@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
+    "deploy-dev": "git checkout develop && eb deploy",
+    "deploy-qa": "git checkout qa && eb deploy",
+    "deploy-prod": "git checkout master  && eb deploy",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -1,0 +1,23 @@
+branch-defaults:
+  master:
+    environment: gp-app-prod
+  qa:
+    environment: gp-app-qa
+  develop:
+    environment: gp-web-dev
+environment-defaults:
+  tgp-api-test:
+    branch: null
+    repository: null
+global:
+  application_name: goodparty.org
+  default_ec2_keyname: null
+  default_platform: arn:aws:elasticbeanstalk:us-west-2::platform/Node.js running on 64bit Amazon Linux/5.4.4
+  default_region: us-west-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli-tgp
+  sc: git
+  workspace_type: Application
