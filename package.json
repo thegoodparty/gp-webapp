@@ -8,7 +8,7 @@
     "deploy-qa": "git checkout qa && eb deploy",
     "deploy-prod": "git checkout master  && eb deploy",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next start",
     "lint": "next lint"
   },
   "dependencies": {
