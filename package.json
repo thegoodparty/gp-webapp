@@ -1,7 +1,12 @@
 {
-  "name": "gp-webapp",
-  "version": "0.1.0",
-  "private": true,
+  "name": "Good-Party",
+  "version": "2.0.0",
+  "description": "Power and money have corrupted both major U.S. Political parties.We're working on a truly Good alternative!",
+  "author": "Tomer Almog",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "dev": "next dev -p 4000",
     "deploy-dev": "git checkout develop && eb deploy",
