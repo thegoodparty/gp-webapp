@@ -36,12 +36,9 @@ export default function DesktopHeader() {
                 href={link.href}
                 data-cy="header-link-label"
                 id={`desktop-nav-${link.label.replace(' ', '-')}`}
+                key={link.href}
               >
-                <div
-                  key={link.href}
-                  data-cy="header-link"
-                  className="mx-3 px-1"
-                >
+                <div data-cy="header-link" className="mx-3 px-1">
                   {link.label}
                 </div>
               </Link>

@@ -57,8 +57,8 @@ export default function Footer() {
               className="mx-auto"
             />
             <div className="italic mt-4" data-cy="footer-join-us">
-              Not a political party. We're building free tools to change the
-              rules, so good independent candidates can run and win!{' '}
+              Not a political party. We&apos;re building free tools to change
+              the rules, so good independent candidates can run and win!{' '}
               <Link href="/register" data-cy="footer-join-us-link">
                 Join us!
               </Link>
