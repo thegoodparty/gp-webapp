@@ -1,5 +1,5 @@
 // import { Lato } from '@next/font/google';
-import PageWrapper from '/Components/shared/layouts/PageWrapper';
+import PageWrapper from '/components/shared/layouts/PageWrapper';
 import './globals.css';
 
 export default function RootLayout({ children }) {

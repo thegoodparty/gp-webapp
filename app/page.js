@@ -1,6 +1,6 @@
 import './globals.css';
-import HomePage from '/Components/shared/HomePage';
-import TgpHelmet from '/Components/shared/TgpHelmet';
+import HomePage from '/components/shared/HomePage';
+import TgpHelmet from '/components/shared/TgpHelmet';
 
 export default function Page() {
   return (
