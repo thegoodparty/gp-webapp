@@ -1,3 +1,4 @@
+import './globals.css';
 import HomePage from '/Components/shared/HomePage';
 import TgpHelmet from '/Components/shared/TgpHelmet';
 
