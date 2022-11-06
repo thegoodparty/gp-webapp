@@ -4,7 +4,7 @@ branch-defaults:
   qa:
     environment: gp-app-qa
   develop:
-    environment: gp-app-aman
+    environment: gp-web-dev
 environment-defaults:
   tgp-api-test:
     branch: null
