@@ -5,7 +5,7 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
   reactStrictMode: true,
-  experimental: { appDir: true },
+  experimental: { appDir: true, transpilePackages: ['ui'] },
 };
 
 module.exports = withPWA(nextConfig);
