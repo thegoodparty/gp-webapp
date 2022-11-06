@@ -7,6 +7,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1.0"
+        ></meta>
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="preconnect" href="https://connect.facebook.net" />
         <meta property="og:site_name" content="GOOD PARTY" />
@@ -31,7 +35,7 @@ export default function RootLayout({ children }) {
         />
 
         <link rel="manifest" href="/manifest.json" />
-        <script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></script>
+        {/* <script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></script> */}
       </head>
       <body className="font-sans">
         <PageWrapper>{children}</PageWrapper>
