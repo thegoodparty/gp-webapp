@@ -1,0 +1,14 @@
+@import '/scss/colors';
+@import '/scss/breakpoints';
+
+.digit {
+  transition: opacity 0.1s ease-in;
+
+  &.active {
+    opacity: 1;
+  }
+
+  &.not-active {
+    opacity: 0;
+  }
+}

@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  line-height: 1.3;
+}
+
 a:hover {
   text-decoration: underline;
+}
+
+.rep-red {
+  color: #bf0020;
+}
+.dem-blue {
+  color: #0027dc;
 }

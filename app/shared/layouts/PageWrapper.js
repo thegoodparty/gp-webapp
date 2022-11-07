@@ -14,7 +14,7 @@ export default function PageWrapper({ children, hideFooter }) {
   };
   return (
     <AppContext.Provider value={childProps}>
-      <div>
+      <div className="overflow-x-hidden">
         <Nav />
         {children}
         {!hideFooter && <Footer />}

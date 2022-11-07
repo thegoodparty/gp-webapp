@@ -16,7 +16,7 @@ export default function DesktopHeader() {
   const { user } = useContext(AppContext);
 
   return (
-    <div className="hidden lg:block border-solid border-b border-zinc-200 px-6 z-50">
+    <div className="relative bg-white  hidden lg:block border-solid border-b border-zinc-200 px-6 z-50">
       <MaxWidth>
         <div className="flex justify-between items-center h-20">
           <div>
