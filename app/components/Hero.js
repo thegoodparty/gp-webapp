@@ -70,7 +70,7 @@ const Hero = () => {
           <SmImageWrapper>
             <Image
               src="/images/homepage/declare-independence.png"
-              layout="fill"
+              fill
               alt="Declare independence"
             />
           </SmImageWrapper>
@@ -111,7 +111,7 @@ const Hero = () => {
       <div className={styles.lgImgWrapper} id="homepage-scroll-image">
         <Image
           src={independenceImg}
-          layout="fill"
+          fill
           objectFit="cover"
           objectPosition="-100% 0"
           alt="Declare independence"
