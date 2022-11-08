@@ -10,6 +10,10 @@ a:hover {
   text-decoration: underline;
 }
 
+a.no-underline:hover {
+  text-decoration: none;
+}
+
 .rep-red {
   color: #bf0020;
 }

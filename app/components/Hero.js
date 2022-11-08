@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 import independenceImg from '/public/images/homepage/declare-independence.png';
 
-import { getUserCookie } from '/helpers/cookieHelper';
 import styles from './Hero.module.scss';
 import SocialSection from './SocialSection';
 import ImageWithScroll from './ImageWithScroll';
@@ -14,7 +13,7 @@ import YellowButton from '../shared/buttons/YellowButton';
 const Hero = () => {
   // const nextCookies = cookies();
   // const user = nextCookies.get('user')?.value;
-  const user = false;
+  const user = true;
   return (
     <div className="w-full h-full relative">
       <div className="grid grid-cols-1 lg:grid-cols-3">

@@ -1,7 +1,7 @@
 'use client';
-const BaseButton = ({ children, onClick = () => {}, style }) => {
+const BaseButton = ({ children, style }) => {
   return (
-    <button onClick={onClick} className="py-3 px-8 rounded-lg" style={style}>
+    <button className="py-3 px-8 rounded-lg" style={style}>
       {children}
     </button>
   );

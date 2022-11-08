@@ -7,5 +7,9 @@ export const gpApi = {
       url: `${base}listening/followers-count`,
       method: 'GET',
     },
+    homepageCandidates: {
+      url: `${base}homepage-candidates`,
+      method: 'GET',
+    },
   },
 };
