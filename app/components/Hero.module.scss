@@ -18,6 +18,7 @@
 
 .smImgWrapper {
   height: 500px;
+  overflow-y: hidden;
 
   @include md {
     height: 700px;

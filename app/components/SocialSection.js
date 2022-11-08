@@ -1,8 +1,6 @@
 import Image from 'next/image';
-import heartImg from '/public/images/heart.svg';
+// import heartImg from '/public/images/heart.svg';
 import Ticker from './Ticker';
-
-// import Ticker from './Ticker';
 
 const SocialSection = () => {
   return (
@@ -10,7 +8,7 @@ const SocialSection = () => {
       <div className="flex items-center">
         <div className="mr-3 pt-2">
           <Image
-            src={heartImg}
+            src="/images/heart.svg"
             width="42"
             height="34"
             alt="good party"
