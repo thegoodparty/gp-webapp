@@ -22,8 +22,6 @@ export default function CandidateAvatar({ candidate, priority = false }) {
             style={{ borderColor: brightColor }}
             priority={priority}
             className="object-cover object-top rounded-full"
-            placeholder="blur"
-            blurDataURL={`/_next/image?url=${image}&w=16&q=1`}
           />
         )}
         {isClaimed && (
