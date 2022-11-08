@@ -29,7 +29,12 @@ const Hero = () => {
             <span className="dem-blue">Blue</span>
           </h1>
           <div className={`relative w-screen -mt-8 ${styles.smImgWrapper}`}>
-            <Image src={independenceImg} alt="Declare independence" priority />
+            <Image
+              src={independenceImg}
+              alt="Declare independence"
+              priority
+              placeholder="blur"
+            />
           </div>
           <div className="lg:inline-block">
             <div className="hidden lg:block">
@@ -116,6 +121,7 @@ const Hero = () => {
           objectPosition="-100% 0"
           alt="Declare independence"
           priority
+          placeholder="blur"
         />
       </div>
       <ImageWithScroll />

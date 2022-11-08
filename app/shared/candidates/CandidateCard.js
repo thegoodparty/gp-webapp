@@ -79,30 +79,30 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
                 )}
               </React.Fragment>
             ))}
-            <div className="mt-8 mb-1">Progress bar here</div>
-            <div
-              className="absolute left-6 bottom-6"
-              style={{ width: 'calc(100% - 48px)' }}
-            >
-              {withFollowButton ? (
-                <div>Follow container here</div>
-              ) : (
-                <BlackButton
-                  fullWidth
-                  className="view-button-card"
-                  style={{
-                    backgroundColor: brightColor,
-                    borderColor: brightColor,
-                    width: '100%',
-                  }}
-                  data-cy="candidate-view"
-                >
-                  <strong>VIEW CAMPAIGN</strong>
-                </BlackButton>
-              )}
-            </div>
           </>
         )}
+        <div className="mt-8 mb-1">Progress bar here</div>
+        <div
+          className="absolute left-6 bottom-6"
+          style={{ width: 'calc(100% - 48px)' }}
+        >
+          {withFollowButton ? (
+            <div>Follow container here</div>
+          ) : (
+            <BlackButton
+              fullWidth
+              className="view-button-card"
+              style={{
+                backgroundColor: brightColor,
+                borderColor: brightColor,
+                width: '100%',
+              }}
+              data-cy="candidate-view"
+            >
+              <strong>VIEW CAMPAIGN</strong>
+            </BlackButton>
+          )}
+        </div>
       </div>
     </WrapperElement>
   );
