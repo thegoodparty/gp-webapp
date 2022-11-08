@@ -33,9 +33,9 @@ function TgpHelmet({ title, ogTitle, description, image }) {
       {title && <title data-cy="page-title">{title}</title>}
       {title && <meta property="og:title" content={ogTitle || title} />}
       {/* <meta property="og:url" content={url} /> */}
-      {APP_BASE !== 'https://goodparty.org' && (
+      {/* {APP_BASE !== 'https://goodparty.org' && (
         <meta name="robots" content="noindex" />
-      )}
+      )} */}
       {/* <link rel="canonical" href={canonical} /> */}
       {description && (
         <meta

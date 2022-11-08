@@ -66,7 +66,7 @@
   "short_name": "GOOD PARTY",
   "orientation": "portrait",
   "display": "standalone",
-  "start_url": "https://goodparty.org/",
+  "start_url": "https://dev.goodparty.org/",
   "description": "We build free software to help good indie candidates run and win.",
   "background_color": "#fff",
   "theme_color": "#5c00c7"
