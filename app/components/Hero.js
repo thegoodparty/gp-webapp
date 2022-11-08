@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers';
 
 import independenceImg from '/public/images/homepage/declare-independence.png';
 
@@ -12,8 +12,9 @@ import ImageWithScroll from './ImageWithScroll';
 import YellowButton from '../shared/buttons/YellowButton';
 
 const Hero = () => {
-  const nextCookies = cookies();
-  const user = nextCookies.get('user')?.value;
+  // const nextCookies = cookies();
+  // const user = nextCookies.get('user')?.value;
+  const user = false;
   return (
     <div className="w-full h-full relative">
       <div className="grid grid-cols-1 lg:grid-cols-3">

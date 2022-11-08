@@ -10,8 +10,7 @@ const randomIncrement = () => Math.floor(Math.random() * 3 + 1);
 
 const REDUCED_COUNT = 100;
 
-const Ticker = ({ cookieName = 'ticker' }) => {
-  const totalFollowers = 1000; //TODO: fetch from server
+const Ticker = ({ totalFollowers }) => {
   const initTotal = 89852 + totalFollowers;
   const [transition, setTransition] = useState(false);
   const [reduced, setReduced] = useState(REDUCED_COUNT);
@@ -21,7 +20,7 @@ const Ticker = ({ cookieName = 'ticker' }) => {
   const [followers, setFollowers] = useState(initTotal - reduced);
   const [prevFollowers, setPrevFollowers] = useState(initTotal - reduced);
   useEffect(() => {
-    let cookieValue = getCookie(cookieName);
+    let cookieValue = getCookie('ticker');
 
     if (cookieValue) {
       cookieValue = parseInt(cookieValue, 10);
@@ -45,7 +44,7 @@ const Ticker = ({ cookieName = 'ticker' }) => {
       setPrevFollowers(initTotal - tickReduce);
       setFollowers(initTotal - tickReduce - increment);
       setReduced(tickReduce - increment);
-      setCookie(cookieName, tickReduce - increment, 0.03);
+      setCookie('ticker', tickReduce - increment, 0.03);
       clearTimeout(timeout2);
       const timeout2Id = setTimeout(() => {
         tick(tickReduce - increment);

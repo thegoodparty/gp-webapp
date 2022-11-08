@@ -56,7 +56,7 @@ export default function DesktopHeader() {
                 <strong className="mx-3 px-1">Join Us</strong>
               </Link>
             )}
-            {user.isAdmin && (
+            {user?.isAdmin && (
               <div className="shadow-md h-10 w-10 flex justify-center items-center rounded-full">
                 <Link href="/admin">
                   <Image

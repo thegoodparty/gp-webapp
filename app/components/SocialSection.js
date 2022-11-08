@@ -1,8 +1,16 @@
 import Image from 'next/image';
+import { gpApi } from '../../gpApi';
+import gpFetch from '../../gpApi/gpFetch';
 // import heartImg from '/public/images/heart.svg';
 import Ticker from './Ticker';
 
-const SocialSection = () => {
+async function fetchFollowers() {
+  const res = await gpFetch(gpApi.homepage.followers, 3600);
+  return res.json();
+}
+
+async function SocialSection() {
+  const followers = await fetchFollowers();
   return (
     <div className="mb-5 lg:mt-24">
       <div className="flex items-center">
@@ -17,7 +25,7 @@ const SocialSection = () => {
           />
         </div>
         <div data-cy="people-count" className="text-3xl font-black lg:text-5xl">
-          <Ticker cookieName="ticker-people" />
+          <Ticker totalFollowers={followers?.total || 0} />
         </div>
         <div
           className="ml-7 font-black lg:text-3xl"
@@ -28,6 +36,11 @@ const SocialSection = () => {
       </div>
     </div>
   );
-};
+}
 
 export default SocialSection;
+
+export async function generateStaticParams() {
+  const res = await gpFetch(gpApi.homepage.followers);
+  return res.json();
+}
