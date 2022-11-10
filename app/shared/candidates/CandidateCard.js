@@ -7,6 +7,7 @@ import {
 } from '/helpers/candidateHelper';
 import BlackButton from '../buttons/BlackButton';
 import CandidateAvatar from './CandidateAvatar';
+import CandidateProgressBar from './CandidateProgressBar';
 
 const MAX_POSITIONS = 6;
 
@@ -81,7 +82,9 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
             ))}
           </>
         )}
-        <div className="mt-8 mb-1">Progress bar here</div>
+        <div className="mt-8 mb-1">
+          <CandidateProgressBar candidate={candidate} />
+        </div>
         <div
           className="absolute left-6 bottom-6"
           style={{ width: 'calc(100% - 48px)' }}
