@@ -12,7 +12,7 @@ async function fetchFollowers() {
 async function SocialSection() {
   const followers = await fetchFollowers();
   return (
-    <div className="mb-5 lg:mt-24">
+    <section className="mb-5 lg:mt-24">
       <div className="flex items-center">
         <div className="mr-3 pt-2">
           <Image
@@ -34,7 +34,7 @@ async function SocialSection() {
           @goodparty people
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

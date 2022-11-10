@@ -1,0 +1,10 @@
+@import '/scss/colors';
+@import '/scss/breakpoints';
+
+.banner {
+  background-size: auto 50%;
+
+  @include lg {
+    background-size: auto 100%;
+  }
+}

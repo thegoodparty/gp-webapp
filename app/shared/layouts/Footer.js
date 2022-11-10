@@ -7,7 +7,7 @@ const year = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="px-8 py-6 border-solid border-t border-zinc-200 mt-6 lg:py-10">
+    <footer className="px-8 py-6 border-solid border-t border-zinc-200 lg:py-10">
       <MaxWidth>
         <div className="grid grid-cols-1 lg:grid-cols-6">
           {FOOTER_COLUMNS.map((column) => (

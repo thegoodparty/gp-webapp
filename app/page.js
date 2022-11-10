@@ -1,15 +1,39 @@
 import './globals.css';
-import TgpHelmet from './shared/TgpHelmet';
 import HomePage from './components/index';
-import MaxWidth from './shared/layouts/MaxWidth';
+// import { jsonLdScriptProps } from 'react-schemaorg';
 
 export default function Page() {
   return (
     <>
-      <TgpHelmet
-        title="GOOD PARTY | Free tools to change the rules and disrupt the corrupt."
-        description="Not a political party, we’re building tools to change the rules, empowering creatives to mobilize community & disrupt the corrupt two-party system. Join us!"
-      />
+      {/* <script
+        async
+        {...jsonLdScriptProps({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'Good Party',
+          legalName: 'Good Party LLC',
+          url: 'https://goodparty.org',
+          logo: 'https://goodparty.org/images/black-logo.svg',
+          foundingDate: '2017',
+          founders: [
+            {
+              '@type': 'Person',
+              name: 'Farhad Mohit',
+            },
+          ],
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'customer support',
+            email: 'ask@goodparty.org',
+          },
+          sameAs: [
+            'https://www.facebook.com/goodpartyorg',
+            'https://twitter.com/goodpartyorg',
+            'https://www.instagram.com/goodpartyorg/',
+            'https://www.tiktok.com/@goodparty',
+          ],
+        })}
+      /> */}
       <HomePage />
     </>
   );

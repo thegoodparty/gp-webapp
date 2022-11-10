@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { candidateColor } from '/helpers/candidateHelper';
-import certifiedImg from '/public/images/heart.svg';
 
 export default function CandidateAvatar({ candidate, priority = false }) {
   const { firstName, lastName, image, isClaimed } = candidate;
@@ -39,13 +38,10 @@ export default function CandidateAvatar({ candidate, priority = false }) {
             <div className="text-center">GOOD CERTIFIED</div>
             <Image
               src="/images/heart.svg"
-              // src={certifiedImg}
               width={26}
               height={20}
               alt="GP"
               className="mt-3 inline-block"
-              objectFit="initial"
-              objectPosition="initial"
             />
           </div>
         )}

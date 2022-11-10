@@ -1,6 +1,8 @@
 // import { Lato } from '@next/font/google';
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
+// import createEmotionServer from '@emotion/server/create-instance';
+// import Providers from './providers';
 
 export default function RootLayout({ children }) {
   return (
@@ -35,6 +37,7 @@ export default function RootLayout({ children }) {
         />
 
         <link rel="manifest" href="/manifest.json" />
+        {/* {this.props.emotionStyleTags} */}
         {/* <script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></script> */}
       </head>
       <body className="font-sans">

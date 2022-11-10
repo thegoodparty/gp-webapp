@@ -62,7 +62,7 @@ export default function DesktopHeader() {
                   <Image
                     src="/images/heart.svg"
                     width={30}
-                    height={30}
+                    height={26}
                     alt="admin"
                   />
                 </Link>

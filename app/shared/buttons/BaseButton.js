@@ -1,7 +1,7 @@
 'use client';
 const BaseButton = ({ children, style }) => {
   return (
-    <button className="py-3 px-8 rounded-lg" style={style}>
+    <button className="py-5 px-8 rounded-lg" style={style}>
       {children}
     </button>
   );

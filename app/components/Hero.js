@@ -58,7 +58,7 @@ const Hero = () => {
               className="absolute top-0 h-full bg-zinc-100"
               style={{ left: '-100vw', width: '200vw', zIndex: '9' }}
             />
-            <div className="relative z-10 text-lg lg:text-2xl leading-6 lg:leading-9">
+            <div className="relative z-10 text-lg lg:text-3xl leading-6 lg:leading-9">
               <div className="lg:hidden">
                 <SocialSection />
               </div>
@@ -69,59 +69,16 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      {/* <Grid container spacing={0}>
-        <Grid item xs={12} lg={8}>
-          
-          <SmImageWrapper>
-            <Image
-              src="/images/homepage/declare-independence.png"
-              fill
-              alt="Declare independence"
-            />
-          </SmImageWrapper>
-          <RegisterWrapper>
-            <LgUpOnly>
-              <SocialSection />
-            </LgUpOnly>
-            {showRegister ? (
-              <RegisterComboContainer />
-            ) : (
-              <Link href="/candidates" passHref>
-                <a
-                  className="no-underline"
-                  style={{ margin: '24px 0', display: 'block' }}
-                >
-                  <YellowButton>
-                    <InnerButton>Follow Candidates</InnerButton>
-                  </YellowButton>
-                </a>
-              </Link>
-            )}
-          </RegisterWrapper>
-          <GrayBg>
-            <FullWidthGray />
-            <Inner>
-              <MdDownOnly>
-                <SocialSection />
-              </MdDownOnly>
-              Good Party is <strong>not a political party</strong>, we are a
-              platform for voters to find results-driven, independent and third
-              party candidates from across the political spectrum.
-            </Inner> 
-          </GrayBg>
-        </Grid>
-        <Grid item xs={12} lg={4}></Grid>
-            </Grid> */}
 
       <div className={styles.lgImgWrapper} id="homepage-scroll-image">
         <Image
           src={independenceImg}
           fill
-          objectFit="cover"
-          objectPosition="-100% 0"
           alt="Declare independence"
           priority
           placeholder="blur"
+          className="object-cover"
+          style={{ objectPosition: '-100% 0' }}
         />
       </div>
       <ImageWithScroll />
