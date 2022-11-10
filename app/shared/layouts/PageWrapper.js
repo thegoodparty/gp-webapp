@@ -1,4 +1,4 @@
-import { createServerContext } from 'react';
+import { createServerContext, Suspense } from 'react';
 import Footer from './Footer';
 import Nav from './navigation/Nav';
 
@@ -14,7 +14,11 @@ export default function PageWrapper({ children, hideFooter }) {
       <div className="overflow-x-hidden">
         <Nav />
         {children}
-        {!hideFooter && <Footer />}
+        {!hideFooter && (
+          <Suspense>
+            <Footer />
+          </Suspense>
+        )}
       </div>
     </AppContext.Provider>
   );
