@@ -5,8 +5,7 @@ import gpFetch from '../../gpApi/gpFetch';
 import Ticker from './Ticker';
 
 async function fetchFollowers() {
-  const res = await gpFetch(gpApi.homepage.followers, 3600);
-  return res.json();
+  return await gpFetch(gpApi.homepage.followers, false, 3600);
 }
 
 async function SocialSection() {

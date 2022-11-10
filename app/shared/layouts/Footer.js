@@ -26,7 +26,7 @@ export default function Footer() {
                 <div
                   key={link.label}
                   data-cy="footer-link-wrapper"
-                  className="font-semibold mb-5"
+                  className="font-bold mb-5"
                 >
                   {link.isExternal ? (
                     <a
@@ -35,11 +35,16 @@ export default function Footer() {
                       rel="noopener noreferrer nofollow"
                       title={link.label}
                       data-cy="footer-link"
+                      className="font-bold"
                     >
                       {link.label}
                     </a>
                   ) : (
-                    <Link href={link.link} data-cy="footer-link">
+                    <Link
+                      href={link.link}
+                      data-cy="footer-link"
+                      className="font-bold"
+                    >
                       {link.label}
                     </Link>
                   )}
@@ -73,7 +78,7 @@ export default function Footer() {
           <Link
             href="/privacy"
             data-cy="footer-privacy-link"
-            className="font-semibold text-black"
+            className="font-bold text-black"
           >
             Privacy Policy
           </Link>

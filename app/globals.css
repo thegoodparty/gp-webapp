@@ -21,3 +21,19 @@ a.no-underline:hover {
 .dem-blue {
   color: #0027dc;
 }
+
+.MuiInputLabel-root.Mui-focused {
+  color: #000 !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #000 !important;
+}
+
+.MuiInputLabel-root.Mui-error {
+  color: #d32f2f !important;
+}
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: #d32f2f !important;
+}

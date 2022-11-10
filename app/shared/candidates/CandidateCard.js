@@ -60,28 +60,29 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
         <div className="flex justify-center">
           <CandidateAvatar candidate={candidate} />
         </div>
-        <h3 className="text-xl font-semibold mb-2 mt-6">
+        <h3 className="text-xl font-bold mb-2 mt-6">
           {firstName} {lastName}
         </h3>
         <div className="text-neutral-600">{partyRace(candidate)}</div>
-        <div className="mt-4  text-sm h-14 overflow-hidden"></div>
-        {topPositions && topPositions.length > 0 && (
-          <>
-            {topPositions.map((position) => (
-              <React.Fragment key={position?.id}>
-                {position && (
-                  <div
-                    className="inline-block px-2 py-1 rounded text-xs bg-zinc-100 mt-1 mr-1 font-semibold"
-                    key={position.id}
-                    data-cy="position"
-                  >
-                    {position.name}
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </>
-        )}
+        <div className="mt-4  text-sm h-14 overflow-hidden">
+          {topPositions && topPositions.length > 0 && (
+            <>
+              {topPositions.map((position) => (
+                <React.Fragment key={position?.id}>
+                  {position && (
+                    <div
+                      className="inline-block px-2 py-1 rounded text-xs bg-zinc-100 mt-1 mr-1 font-bold"
+                      key={position.id}
+                      data-cy="position"
+                    >
+                      {position.name}
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </>
+          )}
+        </div>
         <div className="mt-8 mb-1">
           <CandidateProgressBar candidate={candidate} />
         </div>

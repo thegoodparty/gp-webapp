@@ -11,5 +11,9 @@ export const gpApi = {
       url: `${base}homepage-candidates`,
       method: 'GET',
     },
+    subscribeEmail: {
+      url: `${base}subscribe/email`,
+      method: 'GET',
+    },
   },
 };

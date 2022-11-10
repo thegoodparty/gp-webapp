@@ -5,8 +5,7 @@ import gpFetch from '../../gpApi/gpFetch';
 import CandidateCard from '../shared/candidates/CandidateCard';
 
 async function fetchHomepageCandidates() {
-  const res = await gpFetch(gpApi.homepage.homepageCandidates, 3600);
-  return res.json();
+  return await gpFetch(gpApi.homepage.homepageCandidates, false, 3600);
 }
 
 async function CandidatesSection() {

@@ -1,17 +1,63 @@
-async function gpFetch(endpoint, revalidate) {
-  try {
-    if (endpoint.method === 'GET') {
-      if (revalidate) {
-        return await fetch(endpoint.url, { next: { revalidate } });
-      } else {
-        return await fetch(endpoint.url);
+async function gpFetch(endpoint, data, revalidate) {
+  let { url, method, withAuth } = endpoint;
+  if ((method === 'GET' || method === 'DELETE') && data) {
+    url = `${url}?`;
+    for (const key in data) {
+      if ({}.hasOwnProperty.call(data, key)) {
+        url += `${key}=${data[key]}&`;
       }
     }
-  } catch (e) {
-    console.log('error at gpFetch endpoint', endpoint);
-    console.log('error at gpFetch', e);
-    return { json: () => {} };
+    url = url.slice(0, -1);
   }
+
+  let body = data;
+  if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
+    body = JSON.stringify(data);
+  }
+
+  let token;
+  if (withAuth) {
+    token = getCookie('token');
+    if (!token) {
+      throw new Error({ message: 'missing token' });
+    }
+  }
+
+  const requestOptions = headersOptions(body, endpoint.method, token);
+
+  return await fetchCall(url, requestOptions, revalidate);
 }
 
 export default gpFetch;
+
+function headersOptions(body, method = 'GET', token) {
+  const headers = {
+    // 'Content-Type': 'application/json',
+    // 'Access-Control-Allow-Origin': '*',
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  return {
+    headers,
+    method,
+    mode: 'cors',
+    body,
+  };
+}
+
+async function fetchCall(url, options = {}, revalidate) {
+  if (options.method === 'GET') {
+    delete options.body;
+  }
+
+  let res;
+  if (revalidate) {
+    res = await fetch(url, { ...options, next: { revalidate } });
+  } else {
+    res = await fetch(url, options);
+  }
+  return res.json();
+}
