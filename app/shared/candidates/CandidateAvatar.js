@@ -27,12 +27,8 @@ export default function CandidateAvatar({ candidate, priority = false }) {
           <div
             className="absolute bottom-0 left-0 w-full h-full rounded-full p-1 text-xs font-black text-white flex flex-col items-center justify-end lg:p-3 lg:text-sm"
             style={{
-              background: `linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.8) 0%,
-                rgba(255, 255, 255, 0) 40%,
-                rgba(255, 255, 255, 0) 100%
-              )`,
+              background:
+                'linear-gradient(0deg,rgba(0, 0, 0, 0.8) 0%,rgba(255, 255, 255, 0) 40%,rgba(255, 255, 255, 0) 100%)',
             }}
           >
             <div className="text-center">GOOD CERTIFIED</div>

@@ -18,7 +18,7 @@ const WhatsNext = () => {
             <InvolvedModal />
           </div>
           <div>
-            <Image src={bgImage} style={{ width: 'auto' }} />
+            <Image src={bgImage} style={{ width: 'auto' }} alt="party" />
           </div>
         </div>
       </MaxWidth>
