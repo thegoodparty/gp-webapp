@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { gpApi } from '../../gpApi';
+import gpApi from '../../gpApi';
 import gpFetch from '../../gpApi/gpFetch';
 // import heartImg from '/public/images/heart.svg';
 import Ticker from './Ticker';

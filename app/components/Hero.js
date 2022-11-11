@@ -1,19 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { cookies } from 'next/headers';
 
 import independenceImg from '/public/images/homepage/declare-independence.png';
 
 import styles from './Hero.module.scss';
 import SocialSection from './SocialSection';
 import ImageWithScroll from './ImageWithScroll';
-import YellowButton from '../shared/buttons/YellowButton';
+import FollowOrRegister from './FollowOrRegister';
 
 const Hero = () => {
-  // const nextCookies = cookies();
-  // const user = nextCookies.get('user')?.value;
-  const user = true;
   return (
     <div className="w-full h-full relative">
       <div className="grid grid-cols-1 lg:grid-cols-3">
@@ -40,18 +36,7 @@ const Hero = () => {
             <div className="hidden lg:block">
               <SocialSection />
             </div>
-            {user ? (
-              <div>
-                <br />
-                <Link href="/candidates">
-                  <YellowButton>
-                    <div className="text-lg font-bold">Follow Candidates</div>
-                  </YellowButton>
-                </Link>
-              </div>
-            ) : (
-              <div>combo</div>
-            )}
+            <FollowOrRegister />
           </div>
           <div className="py-5 relative mb-10 mt-9 bg-zinc-100 lg:mt-14 lg:py-10 lg:mb-0">
             <div

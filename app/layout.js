@@ -1,27 +1,15 @@
 import { Lato } from '@next/font/google';
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
-// import createEmotionServer from '@emotion/server/create-instance';
-// import Providers from './providers';
 
-const lato1 = Lato({
-  weight: '400',
-});
-
-const lato2 = Lato({
-  weight: '700',
-});
-
-const lato3 = Lato({
-  weight: '900',
+const lato = Lato({
+  weight: ['400', '700', '900'],
+  subsets: ['latin'],
 });
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${lato1.className} ${lato2.className} ${lato3.className}`}
-    >
+    <html lang="en" className={lato.className}>
       <head>
         <meta charSet="utf-8" />
         <meta
@@ -52,7 +40,6 @@ export default function RootLayout({ children }) {
         />
 
         <link rel="manifest" href="/manifest.json" />
-        {/* {this.props.emotionStyleTags} */}
         {/* <script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></script> */}
       </head>
       <body>

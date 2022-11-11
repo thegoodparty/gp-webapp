@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { gpApi } from '../../gpApi';
+import gpApi from '../../gpApi';
 import gpFetch from '../../gpApi/gpFetch';
 import CandidateCard from '../shared/candidates/CandidateCard';
 

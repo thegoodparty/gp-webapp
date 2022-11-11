@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-import { gpApi } from '/gpApi';
+import gpApi from '/gpApi';
 import gpFetch from '/gpApi/gpFetch';
 import TextField from '../shared/inputs/TextField';
 import BlackButton from '../shared/buttons/BlackButton';
 import BlackButtonClient from '../shared/buttons/BlackButtonClient';
 import Modal from '../shared/utils/Modal';
 import { getUserCookie } from '/helpers/cookieHelper';
-import EmailInput, { isValidEmail } from '../shared/inputs/emailInput';
+import EmailInput, { isValidEmail } from '../shared/inputs/EmailInput1';
 
 async function subscribeEmail(payload) {
   try {

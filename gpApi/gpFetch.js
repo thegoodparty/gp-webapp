@@ -11,7 +11,7 @@ async function gpFetch(endpoint, data, revalidate) {
   }
 
   let body = data;
-  if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
+  if ((method === 'POST' || method === 'PUT') && data) {
     body = JSON.stringify(data);
   }
 
