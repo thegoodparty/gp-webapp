@@ -23,10 +23,10 @@ export default function Modal({ open, closeCallback, children }) {
     <MuiModal open={open} onClose={closeCallback} maxWidth="lg">
       <Box sx={style}>
         <div
-          className="absolute top-4 right-4 cursor-pointer"
+          className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center"
           onClick={closeCallback}
         >
-          <IoIosCloseCircle />
+          <IoIosCloseCircle size={24} />
         </div>
         {children}
       </Box>

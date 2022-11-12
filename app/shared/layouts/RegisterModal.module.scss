@@ -1,0 +1,8 @@
+@import '/scss/colors';
+@import '/scss/breakpoints';
+
+.textField {
+  :global(.MuiInputBase-input) {
+    background-color: #f7f7fe;
+  }
+}

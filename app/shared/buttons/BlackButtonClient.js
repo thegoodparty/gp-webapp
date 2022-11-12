@@ -1,7 +1,13 @@
 'use client';
 import BaseButtonClient from './BaseButtonClient';
 
-const BlackButton = ({ children, style = {}, onClick, disabled, type }) => {
+const BlackButtonClient = ({
+  children,
+  style = {},
+  onClick,
+  disabled,
+  type,
+}) => {
   const backgroundColor = disabled ? '#333' : '#000';
   const cursor = disabled ? 'not-allowed' : 'pointer';
 
@@ -17,4 +23,4 @@ const BlackButton = ({ children, style = {}, onClick, disabled, type }) => {
   );
 };
 
-export default BlackButton;
+export default BlackButtonClient;

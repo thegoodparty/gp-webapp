@@ -1,13 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams, usePathname } from 'next/navigation';
+
 import { getUserCookie } from '/helpers/cookieHelper';
 import UserAvatar from '../../user/UserAvatar';
+import RegisterModal from '../RegisterModal';
 
 const NavProfileOrRegister = () => {
-  const user = getUserCookie(true);
+  const searchParams = useSearchParams();
+  const registerQuery = searchParams.get('register');
+
+  const [user, setUser] = useState(false);
+  const [registerRoute, setRegisterRoute] = useState('');
+
+  useEffect(() => {
+    const user = getUserCookie(true);
+    if (user) {
+      setUser(user);
+    }
+  }, []);
+
+  useEffect(() => {
+    const registerParam = searchParams.get('register');
+    if (registerParam === 'true') {
+      setRegisterRoute(true);
+    } else {
+      setRegisterRoute(false);
+    }
+  }, [registerQuery]);
+
   return (
     <>
       {user?.name ? (
@@ -35,6 +59,11 @@ const NavProfileOrRegister = () => {
             />
           </Link>
         </div>
+      )}
+      {registerRoute && (
+        <Suspense>
+          <RegisterModal />
+        </Suspense>
       )}
     </>
   );
