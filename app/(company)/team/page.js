@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import MaxWidth from '../../shared/layouts/MaxWidth';
 import Hero from './components/Hero';
 import Team from './components/Team';
+import Volunteers from './components/Volunteers';
 
 export default function Page() {
   return (
@@ -9,6 +10,9 @@ export default function Page() {
       <Hero />
       <Suspense>
         <Team />
+      </Suspense>
+      <Suspense>
+        <Volunteers />
       </Suspense>
     </MaxWidth>
   );
