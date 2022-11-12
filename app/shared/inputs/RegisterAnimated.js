@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import gpApi from '/gpApi';
 import gpFetch from '/gpApi/gpFetch';
 import { setUserCookie, setCookie } from '/helpers/cookieHelper';
