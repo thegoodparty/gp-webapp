@@ -1,0 +1,34 @@
+@import '/scss/colors';
+@import '/scss/breakpoints';
+
+.wrapper {
+  padding: 50px 0;
+}
+
+.h2 {
+  font-size: 30px;
+  font-weight: 900;
+  margin: 0 0 28px;
+
+  @include lg {
+    font-size: 40px;
+  }
+}
+
+.point {
+  display: flex;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 30px;
+  margin-bottom: 24px;
+
+  @include lg {
+    font-size: 24px;
+    line-height: 36px;
+  }
+}
+
+.number {
+  padding-right: 34px;
+  font-weight: 900;
+}
