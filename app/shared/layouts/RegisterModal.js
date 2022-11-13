@@ -48,7 +48,7 @@ const RegisterModal = () => {
 
   const [state, setState] = useState({
     name: user?.name || '',
-    email: user?.email || queryEmail || '',
+    email: user?.email || '',
     zipcode: user?.zip || '',
   });
 
