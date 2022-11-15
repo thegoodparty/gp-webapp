@@ -17,7 +17,7 @@ export default function Footer() {
               className="text-center lg:text-left"
             >
               <div
-                className="text-zinc-500 font-black mb-5"
+                className="text-zinc-600 font-black mb-5"
                 data-cy="footer-column-title"
               >
                 {column.title}

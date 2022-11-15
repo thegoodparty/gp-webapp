@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import createCache from '@emotion/cache';
 import { ThemeProvider } from '@mui/material/styles';
 import { CacheProvider } from '@emotion/react';
-import theme from '../scss/theme';
+import theme from '../styles/scss/theme';
 import createEmotionCache from './shared/utils/createEmotionCache';
 
 const clientSideEmotionCache = createEmotionCache();

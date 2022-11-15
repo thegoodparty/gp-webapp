@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Pill from '@shared/buttons/Pill1';
+import Pill from '@shared/buttons/Pill';
 import BlackButton from '@shared/buttons/BlackButton';
 import { useState } from 'react';
 
@@ -95,7 +95,7 @@ export default function Plans() {
   const planStyle = (plan) => {
     let style = {};
     if (plan.name === 'Starter') {
-      style.backgroundColor = '#f3f3f3';
+      style.backgroundColor = '#f7f7f7';
     }
     if (active === plan.name) {
       style.display = 'block';
@@ -161,7 +161,7 @@ export default function Plans() {
             <br />
             <br />
             {plan.features.map((feature, index) => (
-              <div key={feature.title} className="mt-6 text-sm text-zinc-500">
+              <div key={feature.title} className="mt-6 text-zinc-600">
                 <div className="font-black text-black mb-2">
                   {feature.title}
                 </div>
