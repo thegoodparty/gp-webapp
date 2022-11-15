@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Pill from '@shared/buttons/Pill';
+import Pill from '@shared/buttons/Pill1';
 import BlackButton from '@shared/buttons/BlackButton';
 import { useState } from 'react';
 
