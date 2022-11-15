@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 import { getUserCookie } from '/helpers/cookieHelper';
 
-import YellowButton from '../shared/buttons/YellowButton';
-import RegisterAnimated from '../shared/inputs/RegisterAnimated';
+import YellowButton from '@shared/buttons/YellowButton';
+import RegisterAnimated from '@shared/inputs/RegisterAnimated';
 
 export default function FollowOrRegister() {
   const [user, setUser] = useState(false);

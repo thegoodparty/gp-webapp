@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import bgImage from '/public/images/homepage/banner-bg-1.png';
 
-import MaxWidth from '../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 import InvolvedModal from './InvolvedModal';
 
 import styles from './WhatsNext.module.scss';

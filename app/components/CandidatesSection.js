@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import gpApi from '../../gpApi';
 import gpFetch from '../../gpApi/gpFetch';
-import CandidateCard from '../shared/candidates/CandidateCard';
+import CandidateCard from '@shared/candidates/CandidateCard';
 
 async function fetchHomepageCandidates() {
   return await gpFetch(gpApi.homepage.homepageCandidates, false, 3600);

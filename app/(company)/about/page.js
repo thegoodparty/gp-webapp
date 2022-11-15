@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import MaxWidth from '../../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 export default function Page() {
   return (

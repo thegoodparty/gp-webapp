@@ -1,18 +1,14 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Hero from './components/Hero';
-import Team from './components/Team';
-import Volunteers from './components/Volunteers';
+import Plans from './components/Plans';
 
 export default function Page() {
   return (
     <MaxWidth>
       <Hero />
       <Suspense>
-        <Team />
-      </Suspense>
-      <Suspense>
-        <Volunteers />
+        <Plans />
       </Suspense>
     </MaxWidth>
   );

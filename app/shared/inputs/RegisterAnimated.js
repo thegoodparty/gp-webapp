@@ -5,7 +5,7 @@ import gpApi from '/gpApi';
 import gpFetch from '/gpApi/gpFetch';
 import { setUserCookie, setCookie } from '/helpers/cookieHelper';
 
-import { isValidEmail } from './EmailInput1';
+import { isValidEmail } from './EmailInput';
 import YellowButtonClient from '../buttons/YellowButtonClient';
 import styles from './RegisterAnimated.module.scss';
 

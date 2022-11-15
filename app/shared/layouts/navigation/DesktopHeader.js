@@ -10,7 +10,6 @@ export const HEADER_LINKS = [
 ];
 
 export default function DesktopHeader() {
-  const user = false;
   return (
     <div className="relative bg-white  hidden lg:block border-solid border-b border-zinc-200 px-6 z-50">
       <MaxWidth>

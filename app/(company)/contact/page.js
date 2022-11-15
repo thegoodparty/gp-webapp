@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import MaxWidth from '../../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 import HubSpotForm from './components/HubSpotForm';
 
 export default function Page() {

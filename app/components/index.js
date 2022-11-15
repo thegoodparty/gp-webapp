@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import MaxWidth from '../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 import CandidatesSection from './CandidatesSection';
 import Hero from './Hero';
 import WhatsNext from './WhatsNext';

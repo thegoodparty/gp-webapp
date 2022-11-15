@@ -1,5 +1,5 @@
 import WhatsNext from '../../components/WhatsNext';
-import MaxWidth from '../../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 export default function Page() {
   return (

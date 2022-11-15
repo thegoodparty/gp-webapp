@@ -10,7 +10,7 @@ import Hero from './components/Hero';
 import Values from './components/Values';
 import LeverCareers from './components/LeverCareers';
 import Why from './components/Why';
-import MaxWidth from '../../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 function CareersWrapper() {
   return (

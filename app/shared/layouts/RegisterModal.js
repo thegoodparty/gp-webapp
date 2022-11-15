@@ -8,7 +8,7 @@ import { getUserCookie } from '/helpers/cookieHelper';
 
 import TextField from '../inputs/TextField';
 import Modal from '../utils/Modal';
-import { isValidEmail } from '../inputs/EmailInput1';
+import { isValidEmail } from '../inputs/EmailInput';
 import BlackButtonClient from '../buttons/BlackButtonClient';
 import styles from './RegisterModal.module.scss';
 import { register } from '../inputs/RegisterAnimated';

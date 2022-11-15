@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
-import MaxWidth from '../../../shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 import styles from './Values.module.scss';
 
@@ -66,7 +66,7 @@ function Values() {
                 style={{ backgroundColor: card.color }}
               >
                 <div className={styles.front}>
-                  <h4 className={styles.cardTitle}>{card.title}</h4>
+                  <h3 className={styles.cardTitle}>{card.title}</h3>
                   <div className={styles.cardContent}>{card.front}</div>
                   <div className={styles.arrow}>
                     <HiArrowNarrowRight />

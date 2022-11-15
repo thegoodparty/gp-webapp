@@ -1,4 +1,4 @@
-import GpHead from '../shared/layouts/GpHead';
+import GpHead from '@shared/layouts/GpHead';
 
 export default function Head({ params }) {
   return (
