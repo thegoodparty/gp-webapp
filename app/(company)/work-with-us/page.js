@@ -11,10 +11,12 @@ import Values from './components/Values';
 import LeverCareers from './components/LeverCareers';
 import Why from './components/Why';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import JsonLdSchema from '@shared/layouts/JsonLdSchema';
 
 function CareersWrapper() {
   return (
     <>
+      <JsonLdSchema />
       <MaxWidth>
         <Hero />
       </MaxWidth>

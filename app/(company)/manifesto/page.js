@@ -1,9 +1,11 @@
 import WhatsNext from '../../components/WhatsNext';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import JsonLdSchema from '@shared/layouts/JsonLdSchema';
 
 export default function Page() {
   return (
     <div className="mt-14 text-2xl">
+      <JsonLdSchema />
       <MaxWidth>
         <h1
           className="mb-4 text-3xl font-black lg:text-4xl"
