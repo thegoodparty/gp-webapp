@@ -40,8 +40,3 @@ async function CandidatesSection() {
 }
 
 export default CandidatesSection;
-
-export async function generateStaticParams() {
-  const res = await gpFetch(gpApi.homepage.homepageCandidates);
-  return res.json();
-}

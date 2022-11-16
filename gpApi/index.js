@@ -22,6 +22,12 @@ const gpApi = {
       method: 'POST',
     },
   },
+  content: {
+    contentByKey: {
+      url: `${base}content/content-by-key`,
+      method: 'GET',
+    },
+  },
 };
 
 export default gpApi;

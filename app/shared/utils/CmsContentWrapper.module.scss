@@ -1,0 +1,57 @@
+@import '/styles/scss/breakpoints.scss';
+
+.wrapper {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  :global(h1) {
+    margin: 24px 0 32px;
+    font-weight: 900;
+    font-size: 28px;
+    @include lg {
+      font-size: 36px;
+    }
+  }
+
+  :global(h2) {
+    margin: 24px 0 32px;
+    font-weight: 900;
+    font-size: 20px;
+    @include lg {
+      font-size: 28px;
+    }
+  }
+
+  :global(h3) {
+    margin: 20px 0 24px;
+    font-weight: 900;
+    font-size: 18px;
+    @include lg {
+      font-size: 22px;
+    }
+  }
+
+  :global(h4) {
+    margin: 20px 0;
+    font-weight: 900;
+    font-size: 16px;
+    @include lg {
+      font-size: 20px;
+    }
+  }
+
+  :global(ul) {
+    list-style-type: none;
+    :global(li) {
+      margin: 10px 0;
+    }
+    :global(p) {
+      margin-block-start: 10px;
+      margin-block-end: 10px;
+    }
+  }
+
+  :global(p) {
+    margin: 16px 0;
+  }
+}

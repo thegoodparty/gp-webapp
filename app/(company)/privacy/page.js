@@ -1,0 +1,36 @@
+import { Suspense } from 'react';
+import MaxWidth from '@shared/layouts/MaxWidth';
+import gpFetch from 'gpApi/gpFetch';
+import gpApi from 'gpApi';
+import { dateUsHelper } from 'helpers/dateHelper';
+import contentfulHelper from 'helpers/contentfulHelper';
+import CmsContentWrapper from '@shared/utils/CmsContentWrapper';
+
+async function fetchContent(params) {
+  const api = { ...gpApi.content.contentByKey };
+  api.url = `${api.url}?key=privacyPage`;
+  return await gpFetch(api, false, 3600);
+}
+
+export default async function Page(params) {
+  const { content } = await fetchContent();
+  return (
+    <MaxWidth>
+      <h1
+        className="mt-6 text-center text-3xl lg:text-4xl font-black"
+        data-cy="privacy-title"
+      >
+        {content.title}
+      </h1>
+      <div className="flex justify-center items-center mt-2 text-sm">
+        <div>Last Revision &nbsp; | &nbsp;</div>
+        <div>{dateUsHelper(content.lastModified)}</div>
+      </div>
+      <div className="my-5">
+        <CmsContentWrapper>
+          {contentfulHelper(content.pageContent)}
+        </CmsContentWrapper>
+      </div>
+    </MaxWidth>
+  );
+}
