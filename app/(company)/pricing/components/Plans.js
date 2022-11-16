@@ -5,6 +5,8 @@ import Pill from '@shared/buttons/Pill';
 import BlackButton from '@shared/buttons/BlackButton';
 import { useState } from 'react';
 
+import styles from './Plans.module.scss';
+
 const basicFeatures = [
   { title: 'Campaign Page', description: 'Introduce yourself to users' },
   {
@@ -94,9 +96,6 @@ export default function Plans() {
 
   const planStyle = (plan) => {
     let style = {};
-    if (plan.name === 'Starter') {
-      style.backgroundColor = '#f7f7f7';
-    }
     if (active === plan.name) {
       style.display = 'block';
     }
@@ -131,7 +130,9 @@ export default function Plans() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className="p-8 rounded-3xl hidden lg:block lg:p-11 my-3"
+            className={`p-8 rounded-3xl hidden lg:block lg:p-11 my-3 ${
+              plan.name === 'Starter' && 'starter'
+            } ${styles.plan}`}
             style={planStyle(plan)}
           >
             <div className="hidden lg:block">
@@ -139,8 +140,12 @@ export default function Plans() {
                 <div className="text-lg">{plan.name.toUpperCase()}</div>
               </Pill>
             </div>
-            <h3 className="font-black text-5xl mb-10 lg:mt-14">{plan.price}</h3>
-            <div className="mb-8">{plan.subtitle}</div>
+            <div className={styles.price}>
+              <h3 className="font-black text-5xl mb-10 lg:mt-14">
+                {plan.price}
+              </h3>
+              <div className="mb-8">{plan.subtitle}</div>
+            </div>
             <Link
               href={plan.link}
               passHref
