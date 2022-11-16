@@ -1,12 +1,10 @@
 import { Suspense } from 'react';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import HubSpotForm from './components/HubSpotForm';
-import JsonLdSchema from '@shared/layouts/JsonLdSchema';
 
 export default function Page() {
   return (
     <MaxWidth>
-      <JsonLdSchema />
       <div className="xl:max-w-5xl  mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12 mb-12">
           <div>

@@ -1,11 +1,9 @@
 import Link from 'next/link';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import JsonLdSchema from '@shared/layouts/JsonLdSchema';
 
 export default function Page() {
   return (
     <MaxWidth>
-      <JsonLdSchema />
       <h1 className="text-5xl font-black mt-20 mb-10" data-cy="about-title">
         What is Good Party?
       </h1>
