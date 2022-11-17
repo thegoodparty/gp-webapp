@@ -19,7 +19,7 @@ import CandidateAvatar from './CandidateAvatar';
 
 const MAX_POSITIONS = 6;
 
-export default function LargeCard({ candidate, withFollowButton = false }) {
+export default function LargeCard({ candidate, priority = false }) {
   if (!candidate) {
     return <></>;
   }
@@ -64,7 +64,7 @@ export default function LargeCard({ candidate, withFollowButton = false }) {
         <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
           <div className="lg:col-span-3">
             <div className="flex justify-center">
-              <CandidateAvatar candidate={candidate} />
+              <CandidateAvatar candidate={candidate} priority={priority} />
             </div>
           </div>
           <div className="lg:col-span-5">

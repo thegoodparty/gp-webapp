@@ -30,10 +30,10 @@ export default function CandidatesSection({ candidates }) {
           </FaqLink>
         </div>
       </div>
-      {(candidates || []).map((candidate) => (
+      {(candidates || []).map((candidate, index) => (
         <React.Fragment key={candidate.id}>
           {/* {((showOnlyGood && candidate.isClaimed) || !showOnlyGood) && ( */}
-          <LargeCard candidate={candidate} />
+          <LargeCard candidate={candidate} priority={index === 0} />
           {/* )} */}
         </React.Fragment>
       ))}
