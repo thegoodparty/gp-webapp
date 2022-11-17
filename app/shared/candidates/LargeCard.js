@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 import {
@@ -20,7 +19,7 @@ import CandidateAvatar from './CandidateAvatar';
 
 const MAX_POSITIONS = 6;
 
-function LargeCard({ candidate, withFollowButton = false }) {
+export default function LargeCard({ candidate, withFollowButton = false }) {
   if (!candidate) {
     return <></>;
   }
@@ -65,7 +64,7 @@ function LargeCard({ candidate, withFollowButton = false }) {
         <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
           <div className="lg:col-span-3">
             <div className="flex justify-center">
-              <CandidateAvatar candidate={candidate} large largeAll />
+              <CandidateAvatar candidate={candidate} />
             </div>
           </div>
           <div className="lg:col-span-5">
@@ -173,9 +172,3 @@ function LargeCard({ candidate, withFollowButton = false }) {
     </Link>
   );
 }
-
-LargeCard.propTypes = {
-  candidate: PropTypes.object,
-};
-
-export default LargeCard;
