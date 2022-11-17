@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import gpApi from '/gpApi';
 import gpFetch from '/gpApi/gpFetch';
 import { setUserCookie, setCookie } from '/helpers/cookieHelper';
+import { useHookstate } from '@hookstate/core';
 
 import { isValidEmail } from './EmailInput';
 import YellowButtonClient from '../buttons/YellowButtonClient';
@@ -33,7 +34,7 @@ export async function register(payload) {
     setUserCookie(user);
     setCookie('token', token);
 
-    return true;
+    return user;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -47,6 +48,7 @@ export default function RegisterAnimated({ afterRegisterCallback }) {
     name: '',
     zip: '',
   });
+  const userState = useHookstate(globalUserState);
 
   const onChangeField = (key, val) => {
     const newState = {
@@ -62,16 +64,19 @@ export default function RegisterAnimated({ afterRegisterCallback }) {
     state.zip.length === 5;
 
   const submitForm = async () => {
-    const res = await register({
+    const user = await register({
       email: state.email,
       name: state.name,
       zip: state.zip,
     });
-    if (res) {
+    if (user) {
       setState({
         email: '',
         name: '',
         zip: '',
+      });
+      userState.set(() => {
+        user;
       });
       if (afterRegisterCallback) {
         afterRegisterCallback();
