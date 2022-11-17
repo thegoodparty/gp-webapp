@@ -1,22 +1,15 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useHookstate } from '@hookstate/core';
 
 import Link from 'next/link';
 
-import { getUserCookie } from '/helpers/cookieHelper';
-
 import YellowButton from '@shared/buttons/YellowButton';
 import RegisterAnimated from '@shared/inputs/RegisterAnimated';
+import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
 
 export default function FollowOrRegister() {
-  const [user, setUser] = useState(false);
-
-  useEffect(() => {
-    const cookieUser = getUserCookie(true);
-    if (cookieUser) {
-      setUser(cookieUser);
-    }
-  }, []);
+  const userState = useHookstate(globalUserState);
+  const user = userState.get();
 
   return (
     <>

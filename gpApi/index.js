@@ -28,6 +28,12 @@ const gpApi = {
       method: 'GET',
     },
   },
+  candidate: {
+    list: {
+      url: `${base}new-candidates`,
+      method: 'GET',
+    },
+  },
 };
 
 export default gpApi;

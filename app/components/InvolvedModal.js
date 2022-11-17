@@ -3,13 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
+import { useHookstate } from '@hookstate/core';
+import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
+
 import gpApi from '/gpApi';
 import gpFetch from '/gpApi/gpFetch';
 import TextField from '@shared/inputs/TextField';
 import BlackButton from '@shared/buttons/BlackButton';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import Modal from '@shared/utils/Modal';
-import { getUserCookie } from '/helpers/cookieHelper';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput';
 
 async function subscribeEmail(payload) {
@@ -25,7 +27,8 @@ async function subscribeEmail(payload) {
 
 export default function InvolvedModal() {
   const [open, setOpen] = useState(false);
-  const user = getUserCookie(true);
+  const userState = useHookstate(globalUserState);
+  const user = userState.get();
   const [name, setName] = useState(user ? `${user.name}` : '');
   const [email, setEmail] = useState(user ? user.email : '');
 

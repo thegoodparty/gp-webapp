@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-
-import { getUserCookie } from '/helpers/cookieHelper';
+import { useHookstate } from '@hookstate/core';
 
 import TextField from '../inputs/TextField';
 import Modal from '../utils/Modal';
@@ -12,6 +11,7 @@ import { isValidEmail } from '../inputs/EmailInput';
 import BlackButtonClient from '../buttons/BlackButtonClient';
 import styles from './RegisterModal.module.scss';
 import { register } from '../inputs/RegisterAnimated';
+import { globalUserState } from './navigation/NavProfileOrRegister';
 
 export const REGISTER_FIELDS = [
   {
@@ -44,7 +44,8 @@ const RegisterModal = () => {
     router.push(pathname);
   };
 
-  const user = getUserCookie(true);
+  const userState = useHookstate(globalUserState);
+  const user = userState.get();
 
   const [state, setState] = useState({
     name: user?.name || '',

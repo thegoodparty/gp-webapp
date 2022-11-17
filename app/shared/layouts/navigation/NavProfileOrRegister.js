@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';
+import { hookstate, useHookstate } from '@hookstate/core';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams, usePathname } from 'next/navigation';
@@ -9,17 +10,19 @@ import { getUserCookie } from '/helpers/cookieHelper';
 import UserAvatar from '../../user/UserAvatar';
 import RegisterModal from '../RegisterModal';
 
+export const globalUserState = hookstate(false);
+
 const NavProfileOrRegister = () => {
   const searchParams = useSearchParams();
   const registerQuery = searchParams.get('register');
+  const userState = useHookstate(globalUserState);
 
-  const [user, setUser] = useState(false);
   const [registerRoute, setRegisterRoute] = useState('');
 
   useEffect(() => {
     const user = getUserCookie(true);
     if (user) {
-      setUser(user);
+      userState.set(() => user);
     }
   }, []);
 
@@ -31,6 +34,8 @@ const NavProfileOrRegister = () => {
       setRegisterRoute(false);
     }
   }, [registerQuery]);
+
+  const user = userState.get();
 
   return (
     <>
