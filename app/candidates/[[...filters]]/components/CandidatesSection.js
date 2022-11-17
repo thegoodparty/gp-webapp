@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import FaqLink from '@shared/utils/FaqLink';
 import Image from 'next/image';
@@ -33,7 +33,9 @@ export default function CandidatesSection({ candidates }) {
       {(candidates || []).map((candidate) => (
         <React.Fragment key={candidate.id}>
           {/* {((showOnlyGood && candidate.isClaimed) || !showOnlyGood) && ( */}
-          <LargeCard candidate={candidate} />
+          <Suspense>
+            <LargeCard candidate={candidate} />
+          </Suspense>
           {/* )} */}
         </React.Fragment>
       ))}
