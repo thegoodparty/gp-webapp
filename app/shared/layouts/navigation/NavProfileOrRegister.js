@@ -4,20 +4,14 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { hookstate, useHookstate } from '@hookstate/core';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams, usePathname } from 'next/navigation';
 
 import { getUserCookie } from '/helpers/cookieHelper';
 import UserAvatar from '../../user/UserAvatar';
-import RegisterModal from '../RegisterModal';
 
 export const globalUserState = hookstate(false);
 
 const NavProfileOrRegister = () => {
-  const searchParams = useSearchParams();
-  const registerQuery = searchParams.get('register');
   const userState = useHookstate(globalUserState);
-
-  const [registerRoute, setRegisterRoute] = useState('');
 
   useEffect(() => {
     const user = getUserCookie(true);
@@ -26,17 +20,7 @@ const NavProfileOrRegister = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const registerParam = searchParams.get('register');
-    if (registerParam === 'true') {
-      setRegisterRoute(true);
-    } else {
-      setRegisterRoute(false);
-    }
-  }, [registerQuery]);
-
   const user = userState.get();
-
   return (
     <>
       {user?.name ? (
@@ -45,7 +29,7 @@ const NavProfileOrRegister = () => {
         </Link>
       ) : (
         <Link
-          href={`/?register=true`}
+          href="/?register=true"
           data-cy="header-register"
           id="desktop-nav-register"
         >
@@ -64,11 +48,6 @@ const NavProfileOrRegister = () => {
             />
           </Link>
         </div>
-      )}
-      {registerRoute && (
-        <Suspense>
-          <RegisterModal />
-        </Suspense>
       )}
     </>
   );
