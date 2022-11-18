@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '/styles/scss/colors';
+@import '/styles/scss/breakpoints';
 
 * {
   line-height: 1.3;
@@ -54,4 +56,26 @@ ul {
 
 ul li {
   display: list-item;
+}
+
+.font-16 {
+  @apply text-base tracking-wide font-light; 
+}
+.font-18 {
+  @apply text-lg tracking-wide font-light; 
+}
+h1.font-h1 {
+  @apply text-[32px] tracking-wide md:text-[40px] font-black;
+}
+h2.font-h2 {
+  @apply text-[32px] tracking-wide font-black;
+}
+h3.font-h3 {
+  @apply text-[22px] tracking-wide font-black;
+}
+h1.h1 {
+  @apply text-[27px] md:text-4xl text-neutral-800;
+}
+.row {
+  @apply flex items-center	;
 }
