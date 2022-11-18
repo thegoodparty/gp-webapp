@@ -6,6 +6,8 @@ import gpFetch from 'gpApi/gpFetch';
 import { candidateRoute } from 'helpers/candidateHelper';
 import CandidatePage from './components/CandidatePage';
 import CandidateSchema from './CandidateSchema';
+import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
+import { slugify } from 'helpers/articleHelper';
 
 export const fetchCandidate = async (id) => {
   const api = { ...gpApi.candidate.find };
@@ -46,4 +48,15 @@ export default async function Page({ params }) {
       <CandidateSchema candidate={candidate} />
     </>
   );
+}
+
+export async function generateStaticParams() {
+  const { candidates } = await fetchCandidates();
+
+  return candidates.map((candidate) => {
+    const name = slugify(`${candidate.firstName} ${candidate.lastName}`);
+    return {
+      nameId: [name, candidate.id + ''],
+    };
+  });
 }

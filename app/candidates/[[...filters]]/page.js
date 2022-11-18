@@ -2,7 +2,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
 
-const fetchCandidates = async (position, state) => {
+export const fetchCandidates = async (position, state) => {
   const api = { ...gpApi.candidate.list };
   if (position) {
     api.url += `?position=${position}`;
@@ -34,4 +34,8 @@ export default async function Page({ params, searchParams }) {
   };
 
   return <CandidatesPage {...childProps} />;
+}
+
+export async function generateStaticParams() {
+  return [{ filters: ['', ''] }];
 }
