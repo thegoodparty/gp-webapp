@@ -1,0 +1,49 @@
+import { notFound, redirect } from 'next/navigation';
+
+import MaxWidth from '@shared/layouts/MaxWidth';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import { candidateRoute } from 'helpers/candidateHelper';
+import CandidatePage from './components/CandidatePage';
+import CandidateSchema from './CandidateSchema';
+
+export const fetchCandidate = async (id) => {
+  const api = { ...gpApi.candidate.find };
+  api.url += `?id=${id}&allFields=true`;
+
+  return gpFetch(api, false, 3600);
+};
+
+export default async function Page({ params }) {
+  const { nameId } = params;
+  const name = nameId?.length > 0 ? nameId[0] : false;
+  const id = nameId?.length > 1 ? nameId[1] : false;
+  if (!id) {
+    notFound();
+  }
+
+  const { candidate, candidatePositions, followers, feed } =
+    await fetchCandidate(id);
+  if (!candidate) {
+    notFound();
+  }
+
+  if (candidateRoute(candidate) !== `/candidate/${name}/${id}`) {
+    redirect(candidateRoute(candidate));
+  }
+
+  const childProps = {
+    candidate,
+    candidatePositions: candidatePositions || [],
+    id,
+    followers: followers,
+    feed: feed || {},
+  };
+
+  return (
+    <>
+      <CandidatePage {...childProps} />
+      <CandidateSchema candidate={candidate} />
+    </>
+  );
+}

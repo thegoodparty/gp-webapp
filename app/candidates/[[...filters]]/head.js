@@ -5,7 +5,7 @@ export default function Head({ params }) {
     <GpHead
       title="Candidates | GOOD PARTY"
       description="Good Certified Candidates on GOOD PARTY are all Non-Partisan, Small Money and Anti-Corruption."
-      slug="candidates"
+      slug="/candidates"
     />
   );
 }
