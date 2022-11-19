@@ -38,6 +38,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
+    "react-lite-youtube-embed": "^2.3.52",
     "react-schemaorg": "^2.0.0",
     "sass": "^1.56.0",
     "sharp": "^0.31.2",
