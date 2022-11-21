@@ -34,6 +34,13 @@ const gpApi = {
       method: 'GET',
     },
   },
+  follow: {
+    list: {
+      url: `${base}supports`,
+      method: 'GET',
+      withAuth: true,
+    },
+  },
 };
 
 export default gpApi;

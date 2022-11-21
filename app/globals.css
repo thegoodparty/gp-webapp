@@ -58,7 +58,7 @@ ul li {
   display: list-item;
 }
 
-.font-16 {
+/* .font-16 {
   @apply text-base tracking-wide font-light; 
 }
 .font-18 {
@@ -75,7 +75,7 @@ h3.font-h3 {
 }
 h1.h1 {
   @apply text-[27px] md:text-4xl text-neutral-800;
-}
+} */
 .row {
   @apply flex items-center	;
 }
