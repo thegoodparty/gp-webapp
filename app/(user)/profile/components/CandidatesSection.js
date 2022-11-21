@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useContext } from 'react';
+import React from 'react';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { cookies } from 'next/headers';

@@ -1,6 +1,6 @@
 import { getCookie, setCookie } from '/helpers/cookieHelper';
 
-async function gpFetch(endpoint, data, revalidate) {
+async function gpFetch(endpoint, data, revalidate, isFormData = false) {
   let { url, method, withAuth, authToken } = endpoint;
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
@@ -13,7 +13,7 @@ async function gpFetch(endpoint, data, revalidate) {
   }
 
   let body = data;
-  if ((method === 'POST' || method === 'PUT') && data) {
+  if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
     body = JSON.stringify(data);
   }
 
