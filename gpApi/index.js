@@ -52,7 +52,32 @@ const gpApi = {
       method: 'POST',
     },
   },
-
+  campaign: {
+    staff: {
+      userStaff: {
+        url: `${base}user/staff`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+  },
+  candidateApplication: {
+    create: {
+      url: `${base}application`,
+      method: 'POST',
+      withAuth: true,
+    },
+    delete: {
+      url: `${base}application`,
+      method: 'DELETE',
+      withAuth: true,
+    },
+    list: {
+      url: `${base}applications`,
+      method: 'GET',
+      withAuth: true,
+    },
+  },
   //
   // USER
   //
