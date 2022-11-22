@@ -77,6 +77,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    find: {
+      url: `${base}application`,
+      method: 'GET',
+      withAuth: true,
+    },
   },
   //
   // USER
@@ -96,6 +101,19 @@ const gpApi = {
     method: 'DELETE',
     withAuth: true,
   },
+
+  //
+  // admin
+  //
+  admin: {
+    topIssues: {
+      list: {
+        url: `${base}top-issues`, // non admin
+        method: 'GET',
+      },
+    },
+  }
+  
 };
 
 export default gpApi;

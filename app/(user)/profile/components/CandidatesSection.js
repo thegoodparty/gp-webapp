@@ -38,7 +38,7 @@ async function CandidatesSection() {
                     </>
                 )}
             </div>
-            {candidates.length === 0 && (
+            {(!candidates || candidates?.length === 0) && (
                 <div className="text-center">
                     <h3 className='text-[22px] tracking-wide font-black'>You are not following any candidates yet.</h3>
                     <br />
