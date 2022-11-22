@@ -7,7 +7,6 @@
 
 import React, { useState } from 'react';
 import { RiImageAddFill } from 'react-icons/ri';
-import Button from '@mui/material/Button';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -55,14 +54,8 @@ function ImageUploadWrapper({
     return (
         <>
             {customElement ? (
-                <Button
-                    component="label"
-                    style={{
-                        textTransform: 'none',
-                        fontSize: '16px',
-                        padding: 0,
-                        lineHeight: '1.3',
-                    }}
+                <label
+                    className={"transform-none text-base p-0 cursor-pointer"}
                 >
                     {customElement}
                     <input
@@ -72,20 +65,18 @@ function ImageUploadWrapper({
                         accept="image/*"
                         id="file-uploader"
                     />
-                </Button>
+                </label>
             ) : (
-                <Button variant="contained" component="label" className="bg-black text-white py-3 px-0 font-bold">
-                    <BlackButtonClient style={{padding: "0 24px"}}>
+                    <BlackButtonClient className="bg-black text-white py-0 px-6 font-bold">
                         <RiImageAddFill /> &nbsp; Select &nbsp;&nbsp;
                         <input
-                        type="file"
-                        hidden
-                        onChange={handleUploadImage}
-                        accept="image/*"
-                        id="file-uploader"
+                            type="file"
+                            hidden
+                            onChange={handleUploadImage}
+                            accept="image/*"
+                            id="file-uploader"
                         />
                     </BlackButtonClient>
-                </Button>
             )}
             {fileSizeError && (
                 <div className="mt-3 text-red-600">Max file size allowed: {maxFileSize / 1000}K </div>

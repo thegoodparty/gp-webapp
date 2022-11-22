@@ -1,16 +1,14 @@
 'use client';
 import Link from 'next/link';
 import Hamburger from 'hamburger-react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
-import MaxWidth from '../MaxWidth';
-import NavProfileOrRegister from './NavProfileOrRegister';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './MobileMenu.module.scss';
 import UserAvatar from '@shared/user/UserAvatar';
-import { getUserCookie } from 'helpers/cookieHelper';
-
+import { useHookstate } from '@hookstate/core';
+import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Candidates', href: '/candidates' },
@@ -19,14 +17,8 @@ export const HEADER_LINKS = [
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const path = usePathname();
-  const [user, setUser] = useState(false);
-
-  useEffect(() => {
-    const user = getUserCookie(true);
-    if (user) {
-      setUser(user);
-    }
-  }, []);
+  const userState = useHookstate(globalUserState);
+  const user = userState.get();
   return (
     <div className={styles.wrapper}>
       <Hamburger
