@@ -1,7 +1,8 @@
 import { getCookie, setCookie } from '/helpers/cookieHelper';
+import { getServerToken } from '/helpers/userHelper';
 
 async function gpFetch(endpoint, data, revalidate) {
-  let { url, method, withAuth, authToken } = endpoint;
+  let { url, method, withAuth } = endpoint;
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
     for (const key in data) {
@@ -19,7 +20,7 @@ async function gpFetch(endpoint, data, revalidate) {
 
   let token;
   if (withAuth) {
-    token = authToken || getCookie('token');
+    token = getServerToken() || getCookie('token');
     if (!token) {
       throw new Error({ message: 'missing token' });
     }
