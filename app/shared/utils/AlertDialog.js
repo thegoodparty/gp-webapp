@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import WarningIcon from '@mui/icons-material/Warning';
