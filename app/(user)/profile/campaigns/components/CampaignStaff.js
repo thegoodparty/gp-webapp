@@ -5,19 +5,14 @@
  */
 
 import React from 'react';
-import { cookies } from 'next/headers';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import PortalPanel from '@shared/candidate-portal/PortalPanel';
 import StaffCard from './StaffCard';
 
-async function loadStaffCallback() {
+async function loadStaff() {
     try {
-        const nextCookies = cookies();
-        const api = { 
-            ...gpApi.campaign.staff.userStaff,
-            authToken: nextCookies.get('token').value 
-        };
+        const api = gpApi.campaign.staff.userStaff;
         console.log(api);
         const res = await gpFetch(api, null, 3600);
         return res;
@@ -28,7 +23,7 @@ async function loadStaffCallback() {
 }
   
 async function CampaignStaff() {
-    const { staff } = await loadStaffCallback();
+    const { staff } = await loadStaff();
     if (!staff || staff.length === 0) {
         return <></>;
     }
