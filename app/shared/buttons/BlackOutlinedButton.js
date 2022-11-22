@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@mui/material/Button';
 import styles from './BlackOutlinedButton.module.scss';
+import BaseButton from './BaseButton';
 
 const BlackOutlinedButton = ({
   children,
@@ -11,7 +11,7 @@ const BlackOutlinedButton = ({
   ...props
 }) => {
   return (
-    <Button
+    <BaseButton
       variant="outlined"
       color="primary"
       fullWidth={fullWidth}
@@ -22,7 +22,7 @@ const BlackOutlinedButton = ({
       {...props}
     >
       <div className="py-0 px-6">{children}</div>
-    </Button>
+    </BaseButton>
   );
 };
 

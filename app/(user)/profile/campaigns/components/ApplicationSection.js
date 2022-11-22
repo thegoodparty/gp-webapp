@@ -7,7 +7,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Grid from '@mui/material/Grid';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import AlertDialog from '@shared/utils/AlertDialog';
@@ -15,7 +14,7 @@ import ApplicationPreview from './ApplicationPreview';
 import PortalPanel from '@shared/candidate-portal/PortalPanel';
 import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
 
-async function createApplicationCallback(router) {
+async function createApplication(router) {
     try {
         // yield put(snackbarActions.showSnakbarAction('Creating a new application'));
         const api = gpApi.candidateApplication.create;
@@ -33,7 +32,7 @@ async function createApplicationCallback(router) {
     }
 }
 
-async function deleteApplicationCallback(id) {
+async function deleteApplication(id) {
     try {
         // yield put(snackbarActions.showSnakbarAction('Deleting application'));
         const api = gpApi.candidateApplication.delete;
@@ -53,12 +52,11 @@ async function deleteApplicationCallback(id) {
     }
 }
 
-async function loadApplicationsCallback() {
+async function loadApplications() {
     try {
         // yield put(snackbarActions.showSnakbarAction('Loading your application'));
         const api = gpApi.candidateApplication.list;
         const res = await gpFetch(api, null, 3600);
-        console.log(res);
         return res;
         // yield put(actions.loadApplicationsActionSuccess(applications));
     } catch (error) {
@@ -69,14 +67,14 @@ async function loadApplicationsCallback() {
 function ApplicationSection() {
     const router = useRouter();
     const [applications, setApplications] = useState([]);
-    const loadApplications = async () => {
-        const res = await loadApplicationsCallback();
+    const loadApplicationsFunc = async () => {
+        const res = await loadApplications();
         if(applications.length === 0) {
-            setApplications(res.applications);
+            setApplications(res?.applications);
         }
     }
     useEffect(() => {
-        loadApplications();
+        loadApplicationsFunc();
     }, []);
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const [deleteApplicationId, setDeleteApplicationId] = useState(false);
@@ -96,7 +94,7 @@ function ApplicationSection() {
 
     const handleProceedDelete = () => {
         if (deleteApplicationId !== false) {
-            deleteApplicationCallback(deleteApplicationId);
+            deleteApplication(deleteApplicationId);
         }
         handleCloseAlert();
     };
@@ -111,7 +109,7 @@ function ApplicationSection() {
                         Applications
                     </h2>
                     <BlackOutlinedButtonClient
-                        onClick={() => createApplicationCallback(router)} data-cy="start-application"
+                        onClick={() => createApplication(router)} data-cy="start-application"
                     >
                         Start a new application
                     </BlackOutlinedButtonClient>
@@ -127,22 +125,19 @@ function ApplicationSection() {
                         No Applications found
                     </h3>
                 ) : (
-                    <Grid container spacing={3}>
+                    <div className="grid grid-cols-12 gap-3">
                         {applications.map((app) => (
-                            <Grid 
-                                item 
-                                xs={12} 
-                                md={6} 
-                                lg={4} 
+                            <div 
+                                className="col-span-12 md:col-span-6 lg:col-span-4"
                                 key={app.id} data-cy="application-wrapper"
                             >
                                 <ApplicationPreview
                                     app={app}
                                     deleteApplicationCallback={handleDelete}
                                 />
-                            </Grid>
+                            </div>
                         ))}
-                    </Grid>
+                    </div>
                 )}
 
                 <AlertDialog

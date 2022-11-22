@@ -4,8 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { hookstate, useHookstate } from '@hookstate/core';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSearchParams, usePathname } from 'next/navigation';
-
+import { useSearchParams } from 'next/navigation';
 import { getUserCookie } from '/helpers/cookieHelper';
 import UserAvatar from '../../user/UserAvatar';
 import RegisterModal from '../RegisterModal';

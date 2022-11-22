@@ -14,3 +14,14 @@ export const getInitials = (user) => {
 };
 
 export const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+export const getServerToken = () => {
+  const { cookies } = require('next/headers');
+  const nextCookies = cookies();
+  return nextCookies ? nextCookies.get('token').value : null;
+}
+
+export const getServerUser = () => {
+  const { cookies } = require('next/headers');
+  const nextCookies = cookies();
+  return nextCookies ? JSON.parse(nextCookies.get('user').value) : null;
+}

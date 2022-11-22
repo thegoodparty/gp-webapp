@@ -10,7 +10,7 @@ import { AsYouType } from 'libphonenumber-js';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import PhoneIcon from '@mui/icons-material/Phone';
-import TextField from '@mui/material/TextField';
+import TextField from '@shared/inputs/TextField';
 import styles from './PhoneInput.module.scss';
 
 export const isValidPhone = (phone) => {

@@ -5,19 +5,19 @@
  *
  */
 
-import React, { useContext, useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
+import React, { useState, useEffect } from 'react';
+import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { getUserCookie, setUserCookie } from 'helpers/cookieHelper';
+import { useHookstate } from '@hookstate/core';
+import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
 import PortalPanel from '@shared/candidate-portal/PortalPanel';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import styles from './PersonalSection.module.scss'
 
-async function updateUserCallback(updatedFields) {
+async function updateUserCallback(updatedFields, userState) {
     try {
     //   yield put(snackbarActions.showSnakbarAction('Saving...'));
         const api = gpApi.updateUser;
@@ -27,8 +27,7 @@ async function updateUserCallback(updatedFields) {
 
         const response = await gpFetch(api, payload, 3600);
         const { user } = response;
-
-        setUserCookie(user);
+        userState.set(() => user);
     //   yield put(snackbarActions.showSnakbarAction('Your Profile is updated'));
     } catch (error) {
         console.log('Error updating user', error);
@@ -76,7 +75,9 @@ export const USER_SETTING_FIELDS = [
 ];
 
 function PersonalSection() {
-    const user = JSON.parse(getUserCookie());
+    
+    const userState = useHookstate(globalUserState);
+    const user = userState.get('user');
     const updatedState = {};
     if (user) {
         USER_SETTING_FIELDS.forEach((field) => {
@@ -87,9 +88,11 @@ function PersonalSection() {
     const [state, setState] = useState(updatedState);
     const [isPhoneValid, setIsPhoneValid] = useState(true);
 
-    // useEffect(() => {
-    
-    // }, [user]);
+    useEffect(() => {
+        if(!state.name) {
+            setState(user);
+        }
+    }, [user]);
 
     const onChangeField = (key, val) => {
         setState({
@@ -134,8 +137,9 @@ function PersonalSection() {
             fields.phone = fields.phone.replace(/\D+/g, '');
         }
 
-        updateUserCallback(fields);
+        updateUserCallback(fields, userState);
     };
+
     return (
         <section className={styles.section}>
             <PortalPanel color="#EE6C3B">
@@ -145,8 +149,8 @@ function PersonalSection() {
                     Settings
                 </h3>
                 <form noValidate onSubmit={(e) => e.preventDefault()}>
-                    <Grid container spacing={3}>
-                        <Grid xs={12} lg={6}>
+                    <div className="grid grid-cols-12 gap-3">
+                        <div className="col-span-12 md:col-span-6">
                             {USER_SETTING_FIELDS.map((field) => (
                                 <>
                                     {field.type === 'phone' ? (
@@ -168,6 +172,7 @@ function PersonalSection() {
                                             onChange={(e) => onChangeField(field.key, e.target.value)}
                                             required={field.required}
                                             className="mb-4"
+                                            InputLabelProps={{ shrink: true }} 
                                         />
                                     )}
                                 </>
@@ -191,8 +196,8 @@ function PersonalSection() {
                                     cancel
                                 </div>
                             </div>
-                        </Grid>
-                    </Grid>
+                        </div>
+                    </div>
                 </form>
             </PortalPanel>
         </section>

@@ -6,11 +6,12 @@
  */
 
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
+import TextField from '@shared/inputs/TextField';
 import Grid from '@mui/material/Grid';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { getUserCookie } from 'helpers/cookieHelper';
+import { useHookstate } from '@hookstate/core';
+import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
 import PortalPanel from '@shared/candidate-portal/PortalPanel';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { passwordRegex } from 'helpers/userHelper';
@@ -57,7 +58,8 @@ async function changePasswordCallback(password, oldPassword) {
     }
 }
 function PasswordSection() {
-    const user = JSON.parse(getUserCookie());
+    const userState = useHookstate(globalUserState);
+    const user = userState.get();
 
     const initialState = {
         oldPassword: '',
@@ -105,69 +107,69 @@ function PasswordSection() {
 
     return (
         <section>
-        <PortalPanel color="#CA2CCD">
-            <form noValidate onSubmit={(e) => e.preventDefault()}>
-                <h3 
-                    className="text-[22px] tracking-wide font-black mb-16" data-cy="settings-title"
-                >
-                    {user.hasPassword ? 'Change' : 'Create'} your password
-                </h3>
-                <Grid container spacing={3}>
-                    <Grid xs={12} lg={6}>
-                        {user.hasPassword && (
+            <PortalPanel color="#CA2CCD">
+                <form noValidate onSubmit={(e) => e.preventDefault()}>
+                    <h3 
+                        className="text-[22px] tracking-wide font-black mb-16" data-cy="settings-title"
+                    >
+                        {user.hasPassword ? 'Change' : 'Create'} your password
+                    </h3>
+                    <div className="grid grid-cols-12 gap-3">
+                        <div className="col-span-12 md:col-span-6">
+                            {user.hasPassword && (
+                                <TextField
+                                    label="Old Password"
+                                    fullWidth
+                                    variant="outlined"
+                                    type="password"
+                                    value={state.oldPassword}
+                                    onChange={(e) => {
+                                        onChangeField('oldPassword', e.target.value);
+                                    }}
+                                    className="mb-4"
+                                />
+                            )}
                             <TextField
-                                label="Old Password"
+                                label="Password"
                                 fullWidth
                                 variant="outlined"
+                                value={state.password}
                                 type="password"
-                                value={state.oldPassword}
                                 onChange={(e) => {
-                                    onChangeField('oldPassword', e.target.value);
+                                    onChangeField('password', e.target.value);
                                 }}
                                 className="mb-4"
                             />
-                        )}
-                        <TextField
-                            label="Password"
-                            fullWidth
-                            variant="outlined"
-                            value={state.password}
-                            type="password"
-                            onChange={(e) => {
-                                onChangeField('password', e.target.value);
-                            }}
-                            className="mb-4"
-                        />
-                        <small>
-                            For security, passwords must have at least 1 capital letter, 1
-                            lowercase, 1 special character or number, and 8 characters
-                            minimum
-                        </small>
-                        <br />
+                            <small>
+                                For security, passwords must have at least 1 capital letter, 1
+                                lowercase, 1 special character or number, and 8 characters
+                                minimum
+                            </small>
+                            <br />
 
-                        <div className="row mt-20">
-                            <BlackButtonClient
-                                disabled={!canSave()}
-                                onClick={handleSavePassword}
-                                type="submit"
-                            >
-                                <div 
-                                    className="py-0 px-6"
+                            <div className="row mt-20">
+                                <BlackButtonClient
+                                    disabled={!canSave()}
+                                    onClick={handleSavePassword}
+                                    type="submit"
                                 >
-                                    Save
+                                    <div 
+                                        className="py-0 px-6"
+                                    >
+                                        Save
+                                    </div>
+                                </BlackButtonClient>
+                                <div 
+                                    onClick={reset} 
+                                    className="ml-5 underline cursor-pointer"
+                                >
+                                    cancel
                                 </div>
-                            </BlackButtonClient>
-                            <div 
-                                onClick={reset} 
-                                className="ml-5 underline cursor-pointer"
-                            >
-                                cancel
                             </div>
                         </div>
-                    </Grid>
-                </Grid>
-            </form>
-        </PortalPanel>
+                    </div>
+                </form>
+            </PortalPanel>
         </section>
     );
 }
