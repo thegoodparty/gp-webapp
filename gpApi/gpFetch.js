@@ -1,5 +1,5 @@
 import { getCookie, setCookie } from '/helpers/cookieHelper';
-import { getServerToken } from '/helpers/userHelper';
+import { getServerToken } from '/helpers/userServerHelper';
 
 async function gpFetch(endpoint, data, revalidate) {
   let { url, method, withAuth } = endpoint;

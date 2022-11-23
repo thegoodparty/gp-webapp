@@ -5,7 +5,7 @@ import Link from 'next/link';
 import UserAvatar from '@shared/user/UserAvatar';
 import LogoutSection from './LogoutSection';
 import CandidatesSection from './CandidatesSection';
-import { getServerUser } from 'helpers/userHelper';
+import { getServerUser } from 'helpers/userServerHelper';
 
 export default function ProfilePage() {
   const user = getServerUser();

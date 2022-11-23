@@ -12,15 +12,3 @@ export const getInitials = (user) => {
     initialsArr.length > 1 ? initialsArr[initialsArr.length - 1].charAt(0) : ''
   }`;
 };
-
-export const getServerToken = () => {
-  const { cookies } = require('next/headers');
-  const nextCookies = cookies();
-  return nextCookies.get('token').value;
-}
-
-export const getServerUser = () => {
-  const { cookies } = require('next/headers');
-  const nextCookies = cookies();
-  return JSON.parse(nextCookies.get('user').value);
-}
