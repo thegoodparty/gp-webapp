@@ -1,8 +1,31 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import { Suspense } from 'react';
 import BioSection from './BioSection';
+import CampaignProgress from './CampaignProgress';
+import CandidateFeed from './CandidateFeed';
+import DateBox from './DateBox';
+import Endorsements from './Endorsements';
 import Header from './Header';
 import Trending from './Trending';
+
+const rightSide = (props) => {
+  return (
+    <>
+      <Suspense>
+        <Endorsements {...props} />{' '}
+      </Suspense>
+      <Suspense>
+        <DateBox {...props} />
+      </Suspense>
+      <Suspense>
+        <CampaignProgress {...props} />
+      </Suspense>
+      <Suspense>
+        <DateBox {...props} showPast />
+      </Suspense>
+    </>
+  );
+};
 
 export default function CandidatePage(props) {
   return (
@@ -16,9 +39,14 @@ export default function CandidatePage(props) {
           <Suspense>
             <Trending {...props} />
           </Suspense>
+          <div className="lg:hidden">{rightSide(props)}</div>
+          <Suspense>
+            <CandidateFeed {...props} />
+          </Suspense>
         </div>
-        <div>right side</div>
+        <div className="hidden lg:block">{rightSide(props)}</div>
       </div>
+      <div className="mb-4"></div>
     </MaxWidth>
   );
 }

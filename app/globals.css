@@ -55,3 +55,8 @@ ul {
 ul li {
   display: list-item;
 }
+
+.break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
