@@ -4,7 +4,7 @@ import FaqLink from '@shared/utils/FaqLink';
 import Image from 'next/image';
 import LargeCard from '@shared/candidates/LargeCard';
 
-export default function CandidatesSection({ candidates }) {
+export default function CandidatesSection({ candidates, showOnlyGood }) {
   return (
     <section className="mt-20 ">
       <div className="grid grid-cols-1 lg:grid-cols2">
@@ -32,9 +32,9 @@ export default function CandidatesSection({ candidates }) {
       </div>
       {(candidates || []).map((candidate, index) => (
         <React.Fragment key={candidate.id}>
-          {/* {((showOnlyGood && candidate.isClaimed) || !showOnlyGood) && ( */}
-          <LargeCard candidate={candidate} priority={index === 0} />
-          {/* )} */}
+          {((showOnlyGood && candidate.isClaimed) || !showOnlyGood) && (
+            <LargeCard candidate={candidate} priority={index === 0} />
+          )}
         </React.Fragment>
       ))}
       {(!candidates || candidates.length === 0) && (
