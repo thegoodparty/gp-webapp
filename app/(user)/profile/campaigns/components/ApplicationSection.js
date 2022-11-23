@@ -67,11 +67,13 @@ async function loadApplications() {
 function ApplicationSection() {
     const router = useRouter();
     const [applications, setApplications] = useState([]);
+    const [loaded, setLoaded] = useState(false);
     const loadApplicationsFunc = async () => {
         const res = await loadApplications();
-        if(applications.length === 0) {
+        if(!loaded)
             setApplications(res?.applications);
         }
+        setLoaded(true);
     }
     useEffect(() => {
         loadApplicationsFunc();

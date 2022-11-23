@@ -13,7 +13,6 @@ import StaffCard from './StaffCard';
 async function loadStaff() {
     try {
         const api = gpApi.campaign.staff.userStaff;
-        console.log(api);
         const res = await gpFetch(api, null, 3600);
         return res;
         //   yield put(actions.loadStaffActionSuccess(staff));
