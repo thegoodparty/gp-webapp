@@ -67,7 +67,10 @@ function GoalsChart({ candidate, followers }) {
   if (perc > 100) {
     perc = 100;
   }
-  const brightColor = color?.color ? color.color : '#000000';
+  let brightColor = color?.color ? color.color : '#000000';
+  if (brightColor.length === 4) {
+    brightColor = brightColor + brightColor.substr(1, 3);
+  }
   const rgb = hexToRgb(brightColor);
   const COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, brightColor];
 
