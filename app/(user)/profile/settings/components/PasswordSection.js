@@ -114,8 +114,8 @@ function PasswordSection() {
                     >
                         {user.hasPassword ? 'Change' : 'Create'} your password
                     </h3>
-                    <div className="grid grid-cols-12 gap-3">
-                        <div className="col-span-12 md:col-span-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
                             {user.hasPassword && (
                                 <TextField
                                     label="Old Password"

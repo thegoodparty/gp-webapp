@@ -33,6 +33,10 @@ const gpApi = {
       url: `${base}new-candidates`,
       method: 'GET',
     },
+    find: {
+      url: `${base}new-candidate`,
+      method: 'GET',
+    },
   },
   follow: {
     list: {
