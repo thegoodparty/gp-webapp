@@ -50,13 +50,13 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams() {
-  const { candidates } = await fetchCandidates();
+// export async function generateStaticParams() {
+//   const { candidates } = await fetchCandidates();
 
-  return candidates.map((candidate) => {
-    const name = slugify(`${candidate.firstName} ${candidate.lastName}`);
-    return {
-      nameId: [name, candidate.id + ''],
-    };
-  });
-}
+//   return candidates.map((candidate) => {
+//     const name = slugify(`${candidate.firstName} ${candidate.lastName}`);
+//     return {
+//       nameId: [name, candidate.id + ''],
+//     };
+//   });
+// }
