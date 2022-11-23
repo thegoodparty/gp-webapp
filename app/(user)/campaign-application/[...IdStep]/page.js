@@ -3,7 +3,8 @@ import {
 } from 'helpers/localstorageHelper';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { cookies } from 'next/headers';
-
+import ApplicationStep1 from './components/ApplicationStep1';
+import ApplicationStep2 from './components/ApplicationStep2';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 
@@ -61,7 +62,7 @@ export default async function Page({ params }) {
   // const searchParams = useSearchParams();
   // console.log(searchParams.get('IdStep'))
   const { IdStep } = params;
-  const step = IdStep?.length > 1 ? IdStep[1] : 1;
+  const step = parseInt(IdStep?.length > 1 ? IdStep[1] : 1);
   const id = IdStep?.length > 0 ? IdStep[0] : false;
   const { application, reviewMode } = await loadApplication(id);
   console.log(application, reviewMode)
@@ -77,11 +78,11 @@ export default async function Page({ params }) {
     // rejectApplicationCallback,
     issues,
   };
-  console.log(childProps)
+  console.log(childProps.id, childProps.step)
   return (
     <>
-      <h1>Hello World</h1>
-      {/* {step === 1 && <ApplicationStep1 {...childProps} />} */}
+      {step == 1 && <ApplicationStep1 {...childProps} />}
+      {step == 2 && <ApplicationStep2 {...childProps} />}
     </>
   );
 }

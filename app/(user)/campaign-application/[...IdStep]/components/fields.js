@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-
 import {
   FaTwitterSquare,
   FaFacebookSquare,
@@ -12,13 +10,9 @@ import {
   FaGlobeAmericas,
   FaVideo,
 } from 'react-icons/fa';
-import { flatStates } from '../../../helpers/statesHelper';
+import { flatStates } from 'helpers/statesHelper';
 
-const IconWrapper = styled.span`
-  color: #000;
-  font-size: 24px;
-  margin-right: 16px;
-`;
+const iconWrapper = "text-black text-2xl mr-4";
 
 export const step2fields = [
   {
@@ -162,9 +156,9 @@ export const step2Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaTwitterSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -174,9 +168,9 @@ export const step2Socials = [
     placeholder: 'link',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaFacebookSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -186,9 +180,9 @@ export const step2Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaYoutubeSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -198,9 +192,9 @@ export const step2Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaLinkedin />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -210,9 +204,9 @@ export const step2Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaSnapchatSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -222,9 +216,9 @@ export const step2Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaTiktok />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -234,9 +228,9 @@ export const step2Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaRedditSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -246,9 +240,9 @@ export const step2Socials = [
     placeholder: 'website.com',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaGlobeAmericas />
-      </IconWrapper>
+      </span>
     ),
   },
 ];
@@ -424,9 +418,9 @@ export const step3Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaTwitterSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -436,9 +430,9 @@ export const step3Socials = [
     placeholder: 'link',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaFacebookSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -448,9 +442,9 @@ export const step3Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaYoutubeSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -460,9 +454,9 @@ export const step3Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaLinkedin />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -472,9 +466,9 @@ export const step3Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaSnapchatSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -484,9 +478,9 @@ export const step3Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaTiktok />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -496,9 +490,9 @@ export const step3Socials = [
     placeholder: 'username',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaRedditSquare />
-      </IconWrapper>
+      </span>
     ),
   },
   {
@@ -508,9 +502,9 @@ export const step3Socials = [
     placeholder: 'website.com',
     defaultValue: '',
     icon: (
-      <IconWrapper>
+      <span className={iconWrapper}>
         <FaGlobeAmericas />
-      </IconWrapper>
+      </span>
     ),
   },
 ];
@@ -525,21 +519,16 @@ export const leftLinks = [
   { step: 7, label: '7. Application Checklist' },
 ];
 
-
-const IconEmoji = styled.span`
-  font-size: 20px;
-  margin-right: 8px;
-`;
-
+const iconEmoji = 'text-xl mr-2'
 export const APPLICATION_CARDS_1 = [
   {
     title: 'Honest',
     subtitle:
       'Good Certified candidates are committed to serving with utmost integrity, and using technology to be open, transparent and responsive representatives of the people.',
     icon: (
-      <IconEmoji role="img" aria-label="honest">
+      <span className={iconEmoji} role="img" aria-label="honest">
         😇
-      </IconEmoji>
+      </span>
     ),
     checkboxes: [
       {
@@ -576,9 +565,9 @@ export const APPLICATION_CARDS_1 = [
     subtitle:
       'Good Certified candidates are not Republican or Democratic politicians. They are independent-minded people from across the political spectrum, dedicated to advancing the priorities of their constituents.',
     icon: (
-      <IconEmoji role="img" aria-label="Independent">
+      <span className={iconEmoji} role="img" aria-label="Independent">
         🗽
-      </IconEmoji>
+      </span>
     ),
     checkboxes: [
       {
@@ -601,9 +590,9 @@ export const APPLICATION_CARDS_1 = [
     subtitle:
       'Good Certified candidates run to serve people, not corporations, unions, political action committees or special interests. They run  grass-roots campaigns that depend on being connected to and promoted by the people that they’ll be serving.\n',
     icon: (
-      <IconEmoji role="img" aria-label="People-Powered">
+      <span className={iconEmoji} role="img" aria-label="People-Powered">
         🙌🏼
-      </IconEmoji>
+      </span>
     ),
     checkboxes: [
       {
