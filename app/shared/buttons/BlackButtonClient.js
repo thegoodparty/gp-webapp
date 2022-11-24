@@ -7,6 +7,7 @@ const BlackButtonClient = ({
   onClick,
   disabled,
   type,
+  className
 }) => {
   const backgroundColor = disabled ? '#333' : '#000';
   const cursor = disabled ? 'not-allowed' : 'pointer';
@@ -17,6 +18,7 @@ const BlackButtonClient = ({
       onClick={onClick}
       disabled={disabled}
       type={type}
+      className={className}
     >
       {children}
     </BaseButtonClient>

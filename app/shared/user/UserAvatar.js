@@ -1,6 +1,5 @@
 import React from 'react';
 import { getInitials } from '/helpers/userHelper';
-import Image from 'next/image';
 
 function UserAvatar({ user }) {
   if (!user) {
