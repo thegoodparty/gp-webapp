@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import Link from 'next/link';
@@ -17,17 +16,22 @@ export default function ProfilePage() {
             <div className="row">
               <UserAvatar user={user} size="large" />
               <div className="ml-6">
-                  <h3
-                      className="text-xl tracking-wide font-black mb-2"
-                      data-cy="profile-username"
-                  >
-                    {user.name}
-                  </h3>
-                  <Link href="/profile/settings" passHref className="underline" data-cy="profile-edit-link">
-                      Edit
-                  </Link>
+                <h3
+                  className="text-xl tracking-wide font-black mb-2"
+                  data-cy="profile-username"
+                >
+                  {user.name}
+                </h3>
+                <Link
+                  href="/profile/settings"
+                  passHref
+                  className="underline"
+                  data-cy="profile-edit-link"
+                >
+                  Edit
+                </Link>
               </div>
-          </div>
+            </div>
           </div>
           <div className="col-span-3">
             <LogoutSection />
@@ -40,4 +44,3 @@ export default function ProfilePage() {
     </>
   );
 }
-  

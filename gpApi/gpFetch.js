@@ -1,7 +1,6 @@
 import { getCookie, setCookie } from '/helpers/cookieHelper';
-import { getServerToken } from '/helpers/userServerHelper';
 
-async function gpFetch(endpoint, data, revalidate, isFormData = false) {
+async function gpFetch(endpoint, data, revalidate, token, isFormData = false) {
   let { url, method, withAuth } = endpoint;
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
@@ -18,15 +17,15 @@ async function gpFetch(endpoint, data, revalidate, isFormData = false) {
     body = JSON.stringify(data);
   }
 
-  let token;
+  let autoToken;
   if (withAuth) {
-    token = getServerToken() || getCookie('token');
-    if (!token) {
+    autoToken = token || getCookie('token');
+    if (!autoToken) {
       throw new Error({ message: 'missing token' });
     }
   }
 
-  const requestOptions = headersOptions(body, endpoint.method, token);
+  const requestOptions = headersOptions(body, endpoint.method, autoToken);
 
   return await fetchCall(url, requestOptions, revalidate);
 }

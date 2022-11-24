@@ -4,11 +4,6 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { hookstate, useHookstate } from '@hookstate/core';
 import Link from 'next/link';
 import Image from 'next/image';
-<<<<<<< HEAD
-import { useSearchParams } from 'next/navigation';
-=======
-
->>>>>>> b50ec6463aae150ec8856d8aca057a897e583bd2
 import { getUserCookie } from '/helpers/cookieHelper';
 import UserAvatar from '../../user/UserAvatar';
 import RegisterModal from '../RegisterModal';
