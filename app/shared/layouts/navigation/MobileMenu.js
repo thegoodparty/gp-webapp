@@ -8,7 +8,7 @@ import { useState } from 'react';
 import styles from './MobileMenu.module.scss';
 import UserAvatar from '@shared/user/UserAvatar';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
+import { globalUserState } from '@shared/store/UserState';
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Candidates', href: '/candidates' },

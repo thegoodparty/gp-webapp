@@ -11,7 +11,7 @@ import { isValidEmail } from '../inputs/EmailInput';
 import BlackButtonClient from '../buttons/BlackButtonClient';
 import styles from './RegisterModal.module.scss';
 import { register } from '../inputs/RegisterAnimated';
-import { globalUserState } from './navigation/NavProfileOrRegister';
+import { globalUserState } from '@shared/store/UserState';
 
 export const REGISTER_FIELDS = [
   {
