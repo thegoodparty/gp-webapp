@@ -7,11 +7,13 @@ import Image from 'next/image';
 
 import { getUserCookie } from '/helpers/cookieHelper';
 import UserAvatar from '../../user/UserAvatar';
+import RegisterModal from '../RegisterModal';
 
 export const globalUserState = hookstate(false);
 
 const NavProfileOrRegister = () => {
   const userState = useHookstate(globalUserState);
+  const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
     const user = getUserCookie(true);
@@ -28,13 +30,14 @@ const NavProfileOrRegister = () => {
           <UserAvatar user={user} />
         </Link>
       ) : (
-        <Link
-          href="/?register=true"
+        <strong
+          className="mx-3 px-1 cursor-pointer hover:underline"
           data-cy="header-register"
           id="desktop-nav-register"
+          onClick={() => setShowRegister(true)}
         >
-          <strong className="mx-3 px-1">Join Us</strong>
-        </Link>
+          Join Us
+        </strong>
       )}
       {user?.isAdmin && (
         <div className="shadow-md h-12 w-12 ml-4 flex justify-center items-center rounded-full">
@@ -48,6 +51,15 @@ const NavProfileOrRegister = () => {
             />
           </Link>
         </div>
+      )}
+      {showRegister && (
+        <Suspense>
+          <RegisterModal
+            closeModalCallback={() => {
+              setShowRegister(false);
+            }}
+          />
+        </Suspense>
       )}
     </>
   );

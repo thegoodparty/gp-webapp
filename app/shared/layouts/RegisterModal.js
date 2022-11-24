@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useHookstate } from '@hookstate/core';
@@ -36,12 +36,11 @@ export const REGISTER_FIELDS = [
   },
 ];
 
-const RegisterModal = () => {
+const RegisterModal = ({ closeModalCallback }) => {
   const [score, setScore] = useState('good');
   const pathname = usePathname();
-  const router = useRouter();
   const handleCloseModal = () => {
-    router.push(pathname);
+    closeModalCallback();
   };
 
   const userState = useHookstate(globalUserState);
