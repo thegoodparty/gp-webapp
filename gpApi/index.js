@@ -1,4 +1,4 @@
-const apiBase = process.env.API_BASE || 'http://localhost:1337';
+const apiBase = process.env.API_BASE || 'https://api-dev.goodparty.org';
 const base = `${apiBase}/api/v1/`;
 
 const gpApi = {
@@ -44,6 +44,36 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+  },
+  uploadAvatar: {
+    url: `${base}user/avatar`,
+    method: 'POST',
+    withAuth: true,
+  },
+  candidateApplication: {
+    uploadImage: {
+      url: `${base}application/upload-image`,
+      method: 'POST',
+    },
+  },
+
+  //
+  // USER
+  //
+  updateUser: {
+    url: `${base}user/update-user`,
+    method: 'PUT',
+    withAuth: true,
+  },
+  changePassword: {
+    url: `${base}user/password`,
+    method: 'PUT',
+    withAuth: true,
+  },
+  deleteAccount: {
+    url: `${base}user`,
+    method: 'DELETE',
+    withAuth: true,
   },
 };
 
