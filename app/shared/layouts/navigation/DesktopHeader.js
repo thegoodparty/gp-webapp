@@ -2,9 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import MaxWidth from '../MaxWidth';
-import NavRegister from './NavRegister';
-import { getServerUser } from 'helpers/userServerHelper';
-import UserAvatar from '@shared/user/UserAvatar';
+import NavRegisterOrProfile from './NavRegisterOrProfile';
 
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
@@ -12,7 +10,6 @@ export const HEADER_LINKS = [
 ];
 
 export default function DesktopHeader() {
-  const user = getServerUser();
   return (
     <div className="relative bg-white h-20 hidden lg:block border-solid border-b border-zinc-200 px-6 z-50">
       <MaxWidth>
@@ -42,28 +39,7 @@ export default function DesktopHeader() {
                 </div>
               </Link>
             ))}
-            {user?.name ? (
-              <>
-                <Link href="/profile" id="desktop-nav-profile">
-                  <UserAvatar user={user} />
-                </Link>
-                {user?.isAdmin && (
-                  <div className="shadow-md h-12 w-12 ml-4 flex justify-center items-center rounded-full">
-                    <Link href="/admin">
-                      <Image
-                        src="/images/heart.svg"
-                        width={30}
-                        height={26}
-                        alt="admin"
-                        priority
-                      />
-                    </Link>
-                  </div>
-                )}
-              </>
-            ) : (
-              <NavRegister />
-            )}
+            <NavRegisterOrProfile />
           </div>
         </div>
       </MaxWidth>

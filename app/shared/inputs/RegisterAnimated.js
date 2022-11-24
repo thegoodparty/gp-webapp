@@ -9,7 +9,7 @@ import { useHookstate } from '@hookstate/core';
 import { isValidEmail } from './EmailInput';
 import YellowButtonClient from '../buttons/YellowButtonClient';
 import styles from './RegisterAnimated.module.scss';
-import { globalUserState } from '@shared/store/UserState';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 
 const fields = [
   {

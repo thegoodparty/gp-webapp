@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import UserAvatar from '@shared/user/UserAvatar';
 import ImageUpload from '@shared/utils/ImageUpload';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/store/UserState';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 
 function ImageSection() {
   const userState = useHookstate(globalUserState);

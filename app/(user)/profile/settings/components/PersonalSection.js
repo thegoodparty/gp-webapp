@@ -10,7 +10,7 @@ import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/store/UserState';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import PortalPanel from '@shared/candidate-portal/PortalPanel';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
