@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useHookstate } from '@hookstate/core';
 
@@ -36,9 +35,9 @@ export const REGISTER_FIELDS = [
   },
 ];
 
-const RegisterModal = ({ closeModalCallback }) => {
+const RegisterModal = ({ closeModalCallback, openLoginCallback }) => {
   const [score, setScore] = useState('good');
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const handleCloseModal = () => {
     closeModalCallback();
   };
@@ -97,6 +96,11 @@ const RegisterModal = ({ closeModalCallback }) => {
     }
   };
 
+  const openLogin = () => {
+    closeModalCallback();
+    openLoginCallback();
+  };
+
   return (
     <Modal open closeCallback={handleCloseModal}>
       {score === 'bad' ? (
@@ -118,7 +122,7 @@ const RegisterModal = ({ closeModalCallback }) => {
           </div>
         </div>
       ) : (
-        <div className="py-6 max-w-2xl">
+        <div className="py-6 max-w-2xl" style={{ width: '75vw' }}>
           <div className="mb-6 flex justify-center">
             <Image
               src="/images/black-logo.svg"
@@ -131,16 +135,20 @@ const RegisterModal = ({ closeModalCallback }) => {
           <div className="text-center mb-8 pt-8">
             <h1
               data-cy="register-title"
-              className="text-3xl lg:text-5]4xl  font-black"
+              className="text-2xl lg:text-4xl font-black"
             >
               Sign up for Good Party
             </h1>
           </div>
           <div className="my-6 text-sm" data-cy="register-label">
             Already have an account?{' '}
-            <Link href={`${pathname}?login=true`} data-cy="redirect-to-login">
+            <span
+              onClick={openLogin}
+              className="underline"
+              data-cy="redirect-to-login"
+            >
               login
-            </Link>
+            </span>
           </div>
           <form
             noValidate
