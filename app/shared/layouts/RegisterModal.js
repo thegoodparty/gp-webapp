@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
+// import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { useHookstate } from '@hookstate/core';
 
@@ -11,7 +10,7 @@ import { isValidEmail } from '../inputs/EmailInput';
 import BlackButtonClient from '../buttons/BlackButtonClient';
 import styles from './RegisterModal.module.scss';
 import { register } from '../inputs/RegisterAnimated';
-import { globalUserState } from './navigation/NavProfileOrRegister';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 
 export const REGISTER_FIELDS = [
   {
@@ -36,12 +35,11 @@ export const REGISTER_FIELDS = [
   },
 ];
 
-const RegisterModal = () => {
+const RegisterModal = ({ closeModalCallback, openLoginCallback }) => {
   const [score, setScore] = useState('good');
-  const pathname = usePathname();
-  const router = useRouter();
+  // const pathname = usePathname();
   const handleCloseModal = () => {
-    router.push(pathname);
+    closeModalCallback();
   };
 
   const userState = useHookstate(globalUserState);
@@ -98,6 +96,11 @@ const RegisterModal = () => {
     }
   };
 
+  const openLogin = () => {
+    closeModalCallback();
+    openLoginCallback();
+  };
+
   return (
     <Modal open closeCallback={handleCloseModal}>
       {score === 'bad' ? (
@@ -119,7 +122,7 @@ const RegisterModal = () => {
           </div>
         </div>
       ) : (
-        <div className="py-6 max-w-2xl">
+        <div className="py-6 max-w-2xl" style={{ width: '75vw' }}>
           <div className="mb-6 flex justify-center">
             <Image
               src="/images/black-logo.svg"
@@ -132,16 +135,20 @@ const RegisterModal = () => {
           <div className="text-center mb-8 pt-8">
             <h1
               data-cy="register-title"
-              className="text-3xl lg:text-5]4xl  font-black"
+              className="text-2xl lg:text-4xl font-black"
             >
               Sign up for Good Party
             </h1>
           </div>
           <div className="my-6 text-sm" data-cy="register-label">
             Already have an account?{' '}
-            <Link href={`${pathname}?login=true`} data-cy="redirect-to-login">
+            <span
+              onClick={openLogin}
+              className="underline"
+              data-cy="redirect-to-login"
+            >
               login
-            </Link>
+            </span>
           </div>
           <form
             noValidate

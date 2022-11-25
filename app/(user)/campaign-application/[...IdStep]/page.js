@@ -26,7 +26,9 @@ async function loadApplication(id) {
       const payload = {
         id,
       };
-      return await gpFetch(api, payload, 3600);
+      const res = await gpFetch(api, payload, 3600);
+      console.log('response', res)
+      return res;
       // yield put(actions.loadApplicationActionSuccess(application, reviewMode));
     }
   } catch (error) {

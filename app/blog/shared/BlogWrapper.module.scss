@@ -1,0 +1,88 @@
+@import '/styles/scss/colors.scss';
+@import '/styles/scss/breakpoints.scss';
+
+.blogTitle {
+  font-size: 40px;
+  font-weight: 900;
+  margin: 36px 0;
+
+  @include lg {
+    margin: 36px 0 76px;
+  }
+}
+
+.sectionsWrapper {
+  margin-bottom: 36px;
+  height: 23px;
+  overflow-y: hidden;
+  @include lg {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 68px;
+  }
+}
+
+.sections {
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  @include lg {
+    white-space: normal;
+    overflow-x: hidden;
+    max-width: 1200px;
+  }
+}
+
+.section {
+  white-space: nowrap;
+  margin-left: 20px;
+  @include lg {
+    margin-left: 36px;
+  }
+}
+
+.active {
+  color: $gray1;
+}
+.titleWrapper {
+  text-align: center;
+  @include lg {
+    text-align: left;
+  }
+}
+
+.sectionTitle {
+  position: relative;
+  display: inline-block;
+  font-size: 40px;
+  margin: 24px 0 42px;
+
+  @include lg {
+    font-size: 44px;
+    text-align: left;
+    margin: 105px 0 94px;
+  }
+}
+
+.up {
+  z-index: 10;
+  position: relative;
+}
+
+.yellow {
+  position: absolute;
+  height: 24px;
+  width: calc(100% + 10px);
+  bottom: 0;
+  left: -5px;
+  background-color: $yellow;
+  @include lg {
+    bottom: 0;
+    height: 24px;
+  }
+}

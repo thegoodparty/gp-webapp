@@ -30,7 +30,7 @@ export const leftMenuItemsBottom = [
 ];
 const ProfilePageLayout = ({ children }) => {
   const pathname = usePathname();
-  console.log(pathname)
+  console.log(pathname);
   return (
     <div className="bg-zinc-100">
       <div className="max-w-7xl my-0 mx-auto py-16 px-0 lg:flex lg:flex-row">
@@ -38,7 +38,13 @@ const ProfilePageLayout = ({ children }) => {
           {leftMenuItems.map((item) => (
             <React.Fragment key={item.label}>
               <Link href={item.link} passHref>
-                <div className={`inline-block pr-5 pb-4 lg:block lg:pb-8 lg:pr-0 text-base tracking-wide ${pathname === item.link ? 'font-black text-black' : 'text-zinc-600 font-light'}`}>
+                <div
+                  className={`inline-block pr-5 pb-4 lg:block lg:pb-8 lg:pr-0 text-base tracking-wide ${
+                    pathname === item.link
+                      ? 'font-black text-black'
+                      : 'text-zinc-600 font-light'
+                  }`}
+                >
                   {item.label}
                 </div>
               </Link>
@@ -48,14 +54,22 @@ const ProfilePageLayout = ({ children }) => {
             <div className="h-24">&nbsp;</div>
             {leftMenuItemsBottom.map((item) => (
               <Link href={item.link} passHref key={item.label}>
-                <div className={`inline-block pr-5 pb-4 lg:block lg:pb-8 lg:pr-0 text-base tracking-wide ${pathname === item.link ? 'font-black text-black' : 'text-zinc-600 font-light'}`}>
+                <div
+                  className={`inline-block pr-5 pb-4 lg:block lg:pb-8 lg:pr-0 text-base tracking-wide ${
+                    pathname === item.link
+                      ? 'font-black text-black'
+                      : 'text-zinc-600 font-light'
+                  }`}
+                >
                   {item.label}
                 </div>
               </Link>
             ))}
           </div>
         </div>
-        <div className="flex-1 max-w-full lg:max-w-[calc(100%-220px)]">{children}</div>
+        <div className="flex-1 max-w-full lg:max-w-[calc(100%-220px)]">
+          {children}
+        </div>
       </div>
     </div>
   );

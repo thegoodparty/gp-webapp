@@ -1,11 +1,10 @@
 'use client';
-import { useHookstate } from '@hookstate/core';
-
 import Link from 'next/link';
 
 import YellowButton from '@shared/buttons/YellowButton';
 import RegisterAnimated from '@shared/inputs/RegisterAnimated';
-import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { useHookstate } from '@hookstate/core';
 
 export default function FollowOrRegister() {
   const userState = useHookstate(globalUserState);

@@ -4,11 +4,13 @@ import Hamburger from 'hamburger-react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import styles from './MobileMenu.module.scss';
 import UserAvatar from '@shared/user/UserAvatar';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/NavProfileOrRegister';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import RegisterModal from '../RegisterModal';
+import LoginModal from '../LoginModal';
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Candidates', href: '/candidates' },
@@ -16,6 +18,8 @@ export const HEADER_LINKS = [
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const path = usePathname();
   const userState = useHookstate(globalUserState);
   const user = userState.get();
@@ -80,14 +84,13 @@ export default function MobileMenu() {
             </div>
           </Link>
         ) : (
-          <div className="mt-7">
-            <Link
-              href="/register"
-              style={{ fontWeight: path === '/register' ? 'bold' : 'normal' }}
-              id="mobile-nav-register"
-            >
-              Sign Up
-            </Link>
+          <div
+            className="mt-7"
+            style={{ fontWeight: path === '/register' ? 'bold' : 'normal' }}
+            id="mobile-nav-register"
+            onClick={() => setShowRegister(true)}
+          >
+            Sign Up
           </div>
         )}
         {user?.isAdmin && (
@@ -98,6 +101,30 @@ export default function MobileMenu() {
           </div>
         )}
       </div>
+      {showRegister && (
+        <Suspense>
+          <RegisterModal
+            closeModalCallback={() => {
+              setShowRegister(false);
+            }}
+            openLoginCallback={() => {
+              setShowLogin(true);
+            }}
+          />
+        </Suspense>
+      )}
+      {showLogin && (
+        <Suspense>
+          <LoginModal
+            closeModalCallback={() => {
+              setShowLogin(false);
+            }}
+            openRegisterCallback={() => {
+              setShowRegister(true);
+            }}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

@@ -5,16 +5,17 @@ import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@shared/inputs/TextField';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { slugify } from 'helpers/articleHelper';
 
 export default function FiltersSection({
-  candidates,
   positions,
   states,
   routePosition,
   routeState,
+  showOnlyGood,
 }) {
+  const pathname = usePathname();
   const [state, setState] = useState({
     position: '',
     state: routeState || '',
@@ -73,6 +74,14 @@ export default function FiltersSection({
       router.push('/candidates');
     } else {
       router.push(`/candidates/${positionRoute}/${stateRoute}`);
+    }
+  };
+
+  const setGoodQuery = (checked) => {
+    if (checked) {
+      router.push(`${pathname}?certified=true`);
+    } else {
+      router.push(pathname);
     }
   };
 
@@ -155,14 +164,14 @@ export default function FiltersSection({
             }}
           />
         </div>
-        {/* <div className="col-span-3 lg:col-span-2">
+        <div className="col-span-3 lg:col-span-2">
           <Checkbox
             color="primary"
             checked={showOnlyGood}
-            onChange={(e) => setShowOnlyGood(e.target.checked)}
+            onChange={(e) => setGoodQuery(e.target.checked)}
           />
           Show only Good Party Certified Candidates
-        </div> */}
+        </div>
       </div>
     </section>
   );

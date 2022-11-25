@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import MaxWidth from '../MaxWidth';
-import NavProfileOrRegister from './NavProfileOrRegister';
+import NavRegisterOrProfile from './NavRegisterOrProfile';
 
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
@@ -39,7 +39,7 @@ export default function DesktopHeader() {
                 </div>
               </Link>
             ))}
-            <NavProfileOrRegister />
+            <NavRegisterOrProfile />
           </div>
         </div>
       </MaxWidth>
