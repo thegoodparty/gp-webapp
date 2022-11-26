@@ -1,8 +1,14 @@
-'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import FaqModal from './FaqModal';
 
-export default function FaqLink({ children, articleId }) {
-  const pathname = usePathname();
-  return <Link href={`${pathname}?article=${articleId}`}>{children}</Link>;
+async function fetchArticle(articleId) {
+  const api = { ...gpApi.content.contentByKey };
+  api.url += `?key=faqArticles&subKey=id&subValue=${articleId}`;
+  return gpFetch(api, false, 3600);
+}
+
+export default async function FaqLink({ children, articleId }) {
+  const { content } = await fetchArticle(articleId);
+  return <FaqModal article={content}>{children}</FaqModal>;
 }

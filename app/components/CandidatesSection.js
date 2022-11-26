@@ -3,6 +3,7 @@ import Link from 'next/link';
 import gpApi from '../../gpApi';
 import gpFetch from '../../gpApi/gpFetch';
 import CandidateCard from '@shared/candidates/CandidateCard';
+import FaqLink from '@shared/utils/FaqLink';
 
 async function fetchHomepageCandidates() {
   return await gpFetch(gpApi.homepage.homepageCandidates, false, 3600);
@@ -16,7 +17,11 @@ async function CandidatesSection() {
         data-cy="home-candidates-title"
         className="text-xl font-normal mb-5 lg:text-2xl lg:mt-28 lg:mb-7"
       >
-        Find <u>Good Party Certified</u> candidates who pledge to be{' '}
+        Find{' '}
+        <FaqLink articleId="5zIbKVU0wCIAszTOyogGAB">
+          Good Party Certified
+        </FaqLink>{' '}
+        candidates who pledge to be{' '}
         <strong>Independent, People Powered and Anti-Corruption</strong>
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch gap-8">
