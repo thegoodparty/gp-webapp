@@ -24,8 +24,5 @@ export default async function Page({ params, searchParams }) {
     sections,
     articles,
   };
-  console.log('sec', sections);
-  console.log('articles', articles);
-
   return <BlogPage {...childProps} />;
 }

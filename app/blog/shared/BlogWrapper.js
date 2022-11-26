@@ -1,5 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
+import React from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 
 import styles from './BlogWrapper.module.scss';
@@ -26,7 +27,7 @@ export default function BlogWrapper({
             <AiOutlineHome size={18} />
           </Link>
           {sections.map((section) => (
-            <>
+            <React.Fragment key={section.fields.slug}>
               {section.fields.slug === sectionSlug ? (
                 <div className={`${styles.section} ${styles.active}`}>
                   {section.fields.title}
@@ -40,7 +41,7 @@ export default function BlogWrapper({
                   {section.fields.title}
                 </Link>
               )}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </div>
