@@ -18,7 +18,6 @@ export default function BlogArticle({ sections, article }) {
               alt={mainImage.alt}
               layout="fill"
               priority
-              placeholder="blur"
             />
           </div>
         </div>
