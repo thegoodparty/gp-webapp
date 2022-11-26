@@ -11,6 +11,7 @@ import BlackButtonClient from '../buttons/BlackButtonClient';
 import styles from './RegisterModal.module.scss';
 import { register } from '../inputs/RegisterAnimated';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { setCookie, setUserCookie } from 'helpers/cookieHelper';
 
 export const REGISTER_FIELDS = [
   {
@@ -75,11 +76,15 @@ const RegisterModal = ({ closeModalCallback, openLoginCallback }) => {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const res = await register({
+      const { user, token } = await register({
         email: state.email,
         name: state.name,
         zip: state.zipcode,
       });
+      setUserCookie(user);
+      setCookie('token', token);
+      userState.set(() => user);
+      closeModalCallback();
     }
   };
 

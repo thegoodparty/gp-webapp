@@ -76,9 +76,7 @@ export default function RegisterAnimated({ afterRegisterCallback }) {
         name: '',
         zip: '',
       });
-      userState.set(() => {
-        user;
-      });
+      userState.set(() => user);
       if (afterRegisterCallback) {
         afterRegisterCallback();
       }
