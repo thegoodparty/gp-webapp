@@ -1,5 +1,5 @@
 import GoalsChart from '@shared/candidates/GoalsChart';
-import FaqLink from '@shared/utils/FaqLink';
+import FaqLink from '@shared/content/FaqLink';
 
 import { kFormatter, numberFormatter } from '/helpers/numberHelper';
 

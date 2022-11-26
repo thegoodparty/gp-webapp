@@ -3,7 +3,7 @@ import Link from 'next/link';
 import gpApi from '../../gpApi';
 import gpFetch from '../../gpApi/gpFetch';
 import CandidateCard from '@shared/candidates/CandidateCard';
-import FaqLink from '@shared/utils/FaqLink';
+import FaqLink from '@shared/content/FaqLink';
 
 async function fetchHomepageCandidates() {
   return await gpFetch(gpApi.homepage.homepageCandidates, false, 3600);

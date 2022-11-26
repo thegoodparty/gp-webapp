@@ -4,7 +4,7 @@ import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { dateUsHelper } from 'helpers/dateHelper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import CmsContentWrapper from '@shared/utils/CmsContentWrapper';
+import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 
 async function fetchContent(params) {
   const api = { ...gpApi.content.contentByKey };

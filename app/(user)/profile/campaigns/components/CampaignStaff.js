@@ -16,7 +16,11 @@ async function loadStaff() {
 }
 
 async function CampaignStaff() {
-  const { staff } = await loadStaff();
+  const res = await loadStaff();
+  let staff;
+  if (res) {
+    staff = res.staff;
+  }
   if (!staff || staff.length === 0) {
     return <div></div>;
   }

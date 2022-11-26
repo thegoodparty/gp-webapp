@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FaqLink from '@shared/utils/FaqLink';
+import FaqLink from '@shared/content/FaqLink';
 import Image from 'next/image';
 import LargeCard from '@shared/candidates/LargeCard';
 
