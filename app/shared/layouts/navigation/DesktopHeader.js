@@ -22,7 +22,6 @@ export default function DesktopHeader() {
                 width={174}
                 height={20}
                 alt="GOOD PARTY"
-                priority
               />
             </Link>
           </div>

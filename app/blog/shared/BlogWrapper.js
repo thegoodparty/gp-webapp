@@ -23,7 +23,7 @@ export default function BlogWrapper({
       </div>
       <div className={styles.sectionsWrapper}>
         <div className={styles.sections}>
-          <Link href="/blog" className="inline-flex">
+          <Link href="/blog" className="inline-flex" aria-label="Blog Homepage">
             <AiOutlineHome size={18} />
           </Link>
           {sections.map((section) => (

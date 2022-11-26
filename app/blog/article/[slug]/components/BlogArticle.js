@@ -17,6 +17,8 @@ export default function BlogArticle({ sections, article }) {
               src={`https:${mainImage.url}`}
               alt={mainImage.alt}
               layout="fill"
+              priority
+              placeholder="blur"
             />
           </div>
         </div>
