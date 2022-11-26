@@ -9,11 +9,13 @@ import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import Link from 'next/link';
 import CandidateCard from '@shared/candidates/CandidateCard';
+import { getServerToken } from 'helpers/userServerHelper';
 
 async function fetchCandidates(params) {
-  const api = gpApi.follow.list;
+  const api = gpApi.user.follow.list;
   api.url = `${api.url}?withCandidates=true`;
-  return await gpFetch(api, false, 3600);
+  const token = getServerToken();
+  return await gpFetch(api, false, 3600, token);
 }
 
 async function CandidatesSection() {
@@ -22,7 +24,7 @@ async function CandidatesSection() {
   return (
     <div className="mt-6">
       <div className="grid grid-cols-12 gap-3">
-        {candidates && (
+        {/* {candidates && (
           <>
             {candidates.map((candidate) => (
               <div
@@ -34,9 +36,9 @@ async function CandidatesSection() {
               </div>
             ))}
           </>
-        )}
+        )} */}
       </div>
-      {(!candidates || candidates?.length === 0) && (
+      {/* {(!candidates || candidates?.length === 0) && (
         <div className="text-center">
           <h3 className="text-xl tracking-wide font-black">
             You are not following any candidates yet.
@@ -44,7 +46,7 @@ async function CandidatesSection() {
           <br />
           <Link href="/candidates">Find Candidates</Link>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

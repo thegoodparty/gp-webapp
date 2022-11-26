@@ -16,11 +16,12 @@ import { isValidEmail } from '@shared/inputs/EmailInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import styles from './PersonalSection.module.scss';
+import { setUserCookie } from 'helpers/cookieHelper';
 
 async function updateUserCallback(updatedFields, userState) {
   try {
     //   yield put(snackbarActions.showSnakbarAction('Saving...'));
-    const api = gpApi.updateUser;
+    const api = gpApi.user.updateUser;
     const payload = {
       ...updatedFields,
     };
@@ -28,6 +29,7 @@ async function updateUserCallback(updatedFields, userState) {
     const response = await gpFetch(api, payload, 3600);
     const { user } = response;
     userState.set(() => user);
+    setUserCookie(user);
     //   yield put(snackbarActions.showSnakbarAction('Your Profile is updated'));
   } catch (error) {
     console.log('Error updating user', error);
@@ -171,7 +173,7 @@ function PersonalSection() {
                       label={field.label}
                       onChange={(e) => onChangeField(field.key, e.target.value)}
                       required={field.required}
-                      className="mb-4"
+                      style={{ marginBottom: '16px' }}
                       InputLabelProps={{ shrink: true }}
                     />
                   )}
@@ -183,7 +185,7 @@ function PersonalSection() {
                   type="submit"
                   onClick={submit}
                 >
-                  <div className="py-0 px-6">Save</div>
+                  <div className="py-0 px-6  font-black">Save</div>
                 </BlackButtonClient>
                 <div onClick={cancel} className="ml-5 underline cursor-pointer">
                   cancel

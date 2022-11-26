@@ -25,12 +25,11 @@ export const leftMenuItemsBottom = [
   },
   {
     label: 'Need Help?',
-    link: `mailto:${CONTACT_EMAIL}`,
+    link: `/contact`,
   },
 ];
 const ProfilePageLayout = ({ children }) => {
   const pathname = usePathname();
-  console.log(pathname);
   return (
     <div className="bg-zinc-100">
       <div className="max-w-7xl my-0 mx-auto py-16 px-0 lg:flex lg:flex-row">

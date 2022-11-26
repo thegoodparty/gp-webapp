@@ -15,11 +15,12 @@ import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile
 import PortalPanel from '@shared/candidate-portal/PortalPanel';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { passwordRegex } from 'helpers/userHelper';
+import { setUserCookie } from 'helpers/cookieHelper';
 
 async function changePasswordCallback(password, oldPassword) {
   try {
     // yield put(snackbarActions.showSnakbarAction('Saving...'));
-    const api = gpApi.changePassword;
+    const api = gpApi.user.changePassword;
     const payload = {
       newPassword: password,
       oldPassword,
@@ -139,7 +140,7 @@ function PasswordSection() {
                 onChange={(e) => {
                   onChangeField('password', e.target.value);
                 }}
-                className="mb-4"
+                style={{ marginBottom: '16px' }}
               />
               <small>
                 For security, passwords must have at least 1 capital letter, 1
@@ -154,7 +155,7 @@ function PasswordSection() {
                   onClick={handleSavePassword}
                   type="submit"
                 >
-                  <div className="py-0 px-6">Save</div>
+                  <div className="py-0 px-6 font-black">Save</div>
                 </BlackButtonClient>
                 <div onClick={reset} className="ml-5 underline cursor-pointer">
                   cancel

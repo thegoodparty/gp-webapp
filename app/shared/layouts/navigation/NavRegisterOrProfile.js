@@ -12,9 +12,11 @@ export const globalUserState = hookstate(false);
 
 export default function NavRegisterOrProfile() {
   const [showRegister, setShowRegister] = useState(false);
+  const [hasMounted, setHasMounted] = React.useState(false);
 
   const userState = useHookstate(globalUserState);
   useEffect(() => {
+    setHasMounted(true);
     const user = getUserCookie(true);
     if (user) {
       userState.set(() => user);
@@ -22,9 +24,10 @@ export default function NavRegisterOrProfile() {
   }, []);
 
   const user = userState.get();
+
   return (
     <>
-      {user?.name ? (
+      {hasMounted && user?.name ? (
         <>
           <Link href="/profile" id="desktop-nav-profile">
             <UserAvatar user={user} />

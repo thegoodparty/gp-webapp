@@ -1,9 +1,3 @@
-/**
- *
- * CampaignStaff
- *
- */
-
 import React from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -15,9 +9,7 @@ async function loadStaff() {
   try {
     const token = getServerToken();
     const api = gpApi.campaign.staff.userStaff;
-    const res = await gpFetch(api, null, 3600, token);
-    return res;
-    //   yield put(actions.loadStaffActionSuccess(staff));
+    return await gpFetch(api, null, 3600, token);
   } catch (error) {
     console.log('staff error', JSON.stringify(error));
   }
@@ -26,7 +18,7 @@ async function loadStaff() {
 async function CampaignStaff() {
   const { staff } = await loadStaff();
   if (!staff || staff.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   return (

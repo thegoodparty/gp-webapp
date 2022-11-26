@@ -38,7 +38,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <Suspense fallback={<LoadingAnimation fullPage={false} />}>
+      <Suspense>
         <CandidatesSection />
       </Suspense>
     </>

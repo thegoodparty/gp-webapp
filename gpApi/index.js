@@ -38,18 +38,7 @@ const gpApi = {
       method: 'GET',
     },
   },
-  follow: {
-    list: {
-      url: `${base}supports`,
-      method: 'GET',
-      withAuth: true,
-    },
-  },
-  uploadAvatar: {
-    url: `${base}user/avatar`,
-    method: 'POST',
-    withAuth: true,
-  },
+
   candidateApplication: {
     uploadImage: {
       url: `${base}application/upload-image`,
@@ -90,22 +79,35 @@ const gpApi = {
   //
   // USER
   //
-  updateUser: {
-    url: `${base}user/update-user`,
-    method: 'PUT',
-    withAuth: true,
+  user: {
+    updateUser: {
+      url: `${base}user/update-user`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    changePassword: {
+      url: `${base}user/password`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    deleteAccount: {
+      url: `${base}user`,
+      method: 'DELETE',
+      withAuth: true,
+    },
+    follow: {
+      list: {
+        url: `${base}supports`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+    uploadAvatar: {
+      url: `${base}user/avatar`,
+      method: 'POST',
+      withAuth: true,
+    },
   },
-  changePassword: {
-    url: `${base}user/password`,
-    method: 'PUT',
-    withAuth: true,
-  },
-  deleteAccount: {
-    url: `${base}user`,
-    method: 'DELETE',
-    withAuth: true,
-  },
-
   //
   // admin
   //
@@ -116,8 +118,7 @@ const gpApi = {
         method: 'GET',
       },
     },
-  }
-  
+  },
 };
 
 export default gpApi;
