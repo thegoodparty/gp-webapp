@@ -1,12 +1,10 @@
 import CandidateProgressBar from '@shared/candidates/CandidateProgressBar';
-
 import styles from './ProgressMeter.module.scss';
 
 export default function ProgressMeter({ candidate, followers }) {
-  const offsetFollow = 0;
-  let thisWeek = offsetFollow;
+  let thisWeek = 0;
   if (followers) {
-    thisWeek = followers.thisWeek + offsetFollow;
+    thisWeek = followers.thisWeek;
   }
 
   return (

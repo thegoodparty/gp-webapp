@@ -1,10 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { IoIosCheckmark } from 'react-icons/io';
+import { useHookstate } from '@hookstate/core';
 
 import { numberFormatter } from '/helpers/numberHelper';
 import { candidateColor } from '/helpers/candidateHelper';
 import { daysTill } from '/helpers/dateHelper';
+import { followOffsetState } from 'app/candidate/[...nameId]/components/Header/FollowButton';
 
 const CandidateProgressBar = ({
   candidate,
@@ -22,7 +24,11 @@ const CandidateProgressBar = ({
     didWin,
     votesReceived,
   } = candidate;
+  const followOffset = useHookstate(followOffsetState);
+  const offsetFollow = followOffset.get() || 0;
+
   let people = overrideFollowers ? likelyVoters : peopleSoFar;
+  people += offsetFollow;
   const color = candidateColor(candidate);
   const days = daysTill(raceDate);
 

@@ -76,13 +76,11 @@ const RegisterModal = ({ closeModalCallback, openLoginCallback }) => {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, token } = await register({
+      const user = await register({
         email: state.email,
         name: state.name,
         zip: state.zipcode,
       });
-      setUserCookie(user);
-      setCookie('token', token);
       userState.set(() => user);
       closeModalCallback();
     }

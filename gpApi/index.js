@@ -101,6 +101,16 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      create: {
+        url: `${base}support`,
+        method: 'POST',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}support`,
+        method: 'DELETE',
+        withAuth: true,
+      },
     },
     uploadAvatar: {
       url: `${base}user/avatar`,

@@ -16,10 +16,9 @@
 // import { CandidateWrapperContext } from '../index';
 import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import { partyRace } from 'helpers/candidateHelper';
+import FollowButton from './FollowButton';
 
 function CandidateProfile({ candidate, showShareModalCallback }) {
-  // const { candidate } = useContext(CandidateContext);
-
   // const { afterFollowCallback, afterUnfollowCallback } = useContext(
   //   CandidateWrapperContext,
   // );
@@ -39,18 +38,15 @@ function CandidateProfile({ candidate, showShareModalCallback }) {
         <h1 className="text-base" data-cy="candidate-race">
           {partyRace(candidate)}
         </h1>
-        {/* <ButtonWrapper>
-          <FollowButtonContainer
-            candidate={candidate}
-            afterFollowCallback={afterFollowCallback}
-            afterUnfollowCallback={afterUnfollowCallback}
-          />
-          <MdIosShare
+        <div className="hidden lg:flex lg:items-center">
+          <FollowButton candidate={candidate} />
+          {/* <MdIosShare
             size={30}
             style={{ color: '#868686', marginLeft: '18px', cursor: 'pointer' }}
             onClick={showShareModalCallback}
-          />
-        </ButtonWrapper>
+          /> */}
+        </div>
+        {/* 
         {!isClaimed && (
           <Claim data-cy="candidate-claimed">
             Is this you?{' '}

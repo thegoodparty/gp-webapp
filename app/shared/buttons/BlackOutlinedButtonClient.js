@@ -18,15 +18,19 @@ const BlackOutlinedButtonClient = ({
       fullWidth={fullWidth}
       onClick={onClick}
       disabled={disabled}
-      style={style}
       type={type}
-      className={styles.button}
+      style={{
+        borderRadius: '12px',
+        backgroundColor: '#fff',
+        border: 'solid 2px #000',
+        color: '#000',
+        ...style,
+      }}
       {...props}
     >
-      <div className="py-0 px-6">{children}</div>
+      {children}
     </BaseButton>
   );
 };
-
 
 export default BlackOutlinedButtonClient;
