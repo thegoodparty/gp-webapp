@@ -4,27 +4,14 @@
  *
  */
 
-// import React, { useContext, useState } from 'react';
-// import { MdIosShare } from 'react-icons/md';
-
-// import FollowButtonContainer from '/containers/shared/FollowButtonContainer';
-
-// import Row from '../../shared/Row';
-// import { partyRace } from '/helpers/candidatesHelper';
-// import Modal from '../../shared/Modal';
-// import ClaimModal from './ClaimModal';
-// import { CandidateWrapperContext } from '../index';
 import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import { partyRace } from 'helpers/candidateHelper';
+import ClaimModal from './ClaimModal';
 import FollowButton from './FollowButton';
+import ShareCandidate from './ShareCandidate';
 
 function CandidateProfile({ candidate, showShareModalCallback }) {
-  // const { afterFollowCallback, afterUnfollowCallback } = useContext(
-  //   CandidateWrapperContext,
-  // );
-
   const { firstName, lastName, isClaimed } = candidate;
-  // const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex items-center">
@@ -40,28 +27,10 @@ function CandidateProfile({ candidate, showShareModalCallback }) {
         </h1>
         <div className="hidden lg:flex lg:items-center">
           <FollowButton candidate={candidate} />
-          {/* <MdIosShare
-            size={30}
-            style={{ color: '#868686', marginLeft: '18px', cursor: 'pointer' }}
-            onClick={showShareModalCallback}
-          /> */}
+          <ShareCandidate candidate={candidate} />
         </div>
-        {/* 
-        {!isClaimed && (
-          <Claim data-cy="candidate-claimed">
-            Is this you?{' '}
-            <ClaimLink
-              onClick={() => setShowModal(true)}
-              data-cy="candidate-claim-page"
-            >
-              Claim this page
-            </ClaimLink>
-          </Claim>
-        )} */}
+        {!isClaimed && <ClaimModal candidate={candidate} />}
       </div>
-      {/* <Modal closeModalCallback={() => setShowModal(false)} open={showModal}>
-        <ClaimModal closeModalCallback={() => setShowModal(false)} />
-      </Modal> */}
     </div>
   );
 }

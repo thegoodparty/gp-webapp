@@ -19,7 +19,9 @@ export default function NavRegisterOrProfile() {
     setHasMounted(true);
     const user = getUserCookie(true);
     if (user) {
-      userState.set(() => user);
+      setTimeout(() => {
+        userState.set(() => user);
+      }, 100);
     }
   }, []);
 

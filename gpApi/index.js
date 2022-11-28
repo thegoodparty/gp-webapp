@@ -39,6 +39,13 @@ const gpApi = {
     },
   },
 
+  campaign: {
+    claim: {
+      url: `${base}campaign/claim`,
+      method: 'POST',
+    },
+  },
+
   candidateApplication: {
     uploadImage: {
       url: `${base}application/upload-image`,

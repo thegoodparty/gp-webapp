@@ -15,7 +15,6 @@ async function fetchCandidates(params) {
   const api = gpApi.user.follow.list;
   api.url = `${api.url}?withCandidates=true`;
   const token = getServerToken();
-  console.log('token', token);
   return await gpFetch(api, false, 3600, token);
 }
 

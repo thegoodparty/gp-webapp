@@ -25,8 +25,6 @@ async function gpFetch(endpoint, data, revalidate, token, isFormData = false) {
     }
   }
 
-  console.log('auth4', autoToken);
-
   const requestOptions = headersOptions(body, endpoint.method, autoToken);
 
   return await fetchCall(url, requestOptions, revalidate);
