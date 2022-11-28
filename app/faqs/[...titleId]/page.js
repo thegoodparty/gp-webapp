@@ -15,10 +15,7 @@ export default async function Page({ params, searchParams }) {
   const title = titleId?.length > 0 ? titleId[0] : false;
   const id = titleId?.length > 1 ? titleId[1] : false;
 
-  console.log('titke', title);
-  console.log('id', id);
   const { content } = await fetchArticle(id);
-  console.log('contnet', content);
   if (!content) {
     notFound();
   }
@@ -32,4 +29,18 @@ export default async function Page({ params, searchParams }) {
     article: content,
   };
   return <FaqsArticlePage {...childProps} />;
+}
+
+export async function generateStaticParams() {
+  const api = { ...gpApi.content.contentByKey };
+  api.url += '?key=faqArticles';
+  const { content } = await gpFetch(api, false, 3600);
+
+  return content.map((article) => {
+    const title = slugify(article.title);
+    const id = article.id;
+    return {
+      titleId: [title, id + ''],
+    };
+  });
 }
