@@ -9,6 +9,7 @@ export default function Hero() {
         fill
         className="object-cover object-top"
         priority
+        alt="Help Center"
       />
       <div
         className="absolute top-0 left-0 w-full h-full"

@@ -37,7 +37,7 @@ export default function Breadcrumbs({ links }) {
           </span>
         ))}
       </MuiBreadcrumbs>
-      <div className="text-xs text-stone-300 lg:text-base">
+      <div className="text-xs lg:text-base">
         {links[links.length - 1].label}
       </div>
     </div>
