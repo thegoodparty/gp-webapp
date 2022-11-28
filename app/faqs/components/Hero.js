@@ -1,15 +1,17 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
+import heroImg from '/public/images/faqs/faq-hero.jpeg';
 
 export default function Hero() {
   return (
     <div className="h-56 relative lg:h-[500px]">
       <Image
-        src="https://assets.goodparty.org/faq-hero-new.jpg"
+        src={heroImg}
         fill
         className="object-cover object-top"
         priority
         alt="Help Center"
+        placeholder="blur"
       />
       <div
         className="absolute top-0 left-0 w-full h-full"
