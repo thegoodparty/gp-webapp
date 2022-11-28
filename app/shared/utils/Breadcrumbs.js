@@ -1,0 +1,45 @@
+'use client';
+import Link from 'next/link';
+import { JsonLd } from 'react-schemaorg';
+
+import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
+
+export default function Breadcrumbs({ links }) {
+  const schema = [];
+  links.forEach((link, index) => {
+    schema.push({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@id': link.href, // || router.asPath,
+        name: link.label,
+      },
+    });
+  });
+
+  return (
+    <div className="flex items-center flex-nowrap whitespace-nowrap max-w-[100vw] overflow-x-auto p-6">
+      <JsonLd
+        item={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: schema,
+        }}
+      />
+      <MuiBreadcrumbs aria-label="breadcrumb">
+        {links.map((link, index) => (
+          <span key={link.label}>
+            {index < links.length - 1 && (
+              <Link href={link.href} key={link.href}>
+                <div className="text-sm lg:text-base">{link.label}</div>
+              </Link>
+            )}
+          </span>
+        ))}
+      </MuiBreadcrumbs>
+      <div className="text-sm text-stone-300 lg:text-base">
+        {links[links.length - 1].label}
+      </div>{' '}
+    </div>
+  );
+}
