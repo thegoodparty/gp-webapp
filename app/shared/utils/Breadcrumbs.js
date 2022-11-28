@@ -18,7 +18,7 @@ export default function Breadcrumbs({ links }) {
   });
 
   return (
-    <div className="flex items-center flex-nowrap whitespace-nowrap max-w-[100vw] overflow-x-auto p-6">
+    <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
       <JsonLd
         item={{
           '@context': 'https://schema.org',
@@ -31,15 +31,15 @@ export default function Breadcrumbs({ links }) {
           <span key={link.label}>
             {index < links.length - 1 && (
               <Link href={link.href} key={link.href}>
-                <div className="text-sm lg:text-base">{link.label}</div>
+                <div className="text-xs lg:text-base">{link.label}</div>
               </Link>
             )}
           </span>
         ))}
       </MuiBreadcrumbs>
-      <div className="text-sm text-stone-300 lg:text-base">
+      <div className="text-xs text-stone-300 lg:text-base">
         {links[links.length - 1].label}
-      </div>{' '}
+      </div>
     </div>
   );
 }

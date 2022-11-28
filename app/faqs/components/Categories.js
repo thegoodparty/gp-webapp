@@ -4,12 +4,12 @@ import Link from 'next/link';
 export default function Categories({ content }) {
   return (
     <div>
-      <h1
+      <h2
         className="text-3xl font-black my-6 lg:my-8 lg:text-4xl"
         data-cy="faqs-page-title"
       >
         Frequently Asked Questions
-      </h1>
+      </h2>
       {content &&
         content.map((category) => (
           <div
