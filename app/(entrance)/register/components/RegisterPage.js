@@ -12,6 +12,7 @@ import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile
 import { setCookie, setUserCookie } from 'helpers/cookieHelper';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
+import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 
 export const REGISTER_FIELDS = [
   {
@@ -39,7 +40,7 @@ export const REGISTER_FIELDS = [
 export default function RegisterPage({}) {
   const [score, setScore] = useState('good');
   const router = useRouter();
-  // const pathname = usePathname();
+  const snackbarState = useHookstate(globalSnackbarState);
 
   const userState = useHookstate(globalUserState);
   const user = userState.get();
@@ -79,8 +80,25 @@ export default function RegisterPage({}) {
         name: state.name,
         zip: state.zipcode,
       });
-      userState.set(() => user);
-      router.push('/profile');
+      if (user) {
+        userState.set(() => user);
+        router.push('/');
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'Welcome to Good Party!.',
+            isError: false,
+          };
+        });
+      } else {
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'Error registering your email',
+            isError: true,
+          };
+        });
+      }
     }
   };
 

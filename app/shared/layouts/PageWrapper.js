@@ -1,3 +1,4 @@
+import Snackbar from '@shared/utils/Snackbar';
 import { Suspense } from 'react';
 import Footer from './Footer';
 import JsonLdSchema from './JsonLdSchema';
@@ -14,6 +15,9 @@ export default function PageWrapper({ children, hideFooter }) {
           <Footer />
         </Suspense>
       )}
+      {/* <Suspense> */}
+      <Snackbar />
+      {/* </Suspense> */}
     </div>
   );
 }

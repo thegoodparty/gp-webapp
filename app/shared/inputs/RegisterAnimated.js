@@ -32,8 +32,10 @@ const fields = [
 export async function register(payload) {
   try {
     const { user, token } = await gpFetch(gpApi.entrance.register, payload);
-    setUserCookie(user);
-    setCookie('token', token);
+    if (user && token) {
+      setUserCookie(user);
+      setCookie('token', token);
+    }
 
     return user;
   } catch (e) {

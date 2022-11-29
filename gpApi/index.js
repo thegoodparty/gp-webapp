@@ -1,4 +1,4 @@
-const apiBase = process.env.API_BASE || 'https://api-dev.goodparty.org';
+const apiBase = process.env.API_BASE || 'http://localhost:1337';
 const base = `${apiBase}/api/v1/`;
 
 const gpApi = {
@@ -20,6 +20,10 @@ const gpApi = {
     register: {
       url: `${base}entrance/register`,
       method: 'POST',
+    },
+    login: {
+      url: `${base}entrance/login`,
+      method: 'PUT',
     },
   },
   content: {
