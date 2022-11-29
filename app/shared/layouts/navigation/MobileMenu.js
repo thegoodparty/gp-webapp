@@ -9,7 +9,6 @@ import styles from './MobileMenu.module.scss';
 import UserAvatar from '@shared/user/UserAvatar';
 import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import RegisterModal from '../RegisterModal';
 import LoginModal from '../LoginModal';
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
@@ -84,14 +83,14 @@ export default function MobileMenu() {
             </div>
           </Link>
         ) : (
-          <div
+          <Link
+            href="/register"
             className="mt-7"
             style={{ fontWeight: path === '/register' ? 'bold' : 'normal' }}
             id="mobile-nav-register"
-            onClick={() => setShowRegister(true)}
           >
             Sign Up
-          </div>
+          </Link>
         )}
         {user?.isAdmin && (
           <div className="mt-3">
@@ -101,18 +100,7 @@ export default function MobileMenu() {
           </div>
         )}
       </div>
-      {showRegister && (
-        <Suspense>
-          <RegisterModal
-            closeModalCallback={() => {
-              setShowRegister(false);
-            }}
-            openLoginCallback={() => {
-              setShowLogin(true);
-            }}
-          />
-        </Suspense>
-      )}
+
       {showLogin && (
         <Suspense>
           <LoginModal

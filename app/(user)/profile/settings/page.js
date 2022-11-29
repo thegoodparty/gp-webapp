@@ -10,7 +10,6 @@ import { redirect } from 'next/navigation';
 
 export default function Page() {
   const user = getServerUser();
-  console.log('user', user);
   if (!user) {
     redirect('/');
   }

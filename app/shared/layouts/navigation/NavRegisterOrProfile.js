@@ -3,7 +3,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { hookstate, useHookstate } from '@hookstate/core';
 import { getUserCookie } from 'helpers/cookieHelper';
-import RegisterModal from '../RegisterModal';
 import Link from 'next/link';
 import UserAvatar from '@shared/user/UserAvatar';
 import Image from 'next/image';
@@ -11,7 +10,6 @@ import Image from 'next/image';
 export const globalUserState = hookstate(false);
 
 export default function NavRegisterOrProfile() {
-  const [showRegister, setShowRegister] = useState(false);
   const [hasMounted, setHasMounted] = React.useState(false);
 
   const userState = useHookstate(globalUserState);
@@ -50,24 +48,14 @@ export default function NavRegisterOrProfile() {
         </>
       ) : (
         <>
-          <strong
+          <Link
+            href="/register"
             className="mx-3 px-1 cursor-pointer hover:underline"
             data-cy="header-register"
             id="desktop-nav-register"
-            onClick={() => setShowRegister(true)}
           >
-            Join Us
-          </strong>
-
-          {showRegister && (
-            <Suspense>
-              <RegisterModal
-                closeModalCallback={() => {
-                  setShowRegister(false);
-                }}
-              />
-            </Suspense>
-          )}
+            <strong>Join Us</strong>
+          </Link>
         </>
       )}
     </>

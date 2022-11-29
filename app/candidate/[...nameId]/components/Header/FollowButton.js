@@ -3,15 +3,15 @@
 import { candidateColor } from 'helpers/candidateHelper';
 import { useHookstate, hookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import { getCookie, getUserCookie } from 'helpers/cookieHelper';
+import { getUserCookie } from 'helpers/cookieHelper';
 import gpFetch from 'gpApi/gpFetch';
 import { Suspense, use, useEffect, useState } from 'react';
 import gpApi from 'gpApi';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
 import { ImCheckmark } from 'react-icons/im';
-import RegisterModal from '@shared/layouts/RegisterModal';
 import AlertDialog from '@shared/utils/AlertDialog';
+import { useRouter } from 'next/navigation';
 
 const loadUserFollows = async () => {
   const user = getUserCookie();
@@ -40,8 +40,9 @@ export default function FollowButton({ candidate }) {
   const followOffset = useHookstate(followOffsetState);
   const user = userState.get();
   const [follows, setFollows] = useState({});
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     loadUserFollows().then((res) => {
@@ -59,7 +60,7 @@ export default function FollowButton({ candidate }) {
       setFollows(supports);
       followOffset.set((offset) => offset + 1);
     } else {
-      setShowRegisterModal(true);
+      router.push('register');
     }
   };
 
@@ -106,15 +107,6 @@ export default function FollowButton({ candidate }) {
         </BlackButtonClient>
       )}
 
-      {showRegisterModal && (
-        <Suspense>
-          <RegisterModal
-            closeModalCallback={() => {
-              setShowRegisterModal(false);
-            }}
-          />
-        </Suspense>
-      )}
       <AlertDialog
         open={showDeleteAlert}
         handleClose={() => setShowDeleteAlert(false)}
