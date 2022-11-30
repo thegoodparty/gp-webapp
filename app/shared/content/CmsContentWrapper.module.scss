@@ -40,8 +40,26 @@
     }
   }
 
+  :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
   :global(ul) {
-    list-style-type: none;
+    // list-style-type: none;
+    :global(li) {
+      margin: 10px 0;
+    }
+    :global(p) {
+      margin-block-start: 10px;
+      margin-block-end: 10px;
+    }
+  }
+
+  :global(ol) {
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    padding-inline-start: 40px;
     :global(li) {
       margin: 10px 0;
     }

@@ -19,7 +19,6 @@ export default function FaqModal({ children, article }) {
       </div>
       <Suspense>
         <Modal open={showModal} closeCallback={() => setShowModal(false)}>
-          {/* <div className="max-h-[80vh] overflow-y-auto"> */}
           <h1 className="my-8 font-black text-3xl" data-cy="article-title">
             {article.title}
           </h1>
@@ -27,7 +26,6 @@ export default function FaqModal({ children, article }) {
           <CmsContentWrapper>
             {contentfulHelper(article.articleBody)}
           </CmsContentWrapper>
-          {/* </div> */}
         </Modal>
       </Suspense>
     </>

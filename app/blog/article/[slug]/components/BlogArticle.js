@@ -1,3 +1,4 @@
+import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import BlogWrapper from 'app/blog/shared/BlogWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import { dateUsHelper } from 'helpers/dateHelper';
@@ -43,7 +44,9 @@ export default function BlogArticle({ sections, article }) {
         </div>
       </div>
       <div className={styles.maxWidth}>
-        <div className={styles.copy}>{contentfulHelper(body)}</div>
+        <div className={styles.copy}>
+          <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
+        </div>
 
         <div className={styles.authorWrapper}>
           <div className={styles.authorInner}>
