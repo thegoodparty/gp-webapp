@@ -1,6 +1,3 @@
-import Link from 'next/link';
-import { cookies } from 'next/headers';
-
 import ImageSection from './components/ImageSection';
 import PersonalSection from './components/PersonalSection';
 import PasswordSection from './components/PasswordSection';

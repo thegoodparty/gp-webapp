@@ -8,7 +8,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "dev": "NODE_OPTIONS=\"--max_old_space_size=4096\" APP_BASE=http://localhost:4000 API_BASE=http://localhost:1337 next dev -p 4000",
+    "dev": "NODE_OPTIONS=\"--max_old_space_size=8192\" APP_BASE=http://localhost:4000 API_BASE=http://localhost:1337 next dev -p 4000",
     "dev-dev": "APP_BASE=http://localhost:4000 API_BASE=https://api-dev.goodparty.org next dev -p 4000",
     "deploy-dev": "git checkout develop && eb deploy",
     "deploy-qa": "git checkout qa && eb deploy",
