@@ -17,7 +17,6 @@ const Alert = forwardRef(function Alert(props, ref) {
 export default function Snackbar() {
   const state = useHookstate(globalSnackbarState);
   const snackbarState = state.get();
-  console.log('at snackbar', state);
 
   const { isOpen, message, isError } = snackbarState;
   const handleClose = (event, reason) => {

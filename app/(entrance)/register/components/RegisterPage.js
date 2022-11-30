@@ -13,6 +13,8 @@ import { setCookie, setUserCookie } from 'helpers/cookieHelper';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
+import PasswordInput from '@shared/inputs/PasswrodInput';
+import { passwordRegex } from 'helpers/userHelper';
 
 export const REGISTER_FIELDS = [
   {
@@ -43,12 +45,12 @@ export default function RegisterPage({}) {
   const snackbarState = useHookstate(globalSnackbarState);
 
   const userState = useHookstate(globalUserState);
-  const user = userState.get();
 
   const [state, setState] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    zipcode: user?.zip || '',
+    name: '',
+    email: '',
+    zipcode: '',
+    password: '',
   });
 
   const enableSubmit = () => {
@@ -56,7 +58,9 @@ export default function RegisterPage({}) {
       state.name.length >= 2 &&
       state.name.length <= 100 &&
       validateZip() &&
-      validateEmail()
+      validateEmail() &&
+      state.password !== '' &&
+      state.password.match(passwordRegex)
     );
   };
 
@@ -79,6 +83,7 @@ export default function RegisterPage({}) {
         email: state.email,
         name: state.name,
         zip: state.zipcode,
+        password: state.password,
       });
       if (user) {
         userState.set(() => user);
@@ -185,6 +190,19 @@ export default function RegisterPage({}) {
                   />
                 </div>
               ))}
+              <PasswordInput
+                value={state.password}
+                onChangeCallback={(pwd) =>
+                  onChangeField({ target: { value: pwd } }, 'password')
+                }
+                helperText="For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character or number, and 8 characters minimum"
+                className={styles.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <br />
+              <br />
 
               <div>
                 <BlackButtonClient

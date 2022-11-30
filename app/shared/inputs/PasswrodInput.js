@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import TextField from './TextField';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 // import Visibility from '@material-ui/icons/Visibility';
 // import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
@@ -32,6 +33,8 @@ export default function PasswordInput({
   label = 'Password',
   helperText = '8 characters minimum',
   autoFocus = false,
+  className = '',
+  InputLabelProps = {},
 }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -63,6 +66,8 @@ export default function PasswordInput({
       data-cy="password"
       variant={variant}
       autoFocus={autoFocus}
+      className={className}
+      InputLabelProps={InputLabelProps}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -71,7 +76,7 @@ export default function PasswordInput({
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
             >
-              {/* {showPassword ? <Visibility /> : <VisibilityOff />} */}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </IconButton>
           </InputAdornment>
         ),
