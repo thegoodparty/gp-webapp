@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 export default function Page() {
   const user = getServerUser();
   if (!user) {
-    redirect('/');
+    redirect('/login');
   }
   return (
     <>

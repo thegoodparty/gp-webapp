@@ -6,7 +6,7 @@ import CampaignStaff from './components/CampaignStaff';
 export default function Page() {
   const user = getServerUser();
   if (!user) {
-    redirect('/');
+    redirect('/login');
   }
   return (
     <>
