@@ -16,6 +16,8 @@ const style = {
   p: 4,
   borderRadius: 2,
   outline: 'none',
+  maxHeight: '90vh',
+  overflowY: 'auto',
 };
 
 export default function Modal({ open, closeCallback, children }) {
