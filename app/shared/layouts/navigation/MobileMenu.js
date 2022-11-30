@@ -77,20 +77,21 @@ export default function MobileMenu() {
             style={{ width: '100%' }}
             id="mobile-nav-profile"
           >
-            <div className="mt-3 cursor-pointer flex items-center">
+            <div className="mt-4 cursor-pointer flex items-center">
               <UserAvatar user={user} />
               <div className="ml-2">{user.name}</div>
             </div>
           </Link>
         ) : (
-          <Link
-            href="/register"
-            className="mt-7"
-            style={{ fontWeight: path === '/register' ? 'bold' : 'normal' }}
-            id="mobile-nav-register"
-          >
-            Sign Up
-          </Link>
+          <div className="mt-7">
+            <Link
+              href="/register"
+              style={{ fontWeight: path === '/register' ? 'bold' : 'normal' }}
+              id="mobile-nav-register"
+            >
+              Sign Up
+            </Link>
+          </div>
         )}
         {user?.isAdmin && (
           <div className="mt-3">
