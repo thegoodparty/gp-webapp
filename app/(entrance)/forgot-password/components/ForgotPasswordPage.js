@@ -6,28 +6,19 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
 import { setCookie, setUserCookie } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
-import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
 import { useState } from 'react';
-import styles from './LoginPage.js';
-import { useRouter } from 'next/navigation.js';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile.js';
+import styles from '../../login/components/LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 
-async function login(email, password) {
+async function retrievePassword(email) {
   try {
     const payload = {
       email,
-      password,
     };
-    const { user, token } = await gpFetch(gpApi.entrance.login, payload);
-    if (user && token) {
-      setUserCookie(user);
-      setCookie('token', token);
-      return user;
-    }
-    return false;
+    await gpFetch(gpApi.entrance.forgotPassword, payload);
+    return true;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -39,28 +30,27 @@ export default function ForgotPasswordPage() {
     email: '',
     forgotSent: false,
   });
-  const userState = useHookstate(globalUserState);
   const snackbarState = useHookstate(globalSnackbarState);
-  const router = useRouter();
 
-  const enableSubmit = () =>
-    isValidEmail(state.email) &&
-    state.password !== '' &&
-    state.password.match(passwordRegex);
+  const enableSubmit = () => isValidEmail(state.email);
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      //   savePasswordCallback(state.password);
-      console.log('email', state.email, 'ps', state.password);
-      const user = await login(state.email, state.password);
-      if (user) {
-        userState.set(() => user);
-        router.push('/');
+      const res = await retrievePassword(state.email);
+      if (res) {
+        onChangeField(true, 'forgotSent');
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: `A password reset link was sent to ${state.email}`,
+            isError: false,
+          };
+        });
       } else {
         snackbarState.set(() => {
           return {
             isOpen: true,
-            message: 'The email or password are wrong.',
+            message: 'Error sending password reset link.',
             isError: true,
           };
         });
@@ -75,20 +65,16 @@ export default function ForgotPasswordPage() {
     });
   };
 
-  const handleForgot = () => {
-    onChangeField(true, 'forgotSent');
-  };
-
   return (
     <MaxWidth>
       <div className={`flex items-center justify-center ${styles.wrapper}`}>
-        <div className="py-6 max-w-2xl" style={{ width: '75vw' }}>
+        <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
             <h1
               data-cy="register-title"
               className="text-2xl lg:text-4xl font-black"
             >
-              Log into your account
+              Forgot Password?
             </h1>
           </div>
           <div className="my-6 text-sm" data-cy="register-label">
@@ -97,44 +83,42 @@ export default function ForgotPasswordPage() {
               Create one
             </Link>
           </div>
-          <form
-            noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-            data-cy="email-form"
-            id="register-page-form"
-          >
-            <EmailInput
-              onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
-              value={state.email}
-            />
-            <br />
-            <br />
-            <PasswordInput
-              label="Password"
-              onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-              helperText="For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character or number, and 8 characters minimum"
-            />
-
-            <br />
-            <br />
-            <br />
-
-            <BlackButtonClient
-              style={{ width: '100%' }}
-              disabled={!enableSubmit()}
-              onClick={handleSubmit}
-              type="submit"
+          {state.forgotSent ? (
+            <div className="text-2xl font-black my-6 p-4 border border-black rounded text-center">
+              Your password recovery link was sent to {state.email}
+            </div>
+          ) : (
+            <form
+              noValidate
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              data-cy="email-form"
+              id="register-page-form"
             >
-              <strong>LOGIN</strong>
-            </BlackButtonClient>
-          </form>
+              <EmailInput
+                onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
+                value={state.email}
+              />
+
+              <br />
+              <br />
+
+              <BlackButtonClient
+                style={{ width: '100%' }}
+                disabled={!enableSubmit()}
+                onClick={handleSubmit}
+                type="submit"
+              >
+                <strong>SEND CODE</strong>
+              </BlackButtonClient>
+            </form>
+          )}
           <br />
           <br />
 
-          <Link href="/forgot-password" className="text-sm">
-            Forgot your password?
+          <Link href="/login" className="text-sm">
+            Back to login
           </Link>
         </div>
       </div>

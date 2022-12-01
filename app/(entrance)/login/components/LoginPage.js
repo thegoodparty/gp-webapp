@@ -9,7 +9,7 @@ import { useHookstate } from '@hookstate/core';
 import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
 import { useState } from 'react';
-import styles from './LoginPage.js';
+import styles from './LoginPage.module.scss';
 import { useRouter } from 'next/navigation.js';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile.js';
 import gpFetch from 'gpApi/gpFetch.js';
@@ -76,7 +76,7 @@ export default function LoginPage() {
   return (
     <MaxWidth>
       <div className={`flex items-center justify-center ${styles.wrapper}`}>
-        <div className="py-6 max-w-2xl" style={{ width: '75vw' }}>
+        <div className="grid py-6 max-w-2xl" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
             <h1
               data-cy="register-title"

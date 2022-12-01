@@ -26,6 +26,10 @@ const gpApi = {
       url: `${base}entrance/login`,
       method: 'PUT',
     },
+    forgotPassword: {
+      url: `${base}entrance/send-password-recovery-email`,
+      method: 'POST',
+    },
   },
   content: {
     contentByKey: {

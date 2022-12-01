@@ -1,5 +1,6 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
+import ForgotPasswordPage from './components/ForgotPasswordPage';
 
 export default async function Page() {
   const user = getServerUser();
@@ -7,5 +8,5 @@ export default async function Page() {
     redirect('/profile');
   }
 
-  return <>Forgot</>;
+  return <ForgotPasswordPage />;
 }
