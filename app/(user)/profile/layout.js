@@ -1,8 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { CONTACT_EMAIL } from '../../../utils/constants';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { getUserCookie } from 'helpers/cookieHelper';
 export const leftMenuItems = [
   {
     label: 'Profile',
@@ -29,7 +30,17 @@ export const leftMenuItemsBottom = [
   },
 ];
 const ProfilePageLayout = ({ children, params }) => {
+  // for some reason the page redirect is not working so adding this
+  useEffect(() => {
+    const cookieUser = getUserCookie();
+    if (!cookieUser) {
+      window.location.href = '/login';
+    }
+  }, []);
+  // end redirect
+
   const pathname = usePathname();
+
   return (
     <div className="bg-zinc-100">
       <div className="max-w-7xl my-0 mx-auto py-16 px-0 lg:flex lg:flex-row">

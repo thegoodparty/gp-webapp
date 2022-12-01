@@ -11,11 +11,13 @@ import ImageUpload from '@shared/utils/ImageUpload';
 import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { getUserCookie } from 'helpers/cookieHelper';
+import { useRouter } from 'next/navigation';
 
 function ImageSection() {
   const userState = useHookstate(globalUserState);
   const user = userState.get();
   const [uploadedImage, setUploadedImage] = useState(false);
+
   let updatedUser = uploadedImage ? { avatar: uploadedImage } : user;
 
   useEffect(() => {

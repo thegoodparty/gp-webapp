@@ -5,7 +5,7 @@
  *
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -154,7 +154,7 @@ function PersonalSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               {USER_SETTING_FIELDS.map((field) => (
-                <>
+                <Fragment key={field.key}>
                   {field.type === 'phone' ? (
                     <PhoneInput
                       value={state[field.key]}
@@ -177,7 +177,7 @@ function PersonalSection() {
                       InputLabelProps={{ shrink: true }}
                     />
                   )}
-                </>
+                </Fragment>
               ))}
               <div className="row mt-20">
                 <BlackButtonClient
