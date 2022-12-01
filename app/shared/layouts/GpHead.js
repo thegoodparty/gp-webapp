@@ -1,7 +1,7 @@
 import React from 'react';
 
 function GpHead({ title, description, image, slug = '/' }) {
-  const appBase = process.env.APP_BASE;
+  const appBase = process.env.NEXT_PUBLIC_APP_BASE;
   const canonical = appBase + slug;
   return (
     <>

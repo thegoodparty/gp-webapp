@@ -34,10 +34,10 @@ async function login(email, password) {
   }
 }
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   const [state, setState] = useState({
     email: '',
-    password: '',
+    forgotSent: false,
   });
   const userState = useHookstate(globalUserState);
   const snackbarState = useHookstate(globalSnackbarState);
@@ -50,6 +50,8 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
+      //   savePasswordCallback(state.password);
+      console.log('email', state.email, 'ps', state.password);
       const user = await login(state.email, state.password);
       if (user) {
         userState.set(() => user);
@@ -71,6 +73,10 @@ export default function LoginPage() {
       ...state,
       [key]: value,
     });
+  };
+
+  const handleForgot = () => {
+    onChangeField(true, 'forgotSent');
   };
 
   return (

@@ -13,7 +13,7 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 import styles from './ShareCandidate.module.scss';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 
-const appBase = process.env.APP_BASE || 'https://dev.goodparty.org';
+const appBase = process.env.NEXT_PUBLIC_APP_BASE || 'https://dev.goodparty.org';
 
 export default function ShareCandidate({ candidate }) {
   const [showModal, setShowModal] = useState(false);

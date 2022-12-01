@@ -1,4 +1,5 @@
-const apiBase = process.env.API_BASE || 'http://localhost:1337';
+const apiBase =
+  process.env.NEXT_PUBLIC_API_BASE || 'https://api-dev.goodparty.org';
 const base = `${apiBase}/api/v1/`;
 
 const gpApi = {

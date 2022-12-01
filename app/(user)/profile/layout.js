@@ -28,7 +28,7 @@ export const leftMenuItemsBottom = [
     link: `/contact`,
   },
 ];
-const ProfilePageLayout = ({ children }) => {
+const ProfilePageLayout = ({ children, params }) => {
   const pathname = usePathname();
   return (
     <div className="bg-zinc-100">
