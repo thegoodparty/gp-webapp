@@ -108,7 +108,6 @@ export default function LoginPage() {
             <PasswordInput
               label="Password"
               onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-              helperText="For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character or number, and 8 characters minimum"
             />
 
             <br />

@@ -195,7 +195,6 @@ export default function RegisterPage({}) {
                 onChangeCallback={(pwd) =>
                   onChangeField({ target: { value: pwd } }, 'password')
                 }
-                helperText="For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character or number, and 8 characters minimum"
                 className={styles.textField}
                 InputLabelProps={{
                   shrink: true,
