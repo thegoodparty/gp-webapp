@@ -4,6 +4,8 @@ import { Fragment, Suspense, useState } from 'react';
 import { MdIosShare } from 'react-icons/md';
 import { usePathname } from 'next/navigation';
 import { candidateHash } from 'helpers/candidateHelper';
+import { useHookstate } from '@hookstate/core';
+import { FaRegEdit } from 'react-icons/fa';
 
 import { IoIosText, IoLogoWhatsapp } from 'react-icons/io';
 import { FaFacebookF, FaFacebookMessenger, FaTwitter } from 'react-icons/fa';
@@ -12,11 +14,15 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 
 import styles from './ShareCandidate.module.scss';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import Link from 'next/link';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 
 const appBase = process.env.NEXT_PUBLIC_APP_BASE || 'https://dev.goodparty.org';
 
 export default function ShareCandidate({ candidate }) {
   const [showModal, setShowModal] = useState(false);
+  const userState = useHookstate(globalUserState);
+  const user = userState.get();
   const pathname = usePathname();
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';
@@ -81,6 +87,11 @@ export default function ShareCandidate({ candidate }) {
         style={{ color: '#868686', marginLeft: '18px', cursor: 'pointer' }}
         onClick={() => setShowModal(true)}
       />
+      {user?.isAdmin && (
+        <Link href={`/candidate-portal/${candidate.id}`}>
+          <FaRegEdit style={{ color: 'red', marginLeft: '18px' }} size={24} />
+        </Link>
+      )}
       {showModal && (
         <Suspense>
           <Modal

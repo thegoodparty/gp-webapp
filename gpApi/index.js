@@ -53,9 +53,36 @@ const gpApi = {
   },
 
   campaign: {
+    find: {
+      url: `${base}campaign`,
+      method: 'GET',
+      withAuth: true,
+    },
+    update: {
+      url: `${base}campaign`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    stats: {
+      url: `${base}campaign/stats`,
+      method: 'GET',
+      withAuth: true,
+    },
     claim: {
       url: `${base}campaign/claim`,
       method: 'POST',
+    },
+    role: {
+      url: `${base}campaign/staff-role`,
+      method: 'GET',
+      withAuth: true,
+    },
+    staff: {
+      userStaff: {
+        url: `${base}user/staff`,
+        method: 'GET',
+        withAuth: true,
+      },
     },
   },
 
@@ -65,15 +92,7 @@ const gpApi = {
       method: 'POST',
     },
   },
-  campaign: {
-    staff: {
-      userStaff: {
-        url: `${base}user/staff`,
-        method: 'GET',
-        withAuth: true,
-      },
-    },
-  },
+
   candidateApplication: {
     create: {
       url: `${base}application`,
