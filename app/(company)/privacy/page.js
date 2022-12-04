@@ -6,10 +6,12 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 
-async function fetchContent(params) {
-  const api = { ...gpApi.content.contentByKey };
-  api.url = `${api.url}?key=privacyPage`;
-  return await gpFetch(api, false, 3600);
+async function fetchContent() {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'privacyPage',
+  };
+  return await gpFetch(api, payload, 3600);
 }
 
 export default async function Page(params) {

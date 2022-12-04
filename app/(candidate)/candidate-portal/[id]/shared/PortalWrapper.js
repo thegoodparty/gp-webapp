@@ -10,7 +10,7 @@ export default function PortalWrapper({ children, id, role, pathname, title }) {
           className="py-14 lg:flex"
         >
           <PortalLeftMenu id={id} role={role} pathname={pathname} />
-          <div>
+          <div className="flex-1">
             {title && <h1 className="text-2xl mb-8 font-black">{title}</h1>}
             <div>{children}</div>
           </div>

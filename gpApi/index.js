@@ -50,6 +50,10 @@ const gpApi = {
       url: `${base}new-candidate`,
       method: 'GET',
     },
+    trackVisit: {
+      url: `${base}visit`,
+      method: 'POST',
+    },
   },
 
   campaign: {

@@ -8,12 +8,16 @@ import CandidatePage from './components/CandidatePage';
 import CandidateSchema from './CandidateSchema';
 import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import { slugify } from 'helpers/articleHelper';
+import TrackVisit from './TrackVisit';
 
 export const fetchCandidate = async (id) => {
-  const api = { ...gpApi.candidate.find };
-  api.url += `?id=${id}&allFields=true`;
+  const api = gpApi.candidate.find;
+  const payload = {
+    id,
+    allFields: true,
+  };
 
-  return gpFetch(api, false, 3600);
+  return gpFetch(api, payload, 3600);
 };
 
 export default async function Page({ params }) {
@@ -46,6 +50,7 @@ export default async function Page({ params }) {
     <>
       <CandidatePage {...childProps} />
       <CandidateSchema candidate={candidate} />
+      <TrackVisit />
     </>
   );
 }

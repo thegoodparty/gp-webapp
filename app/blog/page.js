@@ -3,15 +3,21 @@ import gpFetch from 'gpApi/gpFetch';
 import BlogPage from './components/BlogPage';
 
 export const fetchSections = async () => {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += '?key=blogSections&deleteKey=articles';
-  return gpFetch(api, false, 3600);
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'blogSections',
+    deleteKey: 'articles',
+  };
+  return gpFetch(api, payload, 3600);
 };
 
 export const fetchArticles = async () => {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += '?key=blogArticles&limit=20';
-  return gpFetch(api, false, 3600);
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'blogArticles',
+    limit: 20,
+  };
+  return gpFetch(api, payload, 3600);
 };
 
 export default async function Page({ params, searchParams }) {

@@ -5,9 +5,14 @@ import { notFound, redirect } from 'next/navigation';
 import FaqsArticlePage from './components/FaqsArticlePage';
 
 const fetchArticle = async (id) => {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += `?key=faqArticles&subKey=id&subValue=${id}`;
-  return gpFetch(api, false, 3600);
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'faqArticles',
+    subKey: 'id',
+    subValue: id,
+  };
+
+  return gpFetch(api, payload, 3600);
 };
 
 export default async function Page({ params, searchParams }) {
@@ -32,9 +37,11 @@ export default async function Page({ params, searchParams }) {
 }
 
 export async function generateStaticParams() {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += '?key=faqArticles';
-  const { content } = await gpFetch(api, false, 3600);
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'faqArticles',
+  };
+  const { content } = await gpFetch(api, payload, 3600);
 
   return content.map((article) => {
     const title = slugify(article.title);
