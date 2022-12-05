@@ -1,4 +1,6 @@
-import { getServerUser } from 'helpers/userServerHelper';
+'use client';
+// import { getServerUser } from 'helpers/userServerHelper';
+import { getUserCookie } from 'helpers/cookieHelper';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
@@ -39,7 +41,7 @@ export const leftMenuItemsBottom = [
 
 export default function PortalLeftMenu({ id, role, pathname }) {
   const link = (itemLink) => `/candidate-portal/${id}${itemLink}`;
-  const user = getServerUser();
+  const user = getUserCookie();
   return (
     <div className="px-3 pt-5 text-center lg:w-[220px] lg:overflow-x-hidden lg:pt-14 lg:pr-3 lg:pb-0 lg:pl-3 lg:text-left">
       {leftMenuItems.map((item) => (

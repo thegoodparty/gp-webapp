@@ -6,7 +6,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { ImBlocked } from 'react-icons/im';
 
-import styles from './CAmpaignColorPicker.module.scss';
+import styles from './CampaignColorPicker.module.scss';
 
 // import ColorPicker from '../CandidatePortalHomeWrapper/ColorPicker';
 
