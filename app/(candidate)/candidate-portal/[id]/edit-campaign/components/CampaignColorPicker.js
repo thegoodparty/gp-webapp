@@ -8,6 +8,7 @@ import { ImBlocked } from 'react-icons/im';
 
 import styles from './CampaignColorPicker.module.scss';
 import { updateCandidateCallback } from './EditCampaignPage';
+import CustomColorPicker from './CustomColorPicker';
 
 // import ColorPicker from '../CandidatePortalHomeWrapper/ColorPicker';
 
@@ -198,7 +199,7 @@ function CampaignColorPicker({ candidate }) {
                   </div>
                 )}
                 {color.wrong && (
-                  <div className="text-center text-xs left-0 top-4">
+                  <div className="text-center text-xs left-0 top-4 flex flex-col items-center">
                     <ImBlocked size={36} />
 
                     <div style={{ marginTop: '6px' }}>Wrong Site</div>
@@ -218,9 +219,9 @@ function CampaignColorPicker({ candidate }) {
               />
             </div>
           ))}
-          {/* <div>
-          <ColorPicker mode="lean" onColorPick={handleColorPicker} />
-        </div> */}
+          <div>
+            <CustomColorPicker onColorPick={handleColorPicker} />
+          </div>
           <div>&nbsp;</div>
           <div>&nbsp;</div>
         </Slider>
