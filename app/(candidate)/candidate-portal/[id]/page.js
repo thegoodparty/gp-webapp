@@ -35,9 +35,10 @@ export default async function Page({ params }) {
   const { stats, chart } = await fetchStats(id);
 
   const childProps = {
+    id,
     candidate,
     role,
-    pathname: '/candidate-portal',
+    pathname: `/candidate-portal/${id}`,
     title: `Analytics Dashboard for ${candidate.firstName} ${candidate.lastName}`,
     stats,
     chart,

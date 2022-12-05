@@ -5,20 +5,20 @@ import { Fragment } from 'react';
 export const leftMenuItems = [
   {
     label: 'Analytics Dashboard',
-    link: '/candidate-portal',
+    link: '',
   },
   {
     label: 'Campaign Page & Info',
-    link: '/candidate-portal/campaign-manager',
+    link: '/edit-campaign',
   },
 
   {
     label: 'Policy Issues',
-    link: '/candidate-portal/top-issues',
+    link: '/top-issues',
   },
   {
     label: 'Key Endorsers',
-    link: '/candidate-portal/endorsements',
+    link: '/endorsements',
   },
 ];
 
@@ -38,7 +38,7 @@ export const leftMenuItemsBottom = [
 ];
 
 export default function PortalLeftMenu({ id, role, pathname }) {
-  const link = (itemLink) => `${itemLink}/${id}`;
+  const link = (itemLink) => `/candidate-portal/${id}${itemLink}`;
   const user = getServerUser();
   return (
     <div className="px-3 pt-5 text-center lg:w-[220px] lg:overflow-x-hidden lg:pt-14 lg:pr-3 lg:pb-0 lg:pl-3 lg:text-left">
@@ -51,7 +51,7 @@ export default function PortalLeftMenu({ id, role, pathname }) {
           <div
             className="inline-block text-zinc-600 pr-5 pb-4 lg:block lg:pb-10 lg:pr-0"
             style={
-              pathname === item.link
+              pathname === link(item.link)
                 ? { fontWeight: '900', color: 'black' }
                 : {}
             }
@@ -70,7 +70,7 @@ export default function PortalLeftMenu({ id, role, pathname }) {
           </Link>
         ))}
         {user?.isAdmin && (
-          <Link href={link('/candidate-portal/admin')}>
+          <Link href={link('/admin')}>
             <div
               className="inline-block text-zinc-600 pr-5 pb-4 lg:block lg:pb-10 lg:pr-0"
               style={
