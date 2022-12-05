@@ -1,10 +1,19 @@
 'use client';
 import { isValidUrl } from 'helpers/linkhelper';
 import { flatStates } from 'helpers/statesHelper';
-import { Suspense, useEffect, useState } from 'react';
+import { Fragment, Suspense, useEffect, useState } from 'react';
 import PortalPanel from '../../shared/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import CampaignColorPicker from './CampaignColorPicker';
+import Select from '@mui/material/Select';
+import { partyResolver } from 'helpers/candidateHelper';
+import JoditEditorWrapper from '@shared/inputs/JoditEditorWrapper';
+import YouTubeInput from '@shared/inputs/YouTubeInput';
+import TextField from '@shared/inputs/TextField';
+import PhoneInput from '@shared/inputs/PhoneInput';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
 export const fields = [
   { label: 'First Name', key: 'firstName', required: true },
@@ -35,7 +44,7 @@ export const fields2 = [
   {
     label: 'State ',
     key: 'state',
-    columns: 6,
+    columns: 'col-span-6',
     type: 'select',
     options: flatStates,
     required: true,
@@ -43,7 +52,7 @@ export const fields2 = [
   {
     label: 'Office ',
     key: 'office',
-    columns: 6,
+    columns: 'col-span-6',
     type: 'select',
     withGroups: true,
     options: [
@@ -86,14 +95,14 @@ export const fields2 = [
   },
   {
     label: 'District (if applicable)',
-    columns: 6,
+    columns: 'col-span-6',
     key: 'district',
     type: 'number',
   },
   {
     label: 'Counties served',
     key: 'counties',
-    columns: 6,
+    columns: 'col-span-6',
   },
   {
     label: 'Date of election ',
@@ -105,13 +114,13 @@ export const fields2 = [
     label: 'Ballot filing deadline ',
     key: 'ballotDate',
     isDate: true,
-    columns: 6,
+    columns: 'col-span-6',
   },
   {
     label: 'Early voting date',
     key: 'earlyVotingDate',
     isDate: true,
-    columns: 6,
+    columns: 'col-span-6',
   },
   { label: 'Headline', key: 'headline', required: true },
   { label: 'Summary', key: 'about', isRichText: true, required: true },
@@ -144,12 +153,34 @@ export const panels = [
   { fields: fields3, label: 'Contact Information' },
 ];
 
+export const updateCandidateCallback = async (id, candidate) => {
+  const api = gpApi.campaign.update;
+  const payload = {
+    id,
+    candidate,
+  };
+  return await gpFetch(api, payload);
+};
+
+export const fetchCandidate = async (id) => {
+  const api = gpApi.campaign.find;
+  const payload = { id };
+  return gpFetch(api, payload);
+};
+
 export default function EditCampaignPage(props) {
-  const { candidate } = props;
+  const [candidate, setCandidate] = useState(props.candidate);
   const [state, setState] = useState({});
   const [errors, setErrors] = useState({});
   const [updateImage, setUpdateImage] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
+  const [s3Url, setS3Url] = useState(false);
+
+  const updateCandidate = async () => {
+    await updateCandidateCallback(candidate.id, state);
+    const res = await fetchCandidate(candidate.id);
+    setCandidate(res.candidate);
+  };
 
   useEffect(() => {
     const newState = {};
@@ -253,9 +284,9 @@ export default function EditCampaignPage(props) {
 
   return (
     <PortalWrapper {...props}>
-      <Suspense fallback="loading">
+      {/* <Suspense fallback="loading">
         <CampaignColorPicker />
-      </Suspense>
+      </Suspense> */}
 
       {panels.map((panel, index) => (
         <PortalPanel
@@ -267,14 +298,14 @@ export default function EditCampaignPage(props) {
             <h3 className="font-black text-2xl mb-11" data-cy="panel-title">
               {panel.label}
             </h3>
-            {/* <Grid container spacing={2}>
+            <div className="grid gap-4 grid-cols-12">
               {panel.fields.map((field) => (
-                <React.Fragment key={field.key}>
+                <Fragment key={field.key}>
                   {(!field.isHidden || showHidden) && (
-                    <Grid
-                      item
-                      xs={12}
-                      lg={field.columns ? field.columns : 12}
+                    <div
+                      className={`col-span-12 ${
+                        field.columns ? 'lg:col-span-6' : 'lg:col-span-12'
+                      }`}
                       data-cy="panel-field"
                     >
                       {field.isRichText && (
@@ -332,28 +363,30 @@ export default function EditCampaignPage(props) {
                               </>
                             )}
                           </Select>
-                          {errors[field.key] && <Err>{errors[field.key]}</Err>}
+                          {errors[field.key] && (
+                            <div className="text-red-600 mt-2">
+                              {errors[field.key]}
+                            </div>
+                          )}
                         </>
                       )}
                       {field.type === 'youtubeInput' && (
                         <YouTubeInput
                           initialId={state[field.key] || ''}
                           onChangeCallback={(value, id) => {
-                            console.log('value', value);
-                            console.log('id', id);
                             onChangeField(field.key, id);
                           }}
                         />
                       )}
+
                       {field.type !== 'select' &&
                         !field.isRichText &&
                         field.type !== 'youtubeInput' &&
                         field.type !== 'phone' && (
                           <TextField
-                            fullWidth
+                            style={{ width: '100%' }}
                             label={field.label}
                             name={field.label}
-                            variant="outlined"
                             value={state[field.key] || ''}
                             initialValue={state[field.key]}
                             type={
@@ -387,6 +420,7 @@ export default function EditCampaignPage(props) {
                             required={field.required}
                           />
                         )}
+
                       {field.type === 'phone' && (
                         <PhoneInput
                           value={state[field.key] || ''}
@@ -396,66 +430,56 @@ export default function EditCampaignPage(props) {
                           hideIcon
                         />
                       )}
-                    </Grid>
+                    </div>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
               {index === 1 && (
-                <Grid item xs={12}>
-                  <ImageWrapper>
+                <div className="col-span-12">
+                  <div className="my-6" style={{ maxWidth: '250px' }}>
                     Campaign Photo
                     <br />
                     <br />
-                    {loading ? (
-                      <div>Uploading...</div>
+                    {(candidate.image || s3Url) && !updateImage ? (
+                      <div>
+                        <img
+                          src={s3Url || candidate.image}
+                          className="full-image"
+                        />
+                        <br />
+                        <BlackButtonClient
+                          onClick={() => setUpdateImage(true)}
+                          fullWidth
+                        >
+                          <strong>Change Photo</strong>
+                        </BlackButtonClient>
+                      </div>
                     ) : (
-                      <>
-                        {(candidate.image || s3Url) && !updateImage ? (
-                          <div>
-                            <img
-                              src={s3Url || candidate.image}
-                              className="full-image"
-                            />
-                            <br />
-                            <BlackButton
-                              onClick={() => setUpdateImage(true)}
-                              fullWidth
-                            >
-                              <InnerButton>Change Photo</InnerButton>
-                            </BlackButton>
-                          </div>
-                        ) : (
-                          <div>
-                            <strong>Upload an Image</strong>
-                            <br />
-                            <ImageUploadContainer
+                      <div>
+                        <strong>Upload an Image</strong>
+                        <br />
+                        {/* <ImageUploadContainer
                               uploadCallback={handleUpload}
                               maxFileSize={1000000}
-                            />
-                          </div>
-                        )}
-                      </>
+                            /> */}
+                      </div>
                     )}
-                  </ImageWrapper>
-                </Grid>
+                  </div>
+                </div>
               )}
-            </Grid> */}
+            </div>
           </div>
-          {/* {index === 0 && (
-            <StickyWrapper>
-              <Sticky>
-                <SaveWrapper>
-                  <BlackButton
-                    onClick={() => updateCandidateCallback(candidate.id, state)}
-                    className="sticky-el"
-                    disabled={!canSubmit()}
-                  >
-                    <InnerButton>SAVE</InnerButton>
-                  </BlackButton>
-                </SaveWrapper>
-              </Sticky>
-            </StickyWrapper>
-          )} */}
+          {index === 0 && (
+            <div className="text-right py-5">
+              <BlackButtonClient
+                onClick={() => updateCandidate()}
+                className="sticky-el"
+                disabled={!canSubmit()}
+              >
+                <strong>SAVE</strong>
+              </BlackButtonClient>
+            </div>
+          )}
         </PortalPanel>
       ))}
     </PortalWrapper>

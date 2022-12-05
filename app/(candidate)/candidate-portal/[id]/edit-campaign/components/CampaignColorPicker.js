@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { ImBlocked } from 'react-icons/im';
 
 import styles from './CampaignColorPicker.module.scss';
+import { updateCandidateCallback } from './EditCampaignPage';
 
 // import ColorPicker from '../CandidatePortalHomeWrapper/ColorPicker';
 
@@ -89,10 +90,6 @@ const groups = [
   { name: 'Pastel', slide: bright.length + muted.length },
   { name: 'Political', slide: bright.length + muted.length + pastel.length },
 ];
-
-export const updateCandidateCallback = async () => {
-  console.log('updateCandidateCallback');
-};
 
 function CampaignColorPicker({ candidate }) {
   const slider = useRef(null);

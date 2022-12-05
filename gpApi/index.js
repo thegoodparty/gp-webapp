@@ -171,6 +171,16 @@ const gpApi = {
         method: 'GET',
       },
     },
+    uploadedImages: {
+      url: `${base}admin/uploaded-images`,
+      method: 'POST',
+      withAuth: true,
+    },
+    uploadImage: {
+      url: `${base}admin/upload-image`,
+      method: 'POST',
+      withAuth: true,
+    },
   },
 };
 
