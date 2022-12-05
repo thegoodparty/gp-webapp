@@ -179,50 +179,52 @@ function CampaignColorPicker({ candidate }) {
           </div>
         ))}
       </div>
-      <Slider {...settings} ref={slider}>
-        {colors.map((color) => (
-          <div className="pr-1" key={color.color}>
-            <div
-              className="h-60 relative rounded-md text-white cursor-pointer flex items-center justify-center"
-              style={
-                color.wrong
-                  ? { backgroundColor: color.color, cursor: 'not-allowed' }
-                  : { backgroundColor: color.color }
-              }
-              onClick={() => selectColor(color)}
-            >
-              {color.type === 'political' && (
-                <div className="absolute w-full text-center text-xs left-0 top-4 font-black">
-                  {color.party}
-                </div>
-              )}
-              {color.wrong && (
-                <div className="text-center text-xs left-0 top-4">
-                  <ImBlocked size={36} />
+      <div style={{ maxWidth: '1060px', overflow: 'hidden', height: '300px' }}>
+        <Slider {...settings} ref={slider}>
+          {colors.map((color) => (
+            <div className="pr-1" key={color.color}>
+              <div
+                className="h-60 relative rounded-md text-white cursor-pointer flex items-center justify-center"
+                style={
+                  color.wrong
+                    ? { backgroundColor: color.color, cursor: 'not-allowed' }
+                    : { backgroundColor: color.color }
+                }
+                onClick={() => selectColor(color)}
+              >
+                {color.type === 'political' && (
+                  <div className="absolute w-full text-center text-xs left-0 top-4 font-black">
+                    {color.party}
+                  </div>
+                )}
+                {color.wrong && (
+                  <div className="text-center text-xs left-0 top-4">
+                    <ImBlocked size={36} />
 
-                  <div style={{ marginTop: '6px' }}>Wrong Site</div>
+                    <div style={{ marginTop: '6px' }}>Wrong Site</div>
+                  </div>
+                )}
+                <div className="absolute w-full text-center text-xs left-0 bottom-3">
+                  {color.color}
                 </div>
-              )}
-              <div className="absolute w-full text-center text-xs left-0 bottom-3">
-                {color.color}
               </div>
+              <div
+                className="inline-block w-[60%] ml-[20%] h-2 rounded-md mt-2"
+                style={
+                  color.color === selected.color
+                    ? { backgroundColor: color.color }
+                    : {}
+                }
+              />
             </div>
-            <div
-              className="inline-block w-[60%] ml-[20%] h-2 rounded-md mt-2"
-              style={
-                color.color === selected.color
-                  ? { backgroundColor: color.color }
-                  : {}
-              }
-            />
-          </div>
-        ))}
-        {/* <div>
+          ))}
+          {/* <div>
           <ColorPicker mode="lean" onColorPick={handleColorPicker} />
         </div> */}
-        <div>&nbsp;</div>
-        <div>&nbsp;</div>
-      </Slider>
+          <div>&nbsp;</div>
+          <div>&nbsp;</div>
+        </Slider>
+      </div>
     </div>
   );
 }

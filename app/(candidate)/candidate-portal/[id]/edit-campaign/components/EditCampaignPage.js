@@ -284,9 +284,9 @@ export default function EditCampaignPage(props) {
 
   return (
     <PortalWrapper {...props}>
-      {/* <Suspense fallback="loading">
-        <CampaignColorPicker />
-      </Suspense> */}
+      <Suspense fallback="loading">
+        <CampaignColorPicker candidate={candidate} />
+      </Suspense>
 
       {panels.map((panel, index) => (
         <PortalPanel
