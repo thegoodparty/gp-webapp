@@ -7,8 +7,20 @@ import TextField from '@shared/inputs/TextField';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 
-const saveIssueCallback = () => {};
+const saveIssueCallback = async (
+  topIssueId,
+  positionId,
+  description,
+  candidateId,
+  order,
+) => {
+  const api = gpApi.campaign.candidatePosition.create;
+  const payload = { topIssueId, positionId, description, candidateId, order };
+  return await gpFetch(api, payload);
+};
 const updateIssueCallback = async (
   id,
   topIssueId,
@@ -40,7 +52,15 @@ function EditableTopIssue({
     description: existingIssue ? existingIssue.description : '',
   });
 
+  const [inputState, setInputState] = useState({
+    topic: existingIssue ? existingIssue.topIssue : '',
+    position: existingIssue ? existingIssue.position : '',
+    description: existingIssue ? existingIssue.description : '',
+  });
+
   const [availableIssues, setAvailableIssues] = useState(topIssues);
+
+  const snackbarState = useHookstate(globalSnackbarState);
 
   useEffect(() => {
     if (candidatePositions?.length > 0) {
@@ -63,6 +83,13 @@ function EditableTopIssue({
   }, [candidatePositions, topIssues]);
 
   const save = () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saving...',
+        isError: false,
+      };
+    });
     if (existingIssue) {
       updateIssueCallback(
         existingIssue.id,
@@ -71,7 +98,6 @@ function EditableTopIssue({
         state.description,
         candidate.id,
       );
-      updatePositionsCallback();
       closeEditModeCallback();
     } else {
       saveIssueCallback(
@@ -88,6 +114,7 @@ function EditableTopIssue({
         description: '',
       });
     }
+    updatePositionsCallback();
   };
 
   const canSubmit = () =>
@@ -103,6 +130,18 @@ function EditableTopIssue({
     }
     setState(updatedState);
   };
+  state.topic !== '' && state.position !== '' && state.description !== '';
+
+  const onInputChange = (value, key) => {
+    const updatedState = {
+      ...inputState,
+      [key]: value,
+    };
+    if (key === 'topic') {
+      updatedState.position = '';
+    }
+    setInputState(updatedState);
+  };
   return (
     <>
       <div className="col-span-1">
@@ -112,6 +151,7 @@ function EditableTopIssue({
         <Autocomplete
           options={availableIssues}
           value={state.topic}
+          inputValue={inputState.topic}
           getOptionLabel={(item) => item?.name}
           fullWidth
           renderInput={(params) => (
@@ -120,12 +160,16 @@ function EditableTopIssue({
           onChange={(event, item) => {
             onChangeField(item, 'topic');
           }}
+          onInputChange={(event, newInputValue) => {
+            onInputChange(newInputValue, 'topic');
+          }}
         />
       </div>
       <div className="col-span-3">
         <Autocomplete
           options={state.topic?.positions || []}
           value={state.position}
+          inputValue={inputState.position}
           getOptionLabel={(item) => item.name}
           fullWidth
           renderInput={(params) => (
@@ -133,6 +177,10 @@ function EditableTopIssue({
           )}
           onChange={(event, item) => {
             onChangeField(item, 'position');
+          }}
+          onInputChange={(event, newInputValue) => {
+            console.log('position input', newInputValue);
+            onInputChange(newInputValue, 'position');
           }}
         />
       </div>
@@ -143,8 +191,12 @@ function EditableTopIssue({
           label="Description"
           name="Description"
           value={state.description}
+          inputValue={inputState.description}
           onChange={(e) => {
             onChangeField(e.target.value, 'description');
+          }}
+          onInputChange={(event, newInputValue) => {
+            onInputChange(newInputValue, 'description');
           }}
         />
       </div>

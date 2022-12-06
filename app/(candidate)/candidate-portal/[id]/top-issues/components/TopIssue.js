@@ -1,17 +1,27 @@
 'use client';
 import AlertDialog from '@shared/utils/AlertDialog';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import React, { useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import EditableTopIssue from './EditableTopIssue';
 
+const deleteCandidatePosition = async (id, candidateId) => {
+  const api = gpApi.campaign.candidatePosition.delete;
+  const payload = { id, candidateId };
+  return await gpFetch(api, payload);
+};
+
 export default function TopIssue(props) {
-  const { index, candidate, candidatePosition } = props;
+  const { index, candidate, candidatePosition, updatePositionsCallback } =
+    props;
   const [editMode, setEditMode] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const deleteCandidatePositionCallback = () => {};
 
-  const deleteIssue = () => {
-    deleteCandidatePositionCallback(candidatePosition.id, candidate.id);
+  const deleteIssue = async () => {
+    await deleteCandidatePosition(candidatePosition.id, candidate.id);
+    updatePositionsCallback();
+    handleCloseAlert();
   };
 
   const handleCloseAlert = () => setShowDeleteAlert(false);
