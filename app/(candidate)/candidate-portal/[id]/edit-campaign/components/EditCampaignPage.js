@@ -165,7 +165,7 @@ export const updateCandidateCallback = async (id, candidate) => {
 export const fetchCandidate = async (id) => {
   const api = gpApi.campaign.find;
   const payload = { id };
-  return gpFetch(api, payload);
+  return await gpFetch(api, payload);
 };
 
 export default function EditCampaignPage(props) {

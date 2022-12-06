@@ -11,7 +11,7 @@ export const fetchCandidates = async (position, state) => {
     api.url += `&state=${state}`;
   }
 
-  return gpFetch(api, false, 3600);
+  return await gpFetch(api, false, 3600);
 };
 
 export default async function Page({ params, searchParams }) {

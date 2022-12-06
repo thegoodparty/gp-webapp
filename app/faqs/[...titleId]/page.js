@@ -12,7 +12,7 @@ const fetchArticle = async (id) => {
     subValue: id,
   };
 
-  return gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload, 3600);
 };
 
 export default async function Page({ params, searchParams }) {

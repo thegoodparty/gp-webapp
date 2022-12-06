@@ -10,7 +10,7 @@ export const track = async (url, data) => {
     data,
   };
 
-  return gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload, 3600);
 };
 
 export default function TrackVisit() {

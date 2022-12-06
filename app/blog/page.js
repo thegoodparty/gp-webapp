@@ -8,7 +8,7 @@ export const fetchSections = async () => {
     key: 'blogSections',
     deleteKey: 'articles',
   };
-  return gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload, 3600);
 };
 
 export const fetchArticles = async () => {
@@ -17,7 +17,7 @@ export const fetchArticles = async () => {
     key: 'blogArticles',
     limit: 20,
   };
-  return gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload, 3600);
 };
 
 export default async function Page({ params, searchParams }) {

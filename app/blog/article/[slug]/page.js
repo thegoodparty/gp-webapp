@@ -10,7 +10,7 @@ export const fetchArticle = async (slug) => {
   const api = { ...gpApi.content.contentByKey };
   api.url += `?key=blogArticles&subKey=slug&subValue=${slug}`;
 
-  return gpFetch(api, false, 3600);
+  return await gpFetch(api, false, 3600);
 };
 
 export default async function Page({ params }) {

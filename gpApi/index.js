@@ -88,6 +88,51 @@ const gpApi = {
         withAuth: true,
       },
     },
+
+    candidatePosition: {
+      create: {
+        url: `${base}candidate-position`,
+        method: 'POST',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}candidate-position`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}candidate-position`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}candidate-positions`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+  },
+
+  topIssues: {
+    create: {
+      url: `${base}top-issue`,
+      method: 'POST',
+      withAuth: true,
+    },
+    update: {
+      url: `${base}top-issue`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    delete: {
+      url: `${base}top-issue`,
+      method: 'DELETE',
+      withAuth: true,
+    },
+    list: {
+      url: `${base}top-issues`, // non admin
+      method: 'GET',
+    },
   },
 
   candidateApplication: {

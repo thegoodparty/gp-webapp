@@ -5,7 +5,7 @@ import FaqsPage from './components/FaqsPage';
 const fetchContent = async () => {
   const api = { ...gpApi.content.contentByKey };
   api.url += '?key=articleCategories';
-  return gpFetch(api, false, 3600);
+  return await gpFetch(api, false, 3600);
 };
 
 export default async function Page({ params, searchParams }) {

@@ -17,7 +17,7 @@ export const fetchCandidate = async (id) => {
     allFields: true,
   };
 
-  return gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload, 3600);
 };
 
 export default async function Page({ params }) {
