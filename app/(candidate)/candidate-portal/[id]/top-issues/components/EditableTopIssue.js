@@ -53,9 +53,9 @@ function EditableTopIssue({
   });
 
   const [inputState, setInputState] = useState({
-    topic: existingIssue ? existingIssue.topIssue : '',
-    position: existingIssue ? existingIssue.position : '',
-    description: existingIssue ? existingIssue.description : '',
+    topic: existingIssue?.topIssue ? existingIssue.topIssue : '',
+    position: existingIssue?.position ? existingIssue.position : '',
+    description: existingIssue?.description ? existingIssue.description : '',
   });
 
   const [availableIssues, setAvailableIssues] = useState(topIssues);
