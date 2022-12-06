@@ -111,6 +111,29 @@ const gpApi = {
         withAuth: true,
       },
     },
+
+    endorsement: {
+      create: {
+        url: `${base}campaign/endorsement`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/endorsements`,
+        method: 'GET',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/endorsement`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}campaign/endorsement`,
+        method: 'PUT',
+        withAuth: true,
+      },
+    },
   },
 
   topIssues: {

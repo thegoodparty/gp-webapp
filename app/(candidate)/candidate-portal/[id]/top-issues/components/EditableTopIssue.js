@@ -179,7 +179,6 @@ function EditableTopIssue({
             onChangeField(item, 'position');
           }}
           onInputChange={(event, newInputValue) => {
-            console.log('position input', newInputValue);
             onInputChange(newInputValue, 'position');
           }}
         />
