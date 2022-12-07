@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import NewEndorsementForm from './NewEndorsementForm';
 
 // import NewEndorsementForm from './NewEndorsementForm';
 
@@ -13,14 +14,13 @@ export default function Endorsement({
   endorsement,
   last,
   deleteCallback,
-  editEndorsementCallback,
+  updateEndorsements,
   candidate,
 }) {
   const [showEdit, setShowEdit] = useState(false);
   const { summary, id, image, link, title } = endorsement;
 
   const handleUpdate = (updated) => {
-    editEndorsementCallback(updated, candidate.id);
     setShowEdit(false);
   };
 
@@ -88,6 +88,8 @@ export default function Endorsement({
         <NewEndorsementForm
           existingEndorsement={endorsement}
           updateEndorsementCallback={handleUpdate}
+          updateEndorsements={updateEndorsements}
+          candidate={candidate}
         />
       )}
     </div>

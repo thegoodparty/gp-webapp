@@ -159,13 +159,6 @@ const gpApi = {
   },
 
   candidateApplication: {
-    uploadImage: {
-      url: `${base}application/upload-image`,
-      method: 'POST',
-    },
-  },
-
-  candidateApplication: {
     create: {
       url: `${base}application`,
       method: 'POST',
@@ -185,6 +178,10 @@ const gpApi = {
       url: `${base}application`,
       method: 'GET',
       withAuth: true,
+    },
+    uploadImage: {
+      url: `${base}application/upload-image`,
+      method: 'POST',
     },
   },
   //

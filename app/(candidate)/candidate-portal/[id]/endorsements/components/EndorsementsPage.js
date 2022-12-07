@@ -7,6 +7,7 @@ import { useState } from 'react';
 import PortalPanel from '../../shared/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import Endorsement from './Endorsement';
+import NewEndorsementForm from './NewEndorsementForm';
 
 const deleteEndorsementCallback = async (id, candidateId) => {
   const api = gpApi.campaign.endorsement.delete;
@@ -32,7 +33,11 @@ export default function EndorsementsPage(props) {
   const handleDelete = async () => {
     await deleteEndorsementCallback(deleteEndorsement.id, candidate.id);
     setDeleteEndorsement(false);
-    const res = await fetchEndorsements(id);
+    await updateEndorsements();
+  };
+
+  const updateEndorsements = async () => {
+    const res = await fetchEndorsements(candidate.id);
     setEndorsements(res.endorsements);
   };
 
@@ -50,7 +55,13 @@ export default function EndorsementsPage(props) {
             <strong>Add Endorsement</strong>
           </BlackButtonClient>
         </div>
-        {/* {showAdd && <NewEndorsementForm closeAdd={() => setShowAdd(false)} />} */}
+        {showAdd && (
+          <NewEndorsementForm
+            closeAdd={() => setShowAdd(false)}
+            updateEndorsements={updateEndorsements}
+            {...props}
+          />
+        )}
         <br />
         {endorsements.map((endorsement, index) => (
           <Endorsement
@@ -58,6 +69,8 @@ export default function EndorsementsPage(props) {
             last={index === endorsements.length - 1}
             deleteCallback={deleteCallback}
             key={endorsement.id}
+            updateEndorsements={updateEndorsements}
+            candidate={candidate}
           />
         ))}
       </PortalPanel>
