@@ -2,14 +2,14 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import ImageUpload from '@shared/inputs/ImageUpload';
 import TextField from '@shared/inputs/TextField';
 import Image from 'next/image';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 
-import { isValidUrl } from '/helpers/linkHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { isValidUrl } from 'helpers/linkhelper';
 
 const addEndorsement = async (id, title, summary, link, image) => {
   const api = gpApi.campaign.endorsement.create;
