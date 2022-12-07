@@ -1,6 +1,6 @@
 'use client';
 import { isValidUrl } from 'helpers/linkhelper';
-import { flatStates } from 'helpers/statesHelper';
+
 import { Fragment, Suspense, useEffect, useState } from 'react';
 import PortalPanel from '../../shared/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
@@ -14,144 +14,8 @@ import PhoneInput from '@shared/inputs/PhoneInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-
-export const fields = [
-  { label: 'First Name', key: 'firstName', required: true },
-  { label: 'Last Name', key: 'lastName', required: true },
-  { label: 'Zip Code', key: 'zip' },
-
-  { label: 'Twitter', key: 'twitter', isUrl: true },
-  { label: 'Facebook', key: 'facebook', isUrl: true },
-  { label: 'YouTube', key: 'youtube', isUrl: true },
-  { label: 'LinkedIn', key: 'linkedin', isUrl: true },
-  { label: 'Snap', key: 'snap', isUrl: true },
-  { label: 'TikTok', key: 'tiktok', isUrl: true },
-  { label: 'Instagram', key: 'instagram', isUrl: true },
-  { label: 'Twitch', key: 'twitch', isUrl: true },
-  { label: 'Website', key: 'website', isUrl: true },
-];
-
-export const fields2 = [
-  {
-    label: 'Political party affiliation',
-    key: 'party',
-    type: 'select',
-    options: ['I', 'GP', 'L', 'W', 'F', 'U', 'Other'],
-    required: true,
-  },
-
-  { label: 'Other Party', key: 'otherParty', isHidden: true },
-  {
-    label: 'State ',
-    key: 'state',
-    columns: 'col-span-6',
-    type: 'select',
-    options: flatStates,
-    required: true,
-  },
-  {
-    label: 'Office ',
-    key: 'office',
-    columns: 'col-span-6',
-    type: 'select',
-    withGroups: true,
-    options: [
-      {
-        group: 'Federal',
-        options: ['President', 'US Senate', 'US House of Representatives'],
-      },
-      {
-        group: 'State',
-        options: [
-          'Governor',
-          'Lieutenant Governor',
-          'Attorney General',
-          'Comptroller',
-          'Treasurer',
-          'Secretary of State',
-          'State Supreme Court Justice',
-          'State Senate',
-          'State House of Representatives',
-        ],
-      },
-      {
-        group: 'Local',
-        options: [
-          'County Executive',
-          'Mayor',
-          'District Attorney',
-          'Sheriff',
-          'Clerk',
-          'Auditor',
-          'Public Administrator',
-          'Judge',
-          'County Commissioner',
-          'Council Member',
-          'School Board',
-        ],
-      },
-    ],
-    required: true,
-  },
-  {
-    label: 'District (if applicable)',
-    columns: 'col-span-6',
-    key: 'district',
-    type: 'number',
-  },
-  {
-    label: 'Counties served',
-    key: 'counties',
-    columns: 'col-span-6',
-  },
-  {
-    label: 'Date of election ',
-    key: 'raceDate',
-    isDate: true,
-    required: true,
-  },
-  {
-    label: 'Ballot filing deadline ',
-    key: 'ballotDate',
-    isDate: true,
-    columns: 'col-span-6',
-  },
-  {
-    label: 'Early voting date',
-    key: 'earlyVotingDate',
-    isDate: true,
-    columns: 'col-span-6',
-  },
-  { label: 'Headline', key: 'headline', required: true },
-  { label: 'Summary', key: 'about', isRichText: true, required: true },
-  { label: 'Committee name', key: 'committeeName' },
-  {
-    label: 'Campaign Video (YouTube Id)',
-    key: 'heroVideo',
-    type: 'youtubeInput',
-  },
-
-  { label: 'Why I am running', key: 'whyRunning' },
-  { label: 'Why I am an independent', key: 'whyIndependent' },
-  { label: 'Prior experience', key: 'experience' },
-
-  { label: 'Home Town & State', key: 'hometown' },
-  { label: 'Current occupation', key: 'occupation' },
-  { label: 'Fun fact', key: 'funFact' },
-];
-
-export const fields3 = [
-  { label: 'First Name ', key: 'contactFirstName' },
-  { label: 'Last Name ', key: 'contactLastName' },
-  { label: 'Email ', key: 'contactEmail', type: 'email' },
-  { label: 'Phone ', key: 'contactPhone', type: 'phone' },
-];
-
-export const panels = [
-  { fields, label: 'Candidate Information' },
-  { fields: fields2, label: 'Campaign Information' },
-  { fields: fields3, label: 'Contact Information' },
-];
+import ImageUpload from '@shared/inputs/ImageUpload';
+import { panels } from './EditCampaignFields';
 
 export const updateCandidateCallback = async (id, candidate) => {
   const api = gpApi.campaign.update;
@@ -165,6 +29,12 @@ export const updateCandidateCallback = async (id, candidate) => {
 export const fetchCandidate = async (id) => {
   const api = gpApi.campaign.find;
   const payload = { id };
+  return await gpFetch(api, payload);
+};
+
+const uploadImage = async (id, url) => {
+  const api = gpApi.campaign.image.create;
+  const payload = { id, url };
   return await gpFetch(api, payload);
 };
 
@@ -252,9 +122,10 @@ export default function EditCampaignPage(props) {
     }
   };
 
-  const handleUpload = (url) => {
-    uploadImageCallback(candidate.id, url);
+  const handleUpload = async (url) => {
+    await uploadImage(candidate.id, url);
     setUpdateImage(false);
+    await fetchCandidate(candidate.id);
   };
 
   const canSubmit = () => {
@@ -458,10 +329,10 @@ export default function EditCampaignPage(props) {
                       <div>
                         <strong>Upload an Image</strong>
                         <br />
-                        {/* <ImageUploadContainer
-                              uploadCallback={handleUpload}
-                              maxFileSize={1000000}
-                            /> */}
+                        <ImageUpload
+                          uploadCallback={handleUpload}
+                          maxFileSize={1000000}
+                        />
                       </div>
                     )}
                   </div>

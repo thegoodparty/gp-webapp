@@ -89,6 +89,14 @@ const gpApi = {
       },
     },
 
+    image: {
+      create: {
+        url: `${base}campaign/image`,
+        method: 'POST',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,

@@ -51,7 +51,7 @@ export default function ImageUpload({
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Upload Image...',
+          message: 'Uploading Image...',
           isError: false,
         };
       });
@@ -82,8 +82,21 @@ export default function ImageUpload({
           />
         </Button>
       ) : (
-        <BlackButtonClient>
-          <RiImageAddFill /> &nbsp; <strong>Select</strong> &nbsp;&nbsp;
+        <Button
+          component="label"
+          style={{
+            textTransform: 'none',
+            fontSize: '16px',
+            padding: '16px 24px',
+            lineHeight: '1.3',
+            backgroundColor: '#000',
+            color: '#fff',
+            fontWeight: '700',
+          }}
+        >
+          <div className="flex items-center">
+            <RiImageAddFill /> &nbsp; <strong>Select</strong> &nbsp;&nbsp;
+          </div>
           <input
             type="file"
             hidden
@@ -91,7 +104,7 @@ export default function ImageUpload({
             accept="image/*"
             id="file-uploader"
           />
-        </BlackButtonClient>
+        </Button>
       )}
       {fileSizeError && (
         <div className="mt-3 text-red-600">
