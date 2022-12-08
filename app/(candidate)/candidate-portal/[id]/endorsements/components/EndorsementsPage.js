@@ -3,6 +3,7 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { revalidateCandidate } from 'helpers/cacheHelper';
 import { useState } from 'react';
 import PortalPanel from '../../shared/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
@@ -34,11 +35,13 @@ export default function EndorsementsPage(props) {
     await deleteEndorsementCallback(deleteEndorsement.id, candidate.id);
     setDeleteEndorsement(false);
     await updateEndorsements();
+    await revalidateCandidate(candidate);
   };
 
   const updateEndorsements = async () => {
     const res = await fetchEndorsements(candidate.id);
     setEndorsements(res.endorsements);
+    await revalidateCandidate(candidate);
   };
 
   return (

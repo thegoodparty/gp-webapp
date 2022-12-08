@@ -9,6 +9,7 @@ import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { revalidateCandidate } from 'helpers/cacheHelper';
 
 const saveIssueCallback = async (
   topIssueId,
@@ -82,7 +83,7 @@ function EditableTopIssue({
     }
   }, [candidatePositions, topIssues]);
 
-  const save = () => {
+  const save = async () => {
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -115,6 +116,7 @@ function EditableTopIssue({
       });
     }
     updatePositionsCallback();
+    await revalidateCandidate(candidate);
   };
 
   const canSubmit = () =>

@@ -23,7 +23,7 @@ export default function Endorsements({ candidate }) {
       </div>
       <div className="gap-2 " spacing={2}>
         {endorsements.map((item) => (
-          <div className="flex" key={item.id} data-cy="endorsement-item">
+          <div className="flex mt-6" key={item.id} data-cy="endorsement-item">
             {item.image && (
               <div className=" mr-6">
                 {
@@ -32,7 +32,7 @@ export default function Endorsements({ candidate }) {
                     height={80}
                     width={80}
                     style={{ objectFit: 'cover' }}
-                    className="rounded-full mr-6"
+                    className="rounded-full w-20 h-20"
                     data-cy="endorsement-item-img"
                     alt="Endorsement"
                   />

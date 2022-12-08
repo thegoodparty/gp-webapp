@@ -15,7 +15,7 @@
     "deploy-prod": "git checkout master  && eb deploy",
     "build-local": "NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:1337  next build",
     "build": "next build",
-    "start": "next build && next start",
+    "start": " next start",
     "lint": "next lint"
   },
   "dependencies": {

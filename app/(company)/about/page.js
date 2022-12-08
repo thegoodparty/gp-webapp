@@ -38,8 +38,8 @@ export default function Page() {
         activists and technologists who believe that our democracy is in peril
         and we need to do all that we can to save it. We are self-funded,
         putting our own time and money to this important cause, and stay
-        independent of any political parties or associations. Meet our team{' '}
-        <Link href="/team">here</Link>.
+        independent of any political parties or associations.{' '}
+        <Link href="/team">Meet our team here</Link>.
       </div>
       <h2 className="text-5xl font-black mt-24 mb-16">Why Good Party?</h2>
       <div className="text-xl mb-10">

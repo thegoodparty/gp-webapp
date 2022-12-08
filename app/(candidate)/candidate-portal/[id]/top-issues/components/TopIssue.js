@@ -2,6 +2,7 @@
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { revalidateCandidate } from 'helpers/cacheHelper';
 import React, { useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import EditableTopIssue from './EditableTopIssue';
@@ -22,6 +23,7 @@ export default function TopIssue(props) {
     await deleteCandidatePosition(candidatePosition.id, candidate.id);
     updatePositionsCallback();
     handleCloseAlert();
+    await revalidateCandidate(candidate);
   };
 
   const handleCloseAlert = () => setShowDeleteAlert(false);

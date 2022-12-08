@@ -6,7 +6,7 @@ import PortalPanel from '../../shared/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import CampaignColorPicker from './CampaignColorPicker';
 import Select from '@mui/material/Select';
-import { partyResolver } from 'helpers/candidateHelper';
+import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import JoditEditorWrapper from '@shared/inputs/JoditEditorWrapper';
 import YouTubeInput from '@shared/inputs/YouTubeInput';
 import TextField from '@shared/inputs/TextField';
@@ -16,6 +16,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ImageUpload from '@shared/inputs/ImageUpload';
 import { panels } from './EditCampaignFields';
+import { revalidateCandidate, revalidatePage } from 'helpers/cacheHelper';
 
 export const updateCandidateCallback = async (id, candidate) => {
   const api = gpApi.campaign.update;
@@ -23,7 +24,9 @@ export const updateCandidateCallback = async (id, candidate) => {
     id,
     candidate,
   };
-  return await gpFetch(api, payload);
+  const res = await gpFetch(api, payload);
+  await revalidateCandidate({ ...candidate, id });
+  return res;
 };
 
 export const fetchCandidate = async (id) => {
