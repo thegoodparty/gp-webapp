@@ -16,7 +16,10 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ImageUpload from '@shared/inputs/ImageUpload';
 import { panels } from './EditCampaignFields';
-import { revalidateCandidate, revalidatePage } from 'helpers/cacheHelper';
+import { revalidateCandidate } from 'helpers/cacheHelper';
+
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 export const updateCandidateCallback = async (id, candidate) => {
   const api = gpApi.campaign.update;
@@ -48,8 +51,16 @@ export default function EditCampaignPage(props) {
   const [updateImage, setUpdateImage] = useState(false);
   const [showHidden, setShowHidden] = useState(false);
   const [s3Url, setS3Url] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
 
   const updateCandidate = async () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saving...',
+        isError: false,
+      };
+    });
     await updateCandidateCallback(candidate.id, state);
     const res = await fetchCandidate(candidate.id);
     setCandidate(res.candidate);

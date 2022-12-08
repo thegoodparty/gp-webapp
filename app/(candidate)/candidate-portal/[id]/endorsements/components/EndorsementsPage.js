@@ -10,6 +10,9 @@ import PortalWrapper from '../../shared/PortalWrapper';
 import Endorsement from './Endorsement';
 import NewEndorsementForm from './NewEndorsementForm';
 
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
+
 const deleteEndorsementCallback = async (id, candidateId) => {
   const api = gpApi.campaign.endorsement.delete;
   const payload = { id, candidateId };
@@ -27,11 +30,19 @@ export default function EndorsementsPage(props) {
   const [endorsements, setEndorsements] = useState(props.endorsements);
   const [showAdd, setShowAdd] = useState(false);
   const [deleteEndorsement, setDeleteEndorsement] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
 
   const deleteCallback = (endorsement) => setDeleteEndorsement(endorsement);
   const cancelDeleteCallback = () => setDeleteEndorsement(false);
 
   const handleDelete = async () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Deleting Endorsement...',
+        isError: false,
+      };
+    });
     await deleteEndorsementCallback(deleteEndorsement.id, candidate.id);
     setDeleteEndorsement(false);
     await updateEndorsements();
