@@ -2,9 +2,9 @@
 @import '/styles/scss/breakpoints';
 
 .wrapper {
-  height: 100vh;
+  min-height: 100vh;
   @include lg {
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px);
   }
 }
 
