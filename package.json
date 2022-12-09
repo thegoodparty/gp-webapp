@@ -47,6 +47,7 @@
     "react-responsive-masonry": "^2.1.6",
     "react-schemaorg": "^2.0.0",
     "react-slick": "^0.29.0",
+    "react-social-login": "^3.4.16",
     "react-sticky-el": "^2.0.9",
     "react-timeago": "^7.1.0",
     "recharts": "^2.1.16",

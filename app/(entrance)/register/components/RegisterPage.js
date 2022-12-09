@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useHookstate } from '@hookstate/core';
 
@@ -9,12 +9,15 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import styles from './RegisterPage.module.scss';
 import { register } from '@shared/inputs/RegisterAnimated';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import { setCookie, setUserCookie } from 'helpers/cookieHelper';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import PasswordInput from '@shared/inputs/PasswrodInput';
 import { passwordRegex } from 'helpers/userHelper';
+import dynamic from 'next/dynamic';
+import SocialButtons from './SocialButtons';
+
+// const SocialButtons = dynamic(() => import('./SocialButtons'), { ssr: false });
 
 export const REGISTER_FIELDS = [
   {
@@ -217,6 +220,9 @@ export default function RegisterPage({}) {
             <GoogleReCaptcha onVerify={handleVerify} action="REGISTER" />
           )} */}
             </form>
+            <Suspense>
+              <SocialButtons />
+            </Suspense>
           </div>
         )}
       </div>
