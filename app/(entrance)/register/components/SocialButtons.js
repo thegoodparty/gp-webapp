@@ -37,10 +37,8 @@ export default function SocialButtons() {
     let idToken;
     if (provider === 'facebook') {
       try {
-        const largeImage = fetch(window.FB.api, '/me/picture?width=500');
-        if (largeImage) {
-          socialPic = largeImage;
-        }
+        const largeImage = await fetch(window.FB.api, '/me/picture?width=500');
+        socialPic = largeImage || '';
         idToken = socialUser._token.accessToken;
       } catch (e) {
         console.log('fb API error');
