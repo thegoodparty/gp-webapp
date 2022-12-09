@@ -34,7 +34,7 @@ const deleteFollowCandidate = async (candidateId) => {
 
 export const followOffsetState = hookstate(0);
 
-export default function FollowButton({ candidate }) {
+export default function FollowButton({ candidate, fullWidth }) {
   const brightColor = candidateColor(candidate);
   const userState = useHookstate(globalUserState);
   const followOffset = useHookstate(followOffsetState);
@@ -84,11 +84,12 @@ export default function FollowButton({ candidate }) {
             color: brightColor,
             borderColor: brightColor,
             marginTop: '12px',
+            width: fullWidth ? '100%' : 'auto',
           }}
           id="candidate-follow-button"
           onClick={() => setShowDeleteAlert(true)}
         >
-          <div className="row">
+          <div className="row justify-center">
             <ImCheckmark />
             <div className="font-black">&nbsp; FOLLOWING</div>
           </div>
@@ -99,11 +100,12 @@ export default function FollowButton({ candidate }) {
             backgroundColor: brightColor,
             borderColor: brightColor,
             marginTop: '12px',
+            width: fullWidth ? '100%' : 'auto',
           }}
           id="candidate-follow-button"
           onClick={handleFollow}
         >
-          <div className="font-black">FOLLOW</div>
+          <div className="font-black text-center">FOLLOW</div>
         </BlackButtonClient>
       )}
 

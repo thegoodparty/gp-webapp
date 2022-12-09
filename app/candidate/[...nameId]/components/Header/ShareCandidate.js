@@ -89,7 +89,10 @@ export default function ShareCandidate({ candidate }) {
       />
       {user?.isAdmin && (
         <Link href={`/candidate-portal/${candidate.id}`}>
-          <FaRegEdit style={{ color: 'red', marginLeft: '18px' }} size={24} />
+          <FaRegEdit
+            style={{ color: '#868686', marginLeft: '18px', marginTop: '4px' }}
+            size={28}
+          />
         </Link>
       )}
       {showModal && (
