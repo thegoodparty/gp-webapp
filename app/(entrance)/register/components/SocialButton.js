@@ -16,16 +16,12 @@ const SocialButton = ({ triggerLogin, children, channel, ...props }) => {
     }
     if (channel === 'google') {
       return (
-        <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-xl lg:w-5 lg:h-5 bg-white shadow-sm rounded-full">
-          <FcGoogle />
+        <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8 bg-white shadow-sm rounded-full">
+          <FcGoogle size={30} />
         </div>
       );
     }
-    return (
-      <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-xl lg:w-5 lg:h-5">
-        <FaFacebook />
-      </div>
-    );
+    return <></>;
   };
 
   return (

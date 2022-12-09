@@ -111,6 +111,19 @@ export default function SocialButtons() {
           Continue with FACEBOOK
         </SocialButton>
       </div>
+      <br />
+      <br />
+      <div data-cy="google-login">
+        <SocialButton
+          channel="google"
+          provider="google"
+          appId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com"
+          onLoginSuccess={socialRegisterCallback}
+          onLoginFailure={socialRegisterFailureCallback}
+        >
+          Continue with GOOGLE
+        </SocialButton>
+      </div>
     </>
   );
 }
