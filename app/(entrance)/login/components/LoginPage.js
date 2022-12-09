@@ -8,20 +8,22 @@ import { setCookie, setUserCookie } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
 import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import { useRouter } from 'next/navigation.js';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
+import SocialButtons from './SocialButtons';
 
 async function login(email, password) {
   try {
+    const api = gpApi.entrance.login;
     const payload = {
       email,
       password,
     };
-    const { user, token } = await gpFetch(gpApi.entrance.login, payload);
+    const { user, token } = await gpFetch(api, payload);
     if (user && token) {
       setUserCookie(user);
       setCookie('token', token);
@@ -124,11 +126,14 @@ export default function LoginPage() {
             </BlackButtonClient>
           </form>
           <br />
-          <br />
 
           <Link href="/forgot-password" className="text-sm">
             Forgot your password?
           </Link>
+
+          <Suspense>
+            <SocialButtons />
+          </Suspense>
         </div>
       </div>
     </MaxWidth>

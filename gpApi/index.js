@@ -34,6 +34,10 @@ const gpApi = {
       url: `${base}entrance/reset-password`,
       method: 'PUT',
     },
+    socialLogin: {
+      url: `${base}entrance/social-login`,
+      method: 'PUT',
+    },
   },
   content: {
     contentByKey: {
