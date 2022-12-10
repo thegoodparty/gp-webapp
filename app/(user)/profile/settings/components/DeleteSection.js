@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import PortalPanel from '@shared/candidate-portal/PortalPanel';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import AlertDialog from '@shared/utils/AlertDialog';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { deleteCookies } from 'helpers/cookieHelper';

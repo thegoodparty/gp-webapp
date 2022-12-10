@@ -5,7 +5,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { revalidateCandidate } from 'helpers/cacheHelper';
 import { useState } from 'react';
-import PortalPanel from '../../shared/PortalPanel';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import Endorsement from './Endorsement';
 import NewEndorsementForm from './NewEndorsementForm';

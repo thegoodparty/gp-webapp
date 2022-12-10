@@ -1,8 +1,8 @@
 import { numberFormatter } from 'helpers/numberHelper';
-import PortalPanel from '../shared/PortalPanel';
 import { FaLongArrowAltUp, FaLongArrowAltDown } from 'react-icons/fa';
 import CampaignChart from './CampaignChart';
 import { Suspense } from 'react';
+import PortalPanel from '@shared/layouts/PortalPanel';
 
 export default function CampaignPanel({ stats, chart }) {
   if (!stats) {

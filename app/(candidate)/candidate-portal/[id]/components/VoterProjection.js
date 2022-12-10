@@ -1,10 +1,10 @@
 import GoalsChart from '@shared/candidates/GoalsChart';
 import FaqLink from '@shared/content/FaqLink';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { numberFormatter } from 'helpers/numberHelper';
 import { Suspense } from 'react';
 import { CONTACT_EMAIL } from 'utils/constants';
-import PortalPanel from '../shared/PortalPanel';
 
 export default function VoterProjection({ candidate }) {
   const today = new Date();

@@ -11,7 +11,7 @@ import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import AlertDialog from '@shared/utils/AlertDialog';
 import ApplicationPreview from './ApplicationPreview';
-import PortalPanel from '@shared/candidate-portal/PortalPanel';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
 
 async function createApplication(router) {

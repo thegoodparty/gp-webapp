@@ -1,7 +1,7 @@
 import React from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import PortalPanel from '@shared/candidate-portal/PortalPanel';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import StaffCard from './StaffCard';
 import { getServerToken } from 'helpers/userServerHelper';
 

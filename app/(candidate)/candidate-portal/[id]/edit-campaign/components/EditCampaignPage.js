@@ -2,7 +2,7 @@
 import { isValidUrl } from 'helpers/linkhelper';
 
 import { Fragment, Suspense, useEffect, useState } from 'react';
-import PortalPanel from '../../shared/PortalPanel';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import CampaignColorPicker from './CampaignColorPicker';
 import Select from '@mui/material/Select';

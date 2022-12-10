@@ -2,7 +2,7 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { Fragment, useState } from 'react';
-import PortalPanel from '../../shared/PortalPanel';
+import PortalPanel from '@shared/layouts/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import EditableTopIssue from './EditableTopIssue';
 import TopIssue from './TopIssue';
