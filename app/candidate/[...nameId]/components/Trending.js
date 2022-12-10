@@ -1,16 +1,13 @@
 'use client';
-import React, { useContext } from 'react';
+import React from 'react';
 import { candidateHash } from '/helpers/candidateHelper';
 import { IoMdShareAlt } from 'react-icons/io';
 
 import styles from './Trending.module.scss';
 import PinkButtonClient from '@shared/buttons/PinkButtonClient';
-// import Row from '../shared/Row';
+import ShareCandidate from './Header/ShareCandidate';
 
 export default function Trending({ candidate }) {
-  // const { showShareModalCallback } = useContext(CandidateWrapperContext);
-  const showShareModalCallback = () => {};
-
   return (
     <div className={styles.wrapper}>
       <h3 className={styles.h3}>Get ‘em trending, tag posts with</h3>
@@ -18,11 +15,13 @@ export default function Trending({ candidate }) {
         <div className={styles.hash}>#{candidateHash(candidate)}</div>
         <div>
           <div className={styles.row}>
-            <PinkButtonClient onClick={showShareModalCallback}>
-              <div className="flex items-center font-black">
-                <div className="mr-6">POST</div> <IoMdShareAlt size={24} />
-              </div>
-            </PinkButtonClient>
+            <ShareCandidate candidate={candidate}>
+              <PinkButtonClient>
+                <div className="flex items-center font-black">
+                  <div className="mr-6">POST</div> <IoMdShareAlt size={24} />
+                </div>
+              </PinkButtonClient>
+            </ShareCandidate>
           </div>
         </div>
       </div>

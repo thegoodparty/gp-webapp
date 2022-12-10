@@ -19,7 +19,7 @@ import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile
 
 const appBase = process.env.NEXT_PUBLIC_APP_BASE || 'https://dev.goodparty.org';
 
-export default function ShareCandidate({ candidate }) {
+export default function ShareCandidate({ candidate, children }) {
   const [showModal, setShowModal] = useState(false);
   const userState = useHookstate(globalUserState);
   const user = userState.get();
@@ -82,19 +82,7 @@ export default function ShareCandidate({ candidate }) {
 
   return (
     <>
-      <MdIosShare
-        size={30}
-        style={{ color: '#868686', marginLeft: '18px', cursor: 'pointer' }}
-        onClick={() => setShowModal(true)}
-      />
-      {user?.isAdmin && (
-        <Link href={`/candidate-portal/${candidate.id}`}>
-          <FaRegEdit
-            style={{ color: '#868686', marginLeft: '18px', marginTop: '4px' }}
-            size={28}
-          />
-        </Link>
-      )}
+      <div onClick={() => setShowModal(true)}>{children}</div>
       {showModal && (
         <Suspense>
           <Modal

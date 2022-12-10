@@ -9,6 +9,8 @@ import { partyRace } from 'helpers/candidateHelper';
 import ClaimModal from './ClaimModal';
 import FollowButton from './FollowButton';
 import ShareCandidate from './ShareCandidate';
+import { MdIosShare } from 'react-icons/md';
+import PortalEditLink from './PortalEditLink';
 
 function CandidateProfile({ candidate, showShareModalCallback }) {
   const { firstName, lastName, isClaimed } = candidate;
@@ -27,7 +29,17 @@ function CandidateProfile({ candidate, showShareModalCallback }) {
         </h1>
         <div className="hidden lg:flex lg:items-center">
           <FollowButton candidate={candidate} />
-          <ShareCandidate candidate={candidate} />
+          <ShareCandidate candidate={candidate}>
+            <MdIosShare
+              size={30}
+              style={{
+                color: '#868686',
+                marginLeft: '18px',
+                cursor: 'pointer',
+              }}
+            />
+          </ShareCandidate>
+          <PortalEditLink candidate={candidate} />
         </div>
         {!isClaimed && <ClaimModal candidate={candidate} />}
       </div>
