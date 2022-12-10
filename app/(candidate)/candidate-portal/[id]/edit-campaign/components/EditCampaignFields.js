@@ -5,9 +5,13 @@ export const fields = [
   { label: 'Last Name', key: 'lastName', required: true },
   { label: 'Zip Code', key: 'zip' },
 
+  {
+    label: 'YouTube (this will be the hero video on your page)',
+    key: 'youtube',
+    isUrl: true,
+  },
   { label: 'Twitter', key: 'twitter', isUrl: true },
   { label: 'Facebook', key: 'facebook', isUrl: true },
-  { label: 'YouTube', key: 'youtube', isUrl: true },
   { label: 'LinkedIn', key: 'linkedin', isUrl: true },
   { label: 'Snap', key: 'snap', isUrl: true },
   { label: 'TikTok', key: 'tiktok', isUrl: true },

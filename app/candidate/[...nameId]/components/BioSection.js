@@ -1,15 +1,16 @@
 import YouTubeLazyPlayer from '@shared/utils/YouTubeLazyPlayer';
-import { candidateColor } from 'helpers/candidateHelper';
+import { youtubeParser } from 'helpers/videoHelper';
 
 export default function BioSection({ candidate }) {
-  const { headline, heroVideo, about, color, website } = candidate;
-  const brightColor = candidateColor(candidate);
+  const { headline, youtube, about, color, website } = candidate;
+  const youtubeId = youtubeParser(youtube);
+
   return (
     <section>
       <h3 className="text-xl font-black mb-7 lg:text-2xl" data-cy="bio-title">
         {headline}
       </h3>
-      <YouTubeLazyPlayer id={heroVideo} />
+      {youtubeId && <YouTubeLazyPlayer id={youtubeId} />}
       <h3
         className="text-xl font-black mt-9 mb-3 lg:text-2xl"
         data-cy="bio-about"

@@ -2,13 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import TextField from '@shared/inputs/TextField';
-
-function youtubeParser(url) {
-  var regExp =
-    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  var match = url.match(regExp);
-  return match && match[7].length == 11 ? match[7] : false;
-}
+import { youtubeParser } from 'helpers/videoHelper';
 
 const YouTubeInput = ({ onChangeCallback, initialId }) => {
   const [state, setState] = useState({
