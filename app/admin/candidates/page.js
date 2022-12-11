@@ -4,7 +4,7 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminCandidatesPage from './components/AdminCandidatesPage';
 
-export const fetchCandidates = async (i) => {
+export const fetchCandidates = async () => {
   const api = gpApi.admin.candidates;
   const token = getServerToken();
   return await gpFetch(api, false, false, token);

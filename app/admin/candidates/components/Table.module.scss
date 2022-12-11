@@ -5,6 +5,8 @@
 
   display: block;
   max-width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
 
   /* This will make the table scrollable when it gets too small */
   :global(.tableWrap) {
@@ -45,7 +47,7 @@
       /* Each cell should grow equally */
       width: 1%;
       /* But "collapsed" cells should be as small as possible */
-      &:global(.collapse) {
+      &:global(.collapseCell) {
         width: 0.0000000001%;
       }
 

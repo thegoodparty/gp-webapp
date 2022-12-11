@@ -115,7 +115,13 @@ export default function Table({ columns, data }) {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                <th
+                  {...column.getHeaderProps(
+                    column.getSortByToggleProps({
+                      className: column.collapse ? 'collapseCell' : '',
+                    }),
+                  )}
+                >
                   {column.render('Header')}
                   {/* Add a sort direction indicator */}
                   <span>
@@ -141,7 +147,13 @@ export default function Table({ columns, data }) {
               <tr {...row.getRowProps()} className={i % 2 !== 0 && styles.odd}>
                 {row.cells.map((cell) => {
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps({
+                        className: cell.column.collapse ? 'collapseCell' : '',
+                      })}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>

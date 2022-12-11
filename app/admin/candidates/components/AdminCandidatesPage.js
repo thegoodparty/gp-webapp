@@ -5,17 +5,27 @@ import { GoTrashcan } from 'react-icons/go';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Table from './Table';
 import Link from 'next/link';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
+import AlertDialog from '@shared/utils/AlertDialog';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
-const headerStyle = {
-  fontWeight: 700,
-  fontSize: '1.05em',
+export const deleteCandidate = async (id) => {
+  const api = gpApi.admin.deleteCandidate;
+  const payload = { id };
+  return await gpFetch(api, payload);
 };
 
 export default function AdminCandidatesPage(props) {
   const { candidates } = props;
+  const snackbarState = useHookstate(globalSnackbarState);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [candidateToDelete, setCandidateToDelete] = useState(false);
+
   const inputData = [];
   candidates.map((candidate) => {
     const fields = {
@@ -32,22 +42,26 @@ export default function AdminCandidatesPage(props) {
   });
   const data = useMemo(() => inputData);
 
-  let str;
-  let rowVal;
-  let columnName;
-  const customFilter = (query, row, column) => {
-    str = query.value;
-    columnName = query.id || column.Header.toLocaleLowerCase();
-    rowVal = row._original[columnName];
-    if (typeof str !== 'string') {
-      str += '';
-    }
-    str = str.toLocaleLowerCase();
-    if (typeof rowVal !== 'string') {
-      rowVal += '';
-    }
-    rowVal = rowVal.toLocaleLowerCase();
-    return rowVal.includes(str);
+  const handleDeleteCandidate = (id) => {
+    setCandidateToDelete(id);
+    setShowDeleteAlert(true);
+  };
+
+  const handleProceedDelete = async () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Deleting candidate...',
+        isError: false,
+      };
+    });
+    await deleteCandidate(candidateToDelete);
+    window.location.reload();
+  };
+
+  const handleCloseAlert = () => {
+    setCandidateToDelete(false);
+    setShowDeleteAlert(false);
   };
 
   const columns = useMemo(() => [
@@ -119,7 +133,6 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Portal',
       accessor: 'portal',
-      headerStyle,
       Cell: ({ row }) => {
         const route = `/candidate-portal/${row.original.id}`;
         return (
@@ -138,6 +151,13 @@ export default function AdminCandidatesPage(props) {
       <PortalPanel color="#2CCDB0">
         <Table columns={columns} data={data} />
       </PortalPanel>
+      <AlertDialog
+        title="Delete Candidate?"
+        description="This can't be undone, and you will have to deal with it in your afterlife"
+        open={showDeleteAlert}
+        handleClose={handleCloseAlert}
+        handleProceed={handleProceedDelete}
+      />
     </AdminWrapper>
   );
 }

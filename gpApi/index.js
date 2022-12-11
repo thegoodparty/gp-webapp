@@ -263,6 +263,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    deleteCandidate: {
+      url: `${base}new-candidate`,
+      method: 'DELETE',
+      withAuth: true,
+    },
   },
 };
 
