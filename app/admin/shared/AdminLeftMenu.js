@@ -29,7 +29,7 @@ export const leftMenuItems = [
 
 export default function AdminLeftMenu({ pathname }) {
   return (
-    <div className="px-3 pt-5 text-center lg:w-[220px] lg:overflow-x-hidden lg:pt-14 lg:pr-3 lg:pb-0 lg:pl-3 lg:text-left">
+    <div className="px-3 pt-5 text-center lg:w-60 lg:min-w-[240px] lg:pt-14 lg:pr-3 lg:pb-0 lg:pl-3 lg:text-left">
       {leftMenuItems.map((item) => (
         <Link href={item.link} data-cy="portal-left-menu-item" key={item.label}>
           <div

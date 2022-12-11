@@ -258,6 +258,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    candidates: {
+      url: `${base}admin/candidates`,
+      method: 'GET',
+      withAuth: true,
+    },
   },
 };
 
