@@ -5,6 +5,7 @@ import {
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
+  usePagination,
 } from 'react-table';
 import styles from './Table.module.scss';
 import { matchSorter } from 'match-sorter';
@@ -94,18 +95,37 @@ export default function Table({ columns, data }) {
   );
 
   // Use the state and functions returned from useTable to build your UI
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable(
-      {
-        columns,
-        data,
-        defaultColumn, // Be sure to pass the defaultColumn option
-        filterTypes,
-      },
-      useFilters,
-      useGlobalFilter,
-      useSortBy,
-    );
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    // for pagination below
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn, // Be sure to pass the defaultColumn option
+      filterTypes,
+      initialState: { pageIndex: 0 },
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+  );
+
+  console.log('page', page);
 
   // Render the UI for your table
   return (
@@ -141,7 +161,7 @@ export default function Table({ columns, data }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, i) => {
+          {page.map((row, i) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} className={i % 2 !== 0 && styles.odd}>
@@ -161,6 +181,69 @@ export default function Table({ columns, data }) {
           })}
         </tbody>
       </table>
+      <div className="flex items-center justify-center my-4">
+        <button
+          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+          onClick={() => gotoPage(0)}
+          disabled={!canPreviousPage}
+        >
+          {'<<'}
+        </button>{' '}
+        <button
+          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+          onClick={() => previousPage()}
+          disabled={!canPreviousPage}
+        >
+          {'<'}
+        </button>
+        <div className="px-3 flex items-center justify-center">
+          <span>
+            Page{' '}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{' '}
+          </span>
+          <span>
+            | Go to page:{' '}
+            <input
+              className="w-8 border p-1"
+              type="number"
+              defaultValue={pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                gotoPage(page);
+              }}
+            />
+          </span>
+        </div>
+        <select
+          className="border px-2 py-1 mx-1"
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value));
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+        <button
+          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+          onClick={() => nextPage()}
+          disabled={!canNextPage}
+        >
+          {'>'}
+        </button>{' '}
+        <button
+          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+          onClick={() => gotoPage(pageCount - 1)}
+          disabled={!canNextPage}
+        >
+          {'>>'}
+        </button>{' '}
+      </div>
     </div>
   );
 }

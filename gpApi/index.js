@@ -273,6 +273,11 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+    users: {
+      url: `${base}admin/users`,
+      method: 'GET',
+      withAuth: true,
+    },
   },
 };
 
