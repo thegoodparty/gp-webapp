@@ -58,6 +58,11 @@ const gpApi = {
       url: `${base}visit`,
       method: 'POST',
     },
+    create: {
+      url: `${base}new-candidate`,
+      method: 'POST',
+      withAuth: true,
+    },
   },
 
   campaign: {

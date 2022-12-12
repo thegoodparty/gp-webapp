@@ -7,7 +7,7 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import styles from './Table.module.scss';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 import { useMemo } from 'react';
 
 function GlobalFilter({

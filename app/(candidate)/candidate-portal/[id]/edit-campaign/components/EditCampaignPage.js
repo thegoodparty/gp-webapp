@@ -15,7 +15,7 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ImageUpload from '@shared/inputs/ImageUpload';
-import { panels } from './EditCampaignFields';
+import { panels, fields2 } from './EditCampaignFields';
 import { revalidateCandidate } from 'helpers/cacheHelper';
 
 import { useHookstate } from '@hookstate/core';

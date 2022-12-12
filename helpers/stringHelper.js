@@ -4,11 +4,13 @@ export const upperFirst = (str) => {
 };
 
 export const trimObject = (obj) => {
-  Object.keys(obj).forEach((key) => {
+  const newObj = JSON.parse(JSON.stringify(obj));
+  Object.keys(newObj).forEach((key) => {
     if (typeof obj[key] === 'string') {
       obj[key] = obj[key].trim();
     }
   });
+  return newObj;
 };
 
 export const removeWhiteSpaces = (str) => {

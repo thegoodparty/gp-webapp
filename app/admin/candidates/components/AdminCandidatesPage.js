@@ -13,6 +13,8 @@ import { globalSnackbarState } from '@shared/utils/Snackbar';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { IoIosPersonAdd } from 'react-icons/io';
 
 export const deleteCandidate = async (id) => {
   const api = gpApi.admin.deleteCandidate;
@@ -149,6 +151,16 @@ export default function AdminCandidatesPage(props) {
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
+        <div className="text-right">
+          <Link href="/admin/add-candidate">
+            <BlackButtonClient>
+              <div className="font-black flex items-center">
+                <IoIosPersonAdd size={24} />{' '}
+                <div className="ml-1"> Add a candidate</div>
+              </div>
+            </BlackButtonClient>
+          </Link>
+        </div>
         <Table columns={columns} data={data} />
       </PortalPanel>
       <AlertDialog
