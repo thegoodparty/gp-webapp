@@ -225,8 +225,45 @@ const gpApi = {
   //
   admin: {
     topIssues: {
+      create: {
+        url: `${base}top-issue`,
+        method: 'POST',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}top-issue`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}top-issue`,
+        method: 'DELETE',
+        withAuth: true,
+      },
       list: {
         url: `${base}top-issues`, // non admin
+        method: 'GET',
+      },
+    },
+
+    position: {
+      create: {
+        url: `${base}position`,
+        method: 'POST',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}position`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}position`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}positions`, // non admin
         method: 'GET',
       },
     },
