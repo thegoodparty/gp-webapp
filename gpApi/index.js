@@ -41,6 +41,14 @@ const gpApi = {
       url: `${base}entrance/social-login`,
       method: 'PUT',
     },
+    twitterLogin: {
+      url: `${base}entrance/twitter-login`,
+      method: 'PUT',
+    },
+    verifyTwitterToken: {
+      url: `${base}entrance/twitter-confirm`,
+      method: 'PUT',
+    },
   },
   content: {
     contentByKey: {
