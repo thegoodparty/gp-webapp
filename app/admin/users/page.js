@@ -4,7 +4,7 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminUsersPage from './components/AdminUsersPage';
 
-export const fetchUsers = async () => {
+const fetchUsers = async () => {
   const api = gpApi.admin.users;
   const token = getServerToken();
   return await gpFetch(api, false, false, token);
@@ -15,7 +15,7 @@ export default async function Page() {
   const { users } = await fetchUsers();
 
   const childProps = {
-    pathname: '/admin/candidates',
+    pathname: '/admin/users',
     title: 'Users',
     users,
   };

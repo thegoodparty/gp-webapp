@@ -13,10 +13,6 @@ export const leftMenuItems = [
     label: 'Settings',
     link: '/profile/settings',
   },
-  {
-    label: 'Campaigns',
-    link: '/profile/campaigns',
-  },
 ];
 
 export const leftMenuItemsBottom = [

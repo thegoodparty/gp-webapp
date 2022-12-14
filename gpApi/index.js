@@ -178,32 +178,6 @@ const gpApi = {
     },
   },
 
-  candidateApplication: {
-    create: {
-      url: `${base}application`,
-      method: 'POST',
-      withAuth: true,
-    },
-    delete: {
-      url: `${base}application`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    list: {
-      url: `${base}applications`,
-      method: 'GET',
-      withAuth: true,
-    },
-    find: {
-      url: `${base}application`,
-      method: 'GET',
-      withAuth: true,
-    },
-    uploadImage: {
-      url: `${base}application/upload-image`,
-      method: 'POST',
-    },
-  },
   //
   // USER
   //

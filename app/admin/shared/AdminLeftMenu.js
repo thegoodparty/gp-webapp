@@ -14,16 +14,8 @@ export const leftMenuItems = [
     link: '/admin/users',
   },
   {
-    label: 'Candidate Applications',
-    link: '/admin/application-requests',
-  },
-  {
     label: 'Top Issues',
     link: '/admin/top-issues',
-  },
-  {
-    label: 'Articles Feedback',
-    link: '/admin/articles',
   },
 ];
 

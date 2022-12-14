@@ -125,8 +125,6 @@ export default function Table({ columns, data }) {
     usePagination,
   );
 
-  console.log('page', page);
-
   // Render the UI for your table
   return (
     <div className={styles.wrapper}>
