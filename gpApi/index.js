@@ -2,6 +2,9 @@ const apiBase =
   process.env.NEXT_PUBLIC_API_BASE || 'https://api-dev.goodparty.org';
 const base = `${apiBase}/api/v1/`;
 
+export const isProd =
+  process.env.NEXT_PUBLIC_API_BASE === 'https://api.goodparty.org';
+
 const gpApi = {
   homepage: {
     followers: {
@@ -276,6 +279,11 @@ const gpApi = {
     users: {
       url: `${base}admin/users`,
       method: 'GET',
+      withAuth: true,
+    },
+    deleteUser: {
+      url: `${base}admin/user`,
+      method: 'DELETE',
       withAuth: true,
     },
   },
