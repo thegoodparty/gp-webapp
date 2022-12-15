@@ -96,6 +96,11 @@ const gpApi = {
       url: `${base}campaign/claim`,
       method: 'POST',
     },
+    approveClaim: {
+      url: `${base}campaign/approve-claim`,
+      method: 'PUT',
+      withAuth: true,
+    },
     role: {
       url: `${base}campaign/staff-role`,
       method: 'GET',
