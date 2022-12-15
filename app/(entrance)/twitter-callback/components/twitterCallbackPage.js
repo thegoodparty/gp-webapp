@@ -60,7 +60,7 @@ export default function TwitterCallbackPage() {
         isError: false,
       };
     });
-    const { user } = await verifyToken(oauthToken, oauthVerifier);
+    const user = await verifyToken(oauthToken, oauthVerifier);
     if (user) {
       userState.set(() => user);
       window.location.href = '/';
