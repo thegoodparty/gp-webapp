@@ -38,7 +38,10 @@ export default function TopIssuesPage(props) {
               />
             </Fragment>
           ))}
-          <EditableTopIssue {...props} />
+          <EditableTopIssue
+            updatePositionsCallback={updatePositionsCallback}
+            {...props}
+          />
         </div>
       </PortalPanel>
     </PortalWrapper>
