@@ -21,9 +21,9 @@ export default function TopIssue(props) {
 
   const deleteIssue = async () => {
     await deleteCandidatePosition(candidatePosition.id, candidate.id);
-    updatePositionsCallback();
-    handleCloseAlert();
     await revalidateCandidate(candidate);
+    await updatePositionsCallback();
+    handleCloseAlert();
   };
 
   const handleCloseAlert = () => setShowDeleteAlert(false);

@@ -10,7 +10,7 @@ import TopIssue from './TopIssue';
 export const fetchCandidatePositions = async (id) => {
   const api = gpApi.campaign.candidatePosition.list;
   const payload = { id };
-  return await gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload);
 };
 
 export default function TopIssuesPage(props) {
