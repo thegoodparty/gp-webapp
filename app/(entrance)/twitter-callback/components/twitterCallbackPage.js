@@ -18,18 +18,22 @@ async function verifyToken(oauthToken, oauthVerifier) {
       oauthVerifier,
     };
     const { user, token } = await gpFetch(api, payload);
+    console.log('call returned with ', user, token);
     if (user && token) {
       setUserCookie(user);
       setCookie('token', token);
+      console.log('set cookies');
+
       return user;
     }
+    console.log('returning false');
     return false;
   } catch (e) {
+    console.log('got an error', e);
     return false;
   }
 }
 let twitterCalled = false;
-//http://localhost:4000/twitter-callback?oauth_token=abc&oath_verifier=hhh
 export default function TwitterCallbackPage() {
   const searchParams = useSearchParams();
   const userState = useHookstate(globalUserState);
