@@ -6,6 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
 
 async function register(payload) {
   try {
@@ -111,9 +112,7 @@ export default function SocialButtons() {
           Continue with FACEBOOK
         </SocialButton>
       </div>
-      <br />
-      <br />
-      <div data-cy="google-login">
+      <div data-cy="google-login" className="mt-6">
         <SocialButton
           channel="google"
           provider="google"
@@ -123,6 +122,10 @@ export default function SocialButtons() {
         >
           Continue with GOOGLE
         </SocialButton>
+      </div>
+
+      <div data-cy="twitter-register" className="mt-6">
+        <TwitterButton />
       </div>
     </>
   );
