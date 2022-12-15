@@ -92,7 +92,7 @@ function EditableTopIssue({
       };
     });
     if (existingIssue) {
-      updateIssueCallback(
+      await updateIssueCallback(
         existingIssue.id,
         state.topic.id,
         state.position.id,
@@ -101,7 +101,7 @@ function EditableTopIssue({
       );
       closeEditModeCallback();
     } else {
-      saveIssueCallback(
+      await saveIssueCallback(
         state.topic.id,
         state.position.id,
         state.description,
