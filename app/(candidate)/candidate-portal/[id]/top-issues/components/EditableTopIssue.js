@@ -115,7 +115,7 @@ function EditableTopIssue({
         description: '',
       });
     }
-    updatePositionsCallback();
+    await updatePositionsCallback();
     await revalidateCandidate(candidate);
   };
 
