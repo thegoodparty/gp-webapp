@@ -9,6 +9,7 @@ import { useHookstate } from '@hookstate/core';
 import { useEffect } from 'react';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { setCookie, setUserCookie } from 'helpers/cookieHelper';
 
 async function verifyToken(oauthToken, oauthVerifier) {
   try {
@@ -18,18 +19,14 @@ async function verifyToken(oauthToken, oauthVerifier) {
       oauthVerifier,
     };
     const { user, token } = await gpFetch(api, payload);
-    console.log('call returned with ', user, token);
     if (user && token) {
       setUserCookie(user);
       setCookie('token', token);
-      console.log('set cookies');
 
       return user;
     }
-    console.log('returning false');
     return false;
   } catch (e) {
-    console.log('got an error', e);
     return false;
   }
 }
