@@ -9,6 +9,7 @@ export default function HomePage() {
     <>
       <MaxWidth>
         <Hero />
+
         <Suspense fallback={<p>Loading...</p>}>
           <CandidatesSection />
         </Suspense>
@@ -16,6 +17,7 @@ export default function HomePage() {
       <Suspense fallback={<p>Loading...</p>}>
         <WhatsNext />
       </Suspense>
+      <div>Env{JSON.stringify(process.env)}</div>
     </>
   );
 }
