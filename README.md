@@ -1,3 +1,58 @@
+<img src="https://assets.goodparty.org/share.jpg" alt="Good Party" align="center" />
+
+<br />
+<br />
+<div align="center">
+  <h1>Good Party Webapp</h1>
+</div>
+<div align="center"><strong>Website:</strong> <a href="https://goodparty.org">https://goodparty.org</a></div>
+
+<br />
+
+## Coding styles
+
+We are using [conventional commits](https://www.conventionalcommits.org/)
+
+## Built With
+
+- [Next13](https://nextjs.org/) - React SSR Framework
+- [Tailwind CSS](https://tailwindcss.com/) - CSS library
+- [Material UI](https://material-ui.com/) - UI Library
+
+## Get Started
+
+```
+npm install
+npm run dev 
+```
+
+To Run with dev api
+```
+npm run dev-dev 
+```
+
+You will need to run also the api for the project <a href="https://github.com/thegoodparty/tgp-api">https://github.com/thegoodparty/tgp-api</a>
+
+## Tests
+We are using [cypress.io](https://www.cypress.io/) for our tests.
+To run with local api:
+* make sure you run your webapp and api local
+```
+npm run cypress-local
+```
+to run cypress with dev or prod api (and local webApp):
+```
+npm run cypress-local-dev
+npm run cypress-local-prod
+``` 
+
+## License
+
+This project is licensed under the [Creative Common Zero (CC0)](https://creativecommons.org/share-your-work/public-domain/cc0/) License
+
+<h2>A Next13 App</h2>
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
