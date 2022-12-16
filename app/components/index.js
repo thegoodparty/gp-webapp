@@ -3,6 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import CandidatesSection from './CandidatesSection';
 import Hero from './Hero';
 import WhatsNext from './WhatsNext';
+import TempClient from './tempClient';
 
 export default function HomePage() {
   return (
@@ -18,6 +19,9 @@ export default function HomePage() {
         <WhatsNext />
       </Suspense>
       <div>Env{JSON.stringify(process.env)}</div>
+      <br />
+      <br />
+      <TempClient />
     </>
   );
 }

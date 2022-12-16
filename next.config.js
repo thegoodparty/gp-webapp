@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     domains: ['assets.goodparty.org', 'images.ctfassets.net'],
   },
+  env: {
+    tomer: 'almog',
+    NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE,
+  },
 };
 
 module.exports = withPWA(nextConfig);
