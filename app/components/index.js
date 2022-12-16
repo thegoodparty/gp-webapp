@@ -18,10 +18,6 @@ export default function HomePage() {
       <Suspense fallback={<p>Loading...</p>}>
         <WhatsNext />
       </Suspense>
-      <div>Env{JSON.stringify(process.env)}</div>
-      <br />
-      <br />
-      <TempClient />
     </>
   );
 }

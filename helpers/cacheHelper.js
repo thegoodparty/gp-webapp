@@ -1,6 +1,6 @@
+import { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { candidateRoute } from './candidateHelper';
-const appBase = process.env.NEXT_PUBLIC_APP_BASE || 'https://dev.goodparty.org';
 
 export const revalidatePage = async (path) => {
   const api = {

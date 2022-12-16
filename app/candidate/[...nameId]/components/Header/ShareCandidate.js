@@ -16,8 +16,7 @@ import styles from './ShareCandidate.module.scss';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import Link from 'next/link';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-
-const appBase = process.env.NEXT_PUBLIC_APP_BASE || 'https://dev.goodparty.org';
+import { appBase } from 'gpApi';
 
 export default function ShareCandidate({ candidate, children }) {
   const [showModal, setShowModal] = useState(false);
