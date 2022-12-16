@@ -1,20 +1,16 @@
 'use client';
 import Modal from '@shared/utils/Modal';
 import { Fragment, Suspense, useState } from 'react';
-import { MdIosShare } from 'react-icons/md';
 import { usePathname } from 'next/navigation';
 import { candidateHash } from 'helpers/candidateHelper';
 import { useHookstate } from '@hookstate/core';
-import { FaRegEdit } from 'react-icons/fa';
 
 import { IoIosText, IoLogoWhatsapp } from 'react-icons/io';
 import { FaFacebookF, FaFacebookMessenger, FaTwitter } from 'react-icons/fa';
-import { BiLinkAlt } from 'react-icons/bi';
 import { RiSendPlaneFill } from 'react-icons/ri';
 
 import styles from './ShareCandidate.module.scss';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import Link from 'next/link';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { appBase } from 'gpApi';
 
