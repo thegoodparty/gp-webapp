@@ -156,14 +156,16 @@ function PersonalSection() {
               {USER_SETTING_FIELDS.map((field) => (
                 <Fragment key={field.key}>
                   {field.type === 'phone' ? (
-                    <PhoneInput
-                      value={state[field.key]}
-                      onChangeCallback={(phone, isValid) => {
-                        onChangeField(field.key, phone);
-                        setIsPhoneValid(isValid);
-                      }}
-                      hideIcon
-                    />
+                    <div className="mb-4">
+                      <PhoneInput
+                        value={state[field.key]}
+                        onChangeCallback={(phone, isValid) => {
+                          onChangeField(field.key, phone);
+                          setIsPhoneValid(isValid);
+                        }}
+                        hideIcon
+                      />
+                    </div>
                   ) : (
                     <TextField
                       key={field.label}

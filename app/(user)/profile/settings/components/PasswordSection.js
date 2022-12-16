@@ -119,29 +119,31 @@ function PasswordSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               {user.hasPassword && (
+                <div className="mb-4">
+                  <TextField
+                    label="Old Password"
+                    fullWidth
+                    variant="outlined"
+                    type="password"
+                    value={state.oldPassword}
+                    onChange={(e) => {
+                      onChangeField('oldPassword', e.target.value);
+                    }}
+                  />
+                </div>
+              )}
+              <div className="mb-4">
                 <TextField
-                  label="Old Password"
+                  label="Password"
                   fullWidth
                   variant="outlined"
+                  value={state.password}
                   type="password"
-                  value={state.oldPassword}
                   onChange={(e) => {
-                    onChangeField('oldPassword', e.target.value);
+                    onChangeField('password', e.target.value);
                   }}
-                  className="mb-4"
                 />
-              )}
-              <TextField
-                label="Password"
-                fullWidth
-                variant="outlined"
-                value={state.password}
-                type="password"
-                onChange={(e) => {
-                  onChangeField('password', e.target.value);
-                }}
-                style={{ marginBottom: '16px' }}
-              />
+              </div>
               <small>
                 For security, passwords must have at least 1 capital letter, 1
                 lowercase, 1 special character or number, and 8 characters
