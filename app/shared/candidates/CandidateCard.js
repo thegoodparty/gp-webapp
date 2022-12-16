@@ -91,7 +91,8 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
           style={{ width: 'calc(100% - 48px)' }}
         >
           {withFollowButton ? (
-            <div>Follow container here</div>
+            // <div>Follow container here</div>
+            <div></div>
           ) : (
             <BlackButton
               fullWidth
