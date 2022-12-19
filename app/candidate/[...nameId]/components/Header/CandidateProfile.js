@@ -29,17 +29,20 @@ function CandidateProfile({ candidate, showShareModalCallback }) {
         </h1>
         <div className="hidden lg:flex lg:items-center">
           <FollowButton candidate={candidate} />
-          <ShareCandidate candidate={candidate}>
-            <MdIosShare
-              size={30}
-              style={{
-                color: '#868686',
-                marginLeft: '18px',
-                cursor: 'pointer',
-              }}
-            />
-          </ShareCandidate>
-          <PortalEditLink candidate={candidate} />
+          <div>
+            <ShareCandidate candidate={candidate}>
+              <MdIosShare
+                size={30}
+                style={{
+                  color: '#868686',
+                  marginLeft: '18px',
+                  cursor: 'pointer',
+                }}
+              />
+            </ShareCandidate>
+
+            <PortalEditLink candidate={candidate} />
+          </div>
         </div>
         {!isClaimed && <ClaimModal candidate={candidate} />}
       </div>

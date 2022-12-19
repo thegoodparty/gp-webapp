@@ -89,7 +89,7 @@ export default function FollowButton({ candidate, fullWidth }) {
           id="candidate-follow-button"
           onClick={() => setShowDeleteAlert(true)}
         >
-          <div className="row justify-center">
+          <div className="row justify-center whitespace-nowrap">
             <ImCheckmark />
             <div className="font-black">&nbsp; FOLLOWING</div>
           </div>

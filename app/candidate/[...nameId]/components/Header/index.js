@@ -13,7 +13,7 @@ export default function Header({ candidate, candidatePositions, followers }) {
             candidatePositions={candidatePositions}
           />
         </div>
-        <div>
+        <div className="pl-4">
           <ProgressMeter candidate={candidate} followers={followers} />
         </div>
       </div>
