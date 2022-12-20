@@ -28,7 +28,7 @@ export default function Page() {
         across the political spectrum have{' '}
         <strong>a real chance of running and winning elections</strong>, for the
         first time in modern history!{' '}
-        <Link href="?register=true" className="underline">
+        <Link href="/register" className="underline">
           Join Us
         </Link>
       </div>

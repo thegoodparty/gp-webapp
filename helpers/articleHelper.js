@@ -15,7 +15,7 @@
 //     return showArticle;
 //   });
 
-export const slugify = (text) => {
+export const slugify = (text, lowercase) => {
   if (!text) {
     return '';
   }
@@ -23,7 +23,11 @@ export const slugify = (text) => {
   if (typeof text === 'number') {
     textStr = text + '';
   }
-  return textStr.replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+  const slug = textStr.replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+  if (lowercase) {
+    return slug.toLowerCase();
+  }
+  return slug;
 };
 
 // export const getArticleById = (articles, id) => {
