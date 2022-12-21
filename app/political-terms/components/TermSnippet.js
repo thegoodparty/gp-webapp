@@ -1,4 +1,6 @@
+import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import { slugify } from 'helpers/articleHelper';
+import contentfulHelper from 'helpers/contentfulHelper';
 import Link from 'next/link';
 
 export const termLink = (term) =>
@@ -6,12 +8,7 @@ export const termLink = (term) =>
 
 export default function TermSnippet({ item, last }) {
   const { title, description } = item;
-  let truncated = description;
-  let isTruncated = false;
-  if (description?.length > 150) {
-    truncated = description.substring(0, 150);
-    isTruncated = true;
-  }
+
   return (
     <Link href={termLink(item)}>
       <div
@@ -21,9 +18,16 @@ export default function TermSnippet({ item, last }) {
         <h3 className="mb-1 lg:mb-0 lg:basis-1/3">
           <strong>{title}</strong>
         </h3>
-        <div className="leading-8">
-          {truncated}
-          {isTruncated && '...'}
+        <div
+          className="leading-8 max-h-16 block w-full overflow-hidden"
+          style={{
+            display: '-webkit-box',
+            '-webkit-line-clamp': '3',
+            '-webkit-box-orient': 'vertical',
+            'text-overflow': 'ellipsis',
+          }}
+        >
+          <CmsContentWrapper>{contentfulHelper(description)}</CmsContentWrapper>
         </div>
       </div>
     </Link>
