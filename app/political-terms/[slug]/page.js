@@ -1,5 +1,6 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { alphabet } from '../components/LayoutWithAlphabet';
 import TermsHomePage from '../components/TermsHomePage';
 import { fetchGlossaryByLetter } from '../page';
 import TermsItemPage from './components/TermsItemPage';
@@ -11,7 +12,7 @@ export const fetchGlossaryByTitle = async (title) => {
     key: 'glossaryItemsByTitle',
     subKey: title,
   };
-  return await gpFetch(api, payload, 60);
+  return await gpFetch(api, payload, 1); // TODO: change later when glossary CMS is stable
 };
 
 export default async function Page({ params }) {
@@ -29,4 +30,14 @@ export default async function Page({ params }) {
       <DefinedTermSchema {...childProps} />
     </>
   );
+}
+
+export async function generateStaticParams() {
+  const letters = alphabet;
+
+  return letters.map((letter) => {
+    return {
+      slug: letter,
+    };
+  });
 }

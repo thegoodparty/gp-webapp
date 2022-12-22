@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import AdminInvalidateCache from './AdminInvalidateCache';
 
-const alphabet = [
+export const alphabet = [
   'A',
   'B',
   'C',
@@ -50,6 +51,7 @@ export default function LayoutWithAlphabet({ activeLetter = 'A', children }) {
         ))}
       </div>
       <div className="pl-4 lg:pl-0 lg:mt-16">{children}</div>
+      <AdminInvalidateCache />
     </div>
   );
 }
