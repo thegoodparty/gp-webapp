@@ -3,6 +3,7 @@ import gpFetch from 'gpApi/gpFetch';
 import TermsHomePage from '../components/TermsHomePage';
 import { fetchGlossaryByLetter } from '../page';
 import TermsItemPage from './components/TermsItemPage';
+import DefinedTermSchema from './DefinedTermSchema';
 
 export const fetchGlossaryByTitle = async (title) => {
   const api = gpApi.content.contentByKey;
@@ -21,6 +22,11 @@ export default async function Page({ params }) {
     return <TermsHomePage activeLetter={slug.toUpperCase()} items={items} />;
   }
   const { content } = await fetchGlossaryByTitle(slug);
-  const childProps = { item: content };
-  return <TermsItemPage {...childProps} />;
+  const childProps = { item: content, slug };
+  return (
+    <>
+      <TermsItemPage {...childProps} />
+      <DefinedTermSchema {...childProps} />
+    </>
+  );
 }
