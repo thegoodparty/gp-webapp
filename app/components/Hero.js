@@ -16,7 +16,7 @@ const Hero = () => {
         <div className="col-span-2">
           <h1 className="text-5xl lg:text-7xl font-black inline-block relative mt-4 mb-3">
             Declare{' '}
-            <span className="relative">
+            <span className="relative inline-block">
               <span className="relative z-10">Independence</span>{' '}
               <span className={styles.yellow} />
             </span>
