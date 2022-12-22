@@ -29,19 +29,21 @@ export default function AdminCandidatesPage(props) {
   const [candidateToDelete, setCandidateToDelete] = useState(false);
 
   const inputData = [];
-  candidates.map((candidate) => {
-    const fields = {
-      active: candidate.isActive ? 'Yes' : 'No',
-      id: candidate.id,
-      firstName: candidate.firstName,
-      lastName: candidate.lastName,
-      party: partyResolver(candidate.party),
-      chamber: candidate.chamber,
-      office: candidate.race,
-      state: candidate.state ? candidate.state.toUpperCase() : '?',
-    };
-    inputData.push(fields);
-  });
+  if (candidates) {
+    candidates.map((candidate) => {
+      const fields = {
+        active: candidate.isActive ? 'Yes' : 'No',
+        id: candidate.id,
+        firstName: candidate.firstName,
+        lastName: candidate.lastName,
+        party: partyResolver(candidate.party),
+        chamber: candidate.chamber,
+        office: candidate.race,
+        state: candidate.state ? candidate.state.toUpperCase() : '?',
+      };
+      inputData.push(fields);
+    });
+  }
   const data = useMemo(() => inputData);
 
   const handleDeleteCandidate = (id) => {

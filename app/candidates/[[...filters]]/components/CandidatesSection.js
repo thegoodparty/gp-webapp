@@ -3,6 +3,7 @@ import React from 'react';
 import FaqLink from '@shared/content/FaqLink';
 import Image from 'next/image';
 import LargeCard from '@shared/candidates/LargeCard';
+import Link from 'next/link';
 
 export default function CandidatesSection({ candidates, showOnlyGood }) {
   return (
@@ -39,7 +40,7 @@ export default function CandidatesSection({ candidates, showOnlyGood }) {
       ))}
       {(!candidates || candidates.length === 0) && (
         <div className="text-center">
-          <FontH3>No Results match your filters</FontH3>
+          <h3 className="font-black text-2xl">No Results match your filters</h3>
           <br />
           <Link href="/candidates">Remove all filters</Link>
         </div>

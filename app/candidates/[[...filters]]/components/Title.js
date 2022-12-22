@@ -8,9 +8,9 @@ export default function Title() {
           className="my-6 text-4xl font-black lg:mt-16 lg:mb-6 lg:text-6xl"
           data-cy="candidates-top-title"
         >
-          Claim your{' '}
+          Independent Candidates - Find An{' '}
           <span className="relative inline-block">
-            <span className="z-10 relative">Independents!</span>
+            <span className="z-10 relative">Independent Near You.</span>
             <div
               className="absolute bottom-0 h-5 lg:h-7 -left-1 lg:bottom-1"
               style={{ width: 'calc(100% + 10px)', backgroundColor: '#ffe600' }}

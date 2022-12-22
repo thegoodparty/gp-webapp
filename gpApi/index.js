@@ -331,6 +331,10 @@ const gpApi = {
       withAuth: true,
     },
   },
+  uploadImage: {
+    url: `${base}application/upload-image`,
+    method: 'POST',
+  },
 };
 
 export default gpApi;

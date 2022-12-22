@@ -13,7 +13,7 @@ const fileSelect = async (image, isUserImage) => {
   if (isUserImage) {
     api = gpApi.user.uploadAvatar;
   } else {
-    api = gpApi.candidateApplication.uploadImage;
+    api = gpApi.uploadImage;
   }
 
   const formData = new FormData();
