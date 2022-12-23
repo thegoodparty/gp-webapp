@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: gp-app-prod
+    environment: gp-web-prod
   qa:
     environment: gp-web-qa
   develop:
