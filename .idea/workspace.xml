@@ -2,16 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6d722ced-cae8-4105-b281-3594a8a8f42d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.prettierignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Components/shared/layouts/Footer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Components/shared/layouts/PageWrapper.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/api/hello.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +17,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2H1SWK2Gz06bPdJX8VHiRQLt5YK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -29,16 +35,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/tomeralmog/Documents/TA/TheGoodParty/dev/gp-webapp/node_modules/prettier",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Components/shared/layouts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/app" />
@@ -52,7 +64,14 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1667451128727</updated>
-      <workItem from="1667451130092" duration="1204000" />
+      <workItem from="1667451130092" duration="3848000" />
+      <workItem from="1667455607701" duration="874000" />
+      <workItem from="1667459050089" duration="100000" />
+      <workItem from="1667491704684" duration="1296000" />
+      <workItem from="1667507208329" duration="7000" />
+      <workItem from="1667583742643" duration="6000" />
+      <workItem from="1667887113576" duration="11000" />
+      <workItem from="1671134913682" duration="350000" />
     </task>
     <servers />
   </component>

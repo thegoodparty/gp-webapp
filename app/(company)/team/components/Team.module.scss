@@ -1,0 +1,32 @@
+@import '/styles/scss/breakpoints';
+
+.member {
+  perspective: 1000px;
+  &:global(.selected) {
+    :global(.member-inner) {
+      transform: rotateY(180deg);
+    }
+  }
+
+  :global(.hide) {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.inner {
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.front {
+  -webkit-backface-visibility: hidden; /* Safari */
+  transform: rotateY(0deg);
+  backface-visibility: hidden;
+}
+
+.back {
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+}

@@ -1,0 +1,17 @@
+@import '/styles/scss/breakpoints.scss';
+
+.price {
+  @include lg {
+    min-height: 220px;
+  }
+}
+
+.plan {
+  @include lg {
+    background-color: inherit;
+
+    &:global(.starter) {
+      background-color: #f7f7f7;
+    }
+  }
+}

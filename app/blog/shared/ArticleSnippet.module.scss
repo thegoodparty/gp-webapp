@@ -1,0 +1,71 @@
+@import '/styles/scss/colors';
+@import '/styles/scss/breakpoints';
+
+.wrapper {
+  padding: 20px;
+  border: solid 1px $gray4;
+  border-radius: 5px;
+}
+
+.hero {
+  margin-bottom: 24px;
+}
+
+.image {
+  position: relative;
+  min-height: 200px;
+  width: 100%;
+  img {
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+.heroImage {
+  min-height: 280px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.topSection {
+  font-size: 12px;
+  color: $gray2;
+
+  strong {
+    color: black;
+  }
+}
+
+.title {
+  font-weight: 900;
+  font-size: 24px;
+  margin: 20px 0;
+}
+
+.summary {
+  font-size: 14px;
+  line-height: 21px;
+  color: $gray2;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.time {
+  color: $gray2;
+}
+
+.full {
+  display: flex;
+  align-items: center;
+}

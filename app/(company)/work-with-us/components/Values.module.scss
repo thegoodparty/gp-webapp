@@ -1,0 +1,100 @@
+@import '/styles/scss/colors';
+@import '/styles/scss/breakpoints';
+
+.wrapper {
+  padding: 50px 0;
+  border-top: solid 1px $gray3;
+}
+
+.h2 {
+  font-size: 30px;
+  font-weight: 900;
+  margin: 0 0 28px;
+  font-weight: 900;
+
+  @include lg {
+    font-size: 40px;
+  }
+}
+
+.cardsWrapper {
+  color: #fff;
+  @include lg {
+    display: flex;
+    .card:first-child {
+      margin-left: 0;
+    }
+    .card:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.card {
+  width: 100%;
+  margin-bottom: 12px;
+  cursor: pointer;
+
+  @include lg {
+    width: calc(20% - 10px);
+    flex-basis: calc(20% - 10px);
+    margin: 5px;
+  }
+}
+
+.selected {
+  .inner {
+    transform: rotateY(180deg);
+  }
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  min-height: 300px;
+
+  border-radius: 10px;
+}
+
+.front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  transform: rotateY(0deg);
+  backface-visibility: hidden;
+  padding: 40px 20px 0;
+}
+
+.back {
+  position: absolute;
+  width: 100%;
+  padding: 40px 20px 0;
+  z-index: 10;
+
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  transform: rotateY(-180deg);
+}
+
+.cardTitle {
+  font-size: 30px;
+  margin: 0 0 24px;
+  font-weight: 900;
+}
+
+.cardContent {
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.arrow {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 30px;
+}

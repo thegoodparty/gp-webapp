@@ -1,0 +1,34 @@
+.shareLink {
+  font-size: 26px;
+  background-color: #000;
+  width: 50px;
+  height: 50px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  &:global(.sms) {
+    background-color: #0ca78a;
+  }
+
+  &:global(.email) {
+    background-color: #2aabee;
+  }
+
+  &:global(.messenger) {
+    background-color: #006bff;
+  }
+  &:global(.whatsapp) {
+    background-color: #25d366;
+  }
+
+  &:global(.twitter) {
+    background-color: #1ea1f3;
+  }
+
+  &:global(.facebook) {
+    background-color: #507cc0;
+  }
+}

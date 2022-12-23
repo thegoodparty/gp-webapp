@@ -1,0 +1,16 @@
+.wrapper {
+  :global(.slick-arrow::before) {
+    color: #fff;
+    opacity: 1;
+    box-shadow: 0 0 10px #000;
+    border-radius: 50%;
+  }
+
+  :global(.slick-next) {
+    right: 10px;
+  }
+  :global(.slick-prev) {
+    left: 10px;
+    z-index: 10;
+  }
+}

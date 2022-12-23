@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import '/styles/scss/colors';
+@import '/styles/scss/breakpoints';
+
+* {
+  line-height: 1.3;
+  outline: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.no-underline:hover {
+  text-decoration: none;
+}
+
+.rep-red {
+  color: #bf0020;
+}
+.dem-blue {
+  color: #0027dc;
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: #000 !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #000 !important;
+}
+
+.MuiInputLabel-root.Mui-error {
+  color: #d32f2f !important;
+}
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: #d32f2f !important;
+}
+
+strong {
+  font-weight: 900;
+}
+
+ul {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+
+ul li {
+  display: list-item;
+}
+
+.row {
+  @apply flex items-center	;
+}
+.break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}

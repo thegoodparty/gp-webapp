@@ -1,3 +1,6 @@
+import './globals.css';
+import HomePage from './components/index';
+
 export default function Page() {
-    return <h1>Hello, Next.js!</h1>;
+  return <HomePage />;
 }
