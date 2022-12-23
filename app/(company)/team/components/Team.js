@@ -80,14 +80,6 @@ export const TEAM_MEMBERS = [
   },
 
   {
-    name: 'Bo Triplett',
-    role: 'Director of Partnerships and Innovation',
-    img: 'https://assets.goodparty.org/team/bo-good.jpg',
-    flipImg: 'https://assets.goodparty.org/team/bo-party.jpg',
-    partyRole: 'The Record Man',
-  },
-
-  {
     name: 'Matthew Wardenaar',
     role: 'Director of Product Management',
     img: 'https://assets.goodparty.org/team/matthew-good.jpg',
