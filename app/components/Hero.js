@@ -29,7 +29,7 @@ const Hero = () => {
               src={independenceImg}
               alt="Declare independence"
               priority
-              // placeholder="blur"
+              placeholder="blur"
             />
           </div>
           <div className="lg:inline-block">
@@ -61,7 +61,7 @@ const Hero = () => {
           fill
           alt="Declare independence"
           priority
-          // placeholder="blur"
+          placeholder="blur"
           className="object-cover"
           style={{ objectPosition: '-100% 0' }}
         />

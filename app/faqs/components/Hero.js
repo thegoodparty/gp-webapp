@@ -11,7 +11,7 @@ export default function Hero() {
         className="object-cover object-top"
         priority
         alt="Help Center"
-        // placeholder="blur"
+        placeholder="blur"
       />
       <div
         className="absolute top-0 left-0 w-full h-full"

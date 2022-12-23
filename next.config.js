@@ -5,12 +5,12 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
   reactStrictMode: true,
-  experimental: { appDir: true, transpilePackages: ['ui'] },
+  experimental: { appDir: true },
+  transpilePackages: ['ui'],
   images: {
     domains: ['assets.goodparty.org', 'images.ctfassets.net'],
   },
   env: {
-    tomer: 'almog',
     NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE,
   },
 };
