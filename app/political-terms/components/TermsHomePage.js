@@ -1,6 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import { Fragment } from 'react';
-import AdminInvalidateCache from './AdminInvalidateCache';
+import { Fragment, Suspense } from 'react';
+import AdminClientLoad from './AdminClientLoad';
 import LayoutWithAlphabet from './LayoutWithAlphabet';
 import TermSnippet from './TermSnippet';
 
@@ -31,7 +31,9 @@ export default function TermsHomePage(props) {
             </div>
           )}
         </LayoutWithAlphabet>
-        <AdminInvalidateCache />
+        <Suspense>
+          <AdminClientLoad />
+        </Suspense>
       </div>
     </MaxWidth>
   );

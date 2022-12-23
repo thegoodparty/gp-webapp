@@ -15,9 +15,9 @@ export default function TermSnippet({ item, last }) {
         className="text-lg lg:flex  pb-4 mb-4 border-b border-b-neutral-300"
         style={last ? { border: 'none' } : {}}
       >
-        <h3 className="mb-1 lg:mb-0 lg:basis-1/3">
+        <h2 className="mb-1 lg:mb-0 lg:basis-1/3">
           <strong>{title}</strong>
-        </h3>
+        </h2>
         <div
           className="leading-8 max-h-16 block w-full overflow-hidden"
           style={{

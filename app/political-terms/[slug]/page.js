@@ -1,8 +1,8 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { alphabet } from '../components/LayoutWithAlphabet';
-import TermsHomePage from '../components/TermsHomePage';
 import { fetchGlossaryByLetter } from '../page';
+import TermsHomePage from '../components/TermsHomePage';
 import TermsItemPage from './components/TermsItemPage';
 import DefinedTermSchema from './DefinedTermSchema';
 
