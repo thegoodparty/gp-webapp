@@ -91,8 +91,13 @@ export default function PortalAdminPage(props) {
         newState[field.key] = candidate[field.key]
           ? candidate[field.key]
           : field.initialValue;
+        // if (field.key === 'didWin' && candidate[field.key]) {
+        //   console.log('didWin', candidate[field.key]);
+        //   newState[field.key] = candidate[field.key] === 'Yes'; // didWin returns as yes or no
+        // }
       });
       newState.isActive = candidate.isActive;
+      console.log('newState', newState);
       setState(newState);
     }
   }, [candidate]);
@@ -151,20 +156,23 @@ export default function PortalAdminPage(props) {
               <>
                 {field.isRadio ? (
                   <>
-                    <div>{field.label}</div>
+                    {console.log('field.key', field.key)}
+                    {console.log('tate[field.key]', state[field.key])}
+                    <div>
+                      {field.label} {state[field.key]}
+                    </div>
                     <RadioGroup
+                      row
                       name={field.label}
                       label={field.label}
-                      value={state[field.key]}
-                      style={{ flexDirection: 'row' }}
+                      value={state[field.key] || null}
                       onChange={(e) => onChangeField(field.key, e.target.value)}
                     >
                       {field.options.map((op) => (
                         <FormControlLabel
-                          style={{ display: 'inline-block' }}
                           value={op}
                           key={op}
-                          control={<Radio color="primary" />}
+                          control={<Radio />}
                           label={op}
                         />
                       ))}
