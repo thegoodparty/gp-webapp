@@ -4,10 +4,12 @@ import { candidateHash } from '/helpers/candidateHelper';
 import { IoMdShareAlt } from 'react-icons/io';
 
 import styles from './Trending.module.scss';
-import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import ShareCandidate from './Header/ShareCandidate';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { candidateColor } from 'helpers/candidateHelper';
 
 export default function Trending({ candidate }) {
+  const brightColor = candidateColor(candidate);
   return (
     <div className={styles.wrapper}>
       <h3 className={styles.h3}>Get ‘em trending, tag posts with</h3>
@@ -16,11 +18,16 @@ export default function Trending({ candidate }) {
         <div>
           <div className={styles.row}>
             <ShareCandidate candidate={candidate}>
-              <PinkButtonClient>
+              <BlackButtonClient
+                style={{
+                  backgroundColor: brightColor,
+                  borderColor: brightColor,
+                }}
+              >
                 <div className="flex items-center font-black">
                   <div className="mr-6">POST</div> <IoMdShareAlt size={24} />
                 </div>
-              </PinkButtonClient>
+              </BlackButtonClient>
             </ShareCandidate>
           </div>
         </div>

@@ -9,6 +9,11 @@
   outline: none;
 }
 
+body {
+  width: 100%;
+  height: 100%;
+}
+
 a:hover {
   text-decoration: underline;
 }
@@ -59,7 +64,7 @@ ul li {
 }
 
 .row {
-  @apply flex items-center	;
+  @apply flex items-center;
 }
 .break-word {
   overflow-wrap: break-word;
