@@ -13,7 +13,6 @@ export const fetchGlossaryByLetter = async () => {
 export default async function Page() {
   const { content } = await fetchGlossaryByLetter();
   const items = content['A'];
-  console.log('items', items);
 
   const childProps = { activeLetter: 'A', items };
   return <TermsHomePage {...childProps} />;

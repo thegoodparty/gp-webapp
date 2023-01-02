@@ -1,8 +1,10 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import TermsHomePage from '../components/TermsHomePage';
+import { alphabet } from '../components/LayoutWithAlphabet';
 import { fetchGlossaryByLetter } from '../page';
+import TermsHomePage from '../components/TermsHomePage';
 import TermsItemPage from './components/TermsItemPage';
+import DefinedTermSchema from './DefinedTermSchema';
 
 export const fetchGlossaryByTitle = async (title) => {
   const api = gpApi.content.contentByKey;
@@ -10,7 +12,7 @@ export const fetchGlossaryByTitle = async (title) => {
     key: 'glossaryItemsByTitle',
     subKey: title,
   };
-  return await gpFetch(api, payload, 60);
+  return await gpFetch(api, payload, 1); // TODO: change later when glossary CMS is stable
 };
 
 export default async function Page({ params }) {
@@ -21,6 +23,21 @@ export default async function Page({ params }) {
     return <TermsHomePage activeLetter={slug.toUpperCase()} items={items} />;
   }
   const { content } = await fetchGlossaryByTitle(slug);
-  const childProps = { item: content };
-  return <TermsItemPage {...childProps} />;
+  const childProps = { item: content, slug };
+  return (
+    <>
+      <TermsItemPage {...childProps} />
+      <DefinedTermSchema {...childProps} />
+    </>
+  );
+}
+
+export async function generateStaticParams() {
+  const letters = alphabet;
+
+  return letters.map((letter) => {
+    return {
+      slug: letter,
+    };
+  });
 }

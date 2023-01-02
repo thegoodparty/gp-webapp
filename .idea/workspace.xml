@@ -40,6 +40,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/tomeralmog/Documents/TA/TheGoodParty/dev/gp-webapp/pages/api",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -50,10 +51,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pages/api" />
+      <recent name="$PROJECT_DIR$/app/api" />
       <recent name="$PROJECT_DIR$/Components/shared/layouts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/public" />
-      <recent name="$PROJECT_DIR$/app" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -72,6 +77,8 @@
       <workItem from="1667583742643" duration="6000" />
       <workItem from="1667887113576" duration="11000" />
       <workItem from="1671134913682" duration="350000" />
+      <workItem from="1671900322467" duration="19000" />
+      <workItem from="1672682814806" duration="1975000" />
     </task>
     <servers />
   </component>

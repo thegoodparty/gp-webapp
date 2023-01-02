@@ -137,9 +137,13 @@ export default function EditCampaignPage(props) {
   };
 
   const handleUpload = async (url) => {
+    console.log('handleUpload1');
     await uploadImage(candidate.id, url);
+    console.log('handleUpload2');
     setUpdateImage(false);
+    console.log('handleUpload3');
     await fetchCandidate(candidate.id);
+    console.log('handleUpload4');
   };
 
   const canSubmit = () => {

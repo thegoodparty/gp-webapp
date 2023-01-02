@@ -44,16 +44,6 @@ export default function Tools() {
           </div>
         </h3>
       </div>
-      <Link
-        href="/campaign-application/guest/1"
-        data-cy="campaign-start-button-link"
-      >
-        <BlackButton>
-          <div data-cy="campaign-start-button-label" className="font-black">
-            START YOUR CAMPAIGN
-          </div>
-        </BlackButton>
-      </Link>
     </section>
   );
 }

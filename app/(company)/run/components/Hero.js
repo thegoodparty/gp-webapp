@@ -16,16 +16,6 @@ export default function Hero() {
       <div className="text-sm mt-10 mb-3 text-neutral-500">
         we're always free
       </div>
-      <Link
-        href="/campaign-application/guest/1"
-        data-cy="campaign-start-button-link"
-      >
-        <BlackButton>
-          <div data-cy="campaign-start-button-label" className="font-black">
-            START YOUR CAMPAIGN
-          </div>
-        </BlackButton>
-      </Link>
       <div className="mt-5 underline">
         <Link href="#questions" data-cy="run-questions">
           How does a campaign work?

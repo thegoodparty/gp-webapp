@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-const alphabet = [
+export const alphabet = [
   'A',
   'B',
   'C',
@@ -38,7 +38,7 @@ export default function LayoutWithAlphabet({ activeLetter = 'A', children }) {
           <Link
             key={letter}
             href={`/political-terms/${letter}`}
-            className="mb-1 lg:mb-0 block lg:inline-block lg:mr-3"
+            className="pb-1 block lg:inline-block lg:pr-3"
             style={
               activeLetter === letter
                 ? { fontWeight: '900', color: 'black' }

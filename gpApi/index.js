@@ -75,6 +75,10 @@ const gpApi = {
       url: `${base}content/content-by-key`,
       method: 'GET',
     },
+    all: {
+      url: `${base}content/all-content`,
+      method: 'GET',
+    },
   },
   candidate: {
     list: {
@@ -330,6 +334,10 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+  },
+  uploadImage: {
+    url: `${base}application/upload-image`,
+    method: 'POST',
   },
 };
 
