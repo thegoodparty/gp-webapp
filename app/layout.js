@@ -3,6 +3,7 @@ import Script from 'next/script';
 
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
+import { isProd } from 'gpApi';
 
 const lato = Lato({
   weight: ['400', '700', '900'],
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
         <meta property="twitter:card" content="summary_large_image" />
         <meta name="theme-color" content="#ffffff" />
         <meta property="fb:app_id" content="241239336921963" />
+        {!isProd && <meta name="robots" content="noindex" />}
         <link
           rel="icon"
           type="image/png"

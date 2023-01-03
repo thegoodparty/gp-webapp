@@ -90,7 +90,7 @@ export const partyRace = (candidate, withLineBreak = true) => {
   let resolvedRace = '';
 
   if (office) {
-    resolvedRace = `${state ? shortToLongState[state] : ''} ${office} ${
+    resolvedRace = `${office} ${state ? `(${shortToLongState[state]})` : ''}  ${
       district ? `| District ${district}` : ''
     }`;
   } else {
@@ -187,7 +187,6 @@ export const shortToLongState = {
   WI: 'Wisconsin',
   WY: 'Wyoming',
 };
-
 
 export function candidateName(app) {
   let name = 'n/a';

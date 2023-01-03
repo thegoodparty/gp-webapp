@@ -24,7 +24,7 @@ function CampaignProgress({ candidate, followers }) {
           </span>
         </FaqLink>
       </div>
-      <GoalsChart candidate={candidate} followers={followers} />
+      <GoalsChart candidate={candidate} />
       <div className="flex justify-center mb-6">
         <div className="text-right" data-cy="campaign-likely-voters">
           🗳 {kFormatter(voters)}
