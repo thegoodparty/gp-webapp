@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { numberFormatter } from '/helpers/numberHelper';
 import { candidateColor } from '/helpers/candidateHelper';
 import { daysTill } from '/helpers/dateHelper';
-import { followOffsetState } from 'app/candidate/[...nameId]/components/Header/FollowButton';
+import { followOffsetState } from 'app/candidate/[slug]/components/Header/FollowButton';
 
 const CandidateProgressBar = ({
   candidate,

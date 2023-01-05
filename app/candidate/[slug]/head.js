@@ -3,15 +3,12 @@ import { partyResolver } from 'helpers/candidateHelper';
 import { fetchCandidate } from './page';
 
 export default async function Head({ params }) {
-  const { nameId } = params;
-  const name = nameId?.length > 0 ? nameId[0] : false;
-  const id = nameId?.length > 1 ? nameId[1] : false;
-  if (!id) {
+  const { slug } = params;
+  if (!slug) {
     return <></>;
   }
 
-  const { candidate, candidatePositions, followers, feed } =
-    await fetchCandidate(id);
+  const { candidate } = await fetchCandidate(slug);
 
   const shareImg = shareImageUrl(candidate);
   const { firstName, lastName, party, otherParty, race, headline } = candidate;

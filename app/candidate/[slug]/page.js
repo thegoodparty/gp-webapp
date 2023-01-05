@@ -10,10 +10,10 @@ import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import { slugify } from 'helpers/articleHelper';
 import TrackVisit from './TrackVisit';
 
-export const fetchCandidate = async (id) => {
+export const fetchCandidate = async (slug) => {
   const api = gpApi.candidate.find;
   const payload = {
-    id,
+    slug,
     allFields: true,
   };
 
@@ -21,27 +21,22 @@ export const fetchCandidate = async (id) => {
 };
 
 export default async function Page({ params }) {
-  const { nameId } = params;
-  const name = nameId?.length > 0 ? nameId[0] : false;
-  const id = nameId?.length > 1 ? nameId[1] : false;
-  if (!id) {
-    notFound();
-  }
-
+  const { slug } = params;
   const { candidate, candidatePositions, followers, feed } =
-    await fetchCandidate(id);
+    await fetchCandidate(slug);
+
   if (!candidate) {
     notFound();
   }
 
-  if (candidateRoute(candidate) !== `/candidate/${name}/${id}`) {
+  if (candidateRoute(candidate) !== `/candidate/${slug}`) {
     redirect(candidateRoute(candidate));
   }
 
   const childProps = {
     candidate,
     candidatePositions: candidatePositions || [],
-    id,
+    id: candidate.id,
     followers: followers,
     feed: feed || {},
   };
@@ -59,9 +54,8 @@ export async function generateStaticParams() {
   const { candidates } = await fetchCandidates();
 
   return candidates.map((candidate) => {
-    const name = slugify(`${candidate.firstName} ${candidate.lastName}`);
     return {
-      nameId: [name, candidate.id + ''],
+      slug: candidate.slug,
     };
   });
 }

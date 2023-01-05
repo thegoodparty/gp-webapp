@@ -54,9 +54,8 @@ export const candidateRoute = (candidate) => {
   if (!candidate) {
     return '/';
   }
-  const { id } = candidate;
-  const name = slugify(`${candidate.firstName} ${candidate.lastName}`);
-  return `/candidate/${name}/${id}`;
+  const { slug } = candidate;
+  return `/candidate/${slug}`;
 };
 
 export const getPartyImage = (partyBadge, party, hideBadge) => {
