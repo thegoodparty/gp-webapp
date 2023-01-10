@@ -93,7 +93,7 @@ export default function OnboardingPage(props) {
   return (
     <OnboardingWrapper {...props}>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-3 p-3">
+        <div className="col-span-12 lg:col-span-3 p-3">
           <h3 className="font-black mb-6">Adjust AI</h3>
           {adjustFields.map((field) => (
             <div className="mb-4" key={field.key}>
@@ -115,7 +115,7 @@ export default function OnboardingPage(props) {
             </a>
           </div>
         </div>
-        <div className="col-span-9 ">
+        <div className="col-span-12 lg:col-span-9 ">
           <PortalPanel color="#ea580c">
             <h3 className="font-black mb-6">Input Data</h3>
             {inputFields.map((field) => (
