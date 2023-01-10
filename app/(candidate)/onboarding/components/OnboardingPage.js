@@ -34,7 +34,7 @@ const fetchOnboardingMessage = async (prompt, tokens, temperature) => {
     return await gpFetch(api, payload);
   } catch (e) {
     console.log('e', e);
-    return '';
+    return 'An Error occurred, please try again.';
   }
 };
 
