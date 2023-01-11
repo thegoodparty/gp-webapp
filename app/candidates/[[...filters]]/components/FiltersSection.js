@@ -15,6 +15,7 @@ export default function FiltersSection({
   routeState,
   showOnlyGood,
 }) {
+  console.log('showOnlyGood', showOnlyGood);
   const pathname = usePathname();
   const [state, setState] = useState({
     position: '',
@@ -78,6 +79,7 @@ export default function FiltersSection({
   };
 
   const setGoodQuery = (checked) => {
+    console.log('setGood', checked);
     if (checked) {
       router.push(`${pathname}?certified=true`);
     } else {
@@ -167,7 +169,7 @@ export default function FiltersSection({
         <div className="col-span-3 lg:col-span-2">
           <Checkbox
             color="primary"
-            checked={showOnlyGood}
+            checked={!!showOnlyGood}
             onChange={(e) => setGoodQuery(e.target.checked)}
           />
           Show only Good Party Certified Candidates
