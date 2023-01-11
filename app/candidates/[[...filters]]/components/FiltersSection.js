@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 // import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-// import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@shared/inputs/TextField';
 import { useRouter, usePathname } from 'next/navigation';
 import { slugify } from 'helpers/articleHelper';
@@ -15,7 +15,6 @@ export default function FiltersSection({
   routeState,
   showOnlyGood,
 }) {
-  console.log('showOnlyGood', showOnlyGood);
   const pathname = usePathname();
   const [state, setState] = useState({
     position: '',
@@ -167,9 +166,8 @@ export default function FiltersSection({
           />
         </div>
         <div className="col-span-3 lg:col-span-2">
-          <input
-            className="mr-2 p-2"
-            type="checkbox"
+          <Checkbox
+            color="primary"
             checked={!!showOnlyGood}
             onChange={(e) => setGoodQuery(e.target.checked)}
           />

@@ -6,7 +6,7 @@ import './globals.css';
 import { isProd } from 'gpApi';
 
 const lato = Lato({
-  weight: ['400', '700', '900'],
+  weight: ['300', '400', '700', '900'],
   subsets: ['latin'],
 });
 

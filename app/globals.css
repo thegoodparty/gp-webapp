@@ -70,3 +70,7 @@ ul li {
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
+
+.text-white {
+  color: #fff;
+}
