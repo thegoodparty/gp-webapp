@@ -19,7 +19,7 @@ export default function TermSnippet({ item, last }) {
           <strong>{title}</strong>
         </h2>
         <div
-          className="leading-8 max-h-16 block w-full overflow-hidden"
+          className="leading-8 max-h-[60px] block w-full overflow-hidden"
           style={{
             display: '-webkit-box',
             '-webkit-line-clamp': '3',

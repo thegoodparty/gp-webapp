@@ -6,10 +6,12 @@
 
 // const { default: Axios } = require('axios');
 
-import gpApi, {appBase} from 'gpApi';
+import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
+import { fetchGlossaryByLetter } from 'app/political-terms/page';
+import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import {faqArticleRoute} from "../../helpers/articleHelper";
-import {candidateRoute} from "../../helpers/candidateHelper";
+import { faqArticleRoute, slugify } from '../../helpers/articleHelper';
+import { candidateRoute } from '../../helpers/candidateHelper';
 
 let yourDate = new Date();
 const currentDate = yourDate.toISOString().split('T')[0];
@@ -28,6 +30,7 @@ const staticUrls = [
   '/work-with-us',
   '/contact',
   '/pricing',
+  '/political-terms',
 ];
 
 export const fetchContent = async () => {
@@ -40,10 +43,19 @@ export const fetchCandidates = async () => {
   return await gpFetch(api, false, 3600);
 };
 
+export const fetchGlossaryByTitle = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'glossaryItemsByTitle',
+  };
+  return await gpFetch(api, payload);
+};
+
 export default async function sitemap(req, res) {
   try {
-    const { faqArticles } = await fetchContent()
-    const { candidates } = await fetchCandidates()
+    const { faqArticles } = await fetchContent();
+    const { candidates } = await fetchCandidates();
+    const { content } = await fetchGlossaryByTitle();
 
     let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -70,6 +82,26 @@ export default async function sitemap(req, res) {
       xmlString += `
         <url>
           <loc>${appBase}${candidateRoute(candidate)}</loc>
+          <lastmod>${currentDate}</lastmod>
+          <changefreq>weekly</changefreq>
+        </url>
+      `;
+    });
+
+    alphabet.forEach((letter) => {
+      xmlString += `
+        <url>
+          <loc>${appBase}/political-terms/${letter}</loc>
+          <lastmod>${currentDate}</lastmod>
+          <changefreq>weekly</changefreq>
+        </url>
+      `;
+    });
+
+    Object.keys(content).forEach((slug) => {
+      xmlString += `
+        <url>
+          <loc>${appBase}/political-terms/${slug}</loc>
           <lastmod>${currentDate}</lastmod>
           <changefreq>weekly</changefreq>
         </url>

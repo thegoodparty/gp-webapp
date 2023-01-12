@@ -24,6 +24,7 @@ export const FOOTER_COLUMNS = [
       { label: 'FAQs', link: '/faqs' },
       { label: 'Pricing', link: '/pricing' },
       { label: 'How To Run', link: '/run' },
+      { label: 'Political Definitions', link: '/political-terms' },
     ],
   },
   {
