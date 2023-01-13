@@ -32,11 +32,11 @@ export default function Hero() {
           <div className="grid grid-cols-12 gap2">
             <div className="col-span-12 lg:col-span-8">
               <h1 className="text-6xl leading-tight font-black">
-                Empowering real people to change politics for good.
+                Empowering people to change politics for good.
               </h1>
               <h2 className="text-xl font-bold mt-5 lg:w-[70%]">
-                We help people who want to get things done, together, run for
-                office. More career politicians aren't the answer.
+                We help independent-minded people who want to get things done
+                run for office. Chat with an expert to learn how.
               </h2>
               <EmailForm />
             </div>

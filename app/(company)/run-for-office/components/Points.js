@@ -12,7 +12,7 @@ const points = [
   {
     title: 'Meet your campaign coach',
     description:
-      "Get expert feedback on your campaign's viability and personalized data about your race and path to victory.",
+      'Get expert feedback on your campaign’s viability and personalized data about your race and path to victory.',
   },
   {
     title: 'Get the Campaign Planning Tool',
@@ -22,7 +22,7 @@ const points = [
   {
     title: 'Win with real support',
     description:
-      'Learn how to earn grassroots support, volunteers and unlock in-district events and activities to win your election. ',
+      'Learn how to earn grassroots support, volunteers and unlock in-district events and activities to win your election.',
   },
 ];
 

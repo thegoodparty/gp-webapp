@@ -10,9 +10,9 @@ export default function WhatIs() {
       <div className="col-span-12 lg:col-span-10">
         <h3 className="text-lg font-light">WHAT IS GOOD PARTY</h3>
         <div className="font-black text-2xl">
-          We build tools and provide expertise to first-time and incumbent,
-          independent candidates. You can reach the voters, volunteers and
-          donors you need to win elections without being a partisan politician.
+          We help first-time and incumbent independent candidates run better
+          campaigns. Get access to free tools and expert knowledge to reach the
+          voters, volunteers, and donors you need without the party politics.
         </div>
       </div>
       <div className="hidden lg:block col-span-2">
