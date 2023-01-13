@@ -23,7 +23,7 @@ export const FOOTER_COLUMNS = [
       { label: 'Meet the Candidates', link: '/candidates' },
       { label: 'FAQs', link: '/faqs' },
       { label: 'Pricing', link: '/pricing' },
-      { label: 'How To Run', link: '/run' },
+      { label: 'Run for office', link: '/run-for-office' },
       { label: 'Political Definitions', link: '/political-terms' },
     ],
   },

@@ -19,7 +19,7 @@ const currentDate = yourDate.toISOString().split('T')[0];
 const staticUrls = [
   '/',
   '/about',
-  '/run',
+  '/run-for-office',
   '/team',
   '/candidates',
   '/login',

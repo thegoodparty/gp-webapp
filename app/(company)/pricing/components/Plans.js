@@ -40,7 +40,7 @@ const plans = [
   {
     name: 'Starter',
     price: 'Free Trial*',
-    link: '/run',
+    link: '/run-for-office',
     subtitle: (
       <div>
         <i>*$5.99/mo. starting in 2024</i>
@@ -55,7 +55,7 @@ const plans = [
   {
     name: 'Pro',
     price: '$19.99/mo',
-    link: '/run',
+    link: '/run-for-office',
     subtitle: 'Helping you stay connected and serve supporters while you serve',
     buttonLabel: 'COMING SOON',
     features: [

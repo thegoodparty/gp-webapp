@@ -10,10 +10,7 @@ import UserAvatar from '@shared/user/UserAvatar';
 import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import LoginModal from '../LoginModal';
-export const HEADER_LINKS = [
-  { label: 'About', href: '/about' },
-  { label: 'Candidates', href: '/candidates' },
-];
+import { HEADER_LINKS } from './DesktopHeader';
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);

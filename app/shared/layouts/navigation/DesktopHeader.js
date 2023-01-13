@@ -6,6 +6,7 @@ import NavRegisterOrProfile from './NavRegisterOrProfile';
 
 export const HEADER_LINKS = [
   { label: 'About', href: '/about' },
+  { label: 'Run', href: '/run-for-office' },
   { label: 'Candidates', href: '/candidates' },
 ];
 
