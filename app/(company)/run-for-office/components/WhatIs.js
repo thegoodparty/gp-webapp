@@ -3,13 +3,10 @@ import Link from 'next/link';
 
 export default function WhatIs() {
   return (
-    <div
-      className="border-t border-b border-neutral-300 py-6 grid grid-cols-12 gap-3 items-center"
-      style={{ borderColor: '#D3D3D3' }}
-    >
+    <div className="border-t border-b border-neutral-300 py-6 grid grid-cols-12 gap-3 items-center">
       <div className="col-span-12 lg:col-span-10">
         <h3 className="text-lg font-light">WHAT IS GOOD PARTY</h3>
-        <div className="font-black text-2xl">
+        <div className="font-black text-2xl lg:pr-16">
           We help first-time and incumbent independent candidates run better
           campaigns. Get access to free tools and expert knowledge to reach the
           voters, volunteers, and donors you need without the party politics.
@@ -17,9 +14,15 @@ export default function WhatIs() {
       </div>
       <div className="hidden lg:block col-span-2">
         <Link href="/about">
-          <PurpleButton style={{ borderRadius: '40px', width: '100%' }}>
-            <div className="whitespace-nowrap font-black text-xl">
-              LEARN HOW
+          <PurpleButton
+            style={{
+              borderRadius: '40px',
+              width: '100%',
+              padding: '12px 32px',
+            }}
+          >
+            <div className="whitespace-nowrap font-bold text-xl tracking-wide">
+              GET STARTED
             </div>
           </PurpleButton>
         </Link>

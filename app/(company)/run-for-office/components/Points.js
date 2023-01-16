@@ -28,7 +28,7 @@ const points = [
 
 export default function Points() {
   return (
-    <div className="border-b border-neutral-300 py-6 grid grid-cols-12 gap-12 items-center">
+    <div className=" py-6 grid grid-cols-12 gap-12">
       {points.map((point, index) => (
         <div className="col-span-12 lg:col-span-6" key={point.title}>
           <div className="text-5xl font-black flex">

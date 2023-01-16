@@ -62,7 +62,7 @@ export default function EmailForm() {
             onClick={submitForm}
             id="involved-modal-submit-email"
             type="submit"
-            value="Learn how"
+            value="Get Started"
             className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold"
             style={
               !canSubmit() ? { opacity: '0.5', cursor: 'not-allowed' } : {}

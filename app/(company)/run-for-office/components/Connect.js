@@ -8,7 +8,7 @@ import EmailForm2 from './EmailForm2';
 export default function Connect() {
   return (
     <div className=" bg-darkPurple text-white pt-16 pb-80 px-6 lg:py-16 flex flex-col items-center justify-center mt-8 rounded-xl relative overflow-hidden">
-      <div className="lg:w-[50%] lg:left-24 xl:left-0 xl:w-[40%] relative z-10">
+      <div className="lg:w-[50%] lg:left-[15%]  relative z-10">
         <h3 className="font-black text-3xl">
           Connect with a Good Party expert
         </h3>
