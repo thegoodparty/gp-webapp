@@ -28,22 +28,24 @@ const points = [
 
 export default function Points() {
   return (
-    <div className=" py-6 grid grid-cols-12 gap-12">
+    <div className="py-6 grid grid-cols-12 gap-2">
       {points.map((point, index) => (
         <div className="col-span-12 lg:col-span-6" key={point.title}>
           <div className="text-5xl font-black flex">
-            <span className="text-yellow-400 mr-3">{index + 1}</span>{' '}
-            <span>
+            <div className="text-yellow-400 mr-3">{index + 1}</div>{' '}
+            <div className="mb-12 lg:mb-24 lg:pr-12">
               {point.title}
               <div className="text-lg font-light mt-3">{point.description}</div>
               {point.ol && (
                 <ol className="text-lg font-normal mt-2 list-decimal">
                   {point.ol.map((li) => (
-                    <li className="ml-4 pl-1 mb-1">{li}</li>
+                    <li className="ml-4 pl-1 mb-1" key={li}>
+                      {li}
+                    </li>
                   ))}
                 </ol>
               )}
-            </span>
+            </div>
           </div>
         </div>
       ))}

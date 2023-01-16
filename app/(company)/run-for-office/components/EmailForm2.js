@@ -36,7 +36,7 @@ export default function EmailForm2() {
             type="email"
             name="email"
             placeholder="john@email.com"
-            className="py-4 pl-4 pr-16 mr-8 border-purple border-2 rounded-full w-full"
+            className="py-4 pl-4 pr-16 mr-8 border-purple border-2 rounded-full w-full text-black"
           />
           <div
             type="submit"
