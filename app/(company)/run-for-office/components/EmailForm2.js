@@ -35,13 +35,19 @@ export default function EmailForm2() {
           <input
             type="email"
             name="email"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            value={email}
             placeholder="john@email.com"
             className="py-4 pl-4 pr-16 mr-8 border-purple border-2 rounded-full w-full text-black"
           />
           <div
+            disabled={!canSubmit()}
+            onClick={submitForm}
             type="submit"
             value="→"
-            className="bg-darkPurple absolute rounded-full right-2 top-2 p-3 text-white  font-bold"
+            className="bg-darkPurple absolute rounded-full right-2 top-2 p-3 text-white  font-bold cursor-pointer"
             style={
               !canSubmit() ? { opacity: '0.5', cursor: 'not-allowed' } : {}
             }
