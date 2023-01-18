@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@shared/inputs/TextField';
-import TopIssuesPills from 'app/candidate/[slug]/components/Header/TopIssuesPills';
 
 export default function PositionsSelector({ positions, updateCallback }) {
   const [nonSelected, setNonSelected] = useState(positions);
