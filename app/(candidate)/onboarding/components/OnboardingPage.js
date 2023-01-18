@@ -7,9 +7,14 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import EmailInput from '@shared/inputs/EmailInput';
 import PhoneInput from '@shared/inputs/PhoneInput';
+import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
+import PositionsSelector from './PositionsSelector';
+import { getUserCookie } from 'helpers/cookieHelper';
+import PasswordInput from '@shared/inputs/PasswrodInput';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 
 const inputFields = [
   { key: 'firstName', label: 'First Name', required: true, type: 'text' },
@@ -23,6 +28,21 @@ const inputFields = [
     required: true,
     type: 'radio',
   },
+  { key: 'dob', label: 'Date of Birth', required: true, type: 'date' },
+  {
+    key: 'party',
+    label: 'Political Party Affiliation (select one)',
+    required: true,
+    type: 'select',
+    options: [
+      'Independent',
+      'Green Party',
+      'Libertarian',
+      'SAM',
+      'Forward',
+      'Other',
+    ],
+  },
   {
     key: 'appointed',
     label: 'Have you ever been appointed to or elected for office before?',
@@ -35,15 +55,31 @@ const inputFields = [
     required: true,
     type: 'radio',
   },
+  { type: 'positionsSelector', key: 'positions', initialValue: [] },
 ];
 
-const initialState = {};
+const initialState = {
+  password: '',
+  passwordConf: '',
+};
+
+const initialErrors = {
+  password: false,
+  passwordConf: false,
+};
 inputFields.map((field) => {
-  initialState[field.key] = '';
+  if (field.initialValue) {
+    initialState[field.key] = field.initialValue;
+  } else {
+    initialState[field.key] = '';
+  }
+  initialErrors[field.key] = false;
 });
 
 export default function OnboardingPage(props) {
+  const user = getUserCookie(true);
   const [state, setState] = useState(initialState);
+  const [errors, setErrors] = useState(initialErrors);
   const onChangeField = (key, value) => {
     setState({
       ...state,
@@ -52,12 +88,19 @@ export default function OnboardingPage(props) {
   };
 
   const canSubmit = () => {
-    return (
-      state.name !== '' &&
-      state.office !== '' &&
-      state.issues !== '' &&
-      state.prompt !== ''
-    );
+    console.log('state', state);
+    for (let i = 0; i < inputFields.length; i++) {
+      const field = inputFields[i];
+      if (field.required) {
+        const val = state[field.key];
+        if (field.initialValue && val === initialValue) {
+          return false;
+        } else if (val === '') {
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   return (
@@ -69,7 +112,7 @@ export default function OnboardingPage(props) {
         <h4 className="font-black italic mb-6">Basic Information</h4>
         {inputFields.map((field) => (
           <div className="mb-6" key={field.key}>
-            {field.type === 'text' && (
+            {(field.type === 'text' || field.type === 'date') && (
               <TextField
                 label={field.label}
                 name={field.label}
@@ -79,6 +122,7 @@ export default function OnboardingPage(props) {
                 multiline={!!field.rows}
                 rows={field.rows || 1}
                 required={field.required}
+                type={field.type}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -87,14 +131,19 @@ export default function OnboardingPage(props) {
             {field.type === 'email' && (
               <EmailInput
                 value={state[field.key]}
-                onChange={(e) => onChangeField(field.key, e.target.value)}
+                onChangeCallback={(e) =>
+                  onChangeField(field.key, e.target.value)
+                }
                 shrink
               />
             )}
             {field.type === 'phone' && (
               <PhoneInput
                 value={state[field.key]}
-                onChange={(e) => onChangeField(field.key, e.target.value)}
+                onChangeCallback={(phone, isValid) => {
+                  onChangeField(field.key, phone);
+                  // setIsPhoneValid(isValid);
+                }}
                 hideIcon
                 shrink
               />
@@ -110,18 +159,80 @@ export default function OnboardingPage(props) {
                   value={state[field.key] || null}
                   onChange={(e) => onChangeField(field.key, e.target.value)}
                 >
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-
                   <FormControlLabel
                     value="yes"
                     control={<Radio />}
                     label="Yes"
                   />
+                  <FormControlLabel value="no" control={<Radio />} label="No" />
                 </RadioGroup>
               </div>
             )}
+            {field.type === 'select' && (
+              <>
+                <div className="text-sm text-gray-500">{field.label}</div>
+                <Select
+                  native
+                  value={state[field.key]}
+                  fullWidth
+                  variant="outlined"
+                  onChange={(e) => onChangeField(field.key, e.target.value)}
+                  label={field.label}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                >
+                  <option value="">Select</option>
+                  {field.options.map((op) => (
+                    <option value={op} key={op}>
+                      {op}
+                    </option>
+                  ))}
+                </Select>
+              </>
+            )}
+            {field.type === 'positionsSelector' && (
+              <PositionsSelector
+                {...props}
+                updateCallback={(positions) =>
+                  onChangeField('positions', positions)
+                }
+              />
+            )}
           </div>
         ))}
+
+        {!user && (
+          <div>
+            <div className="font-black mt-12 mb-6">Account password</div>
+            <PasswordInput
+              value={state.password}
+              onChangeCallback={(pwd) => onChangeField('password', pwd)}
+              className="mb-10"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <PasswordInput
+              label="Re-enter password"
+              helperText=""
+              className="mb-10"
+              value={state.passwordConf}
+              onChangeCallback={(pwd) => onChangeField('passwordConf', pwd)}
+              // className={styles.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        )}
+
+        <BlackButtonClient
+          className="w-full uppercase font-black mt-10"
+          disabled={!canSubmit()}
+        >
+          Create my campaign
+        </BlackButtonClient>
       </PortalPanel>
     </OnboardingWrapper>
   );
