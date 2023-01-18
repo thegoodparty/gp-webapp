@@ -13,6 +13,9 @@ import styles from './ArticleSnippet.module.scss';
 import TimeAgoClient from '@shared/utils/TimeAgoClient';
 
 function ArticleSnippet({ article, heroMode }) {
+  if (!article) {
+    return null;
+  }
   const { title, mainImage, section, publishDate, summary, readingTime, slug } =
     article;
   const sectionName = section?.fields?.title;

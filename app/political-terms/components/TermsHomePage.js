@@ -11,10 +11,13 @@ export default function TermsHomePage(props) {
       <div className="my-9 lg:my-16">
         <h1 className="font-black text-4xl lg:text-5xl mb-4">Terms Glossary</h1>
         <div className="text-lg">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
+          Good Party's Terms Glossary is a list of definitions of words from the
+          political and elections world. These terms are from an independent's
+          perspective with an eye toward reform. If you have a suggestion for a
+          new definition, send it to{' '}
+          <a href="mailto:ask@goodparty.org" rel="noopener noreferrer nofollow">
+            ask@goodparty.org.
+          </a>
         </div>
         <LayoutWithAlphabet {...props}>
           {items && items.length > 0 ? (

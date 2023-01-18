@@ -46,6 +46,7 @@
 
 .copy {
   margin-top: 24px;
+  overflow-wrap: break-word;
 }
 
 .maxWidth {
@@ -63,6 +64,7 @@
 
 .topAuthorWrapper {
   display: flex;
+  align-items: center;
   @include lg {
     display: block;
   }
@@ -92,9 +94,13 @@
   height: 60px;
   width: 60px;
   margin-right: 24px;
+
   img {
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
+    height: 60px;
+    width: 60px;
     object-fit: cover;
-    object-position: center center;
+    object-position: top center;
     border-radius: 50%;
   }
 }

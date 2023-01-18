@@ -12,6 +12,7 @@ export default function EmailInput({
   value,
   onChangeCallback,
   onBlurCallback,
+  shrink,
 }) {
   return (
     <TextField
@@ -25,6 +26,13 @@ export default function EmailInput({
       onChange={onChangeCallback}
       onBlur={onBlurCallback}
       variant="outlined"
+      InputLabelProps={
+        shrink
+          ? {
+              shrink: true,
+            }
+          : {}
+      }
     />
   );
 }

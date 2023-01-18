@@ -27,7 +27,7 @@ export const leftMenuItems = [
 export const leftMenuItemsBottom = [
   {
     label: 'Campaign Guide',
-    link: '/run#how',
+    link: '/run-for-office',
   },
   {
     label: 'FAQs',

@@ -191,6 +191,14 @@ const gpApi = {
         withAuth: true,
       },
     },
+
+    onboarding: {
+      test: {
+        url: `${base}campaign/onboarding/test`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
   },
 
   topIssues: {
