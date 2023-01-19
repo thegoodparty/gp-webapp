@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import passwordValidator from 'password-validator';
 
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
@@ -27,17 +28,42 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 //    }
 //  `;
 
+const schema = new passwordValidator();
+schema
+  .is()
+  .min(8) // Minimum length 8
+  .is()
+  .max(40) // Maximum length 100
+  .has()
+  .uppercase() // Must have uppercase letters
+  .has()
+  .lowercase() // Must have lowercase letters
+  .has()
+  .digits(1) // Must have at least 1 digits
+  .has()
+  .not()
+  .spaces(); // Should not have spaces
+
+export const isValidPassword = (pwd) => {
+  return schema.validate(pwd);
+};
+
+export const invalidPasswordReasons = (pwd) => {
+  return schema.validate(pwd, { list: true });
+};
+
 export default function PasswordInput({
   onChangeCallback,
   variant = 'outlined',
   label = 'Password',
-  helperText = 'For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character or number, and 8 characters minimum',
+  helperText = 'For security, passwords must have at least 1 capital letter, 1 lowercase, 1 number, and 8 minimum characters.',
   autoFocus = false,
   className = '',
   InputLabelProps = {},
 }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -48,8 +74,15 @@ export default function PasswordInput({
 
   const onChangePassword = (event) => {
     if (event) {
-      setPassword(event.target.value);
-      onChangeCallback(event.target.value);
+      const pwd = event.target.value;
+      const isValid = isValidPassword(pwd);
+      if (!isValid) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+      setPassword(pwd);
+      onChangeCallback(pwd);
     }
   };
   return (
@@ -68,6 +101,7 @@ export default function PasswordInput({
       autoFocus={autoFocus}
       className={className}
       InputLabelProps={InputLabelProps}
+      error={error}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

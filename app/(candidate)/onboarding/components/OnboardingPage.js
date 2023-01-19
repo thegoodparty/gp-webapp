@@ -5,16 +5,17 @@ import OnboardingWrapper from '../shared/OnboardingWrapper';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import EmailInput from '@shared/inputs/EmailInput';
-import PhoneInput from '@shared/inputs/PhoneInput';
+import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput';
+import PhoneInput, { isValidPhone } from '@shared/inputs/PhoneInput';
 import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import PositionsSelector from './PositionsSelector';
 import { getUserCookie } from 'helpers/cookieHelper';
-import PasswordInput from '@shared/inputs/PasswrodInput';
+import PasswordInput, { isValidPassword } from '@shared/inputs/PasswrodInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import RenderInputField from './RenderInputField';
 
 const inputFields = [
   { key: 'firstName', label: 'First Name', required: true, type: 'text' },
@@ -63,23 +64,18 @@ const initialState = {
   passwordConf: '',
 };
 
-const initialErrors = {
-  password: false,
-  passwordConf: false,
-};
 inputFields.map((field) => {
   if (field.initialValue) {
     initialState[field.key] = field.initialValue;
   } else {
     initialState[field.key] = '';
   }
-  initialErrors[field.key] = false;
 });
 
 export default function OnboardingPage(props) {
   const user = getUserCookie(true);
   const [state, setState] = useState(initialState);
-  const [errors, setErrors] = useState(initialErrors);
+  const [errors, setErrors] = useState({});
   const onChangeField = (key, value) => {
     setState({
       ...state,
@@ -88,7 +84,6 @@ export default function OnboardingPage(props) {
   };
 
   const canSubmit = () => {
-    console.log('state', state);
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
       if (field.required) {
@@ -100,7 +95,45 @@ export default function OnboardingPage(props) {
         }
       }
     }
+    if (user && (password !== passwordConf || !isValidPassword(password))) {
+      return false;
+    }
+    if (!isValidEmail(state.email)) {
+      return false;
+    }
+    if (!isValidPhone(state.phone)) {
+      return false;
+    }
     return true;
+  };
+
+  const checkErrors = () => {
+    const newErrors = {};
+    for (let i = 0; i < inputFields.length; i++) {
+      const field = inputFields[i];
+      if (field.required) {
+        const val = state[field.key];
+        if (field.initialValue && val === initialValue) {
+          newErrors[field.key] = true;
+        } else if (val === '') {
+          newErrors[field.key] = true;
+        }
+      }
+    }
+    if (user && (password !== passwordConf || !isValidPassword(password))) {
+      newErrors.password = true;
+    }
+    if (!isValidEmail(state.email)) {
+      newErrors.email = true;
+    }
+    if (!isValidPhone(state.phone)) {
+      newErrors.phone = true;
+    }
+    setErrors(newErrors);
+  };
+
+  const handleSubmit = () => {
+    checkErrors();
   };
 
   return (
@@ -111,95 +144,13 @@ export default function OnboardingPage(props) {
         </h3>
         <h4 className="font-black italic mb-6">Basic Information</h4>
         {inputFields.map((field) => (
-          <div className="mb-6" key={field.key}>
-            {(field.type === 'text' || field.type === 'date') && (
-              <TextField
-                label={field.label}
-                name={field.label}
-                fullWidth
-                value={state[field.key]}
-                onChange={(e) => onChangeField(field.key, e.target.value)}
-                multiline={!!field.rows}
-                rows={field.rows || 1}
-                required={field.required}
-                type={field.type}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-            )}
-            {field.type === 'email' && (
-              <EmailInput
-                value={state[field.key]}
-                onChangeCallback={(e) =>
-                  onChangeField(field.key, e.target.value)
-                }
-                shrink
-              />
-            )}
-            {field.type === 'phone' && (
-              <PhoneInput
-                value={state[field.key]}
-                onChangeCallback={(phone, isValid) => {
-                  onChangeField(field.key, phone);
-                  // setIsPhoneValid(isValid);
-                }}
-                hideIcon
-                shrink
-              />
-            )}
-
-            {field.type === 'radio' && (
-              <div className="mb-4">
-                <div className="text-zinc-500 mb-2">{field.label}</div>
-                <RadioGroup
-                  row
-                  name={field.label}
-                  label={field.label}
-                  value={state[field.key] || null}
-                  onChange={(e) => onChangeField(field.key, e.target.value)}
-                >
-                  <FormControlLabel
-                    value="yes"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel value="no" control={<Radio />} label="No" />
-                </RadioGroup>
-              </div>
-            )}
-            {field.type === 'select' && (
-              <>
-                <div className="text-sm text-gray-500">{field.label}</div>
-                <Select
-                  native
-                  value={state[field.key]}
-                  fullWidth
-                  variant="outlined"
-                  onChange={(e) => onChangeField(field.key, e.target.value)}
-                  label={field.label}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                >
-                  <option value="">Select</option>
-                  {field.options.map((op) => (
-                    <option value={op} key={op}>
-                      {op}
-                    </option>
-                  ))}
-                </Select>
-              </>
-            )}
-            {field.type === 'positionsSelector' && (
-              <PositionsSelector
-                {...props}
-                updateCallback={(positions) =>
-                  onChangeField('positions', positions)
-                }
-              />
-            )}
-          </div>
+          <RenderInputField
+            field={field}
+            onChangeCallback={onChangeField}
+            error={!!errors[field.key]}
+            positions={props.positions}
+            value={state[field.key]}
+          />
         ))}
 
         {!user && (
@@ -219,7 +170,6 @@ export default function OnboardingPage(props) {
               className="mb-10"
               value={state.passwordConf}
               onChangeCallback={(pwd) => onChangeField('passwordConf', pwd)}
-              // className={styles.textField}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -230,6 +180,7 @@ export default function OnboardingPage(props) {
         <BlackButtonClient
           className="w-full uppercase font-black mt-10"
           disabled={!canSubmit()}
+          onClick={handleSubmit}
         >
           Create my campaign
         </BlackButtonClient>
