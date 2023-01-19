@@ -55,7 +55,7 @@ export default function EmailForm() {
             }}
             value={email}
             placeholder="john@email.com"
-            className="py-4 pl-4 pr-32 border-purple border-2 rounded-full w-full"
+            className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
           />
           <input
             disabled={!canSubmit()}
