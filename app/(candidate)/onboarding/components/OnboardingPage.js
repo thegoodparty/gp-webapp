@@ -15,6 +15,7 @@ import { register } from '@shared/inputs/RegisterAnimated';
 import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 const inputFields = [
   { key: 'firstName', label: 'First Name', required: true, type: 'text' },
@@ -95,7 +96,9 @@ export default function OnboardingPage(props) {
   const user = getUserCookie(true);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const userState = useHookstate(globalUserState);
+  const snackbarState = useHookstate(globalSnackbarState);
   const router = useRouter();
   const onChangeField = (key, value) => {
     setState({
@@ -120,6 +123,9 @@ export default function OnboardingPage(props) {
   const checkForCampaign = async () => {};
 
   const canSubmit = () => {
+    if (loading) {
+      return false;
+    }
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
       if (field.required) {
@@ -186,6 +192,14 @@ export default function OnboardingPage(props) {
   };
 
   const handleSubmit = async () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saving...',
+        isError: false,
+      };
+    });
+    setLoading(true);
     checkErrors();
     if (!user) {
       const newUser = await register({
@@ -196,8 +210,21 @@ export default function OnboardingPage(props) {
       });
       if (newUser) {
         userState.set(() => user);
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'Your account is created. Creating campaign...',
+            isError: false,
+          };
+        });
       } else {
-        alert('Error creating your account');
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'Error creating your account',
+            isError: true,
+          };
+        });
         return false;
       }
     }
@@ -208,7 +235,16 @@ export default function OnboardingPage(props) {
     const { slug } = await createCampaign(stateNoPassword);
     if (slug) {
       router.push(`/onboarding/${slug}`);
+    } else {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Error creating your campaign',
+          isError: true,
+        };
+      });
     }
+    setLoading(false);
   };
 
   return (
