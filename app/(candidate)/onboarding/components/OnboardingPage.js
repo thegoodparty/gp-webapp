@@ -1,21 +1,20 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import OnboardingWrapper from '../shared/OnboardingWrapper';
-import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput';
-import PhoneInput, { isValidPhone } from '@shared/inputs/PhoneInput';
-import Select from '@mui/material/Select';
-import Radio from '@mui/material/Radio';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import RadioGroup from '@mui/material/RadioGroup';
-import PositionsSelector from './PositionsSelector';
+import { isValidEmail } from '@shared/inputs/EmailInput';
+import { isValidPhone } from '@shared/inputs/PhoneInput';
 import { getUserCookie } from 'helpers/cookieHelper';
 import PasswordInput, { isValidPassword } from '@shared/inputs/PasswrodInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import RenderInputField from './RenderInputField';
+import { register } from '@shared/inputs/RegisterAnimated';
+import { useHookstate } from '@hookstate/core';
+import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 
 const inputFields = [
   { key: 'firstName', label: 'First Name', required: true, type: 'text' },
@@ -72,16 +71,47 @@ inputFields.map((field) => {
   }
 });
 
+async function createCampaign(payload) {
+  try {
+    const api = gpApi.campaign.onboarding.create;
+    return await gpFetch(api, { data: payload });
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
+export async function fetchUserCampaigns() {
+  try {
+    const api = gpApi.campaign.onboarding.findByUser;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 export default function OnboardingPage(props) {
   const user = getUserCookie(true);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
+  const userState = useHookstate(globalUserState);
+  const router = useRouter();
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
     });
   };
+  useEffect(async () => {
+    if (user) {
+      const { campaigns } = await fetchUserCampaigns();
+      if (campaigns.length > 0) {
+        const { slug } = campaigns[0];
+        router.push(`/onboarding/${slug}`);
+      }
+    }
+  }, [user]);
 
   const canSubmit = () => {
     for (let i = 0; i < inputFields.length; i++) {
@@ -89,21 +119,31 @@ export default function OnboardingPage(props) {
       if (field.required) {
         const val = state[field.key];
         if (field.initialValue && val === initialValue) {
+          console.log('field1', field);
           return false;
         } else if (val === '') {
+          console.log('field2', field);
           return false;
         }
       }
     }
-    if (user && (password !== passwordConf || !isValidPassword(password))) {
+    if (
+      !user &&
+      (state.password !== state.passwordConf ||
+        !isValidPassword(state.password))
+    ) {
+      console.log('pass');
       return false;
     }
     if (!isValidEmail(state.email)) {
+      console.log('email');
       return false;
     }
     if (!isValidPhone(state.phone)) {
+      console.log('phone');
       return false;
     }
+    console.log('can submit');
     return true;
   };
 
@@ -120,7 +160,11 @@ export default function OnboardingPage(props) {
         }
       }
     }
-    if (user && (password !== passwordConf || !isValidPassword(password))) {
+    if (
+      !user &&
+      (state.password !== state.passwordConf ||
+        !isValidPassword(state.password))
+    ) {
       newErrors.password = true;
     }
     if (!isValidEmail(state.email)) {
@@ -129,11 +173,36 @@ export default function OnboardingPage(props) {
     if (!isValidPhone(state.phone)) {
       newErrors.phone = true;
     }
+    if (!validateZip(state.zip)) {
+      newErrors.zip = true;
+    }
     setErrors(newErrors);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     checkErrors();
+    if (!user) {
+      const newUser = await register({
+        email: state.email,
+        name: `${state.firstName} ${state.lastName}`,
+        zip: state.zip,
+        password: state.password,
+      });
+      if (newUser) {
+        userState.set(() => user);
+      } else {
+        alert('Error creating your account');
+        return false;
+      }
+    }
+    const stateNoPassword = { ...state };
+    delete stateNoPassword.password;
+    delete stateNoPassword.passwordConf;
+
+    const { slug } = await createCampaign(stateNoPassword);
+    if (slug) {
+      router.push(`/onboarding/${slug}`);
+    }
   };
 
   return (

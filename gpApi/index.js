@@ -193,6 +193,16 @@ const gpApi = {
     },
 
     onboarding: {
+      create: {
+        url: `${base}campaign/onboarding`,
+        method: 'POST',
+        withAuth: true,
+      },
+      findByUser: {
+        url: `${base}campaign/onboarding/by-user`,
+        method: 'GET',
+        withAuth: true,
+      },
       test: {
         url: `${base}campaign/onboarding/test`,
         method: 'GET',
