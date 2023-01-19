@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 export const getServerToken = () => {
   const nextCookies = cookies();
   const cookie = nextCookies.get('token');
-  return cookie.value ? nextCookies.get('token').value : false;
+  return cookie?.value ? nextCookies.get('token').value : false;
 };
 
 export const getServerUser = () => {
