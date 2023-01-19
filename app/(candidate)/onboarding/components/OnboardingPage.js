@@ -103,7 +103,11 @@ export default function OnboardingPage(props) {
       [key]: value,
     });
   };
-  useEffect(async () => {
+  useEffect(() => {
+    checkCampaigns();
+  }, [user]);
+
+  const checkCampaigns = async () => {
     if (user) {
       const { campaigns } = await fetchUserCampaigns();
       if (campaigns.length > 0) {
@@ -111,7 +115,9 @@ export default function OnboardingPage(props) {
         router.push(`/onboarding/${slug}`);
       }
     }
-  }, [user]);
+  };
+
+  const checkForCampaign = async () => {};
 
   const canSubmit = () => {
     for (let i = 0; i < inputFields.length; i++) {
