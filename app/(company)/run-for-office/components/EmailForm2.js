@@ -25,10 +25,10 @@ export default function EmailForm2() {
     }
   };
   return (
-    <form className="" noValidate onSubmit={(e) => e.preventDefault()}>
+    <form className="h-[60px]" noValidate onSubmit={(e) => e.preventDefault()}>
       {success ? (
         <div className="flex items-center">
-          <div className="mr-2">Subscribed</div> <FaCheck />
+          <div className="mr-2">Check your email to learn more</div> <FaCheck />
         </div>
       ) : (
         <div className="relative">
