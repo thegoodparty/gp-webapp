@@ -26,7 +26,7 @@ export default async function Head({ params }) {
     <GpHead
       title={title}
       description={description}
-      slug="/candidate"
+      slug={`/candidate/${slug}`}
       image={shareImg}
     />
   );
