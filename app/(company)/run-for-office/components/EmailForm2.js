@@ -49,7 +49,9 @@ export default function EmailForm2() {
             value="→"
             className="bg-darkPurple absolute rounded-full right-2 top-2 p-3 text-white  font-bold cursor-pointer"
             style={
-              !canSubmit() ? { opacity: '0.5', cursor: 'not-allowed' } : {}
+              !canSubmit() && email !== ''
+                ? { opacity: '0.5', cursor: 'not-allowed' }
+                : {}
             }
           >
             <FaArrowRight />
