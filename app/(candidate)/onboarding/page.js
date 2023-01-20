@@ -17,6 +17,7 @@ export default async function Page() {
       'Good Party  will be with you every step of the way so you can run a successful campaign.',
     self: '/onboarding',
     positions,
+    slug: '',
   };
   return <OnboardingPage {...childProps} />;
 }

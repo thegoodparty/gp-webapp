@@ -1,15 +1,16 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import GoalsPage from './components/GoalsPage';
+import PledgePage from './components/PledgePage';
 
 export default async function Page({ params }) {
   const { slug } = params;
 
   const childProps = {
     self: `/onboarding/${slug}`,
-    title: 'Goals and Objectives',
+    title: 'Take the pledge',
     description:
-      'Good Party  will be with you every step of the way so you can run a successful campaign.',
+      'You must accept the Good Party Pledge to be a candidate on our site.',
+    slug,
   };
-  return <GoalsPage {...childProps} />;
+  return <PledgePage {...childProps} />;
 }
