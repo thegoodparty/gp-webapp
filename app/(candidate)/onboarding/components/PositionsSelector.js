@@ -4,8 +4,13 @@ import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@shared/inputs/TextField';
 
+const comparePositions = (a, b) => {
+  return -a.topIssue.name.localeCompare(b.topIssue.name);
+};
+
 export default function PositionsSelector({ positions, updateCallback }) {
-  const [nonSelected, setNonSelected] = useState(positions);
+  const sorted = positions.sort(comparePositions);
+  const [nonSelected, setNonSelected] = useState(sorted);
   const [selected, setSelected] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
@@ -16,7 +21,8 @@ export default function PositionsSelector({ positions, updateCallback }) {
     });
 
     setSelected(newSelected);
-    setNonSelected(newNonSelected);
+    const sorted = newNonSelected.sort(comparePositions);
+    setNonSelected(sorted);
     setInputValue('');
     updateCallback(newSelected);
   };
@@ -27,8 +33,8 @@ export default function PositionsSelector({ positions, updateCallback }) {
     const newSelected = selected.filter((item) => {
       return item.id !== position.id;
     });
-
-    setNonSelected(newNonSelected);
+    const sorted = newNonSelected.sort(comparePositions);
+    setNonSelected(sorted);
     setSelected(newSelected);
     updateCallback(newSelected);
   };

@@ -37,7 +37,7 @@ export default function Points() {
               {point.title}
               <div className="text-lg font-light mt-3">{point.description}</div>
               {point.ol && (
-                <ol className="text-lg font-normal mt-2 list-decimal">
+                <ol className="text-lg font-light mt-2 list-decimal">
                   {point.ol.map((li) => (
                     <li className="ml-4 pl-1 mb-1" key={li}>
                       {li}
