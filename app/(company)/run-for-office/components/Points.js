@@ -33,7 +33,7 @@ export default function Points() {
         <div className="col-span-12 lg:col-span-6" key={point.title}>
           <div className="text-5xl font-black flex">
             <div className="text-yellow-400 mr-3">{index + 1}</div>{' '}
-            <div className="mb-12 lg:mb-24 lg:pr-12">
+            <div className="mb-12 lg:mb-24 lg:pr-44">
               {point.title}
               <div className="text-lg font-light mt-3">{point.description}</div>
               {point.ol && (

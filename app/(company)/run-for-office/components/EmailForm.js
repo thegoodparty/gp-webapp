@@ -20,6 +20,7 @@ export async function subscribeEmail(payload) {
 export default function EmailForm() {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const canSubmit = () => isValidEmail(email);
 
@@ -33,7 +34,12 @@ export default function EmailForm() {
       });
       if (success) {
         setSuccess(true);
+        setShowError(false);
+      } else {
+        setShowError('An error occurred. Please try again.');
       }
+    } else {
+      setShowError('Please enter a valid email');
     }
   };
   return (
@@ -58,18 +64,17 @@ export default function EmailForm() {
             className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
           />
           <input
-            disabled={!canSubmit()}
             onClick={submitForm}
             id="involved-modal-submit-email"
             type="submit"
             value="Get Started"
             className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-            style={
-              !canSubmit() && email !== ''
-                ? { opacity: '0.5', cursor: 'not-allowed' }
-                : {}
-            }
           />
+          {!!showError && (
+            <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
+              {showError}
+            </div>
+          )}
         </div>
       )}
     </form>
