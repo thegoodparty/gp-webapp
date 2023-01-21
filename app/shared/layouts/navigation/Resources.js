@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-const RESOURCES_LINKS = [
+export const RESOURCES_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },
   { label: 'Terms Glossary', href: '/political-terms' },
