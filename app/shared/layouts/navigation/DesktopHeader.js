@@ -3,9 +3,9 @@ import Image from 'next/image';
 
 import MaxWidth from '../MaxWidth';
 import NavRegisterOrProfile from './NavRegisterOrProfile';
+import Resources from './Resources';
 
 export const HEADER_LINKS = [
-  { label: 'About', href: '/about' },
   { label: 'Run', href: '/run-for-office' },
   { label: 'Candidates', href: '/candidates' },
 ];
@@ -18,7 +18,7 @@ export default function DesktopHeader() {
     >
       <MaxWidth>
         <div className="flex justify-between items-center h-20">
-          <div>
+          <div className="flex items-center">
             <Link href="/" id="desktop-nav-logo">
               <Image
                 src="/images/black-logo.svg"
@@ -28,6 +28,9 @@ export default function DesktopHeader() {
                 alt="GOOD PARTY"
               />
             </Link>
+            <div className="pl-9 italic text-normal tracking-tight">
+              Helping independents win!
+            </div>
           </div>
           <div className="flex justify-end items-center">
             {HEADER_LINKS.map((link) => (
@@ -37,11 +40,19 @@ export default function DesktopHeader() {
                 id={`desktop-nav-${link.label.replace(' ', '-')}`}
                 key={link.href}
               >
-                <div data-cy="header-link" className="mx-3 px-1 font-normal">
+                <div
+                  data-cy="header-link"
+                  className="mx-3 px-1 font-light"
+                  // style={
+                  //   currentRoute === link.href ? { fontWeight: '900' } : {}
+                  // }
+                >
                   {link.label}
                 </div>
               </Link>
             ))}
+            <Resources />
+
             <NavRegisterOrProfile />
           </div>
         </div>
