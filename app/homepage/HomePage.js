@@ -1,7 +1,9 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
+import BlogSection from './BlogSection';
 import FaqsSection from './FaqsSection';
 import ForCandidates from './ForCandidates';
 import Hero from './Hero';
+import TeamSection from './TeamSection';
 
 export default function (props) {
   return (
@@ -10,6 +12,8 @@ export default function (props) {
       <MaxWidth>
         <ForCandidates />
         <FaqsSection />
+        <TeamSection />
+        <BlogSection />
       </MaxWidth>
     </>
   );

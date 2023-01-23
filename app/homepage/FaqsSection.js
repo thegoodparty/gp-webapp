@@ -23,7 +23,7 @@ export default function FaqsSection() {
     <section className="mt-14  border-b border-neutral-300">
       <h3 className="font-black text-4xl">FAQs</h3>
       {faqs.map((faq) => (
-        <div className="my-14 lg:w-[75%]">
+        <div className="my-14 lg:w-[75%]" key={faq.link}>
           <h4 className="font-black text-xl mb-3">{faq.title}</h4>
           <div className="text-2xl mb-10">{faq.content}</div>
           <Link href={faq.link}>
