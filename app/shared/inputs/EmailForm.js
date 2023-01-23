@@ -45,14 +45,14 @@ export default function EmailForm() {
   return (
     <form className="pt-5" noValidate onSubmit={(e) => e.preventDefault()}>
       {success ? (
-        <div className="bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[40%] py-5 px-7 flex justify-between items-center">
+        <div className="bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center">
           <div>Check your email to learn more</div>
           <div>
             <FaCheck />
           </div>
         </div>
       ) : (
-        <div className="relative mb-24 lg:mb-0 lg:w-[50%] xl:w-[40%]">
+        <div className="relative mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%]">
           <input
             type="email"
             name="email"

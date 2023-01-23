@@ -3,7 +3,7 @@
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import { useState } from 'react';
 import { FaArrowRight, FaCheck } from 'react-icons/fa';
-import { subscribeEmail } from './EmailForm';
+import { subscribeEmail } from '../../../shared/inputs/EmailForm';
 
 export default function EmailForm2() {
   const [email, setEmail] = useState('');

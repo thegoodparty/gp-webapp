@@ -1,6 +1,6 @@
-const BaseButton = ({ children, style }) => {
+const BaseButton = ({ children, style, ...props }) => {
   return (
-    <button className="py-5 px-8 rounded-lg" style={style}>
+    <button className="py-5 px-8 rounded-lg" style={style} {...props}>
       {children}
     </button>
   );

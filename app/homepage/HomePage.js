@@ -1,14 +1,16 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
+import FaqsSection from './FaqsSection';
+import ForCandidates from './ForCandidates';
 import Hero from './Hero';
-import WhatIs from './WhatIs';
 
-export default function HomePage() {
+export default function (props) {
   return (
-    <div className="mb-40">
+    <>
       <Hero />
       <MaxWidth>
-        <WhatIs />
+        <ForCandidates />
+        <FaqsSection />
       </MaxWidth>
-    </div>
+    </>
   );
 }

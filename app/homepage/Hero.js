@@ -1,27 +1,21 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import EmailForm from './EmailForm';
+import EmailForm from '@shared/inputs/EmailForm';
 
-import bgImg from '/public/images/homepage/hero-bg.png';
-import peopleImg from '/public/images/homepage/people.png';
-import { FiInfo } from 'react-icons/fi';
-import { AiTwotoneTool } from 'react-icons/ai';
-import { FaUserAlt } from 'react-icons/fa';
-
-const points = [
-  { text: 'On-demand, expert advice', icon: <FiInfo /> },
-  { text: 'Free, automated tools', icon: <AiTwotoneTool /> },
-  { text: 'Campaign management', icon: <FaUserAlt /> },
-];
+import bgImg from '/public/images/landing-pages/hero-bg.png';
+import votersImg from '/public/images/homepage-jan23/homepage-voters.png';
+import PurpleButton from '@shared/buttons/PurpleButton';
+import Link from 'next/link';
+import ForVoters from './ForVoters';
 
 export default function Hero() {
   return (
-    <section className="relative pt-5 lg:pt-20 pb-40">
-      <div className="absolute h-full w-full lg:w-[50%] left-0 lg:left-[50%] top-0">
+    <section className="relative pt-5 lg:pt-20">
+      <div className="absolute h-full w-[200%] lg:w-[60%] left-[-50%] lg:left-[40%] top-0">
         <Image
           src={bgImg}
           layout="fill"
-          className="object-cover"
+          className="object-contain object-right-top"
           alt=""
           placeholder="blur"
           priority
@@ -29,44 +23,21 @@ export default function Hero() {
       </div>
       <MaxWidth>
         <div className="relative z-10">
-          <div className="grid grid-cols-12 gap2">
-            <div className="col-span-12 lg:col-span-8">
-              <h1 className="text-6xl leading-tight font-black">
-                Empowering real people to change politics for good.
-              </h1>
-              <h2 className="text-xl font-bold mt-5 lg:w-[70%]">
-                We help people who want to get things done, together, run for
-                office. More career politicians aren't the answer.
-              </h2>
-              <EmailForm />
-            </div>
-            <div className="col-span-12 lg:col-span-4 flex justify-center flex-col">
-              {points.map((point) => (
-                <div
-                  key={point.text}
-                  className="bg-darkPurple mb-1 text-white font-bold rounded-xl flex justify-between items-center px-6 py-5"
-                >
-                  <div className="text-xl">{point.text}</div>
-                  <div className="text-2xl">{point.icon}</div>
-                </div>
-              ))}
-            </div>
+          <div className=" lg:w-[60%]">
+            <h1 className="text-6xl leading-tight font-black">
+              Change politics for good
+            </h1>
+            <h2 className="text-xl font-bold mt-5">
+              We're building a movement and free tech to end America's two-party
+              political dysfunction and create a truly representative democracy.
+              Discover candidates, volunteer, or run for office to join the
+              movement.
+            </h2>
+            <EmailForm />
           </div>
         </div>
+        <ForVoters />
       </MaxWidth>
-      <div
-        className="hidden lg:block absolute bottom-0 left-[50%]"
-        style={{ marginLeft: '-200px' }}
-      >
-        <Image
-          src={peopleImg}
-          alt=""
-          placeholder="blur"
-          priority
-          width={400}
-          height={250}
-        />
-      </div>
     </section>
   );
 }
