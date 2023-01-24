@@ -9,7 +9,7 @@ export const RESOURCES_LINKS = [
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },
   { label: 'Terms Glossary', href: '/political-terms' },
-  { label: 'FAQ', href: '/faq' },
+  { label: 'FAQ', href: '/faqs' },
 ];
 
 export default function Resources() {
