@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function ForCandidates() {
   return (
-    <div className="grid grid-cols-12 gap-3 relative justify-center items-center border-b border-neutral-300">
+    <div className="grid grid-cols-12 gap-3 relative justify-center items-center border-b border-neutral-300 pb-14 lg:pb-0">
       <div className="col-span-12 lg:col-span-6 ">
         <div className="hidden lg:block min-h-[600px] w-auto ml-0 relative">
           <Image

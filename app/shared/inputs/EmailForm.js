@@ -17,7 +17,7 @@ export async function subscribeEmail(payload) {
   }
 }
 
-export default function EmailForm() {
+export default function EmailForm({ fullWidth = false }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -52,7 +52,11 @@ export default function EmailForm() {
           </div>
         </div>
       ) : (
-        <div className="relative mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%]">
+        <div
+          className={`relative mb-24 lg:mb-0 ${
+            !fullWidth && 'lg:w-[50%] xl:w-[45%]'
+          }`}
+        >
           <input
             type="email"
             name="email"

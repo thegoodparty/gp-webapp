@@ -3,6 +3,7 @@ import BlogSection from './BlogSection';
 import FaqsSection from './FaqsSection';
 import ForCandidates from './ForCandidates';
 import Hero from './Hero';
+import SubscribeSection from './SubscribeSection';
 import TeamSection from './TeamSection';
 
 export default function (props) {
@@ -15,6 +16,7 @@ export default function (props) {
         <TeamSection />
         <BlogSection />
       </MaxWidth>
+      <SubscribeSection />
     </>
   );
 }
