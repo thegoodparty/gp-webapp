@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Hamburger from 'hamburger-react';
 import { usePathname } from 'next/navigation';
-import { GoChevronLeft } from 'react-icons/go';
+import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import Image from 'next/image';
 
 import { useState } from 'react';
@@ -29,6 +29,7 @@ export default function MobileMenu() {
         rounded
         label="Show menu"
       />
+
       <div
         className={`fixed bottom-28 p-7 right-7 bg-white text-right z-40 shadow-md rounded-md ${styles.menu}  justify-end`}
         style={{
@@ -69,8 +70,11 @@ export default function MobileMenu() {
                 </Link>
               </div>
             ))}
-            <div className="mt-7" onClick={() => setShowResources(true)}>
-              Resources
+            <div
+              className="mt-7 cursor-pointer flex items-center justify-end"
+              onClick={() => setShowResources(true)}
+            >
+              Resources <GoChevronRight />
             </div>
             {user?.name ? (
               <Link

@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Backdrop from '@mui/material/Backdrop';
+import { FiChevronDown } from 'react-icons/fi';
 
 export const RESOURCES_LINKS = [
   { label: 'About', href: '/about' },
@@ -14,12 +16,23 @@ export default function Resources() {
   const [open, setOpen] = useState(false);
   return (
     <div
-      className={`ml-3 mr-6 px-1 relative cursor-pointer min-w-[84px] ${
+      className={`ml-3 mr-6 px-1 relative cursor-pointer min-w-[100px] ${
         open ? 'underline font-black' : 'font-light'
       }`}
       onClick={() => setOpen(!open)}
     >
-      Resources
+      <div className="flex items-center">
+        Resources{' '}
+        <FiChevronDown className={` transition-all ${open && 'rotate-180'}`} />
+      </div>
+      <Backdrop
+        open={open}
+        className="opacity-0"
+        style={{ opacity: 0 }}
+        onClick={() => {
+          () => setOpen(false);
+        }}
+      ></Backdrop>
       <div
         className={`absolute z-50 top-14 right-0  bg-white rounded-lg  shadow-md transition  ${
           open ? 'px-1 p-2 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
