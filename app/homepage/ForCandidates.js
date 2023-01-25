@@ -36,7 +36,10 @@ export default function ForCandidates() {
           expertise to start or level up your candidacy.
         </div>
         <Link href="/run-for-office" className="mt-4 block">
-          <PurpleButton className="tracking-wider py-5 px-8">
+          <PurpleButton
+            className="tracking-wider py-5 px-8"
+            id="candidates-learn-more-button"
+          >
             LEARN MORE
           </PurpleButton>
         </Link>

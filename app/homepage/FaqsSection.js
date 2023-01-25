@@ -27,7 +27,7 @@ export default function FaqsSection() {
           <h4 className="font-black text-xl mb-3">{faq.title}</h4>
           <div className="text-2xl mb-10">{faq.content}</div>
           <Link href={faq.link}>
-            <PurpleButton>{faq.buttonLabel}</PurpleButton>
+            <PurpleButton id={faq.title}>{faq.buttonLabel}</PurpleButton>
           </Link>
         </div>
       ))}

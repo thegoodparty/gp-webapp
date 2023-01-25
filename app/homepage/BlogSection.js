@@ -15,6 +15,7 @@ export default function BlogSection() {
           work, and more.
           <Link href="/blog" className="text-lg mt-11 block">
             <PurpleButton
+              id="blog-read-more"
               style={{ backgroundColor: 'white', color: '#46002E' }}
             >
               READ MORE

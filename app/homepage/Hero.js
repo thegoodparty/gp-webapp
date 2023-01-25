@@ -34,7 +34,7 @@ export default function Hero() {
               movement.
             </h2>
             <EmailForm
-              formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+              formId="5d84452a-01df-422b-9734-580148677d2c"
               pageName="Home Page"
             />
           </div>

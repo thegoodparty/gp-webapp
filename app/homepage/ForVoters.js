@@ -29,12 +29,19 @@ export default function ForVoters() {
         </div>
         <div className="mt-4 lg:flex items-center text-center">
           <Link href="/candidates">
-            <PurpleButton className="tracking-wider py-5 px-8">
+            <PurpleButton
+              className="tracking-wider py-5 px-8"
+              id="find-candidates-button"
+            >
               FIND CANDIDATES
             </PurpleButton>
           </Link>
           <div className="mt-5 lg:mt-0 lg:ml-10">
-            <Link href="/contact" className="underline text-xl tracking-wide">
+            <Link
+              href="/contact"
+              className="underline text-xl tracking-wide"
+              id="volunteer-link"
+            >
               VOLUNTEER
             </Link>
           </div>
