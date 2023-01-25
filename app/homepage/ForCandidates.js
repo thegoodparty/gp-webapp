@@ -18,7 +18,7 @@ export default function ForCandidates() {
             placeholder="blur"
           />
         </div>
-        <div className="lg:hidden min-h-[500px] w-screen -ml-8 relative">
+        <div className="lg:hidden min-h-[500px] md:min-h-[800px] w-screen -mr-8 relative">
           <Image
             src={candidatesImgSm}
             layout="fill"

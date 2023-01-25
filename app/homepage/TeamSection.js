@@ -29,8 +29,8 @@ export default function TeamSection() {
           </div>
         </div>
         <div className="col-span-12 lg:col-span-6 h-full">
-          <div className="bg-zinc-100 rounded-2xl pt-5 px-5 lg:py-8 lg:px-11 h-full relative">
-            <div className="lg:w-[70%]">
+          <div className="bg-zinc-100 rounded-2xl pt-5 px-5 md:py-8 md:px-11 h-full relative min-h-[230px]">
+            <div className="md:w-[70%]">
               <h4 className="text-lg font-black">
                 Volunteer &amp; Get Involved
               </h4>
@@ -40,7 +40,7 @@ export default function TeamSection() {
                 joining us!
               </div>
             </div>
-            <div className="text-right lg:absolute lg:bottom-0 lg:right-6">
+            <div className="text-right md:absolute md:bottom-0 md:right-6">
               <Image
                 src={volunteerImg}
                 width={173}

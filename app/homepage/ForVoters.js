@@ -8,7 +8,7 @@ export default function ForVoters() {
   return (
     <div className="grid grid-cols-12 gap-3 mt-5 lg:mt-32 relative">
       <div className="col-span-12 lg:col-span-8 lg:order-last">
-        <div className=" min-h-[350px] w-[calc(100vw+80px)] -ml-10 lg:w-auto lg:ml-0 relative">
+        <div className="min-h-[350px] w-[calc(100vw+80px)] -ml-10 lg:w-auto lg:ml-0 relative">
           <Image
             src={votersImg}
             layout="fill"
@@ -34,7 +34,7 @@ export default function ForVoters() {
             </PurpleButton>
           </Link>
           <div className="mt-5 lg:mt-0 lg:ml-10">
-            <Link href="/" className="underline text-xl tracking-wide">
+            <Link href="/contact" className="underline text-xl tracking-wide">
               VOLUNTEER
             </Link>
           </div>
