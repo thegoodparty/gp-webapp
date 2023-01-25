@@ -38,7 +38,10 @@ export default function Hero() {
                 We help independent-minded people who want to get things done
                 run for office. Chat with an expert to learn how.
               </h2>
-              <EmailForm />
+              <EmailForm
+                formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+                pageName="run for office"
+              />
             </div>
             <div className="col-span-12 lg:col-span-4 flex justify-center flex-col">
               {points.map((point) => (

@@ -15,7 +15,11 @@ export default function SubscribeSection() {
           hope that a better democracy is possible.
         </div>
         <div className="mx-auto lg:w-[50%]">
-          <EmailForm fullWidth />
+          <EmailForm
+            fullWidth
+            forId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+            pageName="Home Page"
+          />
         </div>
       </MaxWidth>
     </section>

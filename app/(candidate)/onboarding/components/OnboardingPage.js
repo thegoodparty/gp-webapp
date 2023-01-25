@@ -113,6 +113,7 @@ export default function OnboardingPage(props) {
   const checkCampaigns = async () => {
     if (user) {
       const { campaigns } = await fetchUserCampaigns();
+      console.log('camp', campaigns);
       if (campaigns.length > 0) {
         const { slug } = campaigns[0];
         router.push(`/onboarding/${slug}`);

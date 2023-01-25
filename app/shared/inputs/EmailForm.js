@@ -17,7 +17,7 @@ export async function subscribeEmail(payload) {
   }
 }
 
-export default function EmailForm({ fullWidth = false }) {
+export default function EmailForm({ formId, fullWidth = false, pageName }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -29,8 +29,8 @@ export default function EmailForm({ fullWidth = false }) {
       const success = await subscribeEmail({
         email: encodeURIComponent(email),
         uri: window.location.href,
-        formId: '46116311-525b-42a2-b88e-d2ab86f26b8a',
-        pageName: 'run for office',
+        formId,
+        pageName,
       });
       if (success) {
         setSuccess(true);

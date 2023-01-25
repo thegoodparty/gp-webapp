@@ -33,7 +33,10 @@ export default function Hero() {
               Discover candidates, volunteer, or run for office to join the
               movement.
             </h2>
-            <EmailForm />
+            <EmailForm
+              formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+              pageName="Home Page"
+            />
           </div>
         </div>
         <ForVoters />
