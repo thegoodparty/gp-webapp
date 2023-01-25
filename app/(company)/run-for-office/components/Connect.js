@@ -28,28 +28,32 @@ export default function Connect() {
       </div>
       <Image
         src={bgImg}
-        layout="fill"
+        sizes="100vw"
+        fill
         className="hidden lg:block object-contain object-left-bottom"
         alt=""
       />
       <div className="hidden lg:block">
         <Image
           src={expertImg}
-          layout="fill"
+          sizes="100vw"
+          fill
           className="object-contain object-left-bottom lg:ml-20"
           alt=""
         />
       </div>
       <Image
         src={bgImgSm}
-        layout="fill"
+        sizes="100vw"
+        fill
         className="lg:hidden object-contain object-left-bottom"
         alt=""
       />
       <div className="absolute left-0 bottom-0 h-60 w-full lg:hidden">
         <Image
           src={expertImgSm}
-          layout="fill"
+          sizes="100vw"
+          fill
           className="object-contain object-left-bottom"
           alt=""
         />

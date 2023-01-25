@@ -29,7 +29,8 @@ function ArticleSnippet({ article, heroMode }) {
               <Image
                 src={`https:${mainImage.url}`}
                 alt={mainImage.alt}
-                layout="fill"
+                sizes="100vw"
+                fill
                 priority={!!heroMode}
               />
             </div>

@@ -25,14 +25,16 @@ export default function BlogSection() {
       </div>
       <Image
         src={bgImg}
-        layout="fill"
+        sizes="100vw"
+        fill
         className="hidden lg:block object-contain object-left-bottom"
         alt=""
       />
 
       <Image
         src={bgImgSm}
-        layout="fill"
+        sizes="100vw"
+        fill
         className="lg:hidden object-contain object-left-bottom"
         alt=""
       />

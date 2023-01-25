@@ -20,7 +20,8 @@ export default function Hero() {
       <div className="absolute h-full w-full lg:w-[50%] left-0 lg:left-[50%] top-0">
         <Image
           src={bgImg}
-          layout="fill"
+          sizes="100vw"
+          fill
           className="object-cover"
           alt=""
           placeholder="blur"

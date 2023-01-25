@@ -12,7 +12,8 @@ export default function ForCandidates() {
         <div className="hidden lg:block min-h-[600px] w-auto ml-0 relative">
           <Image
             src={candidatesImg}
-            layout="fill"
+            sizes="100vw"
+            fill
             className="object-contain"
             alt=""
             placeholder="blur"
@@ -21,7 +22,8 @@ export default function ForCandidates() {
         <div className="lg:hidden min-h-[500px] md:min-h-[800px] w-screen -mr-8 relative">
           <Image
             src={candidatesImgSm}
-            layout="fill"
+            sizes="100vw"
+            fill
             className="object-contain object-right"
             alt=""
             placeholder="blur"

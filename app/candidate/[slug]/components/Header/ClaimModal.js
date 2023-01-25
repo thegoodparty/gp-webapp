@@ -94,7 +94,8 @@ export default function ClaimModal({ candidate }) {
               <div className="h-8 w-8 relative mr-3">
                 <Image
                   src={image}
-                  layout="fill"
+                  sizes="100vw"
+                  fill
                   alt="Claim campaign"
                   className="object-cover rounded-full object-center"
                 />

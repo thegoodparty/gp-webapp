@@ -14,7 +14,8 @@ export default function Hero() {
       <div className="absolute h-full w-[200%] lg:w-[60%] left-[-50%] lg:left-[40%] top-0">
         <Image
           src={bgImg}
-          layout="fill"
+          sizes="100vw"
+          fill
           className="object-contain object-right-top"
           alt=""
           placeholder="blur"

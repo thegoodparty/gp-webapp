@@ -11,7 +11,8 @@ export default function ForVoters() {
         <div className="min-h-[350px] w-[calc(100vw+80px)] -ml-10 lg:w-auto lg:ml-0 relative">
           <Image
             src={votersImg}
-            layout="fill"
+            sizes="100vw"
+            fill
             className="object-contain"
             alt=""
             placeholder="blur"
