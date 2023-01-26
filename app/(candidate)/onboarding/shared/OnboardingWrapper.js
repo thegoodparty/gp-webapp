@@ -8,6 +8,7 @@ export default function OnboardingWrapper({
   self,
   slug,
 }) {
+  console.log('wrapper1');
   const links = [
     { href: '/onboarding', label: 'Candidate Details' },
     { href: `/onboarding/${slug}/pledge`, label: 'Take the pledge' },
@@ -23,7 +24,7 @@ export default function OnboardingWrapper({
       label: 'Voter Outreach & Engagement',
     },
   ];
-
+  console.log('wrapper2');
   return (
     <div className="bg-white lg:bg-zinc-100">
       <MaxWidth>

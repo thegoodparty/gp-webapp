@@ -3,6 +3,7 @@ import OnboardingWrapper from '../../../shared/OnboardingWrapper';
 import PledgeButton from './PledgeButton';
 
 export default function PledgePage(props) {
+  console.log('at page');
   return (
     <OnboardingWrapper {...props}>
       <PortalPanel color="#ea580c" smWhite>
@@ -91,11 +92,11 @@ export default function PledgePage(props) {
               </li>
               <li>
                 I pledge to run a grass-roots campaign, centered on ideas,
-                earned media and word-of-mouth promotion, so that I’m dependent
+                earned media and word-of-mouth promotion, so that I'm dependent
                 on the people, not on big-money and special interests.
               </li>
               <li>
-                I pledge that after I’m elected I will stay connected to my
+                I pledge that after I'm elected I will stay connected to my
                 constituency using technology and tools that ensure my decisions
                 on important issues and legislation are informed by their best
                 ideas and interests.

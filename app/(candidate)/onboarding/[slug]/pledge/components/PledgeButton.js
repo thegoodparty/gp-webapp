@@ -4,7 +4,6 @@ import Checkbox from '@mui/material/Checkbox';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -19,8 +18,8 @@ async function updateCampaign(campaign) {
 }
 
 export default function PledgeButton({ slug, campaign }) {
-  console.log('cc', campaign);
-  const [checked, setChecked] = useState(campaign?.pledge);
+  console.log('pledge btn1');
+  const [checked, setChecked] = useState(campaign?.pledge || false);
   const router = useRouter();
   const handleSubmit = async () => {
     if (checked) {
@@ -29,6 +28,7 @@ export default function PledgeButton({ slug, campaign }) {
       router.push(`onboarding/${slug}/goals`);
     }
   };
+  console.log('pledge btn2');
   return (
     <>
       <div className="mt-16 flex items-center text-xl font-bold mb-4">

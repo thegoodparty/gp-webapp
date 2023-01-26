@@ -5,7 +5,7 @@ export default function Head({ params }) {
     <GpHead
       title="Candidate Portal | GOOD PARTY"
       description="Candidate Portal."
-      slug="/candidate-portal"
+      slug="/onboarding"
     />
   );
 }
