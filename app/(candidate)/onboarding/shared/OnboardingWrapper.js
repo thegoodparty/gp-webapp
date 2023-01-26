@@ -1,21 +1,29 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 
-const links = [
-  { href: '/onboarding', label: 'Candidate Details' },
-  { href: '/onboarding/goals', label: 'Goals & Objectives' },
-  { href: '/onboarding/goals', label: 'Campaign Message & Strategy' },
-  { href: '/onboarding/goals', label: 'Build a Campaign Team' },
-  { href: '/onboarding/goals', label: 'Budget & Fundraising Plan' },
-  { href: '/onboarding/goals', label: 'Voter Outreach & Engagement' },
-];
-
 export default function OnboardingWrapper({
   children,
   title,
   description,
   self,
+  slug,
 }) {
+  const links = [
+    { href: '/onboarding', label: 'Candidate Details' },
+    { href: `/onboarding/${slug}`, label: 'Take the pledge' },
+    { href: `/onboarding/${slug}/goals`, label: 'Goals & Objectives' },
+    {
+      href: `/onboarding/${slug}/strategy`,
+      label: 'Campaign Message & Strategy',
+    },
+    { href: `/onboarding/${slug}/team`, label: 'Build a Campaign Team' },
+    { href: `/onboarding/${slug}/budget`, label: 'Budget & Fundraising Plan' },
+    {
+      href: `/onboarding/${slug}/outreach`,
+      label: 'Voter Outreach & Engagement',
+    },
+  ];
+
   return (
     <div className="bg-white lg:bg-zinc-100">
       <MaxWidth>

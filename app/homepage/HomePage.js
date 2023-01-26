@@ -1,14 +1,22 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
+import BlogSection from './BlogSection';
+import FaqsSection from './FaqsSection';
+import ForCandidates from './ForCandidates';
 import Hero from './Hero';
-import WhatIs from './WhatIs';
+import SubscribeSection from './SubscribeSection';
+import TeamSection from './TeamSection';
 
-export default function HomePage() {
+export default function (props) {
   return (
-    <div className="mb-40">
+    <>
       <Hero />
       <MaxWidth>
-        <WhatIs />
+        <ForCandidates />
+        <FaqsSection />
+        <TeamSection />
+        <BlogSection />
       </MaxWidth>
-    </div>
+      <SubscribeSection />
+    </>
   );
 }

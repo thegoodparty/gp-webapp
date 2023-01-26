@@ -17,7 +17,8 @@ export default function BlogArticle({ sections, article }) {
             <Image
               src={`https:${mainImage.url}`}
               alt={mainImage.alt}
-              layout="fill"
+              sizes="100vw"
+              fill
               priority
             />
           </div>

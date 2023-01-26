@@ -65,7 +65,8 @@ export default function Endorsement({
             <div className="relative h-[200px]">
               <Image
                 src={image}
-                layout="fill"
+                sizes="100vw"
+                fill
                 className="object-cover"
                 alt=""
               />

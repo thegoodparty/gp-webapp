@@ -42,6 +42,11 @@ export const REGISTER_FIELDS = [
   },
 ];
 
+export const validateZip = (zip) => {
+  const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+  return validZip.test(zip);
+};
+
 export default function RegisterPage({}) {
   const [score, setScore] = useState('good');
   const router = useRouter();
@@ -60,7 +65,7 @@ export default function RegisterPage({}) {
     return (
       state.name.length >= 2 &&
       state.name.length <= 100 &&
-      validateZip() &&
+      validateZip(state.zipcode) &&
       validateEmail() &&
       state.password !== '' &&
       state.password.match(passwordRegex)
@@ -69,11 +74,6 @@ export default function RegisterPage({}) {
 
   const validateEmail = () => {
     return isValidEmail(state.email);
-  };
-
-  const validateZip = () => {
-    const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-    return validZip.test(state.zipcode);
   };
 
   const handleSubmitForm = (e) => {

@@ -1,6 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import EmailForm from './EmailForm';
+import EmailForm from '../../../shared/inputs/EmailForm';
 
 import bgImg from '/public/images/landing-pages/hero-bg.png';
 import peopleImg from '/public/images/landing-pages/people.png';
@@ -20,7 +20,8 @@ export default function Hero() {
       <div className="absolute h-full w-full lg:w-[50%] left-0 lg:left-[50%] top-0">
         <Image
           src={bgImg}
-          layout="fill"
+          sizes="100vw"
+          fill
           className="object-cover"
           alt=""
           placeholder="blur"
@@ -38,7 +39,10 @@ export default function Hero() {
                 We help independent-minded people who want to get things done
                 run for office. Chat with an expert to learn how.
               </h2>
-              <EmailForm />
+              <EmailForm
+                formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+                pageName="run for office"
+              />
             </div>
             <div className="col-span-12 lg:col-span-4 flex justify-center flex-col">
               {points.map((point) => (
