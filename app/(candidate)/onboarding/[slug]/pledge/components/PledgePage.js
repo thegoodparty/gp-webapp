@@ -1,5 +1,5 @@
 import PortalPanel from '@shared/layouts/PortalPanel';
-import OnboardingWrapper from '../../shared/OnboardingWrapper';
+import OnboardingWrapper from '../../../shared/OnboardingWrapper';
 import PledgeButton from './PledgeButton';
 
 export default function PledgePage(props) {
@@ -103,7 +103,7 @@ export default function PledgePage(props) {
             </ul>
           </li>
         </ol>
-        <PledgeButton slug={props.slug} />
+        <PledgeButton slug={props.slug} campaign={props.campaign} />
       </PortalPanel>
     </OnboardingWrapper>
   );
