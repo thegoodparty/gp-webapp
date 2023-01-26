@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';

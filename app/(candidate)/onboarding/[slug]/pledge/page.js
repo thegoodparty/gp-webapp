@@ -13,17 +13,12 @@ const fetchUserCampaignServer = async () => {
 };
 
 export default async function Page({ params }) {
-  console.log('pledge page1');
   const { slug } = params;
-  console.log('pledge page2', slug);
 
   const { campaign } = await fetchUserCampaignServer();
-  console.log('pledge page3', campaign);
   if (campaign?.slug !== slug) {
     redirect('/onboarding');
   }
-
-  console.log('pledge page4');
 
   const childProps = {
     self: `/onboarding/${slug}/pledge`,

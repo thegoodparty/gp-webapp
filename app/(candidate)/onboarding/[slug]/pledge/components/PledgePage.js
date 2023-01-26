@@ -3,7 +3,6 @@ import OnboardingWrapper from '../../../shared/OnboardingWrapper';
 import PledgeButton from './PledgeButton';
 
 export default function PledgePage(props) {
-  console.log('at page');
   return (
     <OnboardingWrapper {...props}>
       <PortalPanel color="#ea580c" smWhite>
