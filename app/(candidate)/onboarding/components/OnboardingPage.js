@@ -82,7 +82,7 @@ async function createCampaign(payload) {
   }
 }
 
-export async function fetchUserCampaigns() {
+export async function fetchUserCampaign() {
   try {
     const api = gpApi.campaign.onboarding.findByUser;
     return await gpFetch(api);
@@ -112,11 +112,14 @@ export default function OnboardingPage(props) {
 
   const checkCampaigns = async () => {
     if (user) {
-      const { campaigns } = await fetchUserCampaigns();
-      console.log('camp', campaigns);
-      if (campaigns.length > 0) {
-        const { slug } = campaigns[0];
-        router.push(`/onboarding/${slug}`);
+      const { campaign } = await fetchUserCampaign();
+      if (campaign) {
+        const { slug } = campaign;
+        if (campaign.pledge) {
+          router.push(`/onboarding/${slug}/goals`);
+        } else {
+          router.push(`/onboarding/${slug}/pledge`);
+        }
       }
     }
   };

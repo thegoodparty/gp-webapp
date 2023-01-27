@@ -198,6 +198,11 @@ const gpApi = {
         method: 'POST',
         withAuth: true,
       },
+      update: {
+        url: `${base}campaign/onboarding`,
+        method: 'PUT',
+        withAuth: true,
+      },
       findByUser: {
         url: `${base}campaign/onboarding/by-user`,
         method: 'GET',

@@ -9,7 +9,6 @@ export default function Head({ params }) {
         description="We help independent-minded people who want to get things done run for office. Chat with an expert to learn how."
         slug="/run-for-office"
       />
-      <Script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></Script>
     </>
   );
 }

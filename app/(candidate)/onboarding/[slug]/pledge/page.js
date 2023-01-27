@@ -1,10 +1,12 @@
+export const dynamic = 'force-dynamic';
+
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import PledgePage from './components/PledgePage';
 
-const fetchUserCampaignsServer = async () => {
+const fetchUserCampaignServer = async () => {
   const api = gpApi.campaign.onboarding.findByUser;
   const token = getServerToken();
   return await gpFetch(api, false, 3600, token);
@@ -13,17 +15,18 @@ const fetchUserCampaignsServer = async () => {
 export default async function Page({ params }) {
   const { slug } = params;
 
-  const { campaigns } = await fetchUserCampaignsServer();
-  if (!campaigns || !campaigns.length > 0 || campaigns[0].slug !== slug) {
+  const { campaign } = await fetchUserCampaignServer();
+  if (campaign?.slug !== slug) {
     redirect('/onboarding');
   }
 
   const childProps = {
-    self: `/onboarding/${slug}`,
+    self: `/onboarding/${slug}/pledge`,
     title: 'Take the pledge',
     description:
       'You must accept the Good Party Pledge to be a candidate on our site.',
     slug,
+    campaign,
   };
   return <PledgePage {...childProps} />;
 }
