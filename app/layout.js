@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
         />
 
         <link rel="manifest" href="/manifest.json" />
-        {/* <script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></script> */}
+        <script src="https://www.googleoptimize.com/optimize.js?id=OPT-WLTK9ST"></script>
       </head>
       <body>
         <PageWrapper>{children}</PageWrapper>
