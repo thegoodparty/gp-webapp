@@ -25,6 +25,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/candidate/:slug/:id',
+        destination: '/candidate/:slug',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = withPWA(nextConfig);
