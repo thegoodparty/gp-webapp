@@ -39,8 +39,13 @@ inputFields.map((field) => {
 });
 
 export default function WhyPage(props) {
+  if (props.campaign?.whyGoals) {
+    initialState.twoMinutes = props.campaign.whyGoals.why100;
+  }
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
+
+  console.log('campaign', props.campaign);
 
   const onChangeField = (key, value) => {
     setState({

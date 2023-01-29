@@ -208,6 +208,11 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      generateWhyGoals: {
+        url: `${base}campaign/onboarding/generate-why`,
+        method: 'POST',
+        withAuth: true,
+      },
       test: {
         url: `${base}campaign/onboarding/test`,
         method: 'GET',

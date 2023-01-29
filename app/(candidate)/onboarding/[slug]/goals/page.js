@@ -12,12 +12,21 @@ const fetchUserCampaignServer = async () => {
   return await gpFetch(api, false, 3600, token);
 };
 
+const generateWhyGoals = async () => {
+  const api = gpApi.campaign.onboarding.generateWhyGoals;
+  const token = getServerToken();
+  return await gpFetch(api, false, 3600, token);
+};
+
 export default async function Page({ params }) {
   const { slug } = params;
 
-  const { campaign } = await fetchUserCampaignServer();
+  let { campaign } = await fetchUserCampaignServer();
   if (campaign?.slug !== slug) {
     redirect('/onboarding');
+  }
+  if (!campaign.whyGoals) {
+    ({ campaign } = await generateWhyGoals());
   }
 
   const childProps = {
