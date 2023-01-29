@@ -26,7 +26,7 @@ export default function PledgeButton({ slug, campaign }) {
     if (checked) {
       const updated = { ...campaign, pledge: true };
       await updateCampaign(updated);
-      router.push(`onboarding/${slug}/goals`);
+      router.push(`onboarding/${slug}/goals/why`);
     }
   };
   return (

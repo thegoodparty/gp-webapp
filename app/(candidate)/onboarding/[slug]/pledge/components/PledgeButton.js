@@ -7,7 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-async function updateCampaign(campaign) {
+export async function updateCampaign(campaign) {
   try {
     const api = gpApi.campaign.onboarding.update;
     return await gpFetch(api, { campaign });
@@ -24,7 +24,7 @@ export default function PledgeButton({ slug, campaign, content }) {
     if (checked) {
       const updated = { ...campaign, pledge: true };
       await updateCampaign(updated);
-      router.push(`onboarding/${slug}/goals`);
+      router.push(`onboarding/${slug}/goals/why`);
     }
   };
   return (

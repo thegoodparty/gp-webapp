@@ -30,7 +30,7 @@ export default async function Page({ params }) {
   }
 
   const childProps = {
-    self: `/onboarding/${slug}/goals`,
+    self: `/onboarding/${slug}/goals/why`,
     title: 'Goals & Objectives',
     description:
       'A good campaign is based on a solid plan with clear objectives. Start building yours by defining your why. ',

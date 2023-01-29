@@ -32,6 +32,7 @@ export default function RenderInputField({
           InputLabelProps={{
             shrink: true,
           }}
+          inputProps={field.maxLength ? { maxLength: field.maxLength } : {}}
         />
       )}
       {field.type === 'email' && (

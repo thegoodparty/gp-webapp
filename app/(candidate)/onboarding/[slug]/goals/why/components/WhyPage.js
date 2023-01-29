@@ -1,8 +1,11 @@
 'use client';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import { useState } from 'react';
-import OnboardingWrapper from '../../../shared/OnboardingWrapper';
+import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import { useRouter } from 'next/navigation';
+import { updateCampaign } from '../../../pledge/components/PledgeButton';
 
 const inputFields = [
   {
@@ -11,21 +14,22 @@ const inputFields = [
     required: true,
     type: 'text',
     rows: 6,
+    maxLength: 1000,
   },
-  {
-    key: 'oneMinute',
-    label: '1 minute / 50 words',
-    required: true,
-    type: 'text',
-    rows: 4,
-  },
-  {
-    key: 'halfMinute',
-    label: '30 seconds / 50 words',
-    required: true,
-    type: 'text',
-    rows: 4,
-  },
+  // {
+  //   key: 'oneMinute',
+  //   label: '1 minute / 50 words',
+  //   required: true,
+  //   type: 'text',
+  //   rows: 4,
+  // },
+  // {
+  //   key: 'halfMinute',
+  //   label: '30 seconds / 50 words',
+  //   required: true,
+  //   type: 'text',
+  //   rows: 4,
+  // },
 ];
 
 const initialState = {};
@@ -44,8 +48,14 @@ export default function WhyPage(props) {
   }
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
+  const router = useRouter();
 
-  console.log('campaign', props.campaign);
+  const handleSave = async () => {
+    const updated = props.campaign;
+    updated.whyGoals.why100 = state.twoMinutes;
+    await updateCampaign(updated);
+    router.push(`onboarding/${props.slug}/goals/what`);
+  };
 
   const onChangeField = (key, value) => {
     setState({
@@ -71,6 +81,11 @@ export default function WhyPage(props) {
             value={state[field.key]}
           />
         ))}
+        <div className="flex items-end justify-end">
+          <BlackButtonClient onClick={handleSave}>
+            <div className="font-black">Save &amp; Continue</div>
+          </BlackButtonClient>
+        </div>
       </PortalPanel>
     </OnboardingWrapper>
   );

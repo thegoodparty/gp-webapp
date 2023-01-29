@@ -12,7 +12,7 @@ export default function OnboardingWrapper({
   const links = [
     { href: '/onboarding', label: 'Candidate Details' },
     { href: `/onboarding/${slug}/pledge`, label: 'Take the pledge' },
-    { href: `/onboarding/${slug}/goals`, label: 'Goals & Objectives' },
+    { href: `/onboarding/${slug}/goals/why`, label: 'Goals & Objectives' },
     {
       href: `/onboarding/${slug}/strategy`,
       label: 'Campaign Message & Strategy',
