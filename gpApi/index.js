@@ -213,6 +213,11 @@ const gpApi = {
         method: 'POST',
         withAuth: true,
       },
+      generateWhatGoals: {
+        url: `${base}campaign/onboarding/generate-what`,
+        method: 'POST',
+        withAuth: true,
+      },
       test: {
         url: `${base}campaign/onboarding/test`,
         method: 'GET',

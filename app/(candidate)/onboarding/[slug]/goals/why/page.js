@@ -6,7 +6,7 @@ import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import WhyPage from './components/WhyPage';
 
-const fetchUserCampaignServer = async () => {
+export const fetchUserCampaignServer = async () => {
   const api = gpApi.campaign.onboarding.findByUser;
   const token = getServerToken();
   return await gpFetch(api, false, 3600, token);
