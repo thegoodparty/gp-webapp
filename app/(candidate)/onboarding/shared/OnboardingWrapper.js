@@ -1,5 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
+import AdminDelete from './AdminDelete';
 
 export default function OnboardingWrapper({
   children,
@@ -57,7 +58,10 @@ export default function OnboardingWrapper({
                   </div>
                 ))}
               </div>
-              <div className="col-span-12 lg:col-span-9 ">{children}</div>
+              <div className="col-span-12 lg:col-span-9 ">
+                {children}
+                {self !== '/onboarding' && <AdminDelete />}
+              </div>
             </div>
           </div>
         </div>

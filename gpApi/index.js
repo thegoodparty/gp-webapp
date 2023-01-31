@@ -203,6 +203,11 @@ const gpApi = {
         method: 'PUT',
         withAuth: true,
       },
+      delete: {
+        url: `${base}campaign/onboarding`,
+        method: 'DELETE',
+        withAuth: true,
+      },
       findByUser: {
         url: `${base}campaign/onboarding/by-user`,
         method: 'GET',

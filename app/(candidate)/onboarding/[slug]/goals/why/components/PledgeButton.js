@@ -19,7 +19,6 @@ async function updateCampaign(campaign) {
 }
 
 export default function PledgeButton({ slug, campaign }) {
-  console.log('cc', campaign);
   const [checked, setChecked] = useState(campaign?.pledge);
   const router = useRouter();
   const handleSubmit = async () => {
