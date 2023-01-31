@@ -36,6 +36,7 @@ export default function AdminDelete() {
         onClick={() => {
           setShowDelete(true);
         }}
+        style={{ backgroundColor: 'red', fontWeight: '700' }}
       >
         Delete this campaign
       </BlackButtonClient>

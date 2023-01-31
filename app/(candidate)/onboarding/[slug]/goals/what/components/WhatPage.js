@@ -6,6 +6,10 @@ import { useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { updateCampaign } from '../../../pledge/components/PledgeButton';
+import { getUserCookie } from 'helpers/cookieHelper';
+import LoadingAnimation from '@shared/utils/LoadingAnimation';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
 const inputFields = [
   {
@@ -60,7 +64,15 @@ inputFields.map((field) => {
   }
 });
 
-export default function WhyPage(props) {
+const generateWhatGoals = async () => {
+  const api = gpApi.campaign.onboarding.generateWhatGoals;
+  return await gpFetch(api, { adminForce: true });
+};
+
+export default function WhatPage(props) {
+  const [loading, setLoading] = useState(false);
+
+  const user = getUserCookie(true);
   if (props.campaign?.whatGoals) {
     initialState.whyRunning = props.campaign.whatGoals.whyRunning;
     initialState.bestChoice = props.campaign.whatGoals.bestChoice;
@@ -81,6 +93,12 @@ export default function WhyPage(props) {
     updated.whatGoals.voteReason = state.voteReason;
     await updateCampaign(updated);
     router.push(`onboarding/${props.slug}/goals/opponent`);
+  };
+
+  const handleRegenerateAi = async () => {
+    setLoading(true);
+    await generateWhatGoals();
+    window.location.reload();
   };
 
   const onChangeField = (key, value) => {
@@ -111,11 +129,22 @@ export default function WhyPage(props) {
           />
         ))}
         <div className="flex items-end justify-end">
+          {user?.isAdmin && (
+            <div className="mr-6">
+              <BlackButtonClient
+                onClick={handleRegenerateAi}
+                style={{ backgroundColor: 'blue' }}
+              >
+                <div className="font-black">Regenerate AI input (Admin)</div>
+              </BlackButtonClient>
+            </div>
+          )}
           <BlackButtonClient onClick={handleSave}>
             <div className="font-black">Save &amp; Continue</div>
           </BlackButtonClient>
         </div>
       </PortalPanel>
+      {loading && <LoadingAnimation label="Loading..." fullPage />}
     </OnboardingWrapper>
   );
 }
