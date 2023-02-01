@@ -85,14 +85,18 @@ export default function WhatPage(props) {
   const router = useRouter();
 
   const handleSave = async () => {
+    setLoading(true);
     const updated = props.campaign;
+    if (!updated.whatGoals) {
+      updated.whatGoals = {};
+    }
     updated.whatGoals.whyRunning = state.whyRunning;
     updated.whatGoals.bestChoice = state.bestChoice;
     updated.whatGoals.howDeliver = state.howDeliver;
     updated.whatGoals.whatDeliver = state.whatDeliver;
     updated.whatGoals.voteReason = state.voteReason;
     await updateCampaign(updated);
-    router.push(`onboarding/${props.slug}/goals/opponent`);
+    router.push(`onboarding/${props.slug}/goals/more-info`);
   };
 
   const handleRegenerateAi = async () => {
