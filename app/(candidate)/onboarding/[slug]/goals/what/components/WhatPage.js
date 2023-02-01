@@ -70,7 +70,7 @@ const generateWhatGoals = async () => {
 };
 
 export default function WhatPage(props) {
-  con/private/var/folders/_1/fv7qfk6d28387rcps7j8030c0000gp/T/AppTranslocation/D6532A63-B6A0-44DE-98E9-BEA2D5C028CE/d/Visual Studio Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench/workbench.htmlst [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const user = getUserCookie(true);
   if (props.campaign?.whatGoals) {
