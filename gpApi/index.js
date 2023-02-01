@@ -223,6 +223,11 @@ const gpApi = {
         method: 'POST',
         withAuth: true,
       },
+      generateOpponentGoals: {
+        url: `${base}campaign/onboarding/generate-opponent`,
+        method: 'POST',
+        withAuth: true,
+      },
       test: {
         url: `${base}campaign/onboarding/test`,
         method: 'GET',

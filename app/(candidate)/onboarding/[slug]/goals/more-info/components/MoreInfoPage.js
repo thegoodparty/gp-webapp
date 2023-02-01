@@ -112,6 +112,8 @@ export default function WhatPage(props) {
       [key]: value,
     });
   };
+
+  console.log('cc', props.campaign);
   return (
     <OnboardingWrapper {...props}>
       <PortalPanel color="#ea580c" smWhite>

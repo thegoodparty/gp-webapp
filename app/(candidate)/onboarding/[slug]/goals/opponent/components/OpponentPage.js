@@ -6,6 +6,10 @@ import { useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { updateCampaign } from '../../../pledge/components/PledgeButton';
+import { getUserCookie } from 'helpers/cookieHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import LoadingAnimation from '@shared/utils/LoadingAnimation';
 
 const inputFields = [
   {
@@ -44,6 +48,11 @@ inputFields.map((field) => {
   }
 });
 
+const generateOpponentGoals = async () => {
+  const api = gpApi.campaign.onboarding.generateOpponentGoals;
+  return await gpFetch(api, { adminForce: true });
+};
+
 export default function OpponentPage(props) {
   if (props.campaign?.opponent) {
     initialState.notBestChoice = props.campaign.opponent.notBestChoice;
@@ -52,9 +61,12 @@ export default function OpponentPage(props) {
   }
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const user = getUserCookie(true);
 
   const handleSave = async () => {
+    setLoading(true);
     const updated = props.campaign;
     if (!updated.opponent) {
       updated.opponent = {};
@@ -72,6 +84,13 @@ export default function OpponentPage(props) {
       [key]: value,
     });
   };
+
+  const handleRegenerateAi = async () => {
+    setLoading(true);
+    await generateOpponentGoals();
+    window.location.reload();
+  };
+
   return (
     <OnboardingWrapper {...props}>
       <PortalPanel color="#ea580c" smWhite>
@@ -94,11 +113,22 @@ export default function OpponentPage(props) {
           />
         ))}
         <div className="flex items-end justify-end">
+          {user?.isAdmin && (
+            <div className="mr-6">
+              <BlackButtonClient
+                onClick={handleRegenerateAi}
+                style={{ backgroundColor: 'blue' }}
+              >
+                <div className="font-black">Regenerate AI input (Admin)</div>
+              </BlackButtonClient>
+            </div>
+          )}
           <BlackButtonClient onClick={handleSave}>
             <div className="font-black">Save &amp; Continue</div>
           </BlackButtonClient>
         </div>
       </PortalPanel>
+      {loading && <LoadingAnimation label="Loading..." fullPage />}
     </OnboardingWrapper>
   );
 }
