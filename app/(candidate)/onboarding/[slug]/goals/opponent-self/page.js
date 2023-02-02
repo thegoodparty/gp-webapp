@@ -7,11 +7,11 @@ import { redirect } from 'next/navigation';
 import { fetchUserCampaignServer } from '../why/page';
 import OpponentSelfPage from './components/OpponentSelfPage';
 
-// const generateWhatGoals = async () => {
-//   const api = gpApi.campaign.onboarding.generateWhatGoals;
-//   const token = getServerToken();
-//   return await gpFetch(api, false, 3600, token);
-// };
+const generateOpponentSelf = async () => {
+  const api = gpApi.campaign.onboarding.generateOpponentSelf;
+  const token = getServerToken();
+  return await gpFetch(api, false, 3600, token);
+};
 
 export default async function Page({ params }) {
   const { slug } = params;
@@ -20,9 +20,9 @@ export default async function Page({ params }) {
   if (campaign?.slug !== slug) {
     redirect('/onboarding');
   }
-  // if (!campaign.whatGoals) {
-  //   ({ campaign } = await generateWhatGoals());
-  // }
+  if (!campaign.opponentSelf) {
+    ({ campaign } = await generateOpponentSelf());
+  }
 
   const childProps = {
     self: `/onboarding/${slug}/goals/why`,

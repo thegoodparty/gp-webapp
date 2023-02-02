@@ -14,7 +14,7 @@ export default function OnboardingWrapper({
     { href: `/onboarding/${slug}/pledge`, label: 'Take the pledge' },
     { href: `/onboarding/${slug}/goals/why`, label: 'Goals & Objectives' },
     {
-      href: `/onboarding/${slug}/strategy`,
+      href: `/onboarding/${slug}/strategy/who-are-you`,
       label: 'Campaign Message & Strategy',
     },
     { href: `/onboarding/${slug}/team`, label: 'Build a Campaign Team' },

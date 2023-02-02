@@ -45,6 +45,7 @@ export default function RenderInputField({
       {field.type === 'phone' && (
         <PhoneInput
           value={value}
+          required={field.required}
           onChangeCallback={(phone, isValid) => {
             onChangeCallback(field.key, phone);
           }}
@@ -74,7 +75,10 @@ export default function RenderInputField({
       )}
       {field.type === 'select' && (
         <>
-          <div className="text-sm text-gray-500">{field.label}</div>
+          <div className="text-sm text-gray-500">
+            {field.label}
+            {field.required && <sup> *</sup>}
+          </div>
           <Select
             native
             value={value}

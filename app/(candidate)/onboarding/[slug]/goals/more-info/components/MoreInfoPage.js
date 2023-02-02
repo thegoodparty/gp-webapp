@@ -100,7 +100,7 @@ export default function WhatPage(props) {
 
     await updateCampaign(updated);
     if (state.opponent === '') {
-      router.push(`onboarding/${props.slug}/strategy`);
+      router.push(`onboarding/${props.slug}/strategy/who-are-you`);
     } else {
       router.push(`onboarding/${props.slug}/goals/opponent`);
     }

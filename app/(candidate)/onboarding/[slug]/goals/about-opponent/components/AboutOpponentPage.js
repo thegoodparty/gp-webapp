@@ -6,10 +6,14 @@ import { useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { updateCampaign } from '../../../pledge/components/PledgeButton';
+import { getUserCookie } from 'helpers/cookieHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import LoadingAnimation from '@shared/utils/LoadingAnimation';
 
 const inputFields = [
   {
-    key: 'whyRunning',
+    key: 'whyTheyRunning',
     label: "Why they're running",
     required: true,
     type: 'text',
@@ -32,7 +36,7 @@ const inputFields = [
     maxLength: 1000,
   },
   {
-    key: 'distinctions',
+    key: 'keyDistinctions',
     label: 'Key distinctions',
     type: 'text',
     rows: 6,
@@ -50,26 +54,33 @@ inputFields.map((field) => {
   }
 });
 
+const generateAboutOpponentGoals = async () => {
+  const api = gpApi.campaign.onboarding.generateAboutOpponentGoals;
+  return await gpFetch(api, { adminForce: true });
+};
+
 export default function OpponentSelfPage(props) {
   if (props.campaign?.aboutOpponent) {
-    initialState.whyRunning = props.campaign.aboutOpponent.whyRunning;
+    initialState.whyTheyRunning = props.campaign.aboutOpponent.whyTheyRunning;
     initialState.notBetter = props.campaign.aboutOpponent.notBetter;
     initialState.incumbentFailed = props.campaign.aboutOpponent.incumbentFailed;
-    initialState.distinctions = props.campaign.aboutOpponent.distinctions;
+    initialState.keyDistinctions = props.campaign.aboutOpponent.keyDistinctions;
   }
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
   const router = useRouter();
+  const user = getUserCookie(true);
+  const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
     const updated = props.campaign;
     if (!updated.aboutOpponent) {
       updated.aboutOpponent = {};
     }
-    updated.aboutOpponent.whyRunning = state.whyRunning;
+    updated.aboutOpponent.whyTheyRunning = state.whyTheyRunning;
     updated.aboutOpponent.notBetter = state.notBetter;
     updated.aboutOpponent.incumbentFailed = state.incumbentFailed;
-    updated.aboutOpponent.distinctions = state.distinctions;
+    updated.aboutOpponent.keyDistinctions = state.keyDistinctions;
     await updateCampaign(updated);
     router.push(`onboarding/${props.slug}/goals/opponent-self`);
   };
@@ -80,6 +91,13 @@ export default function OpponentSelfPage(props) {
       [key]: value,
     });
   };
+
+  const handleRegenerateAi = async () => {
+    setLoading(true);
+    await generateAboutOpponentGoals();
+    window.location.reload();
+  };
+
   return (
     <OnboardingWrapper {...props}>
       <PortalPanel color="#ea580c" smWhite>
@@ -102,11 +120,22 @@ export default function OpponentSelfPage(props) {
           />
         ))}
         <div className="flex items-end justify-end">
+          {user?.isAdmin && (
+            <div className="mr-6">
+              <BlackButtonClient
+                onClick={handleRegenerateAi}
+                style={{ backgroundColor: 'blue' }}
+              >
+                <div className="font-black">Regenerate AI input (Admin)</div>
+              </BlackButtonClient>
+            </div>
+          )}
           <BlackButtonClient onClick={handleSave}>
             <div className="font-black">Save &amp; Continue</div>
           </BlackButtonClient>
         </div>
       </PortalPanel>
+      {loading && <LoadingAnimation label="Loading..." fullPage />}
     </OnboardingWrapper>
   );
 }
