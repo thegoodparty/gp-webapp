@@ -30,7 +30,7 @@ export default function ArticleSchema({ article }) {
           image: `https:${author.fields.image?.url}`,
           description: author.fields.summary,
         },
-        image: `https:${mainImage.url}`,
+        image: `https:${mainImage?.url}`,
         headline: title,
         name: title,
         url: `https://goodparty.org/blog/article/${slug}`,

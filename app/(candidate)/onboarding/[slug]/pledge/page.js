@@ -12,10 +12,19 @@ const fetchUserCampaignServer = async () => {
   return await gpFetch(api, false, 3600, token);
 };
 
+export async function fetchContentByKey(key) {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key,
+  };
+  return await gpFetch(api, payload, 3600);
+}
+
 export default async function Page({ params }) {
   const { slug } = params;
 
   const { campaign } = await fetchUserCampaignServer();
+  const { content } = await fetchContentByKey('pledge');
   if (campaign?.slug !== slug) {
     redirect('/onboarding');
   }
@@ -27,6 +36,7 @@ export default async function Page({ params }) {
       'You must accept the Good Party Pledge to be a candidate on our site.',
     slug,
     campaign,
+    content,
   };
   return <PledgePage {...childProps} />;
 }

@@ -148,18 +148,14 @@ export default function OnboardingPage(props) {
       (state.password !== state.passwordConf ||
         !isValidPassword(state.password))
     ) {
-      console.log('pass');
       return false;
     }
     if (!isValidEmail(state.email)) {
-      console.log('email');
       return false;
     }
     if (!isValidPhone(state.phone)) {
-      console.log('phone');
       return false;
     }
-    console.log('can submit');
     return true;
   };
 
@@ -211,6 +207,7 @@ export default function OnboardingPage(props) {
         name: `${state.firstName} ${state.lastName}`,
         zip: state.zip,
         password: state.password,
+        phone: state.phone,
       });
       if (newUser) {
         userState.set(() => user);

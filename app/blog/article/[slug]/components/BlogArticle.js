@@ -13,15 +13,17 @@ export default function BlogArticle({ sections, article }) {
     <BlogWrapper sections={sections} sectionSlug={sectionSlug}>
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
         <div>
-          <div className={styles.image}>
-            <Image
-              src={`https:${mainImage.url}`}
-              alt={mainImage.alt}
-              sizes="100vw"
-              fill
-              priority
-            />
-          </div>
+          {mainImage && (
+            <div className={styles.image}>
+              <Image
+                src={`https:${mainImage.url}`}
+                alt={mainImage.alt}
+                sizes="100vw"
+                fill
+                priority
+              />
+            </div>
+          )}
         </div>
         <div>
           <div>
@@ -32,7 +34,7 @@ export default function BlogArticle({ sections, article }) {
               <div className={styles.authorImage}>
                 <Image
                   src={`https:${author.fields.image.url}`}
-                  alt={mainImage.alt}
+                  alt={mainImage?.alt}
                   width={60}
                   height={60}
                 />

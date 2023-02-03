@@ -17,7 +17,7 @@ async function updateCampaign(campaign) {
   }
 }
 
-export default function PledgeButton({ slug, campaign }) {
+export default function PledgeButton({ slug, campaign, content }) {
   const [checked, setChecked] = useState();
   const router = useRouter();
   const handleSubmit = async () => {
@@ -34,7 +34,7 @@ export default function PledgeButton({ slug, campaign }) {
           checked={checked}
           onChange={(e) => setChecked(e.target.checked)}
         />
-        &nbsp; &nbsp; I am taking the pledge
+        &nbsp; &nbsp; {content.cta}
       </div>
       <BlackButtonClient
         className="font-black"

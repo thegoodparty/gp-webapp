@@ -23,7 +23,9 @@ export default function Resources() {
     >
       <div className="flex items-center">
         Resources{' '}
-        <FiChevronDown className={` transition-all ${open && 'rotate-180'}`} />
+        <FiChevronDown
+          className={`ml-1 transition-all ${open && 'rotate-180'}`}
+        />
       </div>
       <Backdrop
         open={open}
