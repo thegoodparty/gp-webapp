@@ -51,15 +51,15 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams() {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += `?key=blogSections&deleteKey=articles`;
+// export async function generateStaticParams() {
+//   const api = { ...gpApi.content.contentByKey };
+//   api.url += `?key=blogSections&deleteKey=articles`;
 
-  const { content } = await gpFetch(api, false);
+//   const { content } = await gpFetch(api, false);
 
-  return content.map((section) => {
-    return {
-      slug: section.fields.slug,
-    };
-  });
-}
+//   return content.map((section) => {
+//     return {
+//       slug: section.fields.slug,
+//     };
+//   });
+// }
