@@ -58,7 +58,7 @@ export default function BlogArticle({ sections, article }) {
                 <div className={styles.authorImage}>
                   <Image
                     src={`https:${author.fields.image.url}`}
-                    alt={mainImage.alt}
+                    alt={mainImage?.alt}
                     width={60}
                     height={60}
                   />
