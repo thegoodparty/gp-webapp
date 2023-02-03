@@ -25,15 +25,19 @@ function ArticleSnippet({ article, heroMode }) {
       <article className={`${styles.wrapper} ${heroMode && styles.hero}`}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className={heroMode ? 'lg:col-span-1' : 'lg:col-span-3'}>
-            <div className={`${styles.image} ${heroMode && styles.heroImage}`}>
-              <Image
-                src={`https:${mainImage.url}`}
-                alt={mainImage.alt}
-                sizes="100vw"
-                fill
-                priority={!!heroMode}
-              />
-            </div>
+            {mainImage && (
+              <div
+                className={`${styles.image} ${heroMode && styles.heroImage}`}
+              >
+                <Image
+                  src={`https:${mainImage.url}`}
+                  alt={mainImage.alt}
+                  sizes="100vw"
+                  fill
+                  priority={!!heroMode}
+                />
+              </div>
+            )}
           </div>
           <div className={heroMode ? 'lg:col-span-2' : 'lg:col-span-3'}>
             <div className={styles.content}>
