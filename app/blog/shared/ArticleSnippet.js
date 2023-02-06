@@ -39,7 +39,11 @@ function ArticleSnippet({ article, heroMode }) {
               </div>
             )}
           </div>
-          <div className={heroMode ? 'lg:col-span-2' : 'lg:col-span-3'}>
+          <div
+            className={
+              heroMode && mainImage ? 'lg:col-span-2' : 'lg:col-span-3'
+            }
+          >
             <div className={styles.content}>
               <div>
                 <div className={styles.topSection}>

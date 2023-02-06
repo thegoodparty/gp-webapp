@@ -6,12 +6,12 @@
   min-height: 280px;
   width: 100%;
   img {
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
   }
 
   @include lg {
-    min-height: 600px;
+    min-height: 350px;
   }
 }
 
