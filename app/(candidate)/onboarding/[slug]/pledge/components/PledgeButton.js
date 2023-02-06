@@ -2,12 +2,13 @@
 
 import Checkbox from '@mui/material/Checkbox';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-async function updateCampaign(campaign) {
+export async function updateCampaign(campaign) {
   try {
     const api = gpApi.campaign.onboarding.update;
     return await gpFetch(api, { campaign });
@@ -19,16 +20,22 @@ async function updateCampaign(campaign) {
 
 export default function PledgeButton({ slug, campaign, content }) {
   const [checked, setChecked] = useState();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleSubmit = async () => {
     if (checked) {
+      setLoading(true);
       const updated = { ...campaign, pledge: true };
-      await updateCampaign(updated);
-      router.push(`onboarding/${slug}/goals`);
+      const res = await updateCampaign(updated);
+      if (res) {
+        router.push(`onboarding/${slug}/goals/why`);
+      } else {
+        setLoading(false);
+      }
     }
   };
   return (
-    <>
+    <div>
       <div className="mt-16 flex items-center text-xl font-bold mb-4">
         <Checkbox
           checked={checked}
@@ -43,6 +50,12 @@ export default function PledgeButton({ slug, campaign, content }) {
       >
         Continue
       </BlackButtonClient>
-    </>
+      {loading && (
+        <LoadingAnimation
+          label="Creating your goals and objectives..."
+          fullPage
+        />
+      )}
+    </div>
   );
 }

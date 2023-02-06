@@ -1,5 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
+import AdminDelete from './AdminDelete';
 
 export default function OnboardingWrapper({
   children,
@@ -8,13 +9,12 @@ export default function OnboardingWrapper({
   self,
   slug,
 }) {
-  console.log('wrapper1');
   const links = [
     { href: '/onboarding', label: 'Candidate Details' },
     { href: `/onboarding/${slug}/pledge`, label: 'Take the pledge' },
-    { href: `/onboarding/${slug}/goals`, label: 'Goals & Objectives' },
+    { href: `/onboarding/${slug}/goals/why`, label: 'Goals & Objectives' },
     {
-      href: `/onboarding/${slug}/strategy`,
+      href: `/onboarding/${slug}/strategy/who-are-you`,
       label: 'Campaign Message & Strategy',
     },
     { href: `/onboarding/${slug}/team`, label: 'Build a Campaign Team' },
@@ -24,7 +24,6 @@ export default function OnboardingWrapper({
       label: 'Voter Outreach & Engagement',
     },
   ];
-  console.log('wrapper2');
   return (
     <div className="bg-white lg:bg-zinc-100">
       <MaxWidth>
@@ -59,7 +58,10 @@ export default function OnboardingWrapper({
                   </div>
                 ))}
               </div>
-              <div className="col-span-12 lg:col-span-9 ">{children}</div>
+              <div className="col-span-12 lg:col-span-9 ">
+                {children}
+                {self !== '/onboarding' && <AdminDelete />}
+              </div>
             </div>
           </div>
         </div>

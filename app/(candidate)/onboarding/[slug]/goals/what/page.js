@@ -4,10 +4,11 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import WhyPage from './components/WhyPage';
+import { fetchUserCampaignServer } from '../why/page';
+import WhatPage from './components/WhatPage';
 
-const fetchUserCampaignServer = async () => {
-  const api = gpApi.campaign.onboarding.findByUser;
+const generateWhatGoals = async () => {
+  const api = gpApi.campaign.onboarding.generateWhatGoals;
   const token = getServerToken();
   return await gpFetch(api, false, 3600, token);
 };
@@ -15,18 +16,20 @@ const fetchUserCampaignServer = async () => {
 export default async function Page({ params }) {
   const { slug } = params;
 
-  const { campaign } = await fetchUserCampaignServer();
+  let { campaign } = await fetchUserCampaignServer();
   if (campaign?.slug !== slug) {
     redirect('/onboarding');
   }
+  if (!campaign.whatGoals) {
+    ({ campaign } = await generateWhatGoals());
+  }
 
   const childProps = {
-    self: `/onboarding/${slug}/goals`,
-    title: 'Goals & Objectives',
-    description:
-      'A good campaign is based on a solid plan with clear objectives. Start building yours by defining your why. ',
+    self: `/onboarding/${slug}/goals/why`,
+    title: 'Goals & Objectives - What',
+    description: ' ',
     slug,
     campaign,
   };
-  return <WhyPage {...childProps} />;
+  return <WhatPage {...childProps} />;
 }

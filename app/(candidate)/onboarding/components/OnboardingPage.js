@@ -22,7 +22,7 @@ const inputFields = [
   { key: 'lastName', label: 'Last Name', required: true, type: 'text' },
   { key: 'email', label: 'Email', required: true, type: 'email' },
   { key: 'phone', label: 'Phone', required: true, type: 'phone' },
-  { key: 'zip', label: 'Zip Code', required: true, type: 'text' },
+  { key: 'zip', label: 'Zip Code', required: true, type: 'text', maxLength: 5 },
   {
     key: 'citizen',
     label: 'Are you a citizen of the United States?',
@@ -43,6 +43,12 @@ const inputFields = [
       'Forward',
       'Other',
     ],
+  },
+  {
+    key: 'office',
+    label: 'What office are you running for (please include district/state)',
+    required: true,
+    type: 'text',
   },
   {
     key: 'appointed',
@@ -116,7 +122,7 @@ export default function OnboardingPage(props) {
       if (campaign) {
         const { slug } = campaign;
         if (campaign.pledge) {
-          router.push(`/onboarding/${slug}/goals`);
+          router.push(`/onboarding/${slug}/goals/why`);
         } else {
           router.push(`/onboarding/${slug}/pledge`);
         }

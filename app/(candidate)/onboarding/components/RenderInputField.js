@@ -32,6 +32,7 @@ export default function RenderInputField({
           InputLabelProps={{
             shrink: true,
           }}
+          inputProps={field.maxLength ? { maxLength: field.maxLength } : {}}
         />
       )}
       {field.type === 'email' && (
@@ -44,6 +45,7 @@ export default function RenderInputField({
       {field.type === 'phone' && (
         <PhoneInput
           value={value}
+          required={field.required}
           onChangeCallback={(phone, isValid) => {
             onChangeCallback(field.key, phone);
           }}
@@ -54,7 +56,10 @@ export default function RenderInputField({
 
       {field.type === 'radio' && (
         <div className="mb-4">
-          <div className="text-zinc-500 mb-2">{field.label}</div>
+          <div className="text-zinc-500 mb-2">
+            {field.label}
+            {field.required && <sup> *</sup>}
+          </div>
           <RadioGroup
             row
             name={field.label}
@@ -70,7 +75,10 @@ export default function RenderInputField({
       )}
       {field.type === 'select' && (
         <>
-          <div className="text-sm text-gray-500">{field.label}</div>
+          <div className="text-sm text-gray-500">
+            {field.label}
+            {field.required && <sup> *</sup>}
+          </div>
           <Select
             native
             value={value}

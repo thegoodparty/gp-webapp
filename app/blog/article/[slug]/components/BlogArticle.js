@@ -12,8 +12,8 @@ export default function BlogArticle({ sections, article }) {
   return (
     <BlogWrapper sections={sections} sectionSlug={sectionSlug}>
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
-        <div>
-          {mainImage && (
+        {mainImage && (
+          <div>
             <div className={styles.image}>
               <Image
                 src={`https:${mainImage.url}`}
@@ -23,8 +23,8 @@ export default function BlogArticle({ sections, article }) {
                 priority
               />
             </div>
-          )}
-        </div>
+          </div>
+        )}
         <div>
           <div>
             <div className={styles.section}>{section.fields?.title}</div>
@@ -33,7 +33,7 @@ export default function BlogArticle({ sections, article }) {
             <div className={styles.topAuthorWrapper}>
               <div className={styles.authorImage}>
                 <Image
-                  src={`https:${author.fields.image.url}`}
+                  src={`https:${author.fields.image?.url}`}
                   alt={mainImage?.alt}
                   width={60}
                   height={60}
@@ -57,7 +57,7 @@ export default function BlogArticle({ sections, article }) {
               <div>
                 <div className={styles.authorImage}>
                   <Image
-                    src={`https:${author.fields.image.url}`}
+                    src={`https:${author.fields.image?.url}`}
                     alt={mainImage?.alt}
                     width={60}
                     height={60}

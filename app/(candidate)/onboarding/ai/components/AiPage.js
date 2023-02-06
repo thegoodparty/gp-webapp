@@ -75,13 +75,11 @@ export default function OnboardingPage(props) {
     prompt = prompt.replace(/\[\[office\]\]/g, state.office);
     prompt = prompt.replace(/\[\[issues\]\]/g, state.issues);
     prompt = prompt.replace(/\[\[party\]\]/g, state.party);
-    console.log('prop1', prompt);
     const { message } = await fetchOnboardingMessage(
       prompt,
       state.tokens,
       state.temperature,
     );
-    console.log('messae', message);
 
     setState({
       ...state,

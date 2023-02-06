@@ -30,6 +30,7 @@ function PhoneInput({
   onBlurCallback = () => {},
   hideIcon,
   shrink,
+  required = false,
 }) {
   const [displayValue, setDisplayValue] = useState('');
   const [validPhone, setValidPhone] = useState(false);
@@ -86,6 +87,7 @@ function PhoneInput({
       onBlur={onBlurChange}
       variant="outlined"
       error={!validPhone && displayValue !== ''}
+      required={required}
       InputProps={
         !hideIcon
           ? {
