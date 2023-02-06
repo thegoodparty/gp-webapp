@@ -39,6 +39,9 @@ export default function TeamSection() {
                 not money, is the problem that must be solved, please consider
                 joining us!
               </div>
+              <div className="text-lg mt-6 underline">
+                <Link href="/contact">Contact Us</Link>
+              </div>
             </div>
             <div className="text-right md:absolute md:bottom-0 md:right-6">
               <Image
