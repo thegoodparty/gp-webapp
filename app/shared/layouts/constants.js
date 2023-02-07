@@ -4,7 +4,6 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: 'About Us', link: '/about' },
       { label: 'Meet the Team', link: '/team' },
-      { label: 'Manifesto', link: '/manifesto' },
       { label: 'Careers', link: '/work-with-us' },
     ],
   },

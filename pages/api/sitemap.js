@@ -25,7 +25,6 @@ const staticUrls = [
   '/login',
   '/register',
   '/faqs',
-  '/manifesto',
   '/privacy',
   '/work-with-us',
   '/contact',
