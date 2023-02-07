@@ -119,9 +119,7 @@ export default function WhyPage(props) {
           </BlackButtonClient>
         </div>
       </PortalPanel>
-      {loading && (
-        <LoadingAnimation label="Creating your next step..." fullPage />
-      )}
+      {loading && <LoadingAnimation label="Generating responses" fullPage />}
     </OnboardingWrapper>
   );
 }
