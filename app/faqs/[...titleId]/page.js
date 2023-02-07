@@ -21,11 +21,13 @@ export default async function Page({ params, searchParams }) {
   const id = titleId?.length > 1 ? titleId[1] : false;
 
   const { content } = await fetchArticle(id);
+
   if (!content) {
     notFound();
   }
   const articleTitle = content.title;
-  if (slugify(articleTitle) !== title) {
+
+  if (slugify(articleTitle, true) !== title.toLowerCase()) {
     const correctRoute = faqArticleRoute(content);
     redirect(correctRoute);
   }
