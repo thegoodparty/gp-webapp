@@ -26,7 +26,7 @@ export default async function Page({ params }) {
 
   const childProps = {
     self: `/onboarding/${slug}/goals/why`,
-    title: 'Goals & Objectives - What',
+    title: 'Goals & Objectives - The WHAT',
     description: ' ',
     slug,
     campaign,

@@ -13,7 +13,7 @@ export default function WhatIs() {
         </div>
       </div>
       <div className="hidden lg:block col-span-2">
-        <Link href="#connect">
+        <Link href="/run-for-office#connect">
           <PurpleButton
             style={{
               borderRadius: '40px',
