@@ -4,7 +4,7 @@ import { faqArticleRoute, slugify } from 'helpers/articleHelper';
 import { notFound, redirect } from 'next/navigation';
 import FaqsArticlePage from './components/FaqsArticlePage';
 
-const fetchArticle = async (id) => {
+export const fetchArticle = async (id) => {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'faqArticles',
