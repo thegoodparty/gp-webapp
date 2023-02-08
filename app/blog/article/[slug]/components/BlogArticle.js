@@ -4,10 +4,20 @@ import contentfulHelper from 'helpers/contentfulHelper';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Image from 'next/image';
 import styles from './BlogArticle.module.scss';
+import Banner from './Banner';
 
 export default function BlogArticle({ sections, article }) {
-  const { section, author, body, mainImage, publishDate, readingTime, title } =
-    article;
+  const {
+    section,
+    author,
+    body,
+    body2,
+    banner,
+    mainImage,
+    publishDate,
+    readingTime,
+    title,
+  } = article;
   const sectionSlug = section?.fields?.slug;
   return (
     <BlogWrapper sections={sections} sectionSlug={sectionSlug}>
@@ -49,6 +59,11 @@ export default function BlogArticle({ sections, article }) {
       <div className={styles.maxWidth}>
         <div className={styles.copy}>
           <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
+          {body2 && banner && <Banner banner={banner} />}
+          {body2 && (
+            <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
+          )}
+          {banner && <Banner banner={banner} />}
         </div>
 
         <div className={styles.authorWrapper}>
