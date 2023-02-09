@@ -3,8 +3,10 @@ import { slugify } from 'helpers/articleHelper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import Link from 'next/link';
 
-export const termLink = (term) =>
-  `/political-terms/${slugify(term?.title, true)}`;
+export const termLink = (term) => termLinkByTitle(term?.title);
+
+export const termLinkByTitle = (title) =>
+  `/political-terms/${slugify(title, true)}`;
 
 export default function TermSnippet({ item, last }) {
   const { title, description } = item;

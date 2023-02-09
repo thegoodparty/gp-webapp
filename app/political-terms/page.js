@@ -1,6 +1,7 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TermsHomePage from './components/TermsHomePage';
+import { fetchContentByKey } from 'app/(candidate)/onboarding/[slug]/pledge/page';
 import '../globals.css';
 
 export const fetchGlossaryByLetter = async () => {
@@ -15,6 +16,13 @@ export default async function Page() {
   const { content } = await fetchGlossaryByLetter();
   const items = content['A'];
 
-  const childProps = { activeLetter: 'A', items };
+  const recentGlossaryItems = await fetchContentByKey('recentGlossaryItems');
+  const recentGlossaryItemsContent = recentGlossaryItems.content;
+
+  const childProps = {
+    activeLetter: 'A',
+    items,
+    recentGlossaryItems: recentGlossaryItemsContent,
+  };
   return <TermsHomePage {...childProps} />;
 }
