@@ -1,6 +1,7 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TermsHomePage from './components/TermsHomePage';
+import '../globals.css';
 
 export const fetchGlossaryByLetter = async () => {
   const api = gpApi.content.contentByKey;

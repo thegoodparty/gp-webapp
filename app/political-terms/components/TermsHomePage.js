@@ -1,11 +1,18 @@
+'use client';
+
 import MaxWidth from '@shared/layouts/MaxWidth';
 import { Fragment, Suspense } from 'react';
 import AdminClientLoad from './AdminClientLoad';
 import LayoutWithAlphabet from './LayoutWithAlphabet';
 import TermSnippet from './TermSnippet';
+import { Autocomplete, TextField, InputAdornment } from '@mui/material';
+import { Search } from '@mui/icons-material';
 
 export default function TermsHomePage(props) {
   const { items, activeLetter } = props;
+
+  let positions = [{ id: '1', name: 'KEKW' }];
+
   return (
     <MaxWidth>
       <div className="my-9 lg:my-16">
@@ -19,6 +26,53 @@ export default function TermsHomePage(props) {
             ask@goodparty.org.
           </a>
         </div>
+
+        <div className="grid grid-cols-3 gap-3 lg:grid-cols-4 items-center mt-4">
+          <div className="col-span-2 lg:col-span-1">
+            <Autocomplete
+              sx={{ '& fieldset': { borderRadius: 33 } }}
+              options={items}
+              getOptionLabel={(option) => option.title}
+              fullWidth
+              // value={value}
+              variant="outlined"
+              renderInput={(renderInputParams) => (
+                <div
+                  ref={renderInputParams.InputProps.ref}
+                  style={{
+                    alignItems: 'center',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <TextField
+                    style={{ flex: 1 }}
+                    //   {...params}
+                    InputProps={{
+                      ...renderInputParams.InputProps,
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {' '}
+                          <Search />{' '}
+                        </InputAdornment>
+                      ),
+                    }}
+                    placeholder="Search"
+                    inputProps={{
+                      ...renderInputParams.inputProps,
+                    }}
+                    InputLabelProps={{ style: { display: 'none' } }}
+                  />
+                </div>
+              )}
+              // onChange={(event, item) => {
+              //   onChangeField('position', item?.id);
+              // }}
+            />
+          </div>
+        </div>
+
         <LayoutWithAlphabet {...props}>
           {items && items.length > 0 ? (
             <>

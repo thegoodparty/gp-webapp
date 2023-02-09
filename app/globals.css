@@ -74,3 +74,29 @@ ul li {
 .text-white {
   color: #fff;
 }
+
+div.MuiAutocomplete-root div.MuiOutlinedInput-root {
+  /* Search bar when not in focus */
+  border-radius: 40px;
+}
+
+div.MuiAutocomplete-root div.MuiOutlinedInput-root.Mui-focused {
+  /* Search bar when focused */
+  border-radius: 20px 20px 0px 0px !important;
+}
+
+div.MuiAutocomplete-root div.Mui-focused fieldset {
+  /* fieldset element is what controls the border color. Leaving only the bottom border when dropdown is visible */
+  border-width: 1px !important;
+  border-color: transparent transparent #d3d3d3 transparent !important;
+}
+
+.MuiAutocomplete-listbox {
+  /* To control the background color of the listbox, which is the dropdown */
+}
+
+div.MuiAutocomplete-popper div {
+  /* To get rid of the rounding applied by Mui-paper on the dropdown */
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+}
