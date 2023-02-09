@@ -1,6 +1,7 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TermsHomePage from './components/TermsHomePage';
+import { fetchContentByKey } from 'app/(candidate)/onboarding/[slug]/pledge/page';
 
 export const fetchGlossaryByLetter = async () => {
   const api = gpApi.content.contentByKey;
@@ -9,14 +10,6 @@ export const fetchGlossaryByLetter = async () => {
   };
   return await gpFetch(api, payload, 60);
 };
-
-export async function fetchContentByKey(key) {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key,
-  };
-  return await gpFetch(api, payload, 3600);
-}
 
 export default async function Page() {
   const { content } = await fetchGlossaryByLetter();
