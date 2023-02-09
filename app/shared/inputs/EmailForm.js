@@ -9,7 +9,6 @@ import { FaCheck } from 'react-icons/fa';
 export async function subscribeEmail(payload) {
   try {
     await gpFetch(gpApi.homepage.subscribeEmail, payload);
-    console.log('success');
     return true;
   } catch (e) {
     console.log('error', e);
@@ -17,7 +16,12 @@ export async function subscribeEmail(payload) {
   }
 }
 
-export default function EmailForm({ formId, fullWidth = false, pageName }) {
+export default function EmailForm({
+  formId,
+  fullWidth = false,
+  pageName,
+  label = 'Get Started',
+}) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -71,7 +75,7 @@ export default function EmailForm({ formId, fullWidth = false, pageName }) {
             onClick={submitForm}
             id="submit-email"
             type="submit"
-            value="Get Started"
+            value={label}
             className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
           />
           {!!showError && (
