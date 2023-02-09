@@ -6,6 +6,9 @@ import Link from 'next/link';
 export const termLink = (term) =>
   `/political-terms/${slugify(term?.title, true)}`;
 
+export const termLinkByTitle = (title) =>
+  `/political-terms/${slugify(title, true)}`;
+
 export default function TermSnippet({ item, last }) {
   const { title, description } = item;
 

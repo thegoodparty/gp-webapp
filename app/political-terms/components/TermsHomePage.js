@@ -2,10 +2,11 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import { Fragment, Suspense } from 'react';
 import AdminClientLoad from './AdminClientLoad';
 import LayoutWithAlphabet from './LayoutWithAlphabet';
-import TermSnippet from './TermSnippet';
+import TermSnippet, { termLinkByTitle } from './TermSnippet';
+import Link from 'next/link';
 
 export default function TermsHomePage(props) {
-  const { items, activeLetter } = props;
+  const { items, activeLetter, recentGlossaryItems } = props;
   return (
     <MaxWidth>
       <div className="my-9 lg:my-16">
@@ -19,6 +20,30 @@ export default function TermsHomePage(props) {
             ask@goodparty.org.
           </a>
         </div>
+        {recentGlossaryItems && recentGlossaryItems.length > 0 ? (
+          <>
+            <div className="text-lg lg:flex pt-4">
+              <h2 className="mb-1 lg:mb-0 lg:basis-1/3">
+                <strong>RECENTLY ADDED TERMS</strong>
+              </h2>
+            </div>
+
+            {recentGlossaryItems.map((item) => (
+              <Fragment key={item}>
+                <Link href={termLinkByTitle(item)}>
+                  <div className="text-lg lg:flex  pt-2 mt-2">
+                    <h2 className="mb-1 lg:mb-0 lg:basis-1/3 underline">
+                      {item}
+                    </h2>
+                  </div>
+                </Link>
+              </Fragment>
+            ))}
+          </>
+        ) : (
+          <></>
+        )}
+
         <LayoutWithAlphabet {...props}>
           {items && items.length > 0 ? (
             <>
