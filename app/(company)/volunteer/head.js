@@ -5,9 +5,10 @@ export default function Head({ params }) {
   return (
     <>
       <GpHead
-        title="Join the movement to end the two-party system"
-        description="We're organizing a community of Good Partiers to realize our collective power to elect promising independents around the country and fix our broken system."
+        title="Volunteer with Good Party"
+        description="Want to find a way to help build a more vibrant democracy? Learn about how our volunteer program works, opportunities to get involved, and how your actions can have a huge impact. Get in touch with us to start your volunteer journey with Good Party."
         slug="/volunteer"
+        image="/public/images/landing-pages/volunteer.jpg"
       />
     </>
   );

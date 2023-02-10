@@ -21,6 +21,7 @@ export default function EmailForm({
   fullWidth = false,
   pageName,
   label = 'Get Started',
+  buttonIcon,
 }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
@@ -71,13 +72,22 @@ export default function EmailForm({
             placeholder="john@email.com"
             className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
           />
-          <input
-            onClick={submitForm}
-            id="submit-email"
-            type="submit"
-            value={label}
-            className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-          />
+          {buttonIcon ? (
+            <span
+              className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+              onClick={submitForm}
+            >
+              {buttonIcon}
+            </span>
+          ) : (
+            <input
+              onClick={submitForm}
+              id="submit-email"
+              type="submit"
+              value={label}
+              className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+            />
+          )}
           {!!showError && (
             <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
               {showError}

@@ -30,6 +30,7 @@ const staticUrls = [
   '/contact',
   '/pricing',
   '/political-terms',
+  '/volunteer',
 ];
 
 export const fetchContent = async () => {
