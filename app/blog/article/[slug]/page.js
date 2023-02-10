@@ -40,15 +40,15 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = { ...gpApi.content.contentByKey };
-//   api.url += `?key=blogArticles`;
+export async function generateStaticParams() {
+  const api = { ...gpApi.content.contentByKey };
+  api.url += `?key=blogArticles`;
 
-//   const { content } = await gpFetch(api, false);
+  const { content } = await gpFetch(api, false);
 
-//   return content.map((article) => {
-//     return {
-//       slug: article.slug,
-//     };
-//   });
-// }
+  return content.map((article) => {
+    return {
+      slug: article.slug,
+    };
+  });
+}
