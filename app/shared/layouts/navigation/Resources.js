@@ -35,28 +35,30 @@ export default function Resources() {
           () => setOpen(false);
         }}
       ></Backdrop>
-      <div
-        className={`absolute z-50 top-14 right-0  bg-white rounded-lg  shadow-md transition  ${
-          open ? 'px-1 p-2 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
-        }`}
-      >
-        {RESOURCES_LINKS.map((link) => (
-          <Link
-            href={link.href}
-            id={`desktop-resource-nav-${link.label.replace(' ', '-')}`}
-            key={link.href}
-            className="no-underline font-normal"
-          >
-            <div
-              data-cy="header-link"
-              className="py-2 whitespace-nowrap text-sm px-3 hover:bg-zinc-100 rounded"
-              //   style={activeUrl === link.href ? { fontWeight: 'bold' } : {}}
+      {open && (
+        <div
+          className={`absolute z-50 top-14 right-0  bg-white rounded-lg  shadow-md transition  ${
+            open ? 'px-1 p-2 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
+          }`}
+        >
+          {RESOURCES_LINKS.map((link) => (
+            <Link
+              href={link.href}
+              id={`desktop-resource-nav-${link.label.replace(' ', '-')}`}
+              key={link.href}
+              className="no-underline font-normal"
             >
-              {link.label}
-            </div>
-          </Link>
-        ))}
-      </div>
+              <div
+                data-cy="header-link"
+                className="py-2 whitespace-nowrap text-sm px-3 hover:bg-zinc-100 rounded"
+                //   style={activeUrl === link.href ? { fontWeight: 'bold' } : {}}
+              >
+                {link.label}
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

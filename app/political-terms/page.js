@@ -13,15 +13,27 @@ export const fetchGlossaryByLetter = async () => {
 
 export default async function Page() {
   const { content } = await fetchGlossaryByLetter();
-  const items = content['A'];
+  const a_items = content['A'];
 
-  const recentGlossaryItems = await fetchContentByKey('recentGlossaryItems');
-  const recentGlossaryItemsContent = recentGlossaryItems.content;
+  const glossaryItemsContent = await fetchContentByKey('glossaryItemsByTitle');
+  const glossaryItems = glossaryItemsContent.content;
+
+  let glossaryItemsArray = [];
+  Object.keys(glossaryItems).forEach((item) => {
+    glossaryItemsArray.push(glossaryItems[item].title);
+  });
+  glossaryItemsArray.sort();
+
+  const recentGlossaryItemsContent = await fetchContentByKey(
+    'recentGlossaryItems',
+  );
+  const recentGlossaryItems = recentGlossaryItemsContent.content;
 
   const childProps = {
     activeLetter: 'A',
-    items,
-    recentGlossaryItems: recentGlossaryItemsContent,
+    items: a_items,
+    glossaryItems: glossaryItemsArray,
+    recentGlossaryItems: recentGlossaryItems,
   };
   return <TermsHomePage {...childProps} />;
 }
