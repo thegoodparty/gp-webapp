@@ -1,7 +1,7 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { fetchContentByKey } from 'helpers/fetchHelper';
 import TermsHomePage from './components/TermsHomePage';
-import { fetchContentByKey } from 'app/(candidate)/onboarding/[slug]/pledge/page';
 
 export const fetchGlossaryByLetter = async () => {
   const api = gpApi.content.contentByKey;
