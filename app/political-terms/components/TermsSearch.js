@@ -4,49 +4,33 @@ import { termLinkByTitle } from './TermSnippet';
 import { Autocomplete, TextField, InputAdornment } from '@mui/material';
 import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import styles from './TermsSearch.module.scss';
 
 export default function TermsSearch(props) {
   const { glossaryItems } = props;
   const router = useRouter();
 
+  console.log('lossaryItems', glossaryItems);
+
   return (
-    <>
+    <div className={styles.wrapper}>
       {glossaryItems && glossaryItems.length > 0 ? (
         <Autocomplete
-          sx={{ '& fieldset': { borderRadius: 33 } }}
           options={glossaryItems}
-          getOptionLabel={(option) => (option ? option : '')}
           fullWidth
-          // value={value}
-          variant="outlined"
-          renderInput={(renderInputParams) => (
-            <div
-              ref={renderInputParams.InputProps.ref}
-              style={{
-                alignItems: 'center',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
+          renderInput={(params) => (
+            <TextField
+              ref={params.InputProps.ref}
+              {...params}
+              placeholder="Search"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FaSearch className="ml-3" />
+                  </InputAdornment>
+                ),
               }}
-            >
-              <TextField
-                style={{ flex: 1 }}
-                //   {...params}
-                InputProps={{
-                  ...renderInputParams.InputProps,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <FaSearch />
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search"
-                inputProps={{
-                  ...renderInputParams.inputProps,
-                }}
-                InputLabelProps={{ style: { display: 'none' } }}
-              />
-            </div>
+            />
           )}
           onChange={(event, item) => {
             if (item != undefined && item != '') {
@@ -57,6 +41,6 @@ export default function TermsSearch(props) {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 }

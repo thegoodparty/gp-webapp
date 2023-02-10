@@ -37,7 +37,6 @@ export default function TermsHomePage(props) {
             <TermsSearch glossaryItems={glossaryItems} />
           </div>
         </div>
-        {/* {desktopMode ? <TermsSearch glossaryItems={glossaryItems} /> : <></>} */}
 
         {recentGlossaryItems && recentGlossaryItems.length > 0 ? (
           <>

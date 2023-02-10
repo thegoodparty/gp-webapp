@@ -1,0 +1,10 @@
+.wrapper {
+  :global(.MuiOutlinedInput-root) {
+    background-color: #f3f3f3;
+    border: solid 1px #ececec;
+  }
+
+  :global(div.MuiAutocomplete-root fieldset) {
+    border: none !important;
+  }
+}
