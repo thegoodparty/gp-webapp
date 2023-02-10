@@ -5,9 +5,12 @@ import LayoutWithAlphabet from './LayoutWithAlphabet';
 import TermSnippet, { termLinkByTitle } from './TermSnippet';
 import Link from 'next/link';
 import TermsSearch from './TermsSearch';
+// import { useTheme, useMediaQuery } from '@mui/material';
 
 export default function TermsHomePage(props) {
   const { items, activeLetter, glossaryItems, recentGlossaryItems } = props;
+  // const theme = useTheme();
+  // const desktopMode = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <MaxWidth>
@@ -24,6 +27,7 @@ export default function TermsHomePage(props) {
         </div>
 
         <TermsSearch glossaryItems={glossaryItems} />
+        {/* {desktopMode ? <TermsSearch glossaryItems={glossaryItems} /> : <></>} */}
 
         {recentGlossaryItems && recentGlossaryItems.length > 0 ? (
           <>
