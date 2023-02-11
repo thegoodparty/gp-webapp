@@ -64,7 +64,10 @@ export default function Connect() {
       <div className="absolute bottom-4 right-4 lg:hidden italic text-lg flex flex-col items-end">
         <div className="mr-2 mb-2">Get Started!</div>
         <div>
-          <EmailForm2 />
+          <EmailFormBanner
+            pageName="run for office"
+            formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+          />
         </div>
       </div>
     </div>
