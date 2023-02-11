@@ -67,12 +67,12 @@ export default function ExpandWithImages() {
         </div>
         <div className="col-span-12 lg:col-span-6 -mt-5 lg:mt-0">
           {items.map((item, i) => (
-            <>
+            <div className="shadow-[0_0_12px_4px_rgba(0,0,0,0.1)] rounded-xl bg-white">
               <div
-                className={`bg-white text-2xl py-8 px-12 font-black rounded-xl mt-2.5 shadow-[0_0_8px_2px_rgba(0,0,0,0.1)] flex justify-between items-center cursor-pointer relative z-10 ${
+                className={`bg-white text-2xl py-8 px-12 font-black rounded-xl mt-2.5 flex justify-between lg:shadow-[0_0_8px_2px_rgba(0,0,0,0.1)] items-center cursor-pointer relative z-10 ${
                   selected === false
-                    ? 'flex'
-                    : ` ${selected === i ? 'flex' : 'hidden lg:flex'}`
+                    ? 'flex '
+                    : ` ${selected === i ? 'flex' : 'hidden  lg:flex'}`
                 }`}
                 onClick={() => {
                   handleSelect(i);
@@ -103,11 +103,11 @@ export default function ExpandWithImages() {
                 </div>
               </div>
               {selected === i && (
-                <div className="bg-white text-2xl p-12 -mt-2 shadow-[0_0_8px_2px_rgba(0,0,0,0.1)] rounded-b-xl leading-relaxed">
+                <div className="bg-white text-2xl p-12 -mt-2  rounded-b-xl leading-relaxed font-light lg:font-normal">
                   {item.description}
                 </div>
               )}
-            </>
+            </div>
           ))}
         </div>
       </div>

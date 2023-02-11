@@ -6,13 +6,13 @@ import bgImg from '/public/images/landing-pages/hero-bg.png';
 
 export default function Hero() {
   return (
-    <section className="relative pt-5 lg:pt-20 pb-40">
+    <section className="relative pt-5 lg:pt-20 lg:pb-40">
       <div className="absolute h-full w-full lg:w-[50%] left-0 lg:left-[50%] top-0">
         <Image
           src={bgImg}
           sizes="100vw"
           fill
-          className="object-cover"
+          className="object-cover object-left"
           alt=""
           placeholder="blur"
           priority

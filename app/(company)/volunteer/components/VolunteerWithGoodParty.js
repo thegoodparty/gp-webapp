@@ -18,7 +18,7 @@ export default function VolunteerWithGoodParty() {
         alt="volunteer with Good Party"
         placeholder="blur"
         priority
-        className="lg:hidden"
+        className="w-full lg:hidden"
       />
       <MaxWidth>
         <h2 className="font-black text-4xl mt-12">

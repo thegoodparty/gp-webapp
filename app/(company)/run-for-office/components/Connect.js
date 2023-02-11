@@ -3,7 +3,7 @@ import bgImg from '/public/images/landing-pages/red-bg.png';
 import bgImgSm from '/public/images/landing-pages/red-bg-small.png';
 import expertImg from '/public/images/landing-pages/expert.png';
 import expertImgSm from '/public/images/landing-pages/expert-small.png';
-import EmailForm2 from './EmailForm2';
+import EmailFormBanner from '@shared/inputs/EmailFormBanner';
 
 export default function Connect() {
   return (
@@ -22,7 +22,10 @@ export default function Connect() {
         <div className="hidden lg:flex italic text-lg mt-3 items-center">
           <div className="mr-4">Get Started!</div>
           <div>
-            <EmailForm2 />
+            <EmailFormBanner
+              pageName="run for office"
+              formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
+            />
           </div>
         </div>
       </div>

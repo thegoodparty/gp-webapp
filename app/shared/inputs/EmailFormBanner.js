@@ -3,9 +3,9 @@
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import { useState } from 'react';
 import { FaArrowRight, FaCheck } from 'react-icons/fa';
-import { subscribeEmail } from '../../../shared/inputs/EmailForm';
+import { subscribeEmail } from './EmailForm';
 
-export default function EmailForm2() {
+export default function EmailFormBanner({ pageName, formId }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -17,8 +17,8 @@ export default function EmailForm2() {
       const success = await subscribeEmail({
         email: encodeURIComponent(email),
         uri: window.location.href,
-        formId: '46116311-525b-42a2-b88e-d2ab86f26b8a',
-        pageName: 'run for office',
+        formId,
+        pageName,
       });
       if (success) {
         setSuccess(true);

@@ -39,7 +39,7 @@ export default function ForVoters() {
           </Link>
           <div className="mt-5 lg:mt-0 lg:ml-10">
             <Link
-              href="/contact"
+              href="/volunteer"
               className="underline text-xl tracking-wide"
               id="volunteer-link"
             >
