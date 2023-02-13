@@ -3,7 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 
 export default function SubscribeSection() {
   return (
-    <section className="bg-zinc-100 py-12 text-center">
+    <section className="bg-zinc-100 py-12 text-center mt-16">
       <MaxWidth>
         <h3 className="font-black text-3xl lg:text-5xl mb-3">
           GET ON THE LIST

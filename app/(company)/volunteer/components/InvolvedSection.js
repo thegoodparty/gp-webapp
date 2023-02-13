@@ -3,11 +3,12 @@ import bgImg from '/public/images/landing-pages/red-bg.png';
 import bgImgSm from '/public/images/landing-pages/red-bg-small.png';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailFormBanner from '@shared/inputs/EmailFormBanner';
+import RedPurpleSection from '@shared/landing-pages/RedPurpleSection';
 
 export default function InvolvedSection() {
   return (
     <MaxWidth>
-      <div className=" bg-darkPurple text-white py-8 px-10 lg:py-16 text-center my-12 lg:my-16 rounded-xl relative overflow-hidden">
+      <RedPurpleSection>
         <div className="relative z-10">
           <div className="lg:w-[80%] mx-auto font-black text-3xl text-left  lg:text-center">
             Got any questions about getting involved? Take the next step!
@@ -24,22 +25,7 @@ export default function InvolvedSection() {
             </div>
           </div>
         </div>
-        <Image
-          src={bgImg}
-          sizes="100vw"
-          fill
-          className="hidden lg:block object-contain object-left-bottom"
-          alt=""
-        />
-
-        <Image
-          src={bgImgSm}
-          sizes="100vw"
-          fill
-          className="lg:hidden object-contain object-left-bottom"
-          alt=""
-        />
-      </div>
+      </RedPurpleSection>
     </MaxWidth>
   );
 }
