@@ -15,7 +15,7 @@ export const fetchArticles = async () => {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'blogArticles',
-    limit: 20,
+    // limit: 20,
   };
   return await gpFetch(api, payload, 3600);
 };
@@ -24,11 +24,13 @@ export default async function Page({ params, searchParams }) {
   const sectionsRes = await fetchSections();
   const sections = sectionsRes.content;
   const articlesRes = await fetchArticles();
-  const articles = articlesRes.content;
+  const fullArticles = articlesRes.content;
+  const articles = fullArticles.slice(0, 20);
 
   const childProps = {
     sections,
     articles,
+    fullArticles,
   };
   return <BlogPage {...childProps} />;
 }

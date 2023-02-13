@@ -1,11 +1,13 @@
 import ArticleSnippet from '../shared/ArticleSnippet';
 import BlogWrapper from '../shared/BlogWrapper';
+import BlogSearch from './BlogSearch';
 
 export default function BlogPage({
   sections,
   articles,
   sectionSlug,
   sectionTitle,
+  fullArticles,
 }) {
   const hero = articles && articles.length > 0 ? articles[0] : false;
   return (
@@ -13,6 +15,7 @@ export default function BlogPage({
       sections={sections}
       sectionSlug={sectionSlug}
       sectionTitle={sectionTitle}
+      fullArticles={fullArticles}
       useH1
     >
       <ArticleSnippet article={hero} heroMode />
