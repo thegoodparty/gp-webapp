@@ -11,7 +11,7 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
         className={`absolute h-full w-full top-0 ${
           wideBg
             ? ' w-[200%] lg:w-[60%] left-[-50%] lg:left-[40%]'
-            : 'lg:w-[50%] left-0 lg:left-[50%]'
+            : 'w-[200%]  left-[-50%] lg:w-[50%] lg:left-[50%]'
         }`}
       >
         <Image
@@ -21,7 +21,7 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
           className={
             wideBg
               ? 'object-contain object-right-top'
-              : 'object-cover object-left-top'
+              : 'object-contain object-right-top lg:object-cover lg:object-left-top'
           }
           alt=""
           placeholder="blur"
