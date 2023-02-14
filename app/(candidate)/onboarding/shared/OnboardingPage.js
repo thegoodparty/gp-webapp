@@ -38,7 +38,6 @@ export default function OnboardingPage({
       initialState[key] = campaign[campaignKey][key];
     });
   }
-  console.log('initial', initialState);
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
   const router = useRouter();
@@ -75,7 +74,6 @@ export default function OnboardingPage({
       path = nextPathFunc({ ...state });
     }
 
-    console.log('resolved path', path);
     router.push(`onboarding/${slug}${path}`);
   };
 

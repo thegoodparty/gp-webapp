@@ -141,10 +141,8 @@ export default function OnboardingPage(props) {
       if (field.required) {
         const val = state[field.key];
         if (field.initialValue && val === initialValue) {
-          console.log('field1', field);
           return false;
         } else if (val === '') {
-          console.log('field2', field);
           return false;
         }
       }

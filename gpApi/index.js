@@ -213,6 +213,12 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      list: {
+        //admin
+        url: `${base}campaign/onboardings`,
+        method: 'GET',
+        withAuth: true,
+      },
       generateWhyGoals: {
         url: `${base}campaign/onboarding/generate-why`,
         method: 'POST',

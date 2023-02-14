@@ -10,10 +10,12 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AlertDialog from '@shared/utils/AlertDialog';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { deleteCookies } from 'helpers/cookieHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
 async function deleteAccountCallback() {
   try {
-    const api = tgpApi.user.deleteAccount;
+    const api = gpApi.user.deleteAccount;
     await gpFetch(api, null, 3600);
     deleteCookies();
     window.location.href = '/';

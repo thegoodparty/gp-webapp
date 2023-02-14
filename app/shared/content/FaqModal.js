@@ -20,7 +20,7 @@ export default function FaqModal({ children, article }) {
       <Suspense>
         <Modal open={showModal} closeCallback={() => setShowModal(false)}>
           <h1 className="my-8 font-black text-3xl" data-cy="article-title">
-            {article.title}
+            {article?.title}
           </h1>
 
           <CmsContentWrapper>
