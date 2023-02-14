@@ -10,7 +10,7 @@ export default function Connect() {
   return (
     <div id="connect">
       <RedPurpleSection>
-        <div className="lg:w-[50%] lg:left-[15%]  relative z-10">
+        <div className="lg:w-[50%] lg:left-[15%] relative z-20">
           <h3 className="font-black text-3xl">
             Connect with a Good Party expert
           </h3>

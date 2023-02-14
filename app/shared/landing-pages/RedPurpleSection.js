@@ -8,7 +8,6 @@ import EmailFormBanner from '@shared/inputs/EmailFormBanner';
 export default function RedPurpleSection({ children }) {
   return (
     <section className=" bg-darkPurple text-white pt-16 pb-80 px-6 lg:py-16 flex flex-col items-center justify-center mt-8 rounded-xl relative overflow-hidden">
-      {children}
       <Image
         src={bgImg}
         sizes="100vw"
@@ -23,6 +22,7 @@ export default function RedPurpleSection({ children }) {
         className="lg:hidden object-contain object-left-bottom"
         alt=""
       />
+      {children}
     </section>
   );
 }

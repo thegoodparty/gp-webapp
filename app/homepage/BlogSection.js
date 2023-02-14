@@ -8,7 +8,7 @@ import RedPurpleSection from '@shared/landing-pages/RedPurpleSection';
 export default function BlogSection() {
   return (
     <RedPurpleSection>
-      <div className="relative z-10">
+      <div className="relative z-20">
         <div className="lg:w-[50%] mx-auto font-black text-3xl text-left  lg:text-center">
           Check out our blog for articles about running for office, Good Party's
           work, and more.

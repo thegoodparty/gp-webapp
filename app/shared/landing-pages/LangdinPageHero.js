@@ -18,7 +18,11 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
           src={bgImg}
           sizes="100vw"
           fill
-          className="object-cover object-left-top"
+          className={
+            wideBg
+              ? 'object-contain object-right-top'
+              : 'object-cover object-left-top'
+          }
           alt=""
           placeholder="blur"
           priority

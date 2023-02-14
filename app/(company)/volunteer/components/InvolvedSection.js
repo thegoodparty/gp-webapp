@@ -9,7 +9,7 @@ export default function InvolvedSection() {
   return (
     <MaxWidth>
       <RedPurpleSection>
-        <div className="relative z-10">
+        <div className="relative z-20">
           <div className="lg:w-[80%] mx-auto font-black text-3xl text-left  lg:text-center">
             Got any questions about getting involved? Take the next step!
             <div className="text-lg mt-3 lg:w-[60%] mx-auto font-normal italic text-center">
