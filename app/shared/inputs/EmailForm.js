@@ -21,6 +21,7 @@ export default function EmailForm({
   fullWidth = false,
   pageName,
   label = 'Get Started',
+  labelId,
 }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
@@ -47,7 +48,12 @@ export default function EmailForm({
     }
   };
   return (
-    <form className="pt-5" noValidate onSubmit={(e) => e.preventDefault()}>
+    <form
+      className="pt-5"
+      noValidate
+      onSubmit={(e) => e.preventDefault()}
+      id={labelId}
+    >
       {success ? (
         <div className="bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center">
           <div>Check your email to learn more</div>

@@ -31,6 +31,7 @@ export default function Hero() {
             <EmailForm
               formId="46116311-525b-42a2-b88e-d2ab86f26b8a"
               pageName="run for office"
+              labelId="candidate-form"
             />
           </div>
           <div className="col-span-12 lg:col-span-4 flex justify-center flex-col">

@@ -22,6 +22,7 @@ export default function Hero() {
             formId="c7d78873-1ed0-4202-ab01-76577e57352c"
             pageName="volunteer"
             label="Join Us"
+            labelId="volunteer-form"
           />
         </div>
       </div>

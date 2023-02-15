@@ -19,6 +19,7 @@ export default function SubscribeSection() {
             fullWidth
             forId="5d84452a-01df-422b-9734-580148677d2c"
             pageName="Home Page"
+            labelId="subscribe-form"
           />
         </div>
       </MaxWidth>
