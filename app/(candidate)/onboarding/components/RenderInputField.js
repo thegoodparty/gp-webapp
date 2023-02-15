@@ -17,7 +17,9 @@ export default function RenderInputField({
 }) {
   return (
     <div className="mb-6" key={field.key}>
-      {(field.type === 'text' || field.type === 'date') && (
+      {(field.type === 'text' ||
+        field.type === 'date' ||
+        field.type === 'number') && (
         <TextField
           label={field.label}
           name={field.label}
