@@ -71,8 +71,7 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  console.log('campaigns', props.campaigns);
-  const [selected, setSelected] = useState(true);
+  const [selected, setSelected] = useState(false);
   const [campaignsBySlug, setCampaignsBySlug] = useState(false);
   const [state, setState] = useState(initialState);
   const snackbarState = useHookstate(globalSnackbarState);
