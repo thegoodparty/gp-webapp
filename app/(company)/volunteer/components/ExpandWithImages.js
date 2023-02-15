@@ -67,7 +67,7 @@ export default function ExpandWithImages() {
         </div>
         <div className="col-span-12 lg:col-span-6 -mt-5 lg:mt-0">
           {items.map((item, i) => (
-            <div className="shadow-[0_0_12px_4px_rgba(0,0,0,0.1)] rounded-xl bg-white">
+            <div className="shadow-[0_0_8px_2px_rgba(0,0,0,0.1)] rounded-xl bg-white mx-4 lg:mx-0">
               <div
                 className={`bg-white text-2xl py-8 px-12 font-black rounded-xl mt-2.5 flex justify-between lg:shadow-[0_0_8px_2px_rgba(0,0,0,0.1)] items-center cursor-pointer relative z-10 ${
                   selected === false

@@ -38,7 +38,7 @@ export default function EmailFormBanner({ pageName, formId }) {
         onSubmit={(e) => e.preventDefault()}
       >
         {success ? (
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <div className="mr-2">Check your email to learn more</div>{' '}
             <FaCheck />
           </div>

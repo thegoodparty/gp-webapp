@@ -8,7 +8,7 @@ import bgImg from '/public/images/landing-pages/hero-bg.png';
 export default function Hero() {
   return (
     <LandingPageHero>
-      <div className="relative">
+      <div className="relative lg:pb-12">
         <div className="lg:w-[60%]">
           <h1 className="text-6xl leading-tight font-black">
             Join the movement to end the two-party system

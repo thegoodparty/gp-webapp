@@ -9,7 +9,7 @@ import RedPurpleSection from '@shared/landing-pages/RedPurpleSection';
 export default function Connect() {
   return (
     <div id="connect">
-      <RedPurpleSection>
+      <RedPurpleSection withPadding>
         <div className="lg:w-[50%] lg:left-[15%] relative z-20">
           <h3 className="font-black text-3xl">
             Connect with a Good Party expert
