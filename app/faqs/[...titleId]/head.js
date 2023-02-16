@@ -9,7 +9,7 @@ export default async function Head({ params }) {
   const { content } = await fetchArticle(id);
   return (
     <GpHead
-      title={`${content.title} | FAQs | GOOD PARTY`}
+      title={`${content?.title} | FAQs | GOOD PARTY`}
       description="Frequently Asked Questions about GOOD PARTY."
       slug="/faqs"
     />
