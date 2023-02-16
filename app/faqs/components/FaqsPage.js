@@ -13,7 +13,7 @@ const breadcrumbsLinks = [
 export default function FaqsPage({ content }) {
   return (
     <>
-      <Hero />
+      {/* <Hero /> */}
       <MaxWidth>
         <Breadcrumbs links={breadcrumbsLinks} />
         <Categories content={content} />
