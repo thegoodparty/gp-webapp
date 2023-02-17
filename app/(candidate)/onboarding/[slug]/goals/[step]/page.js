@@ -4,8 +4,14 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import { fetchUserCampaignServer } from '../../goals/[step]/page';
-import WhyRunningPage from './components/WhyRunningPage';
+import GoalsStepPage from './components/GoalsStepPage';
+import goalsFields from './goalsFields';
+
+export const fetchUserCampaignServer = async () => {
+  const api = gpApi.campaign.onboarding.findByUser;
+  const token = getServerToken();
+  return await gpFetch(api, false, 3600, token);
+};
 
 // const generateWhyGoals = async () => {
 //   const api = gpApi.campaign.onboarding.generateWhyGoals;
@@ -14,7 +20,9 @@ import WhyRunningPage from './components/WhyRunningPage';
 // };
 
 export default async function Page({ params }) {
-  const { slug } = params;
+  const { slug, step } = params;
+
+  let stepInt = step ? parseInt(step, 10) : 1;
 
   let { campaign } = await fetchUserCampaignServer();
   if (campaign?.slug !== slug) {
@@ -24,13 +32,17 @@ export default async function Page({ params }) {
   //   ({ campaign } = await generateWhyGoals());
   // }
 
+  const stepFields = goalsFields[stepInt - 1];
+
   const childProps = {
-    self: `/onboarding/${slug}/strategy/who-are-you`,
-    title: 'Campaign Message & Strategy',
-    description:
-      'eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium.',
+    title: stepFields.title.replace(
+      '[[NAME]]',
+      `${campaign.firstName} ${campaign.lastName}`,
+    ),
     slug,
     campaign,
+    fields: stepFields.fields,
+    step: stepInt,
   };
-  return <WhyRunningPage {...childProps} />;
+  return <GoalsStepPage {...childProps} />;
 }

@@ -1,69 +1,38 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import JaredImg from 'public/images/campaign/jared.png';
 import AdminDelete from './AdminDelete';
 
-export default function OnboardingWrapper({
-  children,
-  title,
-  description,
-  self,
-  slug,
-}) {
-  const links = [
-    { href: '/onboarding', label: 'Candidate Details' },
-    { href: `/onboarding/${slug}/pledge`, label: 'Take the pledge' },
-    { href: `/onboarding/${slug}/goals/why`, label: 'Goals & Objectives' },
-    {
-      href: `/onboarding/${slug}/strategy/who-are-you`,
-      label: 'Campaign Message & Strategy',
-    },
-    { href: `/onboarding/${slug}/team`, label: 'Build a Campaign Team' },
-    { href: `/onboarding/${slug}/budget`, label: 'Budget & Fundraising Plan' },
-    {
-      href: `/onboarding/${slug}/outreach`,
-      label: 'Voter Outreach & Engagement',
-    },
-  ];
+export default function OnboardingWrapper({ children, title, self }) {
+  const router = useRouter();
+  const goBack = () => {
+    router.back();
+  };
   return (
-    <div className="bg-white lg:bg-zinc-100">
+    <div className="bg-white shadow-inner relative">
+      <div
+        className="pt-8 mx-3 lg:px-0 lg:pt-24 font-black border-b-4 border-teal-400  pb-2 mb-8 lg:hidden cursor-pointer"
+        onClick={goBack}
+      >
+        BACK
+      </div>
+      <div className="relative mb-6 lg:mb-0 w-28 h-28  left-1/2 -ml-14  lg:absolute lg:-top-14 z-50">
+        <Image src={JaredImg} fill className="object-contain" />
+      </div>
       <MaxWidth>
-        <div style={{ minHeight: 'calc(100vh - 80px)' }} className="py-14">
-          <div>
-            {title && <h1 className="text-3xl mb-3 font-black">{title}</h1>}
-            {description && (
-              <h2 className="text-sm mb-10 text-zinc-500 border-b-2 border-gray-200 pb-10">
-                {description}
-              </h2>
-            )}
-            <div className="grid grid-cols-12 gap-4">
-              <div className="hidden lg:block lg:col-span-3 p-3">
-                {links.map((link) => (
-                  <div className="mb-6" key={link.href}>
-                    {self === '/onboarding' ? (
-                      <div
-                        className={`${
-                          link.href === self ? 'font-bold' : 'text-stone-400'
-                        }`}
-                      >
-                        {link.label}
-                      </div>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className={`${link.href === self && 'font-bold'}`}
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="col-span-12 lg:col-span-9 ">
-                {children}
-                {self !== '/onboarding' && <AdminDelete />}
-              </div>
-            </div>
-          </div>
+        <div
+          className="hidden lg:inline-block pt-24 font-black border-b-4 border-teal-400 pb-2 cursor-pointer"
+          onClick={goBack}
+        >
+          BACK
+        </div>
+        <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)]">
+          <h1 className="font-black text-4xl text-center  tracking-tight pb-14">
+            {title}
+          </h1>
+          {children}
+          {self !== '/onboarding' && <AdminDelete />}
         </div>
       </MaxWidth>
     </div>

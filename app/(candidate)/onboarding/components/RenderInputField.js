@@ -16,7 +16,10 @@ export default function RenderInputField({
   positions,
 }) {
   return (
-    <div className="mb-6" key={field.key}>
+    <div
+      className={`mb-6 col-span-12 ${field.cols === 6 && 'lg:col-span-6'} `}
+      key={field.key}
+    >
       {(field.type === 'text' ||
         field.type === 'date' ||
         field.type === 'number') && (

@@ -4,7 +4,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import { fetchUserCampaignServer } from '../../goals/why/page';
+import { fetchUserCampaignServer } from '../../goals/[step]/page';
 import WhyBestChoicePage from './components/WhyBestChoicePage';
 
 // const generateWhyGoals = async () => {

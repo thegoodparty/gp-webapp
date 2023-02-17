@@ -12,7 +12,8 @@ const fetchPositions = async () => {
 export default async function Page() {
   const { positions } = await fetchPositions();
   const childProps = {
-    title: 'Decide to Run',
+    title:
+      "Hi! I'm Jared. I just need a little bit of information so we can help you get started...",
     description:
       'Good Party  will be with you every step of the way so you can run a successful campaign.',
     self: '/onboarding',

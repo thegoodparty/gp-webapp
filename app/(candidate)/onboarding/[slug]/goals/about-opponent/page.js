@@ -4,7 +4,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import { fetchUserCampaignServer } from '../why/page';
+import { fetchUserCampaignServer } from '../[step]/page';
 import AboutOpponentPage from './components/AboutOpponentPage';
 
 const generateAboutOpponent = async () => {

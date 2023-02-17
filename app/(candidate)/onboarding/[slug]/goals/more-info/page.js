@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { redirect } from 'next/navigation';
-import { fetchUserCampaignServer } from '../why/page';
+import { fetchUserCampaignServer } from '../[step]/page';
 import MoreInfoPage from './components/MoreInfoPage';
 
 export default async function Page({ params }) {

@@ -92,35 +92,30 @@ export default function OnboardingPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <PortalPanel color="#ea580c" smWhite>
-        <h3 className="font-black text-xl italic mb-2">{header}</h3>
-        <div className="mb-10">{subHeader}</div>
-
-        {inputFields.map((field) => (
-          <RenderInputField
-            field={field}
-            onChangeCallback={onChangeField}
-            error={!!errors[field.key]}
-            positions={props.positions}
-            value={state[field.key]}
-          />
-        ))}
-        <div className="flex items-end justify-end">
-          {user?.isAdmin && reGenerateAiCallback && (
-            <div className="mr-6">
-              <BlackButtonClient
-                onClick={handleRegenerateAi}
-                style={{ backgroundColor: 'blue' }}
-              >
-                <div className="font-black">Regenerate AI input (Admin)</div>
-              </BlackButtonClient>
-            </div>
-          )}
-          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-            <div className="font-black">Save &amp; Continue</div>
-          </BlackButtonClient>
-        </div>
-      </PortalPanel>
+      {inputFields.map((field) => (
+        <RenderInputField
+          field={field}
+          onChangeCallback={onChangeField}
+          error={!!errors[field.key]}
+          positions={props.positions}
+          value={state[field.key]}
+        />
+      ))}
+      <div className="flex justify-center">
+        {user?.isAdmin && reGenerateAiCallback && (
+          <div className="mr-6">
+            <BlackButtonClient
+              onClick={handleRegenerateAi}
+              style={{ backgroundColor: 'blue' }}
+            >
+              <div className="font-black">Regenerate AI input (Admin)</div>
+            </BlackButtonClient>
+          </div>
+        )}
+        <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+          <div>NEXT</div>
+        </BlackButtonClient>
+      </div>
       {loading && <LoadingAnimation label="Generating responses" fullPage />}
     </OnboardingWrapper>
   );

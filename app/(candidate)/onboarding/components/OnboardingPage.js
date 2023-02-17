@@ -18,51 +18,21 @@ import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 const inputFields = [
-  { key: 'firstName', label: 'First Name', required: true, type: 'text' },
-  { key: 'lastName', label: 'Last Name', required: true, type: 'text' },
-  { key: 'email', label: 'Email', required: true, type: 'email' },
-  { key: 'phone', label: 'Phone', required: true, type: 'phone' },
-  { key: 'zip', label: 'Zip Code', required: true, type: 'text', maxLength: 5 },
   {
-    key: 'citizen',
-    label: 'Are you a citizen of the United States?',
-    required: true,
-    type: 'radio',
-  },
-  { key: 'dob', label: 'Date of Birth', required: true, type: 'date' },
-  {
-    key: 'party',
-    label: 'Political Party Affiliation (select one)',
-    required: true,
-    type: 'select',
-    options: [
-      'Independent',
-      'Green Party',
-      'Libertarian',
-      'SAM',
-      'Forward',
-      'Other',
-    ],
-  },
-  {
-    key: 'office',
-    label: 'What office are you running for (please include district/state)',
+    key: 'firstName',
+    label: 'First Name',
     required: true,
     type: 'text',
+    cols: 6,
   },
   {
-    key: 'appointed',
-    label: 'Have you ever been appointed to or elected for office before?',
+    key: 'lastName',
+    label: 'Last Name',
     required: true,
-    type: 'radio',
+    type: 'text',
+    cols: 6,
   },
-  {
-    key: 'registered',
-    label: 'Have you ever been a registered member of a political party?',
-    required: true,
-    type: 'radio',
-  },
-  { type: 'positionsSelector', key: 'positions', initialValue: [] },
+  { key: 'email', label: 'Email', required: true, type: 'email', cols: 12 },
 ];
 
 const initialState = {
@@ -121,11 +91,7 @@ export default function OnboardingPage(props) {
       const { campaign } = await fetchUserCampaign();
       if (campaign) {
         const { slug } = campaign;
-        if (campaign.pledge) {
-          router.push(`/onboarding/${slug}/goals/why`);
-        } else {
-          router.push(`/onboarding/${slug}/pledge`);
-        }
+        router.push(`/onboarding/${slug}/goals/1`);
       }
     }
   };
@@ -157,9 +123,7 @@ export default function OnboardingPage(props) {
     if (!isValidEmail(state.email)) {
       return false;
     }
-    if (!isValidPhone(state.phone)) {
-      return false;
-    }
+
     return true;
   };
 
@@ -186,12 +150,6 @@ export default function OnboardingPage(props) {
     if (!isValidEmail(state.email)) {
       newErrors.email = true;
     }
-    if (!isValidPhone(state.phone)) {
-      newErrors.phone = true;
-    }
-    if (!validateZip(state.zip)) {
-      newErrors.zip = true;
-    }
     setErrors(newErrors);
   };
 
@@ -205,34 +163,34 @@ export default function OnboardingPage(props) {
     });
     setLoading(true);
     checkErrors();
-    if (!user) {
-      const newUser = await register({
-        email: state.email,
-        name: `${state.firstName} ${state.lastName}`,
-        zip: state.zip,
-        password: state.password,
-        phone: state.phone,
-      });
-      if (newUser) {
-        userState.set(() => user);
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'Your account is created. Creating campaign...',
-            isError: false,
-          };
-        });
-      } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'Error creating your account',
-            isError: true,
-          };
-        });
-        return false;
-      }
-    }
+    // if (!user) {
+    //   const newUser = await register({
+    //     email: state.email,
+    //     name: `${state.firstName} ${state.lastName}`,
+    //     zip: state.zip,
+    //     password: state.password,
+    //     phone: state.phone,
+    //   });
+    //   if (newUser) {
+    //     userState.set(() => user);
+    //     snackbarState.set(() => {
+    //       return {
+    //         isOpen: true,
+    //         message: 'Your account is created. Creating campaign...',
+    //         isError: false,
+    //       };
+    //     });
+    //   } else {
+    //     snackbarState.set(() => {
+    //       return {
+    //         isOpen: true,
+    //         message: 'Error creating your account',
+    //         isError: true,
+    //       };
+    //     });
+    //     return false;
+    //   }
+    // }
     const stateNoPassword = { ...state };
     delete stateNoPassword.password;
     delete stateNoPassword.passwordConf;
@@ -254,11 +212,7 @@ export default function OnboardingPage(props) {
 
   return (
     <OnboardingWrapper {...props}>
-      <PortalPanel color="#ea580c" smWhite>
-        <h3 className="font-black text-xl italic mb-8">
-          Now, let's start putting your campaign together.
-        </h3>
-        <h4 className="font-black italic mb-6">Basic Information</h4>
+      <div className="grid grid-cols-12 gap-4">
         {inputFields.map((field) => (
           <RenderInputField
             field={field}
@@ -268,39 +222,36 @@ export default function OnboardingPage(props) {
             value={state[field.key]}
           />
         ))}
+      </div>
 
-        {!user && (
-          <div>
-            <div className="font-black mt-12 mb-6">Account password</div>
-            <PasswordInput
-              value={state.password}
-              onChangeCallback={(pwd) => onChangeField('password', pwd)}
-              className="mb-10"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <PasswordInput
-              label="Re-enter password"
-              helperText=""
-              className="mb-10"
-              value={state.passwordConf}
-              onChangeCallback={(pwd) => onChangeField('passwordConf', pwd)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </div>
-        )}
-
-        <BlackButtonClient
-          className="w-full uppercase font-black mt-10"
-          disabled={!canSubmit()}
-          onClick={handleSubmit}
-        >
-          Create my campaign
+      {!user && (
+        <div>
+          <div className="font-black mt-12 mb-6">Account password</div>
+          <PasswordInput
+            value={state.password}
+            onChangeCallback={(pwd) => onChangeField('password', pwd)}
+            className="mb-10"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <PasswordInput
+            label="Re-enter password"
+            helperText=""
+            className="mb-10"
+            value={state.passwordConf}
+            onChangeCallback={(pwd) => onChangeField('passwordConf', pwd)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
+      )}
+      <div className="flex justify-center mt-10 ">
+        <BlackButtonClient disabled={!canSubmit()} onClick={handleSubmit}>
+          NEXT
         </BlackButtonClient>
-      </PortalPanel>
+      </div>
     </OnboardingWrapper>
   );
 }
