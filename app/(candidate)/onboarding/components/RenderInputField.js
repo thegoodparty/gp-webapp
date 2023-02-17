@@ -60,7 +60,7 @@ export default function RenderInputField({
       )}
 
       {field.type === 'radio' && (
-        <div className="mb-4">
+        <div className="mb-4 flex justify-center">
           <div className="text-zinc-500 mb-2">
             {field.label}
             {field.required && <sup> *</sup>}

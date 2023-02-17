@@ -92,15 +92,18 @@ export default function OnboardingPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      {inputFields.map((field) => (
-        <RenderInputField
-          field={field}
-          onChangeCallback={onChangeField}
-          error={!!errors[field.key]}
-          positions={props.positions}
-          value={state[field.key]}
-        />
-      ))}
+      <div className="grid grid-cols-12 gap-4">
+        {inputFields.map((field) => (
+          <RenderInputField
+            field={field}
+            onChangeCallback={onChangeField}
+            error={!!errors[field.key]}
+            positions={props.positions}
+            value={state[field.key]}
+          />
+        ))}
+      </div>
+
       <div className="flex justify-center">
         {user?.isAdmin && reGenerateAiCallback && (
           <div className="mr-6">

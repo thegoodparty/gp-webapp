@@ -1,14 +1,17 @@
+import { AnimatePresence } from 'framer-motion';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import JaredImg from 'public/images/campaign/jared.png';
 import AdminDelete from './AdminDelete';
+import { motion } from 'framer-motion';
 
-export default function OnboardingWrapper({ children, title, self }) {
+export default function OnboardingWrapper({ children, title, self, pathname }) {
   const router = useRouter();
   const goBack = () => {
     router.back();
   };
+
   return (
     <div className="bg-white shadow-inner relative">
       <div
@@ -31,7 +34,17 @@ export default function OnboardingWrapper({ children, title, self }) {
           <h1 className="font-black text-4xl text-center  tracking-tight pb-14">
             {title}
           </h1>
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
+              key={pathname}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
+
           {self !== '/onboarding' && <AdminDelete />}
         </div>
       </MaxWidth>

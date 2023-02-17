@@ -43,6 +43,7 @@ export default async function Page({ params }) {
     campaign,
     fields: stepFields.fields,
     step: stepInt,
+    pathname: `/goals/${stepInt}`,
   };
   return <GoalsStepPage {...childProps} />;
 }

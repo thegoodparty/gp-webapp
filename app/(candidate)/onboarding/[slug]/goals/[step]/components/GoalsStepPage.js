@@ -18,7 +18,7 @@ export default function GoalsStepPage(props) {
   return (
     <OnboardingPage
       inputFields={props.fields}
-      nextPath={`/goals/${props.stepInt + 1}`}
+      nextPath={`/goals/${props.step + 1}`}
       campaignKey="goals"
       {...props}
     />

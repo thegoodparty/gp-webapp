@@ -10,6 +10,40 @@ const goalsFields = [
       },
     ],
   },
+  {
+    title: "Great! What's your zip code?",
+    fields: [
+      {
+        key: 'zip',
+        label: 'Zip Code',
+        required: true,
+        type: 'text',
+      },
+    ],
+  },
+  {
+    title: 'Are you a US Citizen?',
+    fields: [
+      {
+        key: 'citizen',
+        label: '',
+        required: true,
+        type: 'radio',
+        options: ['Yes', 'No'],
+      },
+    ],
+  },
+  {
+    title: 'What is your date of birth?',
+    fields: [
+      {
+        key: 'dob',
+        label: 'Date of Birth',
+        required: true,
+        type: 'date',
+      },
+    ],
+  },
 ];
 
 export default goalsFields;
