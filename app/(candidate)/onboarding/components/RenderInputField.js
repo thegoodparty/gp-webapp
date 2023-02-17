@@ -15,7 +15,6 @@ export default function RenderInputField({
   error,
   positions,
 }) {
-  console.llg('render inpt field', field);
   return (
     <div
       className={`mb-6 col-span-12 ${field.cols === 6 && 'lg:col-span-6'} `}

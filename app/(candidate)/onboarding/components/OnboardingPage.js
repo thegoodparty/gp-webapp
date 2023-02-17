@@ -1,20 +1,16 @@
 'use client';
-import PortalPanel from '@shared/layouts/PortalPanel';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import OnboardingWrapper from '../shared/OnboardingWrapper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import { isValidPhone } from '@shared/inputs/PhoneInput';
 import { getUserCookie } from 'helpers/cookieHelper';
 import PasswordInput, { isValidPassword } from '@shared/inputs/PasswrodInput';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import RenderInputField from './RenderInputField';
-import { register } from '@shared/inputs/RegisterAnimated';
 import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 const inputFields = [
@@ -89,8 +85,10 @@ export default function OnboardingPage(props) {
   const checkCampaigns = async () => {
     if (user) {
       const { campaign } = await fetchUserCampaign();
+      console.log('fetched campagin', campaign);
       if (campaign) {
         const { slug } = campaign;
+        console.log('slug found', slug);
         router.push(`/onboarding/${slug}/goals/1`);
       }
     }
