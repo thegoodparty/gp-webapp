@@ -44,6 +44,25 @@ const goalsFields = [
       },
     ],
   },
+  {
+    title: "Thanks! What's your political affiliation, if you have any?",
+    fields: [
+      {
+        key: 'party',
+        label: 'Political Party Affiliation (select one)',
+        required: true,
+        type: 'select',
+        options: [
+          'Independent',
+          'Green Party',
+          'Libertarian',
+          'SAM',
+          'Forward',
+          'Other',
+        ],
+      },
+    ],
+  },
 ];
 
 export default goalsFields;
