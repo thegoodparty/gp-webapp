@@ -47,6 +47,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.6.0",
     "react-lite-youtube-embed": "^2.3.52",
+    "react-loading": "^2.0.3",
     "react-responsive-masonry": "^2.1.6",
     "react-schemaorg": "^2.0.0",
     "react-slick": "^0.29.0",

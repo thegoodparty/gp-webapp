@@ -5,8 +5,9 @@ import { useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
-import LoadingAnimation from '@shared/utils/LoadingAnimation';
+import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function OnboardingPage({
   inputFields,
@@ -34,7 +35,9 @@ export default function OnboardingPage({
 
   if (campaign?.[campaignKey]) {
     keys.forEach((key) => {
-      initialState[key] = campaign[campaignKey][key];
+      if (campaign[campaignKey][key]) {
+        initialState[key] = campaign[campaignKey][key];
+      }
     });
   }
   const [state, setState] = useState(initialState);
@@ -50,8 +53,12 @@ export default function OnboardingPage({
         if (field.initialValue && state[field.key] === field.initialValue) {
           return false;
         }
+
         if (!field.initialValue && state[field.key] === '') {
           return false;
+        }
+        if (field.validate) {
+          return field.validate(state[field.key]);
         }
       }
     }
@@ -113,11 +120,15 @@ export default function OnboardingPage({
             </BlackButtonClient>
           </div>
         )}
-        <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-          <div>NEXT</div>
-        </BlackButtonClient>
+        {loading ? (
+          <ReactLoading color="green" />
+        ) : (
+          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+            <div>NEXT</div>
+          </BlackButtonClient>
+        )}
       </div>
-      {loading && <LoadingAnimation label="Generating responses" fullPage />}
+      {/* {loading && <LoadingAnimation label="Generating responses" fullPage />} */}
     </OnboardingWrapper>
   );
 }

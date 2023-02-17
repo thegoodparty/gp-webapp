@@ -1,3 +1,7 @@
+import { isValidPhone } from '@shared/inputs/PhoneInput';
+import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
+import { flatStates, states } from 'helpers/statesHelper';
+
 const goalsFields = [
   {
     title: "Great to meet you [[NAME]]! What's your phone number?",
@@ -7,6 +11,7 @@ const goalsFields = [
         label: 'Phone Number',
         required: true,
         type: 'phone',
+        validate: isValidPhone,
       },
     ],
   },
@@ -18,6 +23,7 @@ const goalsFields = [
         label: 'Zip Code',
         required: true,
         type: 'text',
+        validate: validateZip,
       },
     ],
   },
@@ -59,6 +65,44 @@ const goalsFields = [
           'SAM',
           'Forward',
           'Other',
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Great! Where are you considering running for office?',
+    fields: [
+      {
+        key: 'state',
+        label: 'State',
+        required: true,
+        type: 'select',
+        options: flatStates,
+      },
+      {
+        key: 'office',
+        label: 'Office',
+        required: true,
+        type: 'select',
+        options: [
+          'President',
+          'US Senate',
+          'US House of Representatives',
+          'Governor',
+          'Lieutenant Governor',
+          'Attorney General',
+          'Comptroller',
+          'Treasurer',
+          'Secretary of State',
+          'State Supreme Court Justice',
+          'County Executive',
+          'Mayor',
+          'District Attorney',
+          'Sheriff',
+          'Clerk',
+          'Auditor',
+          'Public Administrator',
+          'Judge',
         ],
       },
     ],
