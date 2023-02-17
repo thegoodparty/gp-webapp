@@ -1,7 +1,7 @@
 import EmailForm from '@shared/inputs/EmailForm';
 import MaxWidth from '@shared/layouts/MaxWidth';
 
-export default function SubscribeSection() {
+export default function SubscribeSection({ pageName = 'Home Page' }) {
   return (
     <section className="bg-zinc-100 py-12 text-center mt-16">
       <MaxWidth>
@@ -18,7 +18,7 @@ export default function SubscribeSection() {
           <EmailForm
             fullWidth
             forId="5d84452a-01df-422b-9734-580148677d2c"
-            pageName="Home Page"
+            pageName={pageName}
             labelId="subscribe-form"
           />
         </div>
