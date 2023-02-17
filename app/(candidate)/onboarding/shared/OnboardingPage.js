@@ -21,10 +21,12 @@ export default function OnboardingPage({
   subHeader,
   ...props
 }) {
+  console.log('onboarding page1');
   const initialState = {};
   const keys = [];
 
   inputFields.map((field) => {
+    console.log('onboarding page2', field);
     if (field.initialValue) {
       initialState[field.key] = field.initialValue;
     } else {
@@ -32,8 +34,10 @@ export default function OnboardingPage({
     }
     keys.push(field.key);
   });
+  console.log('onboarding page3');
 
   if (campaign?.[campaignKey]) {
+    console.log('onboarding page4');
     keys.forEach((key) => {
       initialState[key] = campaign[campaignKey][key];
     });
@@ -58,6 +62,7 @@ export default function OnboardingPage({
     }
     return true;
   };
+  console.log('onboarding page5');
 
   const handleSave = async () => {
     setLoading(true);
@@ -89,7 +94,7 @@ export default function OnboardingPage({
     await reGenerateAiCallback();
     window.location.reload();
   };
-
+  console.log('onboarding page6', slug);
   return (
     <OnboardingWrapper {...props} slug={slug}>
       <div className="grid grid-cols-12 gap-4">
