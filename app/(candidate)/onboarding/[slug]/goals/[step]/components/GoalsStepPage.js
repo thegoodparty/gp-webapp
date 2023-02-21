@@ -1,14 +1,26 @@
 'use client';
 import OnboardingPage from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import IssuesPage from './IssuesPage';
 
 export default function GoalsStepPage(props) {
-  console.log('goals step page');
+  const { fields, step, isIssuePage } = props;
   return (
-    <OnboardingPage
-      inputFields={props.fields}
-      nextPath={`/goals/${props.step + 1}`}
-      campaignKey="goals"
-      {...props}
-    />
+    <>
+      {isIssuePage ? (
+        <IssuesPage
+          inputFields={fields}
+          nextPath={`/goals/${step + 1}`}
+          campaignKey="goals"
+          {...props}
+        />
+      ) : (
+        <OnboardingPage
+          inputFields={fields}
+          nextPath={`/goals/${step + 1}`}
+          campaignKey="goals"
+          {...props}
+        />
+      )}
+    </>
   );
 }

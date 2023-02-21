@@ -19,6 +19,12 @@ export const fetchUserCampaignServer = async () => {
 //   return await gpFetch(api, false, 3600, token);
 // };
 
+const fetchPositions = async () => {
+  const api = gpApi.admin.position.list;
+  const token = getServerToken();
+  return await gpFetch(api, false, 3600, token);
+};
+
 export default async function Page({ params }) {
   const { slug, step } = params;
 
@@ -34,6 +40,11 @@ export default async function Page({ params }) {
 
   const stepFields = goalsFields[stepInt - 1];
 
+  let positions = [];
+  if (stepFields.isIssuePage) {
+    ({ positions } = await fetchPositions());
+  }
+
   const childProps = {
     title: stepFields.title.replace(
       '[[NAME]]',
@@ -44,6 +55,8 @@ export default async function Page({ params }) {
     fields: stepFields.fields,
     step: stepInt,
     pathname: `/goals/${stepInt}`,
+    positions,
+    isIssuePage: stepFields.isIssuePage,
   };
   return <GoalsStepPage {...childProps} />;
 }

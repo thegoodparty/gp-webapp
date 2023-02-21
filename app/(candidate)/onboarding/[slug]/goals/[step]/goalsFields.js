@@ -95,6 +95,8 @@ const goalsFields = [
           'Treasurer',
           'Secretary of State',
           'State Supreme Court Justice',
+          'State Senate',
+          'State House of Representatives',
           'County Executive',
           'Mayor',
           'District Attorney',
@@ -103,9 +105,56 @@ const goalsFields = [
           'Auditor',
           'Public Administrator',
           'Judge',
+          'County Commissioner',
+          'Council member',
+          'School Board',
+        ],
+      },
+      {
+        key: 'district',
+        label: 'District',
+        type: 'text',
+        hidden: true,
+        showKey: 'office',
+        showCondition: [
+          'US House of Representatives',
+          'State Senate',
+          'State House of Representatives',
+          'County Commissioner',
+          'Council member',
+          'School Board',
         ],
       },
     ],
+  },
+  {
+    title: 'Have you run for office before?',
+    fields: [
+      {
+        key: 'runBefore',
+        label: '',
+        required: true,
+        type: 'radio',
+        options: ['Yes', 'No'],
+      },
+    ],
+  },
+  {
+    title: 'Have you ever been a registered member of a political party?',
+    fields: [
+      {
+        key: 'registeredBefore',
+        label: '',
+        required: true,
+        type: 'radio',
+        options: ['Yes', 'No'],
+      },
+    ],
+  },
+  {
+    isIssuePage: true,
+    title: 'Tell us about some issues you care about and why.',
+    fields: [],
   },
 ];
 

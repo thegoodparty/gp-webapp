@@ -7,8 +7,9 @@ import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
 import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
 
-export default function OnboardingPage({
+export default function IssuesPage({
   inputFields,
   campaign,
   campaignKey,
@@ -18,6 +19,7 @@ export default function OnboardingPage({
   slug,
   header,
   subHeader,
+  positions,
   ...props
 }) {
   const initialState = {};
@@ -103,6 +105,15 @@ export default function OnboardingPage({
   return (
     <OnboardingWrapper {...props} slug={slug}>
       <div className="grid grid-cols-12 gap-4">
+        <div className={`mb-6 col-span-12 `}>
+          <PositionsSelector
+            positions={positions}
+            updateCallback={(positions) =>
+              onChangeCallback('positions', positions)
+            }
+            square
+          />
+        </div>
         {inputFields.map((field) => (
           <>
             {(!field.hidden || canShowField(field)) && (
