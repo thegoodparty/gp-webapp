@@ -69,40 +69,42 @@ export default function IssuesPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <div>
-        <PositionsSelector
-          positions={positions}
-          updateCallback={(positions) => onChangePositions(positions)}
-          initialSelected={state.positions}
-          square
-        />
-      </div>
-      {state.positions?.map((position) => (
-        <div className="mt-6 mb-10">
-          Tell us your stance on {position.name} ({position.topIssue?.name})
-          <div>
-            <TextField
-              placeholder="Write here..."
-              multiline
-              rows={6}
-              fullWidth
-              value={state[`position-${position.id}`]}
-              onChange={(e) => {
-                onChangeField(`position-${position.id}`, e.target.value);
-              }}
-            />
-          </div>
+      <div className="max-w-[360px] mx-auto">
+        <div>
+          <PositionsSelector
+            positions={positions}
+            updateCallback={(positions) => onChangePositions(positions)}
+            initialSelected={state.positions}
+            square
+          />
         </div>
-      ))}
+        {state.positions?.map((position) => (
+          <div className="mt-6 mb-10">
+            Tell us your stance on {position.name} ({position.topIssue?.name})
+            <div>
+              <TextField
+                placeholder="Write here..."
+                multiline
+                rows={6}
+                fullWidth
+                value={state[`position-${position.id}`]}
+                onChange={(e) => {
+                  onChangeField(`position-${position.id}`, e.target.value);
+                }}
+              />
+            </div>
+          </div>
+        ))}
 
-      <div className="flex justify-center">
-        {loading ? (
-          <ReactLoading color="green" />
-        ) : (
-          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-            <div>NEXT</div>
-          </BlackButtonClient>
-        )}
+        <div className="flex justify-center">
+          {loading ? (
+            <ReactLoading color="green" />
+          ) : (
+            <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+              <div>NEXT</div>
+            </BlackButtonClient>
+          )}
+        </div>
       </div>
     </OnboardingWrapper>
   );

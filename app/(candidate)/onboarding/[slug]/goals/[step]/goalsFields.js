@@ -152,13 +152,18 @@ const goalsFields = [
     ],
   },
   {
-    isIssuePage: true,
+    pageType: 'issuesPage',
     title: 'Tell us about some issues you care about and why.',
     fields: [],
   },
   {
-    isPledgePage: true,
+    pageType: 'pledgePage',
     title: 'Read and Take the Good Party Pledge.',
+    fields: [],
+  },
+  {
+    pageType: 'finalPage',
+    title: "We're crunching the numbers for Maine District 10.",
     fields: [],
   },
 ];

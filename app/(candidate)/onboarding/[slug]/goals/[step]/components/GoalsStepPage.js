@@ -4,8 +4,8 @@ import IssuesPage from './IssuesPage';
 import PledgePage from './pledgePage';
 
 export default function GoalsStepPage(props) {
-  const { fields, step, isIssuePage, isPledgePage } = props;
-  if (isIssuePage) {
+  const { fields, step, pageType } = props;
+  if (pageType === 'issuesPage') {
     return (
       <IssuesPage
         nextPath={`/goals/${step + 1}`}
@@ -14,7 +14,7 @@ export default function GoalsStepPage(props) {
       />
     );
   }
-  if (isPledgePage) {
+  if (pageType === 'pledgePage') {
     return (
       <PledgePage
         nextPath={`/goals/${step + 1}`}

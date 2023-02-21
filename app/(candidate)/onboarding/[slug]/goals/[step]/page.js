@@ -40,14 +40,14 @@ export default async function Page({ params }) {
   // }
 
   const stepFields = goalsFields[stepInt - 1];
-
+  const { pageType } = stepFields;
   let positions = [];
-  if (stepFields.isIssuePage) {
+  if (pageType === 'issuesPage') {
     ({ positions } = await fetchPositions());
   }
 
   let pledge;
-  if (stepFields.isPledgePage) {
+  if (pageType === 'pledgePage') {
     const res = await fetchContentByKey('pledge');
     pledge = res.content;
   }
@@ -62,8 +62,7 @@ export default async function Page({ params }) {
     fields: stepFields.fields,
     step: stepInt,
     pathname: `/goals/${stepInt}`,
-    isIssuePage: stepFields.isIssuePage,
-    isPledgePage: stepFields.isPledgePage,
+    pageType,
     pledge,
     positions,
   };
