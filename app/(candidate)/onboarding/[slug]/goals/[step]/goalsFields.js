@@ -156,6 +156,10 @@ const goalsFields = [
     title: 'Tell us about some issues you care about and why.',
     fields: [],
   },
+  {
+    title: 'Read and Take the Good Party Pledge.',
+    fields: [],
+  },
 ];
 
 export default goalsFields;

@@ -8,7 +8,6 @@ export default function GoalsStepPage(props) {
     <>
       {isIssuePage ? (
         <IssuesPage
-          inputFields={fields}
           nextPath={`/goals/${step + 1}`}
           campaignKey="goals"
           {...props}

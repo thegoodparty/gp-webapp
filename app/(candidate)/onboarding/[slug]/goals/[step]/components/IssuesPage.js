@@ -8,59 +8,38 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
+import TextField from '@shared/inputs/TextField';
 
 export default function IssuesPage({
-  inputFields,
   campaign,
-  campaignKey,
-  reGenerateAiCallback,
   nextPath,
-  nextPathFunc,
   slug,
   header,
   subHeader,
   positions,
   ...props
 }) {
-  const initialState = {};
-  const keys = [];
+  let initialState = {
+    positions: [],
+  };
+  const keys = ['positions'];
+  const campaignKey = 'positions';
 
-  inputFields.map((field) => {
-    if (field.initialValue) {
-      initialState[field.key] = field.initialValue;
-    } else {
-      initialState[field.key] = '';
-    }
-    keys.push(field.key);
-  });
-
-  if (campaign?.[campaignKey]) {
-    keys.forEach((key) => {
-      if (campaign[campaignKey][key]) {
-        initialState[key] = campaign[campaignKey][key];
-      }
-    });
+  if (campaign?.[campaignKey]?.topIssues) {
+    initialState = campaign[campaignKey].topIssues;
   }
   const [state, setState] = useState(initialState);
-  const [errors, setErrors] = useState({});
   const router = useRouter();
-  const user = getUserCookie(true);
   const [loading, setLoading] = useState(false);
 
   const canSave = () => {
-    for (let i = 0; i < inputFields.length; i++) {
-      const field = inputFields[i];
-      if (field.required) {
-        if (field.initialValue && state[field.key] === field.initialValue) {
-          return false;
-        }
-
-        if (!field.initialValue && state[field.key] === '') {
-          return false;
-        }
-        if (field.validate) {
-          return field.validate(state[field.key]);
-        }
+    if (!state.positions || state.positions.length === 0) {
+      return false;
+    }
+    for (let i = 0; i < state.positions.length; i++) {
+      const id = positions[i].id;
+      if (!state[`position-${id}`] || state[`position-${id}`] === '') {
+        return false;
       }
     }
     return true;
@@ -72,14 +51,10 @@ export default function IssuesPage({
     if (!updated[campaignKey]) {
       updated[campaignKey] = {};
     }
-    keys.forEach((key) => {
-      updated[campaignKey][key] = state[key];
-    });
+
+    updated[campaignKey].topIssues = state;
     await updateCampaign(updated);
     let path = nextPath;
-    if (!path && nextPathFunc) {
-      path = nextPathFunc({ ...state });
-    }
 
     router.push(`onboarding/${slug}${path}`);
   };
@@ -91,55 +66,38 @@ export default function IssuesPage({
     });
   };
 
-  const handleRegenerateAi = async () => {
-    setLoading(true);
-    await reGenerateAiCallback();
-    window.location.reload();
-  };
-
-  const canShowField = (field) => {
-    const { showKey, showCondition } = field;
-    return showCondition.includes(state[showKey]);
+  const onChangePositions = (positions) => {
+    onChangeField('positions', positions);
   };
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <div className="grid grid-cols-12 gap-4">
-        <div className={`mb-6 col-span-12 `}>
-          <PositionsSelector
-            positions={positions}
-            updateCallback={(positions) =>
-              onChangeCallback('positions', positions)
-            }
-            square
-          />
-        </div>
-        {inputFields.map((field) => (
-          <>
-            {(!field.hidden || canShowField(field)) && (
-              <RenderInputField
-                field={field}
-                onChangeCallback={onChangeField}
-                error={!!errors[field.key]}
-                positions={props.positions}
-                value={state[field.key]}
-              />
-            )}
-          </>
-        ))}
+      <div>
+        <PositionsSelector
+          positions={positions}
+          updateCallback={(positions) => onChangePositions(positions)}
+          square
+        />
       </div>
+      {state.positions?.map((position) => (
+        <div className="mt-6 mb-10">
+          Tell us your stance on {position.name} ({position.topIssue?.name})
+          <div>
+            <TextField
+              placeholder="Write here..."
+              multiline
+              rows={6}
+              fullWidth
+              value={state[`position-${position.id}`]}
+              onChange={(e) => {
+                onChangeField(`position-${position.id}`, e.target.value);
+              }}
+            />
+          </div>
+        </div>
+      ))}
 
       <div className="flex justify-center">
-        {user?.isAdmin && reGenerateAiCallback && (
-          <div className="mr-6">
-            <BlackButtonClient
-              onClick={handleRegenerateAi}
-              style={{ backgroundColor: 'blue' }}
-            >
-              <div className="font-black">Regenerate AI input (Admin)</div>
-            </BlackButtonClient>
-          </div>
-        )}
         {loading ? (
           <ReactLoading color="green" />
         ) : (
@@ -148,7 +106,6 @@ export default function IssuesPage({
           </BlackButtonClient>
         )}
       </div>
-      {/* {loading && <LoadingAnimation label="Generating responses" fullPage />} */}
     </OnboardingWrapper>
   );
 }

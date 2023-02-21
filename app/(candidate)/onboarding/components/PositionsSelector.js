@@ -30,6 +30,7 @@ export default function PositionsSelector({
     const sorted = newNonSelected.sort(comparePositions);
     setNonSelected(sorted);
     setInputValue('');
+    console.log('newS', newSelected);
     updateCallback(newSelected);
   };
 
