@@ -14,11 +14,24 @@ export default function PositionsSelector({
   positions,
   updateCallback,
   square = false,
+  initialSelected,
 }) {
   const sorted = positions.sort(comparePositions);
   const [nonSelected, setNonSelected] = useState(sorted);
   const [selected, setSelected] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    if (initialSelected) {
+      let newNonSelected = [...sorted];
+      initialSelected.forEach((initialItem) => {
+        newNonSelected = newNonSelected.filter((item) => {
+          return item.id !== initialItem.id;
+        });
+      });
+      setSelected(initialSelected);
+      setNonSelected(newNonSelected);
+    }
+  }, []);
 
   const addPosition = (position) => {
     const newSelected = [...selected, position];
@@ -30,7 +43,6 @@ export default function PositionsSelector({
     const sorted = newNonSelected.sort(comparePositions);
     setNonSelected(sorted);
     setInputValue('');
-    console.log('newS', newSelected);
     updateCallback(newSelected);
   };
 

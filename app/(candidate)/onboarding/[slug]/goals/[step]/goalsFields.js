@@ -157,6 +157,7 @@ const goalsFields = [
     fields: [],
   },
   {
+    isPledgePage: true,
     title: 'Read and Take the Good Party Pledge.',
     fields: [],
   },

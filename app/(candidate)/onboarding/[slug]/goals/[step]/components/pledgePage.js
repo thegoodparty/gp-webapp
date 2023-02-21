@@ -7,39 +7,34 @@ import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
 import TextField from '@shared/inputs/TextField';
+import CmsContentWrapper from '@shared/content/CmsContentWrapper';
+import contentfulHelper from 'helpers/contentfulHelper';
+import { Checkbox } from '@mui/material';
 
-export default function IssuesPage({
+export default function PledgePage({
   campaign,
   nextPath,
   slug,
   header,
   subHeader,
-  positions,
+  pledge,
   campaignKey,
   ...props
 }) {
   let initialState = {
-    positions: [],
+    pledged: false,
   };
-  const keys = ['positions'];
-  if (campaign?.[campaignKey]?.topIssues) {
-    initialState = campaign[campaignKey].topIssues;
+  const keys = ['pledged'];
+
+  if (campaign?.[campaignKey]?.pledged) {
+    initialState = { pledged: true };
   }
   const [state, setState] = useState(initialState);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const canSave = () => {
-    if (!state.positions || state.positions.length === 0) {
-      return false;
-    }
-    for (let i = 0; i < state.positions.length; i++) {
-      const id = positions[i].id;
-      if (!state[`position-${id}`] || state[`position-${id}`] === '') {
-        return false;
-      }
-    }
-    return true;
+    return state.pledged;
   };
 
   const handleSave = async () => {
@@ -49,7 +44,7 @@ export default function IssuesPage({
       updated[campaignKey] = {};
     }
 
-    updated[campaignKey].topIssues = state;
+    updated[campaignKey].pledged = state.pledged;
     await updateCampaign(updated);
     let path = nextPath;
 
@@ -63,38 +58,16 @@ export default function IssuesPage({
     });
   };
 
-  const onChangePositions = (positions) => {
-    onChangeField('positions', positions);
-  };
-
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <div>
-        <PositionsSelector
-          positions={positions}
-          updateCallback={(positions) => onChangePositions(positions)}
-          initialSelected={state.positions}
-          square
+      <CmsContentWrapper>{contentfulHelper(pledge?.content)}</CmsContentWrapper>
+      <div className="mt-4 flex items-center text-xl font-bold mb-10">
+        <Checkbox
+          checked={state.pledged}
+          onChange={(e) => onChangeField('pledged', e.target.checked)}
         />
+        &nbsp; &nbsp; {pledge?.cta}
       </div>
-      {state.positions?.map((position) => (
-        <div className="mt-6 mb-10">
-          Tell us your stance on {position.name} ({position.topIssue?.name})
-          <div>
-            <TextField
-              placeholder="Write here..."
-              multiline
-              rows={6}
-              fullWidth
-              value={state[`position-${position.id}`]}
-              onChange={(e) => {
-                onChangeField(`position-${position.id}`, e.target.value);
-              }}
-            />
-          </div>
-        </div>
-      ))}
-
       <div className="flex justify-center">
         {loading ? (
           <ReactLoading color="green" />

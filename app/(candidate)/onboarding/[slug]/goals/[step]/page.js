@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { fetchContentByKey } from 'helpers/fetchHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import GoalsStepPage from './components/GoalsStepPage';
@@ -45,6 +46,12 @@ export default async function Page({ params }) {
     ({ positions } = await fetchPositions());
   }
 
+  let pledge;
+  if (stepFields.isPledgePage) {
+    const res = await fetchContentByKey('pledge');
+    pledge = res.content;
+  }
+
   const childProps = {
     title: stepFields.title.replace(
       '[[NAME]]',
@@ -55,8 +62,10 @@ export default async function Page({ params }) {
     fields: stepFields.fields,
     step: stepInt,
     pathname: `/goals/${stepInt}`,
-    positions,
     isIssuePage: stepFields.isIssuePage,
+    isPledgePage: stepFields.isPledgePage,
+    pledge,
+    positions,
   };
   return <GoalsStepPage {...childProps} />;
 }
