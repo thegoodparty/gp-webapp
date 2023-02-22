@@ -1,5 +1,6 @@
 'use client';
 import OnboardingPage from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import CrunchingPage from './crunchingPage';
 import IssuesPage from './IssuesPage';
 import PledgePage from './pledgePage';
 
@@ -22,6 +23,9 @@ export default function GoalsStepPage(props) {
         {...props}
       />
     );
+  }
+  if (pageType === 'finalPage') {
+    return <CrunchingPage {...props} />;
   }
   return (
     <OnboardingPage

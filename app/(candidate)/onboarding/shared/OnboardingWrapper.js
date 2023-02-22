@@ -7,7 +7,13 @@ import JaredImg from 'public/images/campaign/jared.png';
 import AdminDelete from './AdminDelete';
 import { motion } from 'framer-motion';
 
-export default function OnboardingWrapper({ children, title, self, pathname }) {
+export default function OnboardingWrapper({
+  children,
+  title,
+  self,
+  pathname,
+  icon,
+}) {
   const router = useRouter();
   const goBack = () => {
     router.back();
@@ -22,7 +28,13 @@ export default function OnboardingWrapper({ children, title, self, pathname }) {
         BACK
       </div>
       <div className="relative mb-6 lg:mb-0 w-28 h-28  left-1/2 -ml-14  lg:absolute lg:-top-14 z-50">
-        <Image src={JaredImg} fill className="object-contain" />
+        {icon ? (
+          <div className="w-28 h-28 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white">
+            {icon}
+          </div>
+        ) : (
+          <Image src={JaredImg} fill className="object-contain" />
+        )}
       </div>
       <MaxWidth>
         <div
