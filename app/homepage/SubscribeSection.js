@@ -8,7 +8,7 @@ export default function SubscribeSection({ pageName = 'Home Page' }) {
         <h3 className="font-black text-3xl lg:text-5xl mb-3">
           GET ON THE LIST
         </h3>
-        <div className="text-lg font-light lg:w-[80%] mx-auto">
+        <div className="text-lg font-light lg:w-[80%] mx-auto text-left lg:text-center">
           Subscribe to our newsletter to get regular content about Good Party's
           efforts. We'll share what's new in the movement, highlight Good Party
           Certified candidates, and opportunities to get involved to give you

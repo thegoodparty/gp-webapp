@@ -7,7 +7,7 @@ import aboutImg from 'public/images/landing-pages/about-gp.png';
 export default function WhoWhySection() {
   return (
     <section className="pt-12 lg:my-20 relative border-t border-neutral-300 lg:border-0">
-      <div className="lg:w-[60%]">
+      <div className="lg:w-[60%]  xl:min-h-[800px]">
         <h2 className="font-black text-3xl mb-4">Who is Good Party?</h2>
         <div className="text-xl leading-relaxed mb-10">
           Good Party is a group of independent-minded citizens, technologists,
@@ -43,12 +43,12 @@ export default function WhoWhySection() {
           It's time to declare independence from the corrupt two-party system.
         </div>
       </div>
-      <div className="hidden lg:block absolute top-0 lg:left-[60%] xl:left-[70%] w-[715px] min-h-[620px]">
+      <div className="hidden lg:block absolute top-0 lg:left-[60%] w-[calc(50vw-128px)] min-h-[620px] xl:min-h-[800px]">
         <Image
           src={aboutImg}
           blur
           fill
-          className="object-contain object-left-top"
+          className="object-contain object-right-top"
         />
       </div>
     </section>

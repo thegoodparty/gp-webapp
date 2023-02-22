@@ -12,14 +12,16 @@ export default function BlogSection() {
         <div className="lg:w-[50%] mx-auto font-black text-3xl text-left  lg:text-center">
           Check out our blog for articles about running for office, Good Party's
           work, and more.
-          <Link href="/blog" className="text-lg mt-11 block">
-            <PurpleButton
-              id="blog-read-more"
-              style={{ backgroundColor: 'white', color: '#46002E' }}
-            >
-              READ MORE
-            </PurpleButton>
-          </Link>
+          <div className="text-center">
+            <Link href="/blog" className="text-lg mt-11 block">
+              <PurpleButton
+                id="blog-read-more"
+                style={{ backgroundColor: 'white', color: '#46002E' }}
+              >
+                READ MORE
+              </PurpleButton>
+            </Link>
+          </div>
         </div>
       </div>
     </RedPurpleSection>
