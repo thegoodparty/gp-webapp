@@ -102,43 +102,49 @@ export default function OnboardingPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <div className="max-w-[360px] mx-auto">
-        <div className="grid grid-cols-12 gap-4">
-          {inputFields.map((field) => (
-            <>
-              {(!field.hidden || canShowField(field)) && (
-                <RenderInputField
-                  field={field}
-                  onChangeCallback={onChangeField}
-                  error={!!errors[field.key]}
-                  positions={props.positions}
-                  value={state[field.key]}
-                />
-              )}
-            </>
-          ))}
-        </div>
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <div className="max-w-[360px] mx-auto">
+          <div className="grid grid-cols-12 gap-4">
+            {inputFields.map((field) => (
+              <>
+                {(!field.hidden || canShowField(field)) && (
+                  <RenderInputField
+                    field={field}
+                    onChangeCallback={onChangeField}
+                    error={!!errors[field.key]}
+                    positions={props.positions}
+                    value={state[field.key]}
+                  />
+                )}
+              </>
+            ))}
+          </div>
 
-        <div className="flex justify-center">
-          {user?.isAdmin && reGenerateAiCallback && (
-            <div className="mr-6">
+          <div className="flex justify-center">
+            {user?.isAdmin && reGenerateAiCallback && (
+              <div className="mr-6">
+                <BlackButtonClient
+                  onClick={handleRegenerateAi}
+                  style={{ backgroundColor: 'blue' }}
+                >
+                  <div className="font-black">Regenerate AI input (Admin)</div>
+                </BlackButtonClient>
+              </div>
+            )}
+            {loading ? (
+              <ReactLoading color="green" />
+            ) : (
               <BlackButtonClient
-                onClick={handleRegenerateAi}
-                style={{ backgroundColor: 'blue' }}
+                onClick={handleSave}
+                disabled={!canSave()}
+                type="submit"
               >
-                <div className="font-black">Regenerate AI input (Admin)</div>
+                <div>NEXT</div>
               </BlackButtonClient>
-            </div>
-          )}
-          {loading ? (
-            <ReactLoading color="green" />
-          ) : (
-            <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-              <div>NEXT</div>
-            </BlackButtonClient>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      </form>
     </OnboardingWrapper>
   );
 }

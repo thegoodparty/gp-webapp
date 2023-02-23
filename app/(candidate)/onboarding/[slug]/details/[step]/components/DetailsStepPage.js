@@ -4,13 +4,13 @@ import CrunchingPage from './crunchingPage';
 import IssuesPage from './IssuesPage';
 import PledgePage from './pledgePage';
 
-export default function GoalsStepPage(props) {
+export default function DetailsGoalsStepPage(props) {
   const { fields, step, pageType } = props;
   if (pageType === 'issuesPage') {
     return (
       <IssuesPage
-        nextPath={`/goals/${step + 1}`}
-        campaignKey="goals"
+        nextPath={`/details/${step + 1}`}
+        campaignKey="details"
         {...props}
       />
     );
@@ -18,8 +18,8 @@ export default function GoalsStepPage(props) {
   if (pageType === 'pledgePage') {
     return (
       <PledgePage
-        nextPath={`/goals/${step + 1}`}
-        campaignKey="goals"
+        nextPath={`/details/${step + 1}`}
+        campaignKey="details"
         {...props}
       />
     );
@@ -30,8 +30,8 @@ export default function GoalsStepPage(props) {
   return (
     <OnboardingPage
       inputFields={fields}
-      nextPath={`/goals/${step + 1}`}
-      campaignKey="goals"
+      nextPath={`/details/${step + 1}`}
+      campaignKey="details"
       {...props}
     />
   );

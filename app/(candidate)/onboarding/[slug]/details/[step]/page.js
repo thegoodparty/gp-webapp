@@ -5,8 +5,8 @@ import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import GoalsStepPage from './components/GoalsStepPage';
-import goalsFields from './goalsFields';
+import DetailsStepPage from './components/DetailsStepPage';
+import detailsFields from './detailsFields';
 
 export const fetchUserCampaignServer = async () => {
   const api = gpApi.campaign.onboarding.findByUser;
@@ -39,7 +39,7 @@ export default async function Page({ params }) {
   //   ({ campaign } = await generateWhyGoals());
   // }
 
-  const stepFields = goalsFields[stepInt - 1];
+  const stepFields = detailsFields[stepInt - 1];
   const { pageType } = stepFields;
   let positions = [];
   if (pageType === 'issuesPage') {
@@ -53,18 +53,16 @@ export default async function Page({ params }) {
   }
 
   const childProps = {
-    title: stepFields.title.replace(
-      '[[NAME]]',
-      `${campaign.firstName} ${campaign.lastName}`,
-    ),
+    title: stepFields.title,
+    subTitle: stepFields.subTitle,
     slug,
     campaign,
     fields: stepFields.fields,
     step: stepInt,
-    pathname: `/goals/${stepInt}`,
+    pathname: `/details/${stepInt}`,
     pageType,
     pledge,
     positions,
   };
-  return <GoalsStepPage {...childProps} />;
+  return <DetailsStepPage {...childProps} />;
 }

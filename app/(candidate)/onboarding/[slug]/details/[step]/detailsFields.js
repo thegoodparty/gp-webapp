@@ -2,21 +2,12 @@ import { isValidPhone } from '@shared/inputs/PhoneInput';
 import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 import { flatStates, states } from 'helpers/statesHelper';
 
-const goalsFields = [
+const detailsFields = [
   {
-    title: "Great to meet you [[NAME]]! What's your phone number?",
-    fields: [
-      {
-        key: 'phone',
-        label: 'Phone Number',
-        required: true,
-        type: 'phone',
-        validate: isValidPhone,
-      },
-    ],
-  },
-  {
-    title: "Great! What's your zip code?",
+    title:
+      "Hi! I'm Jared. I just need a little bit of information to get you started...",
+    subTitle:
+      "We'll help you figure out the best way to run a successful campaign where you live",
     fields: [
       {
         key: 'zip',
@@ -29,6 +20,7 @@ const goalsFields = [
   },
   {
     title: 'Are you a US Citizen?',
+    subTitle: 'We use this to verify your eligibility for certain offices',
     fields: [
       {
         key: 'citizen',
@@ -41,6 +33,7 @@ const goalsFields = [
   },
   {
     title: 'What is your date of birth?',
+    subTitle: 'We use this to verify your eligibility for certain offices',
     fields: [
       {
         key: 'dob',
@@ -168,4 +161,4 @@ const goalsFields = [
   },
 ];
 
-export default goalsFields;
+export default detailsFields;

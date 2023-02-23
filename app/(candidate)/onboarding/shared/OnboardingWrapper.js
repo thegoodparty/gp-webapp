@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 export default function OnboardingWrapper({
   children,
   title,
+  subTitle,
   self,
   pathname,
   icon,
@@ -44,9 +45,10 @@ export default function OnboardingWrapper({
           BACK
         </div>
         <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)]">
-          <h1 className="font-black text-4xl text-center  tracking-tight pb-14">
-            {title}
-          </h1>
+          <div className="text-center  tracking-tight pb-14">
+            <h1 className="font-black text-4xl ">{title}</h1>
+            {subTitle && <h2 className="zinc-500 mt-8">{subTitle}</h2>}
+          </div>
           <AnimatePresence mode="wait">
             <motion.div
               initial={{ x: 300, opacity: 0 }}
@@ -57,7 +59,6 @@ export default function OnboardingWrapper({
               {children}
             </motion.div>
           </AnimatePresence>
-
           {self !== '/onboarding' && <AdminDelete />}
         </div>
       </MaxWidth>
