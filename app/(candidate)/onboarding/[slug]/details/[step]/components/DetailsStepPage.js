@@ -1,6 +1,6 @@
 'use client';
 import OnboardingPage from 'app/(candidate)/onboarding/shared/OnboardingPage';
-import CrunchingPage from './crunchingPage';
+import CrunchingPage from './CrunchingPage';
 import IssuesPage from './IssuesPage';
 import PledgePage from './pledgePage';
 
