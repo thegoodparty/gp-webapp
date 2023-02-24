@@ -73,8 +73,16 @@ export default function RenderInputField({
             onChange={(e) => onChangeCallback(field.key, e.target.value)}
             error={error}
           >
-            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" control={<Radio />} label="No" />
+            <FormControlLabel
+              value="yes"
+              control={<Radio />}
+              label={field.options ? field.options[0] : 'Yes'}
+            />
+            <FormControlLabel
+              value="no"
+              control={<Radio />}
+              label={field.options ? field.options[1] : 'No'}
+            />
           </RadioGroup>
         </div>
       )}

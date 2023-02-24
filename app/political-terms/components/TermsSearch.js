@@ -10,8 +10,6 @@ export default function TermsSearch(props) {
   const { glossaryItems } = props;
   const router = useRouter();
 
-  console.log('lossaryItems', glossaryItems);
-
   return (
     <div className={styles.wrapper}>
       {glossaryItems && glossaryItems.length > 0 ? (
