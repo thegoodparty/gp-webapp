@@ -1,11 +1,10 @@
 'use client';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import JaredImg from 'public/images/campaign/jared.png';
 import AdminDelete from './AdminDelete';
-import { motion } from 'framer-motion';
 
 export default function OnboardingWrapper({
   children,
@@ -54,7 +53,7 @@ export default function OnboardingWrapper({
               initial={{ x: 300, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
-              key={pathname}
+              key={`${pathname} ${title}`}
             >
               {children}
             </motion.div>
