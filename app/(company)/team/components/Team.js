@@ -195,7 +195,7 @@ export default function Team() {
                 >
                   {member.name}
                 </div>
-                <div className="" data-cy="member-role">
+                <div className=" " data-cy="member-role">
                   {member.role}
                 </div>
               </div>
