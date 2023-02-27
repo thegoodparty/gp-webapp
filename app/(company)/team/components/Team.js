@@ -90,7 +90,7 @@ export const TEAM_MEMBERS = [
     partyRole: 'Social Storyteller',
   },
   {
-    name: 'Colton Hess ',
+    name: 'Colton Hess',
     role: 'Creator Community Lead',
     img: 'https://assets.goodparty.org/team/colton-goodparty.png',
     flipImg: 'https://assets.goodparty.org/team/colton-party.jpg',
