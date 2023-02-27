@@ -55,7 +55,7 @@ export default function Banner({ banner }) {
         <div className="col-span-12 lg:col-span-6">
           <div className="h-60 relative w-full lg:hidden">
             <Image
-              src={`https:${smallImage.url}`}
+              src={`https:${smallImage?.url}`}
               alt={smallImage.alt}
               sizes="100vw"
               fill
@@ -64,7 +64,7 @@ export default function Banner({ banner }) {
           </div>
           <div className="h-60 relative w-full hidden lg:block">
             <Image
-              src={`https:${largeImage.url}`}
+              src={`https:${largeImage?.url}`}
               alt={largeImage.alt}
               sizes="100vw"
               fill
