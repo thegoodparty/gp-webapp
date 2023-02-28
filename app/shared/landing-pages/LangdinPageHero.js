@@ -1,6 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import EmailForm from '@shared/inputs/EmailForm';
 
 import bgImg from '/public/images/landing-pages/hero-bg.png';
 
