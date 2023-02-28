@@ -63,7 +63,7 @@ export default function Steps() {
                       {step.status}
                     </div>
                     <div className="mt-1">
-                      {step.completedSteps} of {step.stepCount} items
+                      {step.completedSteps} of {step.stepCount} steps
                     </div>
                   </div>
                   <div>

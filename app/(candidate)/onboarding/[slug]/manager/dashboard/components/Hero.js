@@ -1,9 +1,6 @@
 import PurpleButton from '@shared/buttons/PurpleButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import { FaRegLightbulb } from 'react-icons/fa';
-import { IoRocket } from 'react-icons/io';
-import { MdHowToVote } from 'react-icons/md';
 
 import bgImg from '/public/images/landing-pages/hero-bg.png';
 
@@ -13,21 +10,21 @@ export default function Hero() {
       <div className=" bg-white rounded-2xl">
         <div className="grid grid-cols-12 gap-2">
           <div className="col-span-12 lg:col-span-6">
-            <div className="p-6">
+            <div className="p-8">
               <h1 className="font-black text-5xl mb-4">Campaign Manager</h1>
-              <h2 className="text-zinc-500 text-lg mb-8">
+              <h2 className="text-zinc-500 text-lg mb-8 leading-relaxed">
                 Good Party will be with you every step of the way so you can run
                 a successful campaign.
               </h2>
-              <div className="bg-slate-100 py-6 px-10  rounded-lg text-center">
-                <div className="text-teal-400 text-xs font-black mb-1">
-                  NEXT STEP
-                </div>
-                <div className="font-bold text-xl mb-1">Launch</div>
-                <div className="mb-5">step 2 out of 12</div>
-                <PurpleButton>
-                  <div className="px-4">Continue</div>
-                </PurpleButton>
+              <div className="bg-teal-400 text-white text-xs font-black mb-4 mt-14 inline-block py-1 px-2 rounded">
+                NEXT STEP
+              </div>
+              <div className="flex items-baseline mb-5">
+                <div className="font-bold text-2xl">Launch</div>
+                <div className="ml-3 text-zinc-500">step 2 out of 12</div>
+              </div>
+              <div className="bg-orange-500 text-white py-4 px-12 inline-block rounded-full">
+                <div className="font-bold">Continue</div>
               </div>
             </div>
           </div>
