@@ -13,13 +13,13 @@ export default function Hero() {
       <div className=" bg-white rounded-2xl">
         <div className="grid grid-cols-12 gap-2">
           <div className="col-span-12 lg:col-span-6">
-            <div className=" px-16 py-14">
+            <div className="p-6">
               <h1 className="font-black text-5xl mb-4">Campaign Manager</h1>
               <h2 className="text-zinc-500 text-lg mb-8">
                 Good Party will be with you every step of the way so you can run
                 a successful campaign.
               </h2>
-              <div className="bg-slate-100 py-6 px-10 inline-block rounded-lg text-center">
+              <div className="bg-slate-100 py-6 px-10  rounded-lg text-center">
                 <div className="text-teal-400 text-xs font-black mb-1">
                   NEXT STEP
                 </div>
