@@ -79,7 +79,7 @@ export default function IssuesPage({
           />
         </div>
         {state.positions?.map((position) => (
-          <div className="mt-6 mb-10">
+          <div className="mt-6 mb-10" key={position.name}>
             Tell us your stance on {position.name} ({position.topIssue?.name})
             <div>
               <TextField

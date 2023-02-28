@@ -1,6 +1,6 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import ReactLoading from 'react-loading';
@@ -69,7 +69,7 @@ export default function PledgePage({
   return (
     <OnboardingWrapper {...props} slug={slug}>
       {steps.map((step) => (
-        <>
+        <Fragment key={step}>
           <div className="bg-gray-200 p-6 font-bold rounded mb-6">
             {pledge[`title${step}`]}
           </div>
@@ -87,7 +87,7 @@ export default function PledgePage({
               &nbsp; &nbsp; I agree
             </div>
           </div>
-        </>
+        </Fragment>
       ))}
 
       <div className="flex justify-center">
