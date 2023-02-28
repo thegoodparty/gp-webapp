@@ -68,17 +68,17 @@ export default function Steps() {
                   </div>
                   <div>
                     {step.status === 'Completed' && (
-                      <div className="underline text-gray-600 px-6 py-3  font-bold">
+                      <div className="underline text-gray-600 px-6 py-4  font-bold">
                         View Details
                       </div>
                     )}
                     {step.status === 'In Progress' && (
-                      <div className="bg-orange-100 text-orange-600 px-12 py-3 rounded-full  font-black">
+                      <div className="bg-orange-500 text-white px-12 py-4 rounded-full  font-black">
                         Continue
                       </div>
                     )}
                     {step.status === 'Not Started' && (
-                      <div className="underline text-gray-600 px-6 py-3  font-bold">
+                      <div className="underline text-gray-600 px-6 py-4  font-bold">
                         View Steps
                       </div>
                     )}
