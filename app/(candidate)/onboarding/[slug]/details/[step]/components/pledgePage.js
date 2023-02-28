@@ -22,7 +22,9 @@ export default function PledgePage({
   ...props
 }) {
   let initialState = {
-    pledged: false,
+    pledged1: false,
+    pledged2: false,
+    pledged3: false,
   };
   const keys = ['pledged'];
 
@@ -33,8 +35,12 @@ export default function PledgePage({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  if (!pledge) {
+    return null;
+  }
+
   const canSave = () => {
-    return state.pledged;
+    return state.pledged1 && state.pledged2 && state.pledged3;
   };
 
   const handleSave = async () => {
@@ -58,16 +64,32 @@ export default function PledgePage({
     });
   };
 
+  const steps = ['1', '2', '3'];
+
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <CmsContentWrapper>{contentfulHelper(pledge?.content)}</CmsContentWrapper>
-      <div className="mt-4 flex items-center text-xl font-bold mb-10">
-        <Checkbox
-          checked={state.pledged}
-          onChange={(e) => onChangeField('pledged', e.target.checked)}
-        />
-        &nbsp; &nbsp; {pledge?.cta}
-      </div>
+      {steps.map((step) => (
+        <>
+          <div className="bg-gray-200 p-6 font-bold rounded mb-6">
+            {pledge[`title${step}`]}
+          </div>
+          <div className="px-6">
+            <CmsContentWrapper>
+              {contentfulHelper(pledge[`content${step}`])}
+            </CmsContentWrapper>
+            <div className="mt-4 flex items-center font-bold mb-10">
+              <Checkbox
+                checked={state[`pledged${step}`]}
+                onChange={(e) =>
+                  onChangeField(`pledged${step}`, e.target.checked)
+                }
+              />
+              &nbsp; &nbsp; I agree
+            </div>
+          </div>
+        </>
+      ))}
+
       <div className="flex justify-center">
         {loading ? (
           <ReactLoading color="green" />

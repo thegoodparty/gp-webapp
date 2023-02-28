@@ -19,21 +19,7 @@ const detailsFields = [
     ],
   },
   {
-    title: 'Are you a US Citizen?',
-    subTitle: 'We use this to verify your eligibility for certain offices',
-    fields: [
-      {
-        key: 'citizen',
-        label: '',
-        required: true,
-        type: 'radio',
-        options: ['Yes', 'No'],
-      },
-    ],
-  },
-  {
-    title: 'What is your date of birth?',
-    subTitle: 'We use this to verify your eligibility for certain offices',
+    title: "Let's verify your eligibility to run for office.",
     fields: [
       {
         key: 'dob',
@@ -41,8 +27,16 @@ const detailsFields = [
         required: true,
         type: 'date',
       },
+      {
+        key: 'citizen',
+        label: 'Are you a U.S. Citizen?',
+        required: true,
+        type: 'radio',
+        options: ['Yes', 'No'],
+      },
     ],
   },
+
   {
     title: "Thanks! What's your political affiliation, if you have any?",
     fields: [
@@ -176,6 +170,46 @@ const detailsFields = [
           'Forward',
           'Other',
         ],
+      },
+    ],
+  },
+  {
+    title: 'Tell us about your prior experience',
+    subTitle:
+      "Telling potential voters about what you've worked on in the past and any experience that is relevant for the role you plan to run for will increase your odds of winning.",
+    fields: [
+      {
+        key: 'pastExperience',
+        label: '',
+        placeholder: 'I am a placeholder',
+        required: true,
+        type: 'text',
+        rows: 6,
+      },
+    ],
+  },
+  {
+    title: 'What is your current occupation?',
+    subTitle: 'Missing text Mateo',
+    fields: [
+      {
+        key: 'occupation',
+        label: '',
+        required: true,
+        type: 'text',
+      },
+    ],
+  },
+  {
+    title: 'What is a fun fact about yourself?',
+    subTitle: 'Missing text Mateo',
+    fields: [
+      {
+        key: 'funFact',
+        label: '',
+        required: true,
+        type: 'text',
+        rows: 3,
       },
     ],
   },

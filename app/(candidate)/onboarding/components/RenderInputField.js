@@ -28,6 +28,7 @@ export default function RenderInputField({
           name={field.label}
           fullWidth
           value={value}
+          placeholder={field.placeholder || ''}
           onChange={(e) => onChangeCallback(field.key, e.target.value)}
           multiline={!!field.rows}
           rows={field.rows || 1}
@@ -60,10 +61,10 @@ export default function RenderInputField({
       )}
 
       {field.type === 'radio' && (
-        <div className="mb-4 flex justify-center">
+        <div className="mb-4 flex justify-center items-center flex-col">
           <div className="text-zinc-500 mb-2">
             {field.label}
-            {field.required && <sup> *</sup>}
+            {field.label && field.required && <sup> *</sup>}
           </div>
           <RadioGroup
             row
