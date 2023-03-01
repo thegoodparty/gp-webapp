@@ -231,3 +231,12 @@ const detailsFields = [
 ];
 
 export default detailsFields;
+
+let detailFieldsCount = 0;
+detailsFields.forEach((step) => {
+  detailFieldsCount += step.fields?.length || 0;
+});
+
+detailFieldsCount = detailFieldsCount + 2; // pledge and top issues
+console.log('detailFieldsCount', detailFieldsCount);
+export { detailFieldsCount };

@@ -50,7 +50,8 @@ export default function PledgePage({
       updated[campaignKey] = {};
     }
 
-    updated[campaignKey].pledged = state.pledged;
+    updated[campaignKey].pledged =
+      state.pledged1 && state.pledged2 && state.pledged3;
     await updateCampaign(updated);
     let path = nextPath;
 

@@ -7,6 +7,8 @@ import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie, setCookie } from 'helpers/cookieHelper';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import Link from 'next/link';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 const inputFields = [
   {
@@ -62,6 +64,7 @@ export async function fetchUserCampaign() {
 export default function OnboardingStartPage(props) {
   const user = getUserCookie(true);
   const router = useRouter();
+  const snackbarState = useHookstate(globalSnackbarState);
 
   useEffect(() => {
     checkCampaigns();

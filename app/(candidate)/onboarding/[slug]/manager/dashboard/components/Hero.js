@@ -1,10 +1,12 @@
 import PurpleButton from '@shared/buttons/PurpleButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
+import Link from 'next/link';
+import NextStepButton from './NextStepButton';
 
 import bgImg from '/public/images/landing-pages/hero-bg.png';
 
-export default function Hero() {
+export default function Hero({ nextStep, campaignSteps, campaign }) {
   return (
     <MaxWidth>
       <div className=" bg-white rounded-2xl">
@@ -20,12 +22,19 @@ export default function Hero() {
                 NEXT STEP
               </div>
               <div className="flex items-baseline mb-5">
-                <div className="font-bold text-2xl">Launch</div>
-                <div className="ml-3 text-zinc-500">step 2 out of 12</div>
+                <div className="font-bold text-2xl">
+                  {campaignSteps[nextStep.sectionIndex]?.title}
+                </div>
+                <div className="ml-3 text-zinc-500">
+                  step {nextStep.step} out of{' '}
+                  {campaignSteps[nextStep.sectionIndex]?.steps.length}
+                </div>
               </div>
-              <div className="bg-orange-500 text-white py-4 px-12 inline-block rounded-full">
-                <div className="font-bold">Continue</div>
-              </div>
+              <NextStepButton
+                nextStep={nextStep}
+                campaignSteps={campaignSteps}
+                campaign={campaign}
+              />
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 relative">
