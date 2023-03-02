@@ -31,7 +31,7 @@ export default function PositionsSelector({
       setSelected(initialSelected);
       setNonSelected(newNonSelected);
     }
-  }, []);
+  }, [initialSelected, sorted]);
 
   const addPosition = (position) => {
     const newSelected = [...selected, position];
@@ -89,6 +89,7 @@ export default function PositionsSelector({
         )}
         {selected.map((position) => (
           <div
+            key={position.id}
             className="issue inline-block bg-gray-200 rounded py-2 px-4 mt-3 mr-3 font-black cursor-pointer transition hover:bg-neutral-200"
             onClick={() => removePosition(position)}
           >

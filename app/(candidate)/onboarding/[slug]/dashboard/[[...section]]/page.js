@@ -1,8 +1,8 @@
+export const dynamic = 'force-dynamic';
+
 import Dashboard from './components/Dashboard';
 import campaignSteps, { generateCampaignStatus } from './campaignSteps';
 import { fetchUserCampaignServer } from '../../details/[step]/page';
-
-// export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }) {
   const { slug, section } = params;
