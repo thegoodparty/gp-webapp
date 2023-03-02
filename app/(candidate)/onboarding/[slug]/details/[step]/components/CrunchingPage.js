@@ -16,7 +16,7 @@ export default function CrunchingPage({ slug, ...props }) {
         <strong>Virtual Campaign Manager.</strong>
       </div>
       <div className="flex justify-center">
-        <Link href={`/onboarding/${slug}/manager/dashboard`}>
+        <Link href={`/onboarding/${slug}/dashboard`}>
           <BlackButtonClient>
             <div>NEXT</div>
           </BlackButtonClient>

@@ -1,18 +1,20 @@
-import { fetchUserCampaignServer } from '../../details/[step]/page';
-import Dashboard from './components/Dashbaord';
+import Dashboard from './components/Dashboard';
 import campaignSteps, { generateCampaignStatus } from './campaignSteps';
+import { fetchUserCampaignServer } from '../../details/[step]/page';
 
 // export const dynamic = 'force-dynamic';
 
 export default async function Page({ params }) {
-  const { slug } = params;
+  const { slug, section } = params;
   let { campaign } = await fetchUserCampaignServer();
   if (campaign?.slug !== slug) {
     redirect('/onboarding');
   }
 
+  const sectionIndex =
+    section && section.length > 0 ? parseInt(section[0]) - 1 : false;
+
   const campaignStatus = generateCampaignStatus(campaign);
-  console.log('status', campaignStatus);
 
   const nextStep = { ...campaignStatus.nextStep };
   delete campaignStatus.nextStep;
@@ -22,6 +24,7 @@ export default async function Page({ params }) {
     campaignSteps,
     campaignStatus,
     nextStep,
+    sectionIndex,
   };
 
   return <Dashboard {...childProps} />;
