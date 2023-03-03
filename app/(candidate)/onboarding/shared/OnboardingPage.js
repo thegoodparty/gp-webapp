@@ -16,8 +16,6 @@ export default function OnboardingPage({
   nextPath,
   nextPathFunc,
   slug,
-  header,
-  subHeader,
   ...props
 }) {
   const initialState = {};

@@ -1,241 +1,96 @@
-import { isValidPhone } from '@shared/inputs/PhoneInput';
-import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
-import { flatStates, states } from 'helpers/statesHelper';
-
-const detailsFields = [
+const goalsFields = [
   {
-    title:
-      "Hi! I'm Jared. I just need a little bit of information to get you started...",
+    title: 'Tell us why you are running.',
     subTitle:
-      "We'll help you figure out the best way to run a successful campaign where you live",
+      'Candidates who have a compelling story have a better chance of winning. Tell us a little about you and use our AI to help build your story.',
     fields: [
       {
-        key: 'zip',
-        label: 'Zip Code',
-        required: true,
-        type: 'text',
-        validate: validateZip,
-      },
-    ],
-  },
-  {
-    title: "Let's verify your eligibility to run for office.",
-    fields: [
-      {
-        key: 'dob',
-        label: 'Date of Birth',
-        required: true,
-        type: 'date',
-      },
-      {
-        key: 'citizen',
-        label: 'Are you a U.S. Citizen?',
-        required: true,
-        type: 'radio',
-        options: ['Yes', 'No'],
-      },
-    ],
-  },
-
-  {
-    title: "Thanks! What's your political affiliation, if you have any?",
-    fields: [
-      {
-        key: 'party',
-        label: 'Political Party Affiliation (select one)',
-        required: true,
-        type: 'select',
-        options: [
-          'Independent',
-          'Green Party',
-          'Libertarian',
-          'SAM',
-          'Forward',
-          'Other',
-        ],
-      },
-    ],
-  },
-  {
-    title: 'Do you know where you want to run?',
-    fields: [
-      {
-        key: 'knowRun',
+        key: 'whyRunning',
         label: '',
-        required: true,
-        type: 'radio',
-        options: ['Yes, I do', 'I need help'],
-      },
-      {
-        key: 'state',
-        label: 'State',
-        type: 'select',
-        options: flatStates,
-        hidden: true,
-        showKey: 'knowRun',
-        showCondition: ['yes'],
-      },
-      {
-        key: 'office',
-        label: 'Office',
-        type: 'select',
-        hidden: true,
-        showKey: 'knowRun',
-        showCondition: ['yes'],
-        options: [
-          'President',
-          'US Senate',
-          'US House of Representatives',
-          'Governor',
-          'Lieutenant Governor',
-          'Attorney General',
-          'Comptroller',
-          'Treasurer',
-          'Secretary of State',
-          'State Supreme Court Justice',
-          'State Senate',
-          'State House of Representatives',
-          'County Executive',
-          'Mayor',
-          'District Attorney',
-          'Sheriff',
-          'Clerk',
-          'Auditor',
-          'Public Administrator',
-          'Judge',
-          'County Commissioner',
-          'Council member',
-          'School Board',
-        ],
-      },
-      {
-        key: 'district',
-        label: 'District',
-        type: 'text',
-        hidden: true,
-        showKey: 'office',
-        showCondition: [
-          'US House of Representatives',
-          'State Senate',
-          'State House of Representatives',
-          'County Commissioner',
-          'Council member',
-          'School Board',
-        ],
-      },
-    ],
-  },
-  {
-    title: 'Have you run for office before?',
-    fields: [
-      {
-        key: 'runBefore',
-        label: '',
-        required: true,
-        type: 'radio',
-        options: ['Yes', 'No'],
-      },
-      {
-        key: 'officeRunBefore',
-        label: 'What office?',
-        type: 'text',
-        hidden: true,
-        showKey: 'runBefore',
-        showCondition: ['yes'],
-      },
-    ],
-  },
-  {
-    title: 'Have you ever been a registered member of a political party?',
-    fields: [
-      {
-        key: 'registeredBefore',
-        label: '',
-        required: true,
-        type: 'radio',
-        options: ['Yes', 'No'],
-      },
-      {
-        key: 'partyBefore',
-        label: 'Which Party?',
-        type: 'select',
-        hidden: true,
-        showKey: 'registeredBefore',
-        showCondition: ['yes'],
-        options: [
-          'Independent',
-          'Green Party',
-          'Libertarian',
-          'SAM',
-          'Forward',
-          'Other',
-        ],
-      },
-    ],
-  },
-  {
-    title: 'Tell us about your prior experience',
-    subTitle:
-      "Telling potential voters about what you've worked on in the past and any experience that is relevant for the role you plan to run for will increase your odds of winning.",
-    fields: [
-      {
-        key: 'pastExperience',
-        label: '',
-        placeholder: 'I am a placeholder',
         required: true,
         type: 'text',
         rows: 6,
+        enhanceAi: true,
       },
     ],
   },
   {
-    title: 'What is your current occupation?',
-    subTitle: 'Missing text Mateo',
+    title: 'Provide the Date of Election',
+    subTitle:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id lorem dapibus, porta lorem vitae, vehicula nisi. Aenean non congue metus. Nam vel enim.',
     fields: [
       {
-        key: 'occupation',
-        label: '',
+        key: 'electionDate',
+        label: 'Date of Election',
         required: true,
-        type: 'text',
+        type: 'date',
       },
     ],
   },
   {
-    title: 'What is a fun fact about yourself?',
-    subTitle: 'Missing text Mateo',
+    title: 'Have you filed a statement of candidacy?',
+    subTitle:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id lorem dapibus, porta lorem vitae, vehicula nisi. Aenean non congue metus. Nam vel enim.',
     fields: [
       {
-        key: 'funFact',
+        key: 'filedStatement',
         label: '',
         required: true,
+        type: 'radio',
+      },
+      {
+        key: 'statementName',
+        label: 'Great! Tell Us More. What is the name on the statement?',
+        placeHolder: 'Name',
         type: 'text',
-        rows: 3,
+        hidden: true,
+        showKey: 'filedStatement',
+        showCondition: ['yes'],
+      },
+      {
+        key: 'campaignCommittee',
+        label: 'Campaign Committee',
+        placeHolder: 'Campaign Committee',
+        type: 'text',
+        hidden: true,
+        showKey: 'filedStatement',
+        showCondition: ['yes'],
       },
     ],
   },
   {
-    pageType: 'issuesPage',
-    title: 'Tell us about some issues you care about and why.',
-    fields: [],
+    title: 'Who are you running against?',
+    subTitle:
+      "List the name or describe you will be running against. We'll use this information to generate a Tully Box for you, so you will know the best approach against your competition",
+    fields: [
+      {
+        key: 'runningAgainstName',
+        label: 'Name',
+        type: 'text',
+      },
+      {
+        key: 'runningAgainstDescription',
+        label: 'Description',
+        type: 'text',
+        rows: 4,
+      },
+    ],
   },
   {
-    pageType: 'pledgePage',
-    title: 'Read and Take the Good Party Pledge.',
-    fields: [],
-  },
-  {
-    pageType: 'finalPage',
-    title: "We're crunching the numbers for Maine District 10.",
+    title: 'Messaging Strategy',
+    pageType: 'messagingStrategy',
+    subTitle:
+      "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
     fields: [],
   },
 ];
 
-export default detailsFields;
+export default goalsFields;
 
-let detailFieldsCount = 0;
-detailsFields.forEach((step) => {
-  detailFieldsCount += step.fields?.length || 0;
+let goalsFieldsCount = 0;
+goalsFields.forEach((step) => {
+  goalsFieldsCount += step.fields?.length || 0;
 });
 
-detailFieldsCount = detailFieldsCount + 2; // pledge and top issues
-export { detailFieldsCount };
+// goalsFieldsCount = goalsFieldsCount + 2; // pledge and top issues
+export { goalsFieldsCount };

@@ -122,6 +122,10 @@ export default function RenderInputField({
           }
         />
       )}
+
+      {field.enhanceAi && (
+        <div className="mt-4">Enhance with AI (coming soon)</div>
+      )}
     </div>
   );
 }

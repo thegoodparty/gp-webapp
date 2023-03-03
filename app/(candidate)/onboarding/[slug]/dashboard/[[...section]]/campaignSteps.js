@@ -2,6 +2,7 @@ import { FaRegLightbulb } from 'react-icons/fa';
 import { SlRocket } from 'react-icons/sl';
 import { MdHowToVote } from 'react-icons/md';
 import { detailFieldsCount } from '../../details/[step]/detailsFields';
+import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
 
 const campaignSteps = [
   {
@@ -23,7 +24,7 @@ const campaignSteps = [
         title: 'Goals & Objectives',
         subTitle:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: 7,
+        steps: goalsFieldsCount,
       },
       {
         key: 'strategy',
@@ -104,19 +105,26 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details } = campaign;
-  if (details) {
-    status.preLaunch.status = 'In Progress';
-    status.preLaunch.details = {};
-    status.preLaunch.details.status = 'In Progress';
-    const completedSteps = Object.keys(details).length;
-    status.preLaunch.details.completedSteps = completedSteps;
-    if (completedSteps === detailFieldsCount && details.pledged) {
-      status.preLaunch.details.status = 'Completed';
-      status.preLaunch.completedSteps++;
-      status.nextStep.step++;
+  const { details, goals } = campaign;
+  const preLaunchSections = [
+    { key: 'details', value: details, count: detailFieldsCount },
+    { key: 'goals', value: goals, count: goalsFieldsCount },
+  ];
+
+  preLaunchSections.forEach((section) => {
+    if (section) {
+      status.preLaunch.status = 'In Progress';
+      status.preLaunch[section.key] = {};
+      status.preLaunch[section.key].status = 'In Progress';
+      const completedSteps = Object.keys(section.value).length;
+      status.preLaunch[section.key].completedSteps = completedSteps;
+      if (completedSteps >= section.count) {
+        status.preLaunch[section.key].status = 'Completed';
+        status.preLaunch.completedSteps++;
+        status.nextStep.step++;
+      }
     }
-  }
+  });
 
   return status;
 };

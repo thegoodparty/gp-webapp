@@ -224,7 +224,7 @@ const detailsFields = [
     fields: [],
   },
   {
-    pageType: 'finalPage',
+    pageType: 'finalDetailsPage',
     title: "We're crunching the numbers for Maine District 10.",
     fields: [],
   },

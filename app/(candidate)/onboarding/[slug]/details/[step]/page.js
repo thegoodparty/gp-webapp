@@ -1,24 +1,12 @@
 export const dynamic = 'force-dynamic';
 
+import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { getServerToken } from 'helpers/userServerHelper';
-import { redirect } from 'next/navigation';
-import DetailsStepPage from './components/DetailsStepPage';
+import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import detailsFields from './detailsFields';
-
-export const fetchUserCampaignServer = async () => {
-  const api = gpApi.campaign.onboarding.findByUser;
-  const token = getServerToken();
-  return await gpFetch(api, false, 3600, token);
-};
-
-// const generateWhyGoals = async () => {
-//   const api = gpApi.campaign.onboarding.generateWhyGoals;
-//   const token = getServerToken();
-//   return await gpFetch(api, false, 3600, token);
-// };
 
 const fetchPositions = async () => {
   const api = gpApi.admin.position.list;
@@ -28,16 +16,9 @@ const fetchPositions = async () => {
 
 export default async function Page({ params }) {
   const { slug, step } = params;
+  const campaign = await getCampaign(params);
 
   let stepInt = step ? parseInt(step, 10) : 1;
-
-  let { campaign } = await fetchUserCampaignServer();
-  if (campaign?.slug !== slug) {
-    redirect('/onboarding');
-  }
-  // if (!campaign.whyGoals) {
-  //   ({ campaign } = await generateWhyGoals());
-  // }
 
   const stepFields = detailsFields[stepInt - 1];
   const { pageType } = stepFields;
@@ -57,12 +38,14 @@ export default async function Page({ params }) {
     subTitle: stepFields.subTitle,
     slug,
     campaign,
-    fields: stepFields.fields,
+    inputFields: stepFields.fields,
     step: stepInt,
     pathname: `/details/${stepInt}`,
     pageType,
     pledge,
     positions,
+    nextPath: `/details/${stepInt + 1}`,
+    campaignKey: 'details',
   };
-  return <DetailsStepPage {...childProps} />;
+  return <OnboardingStepPage {...childProps} />;
 }
