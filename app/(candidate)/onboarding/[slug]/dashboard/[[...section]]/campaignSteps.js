@@ -118,10 +118,11 @@ export const generateCampaignStatus = (campaign) => {
       status.preLaunch.status = 'In Progress';
       status.preLaunch[section.key] = {};
       status.preLaunch[section.key].status = 'In Progress';
-      const completedSteps = Object.keys(section.value).length;
+      const completedSteps = section.value
+        ? Object.keys(section.value).length
+        : 0;
       status.preLaunch[section.key].completedSteps = completedSteps;
       if (completedSteps >= section.count) {
-        console.log('loop', section.key, completedSteps, section.count);
         status.preLaunch[section.key].status = 'Completed';
         status.preLaunch.completedSteps++;
         status.nextStep.step++;
