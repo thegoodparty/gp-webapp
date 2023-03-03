@@ -46,8 +46,9 @@ export default function Step({
               {stepStatus.status || 'Not Started'}
             </div>
             <div className="mt-1">
-              {stepStatus.completedSteps || 0} of{' '}
-              {sectionIndex === false ? step.steps.length : step.steps} steps
+              {stepStatus.completedSteps +
+                (stepStatus.status === 'In Progress' ? 1 : 0) || 0}{' '}
+              of {sectionIndex === false ? step.steps.length : step.steps} steps
             </div>
           </div>
           <div>

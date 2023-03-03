@@ -3,6 +3,7 @@ import { SlRocket } from 'react-icons/sl';
 import { MdHowToVote } from 'react-icons/md';
 import { detailFieldsCount } from '../../details/[step]/detailsFields';
 import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
+import { strategyFieldsCount } from '../../strategy/[step]/strategyFields';
 
 const campaignSteps = [
   {
@@ -105,10 +106,11 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details, goals } = campaign;
+  const { details, goals, strategy } = campaign;
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
+    { key: 'strategy', value: strategy, count: strategyFieldsCount },
   ];
 
   preLaunchSections.forEach((section) => {
@@ -119,6 +121,7 @@ export const generateCampaignStatus = (campaign) => {
       const completedSteps = Object.keys(section.value).length;
       status.preLaunch[section.key].completedSteps = completedSteps;
       if (completedSteps >= section.count) {
+        console.log('loop', section.key, completedSteps, section.count);
         status.preLaunch[section.key].status = 'Completed';
         status.preLaunch.completedSteps++;
         status.nextStep.step++;
