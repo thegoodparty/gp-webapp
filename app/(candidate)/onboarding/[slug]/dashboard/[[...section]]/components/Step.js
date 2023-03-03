@@ -7,14 +7,13 @@ export default function Step({
   index,
   sectionIndex,
   campaignSteps,
+  nextStep,
 }) {
-  console.log('campaignStatus', campaignStatus);
   let stepStatus = campaignStatus[step.key] || {};
   if (sectionIndex !== false) {
     const campaignStepKey = campaignSteps[sectionIndex].key;
     const sectionStatus = campaignStatus[campaignStepKey];
 
-    console.log('sectionStatus', sectionStatus[step.key]);
     stepStatus = sectionStatus[step.key] || {};
   }
 
@@ -63,12 +62,24 @@ export default function Step({
                   Continue
                 </div>
               )}
-              {(stepStatus.status === 'Not Started' || !stepStatus.status) && (
-                <div className="underline text-gray-600 px-6 py-4  font-bold">
-                  Get Started
-                </div>
-              )}
             </Link>
+
+            {(stepStatus.status === 'Not Started' || !stepStatus.status) && (
+              <>
+                {nextStep.sectionIndex === sectionIndex &&
+                nextStep.step === index + 1 ? (
+                  <Link href={link} className=" no-underline">
+                    <div className="bg-orange-500 text-white px-12 py-4 rounded-full  font-black">
+                      Get Started
+                    </div>
+                  </Link>
+                ) : (
+                  <div className=" text-gray-400 px-6 py-4  font-bold cursor-not-allowed">
+                    Get Started
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

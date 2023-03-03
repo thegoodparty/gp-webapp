@@ -1,7 +1,5 @@
-import PurpleButton from '@shared/buttons/PurpleButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import Link from 'next/link';
 import NextStepButton from './NextStepButton';
 
 import bgImg from '/public/images/landing-pages/hero-bg.png';
@@ -49,6 +47,7 @@ export default function Hero({
                 nextStep={nextStep}
                 campaignSteps={campaignSteps}
                 campaign={campaign}
+                sectionIndex={sectionIndex}
               />
             </div>
           </div>

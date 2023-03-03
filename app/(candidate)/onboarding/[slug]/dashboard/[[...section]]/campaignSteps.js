@@ -126,5 +126,7 @@ export const generateCampaignStatus = (campaign) => {
     }
   });
 
+  console.log('status.nextStep', status.nextStep);
+
   return status;
 };
