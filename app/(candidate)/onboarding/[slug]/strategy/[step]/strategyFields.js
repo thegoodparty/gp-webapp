@@ -44,5 +44,5 @@ strategyFields.forEach((step) => {
   strategyFieldsCount += step.fields?.length || 0;
 });
 
-strategyFieldsCount = strategyFieldsCount + 1; // profile
+// strategyFieldsCount = strategyFieldsCount + 1; // profile
 export { strategyFieldsCount };

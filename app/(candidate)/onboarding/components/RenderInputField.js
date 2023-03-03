@@ -7,6 +7,7 @@ import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import PositionsSelector from './PositionsSelector';
+import Checkbox from '@mui/material/Checkbox';
 
 export default function RenderInputField({
   field,
@@ -17,7 +18,9 @@ export default function RenderInputField({
 }) {
   return (
     <div
-      className={`mb-6 col-span-12 ${field.cols === 6 && 'lg:col-span-6'} `}
+      className={`col-span-12 ${field.cols === 6 && 'lg:col-span-6'} ${
+        !field.noBottomMargin && 'mb-6'
+      }`}
       key={field.key}
     >
       {(field.type === 'text' ||
@@ -113,6 +116,18 @@ export default function RenderInputField({
             ))}
           </Select>
         </>
+      )}
+      {field.type === 'checkbox' && (
+        <div>
+          {field.groupLabel && (
+            <div className="font-bold mb-3">{field.groupLabel}</div>
+          )}
+          <Checkbox
+            value={value}
+            onChange={(e) => onChangeCallback(field.key, e.target.checked)}
+          />{' '}
+          {field.label}
+        </div>
       )}
       {field.type === 'positionsSelector' && (
         <PositionsSelector

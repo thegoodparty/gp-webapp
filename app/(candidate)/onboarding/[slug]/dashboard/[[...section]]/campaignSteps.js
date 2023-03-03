@@ -4,6 +4,7 @@ import { MdHowToVote } from 'react-icons/md';
 import { detailFieldsCount } from '../../details/[step]/detailsFields';
 import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
 import { strategyFieldsCount } from '../../strategy/[step]/strategyFields';
+import { teamFieldsCount } from '../../team/[step]/teamFields';
 
 const campaignSteps = [
   {
@@ -32,14 +33,14 @@ const campaignSteps = [
         title: 'Campaign Message & Strategy',
         subTitle:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: 4,
+        steps: strategyFieldsCount,
       },
       {
         key: 'team',
         title: 'Build a Campaign Team',
         subTitle:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: 2,
+        steps: teamFieldsCount,
       },
       {
         key: 'social',
@@ -94,6 +95,7 @@ const campaignSteps = [
 export default campaignSteps;
 
 export const generateCampaignStatus = (campaign) => {
+  console.log('cc', campaign);
   const status = {
     preLaunch: { status: 'Not Started', completedSteps: 0 },
     launch: { status: 'Not Started', completedSteps: 0 },
@@ -106,11 +108,12 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details, goals, strategy } = campaign;
+  const { details, goals, strategy, team } = campaign;
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
     { key: 'strategy', value: strategy, count: strategyFieldsCount },
+    { key: 'team', value: team, count: teamFieldsCount },
   ];
 
   preLaunchSections.forEach((section) => {
@@ -121,6 +124,9 @@ export const generateCampaignStatus = (campaign) => {
       const completedSteps = section.value
         ? Object.keys(section.value).length
         : 0;
+      if (completedSteps === 0) {
+        status.preLaunch[section.key].status = 'Not Started';
+      }
       status.preLaunch[section.key].completedSteps = completedSteps;
       if (completedSteps >= section.count) {
         status.preLaunch[section.key].status = 'Completed';

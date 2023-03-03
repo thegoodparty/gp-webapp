@@ -155,7 +155,7 @@ export default function RegisterPage({}) {
               <br />
               <br />
               <div>
-                Sorry, we can't create an account for you at the moment.
+                Sorry, we can&apos;t create an account for you at the moment.
               </div>
             </div>
           </div>
