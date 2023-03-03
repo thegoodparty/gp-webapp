@@ -92,5 +92,5 @@ goalsFields.forEach((step) => {
   goalsFieldsCount += step.fields?.length || 0;
 });
 
-// goalsFieldsCount = goalsFieldsCount + 2; // pledge and top issues
+goalsFieldsCount = goalsFieldsCount + 1; // Messaging Strategy
 export { goalsFieldsCount };
