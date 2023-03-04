@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
+import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import strategyFields from './strategyFields';
 
 export default async function Page({ params }) {
@@ -12,9 +13,12 @@ export default async function Page({ params }) {
 
   const stepFields = strategyFields[stepInt - 1];
   const { pageType } = stepFields;
-  const campaignKey = 'strategy';
 
-  let nextPath = `/${campaignKey}/${stepInt + 1}`;
+  const subSectionLabel = campaignSteps[0].steps[2].title;
+  const subSectionKey = campaignSteps[0].steps[2].key;
+  const section = { label: 'Pre Launch', index: 1 };
+
+  let nextPath = `/${subSectionKey}/${stepInt + 1}`;
   if (pageType === 'messagingStrategy') {
     nextPath = '/dashboard';
   }
@@ -26,10 +30,12 @@ export default async function Page({ params }) {
     campaign,
     inputFields: stepFields.fields,
     step: stepInt,
-    pathname: `/${campaignKey}/${stepInt}`,
+    pathname: `/${subSectionKey}/${stepInt}`,
     pageType,
     nextPath,
-    campaignKey,
+    subSectionKey,
+    section,
+    subSectionLabel,
   };
   return <OnboardingStepPage {...childProps} />;
 }

@@ -14,7 +14,7 @@ export const savingState = hookstate(false);
 export default function OnboardingPage({
   inputFields,
   campaign,
-  campaignKey,
+  subSectionKey,
   reGenerateAiCallback,
   nextPath,
   nextPathFunc,
@@ -37,10 +37,10 @@ export default function OnboardingPage({
     keys.push(field.key);
   });
 
-  if (campaign?.[campaignKey]) {
+  if (campaign?.[subSectionKey]) {
     keys.forEach((key) => {
-      if (campaign[campaignKey][key]) {
-        initialState[key] = campaign[campaignKey][key];
+      if (campaign[subSectionKey][key]) {
+        initialState[key] = campaign[subSectionKey][key];
       }
     });
   }
@@ -72,11 +72,11 @@ export default function OnboardingPage({
   const handleSave = async () => {
     setLoading(true);
     const updated = campaign;
-    if (!updated[campaignKey]) {
-      updated[campaignKey] = {};
+    if (!updated[subSectionKey]) {
+      updated[subSectionKey] = {};
     }
     keys.forEach((key) => {
-      updated[campaignKey][key] = state[key];
+      updated[subSectionKey][key] = state[key];
     });
     await updateCampaign(updated);
     let path = nextPath;

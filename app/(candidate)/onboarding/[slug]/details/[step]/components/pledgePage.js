@@ -18,7 +18,7 @@ export default function PledgePage({
   header,
   subHeader,
   pledge,
-  campaignKey,
+  subSectionKey,
   ...props
 }) {
   let initialState = {
@@ -28,7 +28,7 @@ export default function PledgePage({
   };
   const keys = ['pledged'];
 
-  if (campaign?.[campaignKey]?.pledged) {
+  if (campaign?.[subSectionKey]?.pledged) {
     initialState = { pledged: true };
   }
   const [state, setState] = useState(initialState);
@@ -46,11 +46,11 @@ export default function PledgePage({
   const handleSave = async () => {
     setLoading(true);
     const updated = campaign;
-    if (!updated[campaignKey]) {
-      updated[campaignKey] = {};
+    if (!updated[subSectionKey]) {
+      updated[subSectionKey] = {};
     }
 
-    updated[campaignKey].pledged =
+    updated[subSectionKey].pledged =
       state.pledged1 && state.pledged2 && state.pledged3;
     await updateCampaign(updated);
     let path = nextPath;

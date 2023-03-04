@@ -95,7 +95,6 @@ const campaignSteps = [
 export default campaignSteps;
 
 export const generateCampaignStatus = (campaign) => {
-  console.log('cc', campaign);
   const status = {
     preLaunch: { status: 'Not Started', completedSteps: 0 },
     launch: { status: 'Not Started', completedSteps: 0 },
@@ -135,8 +134,6 @@ export const generateCampaignStatus = (campaign) => {
       }
     }
   });
-
-  console.log('status.nextStep', status.nextStep);
 
   return status;
 };

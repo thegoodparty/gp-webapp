@@ -15,15 +15,15 @@ export default function IssuesPage({
   header,
   subHeader,
   positions,
-  campaignKey,
+  subSectionKey,
   ...props
 }) {
   let initialState = {
     positions: [],
   };
   const keys = ['positions'];
-  if (campaign?.[campaignKey]?.topIssues) {
-    initialState = campaign[campaignKey].topIssues;
+  if (campaign?.[subSectionKey]?.topIssues) {
+    initialState = campaign[subSectionKey].topIssues;
   }
   const [state, setState] = useState(initialState);
   const router = useRouter();
@@ -45,11 +45,11 @@ export default function IssuesPage({
   const handleSave = async () => {
     setLoading(true);
     const updated = campaign;
-    if (!updated[campaignKey]) {
-      updated[campaignKey] = {};
+    if (!updated[subSectionKey]) {
+      updated[subSectionKey] = {};
     }
 
-    updated[campaignKey].topIssues = state;
+    updated[subSectionKey].topIssues = state;
     await updateCampaign(updated);
     let path = nextPath;
 

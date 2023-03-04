@@ -7,6 +7,7 @@ import AdminDelete from './AdminDelete';
 import { useEffect, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { savingState } from './OnboardingPage';
+import Breadcrumbs from '@shared/utils/Breadcrumbs';
 
 export default function OnboardingWrapper({
   children,
@@ -17,12 +18,26 @@ export default function OnboardingWrapper({
   icon,
   step,
   totalSteps,
+  slug,
+  section,
+  subSectionLabel,
 }) {
   const initProgress = (step - 2) / totalSteps;
   const [progress, setProgress] = useState(initProgress);
 
   const savingGlobalState = useHookstate(savingState);
   const saving = savingGlobalState.get();
+
+  const breadcrumbsLinks = [
+    { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
+    {
+      href: `/onboarding/${slug}/dashboard/${section.index}`,
+      label: section.label,
+    },
+    {
+      label: subSectionLabel,
+    },
+  ];
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,7 +60,10 @@ export default function OnboardingWrapper({
           <Image src={JaredImg} fill className="object-contain" />
         )}
       </div>
+
       <MaxWidth>
+        <Breadcrumbs links={breadcrumbsLinks} />
+
         <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)] pt-10 lg:pt-24">
           <div className="text-center  tracking-tight pb-14">
             <h1 className="font-black text-4xl ">{title}</h1>

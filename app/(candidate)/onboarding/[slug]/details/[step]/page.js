@@ -6,6 +6,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
+import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import detailsFields from './detailsFields';
 
 const fetchPositions = async () => {
@@ -32,6 +33,9 @@ export default async function Page({ params }) {
     const res = await fetchContentByKey('pledge');
     pledge = res.content;
   }
+  const section = { label: 'Pre Launch', index: 1 };
+  const subSectionKey = campaignSteps[0].steps[0].key;
+  const subSectionLabel = campaignSteps[0].steps[0].title;
 
   const childProps = {
     title: stepFields.title,
@@ -40,13 +44,15 @@ export default async function Page({ params }) {
     campaign,
     inputFields: stepFields.fields,
     step: stepInt,
-    pathname: `/details/${stepInt}`,
+    pathname: `/${subSectionKey}/${stepInt}`,
     pageType,
     pledge,
     positions,
-    nextPath: `/details/${stepInt + 1}`,
-    campaignKey: 'details',
+    nextPath: `/${subSectionKey}/${stepInt + 1}`,
+    subSectionKey,
     totalSteps: detailsFields.length,
+    section,
+    subSectionLabel,
   };
   return <OnboardingStepPage {...childProps} />;
 }
