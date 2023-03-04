@@ -46,6 +46,7 @@ export default async function Page({ params }) {
     positions,
     nextPath: `/details/${stepInt + 1}`,
     campaignKey: 'details',
+    totalSteps: detailsFields.length,
   };
   return <OnboardingStepPage {...childProps} />;
 }

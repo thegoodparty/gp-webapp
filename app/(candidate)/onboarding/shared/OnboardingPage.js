@@ -1,12 +1,15 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
 import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { hookstate } from '@hookstate/core';
+
+export const savingState = hookstate(false);
 
 export default function OnboardingPage({
   inputFields,
@@ -18,8 +21,12 @@ export default function OnboardingPage({
   slug,
   ...props
 }) {
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
   const initialState = {};
   const keys = [];
+  // savingState.set(() => false);
 
   inputFields.map((field) => {
     if (field.initialValue) {
@@ -76,8 +83,11 @@ export default function OnboardingPage({
     if (!path && nextPathFunc) {
       path = nextPathFunc({ ...state });
     }
+    savingState.set(() => true);
 
-    router.push(`onboarding/${slug}${path}`);
+    setTimeout(() => {
+      router.push(`onboarding/${slug}${path}`);
+    }, 200);
   };
 
   const onChangeField = (key, value) => {

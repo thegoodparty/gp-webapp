@@ -2,9 +2,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import JaredImg from 'public/images/campaign/jared.png';
 import AdminDelete from './AdminDelete';
+import { useEffect, useState } from 'react';
+import { useHookstate } from '@hookstate/core';
+import { savingState } from './OnboardingPage';
 
 export default function OnboardingWrapper({
   children,
@@ -13,21 +15,28 @@ export default function OnboardingWrapper({
   self,
   pathname,
   icon,
+  step,
+  totalSteps,
 }) {
-  const router = useRouter();
-  const goBack = () => {
-    router.back();
-  };
+  const initProgress = (step - 2) / totalSteps;
+  const [progress, setProgress] = useState(initProgress);
+
+  const savingGlobalState = useHookstate(savingState);
+  const saving = savingGlobalState.get();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setProgress((step - 1) / totalSteps);
+    }, 500);
+  }, [step, totalSteps]);
 
   return (
-    <div className="bg-white shadow-inner relative">
+    <div className="bg-white shadow-inner relative pt-10 lg:pt-0">
       <div
-        className="pt-8 mx-3 lg:px-0 lg:pt-24 font-black border-b-4 border-teal-400  pb-2 mb-8 lg:hidden cursor-pointer"
-        onClick={goBack}
-      >
-        BACK
-      </div>
-      <div className="relative mb-6 lg:mb-0 w-28 h-28  left-1/2 -ml-14  lg:absolute lg:-top-14 z-50">
+        className="absolute h-1 bg-violet-600  top-0 rounded-r transition-all"
+        style={{ width: `calc(100vw * ${progress})` }}
+      ></div>
+      <div className="relative mb-6 lg:mb-0 w-28 h-28  left-1/2 -ml-14 lg:absolute lg:-top-14 z-50">
         {icon ? (
           <div className="w-28 h-28 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white">
             {icon}
@@ -37,27 +46,21 @@ export default function OnboardingWrapper({
         )}
       </div>
       <MaxWidth>
-        <div
-          className="hidden lg:inline-block pt-24 font-black border-b-4 border-teal-400 pb-2 cursor-pointer"
-          onClick={goBack}
-        >
-          BACK
-        </div>
-        <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)]">
+        <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)] pt-10 lg:pt-24">
           <div className="text-center  tracking-tight pb-14">
             <h1 className="font-black text-4xl ">{title}</h1>
             {subTitle && <h2 className="zinc-500 mt-8">{subTitle}</h2>}
           </div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              initial={{ x: 300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              key={`${pathname} ${title}`}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          {/* <AnimatePresence mode="wait"> */}
+          <motion.div
+            initial={{ x: 300, opacity: 0 }}
+            animate={{ x: saving ? -300 : 0, opacity: saving ? 0 : 1 }}
+            // exit={{ x: -300, opacity: 0 }}
+            key={`${pathname} ${title}`}
+          >
+            {children}
+          </motion.div>
+          {/* </AnimatePresence> */}
           {self !== '/onboarding' && <AdminDelete />}
         </div>
       </MaxWidth>
