@@ -5,6 +5,7 @@ import { detailFieldsCount } from '../../details/[step]/detailsFields';
 import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
 import { strategyFieldsCount } from '../../strategy/[step]/strategyFields';
 import { teamFieldsCount } from '../../team/[step]/teamFields';
+import { socialFieldsCount } from '../../social/[step]/socialFields';
 
 const campaignSteps = [
   {
@@ -47,7 +48,7 @@ const campaignSteps = [
         title: 'Social Media',
         subTitle:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: 3,
+        steps: socialFieldsCount,
       },
       {
         key: 'budget',
@@ -107,12 +108,13 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details, goals, strategy, team } = campaign;
+  const { details, goals, strategy, team, social } = campaign;
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
     { key: 'strategy', value: strategy, count: strategyFieldsCount },
     { key: 'team', value: team, count: teamFieldsCount },
+    { key: 'social', value: social, count: socialFieldsCount },
   ];
 
   preLaunchSections.forEach((section) => {
