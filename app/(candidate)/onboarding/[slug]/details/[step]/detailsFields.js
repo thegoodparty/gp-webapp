@@ -203,6 +203,7 @@ const detailsFields = [
   {
     title: 'What is a fun fact about yourself?',
     subTitle: 'Missing text Mateo',
+    skipable: true,
     fields: [
       {
         key: 'funFact',

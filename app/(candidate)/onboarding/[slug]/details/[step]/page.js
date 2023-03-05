@@ -40,6 +40,7 @@ export default async function Page({ params }) {
   const childProps = {
     title: stepFields.title,
     subTitle: stepFields.subTitle,
+    skipable: stepFields.skipable,
     slug,
     campaign,
     inputFields: stepFields.fields,

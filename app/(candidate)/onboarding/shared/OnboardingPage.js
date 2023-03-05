@@ -19,6 +19,7 @@ export default function OnboardingPage({
   nextPath,
   nextPathFunc,
   slug,
+  skipable,
   ...props
 }) {
   useEffect(() => {
@@ -69,14 +70,14 @@ export default function OnboardingPage({
     return true;
   };
 
-  const handleSave = async () => {
+  const handleSave = async (skipped) => {
     setLoading(true);
     const updated = campaign;
     if (!updated[subSectionKey]) {
       updated[subSectionKey] = {};
     }
     keys.forEach((key) => {
-      updated[subSectionKey][key] = state[key];
+      updated[subSectionKey][key] = skipped ? ' ' : state[key];
     });
     await updateCampaign(updated);
     let path = nextPath;
@@ -88,6 +89,10 @@ export default function OnboardingPage({
     setTimeout(() => {
       router.push(`onboarding/${slug}${path}`);
     }, 200);
+  };
+
+  const handleSkip = async () => {
+    await handleSave(true);
   };
 
   const onChangeField = (key, value) => {
@@ -151,6 +156,14 @@ export default function OnboardingPage({
               </BlackButtonClient>
             )}
           </div>
+          {skipable && (
+            <div
+              className="text-center mt-4 underline cursor-pointer"
+              onClick={handleSkip}
+            >
+              Skip for now
+            </div>
+          )}
         </div>
       </form>
     </OnboardingWrapper>

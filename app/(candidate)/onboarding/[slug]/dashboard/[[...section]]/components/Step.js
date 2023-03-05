@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { FaLock } from 'react-icons/fa';
+import { IoIosCheckmarkCircle } from 'react-icons/io';
 
 export default function Step({
   campaign,
@@ -16,6 +18,7 @@ export default function Step({
 
     stepStatus = sectionStatus[step.key] || {};
   }
+  const { status } = stepStatus;
 
   let link = `/onboarding/${campaign.slug}/dashboard/${index + 1}`;
   if (sectionIndex !== false) {
@@ -37,35 +40,37 @@ export default function Step({
           <div className="">
             <div
               className={`font-black ${
-                stepStatus.status === 'Completed' && ' text-green-600'
-              }  ${stepStatus.status === 'In Progress' && ' text-orange-600'} ${
-                (stepStatus.status === 'Not Started' || !stepStatus.status) &&
-                ' text-gray-600'
+                status === 'Completed' && ' text-green-600 flex items-center'
+              }  ${status === 'In Progress' && ' text-orange-600'} ${
+                (status === 'Not Started' || !status) && ' text-gray-600'
               }`}
             >
-              {stepStatus.status || 'Not Started'}
+              {status === 'Completed' && (
+                <IoIosCheckmarkCircle className="mr-1" />
+              )}
+              {status || 'Not Started'}
             </div>
             <div className="mt-1">
-              {stepStatus.completedSteps +
-                (stepStatus.status === 'In Progress' ? 1 : 0) || 0}{' '}
+              {stepStatus.completedSteps + (status === 'In Progress' ? 1 : 0) ||
+                0}{' '}
               of {sectionIndex === false ? step.steps.length : step.steps} steps
             </div>
           </div>
           <div>
             <Link href={link} className=" no-underline">
-              {stepStatus.status === 'Completed' && (
+              {status === 'Completed' && (
                 <div className="underline text-gray-600 px-6 py-4  font-bold">
                   Edit
                 </div>
               )}
-              {stepStatus.status === 'In Progress' && (
+              {status === 'In Progress' && (
                 <div className="bg-orange-500 text-white px-12 py-4 rounded-full  font-black">
                   Continue
                 </div>
               )}
             </Link>
 
-            {(stepStatus.status === 'Not Started' || !stepStatus.status) && (
+            {(status === 'Not Started' || !status) && (
               <>
                 {nextStep.sectionIndex === sectionIndex &&
                 nextStep.step === index + 1 ? (
@@ -75,8 +80,8 @@ export default function Step({
                     </div>
                   </Link>
                 ) : (
-                  <div className=" text-gray-400 px-6 py-4  font-bold cursor-not-allowed">
-                    Get Started
+                  <div className=" text-gray-400 px-6 py-4  font-bold cursor-not-allowed flex items-center">
+                    <FaLock /> <div className="ml-2">Get Started</div>
                   </div>
                 )}
               </>

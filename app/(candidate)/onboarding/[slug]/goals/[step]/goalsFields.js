@@ -18,6 +18,7 @@ const goalsFields = [
     title: 'Provide the Date of Election',
     subTitle:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id lorem dapibus, porta lorem vitae, vehicula nisi. Aenean non congue metus. Nam vel enim.',
+    skipable: true,
     fields: [
       {
         key: 'electionDate',

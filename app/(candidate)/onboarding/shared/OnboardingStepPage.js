@@ -6,7 +6,6 @@ import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import ProfileBannerPage from '../[slug]/strategy/[step]/components/ProfileBannerPage';
 
 export default function OnboardingStepPage(props) {
-  console.log('step props', props);
   const { pageType } = props;
   if (pageType === 'issuesPage') {
     return <IssuesPage {...props} />;
