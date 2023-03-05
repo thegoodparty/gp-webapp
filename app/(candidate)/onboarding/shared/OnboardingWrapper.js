@@ -32,7 +32,7 @@ export default function OnboardingWrapper({
     { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
     {
       href: `/onboarding/${slug}/dashboard/${section?.index}`,
-      label: section.label,
+      label: section?.label,
     },
     {
       label: subSectionLabel,
