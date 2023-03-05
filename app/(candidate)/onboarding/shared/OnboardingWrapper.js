@@ -2,7 +2,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import JaredImg from 'public/images/campaign/jared.png';
+import JaredImg from 'public/images/campaign/jared.jpg';
 import AdminDelete from './AdminDelete';
 import { useEffect, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
@@ -48,17 +48,26 @@ export default function OnboardingWrapper({
   return (
     <div className="bg-white shadow-inner relative pt-10 lg:pt-0">
       <div
-        className="absolute h-1 bg-violet-600  top-0 rounded-r transition-all"
+        className="absolute h-1 bg-purple  top-0 rounded-r transition-all"
         style={{ width: `calc(100vw * ${progress})` }}
       ></div>
       <div className="relative mb-6 lg:mb-0 w-28 h-28  left-1/2 -ml-14 lg:absolute lg:-top-14 z-50">
-        {icon ? (
-          <div className="w-28 h-28 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white">
-            {icon}
-          </div>
-        ) : (
-          <Image src={JaredImg} fill className="object-contain" />
-        )}
+        <div
+          className="w-28 h-28 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white relative transition"
+          style={progress >= 0.5 ? { borderColor: '#46002E' } : {}}
+        >
+          {icon ? (
+            <> {icon} </>
+          ) : (
+            <Image
+              src={JaredImg}
+              fill
+              alt="Jared"
+              priority
+              className="object-contain rounded-full"
+            />
+          )}
+        </div>
       </div>
 
       <MaxWidth>
