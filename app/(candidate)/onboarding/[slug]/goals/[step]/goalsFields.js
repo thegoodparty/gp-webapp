@@ -2,15 +2,12 @@ const goalsFields = [
   {
     title: 'Tell us why you are running.',
     subTitle:
-      'Candidates who have a compelling story have a better chance of winning. Tell us a little about you and use our AI to help build your story.',
+      "We've been listening and based on what we know about you so far, we can help generate a WHY statement for you. Some things to keep in mind first.",
+    pageType: 'AIFlow',
     fields: [
       {
         key: 'whyRunning',
-        label: '',
-        required: true,
-        type: 'text',
-        rows: 6,
-        enhanceAi: true,
+        withIntro: true,
       },
     ],
   },
