@@ -88,7 +88,6 @@ export default function OnboardingStartPage(props) {
         isError: false,
       };
     });
-    setLoading(true);
 
     const { slug } = await createCampaign(stateNoPassword);
     if (slug) {
@@ -102,7 +101,6 @@ export default function OnboardingStartPage(props) {
         };
       });
     }
-    setLoading(false);
   };
 
   const setReturnCookie = () => {
