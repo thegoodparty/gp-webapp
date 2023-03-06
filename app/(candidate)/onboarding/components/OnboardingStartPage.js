@@ -41,10 +41,10 @@ inputFields.map((field) => {
   }
 });
 
-async function createCampaign(payload) {
+async function createCampaign() {
   try {
     const api = gpApi.campaign.onboarding.create;
-    return await gpFetch(api, { data: payload });
+    return await gpFetch(api);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -89,7 +89,7 @@ export default function OnboardingStartPage(props) {
       };
     });
 
-    const { slug } = await createCampaign(stateNoPassword);
+    const { slug } = await createCampaign();
     if (slug) {
       router.push(`/onboarding/${slug}`);
     } else {
