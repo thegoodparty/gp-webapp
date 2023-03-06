@@ -14,7 +14,7 @@ export default function Hero() {
             Join the movement to end the two-party system
           </h1>
           <h2 className="text-xl mt-5 lg:w-[80%]">
-            We're organizing a community of Good Partiers to realize our
+            We&apos;re organizing a community of Good Partiers to realize our
             collective power to elect promising independents around the country
             and fix our broken system.
           </h2>

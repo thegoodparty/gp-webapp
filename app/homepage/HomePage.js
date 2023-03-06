@@ -6,7 +6,7 @@ import Hero from './Hero';
 import SubscribeSection from './SubscribeSection';
 import TeamSection from './TeamSection';
 
-export default function (props) {
+export default function HomePage() {
   return (
     <>
       <Hero />

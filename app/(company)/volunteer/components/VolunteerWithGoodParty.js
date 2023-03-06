@@ -25,10 +25,10 @@ export default function VolunteerWithGoodParty() {
           Volunteering with Good Party
         </h2>
         <div className="text-2xl lg:w-2/3 mt-5 leading-relaxed">
-          When you volunteer with us, you join a community that's working to
-          support good people running good campaigns to fight for good ideas. Be
-          a part of the movement to elect a new kind of candidate and put people
-          over money.
+          When you volunteer with us, you join a community that&apos;s working
+          to support good people running good campaigns to fight for good ideas.
+          Be a part of the movement to elect a new kind of candidate and put
+          people over money.
         </div>
       </MaxWidth>
     </section>

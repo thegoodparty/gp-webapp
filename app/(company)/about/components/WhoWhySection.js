@@ -29,18 +29,19 @@ export default function WhoWhySection() {
           issues continue to go unaddressed—for decades!
           <br />
           <br />
-          Whether you're concerned about the climate, privacy, inequality, or
-          our individual freedoms, all are{' '}
+          Whether you&apos;re concerned about the climate, privacy, inequality,
+          or our individual freedoms, all are{' '}
           <strong>
             hampered by the dark doom-loop of dysfunctional partisan politics.
           </strong>
           <br />
           <br />
-          It's no wonder that a majority of eligible voters (over 130M
+          It&apos;s no wonder that a majority of eligible voters (over 130M
           Americans), including more than half of Millennials and Gen Z, say
           that{' '}
           <strong>neither Republicans, nor Democrats represent them</strong>.
-          It's time to declare independence from the corrupt two-party system.
+          It&apos;s time to declare independence from the corrupt two-party
+          system.
         </div>
       </div>
       <div className="hidden lg:block absolute top-0 lg:left-[60%] w-[calc(50vw-128px)] min-h-[620px] xl:min-h-[800px]">

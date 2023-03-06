@@ -6,7 +6,7 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import PortalWrapper from '../../shared/PortalWrapper';
 import CampaignColorPicker from './CampaignColorPicker';
 import Select from '@mui/material/Select';
-import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
+import { partyResolver } from 'helpers/candidateHelper';
 import JoditEditorWrapper from '@shared/inputs/JoditEditorWrapper';
 import YouTubeInput from '@shared/inputs/YouTubeInput';
 import TextField from '@shared/inputs/TextField';
@@ -207,7 +207,11 @@ export default function EditCampaignPage(props) {
                             }
                             initialText={state[field.key]}
                           />
-                          {errors[field.key] && <Err>{errors[field.key]}</Err>}
+                          {errors[field.key] && (
+                            <div className="text-red-400">
+                              {errors[field.key]}
+                            </div>
+                          )}
                           <br />
                         </>
                       )}

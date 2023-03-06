@@ -130,10 +130,11 @@ export default function Table({ columns, data }) {
     <div className={styles.wrapper}>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
+              {headerGroup.headers.map((column, i) => (
                 <th
+                  key={`${index}_${i}`}
                   {...column.getHeaderProps(
                     column.getSortByToggleProps({
                       className: column.collapse ? 'collapseCell' : '',
@@ -162,10 +163,15 @@ export default function Table({ columns, data }) {
           {page.map((row, i) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} className={i % 2 !== 0 && styles.odd}>
-                {row.cells.map((cell) => {
+              <tr
+                {...row.getRowProps()}
+                className={i % 2 !== 0 && styles.odd}
+                key={`tr_${i}`}
+              >
+                {row.cells.map((cell, j) => {
                   return (
                     <td
+                      key={`td_${i}_${j}`}
                       {...cell.getCellProps({
                         className: cell.column.collapse ? 'collapseCell' : '',
                       })}

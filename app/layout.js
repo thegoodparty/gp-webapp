@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import { Lato } from '@next/font/google';
 import Script from 'next/script';
 
