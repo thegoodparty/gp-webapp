@@ -1,5 +1,5 @@
 'use client';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import JaredImg from 'public/images/campaign/jared.jpg';
