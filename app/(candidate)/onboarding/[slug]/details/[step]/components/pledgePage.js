@@ -5,8 +5,6 @@ import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapp
 import { useRouter } from 'next/navigation';
 import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
-import TextField from '@shared/inputs/TextField';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import { Checkbox } from '@mui/material';

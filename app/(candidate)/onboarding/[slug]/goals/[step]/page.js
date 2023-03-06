@@ -19,6 +19,7 @@ export default async function Page({ params }) {
   let nextPath = `/${subSectionKey}/${stepInt + 1}`;
   if (pageType === 'messagingStrategy') {
     nextPath = '/dashboard';
+    // TAYLOR probably need to get data from AI
   }
   const section = { label: 'Pre Launch', index: 1 };
 

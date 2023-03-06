@@ -3,6 +3,7 @@ import OnboardingPage from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import CrunchingPage from '../[slug]/details/[step]/components/CrunchingPage';
 import IssuesPage from '../[slug]/details/[step]/components/IssuesPage';
 import PledgePage from '../[slug]/details/[step]/components/pledgePage';
+import MessagingStrategy from '../[slug]/goals/[step]/components/MessagingStrategy';
 import ProfileBannerPage from '../[slug]/strategy/[step]/components/ProfileBannerPage';
 import AIFlow from './AIFiow';
 
@@ -23,6 +24,9 @@ export default function OnboardingStepPage(props) {
   }
   if (pageType === 'AIFlow') {
     return <AIFlow {...props} />;
+  }
+  if (pageType === 'messagingStrategy') {
+    return <MessagingStrategy {...props} />;
   }
   return <OnboardingPage {...props} />;
 }
