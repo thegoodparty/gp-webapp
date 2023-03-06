@@ -1,13 +1,12 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import PortalPanel from '@shared/layouts/PortalPanel';
 import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import { useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
-import LoadingAnimation from '@shared/utils/LoadingAnimation';
-import { updateCampaign } from '../[slug]/pledge/components/PledgeButton';
+import ReactLoading from 'react-loading';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function OnboardingPage({
   inputFields,
@@ -35,7 +34,9 @@ export default function OnboardingPage({
 
   if (campaign?.[campaignKey]) {
     keys.forEach((key) => {
-      initialState[key] = campaign[campaignKey][key];
+      if (campaign[campaignKey][key]) {
+        initialState[key] = campaign[campaignKey][key];
+      }
     });
   }
   const [state, setState] = useState(initialState);
@@ -51,8 +52,12 @@ export default function OnboardingPage({
         if (field.initialValue && state[field.key] === field.initialValue) {
           return false;
         }
+
         if (!field.initialValue && state[field.key] === '') {
           return false;
+        }
+        if (field.validate) {
+          return field.validate(state[field.key]);
         }
       }
     }
@@ -90,38 +95,56 @@ export default function OnboardingPage({
     window.location.reload();
   };
 
+  const canShowField = (field) => {
+    const { showKey, showCondition } = field;
+    return showCondition.includes(state[showKey]);
+  };
+
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <PortalPanel color="#ea580c" smWhite>
-        <h3 className="font-black text-xl italic mb-2">{header}</h3>
-        <div className="mb-10">{subHeader}</div>
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <div className="max-w-[360px] mx-auto">
+          <div className="grid grid-cols-12 gap-4">
+            {inputFields.map((field) => (
+              <>
+                {(!field.hidden || canShowField(field)) && (
+                  <RenderInputField
+                    field={field}
+                    onChangeCallback={onChangeField}
+                    error={!!errors[field.key]}
+                    positions={props.positions}
+                    value={state[field.key]}
+                  />
+                )}
+              </>
+            ))}
+          </div>
 
-        {inputFields.map((field) => (
-          <RenderInputField
-            field={field}
-            onChangeCallback={onChangeField}
-            error={!!errors[field.key]}
-            positions={props.positions}
-            value={state[field.key]}
-          />
-        ))}
-        <div className="flex items-end justify-end">
-          {user?.isAdmin && reGenerateAiCallback && (
-            <div className="mr-6">
+          <div className="flex justify-center">
+            {user?.isAdmin && reGenerateAiCallback && (
+              <div className="mr-6">
+                <BlackButtonClient
+                  onClick={handleRegenerateAi}
+                  style={{ backgroundColor: 'blue' }}
+                >
+                  <div className="font-black">Regenerate AI input (Admin)</div>
+                </BlackButtonClient>
+              </div>
+            )}
+            {loading ? (
+              <ReactLoading color="green" />
+            ) : (
               <BlackButtonClient
-                onClick={handleRegenerateAi}
-                style={{ backgroundColor: 'blue' }}
+                onClick={handleSave}
+                disabled={!canSave()}
+                type="submit"
               >
-                <div className="font-black">Regenerate AI input (Admin)</div>
+                <div>NEXT</div>
               </BlackButtonClient>
-            </div>
-          )}
-          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-            <div className="font-black">Save &amp; Continue</div>
-          </BlackButtonClient>
+            )}
+          </div>
         </div>
-      </PortalPanel>
-      {loading && <LoadingAnimation label="Generating responses" fullPage />}
+      </form>
     </OnboardingWrapper>
   );
 }

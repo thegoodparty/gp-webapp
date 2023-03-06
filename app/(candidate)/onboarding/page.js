@@ -1,23 +1,13 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
-import OnboardingPage from './components/OnboardingPage';
-
-const fetchPositions = async () => {
-  const api = gpApi.admin.position.list;
-  const token = getServerToken();
-  return await gpFetch(api, false, 3600, token);
-};
+import OnboardingStartPage from './components/OnboardingStartPage';
 
 export default async function Page() {
-  const { positions } = await fetchPositions();
   const childProps = {
-    title: 'Decide to Run',
-    description:
-      'Good Party  will be with you every step of the way so you can run a successful campaign.',
+    title: "Hi! I'm Jared. Let's get your campaign started...",
     self: '/onboarding',
-    positions,
     slug: '',
   };
-  return <OnboardingPage {...childProps} />;
+  return <OnboardingStartPage {...childProps} />;
 }

@@ -16,6 +16,7 @@ import PasswordInput from '@shared/inputs/PasswrodInput';
 import { passwordRegex } from 'helpers/userHelper';
 import dynamic from 'next/dynamic';
 import SocialButtons from './SocialButtons';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 
 // const SocialButtons = dynamic(() => import('./SocialButtons'), { ssr: false });
 
@@ -90,7 +91,14 @@ export default function RegisterPage({}) {
       });
       if (user) {
         userState.set(() => user);
-        router.push('/');
+
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          router.push(returnUrl);
+        } else {
+          router.push('/');
+        }
         snackbarState.set(() => {
           return {
             isOpen: true,

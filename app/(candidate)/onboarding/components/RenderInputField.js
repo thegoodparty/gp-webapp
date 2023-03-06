@@ -16,7 +16,10 @@ export default function RenderInputField({
   positions,
 }) {
   return (
-    <div className="mb-6" key={field.key}>
+    <div
+      className={`mb-6 col-span-12 ${field.cols === 6 && 'lg:col-span-6'} `}
+      key={field.key}
+    >
       {(field.type === 'text' ||
         field.type === 'date' ||
         field.type === 'number') && (
@@ -57,7 +60,7 @@ export default function RenderInputField({
       )}
 
       {field.type === 'radio' && (
-        <div className="mb-4">
+        <div className="mb-4 flex justify-center">
           <div className="text-zinc-500 mb-2">
             {field.label}
             {field.required && <sup> *</sup>}
@@ -70,8 +73,16 @@ export default function RenderInputField({
             onChange={(e) => onChangeCallback(field.key, e.target.value)}
             error={error}
           >
-            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" control={<Radio />} label="No" />
+            <FormControlLabel
+              value="yes"
+              control={<Radio />}
+              label={field.options ? field.options[0] : 'Yes'}
+            />
+            <FormControlLabel
+              value="no"
+              control={<Radio />}
+              label={field.options ? field.options[1] : 'No'}
+            />
           </RadioGroup>
         </div>
       )}

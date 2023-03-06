@@ -6,46 +6,18 @@ import styles from './Team.module.scss';
 
 export const TEAM_MEMBERS = [
   {
-    name: 'Tomer Almog',
-    role: 'Chief Technology Officer',
-    img: 'https://assets.goodparty.org/team/tomer-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/tomer-party.jpg',
-    partyRole: 'Peaceful Warrior',
+    name: 'Farhad Mohit',
+    role: 'Founder',
+    img: 'https://assets.goodparty.org/team/farhad-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/farhad-party.jpg',
+    partyRole: 'Burner',
   },
   {
-    name: 'Jared Alper',
-    role: 'Political Director',
-    img: 'https://assets.goodparty.org/team/jared-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/jared-party.jpg',
-    partyRole: 'Improviser',
-  },
-  {
-    name: 'Rob Booth',
-    role: 'Head of Field and Mobilization',
-    img: 'https://assets.goodparty.org/team/rob-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/rob-party.jpg',
-    partyRole: 'Rockstar',
-  },
-  {
-    name: 'Gabby Coll',
-    role: 'Jr. Product Designer',
-    img: 'https://assets.goodparty.org/team/gabby-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/gabby-party.jpg',
-    partyRole: 'Community+based curator+creative',
-  },
-  {
-    name: 'Martha Gakunju',
-    role: 'People & Culture Coordinator',
-    img: 'https://assets.goodparty.org/team/martha-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/martha-party.jpg',
-    partyRole: 'Safari-er',
-  },
-  {
-    name: 'Colton Hess ',
-    role: 'Creator Community Lead',
-    img: 'https://assets.goodparty.org/team/colton-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/colton-party.jpg',
-    partyRole: 'Radical Generalist',
+    name: 'Žak Tomich',
+    role: 'Chief Executive Officer',
+    img: 'https://assets.goodparty.org/team/zak-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/zak-party.jpg',
+    partyRole: 'Dad Joker',
   },
   {
     name: 'Victoria Mitchell',
@@ -55,13 +27,26 @@ export const TEAM_MEMBERS = [
     partyRole: 'Responsibly Wild Wanderer',
   },
   {
-    name: 'Farhad Mohit',
-    role: 'Founder',
-    img: 'https://assets.goodparty.org/team/farhad-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/farhad-party.jpg',
-    partyRole: 'Burner',
+    name: 'Rob Booth',
+    role: 'Head of Field and Mobilization',
+    img: 'https://assets.goodparty.org/team/rob-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/rob-party.jpg',
+    partyRole: 'Rockstar',
   },
-
+  {
+    name: 'Jared Alper',
+    role: 'Political Director',
+    img: 'https://assets.goodparty.org/team/jared-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/jared-party.jpg',
+    partyRole: 'Improviser',
+  },
+  {
+    name: 'Martha Gakunju',
+    role: 'People & Culture Coordinator',
+    img: 'https://assets.goodparty.org/team/martha-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/martha-party.jpg',
+    partyRole: 'Safari-er',
+  },
   {
     name: 'Jack Nagel',
     role: 'Marketing Manager',
@@ -69,7 +54,20 @@ export const TEAM_MEMBERS = [
     flipImg: 'https://assets.goodparty.org/team/jack-party.png',
     partyRole: 'Curious Plant Dad',
   },
-
+  {
+    name: 'Tomer Almog',
+    role: 'Chief Technology Officer',
+    img: 'https://assets.goodparty.org/team/tomer-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/tomer-party.jpg',
+    partyRole: 'Peaceful Warrior',
+  },
+  {
+    name: 'Taylor Murray',
+    role: 'Senior Fullstack Developer',
+    img: 'https://assets.goodparty.org/team/taylor-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/taylor-party.png',
+    partyRole: 'Good Vibes',
+  },
   {
     name: 'Evan Scronce',
     role: 'Design',
@@ -77,21 +75,26 @@ export const TEAM_MEMBERS = [
     flipImg: 'https://assets.goodparty.org/team/evan-party.png',
     partyRole: 'Dad',
   },
-
   {
-    name: 'Žak Tomich',
-    role: 'Chief Executive Officer',
-    img: 'https://assets.goodparty.org/team/zak-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/zak-party.jpg',
-    partyRole: 'Dad Joker',
+    name: 'Gabby Coll',
+    role: 'Jr. Product Designer',
+    img: 'https://assets.goodparty.org/team/gabby-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/gabby-party.jpg',
+    partyRole: 'Community+based curator+creative',
   },
-
   {
-    name: 'Matthew Wardenaar',
+    name: 'Mateo Wardenaar',
     role: 'Director of Product Management',
     img: 'https://assets.goodparty.org/team/matthew-goodparty.png',
     flipImg: 'https://assets.goodparty.org/team/matthew-party.jpg',
     partyRole: 'Social Storyteller',
+  },
+  {
+    name: 'Colton Hess',
+    role: 'Creator Community Lead',
+    img: 'https://assets.goodparty.org/team/colton-goodparty.png',
+    flipImg: 'https://assets.goodparty.org/team/colton-party.jpg',
+    partyRole: 'Radical Generalist',
   },
 ];
 
@@ -192,7 +195,7 @@ export default function Team() {
                 >
                   {member.name}
                 </div>
-                <div className="" data-cy="member-role">
+                <div className=" " data-cy="member-role">
                   {member.role}
                 </div>
               </div>

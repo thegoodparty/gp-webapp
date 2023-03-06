@@ -4,15 +4,34 @@ import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@shared/inputs/TextField';
 
+import styles from './PositionsSelector.module.scss';
+
 const comparePositions = (a, b) => {
   return -a.topIssue.name.localeCompare(b.topIssue.name);
 };
 
-export default function PositionsSelector({ positions, updateCallback }) {
+export default function PositionsSelector({
+  positions,
+  updateCallback,
+  square = false,
+  initialSelected,
+}) {
   const sorted = positions.sort(comparePositions);
   const [nonSelected, setNonSelected] = useState(sorted);
   const [selected, setSelected] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    if (initialSelected) {
+      let newNonSelected = [...sorted];
+      initialSelected.forEach((initialItem) => {
+        newNonSelected = newNonSelected.filter((item) => {
+          return item.id !== initialItem.id;
+        });
+      });
+      setSelected(initialSelected);
+      setNonSelected(newNonSelected);
+    }
+  }, []);
 
   const addPosition = (position) => {
     const newSelected = [...selected, position];
@@ -40,7 +59,7 @@ export default function PositionsSelector({ positions, updateCallback }) {
   };
 
   return (
-    <div>
+    <div className={square && styles.square}>
       <Autocomplete
         options={nonSelected}
         groupBy={(option) => {

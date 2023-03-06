@@ -4,7 +4,12 @@ import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
-import { setCookie, setUserCookie } from 'helpers/cookieHelper.js';
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+  setUserCookie,
+} from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
 import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
@@ -55,7 +60,13 @@ export default function LoginPage() {
       const user = await login(state.email, state.password);
       if (user) {
         userState.set(() => user);
-        router.push('/');
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          router.push(returnUrl);
+        } else {
+          router.push('/');
+        }
       } else {
         snackbarState.set(() => {
           return {

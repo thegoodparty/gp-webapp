@@ -31,14 +31,14 @@ export default function AdminDelete() {
     return null;
   }
   return (
-    <PortalPanel color="#ff00ff">
+    <div className="mt-48 flex justify-center">
       <BlackButtonClient
         onClick={() => {
           setShowDelete(true);
         }}
         style={{ backgroundColor: 'red', fontWeight: '700' }}
       >
-        Delete this campaign
+        Delete this campaign (Admin)
       </BlackButtonClient>
       <AlertDialog
         open={showDelete}
@@ -50,6 +50,6 @@ export default function AdminDelete() {
         description="Are you sure you want to delete this campaign? This cannot be undone."
         handleProceed={handleDelete}
       />
-    </PortalPanel>
+    </div>
   );
 }

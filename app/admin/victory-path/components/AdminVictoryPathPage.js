@@ -7,10 +7,10 @@ import gpFetch from 'gpApi/gpFetch';
 import { Select } from '@mui/material';
 import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { updateCampaign } from 'app/(candidate)/onboarding/[slug]/pledge/components/PledgeButton';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const sections = [
   {
