@@ -28,6 +28,7 @@ async function generateAI(subSectionKey, key) {
     return false;
   }
 }
+let calledInitial = false;
 
 export default function AIFlow({
   inputFields,
@@ -75,8 +76,8 @@ export default function AIFlow({
   const [state, setState] = useState(initialState);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  // const [showIntro, setShowInto] = useState(withIntro);
-  const [showIntro, setShowInto] = useState(false);
+  const [showIntro, setShowInto] = useState(withIntro);
+  // const [showIntro, setShowInto] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
 
   const canSave = () => {
@@ -91,10 +92,9 @@ export default function AIFlow({
       [key]: value,
     });
   };
-
   useEffect(() => {
-    if (!loading) {
-      setLoading(true);
+    if (!calledInitial) {
+      calledInitial = true;
       generateInitialAI();
     }
   }, []);
