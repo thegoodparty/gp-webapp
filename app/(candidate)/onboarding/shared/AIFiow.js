@@ -13,16 +13,17 @@ import ReactLoading from 'react-loading';
 import { BsSaveFill } from 'react-icons/bs';
 import { HiPencil } from 'react-icons/hi';
 import { AiTwotoneTool } from 'react-icons/ai';
+import { FaRedoAlt } from 'react-icons/fa';
 import UserAvatar from '@shared/user/UserAvatar';
 import Image from 'next/image';
 import AIFlowIntro from './AIFiowIntro';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-async function generateAI(subSectionKey, key) {
+async function generateAI(subSectionKey, key, regenerate) {
   try {
     const api = gpApi.campaign.onboarding.ai.create;
-    return await gpFetch(api, { subSectionKey, key });
+    return await gpFetch(api, { subSectionKey, key, regenerate });
   } catch (e) {
     console.log('error', e);
     return false;
@@ -99,12 +100,20 @@ export default function AIFlow({
     }
   }, []);
 
-  const generateInitialAI = async () => {
-    const { chatResponse } = await generateAI(subSectionKey, key);
-    const newChat = chat;
+  const generateInitialAI = async (regenerate = false) => {
+    const { chatResponse } = await generateAI(subSectionKey, key, regenerate);
+    let newChat = chat;
+    if (regenerate) {
+      newChat = [{ type: 'question', text: initialQuestion }];
+    }
     newChat.push({ type: 'answer', text: chatResponse });
     setChat(newChat);
     setLoading(false);
+  };
+
+  const handleRegenrate = async () => {
+    setLoading(true);
+    generateInitialAI(true);
   };
 
   return (
@@ -142,7 +151,7 @@ export default function AIFlow({
                           <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
                             <Typewriter
                               options={{
-                                delay: 10,
+                                delay: 6,
                               }}
                               onInit={(typewriter) => {
                                 typewriter
@@ -193,7 +202,7 @@ export default function AIFlow({
                     index === chat.length - 1 && ( // last item
                       <div className="ml-16">
                         <div className="grid grid-cols-12 gap-4">
-                          <div className="col-span-4">
+                          <div className="col-span-6">
                             <BlackButtonClient className="w-full font-bold">
                               <div className="flex items-center justify-center">
                                 <AiTwotoneTool />
@@ -201,8 +210,19 @@ export default function AIFlow({
                               </div>
                             </BlackButtonClient>
                           </div>
+                          <div className="col-span-6">
+                            <BlackButtonClient
+                              className="w-full font-bold"
+                              onClick={handleRegenrate}
+                            >
+                              <div className="flex items-center justify-center">
+                                <FaRedoAlt />
+                                <div className="mx-2">Regenerate</div>
+                              </div>
+                            </BlackButtonClient>
+                          </div>
 
-                          <div className="col-span-4">
+                          <div className="col-span-6">
                             <BlackButtonClient className="w-full font-bold">
                               <div className="flex items-center justify-center">
                                 <HiPencil />
@@ -211,7 +231,7 @@ export default function AIFlow({
                             </BlackButtonClient>
                           </div>
 
-                          <div className="col-span-4">
+                          <div className="col-span-6">
                             <BlackButtonClient className="w-full font-bold">
                               <div className="flex items-center justify-center">
                                 <BsSaveFill />
