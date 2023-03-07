@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
-import teamFields from './socialFields';
+import socialFields from './socialFields';
 
 export default async function Page({ params }) {
   const { slug, step } = params;
@@ -11,7 +11,7 @@ export default async function Page({ params }) {
 
   let stepInt = step ? parseInt(step, 10) : 1;
 
-  const stepFields = teamFields[stepInt - 1];
+  const stepFields = socialFields[stepInt - 1];
   const { pageType } = stepFields;
 
   const section = { label: 'Pre Launch', index: 1 };
@@ -36,6 +36,7 @@ export default async function Page({ params }) {
     section,
     subSectionLabel,
     pageType,
+    totalSteps: socialFields.length,
   };
   return <OnboardingStepPage {...childProps} />;
 }

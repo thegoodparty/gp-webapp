@@ -34,6 +34,7 @@ export default async function Page({ params }) {
     subSectionKey,
     section,
     subSectionLabel,
+    totalSteps: teamFields.length,
   };
   return <OnboardingStepPage {...childProps} />;
 }
