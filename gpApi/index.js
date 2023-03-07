@@ -219,35 +219,12 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      generateWhyGoals: {
-        url: `${base}campaign/onboarding/generate-why`,
-        method: 'POST',
-        withAuth: true,
-      },
-      generateWhatGoals: {
-        url: `${base}campaign/onboarding/generate-what`,
-        method: 'POST',
-        withAuth: true,
-      },
-      generateOpponentGoals: {
-        url: `${base}campaign/onboarding/generate-opponent`,
-        method: 'POST',
-        withAuth: true,
-      },
-      generateAboutOpponentGoals: {
-        url: `${base}campaign/onboarding/generate-about-opponent`,
-        method: 'POST',
-        withAuth: true,
-      },
-      generateOpponentSelf: {
-        url: `${base}campaign/onboarding/generate-opponent-self`,
-        method: 'POST',
-        withAuth: true,
-      },
-      test: {
-        url: `${base}campaign/onboarding/test`,
-        method: 'GET',
-        withAuth: true,
+      ai: {
+        create: {
+          url: `${base}campaign/onboarding/ai`,
+          method: 'POST',
+          withAuth: true,
+        },
       },
     },
   },
