@@ -101,17 +101,19 @@ export default function AIFlow({
   }, []);
 
   const generateInitialAI = async (regenerate = false) => {
-    const { chatResponse } = await generateAI(subSectionKey, key, regenerate);
     let newChat = chat;
     if (regenerate) {
       newChat = [{ type: 'question', text: initialQuestion }];
+      setChat(newChat);
     }
+    const { chatResponse } = await generateAI(subSectionKey, key, regenerate);
+
     newChat.push({ type: 'answer', text: chatResponse });
     setChat(newChat);
     setLoading(false);
   };
 
-  const handleRegenrate = async () => {
+  const handleRegenerate = async () => {
     setLoading(true);
     generateInitialAI(true);
   };
@@ -172,31 +174,7 @@ export default function AIFlow({
                       </>
                     )}
                   </div>
-                  <div>
-                    {loading && (
-                      <div className="flex items-start mb-4">
-                        <div className="h-12 w-12 rounded-full shadow-md p-2 border-gray-200 border-2">
-                          <div className="rounded-full relative h-full w-full">
-                            <Image
-                              src="/images/heart.svg"
-                              alt="GP"
-                              fill
-                              className="object-contain object-center"
-                            />
-                          </div>
-                        </div>
-                        <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
-                          <div className="flex flex-col  items-center">
-                            <ReactLoading
-                              color="black"
-                              type="spinningBubbles"
-                            />
-                            <div className="mt-2">Loading...</div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+
                   {showButtons &&
                     item.type === 'answer' &&
                     index === chat.length - 1 && ( // last item
@@ -213,7 +191,7 @@ export default function AIFlow({
                           <div className="col-span-6">
                             <BlackButtonClient
                               className="w-full font-bold"
-                              onClick={handleRegenrate}
+                              onClick={handleRegenerate}
                             >
                               <div className="flex items-center justify-center">
                                 <FaRedoAlt />
@@ -244,6 +222,28 @@ export default function AIFlow({
                     )}
                 </>
               ))}
+            <div>
+              {loading && (
+                <div className="flex items-start my-4">
+                  <div className="h-12 w-12 rounded-full shadow-md p-2 border-gray-200 border-2">
+                    <div className="rounded-full relative h-full w-full">
+                      <Image
+                        src="/images/heart.svg"
+                        alt="GP"
+                        fill
+                        className="object-contain object-center"
+                      />
+                    </div>
+                  </div>
+                  <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
+                    <div className="flex flex-col  items-center">
+                      <ReactLoading color="black" type="spinningBubbles" />
+                      <div className="mt-2">Loading...</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </form>
