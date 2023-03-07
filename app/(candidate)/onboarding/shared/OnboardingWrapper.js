@@ -71,7 +71,7 @@ export default function OnboardingWrapper({
       </div>
 
       <MaxWidth>
-        <Breadcrumbs links={breadcrumbsLinks} />
+        {slug && <Breadcrumbs links={breadcrumbsLinks} />}
 
         <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)] pt-10 lg:pt-24">
           <div className="text-center  tracking-tight pb-14">
