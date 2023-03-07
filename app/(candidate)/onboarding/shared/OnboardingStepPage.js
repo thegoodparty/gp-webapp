@@ -4,6 +4,7 @@ import CrunchingPage from '../[slug]/details/[step]/components/CrunchingPage';
 import IssuesPage from '../[slug]/details/[step]/components/IssuesPage';
 import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import MessagingStrategy from '../[slug]/goals/[step]/components/MessagingStrategy';
+import Checklist from '../[slug]/social/[step]/components/Checklist';
 import ProfileBannerPage from '../[slug]/strategy/[step]/components/ProfileBannerPage';
 import AIFlow from './AIFiow';
 
@@ -27,6 +28,9 @@ export default function OnboardingStepPage(props) {
   }
   if (pageType === 'messagingStrategy') {
     return <MessagingStrategy {...props} />;
+  }
+  if (pageType === 'checklist') {
+    return <Checklist {...props} />;
   }
   return <OnboardingPage {...props} />;
 }

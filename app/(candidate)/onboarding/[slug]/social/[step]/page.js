@@ -12,6 +12,7 @@ export default async function Page({ params }) {
   let stepInt = step ? parseInt(step, 10) : 1;
 
   const stepFields = teamFields[stepInt - 1];
+  const { pageType } = stepFields;
 
   const section = { label: 'Pre Launch', index: 1 };
   const subSectionKey = campaignSteps[0].steps[4].key;
@@ -34,6 +35,7 @@ export default async function Page({ params }) {
     subSectionKey,
     section,
     subSectionLabel,
+    pageType,
   };
   return <OnboardingStepPage {...childProps} />;
 }

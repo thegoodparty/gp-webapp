@@ -1,3 +1,3 @@
 export default function MessagingStrategy() {
-    return <div> Taylor will implement</div>
+  return <div> Tomer will implement</div>;
 }
