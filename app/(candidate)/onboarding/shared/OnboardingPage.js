@@ -1,7 +1,7 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
@@ -119,7 +119,7 @@ export default function OnboardingPage({
         <div className="max-w-[360px] mx-auto">
           <div className="grid grid-cols-12 gap-4">
             {inputFields.map((field) => (
-              <>
+              <Fragment key={field.key}>
                 {(!field.hidden || canShowField(field)) && (
                   <RenderInputField
                     field={field}
@@ -129,7 +129,7 @@ export default function OnboardingPage({
                     value={state[field.key]}
                   />
                 )}
-              </>
+              </Fragment>
             ))}
           </div>
 

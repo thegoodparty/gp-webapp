@@ -1,12 +1,10 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import { useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { hookstate } from '@hookstate/core';
 import Typewriter from 'typewriter-effect';
 import ReactLoading from 'react-loading';
 
@@ -19,6 +17,7 @@ import Image from 'next/image';
 import AIFlowIntro from './AIFiowIntro';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import TextField from '@shared/inputs/TextField';
 
 async function generateAI(subSectionKey, key, regenerate) {
   try {
@@ -38,7 +37,6 @@ export default function AIFlow({
   nextPath,
   ...props
 }) {
-  const initialState = {};
   const keys = [];
   // savingState.set(() => false);
 
@@ -55,15 +53,6 @@ export default function AIFlow({
     { type: 'question', text: initialQuestion },
   ]);
 
-  inputFields.map((field) => {
-    if (field.initialValue) {
-      initialState[field.key] = field.initialValue;
-    } else {
-      initialState[field.key] = '';
-    }
-    keys.push(field.key);
-  });
-
   if (campaign?.[subSectionKey]) {
     keys.forEach((key) => {
       if (campaign[subSectionKey][key]) {
@@ -74,18 +63,34 @@ export default function AIFlow({
 
   const { key, withIntro } = inputFields[0];
 
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState({
+    loading: false,
+    showIntro: withIntro,
+    showButtons: false,
+    editMode: false,
+    finalText: '',
+  });
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [showIntro, setShowInto] = useState(withIntro);
-  // const [showIntro, setShowInto] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
 
-  const canSave = () => {
-    return true;
+  const handleSave = async () => {
+    const updated = campaign;
+    if (!updated[subSectionKey]) {
+      updated[subSectionKey] = {};
+    }
+
+    updated[subSectionKey][key] = state.finalText;
+    await updateCampaign(updated);
+    let path = nextPath;
+
+    router.push(`onboarding/${campaign.slug}${path}`);
   };
 
-  const handleSave = async (skipped) => {};
+  // const onChangeField = (key, value) => {
+  //   setState({
+  //     ...state,
+  //     [key]: value,
+  //   });
+  // };
 
   const onChangeField = (key, value) => {
     setState({
@@ -93,6 +98,7 @@ export default function AIFlow({
       [key]: value,
     });
   };
+
   useEffect(() => {
     if (!calledInitial) {
       calledInitial = true;
@@ -110,19 +116,32 @@ export default function AIFlow({
 
     newChat.push({ type: 'answer', text: chatResponse });
     setChat(newChat);
-    setLoading(false);
+    setState({
+      ...state,
+      finalText: chatResponse,
+      loading: false,
+    });
   };
 
   const handleRegenerate = async () => {
-    setLoading(true);
+    setState({
+      ...state,
+      editMode: false,
+      loading: true,
+    });
     generateInitialAI(true);
   };
 
   return (
     <OnboardingWrapper {...props}>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
-        {showIntro ? (
-          <AIFlowIntro nextCallback={() => setShowInto(false)} />
+        {state.showIntro ? (
+          <AIFlowIntro
+            nextCallback={() => {
+              onChangeField('showIntro', false);
+              window.scroll(0, 0);
+            }}
+          />
         ) : (
           <div className="max-w-[600px] mx-auto">
             {chat &&
@@ -150,21 +169,35 @@ export default function AIFlow({
                           </div>
                         </div>
                         {index === chat.length - 1 ? (
-                          <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
-                            <Typewriter
-                              options={{
-                                delay: 6,
-                              }}
-                              onInit={(typewriter) => {
-                                typewriter
-                                  .typeString(item.text)
-                                  .callFunction(() => {
-                                    setShowButtons(true);
-                                  })
+                          <div className="ml-4 flex-1 px-3 py-5  leading-relaxed">
+                            {state.editMode ? (
+                              <TextField
+                                multiline
+                                rows={20}
+                                value={state.finalText}
+                                className="w-full"
+                                onChange={(e) =>
+                                  onChangeField('finalText', e.target.value)
+                                }
+                              />
+                            ) : (
+                              <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
+                                <Typewriter
+                                  options={{
+                                    delay: 4,
+                                  }}
+                                  onInit={(typewriter) => {
+                                    typewriter
+                                      .typeString(item.text)
+                                      .callFunction(() => {
+                                        onChangeField('showButtons', true);
+                                      })
 
-                                  .start();
-                              }}
-                            />
+                                      .start();
+                                  }}
+                                />
+                              </div>
+                            )}
                           </div>
                         ) : (
                           <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
@@ -175,7 +208,7 @@ export default function AIFlow({
                     )}
                   </div>
 
-                  {showButtons &&
+                  {(state.showButtons || state.editMode) &&
                     item.type === 'answer' &&
                     index === chat.length - 1 && ( // last item
                       <div className="ml-16">
@@ -201,7 +234,11 @@ export default function AIFlow({
                           </div>
 
                           <div className="col-span-6">
-                            <BlackButtonClient className="w-full font-bold">
+                            <BlackButtonClient
+                              className="w-full font-bold"
+                              onClick={() => onChangeField('editMode', true)}
+                              disabled={state.editMode}
+                            >
                               <div className="flex items-center justify-center">
                                 <HiPencil />
                                 <div className="mx-2">Edit</div>
@@ -209,7 +246,7 @@ export default function AIFlow({
                             </BlackButtonClient>
                           </div>
 
-                          <div className="col-span-6">
+                          <div className="col-span-6" onClick={handleSave}>
                             <BlackButtonClient className="w-full font-bold">
                               <div className="flex items-center justify-center">
                                 <BsSaveFill />
@@ -223,7 +260,7 @@ export default function AIFlow({
                 </>
               ))}
             <div>
-              {loading && (
+              {state.loading && (
                 <div className="flex items-start my-4">
                   <div className="h-12 w-12 rounded-full shadow-md p-2 border-gray-200 border-2">
                     <div className="rounded-full relative h-full w-full">
