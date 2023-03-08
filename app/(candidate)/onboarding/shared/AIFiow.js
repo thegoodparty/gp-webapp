@@ -12,12 +12,14 @@ import { BsSaveFill } from 'react-icons/bs';
 import { HiPencil } from 'react-icons/hi';
 import { AiTwotoneTool } from 'react-icons/ai';
 import { FaRedoAlt } from 'react-icons/fa';
+import { FiSend } from 'react-icons/fi';
 import UserAvatar from '@shared/user/UserAvatar';
 import Image from 'next/image';
 import AIFlowIntro from './AIFiowIntro';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TextField from '@shared/inputs/TextField';
+import { InputAdornment } from '@mui/material';
 
 async function generateAI(subSectionKey, key, regenerate) {
   try {
@@ -28,6 +30,17 @@ async function generateAI(subSectionKey, key, regenerate) {
     return false;
   }
 }
+
+async function enhanceAI(subSectionKey, key, prompt) {
+  try {
+    const api = gpApi.campaign.onboarding.ai.edit;
+    return await gpFetch(api, { subSectionKey, key, chat: prompt });
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 let calledInitial = false;
 
 export default function AIFlow({
@@ -68,6 +81,8 @@ export default function AIFlow({
     showIntro: withIntro,
     showButtons: false,
     editMode: false,
+    enhanceMode: false,
+    enhanceText: '',
     finalText: '',
   });
   const router = useRouter();
@@ -130,6 +145,32 @@ export default function AIFlow({
       loading: true,
     });
     generateInitialAI(true);
+  };
+
+  const handleEnhance = async () => {
+    setState({
+      ...state,
+      enhanceMode: false,
+      loading: true,
+    });
+    let newChat = chat;
+    newChat.push({ type: 'question', text: state.enhanceText });
+    const prompt = [
+      { role: 'assistant', content: state.finalText },
+      { role: 'user', content: state.enhanceText },
+    ];
+
+    const { chatResponse } = await enhanceAI(subSectionKey, key, prompt);
+
+    newChat.push({ type: 'answer', text: chatResponse });
+
+    setChat(newChat);
+
+    setState({
+      ...state,
+      finalText: chatResponse,
+      loading: false,
+    });
   };
 
   return (
@@ -214,7 +255,10 @@ export default function AIFlow({
                       <div className="ml-16">
                         <div className="grid grid-cols-12 gap-4">
                           <div className="col-span-6">
-                            <BlackButtonClient className="w-full font-bold">
+                            <BlackButtonClient
+                              className="w-full font-bold"
+                              onClick={() => onChangeField('enhanceMode', true)}
+                            >
                               <div className="flex items-center justify-center">
                                 <AiTwotoneTool />
                                 <div className="mx-2">Enhance</div>
@@ -281,6 +325,45 @@ export default function AIFlow({
                 </div>
               )}
             </div>
+            {state.enhanceMode && (
+              <div className="mt-16 ml-10">
+                <div className="mb-6 font-bold">
+                  Ask the Good Party AI to Add, Remove, Enhance something about
+                  why you want to run for office.
+                </div>
+
+                <TextField
+                  label="What do you want to change about the response?"
+                  className="w-full"
+                  onChange={(e) => {
+                    onChangeField('enhanceText', e.target.value);
+                  }}
+                  value={state.enhanceText}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end" onClick={handleEnhance}>
+                        <div className="mr-2 bg-black rounded-full h-9 w-9 flex items-center justify-center cursor-pointer text-white">
+                          <FiSend />
+                        </div>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <div className="mt-6 font-bold">
+                  Examples of what to ask the Good Party AI to enhance
+                </div>
+                <ul>
+                  <li>
+                    Highlight my experience as a former city council member and
+                    passion for the working class
+                  </li>
+                  <li>
+                    Make my WHY statement sound more formal / more like Ryan
+                    Reynolds
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </form>

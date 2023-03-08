@@ -22,6 +22,7 @@ export default function OnboardingPage({
   skipable,
   ...props
 }) {
+  console.log('cc', campaign);
   useEffect(() => {
     savingState.set(() => false);
   }, []);
