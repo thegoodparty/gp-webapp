@@ -75,14 +75,92 @@ const goalsFields = [
     ],
   },
   {
-    title: 'Messaging Strategy',
+    title: (
+      <>
+        Messaging Strategy
+        <br />
+        What they&apos;ll say about us
+      </>
+    ),
     subTitle:
       "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
     pageType: 'AIFlow',
     fields: [
       {
         key: 'theyAboutUs',
-        initialQuestion: "What we'll say about us",
+        initialQuestion: "What they'll say about us",
+      },
+    ],
+  },
+  {
+    title: (
+      <>
+        Messaging Strategy
+        <br />
+        What they&apos;ll say about themselves
+      </>
+    ),
+    subTitle:
+      "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
+    pageType: 'AIFlow',
+    fields: [
+      {
+        key: 'theyAboutThemselves',
+        initialQuestion: "What they'll say about us",
+      },
+    ],
+  },
+  {
+    title: (
+      <>
+        Messaging Strategy
+        <br />
+        What they&apos;ll say about us
+      </>
+    ),
+    subTitle:
+      "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
+    pageType: 'AIFlow',
+    fields: [
+      {
+        key: 'theyAboutThemselves',
+        initialQuestion: "What they'll say about us",
+      },
+    ],
+  },
+  {
+    title: (
+      <>
+        Messaging Strategy
+        <br />
+        What we&apos;ll say about them
+      </>
+    ),
+    subTitle:
+      "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
+    pageType: 'AIFlow',
+    fields: [
+      {
+        key: 'weAboutThem',
+        initialQuestion: "What they'll say about us",
+      },
+    ],
+  },
+  {
+    title: (
+      <>
+        Messaging Strategy
+        <br />
+        What we&apos;ll say about them
+      </>
+    ),
+    subTitle:
+      "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
+    pageType: 'AIFlow',
+    fields: [
+      {
+        key: 'weAboutOurself',
+        initialQuestion: "What they'll say about us",
       },
     ],
   },

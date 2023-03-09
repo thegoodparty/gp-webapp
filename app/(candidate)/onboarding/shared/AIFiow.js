@@ -8,10 +8,9 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Typewriter from 'typewriter-effect';
 import ReactLoading from 'react-loading';
 
-import { BsSaveFill } from 'react-icons/bs';
+import { BsSaveFill, BsFillQuestionCircleFill } from 'react-icons/bs';
 import { HiPencil } from 'react-icons/hi';
 import { GiFairyWand } from 'react-icons/gi';
-import { AiTwotoneTool } from 'react-icons/ai';
 import { FaRedoAlt } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import UserAvatar from '@shared/user/UserAvatar';
@@ -204,8 +203,16 @@ export default function AIFlow({
                   <div className="flex items-start mb-4" key={index}>
                     {item.type === 'question' && (
                       <>
-                        <UserAvatar user={user} />
-                        <div className="ml-4 bg-gray-100 flex-1 p-3 rounded">
+                        {index === 0 ? (
+                          <div className="h-12 w-12 rounded-full shadow-md mr-4">
+                            <BsFillQuestionCircleFill className="h-12 w-12" />
+                          </div>
+                        ) : (
+                          <div className="mr-4">
+                            <UserAvatar user={user} />
+                          </div>
+                        )}
+                        <div className=" bg-gray-100 flex-1 p-3 rounded">
                           {item.text}
                         </div>
                       </>
@@ -223,7 +230,7 @@ export default function AIFlow({
                           </div>
                         </div>
                         {index === chat.length - 1 ? (
-                          <div className="ml-4 flex-1 px-3 py-5  leading-relaxed">
+                          <div className="ml-4 flex-1 mb-4  leading-relaxed">
                             {state.editMode ? (
                               <TextField
                                 multiline
@@ -235,7 +242,7 @@ export default function AIFlow({
                                 }
                               />
                             ) : (
-                              <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
+                              <div className=" border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
                                 <Typewriter
                                   options={{
                                     delay: 1,
