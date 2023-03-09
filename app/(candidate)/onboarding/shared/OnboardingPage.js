@@ -20,15 +20,14 @@ export default function OnboardingPage({
   nextPathFunc,
   slug,
   skipable,
+  step,
   ...props
 }) {
-  console.log('cc', campaign);
   useEffect(() => {
     savingState.set(() => false);
   }, []);
   const initialState = {};
   const keys = [];
-  // savingState.set(() => false);
 
   inputFields.map((field) => {
     if (field.initialValue) {

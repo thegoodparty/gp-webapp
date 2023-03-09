@@ -6,8 +6,6 @@ import { VscGraphLine } from 'react-icons/vsc';
 import { RiCloseCircleFill } from 'react-icons/ri';
 import { AiOutlineBulb } from 'react-icons/ai';
 
-export const savingState = hookstate(false);
-
 export default function AIFlowIntro({ nextCallback }) {
   const IntroItems = [
     {

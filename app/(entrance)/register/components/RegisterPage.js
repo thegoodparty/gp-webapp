@@ -44,8 +44,9 @@ export const REGISTER_FIELDS = [
 ];
 
 export const validateZip = (zip) => {
+  let zipInt = parseInt(zip);
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-  return validZip.test(zip);
+  return validZip.test(zipInt);
 };
 
 export default function RegisterPage({}) {

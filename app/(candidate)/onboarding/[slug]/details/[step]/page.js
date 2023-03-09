@@ -28,6 +28,8 @@ export default async function Page({ params }) {
     ({ positions } = await fetchPositions());
   }
 
+  console.log('pos', positions);
+
   let pledge;
   if (pageType === 'pledgePage') {
     const res = await fetchContentByKey('pledge');

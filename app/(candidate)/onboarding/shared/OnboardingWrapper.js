@@ -69,7 +69,6 @@ export default function OnboardingWrapper({
           )}
         </div>
       </div>
-
       <MaxWidth>
         {slug && <Breadcrumbs links={breadcrumbsLinks} />}
 
@@ -81,7 +80,10 @@ export default function OnboardingWrapper({
           {/* <AnimatePresence mode="wait"> */}
           <motion.div
             initial={{ x: 300, opacity: 0 }}
-            animate={{ x: saving ? -300 : 0, opacity: saving ? 0 : 1 }}
+            animate={{
+              x: saving ? -300 : 0,
+              opacity: saving ? 0 : 1,
+            }}
             // exit={{ x: -300, opacity: 0 }}
             key={`${pathname} ${title}`}
           >

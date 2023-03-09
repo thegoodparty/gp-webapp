@@ -2,8 +2,6 @@ import { isValidPhone } from '@shared/inputs/PhoneInput';
 import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 import { flatStates, states } from 'helpers/statesHelper';
 
-
-
 const detailsFields = [
   {
     title:

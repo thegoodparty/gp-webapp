@@ -16,6 +16,7 @@ export default function PositionsSelector({
   square = false,
   initialSelected,
 }) {
+  console.log('positions selector');
   const sorted = positions.sort(comparePositions);
   const [nonSelected, setNonSelected] = useState(sorted);
   const [selected, setSelected] = useState([]);

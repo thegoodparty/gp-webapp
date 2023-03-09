@@ -180,7 +180,9 @@ export default function AIFlow({
           <AIFlowIntro
             nextCallback={() => {
               onChangeField('showIntro', false);
-              window.scroll(0, 0);
+              if (typeof window !== 'undefined') {
+                window.scroll(0, 0);
+              }
             }}
           />
         ) : (

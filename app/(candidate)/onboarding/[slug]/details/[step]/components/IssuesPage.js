@@ -1,12 +1,13 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
 import TextField from '@shared/inputs/TextField';
+import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 
 export default function IssuesPage({
   campaign,
@@ -18,6 +19,9 @@ export default function IssuesPage({
   subSectionKey,
   ...props
 }) {
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
   let initialState = {
     positions: [],
   };
@@ -34,7 +38,7 @@ export default function IssuesPage({
       return false;
     }
     for (let i = 0; i < state.positions.length; i++) {
-      const id = positions[i].id;
+      const id = state.positions[i].id;
       if (!state[`position-${id}`] || state[`position-${id}`] === '') {
         return false;
       }
@@ -53,7 +57,11 @@ export default function IssuesPage({
     await updateCampaign(updated);
     let path = nextPath;
 
-    router.push(`onboarding/${slug}${path}`);
+    savingState.set(() => true);
+
+    setTimeout(() => {
+      router.push(`onboarding/${slug}${path}`);
+    }, 200);
   };
 
   const onChangeField = (key, value) => {
