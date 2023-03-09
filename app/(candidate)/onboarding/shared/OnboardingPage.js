@@ -45,6 +45,7 @@ export default function OnboardingPage({
       }
     });
   }
+
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function OnboardingPage({
     return true;
   };
 
-  const handleSave = async (skipped) => {
+  const handleSave = async (skipped = false) => {
     setLoading(true);
     const updated = campaign;
     if (!updated[subSectionKey]) {
@@ -148,7 +149,7 @@ export default function OnboardingPage({
               <ReactLoading color="green" />
             ) : (
               <BlackButtonClient
-                onClick={handleSave}
+                onClick={() => handleSave(false)}
                 disabled={!canSave()}
                 type="submit"
               >

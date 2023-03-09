@@ -6,7 +6,24 @@ const detailsFields = [
   {
     title:
       "Hi! I'm Jared. I just need a little bit of information to get you started...",
-    subTitle:
+
+    fields: [
+      {
+        key: 'firstName',
+        label: 'Candidate First Name',
+        required: true,
+        type: 'text',
+      },
+      {
+        key: 'lastName',
+        label: 'Candidate Last Name',
+        required: true,
+        type: 'text',
+      },
+    ],
+  },
+  {
+    title:
       "We'll help you figure out the best way to run a successful campaign where you live",
     fields: [
       {

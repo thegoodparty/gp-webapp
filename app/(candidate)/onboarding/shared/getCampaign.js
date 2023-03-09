@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 export const fetchUserCampaignServer = async () => {
   const api = gpApi.campaign.onboarding.findByUser;
   const token = getServerToken();
-  return await gpFetch(api, false, 3600, token);
+  return await gpFetch(api, false, false, token);
 };
 
 export default async function getCampaign(params) {
