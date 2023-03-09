@@ -10,6 +10,7 @@ import ReactLoading from 'react-loading';
 
 import { BsSaveFill } from 'react-icons/bs';
 import { HiPencil } from 'react-icons/hi';
+import { GiFairyWand } from 'react-icons/gi';
 import { AiTwotoneTool } from 'react-icons/ai';
 import { FaRedoAlt } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
@@ -20,6 +21,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TextField from '@shared/inputs/TextField';
 import { InputAdornment } from '@mui/material';
+import { savingState } from './OnboardingPage';
 
 async function generateAI(subSectionKey, key, regenerate) {
   try {
@@ -50,6 +52,11 @@ export default function AIFlow({
   nextPath,
   ...props
 }) {
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
+  const { key, withIntro } = inputFields[0];
+
   const keys = [];
   // savingState.set(() => false);
 
@@ -58,9 +65,11 @@ export default function AIFlow({
   const { office, district } = campaign.details || {};
   const officeState = campaign.details?.state;
 
-  const initialQuestion = `Why would ${user.name} run for ${office} in ${
-    district || ''
-  } ${officeState || ''}`;
+  const initialQuestion =
+    inputFields[0].initialQuestion ||
+    `Why would ${user.name} run for ${office} in ${district || ''} ${
+      officeState || ''
+    }`;
 
   const [chat, setChat] = useState([
     { type: 'question', text: initialQuestion },
@@ -73,8 +82,6 @@ export default function AIFlow({
       }
     });
   }
-
-  const { key, withIntro } = inputFields[0];
 
   const [state, setState] = useState({
     loading: false,
@@ -97,7 +104,11 @@ export default function AIFlow({
     await updateCampaign(updated);
     let path = nextPath;
 
-    router.push(`onboarding/${campaign.slug}${path}`);
+    savingState.set(() => true);
+
+    setTimeout(() => {
+      router.push(`onboarding/${campaign.slug}${path}`);
+    }, 200);
   };
 
   // const onChangeField = (key, value) => {
@@ -227,7 +238,7 @@ export default function AIFlow({
                               <div className="ml-4 border-gray-200 border-2 rounded flex-1 px-3 py-5  leading-relaxed">
                                 <Typewriter
                                   options={{
-                                    delay: 4,
+                                    delay: 1,
                                   }}
                                   onInit={(typewriter) => {
                                     typewriter
@@ -262,7 +273,7 @@ export default function AIFlow({
                               onClick={() => onChangeField('enhanceMode', true)}
                             >
                               <div className="flex items-center justify-center">
-                                <AiTwotoneTool />
+                                <GiFairyWand />
                                 <div className="mx-2">Enhance</div>
                               </div>
                             </BlackButtonClient>
@@ -282,18 +293,21 @@ export default function AIFlow({
                           <div className="col-span-6">
                             <BlackButtonClient
                               className="w-full font-bold"
-                              onClick={() => onChangeField('editMode', true)}
-                              disabled={state.editMode}
+                              onClick={() =>
+                                onChangeField('editMode', !state.editMode)
+                              }
                             >
                               <div className="flex items-center justify-center">
                                 <HiPencil />
-                                <div className="mx-2">Edit</div>
+                                <div className="mx-2">
+                                  {state.editMode ? 'End ' : ''}Edit
+                                </div>
                               </div>
                             </BlackButtonClient>
                           </div>
 
                           <div className="col-span-6" onClick={handleSave}>
-                            <BlackButtonClient className="w-full font-bold">
+                            <BlackButtonClient className="w-full font-bold bg-green-500">
                               <div className="flex items-center justify-center">
                                 <BsSaveFill />
                                 <div className="mx-2">Save</div>

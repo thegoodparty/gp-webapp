@@ -1,6 +1,6 @@
 const goalsFields = [
   {
-    title: 'Tell us why you are running.',
+    title: 'Why are you running?',
     subTitle:
       "We've been listening and based on what we know about you so far, we can help generate a WHY statement for you. Some things to keep in mind first.",
     pageType: 'AIFlow',
@@ -76,10 +76,15 @@ const goalsFields = [
   },
   {
     title: 'Messaging Strategy',
-    pageType: 'messagingStrategy',
     subTitle:
       "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
-    fields: [],
+    pageType: 'AIFlow',
+    fields: [
+      {
+        key: 'theyAboutUs',
+        initialQuestion: "What we'll say about us",
+      },
+    ],
   },
 ];
 
