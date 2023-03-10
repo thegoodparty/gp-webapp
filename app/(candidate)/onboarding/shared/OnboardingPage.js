@@ -56,9 +56,9 @@ export default function OnboardingPage({
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
       if (field.required) {
-        if (field.initialValue && state[field.key] === field.initialValue) {
-          return false;
-        }
+        // if (field.initialValue && state[field.key] === field.initialValue) {
+        //   return false;
+        // }
 
         if (!field.initialValue && state[field.key] === '') {
           return false;
@@ -115,7 +115,7 @@ export default function OnboardingPage({
   };
 
   return (
-    <OnboardingWrapper {...props} slug={slug}>
+    <OnboardingWrapper {...props} slug={slug} step={step}>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
         <div className="max-w-[360px] mx-auto">
           <div className="grid grid-cols-12 gap-4">

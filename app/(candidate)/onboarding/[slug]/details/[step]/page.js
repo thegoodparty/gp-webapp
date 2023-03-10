@@ -4,7 +4,7 @@ import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
-import { getServerToken } from 'helpers/userServerHelper';
+import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import detailsFields from './detailsFields';
@@ -27,8 +27,18 @@ export default async function Page({ params }) {
   if (pageType === 'issuesPage') {
     ({ positions } = await fetchPositions());
   }
+  if (stepInt === 1) {
+    const user = getServerUser();
+    const name = user.name.split(' ');
+    stepFields.fields[0].initialValue = name[0];
+    stepFields.fields[1].initialValue =
+      name.length > 0 ? name[name.length - 1] : '';
+  }
 
-  console.log('pos', positions);
+  if (stepInt === 2) {
+    const user = getServerUser();
+    stepFields.fields[0].initialValue = user.zip;
+  }
 
   let pledge;
   if (pageType === 'pledgePage') {
