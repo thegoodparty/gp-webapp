@@ -8,6 +8,7 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { hookstate } from '@hookstate/core';
+import ArticlesSnippets from '../[slug]/details/[step]/components/ArticlesSnippets';
 
 export const savingState = hookstate(false);
 
@@ -122,13 +123,24 @@ export default function OnboardingPage({
             {inputFields.map((field) => (
               <Fragment key={field.key}>
                 {(!field.hidden || canShowField(field)) && (
-                  <RenderInputField
-                    field={field}
-                    onChangeCallback={onChangeField}
-                    error={!!errors[field.key]}
-                    positions={props.positions}
-                    value={state[field.key]}
-                  />
+                  <>
+                    {field.type === 'articles' ? (
+                      <ArticlesSnippets
+                        articles={props.articles}
+                        field={field}
+                      />
+                    ) : (
+                      <>
+                        <RenderInputField
+                          field={field}
+                          onChangeCallback={onChangeField}
+                          error={!!errors[field.key]}
+                          positions={props.positions}
+                          value={state[field.key]}
+                        />
+                      </>
+                    )}
+                  </>
                 )}
               </Fragment>
             ))}

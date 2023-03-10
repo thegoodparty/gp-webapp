@@ -140,6 +140,18 @@ const detailsFields = [
           'School Board',
         ],
       },
+      {
+        key: 'articles',
+        type: 'articles',
+        hidden: true,
+        showKey: 'knowRun',
+        showCondition: ['no'],
+        articles: ['run-as-independent', 'how-to-run-a-political-campaign'],
+        title:
+          "Looks like you want to get involved in local politics but you're not sure which office?",
+        subTitle:
+          "Well, you've got a ton of options to choose from - State Senate, City Council, School Board, even Tree Warden! With over 500,000 local elections happening across the US, the possibilities are practically endless. Lucky for you, there are some awesome tools out there to help you figure out which issues you care about most and which office would be the perfect fit for you in your community. Let's check 'em out!",
+      },
     ],
   },
   {

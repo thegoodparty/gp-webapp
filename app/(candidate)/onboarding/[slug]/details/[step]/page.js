@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import { fetchArticle } from 'app/blog/article/[slug]/page';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
@@ -39,6 +40,16 @@ export default async function Page({ params }) {
     const user = getServerUser();
     stepFields.fields[0].initialValue = user.zip;
   }
+  const articles = [];
+  if (stepInt === 5) {
+    if (stepFields.fields[4].articles) {
+      const articlesSlugs = stepFields.fields[4].articles;
+      for (let i = 0; i < articlesSlugs.length; i++) {
+        const article = await fetchArticle(articlesSlugs[i]);
+        articles.push(article?.content);
+      }
+    }
+  }
 
   let pledge;
   if (pageType === 'pledgePage') {
@@ -66,6 +77,7 @@ export default async function Page({ params }) {
     totalSteps: detailsFields.length,
     section,
     subSectionLabel,
+    articles,
   };
   return <OnboardingStepPage {...childProps} />;
 }
