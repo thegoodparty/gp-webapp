@@ -1,7 +1,6 @@
 import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
 
 export default function ArticlesSnippets({ articles, field }) {
-  console.log('articles', articles);
   const { title, subTitle } = field;
   return (
     <div className="col-span-12 lg:min-w-[600px] lg:-ml-[120px] mx-auto mb-12">
