@@ -91,7 +91,7 @@ export default function OnboardingStartPage(props) {
 
     const { slug } = await createCampaign();
     if (slug) {
-      router.push(`/onboarding/${slug}`);
+      router.push(`/onboarding/${slug}/details/1`);
     } else {
       snackbarState.set(() => {
         return {
