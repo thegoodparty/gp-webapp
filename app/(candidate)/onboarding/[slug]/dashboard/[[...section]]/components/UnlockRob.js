@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FaLock } from 'react-icons/fa';
-import RobImg from 'public/images/campaign/rob.png';
+import RobImg from 'public/images/campaign/rob1.png';
 import Image from 'next/image';
 
 export default function UnlockRob({ key }) {
