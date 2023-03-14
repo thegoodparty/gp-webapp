@@ -30,32 +30,18 @@ const campaignSteps = [
         steps: goalsFieldsCount,
       },
       {
-        key: 'strategy',
-        title: 'Campaign Message & Strategy',
+        key: 'plan',
+        title: 'Your Campaign Plan',
         subTitle:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: strategyFieldsCount,
+        steps: 0,
       },
       {
-        key: 'team',
-        title: 'Build a Campaign Team',
+        key: 'incentive',
+        title: 'Unlock somthing',
         subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: teamFieldsCount,
-      },
-      {
-        key: 'social',
-        title: 'Social Media',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: socialFieldsCount,
-      },
-      {
-        key: 'budget',
-        title: ' Budget & Fundraising Plan',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: 6,
+          'Unlock a one-on-one session with our Political Director, Rob Booth!',
+        steps: 0,
       },
     ],
   },
@@ -112,9 +98,6 @@ export const generateCampaignStatus = (campaign) => {
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
-    { key: 'strategy', value: strategy, count: strategyFieldsCount },
-    { key: 'team', value: team, count: teamFieldsCount },
-    { key: 'social', value: social, count: socialFieldsCount },
   ];
 
   preLaunchSections.forEach((section) => {

@@ -25,14 +25,17 @@ export default function Step({
     link = `/onboarding/${campaign.slug}/${step.key}/1`;
   }
   return (
-    <div className="col-span-12 lg:col-span-4 h-full" key={step.key}>
+    <div
+      className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
+      key={step.key}
+    >
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between">
         <div className="px-6 py-8">
           <div className="inline-block rounded mb-3">{step.icon}</div>
-          <h3 className="font-bold text-3xl">
+          <h3 className="font-bold text-2xl">
             {index + 1}. {step.title}
           </h3>
-          <h4 className="text-zinc-500 mt-3 leading-relaxed">
+          <h4 className="text-zinc-500 mt-3 leading-relaxed text-sm  ">
             {step.subTitle}
           </h4>
         </div>
@@ -50,11 +53,15 @@ export default function Step({
               )}
               {status || 'Not Started'}
             </div>
-            <div className="mt-1">
-              {stepStatus.completedSteps + (status === 'In Progress' ? 1 : 0) ||
-                0}{' '}
-              of {sectionIndex === false ? step.steps.length : step.steps} steps
-            </div>
+            {(sectionIndex === false ||
+              (sectionIndex !== false && step.steps > 0)) && (
+              <div className="mt-1">
+                {stepStatus.completedSteps +
+                  (status === 'In Progress' ? 1 : 0) || 0}{' '}
+                of {sectionIndex === false ? step.steps.length : step.steps}{' '}
+                steps
+              </div>
+            )}
           </div>
           <div>
             <Link href={link} className=" no-underline">

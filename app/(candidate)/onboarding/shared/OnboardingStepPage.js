@@ -9,6 +9,7 @@ import AIFlow from './AIFiow';
 
 export default function OnboardingStepPage(props) {
   const { pageType } = props;
+  console.log('pageTY', pageType);
   if (pageType === 'issuesPage') {
     return <IssuesPage {...props} />;
   }

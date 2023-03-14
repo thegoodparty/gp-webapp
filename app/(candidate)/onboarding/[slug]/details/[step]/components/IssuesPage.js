@@ -3,7 +3,6 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
-import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
 import TextField from '@shared/inputs/TextField';
@@ -31,7 +30,6 @@ export default function IssuesPage({
   }
   const [state, setState] = useState(initialState);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const canSave = () => {
     if (!state.positions || state.positions.length === 0) {
@@ -47,7 +45,6 @@ export default function IssuesPage({
   };
 
   const handleSave = async () => {
-    setLoading(true);
     const updated = campaign;
     if (!updated[subSectionKey]) {
       updated[subSectionKey] = {};
@@ -105,13 +102,9 @@ export default function IssuesPage({
         ))}
 
         <div className="flex justify-center">
-          {loading ? (
-            <ReactLoading color="green" />
-          ) : (
-            <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-              <div>NEXT</div>
-            </BlackButtonClient>
-          )}
+          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+            <div>NEXT</div>
+          </BlackButtonClient>
         </div>
       </div>
     </OnboardingWrapper>

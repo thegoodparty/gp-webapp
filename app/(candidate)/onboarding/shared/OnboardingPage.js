@@ -5,7 +5,6 @@ import { Fragment, useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
-import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { hookstate } from '@hookstate/core';
 import ArticlesSnippets from '../[slug]/details/[step]/components/ArticlesSnippets';
@@ -157,17 +156,14 @@ export default function OnboardingPage({
                 </BlackButtonClient>
               </div>
             )}
-            {loading ? (
-              <ReactLoading color="green" />
-            ) : (
-              <BlackButtonClient
-                onClick={() => handleSave(false)}
-                disabled={!canSave()}
-                type="submit"
-              >
-                <div>NEXT</div>
-              </BlackButtonClient>
-            )}
+
+            <BlackButtonClient
+              onClick={() => handleSave(false)}
+              disabled={!canSave()}
+              type="submit"
+            >
+              <div className="font-bold">NEXT</div>
+            </BlackButtonClient>
           </div>
           {skipable && (
             <div
