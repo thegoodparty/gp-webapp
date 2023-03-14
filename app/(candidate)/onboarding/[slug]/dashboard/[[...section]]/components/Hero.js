@@ -16,10 +16,15 @@ export default function Hero({
         <div className="grid grid-cols-12 gap-2">
           <div className="col-span-12 lg:col-span-6">
             <div className="p-8">
+              {campaignSteps[sectionIndex]?.preTitle && (
+                <div className="text-lg font-black mb-3">
+                  {campaignSteps[sectionIndex]?.preTitle}
+                </div>
+              )}
               <h1 className="font-black text-5xl mb-4">
                 {sectionIndex !== false
                   ? campaignSteps[sectionIndex]?.title
-                  : 'Campaign Manager'}
+                  : 'Build your Campaign Plan'}
               </h1>
               <h2 className="text-zinc-500 text-lg mb-8 leading-relaxed">
                 {sectionIndex !== false ? (
@@ -31,7 +36,7 @@ export default function Hero({
                   </>
                 )}
               </h2>
-              <div className="bg-teal-400 text-white text-xs font-black mb-4 mt-14 inline-block py-1 px-2 rounded">
+              <div className="bg-black text-white text-xs font-black mb-4 mt-14 inline-block py-1 px-2 rounded">
                 NEXT STEP
               </div>
               <div className="flex items-baseline mb-5">

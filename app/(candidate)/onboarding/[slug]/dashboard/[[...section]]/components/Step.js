@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FaLock } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
+import UnlockRob from './UnlockRob';
 
 export default function Step({
   campaign,
@@ -24,6 +25,11 @@ export default function Step({
   if (sectionIndex !== false) {
     link = `/onboarding/${campaign.slug}/${step.key}/1`;
   }
+
+  if (step.customCard && step.customCard === 'unlockRob') {
+    return <UnlockRob key={step.key} />;
+  }
+
   return (
     <div
       className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
@@ -31,7 +37,9 @@ export default function Step({
     >
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between">
         <div className="px-6 py-8">
-          <div className="inline-block rounded mb-3">{step.icon}</div>
+          {step.icon && (
+            <div className="inline-block rounded mb-3">{step.icon}</div>
+          )}
           <h3 className="font-bold text-2xl">
             {index + 1}. {step.title}
           </h3>
@@ -63,7 +71,7 @@ export default function Step({
               </div>
             )}
           </div>
-          <div>
+          <div className="pl-3">
             <Link href={link} className=" no-underline">
               {status === 'Completed' && (
                 <div className="underline text-gray-600 px-6 py-4  font-bold">
@@ -71,7 +79,7 @@ export default function Step({
                 </div>
               )}
               {status === 'In Progress' && (
-                <div className="bg-orange-500 text-white px-12 py-4 rounded-full  font-black">
+                <div className="bg-yellow-400  px-8 py-4 rounded-full  font-black">
                   Continue
                 </div>
               )}
@@ -82,7 +90,7 @@ export default function Step({
                 {nextStep.sectionIndex === sectionIndex &&
                 nextStep.step === index + 1 ? (
                   <Link href={link} className=" no-underline">
-                    <div className="bg-orange-500 text-white px-12 py-4 rounded-full  font-black">
+                    <div className="bg-yellow-400 px-8 py-4 rounded-full  font-black">
                       Get Started
                     </div>
                   </Link>

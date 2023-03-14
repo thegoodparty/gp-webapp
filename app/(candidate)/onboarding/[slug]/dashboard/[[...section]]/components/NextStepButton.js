@@ -19,8 +19,8 @@ export default function NextStepButton({
   }
   return (
     <Link href={link}>
-      <div className="bg-orange-500 text-white py-4 px-12 inline-block rounded-full">
-        <div className="font-bold">Continue</div>
+      <div className="bg-yellow-400  py-4 px-12 inline-block rounded-full">
+        <div className="font-black">CONTINUE</div>
       </div>
     </Link>
   );

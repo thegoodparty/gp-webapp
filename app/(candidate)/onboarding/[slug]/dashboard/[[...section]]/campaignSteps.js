@@ -10,9 +10,10 @@ import { socialFieldsCount } from '../../social/[step]/socialFields';
 const campaignSteps = [
   {
     key: 'preLaunch',
+    preTitle: 'Build Your Campaign Plan',
     title: 'Pre Launch',
     subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+      'Good Party will be with you every step of the way so you can run a successful campaign.',
     icon: <FaRegLightbulb size={30} />,
     steps: [
       {
@@ -42,6 +43,7 @@ const campaignSteps = [
         subTitle:
           'Unlock a one-on-one session with our Political Director, Rob Booth!',
         steps: 0,
+        customCard: 'unlockRob',
       },
     ],
   },
