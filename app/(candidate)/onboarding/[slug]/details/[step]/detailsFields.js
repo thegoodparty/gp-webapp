@@ -219,7 +219,6 @@ const detailsFields = [
   },
   {
     title: 'What is your current occupation?',
-    subTitle: 'Missing text Mateo',
     fields: [
       {
         key: 'occupation',
@@ -231,7 +230,6 @@ const detailsFields = [
   },
   {
     title: 'What is a fun fact about yourself?',
-    subTitle: 'Missing text Mateo',
     skipable: true,
     fields: [
       {

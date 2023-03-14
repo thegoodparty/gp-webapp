@@ -13,10 +13,14 @@ export default function NextStepButton({
     nextStep.sectionIndex + 1
   }`;
   if (sectionIndex !== false) {
-    link = `/onboarding/${campaign.slug}/${
-      campaignSteps[sectionIndex]?.steps[nextStep.step - 1]?.key
-    }/1`;
+    const step = campaignSteps[sectionIndex]?.steps[nextStep.step - 1];
+    link = `/onboarding/${campaign.slug}/${step.key}/1`;
+
+    if (step.link) {
+      link = `/onboarding/${campaign.slug}${step.link}`;
+    }
   }
+
   return (
     <Link href={link}>
       <div className="bg-yellow-400  py-4 px-12 inline-block rounded-full">

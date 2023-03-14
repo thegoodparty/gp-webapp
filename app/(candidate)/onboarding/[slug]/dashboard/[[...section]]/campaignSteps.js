@@ -3,9 +3,6 @@ import { SlRocket } from 'react-icons/sl';
 import { MdHowToVote } from 'react-icons/md';
 import { detailFieldsCount } from '../../details/[step]/detailsFields';
 import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
-import { strategyFieldsCount } from '../../strategy/[step]/strategyFields';
-import { teamFieldsCount } from '../../team/[step]/teamFields';
-import { socialFieldsCount } from '../../social/[step]/socialFields';
 
 const campaignSteps = [
   {
@@ -36,6 +33,7 @@ const campaignSteps = [
         subTitle:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
         steps: 0,
+        link: '/campaign-plan',
       },
       {
         key: 'incentive',
@@ -53,15 +51,7 @@ const campaignSteps = [
     subTitle:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
     icon: <SlRocket size={30} />,
-    steps: [
-      {
-        key: 'details',
-        title: 'Candidate Details',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: detailFieldsCount,
-      },
-    ],
+    steps: [],
   },
   {
     key: 'run',
@@ -69,15 +59,7 @@ const campaignSteps = [
     subTitle:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
     icon: <MdHowToVote size={30} />,
-    steps: [
-      {
-        key: 'details',
-        title: 'Candidate Details',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: detailFieldsCount,
-      },
-    ],
+    steps: [],
   },
 ];
 

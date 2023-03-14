@@ -25,6 +25,9 @@ export default function Step({
   if (sectionIndex !== false) {
     link = `/onboarding/${campaign.slug}/${step.key}/1`;
   }
+  if (step.link) {
+    link = `/onboarding/${campaign.slug}${step.link}`;
+  }
 
   if (step.customCard && step.customCard === 'unlockRob') {
     return <UnlockRob key={step.key} />;
@@ -63,7 +66,7 @@ export default function Step({
               )}
               {status || 'Not Started'}
             </div>
-            {(sectionIndex === false ||
+            {((sectionIndex === false && step.steps.length > 0) ||
               (sectionIndex !== false && step.steps > 0)) && (
               <div className="mt-1">
                 {stepStatus.completedSteps +

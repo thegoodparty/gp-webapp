@@ -19,7 +19,7 @@ export default function UnlockRob({ key }) {
           />
         </div>
         <div className="px-6 py-8">
-          <h3 className="font-bold text-2xl text-center">In Progress</h3>
+          <h3 className="font-bold text-2xl text-center">Expert Support</h3>
           <div className="flex items-center mt-3">
             <div>
               Unlock a one-on-one session with our Political Director, Rob
