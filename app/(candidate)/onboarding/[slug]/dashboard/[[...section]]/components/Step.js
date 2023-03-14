@@ -32,7 +32,9 @@ export default function Step({
 
   return (
     <div
-      className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
+      className={`col-span-12 md:col-span-6 ${
+        sectionIndex !== false ? 'lg:col-span-3' : 'lg:col-span-4'
+      } h-full`}
       key={step.key}
     >
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between">
