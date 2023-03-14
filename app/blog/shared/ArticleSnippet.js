@@ -12,7 +12,7 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import styles from './ArticleSnippet.module.scss';
 import TimeAgoClient from '@shared/utils/TimeAgoClient';
 
-function ArticleSnippet({ article, heroMode }) {
+function ArticleSnippet({ article, heroMode, target = false }) {
   if (!article) {
     return null;
   }
@@ -21,7 +21,11 @@ function ArticleSnippet({ article, heroMode }) {
   const sectionName = section?.fields?.title;
 
   return (
-    <Link href={`/blog/article/${slug}`} className="no-underline">
+    <Link
+      href={`/blog/article/${slug}`}
+      className="no-underline"
+      target={target}
+    >
       <article className={`${styles.wrapper} ${heroMode && styles.hero}`}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className={heroMode ? 'lg:col-span-1' : 'lg:col-span-3'}>

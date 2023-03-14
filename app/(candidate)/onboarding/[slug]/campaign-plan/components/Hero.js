@@ -11,7 +11,7 @@ export default function Hero(props) {
         className="object-cover lg:object-contain object-right-top"
         alt=""
       />
-      <h1 className="font-black text-5xl relative">Your Campaign Manager</h1>
+      <h1 className="font-black text-5xl relative">Your Campaign Plan</h1>
     </div>
   );
 }

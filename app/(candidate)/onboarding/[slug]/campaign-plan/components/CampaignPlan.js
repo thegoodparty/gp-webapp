@@ -7,7 +7,7 @@ export default function CampaignManager(props) {
     <div className="bg-slate-100 py-8">
       <MaxWidth>
         <Hero />
-        <CampaignAccordion />
+        <CampaignAccordion {...props} />
       </MaxWidth>
     </div>
   );

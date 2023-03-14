@@ -146,7 +146,7 @@ const detailsFields = [
         hidden: true,
         showKey: 'knowRun',
         showCondition: ['no'],
-        articles: ['run-as-independent', 'how-to-run-a-political-campaign'],
+        articles: ['run-as-independent', 'run-as-independent'],
         title:
           "Looks like you want to get involved in local politics but you're not sure which office?",
         subTitle:
