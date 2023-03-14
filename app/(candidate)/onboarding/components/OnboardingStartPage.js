@@ -51,34 +51,10 @@ async function createCampaign() {
   }
 }
 
-export async function fetchUserCampaign() {
-  try {
-    const api = gpApi.campaign.onboarding.findByUser;
-    return await gpFetch(api);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
-
 export default function OnboardingStartPage(props) {
   const user = getUserCookie(true);
   const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
-
-  useEffect(() => {
-    checkCampaigns();
-  }, [user]);
-
-  const checkCampaigns = async () => {
-    if (user) {
-      const { campaign } = await fetchUserCampaign();
-      if (campaign) {
-        const { slug } = campaign;
-        router.push(`/onboarding/${slug}/details/1`);
-      }
-    }
-  };
 
   const handleSubmit = async () => {
     snackbarState.set(() => {
