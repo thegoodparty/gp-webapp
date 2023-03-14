@@ -5,7 +5,7 @@ import Link from 'next/link';
 import CampaignPlanCard from './CampaignPlanCard';
 
 export default function CampaignAccordion(props) {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(false);
   const { sections, articlesBySlug, campaign } = props;
 
   const handleSelect = (index) => {

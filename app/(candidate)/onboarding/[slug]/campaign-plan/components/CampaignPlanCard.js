@@ -12,15 +12,12 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
   if (type === 'blog') {
     const content = articlesBySlug[slug];
     if (!content) {
-      console.log('tt', title, slug, content?.title);
-
-      console.log('articlesBySlug', articlesBySlug);
       return null;
     }
 
     return (
       <div key={title} className="col-span-12 md:col-span-6 lg:col-span-4 ">
-        <ArticleSnippet article={content} target="_blank" />
+        <ArticleSnippet article={content} target="_blank" minimal />
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 import { FaLock } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 import UnlockRob from './UnlockRob';
@@ -30,7 +31,11 @@ export default function Step({
   }
 
   if (step.customCard && step.customCard === 'unlockRob') {
-    return <UnlockRob key={step.key} />;
+    return (
+      <Fragment key={step.key}>
+        <UnlockRob />
+      </Fragment>
+    );
   }
 
   return (

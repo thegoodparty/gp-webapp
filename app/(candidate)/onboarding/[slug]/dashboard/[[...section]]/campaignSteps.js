@@ -10,28 +10,28 @@ const campaignSteps = [
     preTitle: 'Build Your Campaign Plan',
     title: 'Pre Launch',
     subTitle:
-      'Good Party will be with you every step of the way so you can run a successful campaign.',
+      "Establish your campaign's goals, messaging, strategy, and organization before officially announcing your candidacy.",
     icon: <FaRegLightbulb size={30} />,
     steps: [
       {
         key: 'details',
         title: 'Candidate Details',
         subTitle:
-          'details Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+          'Brief bio, your experience, and positions on key issues, providing voters with a clear understanding of who you are.',
         steps: detailFieldsCount,
       },
       {
         key: 'goals',
         title: 'Goals & Objectives',
         subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+          'Purpose of your campaign, as well as specific, measurable targets and milestones that the campaign aims to achieve.',
         steps: goalsFieldsCount,
       },
       {
         key: 'plan',
         title: 'Your Campaign Plan',
         subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+          "The overall strategy, tactics, and budget for achieving the campaign's goals and objectives.",
         steps: 0,
         link: '/campaign-plan',
       },
@@ -49,7 +49,7 @@ const campaignSteps = [
     key: 'launch',
     title: 'Launch',
     subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+      'Officially announce your candidacy and kick off the campaign with a well-planned event that generates momentum and media coverage.',
     icon: <SlRocket size={30} />,
     steps: [],
   },
@@ -57,7 +57,7 @@ const campaignSteps = [
     key: 'run',
     title: 'Run',
     subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+      'Execute the strategy and tactics developed in earlier phases, including fundraising, canvassing, advertising, and public appearances.',
     icon: <MdHowToVote size={30} />,
     steps: [],
   },

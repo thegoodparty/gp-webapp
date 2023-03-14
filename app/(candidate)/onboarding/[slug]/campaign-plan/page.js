@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import CampaignPlan from './components/CampaignPlan';
+import CampaignPlanPage from './components/CampaignPlanPage';
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import campaignPlanFields from './campaignPlanFields';
 import { fetchContentByKey } from 'helpers/fetchHelper';
@@ -17,7 +17,7 @@ export default async function Page({ params }) {
     articlesBySlug,
   };
 
-  return <CampaignPlan {...childProps} />;
+  return <CampaignPlanPage {...childProps} />;
 }
 
 function mapArticlesBySlug(content) {

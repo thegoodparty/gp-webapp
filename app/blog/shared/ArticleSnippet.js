@@ -12,7 +12,7 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import styles from './ArticleSnippet.module.scss';
 import TimeAgoClient from '@shared/utils/TimeAgoClient';
 
-function ArticleSnippet({ article, heroMode, target = false }) {
+function ArticleSnippet({ article, heroMode, target = false, minimal }) {
   if (!article) {
     return null;
   }
@@ -50,17 +50,21 @@ function ArticleSnippet({ article, heroMode, target = false }) {
           >
             <div className={styles.content}>
               <div>
-                <div className={styles.topSection}>
-                  <strong>{sectionName}</strong> &middot;{' '}
-                  <TimeAgoClient date={publishDate} />
-                </div>
+                {!minimal && (
+                  <div className={styles.topSection}>
+                    <strong>{sectionName}</strong> &middot;{' '}
+                    <TimeAgoClient date={publishDate} />
+                  </div>
+                )}
                 <h2 className={styles.title}>{title}</h2>
                 <p className={styles.summary}>{summary}</p>
               </div>
               <div className={styles.bottom}>
-                <div className={styles.time}>
-                  {readingTime && readingTime.text}
-                </div>
+                {!minimal && (
+                  <div className={styles.time}>
+                    {readingTime && readingTime.text}
+                  </div>
+                )}
 
                 <div className={styles.full}>
                   <div>Read Full &nbsp;</div> <HiArrowNarrowRight />
