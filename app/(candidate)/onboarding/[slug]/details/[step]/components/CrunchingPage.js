@@ -1,10 +1,15 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { RxRocket } from 'react-icons/rx';
 
 export default function CrunchingPage({ slug, ...props }) {
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
   return (
     <OnboardingWrapper {...props} slug={slug} icon={<RxRocket size={50} />}>
       <h3 className="text-lg text-zinc-500 mb-40 text-center">
