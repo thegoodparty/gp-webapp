@@ -12,7 +12,7 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import TextField from '@shared/inputs/TextField';
 
 export default function AiModal({ initialText }) {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [text, setText] = useState(initialText);
   const [state, setState] = useState({
     improveQuery: '',
