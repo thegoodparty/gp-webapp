@@ -1,5 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Step from './Step';
+import DashboardStep from './DashboardStep';
+import SectionStep from './SectionStep';
 
 export default function Steps(props) {
   const { campaignSteps, sectionIndex } = props;
@@ -11,7 +12,23 @@ export default function Steps(props) {
       <div className=" rounded-2xl mt-6">
         <div className="grid grid-cols-12 gap-4 items-stretch">
           {steps.map((step, index) => (
-            <Step key={step.key} step={step} index={index} {...props} />
+            <>
+              {sectionIndex === false ? (
+                <DashboardStep
+                  key={step.key}
+                  step={step}
+                  index={index}
+                  {...props}
+                />
+              ) : (
+                <SectionStep
+                  key={step.key}
+                  step={step}
+                  index={index}
+                  {...props}
+                />
+              )}
+            </>
           ))}
         </div>
       </div>

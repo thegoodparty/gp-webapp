@@ -4,7 +4,7 @@ import { FaLock } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
 import UnlockRob from './UnlockRob';
 
-export default function Step({
+export default function SectionStep({
   campaign,
   step,
   campaignStatus,
@@ -13,19 +13,14 @@ export default function Step({
   campaignSteps,
   nextStep,
 }) {
-  let stepStatus = campaignStatus[step.key] || {};
-  if (sectionIndex !== false) {
-    const campaignStepKey = campaignSteps[sectionIndex].key;
-    const sectionStatus = campaignStatus[campaignStepKey];
+  const campaignStepKey = campaignSteps[sectionIndex].key;
+  const sectionStatus = campaignStatus[campaignStepKey];
+  const stepStatus = sectionStatus[step.key] || {};
 
-    stepStatus = sectionStatus[step.key] || {};
-  }
   const { status } = stepStatus;
 
-  let link = `/onboarding/${campaign.slug}/dashboard/${index + 1}`;
-  if (sectionIndex !== false) {
-    link = `/onboarding/${campaign.slug}/${step.key}/1`;
-  }
+  let link = `/onboarding/${campaign.slug}/${step.key}/1`;
+
   if (step.link) {
     link = `/onboarding/${campaign.slug}${step.link}`;
   }
@@ -40,44 +35,38 @@ export default function Step({
 
   return (
     <div
-      className={`col-span-12 md:col-span-6 ${
-        sectionIndex !== false ? 'lg:col-span-3' : 'lg:col-span-4'
-      } h-full`}
+      className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
       key={step.key}
     >
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between">
-        <div className="px-6 py-8">
-          {step.icon && (
-            <div className="inline-block rounded mb-3">{step.icon}</div>
-          )}
-          <h3 className="font-bold text-2xl">
-            {index + 1}. {step.title}
-          </h3>
-          <h4 className="text-zinc-500 mt-3 leading-relaxed text-sm  ">
+        <div className="px-6 pt-8 pb-3">
+          <h3 className="font-bold text-2xl">{step.title}</h3>
+          <h4 className="text-zinc-500 mt-3 leading-relaxed text-sm">
             {step.subTitle}
           </h4>
         </div>
-        <div className="flex justify-between items-center px-6 py-4 text-sm">
+        <div className="flex justify-between items-center px-6 pb-4 text-sm">
           <div className="">
-            <div
-              className={`font-black ${
-                status === 'Completed' && ' text-green-600 flex items-center'
-              }  ${status === 'In Progress' && ' text-orange-600'} ${
-                (status === 'Not Started' || !status) && ' text-gray-600'
-              }`}
-            >
-              {status === 'Completed' && (
+            {status === 'Completed' && (
+              <div className="font-black text-green-600 flex items-center">
                 <IoIosCheckmarkCircle className="mr-1" />
-              )}
-              {status || 'Not Started'}
-            </div>
-            {((sectionIndex === false && step.steps.length > 0) ||
-              (sectionIndex !== false && step.steps > 0)) && (
+                Completed
+              </div>
+            )}
+            {status === 'In Progress' && (
+              <div className="font-black text-orange-600">In Progress</div>
+            )}
+            {(status === 'Not Started' || !status) && (
+              <div className="font-black text-gray-600">
+                {status || 'Not Started'}
+              </div>
+            )}
+
+            {step.steps > 0 && (
               <div className="mt-1">
                 {stepStatus.completedSteps +
                   (status === 'In Progress' ? 1 : 0) || 0}{' '}
-                of {sectionIndex === false ? step.steps.length : step.steps}{' '}
-                steps
+                of {step.steps} steps
               </div>
             )}
           </div>
