@@ -1,0 +1,21 @@
+.plan {
+  p {
+    margin-bottom: 12px;
+    margin-top: 12px;
+  }
+  table {
+    text-align: left;
+    border-radius: 8px;
+    background-color: #fafafa;
+    margin: 24px 0;
+  }
+  table td,
+  table th {
+    padding: 16px;
+    border-bottom: solid 1px #999;
+  }
+
+  table tr:last-child td {
+    border-bottom: none;
+  }
+}
