@@ -15,13 +15,7 @@ const knobs = [
     key: 'tone',
     label: 'Change Tone',
     prompt: 'Please change the tone to be more',
-    options: [
-      'aggressive',
-      'assertive',
-      'diplomatic',
-      'conciliatory',
-      'optimistic',
-    ],
+    options: ['assertive', 'diplomatic', 'conciliatory', 'optimistic'],
   },
   {
     key: 'style',
