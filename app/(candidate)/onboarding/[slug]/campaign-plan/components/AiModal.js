@@ -5,20 +5,46 @@ import Modal from '@shared/utils/Modal';
 import Image from 'next/image';
 
 import { useState } from 'react';
-import { FaEdit } from 'react-icons/fa';
-import styles from './CampaignPlan.module.scss';
-import UserAvatar from '@shared/user/UserAvatar';
+import { FaRedo } from 'react-icons/fa';
 import { getUserCookie } from 'helpers/cookieHelper';
 import TextField from '@shared/inputs/TextField';
+import { Select } from '@mui/material';
 
-export default function AiModal({ initialText }) {
+const knobs = [
+  {
+    key: 'tone',
+    label: 'Change Tone',
+    prompt: 'Please change the tone to be more',
+    options: [
+      'aggressive',
+      'assertive',
+      'diplomatic',
+      'conciliatory',
+      'optimistic',
+    ],
+  },
+  {
+    key: 'style',
+    label: 'Change Style',
+    prompt: 'Please change the style to be',
+    options: ['formal', 'complex', 'humorous', 'personal'],
+  },
+  {
+    key: 'length',
+    label: 'Change Length',
+    prompt: 'Please make the response length',
+    options: ['concise', 'average', 'verbose'],
+  },
+];
+
+export default function AiModal({ submitCallback }) {
   const [showModal, setShowModal] = useState(false);
-  const [text, setText] = useState(initialText);
   const [state, setState] = useState({
     improveQuery: '',
+    tone: '',
+    style: '',
+    length: '',
   });
-
-  const user = getUserCookie(true);
 
   const onChangeField = (key, value) => {
     setState({
@@ -27,48 +53,95 @@ export default function AiModal({ initialText }) {
     });
   };
 
+  const handleSubmit = () => {
+    setShowModal(false);
+    submitCallback(state.improveQuery);
+  };
+
+  const onChangeKnob = (key, value, index) => {
+    let query = state.improveQuery;
+    const knob = knobs[index];
+
+    // first remove the input from that knob if it exists
+    const existingPrompt = state[key];
+    if (existingPrompt !== '') {
+      query = query.replace(`${knob.prompt} ${existingPrompt}. `, '');
+    }
+
+    if (value !== '') {
+      query += `${knob.prompt} ${value}. `;
+    }
+
+    setState({
+      ...state,
+      [key]: value,
+      improveQuery: query,
+    });
+  };
+
   return (
     <>
-      <div onClick={() => setShowModal(true)}>
-        <Pill>
+      <div onClick={() => setShowModal(true)} className="mr-3">
+        <Pill outlined>
           <div className="flex items-center">
-            <FaEdit />
-            <div className="ml-2">Edit</div>
+            <FaRedo />
+            <div className="ml-2">Regenerate</div>
           </div>
         </Pill>
       </div>
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="p-4" style={{ maxWidth: '960px', minWidth: '300px' }}>
-          <h3 className="text-3xl font-black mb-9 text-center">
-            Edit your campaign plan
+          <h3 className="text-3xl font-black mb-9 flex items-center justify-center">
+            <Image
+              src="/images/campaign/ai-icon.svg"
+              alt="GP-AI"
+              width={48}
+              height={48}
+            />
+            <div className="ml-3">Regenerate your campaign plan</div>
           </h3>
-          <div className="mt-3 flex">
-            <div className="w-10 h-10 shrink-0 mr-3 ">
-              <Image
-                src="/images/campaign/ai-icon.svg"
-                alt="GP-AI"
-                width={40}
-                height={40}
-              />
-            </div>
-            <div
-              className={`px-5 py-1 border border-zinc-200 rounded-t-lg rounded-br-lg ${styles.plan}`}
-            >
-              <div dangerouslySetInnerHTML={{ __html: text }} />
+          <div className="my-10">
+            <div className="w-full grid grid-cols-12 gap-3">
+              {knobs.map((knob, index) => (
+                <div className="col-span-12 lg:col-span-4" key={knob.label}>
+                  <Select
+                    native
+                    value={state[knob.key]}
+                    label={knob.label}
+                    fullWidth
+                    variant="outlined"
+                    onChange={(e) =>
+                      onChangeKnob(knob.key, e.target.value, index)
+                    }
+                  >
+                    <option value="">{knob.label}</option>
+
+                    {knob.options.map((op) => (
+                      <option value={op} key={op}>
+                        {op}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex mt-10">
-            <div className="w-10 h-10 shrink-0 mr-3 ">
-              <UserAvatar user={user} />
-            </div>
-            <div className="w-full">
-              <TextField
-                label="Ask the Good Party AI to add, remove, or change something"
-                onChange={(e) => onChangeField('improveQuery', e.target.value)}
-                value={state.improveQuery}
-                className="w-full"
-              />
-            </div>
+
+          <div className="w-full">
+            <TextField
+              label="Ask the Good Party AI to add, remove, or change something"
+              onChange={(e) => onChangeField('improveQuery', e.target.value)}
+              value={state.improveQuery}
+              className="w-full"
+            />
+          </div>
+        </div>
+        <div className="flex justify-center items-center mt-3">
+          <div className="mr-6" onClick={() => setShowModal(false)}>
+            Cancel
+          </div>
+          <div onClick={handleSubmit}>
+            <Pill>Submit</Pill>
           </div>
         </div>
       </Modal>

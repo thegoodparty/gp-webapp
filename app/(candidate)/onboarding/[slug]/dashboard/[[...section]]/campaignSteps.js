@@ -28,7 +28,7 @@ const campaignSteps = [
         steps: goalsFieldsCount,
       },
       {
-        key: 'plan',
+        key: 'campaignPlan',
         title: 'Your Campaign Plan',
         subTitle:
           "The overall strategy, tactics, and budget for achieving the campaign's goals and objectives.",
@@ -37,9 +37,6 @@ const campaignSteps = [
       },
       {
         key: 'incentive',
-        title: 'Unlock somthing',
-        subTitle:
-          'Unlock a one-on-one session with our Political Director, Rob Booth!',
         steps: 0,
         customCard: 'unlockRob',
       },
@@ -78,10 +75,11 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details, goals, strategy, team, social } = campaign;
+  const { details, goals, campaignPlan } = campaign;
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
+    { key: 'campaignPlan', value: campaignPlan, count: 1 },
   ];
 
   preLaunchSections.forEach((section) => {
