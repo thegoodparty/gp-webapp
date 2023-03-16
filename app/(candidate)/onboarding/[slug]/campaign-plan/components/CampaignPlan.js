@@ -43,7 +43,7 @@ export default function CampaignPlan({ campaign }) {
   const key = 'plan';
   const [plan, setPlan] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [isEdited, setIsEdited] = useState(true);
+  const [isEdited, setIsEdited] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
