@@ -14,19 +14,28 @@
     margin-bottom: 12px;
     margin-top: 12px;
   }
-  table {
+  table,
+  :global(.table) {
     text-align: left;
     border-radius: 8px;
     background-color: #fafafa;
     margin: 24px 0;
+    display: table;
+  }
+  :global(.tr) {
+    display: table-row;
   }
   table td,
-  table th {
+  table th,
+  :global(.table .td),
+  :global(.table .th) {
     padding: 16px;
     border-bottom: solid 1px #999;
+    display: table-cell;
   }
 
-  table tr:last-child td {
+  table tr:last-child td,
+  :global(.table .tr:last-child .td) {
     border-bottom: none;
   }
 }
