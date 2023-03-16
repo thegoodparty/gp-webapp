@@ -158,5 +158,5 @@ goalsFields.forEach((step) => {
   goalsFieldsCount += step.fields?.length || 0;
 });
 
-goalsFieldsCount = goalsFieldsCount + 1; // Messaging Strategy
+goalsFieldsCount = goalsFieldsCount;
 export { goalsFieldsCount };
