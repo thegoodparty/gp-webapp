@@ -22,11 +22,8 @@ export default async function Page({ params }) {
 
 function mapArticlesBySlug(content) {
   let bySlug = {};
-  console.log('count contnet', content.length);
   content.forEach((article) => {
-    console.log('slu', article.slug);
     bySlug[article.slug] = article;
   });
-  console.log('count', Object.keys(bySlug).length);
   return bySlug;
 }

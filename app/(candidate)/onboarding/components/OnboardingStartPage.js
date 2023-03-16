@@ -99,7 +99,7 @@ export default function OnboardingStartPage(props) {
       ) : (
         <div className="flex justify-center mt-10">
           <BlackButtonClient onClick={handleSubmit}>
-            Create Campaign
+            Create a campaign
           </BlackButtonClient>
         </div>
       )}
