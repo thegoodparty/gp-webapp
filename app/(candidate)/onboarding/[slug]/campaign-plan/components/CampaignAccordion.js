@@ -18,13 +18,16 @@ export default function CampaignAccordion(props) {
 
   return (
     <div className="py-8">
+      <div>
+        <h2 className="text-2xl font-bold mt-8 mb-6">RESOURCES</h2>
+      </div>
       {sections.map((section, index) => (
         <section key={section.title} className="mb-3 rounded-2xl bg-white">
           <div
             className="flex justify-between items-center p-6 cursor-pointer"
             onClick={() => handleSelect(index)}
           >
-            <h2 className="font-bold text-2xl">{section.title}</h2>
+            <h3 className="font-bold text-2xl">{section.title}</h3>
             <div
               className={`transition-all duration-300 ${
                 index === selected && 'rotate-180'

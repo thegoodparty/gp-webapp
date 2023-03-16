@@ -6,9 +6,9 @@ import Image from 'next/image';
 
 import { useState } from 'react';
 import { FaRedo } from 'react-icons/fa';
-import { getUserCookie } from 'helpers/cookieHelper';
 import TextField from '@shared/inputs/TextField';
 import { Select } from '@mui/material';
+import AlertDialog from '@shared/utils/AlertDialog';
 
 const knobs = [
   {
@@ -37,8 +37,9 @@ const knobs = [
   },
 ];
 
-export default function AiModal({ submitCallback }) {
+export default function AiModal({ submitCallback, showWarning }) {
   const [showModal, setShowModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [state, setState] = useState({
     improveQuery: '',
     tone: '',
@@ -79,9 +80,22 @@ export default function AiModal({ submitCallback }) {
     });
   };
 
+  const handleRegenerate = () => {
+    if (showWarning) {
+      setShowAlert(true);
+    } else {
+      setShowModal(true);
+    }
+  };
+
+  const handleProceed = () => {
+    setShowAlert(false);
+    setShowModal(true);
+  };
+
   return (
     <>
-      <div onClick={() => setShowModal(true)} className="mr-3">
+      <div onClick={handleRegenerate} className="mr-3">
         <Pill outlined>
           <div className="flex items-center">
             <FaRedo />
@@ -137,7 +151,10 @@ export default function AiModal({ submitCallback }) {
           </div>
         </div>
         <div className="flex justify-center items-center mt-3">
-          <div className="mr-6" onClick={() => setShowModal(false)}>
+          <div
+            className="mr-6 cursor-pointer hover:underline"
+            onClick={() => setShowModal(false)}
+          >
             Cancel
           </div>
           <div onClick={handleSubmit}>
@@ -145,6 +162,14 @@ export default function AiModal({ submitCallback }) {
           </div>
         </div>
       </Modal>
+      <AlertDialog
+        open={showAlert}
+        handleClose={() => setShowAlert(false)}
+        title="Warning - you will lose all changes"
+        ariaLabel="Warning - you will lose all changes"
+        description="You edited the plan. This will delete your edits and generate a new plan. Are you sure you want to proceed?"
+        handleProceed={handleProceed}
+      />
     </>
   );
 }

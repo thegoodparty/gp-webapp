@@ -29,7 +29,7 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
         className="col-span-12 md:col-span-6 lg:col-span-4  bg-slate-50 rounded-lg p-6 flex justify-between flex-col"
       >
         <div>
-          <h3 className="font-black text-2xl">{title}</h3>
+          <h4 className="font-black text-2xl">{title}</h4>
           <div className="text-sm mt-4 mb-9">{description}</div>
         </div>
         <a href={file} className="text-violet-600 font-bold" download>
@@ -44,7 +44,7 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
       className="col-span-12 md:col-span-6 lg:col-span-4  bg-slate-50 rounded-lg p-6 flex justify-between flex-col"
     >
       <div>
-        <h3 className="font-black text-2xl">{title}</h3>
+        <h4 className="font-black text-2xl">{title}</h4>
         <div className="text-sm mt-4 mb-9">{description}</div>
       </div>
       {type === 'link' && (
