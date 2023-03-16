@@ -38,7 +38,7 @@ const campaignSteps = [
       {
         key: 'incentive',
         steps: 0,
-        customCard: 'unlockRob',
+        customCard: 'UnlockJared',
       },
     ],
   },

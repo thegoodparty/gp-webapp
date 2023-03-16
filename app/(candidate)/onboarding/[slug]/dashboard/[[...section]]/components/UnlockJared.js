@@ -1,9 +1,8 @@
-import Link from 'next/link';
 import { FaLock } from 'react-icons/fa';
-import RobImg from 'public/images/campaign/rob1.png';
+import JaredImg from 'public/images/campaign/jared.jpg';
 import Image from 'next/image';
 
-export default function UnlockRob({ key }) {
+export default function UnlockJared({ key }) {
   return (
     <div className="col-span-12 md:col-span-6 lg:col-span-3 h-full" key={key}>
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between relative">
@@ -11,22 +10,31 @@ export default function UnlockRob({ key }) {
           <Image
             src="/images/heart.svg"
             alt="GP"
-            width={64}
-            height={64}
+            width={56}
+            height={56}
             className="block"
           />
         </div>
         <div className="px-6 pb-2">
-          <h3 className="font-bold text-2xl text-center tracking-wider">
-            EXPERT SUPPORT
+          <h3 className="font-bold text-lg text-center">
+            UNLOCK EXPERT SUPPORT{' '}
+            <span role="img" aria-label="Party">
+              🎉
+            </span>
           </h3>
           <div className="flex items-center mt-3">
-            <div className="text-zinc-500 leading-relaxed text-sm">
-              Unlock a one-on-one session with our Political Director, Rob
-              Booth!
+            <div className="text-zinc-500 leading-relaxed text-sm pr-2">
+              Unlock a one-on-one session with our Political Director, Jared
+              Alper!
             </div>
             <div>
-              <Image src={RobImg} height={120} width={120} alt="Rob" />
+              <Image
+                src={JaredImg}
+                height={128}
+                width={128}
+                alt="Jared"
+                className="rounded-full border-4 border-zinc-300"
+              />
             </div>
           </div>
         </div>

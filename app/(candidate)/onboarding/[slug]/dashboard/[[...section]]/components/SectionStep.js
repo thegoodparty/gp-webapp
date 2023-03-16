@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import { FaLock } from 'react-icons/fa';
 import { IoIosCheckmarkCircle } from 'react-icons/io';
-import UnlockRob from './UnlockRob';
+import UnlockJared from './UnlockJared';
 
 export default function SectionStep({
   campaign,
@@ -25,10 +25,10 @@ export default function SectionStep({
     link = `/onboarding/${campaign.slug}${step.link}`;
   }
 
-  if (step.customCard && step.customCard === 'unlockRob') {
+  if (step.customCard && step.customCard === 'UnlockJared') {
     return (
       <Fragment key={step.key}>
-        <UnlockRob />
+        <UnlockJared />
       </Fragment>
     );
   }
