@@ -35,7 +35,6 @@ const goalsFields = [
       {
         key: 'electionDate',
         label: 'Date of Election',
-        required: true,
         type: 'date',
       },
     ],
