@@ -62,7 +62,7 @@ export default function SectionStep({
               </div>
             )}
 
-            {step.steps > 0 && (
+            {step.steps > 0 && status !== 'Completed' && (
               <div className="mt-1">
                 {stepStatus.completedSteps +
                   (status === 'In Progress' ? 1 : 0) || 0}{' '}
