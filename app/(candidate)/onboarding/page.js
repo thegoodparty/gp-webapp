@@ -22,7 +22,7 @@ export default async function Page() {
     const { campaign } = await fetchUserCampaign();
     if (campaign) {
       const { slug } = campaign;
-      redirect(`/onboarding/${slug}/details/1`);
+      redirect(`/onboarding/${slug}/dashboard`);
     }
   }
   const childProps = {
