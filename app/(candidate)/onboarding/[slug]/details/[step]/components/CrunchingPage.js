@@ -20,7 +20,7 @@ export default function CrunchingPage({ slug, ...props }) {
         While we work on the data. You can get started with our{' '}
         <strong>Virtual Campaign Manager.</strong>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center  mb-8">
         <Link href={`/onboarding/${slug}/dashboard`}>
           <BlackButtonClient>
             <div>NEXT</div>

@@ -18,6 +18,7 @@ export default async function Page({ params }) {
 
   let nextPath = `/${subSectionKey}/${stepInt + 1}`;
   if (stepInt === goalsFields.length) {
+    const campaign = await getCampaign(params);
     nextPath = '/dashboard/1';
   }
   const section = { label: 'Pre Launch', index: 1 };

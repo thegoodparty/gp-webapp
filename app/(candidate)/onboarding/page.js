@@ -9,7 +9,7 @@ export async function fetchUserCampaign() {
   try {
     const api = gpApi.campaign.onboarding.findByUser;
     const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    return await gpFetch(api, false, 1, token);
   } catch (e) {
     console.log('error', e);
     return false;

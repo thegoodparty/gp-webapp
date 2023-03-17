@@ -101,7 +101,7 @@ export default function IssuesPage({
           </div>
         ))}
 
-        <div className="flex justify-center">
+        <div className="flex justify-center  mb-8">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
             <div>NEXT</div>
           </BlackButtonClient>

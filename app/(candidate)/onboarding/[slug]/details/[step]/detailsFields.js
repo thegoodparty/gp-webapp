@@ -218,7 +218,6 @@ const detailsFields = [
       {
         key: 'pastExperience',
         label: '',
-        placeholder: 'I am a placeholder',
         required: true,
         type: 'text',
         rows: 6,
