@@ -90,11 +90,17 @@ export default function OnboardingStartPage(props) {
           <div className="font-black mt-12 mb-6 text-center">
             Please log in to your account before starting the onboarding
           </div>
-          <Link href="/login" className="flex justify-center">
-            <BlackButtonClient onClick={setReturnCookie}>
-              <strong>Login</strong>
-            </BlackButtonClient>
-          </Link>
+          <div className="flex items-center flex-col">
+            <Link href="/login">
+              <BlackButtonClient onClick={setReturnCookie}>
+                <strong>Login</strong>
+              </BlackButtonClient>
+            </Link>
+            <div className="my-6">
+              Don&apos;t have an account?{' '}
+              <Link href="/register">Create one</Link>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex justify-center mt-10">
