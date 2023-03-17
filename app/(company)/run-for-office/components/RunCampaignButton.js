@@ -35,7 +35,6 @@ export default function RunCampaignButton() {
   const handleRun = async () => {
     const user = getUserCookie(true);
     if (!user) {
-      setCookie('returnUrl', '/onboarding');
       setCookie('afterAction', 'createCampaign');
       router.push('/register');
     } else {
