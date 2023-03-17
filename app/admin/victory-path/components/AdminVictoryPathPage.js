@@ -2,15 +2,13 @@
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { useEffect, useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { Select } from '@mui/material';
-import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 
 const sections = [
   {

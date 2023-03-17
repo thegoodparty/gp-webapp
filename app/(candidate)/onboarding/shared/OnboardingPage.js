@@ -1,6 +1,5 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import { Fragment, useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
@@ -8,6 +7,7 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { hookstate } from '@hookstate/core';
 import ArticlesSnippets from '../[slug]/details/[step]/components/ArticlesSnippets';
+import RenderInputField from './RenderInputField';
 
 export const savingState = hookstate(false);
 

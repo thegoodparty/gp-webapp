@@ -1,12 +1,18 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { setCookie, setUserCookie } from 'helpers/cookieHelper';
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+  setUserCookie,
+} from 'helpers/cookieHelper';
 import SocialButton from './SocialButton';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
+import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 
 async function register(payload) {
   try {
@@ -70,7 +76,20 @@ export default function SocialButtons() {
     const user = await register(payload);
     if (user) {
       userState.set(() => user);
-      router.push('/');
+
+      const afterAction = getCookie('afterAction');
+      if (afterAction === 'createCampaign') {
+        await createCampaign(router);
+      } else {
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          router.push(returnUrl);
+        } else {
+          router.push('/');
+        }
+      }
+
       snackbarState.set(() => {
         return {
           isOpen: true,

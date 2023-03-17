@@ -1,5 +1,6 @@
 import PurpleButton from '@shared/buttons/PurpleButton';
 import Link from 'next/link';
+import RunCampaignButton from './RunCampaignButton';
 
 export default function WhatIs() {
   return (
@@ -12,20 +13,8 @@ export default function WhatIs() {
           voters, volunteers, and donors you need without the party politics.
         </div>
       </div>
-      <div className="hidden lg:block col-span-2">
-        <Link href="/onboarding">
-          <PurpleButton
-            style={{
-              borderRadius: '40px',
-              width: '100%',
-              padding: '20px auto',
-            }}
-          >
-            <div className="whitespace-nowrap font-bold text-xl tracking-wide">
-              GET STARTED
-            </div>
-          </PurpleButton>
-        </Link>
+      <div className="col-span-12 mt-6 lg:mt-0 lg:col-span-2">
+        <RunCampaignButton />
       </div>
     </div>
   );

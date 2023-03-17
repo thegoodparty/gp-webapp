@@ -17,6 +17,7 @@ import { passwordRegex } from 'helpers/userHelper';
 import dynamic from 'next/dynamic';
 import SocialButtons from './SocialButtons';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 
 // const SocialButtons = dynamic(() => import('./SocialButtons'), { ssr: false });
 
@@ -92,13 +93,17 @@ export default function RegisterPage({}) {
       });
       if (user) {
         userState.set(() => user);
-
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          router.push(returnUrl);
+        const afterAction = getCookie('afterAction');
+        if (afterAction === 'createCampaign') {
+          await createCampaign(router);
         } else {
-          router.push('/');
+          const returnUrl = getCookie('returnUrl');
+          if (returnUrl) {
+            deleteCookie('returnUrl');
+            router.push(returnUrl);
+          } else {
+            router.push('/');
+          }
         }
         snackbarState.set(() => {
           return {

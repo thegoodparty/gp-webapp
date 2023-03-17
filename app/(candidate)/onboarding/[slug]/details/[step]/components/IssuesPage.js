@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
+import PositionsSelector from 'app/(candidate)/onboarding/shared/PositionsSelector';
 import TextField from '@shared/inputs/TextField';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 

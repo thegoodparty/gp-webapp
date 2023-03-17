@@ -20,6 +20,7 @@ import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialButtons from './SocialButtons';
+import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 
 async function login(email, password) {
   try {
@@ -60,12 +61,17 @@ export default function LoginPage() {
       const user = await login(state.email, state.password);
       if (user) {
         userState.set(() => user);
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          router.push(returnUrl);
+        const afterAction = getCookie('afterAction');
+        if (afterAction === 'createCampaign') {
+          await createCampaign(router);
         } else {
-          router.push('/');
+          const returnUrl = getCookie('returnUrl');
+          if (returnUrl) {
+            deleteCookie('returnUrl');
+            router.push(returnUrl);
+          } else {
+            router.push('/');
+          }
         }
       } else {
         snackbarState.set(() => {
