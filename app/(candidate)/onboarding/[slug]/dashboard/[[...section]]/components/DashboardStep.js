@@ -11,6 +11,7 @@ export default function DashboardStep({
   index,
 }) {
   let stepStatus = campaignStatus[step.key] || {};
+  console.log('step.key', step.key);
 
   const { status } = stepStatus;
 
@@ -42,9 +43,12 @@ export default function DashboardStep({
             {status === 'In Progress' && (
               <div className="font-black text-orange-600">In Progress</div>
             )}
-            {(status === 'Not Started' || !status) && (
-              <div className=" text-gray-600">Coming Soon</div>
-            )}
+
+            {((step.key === 'preLaunch' && status === 'Not Started') ||
+              !status) && <div className=" text-gray-600">Not Started</div>}
+
+            {((step.key !== 'preLaunch' && status === 'Not Started') ||
+              !status) && <div className=" text-gray-600">Coming Soon</div>}
 
             {step.steps.length > 0 && (
               <div className="mt-1">
@@ -66,9 +70,16 @@ export default function DashboardStep({
                   Continue
                 </div>
               )}
+              {((step.key === 'preLaunch' && status === 'Not Started') ||
+                !status) && (
+                <div className=" px-6 py-4  font-bold  flex items-center underline">
+                  <div className="ml-2">Get Started</div>
+                </div>
+              )}
             </Link>
 
-            {(status === 'Not Started' || !status) && (
+            {((step.key !== 'preLaunch' && status === 'Not Started') ||
+              !status) && (
               <div className=" text-gray-400 px-6 py-4  font-bold cursor-not-allowed flex items-center">
                 <FaLock /> <div className="ml-2">Get Started</div>
               </div>

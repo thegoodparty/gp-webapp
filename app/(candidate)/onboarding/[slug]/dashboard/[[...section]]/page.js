@@ -16,6 +16,8 @@ export default async function Page({ params }) {
   const nextStep = { ...campaignStatus.nextStep };
   delete campaignStatus.nextStep;
 
+  console.log('campaignStatus', campaignStatus);
+
   const childProps = {
     campaign,
     campaignSteps,

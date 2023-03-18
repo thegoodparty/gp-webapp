@@ -84,7 +84,6 @@ export const generateCampaignStatus = (campaign) => {
 
   preLaunchSections.forEach((section) => {
     if (section) {
-      status.preLaunch.status = 'In Progress';
       status.preLaunch[section.key] = {};
       status.preLaunch[section.key].status = 'In Progress';
       const completedSteps = section.value
@@ -92,6 +91,11 @@ export const generateCampaignStatus = (campaign) => {
         : 0;
       if (completedSteps === 0) {
         status.preLaunch[section.key].status = 'Not Started';
+        if (section.key === 'details') {
+          status.preLaunch.status = 'Not Started';
+        }
+      } else {
+        status.preLaunch.status = 'In Progress';
       }
       status.preLaunch[section.key].completedSteps = completedSteps;
       if (completedSteps >= section.count) {

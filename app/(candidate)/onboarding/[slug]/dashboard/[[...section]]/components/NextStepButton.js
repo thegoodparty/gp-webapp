@@ -5,6 +5,7 @@ export default function NextStepButton({
   campaign,
   sectionIndex,
   campaignSteps,
+  campaignStatus,
 }) {
   // const stepKey =
   //   campaignSteps[nextStep.sectionIndex]?.steps[nextStep.step]?.key;
@@ -20,11 +21,16 @@ export default function NextStepButton({
       link = `/onboarding/${campaign.slug}${step.link}`;
     }
   }
+  console.log('campaign', campaign);
+  let text = 'CONTINUE';
+  if (campaignStatus.preLaunch?.status === 'Not Started') {
+    text = 'GET STARTED';
+  }
 
   return (
     <Link href={link}>
       <div className="bg-yellow-400  py-4 px-12 inline-block rounded-full">
-        <div className="font-black">CONTINUE</div>
+        <div className="font-black">{text}</div>
       </div>
     </Link>
   );

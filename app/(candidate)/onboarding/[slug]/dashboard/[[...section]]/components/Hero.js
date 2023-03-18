@@ -9,6 +9,7 @@ export default function Hero({
   campaignSteps,
   campaign,
   sectionIndex,
+  campaignStatus,
 }) {
   return (
     <MaxWidth>
@@ -53,6 +54,7 @@ export default function Hero({
                 campaignSteps={campaignSteps}
                 campaign={campaign}
                 sectionIndex={sectionIndex}
+                campaignStatus={campaignStatus}
               />
             </div>
           </div>
