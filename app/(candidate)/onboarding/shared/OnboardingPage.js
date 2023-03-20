@@ -20,6 +20,7 @@ export default function OnboardingPage({
   nextPathFunc,
   slug,
   skipable,
+  skipLabel,
   step,
   ...props
 }) {
@@ -170,7 +171,7 @@ export default function OnboardingPage({
               className="text-center mt-4 underline cursor-pointer"
               onClick={handleSkip}
             >
-              Skip for now
+              {skipLabel || 'Skip for now'}
             </div>
           )}
         </div>

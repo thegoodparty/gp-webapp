@@ -27,6 +27,7 @@ export default async function Page({ params }) {
     title: stepFields.title,
     subTitle: stepFields.subTitle,
     skipable: stepFields.skipable,
+    skipLabel: stepFields.skipLabel,
     slug,
     campaign,
     inputFields: stepFields.fields,

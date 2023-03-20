@@ -22,6 +22,7 @@ const goalsFields = [
   {
     title: "What's the date of election?",
     skipable: true,
+    skipLabel: "I don't know",
     fields: [
       {
         key: 'electionDate',
