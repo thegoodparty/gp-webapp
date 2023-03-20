@@ -7,7 +7,7 @@ import TextField from '@shared/inputs/TextField';
 import styles from './PositionsSelector.module.scss';
 
 const comparePositions = (a, b) => {
-  return -a.topIssue.name.localeCompare(b.topIssue.name);
+  return a.topIssue.name.localeCompare(b.topIssue.name);
 };
 
 export default function PositionsSelector({
@@ -16,7 +16,6 @@ export default function PositionsSelector({
   square = false,
   initialSelected,
 }) {
-  console.log('positions selector');
   const sorted = positions.sort(comparePositions);
   const [nonSelected, setNonSelected] = useState(sorted);
   const [selected, setSelected] = useState([]);

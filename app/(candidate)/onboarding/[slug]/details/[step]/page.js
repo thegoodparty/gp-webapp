@@ -13,7 +13,7 @@ import detailsFields from './detailsFields';
 const fetchPositions = async () => {
   const api = gpApi.admin.position.list;
   const token = getServerToken();
-  return await gpFetch(api, false, 3600, token);
+  return await gpFetch(api, false, false, token);
 };
 
 export default async function Page({ params }) {
