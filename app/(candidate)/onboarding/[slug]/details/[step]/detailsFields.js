@@ -229,9 +229,11 @@ const detailsFields = [
       {
         key: 'pastExperience',
         label: '',
+        placeholder:
+          'EXAMPLE: I have 5 years of experience on the local school board, where I worked to improve the quality of education by developing policies, securing funding, and establishing partnerships. This led to higher student achievement, increased graduation rates, and better school facilities. This experience has equipped me with the skills and commitment needed to serve as an elected official.',
         required: true,
         type: 'text',
-        rows: 6,
+        rows: 10,
       },
     ],
   },

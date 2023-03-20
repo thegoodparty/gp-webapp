@@ -117,7 +117,7 @@ export default function OnboardingPage({
   return (
     <OnboardingWrapper {...props} slug={slug} step={step}>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
-        <div className="max-w-[360px] mx-auto">
+        <div className="max-w-[460px] mx-auto">
           <div className="grid grid-cols-12 gap-4">
             {inputFields.map((field) => (
               <Fragment key={field.key}>
