@@ -9,6 +9,7 @@ import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import { Checkbox } from '@mui/material';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import Image from 'next/image';
 
 export default function PledgePage({
   campaign,
@@ -72,8 +73,12 @@ export default function PledgePage({
 
   const steps = ['1', '2', '3'];
 
+  const icon = (
+    <Image src="/images/heart.svg" alt="GP" width={64} height={64} priority />
+  );
+
   return (
-    <OnboardingWrapper {...props} slug={slug}>
+    <OnboardingWrapper {...props} slug={slug} icon={icon}>
       {steps.map((step, index) => (
         <Fragment key={step}>
           <div className="bg-gray-200 p-6 font-bold rounded mb-6">
