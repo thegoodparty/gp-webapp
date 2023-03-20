@@ -74,12 +74,16 @@ export default function PledgePage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      {steps.map((step) => (
+      {steps.map((step, index) => (
         <Fragment key={step}>
           <div className="bg-gray-200 p-6 font-bold rounded mb-6">
             {pledge[`title${step}`]}
           </div>
-          <div className="px-6">
+          <div
+            className={`px-6 ${
+              step === '1' || state[`pledged${index}`] ? 'block' : 'hidden'
+            }`}
+          >
             <CmsContentWrapper>
               {contentfulHelper(pledge[`content${step}`])}
             </CmsContentWrapper>
