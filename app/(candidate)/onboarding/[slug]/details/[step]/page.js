@@ -79,5 +79,5 @@ export default async function Page({ params }) {
     subSectionLabel,
     articles,
   };
-  return <OnboardingSt epPage {...childProps} />;
+  return <OnboardingStepPage {...childProps} />;
 }
