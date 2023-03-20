@@ -46,7 +46,7 @@ export default function OnboardingWrapper({
   }, [step, totalSteps]);
 
   return (
-    <div className="bg-white shadow-inner relative pt-10 lg:pt-0">
+    <div className="bg-white shadow-inner relative pt-10 lg:pt-0 pb-6">
       <div
         className="absolute h-1 bg-purple  top-0 rounded-r transition-all"
         style={{ width: `calc(100vw * ${progress})` }}
