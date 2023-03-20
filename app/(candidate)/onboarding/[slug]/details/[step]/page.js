@@ -13,7 +13,7 @@ import detailsFields from './detailsFields';
 const fetchPositions = async () => {
   const api = gpApi.admin.position.list;
   const token = getServerToken();
-  return await gpFetch(api, false, false, token);
+  return await gpFetch(api, false, 3600, token);
 };
 
 export default async function Page({ params }) {
@@ -79,5 +79,5 @@ export default async function Page({ params }) {
     subSectionLabel,
     articles,
   };
-  return <OnboardingStepPage {...childProps} />;
+  return <OnboardingSt epPage {...childProps} />;
 }
