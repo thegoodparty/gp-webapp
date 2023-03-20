@@ -277,7 +277,8 @@ const detailsFields = [
   },
   {
     pageType: 'finalDetailsPage',
-    title: "We're crunching the numbers for Maine District 10.",
+    title:
+      'Thanks for taking the first step to get in the arena and create change!',
     fields: [],
   },
 ];
@@ -289,5 +290,5 @@ detailsFields.forEach((step) => {
   detailFieldsCount += step.fields?.length || 0;
 });
 
-detailFieldsCount = detailFieldsCount + 2; // pledge and top issues
+detailFieldsCount = detailFieldsCount - 2; // pledge and top issues
 export { detailFieldsCount };
