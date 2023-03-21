@@ -130,18 +130,19 @@ export default function RunningAgainstPage({
             onChangeField('newName', e.target.value);
           }}
         />
-        <TextField
-          className="mt-6"
-          label="Describe them"
-          placeholder="EXAMPLE: Republican hotel owner"
-          multiline
-          rows={6}
-          fullWidth
-          value={state.newDesc}
-          onChange={(e) => {
-            onChangeField('newDesc', e.target.value);
-          }}
-        />
+        <div className="mt-6">
+          <TextField
+            label="Describe them"
+            placeholder="EXAMPLE: Republican hotel owner"
+            multiline
+            rows={6}
+            fullWidth
+            value={state.newDesc}
+            onChange={(e) => {
+              onChangeField('newDesc', e.target.value);
+            }}
+          />
+        </div>
         <div
           className="mt-4 underline text-blue-600 cursor-pointer"
           onClick={handleAddAnother}
