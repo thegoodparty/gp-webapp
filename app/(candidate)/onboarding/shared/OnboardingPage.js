@@ -115,9 +115,6 @@ export default function OnboardingPage({
     return showCondition.includes(state[showKey]);
   };
 
-  console.log('inputFields', inputFields);
-  console.log('campaign', campaign);
-
   return (
     <OnboardingWrapper {...props} slug={slug} step={step}>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
