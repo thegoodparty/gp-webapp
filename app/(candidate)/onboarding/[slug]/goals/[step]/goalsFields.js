@@ -39,15 +39,9 @@ const goalsFields = [
     pageType: 'runningAgainst',
     fields: [
       {
-        key: 'runningAgainstName',
-        label: 'Name',
+        key: 'runningAgainst',
+        label: 'runningAgainst',
         type: 'text',
-      },
-      {
-        key: 'runningAgainstDescription',
-        label: 'Description',
-        type: 'text',
-        rows: 4,
       },
     ],
   },

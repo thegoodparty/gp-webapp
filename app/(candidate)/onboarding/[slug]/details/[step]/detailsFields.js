@@ -1,6 +1,5 @@
-import { isValidPhone } from '@shared/inputs/PhoneInput';
 import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
-import { flatStates, states } from 'helpers/statesHelper';
+import { flatStates } from 'helpers/statesHelper';
 
 const detailsFields = [
   {
@@ -194,35 +193,6 @@ const detailsFields = [
     ],
   },
   {
-    title: 'Have you ever been a registered member of a political party?',
-    fields: [
-      {
-        key: 'registeredBefore',
-        label: '',
-        required: true,
-        type: 'radio',
-        options: ['Yes', 'No'],
-      },
-      {
-        key: 'partyBefore',
-        label: 'Which Party?',
-        type: 'select',
-        hidden: true,
-        showKey: 'registeredBefore',
-        showCondition: ['yes'],
-        options: [
-          'Republican',
-          'Democrat',
-          'Independent',
-          'Green Party',
-          'Libertarian Party',
-          'Forward Party',
-          'Other',
-        ],
-      },
-    ],
-  },
-  {
     title: 'Tell us about your prior experience',
     subTitle:
       "Telling potential voters about what you've worked on in the past and any experience that is relevant for the role you plan to run for will increase your odds of winning.",
@@ -291,4 +261,5 @@ detailsFields.forEach((step) => {
 });
 
 detailFieldsCount = detailFieldsCount - 2; // pledge and top issues
+console.log('detailFieldsCount', detailFieldsCount);
 export { detailFieldsCount };
