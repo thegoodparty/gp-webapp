@@ -1,0 +1,160 @@
+'use client';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { useEffect, useState } from 'react';
+import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import { useRouter } from 'next/navigation';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import TextField from '@shared/inputs/TextField';
+import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+
+export default function RunningAgainstPage({
+  campaign,
+  slug,
+  header,
+  subHeader,
+  subSectionKey,
+  ...props
+}) {
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
+  let initialState = {
+    runningAgainst: [],
+    newName: '',
+    newDesc: '',
+  };
+  const keys = ['runningAgainst'];
+  if (campaign?.[subSectionKey]?.runningAgainst) {
+    initialState.runningAgainst = campaign[subSectionKey].runningAgainst;
+  }
+  const [state, setState] = useState(initialState);
+  const router = useRouter();
+
+  const canSave = () => {
+    if (state.newName !== '' && state.newDesc === '') {
+      return false;
+    }
+    if (state.newName === '' && state.newDesc !== '') {
+      return false;
+    }
+
+    if (
+      state.newName === '' &&
+      state.newDesc === '' &&
+      state.runningAgainst.length === 0
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSave = async () => {
+    const updated = campaign;
+    if (!updated[subSectionKey]) {
+      updated[subSectionKey] = {};
+    }
+
+    let newAgainst = [...state.runningAgainst];
+    if (state.newName && state.newDesc) {
+      newAgainst.push({
+        name: state.newName,
+        description: state.newDesc,
+      });
+    }
+
+    updated[subSectionKey].runningAgainst = newAgainst;
+    console.log('uipdated', updated);
+    await updateCampaign(updated);
+
+    savingState.set(() => true);
+
+    setTimeout(() => {
+      router.push(`onboarding/${slug}/campaign-plan`);
+    }, 200);
+  };
+
+  const onChangeField = (key, value) => {
+    setState({
+      ...state,
+      [key]: value,
+    });
+  };
+
+  const handleAddAnother = () => {
+    const newAgainst = state.runningAgainst;
+    newAgainst.push({
+      name: state.newName,
+      description: state.newDesc,
+    });
+
+    setState({
+      runningAgainst: newAgainst,
+      newName: '',
+      newDesc: '',
+    });
+  };
+
+  const removeAgainst = (index) => {
+    const newAgainst = state.runningAgainst;
+    newAgainst.splice(index, 1);
+    onChangeField('runningAgainst', newAgainst);
+  };
+
+  return (
+    <OnboardingWrapper {...props} slug={slug}>
+      <div className="max-w-[460px] mx-auto">
+        {state.runningAgainst?.map((against, index) => (
+          <div
+            className="my-6 border-b border-gray-200 pb-3"
+            key={against.name}
+          >
+            <div className="font-bold mb-2">{against.name}</div>
+            <div>{against.description}</div>
+            <div
+              className="mt-4 underline text-blue-600 cursor-pointer"
+              onClick={() => {
+                removeAgainst(index);
+              }}
+            >
+              Remove
+            </div>
+          </div>
+        ))}
+
+        <TextField
+          label="Name"
+          fullWidth
+          value={state.newName}
+          onChange={(e) => {
+            onChangeField('newName', e.target.value);
+          }}
+        />
+        <TextField
+          className="mt-6"
+          label="Describe them"
+          placeholder="EXAMPLE: Republican hotel owner"
+          multiline
+          rows={6}
+          fullWidth
+          value={state.newDesc}
+          onChange={(e) => {
+            onChangeField('newDesc', e.target.value);
+          }}
+        />
+        <div
+          className="mt-4 underline text-blue-600 cursor-pointer"
+          onClick={handleAddAnother}
+        >
+          Add Another
+        </div>
+
+        <div className="flex justify-center  my-8">
+          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+            <div>GENERATE CAMPAIGN PLAN</div>
+          </BlackButtonClient>
+        </div>
+      </div>
+    </OnboardingWrapper>
+  );
+}

@@ -35,7 +35,8 @@ const goalsFields = [
   {
     title: 'Who are you running against?',
     subTitle:
-      "List the name or describe you will be running against. We'll use this information to generate a Tully Box for you, so you will know the best approach against your competition",
+      "List the name or describe you will be running against. We'll use this information to generate a messaging strategy. If you don’t know, Google it.",
+    pageType: 'runningAgainst',
     fields: [
       {
         key: 'runningAgainstName',
