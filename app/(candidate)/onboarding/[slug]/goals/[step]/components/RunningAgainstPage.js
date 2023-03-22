@@ -64,7 +64,6 @@ export default function RunningAgainstPage({
     }
 
     updated[subSectionKey].runningAgainst = newAgainst;
-    console.log('uipdated', updated);
     await updateCampaign(updated);
 
     savingState.set(() => true);
@@ -82,6 +81,9 @@ export default function RunningAgainstPage({
   };
 
   const handleAddAnother = () => {
+    if (state.newName === '' && state.newDesc === '') {
+      return;
+    }
     const newAgainst = state.runningAgainst;
     newAgainst.push({
       name: state.newName,
