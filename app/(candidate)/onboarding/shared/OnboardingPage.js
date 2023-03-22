@@ -8,6 +8,9 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { hookstate } from '@hookstate/core';
 import ArticlesSnippets from '../[slug]/details/[step]/components/ArticlesSnippets';
 import RenderInputField from './RenderInputField';
+import Modal from '@shared/utils/Modal';
+import { FaExclamationCircle } from 'react-icons/fa';
+import Pill from '@shared/buttons/Pill';
 
 export const savingState = hookstate(false);
 
@@ -49,6 +52,7 @@ export default function OnboardingPage({
 
   const [state, setState] = useState(initialState);
   const [errors, setErrors] = useState({});
+  const [showInvalidModal, setShowInvalidModal] = useState(false);
   const router = useRouter();
   const user = getUserCookie(true);
   const [loading, setLoading] = useState(false);
@@ -97,11 +101,15 @@ export default function OnboardingPage({
     await handleSave(true);
   };
 
-  const onChangeField = (key, value) => {
-    setState({
-      ...state,
-      [key]: value,
-    });
+  const onChangeField = (key, value, invalidOptions) => {
+    if (invalidOptions && invalidOptions.includes(value)) {
+      setShowInvalidModal(true);
+    } else {
+      setState({
+        ...state,
+        [key]: value,
+      });
+    }
   };
 
   const handleRegenerateAi = async () => {
@@ -176,6 +184,27 @@ export default function OnboardingPage({
           )}
         </div>
       </form>
+      {showInvalidModal && (
+        <Modal open closeCallback={() => setShowInvalidModal(false)}>
+          <div className="flex text-2xl items-center text-black max-w-xs">
+            <FaExclamationCircle className="text-red-600 mr-3" />
+            <div>Please note:</div>
+          </div>
+          <div className="my-5 text-lg">
+            We currently only support candidates
+            <br />
+            outside of the Two Party system.
+          </div>
+          <div
+            className="text-center"
+            onClick={() => setShowInvalidModal(false)}
+          >
+            <Pill className=" bg-yellow-400 border-yellow-400 ">
+              <div className="px-6 text-black tracking-wide">GOT IT</div>
+            </Pill>
+          </div>
+        </Modal>
+      )}
     </OnboardingWrapper>
   );
 }

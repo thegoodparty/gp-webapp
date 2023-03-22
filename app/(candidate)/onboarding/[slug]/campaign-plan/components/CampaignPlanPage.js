@@ -8,6 +8,7 @@ export default function CampaignPlanPage(props) {
   const { slug } = props.campaign;
   const breadcrumbsLinks = [
     { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
+    { href: `/onboarding/${slug}/dashboard/1`, label: 'Pre-Launch' },
     {
       label: 'Your Campaign Plan',
     },

@@ -70,6 +70,7 @@ const detailsFields = [
           'Forward Party',
           'Other',
         ],
+        invalidOptions: ['Democrat Party', 'Republican Party'],
       },
       {
         key: 'otherParty',

@@ -101,7 +101,9 @@ export default function RenderInputField({
             value={value}
             fullWidth
             variant="outlined"
-            onChange={(e) => onChangeCallback(field.key, e.target.value)}
+            onChange={(e) =>
+              onChangeCallback(field.key, e.target.value, field.invalidOptions)
+            }
             label={field.label}
             error={error}
             InputLabelProps={{
