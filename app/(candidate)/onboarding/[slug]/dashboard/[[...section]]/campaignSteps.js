@@ -106,7 +106,5 @@ export const generateCampaignStatus = (campaign) => {
     }
   });
 
-  console.log('campaign status', status);
-
   return status;
 };
