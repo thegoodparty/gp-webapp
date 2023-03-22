@@ -4,7 +4,7 @@ import { JsonLd } from 'react-schemaorg';
 
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
-export default function Breadcrumbs({ links }) {
+export default function Breadcrumbs({ links, withRefresh = false }) {
   const schema = [];
   links.forEach((link, index) => {
     schema.push({
@@ -30,9 +30,17 @@ export default function Breadcrumbs({ links }) {
         {links.map((link, index) => (
           <span key={link.label}>
             {index < links.length - 1 && (
-              <Link href={link.href} key={link.href}>
-                <div className="text-xs lg:text-base">{link.label}</div>
-              </Link>
+              <>
+                {withRefresh ? (
+                  <a href={link.href} key={link.href}>
+                    <div className="text-xs lg:text-base">{link.label}</div>
+                  </a>
+                ) : (
+                  <Link href={link.href} key={link.href}>
+                    <div className="text-xs lg:text-base">{link.label}</div>
+                  </Link>
+                )}
+              </>
             )}
           </span>
         ))}

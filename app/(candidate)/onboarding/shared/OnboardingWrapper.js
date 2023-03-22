@@ -70,7 +70,7 @@ export default function OnboardingWrapper({
         </div>
       </div>
       <MaxWidth>
-        {slug && <Breadcrumbs links={breadcrumbsLinks} />}
+        {slug && <Breadcrumbs links={breadcrumbsLinks} withRefresh />}
 
         <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)] pt-10 lg:pt-24">
           <div className="text-center  tracking-tight pb-14">
