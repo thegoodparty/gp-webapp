@@ -30,11 +30,11 @@ export default function CrunchingPage({ slug, ...props }) {
         out your <strong>Goals</strong>
       </h3>
       <div className="flex justify-center  mb-8">
-        <Link href={`/onboarding/${slug}/dashboard/1`}>
+        <a href={`/onboarding/${slug}/dashboard/1`}>
           <BlackButtonClient>
             <div>GET STARTED</div>
           </BlackButtonClient>
-        </Link>
+        </a>
       </div>
     </OnboardingWrapper>
   );
