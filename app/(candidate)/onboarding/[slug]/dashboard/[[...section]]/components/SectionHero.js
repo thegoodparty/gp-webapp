@@ -1,8 +1,4 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import NextStepButton from './NextStepButton';
-
-import bgImg from '/public/images/campaign/dashboard-bg.svg';
 
 export default function SectionHero({ campaignSteps, sectionIndex }) {
   return (
