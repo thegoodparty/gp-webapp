@@ -38,6 +38,7 @@ async function regenerateAI(subSectionKey, key, prompt) {
   }
 }
 let aiCount = 0;
+let aiTotalCount = 0;
 
 export default function CampaignPlan({ campaign }) {
   const subSectionKey = 'campaignPlan';
@@ -59,6 +60,13 @@ export default function CampaignPlan({ campaign }) {
   }, [campaignPlan]);
 
   const createInitialAI = async (regenerate) => {
+    aiCount++;
+    aiTotalCount++;
+    if (aiTotalCount >= 100) {
+      //fail
+      setLoading(false);
+      return;
+    }
     const { chatResponse, status } = await generateAI(
       subSectionKey,
       key,
@@ -67,7 +75,6 @@ export default function CampaignPlan({ campaign }) {
     if (!chatResponse && status === 'processing') {
       if (aiCount < 20) {
         setTimeout(async () => {
-          aiCount++;
           await createInitialAI();
         }, 5000);
       } else {
