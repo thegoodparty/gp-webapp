@@ -64,6 +64,9 @@ export default function CampaignPlan({ campaign }) {
     aiTotalCount++;
     if (aiTotalCount >= 100) {
       //fail
+      setPlan(
+        'Failed to generate a campaign plan. Please contact us for help.',
+      );
       setLoading(false);
       return;
     }
