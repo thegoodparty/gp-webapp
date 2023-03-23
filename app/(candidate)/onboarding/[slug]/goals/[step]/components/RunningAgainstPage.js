@@ -48,7 +48,7 @@ export default function RunningAgainstPage({
 
     return true;
   };
-
+  console.log('camp', campaign);
   const handleSave = async () => {
     const updated = campaign;
     if (!updated[subSectionKey]) {
@@ -64,6 +64,9 @@ export default function RunningAgainstPage({
     }
 
     updated[subSectionKey].runningAgainst = newAgainst;
+    // updated.campaignPlan = false;
+    // updated.campaignPlanStatus = false;
+
     await updateCampaign(updated);
 
     savingState.set(() => true);

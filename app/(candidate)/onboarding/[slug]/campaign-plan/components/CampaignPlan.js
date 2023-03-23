@@ -58,9 +58,15 @@ export default function CampaignPlan({ campaign }) {
   }, [campaignPlan]);
 
   const createInitialAI = async () => {
-    const { chatResponse } = await generateAI(subSectionKey, key);
-    setPlan(chatResponse);
-    setLoading(false);
+    const { chatResponse, status } = await generateAI(subSectionKey, key);
+    if (!chatResponse && status === 'processing') {
+      setTimeout(async () => {
+        await createInitialAI();
+      }, 5000);
+    } else {
+      setPlan(chatResponse);
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (improveQuery) => {

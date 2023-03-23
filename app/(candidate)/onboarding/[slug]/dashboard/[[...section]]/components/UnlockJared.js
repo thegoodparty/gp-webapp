@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function UnlockJared({ key }) {
   return (
-    <div className="col-span-12 md:col-span-6 lg:col-span-3 h-full" key={key}>
+    <div className="col-span-12 md:col-span-6 xl:col-span-3 h-full" key={key}>
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between relative">
         <div className="flex justify-center pt-4">
           <Image

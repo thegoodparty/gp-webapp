@@ -16,7 +16,7 @@ export default function CampaignPlanPage(props) {
   return (
     <div className="bg-slate-100 py-2">
       <MaxWidth>
-        <Breadcrumbs links={breadcrumbsLinks} />
+        <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         <Hero />
         <CampaignPlan {...props} />
         <CampaignAccordion {...props} />
