@@ -105,7 +105,15 @@ export default function CampaignPlan({ campaign }) {
   return (
     <>
       {loading ? (
-        <LoadingAnimation label="Generating your campaign plan with Good Party AI" />
+        <LoadingAnimation
+          label={
+            <>
+              Generating your campaign plan with Good Party AI.
+              <br />
+              This might take a minute or two.
+            </>
+          }
+        />
       ) : (
         <div className={`bg-white p-6 my-6 rounded-xl ${styles.plan}`}>
           {editMode ? (
