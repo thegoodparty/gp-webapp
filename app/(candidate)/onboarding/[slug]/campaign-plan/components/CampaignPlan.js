@@ -59,7 +59,7 @@ export default function CampaignPlan({ campaign }) {
     }
   }, [campaignPlan]);
 
-  const createInitialAI = async (regenerate) => {
+  const createInitialAI = async (regenerate, chat, editMode) => {
     aiCount++;
     aiTotalCount++;
     if (aiTotalCount >= 100) {
@@ -74,6 +74,8 @@ export default function CampaignPlan({ campaign }) {
       subSectionKey,
       key,
       regenerate,
+      chat,
+      editMode,
     );
     if (!chatResponse && status === 'processing') {
       if (aiCount < 20) {
@@ -100,9 +102,9 @@ export default function CampaignPlan({ campaign }) {
       { role: 'user', content: improveQuery },
     ];
     setPlan(false);
-    const { chatResponse } = await regenerateAI(subSectionKey, key, chat);
-    setPlan(chatResponse);
-    setLoading(false);
+    aiCount = 0;
+    aiTotalCount = 0;
+    await createInitialAI(true, chat, true);
   };
 
   const setEdit = () => {
