@@ -18,10 +18,10 @@ const RichEditor = dynamic(() => import('./RichEditor'), {
   ),
 });
 
-async function generateAI(subSectionKey, key) {
+async function generateAI(subSectionKey, key, regenerate) {
   try {
     const api = gpApi.campaign.onboarding.ai.create;
-    return await gpFetch(api, { subSectionKey, key });
+    return await gpFetch(api, { subSectionKey, key, regenerate });
   } catch (e) {
     console.log('error', e);
     return false;
@@ -37,6 +37,7 @@ async function regenerateAI(subSectionKey, key, prompt) {
     return false;
   }
 }
+let aiCount = 0;
 
 export default function CampaignPlan({ campaign }) {
   const subSectionKey = 'campaignPlan';
@@ -57,20 +58,32 @@ export default function CampaignPlan({ campaign }) {
     }
   }, [campaignPlan]);
 
-  const createInitialAI = async () => {
-    const { chatResponse, status } = await generateAI(subSectionKey, key);
+  const createInitialAI = async (regenerate) => {
+    const { chatResponse, status } = await generateAI(
+      subSectionKey,
+      key,
+      regenerate,
+    );
     if (!chatResponse && status === 'processing') {
-      setTimeout(async () => {
-        await createInitialAI();
-      }, 5000);
+      if (aiCount < 20) {
+        setTimeout(async () => {
+          aiCount++;
+          await createInitialAI();
+        }, 5000);
+      } else {
+        //something went wrong, we are stuck in a loop. reCreate the response
+        console.log('regenerating');
+        aiCount = 0;
+        createInitialAI(true);
+      }
     } else {
+      aiCount = 0;
       setPlan(chatResponse);
       setLoading(false);
     }
   };
 
   const handleSubmit = async (improveQuery) => {
-    console.log('handling submit', improveQuery);
     setLoading(true);
     const chat = [
       { role: 'assistant', content: plan },
