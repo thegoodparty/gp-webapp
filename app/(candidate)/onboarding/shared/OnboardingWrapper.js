@@ -46,7 +46,7 @@ export default function OnboardingWrapper({
   }, [step, totalSteps]);
 
   return (
-    <div className="bg-white shadow-inner relative pt-10 lg:pt-0 pb-6">
+    <div className="bg-white shadow-inner relative pt-10 lg:pt-0 pb-6 min-h-screen lg:min-h-[calc(100vh-80px)] ">
       <div
         className="absolute h-1 bg-purple  top-0 rounded-r transition-all"
         style={{ width: `calc(100vw * ${progress})` }}
@@ -72,7 +72,7 @@ export default function OnboardingWrapper({
       <MaxWidth>
         {slug && <Breadcrumbs links={breadcrumbsLinks} withRefresh />}
 
-        <div className="max-w-[680px] mx-auto min-h-screen lg:min-h-[calc(100vh-80px)] pt-10 lg:pt-24">
+        <div className="max-w-[680px] mx-auto pt-10 lg:pt-24">
           <div className="text-center  tracking-tight pb-14">
             <h1 className="font-black text-4xl ">{title}</h1>
             {subTitle && <h2 className="zinc-500 mt-8">{subTitle}</h2>}
@@ -89,8 +89,7 @@ export default function OnboardingWrapper({
           >
             {children}
           </motion.div>
-          {/* </AnimatePresence> */}
-          {self !== '/onboarding' && <AdminDelete />}
+          {pathname === '/details/1' && <AdminDelete />}
         </div>
       </MaxWidth>
     </div>

@@ -15,7 +15,11 @@ export default function Dashboard(props) {
     },
   ];
   return (
-    <div className={`bg-slate-100  ${sectionIndex === false ? 'pt-8' : 'pt-'}`}>
+    <div
+      className={`bg-slate-100 min-h-[calc(100vh-80px)] relative pb-16 ${
+        sectionIndex === false ? 'pt-8' : 'pt-0'
+      }`}
+    >
       {sectionIndex !== false ? (
         <MaxWidth>
           <Breadcrumbs links={breadcrumbsLinks} />
