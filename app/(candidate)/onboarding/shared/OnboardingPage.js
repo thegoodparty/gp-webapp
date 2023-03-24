@@ -193,7 +193,7 @@ export default function OnboardingPage({
             <div>Please note:</div>
           </div>
           <div className="my-5 text-lg">
-            We currently only support candidates
+            We only support candidates
             <br />
             outside of the Two Party system.
           </div>
