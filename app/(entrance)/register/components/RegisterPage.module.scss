@@ -7,9 +7,3 @@
     min-height: calc(100vh - 80px);
   }
 }
-
-.textField {
-  :global(.MuiInputBase-input) {
-    background-color: #f7f7fe;
-  }
-}

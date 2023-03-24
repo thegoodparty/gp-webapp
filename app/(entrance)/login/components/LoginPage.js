@@ -1,5 +1,4 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient.js';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
@@ -21,6 +20,7 @@ import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialButtons from './SocialButtons';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 
 async function login(email, password) {
   try {
@@ -95,7 +95,7 @@ export default function LoginPage() {
   return (
     <MaxWidth>
       <div className={`flex items-center justify-center ${styles.wrapper}`}>
-        <div className="grid py-6 max-w-2xl" style={{ width: '75vw' }}>
+        <div className="grid py-6 max-w-lg" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
             <h1
               data-cy="register-title"
@@ -104,11 +104,24 @@ export default function LoginPage() {
               Log into your account
             </h1>
           </div>
-          <div className="my-6 text-sm" data-cy="register-label">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" data-cy="redirect-to-register">
-              Create one
-            </Link>
+          <div className="flex justify-center">
+            <div
+              className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
+              data-cy="register-label"
+            >
+              <Link
+                href="/register"
+                data-cy="redirect-to-login"
+                className=" no-underline"
+              >
+                <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
+                  Sign up
+                </div>
+              </Link>
+              <div className="bg-black text-white py-3 px-6 rounded-xl">
+                Sign In
+              </div>
+            </div>
           </div>
           <form
             noValidate
@@ -133,14 +146,14 @@ export default function LoginPage() {
             <br />
             <br />
 
-            <BlackButtonClient
+            <YellowButtonClient
               style={{ width: '100%' }}
               disabled={!enableSubmit()}
               onClick={handleSubmit}
               type="submit"
             >
               <strong>LOGIN</strong>
-            </BlackButtonClient>
+            </YellowButtonClient>
           </form>
           <br />
 
