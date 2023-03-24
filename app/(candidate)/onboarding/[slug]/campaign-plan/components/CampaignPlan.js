@@ -18,10 +18,16 @@ const RichEditor = dynamic(() => import('./RichEditor'), {
   ),
 });
 
-async function generateAI(subSectionKey, key, regenerate) {
+async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
   try {
     const api = gpApi.campaign.onboarding.ai.create;
-    return await gpFetch(api, { subSectionKey, key, regenerate });
+    return await gpFetch(api, {
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    });
   } catch (e) {
     console.log('error', e);
     return false;
