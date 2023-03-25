@@ -1,5 +1,7 @@
 'use client';
 import PurpleButton from '@shared/buttons/PurpleButton';
+import YellowButton from '@shared/buttons/YellowButton';
+import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getUserCookie, setCookie } from 'helpers/cookieHelper';
@@ -47,18 +49,12 @@ export default function RunCampaignButton() {
     }
   };
   return (
-    <div onClick={handleRun}>
-      <PurpleButton
-        style={{
-          borderRadius: '40px',
-          width: '100%',
-          padding: '20px auto',
-        }}
-      >
-        <div className="whitespace-nowrap font-bold text-xl tracking-wide">
+    <div className="relative z-10" onClick={handleRun}>
+      <YellowButton style={{ width: '100%' }}>
+        <div className="whitespace-nowrap font-black text-xl tracking-wide">
           GET STARTED
         </div>
-      </PurpleButton>
+      </YellowButton>
     </div>
   );
 }
