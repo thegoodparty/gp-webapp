@@ -133,6 +133,7 @@ const detailsFields = [
           'County Commissioner',
           'Council member',
           'School Board',
+          'Other',
         ],
       },
       {
@@ -157,6 +158,7 @@ const detailsFields = [
           'County Commissioner',
           'Council member',
           'School Board',
+          'Other',
         ],
       },
       {
