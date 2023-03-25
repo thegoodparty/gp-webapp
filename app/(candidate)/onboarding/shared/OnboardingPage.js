@@ -123,8 +123,6 @@ export default function OnboardingPage({
     return showCondition.includes(state[showKey]);
   };
 
-  console.log('debug campaign', campaign);
-
   return (
     <OnboardingWrapper {...props} slug={slug} step={step}>
       <form noValidate onSubmit={(e) => e.preventDefault()}>

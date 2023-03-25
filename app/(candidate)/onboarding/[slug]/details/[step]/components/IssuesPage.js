@@ -18,6 +18,14 @@ export default function IssuesPage({
   subSectionKey,
   ...props
 }) {
+  console.log('positions', positions);
+  const positionsWithOther = [
+    ...positions,
+    {
+      name: 'Important Issue',
+      topIssue: { name: 'Other' },
+    },
+  ];
   useEffect(() => {
     savingState.set(() => false);
   }, []);
@@ -77,7 +85,7 @@ export default function IssuesPage({
       <div className="max-w-[360px] mx-auto">
         <div>
           <PositionsSelector
-            positions={positions}
+            positions={positionsWithOther}
             updateCallback={(positions) => onChangePositions(positions)}
             initialSelected={state.positions}
             square
