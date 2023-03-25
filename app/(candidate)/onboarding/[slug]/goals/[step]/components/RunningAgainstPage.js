@@ -6,6 +6,17 @@ import { useRouter } from 'next/navigation';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import TextField from '@shared/inputs/TextField';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import { Select } from '@mui/material';
+
+const partyOptions = [
+  'Independent/None',
+  'Democrat Party',
+  'Republican Party',
+  'Green Party',
+  'Libertarian Party',
+  'Forward Party',
+  'Other',
+];
 
 export default function RunningAgainstPage({
   campaign,
@@ -22,6 +33,7 @@ export default function RunningAgainstPage({
     runningAgainst: [],
     newName: '',
     newDesc: '',
+    newParty: '',
   };
   const keys = ['runningAgainst'];
   if (campaign?.[subSectionKey]?.runningAgainst) {
@@ -31,16 +43,31 @@ export default function RunningAgainstPage({
   const router = useRouter();
 
   const canSave = () => {
-    if (state.newName !== '' && state.newDesc === '') {
+    if (
+      state.newName !== '' &&
+      (state.newDesc === '' || state.newParty === '')
+    ) {
       return false;
     }
-    if (state.newName === '' && state.newDesc !== '') {
+
+    if (
+      state.newDesc !== '' &&
+      (state.newName === '' || state.newParty === '')
+    ) {
+      return false;
+    }
+
+    if (
+      state.newParty !== '' &&
+      (state.newName === '' || state.newDesc === '')
+    ) {
       return false;
     }
 
     if (
       state.newName === '' &&
       state.newDesc === '' &&
+      state.newParty === '' &&
       state.runningAgainst.length === 0
     ) {
       return false;
@@ -60,6 +87,7 @@ export default function RunningAgainstPage({
       newAgainst.push({
         name: state.newName,
         description: state.newDesc,
+        party: state.newParty,
       });
     }
 
@@ -84,19 +112,21 @@ export default function RunningAgainstPage({
   };
 
   const handleAddAnother = () => {
-    if (state.newName === '' && state.newDesc === '') {
+    if (state.newName === '' || state.newDesc === '' || state.newParty === '') {
       return;
     }
     const newAgainst = state.runningAgainst;
     newAgainst.push({
       name: state.newName,
       description: state.newDesc,
+      party: state.newParty,
     });
 
     setState({
       runningAgainst: newAgainst,
       newName: '',
       newDesc: '',
+      newParty: '',
     });
   };
 
@@ -116,6 +146,7 @@ export default function RunningAgainstPage({
           >
             <div className="font-bold mb-2">{against.name}</div>
             <div>{against.description}</div>
+            <div>{against.party}</div>
             <div
               className="mt-4 underline text-blue-600 cursor-pointer"
               onClick={() => {
@@ -126,15 +157,36 @@ export default function RunningAgainstPage({
             </div>
           </div>
         ))}
-
         <TextField
           label="Name"
           fullWidth
+          required
           value={state.newName}
           onChange={(e) => {
             onChangeField('newName', e.target.value);
           }}
         />
+        <div className="mt-6">
+          <Select
+            native
+            value={state.newParty}
+            label="Opponent Party affiliation"
+            fullWidth
+            required
+            variant="outlined"
+            onChange={(e) => {
+              onChangeField('newParty', e.target.value);
+            }}
+          >
+            <option value="">Select Opponent Party</option>
+            {partyOptions.map((op) => (
+              <option value={op} key={op}>
+                {op}
+              </option>
+            ))}
+          </Select>
+        </div>
+
         <div className="mt-6">
           <TextField
             label="Describe them"
@@ -142,6 +194,7 @@ export default function RunningAgainstPage({
             multiline
             rows={6}
             fullWidth
+            required
             value={state.newDesc}
             onChange={(e) => {
               onChangeField('newDesc', e.target.value);
@@ -154,7 +207,6 @@ export default function RunningAgainstPage({
         >
           Add Another
         </div>
-
         <div className="flex justify-center  my-8">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
             <div>GENERATE CAMPAIGN PLAN</div>
