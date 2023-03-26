@@ -4,9 +4,6 @@
   "description": "Power and money have corrupted both major U.S. Political parties.We're working on a truly Good alternative!",
   "author": "Tomer Almog",
   "license": "MIT",
-  "engines": {
-    "node": ">=16"
-  },
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max_old_space_size=8192\" NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:1337 next dev -p 4000",
     "dev-dev": "NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=https://api-dev.goodparty.org next dev -p 4000",

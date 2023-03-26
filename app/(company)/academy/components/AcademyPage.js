@@ -1,5 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Curriculum from './curriculum';
+import Curriculum from './Curriculum';
 import Hero from './Hero';
 import Instructors from './Instructors';
 import LearnMore from './LearnMore';
