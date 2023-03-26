@@ -12,10 +12,12 @@ import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { HEADER_LINKS } from './DesktopHeader';
 import { RESOURCES_LINKS } from './Resources';
+import { CANDIDATE_RESOURCES_LINKS } from './CandidateResources';
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const [showResources, setShowResources] = useState(false);
+  const [showCandResources, setShowCandResources] = useState(false);
   const path = usePathname();
   const userState = useHookstate(globalUserState);
   const user = userState.get();
@@ -48,7 +50,7 @@ export default function MobileMenu() {
             />
           </Link>
         </div>
-        {!showResources ? (
+        {!showResources && !showCandResources ? (
           <div className="">
             <div>
               <Link
@@ -75,6 +77,12 @@ export default function MobileMenu() {
               onClick={() => setShowResources(true)}
             >
               Resources <GoChevronRight />
+            </div>
+            <div
+              className="mt-7 cursor-pointer flex items-center justify-end"
+              onClick={() => setShowCandResources(true)}
+            >
+              Candidate Resources <GoChevronRight />
             </div>
             {user?.name ? (
               <Link
@@ -109,28 +117,58 @@ export default function MobileMenu() {
             )}
           </div>
         ) : (
-          <div className="">
-            <div
-              className="flex items-center mb-4"
-              onClick={() => setShowResources(false)}
-            >
-              <GoChevronLeft />
-              <span>&nbsp; Back</span>
-            </div>
-            <div className="mt-7 font-black text-xs">RESOURCES</div>
-            {RESOURCES_LINKS.map((link, index) => (
-              <div key={link.href} className="mt-7">
-                <Link
-                  href={link.href}
-                  id={`mobile-resource-nav-${link.label.replace(' ', '-')}`}
-                  key={link.href}
-                  className="no-underline font-normal py-2"
+          <>
+            {showResources && (
+              <div className="">
+                <div
+                  className="flex items-center mb-4"
+                  onClick={() => setShowResources(false)}
                 >
-                  {link.label}
-                </Link>
+                  <GoChevronLeft />
+                  <span>&nbsp; Back</span>
+                </div>
+                <div className="mt-7 font-black text-xs">RESOURCES</div>
+                {RESOURCES_LINKS.map((link, index) => (
+                  <div key={link.href} className="mt-7">
+                    <Link
+                      href={link.href}
+                      id={`mobile-resource-nav-${link.label.replace(' ', '-')}`}
+                      key={link.href}
+                      className="no-underline font-normal py-2"
+                    >
+                      {link.label}
+                    </Link>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+            {showCandResources && (
+              <div className="">
+                <div
+                  className="flex items-center mb-4"
+                  onClick={() => setShowCandResources(false)}
+                >
+                  <GoChevronLeft />
+                  <span>&nbsp; Back</span>
+                </div>
+                <div className="mt-7 font-black text-xs">
+                  CANDIDATE RESOURCES
+                </div>
+                {CANDIDATE_RESOURCES_LINKS.map((link, index) => (
+                  <div key={link.href} className="mt-7">
+                    <Link
+                      href={link.href}
+                      id={`mobile-resource-nav-${link.label.replace(' ', '-')}`}
+                      key={link.href}
+                      className="no-underline font-normal py-2"
+                    >
+                      {link.label}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

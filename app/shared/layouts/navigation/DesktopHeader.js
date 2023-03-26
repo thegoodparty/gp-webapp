@@ -5,9 +5,10 @@ import MaxWidth from '../MaxWidth';
 import NavRegisterOrProfile from './NavRegisterOrProfile';
 import Resources from './Resources';
 import { GoChevronDown } from 'react-icons/go';
+import CandidateResources from './CandidateResources';
 
 export const HEADER_LINKS = [
-  { label: 'Run', href: '/run-for-office' },
+  // { label: 'Run', href: '/run-for-office' },
   { label: 'Candidates', href: '/candidates' },
 ];
 
@@ -53,6 +54,7 @@ export default function DesktopHeader() {
               </Link>
             ))}
             <Resources />
+            <CandidateResources />
 
             <NavRegisterOrProfile />
           </div>
