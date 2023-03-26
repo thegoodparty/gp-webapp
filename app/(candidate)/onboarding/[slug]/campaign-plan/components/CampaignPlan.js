@@ -1,6 +1,5 @@
 'use client';
 import Pill from '@shared/buttons/Pill';
-import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useEffect, useState } from 'react';
@@ -11,8 +10,7 @@ import Typewriter from 'typewriter-effect';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { LinearProgress } from '@mui/material';
+import LoadingAI from './LoadingAI';
 
 const RichEditor = dynamic(() => import('./RichEditor'), {
   loading: () => (
@@ -36,15 +34,6 @@ async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
   }
 }
 
-async function regenerateAI(subSectionKey, key, prompt) {
-  try {
-    const api = gpApi.campaign.onboarding.ai.edit;
-    return await gpFetch(api, { subSectionKey, key, chat: prompt });
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
 let aiCount = 0;
 let aiTotalCount = 0;
 
@@ -137,29 +126,8 @@ export default function CampaignPlan({ campaign }) {
 
   return (
     <>
-      {1 == 1 ? (
-        <div className="bg-white p-6 my-10 rounded-xl text-center text-xl">
-          <div className="mb-3 text-4xl">
-            Generating your campaign plan with
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="mr-3 text-2xl">Good Party AI</div>
-            <Image
-              src="/images/campaign/ai-icon.svg"
-              alt="GP-AI"
-              width={48}
-              height={48}
-            />
-          </div>
-          <div className="max-w-lg mx-auto">
-            <LinearProgress className="h-2 mt-4 mb-2 bg-black rounded [&>.MuiLinearProgress-bar]:bg-slate-600" />
-          </div>
-          <br />
-          <br />
-          This may take 1-2 minutes. <br />
-          Please check out some of the resources we prepared for you while you
-          wait.
-        </div>
+      {loading ? (
+        <LoadingAI />
       ) : (
         <div className={`bg-white p-6 my-6 rounded-xl ${styles.plan}`}>
           {editMode ? (
