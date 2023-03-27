@@ -11,7 +11,7 @@ export default function Hero() {
         <div className="grid grid-cols-12 gap2">
           <div className="col-span-12 lg:col-span-8">
             <h1 className="text-6xl leading-tight font-black">
-              Empowering people to change politics for good.
+              Run your campaign on your ideas, not a party&apos;s.
             </h1>
             <h2 className="text-xl font-bold mt-5 lg:w-[70%]">
               We help independent-minded people who want to get things done run
