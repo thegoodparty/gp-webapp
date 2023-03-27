@@ -225,6 +225,11 @@ const gpApi = {
           method: 'POST',
           withAuth: true,
         },
+        fastCreate: {
+          url: `${base}campaign/onboarding/fast-ai`,
+          method: 'POST',
+          withAuth: true,
+        },
         edit: {
           url: `${base}campaign/onboarding/ai`,
           method: 'PUT',

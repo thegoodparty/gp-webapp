@@ -136,6 +136,7 @@ export default function OnboardingPage({
                       <ArticlesSnippets
                         articles={props.articles}
                         field={field}
+                        campaign={campaign}
                       />
                     ) : (
                       <>
