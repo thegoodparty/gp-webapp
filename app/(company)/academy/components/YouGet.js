@@ -1,8 +1,7 @@
-import YellowButton from '@shared/buttons/YellowButton';
 import Image from 'next/image';
-import Link from 'next/link';
+import GetStartedButton from './GetStartedButton';
 import budlongImg from '/public/images/landing-pages/jared-budlong.jpg';
-export default function YouGet() {
+export default function YouGet({ openModalCallback }) {
   return (
     <div className="mt-28 grid grid-cols-12 gap-8">
       <div className=" col-span-12 lg:col-span-4 relative">
@@ -22,9 +21,10 @@ export default function YouGet() {
           outstanding potential candidates, and ongoing access to our experts to
           support you on your campaign.
         </p>
-        <Link href="/run-for-office" id="academy-you_get-get-started">
-          <YellowButton>GET STARTED</YellowButton>
-        </Link>
+        <GetStartedButton
+          openModalCallback={openModalCallback}
+          id="academy-you_get-get-started"
+        />
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import CandidateResources from './CandidateResources';
 
 export const HEADER_LINKS = [
   // { label: 'Run', href: '/run-for-office' },
-  { label: 'Candidates', href: '/candidates' },
+  // { label: 'Candidates', href: '/candidates' },
 ];
 
 export default function DesktopHeader() {

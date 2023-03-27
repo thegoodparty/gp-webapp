@@ -7,6 +7,7 @@ export default function YellowButtonClient({
   onClick,
   disabled,
   type,
+  id,
 }) {
   const backgroundColor = disabled ? 'rgba(255, 230, 0, 0.3)' : '#FFE600';
   const textColor = disabled ? '#666' : '#000';
@@ -18,6 +19,7 @@ export default function YellowButtonClient({
       onClick={onClick}
       disabled={disabled}
       type={type}
+      id={id}
     >
       {children}
     </BaseButtonClient>

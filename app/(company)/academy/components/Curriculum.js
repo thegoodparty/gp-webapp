@@ -1,10 +1,9 @@
-import YellowButton from '@shared/buttons/YellowButton';
 import Image from 'next/image';
-import Link from 'next/link';
+import GetStartedButton from './GetStartedButton';
 
 import zoomImg from '/public/images/landing-pages/curriculum.jpg';
 
-export default function Curriculum() {
+export default function Curriculum({ openModalCallback }) {
   return (
     <div className="mt-10 grid grid-cols-12 gap-8">
       <div className=" col-span-12 lg:col-span-6 relative min-h-[300px] md:min-h-[500px]">
@@ -25,9 +24,10 @@ export default function Curriculum() {
           required to confidently decide whether or not to run and the know-how
           to run winning campaigns.
         </p>
-        <Link href="/run-for-office" id="academy-curriculum-get-started">
-          <YellowButton>GET STARTED</YellowButton>
-        </Link>
+        <GetStartedButton
+          openModalCallback={openModalCallback}
+          id="academy-curriculum-get-started"
+        />
       </div>
     </div>
   );
