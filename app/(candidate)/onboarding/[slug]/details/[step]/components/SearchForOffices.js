@@ -1,5 +1,4 @@
 'use client';
-
 import { LinearProgress } from '@mui/material';
 import YellowButton from '@shared/buttons/YellowButton';
 import gpApi from 'gpApi';
