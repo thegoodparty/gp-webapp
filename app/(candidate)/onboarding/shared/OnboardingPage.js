@@ -77,7 +77,16 @@ export default function OnboardingPage({
           return field.validate(state[field.key]);
         }
       }
+
+      if (
+        field.requiredHidden &&
+        canShowField(field) &&
+        state[field.key] === ''
+      ) {
+        return false;
+      }
     }
+
     return true;
   };
 

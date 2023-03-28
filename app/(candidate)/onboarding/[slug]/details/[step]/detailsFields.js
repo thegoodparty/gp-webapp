@@ -108,6 +108,7 @@ const detailsFields = [
         type: 'select',
         hidden: true,
         showKey: 'knowRun',
+        required: true,
         showCondition: ['yes'],
         options: [
           'City Council',
@@ -141,6 +142,7 @@ const detailsFields = [
         label: 'Jurisdiction (City, District, etc.)',
         type: 'text',
         hidden: true,
+        requiredHidden: true,
         showKey: 'office',
         showCondition: [
           'City Council',
