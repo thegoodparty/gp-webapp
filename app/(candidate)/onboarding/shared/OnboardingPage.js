@@ -65,9 +65,14 @@ export default function OnboardingPage({
         //   return false;
         // }
 
+        if (field.type === 'text' && state[field.key] === '') {
+          return false;
+        }
+
         if (!field.initialValue && state[field.key] === '') {
           return false;
         }
+
         if (field.validate) {
           return field.validate(state[field.key]);
         }
