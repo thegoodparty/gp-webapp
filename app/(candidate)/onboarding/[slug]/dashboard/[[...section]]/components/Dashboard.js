@@ -1,5 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Script from 'next/script';
 import Help from './Help';
 import Hero from './Hero';
 import SectionHero from './SectionHero';
@@ -30,6 +31,12 @@ export default function Dashboard(props) {
       )}
       <Steps {...props} />
       <Help />
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
     </div>
   );
 }

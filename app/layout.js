@@ -70,13 +70,6 @@ export default function RootLayout({ children }) {
         `,
         }}
       />
-      {/* used for chatbot on onboarding pages */}
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
     </html>
   );
 }

@@ -11,6 +11,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import LoadingAI from './LoadingAI';
+import Script from 'next/script';
 
 const RichEditor = dynamic(() => import('./RichEditor'), {
   loading: () => (
@@ -172,6 +173,12 @@ export default function CampaignPlan({ campaign }) {
           </div>
         </div>
       )}
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
     </>
   );
 }
