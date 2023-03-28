@@ -71,9 +71,7 @@ export default function PositionsSelector({
         variant="outlined"
         inputValue={inputValue}
         onInputChange={(e) => setInputValue(e?.target?.value || '')}
-        renderInput={(params) => (
-          <TextField {...params} label="Search all Issues" />
-        )}
+        renderInput={(params) => <TextField {...params} label="Add Issue" />}
         renderGroup={(params) => (
           <div>
             <div className="bg-sky-200 font-bold p-2">{params.group}</div>
