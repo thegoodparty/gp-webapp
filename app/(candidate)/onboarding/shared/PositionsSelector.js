@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@shared/inputs/TextField';
+import { MdDeleteForever } from 'react-icons/md';
 
 import styles from './PositionsSelector.module.scss';
 
@@ -90,10 +91,11 @@ export default function PositionsSelector({
         {selected.map((position) => (
           <div
             key={position.id}
-            className="issue inline-block bg-gray-200 rounded py-2 px-4 mt-3 mr-3 font-black cursor-pointer transition hover:bg-neutral-200"
+            className="issue inline-flex items-center bg-gray-200 rounded py-2 px-4 mt-3 mr-3 font-black cursor-pointer transition hover:bg-neutral-200"
             onClick={() => removePosition(position)}
           >
-            {position.name}
+            <span className="mr-2">{position.name}</span>
+            <MdDeleteForever />
           </div>
         ))}
       </div>

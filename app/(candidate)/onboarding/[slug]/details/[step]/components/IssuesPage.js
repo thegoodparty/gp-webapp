@@ -82,7 +82,7 @@ export default function IssuesPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <div className="max-w-[360px] mx-auto">
+      <div className="max-w-[460px] mx-auto">
         <div>
           <PositionsSelector
             positions={positionsWithOther}
