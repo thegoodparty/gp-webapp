@@ -11,7 +11,6 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import LoadingAI from './LoadingAI';
-import { getCookie, setCookie } from 'helpers/cookieHelper';
 
 const RichEditor = dynamic(() => import('./RichEditor'), {
   loading: () => (
@@ -37,7 +36,6 @@ async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
 
 let aiCount = 0;
 let aiTotalCount = 0;
-const typedCookie = 'plan-typed';
 
 export default function CampaignPlan({ campaign }) {
   const subSectionKey = 'campaignPlan';
@@ -47,8 +45,7 @@ export default function CampaignPlan({ campaign }) {
   const [isEdited, setIsEdited] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  let isTypedCookie = getCookie(typedCookie);
-  const [isTyped, setIsTyped] = useState(isTypedCookie === 'yes');
+  const [isTyped, setIsTyped] = useState(false);
 
   const { campaignPlan } = campaign;
   useEffect(() => {
@@ -94,13 +91,10 @@ export default function CampaignPlan({ campaign }) {
       aiCount = 0;
       setPlan(chatResponse);
       setLoading(false);
-      setCookie(typedCookie, 'yes');
     }
   };
 
   const handleSubmit = async (improveQuery) => {
-    setCookie(typedCookie, 'no');
-
     setLoading(true);
     const chat = [
       // { role: 'assistant', content: plan },
@@ -155,7 +149,6 @@ export default function CampaignPlan({ campaign }) {
                       .typeString(plan)
                       .callFunction(() => {
                         setIsTyped(true);
-                        setCookie(typedCookie, 'yes');
                       })
 
                       .start();
