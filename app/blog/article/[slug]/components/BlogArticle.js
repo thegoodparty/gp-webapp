@@ -42,12 +42,14 @@ export default function BlogArticle({ sections, article }) {
             <div className={styles.time}>{readingTime?.text}</div>
             <div className={styles.topAuthorWrapper}>
               <div className={styles.authorImage}>
-                <Image
-                  src={`https:${author.fields.image?.url}`}
-                  alt={mainImage?.alt}
-                  width={60}
-                  height={60}
-                />
+                {author.fields.image?.url && (
+                  <Image
+                    src={`https:${author.fields.image?.url}`}
+                    alt={mainImage?.alt}
+                    width={60}
+                    height={60}
+                  />
+                )}
               </div>
               <div className={styles.authorNameTop}>
                 {author.fields.name} &middot; {dateUsHelper(publishDate)}
@@ -70,14 +72,16 @@ export default function BlogArticle({ sections, article }) {
           <div className={styles.authorInner}>
             <div className={styles.author}>
               <div>
-                <div className={styles.authorImage}>
-                  <Image
-                    src={`https:${author.fields.image?.url}`}
-                    alt={mainImage?.alt}
-                    width={60}
-                    height={60}
-                  />
-                </div>
+                {author.fields.image?.url && (
+                  <div className={styles.authorImage}>
+                    <Image
+                      src={`https:${author.fields.image?.url}`}
+                      alt={mainImage?.alt}
+                      width={60}
+                      height={60}
+                    />
+                  </div>
+                )}
               </div>
               <div>
                 <div className={styles.authorName}>By {author.fields.name}</div>

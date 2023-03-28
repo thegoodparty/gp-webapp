@@ -17,9 +17,9 @@ export default async function Page({ params }) {
   const subSectionKey = campaignSteps[0].steps[1].key;
 
   let nextPath = `/${subSectionKey}/${stepInt + 1}`;
-  if (pageType === 'messagingStrategy') {
-    nextPath = '/dashboard';
-    // probably need to get data from AI
+  if (stepInt === goalsFields.length) {
+    const campaign = await getCampaign(params);
+    nextPath = '/dashboard/1';
   }
   const section = { label: 'Pre Launch', index: 1 };
 
@@ -27,6 +27,7 @@ export default async function Page({ params }) {
     title: stepFields.title,
     subTitle: stepFields.subTitle,
     skipable: stepFields.skipable,
+    skipLabel: stepFields.skipLabel,
     slug,
     campaign,
     inputFields: stepFields.fields,

@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import SocialButton from 'app/(entrance)/register/components/SocialButton';
 import TwitterButton from './TwitterButton';
+import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 
 async function login(payload) {
   try {
@@ -78,9 +79,13 @@ export default function SocialButtons() {
           isError: false,
         };
       });
-      const returnCookie = getCookie('returnUrlLogin');
+      const afterAction = getCookie('afterAction');
+      if (afterAction === 'createCampaign') {
+        await createCampaign(router);
+      }
+      const returnCookie = getCookie('returnUrl');
       if (returnCookie) {
-        deleteCookie('returnUrlLogin');
+        deleteCookie('returnUrl');
         router.push(returnCookie);
       } else {
         router.push('/');

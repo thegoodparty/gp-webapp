@@ -3,18 +3,23 @@ import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 
-export const fetchUserCampaignServer = async () => {
-  const api = gpApi.campaign.onboarding.findByUser;
-  const token = getServerToken();
-  return await gpFetch(api, false, 3600, token);
-};
+export async function fetchUserCampaign() {
+  try {
+    const api = gpApi.campaign.onboarding.findByUser;
+    const token = getServerToken();
+    return await gpFetch(api, false, false, token);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
 
 export default async function getCampaign(params) {
   const { slug } = params;
 
-  let { campaign } = await fetchUserCampaignServer();
+  let { campaign } = await fetchUserCampaign();
   if (campaign?.slug !== slug) {
-    redirect('/onboarding');
+    redirect('/run-for-office');
   }
   return campaign;
 }

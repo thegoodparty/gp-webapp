@@ -3,59 +3,42 @@ import { SlRocket } from 'react-icons/sl';
 import { MdHowToVote } from 'react-icons/md';
 import { detailFieldsCount } from '../../details/[step]/detailsFields';
 import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
-import { strategyFieldsCount } from '../../strategy/[step]/strategyFields';
-import { teamFieldsCount } from '../../team/[step]/teamFields';
-import { socialFieldsCount } from '../../social/[step]/socialFields';
 
 const campaignSteps = [
   {
     key: 'preLaunch',
+    preTitle: 'Build Your Campaign Plan',
     title: 'Pre Launch',
     subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+      "Establish your campaign's goals, messaging, strategy, and organization before officially announcing your candidacy.",
     icon: <FaRegLightbulb size={30} />,
     steps: [
       {
         key: 'details',
         title: 'Candidate Details',
         subTitle:
-          'details Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+          'Brief bio, your experience, and positions on key issues, providing voters with a clear understanding of who you are.',
         steps: detailFieldsCount,
       },
       {
         key: 'goals',
         title: 'Goals & Objectives',
         subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+          'Purpose of your campaign, as well as specific, measurable targets and milestones that the campaign aims to achieve.',
         steps: goalsFieldsCount,
       },
       {
-        key: 'strategy',
-        title: 'Campaign Message & Strategy',
+        key: 'campaignPlan',
+        title: 'Your Campaign Plan',
         subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: strategyFieldsCount,
+          "The overall strategy, tactics, and budget for achieving the campaign's goals and objectives.",
+        steps: 0,
+        link: '/campaign-plan',
       },
       {
-        key: 'team',
-        title: 'Build a Campaign Team',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: teamFieldsCount,
-      },
-      {
-        key: 'social',
-        title: 'Social Media',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: socialFieldsCount,
-      },
-      {
-        key: 'budget',
-        title: ' Budget & Fundraising Plan',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: 6,
+        key: 'incentive',
+        steps: 0,
+        customCard: 'UnlockJared',
       },
     ],
   },
@@ -63,33 +46,17 @@ const campaignSteps = [
     key: 'launch',
     title: 'Launch',
     subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+      'Officially announce your candidacy and kick off the campaign with a well-planned event that generates momentum and media coverage.',
     icon: <SlRocket size={30} />,
-    steps: [
-      {
-        key: 'details',
-        title: 'Candidate Details',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: detailFieldsCount,
-      },
-    ],
+    steps: [],
   },
   {
     key: 'run',
     title: 'Run',
     subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
+      'Execute the strategy and tactics developed in earlier phases, including fundraising, canvassing, advertising, and public appearances.',
     icon: <MdHowToVote size={30} />,
-    steps: [
-      {
-        key: 'details',
-        title: 'Candidate Details',
-        subTitle:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ut neque orci.',
-        steps: detailFieldsCount,
-      },
-    ],
+    steps: [],
   },
 ];
 
@@ -108,18 +75,15 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details, goals, strategy, team, social } = campaign;
+  const { details, goals, campaignPlan } = campaign;
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
-    { key: 'strategy', value: strategy, count: strategyFieldsCount },
-    { key: 'team', value: team, count: teamFieldsCount },
-    { key: 'social', value: social, count: socialFieldsCount },
+    { key: 'campaignPlan', value: campaignPlan, count: 1 },
   ];
 
   preLaunchSections.forEach((section) => {
     if (section) {
-      status.preLaunch.status = 'In Progress';
       status.preLaunch[section.key] = {};
       status.preLaunch[section.key].status = 'In Progress';
       const completedSteps = section.value
@@ -127,6 +91,11 @@ export const generateCampaignStatus = (campaign) => {
         : 0;
       if (completedSteps === 0) {
         status.preLaunch[section.key].status = 'Not Started';
+        if (section.key === 'details') {
+          status.preLaunch.status = 'Not Started';
+        }
+      } else {
+        status.preLaunch.status = 'In Progress';
       }
       status.preLaunch[section.key].completedSteps = completedSteps;
       if (completedSteps >= section.count) {

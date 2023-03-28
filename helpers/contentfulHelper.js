@@ -3,6 +3,10 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 import { BLOCKS } from '@contentful/rich-text-types';
 
+const Text = ({ children }) => (
+  <p style={{ whiteSpace: 'pre-line' }}>{children}</p>
+);
+
 const dtrOptions = {
   renderNode: {
     [BLOCKS.EMBEDDED_ASSET]: (node) => (
@@ -12,6 +16,7 @@ const dtrOptions = {
         className="faq-image"
       />
     ),
+    [BLOCKS.PARAGRAPH]: (node, children) => <Text>{children}</Text>,
   },
 };
 
@@ -19,6 +24,7 @@ const dtrOptions = {
 const contentfulHelper = (rawRichTextField) => {
   try {
     let doc = rawRichTextField;
+    // console.log(require('util').inspect(doc));
     if (typeof doc === 'string') {
       doc = JSON.parse(rawRichTextField);
     }

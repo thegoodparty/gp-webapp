@@ -23,7 +23,7 @@ export default function AdminDelete() {
   const router = useRouter();
   const handleDelete = async () => {
     await deleteCampaign();
-    router.push('/onboarding');
+    router.push('/run-for-office');
   };
 
   const user = getUserCookie(true);

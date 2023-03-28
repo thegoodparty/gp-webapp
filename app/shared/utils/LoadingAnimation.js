@@ -20,7 +20,7 @@ const LoadingAnimation = ({ label, fullPage = true }) => (
         <LinearProgress className="h-2 mt-4 mb-2 bg-black rounded [&>.MuiLinearProgress-bar]:bg-slate-600" />
       </div>
       {label && (
-        <h3 className="text-xl font-bold mb-6">
+        <h3 className="text-xl font-bold my-6">
           {label}
           <br />
           &nbsp;

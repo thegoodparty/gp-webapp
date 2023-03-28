@@ -1,4 +1,5 @@
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store'; //https://beta.nextjs.org/docs/api-reference/segment-config#fetchcache
 
 import Dashboard from './components/Dashboard';
 import campaignSteps, { generateCampaignStatus } from './campaignSteps';

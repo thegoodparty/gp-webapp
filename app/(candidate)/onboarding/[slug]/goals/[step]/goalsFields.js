@@ -1,34 +1,6 @@
 const goalsFields = [
   {
-    title: 'Tell us why you are running.',
-    subTitle:
-      "We've been listening and based on what we know about you so far, we can help generate a WHY statement for you. Some things to keep in mind first.",
-    pageType: 'AIFlow',
-    fields: [
-      {
-        key: 'whyRunning',
-        withIntro: true,
-      },
-    ],
-  },
-  {
-    title: 'Provide the Date of Election',
-    subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id lorem dapibus, porta lorem vitae, vehicula nisi. Aenean non congue metus. Nam vel enim.',
-    skipable: true,
-    fields: [
-      {
-        key: 'electionDate',
-        label: 'Date of Election',
-        required: true,
-        type: 'date',
-      },
-    ],
-  },
-  {
     title: 'Have you filed a statement of candidacy?',
-    subTitle:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id lorem dapibus, porta lorem vitae, vehicula nisi. Aenean non congue metus. Nam vel enim.',
     fields: [
       {
         key: 'filedStatement',
@@ -37,18 +9,9 @@ const goalsFields = [
         type: 'radio',
       },
       {
-        key: 'statementName',
-        label: 'Great! Tell Us More. What is the name on the statement?',
-        placeHolder: 'Name',
-        type: 'text',
-        hidden: true,
-        showKey: 'filedStatement',
-        showCondition: ['yes'],
-      },
-      {
         key: 'campaignCommittee',
-        label: 'Campaign Committee',
-        placeHolder: 'Campaign Committee',
+        label: 'Name of Campaign Committee',
+        placeholder: 'Campaign Committee',
         type: 'text',
         hidden: true,
         showKey: 'filedStatement',
@@ -56,30 +19,31 @@ const goalsFields = [
       },
     ],
   },
+  {
+    title: "What's the date of election?",
+    skipable: true,
+    skipLabel: "I don't know",
+    fields: [
+      {
+        key: 'electionDate',
+        label: 'Date of Election',
+        type: 'date',
+      },
+    ],
+  },
+
   {
     title: 'Who are you running against?',
     subTitle:
-      "List the name or describe you will be running against. We'll use this information to generate a Tully Box for you, so you will know the best approach against your competition",
+      "List the name or describe you will be running against. We'll use this information to generate a messaging strategy. If you don’t know, Google it.",
+    pageType: 'runningAgainst',
     fields: [
       {
-        key: 'runningAgainstName',
-        label: 'Name',
+        key: 'runningAgainst',
+        label: 'runningAgainst',
         type: 'text',
-      },
-      {
-        key: 'runningAgainstDescription',
-        label: 'Description',
-        type: 'text',
-        rows: 4,
       },
     ],
-  },
-  {
-    title: 'Messaging Strategy',
-    pageType: 'messagingStrategy',
-    subTitle:
-      "What the politicos call a 4 way messaging box. Learn what you should say about yourself and what your competition will try to say about you. Don't worry we'll save this for you to review at your leisure.",
-    fields: [],
   },
 ];
 
@@ -90,5 +54,5 @@ goalsFields.forEach((step) => {
   goalsFieldsCount += step.fields?.length || 0;
 });
 
-goalsFieldsCount = goalsFieldsCount + 1; // Messaging Strategy
+goalsFieldsCount = goalsFieldsCount;
 export { goalsFieldsCount };

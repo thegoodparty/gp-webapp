@@ -1,10 +1,11 @@
 export const dynamic = 'force-dynamic';
 
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import { fetchArticle } from 'app/blog/article/[slug]/page';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
-import { getServerToken } from 'helpers/userServerHelper';
+import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import detailsFields from './detailsFields';
@@ -26,6 +27,28 @@ export default async function Page({ params }) {
   let positions = [];
   if (pageType === 'issuesPage') {
     ({ positions } = await fetchPositions());
+  }
+  if (stepInt === 1) {
+    const user = getServerUser();
+    const name = user.name.split(' ');
+    stepFields.fields[0].initialValue = name[0];
+    stepFields.fields[1].initialValue =
+      name.length > 0 ? name[name.length - 1] : '';
+  }
+
+  if (stepInt === 2) {
+    const user = getServerUser();
+    stepFields.fields[0].initialValue = user.zip;
+  }
+  const articles = [];
+  if (stepInt === 5) {
+    if (stepFields.fields[4].articles) {
+      const articlesSlugs = stepFields.fields[4].articles;
+      for (let i = 0; i < articlesSlugs.length; i++) {
+        const article = await fetchArticle(articlesSlugs[i]);
+        articles.push(article?.content);
+      }
+    }
   }
 
   let pledge;
@@ -54,6 +77,7 @@ export default async function Page({ params }) {
     totalSteps: detailsFields.length,
     section,
     subSectionLabel,
+    articles,
   };
   return <OnboardingStepPage {...childProps} />;
 }

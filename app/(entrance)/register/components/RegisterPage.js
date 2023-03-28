@@ -5,7 +5,6 @@ import { useHookstate } from '@hookstate/core';
 
 import TextField from '@shared/inputs/TextField';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import styles from './RegisterPage.module.scss';
 import { register } from '@shared/inputs/RegisterAnimated';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
@@ -14,9 +13,10 @@ import Link from 'next/link';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import PasswordInput from '@shared/inputs/PasswrodInput';
 import { passwordRegex } from 'helpers/userHelper';
-import dynamic from 'next/dynamic';
 import SocialButtons from './SocialButtons';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 
 // const SocialButtons = dynamic(() => import('./SocialButtons'), { ssr: false });
 
@@ -44,6 +44,7 @@ export const REGISTER_FIELDS = [
 ];
 
 export const validateZip = (zip) => {
+  // let zipInt = parseInt(zip);
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
   return validZip.test(zip);
 };
@@ -91,13 +92,17 @@ export default function RegisterPage({}) {
       });
       if (user) {
         userState.set(() => user);
-
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          router.push(returnUrl);
+        const afterAction = getCookie('afterAction');
+        if (afterAction === 'createCampaign') {
+          await createCampaign(router);
         } else {
-          router.push('/');
+          const returnUrl = getCookie('returnUrl');
+          if (returnUrl) {
+            deleteCookie('returnUrl');
+            router.push(returnUrl);
+          } else {
+            router.push('/');
+          }
         }
         snackbarState.set(() => {
           return {
@@ -140,7 +145,7 @@ export default function RegisterPage({}) {
     <MaxWidth>
       <div className={` flex items-center justify-center ${styles.wrapper}`}>
         {score === 'bad' ? (
-          <div className="py-6 max-w-2xl">
+          <div className="py-6 max-w-lg">
             <div
               className="text-center"
               style={{ marginBottom: '32px', paddingTop: '32px' }}
@@ -160,7 +165,7 @@ export default function RegisterPage({}) {
             </div>
           </div>
         ) : (
-          <div className="py-6 max-w-2xl" style={{ width: '75vw' }}>
+          <div className="py-6 max-w-lg" style={{ width: '75vw' }}>
             <div className="text-center mb-8 pt-8">
               <h1
                 data-cy="register-title"
@@ -169,11 +174,24 @@ export default function RegisterPage({}) {
                 Sign up for Good Party
               </h1>
             </div>
-            <div className="my-6 text-sm" data-cy="register-label">
-              Already have an account?{' '}
-              <Link href="/login" data-cy="redirect-to-login">
-                login
-              </Link>
+            <div className="flex justify-center">
+              <div
+                className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
+                data-cy="register-label"
+              >
+                <div className="bg-black text-white py-3 px-6 rounded-xl">
+                  Sign up
+                </div>
+                <Link
+                  href="/login"
+                  data-cy="redirect-to-login"
+                  className=" no-underline"
+                >
+                  <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
+                    Sign In
+                  </div>
+                </Link>
+              </div>
             </div>
             <form
               noValidate
@@ -215,14 +233,14 @@ export default function RegisterPage({}) {
               <br />
 
               <div>
-                <BlackButtonClient
+                <YellowButtonClient
                   disabled={!enableSubmit()}
                   onClick={handleSubmit}
                   type="submit"
                   style={{ width: '100%' }}
                 >
                   <strong>SIGN UP</strong>
-                </BlackButtonClient>
+                </YellowButtonClient>
               </div>
               {/* {!score && (
             <GoogleReCaptcha onVerify={handleVerify} action="REGISTER" />

@@ -1,12 +1,12 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
-import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PositionsSelector from 'app/(candidate)/onboarding/components/PositionsSelector';
+import PositionsSelector from 'app/(candidate)/onboarding/shared/PositionsSelector';
 import TextField from '@shared/inputs/TextField';
+import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 
 export default function IssuesPage({
   campaign,
@@ -18,6 +18,17 @@ export default function IssuesPage({
   subSectionKey,
   ...props
 }) {
+  console.log('positions', positions);
+  const positionsWithOther = [
+    ...positions,
+    {
+      name: 'Important Issue',
+      topIssue: { name: 'Other' },
+    },
+  ];
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
   let initialState = {
     positions: [],
   };
@@ -27,14 +38,13 @@ export default function IssuesPage({
   }
   const [state, setState] = useState(initialState);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const canSave = () => {
     if (!state.positions || state.positions.length === 0) {
       return false;
     }
     for (let i = 0; i < state.positions.length; i++) {
-      const id = positions[i].id;
+      const id = state.positions[i].id;
       if (!state[`position-${id}`] || state[`position-${id}`] === '') {
         return false;
       }
@@ -43,7 +53,6 @@ export default function IssuesPage({
   };
 
   const handleSave = async () => {
-    setLoading(true);
     const updated = campaign;
     if (!updated[subSectionKey]) {
       updated[subSectionKey] = {};
@@ -53,7 +62,11 @@ export default function IssuesPage({
     await updateCampaign(updated);
     let path = nextPath;
 
-    router.push(`onboarding/${slug}${path}`);
+    savingState.set(() => true);
+
+    setTimeout(() => {
+      router.push(`onboarding/${slug}${path}`);
+    }, 200);
   };
 
   const onChangeField = (key, value) => {
@@ -69,10 +82,10 @@ export default function IssuesPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <div className="max-w-[360px] mx-auto">
+      <div className="max-w-[460px] mx-auto">
         <div>
           <PositionsSelector
-            positions={positions}
+            positions={positionsWithOther}
             updateCallback={(positions) => onChangePositions(positions)}
             initialSelected={state.positions}
             square
@@ -96,14 +109,10 @@ export default function IssuesPage({
           </div>
         ))}
 
-        <div className="flex justify-center">
-          {loading ? (
-            <ReactLoading color="green" />
-          ) : (
-            <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-              <div>NEXT</div>
-            </BlackButtonClient>
-          )}
+        <div className="flex justify-center  mb-8">
+          <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+            <div>NEXT</div>
+          </BlackButtonClient>
         </div>
       </div>
     </OnboardingWrapper>

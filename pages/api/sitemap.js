@@ -31,6 +31,7 @@ const staticUrls = [
   '/pricing',
   '/political-terms',
   '/volunteer',
+  '/academy',
 ];
 
 export const fetchContent = async () => {

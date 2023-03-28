@@ -5,7 +5,8 @@ const BaseButton = ({
   onClick = () => {},
   disabled = false,
   type = 'button',
-  className = ''
+  className = '',
+  id,
 }) => {
   return (
     <button
@@ -14,6 +15,7 @@ const BaseButton = ({
       onClick={onClick}
       disabled={disabled}
       type={type}
+      id={id}
     >
       {children}
     </button>
