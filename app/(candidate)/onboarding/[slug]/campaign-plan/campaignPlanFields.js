@@ -69,24 +69,15 @@ const campaignPlanFields = [
     fields: [
       {
         type: 'blog',
-        title: 'Best Practices Blog Post',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        slug: 'how-to-run-a-political-campaign',
+        slug: 'mastering-social-media-content-for-your-campaign',
       },
       {
         type: 'blog',
-        title: 'Brand Building Blog Post',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        slug: 'run-as-independent',
+        slug: 'getting-verified-to-run-political-ads-on-facebook',
       },
       {
         type: 'blog',
-        title: 'Get Verified Blog Post',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        slug: '5-reasons-the-two-party-system-is-bad-for-america',
+        slug: 'creating-content-to-generate-fundraising-and-volunteers',
       },
     ],
   },
