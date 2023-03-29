@@ -60,29 +60,30 @@ export default function OnboardingPage({
   const canSave = () => {
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
+      const value = state[field.key];
+
       if (field.required) {
-        // if (field.initialValue && state[field.key] === field.initialValue) {
+        // if (field.initialValue && value === field.initialValue) {
         //   return false;
         // }
 
-        if (field.type === 'text' && state[field.key] === '') {
+        if (field.type === 'text' && value === '') {
           return false;
         }
 
-        if (!field.initialValue && state[field.key] === '') {
+        if (!field.initialValue && value === '') {
           return false;
         }
 
         if (field.validate) {
-          return field.validate(state[field.key]);
+          return field.validate(value);
+        }
+        if (field.type === 'radio' && field.validateOptions) {
+          return field.validateOptions.includes(value);
         }
       }
 
-      if (
-        field.requiredHidden &&
-        canShowField(field) &&
-        state[field.key] === ''
-      ) {
+      if (field.requiredHidden && canShowField(field) && value === '') {
         return false;
       }
     }

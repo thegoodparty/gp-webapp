@@ -91,6 +91,7 @@ const detailsFields = [
         required: true,
         type: 'radio',
         options: ['Yes, I do', 'I need help'],
+        validateOptions: ['yes'],
       },
       {
         key: 'state',
@@ -169,7 +170,7 @@ const detailsFields = [
         hidden: true,
         showKey: 'knowRun',
         showCondition: ['no'],
-        articles: ['how-to-run-a-political-campaign', 'run-as-independent'],
+        articles: [],
         title:
           "Looks like you want to get involved in local politics but you're not sure which office?",
         subTitle:
