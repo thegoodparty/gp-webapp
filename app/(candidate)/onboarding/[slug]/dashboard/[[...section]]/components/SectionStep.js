@@ -29,7 +29,7 @@ export default function SectionStep({
   if (step.customCard && step.customCard === 'UnlockJared') {
     return (
       <Fragment key={step.key}>
-        <UnlockJared unlocked={step.key === 'incentive'} />
+        <UnlockJared unlocked={step.key === 'incentive'} campaign={campaign} />
       </Fragment>
     );
   }

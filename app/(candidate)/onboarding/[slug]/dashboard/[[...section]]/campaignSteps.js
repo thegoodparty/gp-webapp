@@ -75,11 +75,12 @@ export const generateCampaignStatus = (campaign) => {
   if (!campaign) {
     return status;
   }
-  const { details, goals, campaignPlan } = campaign;
+  const { details, goals, campaignPlan, incentive } = campaign;
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
     { key: 'campaignPlan', value: campaignPlan, count: 1 },
+    { key: 'incentive', value: incentive, count: 1 },
   ];
 
   preLaunchSections.forEach((section) => {
@@ -106,5 +107,10 @@ export const generateCampaignStatus = (campaign) => {
     }
   });
 
+  if (status.preLaunch.completedSteps >= campaignSteps[0].steps.length) {
+    status.preLaunch.status = 'Completed';
+  }
+
+  console.log('status', status);
   return status;
 };

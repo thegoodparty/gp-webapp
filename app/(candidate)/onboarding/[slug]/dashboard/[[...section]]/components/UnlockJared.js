@@ -3,7 +3,7 @@ import JaredImg from 'public/images/campaign/jared.jpg';
 import Image from 'next/image';
 import ScheduleModal from './ScheduleModal';
 
-export default function UnlockJared({ key, unlocked }) {
+export default function UnlockJared({ key, unlocked, campaign }) {
   return (
     <div className="col-span-12 md:col-span-6 xl:col-span-3 h-full" key={key}>
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between relative">
@@ -42,7 +42,7 @@ export default function UnlockJared({ key, unlocked }) {
               </div>
             </div>
             <div className="px-6 pb-2 text-center">
-              <ScheduleModal />
+              <ScheduleModal campaign={campaign} />
             </div>
           </>
         ) : (
