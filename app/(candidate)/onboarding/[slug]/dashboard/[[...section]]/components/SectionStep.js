@@ -24,11 +24,12 @@ export default function SectionStep({
   if (step.link) {
     link = `/onboarding/${campaign.slug}${step.link}`;
   }
+  console.log('link', link);
 
   if (step.customCard && step.customCard === 'UnlockJared') {
     return (
       <Fragment key={step.key}>
-        <UnlockJared />
+        <UnlockJared unlocked={step.key === 'incentive'} />
       </Fragment>
     );
   }
