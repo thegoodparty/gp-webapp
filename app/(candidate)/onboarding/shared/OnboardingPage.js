@@ -11,6 +11,7 @@ import RenderInputField from './RenderInputField';
 import Modal from '@shared/utils/Modal';
 import { FaExclamationCircle } from 'react-icons/fa';
 import Pill from '@shared/buttons/Pill';
+import { getAge } from 'helpers/dateHelper';
 
 export const savingState = hookstate(false);
 
@@ -75,12 +76,20 @@ export default function OnboardingPage({
           return false;
         }
 
-        if (field.validate) {
-          return field.validate(value);
-        }
         if (field.type === 'radio' && field.validateOptions) {
           return field.validateOptions.includes(value);
         }
+      }
+
+      if (field.type === 'date' && field.validate === 'over 18') {
+        const age = getAge(value);
+        console.log('value', value);
+        console.log('age', age);
+        return age >= 18;
+      }
+
+      if (field.validate) {
+        return field.validate(value);
       }
 
       if (field.requiredHidden && canShowField(field) && value === '') {

@@ -42,6 +42,7 @@ const detailsFields = [
         label: 'Date of Birth',
         required: true,
         type: 'date',
+        validate: 'over 18',
       },
       {
         key: 'citizen',
