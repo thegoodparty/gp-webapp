@@ -52,7 +52,7 @@ export default function OnboardingPage({
   }
 
   const [state, setState] = useState(initialState);
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(false);
   const [showInvalidModal, setShowInvalidModal] = useState(false);
   const router = useRouter();
   const user = getUserCookie(true);
@@ -85,6 +85,15 @@ export default function OnboardingPage({
         const age = getAge(value);
         console.log('value', value);
         console.log('age', age);
+        if (age >= 18 && error) {
+          setError(false);
+        }
+        if (age < 18 && !error) {
+          setError(
+            'You must be at least 18 years old to run for a political office',
+          );
+        }
+        // setError('minimun age');
         return age >= 18;
       }
 
@@ -167,7 +176,7 @@ export default function OnboardingPage({
                         <RenderInputField
                           field={field}
                           onChangeCallback={onChangeField}
-                          error={!!errors[field.key]}
+                          // error={!!errors[field.key]}
                           positions={props.positions}
                           value={state[field.key]}
                         />
@@ -206,6 +215,9 @@ export default function OnboardingPage({
             >
               {skipLabel || 'Skip for now'}
             </div>
+          )}
+          {error && (
+            <div className="mt-3 text-red-600 text-center">{error}</div>
           )}
         </div>
       </form>
