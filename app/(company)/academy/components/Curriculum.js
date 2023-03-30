@@ -20,7 +20,7 @@ export default function Curriculum({ openModalCallback }) {
           id="academy-curriculum-get-started"
         />
       </div>
-      <div className=" col-span-12 lg:col-span-6 relative min-h-[300px] md:min-h-[500px]">
+      <div className=" col-span-12 lg:col-span-6 relative min-h-[230px] md:min-h-[360px]">
         <Image
           src={zoomImg}
           alt="curriculum"

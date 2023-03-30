@@ -2,7 +2,7 @@ import RedPurpleSection from '@shared/landing-pages/RedPurpleSection';
 
 export default function LearnMore({ openModalCallback }) {
   return (
-    <RedPurpleSection withPadding>
+    <RedPurpleSection>
       <h3 className="text-3xl">Want to learn more?</h3>
       <p className="text-lg mt-6">
         Find a time to meet with our team to get your questions answered and

@@ -16,6 +16,10 @@ export default function HubSpotForm({ formId }) {
           portalId: '21589597',
           formId,
           target: '#hubspotForm',
+          onFormSubmitted: () => {
+            window.location.href =
+              'https://meetings.hubspot.com/jared-alper/good-party-academy-meeting';
+          },
         });
       }
     });

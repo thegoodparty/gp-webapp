@@ -32,7 +32,7 @@ export default function AcademyPage() {
         }}
       >
         <h2 className="text-2xl font-black my-6">
-          Please provide your email to register
+          Enter your email to get started.
         </h2>
         <HubSpotForm formId="46116311-525b-42a2-b88e-d2ab86f26b8a" />
       </Modal>

@@ -109,6 +109,10 @@ export const generateCampaignStatus = (campaign) => {
 
   if (status.preLaunch.completedSteps >= campaignSteps[0].steps.length) {
     status.preLaunch.status = 'Completed';
+    status.nextStep = {
+      sectionIndex: 1,
+      step: 1,
+    };
   }
 
   console.log('status', status);
