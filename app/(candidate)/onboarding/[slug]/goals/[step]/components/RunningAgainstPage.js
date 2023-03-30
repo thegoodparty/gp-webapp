@@ -145,8 +145,9 @@ export default function RunningAgainstPage({
             key={against.name}
           >
             <div className="font-bold mb-2">{against.name}</div>
-            <div>{against.description}</div>
             <div>{against.party}</div>
+            <div>{against.description}</div>
+
             <div
               className="mt-4 underline text-blue-600 cursor-pointer"
               onClick={() => {
