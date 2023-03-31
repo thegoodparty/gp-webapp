@@ -5,6 +5,13 @@ import useAiPlan from './useAiPlan';
 import styles from './CampaignPlan.module.scss';
 import LoadingAI from './LoadingAI';
 import { CircularProgress } from '@mui/material';
+import BlackButton from '@shared/buttons/BlackButton';
+import dynamic from 'next/dynamic';
+const RichEditor = dynamic(() => import('./RichEditor'), {
+  loading: () => (
+    <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+  ),
+});
 
 export default function CampaignPlanSection({
   section,
@@ -12,13 +19,14 @@ export default function CampaignPlanSection({
   initialOpen,
 }) {
   const [open, setOpen] = useState(initialOpen);
-  const { plan, loading, isTyped } = useAiPlan(
+  const [editMode, setEditMode] = useState(false);
+  const [isEdited, setIsEdited] = useState(false);
+
+  const { plan, loading, isFailed, isTyped } = useAiPlan(
     campaign,
     'campaignPlan',
     section.key,
   );
-
-  console.log('cam', campaign);
 
   const toggleSelect = () => {
     setOpen(!open);
@@ -48,7 +56,18 @@ export default function CampaignPlanSection({
           ) : (
             <div className="border-t border-2 mb-10 border-slate-100">
               <div className={`bg-white p-6 my-6 rounded-xl ${styles.plan}`}>
-                <div dangerouslySetInnerHTML={{ __html: plan }} />
+                {isFailed ? (
+                  <div className="text-center text-xl">
+                    Failed to generate plan click here to try again
+                    <div className="mt-4 text-base font-black">
+                      <a href={`/onboarding/${campaign.slug}/campaign-plan`}>
+                        <BlackButton>Regenerate</BlackButton>
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div dangerouslySetInnerHTML={{ __html: plan }} />
+                )}
               </div>
             </div>
           )}

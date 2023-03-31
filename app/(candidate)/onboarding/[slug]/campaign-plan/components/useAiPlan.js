@@ -26,6 +26,7 @@ export default function useAiPlan(campaign, subSectionKey, key) {
   const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isTyped, setIsTyped] = useState(false);
+  const [isFailed, setIsFalied] = useState(false);
 
   const { campaignPlan } = campaign;
 
@@ -48,6 +49,7 @@ export default function useAiPlan(campaign, subSectionKey, key) {
         'Failed to generate a campaign plan. Please contact us for help.',
       );
       setLoading(false);
+      setIsFalied(true);
       return;
     }
     const { chatResponse, status } = await generateAI(
@@ -75,5 +77,5 @@ export default function useAiPlan(campaign, subSectionKey, key) {
     }
   };
 
-  return { plan, loading, isTyped };
+  return { plan, loading, isFailed, isTyped };
 }
