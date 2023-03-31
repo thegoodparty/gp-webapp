@@ -38,4 +38,7 @@
   :global(.table .tr:last-child .td) {
     border-bottom: none;
   }
+  :global(.text-white) {
+    color: black;
+  }
 }

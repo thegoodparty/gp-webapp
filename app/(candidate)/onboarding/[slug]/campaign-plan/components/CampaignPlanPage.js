@@ -1,7 +1,9 @@
+'use client';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Script from 'next/script';
 import CampaignAccordion from './CampaignAccordion';
-import CampaignPlan from './CampaignPlan';
+import CampaignPlanSections from './CampaignPlanSections';
 import Hero from './Hero';
 
 export default function CampaignPlanPage(props) {
@@ -18,9 +20,15 @@ export default function CampaignPlanPage(props) {
       <MaxWidth>
         <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         <Hero />
-        <CampaignPlan {...props} />
+        <CampaignPlanSections {...props} />
         <CampaignAccordion {...props} />
       </MaxWidth>
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
     </div>
   );
 }
