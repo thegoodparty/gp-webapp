@@ -1,4 +1,5 @@
 'use client';
+import BlackButton from '@shared/buttons/BlackButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Script from 'next/script';
@@ -22,6 +23,11 @@ export default function CampaignPlanPage(props) {
         <Hero />
         <CampaignPlanSections {...props} />
         <CampaignAccordion {...props} />
+        <div className="text-center mb-8 font-black">
+          <a href={`/onboarding/${slug}/dashboard/1`}>
+            <BlackButton>CONTINUE</BlackButton>
+          </a>
+        </div>
       </MaxWidth>
       <Script
         type="text/javascript"

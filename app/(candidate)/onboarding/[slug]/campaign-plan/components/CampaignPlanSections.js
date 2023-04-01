@@ -1,3 +1,4 @@
+import BlackButton from '@shared/buttons/BlackButton';
 import CampaignPlanSection from './CampaignPlanSection';
 
 const sections = [
@@ -21,6 +22,11 @@ export default function CampaignPlanSections({ campaign }) {
           initialOpen={section.key === 'slogan'}
         />
       ))}
+      <div className="text-center mt-8 font-black">
+        <a href={`/onboarding/${campaign.slug}/dashboard/1`}>
+          <BlackButton>CONTINUE</BlackButton>
+        </a>
+      </div>
     </>
   );
 }

@@ -1,17 +1,44 @@
 'use client';
-import { useState } from 'react';
-import { FaChevronDown } from 'react-icons/fa';
-import useAiPlan from './useAiPlan';
+import { useEffect, useState } from 'react';
+import { FaChevronDown, FaPencilAlt, FaSave } from 'react-icons/fa';
 import styles from './CampaignPlan.module.scss';
 import LoadingAI from './LoadingAI';
 import { CircularProgress } from '@mui/material';
 import BlackButton from '@shared/buttons/BlackButton';
 import dynamic from 'next/dynamic';
+import AiModal from './AiModal';
+import Pill from '@shared/buttons/Pill';
+import Typewriter from 'typewriter-effect';
+
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 const RichEditor = dynamic(() => import('./RichEditor'), {
   loading: () => (
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
   ),
 });
+
+async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+  try {
+    const api = gpApi.campaign.onboarding.ai.create;
+    return await gpFetch(api, {
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    });
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
+let aiCount = 0;
+let aiTotalCount = 0;
 
 export default function CampaignPlanSection({
   section,
@@ -21,16 +48,112 @@ export default function CampaignPlanSection({
   const [open, setOpen] = useState(initialOpen);
   const [editMode, setEditMode] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
+  const [plan, setPlan] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isTyped, setIsTyped] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
 
-  const { plan, loading, isFailed, isTyped } = useAiPlan(
-    campaign,
-    'campaignPlan',
-    section.key,
-  );
+  const { campaignPlan } = campaign;
+  const { key } = section;
+  const subSectionKey = 'campaignPlan';
+
+  useEffect(() => {
+    if (!campaignPlan || !campaignPlan[key]) {
+      createInitialAI();
+    } else {
+      setPlan(campaignPlan[key]);
+      setLoading(false);
+      setIsTyped(true);
+    }
+  }, [campaignPlan]);
+
+  const createInitialAI = async (regenerate, chat, editMode) => {
+    aiCount++;
+    aiTotalCount++;
+    if (aiTotalCount >= 100) {
+      //fail
+      setPlan(
+        'Failed to generate a campaign plan. Please contact us for help.',
+      );
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+    const { chatResponse, status } = await generateAI(
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    );
+    if (!chatResponse && status === 'processing') {
+      if (aiCount < 20) {
+        setTimeout(async () => {
+          await createInitialAI();
+        }, 5000);
+      } else {
+        //something went wrong, we are stuck in a loop. reCreate the response
+        console.log('regenerating');
+        aiCount = 0;
+        createInitialAI(true);
+      }
+    } else {
+      aiCount = 0;
+      setPlan(chatResponse);
+      setLoading(false);
+    }
+  };
+
+  // const { plan, loading, isFailed, isTyped } = useAiPlan(
+  //   campaign,
+  //   'campaignPlan',
+  //   section.key,
+  // );
 
   const toggleSelect = () => {
     setOpen(!open);
   };
+
+  const setEdit = () => {
+    setIsEdited(true);
+    setEditMode(true);
+  };
+
+  const handleEdit = async (editedPlan) => {
+    setPlan(editedPlan);
+  };
+
+  const handleRegenerate = async (improveQuery) => {
+    setLoading(true);
+    const chat = [{ role: 'user', content: improveQuery }];
+    setPlan(false);
+    aiCount = 0;
+    aiTotalCount = 0;
+    setIsTyped(false);
+    await createInitialAI(true, chat, true);
+  };
+
+  const handleSave = async () => {
+    const updated = campaign;
+    if (!updated[subSectionKey]) {
+      updated[subSectionKey] = {};
+    }
+
+    updated[subSectionKey][key] = plan;
+    setIsEdited(false);
+    setEditMode(false);
+    await updateCampaign(updated);
+    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saving...',
+        isError: false,
+      };
+    });
+  };
+
   return (
     <section key={section.key} className="my-3 rounded-2xl bg-white">
       <div
@@ -66,8 +189,55 @@ export default function CampaignPlanSection({
                     </div>
                   </div>
                 ) : (
-                  <div dangerouslySetInnerHTML={{ __html: plan }} />
+                  <>
+                    {editMode ? (
+                      <RichEditor
+                        initialText={plan}
+                        onChangeCallback={handleEdit}
+                      />
+                    ) : (
+                      <div
+                        className="relative pb-10 cursor-text"
+                        onClick={setEdit}
+                      >
+                        {initialOpen && !isTyped ? (
+                          <Typewriter
+                            options={{
+                              delay: 1,
+                            }}
+                            onInit={(typewriter) => {
+                              typewriter
+                                .typeString(plan)
+                                .callFunction(() => {
+                                  setIsTyped(true);
+                                })
+
+                                .start();
+                            }}
+                          />
+                        ) : (
+                          <div dangerouslySetInnerHTML={{ __html: plan }} />
+                        )}
+                        <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 cursor-pointer ">
+                          <FaPencilAlt />
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
+              </div>
+              <div className="flex items-center justify-center mt-6 border-t border-t-slate-300 py-6">
+                <AiModal
+                  submitCallback={handleRegenerate}
+                  showWarning={isEdited}
+                />
+                <div onClick={handleSave}>
+                  <Pill>
+                    <div className="flex items-center">
+                      <FaSave className="mr-2" /> Save
+                    </div>
+                  </Pill>
+                </div>
               </div>
             </div>
           )}
