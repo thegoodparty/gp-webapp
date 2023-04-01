@@ -5,6 +5,13 @@ import Link from 'next/link';
 export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
   let { title, description, type, href, slug, isOnboardingLink, file } = field;
   let articleSlug = '';
+  if (type === 'section') {
+    return (
+      <div className="col-span-12 text-2xl font-black mt-4" key={title}>
+        {title}
+      </div>
+    );
+  }
   if (type === 'inProgress') {
     return (
       <>
@@ -93,7 +100,8 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
           <a
             href={file}
             className="text-white bg-black py-2 px-3 font-bold inline-block rounded text-sm"
-            download
+            target="_blank"
+            rel="noopener noreferrer nofollow"
           >
             DOWNLOAD
           </a>
