@@ -29,10 +29,24 @@ export default function SectionStep({
   if (step.customCard && step.customCard === 'UnlockJared') {
     return (
       <Fragment key={step.key}>
-        <UnlockJared unlocked={step.key === 'incentive'} campaign={campaign} />
+        <UnlockJared
+          unlocked={step.key === 'incentive' && status !== 'Not Started'}
+          campaign={campaign}
+        />
       </Fragment>
     );
   }
+
+  const calcCompletedSteps = () => {
+    let stepCount = stepStatus.completedSteps;
+    if (status === 'In Progress') {
+      stepCount + 1;
+    }
+    if (!stepCount) {
+      stepCount = 0;
+    }
+    return Math.min(step.steps, stepCount);
+  };
 
   return (
     <div
@@ -65,9 +79,7 @@ export default function SectionStep({
 
             {step.steps > 0 && status !== 'Completed' && (
               <div className="mt-1">
-                {stepStatus.completedSteps +
-                  (status === 'In Progress' ? 1 : 0) || 0}{' '}
-                of {step.steps} steps
+                {calcCompletedSteps()} of {step.steps} steps
               </div>
             )}
           </div>

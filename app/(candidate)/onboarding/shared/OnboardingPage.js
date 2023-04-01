@@ -83,8 +83,6 @@ export default function OnboardingPage({
 
       if (field.type === 'date' && field.validate === 'over 18') {
         const age = getAge(value);
-        console.log('value', value);
-        console.log('age', age);
         if (age >= 18 && error) {
           setError(false);
         }
@@ -95,6 +93,16 @@ export default function OnboardingPage({
         }
         // setError('minimun age');
         return age >= 18;
+      }
+      if (field.type === 'date' && field.validate === 'futureDateOnly') {
+        try {
+          const electionDate = new Date(value);
+          const now = new Date();
+
+          return electionDate > now;
+        } catch (e) {
+          return false;
+        }
       }
 
       if (field.validate) {

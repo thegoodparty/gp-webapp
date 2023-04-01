@@ -107,7 +107,7 @@ export default function RegisterPage({}) {
         snackbarState.set(() => {
           return {
             isOpen: true,
-            message: 'Welcome to Good Party!.',
+            message: 'Welcome to Good Party!',
             isError: false,
           };
         });

@@ -106,7 +106,11 @@ export const generateCampaignStatus = (campaign) => {
       }
     }
   });
-
+  console.log(
+    'status.preLaunch.completedSteps',
+    status.preLaunch.completedSteps,
+  );
+  console.log('campaignSteps[0].steps.length', campaignSteps[0].steps.length);
   if (status.preLaunch.completedSteps >= campaignSteps[0].steps.length) {
     status.preLaunch.status = 'Completed';
     status.nextStep = {

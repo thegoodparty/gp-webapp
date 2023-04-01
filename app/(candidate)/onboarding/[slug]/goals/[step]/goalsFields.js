@@ -28,6 +28,7 @@ const goalsFields = [
         key: 'electionDate',
         label: 'Date of Election',
         type: 'date',
+        validate: 'futureDateOnly',
       },
     ],
   },
