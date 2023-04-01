@@ -13,7 +13,7 @@ const instructors = [
     img: 'https://assets.goodparty.org/team/rob-goodparty.png',
     title: 'Mobilization',
     description:
-      "Rob has nearly 20 years of experience running winning electoral, legislative, and ballot campaigns. He has organized voters on everything from local races to presidential campaigns, helped to pioneer deep-canvassing during the marriage equality movement, and helped build RepresentUs' volunteer network from the ground up.Led x successful ballot measure efforts with RepresentUs",
+      'Rob has nearly 20 years of experience running winning electoral, legislative, and ballot campaigns. He has organized voters on everything from local races to presidential campaigns, helped to pioneer deep-canvassing during the marriage equality movement, and helped build the volunteer network at RepresentUs that powered the org to 171 wins in cities and states during his tome as their national field director',
   },
   {
     name: 'Colton Hess',
