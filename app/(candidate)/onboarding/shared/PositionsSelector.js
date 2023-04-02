@@ -8,7 +8,13 @@ import { MdDeleteForever } from 'react-icons/md';
 import styles from './PositionsSelector.module.scss';
 
 const comparePositions = (a, b) => {
-  return a.topIssue.name.localeCompare(b.topIssue.name);
+  if (!a?.topIssue) {
+    return -1;
+  }
+  if (!b?.topIssue) {
+    return 1;
+  }
+  return a.topIssue?.name.localeCompare(b.topIssue?.name);
 };
 
 export default function PositionsSelector({
@@ -66,7 +72,7 @@ export default function PositionsSelector({
         groupBy={(option) => {
           return option.topIssue?.name;
         }}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option?.name}
         fullWidth
         variant="outlined"
         inputValue={inputValue}
@@ -92,7 +98,7 @@ export default function PositionsSelector({
             className="issue inline-flex items-center bg-gray-200 rounded py-2 px-4 mt-3 mr-3 font-black cursor-pointer transition hover:bg-neutral-200"
             onClick={() => removePosition(position)}
           >
-            <span className="mr-2">{position.name}</span>
+            <span className="mr-2">{position?.name}</span>
             <MdDeleteForever />
           </div>
         ))}
