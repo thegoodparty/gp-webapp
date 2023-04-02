@@ -44,7 +44,7 @@ export default function SocialButtons() {
     let idToken;
     if (provider === 'facebook') {
       try {
-        const largeImage = await fetch(window.FB.api, '/me/picture?width=500');
+        const largeImage = await fetch(window?.FB.api, '/me/picture?width=500');
         socialPic = largeImage || '';
         idToken = socialUser._token.accessToken;
       } catch (e) {
@@ -71,7 +71,7 @@ export default function SocialButtons() {
       email,
       socialToken: idToken,
       source: 'registerPage',
-      uri: window.location.href,
+      uri: window?.location.href,
     };
     const user = await register(payload);
     if (user) {
