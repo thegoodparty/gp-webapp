@@ -268,5 +268,4 @@ detailsFields.forEach((step) => {
 });
 
 detailFieldsCount = detailFieldsCount - 2; // pledge and top issues
-console.log('detailFieldsCount', detailFieldsCount);
 export { detailFieldsCount };
