@@ -3,7 +3,7 @@ import Image from 'next/image';
 const instructors = [
   {
     name: 'Jared Alper',
-    img: 'https://assets.goodparty.org/team/jared-goodparty.png',
+    img: 'https://assets.goodparty.org/team/jared-goodparty.jpg',
     title: 'Politics',
     description:
       'Jared is a political strategist who has managed or served in senior strategic roles on over a dozen campaigns for US Senate, US House, state legislative and local offices across the United States. His political commentary on democoracy and election reform has been featured in: the New York Daily News, the Hill, the Fulcrum, Real Clear Politics, the Independent Voter Network, and the Wall Street Journal.',
