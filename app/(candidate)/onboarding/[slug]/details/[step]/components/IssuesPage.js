@@ -104,21 +104,26 @@ export default function IssuesPage({
           Add your custom Issue
         </div>
         {state.positions?.map((position) => (
-          <div className="mt-6 mb-10" key={position.name}>
-            Tell us your stance on {position.name} ({position.topIssue?.name})
-            <div>
-              <TextField
-                placeholder="Write here..."
-                multiline
-                rows={6}
-                fullWidth
-                value={state[`position-${position.id}`]}
-                onChange={(e) => {
-                  onChangeField(`position-${position.id}`, e.target.value);
-                }}
-              />
-            </div>
-          </div>
+          <>
+            {position && (
+              <div className="mt-6 mb-10" key={position?.name}>
+                Tell us your stance on {position?.name} (
+                {position?.topIssue?.name})
+                <div>
+                  <TextField
+                    placeholder="Write here..."
+                    multiline
+                    rows={6}
+                    fullWidth
+                    value={state[`position-${position?.id}`]}
+                    onChange={(e) => {
+                      onChangeField(`position-${position?.id}`, e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </>
         ))}
         <div className="flex justify-center  mb-8">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
