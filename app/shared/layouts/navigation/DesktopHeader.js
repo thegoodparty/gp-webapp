@@ -31,7 +31,7 @@ export default function DesktopHeader() {
               />
             </Link>
             <div className="pl-9 italic text-normal tracking-tight">
-              Helping independents win!
+              Helping real people run and win!
             </div>
           </div>
           <div className="flex justify-end items-center">
