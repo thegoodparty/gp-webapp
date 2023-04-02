@@ -14,9 +14,7 @@ const fetchOnboardings = async () => {
 export default async function Page() {
   adminAccessOnly();
   const res = await fetchOnboardings();
-  console.log('res', res);
   const { campaigns } = res;
-  console.log('cc', campaigns);
 
   const childProps = {
     pathname: '/admin/victory-path',

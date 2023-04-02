@@ -1,4 +1,3 @@
-import { Portal } from '@mui/material';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import { fetchCandidate } from '../page';
 import PortalAdminPage from './components/PortalAdminPage';

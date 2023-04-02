@@ -1,26 +1,40 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { RxRocket } from 'react-icons/rx';
 
 export default function CrunchingPage({ slug, ...props }) {
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
+
+  const icon = (
+    <Image
+      src="/images/campaign/confetti-icon.png"
+      alt="GP"
+      width={64}
+      height={64}
+      priority
+    />
+  );
+
   return (
-    <OnboardingWrapper {...props} slug={slug} icon={<RxRocket size={50} />}>
+    <OnboardingWrapper {...props} slug={slug} icon={icon}>
       <h3 className="text-lg text-zinc-500 mb-40 text-center">
         Good Party will be providing you with data to help you understand your
-        Path to Victory.
+        Path to Victory. While we work on the data, you can get started building
+        out your <strong>Goals</strong>
       </h3>
-      <div className="mb-8 text-lg text-center max-w-[360px] mx-auto">
-        While we work on the data. You can get started with our{' '}
-        <strong>Virtual Campaign Manager.</strong>
-      </div>
-      <div className="flex justify-center">
-        <Link href={`/onboarding/${slug}/manager/dashboard`}>
+      <div className="flex justify-center  mb-8">
+        <a href={`/onboarding/${slug}/dashboard/1`}>
           <BlackButtonClient>
-            <div>NEXT</div>
+            <div>GET STARTED</div>
           </BlackButtonClient>
-        </Link>
+        </a>
       </div>
     </OnboardingWrapper>
   );

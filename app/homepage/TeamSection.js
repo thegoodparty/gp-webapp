@@ -19,7 +19,7 @@ export default function TeamSection() {
               behind Good Party
             </h4>
             <div className="font-light text-lg  mt-5">
-              Good Party's core team are the people working full-time,
+              Good Party&apos;s core team are the people working full-time,
               part-time, or as dedicated volunteers on a mission to make people
               matter more than money in our democracy.
             </div>

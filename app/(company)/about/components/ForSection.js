@@ -23,8 +23,8 @@ export default function ForSection() {
         </div>
         <div className="text-xl my-6">
           Imagined running for office but not into Republicans or Democrats? We
-          can help! Get access to free campaign tools and our team's expertise
-          to start or level-up your candidacy.
+          can help! Get access to free campaign tools and our team&apos;s
+          expertise to start or level-up your candidacy.
         </div>
         <Link href="/run-for-office">
           <PurpleButton>

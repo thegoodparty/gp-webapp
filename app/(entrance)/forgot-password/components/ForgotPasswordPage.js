@@ -77,12 +77,7 @@ export default function ForgotPasswordPage() {
               Forgot Password?
             </h1>
           </div>
-          <div className="my-6 text-sm" data-cy="register-label">
-            Don&apos;t have an account?{' '}
-            <Link href="/register" data-cy="redirect-to-register">
-              Create one
-            </Link>
-          </div>
+
           {state.forgotSent ? (
             <div className="text-2xl font-black my-6 p-4 border border-black rounded text-center">
               Your password recovery link was sent to {state.email}

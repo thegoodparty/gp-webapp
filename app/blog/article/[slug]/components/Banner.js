@@ -52,25 +52,30 @@ export default function Banner({ banner }) {
             )}
           </div>
         </div>
+
         <div className="col-span-12 lg:col-span-6">
-          <div className="h-60 relative w-full lg:hidden">
-            <Image
-              src={`https:${smallImage?.url}`}
-              alt={smallImage?.alt}
-              sizes="100vw"
-              fill
-              className="object-cover object-top"
-            />
-          </div>
-          <div className="h-60 relative w-full hidden lg:block">
-            <Image
-              src={`https:${largeImage?.url}`}
-              alt={largeImage?.alt}
-              sizes="100vw"
-              fill
-              className="object-cover object-top"
-            />
-          </div>
+          {smallImage && (
+            <div className="h-60 relative w-full lg:hidden">
+              <Image
+                src={`https:${smallImage.url}`}
+                alt={smallImage.alt}
+                sizes="100vw"
+                fill
+                className="object-cover object-top"
+              />
+            </div>
+          )}
+          {largeImage && (
+            <div className="h-60 relative w-full hidden lg:block">
+              <Image
+                src={`https:${largeImage.url}`}
+                alt={largeImage.alt}
+                sizes="100vw"
+                fill
+                className="object-cover object-top"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

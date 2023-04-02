@@ -37,7 +37,7 @@ export default function LayoutWithAlphabet({ activeLetter = 'A', children }) {
         {alphabet.map((letter) => (
           <Link
             key={letter}
-            href={`/political-terms/${letter}`}
+            href={`/political-terms/${letter.toLowerCase()}`}
             className="pb-1 block lg:inline-block lg:pr-3"
             style={
               activeLetter === letter

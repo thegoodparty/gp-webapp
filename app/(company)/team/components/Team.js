@@ -22,21 +22,21 @@ export const TEAM_MEMBERS = [
   {
     name: 'Victoria Mitchell',
     role: 'Chief Operating Officer',
-    img: 'https://assets.goodparty.org/team/victoria-goodparty.png',
+    img: 'https://assets.goodparty.org/team/victoria-goodparty.jpg',
     flipImg: 'https://assets.goodparty.org/team/victoria-party.jpg',
     partyRole: 'Responsibly Wild Wanderer',
   },
   {
     name: 'Rob Booth',
     role: 'Head of Field and Mobilization',
-    img: 'https://assets.goodparty.org/team/rob-goodparty.png',
+    img: 'https://assets.goodparty.org/team/rob-goodparty.jpg',
     flipImg: 'https://assets.goodparty.org/team/rob-party.jpg',
     partyRole: 'Rockstar',
   },
   {
     name: 'Jared Alper',
     role: 'Political Director',
-    img: 'https://assets.goodparty.org/team/jared-goodparty.png',
+    img: 'https://assets.goodparty.org/team/jared-goodparty.jpg',
     flipImg: 'https://assets.goodparty.org/team/jared-party.jpg',
     partyRole: 'Improviser',
   },
@@ -70,7 +70,7 @@ export const TEAM_MEMBERS = [
   },
   {
     name: 'Evan Scronce',
-    role: 'Design',
+    role: 'Design Contributor',
     img: 'https://assets.goodparty.org/team/evan-goodparty.png',
     flipImg: 'https://assets.goodparty.org/team/evan-party.png',
     partyRole: 'Dad',
@@ -176,7 +176,7 @@ export default function Team() {
                     {member.name}
                   </div>
                   <div className="" data-cy="member-role">
-                    {member.role}
+                    {member.partyRole}
                   </div>
                 </div>
               </div>

@@ -36,7 +36,7 @@ const SocialButton = ({ triggerLogin, children, channel, ...props }) => {
           : channel === 'google'
           ? {
               backgroundColor: '#fff',
-              boxShadow: '0 0 3px 3px rgba(0, 0, 0, 0.1)',
+              border: 'solid 2px #000',
             }
           : {}
       }

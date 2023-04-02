@@ -7,9 +7,9 @@ const BlackButtonClient = ({
   onClick,
   disabled,
   type,
-  className
+  className,
 }) => {
-  const backgroundColor = disabled ? '#333' : '#000';
+  const backgroundColor = disabled ? '#b9b9b9' : '#000';
   const cursor = disabled ? 'not-allowed' : 'pointer';
 
   return (

@@ -9,7 +9,12 @@ import { useHookstate } from '@hookstate/core';
 import { useEffect } from 'react';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { setCookie, setUserCookie } from 'helpers/cookieHelper';
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+  setUserCookie,
+} from 'helpers/cookieHelper';
 
 async function verifyToken(oauthToken, oauthVerifier) {
   try {
@@ -42,7 +47,18 @@ export default function TwitterCallbackPage() {
   // redirect('/profile');
   useEffect(() => {
     if (!oauthToken || !oauthVerifier) {
-      redirect('/');
+      const afterAction = getCookie('afterAction');
+      if (afterAction === 'createCampaign') {
+        createCampaign(router);
+      } else {
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          router.push(returnUrl);
+        } else {
+          router.push('/');
+        }
+      }
     } else {
       handleLogin();
     }

@@ -2,15 +2,13 @@
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { useEffect, useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { Select } from '@mui/material';
-import RenderInputField from 'app/(candidate)/onboarding/components/RenderInputField';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 
 const sections = [
   {
@@ -158,11 +156,11 @@ export default function AdminVictoryPathPage(props) {
         {selected && (
           <div className="mt-8">
             {sections.map((section) => (
-              <div className="mb-12">
+              <div className="mb-12" key={section.title}>
                 <h2 className="font-black text-2xl mb-8">{section.title}</h2>
                 <div className="grid grid-cols-12 gap-4">
                   {section.fields.map((field) => (
-                    <div className="col-span-12 lg:col-span-6">
+                    <div className="col-span-12 lg:col-span-6" key={field.key}>
                       <RenderInputField
                         field={field}
                         onChangeCallback={onChangeField}

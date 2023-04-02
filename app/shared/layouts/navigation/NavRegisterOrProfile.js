@@ -19,9 +19,21 @@ export default function NavRegisterOrProfile() {
     if (user) {
       setTimeout(() => {
         userState.set(() => user);
+        hubspotIntegration(user);
       }, 100);
     }
   }, []);
+
+  const hubspotIntegration = (user) => {
+    var _hsq = (window._hsq = window._hsq || []);
+    _hsq.push([
+      'identify',
+      {
+        email: user.email,
+        name: user.name,
+      },
+    ]);
+  };
 
   const user = userState.get();
 

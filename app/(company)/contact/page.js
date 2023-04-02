@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import HubSpotForm from './components/HubSpotForm';
+import HubSpotForm from '../../shared/utils/HubSpotForm';
 
 export default function Page() {
   return (
@@ -20,7 +20,7 @@ export default function Page() {
           </div>
           <div>
             <Suspense fallback="loading...">
-              <HubSpotForm />
+              <HubSpotForm formId="c60165c3-704d-4cfa-a8de-d89e28f06a7c" />
             </Suspense>
           </div>
         </div>

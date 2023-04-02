@@ -10,8 +10,8 @@ export default function BlogSection() {
     <RedPurpleSection>
       <div className="relative z-20">
         <div className="lg:w-[50%] mx-auto font-black text-3xl text-left  lg:text-center">
-          Check out our blog for articles about running for office, Good Party's
-          work, and more.
+          Check out our blog for articles about running for office, Good
+          Party&apos;s work, and more.
           <div className="text-center">
             <Link href="/blog" className="text-lg mt-11 block">
               <PurpleButton
