@@ -13,7 +13,7 @@ const instructors = [
     img: 'https://assets.goodparty.org/team/rob-goodparty.png',
     title: 'Mobilization',
     description:
-      'Rob has nearly 20 years of experience running winning electoral, legislative, and ballot campaigns. He has organized voters on everything from local races to presidential campaigns, helped to pioneer deep-canvassing during the marriage equality movement, and helped build the volunteer network at RepresentUs that powered the org to 171 wins in cities and states during his tome as their national field director',
+      "Rob has nearly 20 years of experience running winning electoral, legislative, and ballot campaigns. He has organized voters on everything from local races to presidential campaigns, helped to pioneer deep-canvassing during the marriage equality movement, and helped build RepresentUs' volunteer network from the ground up. He has led several successful ballot measure efforts during his time as National Field Director at RepresentUs.",
   },
   {
     name: 'Colton Hess',
@@ -29,9 +29,8 @@ export default function Instructors() {
       <div className=" col-span-12 lg:col-span-8">
         <h2 className="font-black text-5xl mb-5">Our Instructors</h2>
         <p className="text-2xl mb-12">
-          Good Party Academy is set to run from April 3rd to June 2nd.
-          You&apos;ll be expected to join a cohort of 12 candidates and join us
-          for programming 5-8 hours/week.{' '}
+          Meet your new instructors who will be with you on the Good Party
+          Academy journey!
         </p>
       </div>
       <div className=" col-span-12">
