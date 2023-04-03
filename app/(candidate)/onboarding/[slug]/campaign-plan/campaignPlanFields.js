@@ -50,25 +50,29 @@ const campaignPlanFields = [
 
       { type: 'section', title: 'Volunteer' },
       {
+        type: 'blog',
+        slug: 'how-to-build-and-manage-an-effective-volunteer-team',
+      },
+      {
         type: 'file',
         title: 'Volunteer Checklist',
         description:
           'Essential tasks and reminders for effective volunteer engagement and orientation in organizations.',
-        file: 'https://docs.google.com/document/d/1NeREKkd2HfFcrllQbAryy5Cn5FBabtfNsxI-ircv_b4/edit',
+        file: 'https://docs.google.com/document/d/16xDjKGHKH8vR80ZELw9QSyW-utu9y6ZFqQa13IAWllU/edit',
       },
       {
         type: 'file',
         title: 'Sample Volunteer Sign Up Form',
         description:
           'A useful tool for campaigns to efficiently and effectively collect information from potential volunteers.',
-        file: 'https://docs.google.com/document/d/1Zx_WbrjQogr8ftar2PInxfXuYPvhMFBLwxZ8TTHvc3Y/edit',
+        file: 'https://docs.google.com/document/d/11yUOHQC8KP2O00dx06oJOrPQZ39C2-WWoxhIDaEiJP4/edit',
       },
       {
         type: 'file',
         title: 'Sample Volunteer Manual',
         description:
           'Comprehensive guide for volunteers, detailing roles, expectations, and best practices in various organizations.',
-        file: 'https://docs.google.com/document/d/1z0K6n5jhxtrYc-TpXnZBUgGGHrwEhrq68ZS1OqEX-54/edit',
+        file: 'https://docs.google.com/document/d/1eQ04zEURkCg8retajR03hn8CQSetTfE-rZZKz8u-hYg/edit',
       },
     ],
   },
