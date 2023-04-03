@@ -12,7 +12,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { HEADER_LINKS } from './DesktopHeader';
 import { RESOURCES_LINKS } from './Resources';
-import { CANDIDATE_RESOURCES_LINKS } from './CandidateResources';
+import { CANDIDATE_RESOURCES_LINKS } from './Resources';
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
