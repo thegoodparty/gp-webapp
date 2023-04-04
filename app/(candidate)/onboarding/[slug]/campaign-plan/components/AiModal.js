@@ -93,7 +93,7 @@ export default function AiModal({ submitCallback, showWarning }) {
         <Pill outlined>
           <div className="flex items-center">
             <FaRedo />
-            <div className="ml-2">Regenerate</div>
+            <div className="ml-2">Refine</div>
           </div>
         </Pill>
       </div>
@@ -106,7 +106,7 @@ export default function AiModal({ submitCallback, showWarning }) {
               width={48}
               height={48}
             />
-            <div className="ml-3">Regenerate your campaign plan</div>
+            <div className="ml-3">Refine your campaign plan</div>
           </h3>
           <div className="my-10">
             <div className="w-full grid grid-cols-12 gap-3">
