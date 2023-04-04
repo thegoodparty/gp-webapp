@@ -88,7 +88,7 @@ export default function CampaignPlanSection({
       editMode,
     );
     if (!chatResponse && status === 'processing') {
-      if (aiCount < 20) {
+      if (aiCount < 40) {
         setTimeout(async () => {
           await createInitialAI();
         }, 5000);
