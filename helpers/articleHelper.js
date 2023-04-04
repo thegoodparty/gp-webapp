@@ -45,6 +45,6 @@ export const faqArticleRoute = (article) => {
   if (!article || !article.title || !article.id) {
     return '/';
   }
-  const slug = slugify(article.title);
-  return `/faqs/${slug}/${article.id}`;
+  const slug = slugify(article.title, true);
+  return `/faqs/${slug}/${article.id.toLowerCase()}`;
 };
