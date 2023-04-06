@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { RxRocket } from 'react-icons/rx';
 
-export default function CrunchingPage({ slug, ...props }) {
+export default function PlanPreviewPage({ slug, ...props }) {
   useEffect(() => {
     savingState.set(() => false);
   }, []);
@@ -27,7 +27,7 @@ export default function CrunchingPage({ slug, ...props }) {
       <h3 className="text-lg text-zinc-500 mb-40 text-center">
         Good Party will be providing you with data to help you understand your
         Path to Victory. While we work on the data, you can get started building
-        out your <strong>Goals</strong>
+        out your <strong>Election Details</strong>
       </h3>
       <div className="flex justify-center  mb-8">
         <a href={`/onboarding/${slug}/dashboard/1`}>

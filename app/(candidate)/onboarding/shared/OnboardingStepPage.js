@@ -1,7 +1,7 @@
 'use client';
 import OnboardingPage from 'app/(candidate)/onboarding/shared/OnboardingPage';
-import CrunchingPage from '../[slug]/details/[step]/components/CrunchingPage';
 import IssuesPage from '../[slug]/details/[step]/components/IssuesPage';
+import PlanPreviewPage from '../[slug]/details/[step]/components/PlanPreviewPage';
 import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import RunningAgainstPage from '../[slug]/goals/[step]/components/RunningAgainstPage';
 
@@ -14,7 +14,7 @@ export default function OnboardingStepPage(props) {
     return <PledgePage {...props} />;
   }
   if (pageType === 'finalDetailsPage') {
-    return <CrunchingPage {...props} />;
+    return <PlanPreviewPage {...props} />;
   }
   if (pageType === 'runningAgainst') {
     return <RunningAgainstPage {...props} />;

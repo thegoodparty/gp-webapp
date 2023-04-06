@@ -107,7 +107,7 @@ export default function PledgePage({
 
       <div className="flex justify-center mb-8">
         <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-          <div>NEXT</div>
+          <div className="font-black">NEXT</div>
         </BlackButtonClient>
       </div>
     </OnboardingWrapper>

@@ -63,15 +63,15 @@ const detailsFields = [
         required: true,
         type: 'select',
         options: [
-          'Independent/None',
-          'Democrat Party',
+          'Independent',
+          'Democratic Party',
           'Republican Party',
           'Green Party',
           'Libertarian Party',
           'Forward Party',
           'Other',
         ],
-        invalidOptions: ['Democrat Party', 'Republican Party'],
+        invalidOptions: ['Democratic Party', 'Republican Party'],
       },
       {
         key: 'otherParty',
