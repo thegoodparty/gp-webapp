@@ -22,7 +22,7 @@ const campaignSteps = [
       },
       {
         key: 'goals',
-        title: 'Goals & Objectives',
+        title: 'Election Details',
         subTitle:
           'Purpose of your campaign, as well as specific, measurable targets and milestones that the campaign aims to achieve.',
         steps: goalsFieldsCount,
