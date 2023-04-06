@@ -33,7 +33,7 @@ export default function IssuesPage({
   const router = useRouter();
 
   const canSave = () => {
-    if (!state.positions || state.positions.length === 0) {
+    if (!state.positions || state.positions.length < 3) {
       return false;
     }
     for (let i = 0; i < state.positions.length; i++) {
@@ -127,7 +127,7 @@ export default function IssuesPage({
         ))}
         <div className="flex justify-center  mb-8">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-            <div>NEXT</div>
+            <div className="font-black">NEXT</div>
           </BlackButtonClient>
         </div>
       </div>

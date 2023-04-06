@@ -245,7 +245,7 @@ const detailsFields = [
   },
   {
     pageType: 'issuesPage',
-    title: 'Tell us about some issues you care about and why.',
+    title: 'Tell us about 3 to 5 issues you care about and why.',
     fields: [],
   },
   {
