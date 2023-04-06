@@ -200,7 +200,8 @@ const detailsFields = [
     ],
   },
   {
-    title: 'Tell us about your prior experience',
+    title:
+      'Tell us about your past experiences and why you want to run for office',
     subTitle:
       "Telling potential voters about what you've worked on in the past and any experience that is relevant for the role you plan to run for will increase your odds of winning.",
     fields: [
