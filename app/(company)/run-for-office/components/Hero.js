@@ -1,37 +1,50 @@
+import Pill from '@shared/buttons/Pill';
+import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-
-import peopleImg from '/public/images/landing-pages/people.png';
-import LandingPageHero from '@shared/landing-pages/LangdinPageHero';
-import RunCampaignButton from './RunCampaignButton';
+import jaredImg from 'public/images/campaign/jared.jpg';
+import Chat from './Chat';
 
 export default function Hero() {
   return (
-    <LandingPageHero>
-      <div className="relative pb-80 lg:pb-40">
-        <div className="grid grid-cols-12 gap2">
-          <div className="col-span-12 lg:col-span-7">
-            <h1 className="text-6xl leading-tight font-black">
-              Free tools and expertise to run winning campaigns.
-            </h1>
-            <h2 className="text-xl font-bold mt-5 lg:w-[70%]">
-              We help real people who want to serve their communities, run
-              winning campaigns. Chat with an expert to learn how.
-            </h2>
-            <div className="w-full lg:w-60 mt-3 lg:mt-12">
-              <RunCampaignButton />
+    <MaxWidth>
+      <div className="grid grid-cols-12 gap-6 py-16">
+        <div className="col-span-12 lg:col-span-6">
+          <h1 className="font-black text-6xl">
+            Free tools and expertise to run winning campaigns
+          </h1>
+          <h2 className="mt-3 mb-12 text-xl">
+            Free tools, training, and expert knowledge to help independent and
+            third-party candidates run winning campaigns.
+          </h2>
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-6">
+              <Pill className=" bg-yellow-400 border-yellow-400 w-full">
+                <div className="text-black tracking-wide">GET STARTED</div>
+              </Pill>
+            </div>
+            <div className="col-span-12 lg:col-span-6">
+              <Pill outlined className="w-full">
+                <div className="tracking-wide">GET A DEMO</div>
+              </Pill>
             </div>
           </div>
         </div>
-        <Image
-          className="absolute bottom-0 left-1/2 -ml-[200px]"
-          src={peopleImg}
-          alt=""
-          placeholder="blur"
-          priority
-          width={400}
-          height={250}
-        />
+        <div className="col-span-12 lg:col-span-6 text-center">
+          <Image
+            src={jaredImg}
+            width={80}
+            height={80}
+            alt="Jared"
+            className="rounded-full border-4 border-yellow-400 mx-auto shadow-xl"
+          />
+          <div className="text-2xl font-black mt-4">
+            Hey! I&apos;m Jared.
+            <br />
+            Let&apos;s build your custom campaign
+          </div>
+          <Chat />
+        </div>
       </div>
-    </LandingPageHero>
+    </MaxWidth>
   );
 }

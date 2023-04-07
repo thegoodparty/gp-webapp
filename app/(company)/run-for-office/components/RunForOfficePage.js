@@ -1,18 +1,14 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Connect from './Connect';
+import Accordion from './Accordion';
+import Experts from './Experts';
 import Hero from './Hero';
-import Points from './Points';
-import WhatIs from './WhatIs';
 
 export default function RunForOfficePage() {
   return (
-    <div className="mb-40">
+    <div className="">
       <Hero />
-      <MaxWidth>
-        <WhatIs />
-        <Points />
-        <Connect />
-      </MaxWidth>
+      <Accordion />
+      <Experts />
     </div>
   );
 }
