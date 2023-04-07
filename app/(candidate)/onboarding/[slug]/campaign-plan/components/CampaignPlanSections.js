@@ -3,12 +3,14 @@ import CampaignPlanSection from './CampaignPlanSection';
 
 const sections = [
   { key: 'slogan', title: 'Slogans' },
+  { key: 'why', title: "Why I'm Running" },
+  { key: 'aboutMe', title: 'About Me' },
   { key: 'policyPlatform', title: 'Policy Platform' },
-  { key: 'pathToVictory', title: 'Path To Victory' },
   { key: 'communicationsStrategy', title: 'Communications Strategy' },
+  { key: 'messageBox', title: 'Message Box' },
+  { key: 'pathToVictory', title: 'Path To Victory' },
   { key: 'mobilizing', title: 'Mobilizing voters and volunteers' },
   { key: 'getOutTheVote', title: 'Get out the vote tactics' },
-  { key: 'operationalPlan', title: 'Operational plan' },
   { key: 'timeline', title: 'Timeline' },
 ];
 export default function CampaignPlanSections({ campaign }) {

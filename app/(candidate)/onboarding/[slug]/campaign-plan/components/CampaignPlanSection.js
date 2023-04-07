@@ -173,7 +173,7 @@ export default function CampaignPlanSection({
       </div>
       <div
         className={`overflow-hidden transition-all duration-300  ${
-          open ? 'max-h-[2000px]' : 'max-h-0 '
+          open ? 'max-h-[3000px]' : 'max-h-0 '
         }`}
       >
         <div className="p-6 ">
