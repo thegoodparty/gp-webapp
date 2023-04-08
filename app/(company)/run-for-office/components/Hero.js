@@ -3,6 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import jaredImg from 'public/images/campaign/jared.jpg';
 import Chat from './Chat';
+import RunCampaignButton from './RunCampaignButton';
 
 export default function Hero() {
   return (
@@ -18,9 +19,7 @@ export default function Hero() {
           </h2>
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-6">
-              <Pill className=" bg-yellow-400 border-yellow-400 w-full">
-                <div className="text-black tracking-wide">GET STARTED</div>
-              </Pill>
+              <RunCampaignButton fullWidth />
             </div>
             <div className="col-span-12 lg:col-span-6">
               <Pill outlined className="w-full">

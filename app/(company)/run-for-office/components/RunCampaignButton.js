@@ -1,4 +1,5 @@
 'use client';
+import Pill from '@shared/buttons/Pill';
 import PurpleButton from '@shared/buttons/PurpleButton';
 import YellowButton from '@shared/buttons/YellowButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
@@ -32,7 +33,7 @@ export async function createCampaign(router) {
   }
 }
 
-export default function RunCampaignButton() {
+export default function RunCampaignButton({ fullWidth }) {
   const router = useRouter();
   const handleRun = async () => {
     const user = getUserCookie(true);
@@ -50,11 +51,13 @@ export default function RunCampaignButton() {
   };
   return (
     <div className="relative z-10" onClick={handleRun}>
-      <YellowButton style={{ width: '100%' }}>
-        <div className="whitespace-nowrap font-black text-xl tracking-wide">
-          GET STARTED
-        </div>
-      </YellowButton>
+      <Pill
+        className={` bg-yellow-400 border-yellow-400 ${
+          fullWidth ? 'w-full' : 'w-48'
+        }`}
+      >
+        <div className="text-black tracking-wide">GET STARTED</div>
+      </Pill>
     </div>
   );
 }

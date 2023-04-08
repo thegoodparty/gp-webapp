@@ -8,6 +8,7 @@ import insightsImg from 'public/images/landing-pages/insights.png';
 import { FaChevronCircleDown } from 'react-icons/fa';
 import Image from 'next/image';
 import Pill from '@shared/buttons/Pill';
+import RunCampaignButton from './RunCampaignButton';
 
 const sections = [
   {
@@ -71,7 +72,7 @@ export default function Accordion() {
                   className="px-10 py-8 bg-white mb-3 rounded-xl "
                   onClick={() => setSelected(index)}
                 >
-                  <div className="flex justify-between cursor-pointer">
+                  <div className="flex justify-between items-start cursor-pointer">
                     <div className="font-black text-xl">{section.title}</div>
                     <div
                       className={`transition-all duration-300 ${
@@ -96,9 +97,7 @@ export default function Accordion() {
           </h2>
           <div className="grid grid-cols-12 gap-6 mt-10">
             <div className="col-span-12 lg:col-span-6 text-right">
-              <Pill className=" bg-yellow-400 border-yellow-400 w-48">
-                <div className="text-black tracking-wide">GET STARTED</div>
-              </Pill>
+              <RunCampaignButton />
             </div>
             <div className="col-span-12 lg:col-span-6">
               <Pill outlined className="w-48">
