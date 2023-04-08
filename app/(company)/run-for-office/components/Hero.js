@@ -30,7 +30,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="col-span-12 lg:col-span-6 text-center">
-          <Image
+          {/* <Image
             src={jaredImg}
             width={80}
             height={80}
@@ -41,7 +41,7 @@ export default function Hero() {
             Hey! I&apos;m Jared.
             <br />
             Let&apos;s build your custom campaign
-          </div>
+          </div> */}
           <Chat />
         </div>
       </div>
