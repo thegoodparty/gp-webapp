@@ -23,7 +23,7 @@ const detailsFields = [
   },
   {
     title:
-      "We'll help you figure out the best way to run a successful campaign where you live",
+      "We'll help you figure out the best way to run a successful campaign where you live.",
     fields: [
       {
         key: 'zip',
