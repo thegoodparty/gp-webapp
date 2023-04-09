@@ -86,6 +86,8 @@ export default function IssuesPage({
     onChangeField('positions', updated);
   };
 
+  console.log('positions', positions);
+
   return (
     <OnboardingWrapper {...props} slug={slug}>
       <div className="max-w-[460px] mx-auto">

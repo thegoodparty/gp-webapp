@@ -9,13 +9,14 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
+import TextField from '@shared/inputs/TextField';
 
 const sections = [
   {
     title: 'Vote Goal',
     fields: [
-      { key: 'turnAround', label: '2022 Turnout', type: 'number' },
-      { key: 'winNumber', label: 'Win Number', type: 'number' },
+      { key: 'projectedTurnout', label: 'projected Turnout', type: 'number' },
+      { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
     ],
   },
 
@@ -161,11 +162,26 @@ export default function AdminVictoryPathPage(props) {
                 <div className="grid grid-cols-12 gap-4">
                   {section.fields.map((field) => (
                     <div className="col-span-12 lg:col-span-6" key={field.key}>
-                      <RenderInputField
-                        field={field}
-                        onChangeCallback={onChangeField}
-                        value={state[field.key]}
-                      />
+                      {field.formula ? (
+                        <div>
+                          <TextField
+                            label={field.label}
+                            fullWidth
+                            disabled
+                            value={
+                              state.projectedTurnout
+                                ? state.projectedTurnout * 0.51
+                                : 0
+                            }
+                          />
+                        </div>
+                      ) : (
+                        <RenderInputField
+                          field={field}
+                          onChangeCallback={onChangeField}
+                          value={state[field.key]}
+                        />
+                      )}
                     </div>
                   ))}
                 </div>
