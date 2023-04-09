@@ -91,6 +91,23 @@ export default function PledgePage({
           >
             <CmsContentWrapper>
               {contentfulHelper(pledge[`content${step}`])}
+              {index === 1 && (
+                <ul>
+                  <li>
+                    I will abide by a{' '}
+                    <a
+                      className="underline"
+                      href="/faqs/what-is-good-partys-minimum-standard-of-civility/66i4vrrlkx1yf8mncqvysb"
+                      target="_blank"
+                    >
+                      minimum standard of civility
+                    </a>{' '}
+                    and acknowledge that Good Party maintains the right to
+                    withdraw its Good Party Certified endorsement and remove me
+                    from the site if I actively engage in such conduct.
+                  </li>
+                </ul>
+              )}
             </CmsContentWrapper>
             <div className="mt-4 flex items-center font-bold mb-10">
               <Checkbox
