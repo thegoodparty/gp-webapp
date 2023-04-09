@@ -173,9 +173,9 @@ const detailsFields = [
         showCondition: ['no'],
         articles: [],
         title:
-          "Looks like you want to get involved in local politics but you're not sure which office?",
+          "Looks like you want to explore running for office but aren't sure where to start? No problem!",
         subTitle:
-          "Well, you've got a ton of options to choose from - State Senate, City Council, School Board, even Tree Warden! With over 500,000 local elections happening across the US, the possibilities are practically endless. Lucky for you, there are some awesome tools out there to help you figure out which issues you care about most and which office would be the perfect fit for you in your community. Let's check 'em out!",
+          "You have a ton of options to choose from. With over 500,000 local, state and federal offices to choose from it can be a bit overwhelming. Good news though, we've narrowed it down to the offices you can choose from based on your current residency.",
       },
     ],
   },
