@@ -7,8 +7,8 @@ const sections = [
   { key: 'why', title: "Why I'm Running" },
   { key: 'aboutMe', title: 'About Me' },
   { key: 'policyPlatform', title: 'Policy Platform' },
-  { key: 'communicationsStrategy', title: 'Communications Strategy' },
   { key: 'messageBox', title: 'Message Box' },
+  { key: 'communicationsStrategy', title: 'Communications Strategy' },
 ];
 
 const lockedSections = [
