@@ -7,7 +7,7 @@ import RunCampaignButton from './RunCampaignButton';
 export default function Hero({ demoCallback }) {
   return (
     <MaxWidth>
-      <div className="grid grid-cols-12 gap-6 py-16">
+      <div className="grid grid-cols-12 gap-10 py-16">
         <div className="col-span-12 lg:col-span-6">
           <h1 className="font-black text-6xl">
             Free tools and expertise to run winning campaigns

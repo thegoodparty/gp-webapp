@@ -16,7 +16,14 @@ export default function Chat() {
   return (
     <div className="mt-5">
       <div className="flex items-end justify-end mt-5">
-        <div className="shadow-xl rounded-xl rounded-br-none mr-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow ml-28">
+        <Image
+          src="/images/campaign/ai-icon.svg"
+          alt="GP-AI"
+          width={40}
+          height={40}
+          className="shadow-lg rounded-full w-10 h-10"
+        />
+        <div className="shadow-xl rounded-xl rounded-br-none ml-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow mr-28">
           <Typewriter
             options={{
               delay: 40,
@@ -34,25 +41,11 @@ export default function Chat() {
             }}
           />
         </div>
-        <Image
-          src="/images/campaign/ai-icon.svg"
-          alt="GP-AI"
-          width={40}
-          height={40}
-          className="shadow-lg rounded-full w-10 h-10"
-        />
       </div>
 
       {typed1Completed ? (
-        <div className="flex items-end  pt-5">
-          <Image
-            src={mateoImg}
-            alt="Mateo"
-            width={40}
-            height={40}
-            className="shadow-lg rounded-full w-10 h-10"
-          />
-          <div className="shadow-xl bg-slate-100 rounded-xl rounded-bl-none ml-3 px-7 py-5  text-left  flex-grow mr-28">
+        <div className="flex items-end pt-5">
+          <div className="shadow-xl bg-slate-100 rounded-xl rounded-bl-none mr-3 px-7 py-5  text-left  flex-grow ml-28">
             <Typewriter
               options={{
                 delay: 40,
@@ -70,13 +63,27 @@ export default function Chat() {
               }}
             />
           </div>
+          <Image
+            src={mateoImg}
+            alt="Mateo"
+            width={40}
+            height={40}
+            className="shadow-lg rounded-full w-10 h-10"
+          />
         </div>
       ) : (
         <></>
       )}
       {typed2Completed ? (
         <div className="flex items-end justify-end mt-5">
-          <div className="shadow-xl rounded-xl rounded-br-none mr-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow ml-28">
+          <Image
+            src="/images/campaign/ai-icon.svg"
+            alt="GP-AI"
+            width={40}
+            height={40}
+            className="shadow-lg rounded-full w-10 h-10"
+          />
+          <div className="shadow-xl rounded-xl rounded-br-none ml-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow mr-28">
             <Typewriter
               options={{
                 delay: 40,
@@ -86,13 +93,6 @@ export default function Chat() {
               }}
             />
           </div>
-          <Image
-            src="/images/campaign/ai-icon.svg"
-            alt="GP-AI"
-            width={40}
-            height={40}
-            className="shadow-lg rounded-full w-10 h-10"
-          />
         </div>
       ) : (
         <></>
