@@ -79,7 +79,7 @@ export const generateCampaignStatus = (campaign) => {
   const preLaunchSections = [
     { key: 'details', value: details, count: detailFieldsCount },
     { key: 'goals', value: goals, count: goalsFieldsCount },
-    { key: 'campaignPlan', value: campaignPlan, count: 1 },
+    { key: 'campaignPlan', value: campaignPlan, count: 5 },
     { key: 'incentive', value: incentive, count: 1 },
   ];
 
@@ -98,6 +98,10 @@ export const generateCampaignStatus = (campaign) => {
       } else {
         status.preLaunch.status = 'In Progress';
       }
+      if (section.key === 'campaignPlan' && completedSteps === 4) {
+        // details has 4 steps.
+        status.preLaunch.campaignPlan.status = 'Not Started';
+      }
       status.preLaunch[section.key].completedSteps = completedSteps;
       if (completedSteps >= section.count) {
         status.preLaunch[section.key].status = 'Completed';
@@ -114,6 +118,9 @@ export const generateCampaignStatus = (campaign) => {
       step: 1,
     };
   }
+
+  console.log('campaign', campaign);
+  console.log('status', status);
 
   return status;
 };
