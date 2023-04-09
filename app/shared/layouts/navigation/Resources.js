@@ -14,7 +14,7 @@ export const RESOURCES_LINKS = [
 ];
 
 export const CANDIDATE_RESOURCES_LINKS = [
-  { label: 'Run for office', href: '/run-for-office' },
+  { label: 'Run For Office', href: '/run-for-office' },
   { label: 'Good Party Academy', href: '/academy' },
 ];
 
