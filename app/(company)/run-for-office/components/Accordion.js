@@ -44,7 +44,7 @@ export default function Accordion() {
       <MaxWidth>
         <div className="grid grid-cols-12">
           <div className="col-span-12 lg:col-span-7 hidden lg:block">
-            <div className="relative py-3 h-full w-[120%] h-[95%">
+            <div className="relative py-3 w-[120%] h-full">
               <Image
                 src={sections[selected].img}
                 fill
@@ -84,7 +84,17 @@ export default function Accordion() {
                   </div>
 
                   {index === selected && (
-                    <div className="py-8">{section.description}</div>
+                    <>
+                      <div className="py-8">{section.description}</div>
+                      <div className="lg:hidden mt-4 relative h-60">
+                        <Image
+                          src={sections[selected].img}
+                          fill
+                          className="object-contain"
+                          alt=""
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               ))}
@@ -99,8 +109,11 @@ export default function Accordion() {
             <div className="col-span-12 lg:col-span-6 text-right">
               <RunCampaignButton />
             </div>
+            <div className="col-span-12 lg:hidden text-center text-lg font-black">
+              OR
+            </div>
             <div className="col-span-12 lg:col-span-6">
-              <Pill outlined className="w-48">
+              <Pill outlined className="w-full lg:w-48">
                 <div className="tracking-wide">GET A DEMO</div>
               </Pill>
             </div>

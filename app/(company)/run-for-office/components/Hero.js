@@ -21,6 +21,9 @@ export default function Hero() {
             <div className="col-span-12 lg:col-span-6">
               <RunCampaignButton fullWidth />
             </div>
+            <div className="col-span-12 lg:hidden text-center text-lg font-black">
+              OR
+            </div>
             <div className="col-span-12 lg:col-span-6">
               <Pill outlined className="w-full">
                 <div className="tracking-wide">GET A DEMO</div>

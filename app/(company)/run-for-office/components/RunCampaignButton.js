@@ -53,7 +53,7 @@ export default function RunCampaignButton({ fullWidth }) {
     <div className="relative z-10" onClick={handleRun}>
       <Pill
         className={` bg-yellow-400 border-yellow-400 ${
-          fullWidth ? 'w-full' : 'w-48'
+          fullWidth ? 'w-full' : 'w-full lg:w-48'
         }`}
       >
         <div className="text-black tracking-wide">GET STARTED</div>

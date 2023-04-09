@@ -41,13 +41,12 @@ export default function Experts() {
         <div className="mt-10 grid grid-cols-12 gap-12">
           {instructors.map((inst) => (
             <div className="col-span-12 lg:col-span-4" key={inst.name}>
-              <div className="relative md:h-[300px] lg:h-[400px]">
+              <div className="relative -ml-4 lg:ml-0 aspect-square lg:h-[400px]">
                 <Image
                   src={inst.img}
                   alt={inst.name}
-                  width={400}
-                  height={400}
-                  className="rounded-full"
+                  fill
+                  className="object-contain lg:rounded-full"
                 />
               </div>
               <h3 className="text-4xl mt-12 font-black">{inst.name}</h3>
