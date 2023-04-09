@@ -26,6 +26,11 @@ const sections = [
       { key: 'republicans', label: 'Republicans', type: 'number' },
       { key: 'democrats', label: 'Democrats', type: 'number' },
       { key: 'indies', label: 'Indies', type: 'number' },
+      {
+        key: 'averageTurnout',
+        label: 'Average % turnout from past 3 races',
+        type: 'number',
+      },
     ],
   },
 
