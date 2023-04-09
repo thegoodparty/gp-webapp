@@ -127,7 +127,7 @@ export default function CampaignPlanSection({
   const handleRegenerate = async (improveQuery) => {
     setLoading(true);
     const chat = [
-      { role: 'assistant', content: plan },
+      { role: 'system', content: plan },
       { role: 'user', content: improveQuery },
     ];
     setPlan(false);
