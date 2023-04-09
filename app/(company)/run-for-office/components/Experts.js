@@ -27,7 +27,7 @@ const instructors = [
   },
 ];
 
-export default function Experts() {
+export default function Experts({ demoCallback }) {
   return (
     <section className="my-24">
       <MaxWidth>
@@ -61,9 +61,11 @@ export default function Experts() {
           </h3>
           <Image src={calendarImg} alt="Book a demo" width={732} height={542} />
           <div className="mt-12">
-            <Pill outlined className="w-48">
-              <div className="tracking-wide">GET A DEMO</div>
-            </Pill>
+            <div onClick={demoCallback}>
+              <Pill outlined className="w-48">
+                <div className="tracking-wide">GET A DEMO</div>
+              </Pill>
+            </div>
           </div>
         </div>
       </MaxWidth>

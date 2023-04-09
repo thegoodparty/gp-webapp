@@ -1,11 +1,10 @@
+'use client';
 import Pill from '@shared/buttons/Pill';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import jaredImg from 'public/images/campaign/jared.jpg';
 import Chat from './Chat';
 import RunCampaignButton from './RunCampaignButton';
 
-export default function Hero() {
+export default function Hero({ demoCallback }) {
   return (
     <MaxWidth>
       <div className="grid grid-cols-12 gap-6 py-16">
@@ -25,25 +24,15 @@ export default function Hero() {
               OR
             </div>
             <div className="col-span-12 lg:col-span-6">
-              <Pill outlined className="w-full">
-                <div className="tracking-wide">GET A DEMO</div>
-              </Pill>
+              <div onClick={demoCallback}>
+                <Pill outlined className="w-full">
+                  <div className="tracking-wide">GET A DEMO</div>
+                </Pill>
+              </div>
             </div>
           </div>
         </div>
         <div className="col-span-12 lg:col-span-6 text-center">
-          {/* <Image
-            src={jaredImg}
-            width={80}
-            height={80}
-            alt="Jared"
-            className="rounded-full border-4 border-yellow-400 mx-auto shadow-xl"
-          />
-          <div className="text-2xl font-black mt-4">
-            Hey! I&apos;m Jared.
-            <br />
-            Let&apos;s build your custom campaign
-          </div> */}
           <Chat />
         </div>
       </div>

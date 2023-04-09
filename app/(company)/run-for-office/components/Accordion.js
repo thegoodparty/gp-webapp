@@ -37,7 +37,7 @@ const sections = [
   },
 ];
 
-export default function Accordion() {
+export default function Accordion({ demoCallback }) {
   const [selected, setSelected] = useState(0);
   return (
     <section className="py-28 bg-orange-400 bg-opacity-10">
@@ -113,9 +113,11 @@ export default function Accordion() {
               OR
             </div>
             <div className="col-span-12 lg:col-span-6">
-              <Pill outlined className="w-full lg:w-48">
-                <div className="tracking-wide">GET A DEMO</div>
-              </Pill>
+              <div onClick={demoCallback}>
+                <Pill outlined className="w-full lg:w-48">
+                  <div className="tracking-wide">GET A DEMO</div>
+                </Pill>
+              </div>
             </div>
           </div>
         </div>
