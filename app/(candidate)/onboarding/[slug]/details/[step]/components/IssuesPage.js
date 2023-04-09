@@ -116,6 +116,7 @@ export default function IssuesPage({
                     rows={6}
                     fullWidth
                     value={state[`position-${position?.id}`]}
+                    error={state[`position-${position?.id}`] === ''}
                     onChange={(e) => {
                       onChangeField(`position-${position?.id}`, e.target.value);
                     }}
@@ -125,11 +126,17 @@ export default function IssuesPage({
             )}
           </>
         ))}
-        <div className="flex justify-center  mb-8">
+        <div className="flex justify-center  mb-4">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
             <div className="font-black">NEXT</div>
           </BlackButtonClient>
         </div>
+        {!state.positions ||
+          (state.positions.length < 3 && (
+            <div className="text-red-600 text-center  mb-4">
+              Please select at least 3 issues
+            </div>
+          ))}
       </div>
     </OnboardingWrapper>
   );
