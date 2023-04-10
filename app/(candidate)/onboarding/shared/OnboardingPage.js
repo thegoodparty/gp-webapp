@@ -59,9 +59,11 @@ export default function OnboardingPage({
   const [loading, setLoading] = useState(false);
 
   const canSave = () => {
+    console.log('inputFields', inputFields);
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
       const value = state[field.key];
+      console.log('field', field);
 
       if (field.required) {
         // if (field.initialValue && value === field.initialValue) {
@@ -81,6 +83,24 @@ export default function OnboardingPage({
         }
       }
 
+      if (field.type === 'date' && field.validate === 'futureDateOnly') {
+        try {
+          const electionDate = new Date(value);
+          const now = new Date();
+
+          return electionDate > now;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      if (field.validate && typeof field.validate === 'function') {
+        return field.validate(value);
+      }
+
+      if (field.requiredHidden && canShowField(field) && value === '') {
+        return false;
+      }
       if (field.type === 'date' && field.validate === 'over 18') {
         const age = getAge(value);
         if (age >= 18 && error) {
@@ -93,24 +113,6 @@ export default function OnboardingPage({
         }
         // setError('minimun age');
         return age >= 18;
-      }
-      if (field.type === 'date' && field.validate === 'futureDateOnly') {
-        try {
-          const electionDate = new Date(value);
-          const now = new Date();
-
-          return electionDate > now;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      if (field.validate) {
-        return field.validate(value);
-      }
-
-      if (field.requiredHidden && canShowField(field) && value === '') {
-        return false;
       }
     }
 

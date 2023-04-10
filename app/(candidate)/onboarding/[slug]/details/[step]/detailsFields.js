@@ -50,6 +50,7 @@ const detailsFields = [
         required: true,
         type: 'radio',
         options: ['Yes', 'No'],
+        validateOptions: ['yes', 'No'],
       },
     ],
   },

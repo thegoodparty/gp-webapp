@@ -7,8 +7,7 @@ import Typewriter from 'typewriter-effect';
 const msg1 =
   "Hey, I'm GP-ai, Good Party's AI campaign manager.  Let's build your custom campaign!";
 const msg2 = 'Tell me what a good ABOUT statement might look like.';
-const msg3 =
-  "I'm Matthew, an independent candidate running for Mayor in Aliso Viejo. I believe in putting the needs of our community first and promoting common-sense solutions...";
+const msg3 = `"I'm Matthew, an independent candidate running for Mayor in Aliso Viejo. I believe in putting the needs of our community first and promoting common-sense solutions..."`;
 
 export default function Chat() {
   const [typed1Completed, setTyped1Completed] = useState(false);
