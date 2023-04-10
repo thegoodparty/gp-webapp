@@ -9,7 +9,7 @@ import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import { Select } from '@mui/material';
 
 const partyOptions = [
-  'Independent/None',
+  'Independent',
   'Democrat Party',
   'Republican Party',
   'Green Party',

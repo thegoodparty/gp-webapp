@@ -5,9 +5,10 @@ import { useState } from 'react';
 
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
-export default function ScheduleModal({ campaign }) {
+export default function ScheduleModal({ campaign, nextStep }) {
+  const canContinue = nextStep.step > 3 || nextStep.sectionIndex > 0;
   const [showModal, setShowModal] = useState(false);
-  const [showContinue, setShowContinue] = useState(false);
+  const [showContinue, setShowContinue] = useState(canContinue);
 
   const handleOpenModal = () => {
     setShowModal(true);

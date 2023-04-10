@@ -3,9 +3,16 @@ import JaredImg from 'public/images/campaign/jared.jpg';
 import Image from 'next/image';
 import ScheduleModal from './ScheduleModal';
 
-export default function UnlockJared({ key, unlocked, campaign }) {
+export default function UnlockJared({ step, nextStep, campaign }) {
+  const unlocked =
+    step.key === 'incentive' &&
+    (nextStep.step > 3 || nextStep.sectionIndex > 0);
+
   return (
-    <div className="col-span-12 md:col-span-6 xl:col-span-3 h-full" key={key}>
+    <div
+      className="col-span-12 md:col-span-6 xl:col-span-3 h-full"
+      key={step.key}
+    >
       <div className=" bg-white rounded-xl h-full flex flex-col justify-between relative">
         <div className="flex justify-center pt-4">
           <Image
@@ -42,7 +49,7 @@ export default function UnlockJared({ key, unlocked, campaign }) {
               </div>
             </div>
             <div className="px-6 pb-2 text-center">
-              <ScheduleModal campaign={campaign} />
+              <ScheduleModal campaign={campaign} nextStep={nextStep} />
             </div>
           </>
         ) : (
