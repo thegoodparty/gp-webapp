@@ -41,17 +41,18 @@ export default function Experts({ demoCallback }) {
         <div className="mt-10 grid grid-cols-12 gap-12">
           {instructors.map((inst) => (
             <div className="col-span-12 lg:col-span-4" key={inst.name}>
-              <div className="relative -ml-4 lg:ml-0 aspect-square lg:h-[400px]">
+              <div className="relative -ml-4 lg:ml-0 lg:aspect-square lg:h-[400px]">
                 <Image
                   src={inst.img}
                   alt={inst.name}
-                  fill
+                  height={400}
+                  width={400}
                   className="object-contain lg:rounded-full"
                 />
               </div>
               <h3 className="text-4xl mt-12 font-black">{inst.name}</h3>
               <h4 className="text-2xl mt-1">{inst.title}</h4>
-              <p className="mt-8 text-xl">{inst.description}</p>
+              <p className="mt-8 text-xl max-w-[90vw]">{inst.description}</p>
             </div>
           ))}
         </div>

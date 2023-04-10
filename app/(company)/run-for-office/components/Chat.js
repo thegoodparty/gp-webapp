@@ -22,7 +22,7 @@ export default function Chat() {
           height={40}
           className="shadow-lg rounded-full w-10 h-10"
         />
-        <div className="shadow-xl rounded-xl rounded-br-none ml-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow mr-28">
+        <div className="shadow-xl rounded-xl rounded-br-none ml-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow lg:mr-28">
           <Typewriter
             options={{
               delay: 40,
@@ -44,7 +44,7 @@ export default function Chat() {
 
       {typed1Completed ? (
         <div className="flex items-end pt-5">
-          <div className="shadow-xl bg-slate-100 rounded-xl rounded-bl-none mr-3 px-7 py-5  text-left  flex-grow ml-28">
+          <div className="shadow-xl bg-slate-100 rounded-xl rounded-bl-none mr-3 px-7 py-5  text-left  flex-grow lg:ml-28">
             <Typewriter
               options={{
                 delay: 40,
@@ -82,7 +82,7 @@ export default function Chat() {
             height={40}
             className="shadow-lg rounded-full w-10 h-10"
           />
-          <div className="shadow-xl rounded-xl rounded-br-none ml-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow mr-28">
+          <div className="shadow-xl rounded-xl rounded-br-none ml-3 px-7 py-5 border-2 border-zinc-100 text-left flex-grow lg:mr-28">
             <Typewriter
               options={{
                 delay: 40,
