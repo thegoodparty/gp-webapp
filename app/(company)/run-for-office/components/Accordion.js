@@ -107,13 +107,13 @@ export default function Accordion({ demoCallback }) {
           </h2>
           <div className="grid grid-cols-12 gap-6 mt-10">
             <div className="col-span-12 lg:col-span-6 text-right">
-              <RunCampaignButton />
+              <RunCampaignButton id="accordion-get-started-btn" />
             </div>
             <div className="col-span-12 lg:hidden text-center text-lg font-black">
               OR
             </div>
             <div className="col-span-12 lg:col-span-6">
-              <div onClick={demoCallback}>
+              <div onClick={demoCallback} id="accordion-demo-btn">
                 <Pill outlined className="w-full lg:w-48">
                   <div className="tracking-wide">GET A DEMO</div>
                 </Pill>

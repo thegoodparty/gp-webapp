@@ -33,7 +33,7 @@ export async function createCampaign(router) {
   }
 }
 
-export default function RunCampaignButton({ fullWidth }) {
+export default function RunCampaignButton({ fullWidth, id = '' }) {
   const router = useRouter();
   const handleRun = async () => {
     const user = getUserCookie(true);
@@ -50,7 +50,7 @@ export default function RunCampaignButton({ fullWidth }) {
     }
   };
   return (
-    <div className="relative z-10" onClick={handleRun}>
+    <div className="relative z-10" onClick={handleRun} id={id}>
       <Pill
         className={` bg-yellow-400 border-yellow-400 ${
           fullWidth ? 'w-full' : 'w-full lg:w-48'

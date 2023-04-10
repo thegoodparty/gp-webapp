@@ -62,7 +62,7 @@ export default function Experts({ demoCallback }) {
           </h3>
           <Image src={calendarImg} alt="Book a demo" width={732} height={542} />
           <div className="mt-12">
-            <div onClick={demoCallback}>
+            <div onClick={demoCallback} id="experts-demo-btn">
               <Pill outlined className="w-48">
                 <div className="tracking-wide">GET A DEMO</div>
               </Pill>

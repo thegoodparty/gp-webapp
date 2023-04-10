@@ -18,13 +18,13 @@ export default function Hero({ demoCallback }) {
           </h2>
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-6">
-              <RunCampaignButton fullWidth />
+              <RunCampaignButton fullWidth id="hero-get-started-btn" />
             </div>
             <div className="col-span-12 lg:hidden text-center text-lg font-black">
               OR
             </div>
             <div className="col-span-12 lg:col-span-6">
-              <div onClick={demoCallback}>
+              <div onClick={demoCallback} id="hero-demo-btn">
                 <Pill outlined className="w-full">
                   <div className="tracking-wide">GET A DEMO</div>
                 </Pill>
