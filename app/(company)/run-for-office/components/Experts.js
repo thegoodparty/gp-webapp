@@ -1,7 +1,6 @@
 import Pill from '@shared/buttons/Pill';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import calendarImg from 'public/images/landing-pages/calendar.png';
 
 const instructors = [
   {
@@ -60,8 +59,7 @@ export default function Experts({ demoCallback }) {
           <h3 className=" font-black text-4xl mt-32 mb-12">
             Any questions? Schedule a demo with our team
           </h3>
-          <Image src={calendarImg} alt="Book a demo" width={732} height={542} />
-          <div className="mt-12">
+          <div>
             <div onClick={demoCallback} id="experts-demo-btn">
               <Pill outlined className="w-48">
                 <div className="tracking-wide">GET A DEMO</div>
