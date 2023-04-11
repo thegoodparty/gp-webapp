@@ -1,5 +1,6 @@
 import BlackButton from '@shared/buttons/BlackButton';
 import { Fragment } from 'react';
+import { FaLock } from 'react-icons/fa';
 import CampaignPlanSection from './CampaignPlanSection';
 import LockedCampaignPlanSection from './LockedCampaignPlanSection';
 
@@ -39,20 +40,37 @@ export default function CampaignPlanSections({ campaign }) {
           to 48 hours. In the meantime, check out your campaign resources below.
         </div>
       )}
-      {lockedSections.map((section) => (
-        <Fragment key={section.key}>
-          {isWhyLocked ? (
-            <LockedCampaignPlanSection key={section.key} section={section} />
-          ) : (
-            <CampaignPlanSection
-              key={section.key}
-              section={section}
-              campaign={campaign}
-              initialOpen={section.key === 'pathToVictory'}
-            />
-          )}
-        </Fragment>
-      ))}
+      <div className="relative">
+        {lockedSections.map((section) => (
+          <Fragment key={section.key}>
+            {isWhyLocked ? (
+              <LockedCampaignPlanSection section={section} />
+            ) : (
+              <CampaignPlanSection
+                key={section.key}
+                section={section}
+                campaign={campaign}
+                initialOpen={section.key === 'pathToVictory'}
+              />
+            )}
+          </Fragment>
+        ))}
+        {isWhyLocked && (
+          <div className="absolute top-0 left-0 h-full w-full flex items-center justify-center">
+            <div className="flex max-w-[550px] bg-white p-10 lg:p-16 rounded-2xl shadow-xl items-center">
+              <div>
+                <FaLock size={80} className="text-gray-400" />
+              </div>
+              <div className="pl-10 text-xl font-black">
+                Our team is working on your campaign materials now. This can
+                take up to 48 hours. In the meantime, check out your campaign
+                resources below.
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="text-center mt-8 font-black">
         <a href={`/onboarding/${campaign.slug}/dashboard/1`}>
           <BlackButton>CONTINUE</BlackButton>

@@ -1,4 +1,4 @@
-import { FaChevronDown, FaLock } from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
 
 export default function LockedCampaignPlanSection({ section }) {
   return (
@@ -8,7 +8,7 @@ export default function LockedCampaignPlanSection({ section }) {
           <span className="inline-block mr-6">{section.title}</span>
         </h3>
         <div>
-          <FaLock size={24} />
+          <FaChevronDown size={24} />
         </div>
       </div>
     </section>
