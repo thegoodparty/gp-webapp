@@ -86,8 +86,6 @@ export default function IssuesPage({
     onChangeField('positions', updated);
   };
 
-  console.log('positions', positions);
-
   return (
     <OnboardingWrapper {...props} slug={slug}>
       <div className="max-w-[460px] mx-auto">
@@ -136,7 +134,10 @@ export default function IssuesPage({
         {!state.positions ||
           (state.positions.length < 3 && (
             <div className="text-red-600 text-center  mb-4">
-              Please select at least 3 issues
+              Add {state.positions.length === 0 && 'three'}
+              {state.positions.length === 1 && 'two'}
+              {state.positions.length === 2 && 'one'} more issue
+              {state.positions.length < 2 && 's'} to advance to next step.
             </div>
           ))}
       </div>
