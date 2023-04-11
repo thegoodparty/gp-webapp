@@ -1,4 +1,5 @@
 import BlackButton from '@shared/buttons/BlackButton';
+import { Fragment } from 'react';
 import CampaignPlanSection from './CampaignPlanSection';
 import LockedCampaignPlanSection from './LockedCampaignPlanSection';
 
@@ -18,6 +19,7 @@ const lockedSections = [
   { key: 'timeline', title: 'Timeline' },
 ];
 export default function CampaignPlanSections({ campaign }) {
+  const isWhyLocked = !campaign.pathToVictory;
   return (
     <>
       <h2 className="my-8 text-3xl font-black">WHY</h2>
@@ -31,8 +33,25 @@ export default function CampaignPlanSections({ campaign }) {
       ))}
 
       <h2 className="mb-8 mt-16 text-3xl font-black">HOW</h2>
+      {isWhyLocked && (
+        <div className="mb-8 text-xl font-black">
+          Our team is working on your campaign materials now. This can take up
+          to 48 hours. In the meantime, check out your campaign resources below.
+        </div>
+      )}
       {lockedSections.map((section) => (
-        <LockedCampaignPlanSection key={section.key} section={section} />
+        <Fragment key={section.key}>
+          {isWhyLocked ? (
+            <LockedCampaignPlanSection key={section.key} section={section} />
+          ) : (
+            <CampaignPlanSection
+              key={section.key}
+              section={section}
+              campaign={campaign}
+              initialOpen={section.key === 'pathToVictory'}
+            />
+          )}
+        </Fragment>
       ))}
       <div className="text-center mt-8 font-black">
         <a href={`/onboarding/${campaign.slug}/dashboard/1`}>
