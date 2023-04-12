@@ -15,7 +15,12 @@ const sections = [
   {
     title: 'Vote Goal',
     fields: [
-      { key: 'projectedTurnout', label: 'projected Turnout', type: 'number' },
+      {
+        key: 'totalRegisteredVoters',
+        label: 'Total Registered Voters',
+        type: 'number',
+      },
+      { key: 'projectedTurnout', label: 'Projected Turnout', type: 'number' },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
     ],
   },
