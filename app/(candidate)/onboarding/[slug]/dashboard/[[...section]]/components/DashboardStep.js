@@ -44,11 +44,12 @@ export default function DashboardStep({
               <div className="font-black text-orange-600">In Progress</div>
             )}
 
-            {((step.key === 'preLaunch' && status === 'Not Started') ||
-              !status) && <div className=" text-gray-600">Not Started</div>}
+            {(status === 'Not Started' || !status) && (
+              <div className=" text-gray-600">Not Started</div>
+            )}
 
-            {((step.key !== 'preLaunch' && status === 'Not Started') ||
-              !status) && <div className=" text-gray-600">Coming Soon</div>}
+            {/* {((step.key !== 'preLaunch' && status === 'Not Started') ||
+              !status) && <div className=" text-gray-600">Coming Soon</div>} */}
 
             {step.steps.length > 0 && (
               <div className="mt-1">
@@ -70,7 +71,7 @@ export default function DashboardStep({
                   Continue
                 </div>
               )}
-              {((step.key === 'preLaunch' && status === 'Not Started') ||
+              {((step.key !== 'run' && status === 'Not Started') ||
                 !status) && (
                 <div className=" px-6 py-4  font-bold  flex items-center underline">
                   <div className="ml-2">Get Started</div>
@@ -78,8 +79,7 @@ export default function DashboardStep({
               )}
             </Link>
 
-            {((step.key !== 'preLaunch' && status === 'Not Started') ||
-              !status) && (
+            {((step.key === 'run' && status === 'Not Started') || !status) && (
               <div className=" text-gray-400 px-6 py-4  font-bold cursor-not-allowed flex items-center">
                 <FaLock /> <div className="ml-2">Get Started</div>
               </div>

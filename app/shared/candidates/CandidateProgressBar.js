@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { numberFormatter } from '/helpers/numberHelper';
 import { candidateColor } from '/helpers/candidateHelper';
 import { daysTill } from '/helpers/dateHelper';
-import { followOffsetState } from 'app/candidate/[slug]/components/Header/FollowButton';
+// import { followOffsetState } from 'app/candidate/[slug]/components/Header/FollowButton';
 
 const CandidateProgressBar = ({
   candidate,
@@ -24,7 +24,7 @@ const CandidateProgressBar = ({
     didWin,
     votesReceived,
   } = candidate;
-  const followOffset = useHookstate(followOffsetState);
+  const followOffset = 0; //useHookstate(followOffsetState);
   const offsetFollow = followOffset.get() || 0;
 
   let people = overrideFollowers ? likelyVoters : peopleSoFar;

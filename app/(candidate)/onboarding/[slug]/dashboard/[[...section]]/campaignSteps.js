@@ -48,7 +48,22 @@ const campaignSteps = [
     subTitle:
       'Officially announce your candidacy and kick off the campaign with a well-planned event that generates momentum and media coverage.',
     icon: <SlRocket size={30} />,
-    steps: [],
+    steps: [
+      {
+        key: 'profile',
+        title: 'Public Profile',
+        subTitle: 'Edit your public profile. Mateo Mateo.',
+        steps: 1,
+        customLink: true,
+      },
+      {
+        key: 'checklist',
+        title: 'Checklist',
+        subTitle:
+          'Complete the checklist below to Launch your Campaign Profile Page',
+        steps: 8,
+      },
+    ],
   },
   {
     key: 'run',

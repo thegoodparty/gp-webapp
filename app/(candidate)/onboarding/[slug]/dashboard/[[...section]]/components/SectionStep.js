@@ -24,6 +24,11 @@ export default function SectionStep({
   if (step.link) {
     link = `/onboarding/${campaign.slug}${step.link}`;
   }
+  if (step.customLink) {
+    if (step.key === 'profile') {
+      link = `/candidate/${campaign.slug}/edit`;
+    }
+  }
   console.log('link', link);
 
   if (step.customCard && step.customCard === 'UnlockJared') {
