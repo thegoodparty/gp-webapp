@@ -2,19 +2,19 @@ import { Fragment } from 'react';
 
 const tableCols = [
   {
-    date: 'April 10th',
+    date: 'May 10th',
     subject: 'The “Why”: Kickoff GPA & Finding your Why',
   },
   {
-    date: 'April 17th- April 21st',
+    date: 'May 17th - May 21st',
     subject: 'The “How”: Building a Campaign Plan',
   },
   {
-    date: 'April 24th- April 28th',
+    date: 'May 24th - May 28th',
     subject: 'The “Who + How Much”: Building a Team and Support',
   },
   {
-    date: 'May 1st- May 5th',
+    date: 'June 1st - June 5th',
     subject: 'The “What”: Graduate and Making a Decision',
   },
 ];
@@ -25,10 +25,8 @@ export default function Timeline() {
       <div className=" col-span-12 lg:col-span-8">
         <h2 className="font-black text-5xl mb-5">Course Timeline</h2>
         <p className="text-2xl mb-12">
-          The first cohort of Good Party Academy will run from April 10th to May
-          5th. You&apos;ll be expected to join a cohort of 6-12 participants and
-          join us for programming 2-3 hours/week, including group learning and
-          dedicated 1-on-1 sessions.
+          Good Party Academy is currently running its first cohort, but will run
+          another in May 2023.
         </p>
         <div className="mt-10 grid grid-cols-12">
           <div className="col-span-12 bg-black text-white font-black py-2 px-3">
