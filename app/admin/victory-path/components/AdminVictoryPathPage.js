@@ -59,6 +59,13 @@ const sections = [
       { key: 'voterProjection', label: 'Voter Projection', type: 'number' },
     ],
   },
+  {
+    title: 'Budget',
+    fields: [
+      { key: 'budgetLow', label: 'Budget Low', type: 'number' },
+      { key: 'budgetHigh', label: 'Budget High', type: 'number' },
+    ],
+  },
 ];
 
 const initialState = {};
