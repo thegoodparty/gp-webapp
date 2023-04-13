@@ -7,6 +7,7 @@ export default async function Head({ params }) {
   if (!slug) {
     return <></>;
   }
+  return <GpHead title="TBD" description="TBD" />;
 
   const { candidate } = await fetchCandidate(slug);
 
