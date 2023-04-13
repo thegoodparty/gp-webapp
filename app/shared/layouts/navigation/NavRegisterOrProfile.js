@@ -36,18 +36,20 @@ export default function NavRegisterOrProfile() {
     ]);
   };
 
-
-  const fullstoryIndentity = (userI) =>{
+  const fullstoryIndentity = (userI) => {
     if (typeof FS === 'undefined') {
       return;
     }
     if (userI) {
-      console.log('set user fs')
+      console.log('set user fs');
       FS.identify(userI.id, {
         displayName: userI.name,
         email: userI.email,
       });
-  }
+    } else {
+      console.log('fs not defined');
+    }
+  };
 
   const user = userState.get();
 
