@@ -20,6 +20,7 @@ export default function NavRegisterOrProfile() {
       setTimeout(() => {
         userState.set(() => user);
         hubspotIntegration(user);
+        fullstoryIndentity(user);
       }, 100);
     }
   }, []);
@@ -34,6 +35,19 @@ export default function NavRegisterOrProfile() {
       },
     ]);
   };
+
+
+  const fullstoryIndentity = (userI) =>{
+    if (typeof FS === 'undefined') {
+      return;
+    }
+    if (userI) {
+      console.log('set user fs')
+      FS.identify(userI.id, {
+        displayName: userI.name,
+        email: userI.email,
+      });
+  }
 
   const user = userState.get();
 
