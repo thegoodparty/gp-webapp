@@ -126,20 +126,14 @@ export default function CampaignPlanSection({
 
   const handleRegenerate = async (improveQuery) => {
     setLoading(true);
-    let chat = [];
-    if (improveQuery === '') {
-      chat = [
-        {
-          role: 'user',
-          content: 'please regenerate this message in different words',
-        },
-      ];
-    } else {
-      chat = [
-        { role: 'system', content: plan },
-        { role: 'user', content: improveQuery },
-      ];
+    let query = improveQuery;
+    if (query === '') {
+      query = 'please regenerate this message';
     }
+    const chat = [
+      { role: 'system', content: plan },
+      { role: 'user', content: query },
+    ];
     setPlan(false);
     aiCount = 0;
     aiTotalCount = 0;
