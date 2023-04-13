@@ -38,6 +38,7 @@ export default function NavRegisterOrProfile() {
 
   const fullstoryIndentity = (userI) => {
     if (typeof FS === 'undefined') {
+      console.log('fs undefined');
       return;
     }
     if (userI) {
