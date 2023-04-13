@@ -6,7 +6,7 @@ export default function LoadingAI() {
     <div className="bg-white p-6 my-10 rounded-xl text-center text-xl">
       <div className="mb-3 text-4xl">Generating your campaign plan with</div>
       <div className="flex items-center justify-center">
-        <div className="mr-3 text-2xl">Good Party AI</div>
+        <div className="mr-3 text-2xl">AI Campaign Manager</div>
         <Image
           src="/images/campaign/ai-icon.svg"
           alt="GP-AI"

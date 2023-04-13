@@ -15,7 +15,12 @@ const sections = [
   {
     title: 'Vote Goal',
     fields: [
-      { key: 'projectedTurnout', label: 'projected Turnout', type: 'number' },
+      {
+        key: 'totalRegisteredVoters',
+        label: 'Total Registered Voters',
+        type: 'number',
+      },
+      { key: 'projectedTurnout', label: 'Projected Turnout', type: 'number' },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
     ],
   },
@@ -52,6 +57,13 @@ const sections = [
     fields: [
       { key: 'voteGoal', label: 'Vote Goal', type: 'number' },
       { key: 'voterProjection', label: 'Voter Projection', type: 'number' },
+    ],
+  },
+  {
+    title: 'Budget',
+    fields: [
+      { key: 'budgetLow', label: 'Budget Low', type: 'number' },
+      { key: 'budgetHigh', label: 'Budget High', type: 'number' },
     ],
   },
 ];
@@ -101,9 +113,14 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const onChangeField = (key, value) => {
+    let winNumber = state.projectedTurnout * 0.51 || 0;
+    if (key === 'projectedTurnout') {
+      winNumber = value * 0.51;
+    }
     setState({
       ...state,
       [key]: value,
+      winNumber,
     });
   };
 
@@ -173,11 +190,7 @@ export default function AdminVictoryPathPage(props) {
                             label={field.label}
                             fullWidth
                             disabled
-                            value={
-                              state.projectedTurnout
-                                ? state.projectedTurnout * 0.51
-                                : 0
-                            }
+                            value={state[field.key]}
                           />
                         </div>
                       ) : (

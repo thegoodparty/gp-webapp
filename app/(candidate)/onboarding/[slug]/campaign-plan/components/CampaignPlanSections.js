@@ -34,12 +34,6 @@ export default function CampaignPlanSections({ campaign }) {
       ))}
 
       <h2 className="mb-8 mt-16 text-3xl font-black">HOW</h2>
-      {isWhyLocked && (
-        <div className="mb-8 text-xl font-black">
-          Our team is working on your campaign materials now. This can take up
-          to 48 hours. In the meantime, check out your campaign resources below.
-        </div>
-      )}
       <div className="relative">
         {lockedSections.map((section) => (
           <Fragment key={section.key}>
