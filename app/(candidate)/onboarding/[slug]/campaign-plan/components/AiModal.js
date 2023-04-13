@@ -137,7 +137,7 @@ export default function AiModal({ submitCallback, showWarning }) {
 
           <div className="w-full">
             <TextField
-              label="Ask the Good Party AI to add, remove, or change something"
+              label="Ask the AI Campaign Manager to add, remove, or change something"
               onChange={(e) => onChangeField('improveQuery', e.target.value)}
               value={state.improveQuery}
               className="w-full"
