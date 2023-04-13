@@ -90,7 +90,7 @@ export default function RootLayout({ children }) {
       <Script
         strategy="afterInteractive"
         type="text/javascript"
-        id="usersnap"
+        id="fullstory"
         dangerouslySetInnerHTML={{
           __html: `
         if(window.location.hostname === 'goodparty.org'){
