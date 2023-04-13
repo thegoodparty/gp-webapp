@@ -126,6 +126,10 @@ export default function CampaignPlanSection({
 
   const handleRegenerate = async (improveQuery) => {
     setLoading(true);
+    let query = improveQuery;
+    if (query === '') {
+      query = 'please regenerate this message in different words';
+    }
     const chat = [
       { role: 'system', content: plan },
       { role: 'user', content: improveQuery },

@@ -106,9 +106,14 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const onChangeField = (key, value) => {
+    let winNumber = state.projectedTurnout * 0.51 || 0;
+    if (key === 'projectedTurnout') {
+      winNumber = value * 0.51;
+    }
     setState({
       ...state,
       [key]: value,
+      winNumber,
     });
   };
 
@@ -178,11 +183,7 @@ export default function AdminVictoryPathPage(props) {
                             label={field.label}
                             fullWidth
                             disabled
-                            value={
-                              state.projectedTurnout
-                                ? state.projectedTurnout * 0.51
-                                : 0
-                            }
+                            value={state[field.key]}
                           />
                         </div>
                       ) : (
