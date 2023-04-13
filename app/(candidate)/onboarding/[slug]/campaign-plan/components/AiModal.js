@@ -141,6 +141,8 @@ export default function AiModal({ submitCallback, showWarning }) {
               onChange={(e) => onChangeField('improveQuery', e.target.value)}
               value={state.improveQuery}
               className="w-full"
+              multiline
+              rows={3}
             />
           </div>
         </div>
