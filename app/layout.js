@@ -93,7 +93,6 @@ export default function RootLayout({ children }) {
         id="usersnap"
         dangerouslySetInnerHTML={{
           __html: `
-        // fullstory
         if(window.location.hostname === 'goodparty.org'){
           window['_fs_host'] = 'fullstory.com';
           window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
