@@ -1,4 +1,4 @@
-'use client';
+e'use client';
 import React, { useState, useEffect } from 'react';
 import { IoIosCheckmark } from 'react-icons/io';
 import { useHookstate } from '@hookstate/core';
@@ -24,7 +24,7 @@ const CandidateProgressBar = ({
     didWin,
     votesReceived,
   } = candidate;
-  const followOffset = 0; //useHookstate(followOffsetState);
+  const followOffset = 0; // useHookstate(followOffsetState);
   const offsetFollow = 0;
 
   let people = overrideFollowers ? likelyVoters : peopleSoFar;
