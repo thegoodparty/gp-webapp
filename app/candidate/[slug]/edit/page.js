@@ -53,9 +53,40 @@ function mapCampaignToCandidate(campaign) {
   if (!campaign) {
     return false;
   }
-  const { slug, details } = campaign;
+  console.log('cmapaign', campaign);
+  const { slug, details, campaignPlan, pathToVictory } = campaign;
+  const {
+    firstName,
+    lastName,
+    party,
+    state,
+    office,
+    pastExperience,
+    occupation,
+    funFact,
+    topIssues,
+  } = details;
+  const { slogan, aboutMe, why } = campaignPlan;
+
+  let voteGoal, voterProjection;
+  if (pathToVictory) {
+    ({ voteGoal, voterProjection } = pathToVictory);
+  }
   return {
     slug,
-    ...details,
+    firstName,
+    lastName,
+    party,
+    state,
+    office,
+    slogan,
+    about: aboutMe,
+    why,
+    pastExperience,
+    occupation,
+    funFact,
+    topIssues,
+    voteGoal,
+    voterProjection,
   };
 }

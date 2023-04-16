@@ -31,11 +31,11 @@ const renderCustomizedLabel = (props) => {
           </foreignObject>
         </g>
       )}
-      <g>
+      {/* <g>
         <foreignObject x={x - 10} y={y - 10} width={20} height={20}>
           {index === 1 && <div className="-rotate-90">🗳</div>}
         </foreignObject>
-      </g>
+      </g> */}
     </>
   );
 };
@@ -51,28 +51,25 @@ function hexToRgb(hex) {
     : null;
 }
 
-function GoalsChart({ candidate, followers }) {
-  const { likelyVoters, votesNeeded, color } = candidate;
-  let voters = likelyVoters;
-  if (followers?.thisWeek > likelyVoters) {
+function GoalsChart({ candidate, followers, color }) {
+  const { voterProjection, voteGoal } = candidate;
+  let voters = voterProjection || 0;
+  if (followers?.thisWeek > voterProjection) {
     voters = followers.thisWeek;
   }
-  const cappedLikely = voters > votesNeeded ? votesNeeded : voters;
+  const cappedLikely = voters > voteGoal ? voteGoal : voters;
 
   const data = [
-    { name: 'To Win', value: votesNeeded - cappedLikely },
+    { name: 'To Win', value: voteGoal - cappedLikely },
     { name: 'So Far', value: cappedLikely },
   ];
-  let perc = votesNeeded !== 0 ? parseInt((voters * 100) / votesNeeded, 10) : 0;
+  let perc = voteGoal !== 0 ? parseInt((voters * 100) / voteGoal, 10) : 0;
   if (perc > 100) {
     perc = 100;
   }
-  let brightColor = color?.color ? color.color : '#000000';
-  if (brightColor.length === 4) {
-    brightColor = brightColor + brightColor.substr(1, 3);
-  }
-  const rgb = hexToRgb(brightColor);
-  const COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, brightColor];
+
+  // const rgb = hexToRgb(color);
+  // const COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
 
   return (
     <div className="relative">
@@ -91,7 +88,7 @@ function GoalsChart({ candidate, followers }) {
               outerRadius={90}
               startAngle={50}
               endAngle={310}
-              fill={brightColor}
+              fill={color || '#000'}
               labelLine={false}
               label={renderCustomizedLabel}
               isAnimationActive={false}
@@ -99,7 +96,8 @@ function GoalsChart({ candidate, followers }) {
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  // fill={COLORS[index % COLORS.length]}
+                  fill="#EDEDED"
                 />
               ))}
             </Pie>
@@ -108,10 +106,9 @@ function GoalsChart({ candidate, followers }) {
       </div>
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-lg">
         <div className="text-center">
-          <div className="text-3xl font-black">{perc}%</div>
-          Votes Needed
-          <br />
-          To Win
+          <div className="text-3xl font-black">{perc || 0}%</div>
+          <div className="font-bold mt-3 text-xl">of votes</div>
+          <div className="text-sm">needed to Win</div>
         </div>
       </div>
     </div>

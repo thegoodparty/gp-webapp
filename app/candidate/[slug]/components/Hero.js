@@ -1,19 +1,22 @@
 import CandidateAvatar from '@shared/candidates/CandidateAvatar';
+import { partyResolver } from 'helpers/candidateHelper';
 import GetInvolvedButton from './GetInvolvedButton';
 
 export default function Hero(props) {
-  const { candidate } = props;
-  const { color } = candidate;
+  const { candidate, color } = props;
 
   const { firstName, lastName, party, office, state } = candidate;
 
   return (
-    <div className="bg-violet-600 text-white rounded-2xl px-7 py-8 ">
+    <div
+      className=" text-white rounded-2xl px-7 py-8"
+      style={{ backgroundColor: color }}
+    >
       <div className="flex">
         <CandidateAvatar candidate={candidate} />
         <div className="flex-1 pl-6 lg:pl-12 flex flex-col justify-between">
           <div className="hidden lg:block text-right">
-            <GetInvolvedButton />
+            <GetInvolvedButton color={color} />
           </div>
           <div>
             <div className="text-3xl lg:text-4xl font-black">
@@ -21,7 +24,7 @@ export default function Hero(props) {
               {lastName}
             </div>
             <div className="mt-3">
-              {party}
+              {partyResolver(party)}
               <div className="lg:hidden"></div>
               <div className="hidden lg:inline-block px-3">&middot;</div>
               {office}
@@ -33,7 +36,7 @@ export default function Hero(props) {
         </div>
       </div>
       <div className="lg:hidden  text-center mt-10">
-        <GetInvolvedButton />
+        <GetInvolvedButton color={color} />
       </div>
     </div>
   );

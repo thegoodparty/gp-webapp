@@ -54,6 +54,7 @@ export const candidateRoute = (candidate) => {
   if (!candidate) {
     return '/';
   }
+  console.log('cand', candidate);
   const { slug } = candidate;
   return `/candidate/${slug}`;
 };
