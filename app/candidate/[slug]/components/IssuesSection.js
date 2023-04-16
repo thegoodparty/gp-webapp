@@ -4,7 +4,6 @@ export default function IssuesSection({ candidate, color }) {
     return null;
   }
   const { positions } = topIssues;
-  console.log('po', positions);
   return (
     <section className="bg-white my-3 p-6 rounded-2xl">
       <h3 className="font-bold mb-3 text-xl">Issues I care about</h3>

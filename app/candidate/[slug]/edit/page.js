@@ -11,9 +11,10 @@ export default async function Page({ params }) {
   const { slug } = params;
   let isStaged = false;
   let res = await fetchCandidate(slug);
+  let campaign;
   if (!res) {
     isStaged = true;
-    const { campaign } = await fetchUserCampaign();
+    ({ campaign } = await fetchUserCampaign());
     if (campaign) {
       const mapped = mapCampaignToCandidate(campaign);
       res = {
@@ -35,6 +36,7 @@ export default async function Page({ params }) {
   }
 
   const childProps = {
+    campaign,
     candidate,
     editMode: true,
     isStaged,
@@ -53,7 +55,6 @@ function mapCampaignToCandidate(campaign) {
   if (!campaign) {
     return false;
   }
-  console.log('cmapaign', campaign);
   const { slug, details, campaignPlan, pathToVictory } = campaign;
   const {
     firstName,
