@@ -13,6 +13,7 @@ async function fetchArticle(articleId) {
 }
 
 export default async function FaqLink({ children, articleId }) {
-  const { content } = await fetchArticle(articleId);
+  // const { content } = await fetchArticle(articleId);
+  return null;
   return <FaqModal article={content}>{children}</FaqModal>;
 }

@@ -5,7 +5,7 @@ import { kFormatter, numberFormatter } from '/helpers/numberHelper';
 
 // import GoalsChart from 'components/candidate-portal/CandidatePortalHomeWrapper/GoalsChart';
 
-function VictoryTracker({ candidate, followers, color }) {
+function VictoryTracker({ candidate, followers, color, editMode }) {
   const { likelyVoters, votesNeeded, overrideFollowers } = candidate;
   let voters = likelyVoters;
   if (!overrideFollowers && followers?.thisWeek > likelyVoters) {
@@ -18,11 +18,13 @@ function VictoryTracker({ candidate, followers, color }) {
         <div data-cy="campaign-progrsss-title">
           <strong>Victory Meter</strong>
         </div>
-        {/* <FaqLink articleId="4KOzae6PB45c9GQY9Xi9UX">
-          <span className="no-underline" data-cy="campaign-progress-ref">
-            <div className="text-sm text-neutral-400">What`s this?</div>
-          </span>
-        </FaqLink> */}
+        {!editMode ? (
+          <FaqLink articleId="4KOzae6PB45c9GQY9Xi9UX">
+            <span className="no-underline" data-cy="campaign-progress-ref">
+              <div className="text-sm text-neutral-400">What`s this?</div>
+            </span>
+          </FaqLink>
+        ) : null}
       </div>
       <GoalsChart candidate={candidate} color={color} />
       <div className="flex justify-center mb-6">
