@@ -18,11 +18,11 @@ function VictoryTracker({ candidate, followers, color }) {
         <div data-cy="campaign-progrsss-title">
           <strong>Victory Meter</strong>
         </div>
-        <FaqLink articleId="4KOzae6PB45c9GQY9Xi9UX">
+        {/* <FaqLink articleId="4KOzae6PB45c9GQY9Xi9UX">
           <span className="no-underline" data-cy="campaign-progress-ref">
             <div className="text-sm text-neutral-400">What`s this?</div>
           </span>
-        </FaqLink>
+        </FaqLink> */}
       </div>
       <GoalsChart candidate={candidate} color={color} />
       <div className="flex justify-center mb-6">

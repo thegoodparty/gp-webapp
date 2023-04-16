@@ -8,7 +8,7 @@ import WhySection from './WhySection';
 
 export default function CandidatePage(props) {
   const { candidate, editMode, isStaged } = props;
-  const color = '#734BDC';
+  const color = props.color || '#734BDC';
 
   const childProps = {
     ...props,

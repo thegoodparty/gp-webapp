@@ -2,10 +2,10 @@ export const dynamic = 'force-dynamic';
 import { notFound, redirect } from 'next/navigation';
 
 import { candidateRoute } from 'helpers/candidateHelper';
-import CandidatePage from '../components/CandidatePage';
 import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchCandidate } from '../page';
+import EditCandidatePage from '../components/EditCandidatePage';
 
 export default async function Page({ params }) {
   const { slug } = params;
@@ -42,7 +42,7 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <CandidatePage {...childProps} />
+      <EditCandidatePage {...childProps} />
       {/* <CandidateSchema candidate={candidate} /> */}
       {/* <TrackVisit /> */}
     </>

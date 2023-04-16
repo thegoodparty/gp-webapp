@@ -1,9 +1,12 @@
 import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import { partyResolver } from 'helpers/candidateHelper';
 import GetInvolvedButton from './GetInvolvedButton';
+import dynamic from 'next/dynamic';
+
+const ColorPicker = dynamic(() => import('./ColorPicker'));
 
 export default function Hero(props) {
-  const { candidate, color } = props;
+  const { candidate, color, editMode } = props;
 
   const { firstName, lastName, party, office, state } = candidate;
 
@@ -16,7 +19,11 @@ export default function Hero(props) {
         <CandidateAvatar candidate={candidate} />
         <div className="flex-1 pl-6 lg:pl-12 flex flex-col justify-between">
           <div className="hidden lg:block text-right">
-            <GetInvolvedButton color={color} />
+            {editMode ? (
+              <ColorPicker {...props} />
+            ) : (
+              <GetInvolvedButton color={color} />
+            )}
           </div>
           <div>
             <div className="text-3xl lg:text-4xl font-black">
