@@ -10,7 +10,7 @@ export async function fetchUserCampaign() {
     const api = gpApi.campaign.onboarding.findByUser;
     return await gpFetch(api, false, 1);
   } catch (e) {
-    console.log('error', e);
+    console.log('error1', JSON.stringify(e));
     return false;
   }
 }
@@ -25,7 +25,7 @@ export async function createCampaign(router) {
       deleteCookie('returnUrl');
     }
   } catch (e) {
-    console.log('error', JSON.stringify(e));
+    console.log('error2', JSON.stringify(e));
     return false;
   }
 }
