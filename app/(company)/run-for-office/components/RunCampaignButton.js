@@ -1,8 +1,5 @@
 'use client';
 import Pill from '@shared/buttons/Pill';
-import PurpleButton from '@shared/buttons/PurpleButton';
-import YellowButton from '@shared/buttons/YellowButton';
-import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getUserCookie, setCookie } from 'helpers/cookieHelper';
@@ -28,7 +25,7 @@ export async function createCampaign(router) {
       deleteCookie('returnUrl');
     }
   } catch (e) {
-    console.log('error', e);
+    console.log('error', JSON.stringify(e));
     return false;
   }
 }
