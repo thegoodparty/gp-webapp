@@ -4,19 +4,23 @@ import GetInvolvedButton from './GetInvolvedButton';
 import dynamic from 'next/dynamic';
 
 const ColorPicker = dynamic(() => import('./ColorPicker'));
+const ImageUploader = dynamic(() => import('./ImageUploader'));
 
 export default function Hero(props) {
-  const { candidate, color, editMode } = props;
+  const { candidate, color, textColor, editMode, campaign } = props;
 
   const { firstName, lastName, party, office, state } = candidate;
 
   return (
     <div
       className=" text-white rounded-2xl px-7 py-8"
-      style={{ backgroundColor: color }}
+      style={{ backgroundColor: color, color: textColor }}
     >
       <div className="flex">
-        <CandidateAvatar candidate={candidate} />
+        <div className="relative">
+          <CandidateAvatar candidate={candidate} />
+          {editMode ? <ImageUploader campaign={campaign} /> : null}
+        </div>
         <div className="flex-1 pl-6 lg:pl-12 flex flex-col justify-between">
           <div className="hidden lg:block text-right">
             {editMode ? (

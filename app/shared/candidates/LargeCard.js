@@ -67,7 +67,7 @@ export default function LargeCard({ candidate, priority = false }) {
               <CandidateAvatar candidate={candidate} priority={priority} />
             </div>
           </div>
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 lg:pl-6">
             <div className="mt-4">
               <div className="font-bold text-sm h-8 overflow-hidden mb-2">
                 {topPositions && topPositions.length > 0 && (

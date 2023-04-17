@@ -55,7 +55,7 @@ function mapCampaignToCandidate(campaign) {
   if (!campaign) {
     return false;
   }
-  const { slug, details, campaignPlan, pathToVictory } = campaign;
+  const { slug, details, campaignPlan, pathToVictory, color, image } = campaign;
   const {
     firstName,
     lastName,
@@ -89,5 +89,7 @@ function mapCampaignToCandidate(campaign) {
     topIssues,
     voteGoal,
     voterProjection,
+    color,
+    image,
   };
 }
