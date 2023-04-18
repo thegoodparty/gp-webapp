@@ -69,6 +69,7 @@ function mapCampaignToCandidate(campaign) {
     tiktok,
     snap,
     twitch,
+    website,
   } = campaign;
   const {
     firstName,
@@ -112,5 +113,6 @@ function mapCampaignToCandidate(campaign) {
     tiktok,
     snap,
     twitch,
+    website,
   };
 }

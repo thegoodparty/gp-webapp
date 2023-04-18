@@ -8,10 +8,13 @@ import { useState, useEffect } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 import SocialSection, { channels } from './SocialSection';
 
+const channelsWithWebsite = [...channels, { label: 'Website', key: 'website' }];
+
 export default function EditSocialSection(props) {
   const { candidate, campaign } = props;
   const [edit, setEdit] = useState(false);
   const [state, setState] = useState({
+    website: '',
     twitter: '',
     instagram: '',
     facebook: '',
@@ -25,13 +28,15 @@ export default function EditSocialSection(props) {
   };
 
   useEffect(() => {
-    channels.forEach((channel) => {
-      const updated = {
-        ...state,
-        [channel.key]: candidate[channel.key] || '',
-      };
+    console.log('candidte', candidate);
+    if (candidate) {
+      const updated = { ...state };
+      channelsWithWebsite.forEach((channel) => {
+        updated[channel.key] = candidate[channel.key] || '';
+      });
       setState(updated);
-    });
+      console.log('updated', updated);
+    }
   }, [candidate]);
 
   const onChangeField = (key, value) => {
@@ -63,7 +68,7 @@ export default function EditSocialSection(props) {
       {edit ? (
         <section className="bg-white  my-3 rounded-2xl p-6 ">
           <h3 className="font-bold mt-5 mb-3 text-xl">Edit Social Section</h3>
-          {channels.map((channel) => (
+          {channelsWithWebsite.map((channel) => (
             <div key={channel.key} className="mb-3">
               <TextField
                 label={channel.label}

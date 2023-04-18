@@ -3,7 +3,7 @@ import TextPanel from './TextPanel';
 
 export default function AboutSection(props) {
   const { candidate, color } = props;
-  let { headline, slogan, about } = candidate;
+  let { headline, slogan, about, website } = candidate;
   slogan = slogan || headline || '';
   return (
     <section className="bg-white p-6 my-3  rounded-2xl">
@@ -29,6 +29,17 @@ export default function AboutSection(props) {
           section="campaignPlan"
           sectionKey="aboutMe"
         />
+        {website ? (
+          <a
+            href={website}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className="underline"
+            style={{ color }}
+          >
+            Visit candidate website
+          </a>
+        ) : null}
       </div>
     </section>
   );
