@@ -23,7 +23,7 @@ export const fetchCandidate = async (slug) => {
 
 export default async function Page({ params }) {
   const { slug } = params;
-  const { candidate } = await fetchCandidate(slug);
+  const { candidate, candidatePositions, support } = await fetchCandidate(slug);
 
   if (!candidate) {
     notFound();
@@ -32,9 +32,9 @@ export default async function Page({ params }) {
   if (candidateRoute(candidate) !== `/candidate/${slug}`) {
     redirect(candidateRoute(candidate));
   }
-
   const childProps = {
     candidate,
+    candidatePositions,
   };
 
   return (

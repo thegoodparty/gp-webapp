@@ -40,6 +40,7 @@ export default async function Page({ params }) {
     candidate,
     editMode: true,
     isStaged,
+    candidatePositions: mapTopIssues(campaign.details?.topIssues),
   };
 
   return (
@@ -81,7 +82,6 @@ function mapCampaignToCandidate(campaign) {
     pastExperience,
     occupation,
     funFact,
-    topIssues,
   } = details;
   const { slogan, aboutMe, why } = campaignPlan;
 
@@ -102,7 +102,6 @@ function mapCampaignToCandidate(campaign) {
     pastExperience,
     occupation,
     funFact,
-    topIssues,
     voteGoal,
     voterProjection,
     color,
@@ -118,3 +117,18 @@ function mapCampaignToCandidate(campaign) {
     website,
   };
 }
+
+const mapTopIssues = (topIssues) => {
+  const res = [];
+  topIssues.positions.forEach((position) => {
+    const positionWithoutTopIssue = JSON.parse(JSON.stringify(position));
+    delete positionWithoutTopIssue.topIssue;
+    res.push({
+      description: topIssues[`position-${position.id}`],
+      id: `position-${position.id}`,
+      topIssue: position.topIssue,
+      position: positionWithoutTopIssue,
+    });
+  });
+  return res;
+};
