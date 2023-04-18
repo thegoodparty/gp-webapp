@@ -69,6 +69,7 @@ function mapCampaignToCandidate(campaign) {
     tiktok,
     snap,
     twitch,
+    hashtag,
     website,
   } = campaign;
   const {
@@ -113,6 +114,7 @@ function mapCampaignToCandidate(campaign) {
     tiktok,
     snap,
     twitch,
+    hashtag,
     website,
   };
 }

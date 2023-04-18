@@ -3,17 +3,23 @@
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import TextField from '@shared/inputs/TextField';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { candidateHash } from 'helpers/candidateHelper';
 import { isValidUrl } from 'helpers/linkhelper';
 import { useState, useEffect } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 import SocialSection, { channels } from './SocialSection';
 
-const channelsWithWebsite = [...channels, { label: 'Website', key: 'website' }];
+const channelsWithWebsite = [
+  ...channels,
+  { label: 'Website', key: 'website' },
+  { label: 'Hashtag', key: 'hashtag' },
+];
 
 export default function EditSocialSection(props) {
   const { candidate, campaign } = props;
   const [edit, setEdit] = useState(false);
   const [state, setState] = useState({
+    hashtag: '',
     website: '',
     twitter: '',
     instagram: '',
@@ -28,12 +34,15 @@ export default function EditSocialSection(props) {
   };
 
   useEffect(() => {
-    console.log('candidte', candidate);
     if (candidate) {
       const updated = { ...state };
       channelsWithWebsite.forEach((channel) => {
         updated[channel.key] = candidate[channel.key] || '';
       });
+      if (!candidate.hashtag) {
+        updated.hashtag = candidateHash(candidate);
+      }
+
       setState(updated);
       console.log('updated', updated);
     }
