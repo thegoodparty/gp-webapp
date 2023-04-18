@@ -22,7 +22,6 @@ export const fetchCandidate = async (slug) => {
 };
 
 export default async function Page({ params }) {
-  console.log('params', params);
   const { slug } = params;
   const { candidate } = await fetchCandidate(slug);
 

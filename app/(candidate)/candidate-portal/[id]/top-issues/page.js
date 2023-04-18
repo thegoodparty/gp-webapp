@@ -13,7 +13,8 @@ export const fetchTopIssues = async () => {
 export const fetchCandidatePositions = async (id) => {
   const api = gpApi.campaign.candidatePosition.list;
   const payload = { id };
-  return await gpFetch(api, payload, 3600);
+  const token = getServerToken();
+  return await gpFetch(api, payload, 3600, token);
 };
 
 export default async function Page({ params }) {
