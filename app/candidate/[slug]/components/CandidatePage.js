@@ -2,6 +2,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import AboutSection from './AboutSection';
 import Hero from './Hero';
 import IssuesSection from './IssuesSection';
+import SocialSectionWithEdit from './SocialSectionWithEdit';
 import StagedBanner from './StagedBanner';
 import VictoryTracker from './VictoryTracker';
 import WhySection from './WhySection';
@@ -11,7 +12,11 @@ function pickTextColorBasedOnBg(
   lightColor = '#fff',
   darkColor = '#000',
 ) {
-  var color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+  var color =
+    bgColor.toString().charAt(0) === '#'
+      ? bgColor.toString().substring(1, 7)
+      : bgColor;
+
   var r = parseInt(color.substring(0, 2), 16); // hexToR
   var g = parseInt(color.substring(2, 4), 16); // hexToG
   var b = parseInt(color.substring(4, 6), 16); // hexToB
@@ -20,7 +25,11 @@ function pickTextColorBasedOnBg(
 
 export default function CandidatePage(props) {
   const { candidate, editMode, isStaged } = props;
-  const color = props.color || candidate.color || '#734BDC';
+  let color = props.color || candidate.color || '#734BDC';
+  if (!props.color && candidate.color?.color) {
+    // old candidates
+    color = candidate.color.color;
+  }
   const textColor = pickTextColorBasedOnBg(color);
 
   const childProps = {
@@ -37,6 +46,7 @@ export default function CandidatePage(props) {
           <div className="col-span-12 lg:col-span-9">
             <Hero {...childProps} />
             <AboutSection {...childProps} />
+            <SocialSectionWithEdit {...childProps} />
             <div className="lg:hidden">
               <VictoryTracker {...childProps} />
               <IssuesSection {...childProps} />

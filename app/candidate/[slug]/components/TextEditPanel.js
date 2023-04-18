@@ -13,7 +13,6 @@ export default function TextEditPanel({
 }) {
   const [edit, setEdit] = useState(false);
   const [content, setContent] = useState(text);
-  console.log('scampaign', campaign);
 
   const handleEditMode = () => {
     setEdit(!edit);

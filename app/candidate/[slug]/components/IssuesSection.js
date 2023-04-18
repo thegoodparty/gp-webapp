@@ -9,11 +9,11 @@ export default function IssuesSection({ candidate, color }) {
       <h3 className="font-bold mb-3 text-xl">Issues I care about</h3>
       {positions.map((position) => (
         <div key={position.id}>
-          <div className="inline-block bg-opacity-10 rounded mb-3 relative">
+          <div className="inline-block rounded mb-3 relative">
             <div
               className="absolute h-full w-full opacity-30 rounded"
               style={{ backgroundColor: color }}
-            ></div>
+            />
             <div className="opacity-100 relative z-10  py-2 px-4 font-black">
               {position.name}
             </div>

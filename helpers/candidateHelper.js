@@ -122,7 +122,7 @@ export const candidateHash = (candidate) => {
   if (candidate.hashtag) {
     return candidate.hashtag;
   }
-  return `${candidate.firstName}${candidate.lastName}2022`;
+  return `${candidate.firstName?.charAt(0)}${candidate.lastName}2023`;
 };
 
 export const shortToLongState = {

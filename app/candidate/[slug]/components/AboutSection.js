@@ -2,7 +2,7 @@ import { ImQuotesLeft, ImQuotesRight } from 'react-icons/im';
 import TextPanel from './TextPanel';
 
 export default function AboutSection(props) {
-  const { candidate, color, editMode } = props;
+  const { candidate, color } = props;
   let { headline, slogan, about } = candidate;
   slogan = slogan || headline || '';
   return (

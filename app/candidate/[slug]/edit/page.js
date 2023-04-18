@@ -55,7 +55,21 @@ function mapCampaignToCandidate(campaign) {
   if (!campaign) {
     return false;
   }
-  const { slug, details, campaignPlan, pathToVictory, color, image } = campaign;
+  const {
+    slug,
+    details,
+    campaignPlan,
+    pathToVictory,
+    color,
+    image,
+    twitter,
+    instagram,
+    facebook,
+    linkedin,
+    tiktok,
+    snap,
+    twitch,
+  } = campaign;
   const {
     firstName,
     lastName,
@@ -91,5 +105,12 @@ function mapCampaignToCandidate(campaign) {
     voterProjection,
     color,
     image,
+    twitter,
+    instagram,
+    facebook,
+    linkedin,
+    tiktok,
+    snap,
+    twitch,
   };
 }

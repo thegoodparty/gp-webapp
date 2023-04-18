@@ -38,17 +38,13 @@ export default function NavRegisterOrProfile() {
 
   const fullstoryIndentity = (userI) => {
     if (typeof FS === 'undefined') {
-      console.log('fs undefined');
       return;
     }
     if (userI) {
-      console.log('set user fs');
       FS.identify(userI.id, {
         displayName: userI.name,
         email: userI.email,
       });
-    } else {
-      console.log('fs not defined');
     }
   };
 
