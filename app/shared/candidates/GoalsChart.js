@@ -52,7 +52,8 @@ function hexToRgb(hex) {
 }
 
 function GoalsChart({ candidate, followers, color }) {
-  const { voterProjection, voteGoal } = candidate;
+  let { voterProjection, voteGoal } = candidate;
+  voteGoal = voteGoal || 100;
   let voters = voterProjection || 0;
   if (followers?.thisWeek > voterProjection) {
     voters = followers.thisWeek;
