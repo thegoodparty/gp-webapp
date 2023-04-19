@@ -14,6 +14,9 @@ const lato = Lato({
 export const metadata = {
   applicationName: 'GoodParty',
   metadataBase: new URL(appBase),
+  title: 'GOOD PARTY | Free tools to change the rules and disrupt the corrupt.',
+  description:
+    "Not a political party, we're building tools to change the rules, empowering creatives to mobilize community & disrupt the corrupt two-party system. Join us!",
 };
 
 export default function RootLayout({ children }) {
