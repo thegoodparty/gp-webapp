@@ -1,16 +1,12 @@
 import GoalsChart from '@shared/candidates/GoalsChart';
 import FaqLink from '@shared/content/FaqLink';
 
-import { kFormatter, numberFormatter } from '/helpers/numberHelper';
+import { kFormatter, numberFormatter } from 'helpers/numberHelper';
 
 // import GoalsChart from 'components/candidate-portal/CandidatePortalHomeWrapper/GoalsChart';
 
 function VictoryTracker({ candidate, followers, color, editMode }) {
-  const { likelyVoters, votesNeeded, overrideFollowers } = candidate;
-  let voters = likelyVoters;
-  if (!overrideFollowers && followers?.thisWeek > likelyVoters) {
-    voters = followers.thisWeek;
-  }
+  const { voteGoal, voterProjection } = candidate;
 
   return (
     <div className="rounded-2xl bg-white p-6 pb-5 relative z-10">
@@ -26,15 +22,15 @@ function VictoryTracker({ candidate, followers, color, editMode }) {
           </FaqLink>
         ) : null}
       </div>
-      <GoalsChart candidate={candidate} color={color} />
+      <GoalsChart candidate={candidate} color={color} followers={50} />
       <div className="flex justify-center mb-6">
         <div className="text-right" data-cy="campaign-likely-voters">
-          🗳 {kFormatter(voters)}
+          🗳 {kFormatter(voterProjection)}
           <div className="text-sm">Likely Voters</div>
         </div>
         <div className="w-20" />
         <div data-cy="campaign-needed-votes">
-          {kFormatter(votesNeeded)} 🎉
+          {kFormatter(voteGoal)} 🎉
           <div className="text-sm">needed to win</div>
         </div>
       </div>

@@ -51,7 +51,7 @@ export default function SocialSection(props) {
           #{hashtag}
         </div>
         <div className="flex items-center" style={{ color: color }}>
-          <Pill
+          {/* <Pill
             style={{
               backgroundColor: color,
               color: textColor,
@@ -62,7 +62,7 @@ export default function SocialSection(props) {
             <div className="flex items-center" style={{ color: textColor }}>
               <FaShare className="mr-2" /> Share
             </div>
-          </Pill>
+          </Pill> */}
           {socialChannels.map((channel) => (
             <a
               href={channel.url}

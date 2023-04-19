@@ -63,13 +63,14 @@ function GoalsChart({ candidate, followers, color }) {
     { name: 'To Win', value: voteGoal - cappedLikely },
     { name: 'So Far', value: cappedLikely },
   ];
+  console.log('data', data);
   let perc = voteGoal !== 0 ? parseInt((voters * 100) / voteGoal, 10) : 0;
   if (perc > 100) {
     perc = 100;
   }
 
-  // const rgb = hexToRgb(color);
-  // const COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
+  const rgb = hexToRgb(color);
+  const COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
 
   return (
     <div className="relative">
@@ -96,8 +97,8 @@ function GoalsChart({ candidate, followers, color }) {
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  // fill={COLORS[index % COLORS.length]}
-                  fill="#EDEDED"
+                  fill={COLORS[index % COLORS.length]}
+                  // fill="#EDEDED"
                 />
               ))}
             </Pie>

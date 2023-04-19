@@ -54,6 +54,9 @@ export const toPrecision = (num) => {
 };
 
 export const kFormatter = (num) => {
+  if (!num) {
+    return 0;
+  }
   if (Math.abs(num) > 999999) {
     return Math.sign(num) * (Math.abs(num) / 1000000).toFixed(1) + 'M';
   }
