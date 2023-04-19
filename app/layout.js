@@ -4,12 +4,17 @@ import Script from 'next/script';
 
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
-import { isProd } from 'gpApi';
+import { appBase, isProd } from 'gpApi';
 
 const lato = Lato({
   weight: ['300', '400', '700', '900'],
   subsets: ['latin'],
 });
+
+export const metadata = {
+  applicationName: 'GoodParty',
+  metadataBase: new URL(appBase),
+};
 
 export default function RootLayout({ children }) {
   return (

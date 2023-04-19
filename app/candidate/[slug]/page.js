@@ -2,10 +2,11 @@ import { notFound, redirect } from 'next/navigation';
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { candidateRoute } from 'helpers/candidateHelper';
+import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import CandidatePage from './components/CandidatePage';
 import CandidateSchema from './CandidateSchema';
 import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchCandidate = async (slug) => {
   try {
@@ -20,6 +21,31 @@ export const fetchCandidate = async (slug) => {
     return false;
   }
 };
+
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+  const { candidate } = await fetchCandidate(slug);
+  const { firstName, lastName, party, otherParty, office, headline } =
+    candidate;
+
+  const title = `${firstName} ${lastName} ${partyResolver(party, otherParty)} ${
+    party !== 'I' ? 'Party ' : ''
+  }candidate for ${office}`;
+
+  const description = `Join the crowd-voting campaign for ${firstName} ${lastName}, ${partyResolver(
+    party,
+    otherParty,
+  ).toLowerCase()} for ${office} | ${
+    headline ? ` ${headline} | ` : ' '
+  }Crowd-voting on GOOD PARTY`;
+
+  const meta = pageMetaData({
+    title,
+    description,
+    slug: `/candidate/${slug}`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { slug } = params;
