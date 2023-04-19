@@ -6,6 +6,7 @@ import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchCandidate } from '../page';
 import EditCandidatePage from '../components/EditCandidatePage';
+import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]/page';
 
 export default async function Page({ params }) {
   const { slug } = params;
@@ -35,12 +36,15 @@ export default async function Page({ params }) {
     redirect(candidateRoute(candidate));
   }
 
+  const { positions } = await fetchPositions();
+
   const childProps = {
     campaign,
     candidate,
     editMode: true,
     isStaged,
     candidatePositions: mapTopIssues(campaign.details?.topIssues),
+    positions, // for issuesSelector
   };
 
   return (

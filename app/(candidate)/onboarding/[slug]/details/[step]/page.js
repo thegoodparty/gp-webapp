@@ -10,7 +10,7 @@ import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import detailsFields from './detailsFields';
 
-const fetchPositions = async () => {
+export const fetchPositions = async () => {
   const api = gpApi.admin.position.list;
   const token = getServerToken();
   return await gpFetch(api, false, 3600, token);

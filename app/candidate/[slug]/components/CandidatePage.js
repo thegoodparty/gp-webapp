@@ -1,7 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import AboutSection from './AboutSection';
 import Hero from './Hero';
-import IssuesSection from './IssuesSection';
+import IssuesSectionWithEdit from './IssuesSectionWithEdit';
 import SocialSectionWithEdit from './SocialSectionWithEdit';
 import StagedBanner from './StagedBanner';
 import VictoryTracker from './VictoryTracker';
@@ -49,13 +49,13 @@ export default function CandidatePage(props) {
             <SocialSectionWithEdit {...childProps} />
             <div className="lg:hidden">
               <VictoryTracker {...childProps} />
-              <IssuesSection {...childProps} />
+              <IssuesSectionWithEdit {...childProps} />
             </div>
             <WhySection {...childProps} />
           </div>
           <div className="col-span-12 lg:col-span-3 hidden lg:block">
             <VictoryTracker {...childProps} />
-            <IssuesSection {...childProps} />
+            <IssuesSectionWithEdit {...childProps} />
           </div>
         </div>
       </MaxWidth>
