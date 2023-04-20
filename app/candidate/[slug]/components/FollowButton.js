@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import gpApi from 'gpApi';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { useRouter } from 'next/navigation';
-import { FaThumbsUp } from 'react-icons/fa';
+import { FaShare } from 'react-icons/fa';
 
 const loadUserFollows = async () => {
   const user = getUserCookie();
@@ -93,7 +93,7 @@ export default function FollowButton({ candidate, color, textColor }) {
             </div>
           </div>
           <div className="text-2xl" style={{ color }}>
-            <FaThumbsUp />
+            <FaShare />
           </div>
         </div>
       ) : (
@@ -109,7 +109,7 @@ export default function FollowButton({ candidate, color, textColor }) {
             <div className="mt-1">Follow this campaign to stay in the loop</div>
           </div>
           <div className="text-2xl" style={{ color }}>
-            <FaThumbsUp />
+            <FaShare />
           </div>
         </div>
       )}
