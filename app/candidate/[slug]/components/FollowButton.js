@@ -3,7 +3,7 @@
 import { candidateColor } from 'helpers/candidateHelper';
 import { useHookstate, hookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import { getUserCookie } from 'helpers/cookieHelper';
+import { getUserCookie, setCookie } from 'helpers/cookieHelper';
 import gpFetch from 'gpApi/gpFetch';
 import { useEffect, useState } from 'react';
 import gpApi from 'gpApi';
@@ -58,7 +58,8 @@ export default function FollowButton({ candidate, color, textColor }) {
       setFollows(supports);
       // followOffset.set((offset) => offset + 1);
     } else {
-      router.push('register');
+      setCookie('returnUrl', `/candidate/${candidate.slug}`);
+      router.push('/register');
     }
   };
 
