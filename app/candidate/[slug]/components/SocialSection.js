@@ -11,6 +11,7 @@ import {
   FaSnapchatGhost,
   FaTwitch,
 } from 'react-icons/fa';
+import SharePill from './SharePill';
 
 export const channels = [
   { label: 'Twitter', key: 'twitter', icon: <FaTwitter /> },
@@ -51,18 +52,7 @@ export default function SocialSection(props) {
           #{hashtag}
         </div>
         <div className="flex items-center" style={{ color: color }}>
-          {/* <Pill
-            style={{
-              backgroundColor: color,
-              color: textColor,
-              borderColor: color,
-            }}
-            className="mr-5"
-          >
-            <div className="flex items-center" style={{ color: textColor }}>
-              <FaShare className="mr-2" /> Share
-            </div>
-          </Pill> */}
+          <SharePill {...props} />
           {socialChannels.map((channel) => (
             <a
               href={channel.url}

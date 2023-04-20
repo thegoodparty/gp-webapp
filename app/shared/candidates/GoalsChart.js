@@ -40,7 +40,7 @@ const renderCustomizedLabel = (props) => {
   );
 };
 
-function hexToRgb(hex) {
+export function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -64,7 +64,6 @@ function GoalsChart({ candidate, followers, color }) {
     { name: 'To Win', value: voteGoal - cappedLikely },
     { name: 'So Far', value: cappedLikely },
   ];
-  console.log('data', data);
   let perc = voteGoal !== 0 ? parseInt((voters * 100) / voteGoal, 10) : 0;
   if (perc > 100) {
     perc = 100;

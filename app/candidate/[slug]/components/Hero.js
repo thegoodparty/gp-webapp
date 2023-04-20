@@ -26,7 +26,7 @@ export default function Hero(props) {
             {editMode ? (
               <ColorPicker {...props} />
             ) : (
-              <GetInvolvedButton color={color} />
+              <GetInvolvedButton {...props} />
             )}
           </div>
           <div>

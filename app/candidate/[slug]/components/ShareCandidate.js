@@ -1,6 +1,5 @@
 'use client';
-import Modal from '@shared/utils/Modal';
-import { Fragment, Suspense, useState } from 'react';
+import { Fragment } from 'react';
 import { usePathname } from 'next/navigation';
 import { candidateHash } from 'helpers/candidateHelper';
 import { useHookstate } from '@hookstate/core';
@@ -15,7 +14,6 @@ import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile
 import { appBase } from 'gpApi';
 
 export default function ShareCandidate({ candidate, children }) {
-  const [showModal, setShowModal] = useState(false);
   const userState = useHookstate(globalUserState);
   const user = userState.get();
   const pathname = usePathname();
@@ -76,62 +74,48 @@ export default function ShareCandidate({ candidate, children }) {
   ];
 
   return (
-    <>
-      <div onClick={() => setShowModal(true)}>{children}</div>
-      {showModal && (
-        <Suspense>
-          <Modal
-            open
-            closeCallback={() => {
-              setShowModal(false);
-            }}
-          >
+    <div
+      style={{ width: '60vw', maxWidth: '450px', minWidth: '300px' }}
+      className="p-6"
+    >
+      <h3 className="text-2xl font-black my-4">Share On</h3>
+      {channels.map((channel, index) => (
+        <Fragment key={channel.label}>
+          {channel.link && (
             <div
-              style={{ width: '60vw', maxWidth: '450px', minWidth: '300px' }}
-              className="p-6"
+              className=" py-4 border-t border-t-gray-200 flex items-center justify-between"
+              data-cy="share-item"
             >
-              <h3 className="text-2xl font-black my-4">Share On</h3>
-              {channels.map((channel, index) => (
-                <Fragment key={channel.label}>
-                  {channel.link && (
-                    <div
-                      className=" py-4 border-t border-t-gray-200 flex items-center justify-between"
-                      data-cy="share-item"
-                    >
-                      <div className="flex items-center">
-                        <div
-                          className={`${styles.shareLink} ${channel.className}`}
-                          style={
-                            channel.label === 'Website'
-                              ? { backgroundColor: brightColor }
-                              : {}
-                          }
-                        >
-                          {channel.icon}
-                        </div>
-                        <div className="ml-4">{channel.label}</div>
-                      </div>
-                      <a
-                        href={channel.link}
-                        onClick={() => {
-                          trackShare(channel.label);
-                        }}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        id={`${channel.label}-share`}
-                      >
-                        <BlackButtonClient>
-                          <div className="text-xs font-black">Share</div>
-                        </BlackButtonClient>
-                      </a>
-                    </div>
-                  )}
-                </Fragment>
-              ))}
+              <div className="flex items-center">
+                <div
+                  className={`${styles.shareLink} ${channel.className}`}
+                  style={
+                    channel.label === 'Website'
+                      ? { backgroundColor: brightColor }
+                      : {}
+                  }
+                >
+                  {channel.icon}
+                </div>
+                <div className="ml-4">{channel.label}</div>
+              </div>
+              <a
+                href={channel.link}
+                onClick={() => {
+                  trackShare(channel.label);
+                }}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                id={`${channel.label}-share`}
+              >
+                <BlackButtonClient>
+                  <div className="text-xs font-black">Share</div>
+                </BlackButtonClient>
+              </a>
             </div>
-          </Modal>
-        </Suspense>
-      )}
-    </>
+          )}
+        </Fragment>
+      ))}
+    </div>
   );
 }

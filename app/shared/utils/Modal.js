@@ -20,18 +20,25 @@ const style = {
   overflowY: 'auto',
 };
 
-export default function Modal({ open, closeCallback, children }) {
+export default function Modal({
+  open,
+  closeCallback,
+  children,
+  boxStyle = {},
+}) {
   return (
     <MuiModal open={open} onClose={closeCallback} maxWidth="lg">
-      <Box sx={style}>
-        <div
-          className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center"
-          onClick={closeCallback}
-        >
-          <IoIosCloseCircle size={24} />
-        </div>
-        {children}
-      </Box>
+      <div className="bg-blue-400">
+        <Box sx={style} style={boxStyle}>
+          <div
+            className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center"
+            onClick={closeCallback}
+          >
+            <IoIosCloseCircle size={24} />
+          </div>
+          {children}
+        </Box>
+      </div>
     </MuiModal>
   );
 }

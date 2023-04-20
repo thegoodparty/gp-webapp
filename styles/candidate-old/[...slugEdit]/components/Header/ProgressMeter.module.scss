@@ -1,7 +1,0 @@
-@import '/styles/scss/breakpoints.scss';
-
-.innerWrapper {
-  @include lg {
-    width: 450px;
-  }
-}

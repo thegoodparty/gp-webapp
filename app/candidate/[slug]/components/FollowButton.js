@@ -5,13 +5,11 @@ import { useHookstate, hookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
 import { getUserCookie } from 'helpers/cookieHelper';
 import gpFetch from 'gpApi/gpFetch';
-import { Suspense, use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import gpApi from 'gpApi';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
-import { ImCheckmark } from 'react-icons/im';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { useRouter } from 'next/navigation';
+import { FaThumbsUp } from 'react-icons/fa';
 
 const loadUserFollows = async () => {
   const user = getUserCookie();
@@ -32,12 +30,12 @@ const deleteFollowCandidate = async (candidateId) => {
   return await gpFetch(api, { candidateId });
 };
 
-export const followOffsetState = hookstate(0);
+// export const followOffsetState = hookstate(0);
 
-export default function FollowButton({ candidate, fullWidth }) {
+export default function FollowButton({ candidate, color, textColor }) {
   const brightColor = candidateColor(candidate);
   const userState = useHookstate(globalUserState);
-  const followOffset = useHookstate(followOffsetState);
+  // const followOffset = useHookstate(followOffsetState);
   const user = userState.get();
   const [follows, setFollows] = useState({});
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
@@ -58,7 +56,7 @@ export default function FollowButton({ candidate, fullWidth }) {
       await followCandidate(candidate.id);
       const { supports } = await loadUserFollows();
       setFollows(supports);
-      followOffset.set((offset) => offset + 1);
+      // followOffset.set((offset) => offset + 1);
     } else {
       router.push('register');
     }
@@ -71,7 +69,7 @@ export default function FollowButton({ candidate, fullWidth }) {
       await deleteFollowCandidate(candidate.id);
       const { supports } = await loadUserFollows();
       setFollows(supports);
-      followOffset.set((offset) => offset - 1);
+      // followOffset.set((offset) => offset - 1);
     }
     setShowDeleteAlert(false);
   };
@@ -79,34 +77,41 @@ export default function FollowButton({ candidate, fullWidth }) {
   return (
     <>
       {isFollowed ? (
-        <BlackOutlinedButtonClient
-          style={{
-            color: brightColor,
-            borderColor: brightColor,
-            marginTop: '12px',
-            width: fullWidth ? '100%' : 'auto',
-          }}
+        <div
+          className="flex items-center justify-between py-2 px-4 mt-2 rounded-md cursor-pointer"
           id="candidate-follow-button"
           onClick={() => setShowDeleteAlert(true)}
+          style={{ backgroundColor: color, color: textColor }}
         >
-          <div className="row justify-center whitespace-nowrap">
-            <ImCheckmark />
-            <div className="font-black">&nbsp; FOLLOWING</div>
+          <div className="">
+            <div className="flex-1 font-black text-xl tracking-wider">
+              FOLLOWING
+            </div>
+            <div className="mt-1">
+              Thank you for following {candidate.firstName} {candidate.lastName}
+              !
+            </div>
           </div>
-        </BlackOutlinedButtonClient>
+          <div className="text-2xl" style={{ color }}>
+            <FaThumbsUp />
+          </div>
+        </div>
       ) : (
-        <BlackButtonClient
-          style={{
-            backgroundColor: brightColor,
-            borderColor: brightColor,
-            marginTop: '12px',
-            width: fullWidth ? '100%' : 'auto',
-          }}
+        <div
+          className="flex items-center justify-between bg-white py-2 px-4 mt-2 rounded-md cursor-pointer"
           id="candidate-follow-button"
           onClick={handleFollow}
         >
-          <div className="font-black text-center">FOLLOW</div>
-        </BlackButtonClient>
+          <div className="">
+            <div className="flex-1 font-black text-xl tracking-wider">
+              FOLLOW
+            </div>
+            <div className="mt-1">Follow this campaign to stay in the loop</div>
+          </div>
+          <div className="text-2xl" style={{ color }}>
+            <FaThumbsUp />
+          </div>
+        </div>
       )}
 
       <AlertDialog
