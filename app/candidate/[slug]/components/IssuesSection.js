@@ -17,7 +17,7 @@ export default function IssuesSection({ color, candidatePositions }) {
               {position.position.name}
             </div>
           </div>
-          <div className="mb-9">{position.description}</div>
+          <div className="mb-9 break-words">{position.description}</div>
         </div>
       ))}
     </section>
