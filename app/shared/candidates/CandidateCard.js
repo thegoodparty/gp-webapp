@@ -56,9 +56,9 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
 
   return (
     <WrapperElement>
-      <div className="rounded-2xl pt-6 px-6 pb-28 border-2 border-solid border-gray-200 h-full relative bg-white">
+      <div className="rounded-2xl py-6 px-6 border-2 border-solid border-gray-200 h-full relative bg-white">
         <div className="flex justify-center">
-          <CandidateAvatar candidate={candidate} />
+          <CandidateAvatar candidate={candidate} small />
         </div>
         <h3 className="text-xl font-bold mb-2 mt-6">
           {firstName} {lastName}

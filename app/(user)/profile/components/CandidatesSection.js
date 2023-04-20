@@ -13,9 +13,11 @@ import { getServerToken } from 'helpers/userServerHelper';
 
 async function fetchCandidates(params) {
   const api = gpApi.user.follow.list;
-  api.url = `${api.url}?withCandidates=true`;
   const token = getServerToken();
-  return await gpFetch(api, false, 3600, token);
+  const payload = {
+    withCandidates: true,
+  };
+  return await gpFetch(api, payload, 3600, token);
 }
 
 async function CandidatesSection() {
