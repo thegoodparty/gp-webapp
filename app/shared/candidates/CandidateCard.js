@@ -24,11 +24,6 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
     topPositions = positions.slice(0, MAX_POSITIONS);
   }
 
-  let thisWeek = 0;
-  if (followers) {
-    thisWeek = followers.thisWeek + (support ? support.thisWeek : 0);
-  }
-
   const WrapperElement = ({ children }) => {
     if (withFollowButton) {
       return (
