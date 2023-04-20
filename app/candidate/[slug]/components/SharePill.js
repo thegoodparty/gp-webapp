@@ -14,6 +14,7 @@ export default function SharePill(props) {
         onClick={() => {
           setShowShareModal(true);
         }}
+        id="candidate-share-pill"
       >
         <Pill
           style={{
