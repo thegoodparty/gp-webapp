@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import BlogSearch from '../components/BlogSearch';
-
+import BaseButtonClient from '../../shared/buttons/BaseButtonClient';
 import styles from './BlogWrapper.module.scss';
 
 export default function BlogWrapper({
@@ -34,7 +34,12 @@ export default function BlogWrapper({
       <div className={styles.sectionsWrapper}>
         <div className={styles.sections}>
           <Link href="/blog" className="inline-flex" aria-label="Blog Homepage">
-            <AiOutlineHome size={18} />
+            <BaseButtonClient
+              style={{ backgroundColor: '#000', color: '#ffffff' }}
+              className="py-3 px-4 mb-3 font-bold"
+            >
+              <AiOutlineHome size={18} />
+            </BaseButtonClient>
           </Link>
           {sections.map((section) => (
             <React.Fragment key={section.fields.slug}>
@@ -48,7 +53,26 @@ export default function BlogWrapper({
                   key={section.id}
                   className={styles.section}
                 >
-                  {section.fields.title}
+                  <BaseButtonClient
+                    style={{
+                      backgroundColor:
+                        section.fields.title == 'Onboarding Live'
+                          ? '#1E0044'
+                          : section.fields.title == 'The Independent Cause'
+                          ? '#CE1E6A'
+                          : section.fields.title == 'Good Party Updates'
+                          ? '#FF5B00'
+                          : section.fields.title == 'Candidates'
+                          ? '#5ED3C5'
+                          : section.fields.title == 'Politics'
+                          ? '#8E0B7D'
+                          : '#000',
+                      color: '#ffffff',
+                    }}
+                    className="py-3 px-4 mb-3 font-bold"
+                  >
+                    {section.fields.title}
+                  </BaseButtonClient>
                 </Link>
               )}
             </React.Fragment>
