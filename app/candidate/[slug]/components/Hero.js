@@ -47,7 +47,7 @@ export default function Hero(props) {
         </div>
       </div>
       <div className="lg:hidden  text-center mt-10">
-        <GetInvolvedButton color={color} />
+        <GetInvolvedButton {...props} />
       </div>
     </div>
   );
