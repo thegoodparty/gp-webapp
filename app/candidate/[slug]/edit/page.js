@@ -7,6 +7,32 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import { fetchCandidate } from '../page';
 import EditCandidatePage from '../components/EditCandidatePage';
 import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]/page';
+import pageMetaData from 'helpers/metadataHelper';
+
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+  const { candidate } = await fetchCandidate(slug);
+  const { firstName, lastName, party, otherParty, office, headline } =
+    candidate;
+
+  const title = `${firstName} ${lastName} ${partyResolver(party, otherParty)} ${
+    party !== 'I' ? 'Party ' : ''
+  }candidate for ${office}`;
+
+  const description = `Join the crowd-voting campaign for ${firstName} ${lastName}, ${partyResolver(
+    party,
+    otherParty,
+  ).toLowerCase()} for ${office} | ${
+    headline ? ` ${headline} | ` : ' '
+  }Crowd-voting on GOOD PARTY`;
+
+  const meta = pageMetaData({
+    title,
+    description,
+    slug: `/candidate/${slug}/edit`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { slug } = params;

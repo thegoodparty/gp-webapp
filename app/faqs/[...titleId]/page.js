@@ -3,6 +3,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute, slugify } from 'helpers/articleHelper';
 import { notFound, redirect } from 'next/navigation';
 import FaqsArticlePage from './components/FaqsArticlePage';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchArticle = async (id) => {
   const api = gpApi.content.contentByKey;
@@ -14,6 +15,17 @@ export const fetchArticle = async (id) => {
 
   return await gpFetch(api, payload, 3600);
 };
+
+export async function generateMetadata({ params }) {
+  const { id } = params;
+  const { content } = await fetchArticle(id);
+  const meta = pageMetaData({
+    title: `${content?.title} | FAQs | GOOD PARTY`,
+    description: 'Frequently Asked Questions about GOOD PARTY.',
+    slug: '/faqs',
+  });
+  return meta;
+}
 
 export default async function Page({ params, searchParams }) {
   const { titleId } = params;

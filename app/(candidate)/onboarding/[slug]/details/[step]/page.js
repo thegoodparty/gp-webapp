@@ -9,12 +9,20 @@ import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import detailsFields from './detailsFields';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchPositions = async () => {
   const api = gpApi.admin.position.list;
   const token = getServerToken();
   return await gpFetch(api, false, 3600, token);
 };
+
+const meta = pageMetaData({
+  title: 'Candidate Onboarding | GOOD PARTY',
+  description: 'Candidate Onboarding.',
+  slug: '/onboarding',
+});
+export const metadata = meta;
 
 export default async function Page({ params }) {
   const { slug, step } = params;

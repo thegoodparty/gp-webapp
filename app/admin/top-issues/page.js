@@ -3,6 +3,14 @@ import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminTopIssuesPage from './components/AdminTopIssuesPage';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Top Issues | GOOD PARTY',
+  description: 'Admin Top Issues Dashboard.',
+  slug: '/admin/top-issues',
+});
+export const metadata = meta;
 
 const fetchIssues = async () => {
   const api = gpApi.admin.topIssues.list;

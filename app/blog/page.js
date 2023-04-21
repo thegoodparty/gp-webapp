@@ -1,6 +1,14 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlogPage from './components/BlogPage';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Blog | GOOD PARTY',
+  description: 'Good Party Blog',
+  slug: '/blog',
+});
+export const metadata = meta;
 
 export const fetchSections = async () => {
   const api = gpApi.content.contentByKey;

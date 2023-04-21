@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlogPage from 'app/blog/components/BlogPage';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchSections = async (slug) => {
   const api = { ...gpApi.content.contentByKey };
@@ -26,6 +27,19 @@ export const fetchSections = async (slug) => {
     sectionTitle,
   };
 };
+
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+  const { sections, sectionSlug, articles, sectionTitle } = await fetchSections(
+    slug,
+  );
+
+  const meta = pageMetaData({
+    title: `${sectionTitle} | Good Party Blog`,
+    description: `Good Part Blog ${sectionTitle} Section`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { slug } = params;

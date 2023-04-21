@@ -1,6 +1,14 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import FaqsPage from './components/FaqsPage';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'FAQs | GOOD PARTY',
+  description: 'Frequently Asked Questions about GOOD PARTY.',
+  slug: '/faqs',
+});
+export const metadata = meta;
 
 const fetchContent = async () => {
   const api = { ...gpApi.content.contentByKey };

@@ -4,6 +4,7 @@ import { portalAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import { fetchCandidate, fetchRole } from '../page';
 import TopIssuesPage from './components/TopIssuesPage';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchTopIssues = async () => {
   const api = gpApi.topIssues.list;
@@ -16,6 +17,18 @@ export const fetchCandidatePositions = async (id) => {
   const token = getServerToken();
   return await gpFetch(api, payload, 3600, token);
 };
+
+export async function generateMetadata({ params }) {
+  const { id } = params;
+  const title = 'Edit Top Issues | GOOD PARTY';
+  const description = 'Edit top issues';
+  const meta = pageMetaData({
+    title,
+    description,
+    slug: `/candidate-portal/${id}/top-issues`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { id } = params;

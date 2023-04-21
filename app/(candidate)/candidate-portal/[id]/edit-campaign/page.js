@@ -1,6 +1,19 @@
 import { portalAccessOnly } from 'helpers/permissionHelper';
 import { fetchCandidate, fetchRole, fetchStats } from '../page';
 import EditCampaignPage from './components/EditCampaignPage';
+import pageMetaData from 'helpers/metadataHelper';
+
+export async function generateMetadata({ params }) {
+  const { id } = params;
+  const title = 'Edit Candidate | GOOD PARTY';
+  const description = 'Edit Candidate.';
+  const meta = pageMetaData({
+    title,
+    description,
+    slug: `/candidate-portal/${id}/edit-campaign`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { id } = params;

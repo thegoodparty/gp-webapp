@@ -4,6 +4,15 @@ import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
 import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
 import goalsFields from './goalsFields';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Candidate Onboarding | GOOD PARTY',
+  description: 'Candidate Onboarding.',
+  slug: '/onboarding',
+});
+
+export const metadata = meta;
 
 export default async function Page({ params }) {
   const { slug, step } = params;

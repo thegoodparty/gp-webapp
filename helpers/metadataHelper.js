@@ -12,6 +12,8 @@ const pageMetaData = ({
     },
     openGraph: {
       images: image,
+      title,
+      description,
     },
   };
 };
