@@ -8,7 +8,10 @@ export default function TextPanel(props) {
       {editMode ? (
         <TextEditPanel {...props} />
       ) : (
-        <div dangerouslySetInnerHTML={{ __html: text }} />
+        <div
+          className="break-words"
+          dangerouslySetInnerHTML={{ __html: text }}
+        />
       )}
     </>
   );
