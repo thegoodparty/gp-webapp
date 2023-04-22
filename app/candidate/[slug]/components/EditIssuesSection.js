@@ -27,6 +27,7 @@ export default function EditIssuesSection(props) {
             positions={positions}
             subSectionKey="details"
             onSaveCallback={onSave}
+            buttonLabel="SAVE"
           />
         </section>
       ) : (

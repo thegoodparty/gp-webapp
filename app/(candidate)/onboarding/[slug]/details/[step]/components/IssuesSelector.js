@@ -11,6 +11,7 @@ export default function IssuesSelector({
   positions,
   subSectionKey,
   onSaveCallback,
+  buttonLabel = 'NEXT',
 }) {
   const positionsWithOther = [...positions];
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function IssuesSelector({
         ))}
         <div className="flex justify-center  mb-4">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-            <div className="font-black">NEXT</div>
+            <div className="font-black">{buttonLabel}</div>
           </BlackButtonClient>
         </div>
         {!state.positions ||
