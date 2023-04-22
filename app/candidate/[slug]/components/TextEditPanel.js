@@ -48,7 +48,10 @@ export default function TextEditPanel({
               <FaPencilAlt />
             </div>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div
+            className="break-words"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </>
       )}
     </div>
