@@ -10,6 +10,18 @@ import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 import TextField from '@shared/inputs/TextField';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+export async function sendVictoryMail(slug) {
+  try {
+    const api = gpApi.admin.victoryMail;
+    return await gpFetch(api, { slug });
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
 
 const sections = [
   {
@@ -138,6 +150,7 @@ export default function AdminVictoryPathPage(props) {
     };
     try {
       await updateCampaign(campaign);
+      await sendVictoryMail(campaign.slug);
       snackbarState.set(() => {
         return {
           isOpen: true,

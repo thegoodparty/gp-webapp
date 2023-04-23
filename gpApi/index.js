@@ -307,6 +307,11 @@ const gpApi = {
   // admin
   //
   admin: {
+    victoryMail: {
+      url: `${base}admin/victory-mail`,
+      method: 'POST',
+      withAuth: true,
+    },
     topIssues: {
       create: {
         url: `${base}top-issue`,
