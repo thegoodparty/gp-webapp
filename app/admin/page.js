@@ -1,10 +1,8 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import AdminPage from './components/AdminPage';
 import pageMetaData from 'helpers/metadataHelper';
 
-const meta = pagemetaData({
+const meta = pageMetaData({
   title: 'Admin Dashboard',
   description: 'Admin Dashboard.',
 });

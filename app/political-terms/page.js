@@ -18,7 +18,7 @@ const meta = pageMetaData({
     'Political terms and definitions, elevate your political game with our easy to use political database at Good Party',
   slug: '/political-terms',
 });
-export const metadata = meta;
+// export const metadata = meta;
 
 export default async function Page() {
   const { content } = await fetchGlossaryByLetter();
