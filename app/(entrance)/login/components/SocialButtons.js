@@ -10,7 +10,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import SocialButton from 'app/(entrance)/register/components/SocialButton';
+// import SocialButton from 'app/(entrance)/register/components/SocialButton';
 import TwitterButton from './TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 
@@ -113,7 +113,7 @@ export default function SocialButtons() {
         </div>
       </div>
 
-      <div data-cy="facebook-login">
+      {/* <div data-cy="facebook-login">
         <SocialButton
           channel="facebook"
           provider="facebook"
@@ -134,7 +134,7 @@ export default function SocialButtons() {
         >
           Continue with GOOGLE
         </SocialButton>
-      </div>
+      </div> */}
 
       <div data-cy="twitter-login" className="mt-6">
         <TwitterButton />
