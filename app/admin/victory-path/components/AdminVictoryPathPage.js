@@ -91,6 +91,7 @@ export default function AdminVictoryPathPage(props) {
   const [campaignsBySlug, setCampaignsBySlug] = useState(false);
   const [state, setState] = useState(initialState);
   const snackbarState = useHookstate(globalSnackbarState);
+  console.log('props.campaigns', props.campaigns);
   useEffect(() => {
     const bySlug = {};
     props.campaigns.forEach((campaign) => {
@@ -172,7 +173,7 @@ export default function AdminVictoryPathPage(props) {
           <option value="">Select a Campaign</option>
           {campaigns.map((op) => (
             <option value={op.slug} key={op.slug}>
-              {op.slug} (User: {op.user.name})
+              {op.slug} (User: {op.user?.name})
             </option>
           ))}
         </Select>
