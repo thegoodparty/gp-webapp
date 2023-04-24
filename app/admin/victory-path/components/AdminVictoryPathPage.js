@@ -186,12 +186,21 @@ export default function AdminVictoryPathPage(props) {
           <option value="">Select a Campaign</option>
           {campaigns.map((op) => (
             <option value={op.slug} key={op.slug}>
-              {op.slug} (User: {op.user?.name})
+              {op.slug} (User: {op.user?.name}, Office:{' '}
+              {op.data?.details?.office || 'N/A'}, State:{' '}
+              {op.data?.details?.state || 'N/A'}, District:{' '}
+              {op.data?.details?.district || 'N/A'})
             </option>
           ))}
         </Select>
         {selected && (
           <div className="mt-8">
+            <h2 className="my-6 text-xl">
+              Office: <strong>{selected.data?.details?.office || 'N/A'}</strong>
+              . State: <strong>{selected.data?.details?.state || 'N/A'}</strong>
+              . District:{' '}
+              <strong>{selected.data?.details?.district || 'N/A'}</strong>
+            </h2>
             {sections.map((section) => (
               <div className="mb-12" key={section.title}>
                 <h2 className="font-black text-2xl mb-8">{section.title}</h2>
