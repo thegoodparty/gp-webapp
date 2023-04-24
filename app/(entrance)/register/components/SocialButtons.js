@@ -6,7 +6,7 @@ import {
   setCookie,
   setUserCookie,
 } from 'helpers/cookieHelper';
-import SocialButton from './SocialButton';
+// import SocialButton from './SocialButton';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
@@ -120,7 +120,7 @@ export default function SocialButtons() {
         </div>
       </div>
 
-      <div data-cy="facebook-login">
+      {/* <div data-cy="facebook-login">
         <SocialButton
           channel="facebook"
           provider="facebook"
@@ -130,8 +130,8 @@ export default function SocialButtons() {
         >
           Continue with FACEBOOK
         </SocialButton>
-      </div>
-      <div data-cy="google-login" className="mt-6">
+      </div> */}
+      {/* <div data-cy="google-login" className="mt-6">
         <SocialButton
           channel="google"
           provider="google"
@@ -141,7 +141,7 @@ export default function SocialButtons() {
         >
           Continue with GOOGLE
         </SocialButton>
-      </div>
+      </div> */}
 
       <div data-cy="twitter-register" className="mt-6">
         <TwitterButton />
