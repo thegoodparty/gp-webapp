@@ -11,6 +11,33 @@
   }
 }
 
+.sectionsSlugWrapper {
+  margin-bottom: 36px;
+  height: 23px;
+  overflow-y: hidden;
+  @include lg {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 68px;
+  }
+}
+
+.sectionsSlug {
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  @include lg {
+    white-space: normal;
+    overflow-x: hidden;
+    max-width: 1200px;
+  }
+}
+
 .sectionsWrapper {
   margin-bottom: 36px;
   height: auto;

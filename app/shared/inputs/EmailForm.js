@@ -22,6 +22,7 @@ export default function EmailForm({
   pageName,
   label = 'Get Started',
   labelId,
+  buttonFull = false,
 }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
@@ -55,42 +56,67 @@ export default function EmailForm({
       id={labelId}
     >
       {success ? (
-        <div className="bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center">
+        <div
+          className={`bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center`}
+        >
           <div>Check your email to learn more</div>
           <div>
             <FaCheck />
           </div>
         </div>
       ) : (
-        <div
-          className={`relative mb-24 lg:mb-0 ${
-            !fullWidth && 'lg:w-[50%] xl:w-[45%]'
-          }`}
-        >
-          <input
-            type="email"
-            name="email"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            value={email}
-            placeholder="john@email.com"
-            className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
-          />
+        <>
+          <div
+            className={`relative mb-24 lg:mb-0 ${
+              !fullWidth && 'lg:w-[50%] xl:w-[45%]'
+            }`}
+          >
+            <input
+              type="email"
+              name="email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              value={email}
+              placeholder="john@email.com"
+              className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
+            />
 
-          <input
-            onClick={submitForm}
-            id="submit-email"
-            type="submit"
-            value={label}
-            className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-          />
-          {!!showError && (
-            <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
-              {showError}
+            {buttonFull == false ? (
+              <input
+                onClick={submitForm}
+                id="submit-email"
+                type="submit"
+                value={label}
+                className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+              />
+            ) : (
+              <></>
+            )}
+
+            {!!showError && (
+              <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
+                {showError}
+              </div>
+            )}
+          </div>
+
+          {buttonFull && (
+            <div
+              className={`relative mb-24 lg:mb-0 ${
+                !fullWidth && 'lg:w-[50%] xl:w-[45%]'
+              }`}
+            >
+              <input
+                onClick={submitForm}
+                id="submit-email"
+                type="submit"
+                value={label}
+                className="bg-purple absolute rounded-full w-full mt-5 right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+              />
             </div>
           )}
-        </div>
+        </>
       )}
     </form>
   );

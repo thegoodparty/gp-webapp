@@ -14,6 +14,7 @@ export default function BlogWrapper({
   sectionTitle,
   fullArticles,
 }) {
+  console.log('sectionSlug', sectionSlug);
   return (
     <MaxWidth>
       <div className="grid grid-cols-12 gap-3">
@@ -31,8 +32,12 @@ export default function BlogWrapper({
         </div>
       </div>
 
-      <div className={styles.sectionsWrapper}>
-        <div className={styles.sections}>
+      <div
+        className={
+          sectionSlug ? styles.sectionsSlugWrapper : styles.sectionsWrapper
+        }
+      >
+        <div className={sectionSlug ? styles.sectionsSlug : styles.sections}>
           <Link href="/blog" className="inline-flex" aria-label="Blog Homepage">
             <BaseButtonClient
               style={{ backgroundColor: '#000', color: '#ffffff' }}
@@ -54,22 +59,19 @@ export default function BlogWrapper({
                   className={styles.section}
                 >
                   <BaseButtonClient
-                    style={{
-                      backgroundColor:
-                        section.fields.title == 'Onboarding Live'
-                          ? '#1E0044'
-                          : section.fields.title == 'The Independent Cause'
-                          ? '#CE1E6A'
-                          : section.fields.title == 'Good Party Updates'
-                          ? '#FF5B00'
-                          : section.fields.title == 'Candidates'
-                          ? '#5ED3C5'
-                          : section.fields.title == 'Politics'
-                          ? '#8E0B7D'
-                          : '#000',
-                      color: '#ffffff',
-                    }}
-                    className="py-3 px-4 mb-3 font-bold"
+                    className={`${
+                      section.fields.slug == 'onboarding-live'
+                        ? 'bg-indigo-900'
+                        : section.fields.slug == 'politics'
+                        ? 'bg-violet-600'
+                        : section.fields.slug == 'the-independent-cause'
+                        ? 'bg-pink-600'
+                        : section.fields.slug == 'temp-section'
+                        ? 'bg-orange-600'
+                        : section.fields.slug == 'candidates'
+                        ? 'bg-teal-500'
+                        : 'bg-gray-800'
+                    } py-3 px-4 mb-3 font-bold text-white`}
                   >
                     {section.fields.title}
                   </BaseButtonClient>
