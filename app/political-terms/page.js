@@ -4,13 +4,13 @@ import { fetchContentByKey } from 'helpers/fetchHelper';
 import TermsHomePage from './components/TermsHomePage';
 import pageMetaData from 'helpers/metadataHelper';
 
-export const fetchGlossaryByLetter = async () => {
+export async function fetchGlossaryByLetter() {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'glossaryItemsByLetter',
   };
   return await gpFetch(api, payload, 60);
-};
+}
 
 const meta = pageMetaData({
   title: 'Political Terms & Definitions | Good Party',
@@ -18,7 +18,7 @@ const meta = pageMetaData({
     'Political terms and definitions, elevate your political game with our easy to use political database at Good Party',
   slug: '/political-terms',
 });
-// export const metadata = meta;
+export const metadata = meta;
 
 export default async function Page() {
   const { content } = await fetchGlossaryByLetter();

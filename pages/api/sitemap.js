@@ -7,7 +7,6 @@
 // const { default: Axios } = require('axios');
 
 import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
-import { fetchGlossaryByLetter } from 'app/political-terms/page';
 import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute, slugify } from '../../helpers/articleHelper';
