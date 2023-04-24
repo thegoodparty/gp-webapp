@@ -1,6 +1,14 @@
 import { Suspense } from 'react';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import HubSpotForm from '../../shared/utils/HubSpotForm';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Contact | GOOD PARTY',
+  description: 'Have questions or want to get involved? Contact us.',
+  slug: '/contact',
+});
+export const metadata = meta;
 
 export default function Page() {
   return (

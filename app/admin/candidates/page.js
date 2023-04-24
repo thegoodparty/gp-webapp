@@ -3,6 +3,14 @@ import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminCandidatesPage from './components/AdminCandidatesPage';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Admin Candidates | GOOD PARTY',
+  description: 'Admin Candidates Dashboard.',
+  slug: '/admin/candidates',
+});
+export const metadata = meta;
 
 export const fetchCandidates = async () => {
   const api = gpApi.admin.candidates;

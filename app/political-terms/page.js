@@ -2,6 +2,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import TermsHomePage from './components/TermsHomePage';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchGlossaryByLetter = async () => {
   const api = gpApi.content.contentByKey;
@@ -10,6 +11,14 @@ export const fetchGlossaryByLetter = async () => {
   };
   return await gpFetch(api, payload, 60);
 };
+
+const meta = pageMetaData({
+  title: 'Political Terms & Definitions | Good Party',
+  description:
+    'Political terms and definitions, elevate your political game with our easy to use political database at Good Party',
+  slug: '/political-terms',
+});
+export const metadata = meta;
 
 export default async function Page() {
   const { content } = await fetchGlossaryByLetter();

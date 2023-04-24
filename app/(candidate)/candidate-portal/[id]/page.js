@@ -3,6 +3,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { portalAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import PortalHomePage from './components/PortalHomePage';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchRole = async (id) => {
   const api = gpApi.campaign.role;
@@ -24,6 +25,14 @@ export const fetchStats = async (id, range = 7) => {
   const token = getServerToken();
   return await gpFetch(api, payload, 3600, token);
 };
+
+const meta = pageMetaData({
+  title: 'Candidate Portal | GOOD PARTY',
+  description: 'Candidate Portal.',
+  slug: '/candidate-portal',
+});
+
+export const metadata = meta;
 
 export default async function Page({ params }) {
   const { id } = params;

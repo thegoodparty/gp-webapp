@@ -5,6 +5,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { fetchSections } from 'app/blog/page';
 import ArticleSchema from './ArticleSchema';
 import BlogArticle from './components/BlogArticle';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchArticle = async (slug) => {
   const api = gpApi.content.contentByKey;
@@ -16,6 +17,18 @@ export const fetchArticle = async (slug) => {
 
   return await gpFetch(api, payload, 3600);
 };
+
+export async function generateMetadata({ params }) {
+  const { slug } = params;
+  const { content } = await fetchArticle(slug);
+
+  const meta = pageMetaData({
+    title: `${content.title} | Good Party`,
+    description: content.summary,
+    image: content.mainImage && `https:${content.mainImage.url}`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { slug } = params;

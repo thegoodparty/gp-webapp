@@ -4,6 +4,14 @@ import CampaignPlanPage from './components/CampaignPlanPage';
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import campaignPlanFields from './campaignPlanFields';
 import { fetchContentByKey } from 'helpers/fetchHelper';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Campaign Manager | GOOD PARTY',
+  description: 'Campaign Manager',
+  slug: '/onboarding',
+});
+export const metadata = meta;
 
 export default async function Page({ params }) {
   const campaign = await getCampaign(params);

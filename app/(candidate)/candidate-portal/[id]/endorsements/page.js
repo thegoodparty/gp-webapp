@@ -4,6 +4,7 @@ import { portalAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import { fetchCandidate, fetchRole } from '../page';
 import EndorsementsPage from './components/EndorsementsPage';
+import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchEndorsements = async (id) => {
   const api = gpApi.campaign.endorsement.list;
@@ -11,6 +12,18 @@ export const fetchEndorsements = async (id) => {
   const payload = { candidateId: id };
   return await gpFetch(api, payload, false, token);
 };
+
+export async function generateMetadata({ params }) {
+  const { id } = params;
+  const title = 'Candidate Endorsements | GOOD PARTY';
+  const description = 'Candidate Endorsements.';
+  const meta = pageMetaData({
+    title,
+    description,
+    slug: `/candidate-portal/${id}/endorsements`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
   const { id } = params;

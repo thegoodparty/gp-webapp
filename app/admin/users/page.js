@@ -3,6 +3,14 @@ import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminUsersPage from './components/AdminUsersPage';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Admin Users',
+  description: 'Admin Users Dashboard.',
+  slug: '/admin/users',
+});
+export const metadata = meta;
 
 const fetchUsers = async () => {
   const api = gpApi.admin.users;

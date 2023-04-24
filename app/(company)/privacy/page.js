@@ -5,6 +5,7 @@ import gpApi from 'gpApi';
 import { dateUsHelper } from 'helpers/dateHelper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
+import pageMetaData from 'helpers/metadataHelper';
 
 async function fetchContent() {
   const api = gpApi.content.contentByKey;
@@ -13,6 +14,14 @@ async function fetchContent() {
   };
   return await gpFetch(api, payload, 3600);
 }
+
+const meta = pageMetaData({
+  title: 'Privacy Policy | GOOD PARTY',
+  description:
+    'This Privacy Policy explains how Good Party collects, uses, and disclose information that you may provide while visiting our website',
+  slug: '/privacy',
+});
+export const metadata = meta;
 
 export default async function Page(params) {
   const { content } = await fetchContent();

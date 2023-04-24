@@ -4,6 +4,15 @@ export const fetchCache = 'force-no-store'; //https://beta.nextjs.org/docs/api-r
 import Dashboard from './components/Dashboard';
 import campaignSteps, { generateCampaignStatus } from './campaignSteps';
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import pageMetaData from 'helpers/metadataHelper';
+
+const meta = pageMetaData({
+  title: 'Candidate Onboarding | GOOD PARTY',
+  description: 'Candidate Onboarding.',
+  slug: '/onboarding',
+  image: 'https://assets.goodparty.org/dashboard.jpg',
+});
+export const metadata = meta;
 
 export default async function Page({ params }) {
   const { section } = params;
