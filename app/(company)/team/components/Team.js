@@ -57,7 +57,7 @@ export const TEAM_MEMBERS = [
   {
     name: 'Tomer Almog',
     role: 'Chief Technology Officer',
-    img: 'https://assets.goodparty.org/team/tomer-goodparty.png',
+    img: 'https://assets.goodparty.org/team/tomer-gp2.jpg',
     flipImg: 'https://assets.goodparty.org/team/tomer-party.jpg',
     partyRole: 'Peaceful Warrior',
   },
