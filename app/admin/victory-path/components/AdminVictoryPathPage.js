@@ -126,7 +126,7 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const onChangeField = (key, value) => {
-    let winNumber = state.projectedTurnout * 0.51 || 0;
+    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
     if (key === 'projectedTurnout') {
       winNumber = Math.round(value * 0.51);
     }
