@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { notFound, redirect } from 'next/navigation';
 
-import { candidateRoute } from 'helpers/candidateHelper';
+import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchCandidate } from '../page';
@@ -11,9 +11,19 @@ import pageMetaData from 'helpers/metadataHelper';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { candidate } = await fetchCandidate(slug);
-  const { firstName, lastName, party, otherParty, office, headline } =
-    candidate;
+
+  let res = await fetchCandidate(slug);
+  let campaign;
+  if (!res) {
+    ({ campaign } = await fetchUserCampaign());
+    if (campaign) {
+      campaign = mapCampaignToCandidate(campaign);
+    }
+  } else {
+    campaign = res.candidate;
+  }
+
+  const { firstName, lastName, party, otherParty, office, headline } = campaign;
 
   const title = `${firstName} ${lastName} ${partyResolver(party, otherParty)} ${
     party !== 'I' ? 'Party ' : ''

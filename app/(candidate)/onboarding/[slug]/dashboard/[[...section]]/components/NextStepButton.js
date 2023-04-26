@@ -21,7 +21,6 @@ export default function NextStepButton({
       link = `/onboarding/${campaign.slug}${step.link}`;
     }
   }
-  console.log('campaign', campaign);
   let text = 'CONTINUE';
   if (campaignStatus.preLaunch?.status === 'Not Started') {
     text = 'GET STARTED';
