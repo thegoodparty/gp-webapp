@@ -17,10 +17,15 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export async function fetchCampaignVersions() {
-  const api = gpApi.campaign.onboarding.planVersions;
+  try {
+    const api = gpApi.campaign.onboarding.planVersions;
 
-  const token = getServerToken();
-  return await gpFetch(api, false, false, token);
+    const token = getServerToken();
+    return await gpFetch(api, false, false, token);
+  } catch (e) {
+    console.log('error at fetchCampaignVersions', e);
+    return {};
+  }
 }
 
 export default async function Page({ params }) {
