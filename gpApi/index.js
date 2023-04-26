@@ -236,6 +236,11 @@ const gpApi = {
           withAuth: true,
         },
       },
+      planVersions: {
+        url: `${base}campaign/onboarding/planVersion`,
+        method: 'GET',
+        withAuth: true,
+      },
     },
   },
 

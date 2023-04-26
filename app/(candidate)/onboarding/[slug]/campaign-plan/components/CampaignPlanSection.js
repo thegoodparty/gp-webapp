@@ -15,6 +15,7 @@ import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import PlanVersion from './PlanVersion';
 const RichEditor = dynamic(() => import('./RichEditor'), {
   loading: () => (
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
@@ -44,6 +45,7 @@ export default function CampaignPlanSection({
   section,
   campaign,
   initialOpen,
+  versions,
 }) {
   const [open, setOpen] = useState(initialOpen);
   const [editMode, setEditMode] = useState(false);
@@ -149,7 +151,7 @@ export default function CampaignPlanSection({
     updated[subSectionKey][key] = plan;
     setIsEdited(false);
     setEditMode(false);
-    await updateCampaign(updated);
+    await updateCampaign(updated, key);
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
     snackbarState.set(() => {
       return {
@@ -158,6 +160,11 @@ export default function CampaignPlanSection({
         isError: false,
       };
     });
+  };
+
+  const updatePlanCallback = (version) => {
+    setPlan(version);
+    setIsEdited(true);
   };
 
   return (
@@ -184,6 +191,12 @@ export default function CampaignPlanSection({
             <LoadingAI />
           ) : (
             <div className="border-t border-2 mb-10 border-slate-100">
+              <PlanVersion
+                campaign={campaign}
+                versions={versions[key]}
+                updatePlanCallback={updatePlanCallback}
+                latestVersion={campaignPlan[key]}
+              />
               <div className={`bg-white p-6 my-6 rounded-xl ${styles.plan}`}>
                 {isFailed ? (
                   <div className="text-center text-xl">

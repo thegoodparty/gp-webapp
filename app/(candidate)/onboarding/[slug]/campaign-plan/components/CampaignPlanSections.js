@@ -20,7 +20,7 @@ const lockedSections = [
   { key: 'operationalPlan', title: 'Operational Plan' },
   { key: 'timeline', title: 'Timeline' },
 ];
-export default function CampaignPlanSections({ campaign }) {
+export default function CampaignPlanSections({ campaign, versions }) {
   const isWhyLocked = !campaign.pathToVictory;
   return (
     <>
@@ -31,6 +31,7 @@ export default function CampaignPlanSections({ campaign }) {
           section={section}
           campaign={campaign}
           initialOpen={section.key === 'slogan'}
+          versions={versions}
         />
       ))}
 
@@ -46,6 +47,7 @@ export default function CampaignPlanSections({ campaign }) {
                 section={section}
                 campaign={campaign}
                 initialOpen={section.key === 'pathToVictory'}
+                versions={versions}
               />
             )}
           </Fragment>

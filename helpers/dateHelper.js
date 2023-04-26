@@ -19,6 +19,13 @@ export const dateUsHelper = (orgDate) => {
   }
 };
 
+export const dateWithTime = (orgDate) => {
+  if (!orgDate) {
+    return orgDate;
+  }
+  return new Date(orgDate).toLocaleString('en-US');
+};
+
 export const parseDobUS = (dob) => {
   if (dob.length === 8) {
     return `${dob.substr(0, 2)}/${dob.substr(2, 2)}/${dob.substr(4, 4)}`;
