@@ -23,7 +23,18 @@ export const dateWithTime = (orgDate) => {
   if (!orgDate) {
     return orgDate;
   }
-  return new Date(orgDate).toLocaleString('en-US');
+  const date = new Date(orgDate);
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  });
+  return `${date.getHours()}:${
+    date.getMinutes() < 10 ? '0' : ''
+  }${date.getMinutes()}`;
 };
 
 export const parseDobUS = (dob) => {
