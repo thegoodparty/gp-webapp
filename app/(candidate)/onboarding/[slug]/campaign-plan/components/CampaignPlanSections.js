@@ -1,5 +1,7 @@
 import BlackButton from '@shared/buttons/BlackButton';
-import { Fragment } from 'react';
+import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
+import { Fragment, useEffect, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
 import CampaignPlanSection from './CampaignPlanSection';
 import LockedCampaignPlanSection from './LockedCampaignPlanSection';
@@ -20,8 +22,15 @@ const lockedSections = [
   { key: 'operationalPlan', title: 'Operational Plan' },
   { key: 'timeline', title: 'Timeline' },
 ];
-export default function CampaignPlanSections({ campaign, versions }) {
+export default function CampaignPlanSections({ campaign }) {
+  const versions = useVersions();
+  const [updatedVersions, setUpdatedVersions] = useState(false);
   const isWhyLocked = !campaign.pathToVictory;
+
+  const updateVersionsCallback = async () => {
+    const { versions } = await fetchCampaignVersions();
+    setUpdatedVersions(versions);
+  };
   return (
     <>
       <h2 className="my-8 text-3xl font-black">WHY</h2>
@@ -31,7 +40,8 @@ export default function CampaignPlanSections({ campaign, versions }) {
           section={section}
           campaign={campaign}
           initialOpen={section.key === 'slogan'}
-          versions={versions}
+          versions={updatedVersions || versions}
+          updateVersionsCallback={updateVersionsCallback}
         />
       ))}
 
@@ -47,7 +57,8 @@ export default function CampaignPlanSections({ campaign, versions }) {
                 section={section}
                 campaign={campaign}
                 initialOpen={section.key === 'pathToVictory'}
-                versions={versions}
+                versions={updatedVersions || versions}
+                updateVersionsCallback={updateVersionsCallback}
               />
             )}
           </Fragment>

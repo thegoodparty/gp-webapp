@@ -16,3 +16,13 @@ export async function updateCampaign(campaign, versionKey) {
     return false;
   }
 }
+
+export async function fetchCampaignVersions() {
+  try {
+    const api = gpApi.campaign.onboarding.planVersions;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error at fetchCampaignVersions', e);
+    return {};
+  }
+}

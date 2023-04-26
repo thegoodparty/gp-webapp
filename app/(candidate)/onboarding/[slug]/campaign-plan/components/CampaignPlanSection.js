@@ -46,6 +46,7 @@ export default function CampaignPlanSection({
   campaign,
   initialOpen,
   versions,
+  updateVersionsCallback,
 }) {
   const [open, setOpen] = useState(initialOpen);
   const [editMode, setEditMode] = useState(false);
@@ -143,6 +144,14 @@ export default function CampaignPlanSection({
   };
 
   const handleSave = async () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saving...',
+        isError: false,
+      };
+    });
+
     const updated = campaign;
     if (!updated[subSectionKey]) {
       updated[subSectionKey] = {};
@@ -152,14 +161,8 @@ export default function CampaignPlanSection({
     setIsEdited(false);
     setEditMode(false);
     await updateCampaign(updated, key);
+    await updateVersionsCallback();
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
   };
 
   const updatePlanCallback = (version) => {
