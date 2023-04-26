@@ -1,10 +1,12 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import Image from 'next/image';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import CampaignPlanSection from '../../../campaign-plan/components/CampaignPlanSection';
 
 const sections = [
@@ -15,6 +17,13 @@ const sections = [
 ];
 
 export default function PlanPreviewPage({ slug, ...props }) {
+  const versions = useVersions();
+  const [updatedVersions, setUpdatedVersions] = useState(false);
+  const updateVersionsCallback = async () => {
+    const { versions } = await fetchCampaignVersions();
+    setUpdatedVersions(versions);
+  };
+
   useEffect(() => {
     savingState.set(() => false);
   }, []);
@@ -46,7 +55,8 @@ export default function PlanPreviewPage({ slug, ...props }) {
               section={section}
               campaign={campaign}
               initialOpen={section.key === 'slogan'}
-              versions={{}}
+              versions={updatedVersions || versions}
+              updateVersionsCallback={updateVersionsCallback}
             />
           ))}
         </div>
