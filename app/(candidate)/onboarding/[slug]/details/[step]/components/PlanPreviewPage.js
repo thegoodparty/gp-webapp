@@ -46,6 +46,7 @@ export default function PlanPreviewPage({ slug, ...props }) {
               section={section}
               campaign={campaign}
               initialOpen={section.key === 'slogan'}
+              versions={{}}
             />
           ))}
         </div>
