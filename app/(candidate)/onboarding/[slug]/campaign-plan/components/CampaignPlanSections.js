@@ -18,7 +18,7 @@ const sections = [
 const lockedSections = [
   { key: 'pathToVictory', title: 'Path To Victory' },
   { key: 'mobilizing', title: 'Mobilizing voters and volunteers' },
-  { key: 'operationalPlan', title: 'Operational Plan' },
+  { key: 'operationalPlan', title: 'Budget' },
   { key: 'timeline', title: 'Timeline' },
 ];
 export default function CampaignPlanSections({ campaign }) {
