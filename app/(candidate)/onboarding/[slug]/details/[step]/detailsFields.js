@@ -4,7 +4,7 @@ import { flatStates } from 'helpers/statesHelper';
 const detailsFields = [
   {
     title:
-      "Hi! I'm Jared. I just need a little bit of information to get you started...",
+      "Hi! I'm Good Party's AI Campaign Manager. I just need a little bit of information to get you started...",
 
     fields: [
       {
