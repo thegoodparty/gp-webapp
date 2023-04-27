@@ -54,8 +54,8 @@ const sections = [
   {
     title: 'Voter Demographics',
     fields: [
-      { key: 'ageMin', label: 'Age Range Low', type: 'number' },
-      { key: 'ageMax', label: 'Age Range Max', type: 'number' },
+      { key: 'allAvailVoters', label: 'All avail voters', type: 'number' },
+      { key: 'availVotersTo35', label: '18-35 avail voters', type: 'number' },
       { key: 'women', label: 'Women', type: 'number' },
       { key: 'men', label: 'Men', type: 'number' },
       { key: 'africanAmerican', label: 'African American', type: 'number' },
