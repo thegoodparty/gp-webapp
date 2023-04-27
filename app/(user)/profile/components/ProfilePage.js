@@ -5,6 +5,7 @@ import UserAvatar from '@shared/user/UserAvatar';
 import LogoutSection from './LogoutSection';
 import CandidatesSection from './CandidatesSection';
 import { getServerUser } from 'helpers/userServerHelper';
+import RunCampaignButton from 'app/(company)/run-for-office/components/RunCampaignButton';
 
 export default function ProfilePage() {
   const user = getServerUser();
@@ -37,6 +38,13 @@ export default function ProfilePage() {
             <LogoutSection />
           </div>
         </div>
+      </div>
+      <div className="mt-6 mb-3">
+        <RunCampaignButton
+          id="profile-run-for-office"
+          label="Run For Office"
+          fullWidth
+        />
       </div>
       <Suspense>
         <CandidatesSection />

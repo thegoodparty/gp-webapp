@@ -30,7 +30,11 @@ export async function createCampaign(router) {
   }
 }
 
-export default function RunCampaignButton({ fullWidth, id = '' }) {
+export default function RunCampaignButton({
+  fullWidth,
+  id = '',
+  label = 'GET STARTED',
+}) {
   const router = useRouter();
   const handleRun = async () => {
     const user = getUserCookie(true);
@@ -53,7 +57,7 @@ export default function RunCampaignButton({ fullWidth, id = '' }) {
           fullWidth ? 'w-full' : 'w-full lg:w-48'
         }`}
       >
-        <div className="text-black tracking-wide">GET STARTED</div>
+        <div className="text-black tracking-wide">{label}</div>
       </Pill>
     </div>
   );
