@@ -18,7 +18,6 @@ const sections = [
 const lockedSections = [
   { key: 'pathToVictory', title: 'Path To Victory' },
   { key: 'mobilizing', title: 'Mobilizing voters and volunteers' },
-  { key: 'getOutTheVote', title: 'Get out the vote tactics' },
   { key: 'operationalPlan', title: 'Operational Plan' },
   { key: 'timeline', title: 'Timeline' },
 ];
