@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import JaredImg from 'public/images/campaign/jared.jpg';
+import AiIcon from 'public/images/campaign/gp-ai.png';
 import AdminDelete from './AdminDelete';
 import { useEffect, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
@@ -66,11 +66,12 @@ export default function OnboardingWrapper({
             <> {icon} </>
           ) : (
             <Image
-              src={JaredImg}
-              fill
-              alt="Jared"
+              src={AiIcon}
+              alt="Good Party AI"
               priority
-              className="object-contain rounded-full"
+              className="mt-2"
+              width={68}
+              height={56}
             />
           )}
         </div>
