@@ -11,12 +11,14 @@ export default function AboutSection(props) {
         <div className="w-8 text-right">
           <ImQuotesLeft size={30} style={{ color }} />
         </div>
-        <TextPanel
-          text={slogan}
-          {...props}
-          section="campaignPlan"
-          sectionKey="slogan"
-        />
+        <div className="max-w-[840px]">
+          <TextPanel
+            text={slogan}
+            {...props}
+            section="campaignPlan"
+            sectionKey="slogan"
+          />
+        </div>
         <div className="w-8 text-left">
           <ImQuotesRight size={30} style={{ color }} />
         </div>
