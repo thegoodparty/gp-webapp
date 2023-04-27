@@ -17,7 +17,7 @@ async function fetchCandidates(params) {
   const payload = {
     withCandidates: true,
   };
-  return await gpFetch(api, payload, 3600, token);
+  return await gpFetch(api, payload, 0, token);
 }
 
 async function CandidatesSection() {
