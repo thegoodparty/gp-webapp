@@ -14,10 +14,11 @@ import { useRouter } from 'next/navigation';
 async function resetPassword(email, password, token) {
   try {
     const payload = {
-      email,
+      email: email.replace(' ', '@'),
       password,
       token,
     };
+    console.log('payload', payload);
     await gpFetch(gpApi.entrance.resetPassword, payload);
     return true;
   } catch (e) {
