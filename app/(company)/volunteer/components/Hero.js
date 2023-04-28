@@ -9,7 +9,7 @@ export default function Hero() {
   return (
     <LandingPageHero>
       <div className="relative lg:pb-12">
-        <div className="lg:w-[60%]">
+        <div className="lg:w-[70%]">
           <h1 className="text-6xl leading-tight font-black">
             Join the movement to end the two-party system
           </h1>
@@ -21,7 +21,7 @@ export default function Hero() {
           <EmailForm
             formId="c7d78873-1ed0-4202-ab01-76577e57352c"
             pageName="volunteer"
-            label="Join Us"
+            label="Join an info session"
             labelId="volunteer-form"
           />
         </div>
