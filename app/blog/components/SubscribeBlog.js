@@ -1,4 +1,4 @@
-import EmailForm from '@shared/inputs/EmailForm';
+import EmailFirstLastForm from '@shared/inputs/EmailFirstLastForm';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import styles from '../shared/ArticleSnippet.module.scss';
 
@@ -16,27 +16,12 @@ export default function SubscribeBlog() {
             {/* <div className="text-lg font-light lg:w-[80%] mx-auto text-left lg:text-center">          
             </div> */}
             <div className="mx-auto">
-              <input
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                className="py-4 pl-4 pr-36 mb-5 border-purple border-2 rounded-full w-full"
-              />
-
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
-              />
-
-              <EmailForm
+              <EmailFirstLastForm
                 fullWidth
-                forId="5d84452a-01df-422b-9734-580148677d2c"
+                formId="5d84452a-01df-422b-9734-580148677d2c"
                 pageName="Blog"
                 label="Subscribe"
                 labelId="subscribe-form"
-                buttonFull={true}
               />
             </div>
           </div>

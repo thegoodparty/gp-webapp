@@ -1,5 +1,4 @@
-import BaseButton from '@shared/buttons/BaseButton';
-import BaseButtonClient from '../../shared/buttons/BaseButtonClient';
+import { Fragment } from 'react';
 import ArticleSnippet from '../shared/ArticleSnippet';
 import BlogWrapper from '../shared/BlogWrapper';
 import BlogSearch from './BlogSearch';
@@ -20,7 +19,6 @@ function getSectionArticles(section, articles) {
   }
 
   if (section.fields.slug == 'onboarding-live') {
-    // push a CTA here ?
     return sectionArticles.slice(0, 2);
   } else {
     return sectionArticles.slice(0, 3);
@@ -48,11 +46,11 @@ export default function BlogPage({
       {sectionSlug == undefined && sections && sections.length > 0 && (
         <div className="grid-cols-12 col-span-12">
           <ArticleSnippet article={hero} heroMode />
-          {sections.map((section) => {
+          {sections.map((section, index) => {
             const sectionArticles = getSectionArticles(section, articles);
             return (
-              <>
-                <BaseButtonClient
+              <Fragment key={section.id}>
+                <button
                   className={`${
                     section.fields.slug == 'onboarding-live'
                       ? 'bg-indigo-800'
@@ -65,13 +63,13 @@ export default function BlogPage({
                       : section.fields.slug == 'candidates'
                       ? 'bg-teal-400'
                       : 'bg-gray-600'
-                  } rounded-full py-2 px-4 mt-3 mb-3 text-sm font-bold text-white cursor-default`}
+                  } py-2 px-4 mb-3 mt-10 text-sm font-bold text-white cursor-default rounded-full`}
                 >
                   {section.fields.title}
-                </BaseButtonClient>
+                </button>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {sectionArticles.map((article) => (
-                    <ArticleSnippet article={article} />
+                    <ArticleSnippet key={article.id} article={article} />
                   ))}
                   {section.fields.slug == 'onboarding-live' ? (
                     <SubscribeBlog />
@@ -79,7 +77,7 @@ export default function BlogPage({
                     <></>
                   )}
                 </div>
-              </>
+              </Fragment>
             );
           })}
         </div>
@@ -89,13 +87,13 @@ export default function BlogPage({
           <ArticleSnippet article={hero} heroMode />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {articles.map((article, index) => (
-              <>
+              <Fragment key={article.id}>
                 {index > 0 && (
                   <div>
                     <ArticleSnippet article={article} />
                   </div>
                 )}
-              </>
+              </Fragment>
             ))}
           </div>
         </>
