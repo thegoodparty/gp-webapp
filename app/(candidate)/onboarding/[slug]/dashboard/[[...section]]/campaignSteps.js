@@ -1,77 +1,127 @@
-import { FaRegLightbulb } from 'react-icons/fa';
-import { SlRocket } from 'react-icons/sl';
-import { MdHowToVote } from 'react-icons/md';
+import { FaHeart, FaRegLightbulb, FaStar } from 'react-icons/fa';
+import { BsFillMegaphoneFill } from 'react-icons/bs';
 import { detailFieldsCount } from '../../details/[step]/detailsFields';
 import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
 
 const campaignSteps = [
   {
-    key: 'preLaunch',
-    preTitle: 'Build Your Campaign Plan',
-    title: 'Pre Launch',
+    key: 'details',
+    title: (
+      <>
+        Fill Candidate
+        <br />
+        Info
+      </>
+    ),
+    plainTitle: 'Fill Candidate Info',
+    subTitle: 'Who you are and your positions on key issues',
+    stepNum: 1,
+    connectedLine: true,
+  },
+  {
+    key: 'goals',
+    title: (
+      <>
+        Provide
+        <br />
+        Election Details
+      </>
+    ),
+    plainTitle: 'Provide Election Details',
+    subTitle: 'Purpose of your campaign, and measurable targets and milestones',
+    stepNum: 2,
+  },
+  { key: 'gap1', type: 'gap' },
+  {
+    key: 'campaignPlan',
+    title: (
+      <>
+        Generate
+        <br />
+        Campaign Plan
+      </>
+    ),
+    plainTitle: 'Generate Campaign Plan',
     subTitle:
-      "Establish your campaign's goals, messaging, strategy, and organization before officially announcing your candidacy.",
-    icon: <FaRegLightbulb size={30} />,
-    steps: [
-      {
-        key: 'details',
-        title: 'Candidate Details',
-        subTitle:
-          'Brief bio, your experience, and positions on key issues, providing voters with a clear understanding of who you are.',
-        steps: detailFieldsCount,
-      },
-      {
-        key: 'goals',
-        title: 'Election Details',
-        subTitle:
-          'Purpose of your campaign, as well as specific, measurable targets and milestones that the campaign aims to achieve.',
-        steps: goalsFieldsCount,
-      },
-      {
-        key: 'campaignPlan',
-        title: 'Your Campaign Plan',
-        subTitle:
-          "The overall strategy, tactics, and budget for achieving the campaign's goals and objectives.",
-        steps: 0,
-        link: '/campaign-plan',
-      },
-      {
-        key: 'incentive',
-        steps: 0,
-        customCard: 'UnlockJared',
-      },
-    ],
+      'The overall strategy, tactics, and budget for achieving your campaign goals',
+    link: '/campaign-plan',
+    stepNum: 3,
+    aiIcon: true,
+    connectedLine: true,
+  },
+  {
+    key: 'profile',
+    type: 'incentive',
+    title: 'Campaign Profile',
+    icon: <FaStar />,
+    connectedLine: true,
+  },
+  {
+    key: 'support',
+    type: 'incentive',
+    title: 'Expert Campaign Support',
+    icon: <FaHeart />,
+  },
+  {
+    key: 'team',
+    title: (
+      <>
+        Build
+        <br />
+        Campaign Team
+      </>
+    ),
+    plainTitle: 'Build Campaign Team',
+    subTitle:
+      'Connect with skilled volunteers, passionate advocates, & top professionals',
+    stepNum: 4,
+    connectedLine: true,
+  },
+  {
+    key: 'social',
+    title: (
+      <>
+        Online Presence
+        <br />
+        &amp; Social Media
+      </>
+    ),
+    plainTitle: 'Online Presence & Social Media',
+    subTitle:
+      'A tailored Social Strategy leveraging our insights to engage voters & drive support',
+    stepNum: 5,
+    connectedLine: true,
+  },
+  {
+    key: 'socialSupport',
+    type: 'incentive',
+    title: 'Expert Social Media Support',
+    icon: <BsFillMegaphoneFill />,
+  },
+  {
+    key: 'finance',
+    title: (
+      <>
+        Financial Management
+        <br />
+        &amp; Fundraising
+      </>
+    ),
+    plainTitle: 'Financial Management & Fundraising',
+    subTitle:
+      'A tailored Fundraising Strategy and tools to secure vital financial support efficiently',
+    stepNum: 6,
+    connectedLine: true,
+  },
+  {
+    key: 'financeSupport',
+    type: 'incentive',
+    title: 'Expert Management Support',
+    icon: <FaHeart />,
   },
   {
     key: 'launch',
-    title: 'Launch',
-    subTitle:
-      'Officially announce your candidacy and kick off the campaign with a well-planned event that generates momentum and media coverage.',
-    icon: <SlRocket size={30} />,
-    steps: [
-      {
-        key: 'profile',
-        title: 'Public Profile',
-        subTitle: 'Edit your public profile. Mateo Mateo.',
-        steps: 1,
-        customLink: true,
-      },
-      {
-        key: 'checklist',
-        title: 'Checklist',
-        subTitle:
-          'Complete the checklist below to Launch your Campaign Profile Page',
-        steps: 8,
-      },
-    ],
-  },
-  {
-    key: 'run',
-    title: 'Run',
-    subTitle:
-      'Execute the strategy and tactics developed in earlier phases, including fundraising, canvassing, advertising, and public appearances.',
-    icon: <MdHowToVote size={30} />,
-    steps: [],
+    type: 'launch',
   },
 ];
 
@@ -79,59 +129,122 @@ export default campaignSteps;
 
 export const generateCampaignStatus = (campaign) => {
   const status = {
-    preLaunch: { status: 'Not Started', completedSteps: 0 },
-    launch: { status: 'Not Started', completedSteps: 0 },
-    run: { status: 'Not Started', completedSteps: 0 },
-    nextStep: {
-      sectionIndex: 0,
-      step: 1,
+    details: {
+      status: 'notStarted',
+      completedSteps: 0,
+      totalSteps: detailFieldsCount,
+    },
+    goals: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: goalsFieldsCount,
+    },
+    campaignPlan: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 11,
+    },
+    profile: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 1,
+    },
+    support: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 1,
+    },
+    team: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 5,
+    },
+    social: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 5,
+    },
+    socialSupport: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 5,
+    },
+
+    finance: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 5,
+    },
+    financeSupport: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 5,
+    },
+    launch: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 1,
     },
   };
   if (!campaign) {
     return status;
   }
-  const { details, goals, campaignPlan, incentive } = campaign;
-  const preLaunchSections = [
-    { key: 'details', value: details, count: detailFieldsCount },
-    { key: 'goals', value: goals, count: goalsFieldsCount },
-    { key: 'campaignPlan', value: campaignPlan, count: 5 },
-    { key: 'incentive', value: incentive, count: 1 },
-  ];
 
-  preLaunchSections.forEach((section) => {
-    if (section) {
-      status.preLaunch[section.key] = {};
-      status.preLaunch[section.key].status = 'In Progress';
-      const completedSteps = section.value
-        ? Object.keys(section.value).length
-        : 0;
-      if (completedSteps === 0) {
-        status.preLaunch[section.key].status = 'Not Started';
-        if (section.key === 'details') {
-          status.preLaunch.status = 'Not Started';
-        }
-      } else {
-        status.preLaunch.status = 'In Progress';
+  Object.keys(status).forEach((key, index) => {
+    const step = status[key];
+    const value = campaign[key];
+    if (value) {
+      const completedSteps = Object.keys(value).length || 0;
+      if (completedSteps > 0) {
+        step.status = 'inProgress';
       }
-      if (section.key === 'campaignPlan' && completedSteps === 4) {
+      if (completedSteps >= step.totalSteps) {
+        step.status = 'completed';
+      }
+      if (step.key === 'campaignPlan' && completedSteps === 4) {
         // details has 4 steps.
-        status.preLaunch.campaignPlan.status = 'Not Started';
+        step.status = 'notStarted';
       }
-      status.preLaunch[section.key].completedSteps = completedSteps;
-      if (completedSteps >= section.count) {
-        status.preLaunch[section.key].status = 'Completed';
-        status.preLaunch.completedSteps++;
-        status.nextStep.step++;
+      step.completedSteps = completedSteps;
+    }
+
+    // if the previous step is completed and current step is locked
+    // then set status to notStarted
+    if (index > 0 && step.status === 'locked') {
+      const keys = Object.keys(status);
+      const prevStatus = status[keys[index - 1]];
+      if (prevStatus.status === 'completed') {
+        step.status = 'notStarted';
       }
     }
   });
 
-  if (status.preLaunch.completedSteps >= campaignSteps[0].steps.length) {
-    status.preLaunch.status = 'Completed';
-    status.nextStep = {
-      sectionIndex: 1,
-      step: 1,
-    };
+  // set incentive status
+  if (status.campaignPlan.status === 'completed') {
+    status.support.status = 'completed';
+    status.profile.status = 'completed';
+    if (status.team.status === 'locked') {
+      status.team.status = 'notStarted';
+    }
+  } else {
+    status.support.status = 'locked';
+    status.profile.status = 'locked';
+  }
+
+  if (status.social.status === 'completed') {
+    status.socialSupport.status = 'completed';
+    if (status.finance.status === 'locked') {
+      status.finance.status = 'notStarted';
+    }
+  } else {
+    status.socialSupport.status = 'locked';
+  }
+
+  if (status.finance.status === 'completed') {
+    status.financeSupport.status = 'completed';
+    status.launch.status = 'noStarted';
+  } else {
+    status.financeSupport.status = 'locked';
   }
 
   return status;

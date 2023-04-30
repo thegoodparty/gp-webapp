@@ -1,32 +1,32 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import DashboardStep from './DashboardStep';
-import SectionStep from './SectionStep';
+import IncentiveCard from './IncentiveCard';
+import LaunchCard from './LaunchCard';
+import Step from './Step';
 
 export default function Steps(props) {
-  const { campaignSteps, sectionIndex } = props;
-  const steps =
-    sectionIndex !== false ? campaignSteps[sectionIndex].steps : campaignSteps;
-
+  const { campaignSteps } = props;
   return (
     <MaxWidth>
       <div className=" rounded-2xl mt-6">
-        <div className="grid grid-cols-12 gap-4 items-stretch">
-          {steps.map((step, index) => (
+        <div className="grid grid-cols-12 gap-8 lg:gap-12 items-stretch">
+          {campaignSteps.map((step) => (
             <>
-              {sectionIndex === false ? (
-                <DashboardStep
-                  key={step.key}
-                  step={step}
-                  index={index}
-                  {...props}
-                />
+              {step.type === 'gap' ? (
+                <div className="col-span-12 lg:col-span-4" key={step.key}></div>
               ) : (
-                <SectionStep
-                  key={step.key}
-                  step={step}
-                  index={index}
-                  {...props}
-                />
+                <>
+                  {step.type === 'launch' ? (
+                    <LaunchCard key={step.key} {...props} />
+                  ) : (
+                    <>
+                      {step.type === 'incentive' ? (
+                        <IncentiveCard key={step.key} step={step} {...props} />
+                      ) : (
+                        <Step key={step.key} step={step} {...props} />
+                      )}
+                    </>
+                  )}
+                </>
               )}
             </>
           ))}

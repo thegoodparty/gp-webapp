@@ -33,10 +33,6 @@ export default function OnboardingWrapper({
   const breadcrumbsLinks = [
     { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
     {
-      href: `/onboarding/${slug}/dashboard/${section?.index}`,
-      label: section?.label,
-    },
-    {
       label: subSectionLabel,
     },
   ];

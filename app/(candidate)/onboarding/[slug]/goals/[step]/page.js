@@ -22,15 +22,14 @@ export default async function Page({ params }) {
 
   const stepFields = goalsFields[stepInt - 1];
   const { pageType } = stepFields;
-  const subSectionLabel = campaignSteps[0].steps[1].title;
-  const subSectionKey = campaignSteps[0].steps[1].key;
+  const subSectionKey = campaignSteps[1].key;
+  const subSectionLabel = campaignSteps[1].plainTitle;
 
   let nextPath = `/${subSectionKey}/${stepInt + 1}`;
   if (stepInt === goalsFields.length) {
     const campaign = await getCampaign(params);
-    nextPath = '/dashboard/1';
+    nextPath = '/dashboard';
   }
-  const section = { label: 'Pre Launch', index: 1 };
 
   const childProps = {
     title: stepFields.title,
@@ -45,7 +44,6 @@ export default async function Page({ params }) {
     pageType,
     nextPath,
     subSectionKey,
-    section,
     subSectionLabel,
     totalSteps: goalsFields.length,
   };

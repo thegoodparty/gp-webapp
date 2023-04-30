@@ -48,25 +48,14 @@ export default async function Page({ params }) {
     const user = getServerUser();
     stepFields.fields[0].initialValue = user.zip;
   }
-  // const articles = [];
-  // if (stepInt === 5) {
-  //   if (stepFields.fields[4].articles) {
-  //     const articlesSlugs = stepFields.fields[4].articles;
-  //     for (let i = 0; i < articlesSlugs.length; i++) {
-  //       const article = await fetchArticle(articlesSlugs[i]);
-  //       articles.push(article?.content);
-  //     }
-  //   }
-  // }
 
   let pledge;
   if (pageType === 'pledgePage') {
     const res = await fetchContentByKey('pledge');
     pledge = res.content;
   }
-  const section = { label: 'Pre Launch', index: 1 };
-  const subSectionKey = campaignSteps[0].steps[0].key;
-  const subSectionLabel = campaignSteps[0].steps[0].title;
+  const subSectionKey = campaignSteps[0].key;
+  const subSectionLabel = campaignSteps[0].plainTitle;
 
   const childProps = {
     title: stepFields.title,
@@ -83,9 +72,7 @@ export default async function Page({ params }) {
     nextPath: `/${subSectionKey}/${stepInt + 1}`,
     subSectionKey,
     totalSteps: detailsFields.length,
-    section,
     subSectionLabel,
-    // articles,
   };
   return <OnboardingStepPage {...childProps} />;
 }
