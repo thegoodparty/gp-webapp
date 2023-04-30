@@ -51,6 +51,9 @@ export default function Step({ campaign, step, campaignStatus }) {
   if (status === 'inProgress') {
     link = `/onboarding/${campaign.slug}/${step.key}/${completedSteps}`;
   }
+  if (step.key === 'campaignPlan') {
+    link = `/onboarding/${campaign.slug}/campaign-plan`;
+  }
 
   const showBorder = status === 'notStarted' || status === 'inProgress';
   return (
