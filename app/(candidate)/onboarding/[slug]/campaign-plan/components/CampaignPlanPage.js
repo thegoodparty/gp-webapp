@@ -15,6 +15,7 @@ export default function CampaignPlanPage(props) {
       label: 'Your Campaign Plan',
     },
   ];
+  console.log('campaign', props.campaign);
   return (
     <div className="bg-slate-100 py-2">
       <MaxWidth>
