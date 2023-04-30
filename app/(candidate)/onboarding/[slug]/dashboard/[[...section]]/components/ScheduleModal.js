@@ -5,10 +5,8 @@ import { useState } from 'react';
 
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
-export default function ScheduleModal({ campaign, nextStep }) {
-  const canContinue = nextStep.step > 3 || nextStep.sectionIndex > 0;
+export default function ScheduleModal({ campaign }) {
   const [showModal, setShowModal] = useState(false);
-  const [showContinue, setShowContinue] = useState(canContinue);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -16,46 +14,16 @@ export default function ScheduleModal({ campaign, nextStep }) {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setShowContinue(true);
-  };
-
-  const handleContinue = async () => {
-    await updateCampaign({
-      ...campaign,
-      incentive: {
-        completed: true,
-      },
-    });
-    window.location.href = `/onboarding/${campaign.slug}/dashboard`;
   };
 
   return (
     <>
-      {showContinue ? (
-        <>
-          <div
-            className="bg-yellow-400  py-4 px-12 inline-block rounded-full cursor-pointer transition-colors hover:bg-yellow-200"
-            onClick={handleContinue}
-          >
-            <div className="font-black">CONTINUE</div>
-          </div>
-          <div
-            className="mt-2 text-blue-400 text-sm cursor-pointer"
-            onClick={() => {
-              setShowContinue(false);
-            }}
-          >
-            Schedule another meeting
-          </div>
-        </>
-      ) : (
-        <div
-          className="bg-yellow-400  py-4 px-12 inline-block rounded-full cursor-pointer transition-colors hover:bg-yellow-200"
-          onClick={handleOpenModal}
-        >
-          <div className="font-black">SCHEDULE</div>
-        </div>
-      )}
+      <div
+        className="text-sm text-center underline mt-1 cursor-pointer"
+        onClick={handleOpenModal}
+      >
+        View Support
+      </div>
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>
           <div className="w-[80vw] max-w-[900px] h-[90vh]">

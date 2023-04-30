@@ -7,19 +7,18 @@ import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Candidate Onboarding | GOOD PARTY',
-  description: 'Candidate Onboarding.',
-  slug: '/onboarding',
+  title: 'Campaign Pre Launch | GOOD PARTY',
+  description: 'Campaign Pre Launch - Candidate Onboarding.',
+  slug: '/',
   image: 'https://assets.goodparty.org/dashboard.jpg',
 });
 export const metadata = meta;
 
 export default async function Page({ params }) {
-  const { section } = params;
   const campaign = await getCampaign(params);
 
-  const sectionIndex =
-    section && section.length > 0 ? parseInt(section[0]) - 1 : false;
+  // const sectionIndex =
+  //   section && section.length > 0 ? parseInt(section[0]) - 1 : false;
 
   const campaignStatus = generateCampaignStatus(campaign);
 
@@ -31,7 +30,6 @@ export default async function Page({ params }) {
     campaignSteps,
     campaignStatus,
     nextStep,
-    sectionIndex,
   };
 
   return <Dashboard {...childProps} />;
