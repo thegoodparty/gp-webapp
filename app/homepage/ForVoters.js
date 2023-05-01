@@ -23,29 +23,19 @@ export default function ForVoters() {
       <div className="col-span-12 lg:col-span-4 py-10">
         <h2 className="font-black text-4xl">For Voters</h2>
         <div className="text-lg mt-2">
-          Join the movement for a brighter political future. Discover
-          independent and third-party candidates who align with your values and
-          are committed to fighting for the issues that matter to you, not
-          corporate and special interest groups.
+          Join our movement for a brighter political future. You'll join a
+          community of independent-minded people helping to elect a new
+          generation of real people running winning campaigns on good ideas.
         </div>
         <div className="mt-4 lg:flex items-center text-center">
-          <Link href="/candidates">
+          <Link href="/volunteer">
             <PurpleButton
               className="tracking-wider py-5 px-8"
               id="find-candidates-button"
             >
-              FIND CANDIDATES
+              Learn more
             </PurpleButton>
           </Link>
-          <div className="mt-5 lg:mt-0 lg:ml-10">
-            <Link
-              href="/volunteer"
-              className="underline text-xl tracking-wide"
-              id="volunteer-link"
-            >
-              VOLUNTEER
-            </Link>
-          </div>
         </div>
       </div>
     </div>
