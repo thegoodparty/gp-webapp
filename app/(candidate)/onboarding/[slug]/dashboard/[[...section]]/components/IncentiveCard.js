@@ -49,8 +49,12 @@ export default function IncentiveCard({ step, campaign, campaignStatus }) {
           >
             <div className="flex justify-between items-start">
               <div
-                className={`w-11  text-lg ${
+                className={`w-11 inline-block py-2 px-3 rounded-full text-lg ${
                   status === 'locked' ? 'text-gp-yellow' : ' text-black'
+                }  ${
+                  status === 'locked'
+                    ? 'bg-white bg-opacity-20'
+                    : ' bg-black bg-opacity-10'
                 }`}
               >
                 {icon}
