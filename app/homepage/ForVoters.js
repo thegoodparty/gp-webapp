@@ -36,15 +36,6 @@ export default function ForVoters() {
               Learn more
             </PurpleButton>
           </Link>
-          {/* <div className="mt-5 lg:mt-0 lg:ml-10">
-            <Link
-              href="/volunteer"
-              className="underline text-xl tracking-wide"
-              id="volunteer-link"
-            >
-              VOLUNTEER
-            </Link>
-          </div> */}
         </div>
       </div>
     </div>
