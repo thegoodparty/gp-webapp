@@ -5,6 +5,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
+import BaseButtonClient from '../buttons/BaseButtonClient';
 
 export async function subscribeEmail(payload) {
   try {
@@ -22,7 +23,6 @@ export default function EmailForm({
   pageName,
   label = 'Get Started',
   labelId,
-  buttonFull = false,
 }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
@@ -82,17 +82,19 @@ export default function EmailForm({
               className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
             />
 
-            {buttonFull == false ? (
-              <input
-                onClick={submitForm}
-                id="submit-email"
-                type="submit"
-                value={label}
-                className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-              />
-            ) : (
-              <></>
-            )}
+            <BaseButtonClient
+              onClick={submitForm}
+              id="submit-email"
+              type="submit"
+              // we overwrite the rounded-lg and px/py using style
+              style={{
+                borderRadius: '9999px',
+                padding: '0.625rem 1.25rem',
+              }}
+              className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+            >
+              {label}
+            </BaseButtonClient>
 
             {!!showError && (
               <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
@@ -100,22 +102,6 @@ export default function EmailForm({
               </div>
             )}
           </div>
-
-          {buttonFull && (
-            <div
-              className={`relative mb-24 lg:mb-0 ${
-                !fullWidth && 'lg:w-[50%] xl:w-[45%]'
-              }`}
-            >
-              <input
-                onClick={submitForm}
-                id="submit-email"
-                type="submit"
-                value={label}
-                className="bg-purple absolute rounded-full w-full mt-5 right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-              />
-            </div>
-          )}
         </>
       )}
     </form>

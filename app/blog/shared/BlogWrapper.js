@@ -59,15 +59,15 @@ export default function BlogWrapper({
                 // </div>
                 <BaseButtonClient
                   className={`${
-                    section.fields.slug == 'onboarding-live'
+                    section.fields.slug === 'onboarding-live'
                       ? 'bg-indigo-900'
-                      : section.fields.slug == 'politics'
+                      : section.fields.slug === 'politics'
                       ? 'bg-violet-600'
-                      : section.fields.slug == 'the-independent-cause'
+                      : section.fields.slug === 'the-independent-cause'
                       ? 'bg-pink-600'
-                      : section.fields.slug == 'temp-section'
+                      : section.fields.slug === 'temp-section'
                       ? 'bg-orange-600'
-                      : section.fields.slug == 'candidates'
+                      : section.fields.slug === 'candidates'
                       ? 'bg-teal-500'
                       : 'bg-gray-800'
                   } py-3 px-4 mb-3 ml-3 font-bold text-white rounded-full`}
@@ -85,15 +85,15 @@ export default function BlogWrapper({
                     className={`${
                       sectionSlug != undefined
                         ? 'bg-gray-800'
-                        : section.fields.slug == 'onboarding-live'
+                        : section.fields.slug === 'onboarding-live'
                         ? 'bg-indigo-900'
-                        : section.fields.slug == 'politics'
+                        : section.fields.slug === 'politics'
                         ? 'bg-violet-600'
-                        : section.fields.slug == 'the-independent-cause'
+                        : section.fields.slug === 'the-independent-cause'
                         ? 'bg-pink-600'
-                        : section.fields.slug == 'temp-section'
+                        : section.fields.slug === 'temp-section'
                         ? 'bg-orange-600'
-                        : section.fields.slug == 'candidates'
+                        : section.fields.slug === 'candidates'
                         ? 'bg-teal-500'
                         : 'bg-gray-800'
                     } py-3 px-4 mb-3 font-bold text-white rounded-full`}

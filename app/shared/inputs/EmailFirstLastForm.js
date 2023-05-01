@@ -5,6 +5,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
+import BaseButtonClient from '../buttons/BaseButtonClient';
 
 export async function subscribeEmail(payload) {
   try {
@@ -119,13 +120,14 @@ export default function EmailForm({
               !fullWidth && 'lg:w-[50%] xl:w-[45%]'
             }`}
           >
-            <input
+            <BaseButtonClient
               onClick={submitForm}
               id="submit-email"
               type="submit"
-              value={label}
-              className="bg-black absolute rounded-lg w-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-            />
+              className="bg-black absolute w-full top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+            >
+              {label}
+            </BaseButtonClient>
           </div>
         </>
       )}
