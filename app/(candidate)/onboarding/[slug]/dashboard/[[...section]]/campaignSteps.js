@@ -117,7 +117,7 @@ const campaignSteps = [
   {
     key: 'financeSupport',
     type: 'incentive',
-    title: 'Expert Management Support',
+    title: 'Expert Field & Mobilization Support',
     icon: <FaHeart />,
   },
   {
