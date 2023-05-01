@@ -22,6 +22,7 @@ function ArticleSnippet({ article, heroMode, target = false, minimal }) {
 
   return (
     <Link
+      id={slug}
       href={`/blog/article/${slug}`}
       className="no-underline"
       target={target}

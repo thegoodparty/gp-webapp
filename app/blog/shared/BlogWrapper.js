@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import BlogSearch from '../components/BlogSearch';
-
+import BaseButtonClient from '../../shared/buttons/BaseButtonClient';
 import styles from './BlogWrapper.module.scss';
 
 export default function BlogWrapper({
@@ -14,6 +14,7 @@ export default function BlogWrapper({
   sectionTitle,
   fullArticles,
 }) {
+  // console.log('sectionSlug', sectionSlug);
   return (
     <MaxWidth>
       <div className="grid grid-cols-12 gap-3">
@@ -31,24 +32,74 @@ export default function BlogWrapper({
         </div>
       </div>
 
-      <div className={styles.sectionsWrapper}>
-        <div className={styles.sections}>
-          <Link href="/blog" className="inline-flex" aria-label="Blog Homepage">
-            <AiOutlineHome size={18} />
+      <div
+        className={
+          sectionSlug ? styles.sectionsSlugWrapper : styles.sectionsWrapper
+        }
+      >
+        <div className={sectionSlug ? styles.sectionsSlug : styles.sections}>
+          <Link
+            id="blog-home"
+            href="/blog"
+            className="inline-flex"
+            aria-label="Blog Homepage"
+          >
+            <BaseButtonClient
+              style={{ backgroundColor: '#000', color: '#ffffff' }}
+              className="py-3 px-4 mb-3 font-bold"
+            >
+              <AiOutlineHome size={18} />
+            </BaseButtonClient>
           </Link>
           {sections.map((section) => (
             <React.Fragment key={section.fields.slug}>
               {section.fields.slug === sectionSlug ? (
-                <div className={`${styles.section} ${styles.active}`}>
+                // <div className={`${styles.section} ${styles.active}`}>
+                //   {section.fields.title}
+                // </div>
+                <BaseButtonClient
+                  className={`${
+                    section.fields.slug === 'onboarding-live'
+                      ? 'bg-indigo-900'
+                      : section.fields.slug === 'politics'
+                      ? 'bg-violet-600'
+                      : section.fields.slug === 'the-independent-cause'
+                      ? 'bg-pink-600'
+                      : section.fields.slug === 'temp-section'
+                      ? 'bg-orange-600'
+                      : section.fields.slug === 'candidates'
+                      ? 'bg-teal-500'
+                      : 'bg-gray-800'
+                  } py-3 px-4 mb-3 ml-3 font-bold text-white rounded-full`}
+                >
                   {section.fields.title}
-                </div>
+                </BaseButtonClient>
               ) : (
                 <Link
+                  id={`blog-section-${section.fields.slug}`}
                   href={`/blog/section/${section.fields.slug}`}
                   key={section.id}
                   className={styles.section}
                 >
-                  {section.fields.title}
+                  <BaseButtonClient
+                    className={`${
+                      sectionSlug != undefined
+                        ? 'bg-gray-800'
+                        : section.fields.slug === 'onboarding-live'
+                        ? 'bg-indigo-900'
+                        : section.fields.slug === 'politics'
+                        ? 'bg-violet-600'
+                        : section.fields.slug === 'the-independent-cause'
+                        ? 'bg-pink-600'
+                        : section.fields.slug === 'temp-section'
+                        ? 'bg-orange-600'
+                        : section.fields.slug === 'candidates'
+                        ? 'bg-teal-500'
+                        : 'bg-gray-800'
+                    } py-3 px-4 mb-3 font-bold text-white rounded-full`}
+                  >
+                    {section.fields.title}
+                  </BaseButtonClient>
                 </Link>
               )}
             </React.Fragment>

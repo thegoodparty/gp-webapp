@@ -25,6 +25,8 @@ export default function EmailForm({
   labelId,
 }) {
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
 
@@ -34,6 +36,8 @@ export default function EmailForm({
     if (canSubmit()) {
       const success = await subscribeEmail({
         email: encodeURIComponent(email),
+        firstName: encodeURIComponent(firstName),
+        lastName: encodeURIComponent(lastName),
         uri: window.location.href,
         formId,
         pageName,
@@ -57,7 +61,7 @@ export default function EmailForm({
     >
       {success ? (
         <div
-          className={`bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center`}
+          className={`bg-black text-white rounded-lg mb-24 w-full py-5 px-7 flex justify-between items-center`}
         >
           <div>Check your email to learn more</div>
           <div>
@@ -72,6 +76,28 @@ export default function EmailForm({
             }`}
           >
             <input
+              type="text"
+              name="firstName"
+              onChange={(e) => {
+                setFirstName(e.target.value);
+              }}
+              value={firstName}
+              placeholder="First Name"
+              className="py-4 pl-4 pr-36 mb-5 rounded-lg w-full"
+            />
+
+            <input
+              type="text"
+              name="lastName"
+              onChange={(e) => {
+                setLastName(e.target.value);
+              }}
+              value={lastName}
+              placeholder="Last Name"
+              className="py-4 pl-4 pr-36 mb-5 rounded-lg w-full"
+            />
+
+            <input
               type="email"
               name="email"
               onChange={(e) => {
@@ -79,28 +105,29 @@ export default function EmailForm({
               }}
               value={email}
               placeholder="john@email.com"
-              className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
+              className="py-4 pl-4 pr-36 mb-5 rounded-lg w-full"
             />
-
-            <BaseButtonClient
-              onClick={submitForm}
-              id="submit-email"
-              type="submit"
-              // we overwrite the rounded-lg and px/py using style
-              style={{
-                borderRadius: '9999px',
-                padding: '0.625rem 1.25rem',
-              }}
-              className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-            >
-              {label}
-            </BaseButtonClient>
 
             {!!showError && (
               <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
                 {showError}
               </div>
             )}
+          </div>
+
+          <div
+            className={`relative mb-24 lg:mb-0 ${
+              !fullWidth && 'lg:w-[50%] xl:w-[45%]'
+            }`}
+          >
+            <BaseButtonClient
+              onClick={submitForm}
+              id="submit-email"
+              type="submit"
+              className="bg-black absolute w-full top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+            >
+              {label}
+            </BaseButtonClient>
           </div>
         </>
       )}

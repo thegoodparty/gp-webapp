@@ -12,7 +12,7 @@ export default function TermSnippet({ item, last }) {
   const { title, description } = item;
 
   return (
-    <Link href={termLink(item)}>
+    <Link id={`terms-${slugify(title, true)}`} href={termLink(item)}>
       <div
         className="text-lg lg:flex  pb-4 mb-4 border-b border-b-neutral-300"
         style={last ? { border: 'none' } : {}}
