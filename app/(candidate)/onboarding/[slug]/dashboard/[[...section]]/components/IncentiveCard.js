@@ -103,8 +103,12 @@ export default function IncentiveCard({ step, campaign, campaignStatus }) {
               </>
             )}
           </div>
-          {connectedLine && (
-            <div className="absolute z-0 bg-black opacity-10 -bottom-12 left-1/2 -ml-2.5 w-5 h-14 lg:top-1/2 lg:left-auto lg:-right-[34px] lg:-mt-5 lg:ml-0 lg:rotate-90"></div>
+          {key !== 'financeSupport' && (
+            <div
+              className={`absolute z-0 bg-black opacity-10 -bottom-12 left-1/2 -ml-2.5 w-5 h-14 lg:top-1/2 lg:left-auto lg:-right-[34px] lg:-mt-5 lg:ml-0 lg:rotate-90 ${
+                !connectedLine && 'lg:hidden'
+              }`}
+            ></div>
           )}
         </div>
       </div>
