@@ -23,7 +23,7 @@ export default function CampaignPlanPage(props) {
         <CampaignPlanSections {...props} />
         <CampaignAccordion {...props} />
         <div className="text-center mb-8 font-black">
-          <a href={`/onboarding/${slug}/dashboard/1`}>
+          <a href={`/onboarding/${slug}/dashboard`}>
             <BlackButton>CONTINUE</BlackButton>
           </a>
         </div>

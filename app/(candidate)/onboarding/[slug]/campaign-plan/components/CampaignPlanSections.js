@@ -79,7 +79,7 @@ export default function CampaignPlanSections({ campaign }) {
       </div>
 
       <div className="text-center mt-8 font-black">
-        <a href={`/onboarding/${campaign.slug}/dashboard/1`}>
+        <a href={`/onboarding/${campaign.slug}/dashboard`}>
           <BlackButton>CONTINUE</BlackButton>
         </a>
       </div>
