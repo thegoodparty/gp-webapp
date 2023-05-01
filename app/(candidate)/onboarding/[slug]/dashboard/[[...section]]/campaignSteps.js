@@ -76,6 +76,7 @@ const campaignSteps = [
       'Connect with skilled volunteers, passionate advocates, & top professionals',
     stepNum: 4,
     connectedLine: true,
+    comingSoon: true,
   },
   {
     key: 'social',
