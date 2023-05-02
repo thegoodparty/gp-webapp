@@ -201,6 +201,25 @@ export default function AdminVictoryPathPage(props) {
               . District:{' '}
               <strong>{selected.data?.details?.district || 'N/A'}</strong>
             </h2>
+            {selected.user && (
+              <div className="p-4 border border-gray-500 rounded-md mb-5 max-w-xl">
+                <h2 className="mb-6 text-xl font-black">User</h2>
+                <div className="pb-2 border-b border-gray-300 mb-2">
+                  id: <strong>{selected.user.id}</strong>
+                </div>
+                <div className="pb-2 border-b border-gray-300 mb-2">
+                  Name: <strong>{selected.user.name}</strong>
+                </div>
+                <div className="pb-2 border-b border-gray-300 mb-2">
+                  Email:{' '}
+                  <strong>
+                    <a href={`mailto:${selected.user.email}`}>
+                      {selected.user.email}
+                    </a>
+                  </strong>
+                </div>
+              </div>
+            )}
             {sections.map((section) => (
               <div className="mb-12" key={section.title}>
                 <h2 className="font-black text-2xl mb-8">{section.title}</h2>
