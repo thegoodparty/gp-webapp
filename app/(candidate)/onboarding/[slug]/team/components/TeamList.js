@@ -1,3 +1,5 @@
+import YellowButton from '@shared/buttons/YellowButton';
+import Link from 'next/link';
 import { Fragment } from 'react';
 
 const fields = [
@@ -92,47 +94,54 @@ const fields = [
     ],
   },
 ];
-export default function TeamList() {
+export default function TeamList({ slug }) {
   return (
-    <div className="lg:mt-6 pt-5 lg:pt-10 bg-white rounded-2xl">
-      <div>
-        <div class="font-bold mb-10 text-2xl px-6 lg:px-10">
-          Things to consider when building a team:
+    <>
+      <div className="lg:mt-6 pt-5 lg:pt-10 bg-white rounded-2xl">
+        <div>
+          <div class="font-bold mb-10 text-2xl px-6 lg:px-10">
+            Things to consider when building a team:
+          </div>
+          <div className="text-lg max-w-3xl font-light px-6 lg:px-10">
+            Keep in mind that in a small campaign team, individuals may take on
+            multiple roles, combining responsibilities to ensure efficient use
+            of resources. The specific roles and team composition will also
+            depend on the campaign&apos;s unique goals, strategy, and resources.
+          </div>
         </div>
-        <div className="text-lg max-w-3xl font-light px-6 lg:px-10">
-          Keep in mind that in a small campaign team, individuals may take on
-          multiple roles, combining responsibilities to ensure efficient use of
-          resources. The specific roles and team composition will also depend on
-          the campaign&apos;s unique goals, strategy, and resources.
-        </div>
-      </div>
-      {fields.map((field) => (
-        <div key={field.title} className="pt-14 lg:pt-28">
-          <h2 className="text-2xl font-black pb-4 pl-6 lg:pl-28">
-            {field.title}
-          </h2>
-          <div className="bg-slate-100 h-1" />
-          {field.steps.map((step, index) => (
-            <Fragment key={step.title}>
-              <div className="py-6 flex items-center">
-                <div className="text-right lg:text-center w-16 shrink-0 lg:w-[180px] font-bold text-5xl lg:text-6xl">
-                  {index + 1}
-                </div>
-                <div className="hidden lg:block bg-slate-100 w-1 h-10 mr-14 shrink-0"></div>
-                <div>
-                  <h3 className="font-bold text-lg lg:text-2xl mb-1 ml-4 lg:ml-0">
-                    {step.title}
-                  </h3>
-                  <div className="text-sm lg:text-lg font-light ml-4 lg:ml-0">
-                    {step.description}
+        {fields.map((field) => (
+          <div key={field.title} className="pt-14 lg:pt-28">
+            <h2 className="text-2xl font-black pb-4 pl-6 lg:pl-28">
+              {field.title}
+            </h2>
+            <div className="bg-slate-100 h-1" />
+            {field.steps.map((step, index) => (
+              <Fragment key={step.title}>
+                <div className="py-6 flex items-center">
+                  <div className="text-right lg:text-center w-16 shrink-0 lg:w-[180px] font-bold text-5xl lg:text-6xl">
+                    {index + 1}
+                  </div>
+                  <div className="hidden lg:block bg-slate-100 w-1 h-10 mr-14 shrink-0"></div>
+                  <div>
+                    <h3 className="font-bold text-lg lg:text-2xl mb-1 ml-4 lg:ml-0">
+                      {step.title}
+                    </h3>
+                    <div className="text-sm lg:text-lg font-light ml-4 lg:ml-0">
+                      {step.description}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="bg-slate-100 h-1" />
-            </Fragment>
-          ))}
-        </div>
-      ))}
-    </div>
+                <div className="bg-slate-100 h-1" />
+              </Fragment>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="mt-12 text-center">
+        <Link href={`/onboarding/${slug}/dashboard`}>
+          <YellowButton>CONTINUE</YellowButton>
+        </Link>
+      </div>
+    </>
   );
 }

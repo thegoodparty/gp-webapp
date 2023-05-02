@@ -3,6 +3,7 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Hero from './Hero';
 import Resources from './Resources';
 import TeamList from './TeamList';
+import UpdateCampaignTeam from './UpdateCampaignTeam';
 
 export default function OnboardingTeamPage({ campaign }) {
   const { slug } = campaign;
@@ -22,8 +23,10 @@ export default function OnboardingTeamPage({ campaign }) {
         <div className="lg:hidden">
           <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         </div>
-        <TeamList />
+        <TeamList slug={slug} />
+
         <Resources />
+        <UpdateCampaignTeam campaign={campaign} />
       </MaxWidth>
     </div>
   );

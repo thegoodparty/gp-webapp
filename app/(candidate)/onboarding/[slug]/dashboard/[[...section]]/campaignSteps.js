@@ -159,7 +159,7 @@ export const generateCampaignStatus = (campaign) => {
     team: {
       status: 'locked',
       completedSteps: 0,
-      totalSteps: 5,
+      totalSteps: 1,
     },
     social: {
       status: 'locked',
