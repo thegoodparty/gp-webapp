@@ -32,12 +32,8 @@ export default function BlogWrapper({
         </div>
       </div>
 
-      <div
-        className={
-          sectionSlug ? styles.sectionsSlugWrapper : styles.sectionsWrapper
-        }
-      >
-        <div className={sectionSlug ? styles.sectionsSlug : styles.sections}>
+      <div className={styles.sectionsWrapper}>
+        <div className={styles.sections}>
           <Link
             id="blog-home"
             href="/blog"
@@ -46,7 +42,7 @@ export default function BlogWrapper({
           >
             <BaseButtonClient
               style={{ backgroundColor: '#000', color: '#ffffff' }}
-              className="py-3 px-4 mb-3 font-bold"
+              className="py-3 px-4 mb-3 ml-3 mr-3 font-bold"
             >
               <AiOutlineHome size={18} />
             </BaseButtonClient>
@@ -54,26 +50,25 @@ export default function BlogWrapper({
           {sections.map((section) => (
             <React.Fragment key={section.fields.slug}>
               {section.fields.slug === sectionSlug ? (
-                // <div className={`${styles.section} ${styles.active}`}>
-                //   {section.fields.title}
-                // </div>
-                <BaseButtonClient
-                  className={`${
-                    section.fields.slug === 'onboarding-live'
-                      ? 'bg-indigo-900'
-                      : section.fields.slug === 'politics'
-                      ? 'bg-violet-600'
-                      : section.fields.slug === 'the-independent-cause'
-                      ? 'bg-pink-600'
-                      : section.fields.slug === 'temp-section'
-                      ? 'bg-orange-600'
-                      : section.fields.slug === 'candidates'
-                      ? 'bg-teal-500'
-                      : 'bg-gray-800'
-                  } py-3 px-4 mb-3 ml-3 font-bold text-white rounded-full`}
-                >
-                  {section.fields.title}
-                </BaseButtonClient>
+                <div className={styles.section}>
+                  <BaseButtonClient
+                    className={`${
+                      section.fields.slug === 'onboarding-live'
+                        ? 'bg-indigo-900'
+                        : section.fields.slug === 'politics'
+                        ? 'bg-violet-600'
+                        : section.fields.slug === 'the-independent-cause'
+                        ? 'bg-pink-600'
+                        : section.fields.slug === 'temp-section'
+                        ? 'bg-orange-600'
+                        : section.fields.slug === 'candidates'
+                        ? 'bg-teal-500'
+                        : 'bg-gray-800'
+                    } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full whitespace-nowrap`}
+                  >
+                    {section.fields.title}
+                  </BaseButtonClient>
+                </div>
               ) : (
                 <Link
                   id={`blog-section-${section.fields.slug}`}
@@ -96,7 +91,7 @@ export default function BlogWrapper({
                         : section.fields.slug === 'candidates'
                         ? 'bg-teal-500'
                         : 'bg-gray-800'
-                    } py-3 px-4 mb-3 font-bold text-white rounded-full`}
+                    } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full whitespace-nowrap`}
                   >
                     {section.fields.title}
                   </BaseButtonClient>
