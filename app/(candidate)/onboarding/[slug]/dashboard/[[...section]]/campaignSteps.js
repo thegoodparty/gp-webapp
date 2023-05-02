@@ -121,7 +121,7 @@ const campaignSteps = [
       <>
         Launch Your
         <br />
-        &amp; Campaign
+        Campaign
       </>
     ),
     plainTitle: 'Launch Your Campaign',
