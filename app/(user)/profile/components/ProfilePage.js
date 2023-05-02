@@ -39,12 +39,8 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <div className="mt-6 mb-3">
-        <RunCampaignButton
-          id="profile-run-for-office"
-          label="Run For Office"
-          fullWidth
-        />
+      <div className="mt-6 mb-3 flex items-center">
+        <RunCampaignButton id="profile-run-for-office" label="Run For Office" />
       </div>
       <Suspense>
         <CandidatesSection />
