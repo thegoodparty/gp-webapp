@@ -1,5 +1,4 @@
 import YellowButton from '@shared/buttons/YellowButton';
-import Link from 'next/link';
 import { Fragment } from 'react';
 
 const fields = [
@@ -138,9 +137,9 @@ export default function TeamList({ slug }) {
         ))}
       </div>
       <div className="mt-12 text-center">
-        <Link href={`/onboarding/${slug}/dashboard`}>
+        <a href={`/onboarding/${slug}/dashboard`}>
           <YellowButton>CONTINUE</YellowButton>
-        </Link>
+        </a>
       </div>
     </>
   );
