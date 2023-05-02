@@ -110,7 +110,7 @@ export default function TeamList({ slug }) {
         </div>
         {fields.map((field) => (
           <div key={field.title} className="pt-14 lg:pt-28">
-            <h2 className="text-2xl font-black pb-4 pl-6 lg:pl-28">
+            <h2 className="text-2xl font-black pb-4 pl-6 lg:pl-20">
               {field.title}
             </h2>
             <div className="bg-slate-100 h-1" />
