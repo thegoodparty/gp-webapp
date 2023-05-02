@@ -12,7 +12,10 @@ export default function Steps(props) {
           {campaignSteps.map((step) => (
             <>
               {step.type === 'gap' ? (
-                <div className="col-span-12 lg:col-span-4" key={step.key}></div>
+                <div
+                  className="col-span-12 lg:col-span-4 hidden lg:block"
+                  key={step.key}
+                ></div>
               ) : (
                 <>
                   {step.type === 'launch' ? (

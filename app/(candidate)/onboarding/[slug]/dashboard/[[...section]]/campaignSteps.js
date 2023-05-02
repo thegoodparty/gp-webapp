@@ -116,14 +116,24 @@ const campaignSteps = [
     connectedLine: true,
   },
   {
+    key: 'launch',
+    title: (
+      <>
+        Launch Your
+        <br />
+        &amp; Campaign
+      </>
+    ),
+    plainTitle: 'Launch Your Campaign',
+    subTitle: 'Effortlessly launch your campaign with our comprehensive guide',
+    stepNum: 7,
+    connectedLine: true,
+  },
+  {
     key: 'financeSupport',
     type: 'incentive',
     title: 'Expert Field & Mobilization Support',
     icon: <FaHeart />,
-  },
-  {
-    key: 'launch',
-    type: 'launch',
   },
 ];
 
@@ -177,15 +187,15 @@ export const generateCampaignStatus = (campaign) => {
       completedSteps: 0,
       totalSteps: 5,
     },
-    financeSupport: {
-      status: 'locked',
-      completedSteps: 0,
-      totalSteps: 5,
-    },
     launch: {
       status: 'locked',
       completedSteps: 0,
       totalSteps: 1,
+    },
+    financeSupport: {
+      status: 'locked',
+      completedSteps: 0,
+      totalSteps: 5,
     },
   };
   if (!campaign) {

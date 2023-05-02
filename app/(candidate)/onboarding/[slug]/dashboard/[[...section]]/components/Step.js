@@ -63,7 +63,7 @@ export default function Step({ campaign, step, campaignStatus }) {
   return (
     <div className="col-span-12 lg:col-span-4 h-full relative" key={step.key}>
       <div
-        className={`bg-white p-5 rounded-2xl flex flex-col justify-between z-10 relative transition-shadow hover:shadow-lg ${
+        className={`bg-white p-5 h-full rounded-2xl flex flex-col justify-between z-10 relative transition-shadow hover:shadow-lg ${
           showBorder && 'border-[3px] border-black'
         }`}
       >
