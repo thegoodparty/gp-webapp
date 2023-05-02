@@ -54,8 +54,8 @@ export default function Step({ campaign, step, campaignStatus }) {
   if (status === 'inProgress') {
     link = `/onboarding/${campaign.slug}/${step.key}/${completedSteps}`;
   }
-  if (step.key === 'campaignPlan') {
-    link = `/onboarding/${campaign.slug}/campaign-plan`;
+  if (step.link) {
+    link = `/onboarding/${campaign.slug}${step.link}`;
   }
 
   const showBorder =

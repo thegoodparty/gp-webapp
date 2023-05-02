@@ -76,7 +76,7 @@ const campaignSteps = [
       'Connect with skilled volunteers, passionate advocates, & top professionals',
     stepNum: 4,
     connectedLine: true,
-    comingSoon: true,
+    link: '/team',
   },
   {
     key: 'social',
@@ -92,6 +92,7 @@ const campaignSteps = [
       'A tailored Social Strategy leveraging our insights to engage voters & drive support',
     stepNum: 5,
     connectedLine: true,
+    comingSoon: true,
   },
   {
     key: 'socialSupport',
