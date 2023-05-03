@@ -92,7 +92,7 @@ const campaignSteps = [
       'A tailored Social Strategy leveraging our insights to engage voters & drive support',
     stepNum: 5,
     connectedLine: true,
-    comingSoon: true,
+    link: '/social',
   },
   {
     key: 'socialSupport',
@@ -114,6 +114,7 @@ const campaignSteps = [
       'A tailored Fundraising Strategy and tools to secure vital financial support efficiently',
     stepNum: 6,
     connectedLine: true,
+    comingSoon: true,
   },
   {
     key: 'launch',
@@ -174,12 +175,12 @@ export const generateCampaignStatus = (campaign) => {
     social: {
       status: 'locked',
       completedSteps: 0,
-      totalSteps: 5,
+      totalSteps: 1,
     },
     socialSupport: {
       status: 'locked',
       completedSteps: 0,
-      totalSteps: 5,
+      totalSteps: 1,
     },
 
     finance: {

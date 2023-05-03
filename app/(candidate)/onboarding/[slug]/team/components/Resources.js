@@ -1,3 +1,4 @@
+import BlackResourceCard from 'app/(candidate)/onboarding/shared/BlackResourceCard';
 import { MdOutlineFileDownload } from 'react-icons/md';
 const cards = [
   {
@@ -43,28 +44,7 @@ export default function Resources() {
       <div className="font-black text-2xl mb-4 mt-16">RESOURCES</div>
       <div className="p-7 bg-white rounded-2xl grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5  gap-4">
         {cards.map((card) => (
-          <div
-            key={card.title}
-            className="p-6 bg-black text-white rounded-lg flex flex-col justify-between"
-          >
-            <div>
-              <h4 className="font-black text-xl">{card.title}</h4>
-              <div className="text-sm my-4">{card.description}</div>
-            </div>
-            <div>
-              <div className="items-center bg-gp-yellow text-black  py-2 px-4 rounded-md inline-flex">
-                <a
-                  href={card.link}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  className="text-xs font-black tracking-widest mr-2"
-                >
-                  DOWNLOAD
-                </a>
-                <MdOutlineFileDownload />
-              </div>
-            </div>
-          </div>
+          <BlackResourceCard key={card.title} card={card} />
         ))}
       </div>
     </div>

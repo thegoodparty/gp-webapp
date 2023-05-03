@@ -1,6 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import IncentiveCard from './IncentiveCard';
-import LaunchCard from './LaunchCard';
 import Step from './Step';
 
 export default function Steps(props) {
@@ -18,16 +17,10 @@ export default function Steps(props) {
                 ></div>
               ) : (
                 <>
-                  {step.type === 'launch' ? (
-                    <LaunchCard key={step.key} {...props} />
+                  {step.type === 'incentive' ? (
+                    <IncentiveCard key={step.key} step={step} {...props} />
                   ) : (
-                    <>
-                      {step.type === 'incentive' ? (
-                        <IncentiveCard key={step.key} step={step} {...props} />
-                      ) : (
-                        <Step key={step.key} step={step} {...props} />
-                      )}
-                    </>
+                    <Step key={step.key} step={step} {...props} />
                   )}
                 </>
               )}
