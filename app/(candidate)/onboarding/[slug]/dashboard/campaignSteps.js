@@ -1,7 +1,7 @@
-import { FaHeart, FaRegLightbulb, FaStar } from 'react-icons/fa';
+import { FaHeart, FaStar } from 'react-icons/fa';
 import { BsFillMegaphoneFill } from 'react-icons/bs';
-import { detailFieldsCount } from '../../details/[step]/detailsFields';
-import { goalsFieldsCount } from '../../goals/[step]/goalsFields';
+import { detailFieldsCount } from '../details/[step]/detailsFields';
+import { goalsFieldsCount } from '../goals/[step]/goalsFields';
 
 const campaignSteps = [
   {
