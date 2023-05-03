@@ -33,7 +33,7 @@ export default function ForVoters() {
               className="tracking-wider py-5 px-8"
               id="find-candidates-button"
             >
-              Learn more
+              Learn More
             </PurpleButton>
           </Link>
         </div>
