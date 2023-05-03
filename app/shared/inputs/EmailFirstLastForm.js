@@ -71,9 +71,7 @@ export default function EmailForm({
       ) : (
         <>
           <div
-            className={`relative mb-24 lg:mb-0 ${
-              !fullWidth && 'lg:w-[50%] xl:w-[45%]'
-            }`}
+            className={`flex flex-col ${!fullWidth && 'lg:w-[50%] xl:w-[45%]'}`}
           >
             <input
               type="text"
@@ -108,26 +106,20 @@ export default function EmailForm({
               className="py-4 pl-4 pr-36 mb-5 rounded-lg w-full"
             />
 
+            <BaseButtonClient
+              onClick={submitForm}
+              id="submit-email"
+              type="submit"
+              className="bg-black w-full top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+            >
+              {label}
+            </BaseButtonClient>
+
             {!!showError && (
               <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">
                 {showError}
               </div>
             )}
-          </div>
-
-          <div
-            className={`relative mb-24 lg:mb-0 ${
-              !fullWidth && 'lg:w-[50%] xl:w-[45%]'
-            }`}
-          >
-            <BaseButtonClient
-              onClick={submitForm}
-              id="submit-email"
-              type="submit"
-              className="bg-black absolute w-full top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
-            >
-              {label}
-            </BaseButtonClient>
           </div>
         </>
       )}
