@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
-export default function ScheduleModal({ campaign }) {
+export default function ScheduleModal({ calendar }) {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -27,11 +27,7 @@ export default function ScheduleModal({ campaign }) {
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>
           <div className="w-[80vw] max-w-[900px] h-[90vh]">
-            <iframe
-              src="https://meetings.hubspot.com/jared-alper"
-              width="100%"
-              height="100%"
-            />
+            <iframe src={calendar} width="100%" height="100%" />
           </div>
         </Modal>
       )}

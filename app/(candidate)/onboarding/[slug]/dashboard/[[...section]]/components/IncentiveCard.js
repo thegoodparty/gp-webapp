@@ -8,16 +8,9 @@ import { BiUser } from 'react-icons/bi';
 import Link from 'next/link';
 import ScheduleModal from './ScheduleModal';
 
-const WrapperElement = ({ link, status, children }) => {
-  if (status === 'locked' || !link) {
-    return <div>{children}</div>;
-  }
-  return <Link href={link}>{children}</Link>;
-};
-
 export default function IncentiveCard({ step, campaign, campaignStatus }) {
   const { slug, image } = campaign;
-  const { key, icon, title, connectedLine } = step;
+  const { key, icon, title, connectedLine, calendar } = step;
   const stepStatus = campaignStatus[step.key];
   const status = stepStatus?.status;
 
@@ -95,17 +88,7 @@ export default function IncentiveCard({ step, campaign, campaignStatus }) {
             <div className="mt-1 font-bold text-lg h-14 flex items-center justify-center text-center">
               {title}
             </div>
-            {status !== 'locked' && (
-              <>
-                {key === 'support' ? (
-                  <ScheduleModal campaign={campaign} />
-                ) : (
-                  <div className="text-sm text-center underline mt-1">
-                    <Link href={link}>View {key}</Link>{' '}
-                  </div>
-                )}
-              </>
-            )}
+            {status !== 'locked' && <ScheduleModal calendar={calendar} />}
           </div>
           {key !== 'financeSupport' && (
             <div

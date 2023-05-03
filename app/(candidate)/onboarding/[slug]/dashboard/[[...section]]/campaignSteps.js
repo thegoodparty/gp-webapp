@@ -60,6 +60,7 @@ const campaignSteps = [
     key: 'support',
     type: 'incentive',
     title: 'Expert Campaign Support',
+    calendar: 'https://meetings.hubspot.com/jared-alper',
     icon: <FaHeart />,
   },
   {
@@ -99,6 +100,8 @@ const campaignSteps = [
     type: 'incentive',
     title: 'Expert Social Media Support',
     icon: <BsFillMegaphoneFill />,
+    calendar:
+      'https://meetings.hubspot.com/colton-hess/candidatesocialdiscussion',
   },
   {
     key: 'finance',
