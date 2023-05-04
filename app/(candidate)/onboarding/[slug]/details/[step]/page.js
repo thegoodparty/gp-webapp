@@ -7,7 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
-import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
+import campaignSteps from '../../dashboard/campaignSteps';
 import detailsFields from './detailsFields';
 import pageMetaData from 'helpers/metadataHelper';
 

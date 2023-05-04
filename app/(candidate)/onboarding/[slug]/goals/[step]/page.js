@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import OnboardingStepPage from '../../../shared/OnboardingStepPage';
-import campaignSteps from '../../dashboard/[[...section]]/campaignSteps';
+import campaignSteps from '../../dashboard/campaignSteps';
 import goalsFields from './goalsFields';
 import pageMetaData from 'helpers/metadataHelper';
 
