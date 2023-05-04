@@ -117,7 +117,7 @@ const campaignSteps = [
       'A tailored Fundraising Strategy and tools to secure vital financial support efficiently',
     stepNum: 6,
     connectedLine: true,
-    comingSoon: true,
+    link: '/finance',
   },
   {
     key: 'launch',
@@ -131,6 +131,7 @@ const campaignSteps = [
     plainTitle: 'Launch Your Campaign',
     subTitle: 'Effortlessly launch your campaign with our comprehensive guide',
     stepNum: 7,
+    comingSoon: true,
     connectedLine: true,
   },
   {
@@ -189,7 +190,7 @@ export const generateCampaignStatus = (campaign) => {
     finance: {
       status: 'locked',
       completedSteps: 0,
-      totalSteps: 5,
+      totalSteps: 4,
     },
     launch: {
       status: 'locked',

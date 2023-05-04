@@ -1,7 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Hero from '../../social/components/Hero';
 import Resources from '../../social/components/Resources';
-import Hero from './Hero';
 import TeamList from './TeamList';
 import UpdateCampaignTeam from './UpdateCampaignTeam';
 const cards = [
@@ -57,7 +57,7 @@ export default function OnboardingTeamPage({ campaign }) {
         <div className="hidden lg:block">
           <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         </div>
-        <Hero />
+        <Hero title="Build a Campaign Team" />
         <div className="lg:hidden">
           <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         </div>

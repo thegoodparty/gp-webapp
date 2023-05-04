@@ -40,7 +40,7 @@ export default function OnboardingSocialPage({ campaign }) {
         <div className="hidden lg:block">
           <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         </div>
-        <Hero />
+        <Hero title="Online presence & social media" />
         <div className="lg:hidden">
           <Breadcrumbs links={breadcrumbsLinks} withRefresh />
         </div>

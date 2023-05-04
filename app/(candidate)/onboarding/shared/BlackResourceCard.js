@@ -2,6 +2,10 @@ import { MdOutlineFileDownload } from 'react-icons/md';
 
 export default function BlackResourceCard({ card }) {
   const { title, description, link } = card;
+  let isDownload = true;
+  if (link.charAt(0) === '/') {
+    isDownload = false;
+  }
   return (
     <div
       key={title}
@@ -12,16 +16,20 @@ export default function BlackResourceCard({ card }) {
         <div className="text-sm my-4">{description}</div>
       </div>
       <div>
-        <div className="items-center bg-gp-yellow text-black  py-2 px-4 rounded-md inline-flex">
+        <div
+          className={`items-center  py-2  rounded-md inline-flex ${
+            isDownload ? 'bg-gp-yellow text-black px-4' : ' text-gp-yellow'
+          }`}
+        >
           <a
             href={link}
             target="_blank"
             rel="noopener noreferrer nofollow"
             className="text-xs font-black tracking-widest mr-2"
           >
-            DOWNLOAD
+            {isDownload ? 'DOWNLOAD' : 'READ MORE'}
           </a>
-          <MdOutlineFileDownload />
+          {isDownload && <MdOutlineFileDownload />}
         </div>
       </div>
     </div>
