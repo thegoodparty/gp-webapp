@@ -39,6 +39,10 @@ const gpApi = {
       url: `${base}subscribe/email`,
       method: 'GET',
     },
+    declarationSignatures: {
+      url: `${base}declare/list`,
+      method: 'GET',
+    },
   },
   entrance: {
     register: {
