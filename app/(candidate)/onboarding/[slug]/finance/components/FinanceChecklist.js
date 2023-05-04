@@ -29,7 +29,6 @@ const fields = [
               target="_blank"
               rel="noopener noreferrer nofollow"
               className="font-medium underline"
-              onClick={(e) => e.stopPropagation()}
             >
               https://www.irs.gov/ein
             </a>
@@ -265,7 +264,12 @@ export default function FinanceChecklist({ campaign }) {
                     {field.subTitle}
                   </div>
                   {selected === index && (
-                    <div className="-ml-14 lg:ml-0 mt-10 lg:my-16">
+                    <div
+                      className="-ml-14 lg:ml-0 mt-10 lg:my-16 cursor-default"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
                       {field.steps.map((step, index) => (
                         <div
                           key={step.title}
