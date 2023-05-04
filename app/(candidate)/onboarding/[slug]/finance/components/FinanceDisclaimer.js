@@ -14,7 +14,7 @@ export default function FinanceDisclaimer() {
           services that charge fees for obtaining an EIN on your behalf.
         </div>
       </div>
-      <div className="flex max-w-2xl  mx-auto bg-gp-yellow mt-14 py-6 px-8 rounded-xl">
+      <div className="flex max-w-2xl items-center  mx-auto bg-gp-yellow mt-14 py-6 px-8 rounded-xl">
         <div className="hidden lg:block text-4xl mr-8 text-red-700 pt-1">
           <Image
             src="/images/icons/party.svg"
