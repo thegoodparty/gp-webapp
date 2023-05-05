@@ -5,7 +5,7 @@ import Hero from '../../social/components/Hero';
 import FinanceChecklist from './FinanceChecklist';
 const cards = [
   {
-    title: 'Raising the Bar: Best Practices for...',
+    title: 'Raising the Bar: Best Practices for Political Fundraising',
     description: 'Strategies to raise funds effectively and ethically.',
     link: '/blog/article/raising-the-bar-best-practices-for-political-fundraising',
   },

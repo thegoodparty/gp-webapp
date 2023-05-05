@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import { FaChevronDown, FaExclamation } from 'react-icons/fa';
 import FinanceDisclaimer from './FinanceDisclaimer';
+import QuickLinks from './QuickLinks';
 
 const fields = [
   {
@@ -307,6 +308,7 @@ export default function FinanceChecklist({ campaign }) {
                 </div>
               </div>
               {selected === 0 && index === 0 && <FinanceDisclaimer />}
+              {selected === 3 && index === 3 && <QuickLinks />}
 
               <div className="bg-slate-100 h-1" />
             </Fragment>
