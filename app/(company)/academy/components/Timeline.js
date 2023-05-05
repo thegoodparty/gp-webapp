@@ -2,19 +2,19 @@ import { Fragment } from 'react';
 
 const tableCols = [
   {
-    date: 'May 10th',
+    date: 'May 31st',
     subject: 'The “Why”: Kickoff GPA & Finding your Why',
   },
   {
-    date: 'May 17th - May 21st',
+    date: 'June 7th',
     subject: 'The “How”: Building a Campaign Plan',
   },
   {
-    date: 'May 24th - May 28th',
+    date: 'June 14th',
     subject: 'The “Who + How Much”: Building a Team and Support',
   },
   {
-    date: 'June 1st - June 5th',
+    date: 'June 21st',
     subject: 'The “What”: Graduate and Making a Decision',
   },
 ];
