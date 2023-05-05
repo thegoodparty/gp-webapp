@@ -40,8 +40,10 @@ const gpApi = {
       method: 'GET',
     },
     declarationSignatures: {
-      url: `${base}declare/list`,
-      method: 'GET',
+      list: {
+        url: `${base}declares`,
+        method: 'GET',
+      },
     },
   },
   entrance: {

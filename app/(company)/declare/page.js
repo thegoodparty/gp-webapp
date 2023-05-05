@@ -25,9 +25,14 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export const fetchSignatures = async () => {
-  const api = gpApi.homepage.declarationSignatures;
-  return await gpFetch(api);
+const fetchSignatures = async () => {
+  try {
+    const api = gpApi.homepage.declarationSignatures.list;
+    return await gpFetch(api, false, 3600);
+  } catch (e) {
+    console.log('error at fetchSignatures', e);
+    return {};
+  }
 };
 
 export default async function Page() {
