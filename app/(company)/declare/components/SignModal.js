@@ -4,7 +4,7 @@ import { useState } from 'react';
 import BaseButtonClient from '@shared/buttons/BaseButtonClient';
 import SignForm from './SignForm';
 
-export default function AiModal({ submitCallback, showWarning }) {
+export default function SignModal() {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -32,7 +32,7 @@ export default function AiModal({ submitCallback, showWarning }) {
           </h3>
           <SignForm
             fullWidth
-            formId="37d98f01-7062-405f-b0d1-c95179057db1"
+            formId="f51c1352-c778-40a8-b589-b911c31e64b1"
             pageName="Declare"
             label="SIGN NOW"
             labelId="signature-form"

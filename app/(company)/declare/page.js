@@ -10,6 +10,6 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page() {
+export default function Page(params) {
   return <DeclagePage />;
 }
