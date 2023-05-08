@@ -2,38 +2,9 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import SignModal from './SignModal';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { Libre_Baskerville, Tangerine } from '@next/font/google';
-import { useEffect, useState } from 'react';
 
-const baskerville = Libre_Baskerville({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-});
-
-const tangerine = Tangerine({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-});
-
-export default function DeclarePage() {
-  const [signatures, setSignatures] = useState('');
-
-  const fetchSignatures = async () => {
-    try {
-      const api = gpApi.homepage.declarationSignatures.list;
-      const signers = await gpFetch(api, false, 3600);
-      setSignatures(signers.signatures);
-    } catch (e) {
-      console.log('error at fetchSignatures', e);
-      return {};
-    }
-  };
-
-  useEffect(() => {
-    fetchSignatures();
-  }, []);
+export default function DeclarePage(props) {
+  const { signatures, baskerville, tangerine } = props;
 
   return (
     <MaxWidth>

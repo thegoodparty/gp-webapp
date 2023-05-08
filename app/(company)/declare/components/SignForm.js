@@ -5,8 +5,6 @@ import { isValidEmail } from '@shared/inputs/EmailInput';
 import { Tangerine } from '@next/font/google';
 import Link from 'next/link';
 import BaseButtonClient from '@shared/buttons/BaseButtonClient';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import Image from 'next/image';
 
 const tangerine = Tangerine({
