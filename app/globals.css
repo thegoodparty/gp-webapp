@@ -120,7 +120,7 @@ div.MuiAutocomplete-popper div {
   .print-page-break {
     margin-top: 1rem;
     display: block;
-    page-break-before: auto;
+    page-break-before: always;
   }
   .hidden-for-print {
     display: none;

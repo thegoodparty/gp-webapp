@@ -175,8 +175,6 @@ export default function CampaignPlanSection({
 
   return (
     <section key={section.key} className="my-3 rounded-2xl bg-white">
-      <div className="print-page-break" />
-
       <div
         className="flex justify-between items-center p-6 cursor-pointer"
         onClick={() => toggleSelect()}
@@ -186,7 +184,9 @@ export default function CampaignPlanSection({
           {loading && <CircularProgress size={20} />}
         </h3>
         <div
-          className={`transition-all duration-300 ${expand && 'rotate-180'}`}
+          className={`transition-all duration-300 hidden-for-print ${
+            expand && 'rotate-180'
+          }`}
         >
           <FaChevronDown size={24} />
         </div>
@@ -272,6 +272,7 @@ export default function CampaignPlanSection({
           )}
         </div>
       </div>
+      <div className="print-page-break" />
     </section>
   );
 }

@@ -81,7 +81,7 @@ function CampaignPlanSections(props, ref) {
         )}
       </div>
 
-      <div className="text-center mt-8 font-black">
+      <div className="text-center mt-8 font-black hidden-for-print">
         <a href={`/onboarding/${campaign.slug}/dashboard`}>
           <BlackButton>CONTINUE</BlackButton>
         </a>
