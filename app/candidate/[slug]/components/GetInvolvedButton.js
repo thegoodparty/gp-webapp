@@ -9,8 +9,14 @@ import { GiSandsOfTime } from 'react-icons/gi';
 import FollowButton from './FollowButton';
 import ShareCandidate from './ShareCandidate';
 
-export default function GetInvolvedButton({ color, candidate, textColor }) {
+export default function GetInvolvedButton({
+  color,
+  candidate,
+  textColor,
+  candidatePositions,
+}) {
   console.log('can', candidate);
+  console.log('candidatePositions', candidatePositions);
   const [showModal, setShowModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
