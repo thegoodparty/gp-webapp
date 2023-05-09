@@ -70,7 +70,10 @@ function GoalsChart({ candidate, followers, color }) {
   }
 
   const rgb = hexToRgb(color);
-  const COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
+  let COLORS = [`rgba(0,0,0, 0.5)`, color];
+  if (rgb) {
+    COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
+  }
 
   return (
     <div className="relative">

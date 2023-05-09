@@ -37,14 +37,12 @@ const statusStyles = {
 };
 
 export default function Step({ campaign, step, campaignStatus }) {
-  const { title, stepNum, subTitle, connectedLine, comingSoon } = step;
+  const { title, stepNum, subTitle, connectedLine } = step;
 
   const stepStatus = campaignStatus[step.key];
   const status = stepStatus.status;
   let statusStyle = statusStyles[stepStatus.status];
-  if (comingSoon) {
-    statusStyle = statusStyles['locked'];
-  }
+
   const completedSteps = Math.min(
     stepStatus.completedSteps,
     stepStatus.totalSteps,
@@ -58,8 +56,7 @@ export default function Step({ campaign, step, campaignStatus }) {
     link = `/onboarding/${campaign.slug}${step.link}`;
   }
 
-  const showBorder =
-    !comingSoon && (status === 'notStarted' || status === 'inProgress');
+  const showBorder = status === 'notStarted' || status === 'inProgress';
   return (
     <div className="col-span-12 lg:col-span-4 h-full relative" key={step.key}>
       <div
@@ -81,7 +78,7 @@ export default function Step({ campaign, step, campaignStatus }) {
                 </div>
               ) : (
                 <>
-                  {(comingSoon || status === 'locked') && (
+                  {status === 'locked' && (
                     <div className="bg-zinc-400 bg-opacity-30   py-2 px-3 rounded-full">
                       <FaLock />
                     </div>
@@ -93,14 +90,14 @@ export default function Step({ campaign, step, campaignStatus }) {
           <div className="flex pr-3 items-start">
             <div
               className={`font-bold text-7xl ${
-                (status === 'locked' || comingSoon) && 'text-zinc-400'
+                status === 'locked' && 'text-zinc-400'
               }`}
             >
               {stepNum}
             </div>
             <div
               className={`ml-3 text-2xl font-bold mt-1 ${
-                (status === 'locked' || comingSoon) && 'text-zinc-400'
+                status === 'locked' && 'text-zinc-400'
               }`}
             >
               {title}
@@ -108,41 +105,36 @@ export default function Step({ campaign, step, campaignStatus }) {
           </div>
           <div className="text-sm mt-6 text-neutral-500">{subTitle}</div>
         </div>
-        {comingSoon ? (
-          <div className="mt-5 text-right mb-1 text-zinc-500 text-sm font-bold">
-            Coming Soon
-          </div>
-        ) : (
-          <div className="flex items-center justify-between mt-3">
-            <div>
-              <div
-                className="text-sm font-black"
-                style={{ color: statusStyle.color }}
-              >
-                {statusStyle.label}
-              </div>
-              <div className="text-xs">
-                {completedSteps} of {stepStatus.totalSteps} items
-              </div>
+
+        <div className="flex items-center justify-between mt-3">
+          <div>
+            <div
+              className="text-sm font-black"
+              style={{ color: statusStyle.color }}
+            >
+              {statusStyle.label}
             </div>
-            {!statusStyle.hideButton ? (
-              <div>
-                <Link href={link}>
-                  <YellowButtonClient style={{ padding: '8px 16px' }}>
-                    <div className="text-sm font-bold">
-                      {statusStyle.buttonLabel}
-                    </div>
-                  </YellowButtonClient>
-                </Link>
-              </div>
-            ) : null}
-            {status === 'completed' && (
-              <Link href={link}>
-                <div className="font-bold underline text-sm">View details</div>
-              </Link>
-            )}
+            <div className="text-xs">
+              {completedSteps} of {stepStatus.totalSteps} items
+            </div>
           </div>
-        )}
+          {!statusStyle.hideButton ? (
+            <div>
+              <Link href={link}>
+                <YellowButtonClient style={{ padding: '8px 16px' }}>
+                  <div className="text-sm font-bold">
+                    {statusStyle.buttonLabel}
+                  </div>
+                </YellowButtonClient>
+              </Link>
+            </div>
+          ) : null}
+          {status === 'completed' && (
+            <Link href={link}>
+              <div className="font-bold underline text-sm">View details</div>
+            </Link>
+          )}
+        </div>
       </div>
 
       <div

@@ -228,7 +228,7 @@ export default function FinanceChecklist({ campaign }) {
     <>
       <div className="lg:mt-6 pt-5 lg:pt-10 bg-white rounded-2xl">
         <div>
-          <div class="font-bold mb-10 text-2xl px-6 lg:px-10">
+          <div className="font-bold mb-10 text-2xl px-6 lg:px-10">
             Let&apos;s get your finances in order
           </div>
           <div className="text-lg max-w-3xl font-light px-6 lg:px-10">

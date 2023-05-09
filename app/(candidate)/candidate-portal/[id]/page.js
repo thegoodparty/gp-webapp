@@ -6,10 +6,12 @@ import PortalHomePage from './components/PortalHomePage';
 import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchRole = async (id) => {
+  console.log('fetching role');
   const api = gpApi.campaign.role;
   const payload = { id };
   const token = getServerToken();
-  return await gpFetch(api, payload, 3600, token);
+  console.log('fetching role', api);
+  return await gpFetch(api, payload, false, token);
 };
 
 export const fetchCandidate = async (id) => {
@@ -38,6 +40,7 @@ export default async function Page({ params }) {
   const { id } = params;
 
   const role = await fetchRole(id);
+  console.log('role', role);
   portalAccessOnly(role);
 
   const { candidate } = await fetchCandidate(id);

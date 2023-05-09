@@ -213,6 +213,11 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      launch: {
+        url: `${base}campaign/onboarding/launch`,
+        method: 'POST',
+        withAuth: true,
+      },
       list: {
         //admin
         url: `${base}campaign/onboardings`,

@@ -25,6 +25,14 @@ export const fetchCandidate = async (slug) => {
 export async function generateMetadata({ params }) {
   const { slug } = params;
   const { candidate } = await fetchCandidate(slug);
+  if (!candidate) {
+    const meta = pageMetaData({
+      title: 'Not Found',
+      description: '',
+      slug: `/candidate/${slug}`,
+    });
+    return meta;
+  }
   const { firstName, lastName, party, otherParty, office, headline } =
     candidate;
 
