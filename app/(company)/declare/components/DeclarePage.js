@@ -47,6 +47,8 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
     },
   ];
 
+  let modalProps = { tangerine };
+
   return (
     <MaxWidth>
       <div className="xl:max-w-5xl mx-auto w-full items-center">
@@ -85,7 +87,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
                   🎉
                 </span>
               </div>
-              <SignModal />
+              <SignModal {...modalProps} />
             </div>
             <div
               className={`flex flex-col max-w-[55%] mx-auto justify-center items-center text-2xl ${tangerine.className}`}

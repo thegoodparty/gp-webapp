@@ -4,7 +4,7 @@ import { useState } from 'react';
 import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import SignForm from './SignForm';
 
-export default function SignModal() {
+export default function SignModal({ tangerine }) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -33,6 +33,7 @@ export default function SignModal() {
             pageName="Declare"
             label="SIGN NOW"
             labelId="signature-form"
+            tangerine={tangerine}
           />
         </div>
       </Modal>

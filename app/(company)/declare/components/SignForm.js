@@ -2,18 +2,12 @@
 
 import { useState } from 'react';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import { Tangerine } from '@next/font/google';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import Link from 'next/link';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import Image from 'next/image';
-
-const tangerine = Tangerine({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-});
 
 export async function subscribeEmail(payload) {
   try {
@@ -30,6 +24,7 @@ export default function SignatureForm({
   pageName,
   label = 'SIGN NOW',
   labelId,
+  tangerine,
 }) {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
