@@ -10,6 +10,7 @@ import FollowButton from './FollowButton';
 import ShareCandidate from './ShareCandidate';
 
 export default function GetInvolvedButton({ color, candidate, textColor }) {
+  console.log('can', candidate);
   const [showModal, setShowModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
