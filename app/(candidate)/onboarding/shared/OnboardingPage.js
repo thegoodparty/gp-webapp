@@ -59,7 +59,6 @@ export default function OnboardingPage({
   const [loading, setLoading] = useState(false);
 
   const canSave = () => {
-    console.log('inputFields', inputFields);
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
       const value = state[field.key];

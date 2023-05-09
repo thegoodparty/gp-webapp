@@ -12,7 +12,6 @@ function debounce(func, args, timeout = 600) {
 
 export default function EditCandidatePage(props) {
   const { candidate, campaign } = props;
-  console.log('camp', campaign);
   const [color, setColor] = useState(candidate.color || '#734BDC');
   useEffect(() => {
     updateCampaign({

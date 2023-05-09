@@ -15,8 +15,6 @@ export default function GetInvolvedButton({
   textColor,
   candidatePositions,
 }) {
-  console.log('can', candidate);
-  console.log('candidatePositions', candidatePositions);
   const [showModal, setShowModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
