@@ -40,11 +40,16 @@ export default function NavRegisterOrProfile() {
     if (typeof FS === 'undefined') {
       return;
     }
-    if (userI) {
-      FS.identify(userI.id, {
-        displayName: userI.name,
-        email: userI.email,
-      });
+    if (userI && userI.email) {
+      const domain = userI.email.split('@')[1];
+      if (domain === 'goodparty.org') {
+        FS.shutdown();
+      } else {
+        FS.identify(userI.id, {
+          displayName: userI.name,
+          email: userI.email,
+        });
+      }
     }
   };
 
