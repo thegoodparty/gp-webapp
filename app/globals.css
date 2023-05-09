@@ -100,3 +100,34 @@ div.MuiAutocomplete-popper div {
   border-top-right-radius: 0px;
   border-top-left-radius: 0px;
 }
+
+@media all {
+  .print-page-break {
+    display: none;
+  }
+}
+
+@media print {
+  html,
+  body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media print {
+  .print-page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+  .hidden-for-print {
+    display: none;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
+}

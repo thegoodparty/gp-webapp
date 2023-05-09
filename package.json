@@ -51,6 +51,7 @@
     "react-sticky-el": "^2.0.9",
     "react-table": "^7.8.0",
     "react-timeago": "^7.1.0",
+    "react-to-print": "^2.14.12",
     "recharts": "^2.1.16",
     "sass": "^1.56.0",
     "sharp": "^0.31.3",

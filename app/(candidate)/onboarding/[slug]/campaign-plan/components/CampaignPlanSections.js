@@ -1,7 +1,7 @@
 import BlackButton from '@shared/buttons/BlackButton';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
-import { Fragment, useEffect, useState } from 'react';
+import { forwardRef, Fragment, useEffect, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
 import CampaignPlanSection from './CampaignPlanSection';
 import LockedCampaignPlanSection from './LockedCampaignPlanSection';
@@ -21,7 +21,8 @@ const lockedSections = [
   { key: 'operationalPlan', title: 'Budget' },
   { key: 'timeline', title: 'Timeline' },
 ];
-export default function CampaignPlanSections({ campaign }) {
+function CampaignPlanSections(props, ref) {
+  const { campaign, expandAll } = props;
   const versions = useVersions();
   const [updatedVersions, setUpdatedVersions] = useState(false);
   const isWhyLocked = !campaign.pathToVictory;
@@ -31,7 +32,7 @@ export default function CampaignPlanSections({ campaign }) {
     setUpdatedVersions(versions);
   };
   return (
-    <>
+    <div ref={ref}>
       <h2 className="my-8 text-3xl font-black">WHY</h2>
       {sections.map((section) => (
         <CampaignPlanSection
@@ -41,6 +42,7 @@ export default function CampaignPlanSections({ campaign }) {
           initialOpen={section.key === 'slogan'}
           versions={updatedVersions || versions}
           updateVersionsCallback={updateVersionsCallback}
+          forceExpand={expandAll}
         />
       ))}
 
@@ -58,6 +60,7 @@ export default function CampaignPlanSections({ campaign }) {
                 initialOpen={section.key === 'pathToVictory'}
                 versions={updatedVersions || versions}
                 updateVersionsCallback={updateVersionsCallback}
+                forceExpand={expandAll}
               />
             )}
           </Fragment>
@@ -83,6 +86,8 @@ export default function CampaignPlanSections({ campaign }) {
           <BlackButton>CONTINUE</BlackButton>
         </a>
       </div>
-    </>
+    </div>
   );
 }
+
+export default forwardRef(CampaignPlanSections);

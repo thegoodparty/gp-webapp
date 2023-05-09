@@ -47,6 +47,7 @@ export default function CampaignPlanSection({
   initialOpen,
   versions,
   updateVersionsCallback,
+  forceExpand,
 }) {
   const [open, setOpen] = useState(initialOpen);
   const [editMode, setEditMode] = useState(false);
@@ -170,8 +171,12 @@ export default function CampaignPlanSection({
     setIsEdited(true);
   };
 
+  const expand = open || forceExpand;
+
   return (
     <section key={section.key} className="my-3 rounded-2xl bg-white">
+      <div className="print-page-break" />
+
       <div
         className="flex justify-between items-center p-6 cursor-pointer"
         onClick={() => toggleSelect()}
@@ -180,13 +185,15 @@ export default function CampaignPlanSection({
           <span className="inline-block mr-6">{section.title}</span>
           {loading && <CircularProgress size={20} />}
         </h3>
-        <div className={`transition-all duration-300 ${open && 'rotate-180'}`}>
+        <div
+          className={`transition-all duration-300 ${expand && 'rotate-180'}`}
+        >
           <FaChevronDown size={24} />
         </div>
       </div>
       <div
         className={`overflow-hidden transition-all duration-300  ${
-          open ? 'max-h-[3000px]' : 'max-h-0 '
+          expand ? 'max-h-[3000px]' : 'max-h-0 '
         }`}
       >
         <div className="p-6 ">
@@ -240,7 +247,7 @@ export default function CampaignPlanSection({
                         ) : (
                           <div dangerouslySetInnerHTML={{ __html: plan }} />
                         )}
-                        <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 cursor-pointer ">
+                        <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 cursor-pointer hidden-for-print">
                           <FaPencilAlt />
                         </div>
                       </div>
@@ -248,7 +255,7 @@ export default function CampaignPlanSection({
                   </>
                 )}
               </div>
-              <div className="flex items-center justify-center mt-6 border-t border-t-slate-300 py-6">
+              <div className="flex items-center justify-center mt-6 border-t border-t-slate-300 py-6 hidden-for-print">
                 <AiModal
                   submitCallback={handleRegenerate}
                   showWarning={isEdited}

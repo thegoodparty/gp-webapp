@@ -21,7 +21,7 @@ export default function PlanVersion({
     }
   };
   return (
-    <div className="text-right p-2">
+    <div className="text-right p-2 hidden-for-print">
       <Select
         native
         value={state}
