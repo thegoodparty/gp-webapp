@@ -17,7 +17,7 @@ const tangerine = Tangerine({
 const fetchSignatures = async () => {
   try {
     const api = gpApi.homepage.declarationSignatures.list;
-    const signers = await gpFetch(api, false, 3600);
+    const signers = await gpFetch(api);
     return signers?.signatures || '';
   } catch (e) {
     console.log('error at fetchSignatures', e);
