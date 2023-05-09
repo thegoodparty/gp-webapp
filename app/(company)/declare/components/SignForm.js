@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import { Tangerine } from '@next/font/google';
+import gpFetch from 'gpApi/gpFetch';
+import gpApi from 'gpApi';
 import Link from 'next/link';
-import BaseButtonClient from '@shared/buttons/BaseButtonClient';
+import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import Image from 'next/image';
 
 const tangerine = Tangerine({
@@ -66,7 +69,7 @@ export default function SignatureForm({
       {success ? (
         <div className="flex flex-col">
           <div>
-            <div className="flex flex-row ml-14 md:ml-0 justify-center mx-auto mb-6">
+            <div className="flex flex-row justify-center mx-auto mb-6">
               <Image
                 src="/images/heart.svg"
                 alt="GP"
@@ -91,24 +94,24 @@ export default function SignatureForm({
           <div>
             <div className="flex flex-row justify-center mx-auto mb-6">
               <Link href="/volunteer">
-                <BaseButtonClient
-                  className="py-3 px-4 mb-3 ml-3 font-bold bg-black text-white text-sm"
+                <BlackButtonClient
+                  className="py-3 px-4 mb-3 mr-3 font-bold text-white text-sm"
                   style={{
                     padding: '0.625rem 1.25rem',
                   }}
                 >
                   Learn More
-                </BaseButtonClient>
+                </BlackButtonClient>
               </Link>
               <Link href="https://www.facebook.com/sharer.php?u=goodparty.org">
-                <BaseButtonClient
-                  className="py-3 px-4 mb-3 ml-3 font-bold bg-pink-600 text-white text-sm"
+                <PinkButtonClient
+                  className="py-3 px-4 mb-3 font-bold text-white text-sm"
                   style={{
                     padding: '0.625rem 1.25rem',
                   }}
                 >
                   Share
-                </BaseButtonClient>
+                </PinkButtonClient>
               </Link>
             </div>
           </div>
@@ -149,14 +152,14 @@ export default function SignatureForm({
               className="py-4 pl-4 pr-36 mb-5 rounded-lg w-full border-solid border-2 border-gray-300"
             />
 
-            <BaseButtonClient
+            <BlackButtonClient
               onClick={submitForm}
               id="submit-email"
               type="submit"
-              className="bg-black w-full top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
+              className="w-full top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
             >
               {label}
-            </BaseButtonClient>
+            </BlackButtonClient>
 
             {!!showError && (
               <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">

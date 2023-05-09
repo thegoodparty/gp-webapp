@@ -1,7 +1,7 @@
 'use client';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
-import BaseButtonClient from '@shared/buttons/BaseButtonClient';
+import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import SignForm from './SignForm';
 
 export default function SignModal() {
@@ -9,8 +9,8 @@ export default function SignModal() {
 
   return (
     <>
-      <BaseButtonClient
-        className="py-3 px-4 mb-3 ml-3 font-bold bg-pink-600 text-white text-sm"
+      <PinkButtonClient
+        className="py-3 px-4 mb-3 ml-3 font-bold text-white text-sm"
         style={{
           borderRadius: '9999px',
           padding: '0.625rem 1.25rem',
@@ -18,13 +18,10 @@ export default function SignModal() {
         onClick={() => setShowModal(true)}
       >
         SIGN NOW
-      </BaseButtonClient>
+      </PinkButtonClient>
 
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
-        <div
-          className="flex flex-col p-4"
-          style={{ maxWidth: '465px', minWidth: '300px' }}
-        >
+        <div className="flex flex-col p-4 max-w-[465px] min-w-[300px]">
           <h3 className="text-xl font-black mb-9 flex items-center justify-center">
             <div className="ml-3">
               Leave your John Hancock and declare your independence!
