@@ -139,6 +139,7 @@ const campaignSteps = [
     type: 'incentive',
     title: 'Expert Field & Mobilization Support',
     icon: <FaHeart />,
+    calendar: 'https://meetings.hubspot.com/rob994/info-session',
   },
 ];
 
