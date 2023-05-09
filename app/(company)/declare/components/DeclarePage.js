@@ -2,9 +2,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import SignModal from './SignModal';
 
-export default function DeclarePage(props) {
-  const { signatures, baskerville, tangerine } = props;
-
+export default function DeclarePage({ signatures, baskerville, tangerine }) {
   return (
     <MaxWidth>
       <div className="xl:max-w-5xl mx-auto w-full items-center">

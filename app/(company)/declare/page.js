@@ -36,11 +36,11 @@ export const metadata = meta;
 
 export default async function Page(params) {
   const signatures = await fetchSignatures();
-  return (
-    <DeclagePage
-      signatures={signatures}
-      baskerville={baskerville}
-      tangerine={tangerine}
-    />
-  );
+  const childProps = {
+    signatures,
+    baskerville,
+    tangerine,
+  };
+
+  return <DeclagePage {...childProps} />;
 }
