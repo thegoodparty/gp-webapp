@@ -51,11 +51,19 @@ const campaignSteps = [
   },
   {
     key: 'profile',
-    type: 'incentive',
-    title: 'Campaign Profile',
-    icon: <FaStar />,
+    title: (
+      <>
+        Preview Profile
+        <br />& Upload Photo
+      </>
+    ),
+    plainTitle: 'Preview Profile & Upload Photo',
+    subTitle: 'Review your profile information and upload your photo',
+    stepNum: 4,
     connectedLine: true,
+    link: 'custom',
   },
+
   {
     key: 'support',
     type: 'incentive',
@@ -75,7 +83,7 @@ const campaignSteps = [
     plainTitle: 'Build Campaign Team',
     subTitle:
       'Connect with skilled volunteers, passionate advocates, & top professionals',
-    stepNum: 4,
+    stepNum: 5,
     connectedLine: true,
     link: '/team',
   },
@@ -91,7 +99,7 @@ const campaignSteps = [
     plainTitle: 'Online Presence & Social Media',
     subTitle:
       'A tailored Social Strategy leveraging our insights to engage voters & drive support',
-    stepNum: 5,
+    stepNum: 6,
     connectedLine: true,
     link: '/social',
   },
@@ -115,7 +123,7 @@ const campaignSteps = [
     plainTitle: 'Financial Management & Fundraising',
     subTitle:
       'A tailored Fundraising Strategy and tools to secure vital financial support efficiently',
-    stepNum: 6,
+    stepNum: 7,
     connectedLine: true,
     link: '/finance',
   },
@@ -130,7 +138,7 @@ const campaignSteps = [
     ),
     plainTitle: 'Launch Your Campaign',
     subTitle: 'Effortlessly launch your campaign with our comprehensive guide',
-    stepNum: 7,
+    stepNum: 8,
     connectedLine: true,
     link: '/launch',
   },
@@ -238,15 +246,13 @@ export const generateCampaignStatus = (campaign) => {
   });
 
   // set incentive status
-  if (status.campaignPlan.status === 'completed') {
+  if (status.profile.status === 'completed') {
     status.support.status = 'completed';
-    status.profile.status = 'completed';
     if (status.team.status === 'locked') {
       status.team.status = 'notStarted';
     }
   } else {
     status.support.status = 'locked';
-    status.profile.status = 'locked';
   }
 
   if (status.social.status === 'completed') {

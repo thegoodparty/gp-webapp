@@ -48,18 +48,17 @@ export default async function Page({ params }) {
   const { slug } = params;
   let isStaged = false;
   let res = await fetchCandidate(slug);
-  let campaign;
+  let { campaign } = await fetchUserCampaign();
   if (!res) {
     isStaged = true;
-    ({ campaign } = await fetchUserCampaign());
     if (campaign) {
       const mapped = mapCampaignToCandidate(campaign);
       res = {
         candidate: mapped,
       };
+    } else {
+      notFound();
     }
-  } else {
-    notFound();
   }
 
   const { candidate } = res;
@@ -79,7 +78,7 @@ export default async function Page({ params }) {
     candidate,
     editMode: true,
     isStaged,
-    candidatePositions: mapTopIssues(campaign.details?.topIssues),
+    candidatePositions: mapTopIssues(candidate.details?.topIssues),
     positions, // for issuesSelector
   };
 
@@ -160,6 +159,9 @@ function mapCampaignToCandidate(campaign) {
 
 const mapTopIssues = (topIssues) => {
   const res = [];
+  if (!topIssues) {
+    return res;
+  }
   topIssues.positions.forEach((position) => {
     const positionWithoutTopIssue = JSON.parse(JSON.stringify(position));
     delete positionWithoutTopIssue.topIssue;

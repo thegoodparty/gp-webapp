@@ -37,7 +37,7 @@ const statusStyles = {
 };
 
 export default function Step({ campaign, step, campaignStatus }) {
-  const { title, stepNum, subTitle, connectedLine } = step;
+  const { key, title, stepNum, subTitle, connectedLine } = step;
 
   const stepStatus = campaignStatus[step.key];
   const status = stepStatus.status;
@@ -54,6 +54,9 @@ export default function Step({ campaign, step, campaignStatus }) {
   }
   if (step.link) {
     link = `/onboarding/${campaign.slug}${step.link}`;
+  }
+  if (step.link === 'custom' && key === 'profile') {
+    link = `/candidate/${campaign.slug}/edit`;
   }
 
   const showBorder = status === 'notStarted' || status === 'inProgress';

@@ -21,14 +21,9 @@ export default function IncentiveCard({ step, campaign, campaignStatus }) {
     imgSrc = ColtonImg;
   } else if (key === 'financeSupport') {
     imgSrc = RobImg;
-  } else if (key === 'profile' && image) {
-    imgSrc = image;
   }
 
   let link = '';
-  if (key === 'profile') {
-    link = `/candidate/${slug}/edit`;
-  }
 
   return (
     <Fragment key={key}>
@@ -88,19 +83,8 @@ export default function IncentiveCard({ step, campaign, campaignStatus }) {
             <div className="mt-1 font-bold text-lg h-14 flex items-center justify-center text-center">
               {title}
             </div>
-            {status !== 'locked' && key === 'profile' && (
-              <Link
-                className="mt-1 block text-sm text-center underline"
-                href={link}
-                title="View Profile"
-              >
-                View Profile
-              </Link>
-            )}
 
-            {status !== 'locked' && key !== 'profile' && (
-              <ScheduleModal calendar={calendar} />
-            )}
+            {status !== 'locked' && <ScheduleModal calendar={calendar} />}
           </div>
           {key !== 'financeSupport' && (
             <div

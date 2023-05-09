@@ -1,6 +1,6 @@
 'use client';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CandidatePage from './CandidatePage';
 
 function debounce(func, args, timeout = 600) {
@@ -12,7 +12,16 @@ function debounce(func, args, timeout = 600) {
 
 export default function EditCandidatePage(props) {
   const { candidate, campaign } = props;
+  console.log('camp', campaign);
   const [color, setColor] = useState(candidate.color || '#734BDC');
+  useEffect(() => {
+    updateCampaign({
+      ...campaign,
+      profile: {
+        completed: true,
+      },
+    });
+  }, []);
 
   const updateColorCallback = async (color) => {
     setColor(color);
