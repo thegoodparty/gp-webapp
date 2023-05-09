@@ -38,7 +38,7 @@ const fields = [
   },
   {
     title: 'Social Media',
-    key: 'socailMedia',
+    key: 'socialMedia',
     icon: <BsMegaphone />,
     items: ['Launch video', 'Social media written content announcing launch'],
   },

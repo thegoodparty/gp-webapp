@@ -16,7 +16,7 @@ export const fetchCandidate = async (slug) => {
       allFields: true,
     };
 
-    return await gpFetch(api, payload, 3600);
+    return await gpFetch(api, payload);
   } catch (e) {
     return false;
   }
