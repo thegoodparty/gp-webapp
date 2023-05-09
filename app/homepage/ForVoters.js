@@ -27,7 +27,7 @@ export default function ForVoters() {
           community of independent-minded people helping to elect a new
           generation of real people running winning campaigns on good ideas.
         </div>
-        <div className="mt-4 lg:flex items-center text-center">
+        <div className="mt-4 lg:flex items-center">
           <Link href="/volunteer">
             <PurpleButton
               className="tracking-wider py-5 px-8"
