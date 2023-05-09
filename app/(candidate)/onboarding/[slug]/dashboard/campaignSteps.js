@@ -154,6 +154,7 @@ const campaignSteps = [
 export default campaignSteps;
 
 export const generateCampaignStatus = (campaign) => {
+  let currentStep = 'details-1';
   const status = {
     details: {
       status: 'notStarted',
@@ -213,7 +214,7 @@ export const generateCampaignStatus = (campaign) => {
     },
   };
   if (!campaign) {
-    return status;
+    return { ...status, currentStep };
   }
 
   Object.keys(status).forEach((key, index) => {
@@ -223,9 +224,13 @@ export const generateCampaignStatus = (campaign) => {
       const completedSteps = Object.keys(value).length || 0;
       if (completedSteps > 0) {
         step.status = 'inProgress';
+        if (!(step.key === 'campaignPlan' && completedSteps === 4)) {
+          currentStep = `${key}-${completedSteps}`;
+        }
       }
       if (completedSteps >= step.totalSteps) {
         step.status = 'completed';
+        currentStep = `${key}-completed`;
       }
       if (step.key === 'campaignPlan' && completedSteps === 4) {
         // details has 4 steps.
@@ -270,6 +275,6 @@ export const generateCampaignStatus = (campaign) => {
   } else {
     status.financeSupport.status = 'locked';
   }
-
+  status.currentStep = currentStep;
   return status;
 };

@@ -2,12 +2,17 @@
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { generateCampaignStatus } from '../[slug]/dashboard/campaignSteps';
 
 export async function updateCampaign(campaign, versionKey) {
   try {
     const api = gpApi.campaign.onboarding.update;
+    const currentStep = calcCampaignStep(campaign);
     const payload = {
-      campaign,
+      campaign: {
+        ...campaign,
+        currentStep,
+      },
       versionKey,
     };
     return await gpFetch(api, payload);
@@ -25,4 +30,9 @@ export async function fetchCampaignVersions() {
     console.log('error at fetchCampaignVersions', e);
     return {};
   }
+}
+
+function calcCampaignStep(campaign) {
+  const status = generateCampaignStatus(campaign);
+  return status.currentStep;
 }
