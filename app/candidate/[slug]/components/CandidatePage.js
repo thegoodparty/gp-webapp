@@ -24,7 +24,7 @@ function pickTextColorBasedOnBg(
 }
 
 export default function CandidatePage(props) {
-  const { candidate, editMode, isStaged } = props;
+  const { candidate, isStaged } = props;
   let color = props.color || candidate.color || '#734BDC';
   if (!props.color && candidate.color?.color) {
     // old candidates
