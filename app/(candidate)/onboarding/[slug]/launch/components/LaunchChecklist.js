@@ -150,7 +150,7 @@ export default function LaunchChecklist({ campaign }) {
       });
       const { slug } = await launchCampaign();
       if (slug) {
-        window.location.href = `/candidate/${slug}`;
+        router.push(`/candidate/${slug}`);
       } else {
         snackbarState.set(() => {
           return {
