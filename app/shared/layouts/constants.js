@@ -26,6 +26,7 @@ export const FOOTER_COLUMNS = [
       { label: 'FAQs', link: '/faqs' },
       { label: 'Pricing', link: '/pricing' },
       { label: 'Political Definitions', link: '/political-terms' },
+      { label: 'Declaration of Independence', link: '/declare' },
     ],
   },
   {

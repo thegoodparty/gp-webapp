@@ -90,7 +90,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
               <SignModal {...modalProps} />
             </div>
             <div
-              className={`flex flex-col max-w-[55%] mx-auto justify-center items-center text-2xl ${tangerine.className}`}
+              className={`flex flex-col max-w-[55%] mt-8 mx-auto justify-center items-center text-2xl ${tangerine.className}`}
             >
               {signatures}
             </div>
