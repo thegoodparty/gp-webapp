@@ -172,7 +172,7 @@ export default function LaunchChecklist({ campaign }) {
             {field.items.map((item, index) => (
               <div
                 key={`${field.key}-${index}`}
-                className="mb-3 flex items-center"
+                className="mb-3 ml-5 flex items-center"
               >
                 <Checkbox
                   sx={{
