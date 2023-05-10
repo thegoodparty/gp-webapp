@@ -1,8 +1,8 @@
 import pageMetaData from 'helpers/metadataHelper';
-import DeclagePage from './components/DeclarePage';
+import DeclarePage from './components/DeclarePage';
+import { Libre_Baskerville, Tangerine } from '@next/font/google';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { Libre_Baskerville, Tangerine } from '@next/font/google';
 
 const baskerville = Libre_Baskerville({
   weight: ['400', '700'],
@@ -14,16 +14,15 @@ const tangerine = Tangerine({
   subsets: ['latin'],
 });
 
-const fetchSignatures = async () => {
+async function fetchSignatures() {
   try {
     const api = gpApi.homepage.declarationSignatures.list;
-    const signers = await gpFetch(api);
-    return signers?.signatures || '';
+    return await gpFetch(api);
   } catch (e) {
     console.log('error at fetchSignatures', e);
     return {};
   }
-};
+}
 
 const meta = pageMetaData({
   title: 'Declaration of Independence | GOOD PARTY',
@@ -35,12 +34,12 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page(params) {
-  const signatures = await fetchSignatures();
+  const { signatures } = await fetchSignatures();
   const childProps = {
-    signatures,
+    signatures: signatures || '',
     baskerville,
     tangerine,
   };
 
-  return <DeclagePage {...childProps} />;
+  return <DeclarePage {...childProps} />;
 }
