@@ -66,7 +66,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
                 GOOD PARTY Declaration of Independence
               </p>
             </div>
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center md:items-center">
               {content.map((line) => (
                 <div
                   key={line.key}
