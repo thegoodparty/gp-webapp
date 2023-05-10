@@ -13,6 +13,7 @@ import { FiCamera } from 'react-icons/fi';
 import { RiRocketLine } from 'react-icons/ri';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useRouter } from 'next/navigation';
 
 const fields = [
   {
@@ -87,9 +88,10 @@ export async function launchCampaign() {
 }
 
 export default function LaunchChecklist({ campaign }) {
-  const { slug } = campaign;
+  const { slug, launched, candidateSlug } = campaign;
   const [selected, setSelected] = useState(false);
   const [state, setState] = useState(initialState);
+  const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
 
   useEffect(() => {
@@ -136,24 +138,28 @@ export default function LaunchChecklist({ campaign }) {
     return true;
   };
   const handleSave = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
-    const { slug } = await launchCampaign();
-    if (slug) {
-      window.location.href = `/candidate/${slug}`;
+    if (launched && candidateSlug) {
+      router.push(`/candidate/${candidateSlug}`);
     } else {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Error launching your campaign',
-          isError: true,
+          message: 'Saving...',
+          isError: false,
         };
       });
+      const { slug } = await launchCampaign();
+      if (slug) {
+        window.location.href = `/candidate/${slug}`;
+      } else {
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'Error launching your campaign',
+            isError: true,
+          };
+        });
+      }
     }
   };
 
@@ -172,11 +178,11 @@ export default function LaunchChecklist({ campaign }) {
             {field.items.map((item, index) => (
               <div
                 key={`${field.key}-${index}`}
-                className="mb-3 ml-5 flex items-center"
+                className="mb-3 ml-6 flex items-center"
               >
                 <Checkbox
                   sx={{
-                    '&.Mui-checked': { color: '#FFE600' },
+                    '&.Mui-checked': { color: '#000' },
                     '& .MuiSvgIcon-root': { fontSize: 36 },
                   }}
                   checked={state[`${field.key}-${index}`]}
@@ -198,7 +204,9 @@ export default function LaunchChecklist({ campaign }) {
           BACK TO DASHBOARD
         </a>
         <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
-          <strong>LAUNCH YOUR PROFILE</strong>
+          <strong>
+            {launched ? 'VIEW YOUR PROFILE' : 'LAUNCH YOUR PROFILE'}
+          </strong>
         </YellowButtonClient>
       </div>
     </div>
