@@ -272,7 +272,6 @@ export default function CampaignPlanSection({
           )}
         </div>
       </div>
-      <div className="print-page-break" />
     </section>
   );
 }
