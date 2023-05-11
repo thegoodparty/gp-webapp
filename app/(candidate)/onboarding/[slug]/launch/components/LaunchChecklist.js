@@ -14,6 +14,17 @@ import { RiRocketLine } from 'react-icons/ri';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { useRouter } from 'next/navigation';
+import ReactCanvasConfetti from 'react-canvas-confetti';
+import Confetti from './Confetti';
+
+const canvasStyles = {
+  position: 'fixed',
+  pointerEvents: 'none',
+  width: '100%',
+  height: '100%',
+  top: 0,
+  left: 0,
+};
 
 const fields = [
   {
@@ -203,11 +214,15 @@ export default function LaunchChecklist({ campaign }) {
         >
           BACK TO DASHBOARD
         </a>
-        <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
-          <strong>
-            {launched ? 'VIEW YOUR PROFILE' : 'LAUNCH YOUR PROFILE'}
-          </strong>
-        </YellowButtonClient>
+        <Confetti
+          button={
+            <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
+              <strong>
+                {launched ? 'VIEW YOUR PROFILE' : 'LAUNCH YOUR PROFILE'}
+              </strong>
+            </YellowButtonClient>
+          }
+        />
       </div>
     </div>
   );
