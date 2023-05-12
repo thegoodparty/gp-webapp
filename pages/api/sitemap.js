@@ -136,7 +136,7 @@ export default async function sitemap(req, res) {
       xmlString += `
         <url>
           <loc>${appBase}/blog/article/${article.slug}</loc>
-          <lastmod>${currentDate}</lastmod>
+          <lastmod>${article.publishDate}</lastmod>
           <changefreq>monthly</changefreq>
         </url>
       `;
