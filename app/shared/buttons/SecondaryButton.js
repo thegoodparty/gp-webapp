@@ -1,10 +1,10 @@
 import { CircularProgress } from '@mui/material';
 import classNames from 'classnames';
-import PrimaryButton from './PrimaryButton';
+import { setSize } from './PrimaryButton';
 
-export default function SecondaryButton({
+export default function SecondaryPrimaryButton({
   children,
-  className = '',
+  className = {},
   variant = 'contained',
   style = {},
   size = 'large',
@@ -12,48 +12,82 @@ export default function SecondaryButton({
   loading = false,
 }) {
   let baseClass = {
-    'hover:bg-lime-400': true,
-    'active:bg-lime-400': true,
-    'hover:text-indigo-900': true,
-    'active:text-indigo-900': true,
+    'rounded-lg': true,
+    'font-medium': true,
+
+    'transition-colors': true,
   };
   if (variant === 'contained') {
     baseClass['bg-slate-300'] = true;
-    baseClass['text-indigo-900'] = true;
+    baseClass['text-indigo'] = true;
+    baseClass['hover:bg-lime-400'] = true;
+    baseClass['active:bg-lime-400'] = true;
   } else if (variant === 'outlined') {
     baseClass['bg-white'] = true;
     baseClass['text-primary'] = true;
     baseClass['border-2'] = true;
-    baseClass['border-primary'] = true;
+    baseClass['border-slate-500'] = true;
+    baseClass['hover:bg-lime-400'] = true;
+    baseClass['active:bg-lime-400'] = true;
+    baseClass['hover:border-lime-400'] = true;
+    baseClass['active:border-lime-400'] = true;
   } else if (variant === 'text') {
     baseClass['text-primary'] = true;
+    baseClass['hover:bg-lime-400'] = true;
+    baseClass['active:bg-lime-400'] = true;
+  }
+  setSize(baseClass, size);
+  if (disabled) {
+    baseClass['cursor-not-allowed'] = true;
+    if (variant === 'contained') {
+      baseClass['bg-slate-200'] = true;
+      baseClass['text-gray-700'] = true;
+      baseClass['bg-slate-300'] = false;
+      baseClass['text-indigo'] = false;
+      baseClass['hover:bg-lime-400'] = false;
+      baseClass['active:bg-lime-400'] = false;
+    } else if (variant === 'outlined') {
+      baseClass['bg-white'] = true;
+      baseClass['text-gray-500'] = true;
+      baseClass['border-gray-200'] = true;
+
+      baseClass['text-primary'] = false;
+      baseClass['border-slate-500'] = false;
+      baseClass['hover:bg-lime-400'] = false;
+      baseClass['active:bg-lime-400'] = false;
+      baseClass['hover:border-lime-400'] = false;
+      baseClass['active:border-lime-400'] = false;
+      baseClass['hover:text-primary'] = false;
+      baseClass['active:text-primary'] = false;
+    } else if (variant === 'text') {
+      baseClass['text-gray-500'] = true;
+      baseClass['text-primary'] = false;
+
+      baseClass['hover:bg-lime-400'] = false;
+      baseClass['active:bg-lime-400'] = false;
+      baseClass['hover:border-lime-400'] = false;
+      baseClass['active:border-lime-400'] = false;
+      baseClass['hover:text-primary'] = false;
+      baseClass['active:text-primary'] = false;
+      baseClass['border-2'] = false;
+    }
   }
 
-  if (disabled) {
-    baseClass['bg-slate-200'] = true;
-    baseClass['text-gray-700'] = true;
-    baseClass['hover:text-gray-700'] = true;
-    baseClass['hover:text-lime-500'] = false;
-    baseClass['active:text-lime-500'] = false;
-    baseClass['bg-white'] = false;
-    baseClass['bg-slate-300'] = false;
-    baseClass['bg-gray-600'] = false;
-    baseClass['text-gray-300'] = false;
-    baseClass['hover:text-gray-300'] = false;
-    baseClass['hover:bg-lime-400'] = false;
-    baseClass['active:bg-lime-400'] = false;
+  if (loading) {
+    baseClass.flex = true;
+    baseClass['items-center'] = true;
   }
 
   return (
-    <PrimaryButton
-      className={classNames(baseClass, className)}
+    <button
+      className={classNames({ ...baseClass, ...className })}
       style={style}
-      variant={variant}
-      size={size}
       disabled={disabled}
-      loading={loading}
     >
+      {loading ? (
+        <CircularProgress size={16} className="mr-2" color="inherit" />
+      ) : null}
       {children}
-    </PrimaryButton>
+    </button>
   );
 }

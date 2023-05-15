@@ -1,9 +1,9 @@
-import SecondaryButtonComponent from './SecondaryButton';
-import { argTypes } from './buttonsArgTypes';
+import ErrorButtonComponent from './ErrorButton';
+import { argTypes } from './PrimaryButton.stories';
 
 export default {
-  title: 'Buttons/SecondaryButton',
-  component: SecondaryButtonComponent,
+  title: 'Buttons/ErrorButton',
+  component: ErrorButtonComponent,
   tags: ['autodocs'],
   args: {
     children: 'Button text',
