@@ -1,5 +1,5 @@
+import { argTypes } from './buttonsArgTypes';
 import ErrorButtonComponent from './ErrorButton';
-import { argTypes } from './PrimaryButton.stories';
 
 export default {
   title: 'Buttons/ErrorButton',

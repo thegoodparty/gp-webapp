@@ -2,7 +2,7 @@ import { CircularProgress } from '@mui/material';
 import classNames from 'classnames';
 import { setSize } from './PrimaryButton';
 
-export default function SecondaryPrimaryButton({
+export default function SecondaryButton({
   children,
   className = {},
   variant = 'contained',
@@ -19,7 +19,7 @@ export default function SecondaryPrimaryButton({
   };
   if (variant === 'contained') {
     baseClass['bg-slate-300'] = true;
-    baseClass['text-indigo'] = true;
+    baseClass['text-primary'] = true;
     baseClass['hover:bg-lime-400'] = true;
     baseClass['active:bg-lime-400'] = true;
   } else if (variant === 'outlined') {
@@ -43,7 +43,7 @@ export default function SecondaryPrimaryButton({
       baseClass['bg-slate-200'] = true;
       baseClass['text-gray-700'] = true;
       baseClass['bg-slate-300'] = false;
-      baseClass['text-indigo'] = false;
+      baseClass['text-primary'] = false;
       baseClass['hover:bg-lime-400'] = false;
       baseClass['active:bg-lime-400'] = false;
     } else if (variant === 'outlined') {
