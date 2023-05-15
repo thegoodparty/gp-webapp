@@ -1,0 +1,94 @@
+import { CircularProgress } from '@mui/material';
+import classNames from 'classnames';
+import { setSize } from './PrimaryButton';
+
+export default function InfoButton({
+  children,
+  className = {},
+  variant = 'contained',
+  style = {},
+  size = 'large',
+  disabled = false,
+  loading = false,
+}) {
+  let baseClass = {
+    'rounded-lg': true,
+    'font-medium': true,
+    'transition-colors': true,
+  };
+  if (variant === 'contained') {
+    baseClass['bg-slate-400'] = true;
+    baseClass['text-indigo-900'] = true;
+    baseClass['hover:bg-slate-500'] = true;
+    baseClass['active:bg-slate-500'] = true;
+  } else if (variant === 'outlined') {
+    baseClass['bg-white'] = true;
+    baseClass['text-indigo-900'] = true;
+    baseClass['border-2'] = true;
+    baseClass['border-slate-900'] = true;
+
+    baseClass['hover:border-primary'] = true;
+    baseClass['active:border-primary'] = true;
+    baseClass['hover:bg-primary'] = true;
+    baseClass['active:bg-primary'] = true;
+    baseClass['hover:text-slate-50'] = true;
+    baseClass['active:text-slate-50'] = true;
+  } else if (variant === 'text') {
+    baseClass['text-indigo-300'] = true;
+    baseClass['hover:bg-slate-400'] = true;
+    baseClass['active:bg-slate-400'] = true;
+    baseClass['hover:text-primary'] = true;
+    baseClass['active:text-primary'] = true;
+  }
+  setSize(baseClass, size);
+  if (disabled) {
+    baseClass['cursor-not-allowed'] = true;
+    if (variant === 'contained') {
+      baseClass['bg-slate-200'] = true;
+      baseClass['text-gray-700'] = true;
+
+      baseClass['bg-slate-400'] = false;
+      baseClass['text-indigo-900'] = false;
+      baseClass['hover:bg-slate-500'] = false;
+      baseClass['active:bg-slate-500'] = false;
+    } else if (variant === 'outlined') {
+      baseClass['text-gray-500'] = true;
+      baseClass['border-slate-200'] = true;
+
+      baseClass['text-indigo-900'] = false;
+      baseClass['border-slate-900'] = false;
+      baseClass['hover:border-primary'] = false;
+      baseClass['active:border-primary'] = false;
+      baseClass['hover:bg-primary'] = false;
+      baseClass['active:bg-primary'] = false;
+      baseClass['hover:text-slate-50'] = false;
+      baseClass['active:text-slate-50'] = false;
+    } else if (variant === 'text') {
+      baseClass['text-gray-500'] = true;
+
+      baseClass['text-indigo-300'] = false;
+      baseClass['hover:bg-slate-400'] = false;
+      baseClass['active:bg-slate-400'] = false;
+      baseClass['hover:text-primary'] = false;
+      baseClass['active:text-primary'] = false;
+    }
+  }
+
+  if (loading) {
+    baseClass.flex = true;
+    baseClass['items-center'] = true;
+  }
+
+  return (
+    <button
+      className={classNames({ ...baseClass, ...className })}
+      style={style}
+      disabled={disabled}
+    >
+      {loading ? (
+        <CircularProgress size={16} className="mr-2" color="inherit" />
+      ) : null}
+      {children}
+    </button>
+  );
+}
