@@ -15,12 +15,13 @@ export const metadata = meta;
 const fetchIssues = async () => {
   const api = gpApi.admin.topIssues.list;
   const token = getServerToken();
-  return await gpFetch(api, false, false, token);
+  return await gpFetch(api, false, 1, token);
 };
 
 export default async function Page() {
   adminAccessOnly();
-  const { topIssues } = await fetchIssues();
+  const res = await fetchIssues();
+  const { topIssues } = res;
   const childProps = {
     pathname: '/admin/top-issues',
     title: 'Top Issues',
