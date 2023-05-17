@@ -10,12 +10,17 @@ export default function InfoButton({
   size = 'large',
   disabled = false,
   loading = false,
+  fullWidth,
 }) {
   let baseClass = {
     'rounded-lg': true,
     'font-medium': true,
     'transition-colors': true,
   };
+  if (fullWidth) {
+    baseClass['w-full'] = true;
+  }
+
   if (variant === 'contained') {
     baseClass['bg-slate-400'] = true;
     baseClass['text-indigo-900'] = true;

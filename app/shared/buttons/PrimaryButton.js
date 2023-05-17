@@ -25,6 +25,7 @@ export default function PrimaryButton({
   size = 'large',
   disabled = false,
   loading = false,
+  fullWidth = false,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -83,6 +84,10 @@ export default function PrimaryButton({
       baseClass['hover:bg-primary'] = false;
       baseClass['active:bg-primary'] = false;
     }
+  }
+
+  if (fullWidth) {
+    baseClass['w-full'] = true;
   }
 
   if (loading) {

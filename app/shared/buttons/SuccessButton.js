@@ -10,12 +10,17 @@ export default function SuccessButton({
   size = 'large',
   disabled = false,
   loading = false,
+  fullWidth = false,
 }) {
   let baseClass = {
     'rounded-lg': true,
     'font-medium': true,
     'transition-colors': true,
   };
+
+  if (fullWidth) {
+    baseClass['w-full'] = true;
+  }
   if (variant === 'contained') {
     baseClass['bg-green-400'] = true;
     baseClass['text-indigo-900'] = true;

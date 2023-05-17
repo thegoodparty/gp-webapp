@@ -10,6 +10,7 @@ export default function SecondaryButton({
   size = 'large',
   disabled = false,
   loading = false,
+  fullWidth = false,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -17,6 +18,11 @@ export default function SecondaryButton({
 
     'transition-colors': true,
   };
+
+  if (fullWidth) {
+    baseClass['w-full'] = true;
+  }
+
   if (variant === 'contained') {
     baseClass['bg-slate-300'] = true;
     baseClass['text-primary'] = true;

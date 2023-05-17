@@ -60,4 +60,16 @@ export const argTypes = {
       defaultValue: { summary: false },
     },
   },
+
+  fullWidth: {
+    options: [true, false],
+    control: { type: 'select' },
+    description: 'full width of its parent container',
+    table: {
+      type: {
+        summary: 'select',
+      },
+      defaultValue: { summary: false },
+    },
+  },
 };
