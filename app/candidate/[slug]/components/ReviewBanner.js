@@ -23,7 +23,6 @@ export default function ReviewBanner({ campaign }) {
   const { launchStatus } = campaign;
   const launch = async () => {
     const { slug } = await launchCampaign(campaign.slug);
-    console.log('launched', slug);
     if (slug) {
       router.push(`/candidate/${slug}`);
     }
