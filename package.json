@@ -26,6 +26,7 @@
     "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.13",
     "@next/font": "13.2.3",
+    "@react-oauth/google": "^0.11.0",
     "autoprefixer": "^10.4.13",
     "eslint": "8.26.0",
     "eslint-config-next": "13.2.3",

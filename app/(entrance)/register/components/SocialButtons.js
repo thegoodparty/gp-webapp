@@ -1,3 +1,4 @@
+'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import {

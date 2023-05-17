@@ -47,6 +47,7 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
+
   const userState = useHookstate(globalUserState);
   const snackbarState = useHookstate(globalSnackbarState);
   const router = useRouter();
@@ -93,79 +94,80 @@ export default function LoginPage() {
   };
 
   return (
-    <MaxWidth>
-      <div className={`flex items-center justify-center ${styles.wrapper}`}>
-        <div className="grid py-6 max-w-lg" style={{ width: '75vw' }}>
-          <div className="text-center mb-8 pt-8">
-            <h1
-              data-cy="register-title"
-              className="text-2xl lg:text-4xl font-black"
-            >
-              Log into your account
-            </h1>
-          </div>
-          <div className="flex justify-center">
-            <div
-              className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
-              data-cy="register-label"
-            >
-              <Link
-                href="/register"
-                data-cy="redirect-to-login"
-                className=" no-underline"
+    <>
+      <MaxWidth>
+        <div className={`flex items-center justify-center ${styles.wrapper}`}>
+          <div className="grid py-6 max-w-lg" style={{ width: '75vw' }}>
+            <div className="text-center mb-8 pt-8">
+              <h1
+                data-cy="register-title"
+                className="text-2xl lg:text-4xl font-black"
               >
-                <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
-                  Sign up
+                Log into your account
+              </h1>
+            </div>
+            <div className="flex justify-center">
+              <div
+                className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
+                data-cy="register-label"
+              >
+                <Link
+                  href="/register"
+                  data-cy="redirect-to-login"
+                  className=" no-underline"
+                >
+                  <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
+                    Sign up
+                  </div>
+                </Link>
+                <div className="bg-black text-white py-3 px-6 rounded-xl">
+                  Sign In
                 </div>
-              </Link>
-              <div className="bg-black text-white py-3 px-6 rounded-xl">
-                Sign In
               </div>
             </div>
-          </div>
-          <form
-            noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-            data-cy="email-form"
-            id="register-page-form"
-          >
-            <EmailInput
-              onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
-              value={state.email}
-            />
-            <br />
-            <br />
-            <PasswordInput
-              label="Password"
-              onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-            />
-
-            <br />
-            <br />
-            <br />
-
-            <YellowButtonClient
-              style={{ width: '100%' }}
-              disabled={!enableSubmit()}
-              onClick={handleSubmit}
-              type="submit"
+            <form
+              noValidate
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              data-cy="email-form"
+              id="register-page-form"
             >
-              <strong>LOGIN</strong>
-            </YellowButtonClient>
-          </form>
-          <br />
+              <EmailInput
+                onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
+                value={state.email}
+              />
+              <br />
+              <br />
+              <PasswordInput
+                label="Password"
+                onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
+              />
 
-          <Link href="/forgot-password" className="text-sm">
-            Forgot your password?
-          </Link>
+              <br />
+              <br />
+              <br />
 
-          <Suspense>
-            <SocialButtons />
-          </Suspense>
+              <YellowButtonClient
+                style={{ width: '100%' }}
+                disabled={!enableSubmit()}
+                onClick={handleSubmit}
+                type="submit"
+              >
+                <strong>LOGIN</strong>
+              </YellowButtonClient>
+            </form>
+            <br />
+
+            <Link href="/forgot-password" className="text-sm">
+              Forgot your password?
+            </Link>
+            <Suspense>
+              <SocialButtons />
+            </Suspense>
+          </div>
         </div>
-      </div>
-    </MaxWidth>
+      </MaxWidth>
+    </>
   );
 }
