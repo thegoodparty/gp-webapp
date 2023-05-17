@@ -47,8 +47,6 @@ export default async function Page({ params }) {
 
   const { positions } = await fetchPositions();
 
-  console.log('top issus', campaign.details?.topIssues);
-
   const childProps = {
     campaign,
     candidate,
