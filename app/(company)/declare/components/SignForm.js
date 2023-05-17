@@ -5,10 +5,11 @@ import { isValidEmail } from '@shared/inputs/EmailInput';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import Link from 'next/link';
+import BlackButton from '@shared/buttons/BlackButton';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import Image from 'next/image';
-
+import ShareCandidate from 'app/candidate/[slug]/components/ShareCandidate';
 export async function subscribeEmail(payload) {
   try {
     await gpFetch(gpApi.homepage.subscribeEmail, payload);
@@ -31,6 +32,7 @@ export default function SignatureForm({
   const [lastName, setLastName] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
   const canSubmit = () => isValidEmail(email);
 
@@ -61,7 +63,7 @@ export default function SignatureForm({
       onSubmit={(e) => e.preventDefault()}
       id={labelId}
     >
-      {success ? (
+      {success && !showShare ? (
         <div className="flex flex-col">
           <div>
             <div className="flex flex-row justify-center mx-auto mb-6">
@@ -89,28 +91,30 @@ export default function SignatureForm({
           <div>
             <div className="flex flex-row justify-center mx-auto mb-6">
               <Link href="/volunteer">
-                <BlackButtonClient
-                  className="py-3 px-4 mb-3 mr-3 font-bold text-white text-sm"
+                <BlackButton
+                  className="font-bold text-white text-sm"
                   style={{
                     padding: '0.625rem 1.25rem',
+                    marginRight: '0.75rem',
                   }}
                 >
                   Learn More
-                </BlackButtonClient>
+                </BlackButton>
               </Link>
-              <Link href="https://www.facebook.com/sharer.php?u=goodparty.org">
-                <PinkButtonClient
-                  className="py-3 px-4 mb-3 font-bold text-white text-sm"
-                  style={{
-                    padding: '0.625rem 1.25rem',
-                  }}
-                >
-                  Share
-                </PinkButtonClient>
-              </Link>
+              <PinkButtonClient
+                className="py-3 px-4 mb-3 font-bold text-white text-sm"
+                style={{
+                  padding: '0.625rem 1.25rem',
+                }}
+                onClick={() => setShowShare(true)}
+              >
+                Share
+              </PinkButtonClient>
             </div>
           </div>
         </div>
+      ) : showShare ? (
+        <ShareCandidate />
       ) : (
         <>
           <div className="flex flex-col">
