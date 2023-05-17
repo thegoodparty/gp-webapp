@@ -47,12 +47,14 @@ export default async function Page({ params }) {
 
   const { positions } = await fetchPositions();
 
+  console.log('top issus', campaign.details?.topIssues);
+
   const childProps = {
     campaign,
     candidate,
     reviewMode: true,
     editMode: true,
-    candidatePositions: mapTopIssues(candidate.details?.topIssues),
+    candidatePositions: mapTopIssues(campaign.details?.topIssues),
     positions, // for issuesSelector
   };
 
