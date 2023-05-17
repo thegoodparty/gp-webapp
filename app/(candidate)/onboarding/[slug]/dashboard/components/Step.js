@@ -26,6 +26,12 @@ const statusStyles = {
     active: true,
     buttonLabel: 'CONTINUE',
   },
+  inReview: {
+    label: 'In Review',
+    color: '#E00C30',
+    active: true,
+    buttonLabel: 'PENDING',
+  },
   completed: {
     label: 'Completed',
     color: '#47E28B',
@@ -49,7 +55,7 @@ export default function Step({ campaign, step, campaignStatus }) {
   );
 
   let link = `/onboarding/${campaign.slug}/${step.key}/1`;
-  if (status === 'inProgress') {
+  if (status === 'inProgress' || status === 'inReview') {
     link = `/onboarding/${campaign.slug}/${step.key}/${completedSteps}`;
   }
   if (step.link) {
@@ -59,7 +65,8 @@ export default function Step({ campaign, step, campaignStatus }) {
     link = `/candidate/${campaign.slug}/edit`;
   }
 
-  const showBorder = status === 'notStarted' || status === 'inProgress';
+  const showBorder =
+    status === 'notStarted' || status === 'inProgress' || status === 'inReview';
   return (
     <div className="col-span-12 lg:col-span-4 h-full relative" key={step.key}>
       <div

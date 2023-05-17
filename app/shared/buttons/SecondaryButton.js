@@ -1,5 +1,5 @@
 import { CircularProgress } from '@mui/material';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { setSize } from './PrimaryButton';
 
 export default function SecondaryButton({
@@ -80,7 +80,7 @@ export default function SecondaryButton({
 
   return (
     <button
-      className={classNames({ ...baseClass, ...className })}
+      className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
     >

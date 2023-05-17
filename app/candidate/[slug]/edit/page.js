@@ -91,7 +91,7 @@ export default async function Page({ params }) {
   );
 }
 
-function mapCampaignToCandidate(campaign) {
+export function mapCampaignToCandidate(campaign) {
   if (!campaign) {
     return false;
   }
@@ -157,7 +157,7 @@ function mapCampaignToCandidate(campaign) {
   };
 }
 
-const mapTopIssues = (topIssues) => {
+export const mapTopIssues = (topIssues) => {
   const res = [];
   if (!topIssues) {
     return res;

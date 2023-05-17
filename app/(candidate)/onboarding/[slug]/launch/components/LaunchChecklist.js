@@ -14,7 +14,6 @@ import { RiRocketLine } from 'react-icons/ri';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { useRouter } from 'next/navigation';
-import ReactCanvasConfetti from 'react-canvas-confetti';
 import Confetti from './Confetti';
 
 const canvasStyles = {
@@ -90,16 +89,17 @@ fields.forEach((field) => {
 
 export async function launchCampaign() {
   try {
-    const api = gpApi.campaign.onboarding.launch;
-    return await gpFetch(api);
+    const api = gpApi.campaign.onboarding.launchRequest;
+    await gpFetch(api);
+    return true;
   } catch (e) {
     console.log('error at launchCampaign', e);
-    return {};
+    return false;
   }
 }
 
 export default function LaunchChecklist({ campaign }) {
-  const { slug, launched, candidateSlug } = campaign;
+  const { slug, launchStatus, candidateSlug } = campaign;
   const [selected, setSelected] = useState(false);
   const [state, setState] = useState(initialState);
   const router = useRouter();
@@ -149,7 +149,7 @@ export default function LaunchChecklist({ campaign }) {
     return true;
   };
   const handleSave = async () => {
-    if (launched && candidateSlug) {
+    if (launchStatus === 'launched' && candidateSlug) {
       router.push(`/candidate/${candidateSlug}`);
     } else {
       snackbarState.set(() => {
@@ -159,9 +159,9 @@ export default function LaunchChecklist({ campaign }) {
           isError: false,
         };
       });
-      const { slug } = await launchCampaign();
-      if (slug) {
-        router.push(`/candidate/${slug}`);
+      const res = await launchCampaign();
+      if (res) {
+        router.push(`/onboarding/${slug}/dashboard`);
       } else {
         snackbarState.set(() => {
           return {
@@ -218,7 +218,16 @@ export default function LaunchChecklist({ campaign }) {
           button={
             <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
               <strong>
-                {launched ? 'VIEW YOUR PROFILE' : 'LAUNCH YOUR PROFILE'}
+                {launchStatus === 'launched' ? (
+                  'VIEW YOUR PROFILE'
+                ) : (
+                  <>
+                    {' '}
+                    {launchStatus === 'pending'
+                      ? 'PENDING REVIEW'
+                      : 'LAUNCH YOUR PROFILE'}
+                  </>
+                )}
               </strong>
             </YellowButtonClient>
           }

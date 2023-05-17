@@ -2,6 +2,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import AboutSection from './AboutSection';
 import Hero from './Hero';
 import IssuesSectionWithEdit from './IssuesSectionWithEdit';
+import ReviewBanner from './ReviewBanner';
 import SocialSectionWithEdit from './SocialSectionWithEdit';
 import StagedBanner from './StagedBanner';
 import VictoryTracker from './VictoryTracker';
@@ -24,7 +25,7 @@ function pickTextColorBasedOnBg(
 }
 
 export default function CandidatePage(props) {
-  const { candidate, isStaged } = props;
+  const { candidate, isStaged, reviewMode } = props;
   let color = props.color || candidate.color || '#734BDC';
   if (!props.color && candidate.color?.color) {
     // old candidates
@@ -42,6 +43,7 @@ export default function CandidatePage(props) {
     <div className="bg-slate-100">
       <MaxWidth>
         {isStaged && <StagedBanner />}
+        {reviewMode && <ReviewBanner {...props} />}
         <div className="grid grid-cols-12 gap-6 pt-4">
           <div className="col-span-12 lg:col-span-9">
             <Hero {...childProps} />
