@@ -10,7 +10,7 @@ export default function Banner({ campaign }) {
         </div>
       ) : null}
       {launchStatus === 'pending' ? (
-        <div className="p-2 text-lg text-center bg-red-400 text-white">
+        <div className="p-2 text-lg text-center bg-black text-white">
           Your campaign launch is pending a review.
         </div>
       ) : null}

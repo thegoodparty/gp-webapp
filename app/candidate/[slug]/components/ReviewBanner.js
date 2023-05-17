@@ -31,7 +31,7 @@ export default function ReviewBanner({ campaign }) {
     <div className="pt-4">
       <div className="bg-black text-white p-3 text-center rounded font-bold">
         Admin Review mode
-        {launchStatus !== 'pending' && (
+        {launchStatus === 'pending' && (
           <div onClick={launch} className="mt-4">
             <SecondaryButton size="medium">Approve</SecondaryButton>
           </div>
