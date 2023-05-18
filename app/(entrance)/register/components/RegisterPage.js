@@ -7,7 +7,7 @@ import TextField from '@shared/inputs/TextField';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import styles from './RegisterPage.module.scss';
 import { register } from '@shared/inputs/RegisterAnimated';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ClientRegisterOrProfile';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';

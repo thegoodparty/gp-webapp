@@ -15,7 +15,7 @@ import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import { useRouter } from 'next/navigation.js';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile.js';
+import { globalUserState } from '@shared/layouts/navigation/ClientRegisterOrProfile.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialButtons from './SocialButtons';

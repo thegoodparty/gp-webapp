@@ -1,29 +1,22 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { hookstate, useHookstate } from '@hookstate/core';
-import { getUserCookie } from 'helpers/cookieHelper';
 import Link from 'next/link';
 import UserAvatar from '@shared/user/UserAvatar';
-import Image from 'next/image';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export const globalUserState = hookstate(false);
 
-export default function NavRegisterOrProfile() {
-  const [hasMounted, setHasMounted] = React.useState(false);
-
+export default function ClientRegisterOrProfile({ user }) {
   const userState = useHookstate(globalUserState);
   useEffect(() => {
-    setHasMounted(true);
-    const user = getUserCookie(true);
     if (user) {
-      setTimeout(() => {
-        userState.set(() => user);
-        hubspotIntegration(user);
-        fullstoryIndentity(user);
-      }, 100);
+      userState.set(() => user);
+      hubspotIntegration(user);
+      fullstoryIndentity(user);
     }
-  }, []);
+  }, [user]);
 
   const hubspotIntegration = (user) => {
     var _hsq = (window._hsq = window._hsq || []);
@@ -53,16 +46,14 @@ export default function NavRegisterOrProfile() {
     }
   };
 
-  const user = userState.get();
-
   return (
     <>
-      {hasMounted && user?.name ? (
+      {user?.name ? (
         <>
           <Link href="/profile" id="desktop-nav-profile">
             <UserAvatar user={user} />
           </Link>
-          {user?.isAdmin && (
+          {/* {user?.isAdmin && (
             <div className="shadow-md h-12 w-12 ml-4 flex justify-center items-center rounded-full">
               <Link href="/admin">
                 <Image
@@ -74,17 +65,17 @@ export default function NavRegisterOrProfile() {
                 />
               </Link>
             </div>
-          )}
+          )} */}
         </>
       ) : (
         <>
           <Link
             href="/register"
-            className="mx-3 px-1 cursor-pointer hover:underline"
+            className="px-1 cursor-pointer hover:underline"
             data-cy="header-register"
             id="desktop-nav-register"
           >
-            <strong>Join Us</strong>
+            <PrimaryButton size="medium">Sign in</PrimaryButton>
           </Link>
         </>
       )}

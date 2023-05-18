@@ -9,10 +9,8 @@ import { useState } from 'react';
 import styles from './MobileMenu.module.scss';
 import UserAvatar from '@shared/user/UserAvatar';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import { HEADER_LINKS } from './DesktopHeader';
-import { RESOURCES_LINKS } from './Resources';
-import { CANDIDATE_RESOURCES_LINKS } from './Resources';
+import { globalUserState } from '@shared/layouts/navigation/ClientRegisterOrProfile';
+import { RESOURCES_LINKS } from './LearnMore';
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
@@ -61,17 +59,7 @@ export default function MobileMenu() {
                 Home
               </Link>
             </div>
-            {HEADER_LINKS.map((link) => (
-              <div key={link.href} className="mt-7">
-                <Link
-                  href={link.href}
-                  id={`mobile-nav-${link.label.replace(' ', '-')}`}
-                  style={{ fontWeight: path === link.href ? 'bold' : 'normal' }}
-                >
-                  {link.label}
-                </Link>
-              </div>
-            ))}
+
             <div
               className="mt-7 cursor-pointer flex items-center justify-end"
               onClick={() => setShowResources(true)}
@@ -154,18 +142,6 @@ export default function MobileMenu() {
                 <div className="mt-7 font-black text-xs">
                   CANDIDATE RESOURCES
                 </div>
-                {CANDIDATE_RESOURCES_LINKS.map((link, index) => (
-                  <div key={link.href} className="mt-7">
-                    <Link
-                      href={link.href}
-                      id={`mobile-resource-nav-${link.label.replace(' ', '-')}`}
-                      key={link.href}
-                      className="no-underline font-normal py-2"
-                    >
-                      {link.label}
-                    </Link>
-                  </div>
-                ))}
               </div>
             )}
           </>

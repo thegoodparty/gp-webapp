@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ClientRegisterOrProfile';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { passwordRegex } from 'helpers/userHelper';

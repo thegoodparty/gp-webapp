@@ -2,7 +2,7 @@
 
 import { candidateColor } from 'helpers/candidateHelper';
 import { useHookstate, hookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ClientRegisterOrProfile';
 import { getUserCookie, setCookie } from 'helpers/cookieHelper';
 import gpFetch from 'gpApi/gpFetch';
 import { useEffect, useState } from 'react';

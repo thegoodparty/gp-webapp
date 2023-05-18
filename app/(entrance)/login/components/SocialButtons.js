@@ -9,7 +9,7 @@ import {
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ClientRegisterOrProfile';
 // import SocialButton from 'app/(entrance)/register/components/SocialButton';
 import TwitterButton from './TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
