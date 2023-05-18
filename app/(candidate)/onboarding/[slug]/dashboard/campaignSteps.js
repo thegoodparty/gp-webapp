@@ -169,7 +169,7 @@ export const generateCampaignStatus = (campaign) => {
     campaignPlan: {
       status: 'locked',
       completedSteps: 0,
-      totalSteps: 11,
+      totalSteps: 10,
     },
     profile: {
       status: 'locked',
