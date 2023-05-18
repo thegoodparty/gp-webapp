@@ -6,9 +6,13 @@ export default function Banner({ campaign }) {
   return (
     <div className="pb-8">
       {launchStatus === 'launched' ? (
-        <div className="p-2 text-lg text-center bg-green-600 text-white">
-          Your campaign is launched.{' '}
-          <Link href={`/candidate/${candidateSlug || slug}`}>
+        <div className="p-2  text-center bg-green-600 text-white">
+          Your campaign is launched.
+          <br />
+          <Link
+            href={`/candidate/${candidateSlug || slug}`}
+            className="underline mt-1 text-lg"
+          >
             Your Campaign
           </Link>
         </div>
