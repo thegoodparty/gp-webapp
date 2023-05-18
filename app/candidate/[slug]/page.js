@@ -13,9 +13,10 @@ export const fetchCandidate = async (slug) => {
       slug,
       allFields: true,
     };
-
+    console.log('fetching');
     return await gpFetch(api, payload, 3600);
   } catch (e) {
+    console.log('error in fetch candidate', e);
     return false;
   }
 };
