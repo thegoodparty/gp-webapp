@@ -34,6 +34,7 @@ export default function AdminCandidatesPage(props) {
       const fields = {
         active: candidate.isActive ? 'Yes' : 'No',
         id: candidate.id,
+        slug: candidate.slug,
         firstName: candidate.firstName,
         lastName: candidate.lastName,
         party: partyResolver(candidate.party),
@@ -129,21 +130,6 @@ export default function AdminCandidatesPage(props) {
               }}
               style={{ color: 'red', cursor: 'pointer' }}
             />
-          </div>
-        );
-      },
-    },
-
-    {
-      Header: 'Portal',
-      accessor: 'portal',
-      Cell: ({ row }) => {
-        const route = `/candidate-portal/${row.original.id}`;
-        return (
-          <div className="text-center">
-            <Link href={route} className="underline">
-              Candidate Portal
-            </Link>
           </div>
         );
       },
