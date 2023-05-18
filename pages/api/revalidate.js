@@ -9,6 +9,6 @@ export default async function revalidate(req, res) {
   } catch (err) {
     // If there was an error, Next.js will continue
     // to show the last successfully generated page
-    return res.status(500).send('Error revalidating');
+    return res.status(500).send('Error revalidating' + JSON.stringify(err));
   }
 }

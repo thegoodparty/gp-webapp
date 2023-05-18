@@ -4,8 +4,6 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import CandidatePage from './components/CandidatePage';
-import CandidateSchema from './CandidateSchema';
-import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchCandidate = async (slug) => {
