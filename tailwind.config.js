@@ -121,7 +121,7 @@ module.exports = {
           950: '#0B0082',
         },
         purple: {
-          DEFAULT: '#642EFF',
+          DEFAULT: '#46002E',
           50: '#ECE6FF',
           100: '#DDD1FF',
           200: '#BFA8FF',
