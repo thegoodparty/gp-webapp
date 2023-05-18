@@ -13,11 +13,8 @@ export const fetchCandidate = async (slug) => {
       slug,
       allFields: true,
     };
-    console.log('fetching api', api);
-    console.log('fetching patload', payload);
     return await gpFetch(api, payload, 3600);
   } catch (e) {
-    console.log('error in fetch candidate', e);
     return false;
   }
 };
@@ -58,8 +55,6 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const { slug } = params;
   const { candidate, candidatePositions, support } = await fetchCandidate(slug);
-  console.log('candidate page. slug: ', slug);
-  console.log('candidate page. candidate: ', candidate);
   if (!candidate) {
     notFound();
   }
