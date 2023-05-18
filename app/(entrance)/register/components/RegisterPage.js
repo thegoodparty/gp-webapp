@@ -1,6 +1,5 @@
 'use client';
 import React, { Suspense, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useHookstate } from '@hookstate/core';
 
 import TextField from '@shared/inputs/TextField';
@@ -51,7 +50,6 @@ export const validateZip = (zip) => {
 
 export default function RegisterPage({}) {
   const [score, setScore] = useState('good');
-  const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
 
   const userState = useHookstate(globalUserState);
@@ -94,14 +92,14 @@ export default function RegisterPage({}) {
         userState.set(() => user);
         const afterAction = getCookie('afterAction');
         if (afterAction === 'createCampaign') {
-          await createCampaign(router);
+          await createCampaign();
         } else {
           const returnUrl = getCookie('returnUrl');
           if (returnUrl) {
             deleteCookie('returnUrl');
-            router.push(returnUrl);
+            window.location.href = returnUrl;
           } else {
-            router.push('/');
+            window.location.href = '/';
           }
         }
         snackbarState.set(() => {
