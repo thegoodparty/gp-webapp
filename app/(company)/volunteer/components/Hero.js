@@ -1,4 +1,4 @@
-import LandingPageHero from '@shared/landing-pages/LangdinPageHero';
+import LandingPageHero from '@shared/landing-pages/LandingPageHero';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import EmailForm from '../../../shared/inputs/EmailForm';

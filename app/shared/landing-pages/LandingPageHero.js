@@ -9,8 +9,8 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
       <div
         className={`absolute h-full w-full top-0 ${
           wideBg
-            ? ' w-[200%] lg:w-[60%] left-[-50%] lg:left-[40%]'
-            : 'w-[200%]  left-[-50%] lg:w-[50%] lg:left-[50%]'
+            ? ' w-[200vw] lg:w-[60%] left-[-50%] lg:left-[40%]'
+            : 'w-[200vw]  left-[-50%] lg:w-[50%] lg:left-[50%]'
         }`}
       >
         <Image

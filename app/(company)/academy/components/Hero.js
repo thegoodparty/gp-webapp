@@ -1,5 +1,5 @@
 import YellowButton from '@shared/buttons/YellowButton';
-import LandingPageHero from '@shared/landing-pages/LangdinPageHero';
+import LandingPageHero from '@shared/landing-pages/LandingPageHero';
 import Image from 'next/image';
 import Link from 'next/link';
 import GetStartedButton from './GetStartedButton';
