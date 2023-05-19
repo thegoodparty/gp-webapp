@@ -14,8 +14,8 @@ export default function OfficeLink() {
       {!candidate ? (
         <Link
           href="run-for-office"
-          className="font-medium mr-4"
-          id="desktop-header-run-for-office"
+          className="hidden lg:block font-medium mr-4"
+          id="header-run-for-office"
         >
           <PrimaryButton variant="text" size="medium">
             Run for Office
@@ -34,7 +34,9 @@ export default function OfficeLink() {
             </Link>
           ) : (
             <Link href={`/onboarding/${candidate}/dashboard`}>
-              <WarningButton size="medium">Continue Onboarding</WarningButton>
+              <WarningButton size="medium">
+                Continue<span className="hidden lg:inline"> Onboarding</span>
+              </WarningButton>
             </Link>
           )}
         </div>

@@ -9,6 +9,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import { VscHeart } from 'react-icons/vsc';
 import { RiLogoutBoxLine, RiSettingsLine } from 'react-icons/ri';
 import { deleteCookies } from 'helpers/cookieHelper';
+import { RESOURCES_LINKS } from './LearnMoreClient';
 
 export const globalUserState = hookstate(false);
 
@@ -87,6 +88,28 @@ export default function ClientRegisterOrProfile({ user }) {
                     : 'p-0 opacity-0 overflow-visible'
                 }`}
               >
+                <div className="lg:hidden border-b border-gray-800 pb-3 mb-3">
+                  {RESOURCES_LINKS.map((link) => (
+                    <Link
+                      href={link.href}
+                      id={`desktop-learn-more-nav-${link.label.replace(
+                        ' ',
+                        '-',
+                      )}`}
+                      key={link.href}
+                      className="no-underline font-normal"
+                    >
+                      <div
+                        data-cy="header-link"
+                        className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                        //   style={activeUrl === link.href ? { fontWeight: 'bold' } : {}}
+                      >
+                        {link.icon}
+                        <div className="ml-3">{link.label}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
                 <Link
                   href="/profile/settings"
                   id={`desktop-profile-nav-settings`}
@@ -118,7 +141,7 @@ export default function ClientRegisterOrProfile({ user }) {
             href="/login"
             className="px-1 cursor-pointer hover:underline"
             data-cy="header-sign-in"
-            id="desktop-nav-sign-in"
+            id="nav-sign-in"
           >
             <PrimaryButton size="medium">Sign in</PrimaryButton>
           </Link>
