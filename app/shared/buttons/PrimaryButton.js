@@ -1,5 +1,5 @@
-import { CircularProgress } from '@mui/material';
 import clsx from 'clsx';
+import ButtonLoading from './ButtonLoading';
 
 export function setSize(baseClass, size) {
   if (size === 'large') {
@@ -101,9 +101,7 @@ export default function PrimaryButton({
       style={style}
       disabled={disabled}
     >
-      {loading ? (
-        <CircularProgress size={16} className="mr-2" color="inherit" />
-      ) : null}
+      {loading ? <ButtonLoading /> : null}
       {children}
     </button>
   );

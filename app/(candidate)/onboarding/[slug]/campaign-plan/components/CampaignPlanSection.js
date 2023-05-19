@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaChevronDown, FaPencilAlt, FaSave } from 'react-icons/fa';
 import styles from './CampaignPlan.module.scss';
 import LoadingAI from './LoadingAI';
-import { CircularProgress } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import BlackButton from '@shared/buttons/BlackButton';
 import dynamic from 'next/dynamic';
 import AiModal from './AiModal';

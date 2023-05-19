@@ -1,4 +1,4 @@
-import H1 from '@shared/typography/H1';
+'use client';
 import Link from 'next/link';
 
 export default function Banner({ campaign }) {

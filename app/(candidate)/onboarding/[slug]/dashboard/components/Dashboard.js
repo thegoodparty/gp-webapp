@@ -1,5 +1,6 @@
 import Script from 'next/script';
 import Banner from './Banner';
+import CandidateCookie from './CandidateCoookie';
 import Help from './Help';
 import Hero from './Hero';
 import Steps from './Steps';
@@ -7,7 +8,7 @@ import Steps from './Steps';
 export default function Dashboard(props) {
   return (
     <div className="bg-slate-100 min-h-[calc(100vh-56px)] relative pb-16">
-      {<Banner {...props} />}
+      <Banner {...props} />
       <div className="max-w-screen-lg mx-auto px-4 xl:p-0">
         <Hero {...props} />
         <Steps {...props} />
@@ -19,6 +20,7 @@ export default function Dashboard(props) {
           src="//js.hs-scripts.com/21589597.js"
         />
       </div>
+      <CandidateCookie {...props} />
     </div>
   );
 }

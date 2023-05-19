@@ -7,6 +7,7 @@ import { VscHeart } from 'react-icons/vsc';
 import { SlGraduation } from 'react-icons/sl';
 import { RiHandHeartLine, RiProfileLine } from 'react-icons/ri';
 import { TfiList } from 'react-icons/tfi';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export const RESOURCES_LINKS = [
   { label: 'About', href: '/about', icon: <VscHeart /> },
@@ -33,15 +34,17 @@ export default function LearnMore() {
 
   return (
     <div
-      className="ml-3 mr-6 px-1 relative cursor-pointer min-w-[100px]"
+      className="mr-2 relative cursor-pointer min-w-[100px]"
       onClick={handleToggle}
     >
-      <div className="flex items-center">
-        <div className="font-medium text-base">Learn More</div>
-        <FiChevronDown
-          className={`ml-1 transition-all ${open && 'rotate-180'}`}
-        />
-      </div>
+      <PrimaryButton variant="text" size="medium">
+        <div className="flex items-center">
+          <div className="font-medium text-base">Learn More</div>
+          <FiChevronDown
+            className={`ml-1 transition-all ${open && 'rotate-180'}`}
+          />
+        </div>
+      </PrimaryButton>
 
       {open ? (
         <>
@@ -59,7 +62,7 @@ export default function LearnMore() {
             {RESOURCES_LINKS.map((link) => (
               <Link
                 href={link.href}
-                id={`desktop-resource-nav-${link.label.replace(' ', '-')}`}
+                id={`desktop-learn-more-nav-${link.label.replace(' ', '-')}`}
                 key={link.href}
                 className="no-underline font-normal"
               >
