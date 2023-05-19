@@ -15,6 +15,5 @@ export const getServerUser = () => {
 export const getServerCandidateCookie = () => {
   const nextCookies = cookies();
   const cookie = nextCookies.get('candidate');
-  console.log('cookie', cookie);
   return cookie?.value;
 };
