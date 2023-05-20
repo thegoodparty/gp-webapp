@@ -19,7 +19,7 @@ export default function OfficeOrContinueLink({ campaignStatus }) {
       ) : (
         <div className="mr-4">
           {status === 'candidate' ? (
-            <Link href={`/campaign/${slug}/dashboard`}>
+            <Link href={`/campaign/dashboard`}>
               <WarningButton size="medium">Dashboard</WarningButton>
             </Link>
           ) : (

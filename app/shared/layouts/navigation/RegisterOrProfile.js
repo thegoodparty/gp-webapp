@@ -10,6 +10,7 @@ import { VscHeart } from 'react-icons/vsc';
 import { RiLogoutBoxLine, RiSettingsLine } from 'react-icons/ri';
 import { deleteCookies } from 'helpers/cookieHelper';
 import { RESOURCES_LINKS } from './LearnMore';
+import { HiOutlineStar } from 'react-icons/hi';
 
 export const globalUserState = hookstate(false);
 
@@ -117,6 +118,17 @@ export default function RegisterOrProfile({ user, open, toggleCallback }) {
                     <div className="ml-3">Settings</div>
                   </div>
                 </Link>
+                {user.isAdmin && (
+                  <Link href="/admin" className="no-underline font-normal">
+                    <div
+                      data-cy="header-link"
+                      className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                    >
+                      <HiOutlineStar />
+                      <div className="ml-3">Admin</div>
+                    </div>
+                  </Link>
+                )}
                 <div
                   data-cy="header-link"
                   className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
