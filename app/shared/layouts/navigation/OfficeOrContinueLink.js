@@ -24,7 +24,7 @@ export default function OfficeOrContinueLink({
           {status === 'candidate' ? (
             <>
               {!isDashboardPath && (
-                <Link href={`/campaign/dashboard`}>
+                <Link href={`/dashboard`}>
                   <WarningButton size="medium">Dashboard</WarningButton>
                 </Link>
               )}
