@@ -1,6 +1,5 @@
 import Script from 'next/script';
 import Banner from './Banner';
-import CandidateCookie from './CandidateCoookie';
 import Help from './Help';
 import Hero from './Hero';
 import Steps from './Steps';
@@ -20,7 +19,6 @@ export default function Dashboard(props) {
           src="//js.hs-scripts.com/21589597.js"
         />
       </div>
-      <CandidateCookie {...props} />
     </div>
   );
 }

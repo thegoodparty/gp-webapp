@@ -2,9 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import MaxWidth from '../MaxWidth';
-import LearnMore from './LearnMore';
-import OfficeLink from './OfficeLink';
-import RegisterOrProfile from './RegisterOrProfile';
+import RightSide from './RightSide';
 
 export default function DesktopHeader() {
   return (
@@ -26,9 +24,7 @@ export default function DesktopHeader() {
             </div>
           </div>
           <div className="flex justify-end items-center">
-            <LearnMore />
-            <OfficeLink />
-            <RegisterOrProfile />
+            <RightSide />
           </div>
         </div>
       </MaxWidth>

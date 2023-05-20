@@ -1,17 +1,12 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
-import {
-  getServerCandidateCookie,
-  getServerUser,
-} from 'helpers/userServerHelper';
 import Link from 'next/link';
 
-export default function OfficeLink() {
-  const user = getServerUser();
-  const candidate = getServerCandidateCookie();
+export default function OfficeOrContinueLink({ campaignStatus }) {
+  const { status, slug } = campaignStatus || {};
   return (
     <>
-      {!candidate ? (
+      {!status ? (
         <Link
           href="run-for-office"
           className="hidden lg:block font-medium mr-4"
@@ -23,17 +18,12 @@ export default function OfficeLink() {
         </Link>
       ) : (
         <div className="mr-4">
-          {candidate.startsWith('candidate-') ? (
-            <Link
-              href={`/campaign/${candidate.replace(
-                'candidate-',
-                '',
-              )}/dashboard`}
-            >
+          {status === 'candidate' ? (
+            <Link href={`/campaign/${slug}/dashboard`}>
               <WarningButton size="medium">Dashboard</WarningButton>
             </Link>
           ) : (
-            <Link href={`/onboarding/${candidate}/dashboard`}>
+            <Link href={`/onboarding/${slug}/dashboard`}>
               <WarningButton size="medium">
                 Continue<span className="hidden lg:inline"> Onboarding</span>
               </WarningButton>

@@ -1,9 +1,3 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import EmailForm from '../../../shared/inputs/EmailForm';
-
-import bgImg from '/public/images/landing-pages/hero-bg.png';
-import peopleImg from '/public/images/landing-pages/people.png';
 import { FiInfo } from 'react-icons/fi';
 import { AiTwotoneTool } from 'react-icons/ai';
 import { FaUserAlt } from 'react-icons/fa';

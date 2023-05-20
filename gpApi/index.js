@@ -313,6 +313,11 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+    campaignStatus: {
+      url: `${base}user/campaign-status`,
+      method: 'GET',
+      withAuth: true,
+    },
     follow: {
       list: {
         url: `${base}supports`,

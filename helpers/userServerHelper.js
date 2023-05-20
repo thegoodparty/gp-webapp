@@ -11,9 +11,3 @@ export const getServerUser = () => {
   const cookie = nextCookies.get('user');
   return cookie && cookie.value ? JSON.parse(cookie.value) : false;
 };
-
-export const getServerCandidateCookie = () => {
-  const nextCookies = cookies();
-  const cookie = nextCookies.get('candidate');
-  return cookie?.value;
-};
