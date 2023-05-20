@@ -28,9 +28,9 @@ const pages = [
     link: '/dashboard/resources',
   },
 ];
-export default function DashboardMenu({ path }) {
+export default function DashboardMenu({ pathname }) {
   return (
-    <div className="w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
+    <div className="w-[calc(100vw-16px)] lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
       {pages.map((page) => (
         <Fragment key={page.label}>
           {page.section && (
@@ -39,7 +39,7 @@ export default function DashboardMenu({ path }) {
           <Link href={page.link} className="no-underline">
             <div
               className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 ${
-                path === page.link && 'text-slate-50 bg-indigo-700'
+                pathname === page.link && 'text-slate-50 bg-indigo-700'
               }`}
             >
               {page.icon}

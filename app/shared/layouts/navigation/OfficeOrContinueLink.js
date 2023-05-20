@@ -2,7 +2,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';
 
-export default function OfficeOrContinueLink({ campaignStatus }) {
+export default function OfficeOrContinueLink({
+  campaignStatus,
+  isDashboardPath,
+}) {
   const { status, slug } = campaignStatus || {};
   return (
     <>
@@ -19,9 +22,13 @@ export default function OfficeOrContinueLink({ campaignStatus }) {
       ) : (
         <div className="mr-4">
           {status === 'candidate' ? (
-            <Link href={`/campaign/dashboard`}>
-              <WarningButton size="medium">Dashboard</WarningButton>
-            </Link>
+            <>
+              {!isDashboardPath && (
+                <Link href={`/campaign/dashboard`}>
+                  <WarningButton size="medium">Dashboard</WarningButton>
+                </Link>
+              )}
+            </>
           ) : (
             <Link href={`/onboarding/${slug}/dashboard`}>
               <WarningButton size="medium">

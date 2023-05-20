@@ -4,7 +4,7 @@ import Image from 'next/image';
 import MaxWidth from '../MaxWidth';
 import RightSide from './RightSide';
 
-export default function DesktopHeader() {
+export default function Nav() {
   return (
     <div className="relative bg-slate-50 lg:block border-solid border-b border-zinc-200 lg:px-6 z-50 h-14">
       <MaxWidth>

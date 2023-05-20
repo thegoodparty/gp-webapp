@@ -12,7 +12,7 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const childProps = {
-    path: '/dashboard',
+    pathname: '/dashboard',
   };
   return <DashboardPage {...childProps} />;
 }

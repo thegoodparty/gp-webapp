@@ -2,10 +2,12 @@
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LearnMore from './LearnMore';
 import OfficeOrContinueLink from './OfficeOrContinueLink';
 import RegisterOrProfile from './RegisterOrProfile';
+import TopDashboardMenu from './TopDashboardMenu';
 
 export async function fetchCampaignStatus() {
   try {
@@ -20,7 +22,11 @@ export async function fetchCampaignStatus() {
 export default function RightSideClient({ user }) {
   const [learnMoreOpen, setLearnMoreOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
   const [campaignStatus, setCampaignStatus] = useState(false);
+
+  const pathname = usePathname();
+  const isDashboardPath = pathname.startsWith('/dashboard');
 
   useEffect(() => {
     updateStatus();
@@ -30,14 +36,24 @@ export default function RightSideClient({ user }) {
     setCampaignStatus(status);
   };
 
-  const toggleLearnMore = () => {
+  const closeAll = () => {
     setAccountOpen(false);
+    setLearnMoreOpen(false);
+    setDashboardOpen(false);
+  };
+
+  const toggleLearnMore = () => {
+    closeAll();
     setLearnMoreOpen(!learnMoreOpen);
   };
 
   const toggleAccount = () => {
-    setLearnMoreOpen(false);
+    closeAll();
     setAccountOpen(!accountOpen);
+  };
+  const toggleDashboard = () => {
+    closeAll();
+    setDashboardOpen(!dashboardOpen);
   };
   return (
     <>
@@ -47,12 +63,22 @@ export default function RightSideClient({ user }) {
         user={user}
         campaignStatus={campaignStatus}
       />
-      <OfficeOrContinueLink campaignStatus={campaignStatus} />
+      <OfficeOrContinueLink
+        campaignStatus={campaignStatus}
+        isDashboardPath={isDashboardPath}
+      />
       <RegisterOrProfile
         user={user}
         open={accountOpen}
         toggleCallback={toggleAccount}
       />
+      {isDashboardPath && (
+        <TopDashboardMenu
+          open={dashboardOpen}
+          toggleCallback={toggleDashboard}
+          pathname={pathname}
+        />
+      )}
     </>
   );
 }
