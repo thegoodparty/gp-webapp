@@ -19,7 +19,10 @@ export default function Tabs({
   };
   return (
     <div className={`w-full ${orientation === 'vertical' ? 'flex' : ''}`}>
-      <div className={`${!centered ? 'flex items-center' : ''}`}>
+      <div className={` relative  ${!centered ? 'flex items-center' : ''} `}>
+        {orientation === 'horizontal' && (
+          <div className=" bg-slate-300 absolute w-full h-[1px] bottom-0 left-0" />
+        )}
         <MuiTabs
           value={value}
           onChange={handleChange}
@@ -27,6 +30,9 @@ export default function Tabs({
           orientation={orientation}
           variant={variant}
           centered={centered}
+          sx={{
+            '.MuiTabs-indicator': { backgroundColor: '#000' },
+          }}
         >
           {tabLabels.map((label) => (
             <Tab
