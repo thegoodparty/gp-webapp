@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation.js';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import SocialButtons from './SocialButtons';
+import SocialLoginButtons from './SocialLoginButtons';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 
@@ -163,7 +163,7 @@ export default function LoginPage() {
               Forgot your password?
             </Link>
             <Suspense>
-              <SocialButtons />
+              <SocialLoginButtons />
             </Suspense>
           </div>
         </div>

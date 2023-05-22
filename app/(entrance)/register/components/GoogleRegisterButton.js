@@ -1,31 +1,41 @@
 'use client';
 import React from 'react';
 import Button from '@mui/material/Button';
-import { FaFacebook } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { useGoogleLogin } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google';
 
-const GoogleButton = ({ onLoginSuccess }) => {
+const GoogleRegisterButton = ({ onLoginSuccess }) => {
   const performGoogleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      console.log(tokenResponse);
+    onSuccess: async (tokenResponse) => {
+      // console.log(tokenResponse);
       const accessToken = tokenResponse.access_token;
-      console.log('accessToken', accessToken);
-      fetchGoogleUser(accessToken);
+      // console.log('accessToken', accessToken);
+      const socialUser = await fetchGoogleUser(accessToken);
+      // console.log('socialUser', socialUser);
+      onLoginSuccess(socialUser);
     },
   });
 
   const fetchGoogleUser = async (accessToken) => {
-    console.log('fetching...');
     const res = await fetch('https://www.googleapis.com/userinfo/v2/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
     const data = await res.json();
-    console.log('userdata', data);
-    return data;
+    // console.log('userdata', data);
+
+    const socialUser = {
+      _profile: {
+        name: data.name,
+        id: data.id,
+        email: data.email,
+        profilePicURL: data.picture,
+      },
+      _provider: 'google',
+      _token: { idToken: accessToken },
+    };
+    return socialUser;
   };
 
   return (
@@ -51,4 +61,4 @@ const GoogleButton = ({ onLoginSuccess }) => {
   );
 };
 
-export default GoogleButton;
+export default GoogleRegisterButton;

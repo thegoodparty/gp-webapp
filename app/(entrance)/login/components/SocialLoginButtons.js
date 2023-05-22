@@ -7,17 +7,19 @@ import {
   setCookie,
   setUserCookie,
 } from 'helpers/cookieHelper';
-// import SocialButton from './SocialButton';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
-import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
+import SocialButton from 'app/(entrance)/register/components/SocialButton';
+import TwitterButton from './TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import GoogleLoginButton from './GoogleLoginButton';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-async function register(payload) {
+async function login(payload) {
   try {
-    const api = gpApi.entrance.register;
+    const api = gpApi.entrance.socialLogin;
     const { user, token } = await gpFetch(api, payload);
     if (user && token) {
       setUserCookie(user);
@@ -31,21 +33,21 @@ async function register(payload) {
   }
 }
 
-export default function SocialButtons() {
+export default function SocialLoginButtons() {
   const snackbarState = useHookstate(globalSnackbarState);
   const userState = useHookstate(globalUserState);
   const router = useRouter();
 
-  const socialRegisterCallback = async (socialUser) => {
+  const socialLoginCallback = async (socialUser) => {
     const profile = socialUser._profile;
     const provider = socialUser._provider;
-    const { name, email, id, profilePicURL } = profile;
+    const { email, profilePicURL } = profile;
     // for facebook - get a larger image
     let socialPic = profilePicURL;
     let idToken;
     if (provider === 'facebook') {
       try {
-        const largeImage = await fetch(window?.FB.api, '/me/picture?width=500');
+        const largeImage = await fetch(window.FB.api, '/me/picture?width=500');
         socialPic = largeImage || '';
         idToken = socialUser._token.accessToken;
       } catch (e) {
@@ -59,56 +61,51 @@ export default function SocialButtons() {
           socialPic = largeImg;
         }
         ({ idToken } = socialUser._token);
+        // console.log('idToken', idToken);
       } catch (e) {
         console.log('large image error');
       }
     }
 
     const payload = {
-      socialId: id,
-      socialProvider: provider,
-      socialPic,
-      name,
       email,
+      socialPic,
+      socialProvider: provider,
       socialToken: idToken,
-      source: 'registerPage',
-      uri: window?.location.href,
     };
-    const user = await register(payload);
+    const user = await login(payload);
     if (user) {
       userState.set(() => user);
-
-      const afterAction = getCookie('afterAction');
-      if (afterAction === 'createCampaign') {
-        await createCampaign(router);
-      } else {
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          router.push(returnUrl);
-        } else {
-          router.push('/');
-        }
-      }
-
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Welcome to Good Party!',
+          message: 'Welcome back to Good Party!',
           isError: false,
         };
       });
+      const afterAction = getCookie('afterAction');
+      if (afterAction === 'createCampaign') {
+        await createCampaign(router);
+      }
+      const returnCookie = getCookie('returnUrl');
+      if (returnCookie) {
+        deleteCookie('returnUrl');
+        router.push(returnCookie);
+      } else {
+        router.push('/');
+      }
     } else {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Error registering',
+          message: 'Error login in',
           isError: true,
         };
       });
     }
   };
-  const socialRegisterFailureCallback = () => {};
+  const socialLoginFailureCallback = () => {};
+
   return (
     <>
       <div className="my-8 h-4 relative">
@@ -126,25 +123,30 @@ export default function SocialButtons() {
           channel="facebook"
           provider="facebook"
           appId="241239336921963"
-          onLoginSuccess={socialRegisterCallback}
-          onLoginFailure={socialRegisterFailureCallback}
+          onLoginSuccess={socialLoginCallback}
+          onLoginFailure={socialLoginFailureCallback}
         >
           Continue with FACEBOOK
         </SocialButton>
       </div> */}
-      {/* <div data-cy="google-login" className="mt-6">
-        <SocialButton
-          channel="google"
-          provider="google"
-          appId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com"
-          onLoginSuccess={socialRegisterCallback}
-          onLoginFailure={socialRegisterFailureCallback}
-        >
-          Continue with GOOGLE
-        </SocialButton>
-      </div> */}
 
-      <div data-cy="twitter-register" className="mt-6">
+      {/* <div data-cy="google-login" className="mt-6">
+          <SocialButton
+            channel="google"
+            provider="google"
+            appId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com"
+            performLoginCallback={useGoogleLogin}
+            onLoginSuccess={socialLoginCallback}
+            onLoginFailure={socialLoginFailureCallback}
+          >
+            Continue with GOOGLE
+          </SocialButton>
+        </div> */}
+      <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
+        <GoogleLoginButton onLoginSuccess={socialLoginCallback} />
+      </GoogleOAuthProvider>
+
+      <div data-cy="twitter-login" className="mt-6">
         <TwitterButton />
       </div>
     </>
