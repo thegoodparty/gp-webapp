@@ -6,7 +6,7 @@ export default function DashboardLayout({ children, pathname }) {
       <div className="hidden lg:block">
         <DashboardMenu pathname={pathname} />
       </div>
-      <div className="lg:ml-8 flex-1">{children}</div>
+      <main className="lg:ml-8 flex-1">{children}</main>
     </div>
   );
 }
