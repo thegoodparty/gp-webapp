@@ -14,7 +14,7 @@ export async function fetchCampaignStatus() {
     const api = gpApi.user.campaignStatus;
     return await gpFetch(api, false, 10);
   } catch (e) {
-    console.log('error at fetchCampaignVersions', e);
+    console.log('error at fetchCampaignStatus', e);
     return { status: false };
   }
 }

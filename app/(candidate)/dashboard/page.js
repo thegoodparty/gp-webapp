@@ -1,7 +1,6 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import pageMetaData from 'helpers/metadataHelper';
 import DashboardPage from './components/DashboardPage';
+import candidateAccess from './shared/candidateAccess';
 
 const meta = pageMetaData({
   title: 'Campaign Dashboard | GOOD PARTY',
@@ -11,6 +10,8 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
+  await candidateAccess();
+
   const childProps = {
     pathname: '/dashboard',
   };
