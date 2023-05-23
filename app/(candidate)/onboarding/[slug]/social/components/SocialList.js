@@ -1,7 +1,7 @@
 import YellowButton from '@shared/buttons/YellowButton';
 import { Fragment } from 'react';
 
-const steps = [
+export const websiteSteps = [
   {
     title: 'Design a user-friendly website',
     description:
@@ -43,7 +43,7 @@ export default function SocialList({ slug }) {
         </div>
         <div className="pt-14 lg:pt-20">
           <div className="bg-slate-100 h-1" />
-          {steps.map((step, index) => (
+          {websiteSteps.map((step, index) => (
             <Fragment key={step.title}>
               <div className="py-6 flex items-center">
                 <div className="text-right lg:text-center w-16 shrink-0 lg:w-[180px] font-bold text-5xl lg:text-6xl">

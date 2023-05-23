@@ -12,7 +12,7 @@ export default function ListItem({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="mb-10">
+    <div className="mb-6">
       <div
         className="flex items-center cursor-pointer"
         onClick={() => {

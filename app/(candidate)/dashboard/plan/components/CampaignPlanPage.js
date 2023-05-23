@@ -5,6 +5,7 @@ import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import MessagingPanel from './MessagingPanel';
+import SocialPanel from './SocialPanel';
 import TitleSection from './TitleSection';
 
 const tabLabels = ['Messaging', 'Social Media', 'Vision'];
@@ -24,7 +25,7 @@ export default function CampaignPlanPage(props) {
       versions={updatedVersions || versions}
       updateVersionsCallback={updateVersionsCallback}
     />,
-    <MessagingPanel key="socialMediaPanel" {...props} />,
+    <SocialPanel key="socialMediaPanel" {...props} />,
     <MessagingPanel key="visionPanel" {...props} />,
   ];
   return (
