@@ -7,6 +7,7 @@ import DashboardLayout from '../../shared/DashboardLayout';
 import MessagingPanel from './MessagingPanel';
 import SocialPanel from './SocialPanel';
 import TitleSection from './TitleSection';
+import VisionPanel from './VisionPanel';
 
 const tabLabels = ['Messaging', 'Social Media', 'Vision'];
 
@@ -26,7 +27,12 @@ export default function CampaignPlanPage(props) {
       updateVersionsCallback={updateVersionsCallback}
     />,
     <SocialPanel key="socialMediaPanel" {...props} />,
-    <MessagingPanel key="visionPanel" {...props} />,
+    <VisionPanel
+      key="visionPanel"
+      {...props}
+      versions={updatedVersions || versions}
+      updateVersionsCallback={updateVersionsCallback}
+    />,
   ];
   return (
     <DashboardLayout {...props}>

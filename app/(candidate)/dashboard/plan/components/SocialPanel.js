@@ -18,7 +18,7 @@ export default function SocialPanel(props) {
             Here are some helpful tips for building a good campaign site.
           </Body2>
           {websiteSteps.map((step, index) => (
-            <ListItem ket={step.title} title={step.title} number={index + 1}>
+            <ListItem key={step.title} title={step.title} number={index + 1}>
               {step.description}
             </ListItem>
           ))}

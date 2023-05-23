@@ -40,8 +40,8 @@ export default function TogglePanel({
               {typeof icon === 'string' ? (
                 <Image
                   src={icon}
-                  width={22}
-                  height={28}
+                  width={36}
+                  height={36}
                   alt=""
                   className="mr-4"
                 />
