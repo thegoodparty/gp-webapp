@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import { FcGoogle } from 'react-icons/fc';
 import { useGoogleLogin } from '@react-oauth/google';
 
-const GoogleRegisterButton = ({ onLoginSuccess }) => {
+const GoogleRegisterButton = ({ loginSuccessCallback }) => {
   const performGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       // console.log(tokenResponse);
@@ -12,7 +12,7 @@ const GoogleRegisterButton = ({ onLoginSuccess }) => {
       // console.log('accessToken', accessToken);
       const socialUser = await fetchGoogleUser(accessToken);
       // console.log('socialUser', socialUser);
-      onLoginSuccess(socialUser);
+      loginSuccessCallback(socialUser);
     },
   });
 

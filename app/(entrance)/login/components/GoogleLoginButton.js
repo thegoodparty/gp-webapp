@@ -4,15 +4,12 @@ import Button from '@mui/material/Button';
 import { FcGoogle } from 'react-icons/fc';
 import { useGoogleLogin } from '@react-oauth/google';
 
-const GoogleLoginButton = ({ onLoginSuccess }) => {
+const GoogleLoginButton = ({ loginSuccessCallback }) => {
   const performGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      // console.log(tokenResponse);
       const accessToken = tokenResponse.access_token;
-      // console.log('accessToken', accessToken);
       const socialUser = await fetchGoogleUser(accessToken);
-      // console.log('socialUser', socialUser);
-      onLoginSuccess(socialUser);
+      loginSuccessCallback(socialUser);
     },
   });
 
@@ -23,7 +20,6 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       },
     });
     const data = await res.json();
-    // console.log('userdata', data);
 
     const socialUser = {
       _profile: { email: data.email, profilePicURL: data.picture },

@@ -97,7 +97,7 @@ export default function LoginPage() {
     <>
       <MaxWidth>
         <div className={`flex items-center justify-center ${styles.wrapper}`}>
-          <div className="grid py-6 max-w-lg" style={{ width: '75vw' }}>
+          <div className="grid py-6 max-w-lg w-[75vw]">
             <div className="text-center mb-8 pt-8">
               <h1
                 data-cy="register-title"
@@ -133,35 +133,38 @@ export default function LoginPage() {
               data-cy="email-form"
               id="register-page-form"
             >
-              <EmailInput
-                onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
-                value={state.email}
-              />
-              <br />
-              <br />
-              <PasswordInput
-                label="Password"
-                onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-              />
+              <div className="flex mt-5">
+                <EmailInput
+                  onChangeCallback={(e) =>
+                    onChangeField(e.target.value, 'email')
+                  }
+                  value={state.email}
+                />
+              </div>
 
-              <br />
-              <br />
-              <br />
-
-              <YellowButtonClient
-                style={{ width: '100%' }}
-                disabled={!enableSubmit()}
-                onClick={handleSubmit}
-                type="submit"
-              >
-                <strong>LOGIN</strong>
-              </YellowButtonClient>
+              <div className="flex mt-5">
+                <PasswordInput
+                  label="Password"
+                  onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
+                />
+              </div>
+              <div className="flex mt-5">
+                <YellowButtonClient
+                  style={{ width: '100%' }}
+                  disabled={!enableSubmit()}
+                  onClick={handleSubmit}
+                  type="submit"
+                >
+                  <strong>LOGIN</strong>
+                </YellowButtonClient>
+              </div>
             </form>
-            <br />
+            <div className="flex mt-5">
+              <Link href="/forgot-password" className="text-sm">
+                Forgot your password?
+              </Link>
+            </div>
 
-            <Link href="/forgot-password" className="text-sm">
-              Forgot your password?
-            </Link>
             <Suspense>
               <SocialLoginButtons />
             </Suspense>

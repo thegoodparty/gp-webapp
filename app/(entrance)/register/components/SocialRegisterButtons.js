@@ -7,7 +7,6 @@ import {
   setCookie,
   setUserCookie,
 } from 'helpers/cookieHelper';
-// import SocialButton from './SocialButton';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
@@ -125,31 +124,8 @@ export default function SocialRegisterButtons() {
         </div>
       </div>
 
-      {/* <div data-cy="facebook-login">
-        <SocialButton
-          channel="facebook"
-          provider="facebook"
-          appId="241239336921963"
-          onLoginSuccess={socialRegisterCallback}
-          onLoginFailure={socialRegisterFailureCallback}
-        >
-          Continue with FACEBOOK
-        </SocialButton>
-      </div> */}
-      {/* <div data-cy="google-login" className="mt-6">
-        <SocialButton
-          channel="google"
-          provider="google"
-          appId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com"
-          onLoginSuccess={socialRegisterCallback}
-          onLoginFailure={socialRegisterFailureCallback}
-        >
-          Continue with GOOGLE
-        </SocialButton>
-      </div> */}
-
       <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
-        <GoogleRegisterButton onLoginSuccess={socialRegisterCallback} />
+        <GoogleRegisterButton loginSuccessCallback={socialRegisterCallback} />
       </GoogleOAuthProvider>
 
       <div data-cy="twitter-register" className="mt-6">
