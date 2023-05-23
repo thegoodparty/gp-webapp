@@ -6,10 +6,10 @@ export default function TitleSection() {
   return (
     <div className="flex justify-between mb-3">
       <div>
-        <H1>Campaign Plan</H1>
+        <H1>Campaign Team</H1>
         <Body1 className="mt-3">
-          Your personalized plan powered by Good Party GPT and our team of
-          campaign experts
+          Good Party AI can help you create high quality content for your
+          campaign
         </Body1>
       </div>
       <div>

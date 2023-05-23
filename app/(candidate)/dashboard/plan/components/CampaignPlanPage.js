@@ -4,9 +4,9 @@ import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxAct
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
+import TitleSection from '../../shared/TitleSection';
 import MessagingPanel from './MessagingPanel';
 import SocialPanel from './SocialPanel';
-import TitleSection from './TitleSection';
 import VisionPanel from './VisionPanel';
 
 const tabLabels = ['Messaging', 'Social Media', 'Vision'];
@@ -36,7 +36,13 @@ export default function CampaignPlanPage(props) {
   ];
   return (
     <DashboardLayout {...props}>
-      <TitleSection />
+      <TitleSection
+        title="Campaign Plan"
+        subtitle="Your personalized plan powered by Good Party GPT and our team of campaign experts"
+        image="/images/dashboard/plan.svg"
+        imgWidth={132}
+        imgHeight={120}
+      />
       <Tabs tabLabels={tabLabels} tabPanels={tabPanels} />
     </DashboardLayout>
   );
