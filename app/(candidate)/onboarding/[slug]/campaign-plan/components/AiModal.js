@@ -9,7 +9,7 @@ import { FaRedo } from 'react-icons/fa';
 import TextField from '@shared/inputs/TextField';
 import { Select } from '@mui/material';
 import AlertDialog from '@shared/utils/AlertDialog';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
 
 const knobs = [
   {
@@ -91,12 +91,12 @@ export default function AiModal({ submitCallback, showWarning }) {
   return (
     <>
       <div onClick={handleRegenerate} className="mr-3">
-        <PrimaryButton variant="outlined">
+        <SecondaryButton>
           <div className="flex items-center">
             <FaRedo />
             <div className="ml-2">Refine</div>
           </div>
-        </PrimaryButton>
+        </SecondaryButton>
       </div>
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="p-4" style={{ maxWidth: '960px', minWidth: '300px' }}>
@@ -155,7 +155,7 @@ export default function AiModal({ submitCallback, showWarning }) {
             Cancel
           </div>
           <div onClick={handleSubmit}>
-            <PrimaryButton>Submit</PrimaryButton>
+            <SecondaryButton>Submit</SecondaryButton>
           </div>
         </div>
       </Modal>
