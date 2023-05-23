@@ -193,7 +193,7 @@ export default function CampaignPlanSection({
                 updatePlanCallback={updatePlanCallback}
                 latestVersion={campaignPlan[key]}
               />
-              <div className={` p-6 my-6 rounded-xl ${styles.plan}`}>
+              <div className={`p-3 lg:p-6 my-6 rounded-xl ${styles.plan}`}>
                 {isFailed ? (
                   <div className="text-center text-xl">
                     Failed to generate plan click here to try again

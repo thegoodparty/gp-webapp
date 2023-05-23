@@ -40,8 +40,8 @@ export default function TogglePanel({
               {typeof icon === 'string' ? (
                 <Image
                   src={icon}
-                  width={36}
-                  height={36}
+                  width={22}
+                  height={28}
                   alt=""
                   className="mr-4"
                 />
@@ -66,7 +66,7 @@ export default function TogglePanel({
         </div>
       </div>
       {(forceExpand || open) && (
-        <div className="bg-slate-200 pt-4 pb-7 px-7 rounded-b-xl">
+        <div className="bg-slate-200 px-3 pt-1 pb-3 lg:pt-4 lg:pb-7 lg:px-7 rounded-b-xl">
           {children}
         </div>
       )}
