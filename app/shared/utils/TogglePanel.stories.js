@@ -7,7 +7,7 @@ export default {
   args: {
     label: 'Summary label',
     icon: 'https://cdn-icons-png.flaticon.com/512/4436/4436481.png',
-    panel: 'Panel content',
+    children: 'Panel content',
   },
   argTypes: {
     label: {
@@ -19,7 +19,7 @@ export default {
         },
       },
     },
-    panel: {
+    children: {
       control: 'text',
       description: 'Node or text for the panel',
       table: {

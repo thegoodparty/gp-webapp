@@ -9,13 +9,22 @@ import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 export default function TogglePanel({
   icon,
   label = '',
+  forceExpand,
   // badge,
-  panel,
+  children,
 }) {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
     setOpen(!open);
   };
+
+  /*
+        <div
+          className={`overflow-hidden transition-all duration-300  ${
+            expand ? 'max-h-[3000px]' : 'max-h-0 '
+          }`}
+        >
+  */
   return (
     <>
       <div
@@ -55,8 +64,10 @@ export default function TogglePanel({
           )}
         </div>
       </div>
-      {open && (
-        <div className="bg-slate-200 py-4 px-7 rounded-b-xl">{panel}</div>
+      {(forceExpand || open) && (
+        <div className="bg-slate-200 pt-4 pb-7 px-7 rounded-b-xl">
+          {children}
+        </div>
       )}
     </>
   );
