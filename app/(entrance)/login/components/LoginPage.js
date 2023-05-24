@@ -14,7 +14,7 @@ import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile.js';
+import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialLoginButtons from './SocialLoginButtons';
