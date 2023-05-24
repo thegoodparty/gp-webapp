@@ -7,9 +7,11 @@ export default function Signatures({ signatures, tangerine }) {
   let modalProps = { tangerine, setSigner };
 
   useEffect(() => {
-    const signature = localStorage.getItem('signature');
-    if (signature && !signatures.includes(signature)) {
-      setSigner(signature);
+    if (localStorage.getItem('signature') != null) {
+      const signature = localStorage.getItem('signature');
+      if (signature && !signatures.includes(signature)) {
+        setSigner(signature);
+      }
     }
   }, [signatures]);
 
