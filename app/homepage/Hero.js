@@ -1,12 +1,12 @@
 import EmailForm from '@shared/inputs/EmailForm';
 
 import ForVoters from './ForVoters';
-import LandingPageHero from '@shared/landing-pages/LangdinPageHero';
+import LandingPageHero from '@shared/landing-pages/LandingPageHero';
 
 export default function Hero() {
   return (
     <LandingPageHero wideBg>
-      <div className=" lg:w-[60%]">
+      <div className="lg:w-[60%]">
         <h1 className="text-6xl leading-tight font-black">
           Change politics for good
         </h1>

@@ -14,8 +14,7 @@ import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
-import { useRouter } from 'next/navigation.js';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile.js';
+import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialLoginButtons from './SocialLoginButtons';
@@ -50,7 +49,6 @@ export default function LoginPage() {
 
   const userState = useHookstate(globalUserState);
   const snackbarState = useHookstate(globalSnackbarState);
-  const router = useRouter();
 
   const enableSubmit = () =>
     isValidEmail(state.email) &&
@@ -64,14 +62,14 @@ export default function LoginPage() {
         userState.set(() => user);
         const afterAction = getCookie('afterAction');
         if (afterAction === 'createCampaign') {
-          await createCampaign(router);
+          await createCampaign();
         } else {
           const returnUrl = getCookie('returnUrl');
           if (returnUrl) {
             deleteCookie('returnUrl');
-            router.push(returnUrl);
+            window.location.href = returnUrl;
           } else {
-            router.push('/');
+            window.location.href = '/';
           }
         }
       } else {

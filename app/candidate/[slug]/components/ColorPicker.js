@@ -1,5 +1,5 @@
 'use client';
-import CustomColorPicker from 'app/(candidate)/candidate-portal/[id]/edit-campaign/components/CustomColorPicker';
+import CustomColorPicker from './CustomColorPicker';
 import Image from 'next/image';
 import { useState } from 'react';
 

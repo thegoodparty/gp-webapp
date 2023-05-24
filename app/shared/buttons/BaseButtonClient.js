@@ -10,7 +10,7 @@ const BaseButton = ({
 }) => {
   return (
     <button
-      className={`py-5 px-8 rounded-lg ${className}`}
+      className={`py-4 px-6 rounded-lg ${className}`}
       style={style}
       onClick={onClick}
       disabled={disabled}

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { AiOutlinePrinter } from 'react-icons/ai';
 import { SlGraduation } from 'react-icons/sl';
 
@@ -11,14 +12,16 @@ export default function Hero() {
         community.
       </div>
       <div className="flex">
-        <div className="bg-black bg-opacity-10 py-2 px-4 mr-3 flex items-center text-sm rounded-md">
-          <div className="mr-3">GOODPARTY Academy</div>
-          <SlGraduation />
-        </div>
-        <div className="bg-black bg-opacity-10 py-2 px-4 mr-3 flex items-center text-sm rounded-md">
+        <Link href="/academy">
+          <div className="bg-black bg-opacity-10 py-2 px-4 mr-3 flex items-center text-sm rounded-md">
+            <div className="mr-3">GOODPARTY Academy</div>
+            <SlGraduation />
+          </div>
+        </Link>
+        {/* <div className="bg-black bg-opacity-10 py-2 px-4 mr-3 flex items-center text-sm rounded-md">
           <div className="mr-3">Print Checklist</div>
           <AiOutlinePrinter />
-        </div>
+        </div> */}
       </div>
     </div>
   );

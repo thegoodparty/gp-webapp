@@ -1,13 +1,12 @@
 'use client';
 import React, { Suspense, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useHookstate } from '@hookstate/core';
 
 import TextField from '@shared/inputs/TextField';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import styles from './RegisterPage.module.scss';
 import { register } from '@shared/inputs/RegisterAnimated';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
@@ -51,7 +50,6 @@ export const validateZip = (zip) => {
 
 export default function RegisterPage({}) {
   const [score, setScore] = useState('good');
-  const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
 
   const userState = useHookstate(globalUserState);
@@ -94,14 +92,14 @@ export default function RegisterPage({}) {
         userState.set(() => user);
         const afterAction = getCookie('afterAction');
         if (afterAction === 'createCampaign') {
-          await createCampaign(router);
+          await createCampaign();
         } else {
           const returnUrl = getCookie('returnUrl');
           if (returnUrl) {
             deleteCookie('returnUrl');
-            router.push(returnUrl);
+            window.location.href = returnUrl;
           } else {
-            router.push('/');
+            window.location.href = '/';
           }
         }
         snackbarState.set(() => {

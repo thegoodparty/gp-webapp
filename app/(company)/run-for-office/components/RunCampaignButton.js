@@ -15,14 +15,14 @@ export async function fetchUserCampaign() {
   }
 }
 
-export async function createCampaign(router) {
+export async function createCampaign() {
   try {
     const api = gpApi.campaign.onboarding.create;
     const { slug } = await gpFetch(api);
     if (slug) {
-      router.push(`/onboarding/${slug}/dashboard`);
       deleteCookie('afterAction');
       deleteCookie('returnUrl');
+      window.location.href = `/onboarding/${slug}/dashboard`;
     }
   } catch (e) {
     console.log('error2', JSON.stringify(e));

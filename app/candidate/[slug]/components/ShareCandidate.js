@@ -10,7 +10,7 @@ import { RiSendPlaneFill } from 'react-icons/ri';
 
 import styles from './ShareCandidate.module.scss';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { globalUserState } from '@shared/layouts/navigation/NavRegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import { appBase } from 'gpApi';
 
 export default function ShareCandidate({ candidate, children }) {

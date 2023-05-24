@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <div>
       <div className="flex items-start">
-        <H1>Campaign - Pre Launch</H1>
+        <h1 className="font-black text-5xl">Campaign - Pre Launch</h1>
         <div className="bg-black text-white font-black text-xs py-1 px-2 ml-3 rounded-sm">
           BETA
         </div>

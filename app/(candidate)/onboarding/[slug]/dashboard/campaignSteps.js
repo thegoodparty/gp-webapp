@@ -169,7 +169,7 @@ export const generateCampaignStatus = (campaign) => {
     campaignPlan: {
       status: 'locked',
       completedSteps: 0,
-      totalSteps: 11,
+      totalSteps: 10,
     },
     profile: {
       status: 'locked',
@@ -274,7 +274,11 @@ export const generateCampaignStatus = (campaign) => {
   } else {
     status.financeSupport.status = 'locked';
   }
-  if (campaign.launched) {
+  if (campaign.launchStatus === 'pending') {
+    status.launch.completedSteps = 21;
+    status.launch.status = 'inReview';
+  }
+  if (campaign.launchStatus === 'launched') {
     status.launch.completedSteps = 21;
     status.launch.status = 'completed';
   }

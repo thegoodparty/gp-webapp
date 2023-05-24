@@ -251,7 +251,7 @@ const detailsFields = [
   },
   {
     pageType: 'pledgePage',
-    title: 'Read and Take the Good Party Pledge.',
+    title: 'Good Party User Agreement.',
     fields: [],
   },
   {

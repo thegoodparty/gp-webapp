@@ -47,7 +47,7 @@ export default function OnboardingWrapper({
     <div
       className={`${
         !noBg && 'bg-white'
-      } shadow-inner relative pt-10 lg:pt-0 pb-6 min-h-screen lg:min-h-[calc(100vh-80px)] `}
+      } shadow-inner relative pt-10 lg:pt-0 pb-6 min-h-screen lg:min-h-[calc(100vh-56px)] `}
     >
       <div
         className="absolute h-1 bg-purple  top-0 rounded-r transition-all"

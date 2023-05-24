@@ -62,6 +62,7 @@ async function fetchCall(url, options = {}, revalidate) {
     res = await fetch(url, options);
   }
   try {
+    // console.log('res', res);
     let jsonRes = res.json();
     return jsonRes;
   } catch (e) {

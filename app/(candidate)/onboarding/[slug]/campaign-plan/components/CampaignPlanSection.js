@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaChevronDown, FaPencilAlt, FaSave } from 'react-icons/fa';
 import styles from './CampaignPlan.module.scss';
 import LoadingAI from './LoadingAI';
-import { CircularProgress } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import BlackButton from '@shared/buttons/BlackButton';
 import dynamic from 'next/dynamic';
 import AiModal from './AiModal';
@@ -16,6 +16,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
+import TogglePanel from '@shared/utils/TogglePanel';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 const RichEditor = dynamic(() => import('./RichEditor'), {
   loading: () => (
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
@@ -45,7 +47,7 @@ export default function CampaignPlanSection({
   section,
   campaign,
   initialOpen,
-  versions,
+  versions = {},
   updateVersionsCallback,
   forceExpand,
 }) {
@@ -174,40 +176,24 @@ export default function CampaignPlanSection({
   const expand = open || forceExpand;
 
   return (
-    <section key={section.key} className="my-3 rounded-2xl bg-white">
-      <div
-        className="flex justify-between items-center p-6 cursor-pointer"
-        onClick={() => toggleSelect()}
+    <section key={section.key} className="my-3">
+      <TogglePanel
+        label={section.title}
+        icon={loading ? <CircularProgress size={20} /> : section.icon}
+        forceExpand={forceExpand}
       >
-        <h3 className="font-bold text-2xl flex items-center">
-          <span className="inline-block mr-6">{section.title}</span>
-          {loading && <CircularProgress size={20} />}
-        </h3>
-        <div
-          className={`transition-all duration-300 hidden-for-print ${
-            expand && 'rotate-180'
-          }`}
-        >
-          <FaChevronDown size={24} />
-        </div>
-      </div>
-      <div
-        className={`overflow-hidden transition-all duration-300  ${
-          expand ? 'max-h-[3000px]' : 'max-h-0 '
-        }`}
-      >
-        <div className="p-6 ">
+        <div className="">
           {loading ? (
             <LoadingAI />
           ) : (
-            <div className="border-t border-2 mb-10 border-slate-100">
+            <div className="border border-slate-500 bg-slate-50 rounded-xl">
               <PlanVersion
                 campaign={campaign}
                 versions={versions[key]}
                 updatePlanCallback={updatePlanCallback}
                 latestVersion={campaignPlan[key]}
               />
-              <div className={`bg-white p-6 my-6 rounded-xl ${styles.plan}`}>
+              <div className={`p-3 lg:p-6 my-6 rounded-xl ${styles.plan}`}>
                 {isFailed ? (
                   <div className="text-center text-xl">
                     Failed to generate plan click here to try again
@@ -247,7 +233,7 @@ export default function CampaignPlanSection({
                         ) : (
                           <div dangerouslySetInnerHTML={{ __html: plan }} />
                         )}
-                        <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-100 cursor-pointer hidden-for-print">
+                        <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-500 cursor-pointer hidden-for-print">
                           <FaPencilAlt />
                         </div>
                       </div>
@@ -255,24 +241,23 @@ export default function CampaignPlanSection({
                   </>
                 )}
               </div>
-              <div className="flex items-center justify-center mt-6 border-t border-t-slate-300 py-6 hidden-for-print">
+              <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
                 <AiModal
                   submitCallback={handleRegenerate}
                   showWarning={isEdited}
                 />
                 <div onClick={handleSave}>
-                  <Pill>
+                  <PrimaryButton>
                     <div className="flex items-center">
                       <FaSave className="mr-2" /> Save
                     </div>
-                  </Pill>
+                  </PrimaryButton>
                 </div>
               </div>
             </div>
           )}
         </div>
-      </div>
-      <div className="print-page-break" />
+      </TogglePanel>
     </section>
   );
 }

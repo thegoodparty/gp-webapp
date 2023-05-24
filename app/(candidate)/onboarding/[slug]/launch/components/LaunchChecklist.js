@@ -13,6 +13,17 @@ import { FiCamera } from 'react-icons/fi';
 import { RiRocketLine } from 'react-icons/ri';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useRouter } from 'next/navigation';
+import Confetti from './Confetti';
+
+const canvasStyles = {
+  position: 'fixed',
+  pointerEvents: 'none',
+  width: '100%',
+  height: '100%',
+  top: 0,
+  left: 0,
+};
 
 const fields = [
   {
@@ -78,18 +89,20 @@ fields.forEach((field) => {
 
 export async function launchCampaign() {
   try {
-    const api = gpApi.campaign.onboarding.launch;
-    return await gpFetch(api);
+    const api = gpApi.campaign.onboarding.launchRequest;
+    await gpFetch(api);
+    return true;
   } catch (e) {
     console.log('error at launchCampaign', e);
-    return {};
+    return false;
   }
 }
 
 export default function LaunchChecklist({ campaign }) {
-  const { slug } = campaign;
+  const { slug, launchStatus, candidateSlug } = campaign;
   const [selected, setSelected] = useState(false);
   const [state, setState] = useState(initialState);
+  const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
 
   useEffect(() => {
@@ -136,24 +149,28 @@ export default function LaunchChecklist({ campaign }) {
     return true;
   };
   const handleSave = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
-    const { slug } = await launchCampaign();
-    if (slug) {
-      window.location.href = `/candidate/${slug}`;
+    if (launchStatus === 'launched' && candidateSlug) {
+      router.push(`/candidate/${candidateSlug}`);
     } else {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Error launching your campaign',
-          isError: true,
+          message: 'Saving...',
+          isError: false,
         };
       });
+      const res = await launchCampaign();
+      if (res) {
+        router.push(`/onboarding/${slug}/dashboard`);
+      } else {
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'Error launching your campaign',
+            isError: true,
+          };
+        });
+      }
     }
   };
 
@@ -172,11 +189,11 @@ export default function LaunchChecklist({ campaign }) {
             {field.items.map((item, index) => (
               <div
                 key={`${field.key}-${index}`}
-                className="mb-3 ml-5 flex items-center"
+                className="mb-3 ml-6 flex items-center"
               >
                 <Checkbox
                   sx={{
-                    '&.Mui-checked': { color: '#FFE600' },
+                    '&.Mui-checked': { color: '#000' },
                     '& .MuiSvgIcon-root': { fontSize: 36 },
                   }}
                   checked={state[`${field.key}-${index}`]}
@@ -197,9 +214,24 @@ export default function LaunchChecklist({ campaign }) {
         >
           BACK TO DASHBOARD
         </a>
-        <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
-          <strong>LAUNCH YOUR PROFILE</strong>
-        </YellowButtonClient>
+        <Confetti
+          button={
+            <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
+              <strong>
+                {launchStatus === 'launched' ? (
+                  'VIEW YOUR PROFILE'
+                ) : (
+                  <>
+                    {' '}
+                    {launchStatus === 'pending'
+                      ? 'PENDING REVIEW'
+                      : 'LAUNCH YOUR PROFILE'}
+                  </>
+                )}
+              </strong>
+            </YellowButtonClient>
+          }
+        />
       </div>
     </div>
   );

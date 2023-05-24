@@ -4,8 +4,6 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import CandidatePage from './components/CandidatePage';
-import CandidateSchema from './CandidateSchema';
-import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchCandidate = async (slug) => {
@@ -15,7 +13,6 @@ export const fetchCandidate = async (slug) => {
       slug,
       allFields: true,
     };
-
     return await gpFetch(api, payload, 3600);
   } catch (e) {
     return false;
@@ -58,7 +55,6 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const { slug } = params;
   const { candidate, candidatePositions, support } = await fetchCandidate(slug);
-
   if (!candidate) {
     notFound();
   }

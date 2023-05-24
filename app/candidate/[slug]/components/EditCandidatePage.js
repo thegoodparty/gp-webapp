@@ -3,7 +3,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useEffect, useState } from 'react';
 import CandidatePage from './CandidatePage';
 
-function debounce(func, args, timeout = 600) {
+export function debounce(func, args, timeout = 600) {
   clearTimeout(window.timer);
   window.timer = setTimeout(() => {
     func(args);

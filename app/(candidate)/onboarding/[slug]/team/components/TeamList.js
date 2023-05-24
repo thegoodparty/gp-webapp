@@ -1,9 +1,9 @@
 import YellowButton from '@shared/buttons/YellowButton';
 import { Fragment } from 'react';
 
-const fields = [
+export const teamFields = [
   {
-    title: 'ESSENTIAL RESPONSIBILITIES',
+    title: 'Essential roles:',
     steps: [
       {
         title: 'Campaign Treasurer / Compliance Manager',
@@ -28,7 +28,7 @@ const fields = [
     ],
   },
   {
-    title: 'NICE-TO-HAVE ROLES',
+    title: 'Nice to have roles:',
     steps: [
       {
         title: 'Data Analyst',
@@ -108,7 +108,7 @@ export default function TeamList({ slug }) {
             depend on the campaign&apos;s unique goals, strategy, and resources.
           </div>
         </div>
-        {fields.map((field) => (
+        {teamFields.map((field) => (
           <div key={field.title} className="pt-14 lg:pt-28">
             <h2 className="text-2xl font-black pb-4 pl-6 lg:pl-20">
               {field.title}

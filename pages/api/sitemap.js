@@ -9,7 +9,7 @@
 import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
 import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { faqArticleRoute, slugify } from '../../helpers/articleHelper';
+import { faqArticleRoute } from '../../helpers/articleHelper';
 import { candidateRoute } from '../../helpers/candidateHelper';
 
 let yourDate = new Date();
@@ -31,6 +31,7 @@ const staticUrls = [
   '/political-terms',
   '/volunteer',
   '/academy',
+  '/blog',
 ];
 
 export const fetchContent = async () => {
@@ -51,11 +52,32 @@ export const fetchGlossaryByTitle = async () => {
   return await gpFetch(api, payload);
 };
 
+const fetchArticles = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'blogArticles',
+  };
+  return await gpFetch(api, payload, 3600);
+};
+
+export const fetchSections = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'blogSections',
+    deleteKey: 'articles',
+  };
+  return await gpFetch(api, payload, 3600);
+};
+
 export default async function sitemap(req, res) {
   try {
     const { faqArticles } = await fetchContent();
     const { candidates } = await fetchCandidates();
     const { content } = await fetchGlossaryByTitle();
+    const blogRes = await fetchArticles();
+    const blogArticles = blogRes.content;
+    const blogSectionsRes = await fetchSections();
+    const blogSections = blogSectionsRes.content;
 
     let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -83,7 +105,7 @@ export default async function sitemap(req, res) {
         <url>
           <loc>${appBase}${candidateRoute(candidate)}</loc>
           <lastmod>${currentDate}</lastmod>
-          <changefreq>weekly</changefreq>
+          <changefreq>monthly</changefreq>
         </url>
       `;
     });
@@ -93,7 +115,7 @@ export default async function sitemap(req, res) {
         <url>
           <loc>${appBase}/political-terms/${letter}</loc>
           <lastmod>${currentDate}</lastmod>
-          <changefreq>weekly</changefreq>
+          <changefreq>monthly</changefreq>
         </url>
       `;
     });
@@ -103,10 +125,31 @@ export default async function sitemap(req, res) {
         <url>
           <loc>${appBase}/political-terms/${slug}</loc>
           <lastmod>${currentDate}</lastmod>
-          <changefreq>weekly</changefreq>
+          <changefreq>monthly</changefreq>
         </url>
       `;
     });
+
+    blogArticles.forEach((article) => {
+      xmlString += `
+        <url>
+          <loc>${appBase}/blog/article/${article.slug}</loc>
+          <lastmod>${article.publishDate}</lastmod>
+          <changefreq>monthly</changefreq>
+        </url>
+      `;
+    });
+
+    blogSections.forEach((section) => {
+      xmlString += `
+        <url>
+          <loc>${appBase}/blog/section/${section.fields?.slug}</loc>
+          <lastmod>${currentDate}</lastmod>
+          <changefreq>monthly</changefreq>
+        </url>
+      `;
+    });
+
     xmlString += '</urlset>';
 
     res.writeHead(200, {
