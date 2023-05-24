@@ -9,7 +9,7 @@ import { FaChevronDown, FaExclamation } from 'react-icons/fa';
 import FinanceDisclaimer from './FinanceDisclaimer';
 import QuickLinks from './QuickLinks';
 
-const fields = [
+export const fundingFields = [
   {
     key: 'ein',
     title: 'File for an EIN with the IRS',
@@ -170,7 +170,7 @@ const fields = [
 ];
 
 const initialState = {};
-fields.forEach((field) => {
+fundingFields.forEach((field) => {
   initialState[field.key] = false;
 });
 
@@ -240,7 +240,7 @@ export default function FinanceChecklist({ campaign }) {
         </div>
         <div className="pt-14 lg:pt-28">
           <div className="bg-slate-100 h-1" />
-          {fields.map((field, index) => (
+          {fundingFields.map((field, index) => (
             <Fragment key={field.key}>
               <div className="py-6 flex items-start justify-between">
                 <div className="text-right lg:text-center w-11 pl-2 lg:pl-0 shrink-0 lg:w-[180px] -mt-2">
