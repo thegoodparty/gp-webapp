@@ -1,3 +1,4 @@
+'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import {
@@ -10,9 +11,10 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
-// import SocialButton from 'app/(entrance)/register/components/SocialButton';
 import TwitterButton from './TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import GoogleLoginButton from './GoogleLoginButton';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 async function login(payload) {
   try {
@@ -30,7 +32,7 @@ async function login(payload) {
   }
 }
 
-export default function SocialButtons() {
+export default function SocialLoginButtons() {
   const snackbarState = useHookstate(globalSnackbarState);
   const userState = useHookstate(globalUserState);
   const router = useRouter();
@@ -58,6 +60,7 @@ export default function SocialButtons() {
           socialPic = largeImg;
         }
         ({ idToken } = socialUser._token);
+        // console.log('idToken', idToken);
       } catch (e) {
         console.log('large image error');
       }
@@ -101,6 +104,7 @@ export default function SocialButtons() {
     }
   };
   const socialLoginFailureCallback = () => {};
+
   return (
     <>
       <div className="my-8 h-4 relative">
@@ -113,28 +117,9 @@ export default function SocialButtons() {
         </div>
       </div>
 
-      {/* <div data-cy="facebook-login">
-        <SocialButton
-          channel="facebook"
-          provider="facebook"
-          appId="241239336921963"
-          onLoginSuccess={socialLoginCallback}
-          onLoginFailure={socialLoginFailureCallback}
-        >
-          Continue with FACEBOOK
-        </SocialButton>
-      </div>
-      <div data-cy="google-login" className="mt-6">
-        <SocialButton
-          channel="google"
-          provider="google"
-          appId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com"
-          onLoginSuccess={socialLoginCallback}
-          onLoginFailure={socialLoginFailureCallback}
-        >
-          Continue with GOOGLE
-        </SocialButton>
-      </div> */}
+      <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
+        <GoogleLoginButton loginSuccessCallback={socialLoginCallback} />
+      </GoogleOAuthProvider>
 
       <div data-cy="twitter-login" className="mt-6">
         <TwitterButton />

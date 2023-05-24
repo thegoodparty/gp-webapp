@@ -14,10 +14,10 @@ import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile.js';
+import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import SocialButtons from './SocialButtons';
+import SocialLoginButtons from './SocialLoginButtons';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 
@@ -46,6 +46,7 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
+
   const userState = useHookstate(globalUserState);
   const snackbarState = useHookstate(globalSnackbarState);
 
@@ -91,79 +92,83 @@ export default function LoginPage() {
   };
 
   return (
-    <MaxWidth>
-      <div className={`flex items-center justify-center ${styles.wrapper}`}>
-        <div className="grid py-6 max-w-lg" style={{ width: '75vw' }}>
-          <div className="text-center mb-8 pt-8">
-            <h1
-              data-cy="register-title"
-              className="text-2xl lg:text-4xl font-black"
-            >
-              Log into your account
-            </h1>
-          </div>
-          <div className="flex justify-center">
-            <div
-              className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
-              data-cy="register-label"
-            >
-              <Link
-                href="/register"
-                data-cy="redirect-to-login"
-                className=" no-underline"
+    <>
+      <MaxWidth>
+        <div className={`flex items-center justify-center ${styles.wrapper}`}>
+          <div className="grid py-6 max-w-lg w-[75vw]">
+            <div className="text-center mb-8 pt-8">
+              <h1
+                data-cy="register-title"
+                className="text-2xl lg:text-4xl font-black"
               >
-                <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
-                  Sign up
+                Log into your account
+              </h1>
+            </div>
+            <div className="flex justify-center">
+              <div
+                className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
+                data-cy="register-label"
+              >
+                <Link
+                  href="/register"
+                  data-cy="redirect-to-login"
+                  className=" no-underline"
+                >
+                  <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
+                    Sign up
+                  </div>
+                </Link>
+                <div className="bg-black text-white py-3 px-6 rounded-xl">
+                  Sign In
                 </div>
-              </Link>
-              <div className="bg-black text-white py-3 px-6 rounded-xl">
-                Sign In
               </div>
             </div>
-          </div>
-          <form
-            noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-            data-cy="email-form"
-            id="register-page-form"
-          >
-            <EmailInput
-              onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
-              value={state.email}
-            />
-            <br />
-            <br />
-            <PasswordInput
-              label="Password"
-              onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-            />
-
-            <br />
-            <br />
-            <br />
-
-            <YellowButtonClient
-              style={{ width: '100%' }}
-              disabled={!enableSubmit()}
-              onClick={handleSubmit}
-              type="submit"
+            <form
+              noValidate
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              data-cy="email-form"
+              id="register-page-form"
             >
-              <strong>LOGIN</strong>
-            </YellowButtonClient>
-          </form>
-          <br />
+              <div className="flex mt-5">
+                <EmailInput
+                  onChangeCallback={(e) =>
+                    onChangeField(e.target.value, 'email')
+                  }
+                  value={state.email}
+                />
+              </div>
 
-          <Link href="/forgot-password" className="text-sm">
-            Forgot your password?
-          </Link>
+              <div className="flex mt-5">
+                <PasswordInput
+                  label="Password"
+                  onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
+                />
+              </div>
+              <div className="flex mt-5">
+                <YellowButtonClient
+                  style={{ width: '100%' }}
+                  disabled={!enableSubmit()}
+                  onClick={handleSubmit}
+                  type="submit"
+                >
+                  <strong>LOGIN</strong>
+                </YellowButtonClient>
+              </div>
+            </form>
+            <div className="flex mt-5">
+              <Link href="/forgot-password" className="text-sm">
+                Forgot your password?
+              </Link>
+            </div>
 
-          <Suspense>
-            <SocialButtons />
-          </Suspense>
+            <Suspense>
+              <SocialLoginButtons />
+            </Suspense>
+          </div>
         </div>
-      </div>
-    </MaxWidth>
+      </MaxWidth>
+    </>
   );
 }

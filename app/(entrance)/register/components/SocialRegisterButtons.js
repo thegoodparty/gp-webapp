@@ -1,3 +1,4 @@
+'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import {
@@ -6,13 +7,14 @@ import {
   setCookie,
   setUserCookie,
 } from 'helpers/cookieHelper';
-// import SocialButton from './SocialButton';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import GoogleRegisterButton from './GoogleRegisterButton';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 async function register(payload) {
   try {
@@ -30,7 +32,7 @@ async function register(payload) {
   }
 }
 
-export default function SocialButtons() {
+export default function SocialRegisterButtons() {
   const snackbarState = useHookstate(globalSnackbarState);
   const userState = useHookstate(globalUserState);
   const router = useRouter();
@@ -52,11 +54,13 @@ export default function SocialButtons() {
       }
     } else if (provider === 'google') {
       // for gogole removing the "=s96-c" at the end of the string returns a large image.
+      console.log('profilePicURL', profilePicURL);
       try {
         const largeImg = profilePicURL.substring(0, profilePicURL.indexOf('='));
         if (largeImg) {
           socialPic = largeImg;
         }
+        console.log('socialPic', socialPic);
         ({ idToken } = socialUser._token);
       } catch (e) {
         console.log('large image error');
@@ -120,28 +124,9 @@ export default function SocialButtons() {
         </div>
       </div>
 
-      {/* <div data-cy="facebook-login">
-        <SocialButton
-          channel="facebook"
-          provider="facebook"
-          appId="241239336921963"
-          onLoginSuccess={socialRegisterCallback}
-          onLoginFailure={socialRegisterFailureCallback}
-        >
-          Continue with FACEBOOK
-        </SocialButton>
-      </div> */}
-      {/* <div data-cy="google-login" className="mt-6">
-        <SocialButton
-          channel="google"
-          provider="google"
-          appId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com"
-          onLoginSuccess={socialRegisterCallback}
-          onLoginFailure={socialRegisterFailureCallback}
-        >
-          Continue with GOOGLE
-        </SocialButton>
-      </div> */}
+      <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
+        <GoogleRegisterButton loginSuccessCallback={socialRegisterCallback} />
+      </GoogleOAuthProvider>
 
       <div data-cy="twitter-register" className="mt-6">
         <TwitterButton />
