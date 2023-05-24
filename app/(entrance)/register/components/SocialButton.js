@@ -1,11 +1,17 @@
 'use client';
 import React from 'react';
-import SocialLogin from 'react-social-login';
+// import SocialLogin from 'react-social-login';
 import Button from '@mui/material/Button';
 import { FaFacebook } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-const SocialButton = ({ triggerLogin, children, channel, ...props }) => {
+const SocialButton = ({
+  performLoginCallback,
+  children,
+  channel,
+  ...props
+}) => {
   const icon = () => {
     if (channel === 'facebook') {
       return (
@@ -25,28 +31,30 @@ const SocialButton = ({ triggerLogin, children, channel, ...props }) => {
   };
 
   return (
-    <Button
-      fullWidth
-      onClick={triggerLogin}
-      {...props}
-      className={'rounded-lg py-4 px-1 relative text-center'}
-      style={
-        channel === 'facebook'
-          ? { backgroundColor: '#507cc0', color: '#fff' }
-          : channel === 'google'
-          ? {
-              backgroundColor: '#fff',
-              border: 'solid 2px #000',
-            }
-          : {}
-      }
-      data-cy={`${channel}-social-login`}
-    >
-      <div className="text-center font-black py-3">
-        {icon()} {children}
-      </div>
-    </Button>
+    <>
+      <Button
+        fullWidth
+        onClick={performLoginCallback}
+        {...props}
+        className={'rounded-lg py-4 px-1 relative text-center'}
+        style={
+          channel === 'facebook'
+            ? { backgroundColor: '#507cc0', color: '#fff' }
+            : channel === 'google'
+            ? {
+                backgroundColor: '#fff',
+                border: 'solid 2px #000',
+              }
+            : {}
+        }
+        data-cy={`${channel}-social-login`}
+      >
+        <div className="text-center font-black py-3">
+          {icon()} {children}
+        </div>
+      </Button>
+    </>
   );
 };
 
-export default SocialLogin(SocialButton);
+export default SocialButton;

@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import PasswordInput from '@shared/inputs/PasswrodInput';
 import { passwordRegex } from 'helpers/userHelper';
-import SocialButtons from './SocialButtons';
+import SocialRegisterButtons from './SocialRegisterButtons';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
@@ -245,7 +245,7 @@ export default function RegisterPage({}) {
           )} */}
             </form>
             <Suspense>
-              <SocialButtons />
+              <SocialRegisterButtons />
             </Suspense>
           </div>
         )}
