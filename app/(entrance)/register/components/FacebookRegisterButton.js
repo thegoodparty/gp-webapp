@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { FaFacebook } from 'react-icons/fa';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 
-const FacebookLoginButton = ({ loginSuccessCallback }) => {
+const FacebookRegisterButton = ({ loginSuccessCallback }) => {
   const [socialToken, setSocialToken] = React.useState('');
   const [socialEmail, setSocialEmail] = React.useState('');
   const [socialPicture, setSocialPicture] = React.useState('');
@@ -38,7 +38,7 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
           }
         }}
         onFail={(error) => {
-          console.log('Login Failed!', error);
+          console.log('Register Failed!', error);
         }}
         onProfileSuccess={(response) => {
           if (response?.email) {
@@ -52,10 +52,10 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
         <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8">
           <FaFacebook size={30} />
         </div>
-        CONTINUE WITH FACEBOOK
+        Continue with FACEBOOK
       </FacebookLogin>
     </div>
   );
 };
 
-export default FacebookLoginButton;
+export default FacebookRegisterButton;

@@ -43,7 +43,7 @@ const GoogleRegisterButton = ({ loginSuccessCallback }) => {
       <Button
         fullWidth
         onClick={performGoogleLogin}
-        className={'rounded-lg py-4 px-1 relative text-center'}
+        className={'rounded-lg py-5 px-1 relative text-center'}
         style={{
           backgroundColor: '#fff',
           border: 'solid 2px #000',

@@ -15,6 +15,7 @@ import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import FacebookRegisterButton from './FacebookRegisterButton';
 
 async function register(payload) {
   try {
@@ -46,21 +47,17 @@ export default function SocialRegisterButtons() {
     let idToken;
     if (provider === 'facebook') {
       try {
-        const largeImage = await fetch(window?.FB.api, '/me/picture?width=500');
-        socialPic = largeImage || '';
         idToken = socialUser._token.accessToken;
       } catch (e) {
         console.log('fb API error');
       }
     } else if (provider === 'google') {
       // for gogole removing the "=s96-c" at the end of the string returns a large image.
-      console.log('profilePicURL', profilePicURL);
       try {
         const largeImg = profilePicURL.substring(0, profilePicURL.indexOf('='));
         if (largeImg) {
           socialPic = largeImg;
         }
-        console.log('socialPic', socialPic);
         ({ idToken } = socialUser._token);
       } catch (e) {
         console.log('large image error');
@@ -127,6 +124,8 @@ export default function SocialRegisterButtons() {
       <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
         <GoogleRegisterButton loginSuccessCallback={socialRegisterCallback} />
       </GoogleOAuthProvider>
+
+      <FacebookRegisterButton loginSuccessCallback={socialRegisterCallback} />
 
       <div data-cy="twitter-register" className="mt-6">
         <TwitterButton />

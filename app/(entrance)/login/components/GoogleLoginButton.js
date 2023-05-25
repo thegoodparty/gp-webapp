@@ -38,10 +38,11 @@ const GoogleLoginButton = ({ loginSuccessCallback }) => {
         style={{
           backgroundColor: '#fff',
           border: 'solid 2px #000',
+          height: '16px',
         }}
         data-cy={`google-social-login`}
       >
-        <div className="text-center text-black py-3">
+        <div className="text-center text-black py-5">
           <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8 bg-white shadow-sm rounded-full">
             <FcGoogle size={30} />
           </div>

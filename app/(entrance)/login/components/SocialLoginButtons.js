@@ -25,7 +25,6 @@ async function login(payload) {
       setUserCookie(user);
       setCookie('token', token);
     }
-
     return user;
   } catch (e) {
     console.log('error', e);
@@ -47,22 +46,18 @@ export default function SocialLoginButtons() {
     let idToken;
     if (provider === 'facebook') {
       try {
-        // const largeImage = await fetch(window.FB.api, '/me/picture?width=500');
-        // socialPic = largeImage || '';
         idToken = socialUser._token.accessToken;
       } catch (e) {
         console.log('fb API error');
       }
-      console.log('idToken', idToken);
     } else if (provider === 'google') {
-      // for gogole removing the "=s96-c" at the end of the string returns a large image.
+      // for google removing the "=s96-c" at the end of the string returns a large image.
       try {
         const largeImg = profilePicURL.substring(0, profilePicURL.indexOf('='));
         if (largeImg) {
           socialPic = largeImg;
         }
         ({ idToken } = socialUser._token);
-        // console.log('idToken', idToken);
       } catch (e) {
         console.log('large image error');
       }
@@ -75,7 +70,6 @@ export default function SocialLoginButtons() {
       socialToken: idToken,
     };
 
-    console.log('payload'.payload);
     const user = await login(payload);
     if (user) {
       userState.set(() => user);
