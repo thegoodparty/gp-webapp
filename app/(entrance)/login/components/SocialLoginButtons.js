@@ -46,13 +46,13 @@ export default function SocialLoginButtons() {
     let socialPic = profilePicURL;
     let idToken;
     if (provider === 'facebook') {
-      try {
-        const largeImage = await fetch(window.FB.api, '/me/picture?width=500');
-        socialPic = largeImage || '';
-        idToken = socialUser._token.accessToken;
-      } catch (e) {
-        console.log('fb API error');
-      }
+      // try {
+      //   const largeImage = await fetch(window.FB.api, '/me/picture?width=500');
+      //   socialPic = largeImage || '';
+      //   idToken = socialUser._token.accessToken;
+      // } catch (e) {
+      //   console.log('fb API error');
+      // }
     } else if (provider === 'google') {
       // for gogole removing the "=s96-c" at the end of the string returns a large image.
       try {
@@ -73,6 +73,8 @@ export default function SocialLoginButtons() {
       socialProvider: provider,
       socialToken: idToken,
     };
+
+    console.log('payload'.payload);
     const user = await login(payload);
     if (user) {
       userState.set(() => user);
