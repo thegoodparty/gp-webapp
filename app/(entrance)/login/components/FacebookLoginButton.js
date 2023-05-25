@@ -12,6 +12,7 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
   //       loginSuccessCallback(socialUser);
   //     },
   //   });
+  const [socialUser, setSocialUser] = React.useState({});
 
   return (
     <div data-cy="facebook-login" className="mt-6">
@@ -25,14 +26,26 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
         data-cy={`facebook-social-login`}
         onSuccess={(response) => {
           console.log('Login Success!', response);
-          // CALL loginSuccessCallback
-          // TODO: parse response. create socialUser object and pass to loginSuccessCallback
+          const fbUser = {
+            _provider: 'facebook',
+            _token: { accessToken: response.accessToken },
+          };
+          console.log('fbUser', fbUser);
+          setSocialUser(fbUser);
         }}
         onFail={(error) => {
           console.log('Login Failed!', error);
         }}
         onProfileSuccess={(response) => {
           console.log('Get Profile Success!', response);
+          let fbUser = socialUser;
+          fbUser._profile = {
+            email: response.email,
+            profilePicURL: response.picture.data.url,
+          };
+          console.log('fbUser', fbUser);
+          setSocialUser(fbUser);
+          loginSuccessCallback(fbUser);
         }}
       >
         <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8">
