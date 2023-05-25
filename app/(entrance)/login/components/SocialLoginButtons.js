@@ -14,6 +14,7 @@ import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import TwitterButton from './TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import GoogleLoginButton from './GoogleLoginButton';
+import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 async function login(payload) {
@@ -120,6 +121,8 @@ export default function SocialLoginButtons() {
       <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
         <GoogleLoginButton loginSuccessCallback={socialLoginCallback} />
       </GoogleOAuthProvider>
+
+      <FacebookLoginButton loginSuccessCallback={socialLoginCallback} />
 
       <div data-cy="twitter-login" className="mt-6">
         <TwitterButton />
