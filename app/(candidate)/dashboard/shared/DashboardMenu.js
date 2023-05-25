@@ -7,7 +7,7 @@ import { TbBrain } from 'react-icons/tb';
 
 const pages = [
   { label: 'Campaign Tracker', icon: <AiOutlineFlag />, link: '/dashboard' },
-  { label: 'Profile', icon: <RiUserHeartLine />, link: '/dashboard/profile' },
+  { label: 'Profile', icon: <RiUserHeartLine />, link: '/profile' },
   {
     label: 'Campaign Plan',
     icon: <TbBrain />,

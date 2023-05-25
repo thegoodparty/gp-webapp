@@ -31,7 +31,7 @@ export default async function Page({ params }) {
   return <CampaignPlanPage {...childProps} />;
 }
 
-function mapArticlesBySlug(content) {
+export function mapArticlesBySlug(content) {
   let bySlug = {};
   content.forEach((article) => {
     bySlug[article.slug] = article;
