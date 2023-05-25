@@ -1,18 +1,32 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { FaFacebook } from 'react-icons/fa';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 
 const FacebookLoginButton = ({ loginSuccessCallback }) => {
-  //   const performFacebookLogin = useFacebookLogin({
-  //     onSuccess: async (tokenResponse) => {
-  //       const accessToken = tokenResponse.access_token;
-  //       const socialUser = await fetchFacebookUser(accessToken);
-  //       loginSuccessCallback(socialUser);
-  //     },
-  //   });
-  const [socialUser, setSocialUser] = React.useState({});
+  const [socialToken, setSocialToken] = React.useState('');
+  const [socialEmail, setSocialEmail] = React.useState('');
+  const [socialPicture, setSocialPicture] = React.useState('');
+
+  useEffect(() => {
+    console.log('socialToken', socialToken);
+    console.log('socialEmail', socialEmail);
+    console.log('socialPicture', socialPicture);
+
+    if (socialToken != '' && socialEmail != '' && socialPicture != '') {
+      const fbUser = {
+        _provider: 'facebook',
+        _token: { accessToken: socialToken },
+        _profile: {
+          email: socialEmail,
+          profilePicURL: socialPicture,
+        },
+      };
+      console.log('fbUser', fbUser);
+      loginSuccessCallback(fbUser);
+    }
+  }, [socialToken, socialEmail, socialPicture]);
 
   return (
     <div data-cy="facebook-login" className="mt-6">
@@ -26,26 +40,21 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
         data-cy={`facebook-social-login`}
         onSuccess={(response) => {
           console.log('Login Success!', response);
-          const fbUser = {
-            _provider: 'facebook',
-            _token: { accessToken: response.accessToken },
-          };
-          console.log('fbUser', fbUser);
-          setSocialUser(fbUser);
+          if (response?.accessToken) {
+            setSocialToken(response.accessToken);
+          }
         }}
         onFail={(error) => {
           console.log('Login Failed!', error);
         }}
         onProfileSuccess={(response) => {
           console.log('Get Profile Success!', response);
-          let fbUser = socialUser;
-          fbUser._profile = {
-            email: response.email,
-            profilePicURL: response.picture.data.url,
-          };
-          console.log('fbUser', fbUser);
-          setSocialUser(fbUser);
-          loginSuccessCallback(fbUser);
+          if (response?.email) {
+            setSocialEmail(response.email);
+          }
+          if (response?.picture?.data?.url) {
+            setSocialPicture(response.picture.data.url);
+          }
         }}
       >
         <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8">
