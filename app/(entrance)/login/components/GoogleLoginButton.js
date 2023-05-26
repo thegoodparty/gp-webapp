@@ -34,20 +34,20 @@ const GoogleLoginButton = ({ loginSuccessCallback }) => {
       <Button
         fullWidth
         onClick={performGoogleLogin}
-        className={'rounded-lg py-4 px-1 relative text-center min-h-16'}
         style={{
           backgroundColor: '#fff',
-          border: 'solid 2px #000',
-          height: '16px',
+          borderRadius: '8px',
+          // border color grey for google button
+          border: '1px solid #ccc',
         }}
         data-cy={`google-social-login`}
       >
-        <div className="text-center text-black py-5">
-          <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8 bg-white shadow-sm rounded-full">
-            <FcGoogle size={30} />
-          </div>
+        <div className="text-xs lg:text-sm bg-white text-black relative  py-4 px-1 w-full">
+          <span className="absolute left-3 t-4 lg:text-xl">
+            <FcGoogle />
+          </span>
+          <div className="font-bold">Continue with Google</div>
         </div>
-        Continue with GOOGLE
       </Button>
     </div>
   );

@@ -26,7 +26,9 @@ const FacebookRegisterButton = ({ loginSuccessCallback }) => {
     <div data-cy="facebook-login" className="mt-6">
       <FacebookLogin
         appId="281110284260458"
-        className={'rounded-lg py-4 px-1 relative text-center w-full'}
+        className={
+          'rounded-lg py-4 px-1 relative text-center text-sm font-bold w-full'
+        }
         style={{
           backgroundColor: '#507cc0',
           color: '#fff',

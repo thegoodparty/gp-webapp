@@ -26,7 +26,9 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
     <div data-cy="facebook-login" className="mt-6">
       <FacebookLogin
         appId="281110284260458"
-        className={'rounded-lg py-4 px-1 relative text-center w-full'}
+        className={
+          'rounded-lg py-4 px-1 relative text-center text-sm font-bold w-full'
+        }
         style={{
           backgroundColor: '#507cc0',
           color: '#fff',
@@ -49,7 +51,7 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
           }
         }}
       >
-        <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-2xl lg:w-8 lg:h-8">
+        <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-xs lg:w-8 lg:h-8">
           <FaFacebook size={30} />
         </div>
         CONTINUE WITH FACEBOOK
