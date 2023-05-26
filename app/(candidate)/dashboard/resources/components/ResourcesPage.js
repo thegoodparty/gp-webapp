@@ -128,7 +128,7 @@ export default function ResourcesPage(props) {
         imgHeight={120}
       />
 
-      <div className="mt-14 mb-8">
+      <div className="mt-14 mb-8 ">
         {sections.map((section) => (
           <div key={section.title}>
             <H5 className="mt-9 mb-3">{section.title}</H5>
