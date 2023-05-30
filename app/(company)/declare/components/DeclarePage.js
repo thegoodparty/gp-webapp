@@ -1,6 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
-import SignModal from './SignModal';
+import Signatures from './Signatures';
 
 export default function DeclarePage({ signatures, baskerville, tangerine }) {
   const content = [
@@ -47,7 +47,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
     },
   ];
 
-  let modalProps = { tangerine };
+  let modalProps = { signatures, tangerine };
 
   return (
     <MaxWidth>
@@ -80,26 +80,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
                 </div>
               ))}
             </div>
-            <div className="flex font-bold text-xl max-w-[65%] md:max-w-[55%] mx-auto justify-between items-center align-middle mt-10">
-              <div className="flex flex-row">
-                <p>Join the party</p>
-                <span role="img" className="ml-1" aria-label="Party">
-                  🎉
-                </span>
-              </div>
-              <SignModal {...modalProps} />
-            </div>
-            <div
-              className={`flex flex-col max-w-[55%] mt-8 mx-auto justify-center items-center text-2xl ${tangerine.className}`}
-            >
-              {signatures}
-            </div>
-
-            <div
-              className={`flex flex-col max-w-[55%] mx-auto justify-center items-center text-2xl ${tangerine.className}`}
-            >
-              ... And more!
-            </div>
+            <Signatures {...modalProps} />
           </div>
         </div>
       </div>

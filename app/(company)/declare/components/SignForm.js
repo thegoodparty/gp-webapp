@@ -26,6 +26,7 @@ export default function SignatureForm({
   label = 'SIGN NOW',
   labelId,
   tangerine,
+  setSigner,
 }) {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -49,6 +50,9 @@ export default function SignatureForm({
       if (success) {
         setSuccess(true);
         setShowError(false);
+        const signature = `${firstName} ${lastName}, `;
+        setSigner(signature);
+        localStorage.setItem('signature', signature);
       } else {
         setShowError('An error occurred. Please try again.');
       }
