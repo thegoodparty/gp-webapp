@@ -32,8 +32,8 @@ export default function BlogWrapper({
         </div>
       </div>
 
-      <div className={styles.sectionsWrapper}>
-        <div className={styles.sections}>
+      <div className={styles.sectionsSlugWrapper}>
+        <div className={styles.sectionsSlug}>
           <Link
             id="blog-home"
             href="/blog"
@@ -64,7 +64,7 @@ export default function BlogWrapper({
                         : section.fields.slug === 'candidates'
                         ? 'bg-teal-500'
                         : 'bg-gray-800'
-                    } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full whitespace-nowrap`}
+                    } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}
                   </BaseButtonClient>
@@ -91,7 +91,7 @@ export default function BlogWrapper({
                         : section.fields.slug === 'candidates'
                         ? 'bg-teal-500'
                         : 'bg-gray-800'
-                    } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full whitespace-nowrap`}
+                    } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}
                   </BaseButtonClient>
