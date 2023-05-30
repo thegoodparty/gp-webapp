@@ -27,7 +27,7 @@ const FacebookRegisterButton = ({ loginSuccessCallback }) => {
       <FacebookLogin
         appId="281110284260458"
         className={
-          'rounded-lg py-4 px-1 relative text-center text-sm font-bold w-full'
+          'rounded-lg py-5 px-1 relative text-center text-sm font-bold w-full'
         }
         style={{
           backgroundColor: '#507cc0',
