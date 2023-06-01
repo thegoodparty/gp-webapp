@@ -1,10 +1,11 @@
 'use client';
 import Script from 'next/script';
 import { useState } from 'react';
-import Accordion from './Accordion';
+import WhatWeDo from './WhatWeDo';
 import Experts from './Experts';
 import Hero from './Hero';
 import dynamic from 'next/dynamic';
+import styles from './RunForOffice.module.scss';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
 export default function RunForOfficePage() {
@@ -20,7 +21,9 @@ export default function RunForOfficePage() {
   return (
     <div className="">
       <Hero demoCallback={handleOpenModal} />
-      <Accordion demoCallback={handleOpenModal} />
+      <div className={styles.boxBottom}></div>
+
+      <WhatWeDo demoCallback={handleOpenModal} />
       <Experts demoCallback={handleOpenModal} />
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>

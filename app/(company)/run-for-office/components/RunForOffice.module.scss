@@ -1,0 +1,16 @@
+@import '/styles/scss/colors.scss';
+@import '/styles/scss/breakpoints.scss';
+
+.boxTop {
+  background: linear-gradient(172deg, #ffffff 54.5%, #13161a 55%);
+  border-radius: 4px;
+  height: 205px;
+  width: 100%;
+}
+
+.boxBottom {
+  background: linear-gradient(-172deg, #ffffff 54.5%, #13161a 55%);
+  border-radius: 4px;
+  height: 205px;
+  width: 100%;
+}
