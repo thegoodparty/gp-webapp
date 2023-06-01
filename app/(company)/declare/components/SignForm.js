@@ -124,6 +124,7 @@ export default function SignatureForm({
           <div className="flex flex-col">
             <input
               type="text"
+              maxLength={35}
               name="firstName"
               onChange={(e) => {
                 setFirstName(e.target.value);
@@ -135,6 +136,7 @@ export default function SignatureForm({
 
             <input
               type="text"
+              maxLength={35}
               name="lastName"
               onChange={(e) => {
                 setLastName(e.target.value);
