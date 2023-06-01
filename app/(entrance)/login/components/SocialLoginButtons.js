@@ -91,6 +91,7 @@ export default function SocialLoginButtons() {
       } else {
         router.push('/');
       }
+      window.location.href = '/';
     } else {
       snackbarState.set(() => {
         return {
