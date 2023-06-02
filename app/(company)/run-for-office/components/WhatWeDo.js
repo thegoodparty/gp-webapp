@@ -105,7 +105,7 @@ export default function WhatWeDo({ demoCallback }) {
           ))}
         </div>
         <div className="flex justify-center mt-20">
-          <div className="flex w-full lg:w-[80%] h-[300px] bg-zinc-800 rounded-2xl mt-5">
+          <div className="flex w-full lg:w-[80%] h-auto bg-zinc-800 rounded-2xl mt-5">
             <div className="flex flex-col justify-center items-center text-center w-2/3">
               <h3 className="text-2xl text-slate-100 pr-5 pl-5">
                 {sections[selected].description}
