@@ -18,7 +18,7 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
           profilePicURL: socialPicture,
         },
       };
-      loginSuccessCallback(fbUser);
+      // loginSuccessCallback(fbUser);
     }
   }, [socialToken, socialEmail, socialPicture]);
 
@@ -43,6 +43,7 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
           console.log('Login Failed!', error);
         }}
         onProfileSuccess={(response) => {
+          console.log('Profile Success!', response);
           if (response?.email) {
             setSocialEmail(response.email);
           }
