@@ -9,7 +9,7 @@ export default function Hero({ demoCallback }) {
   return (
     <MaxWidth>
       <div className="flex flex-row w-full">
-        <div className="flex flex-row w-full mt-5 justify-between">
+        <div className="flex flex-row w-full mt-5 justify-between h-auto">
           <Image
             src="/images/run-page/squiggles.svg"
             width="90"

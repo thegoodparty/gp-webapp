@@ -6,8 +6,9 @@ export default function HeroImages() {
     <div className="flex flex-auto h-[600px] mt-20 md:-mt-20 justify-center relative">
       <Image
         src="/images/run-page/hero-large.png"
-        alt="GP-AI"
+        alt="Good Party"
         fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         className="object-contain"
       />
     </div>

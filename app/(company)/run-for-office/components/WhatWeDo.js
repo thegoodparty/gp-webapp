@@ -5,37 +5,43 @@ import { LuStars } from 'react-icons/lu';
 import { SlGraduation } from 'react-icons/sl';
 import { RiHandHeartLine, RiTeamLine, RiLineChartLine } from 'react-icons/ri';
 import Image from 'next/image';
-import testimonial1Img from 'public/images/run-page/testimonial1.png';
-import toolsImg from 'public/images/landing-pages/tools.png';
-import expertsImg from 'public/images/landing-pages/experts.png';
-import insightsImg from 'public/images/landing-pages/insights.png';
 
 const sections = [
   {
-    title: 'Candidate for Maine House District 104',
-    name: 'Anne Gass',
+    name: 'Breanna S.',
+    title: 'Fintech Founder',
     description:
-      '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
-    img: testimonial1Img,
+      '“Working with the different AI tools was an amazing experience because… I was able to see what it would be like to enter my message from my own vocabulary, my own heart and mind and have AI just slightly tweak it in order to be the best version for the type of audience Im trying to engage with.”',
+    img: '/images/run-page/testimonial1.png',
   },
   {
-    title: 'Get help from experts',
+    name: 'Carlos R.',
+    title: 'Regulatory Writer',
     description:
-      'We cut out expensive consultants by providing you free access to our team of experienced political professionals in fundraising, digital, field operations, and more.',
-    img: expertsImg,
+      '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
+    img: '/images/run-page/testimonial1.png',
   },
-  {
-    title: 'Get access to cutting-edge AI tools',
-    description:
-      'Our AI-powered tools make campaigning smarter, faster and cheaper than ever and provide a  competitive edge over old-style, two-party politicians.',
-    img: toolsImg,
-  },
-  {
-    title: 'Actionable data, analysis and insights',
-    description:
-      'See where your voters are, and how to reach them.  Your free campaign tracker shows the path-to-victory and highlights the viability of your campaign.',
-    img: insightsImg,
-  },
+  // {
+  //   title: 'Candidate for Maine House District 104',
+  //   name: 'Anne G.',
+  //   description:
+  //     '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
+  //   img: anneImg,
+  // },
+  // {
+  //   name: 'Chaz M.',
+  //   title: 'Firefighter',
+  //   description:
+  //     '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
+  //   img: chazImg,
+  // },
+  // {
+  //   name: 'Ben W.',
+  //   title: 'Candidate for Maine House District 89',
+  //   description:
+  //     '“Being an independent means that it can be hard to run with no party to back you, but Good Party changed that. The staff at good party was friendly, inviting, and highly knowledgeable.”',
+  //   img: benImg,
+  // },
 ];
 
 const features = [
@@ -116,8 +122,9 @@ export default function WhatWeDo({ demoCallback }) {
               <Image
                 src={sections[selected].img}
                 fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-contain"
-                alt=""
+                alt={sections[selected].name}
               />
             </div>
           </div>
@@ -138,7 +145,7 @@ export default function WhatWeDo({ demoCallback }) {
         </div>
       </MaxWidth>
 
-      <div className="flex relative justify-start -mb-[200px]">
+      <div className="flex relative justify-start -mb-[200px] w-auto h-auto">
         <Image
           src="/images/run-page/triangles.svg"
           width="200"
