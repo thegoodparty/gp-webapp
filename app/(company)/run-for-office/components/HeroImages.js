@@ -3,13 +3,12 @@ import Image from 'next/image';
 
 export default function HeroImages() {
   return (
-    <div className="flex mt-5 justify-center">
+    <div className="flex flex-auto h-[600px] mt-20 md:-mt-20 justify-center relative">
       <Image
         src="/images/run-page/hero-large.png"
         alt="GP-AI"
-        width="200"
-        height="400"
-        //   className="shadow-lg rounded-full w-10 h-10"
+        fill
+        className="object-contain"
       />
     </div>
   );

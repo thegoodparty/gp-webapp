@@ -14,19 +14,19 @@ export default function Hero({ demoCallback }) {
             src="/images/run-page/squiggles.svg"
             width="90"
             height="90"
-            className="ml-10"
+            className="ml-12"
           />
 
           <Image
             src="/images/run-page/hero-star.svg"
-            width="90"
-            height="90"
-            className="mr-5"
+            width="120"
+            height="120"
+            className="mt-5"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-12 md:gap-10">
+      <div className="grid grid-cols-12 md:gap-10 pl-8 pr-8">
         <div className="col-span-12 md:col-span-6">
           <h1 className="font-black text-6xl -mt-10">
             Free tools to help real people run and win

@@ -2,7 +2,7 @@
 import Script from 'next/script';
 import { useState } from 'react';
 import WhatWeDo from './WhatWeDo';
-import Experts from './Experts';
+import Features from './Features';
 import Hero from './Hero';
 import dynamic from 'next/dynamic';
 import styles from './RunForOffice.module.scss';
@@ -21,10 +21,12 @@ export default function RunForOfficePage() {
   return (
     <div className="">
       <Hero demoCallback={handleOpenModal} />
-      <div className={styles.boxBottom}></div>
-
+      <div className={styles.boxTop} />
       <WhatWeDo demoCallback={handleOpenModal} />
-      <Experts demoCallback={handleOpenModal} />
+      <div className={styles.boxBottom} />
+      <Features demoCallback={handleOpenModal} />
+      {/* <div className={styles.boxFooter} /> */}
+
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>
           <div className="w-[80vw] max-w-[900px] h-[90vh]">
