@@ -8,26 +8,26 @@ import Image from 'next/image';
 
 const sections = [
   {
+    title: 'Candidate for Maine House District 104',
+    name: 'Anne G.',
+    description:
+      '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
+    img: '/images/run-page/Anne.jpg',
+  },
+  {
     name: 'Breanna S.',
     title: 'Fintech Founder',
     description:
       '“Working with the different AI tools was an amazing experience because… I was able to see what it would be like to enter my message from my own vocabulary, my own heart and mind and have AI just slightly tweak it in order to be the best version for the type of audience Im trying to engage with.”',
-    img: '/images/run-page/testimonial1.png',
+    img: '/images/run-page/Breanna.jpg',
   },
   {
     name: 'Carlos R.',
     title: 'Regulatory Writer',
     description:
       '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
-    img: '/images/run-page/testimonial1.png',
+    img: '/images/run-page/Carlos.jpg',
   },
-  // {
-  //   title: 'Candidate for Maine House District 104',
-  //   name: 'Anne G.',
-  //   description:
-  //     '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
-  //   img: anneImg,
-  // },
   // {
   //   name: 'Chaz M.',
   //   title: 'Firefighter',
