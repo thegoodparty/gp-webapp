@@ -7,20 +7,30 @@ const FacebookRegisterButton = ({ loginSuccessCallback }) => {
   const [socialToken, setSocialToken] = React.useState('');
   const [socialEmail, setSocialEmail] = React.useState('');
   const [socialPicture, setSocialPicture] = React.useState('');
+  const [socialId, setSocialId] = React.useState('');
+  const [socialName, setSocialName] = React.useState('');
 
   useEffect(() => {
-    if (socialToken != '' && socialEmail != '' && socialPicture != '') {
+    if (
+      socialToken != '' &&
+      socialEmail != '' &&
+      socialPicture != '' &&
+      socialId != '' &&
+      socialName != ''
+    ) {
       const fbUser = {
         _provider: 'facebook',
         _token: { accessToken: socialToken },
         _profile: {
+          name: socialName,
+          id: socialId,
           email: socialEmail,
           profilePicURL: socialPicture,
         },
       };
       loginSuccessCallback(fbUser);
     }
-  }, [socialToken, socialEmail, socialPicture]);
+  }, [socialToken, socialId, socialName, socialEmail, socialPicture]);
 
   return (
     <div data-cy="facebook-login" className="mt-6">
@@ -43,11 +53,17 @@ const FacebookRegisterButton = ({ loginSuccessCallback }) => {
           console.log('Register Failed!', error);
         }}
         onProfileSuccess={(response) => {
+          if (response?.id) {
+            setSocialId(response.id);
+          }
           if (response?.email) {
             setSocialEmail(response.email);
           }
           if (response?.picture?.data?.url) {
             setSocialPicture(response.picture.data.url);
+          }
+          if (response?.name) {
+            setSocialName(response.name);
           }
         }}
       >
