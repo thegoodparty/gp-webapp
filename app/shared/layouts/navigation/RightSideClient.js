@@ -4,6 +4,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import GetInvolved from './GetInvolved';
 import LearnMore from './LearnMore';
 import OfficeOrContinueLink from './OfficeOrContinueLink';
 import RegisterOrProfile from './RegisterOrProfile';
@@ -14,7 +15,6 @@ export async function fetchCampaignStatus() {
     const api = gpApi.user.campaignStatus;
     return await gpFetch(api, false, 10);
   } catch (e) {
-    console.log('error at fetchCampaignStatus', e);
     return { status: false };
   }
 }
@@ -63,14 +63,23 @@ export default function RightSideClient({ user }) {
         user={user}
         campaignStatus={campaignStatus}
       />
+
       <OfficeOrContinueLink
         campaignStatus={campaignStatus}
         isDashboardPath={isDashboardPath}
       />
+
+      <GetInvolved
+        toggleCallback={toggleLearnMore}
+        user={user}
+        campaignStatus={campaignStatus}
+      />
+
       <RegisterOrProfile
         user={user}
         open={accountOpen}
         toggleCallback={toggleAccount}
+        campaignStatus={campaignStatus}
       />
       {isDashboardPath && (
         <TopDashboardMenu

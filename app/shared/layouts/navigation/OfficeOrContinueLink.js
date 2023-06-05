@@ -12,7 +12,7 @@ export default function OfficeOrContinueLink({
       {!status ? (
         <Link
           href="run-for-office"
-          className="hidden lg:block font-medium mr-4"
+          className="hidden lg:block font-medium mr-2"
           id="header-run-for-office"
         >
           <PrimaryButton variant="text" size="medium">
@@ -20,7 +20,7 @@ export default function OfficeOrContinueLink({
           </PrimaryButton>
         </Link>
       ) : (
-        <div className="mr-4">
+        <div className="mr-2">
           {status === 'candidate' ? (
             <>
               {!isDashboardPath && (

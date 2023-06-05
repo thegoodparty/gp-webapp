@@ -19,8 +19,14 @@ export const LINKS = [
   { label: 'Log out', href: '/academy', icon: <VscHeart /> },
 ];
 
-export default function RegisterOrProfile({ user, open, toggleCallback }) {
+export default function RegisterOrProfile({
+  user,
+  open,
+  toggleCallback,
+  campaignStatus,
+}) {
   const userState = useHookstate(globalUserState);
+  const { status, slug } = campaignStatus || {};
   useEffect(() => {
     if (user) {
       userState.set(() => user);
@@ -83,28 +89,29 @@ export default function RegisterOrProfile({ user, open, toggleCallback }) {
                     : 'p-0 opacity-0 overflow-visible'
                 }`}
               >
-                <div className="lg:hidden border-b border-gray-800 pb-3 mb-3">
-                  {RESOURCES_LINKS.map((link) => (
-                    <Link
-                      href={link.href}
-                      id={`desktop-learn-more-nav-${link.label.replace(
-                        ' ',
-                        '-',
-                      )}`}
-                      key={link.href}
-                      className="no-underline font-normal"
-                    >
-                      <div
-                        data-cy="header-link"
-                        className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
-                        //   style={activeUrl === link.href ? { fontWeight: 'bold' } : {}}
+                {status && (
+                  <div className="lg:hidden border-b border-gray-800 pb-3 mb-3">
+                    {RESOURCES_LINKS.map((link) => (
+                      <Link
+                        href={link.href}
+                        id={`desktop-learn-more-nav-${link.label.replace(
+                          ' ',
+                          '-',
+                        )}`}
+                        key={link.href}
+                        className="no-underline font-normal"
                       >
-                        {link.icon}
-                        <div className="ml-3">{link.label}</div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                        <div
+                          data-cy="header-link"
+                          className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                        >
+                          {link.icon}
+                          <div className="ml-3">{link.label}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
                 <Link
                   href="/profile/settings"
                   id={`desktop-profile-nav-settings`}
