@@ -3,8 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import TogglePanel from '@shared/utils/TogglePanel';
 import Image from 'next/image';
 import { LuStars } from 'react-icons/lu';
-import { SlGraduation } from 'react-icons/sl';
-import { RiHandHeartLine, RiTeamLine, RiLineChartLine } from 'react-icons/ri';
+import { RiTeamLine, RiLineChartLine } from 'react-icons/ri';
 
 const features = [
   {
@@ -40,24 +39,6 @@ export default function Features({ demoCallback }) {
   return (
     <section className="my-24">
       <MaxWidth>
-        {/* <div className="flex justify-center items-center">
-          <div className="flex flex-col md:flex-row items-center justify-between p-5 w-3/4">
-            <div className="flex flex-col flex-auto items-center text-center">
-              <h2 className="font-black text-8xl">100+</h2>
-              <div className="text-lg mt-3">Candidates supported</div>
-            </div>
-            <div className="flex flex-col flex-auto items-center text-center mt-10 md:mt-0">
-              <h2 className="font-black text-8xl">50+</h2>
-              <div className="text-lg mt-3">Yeas of Experience</div>
-            </div>
-
-            <div className="flex flex-col flex-auto items-center text-center mt-10 md:mt-0">
-              <h2 className="font-black text-8xl">$0</h2>
-              <div className="text-lg mt-3">Cost to you</div>
-            </div>
-          </div>
-        </div> */}
-
         <div className="grid grid-cols-12 gap-3 items-stretch text-center">
           <div className="col-span-12 md:col-span-4">
             <h2 className="font-black text-8xl">100+</h2>
