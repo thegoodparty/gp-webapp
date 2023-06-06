@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { VscHeart } from 'react-icons/vsc';
 import { SlGraduation } from 'react-icons/sl';
@@ -17,12 +16,7 @@ export const RESOURCES_LINKS = [
   { label: 'Glossary', href: '/political-terms', icon: <TfiList /> },
 ];
 
-export default function LearnMore({
-  open,
-  toggleCallback,
-  campaignStatus,
-  user,
-}) {
+export default function LearnMore({ open, toggleCallback, campaignStatus }) {
   const { status } = campaignStatus || {};
   return (
     <div
@@ -82,15 +76,28 @@ export default function LearnMore({
               </Link>
             ))}
             {!status && (
-              <Link
-                href="run-for-office"
-                className="font-medium mr-5 lg:hidden"
-                id="header-run-for-office"
-              >
-                <WarningButton size="medium" fullWidth>
-                  Run for Office
-                </WarningButton>
-              </Link>
+              <>
+                <div className="my-2">
+                  <Link
+                    href="/volunteer"
+                    className="font-medium mr-5  lg:hidden"
+                    id="header-get-involved"
+                  >
+                    <WarningButton size="medium" variant="outlined" fullWidth>
+                      <span className="font-medium">Get Involved</span>
+                    </WarningButton>
+                  </Link>
+                </div>
+                <Link
+                  href="run-for-office"
+                  className="font-medium mr-5 lg:hidden"
+                  id="header-run-for-office"
+                >
+                  <WarningButton size="medium" fullWidth>
+                    <span className="font-medium">Run for Office</span>
+                  </WarningButton>
+                </Link>
+              </>
             )}
           </div>
         </>

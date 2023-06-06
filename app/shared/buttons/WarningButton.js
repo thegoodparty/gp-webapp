@@ -27,11 +27,11 @@ export default function WarningButton({
     baseClass['hover:bg-lime-500'] = true;
     baseClass['active:bg-lime-500'] = true;
   } else if (variant === 'outlined') {
-    baseClass['bg-white'] = true;
-    baseClass['text-primary'] = true;
+    baseClass['text-yellow-700'] = true;
     baseClass['border-2'] = true;
     baseClass['border-yellow-700'] = true;
     baseClass['hover:border-yellow-600'] = true;
+    baseClass['hover:text-primary'] = true;
     baseClass['hover:bg-yellow-600'] = true;
     baseClass['active:bg-yellow-600'] = true;
   } else if (variant === 'text') {

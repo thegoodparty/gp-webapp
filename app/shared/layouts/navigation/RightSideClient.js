@@ -60,7 +60,6 @@ export default function RightSideClient({ user }) {
       <LearnMore
         open={learnMoreOpen}
         toggleCallback={toggleLearnMore}
-        user={user}
         campaignStatus={campaignStatus}
       />
 
