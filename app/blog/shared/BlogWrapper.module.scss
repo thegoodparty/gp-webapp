@@ -13,7 +13,7 @@
 
 .sectionsSlugWrapper {
   margin-bottom: 36px;
-  height: 23px;
+  height: 58px;
   overflow-y: hidden;
   @include lg {
     height: auto;
@@ -21,7 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 68px;
+    // margin-bottom: 68px;
   }
 }
 
