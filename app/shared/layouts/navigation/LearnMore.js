@@ -45,20 +45,6 @@ export default function LearnMore({ open, toggleCallback, campaignStatus }) {
               open ? 'p-3 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
             }`}
           >
-            <Link
-              href="/volunteer"
-              id={`desktop-learn-more-nav-get-involved`}
-              className="no-underline font-normal lg:hidden"
-            >
-              <div
-                data-cy="header-link"
-                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
-              >
-                <RiHandHeartLine />
-                <div className="ml-3">Get Involved</div>
-              </div>
-            </Link>
-
             {RESOURCES_LINKS.map((link) => (
               <Link
                 href={link.href}
