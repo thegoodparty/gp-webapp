@@ -33,7 +33,7 @@
   align-items: center;
   @include lg {
     white-space: normal;
-    overflow-x: hidden;
+    // overflow-x: hidden;
     max-width: 1200px;
   }
 }
