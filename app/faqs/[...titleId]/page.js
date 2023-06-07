@@ -19,10 +19,11 @@ export const fetchArticle = async (id) => {
 export async function generateMetadata({ params }) {
   const { id } = params;
   const { content } = await fetchArticle(id);
+  // console.log('content', content);
   const meta = pageMetaData({
     title: `${content?.title} | FAQs | GOOD PARTY`,
     description: 'Frequently Asked Questions about GOOD PARTY.',
-    slug: '/faqs',
+    // slug: `/faqs/${content?.slug}`,
   });
   return meta;
 }
