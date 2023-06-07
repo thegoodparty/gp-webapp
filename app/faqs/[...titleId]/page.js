@@ -17,13 +17,15 @@ export const fetchArticle = async (id) => {
 };
 
 export async function generateMetadata({ params }) {
-  const { id } = params;
+  const { titleId } = params;
+  const title = titleId?.length > 0 ? titleId[0] : false;
+  const id = titleId?.length > 1 ? titleId[1] : false;
   const { content } = await fetchArticle(id);
-  // console.log('content', content);
+
   const meta = pageMetaData({
     title: `${content?.title} | FAQs | GOOD PARTY`,
     description: 'Frequently Asked Questions about GOOD PARTY.',
-    // slug: `/faqs/${content?.slug}`,
+    slug: `/faqs/${title}/${id}`,
   });
   return meta;
 }
