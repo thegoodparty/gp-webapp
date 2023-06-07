@@ -14,12 +14,13 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  // const { campaign } = await fetchUserCampaign();
-  // const { candidateSlug } = campaign;
+  const { campaign } = await fetchUserCampaign();
+  const { candidateSlug } = campaign;
   // const { candidate } = await fetchCandidate(candidateSlug);
 
   const childProps = {
     pathname: '/dashboard/funding',
+    candidateSlug,
   };
 
   return <CampaignFundingPage {...childProps} />;

@@ -28,7 +28,13 @@ const pages = [
     link: '/dashboard/resources',
   },
 ];
-export default function DashboardMenu({ pathname, toggleCallback }) {
+export default function DashboardMenu({
+  pathname,
+  toggleCallback,
+  candidateSlug,
+}) {
+  // make profile link dynamic
+  pages[1].link = `/candidate/${candidateSlug}`;
   return (
     <div className="w-[calc(100vw-16px)] lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
       {pages.map((page) => (

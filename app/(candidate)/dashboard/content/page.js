@@ -21,13 +21,13 @@ export default async function Page({ params, searchParams }) {
 
   const { campaign } = await fetchUserCampaign();
   const { candidateSlug } = campaign;
-  const { candidate } = await fetchCandidate(candidateSlug);
+  // const { candidate } = await fetchCandidate(candidateSlug);
 
   const childProps = {
     pathname: '/dashboard/content',
     articlesBySlug,
     campaign,
-    candidate,
+    candidateSlug,
   };
 
   return <ContentPage {...childProps} />;
