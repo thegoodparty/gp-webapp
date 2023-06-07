@@ -18,7 +18,7 @@ export default function ImageUploader({ campaign }) {
     <div className="absolute bottom-0 right-6">
       <ImageUpload
         uploadCallback={handleUpload}
-        maxFileSize={1000000}
+        maxFileSize={4000000}
         customElement={
           <div className="text-2xl w-12 h-12 rounded-full text-zinc-500 bg-zinc-300 flex items-center justify-center border-2 border-white cursor-pointer transition-transform hover:rotate-12">
             <FaCamera />
