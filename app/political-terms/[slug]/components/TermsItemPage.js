@@ -4,8 +4,9 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import contentfulHelper from 'helpers/contentfulHelper';
 import Link from 'next/link';
+import TermsByLetter from '../../components/TermsByLetter';
 
-export default function TermsItemPage({ item, slug }) {
+export default function TermsItemPage({ item, slug, items, activeLetter }) {
   const letter = slug.charAt(0).toUpperCase();
   const breadcrumbsLinks = [
     { href: '/', label: 'Good Party' },
@@ -66,6 +67,13 @@ export default function TermsItemPage({ item, slug }) {
           </>
         )}
       </div>
+      {activeLetter != undefined && (
+        <TermsByLetter
+          letter={letter}
+          items={items}
+          activeLetter={activeLetter}
+        />
+      )}
     </MaxWidth>
   );
 }
