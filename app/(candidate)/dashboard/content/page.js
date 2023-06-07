@@ -19,13 +19,15 @@ export default async function Page({ params, searchParams }) {
   const { content } = await fetchContentByKey('blogArticles');
   const articlesBySlug = mapArticlesBySlug(content);
 
-  // const { campaign } = await fetchUserCampaign();
-  // const { candidateSlug } = campaign;
-  // const { candidate } = await fetchCandidate(candidateSlug);
+  const { campaign } = await fetchUserCampaign();
+  const { candidateSlug } = campaign;
+  const { candidate } = await fetchCandidate(candidateSlug);
 
   const childProps = {
     pathname: '/dashboard/content',
     articlesBySlug,
+    campaign,
+    candidate,
   };
 
   return <ContentPage {...childProps} />;
