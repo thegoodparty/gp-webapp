@@ -72,12 +72,14 @@ export default function RightSideClient() {
       <OfficeOrContinueLink
         campaignStatus={campaignStatus}
         isDashboardPath={isDashboardPath}
+        closeAll={closeAll}
       />
 
       <GetInvolved
         toggleCallback={toggleLearnMore}
         user={user}
         campaignStatus={campaignStatus}
+        closeAll={closeAll}
       />
 
       <RegisterOrProfile
