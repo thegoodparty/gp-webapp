@@ -74,7 +74,7 @@ export default function Features({ demoCallback }) {
           </div>
           <div className="col-span-12 md:col-span-8 justify-center items-center text-center h-[500px] w-full mt-10 relative">
             <Image
-              src="/images/run-page/platform.png"
+              src="/images/run-for-office/platform.png"
               fill
               className="object-contain"
               alt=""

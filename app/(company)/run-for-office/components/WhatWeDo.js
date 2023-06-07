@@ -12,21 +12,21 @@ const sections = [
     name: 'Anne G.',
     description:
       '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
-    img: '/images/run-page/Anne.jpg',
+    img: '/images/run-for-office/anne.jpg',
   },
   {
     name: 'Breanna S.',
     title: 'Fintech Founder',
     description:
       '“Working with the different AI tools was an amazing experience because… I was able to see what it would be like to enter my message from my own vocabulary, my own heart and mind and have AI just slightly tweak it in order to be the best version for the type of audience Im trying to engage with.”',
-    img: '/images/run-page/Breanna.jpg',
+    img: '/images/run-for-office/breanna.jpg',
   },
   {
     name: 'Carlos R.',
     title: 'Regulatory Writer',
     description:
       '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
-    img: '/images/run-page/Carlos.jpg',
+    img: '/images/run-for-office/carlos.jpg',
   },
   // {
   //   name: 'Chaz M.',
@@ -105,7 +105,7 @@ export default function WhatWeDo({ demoCallback }) {
           ))}
         </div>
         <div className="flex justify-center mt-20">
-          <div className="flex w-full lg:w-[80%] h-auto bg-zinc-800 rounded-2xl mt-5">
+          <div className="flex w-full lg:w-[80%] min-h-[300px]  bg-zinc-800 rounded-2xl mt-5">
             <div className="flex flex-col justify-center items-center text-center w-2/3">
               <h3 className="text-2xl text-slate-100 pr-5 pl-5">
                 {sections[selected].description}
@@ -122,8 +122,8 @@ export default function WhatWeDo({ demoCallback }) {
               <Image
                 src={sections[selected].img}
                 fill
-                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-contain"
+                sizes="100vw"
+                className="object-cover rounded-tr-2xl rounded-br-2xl"
                 alt={sections[selected].name}
               />
             </div>
@@ -147,7 +147,7 @@ export default function WhatWeDo({ demoCallback }) {
 
       <div className="flex relative justify-start -mb-[200px] w-auto h-auto">
         <Image
-          src="/images/run-page/triangles.svg"
+          src="/images/run-for-office/triangles.svg"
           width="200"
           height="200"
           className="ml-12"

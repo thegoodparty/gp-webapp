@@ -11,14 +11,14 @@ export default function Hero({ demoCallback }) {
       <div className="flex flex-row w-full">
         <div className="flex flex-row w-full mt-5 justify-between h-auto">
           <Image
-            src="/images/run-page/squiggles.svg"
+            src="/images/run-for-office/squiggles.svg"
             width="90"
             height="90"
             className="ml-12"
           />
 
           <Image
-            src="/images/run-page/hero-star.svg"
+            src="/images/run-for-office/hero-star.svg"
             width="120"
             height="120"
             className="mt-5"
