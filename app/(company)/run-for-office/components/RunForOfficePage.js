@@ -4,11 +4,13 @@ import { useState } from 'react';
 import WhatWeDo from './WhatWeDo';
 import Features from './Features';
 import Hero from './Hero';
+import Cta from './Cta';
+import Blog from './Blog';
 import dynamic from 'next/dynamic';
 import styles from './RunForOffice.module.scss';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
-export default function RunForOfficePage() {
+export default function RunForOfficePage({ articles }) {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -25,6 +27,8 @@ export default function RunForOfficePage() {
       <WhatWeDo demoCallback={handleOpenModal} />
       <div className={styles.boxBottom} />
       <Features demoCallback={handleOpenModal} />
+      <Blog articles={articles} />
+      <Cta />
       {/* <div className={styles.boxFooter} /> */}
 
       {showModal && (

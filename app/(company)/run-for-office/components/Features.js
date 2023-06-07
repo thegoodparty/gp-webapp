@@ -1,4 +1,3 @@
-import Pill from '@shared/buttons/Pill';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import TogglePanel from '@shared/utils/TogglePanel';
 import Image from 'next/image';
@@ -79,18 +78,6 @@ export default function Features({ demoCallback }) {
               className="object-contain"
               alt=""
             />
-          </div>
-        </div>
-        <div className="flex items-center flex-col w-full">
-          <h3 className=" font-black text-4xl mt-10 mb-12">
-            Any questions? Schedule a demo with our team
-          </h3>
-          <div>
-            <div onClick={demoCallback} id="experts-demo-btn">
-              <Pill outlined className="w-48">
-                <div className="tracking-wide">GET A DEMO</div>
-              </Pill>
-            </div>
           </div>
         </div>
       </MaxWidth>
