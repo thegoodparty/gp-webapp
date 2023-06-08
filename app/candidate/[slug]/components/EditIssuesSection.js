@@ -17,8 +17,6 @@ export default function EditIssuesSection(props) {
     window.location.reload();
   };
 
-  console.log('positions', positions);
-
   return (
     <>
       {edit ? (

@@ -13,7 +13,7 @@ export const fetchCandidate = async (slug) => {
       slug,
       allFields: true,
     };
-    return await gpFetch(api, payload, 3601);
+    return await gpFetch(api, payload, 0);
   } catch (e) {
     return false;
   }
