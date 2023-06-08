@@ -16,7 +16,7 @@ export default function TermsItemPage({ item, slug, items, activeLetter }) {
       label: 'Glossary',
     },
     {
-      href: `/political-terms/${letter}`,
+      href: `/political-terms/${letter.toLowerCase()}`,
       label: letter,
     },
     {
