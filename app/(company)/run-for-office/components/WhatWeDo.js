@@ -5,6 +5,7 @@ import { LuStars } from 'react-icons/lu';
 import { SlGraduation } from 'react-icons/sl';
 import { RiHandHeartLine, RiTeamLine, RiLineChartLine } from 'react-icons/ri';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const sections = [
   {
@@ -50,18 +51,30 @@ const features = [
     title: 'A.I. Campaign Manager',
     description:
       'Plan and run a winning campaign for free with time-saving AI tools and actionable expertise from political pros',
+    icon: <LuStars className="text-6xl text-black" />,
+    bgfrom: '#AFA8FF',
+    bgto: '#FFD78A',
+    link: '',
   },
   {
     name: 'Academy',
     title: 'Good Party Academy',
     description:
       'Free course led by campaigning experts for first time candidates exploring a run for office',
+    icon: <SlGraduation className="text-6xl text-black" />,
+    bgfrom: '#F9FFB1',
+    bgto: '#FFD27A',
+    link: '/academy',
   },
   {
     name: 'Support',
     title: 'Expert Volunteer Support',
     description:
       'Tap into our network of engaged volunteers ready to help you reach more voters',
+    icon: <RiHandHeartLine className="text-6xl text-black" />,
+    bgfrom: '#C5F4FF',
+    bgto: '#FFD481',
+    link: '/volunteer',
   },
 ];
 
@@ -82,25 +95,31 @@ export default function WhatWeDo({ demoCallback }) {
               className="col-span-12 lg:col-span-4 flex flex-col items-center justify-center"
               key={feature.name}
             >
-              {feature.name === 'A.I.' ? (
-                <div className="flex flex-col h-[200px] w-[200px] rounded-full bg-gradient-to-br from-[#AFA8FF] to-[#FFD78A] items-center justify-center self-center">
-                  <LuStars className="text-6xl text-black" />
-                </div>
-              ) : feature.name === 'Academy' ? (
-                <div className="flex h-[200px] w-[200px] rounded-full bg-gradient-to-br from-[#F9FFB1] to-[#FFD27A] items-center justify-center self-center">
-                  <SlGraduation className="text-6xl text-black" />
-                </div>
-              ) : feature.name === 'Support' ? (
-                <div className="flex h-[200px] w-[200px] rounded-full bg-gradient-to-br from-[#C5F4FF] to-[#FFD481] items-center justify-center self-center">
-                  <RiHandHeartLine className="text-6xl text-black" />
-                </div>
-              ) : (
-                <></>
-              )}
+              <div
+                className={`flex flex-col h-[200px] w-[200px] rounded-full bg-gradient-to-br from-[${feature.bgfrom}] to-[${feature.bgto}] items-center justify-center self-center`}
+              >
+                {feature.icon}
+              </div>
               <h3 className="text-3xl mt-12 text-slate-100">{feature.title}</h3>
               <p className="mt-8 text-lg max-w-[90vw] text-slate-300">
                 {feature.description}
               </p>
+              {feature.link == '' ? (
+                <p
+                  href={feature.link}
+                  onClick={demoCallback}
+                  className="mt-5 text-md text-lime-500 hover:underline cursor-pointer"
+                >
+                  Learn More
+                </p>
+              ) : (
+                <Link
+                  href={feature.link}
+                  className="mt-5 text-md text-lime-500"
+                >
+                  Learn More
+                </Link>
+              )}
             </div>
           ))}
         </div>
