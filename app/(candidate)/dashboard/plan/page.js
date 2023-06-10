@@ -22,6 +22,7 @@ export default async function Page({ params, searchParams }) {
     pathname: '/dashboard/plan',
     campaign,
     candidate,
+    candidateSlug,
   };
 
   return <CampaignPlanPage {...childProps} />;

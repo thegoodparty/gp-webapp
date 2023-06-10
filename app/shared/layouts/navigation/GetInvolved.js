@@ -19,7 +19,7 @@ export const RESOURCES_LINKS = [
   { label: 'Volunteer', href: '/volunteer', icon: <RiHandHeartLine /> },
 ];
 
-export default function GetInvolved({ open, toggleCallback, campaignStatus }) {
+export default function GetInvolved({ closeAll, campaignStatus }) {
   const { status } = campaignStatus || {};
   return (
     <Link
@@ -27,6 +27,7 @@ export default function GetInvolved({ open, toggleCallback, campaignStatus }) {
       className={`mr-4 relative cursor-pointer min-w-[100px] hidden  ${
         status ? ' lg:hidden' : 'lg:block'
       }`}
+      onClick={closeAll}
     >
       <PrimaryButton variant="text" size="medium">
         <div className="font-medium text-base">Get Involved</div>

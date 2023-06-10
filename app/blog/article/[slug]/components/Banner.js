@@ -24,7 +24,7 @@ export default function Banner({ banner }) {
         height={15}
         alt="GOOD PARTY"
       />
-      <div className="grid grid-cols-12 gap3 lg:items-end">
+      <div className="grid grid-cols-12 gap3 lg:items-stretch">
         <div className="col-span-12 lg:col-span-6">
           <div className="px-10 flex flex-col items-center lg:mb-10">
             <h3 className="font-black text-center text-4xl mt-8">{title}</h3>
@@ -55,24 +55,24 @@ export default function Banner({ banner }) {
 
         <div className="col-span-12 lg:col-span-6">
           {smallImage && (
-            <div className="h-60 relative w-full lg:hidden">
+            <div className="h-full relative w-full lg:hidden">
               <Image
                 src={`https:${smallImage.url}`}
                 alt={smallImage.alt}
                 sizes="100vw"
                 fill
-                className="object-cover object-top"
+                className="object-contain object-center"
               />
             </div>
           )}
           {largeImage && (
-            <div className="h-60 relative w-full hidden lg:block">
+            <div className="h-full relative w-full hidden lg:block">
               <Image
                 src={`https:${largeImage.url}`}
                 alt={largeImage.alt}
                 sizes="100vw"
                 fill
-                className="object-cover object-top"
+                className="object-contain object-center pr-10"
               />
             </div>
           )}

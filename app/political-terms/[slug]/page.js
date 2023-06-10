@@ -40,13 +40,21 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = params;
-  if (slug.length === 1) {
+  let items = [];
+  let activeLetter;
+
+  if (slug != undefined) {
     const { content } = await fetchGlossaryByLetter();
-    const items = content[slug.toUpperCase()];
-    return <TermsHomePage activeLetter={slug.toUpperCase()} items={items} />;
+    activeLetter = slug.charAt(0).toUpperCase();
+    items = content[activeLetter];
+  }
+
+  if (slug.length === 1) {
+    return <TermsHomePage activeLetter={activeLetter} items={items} />;
   }
   const { content } = await fetchGlossaryByTitle(slug);
-  const childProps = { item: content, slug };
+
+  const childProps = { item: content, slug, items, activeLetter };
   return (
     <>
       <TermsItemPage {...childProps} />

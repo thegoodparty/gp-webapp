@@ -37,6 +37,7 @@ export async function generateMetadata({ params }) {
   const meta = pageMetaData({
     title: `${sectionTitle} | Good Party Blog`,
     description: `Good Part Blog ${sectionTitle} Section`,
+    slug: `/blog/section/${sectionSlug}`,
   });
   return meta;
 }

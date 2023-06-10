@@ -4,6 +4,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getUserCookie, setCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
+import WarningButton from '@shared/buttons/WarningButton';
 
 export async function fetchUserCampaign() {
   try {
@@ -33,7 +34,7 @@ export async function createCampaign() {
 export default function RunCampaignButton({
   fullWidth,
   id = '',
-  label = 'GET STARTED',
+  label = 'Get Started',
 }) {
   const router = useRouter();
   const handleRun = async () => {
@@ -52,13 +53,9 @@ export default function RunCampaignButton({
   };
   return (
     <div className="relative z-10" onClick={handleRun} id={id}>
-      <Pill
-        className={` bg-yellow-400 border-yellow-400 ${
-          fullWidth ? 'w-full' : 'w-full lg:w-48'
-        }`}
-      >
+      <WarningButton className={`${fullWidth ? 'w-full' : 'w-full lg:w-48'}`}>
         <div className="text-black tracking-wide">{label}</div>
-      </Pill>
+      </WarningButton>
     </div>
   );
 }
