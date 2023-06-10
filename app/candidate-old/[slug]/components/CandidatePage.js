@@ -1,7 +1,12 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import ProfileSection from './ProfileSection';
+import AboutSection from './AboutSection';
+import Hero from './Hero';
+import IssuesSectionWithEdit from './IssuesSectionWithEdit';
 import ReviewBanner from './ReviewBanner';
+import SocialSectionWithEdit from './SocialSectionWithEdit';
 import StagedBanner from './StagedBanner';
+import VictoryTracker from './VictoryTracker';
+import WhySection from './WhySection';
 
 function pickTextColorBasedOnBg(
   bgColor,
@@ -22,12 +27,10 @@ function pickTextColorBasedOnBg(
 export default function CandidatePage(props) {
   const { candidate, isStaged, reviewMode } = props;
   let color = props.color || candidate.color || '#734BDC';
-  console.log('color', color);
   if (!props.color && candidate.color?.color) {
     // old candidates
     color = candidate.color.color;
   }
-  console.log('color2', color);
   const textColor = pickTextColorBasedOnBg(color);
 
   const childProps = {
@@ -37,15 +40,25 @@ export default function CandidatePage(props) {
   };
 
   return (
-    <div className="bg-slate-50 py-5">
+    <div className="bg-slate-100">
       <MaxWidth>
         {isStaged && <StagedBanner />}
         {reviewMode && <ReviewBanner {...props} />}
-        <div className="lg:flex">
-          <div className="lg:basis-[350px]">
-            <ProfileSection {...childProps} />
+        <div className="grid grid-cols-12 gap-6 pt-4">
+          <div className="col-span-12 lg:col-span-9">
+            <Hero {...childProps} />
+            <AboutSection {...childProps} />
+            <SocialSectionWithEdit {...childProps} />
+            <div className="lg:hidden">
+              <VictoryTracker {...childProps} />
+              <IssuesSectionWithEdit {...childProps} />
+            </div>
+            <WhySection {...childProps} />
           </div>
-          <div className="bg-red-300 lg:flex-1">desktop right</div>
+          <div className="col-span-12 lg:col-span-3 hidden lg:block">
+            <VictoryTracker {...childProps} />
+            <IssuesSectionWithEdit {...childProps} />
+          </div>
         </div>
       </MaxWidth>
     </div>
