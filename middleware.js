@@ -11,4 +11,9 @@ const Middleware = (req) => {
   );
 };
 
+// if we ever want to have images or static assets with capital letters we need this:
+// export const config = {
+//   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
+// };
+
 export default Middleware;
