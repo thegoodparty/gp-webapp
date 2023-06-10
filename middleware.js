@@ -12,14 +12,8 @@ export const fetchRedirects = async () => {
 
 export default async function middleware(req) {
   const { content } = await fetchRedirects();
-
-  // convert array to object for faster lookup
-  const redirects = content.reduce(
-    (acc, { fromPath, toPath }) => ({ ...acc, [fromPath]: toPath }),
-    {},
-  );
-
-  if (redirects.hasOwnProperty(req.nextUrl.pathname)) {
+  const redirects = content;
+  if (redirects && redirects.hasOwnProperty(req.nextUrl.pathname)) {
     return NextResponse.redirect(
       `${req.nextUrl.origin + redirects[req.nextUrl.pathname]}`,
       { status: 301 },
