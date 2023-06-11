@@ -1,8 +1,7 @@
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';
-import { AiOutlineCaretDown } from 'react-icons/ai';
 import FollowButton from './FollowButton';
+import MoreCTAs from './MoreCTAs';
 
 export default function CtaSection(props) {
   const { color, textColor } = props;
@@ -17,9 +16,7 @@ export default function CtaSection(props) {
         <FollowButton {...props} />
       </div>
       <div>
-        <SecondaryButton style={{ height: '60px' }}>
-          <AiOutlineCaretDown size={22} />
-        </SecondaryButton>
+        <MoreCTAs {...props} />
       </div>
     </div>
   );

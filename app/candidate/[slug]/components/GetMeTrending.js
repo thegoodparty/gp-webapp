@@ -4,7 +4,7 @@ import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { candidateHash } from 'helpers/candidateHelper';
 import { BsMegaphone } from 'react-icons/bs';
-import { RiClipboardLine } from 'react-icons/ri';
+import { RiClipboardLine, RiShareForwardLine } from 'react-icons/ri';
 import ShareButton from './ShareButton';
 
 export default function GetMeTrending(props) {
@@ -31,7 +31,14 @@ export default function GetMeTrending(props) {
               </PrimaryButton>
             </CopyToClipboard>
             <div className="ml-2">
-              <ShareButton {...props} />
+              <ShareButton {...props}>
+                <PrimaryButton>
+                  <div className="text-lime-500 flex items-center">
+                    <div className="mr-2">Share</div>
+                    <RiShareForwardLine />
+                  </div>
+                </PrimaryButton>
+              </ShareButton>
             </div>
           </div>
         </div>

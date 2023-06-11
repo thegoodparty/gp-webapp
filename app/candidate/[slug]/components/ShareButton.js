@@ -8,7 +8,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { RiShareForwardLine } from 'react-icons/ri';
 
 export default function ShareButton(props) {
-  const { candidate, color, textColor } = props;
+  const { candidate, children } = props;
   const [showShareModal, setShowShareModal] = useState(false);
   return (
     <>
@@ -18,12 +18,7 @@ export default function ShareButton(props) {
         }}
         id="candidate-share-pill"
       >
-        <PrimaryButton>
-          <div className="text-lime-500 flex items-center">
-            <div className="mr-2">Share</div>
-            <RiShareForwardLine />
-          </div>
-        </PrimaryButton>
+        {children}
       </div>
       <Modal
         open={showShareModal}
