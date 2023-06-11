@@ -8,7 +8,11 @@ export default function IssuesList({ candidatePositions, previewMode }) {
   }
   return (
     <div>
-      <H4 className="text-indigo-50">Issues</H4>
+      {positions.length === 0 ? (
+        <H4 className="text-indigo-50">No issue selected</H4>
+      ) : (
+        <H4 className="text-indigo-50">Issues</H4>
+      )}
       {positions.map((candidatePosition) => (
         <CandidatePosition
           candidatePosition={candidatePosition}

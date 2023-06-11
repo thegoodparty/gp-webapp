@@ -28,7 +28,7 @@ export default async function Page({ params, searchParams }) {
   const { filters } = params;
   const position = filters?.length > 0 ? filters[0] : false;
   const state = filters?.length > 1 ? filters[1] : false;
-  const showOnlyGood = searchParams.certified;
+  const showOnlyGood = searchParams?.certified;
   const { candidates, positions, states } = await fetchCandidates(
     position,
     state,

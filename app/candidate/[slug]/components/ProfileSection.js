@@ -50,9 +50,11 @@ export default function ProfileSection(props) {
           </div>
         </div>
       </div>
-      <Body2 className="mt-6 text-center mb-8">
-        <div dangerouslySetInnerHTML={{ __html: slogan }} />
-      </Body2>
+      {slogan ? (
+        <Body2 className="mt-6 text-center mb-8">
+          <div dangerouslySetInnerHTML={{ __html: slogan }} />
+        </Body2>
+      ) : null}
     </section>
   );
 }

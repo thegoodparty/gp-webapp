@@ -1,6 +1,5 @@
 import Body1 from '@shared/typography/Body1';
 import H4 from '@shared/typography/H4';
-import { FaLayerGroup } from 'react-icons/fa';
 import IssuesIcon from './IssuesIcon';
 
 export default function CandidatePosition({ candidatePosition }) {
