@@ -1,19 +1,52 @@
+'use client';
 import Tabs from '@shared/utils/Tabs';
+import { useState } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
+import { RiGroupLine, RiLandscapeLine } from 'react-icons/ri';
+import { TbBrain } from 'react-icons/tb';
+import IssuesTab from './IssuesTab';
+import OverviewTab from './OverviewTab';
 
 const labels = [
-  <div key="overview" className="flex items-center">
+  <div key="overview" className="flex flex-col lg:flex-row items-center">
     <AiOutlineFlag />
-    <div className="ml-2 font-medium">Overview</div>
+    <div className="ml-2 font-medium text-xs lg:text-base">Overview</div>
   </div>,
-  'Overview2',
+  <div key="overview" className="flex flex-col lg:flex-row items-center">
+    <RiLandscapeLine />
+    <div className="ml-2 font-medium text-xs lg:text-base">Issues</div>
+  </div>,
+  <div key="overview" className="flex flex-col lg:flex-row items-center">
+    <TbBrain />
+    <div className="ml-2 font-medium text-xs lg:text-base">Endorsements</div>
+  </div>,
+  <div key="overview" className="flex flex-col lg:flex-row items-center">
+    <RiGroupLine />
+    <div className="ml-2 font-medium text-xs lg:text-base">Info</div>
+  </div>,
 ];
 
-export default function TabsSection() {
-  const panels = [<div key="1">1</div>, <div key="2">2</div>];
+export default function TabsSection(props) {
+  const [tab, setTab] = useState(0);
+  const changeTabCallback = (index) => {
+    setTab(index);
+  };
+  const panels = [
+    <div key="1">
+      <OverviewTab {...props} changeTabCallback={changeTabCallback} />
+    </div>,
+    <div key="2">
+      <IssuesTab {...props} />
+    </div>,
+  ];
   return (
-    <section>
-      <Tabs tabLabels={labels} tabPanels={panels} />
+    <section className="mt-14">
+      <Tabs
+        tabLabels={labels}
+        tabPanels={panels}
+        activeTab={tab}
+        changeCallback={changeTabCallback}
+      />
     </section>
   );
 }

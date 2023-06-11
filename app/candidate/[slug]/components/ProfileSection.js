@@ -8,7 +8,6 @@ import VictoryTracker from './VictoryTracker';
 
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign, district } = props;
-  console.log('candidate', candidate);
 
   const { firstName, lastName, slogan, party, office, state } = candidate;
   return (
@@ -17,7 +16,7 @@ export default function ProfileSection(props) {
         <div>
           <VictoryTracker {...props} />
         </div>
-        <div className="absolute top-4 left-9 ">
+        <div className="absolute top-3 left-9 ">
           <CandidateAvatar candidate={candidate} priority />
           {editMode ? <ImageUploader campaign={campaign} /> : null}
         </div>
@@ -51,7 +50,7 @@ export default function ProfileSection(props) {
           </div>
         </div>
       </div>
-      <Body2 className="mt-6 text-center">
+      <Body2 className="mt-6 text-center mb-8">
         <div dangerouslySetInnerHTML={{ __html: slogan }} />
       </Body2>
     </section>

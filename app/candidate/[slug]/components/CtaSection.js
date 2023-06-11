@@ -7,7 +7,7 @@ import FollowButton from './FollowButton';
 export default function CtaSection(props) {
   const { color, textColor } = props;
   return (
-    <div className="flex justify-end items-center">
+    <div className="flex justify-center lg:justify-end items-center">
       <Link href="/volunteer" id="candidate-volunteer" className="mr-1">
         <WarningButton style={{ backgroundColor: color, color: textColor }}>
           <span className="font-medium">Volunteer</span>

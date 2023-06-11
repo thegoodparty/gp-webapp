@@ -24,12 +24,10 @@ function pickTextColorBasedOnBg(
 export default function CandidatePage(props) {
   const { candidate, isStaged, reviewMode } = props;
   let color = props.color || candidate.color || '#734BDC';
-  console.log('color', color);
   if (!props.color && candidate.color?.color) {
     // old candidates
     color = candidate.color.color;
   }
-  console.log('color2', color);
   const textColor = pickTextColorBasedOnBg(color);
 
   const childProps = {
@@ -47,7 +45,7 @@ export default function CandidatePage(props) {
           <div className="lg:basis-[350px]">
             <ProfileSection {...childProps} />
           </div>
-          <div className="lg:flex-1">
+          <div className="lg:flex-1 lg:pl-36">
             <CtaSection {...childProps} />
             <TabsSection {...childProps} />
           </div>
