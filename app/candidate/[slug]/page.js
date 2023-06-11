@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
     });
     return meta;
   }
-  const { firstName, lastName, party, otherParty, office, headline } =
+  const { firstName, lastName, party, otherParty, office, headline, image } =
     candidate;
 
   const title = `${firstName} ${lastName} ${partyResolver(party, otherParty)} ${
@@ -48,6 +48,7 @@ export async function generateMetadata({ params }) {
     title,
     description,
     slug: `/candidate/${slug}`,
+    image,
   });
   return meta;
 }
