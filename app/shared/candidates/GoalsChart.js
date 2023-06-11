@@ -96,7 +96,7 @@ function GoalsChart({ candidate, followers, color }) {
               fill={color || '#000'}
               labelLine={false}
               // label={renderCustomizedLabel}
-              // isAnimationActive={false}
+              isAnimationActive={false}
             >
               {data.map((entry, index) => (
                 <Cell

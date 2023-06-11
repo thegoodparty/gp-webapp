@@ -25,6 +25,13 @@ export default function Tabs({
       setValue(newValue);
     }
   };
+
+  const isSelected = (index) => {
+    if (activeTab !== false) {
+      return activeTab === index;
+    }
+    return value === index;
+  };
   return (
     <div className={`w-full ${orientation === 'vertical' ? 'flex' : ''}`}>
       <div className={` relative  ${!centered ? 'flex items-center' : ''} `}>
@@ -52,7 +59,7 @@ export default function Tabs({
                 <SecondaryButton variant="text" size="medium">
                   <span
                     className={
-                      value === index ? 'text-primary' : 'text-gray-700'
+                      isSelected(index) ? 'text-primary' : 'text-gray-700'
                     }
                   >
                     {label}
@@ -67,7 +74,8 @@ export default function Tabs({
         <div
           role="tabpanel"
           key={index}
-          hidden={activeTab !== false ? activeTab !== index : value !== index}
+          // hidden={activeTab !== false ? activeTab !== index : value !== index}
+          hidden={!isSelected(index)}
           className={`${orientation === 'horizontal' ? 'mt-3' : 'ml-3'} `}
         >
           {panel}

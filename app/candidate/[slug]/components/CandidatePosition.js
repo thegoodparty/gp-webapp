@@ -10,13 +10,11 @@ export default function CandidatePosition({ candidatePosition }) {
       key={candidatePosition.id}
       className="bg-slate-200 rounded-2xl px-5 pt-5 pb-11 mt-4 flex"
     >
-      <div className="pt-2 mr-2">
+      <div className="pt-2 mr-2" title={topIssue?.name}>
         <IssuesIcon issueName={topIssue?.name} />
       </div>
       <div>
-        <H4 className="">
-          {topIssue?.name} | {position?.name}
-        </H4>
+        <H4 className="">{position?.name}</H4>
         <Body1 className="mt-3">{description}</Body1>
       </div>
     </div>

@@ -3,7 +3,7 @@ import CtaSection from './CtaSection';
 import ProfileSection from './ProfileSection';
 import ReviewBanner from './ReviewBanner';
 import StagedBanner from './StagedBanner';
-import TabsSection from './TabsSection';
+import TabsSection from './tabs/TabsSection';
 
 function pickTextColorBasedOnBg(
   bgColor,
@@ -45,7 +45,7 @@ export default function CandidatePage(props) {
           <div className="lg:basis-[350px]">
             <ProfileSection {...childProps} />
           </div>
-          <div className="lg:flex-1 lg:pl-36">
+          <div className="lg:flex-1 lg:pl-36 max-w-[786px]">
             <CtaSection {...childProps} />
             <TabsSection {...childProps} />
           </div>

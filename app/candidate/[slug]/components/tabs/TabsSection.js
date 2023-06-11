@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { RiGroupLine, RiLandscapeLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
+import EndorsementsTab from './EndorsementsTab';
+import InfoTab from './InfoTab';
 import IssuesTab from './IssuesTab';
 import OverviewTab from './OverviewTab';
 
@@ -37,6 +39,12 @@ export default function TabsSection(props) {
     </div>,
     <div key="2">
       <IssuesTab {...props} />
+    </div>,
+    <div key="3">
+      <EndorsementsTab {...props} />
+    </div>,
+    <div key="4">
+      <InfoTab {...props} />
     </div>,
   ];
   return (
