@@ -1,4 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
+import CtaSection from './CtaSection';
 import ProfileSection from './ProfileSection';
 import ReviewBanner from './ReviewBanner';
 import StagedBanner from './StagedBanner';
@@ -45,7 +46,9 @@ export default function CandidatePage(props) {
           <div className="lg:basis-[350px]">
             <ProfileSection {...childProps} />
           </div>
-          <div className="bg-red-300 lg:flex-1">desktop right</div>
+          <div className="lg:flex-1">
+            <CtaSection {...childProps} />
+          </div>
         </div>
       </MaxWidth>
     </div>

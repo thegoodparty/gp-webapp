@@ -4,6 +4,7 @@ import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
 import ImageUploader from 'app/candidate-old/[slug]/components/ImageUploader';
 import { partyResolver } from 'helpers/candidateHelper';
+import VictoryTracker from './VictoryTracker';
 
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign, district } = props;
@@ -13,8 +14,13 @@ export default function ProfileSection(props) {
   return (
     <section className="flex flex-col items-center mt-5">
       <div className="relative">
-        <CandidateAvatar candidate={candidate} priority />
-        {editMode ? <ImageUploader campaign={campaign} /> : null}
+        <div>
+          <VictoryTracker {...props} />
+        </div>
+        <div className="absolute top-4 left-9 ">
+          <CandidateAvatar candidate={candidate} priority />
+          {editMode ? <ImageUploader campaign={campaign} /> : null}
+        </div>
       </div>
       <H1 className="font-semibold">
         {firstName} {lastName}

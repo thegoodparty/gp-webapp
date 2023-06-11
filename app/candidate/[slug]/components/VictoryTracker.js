@@ -12,7 +12,7 @@ function VictoryTracker({ candidate, color }) {
 
   return (
     <div className="relative z-10">
-      <GoalsChart candidate={candidate} color={color} followers={50} />
+      <GoalsChart candidate={candidate} color={color} />
       <div className="flex justify-center mb-6">
         <div className="text-right" data-cy="campaign-likely-voters">
           <H3>{kFormatter(voterProjection)}</H3>

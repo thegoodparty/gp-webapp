@@ -70,16 +70,17 @@ function GoalsChart({ candidate, followers, color }) {
   }
 
   const rgb = hexToRgb(color);
-  let COLORS = [`rgba(0,0,0, 0.5)`, color];
+  let COLORS = ['#D4DBE4', color];
   if (rgb) {
-    COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
+    // COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
+    COLORS = ['#D4DBE4', color];
   }
 
   return (
     <div className="relative">
       <div
         className={styles.wrapper}
-        style={{ height: '150px', transform: 'scaleX(1) rotate(90deg)' }}
+        style={{ height: '200px', transform: 'scaleX(1) rotate(90deg)' }}
       >
         <ResponsiveContainer width="100%" height="100%">
           <PieChart width={400} height={400}>
@@ -88,14 +89,14 @@ function GoalsChart({ candidate, followers, color }) {
               dataKey="value"
               cx="50%"
               cy="50%"
-              innerRadius={75}
-              outerRadius={90}
+              innerRadius={100}
+              outerRadius={115}
               startAngle={50}
               endAngle={310}
               fill={color || '#000'}
               labelLine={false}
-              label={renderCustomizedLabel}
-              isAnimationActive={false}
+              // label={renderCustomizedLabel}
+              // isAnimationActive={false}
             >
               {data.map((entry, index) => (
                 <Cell
@@ -108,13 +109,13 @@ function GoalsChart({ candidate, followers, color }) {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-lg">
+      {/* <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-lg">
         <div className="text-center">
           <div className="text-3xl font-black">{perc || 0}%</div>
           <div className="font-bold mt-3 text-xl">of votes</div>
           <div className="text-sm">needed to Win</div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

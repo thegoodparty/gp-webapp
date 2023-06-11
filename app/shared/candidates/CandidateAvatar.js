@@ -9,7 +9,7 @@ export default function CandidateAvatar({ candidate, priority = false }) {
 
   return (
     <div className="relative ">
-      <div className="relative h-28 w-28 lg:h-44 lg:w-44 rounded-full bg-zinc-300 text-white flex items-center justify-center">
+      <div className="relative h-44 w-44 rounded-full bg-zinc-300 text-white flex items-center justify-center">
         {image ? (
           <Image
             src={image}

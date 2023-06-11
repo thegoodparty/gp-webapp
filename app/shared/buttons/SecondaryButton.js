@@ -29,7 +29,6 @@ export default function SecondaryButton({
     baseClass['hover:bg-lime-400'] = true;
     baseClass['active:bg-lime-400'] = true;
   } else if (variant === 'outlined') {
-    baseClass['bg-white'] = true;
     baseClass['text-primary'] = true;
     baseClass['border-2'] = true;
     baseClass['border-slate-500'] = true;
@@ -53,7 +52,6 @@ export default function SecondaryButton({
       baseClass['hover:bg-lime-400'] = false;
       baseClass['active:bg-lime-400'] = false;
     } else if (variant === 'outlined') {
-      baseClass['bg-white'] = true;
       baseClass['text-gray-500'] = true;
       baseClass['border-gray-200'] = true;
 
