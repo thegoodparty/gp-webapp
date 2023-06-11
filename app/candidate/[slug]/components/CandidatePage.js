@@ -3,6 +3,7 @@ import CtaSection from './CtaSection';
 import ProfileSection from './ProfileSection';
 import ReviewBanner from './ReviewBanner';
 import StagedBanner from './StagedBanner';
+import TabsSection from './TabsSection';
 
 function pickTextColorBasedOnBg(
   bgColor,
@@ -48,6 +49,7 @@ export default function CandidatePage(props) {
           </div>
           <div className="lg:flex-1">
             <CtaSection {...childProps} />
+            <TabsSection {...childProps} />
           </div>
         </div>
       </MaxWidth>
