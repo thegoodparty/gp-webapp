@@ -15,6 +15,7 @@ export default function Hero({ demoCallback }) {
             width="90"
             height="90"
             className="ml-12"
+            alt=""
           />
 
           <Image
@@ -22,6 +23,7 @@ export default function Hero({ demoCallback }) {
             width="120"
             height="120"
             className="mt-5"
+            alt=""
           />
         </div>
       </div>
@@ -33,8 +35,8 @@ export default function Hero({ demoCallback }) {
           </h1>
           <h2 className="mt-3 mb-12 text-xl">
             Our free AI Campaign Manager and team with 50+ years of experience
-            power independent campaigns. We're here to make running as an
-            indepdendent possible!
+            power independent campaigns. We&apos;re here to make running as an
+            independent possible!
           </h2>
           <div className="grid grid-cols-12 gap-6">
             <div className="flex flex-row w-full col-span-12">
