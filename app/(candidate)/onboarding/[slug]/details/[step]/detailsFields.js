@@ -269,7 +269,7 @@ detailsFields.forEach((step) => {
   detailFieldsCount += step.fields?.length || 0;
 });
 
-detailFieldsCount = detailFieldsCount - 2; // pledge and top issues
+detailFieldsCount = detailFieldsCount - 5; // pledge and top issues
 export { detailFieldsCount };
 
 var a = {
