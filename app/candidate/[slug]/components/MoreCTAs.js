@@ -10,7 +10,6 @@ export default function MoreCTAs(props) {
   const [open, setOpen] = useState(false);
   const { candidate } = props;
   const { website } = candidate;
-  console.log('ca', candidate);
   return (
     <div className="relative">
       <div
