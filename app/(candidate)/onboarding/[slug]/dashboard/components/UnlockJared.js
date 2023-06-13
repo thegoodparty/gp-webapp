@@ -49,7 +49,11 @@ export default function UnlockJared({ step, nextStep, campaign }) {
               </div>
             </div>
             <div className="px-6 pb-2 text-center">
-              <ScheduleModal campaign={campaign} nextStep={nextStep} />
+              <ScheduleModal
+                campaign={campaign}
+                nextStep={nextStep}
+                calendar="https://meetings.hubspot.com/jared-alper"
+              />
             </div>
           </>
         ) : (

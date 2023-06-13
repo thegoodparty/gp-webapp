@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import CandidatePage from './CandidatePage';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { revalidateCandidates } from 'helpers/cacheHelper';
 
 export async function updateCandidate(candidate) {
   try {
