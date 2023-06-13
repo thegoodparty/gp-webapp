@@ -95,6 +95,11 @@ const gpApi = {
       url: `${base}new-candidate`,
       method: 'GET',
     },
+    update: {
+      url: `${base}new-candidate`,
+      method: 'PUT',
+      withAuth: true,
+    },
     trackVisit: {
       url: `${base}visit`,
       method: 'POST',

@@ -8,7 +8,10 @@ export default function CtaSection(props) {
   return (
     <div className="flex justify-center lg:justify-end items-center">
       <Link href="/volunteer" id="candidate-volunteer" className="mr-1">
-        <WarningButton style={{ backgroundColor: color, color: textColor }}>
+        <WarningButton
+          style={{ backgroundColor: color, color: textColor }}
+          size="medium"
+        >
           <span className="font-medium">Volunteer</span>
         </WarningButton>
       </Link>

@@ -5,6 +5,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import CandidatePage from './components/CandidatePage';
 import pageMetaData from 'helpers/metadataHelper';
+import CandidateSchema from './CandidateSchema';
 
 export const fetchCandidate = async (slug) => {
   try {
@@ -71,7 +72,7 @@ export default async function Page({ params }) {
   return (
     <>
       <CandidatePage {...childProps} />
-      {/* <CandidateSchema candidate={candidate} /> */}
+      <CandidateSchema candidate={candidate} />
       {/* <TrackVisit /> */}
     </>
   );

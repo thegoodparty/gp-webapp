@@ -83,13 +83,13 @@ export default function FollowButton({ candidate, color, textColor }) {
           id="candidate-follow-button"
           onClick={() => setShowDeleteAlert(true)}
         >
-          <SecondaryButton variant="outlined">
+          <SecondaryButton variant="outlined" size="medium">
             <span className="font-medium">Following</span>
           </SecondaryButton>
         </div>
       ) : (
         <div id="candidate-follow-button" onClick={handleFollow}>
-          <SecondaryButton>
+          <SecondaryButton size="medium">
             <span className="font-medium">Follow</span>
           </SecondaryButton>
         </div>

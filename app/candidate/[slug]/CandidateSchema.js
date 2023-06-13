@@ -1,4 +1,3 @@
-import React, { useContext } from 'react';
 import { JsonLd } from 'react-schemaorg';
 
 import { candidateRoute, partyResolver } from '/helpers/candidateHelper';
@@ -8,9 +7,8 @@ export default function CandidateSchema({ candidate }) {
     firstName,
     lastName,
     party,
-    race,
+    office,
     image,
-    raceDate,
     facebook,
     twitter,
     tiktok,
@@ -23,7 +21,7 @@ export default function CandidateSchema({ candidate }) {
   } = candidate;
   const runForRace = `${partyResolver(party)} ${
     party !== 'I' ? 'Party' : ''
-  } Candidate for ${race}`;
+  } Candidate for ${office}`;
   const sameAs = [];
 
   [
@@ -60,7 +58,6 @@ export default function CandidateSchema({ candidate }) {
           sameAs,
         },
         actionOption: runForRace,
-        endTime: raceDate,
         image,
         name: `${firstName} ${lastName}`,
         sameAs,

@@ -11,7 +11,7 @@ import {
 import TextPanel from '../TextPanel';
 
 export default function InfoTab(props) {
-  const { candidate, previewMode, color, changeTabCallback } = props;
+  const { candidate, previewMode, color, changeTabCallback, editMode } = props;
   const { about } = candidate;
 
   const sections = [
@@ -67,7 +67,11 @@ export default function InfoTab(props) {
                   {section.icon}
                 </div>
               </div>
-              <div className={previewMode ? 'h-16 overflow-hidden' : ''}>
+              <div
+                className={
+                  previewMode && !editMode ? 'h-16 overflow-hidden' : ''
+                }
+              >
                 <TextPanel
                   text={candidate[section.key]}
                   {...props}
