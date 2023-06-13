@@ -22,7 +22,7 @@ export default function ScheduleModal({ calendar }) {
         className="text-sm text-center underline mt-1 cursor-pointer"
         onClick={handleOpenModal}
       >
-        View Support
+        Book a Time
       </div>
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>
