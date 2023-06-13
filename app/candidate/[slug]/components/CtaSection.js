@@ -12,14 +12,14 @@ export default function CtaSection(props) {
       <div className=" bg-slate-50 pt-5 pb-3">
         <div className="flex justify-center lg:justify-end items-center">
           {editMode ? (
-            <Link href={`/candidate/${candidate.slug}`}>
+            <a href={`/candidate/${candidate.slug}`}>
               <WarningButton
                 style={{ backgroundColor: color, color: textColor }}
                 size="medium"
               >
                 <span className="font-medium">Done Editing</span>
               </WarningButton>
-            </Link>
+            </a>
           ) : (
             <>
               <Link href="/volunteer" id="candidate-volunteer" className="mr-1">
