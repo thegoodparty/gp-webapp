@@ -37,7 +37,7 @@ export default function CandidatePage(props) {
   };
 
   return (
-    <div className="bg-slate-50 py-5">
+    <div className="bg-slate-50 pb-5">
       <MaxWidth>
         {isStaged && <StagedBanner />}
         {reviewMode && <ReviewBanner {...props} />}

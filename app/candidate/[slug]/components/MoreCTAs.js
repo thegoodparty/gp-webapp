@@ -17,8 +17,10 @@ export default function MoreCTAs(props) {
           setOpen(!open);
         }}
       >
-        <SecondaryButton style={{ height: '40px' }}>
-          <AiOutlineCaretDown />
+        <SecondaryButton size="medium">
+          <div className="py-[6px]">
+            <AiOutlineCaretDown />
+          </div>
         </SecondaryButton>
       </div>
       {open && (

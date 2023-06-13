@@ -13,7 +13,7 @@ export default function ProfileSection(props) {
   const { firstName, lastName, slogan, party, office, state, district } =
     candidate;
   return (
-    <section className="flex flex-col items-center mt-5">
+    <section className="flex flex-col items-center mt-5  pt-5">
       <div className="relative">
         <div>
           <VictoryTracker {...props} />
