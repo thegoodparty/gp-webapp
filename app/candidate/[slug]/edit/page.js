@@ -62,6 +62,7 @@ export default async function Page({ params }) {
   }
 
   const { candidate } = res;
+  let { candidatePositions } = res;
 
   if (!candidate) {
     notFound();
@@ -73,12 +74,16 @@ export default async function Page({ params }) {
 
   const { positions } = await fetchPositions();
 
+  if (isStaged) {
+    candidatePositions = mapTopIssues(campaign.details?.topIssues);
+  }
+
   const childProps = {
     campaign,
     candidate,
     editMode: true,
     isStaged,
-    candidatePositions: mapTopIssues(candidate.details?.topIssues),
+    candidatePositions,
     positions, // for issuesSelector
   };
 
