@@ -6,7 +6,7 @@ import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
-import PositionsSelector from './PositionsSelector';
+import PositionsSelector from './PositionsAutocomplete';
 import Checkbox from '@mui/material/Checkbox';
 
 export default function RenderInputField({

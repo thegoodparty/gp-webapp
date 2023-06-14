@@ -6,6 +6,9 @@ import TextField from '@shared/inputs/TextField';
 import { MdDeleteForever } from 'react-icons/md';
 
 import styles from './PositionsSelector.module.scss';
+import H5 from '@shared/typography/H5';
+import { Paper } from '@mui/material';
+import { RiSearch2Line } from 'react-icons/ri';
 
 const comparePositions = (a, b) => {
   if (!a?.topIssue) {
@@ -17,78 +20,62 @@ const comparePositions = (a, b) => {
   return a.topIssue?.name.localeCompare(b.topIssue?.name);
 };
 
-export default function PositionsSelector({
+export default function PositionsAutocomplete({
   positions,
   updateCallback,
-  square = false,
   initialSelected,
 }) {
   const sorted = positions.sort(comparePositions);
-  const [nonSelected, setNonSelected] = useState(sorted);
-  const [selected, setSelected] = useState([]);
   const [inputValue, setInputValue] = useState('');
   useEffect(() => {
-    if (initialSelected) {
-      let newNonSelected = [...sorted];
-      initialSelected.forEach((initialItem) => {
-        newNonSelected = newNonSelected.filter((item) => {
-          return item.id !== initialItem.id;
-        });
-      });
-      setSelected(initialSelected);
-      setNonSelected(newNonSelected);
-    }
+    // if (initialSelected) {
+    //   let newNonSelected = [...sorted];
+    //   initialSelected.forEach((initialItem) => {
+    //     newNonSelected = newNonSelected.filter((item) => {
+    //       return item.id !== initialItem.id;
+    //     });
+    //   });
+    //   setSelected(initialSelected);
+    //   setNonSelected(newNonSelected);
+    // }
   }, [initialSelected, sorted]);
 
   const addPosition = (position) => {
-    const newSelected = [...selected, position];
-    const newNonSelected = nonSelected.filter((item) => {
-      return item.id !== position.id;
-    });
-
-    setSelected(newSelected);
-    const sorted = newNonSelected.sort(comparePositions);
-    setNonSelected(sorted);
-    setInputValue('');
-    updateCallback(newSelected);
-  };
-
-  const removePosition = (position) => {
-    const newNonSelected = [...nonSelected, position];
-
-    const newSelected = selected.filter((item) => {
-      return item.id !== position.id;
-    });
-    const sorted = newNonSelected.sort(comparePositions);
-    setNonSelected(sorted);
-    setSelected(newSelected);
-    updateCallback(newSelected);
+    updateCallback(position);
   };
 
   return (
-    <div className={square && styles.square}>
+    <div className={styles.square}>
       <Autocomplete
-        options={nonSelected}
+        options={sorted}
         groupBy={(option) => {
           return option.topIssue?.name;
         }}
         getOptionLabel={(option) => option?.name}
         fullWidth
         variant="outlined"
+        PaperComponent={({ children }) => (
+          <Paper style={{ background: '#13161A' }}>{children}</Paper>
+        )}
+        popupIcon={<RiSearch2Line className="mr-2" />}
         inputValue={inputValue}
         onInputChange={(e) => setInputValue(e?.target?.value || '')}
         renderInput={(params) => <TextField {...params} label="Add Issue" />}
         renderGroup={(params) => (
           <div>
-            <div className="bg-sky-200 font-bold p-2">{params.group}</div>
-            <div className="p-2">{params.children}</div>
+            <div className="bg-primary p-2">
+              <H5 className="text-indigo-300">{params.group}</H5>
+            </div>
+            <div className="bg-primary p-2 text-gray-800">
+              {params.children}
+            </div>
           </div>
         )}
         onChange={(event, item) => {
           addPosition(item);
         }}
       />
-      <div className="mt-3">
+      {/* <div className="mt-3">
         {selected.length > 0 && (
           <div className="text-sm font-bold">Selected issues:</div>
         )}
@@ -102,7 +89,7 @@ export default function PositionsSelector({
             <MdDeleteForever />
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

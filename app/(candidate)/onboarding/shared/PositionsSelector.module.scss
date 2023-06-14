@@ -1,11 +1,12 @@
 .square {
   :global(div.MuiAutocomplete-root div.MuiOutlinedInput-root) {
     /* Search bar when not in focus */
-    border-radius: 0;
+    border-radius: 4px;
+    background-color: white;
   }
 
   :global(div.MuiAutocomplete-root div.MuiOutlinedInput-root.Mui-focused) {
     /* Search bar when focused */
-    border-radius: 0 !important;
+    border-radius: 4px !important;
   }
 }
