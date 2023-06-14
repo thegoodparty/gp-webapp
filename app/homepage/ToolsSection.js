@@ -3,7 +3,7 @@ import Link from 'next/link';
 import teamImg from '/public/images/homepage-jan23/team.png';
 import volunteerImg from '/public/images/homepage-jan23/volunteer.png';
 
-export default function TeamSection() {
+export default function ToolsSection() {
   return (
     <section className="mt-14">
       <div className="grid grid-cols-12 gap-4 items-stretch">

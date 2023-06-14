@@ -1,22 +1,23 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import BlogSection from './BlogSection';
-import FaqsSection from './FaqsSection';
-import ForCandidates from './ForCandidates';
 import Hero from './Hero';
-import SubscribeSection from './SubscribeSection';
-import TeamSection from './TeamSection';
+import FactsSection from './FactsSection';
+import HowSection from './HowSection';
+import ToolsSection from './ToolsSection';
+// import SubscribeSection from './SubscribeSection';
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <MaxWidth>
-        <ForCandidates />
-        <FaqsSection />
-        <TeamSection />
-        <BlogSection />
+      <div className="bg-[linear-gradient(-172deg,_#FFFFFF_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
+      <FactsSection />
+      <div className="bg-[linear-gradient(-172deg,_#13161A_54.5%,_#FFFFFF_55%)] h-[calc(100vw*.17)] w-full" />
+      <HowSection />
+
+      {/* <MaxWidth>
+        <ToolsSection />
       </MaxWidth>
-      <SubscribeSection />
+      <SubscribeSection /> */}
     </>
   );
 }
