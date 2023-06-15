@@ -5,6 +5,7 @@ import H3 from '@shared/typography/H3';
 import ImageUploader from 'app/candidate-old/[slug]/components/ImageUploader';
 import { partyResolver } from 'helpers/candidateHelper';
 import EditProfile from './EditProfile';
+import EditProfileButton from './EditProfileButton';
 import VictoryTracker from './VictoryTracker';
 
 export default function ProfileSection(props) {
@@ -64,6 +65,7 @@ export default function ProfileSection(props) {
               <div dangerouslySetInnerHTML={{ __html: slogan }} />
             </Body2>
           ) : null}
+          <EditProfileButton {...props} />
         </>
       )}
     </section>

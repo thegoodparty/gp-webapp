@@ -2,7 +2,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import RichEditor from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor';
+// import RichEditor from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor';
 import { useState } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 

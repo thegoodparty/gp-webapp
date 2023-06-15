@@ -109,6 +109,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    canEdit: {
+      url: `${base}new-candidate/can-edit`,
+      method: 'GET',
+      withAuth: true,
+    },
   },
 
   campaign: {
@@ -422,6 +427,7 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+
     users: {
       url: `${base}admin/users`,
       method: 'GET',
