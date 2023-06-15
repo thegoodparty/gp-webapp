@@ -1,58 +1,101 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import teamImg from '/public/images/homepage-jan23/team.png';
-import volunteerImg from '/public/images/homepage-jan23/volunteer.png';
+import WarningButton from '@shared/buttons/WarningButton';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
+import Carousel from '@shared/inputs/Carousel';
+
+const sections = [
+  {
+    title: 'Candidate for Maine House District 104',
+    name: 'Anne G.',
+    description:
+      '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
+    img: '/images/run-for-office/anne.jpg',
+  },
+  {
+    name: 'Breanna S.',
+    title: 'Fintech Founder',
+    description:
+      '“Working with the different AI tools was an amazing experience because… I was able to see what it would be like to enter my message from my own vocabulary, my own heart and mind and have AI just slightly tweak it in order to be the best version for the type of audience Im trying to engage with.”',
+    img: '/images/run-for-office/breanna.jpg',
+  },
+  {
+    name: 'Carlos R.',
+    title: 'Regulatory Writer',
+    description:
+      '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
+    img: '/images/run-for-office/carlos.jpg',
+  },
+  // {
+  //   name: 'Chaz M.',
+  //   title: 'Firefighter',
+  //   description:
+  //     '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
+  //   img: chazImg,
+  // },
+  // {
+  //   name: 'Ben W.',
+  //   title: 'Candidate for Maine House District 89',
+  //   description:
+  //     '“Being an independent means that it can be hard to run with no party to back you, but Good Party changed that. The staff at good party was friendly, inviting, and highly knowledgeable.”',
+  //   img: benImg,
+  // },
+];
 
 export default function ToolsSection() {
   return (
-    <section className="mt-14">
-      <div className="grid grid-cols-12 gap-4 items-stretch">
-        <div className="col-span-12 lg:col-span-6 h-full">
-          <div className="bg-zinc-100 rounded-2xl p-5 lg:py-8 lg:px-11 h-full relative">
-            <div className="lg:absolute lg:top-6 lg:right-6">
-              <Image src={teamImg} width={126} height={36} alt="team" />
+    <section className="bg-indigo-800 pb-20">
+      <div className="grid grid-cols-12 gap-3 relative items-center pb-14 lg:pb-0 -pt-[50px] z-50 overlay">
+        <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-end lg:pr-10">
+          <div className="w-auto ml-0 flex relative">
+            <Image
+              src="/images/homepage/dots.svg"
+              sizes="100vw"
+              height={100}
+              width={100}
+              className="object-contain"
+              alt=""
+            />
+          </div>
+
+          <div className="text-slate-50 font-black text-3xl mt-2 max-w-[300px]">
+            Free tools + experts power winning campaigns
+          </div>
+
+          <div className="text-slate-50 text-md mt-2 max-w-[300px]">
+            Independent candidates get free access to our team with 50+ years of
+            campaign experience and our latest AI tools that keep your campaign
+            on track
+          </div>
+          <div className="flex">
+            <div className="mt-4">
+              <Link href="/run-for-office">
+                <WarningButton size="medium">Free campaign tools</WarningButton>
+              </Link>
             </div>
-            <h4 className="text-lg font-black">
-              <Link href="/team" className="underline">
-                Meet the Team
-              </Link>{' '}
-              behind Good Party
-            </h4>
-            <div className="font-light text-lg  mt-5">
-              Good Party&apos;s core team are the people working full-time,
-              part-time, or as dedicated volunteers on a mission to make people
-              matter more than money in our democracy.
-            </div>
-            <div className="text-lg mt-6 underline">
-              <Link href="/work-with-us">See full-time positions</Link>
+            <div className="mt-4 pl-3">
+              <Link href="/run-for-office">
+                <SecondaryButton size="medium">
+                  Learn how to run
+                </SecondaryButton>
+              </Link>
             </div>
           </div>
         </div>
-        <div className="col-span-12 lg:col-span-6 h-full">
-          <div className="bg-zinc-100 rounded-2xl pt-5 px-5 md:py-8 md:px-11 h-full relative min-h-[230px]">
-            <div className="md:w-[70%]">
-              <h4 className="text-lg font-black">
-                Volunteer &amp; Get Involved
-              </h4>
-              <div className="font-light text-lg mt-5">
-                If you agree that a functioning democracy that serves people,
-                not money, is the problem that must be solved, please consider
-                joining us!
-              </div>
-              <div className="text-lg mt-6 underline">
-                <Link href="/contact">Contact Us</Link>
-              </div>
-            </div>
-            <div className="text-right md:absolute md:bottom-0 md:right-6">
-              <Image
-                src={volunteerImg}
-                width={173}
-                height={211}
-                alt="team"
-                className="inline-block"
-              />
-            </div>
+        <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-start lg:pl-10 mt-10 lg:mt-0">
+          <div className="w-auto ml-0 flex relative">
+            <Image
+              src="/images/homepage/software.png"
+              sizes="100vw"
+              height={300}
+              width={440}
+              className="object-contain"
+              alt=""
+            />
           </div>
+        </div>
+        <div className="col-span-12 mt-20 justify-self-center">
+          <Carousel sections={sections} />
         </div>
       </div>
     </section>
