@@ -11,14 +11,14 @@ export const fetchRedirects = async () => {
 };
 
 export default async function middleware(req) {
-  const { content } = await fetchRedirects();
-  const redirects = content;
-  if (redirects && redirects.hasOwnProperty(req.nextUrl.pathname)) {
-    return NextResponse.redirect(
-      `${req.nextUrl.origin + redirects[req.nextUrl.pathname]}`,
-      { status: 301 },
-    );
-  }
+  // const { content } = await fetchRedirects();
+  // const redirects = content;
+  // if (redirects && redirects.hasOwnProperty(req.nextUrl.pathname)) {
+  //   return NextResponse.redirect(
+  //     `${req.nextUrl.origin + redirects[req.nextUrl.pathname]}`,
+  //     { status: 301 },
+  //   );
+  // }
 
   if (req.nextUrl.pathname === req.nextUrl.pathname.toLowerCase()) {
     return NextResponse.next();
@@ -28,7 +28,7 @@ export default async function middleware(req) {
     `${req.nextUrl.origin + req.nextUrl.pathname.toLowerCase()}`,
     { status: 301 },
   );
-  
+
   // if we ever want to have images or static assets with capital letters we need this:
   // export const config = {
   //   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
