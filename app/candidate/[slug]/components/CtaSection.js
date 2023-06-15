@@ -8,7 +8,7 @@ import Sticky from 'react-stickynode';
 export default function CtaSection(props) {
   const { color, textColor, editMode, candidate } = props;
   return (
-    <Sticky innerZ={50}>
+    <Sticky innerZ={40}>
       <div className=" bg-slate-50 pt-5 pb-3">
         <div className="flex justify-center lg:justify-end items-center">
           {editMode ? (
