@@ -178,6 +178,10 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      find: {
+        url: `${base}candidate-position`,
+        method: 'GET',
+      },
     },
 
     endorsement: {
