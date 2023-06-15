@@ -63,7 +63,7 @@ export default function LargeCard({ candidate, priority = false }) {
       <div className="rounded-2xl py-4 px-9 border-2 border-gray-200 h-full relative bg-white mb-6">
         <div className="grid gap-3 grid-cols-1 lg:grid-cols-12">
           <div className="lg:col-span-3">
-            <div className="flex justify-center">
+            <div className="flex justify-center lg:mt-12">
               <CandidateAvatar candidate={candidate} priority={priority} />
             </div>
           </div>

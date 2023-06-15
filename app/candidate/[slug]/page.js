@@ -5,6 +5,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import CandidatePage from './components/CandidatePage';
 import pageMetaData from 'helpers/metadataHelper';
+import CandidateSchema from './CandidateSchema';
 
 export const fetchCandidate = async (slug) => {
   try {
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }) {
     });
     return meta;
   }
-  const { firstName, lastName, party, otherParty, office, headline } =
+  const { firstName, lastName, party, otherParty, office, headline, image } =
     candidate;
 
   const title = `${firstName} ${lastName} ${partyResolver(party, otherParty)} ${
@@ -48,6 +49,7 @@ export async function generateMetadata({ params }) {
     title,
     description,
     slug: `/candidate/${slug}`,
+    image,
   });
   return meta;
 }
@@ -70,7 +72,7 @@ export default async function Page({ params }) {
   return (
     <>
       <CandidatePage {...childProps} />
-      {/* <CandidateSchema candidate={candidate} /> */}
+      <CandidateSchema candidate={candidate} />
       {/* <TrackVisit /> */}
     </>
   );

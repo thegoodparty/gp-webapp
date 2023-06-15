@@ -8,8 +8,7 @@ import { BiUser } from 'react-icons/bi';
 import Link from 'next/link';
 import ScheduleModal from './ScheduleModal';
 
-export default function IncentiveCard({ step, campaign, campaignStatus }) {
-  const { slug, image } = campaign;
+export default function IncentiveCard({ step, campaignStatus }) {
   const { key, icon, title, connectedLine, calendar } = step;
   const stepStatus = campaignStatus[step.key];
   const status = stepStatus?.status;

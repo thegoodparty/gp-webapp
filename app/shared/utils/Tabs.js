@@ -11,11 +11,26 @@ export default function Tabs({
   orientation = 'horizontal',
   variant = 'standard',
   centered = false,
+  // controlledMode
+  activeTab = false,
+  changeCallback = () => {},
 }) {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    if (activeTab !== false) {
+      changeCallback(newValue);
+      //controlled
+    } else {
+      setValue(newValue);
+    }
+  };
+
+  const isSelected = (index) => {
+    if (activeTab !== false) {
+      return activeTab === index;
+    }
+    return value === index;
   };
   return (
     <div className={`w-full ${orientation === 'vertical' ? 'flex' : ''}`}>
@@ -24,7 +39,7 @@ export default function Tabs({
           <div className=" bg-slate-300 absolute w-full h-[1px] bottom-0 left-0" />
         )}
         <MuiTabs
-          value={value}
+          value={activeTab !== false ? activeTab : value}
           onChange={handleChange}
           aria-label="nav tabs example"
           orientation={orientation}
@@ -34,7 +49,7 @@ export default function Tabs({
             '.MuiTabs-indicator': { backgroundColor: '#000' },
           }}
         >
-          {tabLabels.map((label) => (
+          {tabLabels.map((label, index) => (
             <Tab
               key={label}
               sx={{
@@ -42,7 +57,13 @@ export default function Tabs({
               }}
               label={
                 <SecondaryButton variant="text" size="medium">
-                  {label}
+                  <span
+                    className={
+                      isSelected(index) ? 'text-primary' : 'text-gray-700'
+                    }
+                  >
+                    {label}
+                  </span>
                 </SecondaryButton>
               }
             />
@@ -53,7 +74,8 @@ export default function Tabs({
         <div
           role="tabpanel"
           key={index}
-          hidden={value !== index}
+          // hidden={activeTab !== false ? activeTab !== index : value !== index}
+          hidden={!isSelected(index)}
           className={`${orientation === 'horizontal' ? 'mt-3' : 'ml-3'} `}
         >
           {panel}

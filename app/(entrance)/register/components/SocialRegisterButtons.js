@@ -98,6 +98,8 @@ export default function SocialRegisterButtons() {
           isError: false,
         };
       });
+
+      window.location.href = '/';
     } else {
       snackbarState.set(() => {
         return {

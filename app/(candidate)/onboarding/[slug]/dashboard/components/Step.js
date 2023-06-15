@@ -1,9 +1,7 @@
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import Link from 'next/link';
-import { Fragment } from 'react';
 import { FaLock } from 'react-icons/fa';
 import { GrCheckmark } from 'react-icons/gr';
-import UnlockJared from './UnlockJared';
 
 const statusStyles = {
   locked: {

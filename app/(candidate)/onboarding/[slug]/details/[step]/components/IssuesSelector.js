@@ -2,7 +2,7 @@
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useEffect, useState } from 'react';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PositionsSelector from 'app/(candidate)/onboarding/shared/PositionsSelector';
+import PositionsSelector from 'app/(candidate)/onboarding/shared/PositionsAutocomplete';
 import TextField from '@shared/inputs/TextField';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 
@@ -12,6 +12,7 @@ export default function IssuesSelector({
   subSectionKey,
   onSaveCallback,
   buttonLabel = 'NEXT',
+  candidate,
 }) {
   const positionsWithOther = [...positions];
   useEffect(() => {

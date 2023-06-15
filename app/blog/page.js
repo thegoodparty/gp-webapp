@@ -32,8 +32,11 @@ export default async function Page({ params, searchParams }) {
   const sectionsRes = await fetchSections();
   const sections = sectionsRes.content;
   const articlesRes = await fetchArticles();
-  const fullArticles = articlesRes.content;
-  const articles = fullArticles.slice(0, 20);
+  const fullArticles = articlesRes?.content;
+  let articles = [];
+  if (fullArticles != undefined) {
+    articles = fullArticles.slice(0, 20);
+  }
 
   const childProps = {
     sections,

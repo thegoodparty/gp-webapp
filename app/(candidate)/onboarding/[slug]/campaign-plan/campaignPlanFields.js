@@ -9,14 +9,6 @@ const campaignPlanFields = [
     ],
   },
   {
-    title: 'Voter Report',
-    fields: [
-      {
-        type: 'inProgress',
-      },
-    ],
-  },
-  {
     title: 'Build a Campaign Team',
     fields: [
       { type: 'section', title: 'Campaign Messaging Strategy' },

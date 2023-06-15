@@ -2,7 +2,6 @@
 import { Fragment } from 'react';
 import { usePathname } from 'next/navigation';
 import { candidateHash } from 'helpers/candidateHelper';
-import { useHookstate } from '@hookstate/core';
 
 import { IoIosText, IoLogoWhatsapp } from 'react-icons/io';
 import { FaFacebookF, FaFacebookMessenger, FaTwitter } from 'react-icons/fa';
@@ -14,8 +13,6 @@ import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import { appBase } from 'gpApi';
 
 export default function ShareCandidate({ candidate, children }) {
-  const userState = useHookstate(globalUserState);
-  const user = userState.get();
   const pathname = usePathname();
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';

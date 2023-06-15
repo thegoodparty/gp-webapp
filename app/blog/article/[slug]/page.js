@@ -26,6 +26,7 @@ export async function generateMetadata({ params }) {
     title: `${content.title} | Good Party`,
     description: content.summary,
     image: content.mainImage && `https:${content.mainImage.url}`,
+    slug: `/blog/article/${slug}`,
   });
   return meta;
 }

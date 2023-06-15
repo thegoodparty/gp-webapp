@@ -10,6 +10,7 @@ import gpApi from 'gpApi';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { useRouter } from 'next/navigation';
 import { FaShare } from 'react-icons/fa';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
 
 const loadUserFollows = async () => {
   const user = getUserCookie();
@@ -79,39 +80,18 @@ export default function FollowButton({ candidate, color, textColor }) {
     <>
       {isFollowed ? (
         <div
-          className="flex items-center justify-between py-2 px-4 mt-2 rounded-md cursor-pointer"
           id="candidate-follow-button"
           onClick={() => setShowDeleteAlert(true)}
-          style={{ backgroundColor: color, color: textColor }}
         >
-          <div className="">
-            <div className="flex-1 font-black text-xl tracking-wider">
-              FOLLOWING
-            </div>
-            <div className="mt-1">
-              Thank you for following {candidate.firstName} {candidate.lastName}
-              !
-            </div>
-          </div>
-          <div className="text-2xl" style={{ color }}>
-            <FaShare />
-          </div>
+          <SecondaryButton variant="outlined" size="medium">
+            <span className="font-medium">Following</span>
+          </SecondaryButton>
         </div>
       ) : (
-        <div
-          className="flex items-center justify-between bg-white py-2 px-4 mt-2 rounded-md cursor-pointer"
-          id="candidate-follow-button"
-          onClick={handleFollow}
-        >
-          <div className="">
-            <div className="flex-1 font-black text-xl tracking-wider">
-              FOLLOW
-            </div>
-            <div className="mt-1">Follow this campaign to stay in the loop</div>
-          </div>
-          <div className="text-2xl" style={{ color }}>
-            <FaShare />
-          </div>
+        <div id="candidate-follow-button" onClick={handleFollow}>
+          <SecondaryButton size="medium">
+            <span className="font-medium">Follow</span>
+          </SecondaryButton>
         </div>
       )}
 

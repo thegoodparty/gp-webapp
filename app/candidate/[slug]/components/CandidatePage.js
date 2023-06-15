@@ -1,12 +1,9 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import AboutSection from './AboutSection';
-import Hero from './Hero';
-import IssuesSectionWithEdit from './IssuesSectionWithEdit';
+import CtaSection from './CtaSection';
+import ProfileSection from './ProfileSection';
 import ReviewBanner from './ReviewBanner';
-import SocialSectionWithEdit from './SocialSectionWithEdit';
 import StagedBanner from './StagedBanner';
-import VictoryTracker from './VictoryTracker';
-import WhySection from './WhySection';
+import TabsSection from './tabs/TabsSection';
 
 function pickTextColorBasedOnBg(
   bgColor,
@@ -40,24 +37,17 @@ export default function CandidatePage(props) {
   };
 
   return (
-    <div className="bg-slate-100">
+    <div className="bg-slate-50 pb-5">
       <MaxWidth>
         {isStaged && <StagedBanner />}
         {reviewMode && <ReviewBanner {...props} />}
-        <div className="grid grid-cols-12 gap-6 pt-4">
-          <div className="col-span-12 lg:col-span-9">
-            <Hero {...childProps} />
-            <AboutSection {...childProps} />
-            <SocialSectionWithEdit {...childProps} />
-            <div className="lg:hidden">
-              <VictoryTracker {...childProps} />
-              <IssuesSectionWithEdit {...childProps} />
-            </div>
-            <WhySection {...childProps} />
+        <div className="lg:flex">
+          <div className="lg:basis-[350px]">
+            <ProfileSection {...childProps} />
           </div>
-          <div className="col-span-12 lg:col-span-3 hidden lg:block">
-            <VictoryTracker {...childProps} />
-            <IssuesSectionWithEdit {...childProps} />
+          <div className="lg:flex-1 lg:pl-36 max-w-[786px]">
+            <CtaSection {...childProps} />
+            <TabsSection {...childProps} />
           </div>
         </div>
       </MaxWidth>

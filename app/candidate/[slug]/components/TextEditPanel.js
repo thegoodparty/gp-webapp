@@ -1,6 +1,8 @@
 'use client';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import TextField from '@shared/inputs/TextField';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import RichEditor from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor';
+// import RichEditor from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor';
 import { useState } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 
@@ -10,6 +12,8 @@ export default function TextEditPanel({
   section,
   sectionKey,
   campaign,
+  candidate,
+  saveCallback,
 }) {
   const [edit, setEdit] = useState(false);
   const [content, setContent] = useState(text);
@@ -18,8 +22,7 @@ export default function TextEditPanel({
     setEdit(!edit);
   };
 
-  const handleEdit = async (edited) => {
-    setContent(edited);
+  const handleSave = async () => {
     setEdit(false);
     if (isStaged && campaign && section && sectionKey) {
       await updateCampaign({
@@ -29,6 +32,11 @@ export default function TextEditPanel({
           [sectionKey]: edited,
         },
       });
+    } else {
+      await saveCallback({
+        ...candidate,
+        [sectionKey]: content,
+      });
     }
   };
 
@@ -36,7 +44,19 @@ export default function TextEditPanel({
     <div>
       {edit ? (
         <div>
-          <RichEditor initialText={content} onChangeCallback={handleEdit} />
+          <TextField
+            label={sectionKey}
+            fullWidth
+            multiline
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+          />
+          {/* <RichEditor initialText={content} onChangeCallback={handleEdit} /> */}
+          <div className="my-3" onClick={handleSave}>
+            <PrimaryButton fullWidth>Save</PrimaryButton>
+          </div>
         </div>
       ) : (
         <>

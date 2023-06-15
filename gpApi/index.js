@@ -95,6 +95,11 @@ const gpApi = {
       url: `${base}new-candidate`,
       method: 'GET',
     },
+    update: {
+      url: `${base}new-candidate`,
+      method: 'PUT',
+      withAuth: true,
+    },
     trackVisit: {
       url: `${base}visit`,
       method: 'POST',
@@ -102,6 +107,11 @@ const gpApi = {
     create: {
       url: `${base}new-candidate`,
       method: 'POST',
+      withAuth: true,
+    },
+    canEdit: {
+      url: `${base}new-candidate/can-edit`,
+      method: 'GET',
       withAuth: true,
     },
   },
@@ -172,6 +182,10 @@ const gpApi = {
         url: `${base}candidate-positions`,
         method: 'GET',
         withAuth: true,
+      },
+      find: {
+        url: `${base}candidate-position`,
+        method: 'GET',
       },
     },
 
@@ -413,6 +427,7 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+
     users: {
       url: `${base}admin/users`,
       method: 'GET',

@@ -13,7 +13,7 @@ export const revalidatePage = async (path) => {
   return await gpFetch(api, payload);
 };
 
-export const revalidateCandidate = async (candidate) => {
-  const path = candidateRoute(candidate);
+export const revalidateCandidates = async () => {
+  const path = candidateRoute('candidate/[slug]');
   return await revalidatePage(path);
 };

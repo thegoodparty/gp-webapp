@@ -1,6 +1,25 @@
 import { NextResponse } from 'next/server';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
-const Middleware = (req) => {
+export const fetchRedirects = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'redirects',
+  };
+  return await gpFetch(api, payload, 3600);
+};
+
+export default async function middleware(req) {
+  // const { content } = await fetchRedirects();
+  // const redirects = content;
+  // if (redirects && redirects.hasOwnProperty(req.nextUrl.pathname)) {
+  //   return NextResponse.redirect(
+  //     `${req.nextUrl.origin + redirects[req.nextUrl.pathname]}`,
+  //     { status: 301 },
+  //   );
+  // }
+
   if (req.nextUrl.pathname === req.nextUrl.pathname.toLowerCase()) {
     return NextResponse.next();
   }
@@ -9,11 +28,9 @@ const Middleware = (req) => {
     `${req.nextUrl.origin + req.nextUrl.pathname.toLowerCase()}`,
     { status: 301 },
   );
-};
 
-// if we ever want to have images or static assets with capital letters we need this:
-// export const config = {
-//   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
-// };
-
-export default Middleware;
+  // if we ever want to have images or static assets with capital letters we need this:
+  // export const config = {
+  //   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
+  // }
+}

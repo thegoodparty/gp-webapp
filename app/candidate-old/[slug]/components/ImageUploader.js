@@ -1,5 +1,6 @@
 'use client';
 
+import WarningButton from '@shared/buttons/WarningButton';
 import ImageUpload from '@shared/inputs/ImageUpload';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { FaCamera } from 'react-icons/fa';
@@ -15,15 +16,11 @@ export default function ImageUploader({ campaign }) {
   };
 
   return (
-    <div className="absolute bottom-0 right-6">
+    <div className="absolute w-full h-full flex items-center justify-center top-0 left-0">
       <ImageUpload
         uploadCallback={handleUpload}
-        maxFileSize={1000000}
-        customElement={
-          <div className="text-2xl w-12 h-12 rounded-full text-zinc-500 bg-zinc-300 flex items-center justify-center border-2 border-white cursor-pointer transition-transform hover:rotate-12">
-            <FaCamera />
-          </div>
-        }
+        maxFileSize={4000000}
+        customElement={<WarningButton size="small">Edit Image</WarningButton>}
       />
     </div>
   );

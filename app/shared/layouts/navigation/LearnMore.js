@@ -1,14 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { VscHeart } from 'react-icons/vsc';
 import { SlGraduation } from 'react-icons/sl';
 import { RiHandHeartLine, RiProfileLine } from 'react-icons/ri';
 import { TfiList } from 'react-icons/tfi';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import OfficeOrContinueLink from './OfficeOrContinueLink';
 import WarningButton from '@shared/buttons/WarningButton';
 
 export const RESOURCES_LINKS = [
@@ -16,7 +14,6 @@ export const RESOURCES_LINKS = [
   { label: 'Academy', href: '/academy', icon: <SlGraduation /> },
   { label: 'Blog', href: '/blog', icon: <RiProfileLine /> },
   { label: 'Glossary', href: '/political-terms', icon: <TfiList /> },
-  { label: 'Volunteer', href: '/volunteer', icon: <RiHandHeartLine /> },
 ];
 
 export default function LearnMore({ open, toggleCallback, campaignStatus }) {
@@ -58,7 +55,6 @@ export default function LearnMore({ open, toggleCallback, campaignStatus }) {
                 <div
                   data-cy="header-link"
                   className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
-                  //   style={activeUrl === link.href ? { fontWeight: 'bold' } : {}}
                 >
                   {link.icon}
                   <div className="ml-3">{link.label}</div>
@@ -66,15 +62,28 @@ export default function LearnMore({ open, toggleCallback, campaignStatus }) {
               </Link>
             ))}
             {!status && (
-              <Link
-                href="run-for-office"
-                className="font-medium mr-5 lg:hidden"
-                id="header-run-for-office"
-              >
-                <WarningButton size="medium" fullWidth>
-                  Run for Office
-                </WarningButton>
-              </Link>
+              <>
+                <div className="my-2">
+                  <Link
+                    href="/volunteer"
+                    className="font-medium mr-5  lg:hidden"
+                    id="header-get-involved"
+                  >
+                    <WarningButton size="medium" variant="outlined" fullWidth>
+                      <span className="font-medium">Get Involved</span>
+                    </WarningButton>
+                  </Link>
+                </div>
+                <Link
+                  href="run-for-office"
+                  className="font-medium mr-5 lg:hidden"
+                  id="header-run-for-office"
+                >
+                  <WarningButton size="medium" fullWidth>
+                    <span className="font-medium">Run for Office</span>
+                  </WarningButton>
+                </Link>
+              </>
             )}
           </div>
         </>

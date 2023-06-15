@@ -68,7 +68,7 @@ const campaignSteps = [
     key: 'support',
     type: 'incentive',
     title: 'Expert Campaign Support',
-    calendar: 'https://meetings.hubspot.com/jared-alper',
+    calendar: 'https://meetings.hubspot.com/jared-alper/onboarding',
     icon: <FaHeart />,
   },
   {
@@ -109,7 +109,7 @@ const campaignSteps = [
     title: 'Expert Social Media Support',
     icon: <BsFillMegaphoneFill />,
     calendar:
-      'https://meetings.hubspot.com/colton-hess/candidatesocialdiscussion',
+      'https://meetings.hubspot.com/colton-hess/social-media-onboarding',
   },
   {
     key: 'finance',
@@ -147,7 +147,7 @@ const campaignSteps = [
     type: 'incentive',
     title: 'Expert Field & Mobilization Support',
     icon: <FaHeart />,
-    calendar: 'https://meetings.hubspot.com/rob994/info-session',
+    calendar: 'https://meetings.hubspot.com/robbooth/mobilization-onboarding',
   },
 ];
 
