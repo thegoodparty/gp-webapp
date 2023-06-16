@@ -20,25 +20,9 @@ const comparePositions = (a, b) => {
   return a.topIssue?.name.localeCompare(b.topIssue?.name);
 };
 
-export default function PositionsAutocomplete({
-  positions,
-  updateCallback,
-  initialSelected,
-}) {
+export default function PositionsAutocomplete({ positions, updateCallback }) {
   const sorted = positions.sort(comparePositions);
   const [inputValue, setInputValue] = useState('');
-  useEffect(() => {
-    // if (initialSelected) {
-    //   let newNonSelected = [...sorted];
-    //   initialSelected.forEach((initialItem) => {
-    //     newNonSelected = newNonSelected.filter((item) => {
-    //       return item.id !== initialItem.id;
-    //     });
-    //   });
-    //   setSelected(initialSelected);
-    //   setNonSelected(newNonSelected);
-    // }
-  }, [initialSelected, sorted]);
 
   const addPosition = (position) => {
     updateCallback(position);

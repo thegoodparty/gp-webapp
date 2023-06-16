@@ -53,9 +53,9 @@ export default function OnboardingWrapper({
         className="absolute h-1 bg-purple  top-0 rounded-r transition-all"
         style={{ width: `calc(100vw * ${progress})` }}
       ></div>
-      <div className="relative mb-6 lg:mb-0 w-28 h-28  left-1/2 -ml-14 lg:absolute lg:-top-14 z-50">
+      <div className="relative mb-6 lg:mb-0 w-20 h-20  left-1/2 -ml-14 lg:absolute lg:-top-10 z-50">
         <div
-          className="w-28 h-28 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white relative transition"
+          className="w-20 h-20 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white relative transition"
           style={progress >= 0.5 ? { borderColor: '#46002E' } : {}}
         >
           {icon ? (
@@ -66,8 +66,8 @@ export default function OnboardingWrapper({
               alt="Good Party AI"
               priority
               className="mt-2"
-              width={68}
-              height={56}
+              width={48}
+              height={39}
             />
           )}
         </div>

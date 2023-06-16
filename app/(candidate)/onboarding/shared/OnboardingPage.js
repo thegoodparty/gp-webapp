@@ -62,7 +62,6 @@ export default function OnboardingPage({
     for (let i = 0; i < inputFields.length; i++) {
       const field = inputFields[i];
       const value = state[field.key];
-      console.log('field', field);
 
       if (field.required) {
         // if (field.initialValue && value === field.initialValue) {
