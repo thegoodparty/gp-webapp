@@ -5,6 +5,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';
 import H2 from '@shared/typography/H2';
+import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
@@ -43,6 +44,7 @@ export default function EditCandidatePosition({
 }) {
   const [edit, setEdit] = useState(false);
   const [description, setDescription] = useState(candidatePosition.description);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleDelete = async () => {
     await deleteCandidatePosition(candidatePosition.id);
@@ -96,7 +98,12 @@ export default function EditCandidatePosition({
       )}
       {!edit && (
         <div className="mt-2 text-right">
-          <div className="mr-2 inline-block" onClick={handleDelete}>
+          <div
+            className="mr-2 inline-block"
+            onClick={() => {
+              setShowAlert(true);
+            }}
+          >
             <ErrorButton size="small">Delete</ErrorButton>
           </div>
           <div
@@ -111,6 +118,14 @@ export default function EditCandidatePosition({
           </div>
         </div>
       )}
+      <AlertDialog
+        open={showAlert}
+        handleClose={() => setShowAlert(false)}
+        title="Are you sure?"
+        ariaLabel="Are you sure?"
+        description="This can not be undone, Are you sure you want to proceed?"
+        handleProceed={handleDelete}
+      />
     </div>
   );
 }
