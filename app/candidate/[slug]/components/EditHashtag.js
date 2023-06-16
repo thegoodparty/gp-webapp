@@ -6,10 +6,15 @@ import { candidateHash } from 'helpers/candidateHelper';
 import { useState } from 'react';
 
 export default function EditHashtag(props) {
-  const { candidate, saveCallback } = props;
+  const { candidate, saveCallback, isStaged } = props;
+
   const hashtag = candidateHash(candidate);
 
   const [state, setState] = useState(hashtag);
+
+  if (isStaged) {
+    return null;
+  }
 
   const save = () => {
     saveCallback({

@@ -47,10 +47,15 @@ export async function loadCandidatePosition(slug) {
 }
 
 export default function EditIssues(props) {
-  const { campaign, positions, candidate, candidatePositions } = props;
+  const { campaign, positions, candidate, candidatePositions, isStaged } =
+    props;
 
   const [state, setState] = useState(candidatePositions);
   const [showAdd, setShowAdd] = useState(false);
+
+  if (isStaged) {
+    return null;
+  }
 
   const onAddPosition = async (position, candidatePosition, order) => {
     await saveCandidatePosition({

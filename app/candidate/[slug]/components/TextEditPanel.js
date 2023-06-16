@@ -29,7 +29,7 @@ export default function TextEditPanel({
         ...campaign,
         [section]: {
           ...campaign[section],
-          [sectionKey]: edited,
+          [sectionKey]: content,
         },
       });
     } else {
