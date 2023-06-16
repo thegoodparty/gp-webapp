@@ -2,7 +2,7 @@
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useEffect, useState } from 'react';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PositionsSelector from 'app/(candidate)/onboarding/shared/PositionsAutocomplete';
+import PositionsAutocomplete from 'app/(candidate)/onboarding/shared/PositionsAutocomplete';
 import TextField from '@shared/inputs/TextField';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 
@@ -14,7 +14,6 @@ export default function IssuesSelector({
   buttonLabel = 'NEXT',
   candidate,
 }) {
-  const positionsWithOther = [...positions];
   useEffect(() => {
     savingState.set(() => false);
   }, []);
@@ -57,40 +56,41 @@ export default function IssuesSelector({
     });
   };
 
-  const onChangePositions = (positions) => {
-    onChangeField('positions', positions);
+  const onChangePositions = (position) => {
+    const updatedPositions = state.positions;
+    updatedPositions.push(position);
+    onChangeField('positions', updatedPositions);
   };
 
-  const addCustom = () => {
-    const updated = [
-      ...state.positions,
-      {
-        id: 'custom-id',
-        name: 'Custom Issue',
-        topIssue: { name: 'Other' },
-      },
-    ];
+  // const addCustom = () => {
+  //   const updated = [
+  //     ...state.positions,
+  //     {
+  //       id: 'custom-id',
+  //       name: 'Custom Issue',
+  //       topIssue: { name: 'Other' },
+  //     },
+  //   ];
 
-    onChangeField('positions', updated);
-  };
+  //   onChangeField('positions', updated);
+  // };
 
   return (
     <>
       <div className="max-w-[460px] mx-auto">
-        <div>
-          <PositionsSelector
-            positions={positionsWithOther}
-            updateCallback={(positions) => onChangePositions(positions)}
-            initialSelected={state.positions}
+        <div className="mb-5">
+          <PositionsAutocomplete
+            positions={positions}
+            updateCallback={(position) => onChangePositions(position)}
             square
           />
         </div>
-        <div
+        {/* <div
           className="my-5 font-bold text-blue-500 cursor-pointer"
           onClick={addCustom}
         >
           Add your custom Issue
-        </div>
+        </div> */}
         {state.positions?.map((position) => (
           <>
             {position && (
