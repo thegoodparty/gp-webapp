@@ -9,7 +9,7 @@ export default function CtaSection(props) {
   const { color, textColor, editMode, candidate, isStaged, campaign } = props;
   let link = '';
   if (isStaged && campaign) {
-    link = `onboarding/${campaign.slug}/dashboard`;
+    link = `/onboarding/${campaign.slug}/dashboard`;
   } else {
     link = `/candidate/${candidate.slug}`;
   }

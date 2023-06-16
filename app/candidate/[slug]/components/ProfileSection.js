@@ -23,7 +23,7 @@ export default function ProfileSection(props) {
           <div className={editMode ? 'opacity-60' : ''}>
             <CandidateAvatar candidate={candidate} priority />
           </div>
-          {editMode ? <ImageUploader campaign={campaign} /> : null}
+          {editMode ? <ImageUploader {...props} /> : null}
         </div>
       </div>
 
