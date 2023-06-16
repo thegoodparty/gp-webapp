@@ -14,6 +14,6 @@ export const revalidatePage = async (path) => {
 };
 
 export const revalidateCandidates = async () => {
-  const path = candidateRoute('candidate/[slug]');
+  const path = 'candidate/[slug]';
   return await revalidatePage(path);
 };
