@@ -49,8 +49,6 @@ export async function loadCandidatePosition(slug) {
 export default function EditIssues(props) {
   const { campaign, positions, candidate, candidatePositions } = props;
 
-  console.log('candidatePositions', candidatePositions);
-
   const [state, setState] = useState(candidatePositions);
   const [showAdd, setShowAdd] = useState(false);
 
