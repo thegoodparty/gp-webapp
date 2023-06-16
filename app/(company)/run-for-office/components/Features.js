@@ -66,9 +66,8 @@ export default function Features({ demoCallback }) {
                       {feature.icon}
                     </div>
                   }
-                >
-                  {feature.description}
-                </TogglePanel>
+                  children={feature.description}
+                />
               </div>
             ))}
           </div>

@@ -6,6 +6,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import BaseButtonClient from '../buttons/BaseButtonClient';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export async function subscribeEmail(payload) {
   try {
@@ -66,11 +67,7 @@ export default function EmailForm({
         </div>
       ) : (
         <>
-          <div
-            className={`relative mb-24 lg:mb-0 ${
-              !fullWidth && 'lg:w-[50%] xl:w-[45%]'
-            }`}
-          >
+          <div className={`flex flex-row relative lg:mb-0 flex-auto max-w-lg`}>
             <input
               type="email"
               name="email"
@@ -78,23 +75,18 @@ export default function EmailForm({
                 setEmail(e.target.value);
               }}
               value={email}
-              placeholder="john@email.com"
-              className="py-4 pl-4 pr-36 border-purple border-2 rounded-full w-full"
+              placeholder="Email"
+              className="py-4 pl-4 pr-36 border-gray border-2 rounded-lg w-full text-black placeholder-black"
             />
 
-            <BaseButtonClient
+            <div
+              className="flex flex-auto whitespace-nowrap pl-3"
               onClick={submitForm}
               id="submit-email"
               type="submit"
-              // we overwrite the rounded-lg and px/py using style
-              style={{
-                borderRadius: '9999px',
-                padding: '0.625rem 1.25rem',
-              }}
-              className="bg-purple absolute rounded-full right-2 top-2 py-2.5 text-white px-5 font-bold cursor-pointer"
             >
-              {label}
-            </BaseButtonClient>
+              <PrimaryButton>Learn How</PrimaryButton>
+            </div>
 
             {!!showError && (
               <div className="text-sm text-red-600 pl-5 pt-1 font-bold drop-shadow">

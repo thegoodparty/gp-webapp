@@ -52,8 +52,8 @@ const features = [
     description:
       'Plan and run a winning campaign for free with time-saving AI tools and actionable expertise from political pros',
     icon: <LuStars className="text-6xl text-black" />,
-    bgfrom: '#AFA8FF',
-    bgto: '#FFD78A',
+    bg_from: 'from-[#AFA8FF]',
+    bg_to: 'to-[#FFD78A]',
     link: '',
   },
   {
@@ -62,8 +62,8 @@ const features = [
     description:
       'Free course led by campaigning experts for first time candidates exploring a run for office',
     icon: <SlGraduation className="text-6xl text-black" />,
-    bgfrom: '#F9FFB1',
-    bgto: '#FFD27A',
+    bg_from: 'from-[#F9FFB1]',
+    bg_to: 'to-[#FFD27A]',
     link: '/academy',
   },
   {
@@ -72,8 +72,8 @@ const features = [
     description:
       'Tap into our network of engaged volunteers ready to help you reach more voters',
     icon: <RiHandHeartLine className="text-6xl text-black" />,
-    bgfrom: '#C5F4FF',
-    bgto: '#FFD481',
+    bg_from: 'from-[#C5F4FF]',
+    bg_to: 'to-[#FFD481]',
     link: '/volunteer',
   },
 ];
@@ -96,7 +96,7 @@ export default function WhatWeDo({ demoCallback }) {
               key={feature.name}
             >
               <div
-                className={`flex flex-col h-[200px] w-[200px] rounded-full bg-gradient-to-br from-[${feature.bgfrom}] to-[${feature.bgto}] items-center justify-center self-center`}
+                className={`flex flex-col h-[200px] w-[200px] rounded-full bg-gradient-to-br ${feature.bg_from} ${feature.bg_to} items-center justify-center self-center`}
               >
                 {feature.icon}
               </div>
