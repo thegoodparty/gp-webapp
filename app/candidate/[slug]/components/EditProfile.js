@@ -4,6 +4,7 @@ import H6 from '@shared/typography/H6';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import { useState } from 'react';
+import { I } from 'storybook-static/403.be20d0f8.iframe.bundle';
 
 const colors = ['#574AF0', '#EA932D', '#61B35F', '#55AFAA', '#E44A8B'];
 
@@ -16,7 +17,13 @@ export default function EditProfile(props) {
     color,
     updateColorCallback,
   } = props;
-  const { firstName, lastName, slogan, office, district } = candidate;
+  let firstName, lastName, slogan, office, district;
+  if (isStaged && campaign && campaign.details) {
+    ({ firstName, lastName, office, district } = campaign.details);
+    ({ slogan } = campaign.campaignPlan);
+  } else {
+    ({ firstName, lastName, slogan, office, district } = candidate);
+  }
 
   const [state, setState] = useState({
     firstName,
@@ -118,6 +125,7 @@ export default function EditProfile(props) {
       delete stateNoSlogan.slogan;
       await saveCallback({
         ...campaign,
+        color,
         details: {
           ...campaign.details,
           ...stateNoSlogan,

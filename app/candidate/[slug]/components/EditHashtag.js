@@ -2,25 +2,32 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import { candidateHash } from 'helpers/candidateHelper';
+import { campaignHash, candidateHash } from 'helpers/candidateHelper';
 import { useState } from 'react';
 
 export default function EditHashtag(props) {
-  const { candidate, saveCallback, isStaged } = props;
-
-  const hashtag = candidateHash(candidate);
+  const { candidate, saveCallback, isStaged, campaign } = props;
+  let hashtag;
+  if (isStaged) {
+    hashtag = campaignHash(campaign);
+  } else {
+    hashtag = candidateHash(candidate);
+  }
 
   const [state, setState] = useState(hashtag);
 
-  if (isStaged) {
-    return null;
-  }
-
   const save = () => {
-    saveCallback({
-      ...candidate,
-      hashtag: state,
-    });
+    if (isStaged) {
+      saveCallback({
+        ...campaign,
+        hashtag: state,
+      });
+    } else {
+      saveCallback({
+        ...candidate,
+        hashtag: state,
+      });
+    }
   };
 
   return (

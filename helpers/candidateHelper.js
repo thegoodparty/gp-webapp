@@ -125,6 +125,18 @@ export const candidateHash = (candidate) => {
   return `${candidate.firstName?.charAt(0)}${candidate.lastName}2023`;
 };
 
+export const campaignHash = (campaign) => {
+  if (!campaign) {
+    return '';
+  }
+  if (campaign.hashtag) {
+    return campaign.hashtag;
+  }
+  return `${campaign.details?.firstName?.charAt(0)}${
+    campaign.details?.lastName
+  }2023`;
+};
+
 export const shortToLongState = {
   AL: 'Alabama',
   AK: 'Alaska',
