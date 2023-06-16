@@ -1,5 +1,3 @@
-import PurpleButton from '@shared/buttons/PurpleButton';
-import Link from 'next/link';
 import Image from 'next/image';
 
 export default function FactsSection() {

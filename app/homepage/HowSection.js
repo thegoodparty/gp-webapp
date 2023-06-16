@@ -1,10 +1,5 @@
 import Image from 'next/image';
 
-import candidatesImg from '/public/images/homepage-jan23/homepage-candidates.png';
-import candidatesImgSm from '/public/images/homepage-jan23/your-name.jpg';
-import PurpleButton from '@shared/buttons/PurpleButton';
-import Link from 'next/link';
-
 export default function HowSection() {
   return (
     <>
