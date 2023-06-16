@@ -40,10 +40,10 @@ export default function TabsSection(props) {
     <div key="2">
       <IssuesTab {...props} />
     </div>,
+    // <div key="3">
+    //   <EndorsementsTab {...props} />
+    // </div>,
     <div key="3">
-      <EndorsementsTab {...props} />
-    </div>,
-    <div key="4">
       <InfoTab {...props} />
     </div>,
   ];
