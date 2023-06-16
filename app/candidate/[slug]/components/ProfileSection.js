@@ -2,7 +2,7 @@ import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
-import ImageUploader from 'app/candidate-old/[slug]/components/ImageUploader';
+import ImageUploader from 'app/candidate/[slug]/components/ImageUploader';
 import { partyResolver } from 'helpers/candidateHelper';
 import EditProfile from './EditProfile';
 import EditProfileButton from './EditProfileButton';
