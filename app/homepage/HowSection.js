@@ -18,7 +18,7 @@ export default function HowSection() {
       <div className="grid grid-cols-12 gap-3 relative items-center pb-14 lg:pb-0">
         <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-end lg:pr-10">
           <div className="flex flex-row">
-            <div className="flex text-xl mt-2 w-10 h-10 bg-lime-400 items-center justify-center">
+            <div className="flex text-xl mt-2 w-10 h-10 bg-lime-400 items-center justify-center rounded-lg">
               <span class="text-indigo-800 text-center">1</span>
             </div>
             <div className="text-2xl mt-2 text-center max-w-[300px]">
@@ -47,6 +47,15 @@ export default function HowSection() {
 
       <div className="grid grid-cols-12 gap-3 relative items-center pb-14 lg:pb-0">
         <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-end lg:pl-10 order-last md:order-first">
+          <div className="absolute -ml-10 lg:-ml-40 mt-20 mr-3 overlay z-50">
+            <Image
+              src="/images/homepage/bolts.svg"
+              width="90"
+              height="90"
+              className="ml-12"
+              alt="Good Party"
+            />
+          </div>
           <div className="w-auto ml-0 flex relative">
             <Image
               src="/images/homepage/genz.png"
@@ -60,8 +69,8 @@ export default function HowSection() {
         </div>
         <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-start lg:pr-10">
           <div className="flex flex-row">
-            <div className="flex text-xl mt-2 w-10 h-10 bg-lime-400 items-center justify-center">
-              <span class="text-indigo-800 text-center">2</span>
+            <div className="flex text-xl mt-2 w-10 h-10 bg-purple-400 items-center justify-center rounded-lg">
+              <span class="text-slate-50 text-center">2</span>
             </div>
             <div className="text-2xl mt-2 text-center max-w-[300px]">
               Mobilize volunteers to support winning campaigns
@@ -78,7 +87,7 @@ export default function HowSection() {
       <div className="grid grid-cols-12 gap-3 relative items-center pb-14 lg:pb-0">
         <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-end lg:pr-10">
           <div className="flex flex-row">
-            <div className="flex text-xl mt-2 w-10 h-10 bg-lime-400 items-center justify-center">
+            <div className="flex text-xl mt-2 w-10 h-10 bg-orange-400 items-center justify-center rounded-lg">
               <span class="text-indigo-800 text-center">3</span>
             </div>
             <div className="text-2xl mt-2 text-center max-w-[300px]">

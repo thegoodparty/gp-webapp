@@ -76,7 +76,7 @@ export default function EmailForm({
               }}
               value={email}
               placeholder="Email"
-              className="py-4 pl-4 pr-36 border-gray border-2 rounded-lg w-full text-black placeholder-black"
+              className="py-4 pl-4 pr-36 border-slate-300 border-2 rounded-lg w-full text-black placeholder-black"
             />
 
             <div

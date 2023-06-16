@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { LuStars } from 'react-icons/lu';
 import { SlGraduation } from 'react-icons/sl';
 import { RiHandHeartLine, RiTeamLine, RiLineChartLine } from 'react-icons/ri';
+import Carousel from '@shared/inputs/Carousel';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -29,20 +30,6 @@ const sections = [
       '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
     img: '/images/run-for-office/carlos.jpg',
   },
-  // {
-  //   name: 'Chaz M.',
-  //   title: 'Firefighter',
-  //   description:
-  //     '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
-  //   img: chazImg,
-  // },
-  // {
-  //   name: 'Ben W.',
-  //   title: 'Candidate for Maine House District 89',
-  //   description:
-  //     '“Being an independent means that it can be hard to run with no party to back you, but Good Party changed that. The staff at good party was friendly, inviting, and highly knowledgeable.”',
-  //   img: benImg,
-  // },
 ];
 
 const features = [
@@ -123,53 +110,18 @@ export default function WhatWeDo({ demoCallback }) {
             </div>
           ))}
         </div>
-        <div className="flex justify-center mt-20">
-          <div className="flex w-full lg:w-[80%] min-h-[300px]  bg-zinc-800 rounded-2xl mt-5">
-            <div className="flex flex-col justify-center items-center text-center w-2/3">
-              <h3 className="text-2xl text-slate-100 pr-5 pl-5">
-                {sections[selected].description}
-              </h3>
-
-              <p className="mt-3 text-lg max-w-[90vw] text-slate-300">
-                - {sections[selected].name}
-              </p>
-              <p className="mt-2 text-md max-w-[90vw] text-indigo-200">
-                {sections[selected].title}
-              </p>
-            </div>
-            <div className="flex flex-col justify-center items-center text-center w-1/3 rounded-2xl h-full relative">
-              <Image
-                src={sections[selected].img}
-                fill
-                sizes="100vw"
-                className="object-cover rounded-tr-2xl rounded-br-2xl"
-                alt={sections[selected].name}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-center">
-          <div className="flex w-full lg:w-[80%] h-[auto] rounded-2xl items-center justify-center p-5">
-            {sections.map((section, index) => (
-              <div
-                key={section.title}
-                className={`w-4 h-4 rounded-full mx-2 border-white cursor-pointer ${
-                  index === selected ? 'bg-[#DFF265]' : 'bg-[#2D343D]'
-                }`}
-                onClick={() => setSelected(index)}
-              ></div>
-            ))}
-          </div>
+        <div className="flex justify-center mt-20 pb-10">
+          <Carousel sections={sections} />
         </div>
       </MaxWidth>
 
-      <div className="flex relative justify-start -mb-[200px] w-auto h-auto">
+      <div className="flex absolute justify-start md:mt-5 lg:mt-10 w-auto h-auto overlay z-50">
         <Image
           src="/images/run-for-office/triangles.svg"
           width="200"
           height="200"
           className="ml-12"
+          alt="triangles"
         />
       </div>
     </section>

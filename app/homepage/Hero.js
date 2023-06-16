@@ -1,12 +1,11 @@
 import EmailForm from '@shared/inputs/EmailForm';
-import ForVoters from './ForVoters';
-import LandingPageHero from '@shared/landing-pages/LandingPageHero';
 import Image from 'next/image';
 import bgImg from '/public/images/homepage/art.png';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 export default function Hero() {
   return (
-    <>
+    <MaxWidth>
       <div className="grid grid-cols-12 gap-3 md:justify-items-center mt-3">
         <div className="col-span-12 lg:col-span-7 lg:pl-20 max-w-2xl p-10">
           <div className="absolute -mt-10 mr-3">
@@ -43,11 +42,11 @@ export default function Hero() {
             sizes="50vw"
             className="object-contain object-right-top"
             alt=""
-            placeholder="blur"
+            // placeholder="blur"
             priority
           />
         </div>
       </div>
-    </>
+    </MaxWidth>
   );
 }

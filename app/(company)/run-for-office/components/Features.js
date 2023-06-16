@@ -53,7 +53,7 @@ export default function Features({ demoCallback }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 justify-center items-center mt-10 md:mt-20">
+        <div className="grid grid-cols-12 gap-3 justify-center items-center mt-10">
           <div className="col-span-12 md:col-span-4 justify-center">
             {features.map((feature, index) => (
               <div key={feature.name}>
