@@ -47,22 +47,47 @@ export async function loadCandidatePosition(slug) {
 }
 
 export default function EditIssues(props) {
-  const { campaign, positions, candidate, candidatePositions, isStaged } =
-    props;
+  const {
+    campaign,
+    positions,
+    candidate,
+    candidatePositions,
+    isStaged,
+    saveCallback,
+  } = props;
 
   const [state, setState] = useState(candidatePositions);
   const [showAdd, setShowAdd] = useState(false);
   console.log('campaign.details?.topIssues', campaign.details?.topIssues);
   console.log('candidatePositions', candidatePositions);
   const onAddPosition = async (position, candidatePosition, order) => {
-    await saveCandidatePosition({
-      description: candidatePosition,
-      candidateId: candidate.id,
-      positionId: position.id,
-      topIssueId: position.topIssue?.id,
-      order,
-    });
-    await loadPositions();
+    if (isStaged && campaign) {
+      console.log('add position', position);
+      console.log('add candidatePosition', candidatePosition);
+      const existing = campaign.details?.topIssues || {};
+      existing[`position-${position.id}`] = candidatePosition;
+      if (!existing.positions) {
+        existing.positions = [];
+      }
+      existing.positions.push(position);
+      await saveCallback({
+        ...campaign,
+        details: {
+          ...campaign.details,
+          topIssues: existing,
+        },
+      });
+      window.location.reload();
+    } else {
+      await saveCandidatePosition({
+        description: candidatePosition,
+        candidateId: candidate.id,
+        positionId: position.id,
+        topIssueId: position.topIssue?.id,
+        order,
+      });
+      await loadPositions();
+    }
   };
   const remainingSlotsCount = Math.max(0, 3 - state.length);
   const remainingSlots = [];
@@ -91,6 +116,7 @@ export default function EditIssues(props) {
                 index={index}
                 key={candidatePosition.id}
                 updatePositionsCallback={loadPositions}
+                {...props}
               />
             ))}
           {remainingSlots.map((num) => (

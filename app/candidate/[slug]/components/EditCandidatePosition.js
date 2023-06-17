@@ -41,19 +41,68 @@ export default function EditCandidatePosition({
   candidatePosition,
   index,
   updatePositionsCallback,
+  isStaged,
+  campaign,
+  saveCallback,
 }) {
   const [edit, setEdit] = useState(false);
   const [description, setDescription] = useState(candidatePosition.description);
   const [showAlert, setShowAlert] = useState(false);
 
   const handleDelete = async () => {
-    await deleteCandidatePosition(candidatePosition.id);
-    updatePositionsCallback();
+    if (isStaged && campaign) {
+      const existing = JSON.parse(JSON.stringify(campaign.details?.topIssues));
+      /* in the form of
+      {
+        position-id: 'candidate position here',
+        positions:[
+          {db-position-here, topIssue: db-top-issue here}
+        ]
+      }
+      */
+      const positionId = candidatePosition.id.replace('position-', '');
+      let index;
+      existing.positions.forEach((position, i) => {
+        if (position.id == positionId) {
+          index = i;
+        }
+      });
+      existing.positions.splice(index, 1);
+      if (existing.positions.length === 0) {
+        delete existing.positions;
+      }
+      delete existing[candidatePosition.id];
+      await saveCallback({
+        ...campaign,
+        details: {
+          ...campaign.details,
+          topIssues: existing,
+        },
+      });
+      window.location.reload();
+    } else {
+      await deleteCandidatePosition(candidatePosition.id);
+      updatePositionsCallback();
+    }
+    setShowAlert(false);
   };
 
   const handleSave = async () => {
-    await updateCandidatePosition(candidatePosition.id, description);
-    updatePositionsCallback();
+    if (isStaged && campaign) {
+      const existing = JSON.parse(JSON.stringify(campaign.details?.topIssues));
+      existing[candidatePosition.id] = description;
+      await saveCallback({
+        ...campaign,
+        details: {
+          ...campaign.details,
+          topIssues: existing,
+        },
+      });
+      window.location.reload();
+    } else {
+      await updateCandidatePosition(candidatePosition.id, description);
+      await updatePositionsCallback();
+    }
     setEdit(false);
   };
   return (

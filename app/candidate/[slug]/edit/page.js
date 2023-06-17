@@ -166,7 +166,7 @@ export function mapCampaignToCandidate(campaign) {
 
 export const mapTopIssues = (topIssues) => {
   const res = [];
-  if (!topIssues) {
+  if (!topIssues || !topIssues.positions) {
     return res;
   }
   topIssues.positions.forEach((position) => {
