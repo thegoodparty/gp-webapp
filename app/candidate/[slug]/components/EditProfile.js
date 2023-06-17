@@ -4,7 +4,6 @@ import H6 from '@shared/typography/H6';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import { useState } from 'react';
-import { I } from 'storybook-static/403.be20d0f8.iframe.bundle';
 
 const colors = ['#574AF0', '#EA932D', '#61B35F', '#55AFAA', '#E44A8B'];
 

@@ -52,11 +52,8 @@ export default function EditIssues(props) {
 
   const [state, setState] = useState(candidatePositions);
   const [showAdd, setShowAdd] = useState(false);
-
-  if (isStaged) {
-    return null;
-  }
-
+  console.log('campaign.details?.topIssues', campaign.details?.topIssues);
+  console.log('candidatePositions', candidatePositions);
   const onAddPosition = async (position, candidatePosition, order) => {
     await saveCandidatePosition({
       description: candidatePosition,
