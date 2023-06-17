@@ -7,12 +7,7 @@ import { useState } from 'react';
 
 export default function EditHashtag(props) {
   const { candidate, saveCallback, isStaged, campaign } = props;
-  let hashtag;
-  if (isStaged) {
-    hashtag = campaignHash(campaign);
-  } else {
-    hashtag = candidateHash(candidate);
-  }
+  let hashtag = candidateHash(candidate);
 
   const [state, setState] = useState(hashtag);
 

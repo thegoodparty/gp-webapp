@@ -126,6 +126,7 @@ export function mapCampaignToCandidate(campaign) {
     pastExperience,
     occupation,
     funFact,
+    district,
   } = details;
   const { slogan, aboutMe, why } = campaignPlan;
 
@@ -159,6 +160,7 @@ export function mapCampaignToCandidate(campaign) {
     twitch,
     hashtag,
     website,
+    district,
   };
 }
 
