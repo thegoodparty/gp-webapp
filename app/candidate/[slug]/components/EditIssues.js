@@ -58,12 +58,8 @@ export default function EditIssues(props) {
 
   const [state, setState] = useState(candidatePositions);
   const [showAdd, setShowAdd] = useState(false);
-  console.log('campaign.details?.topIssues', campaign.details?.topIssues);
-  console.log('candidatePositions', candidatePositions);
   const onAddPosition = async (position, candidatePosition, order) => {
     if (isStaged && campaign) {
-      console.log('add position', position);
-      console.log('add candidatePosition', candidatePosition);
       const existing = campaign.details?.topIssues || {};
       existing[`position-${position.id}`] = candidatePosition;
       if (!existing.positions) {
