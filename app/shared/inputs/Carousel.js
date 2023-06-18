@@ -37,8 +37,8 @@ export default class Carousel extends Component {
                 <div className="flex flex-col justify-center items-center text-center w-1/3 rounded-2xl h-full relative">
                   <Image
                     src={this.props.sections[index].img}
-                    sizes="100vw"
                     fill
+                    sizes="100vw"
                     className="object-cover rounded-tr-2xl rounded-br-2xl"
                     alt={this.props.sections[index].name}
                   />

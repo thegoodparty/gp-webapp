@@ -142,7 +142,7 @@
   content: '•';
   text-align: center;
   opacity: 0.25;
-  color: #000;
+  color: #2d343d;
 }
 .slick-dots li.slick-active button:before {
   opacity: 0.75;

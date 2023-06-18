@@ -34,6 +34,7 @@ export default function Hero() {
             formId="5d84452a-01df-422b-9734-580148677d2c"
             pageName="Home Page"
             labelId="subscribe-form"
+            label="Learn how"
           />
         </div>
         <div className="flex col-span-12 lg:col-span-5 relative h-[600px] lg:pt-10">

@@ -20,11 +20,11 @@ export default function HowSection() {
       <div className="grid grid-cols-12 gap-3 relative items-center lg:pb-0 mb-5">
         <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-end lg:pr-10 mb-5">
           <div className="flex flex-row">
-            <div className="flex flex-col text-xl mt-2 w-10 h-10 bg-lime-400 items-center justify-center rounded-lg -ml-14 mr-4">
-              <span class="text-indigo-800 text-center">1</span>
+            <div className="flex flex-col text-xl mt-2 w-10 h-10 bg-lime-400 items-center justify-center rounded-lg mr-10">
+              <span className="text-indigo-800 text-center">1</span>
             </div>
 
-            <div className="text-2xl mt-2 text-start max-w-[300px]">
+            <div className="text-2xl mt-2 text-start max-w-[300px] -ml-5">
               Make independent candidates viable
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function HowSection() {
         <div className="col-span-12 md:col-span-6 justify-self-center md:justify-self-start lg:pr-10 pl-10 mb-5">
           <div className="flex flex-row">
             <div className="flex flex-col text-xl mt-2 w-10 h-10 bg-purple-400 items-center justify-center rounded-lg -ml-14 -mr-4">
-              <span class="text-slate-50 text-center">2</span>
+              <span className="text-slate-50 text-center">2</span>
             </div>
             <div className="text-2xl mt-2 text-start max-w-[300px] ml-10">
               Mobilize volunteers to support winning campaigns
@@ -100,10 +100,10 @@ export default function HowSection() {
       <div className="grid grid-cols-12 gap-3 relative items-center pb-14 lg:pb-0 mb-5">
         <div className="col-span-12 md:col-span-6 justify-self-center lg:justify-self-end lg:pr-10 mb-5">
           <div className="flex flex-row">
-            <div className="flex flex-col text-xl mt-2 w-10 h-10 bg-orange-400 items-center justify-center rounded-lg -ml-14 -mr-4">
-              <span class="text-indigo-800 text-center">3</span>
+            <div className="flex flex-col text-xl mt-2 w-10 h-10 bg-orange-400 items-center justify-center rounded-lg mr-10">
+              <span className="text-indigo-800 text-center">3</span>
             </div>
-            <div className="text-2xl mt-2 text-start max-w-[300px] ml-10">
+            <div className="text-2xl mt-2 text-start max-w-[300px] -ml-5">
               Make America a truly representative democracy
             </div>
           </div>
