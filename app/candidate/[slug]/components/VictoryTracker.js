@@ -16,12 +16,12 @@ function VictoryTracker({ candidate, color }) {
       <div className="flex justify-center mb-6">
         <div className="text-right" data-cy="campaign-likely-voters">
           <H3>{kFormatter(voterProjection)}</H3>
-          <Body2>Likely Voters</Body2>
+          <Body2 className="text-indigo-50">Likely voters</Body2>
         </div>
         <div className="w-20" />
         <div data-cy="campaign-needed-votes">
           <H3>{kFormatter(voteGoal)}</H3>
-          <Body2>needed to win</Body2>
+          <Body2 className="text-indigo-50">Needed to win</Body2>
         </div>
       </div>
     </div>
