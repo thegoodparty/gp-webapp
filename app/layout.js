@@ -1,16 +1,12 @@
 /* eslint-disable @next/next/no-sync-scripts */
-import { Lato } from '@next/font/google';
+import { Outfit } from 'next/font/google';
 import Script from 'next/script';
 
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
 import { appBase, isProd } from 'gpApi';
 
-const lato = Lato({
-  weight: ['300', '400', '700', '900'],
-  subsets: ['latin'],
-});
-
+const outfit = Outfit({ subsets: ['latin'] });
 export const metadata = {
   applicationName: 'GoodParty',
   metadataBase: new URL(appBase),
@@ -21,7 +17,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={lato.className}>
+    <html lang="en" className={outfit.className}>
       <head>
         <meta charSet="utf-8" />
         <meta

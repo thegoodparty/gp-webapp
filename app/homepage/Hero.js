@@ -17,10 +17,13 @@ export default function Hero() {
               alt="Good Party"
             />
           </div>
-          <h1 className="text-6xl leading-tight font-black">
-            <p>Shape our</p>
-            <p>country&apos;s</p>
-            <p>destiny</p>
+          <h1 className="text-6xl font-black">
+            Shape our
+            <br />
+            country&apos;s
+            <br />
+            destiny
+            <br />
           </h1>
           <h2 className="text-lg mt-5">
             We&apos;re not a political party – we&apos;re building a movement
@@ -34,6 +37,7 @@ export default function Hero() {
             formId="5d84452a-01df-422b-9734-580148677d2c"
             pageName="Home Page"
             labelId="subscribe-form"
+            label="Learn how"
           />
         </div>
         <div className="flex col-span-12 lg:col-span-5 relative h-[600px] lg:pt-10">
