@@ -18,15 +18,22 @@ const labels = [
     <RiLandscapeLine />
     <div className="ml-2 font-medium text-xs lg:text-base">Issues</div>
   </div>,
-  // <div key="endorsements" className="flex flex-col lg:flex-row items-center">
-  //   <TbBrain />
-  //   <div className="ml-2 font-medium text-xs lg:text-base">Endorsements</div>
-  // </div>,
+  <div key="endorsements" className="flex flex-col lg:flex-row items-center">
+    <TbBrain />
+    <div className="ml-2 font-medium text-xs lg:text-base">Endorsements</div>
+  </div>,
   <div key="info" className="flex flex-col lg:flex-row items-center">
     <RiGroupLine />
     <div className="ml-2 font-medium text-xs lg:text-base">Info</div>
   </div>,
 ];
+
+export const TABS_ENUM = {
+  overview: 0,
+  issues: 1,
+  endorsements: 2,
+  info: 3,
+};
 
 export default function TabsSection(props) {
   const [tab, setTab] = useState(0);
@@ -40,10 +47,10 @@ export default function TabsSection(props) {
     <div key="2">
       <IssuesTab {...props} />
     </div>,
-    // <div key="3">
-    //   <EndorsementsTab {...props} />
-    // </div>,
     <div key="3">
+      <EndorsementsTab {...props} />
+    </div>,
+    <div key="4">
       <InfoTab {...props} />
     </div>,
   ];
