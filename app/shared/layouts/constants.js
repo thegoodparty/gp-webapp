@@ -22,7 +22,7 @@ export const FOOTER_COLUMNS = [
     links: [
       { label: 'Run for office', link: '/run-for-office' },
       { label: 'Good Party Academy', link: '/academy' },
-      { label: 'Meet the Candidates', link: '/candidates' },
+      // { label: 'Meet the Candidates', link: '/candidates' },
       { label: 'FAQs', link: '/faqs' },
       { label: 'Pricing', link: '/pricing' },
       { label: 'Political Definitions', link: '/political-terms' },
