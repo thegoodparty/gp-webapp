@@ -98,7 +98,7 @@ export default function InfoTab(props) {
               {previewMode && (
                 <div
                   onClick={() => {
-                    changeTabCallback(3);
+                    changeTabCallback(2);
                   }}
                 >
                   <Body1
