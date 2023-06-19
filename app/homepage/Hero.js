@@ -17,10 +17,13 @@ export default function Hero() {
               alt="Good Party"
             />
           </div>
-          <h1 className="text-6xl leading-tight font-black">
-            <p>Shape our</p>
-            <p>country&apos;s</p>
-            <p>destiny</p>
+          <h1 className="text-6xl font-black">
+            Shape our
+            <br />
+            country&apos;s
+            <br />
+            destiny
+            <br />
           </h1>
           <h2 className="text-lg mt-5">
             We&apos;re not a political party – we&apos;re building a movement
