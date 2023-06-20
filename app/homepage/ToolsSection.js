@@ -8,22 +8,25 @@ import softwareImg from '/public/images/homepage/software.png';
 
 const sections = [
   {
-    name: 'Peter H.',
+    name: 'Peter H. - Independent',
     title: 'GPA Candidate',
+    subtitle: 'Good Party Academy Graduate',
     description:
       "My takeaway was “I could probably shake that many hands!” it's within reach, I could represent my community, my neighborhood. It's not a moonshot.",
     img: '/images/homepage/peter.jpg',
   },
   {
-    name: 'Chaz M.',
+    name: 'Chaz M. - Independent',
     title: 'Firefighter',
+    subtitle: 'Good Party Academy Graduate',
     description:
       "With where Good Party's AI is today, you could [run for office] today… my aha moment was how powerful the software is. And it's free!",
     img: '/images/homepage/chaz.jpg',
   },
   {
-    title: 'Candidate for Maine House District 104',
-    name: 'Anne G.',
+    title: 'Former candidate for Maine House ',
+    name: 'Anne G. - Independent',
+    subtitle: 'Good Party Certified',
     description:
       'As an Indie candidate without a party organization it meant a lot to me to have someone working hard to help me reach younger voters.',
     img: '/images/homepage/anne.jpg',
