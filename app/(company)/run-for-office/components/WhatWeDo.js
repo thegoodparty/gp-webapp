@@ -20,7 +20,7 @@ const sections = [
     name: 'Breanna S.',
     title: 'Fintech Founder',
     description:
-      '“Working with the different AI tools was an amazing experience because… I was able to see what it would be like to enter my message from my own vocabulary, my own heart and mind and have AI just slightly tweak it in order to be the best version for the type of audience Im trying to engage with.”',
+      '“Working with the different AI tools was an amazing experience because… I was able to... tweak it in order to be the best version for the type of audience Im trying to engage with.”',
     img: '/images/run-for-office/breanna.jpg',
   },
   {

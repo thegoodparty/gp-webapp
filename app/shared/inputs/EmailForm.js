@@ -67,7 +67,9 @@ export default function EmailForm({
         </div>
       ) : (
         <>
-          <div className={`flex flex-row relative lg:mb-0 flex-auto max-w-lg`}>
+          <div
+            className={`flex flex-col md:flex-row relative lg:mb-0 flex-auto max-w-lg`}
+          >
             <input
               type="email"
               name="email"
@@ -80,7 +82,7 @@ export default function EmailForm({
             />
 
             <div
-              className="flex flex-auto whitespace-nowrap pl-3"
+              className="flex flex-col flex-auto whitespace-nowrap md:pl-3 pt-2 pb-2 md:pb-0 md:pt-0"
               onClick={submitForm}
               id="submit-email"
               type="submit"

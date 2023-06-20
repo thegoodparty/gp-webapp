@@ -1,5 +1,5 @@
 .storybook-page {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--outfit-font);
   font-size: 14px;
   line-height: 24px;
   padding: 48px 20px;
