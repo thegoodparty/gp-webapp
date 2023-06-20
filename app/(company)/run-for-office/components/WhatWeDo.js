@@ -10,22 +10,25 @@ import Link from 'next/link';
 
 const sections = [
   {
-    title: 'Candidate for Maine House District 104',
-    name: 'Anne G.',
+    title: 'Former candidate for Maine House',
+    subtitle: 'Good Party Certified',
+    name: 'Anne G. - Independent',
     description:
       '“As an Indie candidate without a part organization it meant a lot to me to have someone working hard to help me reach voters.”',
     img: '/images/run-for-office/anne.jpg',
   },
   {
-    name: 'Breanna S.',
+    name: 'Breanna S. - Independent',
     title: 'Fintech Founder',
+    subtitle: 'Good Party Academy Graduate',
     description:
       '“Working with the different AI tools was an amazing experience because… I was able to... tweak it in order to be the best version for the type of audience Im trying to engage with.”',
     img: '/images/run-for-office/breanna.jpg',
   },
   {
-    name: 'Carlos R.',
+    name: 'Carlos R. - Independent',
     title: 'Regulatory Writer',
+    subtitle: 'Good Party Academy Graduate',
     description:
       '“[Good Party shows that] there are tools out there for people who are not connected to any political parties, who dont have any money behind them.”',
     img: '/images/run-for-office/carlos.jpg',
@@ -76,7 +79,7 @@ export default function WhatWeDo({ demoCallback }) {
           Run your campaign
         </h2>
         <h2 className="text-center text-slate-100 text-6xl">with confidence</h2>
-        <div className="grid grid-cols-12 gap-12 items-center justify-center text-center mt-8">
+        <div className="grid grid-cols-12 gap-3 items-center justify-center text-center mt-8 pl-10 pr-10">
           {features.map((feature) => (
             <div
               className="col-span-12 lg:col-span-4 flex flex-col items-center justify-center"
