@@ -1,5 +1,5 @@
 .storybook-button {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--outfit-font);
   font-weight: 700;
   border: 0;
   border-radius: 3em;

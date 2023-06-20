@@ -1,12 +1,58 @@
 /* eslint-disable @next/next/no-sync-scripts */
 import { Outfit } from 'next/font/google';
+import localFont from 'next/font/local';
 import Script from 'next/script';
 
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
 import { appBase, isProd } from 'gpApi';
 
-const outfit = Outfit({ subsets: ['latin'] });
+const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
+
+const sfPro = localFont({
+  subsets: ['latin'],
+  src: [
+    // {
+    //   path: '../public/fonts/SFProDisplay-Thin.woff2',
+    //   weight: '100',
+    //   style: 'normal',
+    // },
+    // {
+    //   path: '../public/fonts/SFProDisplay-Ultralight.woff2',
+    //   weight: '200',
+    //   style: 'normal',
+    // },
+    {
+      path: '../public/fonts/SFProDisplay-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/SFProDisplay-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/SFProDisplay-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/SFProDisplay-Semibold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    // {
+    //   path: '../public/fonts/SFProDisplay-Bold.woff2',
+    //   weight: '700',
+    //   style: 'normal',
+    // },
+  ],
+  formatHint: 'woff2',
+  variable: '--sfpro-font',
+  display: 'swap',
+});
+
 export const metadata = {
   applicationName: 'GoodParty',
   metadataBase: new URL(appBase),
@@ -17,7 +63,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={outfit.className}>
+    <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
       <head>
         <meta charSet="utf-8" />
         <meta

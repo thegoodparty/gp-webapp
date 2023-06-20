@@ -2,22 +2,23 @@ import EmailForm from '@shared/inputs/EmailForm';
 import Image from 'next/image';
 import bgImg from '/public/images/homepage/art.png';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import styles from './Homepage.module.scss';
 
 export default function Hero() {
   return (
     <MaxWidth>
-      <div className="grid grid-cols-12 gap-3 md:justify-items-center mt-3">
+      <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-20 bg-slate-50 items-stretch">
         <div className="col-span-12 lg:col-span-7 lg:pl-20 max-w-2xl p-10">
-          <div className="absolute -mt-10 mr-3">
+          <div className="absolute -mt-[100px] mr-3">
             <Image
               src="/images/homepage/squiggles.svg"
-              width="90"
-              height="90"
+              width="135"
+              height="135"
               className="ml-12"
               alt="Good Party"
             />
           </div>
-          <h1 className="text-6xl font-black">
+          <h1 className="text-6xl md:text-[92px] font-semibold">
             Shape our
             <br />
             country&apos;s
@@ -25,11 +26,11 @@ export default function Hero() {
             destiny
             <br />
           </h1>
-          <h2 className="text-lg mt-5">
+          <h2 className="text-lg font-sfpro font-normal leading-6 mt-5">
             We&apos;re not a political party – we&apos;re building a movement
             and free tech to end America&apos;s two-party political dysfunction
           </h2>
-          <h3 className="text-lg mt-5">
+          <h3 className="text-lg font-sfpro font-normal leading-6 mt-5">
             Discover independent candidates, volunteer, or run for office to
             join the movement
           </h3>
@@ -40,7 +41,7 @@ export default function Hero() {
             label="Learn how"
           />
         </div>
-        <div className="flex col-span-12 lg:col-span-5 relative h-[600px] lg:pt-10">
+        <div className="flex col-span-12 lg:col-span-5 relative h-full lg:pt-10">
           <Image
             src={bgImg}
             sizes="50vw"
