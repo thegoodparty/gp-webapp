@@ -5,7 +5,7 @@ import Pill from '@shared/buttons/Pill';
 export default function Cta({ demoCallback }) {
   return (
     <MaxWidth>
-      <div className="flex items-center flex-col w-full mb-12 mt-12">
+      <div className="flex items-center flex-col w-full pb-20 pt-12">
         <h3 className=" font-black text-4xl mb-12">
           Any questions? Schedule a demo with our team
         </h3>

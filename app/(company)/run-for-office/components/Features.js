@@ -3,6 +3,7 @@ import TogglePanel from '@shared/utils/TogglePanel';
 import Image from 'next/image';
 import { LuStars } from 'react-icons/lu';
 import { RiTeamLine, RiLineChartLine } from 'react-icons/ri';
+import platformImg from '/public/images/run-for-office/platform.png';
 
 const features = [
   {
@@ -53,8 +54,8 @@ export default function Features({ demoCallback }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 justify-center items-center mt-10">
-          <div className="col-span-12 md:col-span-4 justify-center">
+        <div className="grid grid-cols-12 gap-3 justify-center items-center mt-10 w-full h-auto">
+          <div className="col-span-12 md:col-span-4 justify-center items-center">
             {features.map((feature, index) => (
               <div key={feature.name}>
                 <TogglePanel
@@ -72,10 +73,10 @@ export default function Features({ demoCallback }) {
               </div>
             ))}
           </div>
-          <div className="col-span-12 md:col-span-8 justify-center items-center text-center h-[500px] w-full mt-10 relative">
+          <div className="col-span-12 md:col-span-8 justify-center text-center h-full mt-10 relative">
             <Image
-              src="/images/run-for-office/platform.png"
-              fill
+              src={platformImg}
+              sizes="100vw"
               className="object-contain"
               alt=""
             />
