@@ -2,7 +2,6 @@ import EmailForm from '@shared/inputs/EmailForm';
 import Image from 'next/image';
 import bgImg from '/public/images/homepage/art.png';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import styles from './Homepage.module.scss';
 
 export default function Hero() {
   return (
