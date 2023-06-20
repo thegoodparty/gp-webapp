@@ -9,6 +9,7 @@ import {
   RiProfileLine,
 } from 'react-icons/ri';
 import TextPanel from '../TextPanel';
+import { TABS_ENUM } from './TabsSection';
 
 export default function InfoTab(props) {
   const {
@@ -98,7 +99,7 @@ export default function InfoTab(props) {
               {previewMode && (
                 <div
                   onClick={() => {
-                    changeTabCallback(2);
+                    changeTabCallback(TABS_ENUM.info);
                   }}
                 >
                   <Body1

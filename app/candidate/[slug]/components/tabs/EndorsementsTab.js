@@ -1,9 +1,16 @@
 import H4 from '@shared/typography/H4';
+import EditEndorsements from '../EditEndorsements';
+import EndorsementList from '../EndorsementList';
 
 export default function EndorsementsTab(props) {
+  const { editMode } = props;
   return (
     <div>
-      <H4 className="text-indigo-50">No endorsements available.</H4>
+      {editMode ? (
+        <EditEndorsements {...props} />
+      ) : (
+        <EndorsementList {...props} />
+      )}
     </div>
   );
 }

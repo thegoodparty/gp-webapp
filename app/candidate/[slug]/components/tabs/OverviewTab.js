@@ -2,6 +2,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import GetMeTrending from '../GetMeTrending';
 import IssuesList from '../IssuesList';
 import InfoTab from './InfoTab';
+import { TABS_ENUM } from './TabsSection';
 
 export default function OverviewTab(props) {
   const { changeTabCallback } = props;
@@ -11,7 +12,7 @@ export default function OverviewTab(props) {
       <div
         className="text-center mt-7 mb-12"
         onClick={() => {
-          changeTabCallback(1);
+          changeTabCallback(TABS_ENUM.issues);
         }}
       >
         <InfoButton variant="text">See all issues</InfoButton>
