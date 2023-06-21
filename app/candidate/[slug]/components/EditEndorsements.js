@@ -4,7 +4,8 @@ import H4 from '@shared/typography/H4';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 import AddEndorsement from './AddEndorsement';
-import Endorsements from './Endorsements';
+import Endorsement from './Endorsement';
+import EndorsementList from './EndorsementList';
 
 export default function EditEndorsements(props) {
   const [showModal, setShowModal] = useState(false);
@@ -30,9 +31,7 @@ export default function EditEndorsements(props) {
         </div>
       </div>
 
-      {endorsements.map((endorsement) => (
-        <Endorsements endorsement={endorsement} key={endorsement.name} />
-      ))}
+      <EndorsementList {...props} />
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <AddEndorsement cancelCallback={() => setShowModal(false)} {...props} />
       </Modal>

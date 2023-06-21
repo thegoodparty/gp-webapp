@@ -1,4 +1,5 @@
 'use client';
+import ErrorButton from '@shared/buttons/ErrorButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import ImageUpload from '@shared/inputs/ImageUpload';
@@ -8,12 +9,20 @@ import { revalidateCandidates } from 'helpers/cacheHelper';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function AddEndorsement(props) {
-  const { candidate, campaign, isStaged, cancelCallback, saveCallback } = props;
+export default function EditEndorsementModal(props) {
+  const {
+    candidate,
+    campaign,
+    isStaged,
+    cancelCallback,
+    saveCallback,
+    endorsement,
+    index,
+  } = props;
   const [state, setState] = useState({
-    name: '',
-    image: '', //https://assets.goodparty.org/candidate-info/6d8418ad-999b-488f-875a-5551fcbca525.jpg
-    content: '',
+    name: endorsement.name,
+    image: endorsement.image,
+    content: endorsement.content,
   });
 
   const canSave = () => {
@@ -34,15 +43,34 @@ export default function AddEndorsement(props) {
   const save = async () => {
     if (isStaged && campaign) {
       const endorsements = campaign.endorsements || [];
-      endorsements.push(state);
+      endorsements[index] = state;
       await saveCallback({
         ...campaign,
         endorsements,
       });
     } else {
       const endorsements = candidate.endorsements || [];
-      console.log('here', endorsements);
-      endorsements.push(state);
+      endorsements[index] = state;
+      await saveCallback({
+        ...candidate,
+        endorsements,
+      });
+    }
+    await revalidateCandidates();
+    window.location.reload();
+  };
+
+  const handleDelete = async () => {
+    if (isStaged && campaign) {
+      const endorsements = campaign.endorsements || [];
+      endorsements.splice(index, 1);
+      await saveCallback({
+        ...campaign,
+        endorsements,
+      });
+    } else {
+      const endorsements = candidate.endorsements || [];
+      endorsements.splice(index, 1);
       await saveCallback({
         ...candidate,
         endorsements,
@@ -54,7 +82,7 @@ export default function AddEndorsement(props) {
   return (
     <div className="bg-white rounded-xl w-[90vw] md:w-auto  lg:min-w-[740px]">
       <H2 className="text-center border-b border-slate-500 pb-5">
-        Add endorsement
+        Update endorsement
       </H2>
       <div className="flex items-center mb-14 mt-8">
         {state.image ? (
@@ -81,10 +109,10 @@ export default function AddEndorsement(props) {
             <ImageUpload
               uploadCallback={handleUpload}
               maxFileSize={500000}
-              customId="endorsement-upload"
+              customId="endorsement-upload-edit"
               customElement={
                 <div className="bg-primary text-slate-50 text-lg py-4 px-6 rounded-xl">
-                  Upload Photo
+                  Change Photo
                 </div>
               }
             />
@@ -119,12 +147,19 @@ export default function AddEndorsement(props) {
           onChangeField('content', e.target.value);
         }}
       />
-      <div className="mt-14 flex justify-end">
-        <div onClick={cancelCallback}>
-          <SecondaryButton>Cancel</SecondaryButton>
+      <div className="mt-14 flex justify-between">
+        <div onClick={handleDelete}>
+          <ErrorButton>Delete</ErrorButton>
         </div>
-        <div onClick={save} className="ml-3">
-          <PrimaryButton disabled={!canSave()}>Add endorsement</PrimaryButton>
+        <div className="flex">
+          <div onClick={cancelCallback}>
+            <SecondaryButton>Cancel</SecondaryButton>
+          </div>
+          <div onClick={save} className="ml-3">
+            <PrimaryButton disabled={!canSave()}>
+              Update endorsement
+            </PrimaryButton>
+          </div>
         </div>
       </div>
     </div>
