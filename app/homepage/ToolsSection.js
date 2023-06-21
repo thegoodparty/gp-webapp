@@ -50,7 +50,7 @@ export default function ToolsSection() {
               />
             </div>
 
-            <div className="font-sfpro text-slate-50 font-semibold text-[56px] leading-[64px] mt-2">
+            <div className="font-sfpro text-slate-50 font-semibold text-[36px] md:text-[54px] leading-[36px] md:leading-[64px]  mt-2">
               Free tools + experts power winning campaigns
             </div>
 
@@ -61,14 +61,14 @@ export default function ToolsSection() {
             </div>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="candidates_tool">
                   <WarningButton size="medium">
                     Free campaign tools
                   </WarningButton>
                 </Link>
               </div>
               <div className="mt-4 pl-0 md:pl-3">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="candidates_academy">
                   <SecondaryButton size="medium">
                     Learn how to run
                   </SecondaryButton>
