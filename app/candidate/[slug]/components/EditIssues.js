@@ -54,6 +54,7 @@ export default function EditIssues(props) {
     candidatePositions,
     isStaged,
     saveCallback,
+    hideTitle = false,
   } = props;
 
   const [state, setState] = useState(candidatePositions);
@@ -98,63 +99,49 @@ export default function EditIssues(props) {
 
   return (
     <div>
-      <H1>Add 3 Issues</H1>
+      {!hideTitle && <H1>Add 3 Issues</H1>}
       <Body1 className="mt-5 mb-7">
         Select the issues that resonate deeply with you. These will form the
         foundation of your campaign and your connection with the community.
       </Body1>
-      {candidate ? (
-        <>
-          {state &&
-            state.map((candidatePosition, index) => (
-              <EditCandidatePosition
-                candidatePosition={candidatePosition}
-                index={index}
-                key={candidatePosition.id}
-                updatePositionsCallback={loadPositions}
-                {...props}
-              />
-            ))}
-          {remainingSlots.map((num) => (
-            <div
-              className="border-2 py-5 px-8 mb-5 rounded-xl border-dashed border-slate-900 min-h-[150px] bg-slate-100"
-              key={num}
-            >
-              <H2 className="mb-5">Issue {num + state.length}</H2>
 
-              {num === 1 && (
-                <>
-                  {showAdd ? (
-                    <div>
-                      {candidate ? (
-                        <CandidateIssuesSelector
-                          candidate={candidate}
-                          positions={positions}
-                          onSaveCallback={(position, candidatePosition) => {
-                            onAddPosition(position, candidatePosition, num);
-                          }}
-                        />
-                      ) : null}
-                    </div>
-                  ) : (
-                    <div onClick={() => setShowAdd(true)}>
-                      <WarningButton size="medium">+ Add issue</WarningButton>
-                    </div>
-                  )}
-                </>
+      {state &&
+        state.map((candidatePosition, index) => (
+          <EditCandidatePosition
+            candidatePosition={candidatePosition}
+            index={index}
+            key={candidatePosition.id}
+            updatePositionsCallback={loadPositions}
+            {...props}
+          />
+        ))}
+      {remainingSlots.map((num) => (
+        <div
+          className="border-2 py-5 px-8 mb-5 rounded-xl border-dashed border-slate-900 min-h-[150px] bg-slate-100"
+          key={num}
+        >
+          <H2 className="mb-5">Issue {num + state.length}</H2>
+
+          {num === 1 && (
+            <>
+              {showAdd ? (
+                <div>
+                  <CandidateIssuesSelector
+                    positions={positions}
+                    onSaveCallback={(position, candidatePosition) => {
+                      onAddPosition(position, candidatePosition, num);
+                    }}
+                  />
+                </div>
+              ) : (
+                <div onClick={() => setShowAdd(true)}>
+                  <WarningButton size="medium">+ Add issue</WarningButton>
+                </div>
               )}
-            </div>
-          ))}
-        </>
-      ) : (
-        <IssuesSelector
-          campaign={campaign}
-          positions={positions}
-          subSectionKey="details"
-          onSaveCallback={onSave}
-          buttonLabel="SAVE"
-        />
-      )}
+            </>
+          )}
+        </div>
+      ))}
     </div>
   );
 }
