@@ -23,7 +23,7 @@ export default class Carousel extends Component {
             <div key={section.name}>
               <div className="flex h-[425px] md:h-[350px] lg:[300px] w-full">
                 <div className="flex flex-col justify-center items-center text-start w-[60%]">
-                  <h3 className="text-[15px] md:text-[24px] lg:text-[28px] leading-10 font-semibold text-slate-100 pr-5 pl-5">
+                  <h3 className="text-[15px] md:text-[24px] lg:text-[28px] leading-6 lg:leading-10 font-semibold text-slate-100 pr-5 pl-5">
                     {this.props.sections[index].description}
                   </h3>
 

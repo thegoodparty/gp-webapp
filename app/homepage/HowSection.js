@@ -62,7 +62,7 @@ export default function HowSection() {
 
         <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-10">
           <div className="col-span-12 md:col-span-5 justify-self-start lg:justify-self-end lg:pl-10 order-last md:order-first h-full">
-            <div className="absolute -ml-10 lg:-ml-40 mt-20 mr-3 overlay z-50">
+            <div className="absolute -ml-10 lg:-ml-40 mt-20 mr-3 z-50">
               <Image
                 src="/images/homepage/bolts.svg"
                 width="90"

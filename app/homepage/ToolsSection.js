@@ -9,7 +9,7 @@ import softwareImg from '/public/images/homepage/software.png';
 const sections = [
   {
     name: 'Peter H. - Independent',
-    title: 'GPA Candidate',
+    title: 'Social Impact Consultant',
     subtitle: 'Good Party Academy Graduate',
     description:
       "My takeaway was “I could probably shake that many hands!” it's within reach, I could represent my community, my neighborhood. It's not a moonshot.",
@@ -77,7 +77,7 @@ export default function ToolsSection() {
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 justify-self-center lg:justify-self-start lg:pl-10 mt-8 md:mt-40 lg:mt-0">
-            <div className="ml-0 flex relative overlay z-50 mt-10 md:-mt-40 lg:-mt-[125px] h-auto w-full">
+            <div className="ml-0 flex relative z-50 mt-10 md:-mt-40 lg:-mt-[125px] h-auto w-full">
               <Image
                 src={softwareImg}
                 sizes="100vw"
@@ -85,7 +85,7 @@ export default function ToolsSection() {
                 alt=""
               />
             </div>
-            <div className="absolute justify-end mr-3 overlay z-50">
+            <div className="flex justify-end right-0 pr-5 z-50">
               <Image
                 src="/images/homepage/track.svg"
                 width="90"
@@ -98,7 +98,7 @@ export default function ToolsSection() {
           <div className="col-span-12 mt-20 justify-self-center">
             <Carousel sections={sections} />
 
-            <div className="absolute justify-end mt-20 mr-3 overlay z-50">
+            <div className="flex justify-end mt-20 mr-3 z-50">
               <Image
                 src="/images/homepage/hex.svg"
                 width="90"
