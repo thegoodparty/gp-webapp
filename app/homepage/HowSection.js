@@ -16,10 +16,10 @@ export default function HowSection() {
         />
       </div>
       <div className="bg-slate-50">
-        <h3 className="text-[28px] md:text-[56px] font-semibold text-center pb-20 pt-40 md:pt-20">
+        <h3 className="text-[28px] md:text-[56px] font-semibold text-center pb-5 md:pb-20 pt-40 md:pt-20">
           How Good Party works
         </h3>
-        <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-10">
+        <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-3">
           <div className="col-span-12 md:col-span-1 lg:col-span-2 justify-self-start md:justify-self-end items-start h-full">
             <div className="flex text-xl mt-2 w-[88px] h-[88px] bg-lime-500 items-center justify-center rounded-[20px]">
               <span className="font-sfpro font-medium text-indigo-800 text-center text-[40px]">
@@ -38,7 +38,7 @@ export default function HowSection() {
                 candidates across the country
               </div>
               <div className="mt-4">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="hiw_act_now">
                   <SecondaryButton size="medium">
                     Run for office
                   </SecondaryButton>
@@ -60,9 +60,9 @@ export default function HowSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-10">
+        <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-3">
           <div className="col-span-12 md:col-span-5 justify-self-start lg:justify-self-end lg:pl-10 order-last md:order-first h-full">
-            <div className="absolute -ml-10 lg:-ml-40 mt-20 mr-3 overlay z-50">
+            <div className="absolute -ml-10 lg:-ml-40 mt-20 mr-3 z-50">
               <Image
                 src="/images/homepage/bolts.svg"
                 width="90"
@@ -90,7 +90,7 @@ export default function HowSection() {
             </div>
           </div>
           <div className="col-span-12 md:col-span-5 justify-self-center md:justify-self-start items-start lg:pr-10 mb-5 w-full">
-            <div className="md:pl-10">
+            <div className="md:pl-[70px]">
               <div className="text-[32px] mt-2 text-start font-medium leading-10">
                 Mobilize volunteers to support winning campaigns
               </div>
@@ -100,7 +100,7 @@ export default function HowSection() {
                 campaigns with our volunteer programs
               </div>
               <div className="mt-4">
-                <Link href="/volunteer">
+                <Link href="/volunteer" id="hiw_volunteer">
                   <SecondaryButton size="medium">Volunteer</SecondaryButton>
                 </Link>
               </div>
@@ -108,7 +108,7 @@ export default function HowSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 relative items-start pb-14 lg:pb-0 mb-5 p-10">
+        <div className="grid grid-cols-12 gap-3 relative items-start pb-14 lg:pb-0 mb-5 p-3">
           <div className="col-span-12 md:col-span-1 lg:col-span-2 justify-self-start md:justify-self-end items-start h-full">
             <div className="flex text-xl mt-2 w-[88px] h-[88px] bg-orange-400 items-center justify-center rounded-[20px]">
               <span className="font-sfpro font-medium text-indigo-800 text-center text-[40px]">
@@ -127,7 +127,7 @@ export default function HowSection() {
                 matter most
               </div>
               <div className="mt-4">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="hiw_run">
                   <SecondaryButton size="medium">Act now</SecondaryButton>
                 </Link>
               </div>

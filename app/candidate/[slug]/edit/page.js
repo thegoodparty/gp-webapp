@@ -8,6 +8,7 @@ import { fetchCandidate } from '../page';
 import EditCandidatePage from '../components/EditCandidatePage';
 import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]/page';
 import pageMetaData from 'helpers/metadataHelper';
+import { mapTopIssues } from './mapTopIssues';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -163,21 +164,3 @@ export function mapCampaignToCandidate(campaign) {
     district,
   };
 }
-
-export const mapTopIssues = (topIssues) => {
-  const res = [];
-  if (!topIssues || !topIssues.positions) {
-    return res;
-  }
-  topIssues.positions.forEach((position) => {
-    const positionWithoutTopIssue = JSON.parse(JSON.stringify(position));
-    delete positionWithoutTopIssue.topIssue;
-    res.push({
-      description: topIssues[`position-${position.id}`],
-      id: `position-${position.id}`,
-      topIssue: position.topIssue,
-      position: positionWithoutTopIssue,
-    });
-  });
-  return res;
-};

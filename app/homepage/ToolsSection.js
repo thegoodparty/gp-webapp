@@ -8,22 +8,25 @@ import softwareImg from '/public/images/homepage/software.png';
 
 const sections = [
   {
-    name: 'Peter H.',
-    title: 'GPA Candidate',
+    name: 'Peter H. - Independent',
+    title: 'Social Impact Consultant',
+    subtitle: 'Good Party Academy Graduate',
     description:
       "My takeaway was “I could probably shake that many hands!” it's within reach, I could represent my community, my neighborhood. It's not a moonshot.",
     img: '/images/homepage/peter.jpg',
   },
   {
-    name: 'Chaz M.',
+    name: 'Chaz M. - Independent',
     title: 'Firefighter',
+    subtitle: 'Good Party Academy Graduate',
     description:
       "With where Good Party's AI is today, you could [run for office] today… my aha moment was how powerful the software is. And it's free!",
     img: '/images/homepage/chaz.jpg',
   },
   {
-    title: 'Candidate for Maine House District 104',
-    name: 'Anne G.',
+    title: 'Former candidate for Maine House ',
+    name: 'Anne G. - Independent',
+    subtitle: 'Good Party Certified',
     description:
       'As an Indie candidate without a party organization it meant a lot to me to have someone working hard to help me reach younger voters.',
     img: '/images/homepage/anne.jpg',
@@ -47,7 +50,7 @@ export default function ToolsSection() {
               />
             </div>
 
-            <div className="font-sfpro text-slate-50 font-semibold text-[56px] leading-[64px] mt-2">
+            <div className="font-sfpro text-slate-50 font-semibold text-[36px] md:text-[54px] leading-[36px] md:leading-[64px]  mt-2">
               Free tools + experts power winning campaigns
             </div>
 
@@ -58,14 +61,14 @@ export default function ToolsSection() {
             </div>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="candidates_tool">
                   <WarningButton size="medium">
                     Free campaign tools
                   </WarningButton>
                 </Link>
               </div>
               <div className="mt-4 pl-0 md:pl-3">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="candidates_academy">
                   <SecondaryButton size="medium">
                     Learn how to run
                   </SecondaryButton>
@@ -74,7 +77,7 @@ export default function ToolsSection() {
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 justify-self-center lg:justify-self-start lg:pl-10 mt-8 md:mt-40 lg:mt-0">
-            <div className="ml-0 flex relative overlay z-50 mt-10 md:-mt-40 lg:-mt-[125px] h-auto w-full">
+            <div className="ml-0 flex relative z-50 mt-10 md:-mt-40 lg:-mt-[125px] h-auto w-full">
               <Image
                 src={softwareImg}
                 sizes="100vw"
@@ -82,7 +85,7 @@ export default function ToolsSection() {
                 alt=""
               />
             </div>
-            <div className="absolute justify-end mr-3 overlay z-50">
+            <div className="flex justify-end right-0 pr-5 z-50">
               <Image
                 src="/images/homepage/track.svg"
                 width="90"
@@ -95,7 +98,7 @@ export default function ToolsSection() {
           <div className="col-span-12 mt-20 justify-self-center">
             <Carousel sections={sections} />
 
-            <div className="absolute justify-end mt-20 mr-3 overlay z-50">
+            <div className="flex justify-end mt-20 mr-3 z-50">
               <Image
                 src="/images/homepage/hex.svg"
                 width="90"
