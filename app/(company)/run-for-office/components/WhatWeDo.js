@@ -22,7 +22,7 @@ const sections = [
     title: 'Fintech Founder',
     subtitle: 'Good Party Academy Graduate',
     description:
-      '“Working with the different AI tools was an amazing experience because… I was able to... tweak it in order to be the best version for the type of audience Im trying to engage with.”',
+      '“Working with [Good Party] AI Tools was an amazing experience.”',
     img: '/images/run-for-office/breanna.jpg',
   },
   {
@@ -118,7 +118,7 @@ export default function WhatWeDo({ demoCallback }) {
         </div>
       </MaxWidth>
 
-      <div className="flex absolute justify-start md:mt-5 lg:mt-10 w-auto h-auto overlay z-50">
+      <div className="flex absolute justify-start md:mt-5 lg:mt-10 w-auto h-auto z-50">
         <Image
           src="/images/run-for-office/triangles.svg"
           width="200"
