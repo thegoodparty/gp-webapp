@@ -9,22 +9,8 @@ import Body1 from '@shared/typography/Body1';
 import { IoMdClose } from 'react-icons/io';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
-export default function CandidateIssueSelector({
-  positions,
-  onSaveCallback,
-  candidate,
-  candidatePositions,
-  initialPosition,
-}) {
-  const positionsWithOther = [
-    ...positions,
-    {
-      id: 'custom-id',
-      name: '+ Add custom position',
-      topIssue: { name: 'Other' },
-    },
-  ];
-  const [state, setState] = useState({ position: initialPosition, text: '' });
+export default function CandidateIssueSelector({ positions, onSaveCallback }) {
+  const [state, setState] = useState({ position: '', text: '' });
 
   const onChangeField = (key, value) => {
     setState({
@@ -72,7 +58,7 @@ export default function CandidateIssueSelector({
           ) : (
             <div>
               <PositionsSelector
-                positions={positionsWithOther}
+                positions={positions}
                 updateCallback={onChangePositions}
                 // initialSelected={state.positions}
                 square

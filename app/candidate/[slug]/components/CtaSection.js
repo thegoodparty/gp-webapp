@@ -6,13 +6,19 @@ import MoreCTAs from './MoreCTAs';
 import Sticky from 'react-stickynode';
 
 export default function CtaSection(props) {
-  const { color, textColor, editMode, candidate } = props;
+  const { color, textColor, editMode, candidate, isStaged, campaign } = props;
+  let link = '';
+  if (isStaged && campaign) {
+    link = `/onboarding/${campaign.slug}/dashboard`;
+  } else {
+    link = `/candidate/${candidate.slug}`;
+  }
   return (
-    <Sticky innerZ={50}>
+    <Sticky innerZ={40}>
       <div className=" bg-slate-50 pt-5 pb-3">
         <div className="flex justify-center lg:justify-end items-center">
           {editMode ? (
-            <a href={`/candidate/${candidate.slug}`}>
+            <a href={link}>
               <WarningButton
                 style={{ backgroundColor: color, color: textColor }}
                 size="medium"

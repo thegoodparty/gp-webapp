@@ -29,11 +29,11 @@ export default function Hero({ demoCallback }) {
       </div>
 
       <div className="grid grid-cols-12 md:gap-10 pl-8 pr-8">
-        <div className="col-span-12 md:col-span-6">
-          <h1 className="font-black text-6xl -mt-10">
+        <div className="col-span-12 md:col-span-7">
+          <h1 className="font-semibold text-[42px] md:text-[60px] lg:text-[92px] leading-[42px] lg:leading-[92px] -mt-10">
             Free tools to help real people run and win
           </h1>
-          <h2 className="mt-3 mb-12 text-xl">
+          <h2 className="mt-3 mb-12 font-sfpro text-black font-normal text-[18px] leading-[24px]">
             Our free AI Campaign Manager and team with 50+ years of experience
             power independent campaigns. We&apos;re here to make running as an
             independent possible!
@@ -51,7 +51,7 @@ export default function Hero({ demoCallback }) {
             </div>
           </div>
         </div>
-        <div className="col-span-12 md:col-span-6 text-center">
+        <div className="col-span-12 md:col-span-5 text-center">
           <HeroImages />
         </div>
       </div>

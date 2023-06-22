@@ -32,8 +32,8 @@ export default function PlanPreviewPage({ slug, ...props }) {
     <Image
       src="/images/campaign/confetti-icon.png"
       alt="GP"
-      width={64}
-      height={64}
+      width={40}
+      height={40}
       priority
     />
   );

@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { RiGroupLine, RiLandscapeLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
-import EndorsementsTab from './EndorsementsTab';
+import EndorsementsTab from '../endorsements/EndorsementsTab';
 import InfoTab from './InfoTab';
-import IssuesTab from './IssuesTab';
+import IssuesTab from '../issues/IssuesTab';
 import OverviewTab from './OverviewTab';
 
 const labels = [
@@ -18,15 +18,22 @@ const labels = [
     <RiLandscapeLine />
     <div className="ml-2 font-medium text-xs lg:text-base">Issues</div>
   </div>,
-  // <div key="endorsements" className="flex flex-col lg:flex-row items-center">
-  //   <TbBrain />
-  //   <div className="ml-2 font-medium text-xs lg:text-base">Endorsements</div>
-  // </div>,
+  <div key="endorsements" className="flex flex-col lg:flex-row items-center">
+    <TbBrain />
+    <div className="ml-2 font-medium text-xs lg:text-base">Endorsements</div>
+  </div>,
   <div key="info" className="flex flex-col lg:flex-row items-center">
     <RiGroupLine />
     <div className="ml-2 font-medium text-xs lg:text-base">Info</div>
   </div>,
 ];
+
+export const TABS_ENUM = {
+  overview: 0,
+  issues: 1,
+  endorsements: 2,
+  info: 3,
+};
 
 export default function TabsSection(props) {
   const [tab, setTab] = useState(0);

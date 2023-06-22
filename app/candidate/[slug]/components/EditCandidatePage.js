@@ -29,7 +29,7 @@ export function debounce(func, args, timeout = 600) {
 }
 
 export default function EditCandidatePage(props) {
-  const { candidate, campaign } = props;
+  const { candidate, campaign, isStaged } = props;
   const snackbarState = useHookstate(globalSnackbarState);
 
   const [color, setColor] = useState(candidate.color || '#734BDC');
@@ -59,8 +59,12 @@ export default function EditCandidatePage(props) {
         isError: false,
       };
     });
-    await updateCandidate(candidate);
-    await revalidateCandidates();
+    if (isStaged && campaign) {
+      await updateCampaign(candidate);
+    } else {
+      await updateCandidate(candidate);
+      await revalidateCandidates();
+    }
     snackbarState.set(() => {
       return {
         isOpen: true,

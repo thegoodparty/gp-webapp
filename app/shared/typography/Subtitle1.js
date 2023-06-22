@@ -1,3 +1,7 @@
 export default function Subtitle1({ children, className = '' }) {
-  return <div className={`font-normal text-base ${className}`}>{children}</div>;
+  return (
+    <div className={`font-normal font-sfpro text-base ${className}`}>
+      {children}
+    </div>
+  );
 }

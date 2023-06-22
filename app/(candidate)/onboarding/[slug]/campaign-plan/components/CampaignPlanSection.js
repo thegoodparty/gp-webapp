@@ -189,9 +189,9 @@ export default function CampaignPlanSection({
             <div className="border border-slate-500 bg-slate-50 rounded-xl">
               <PlanVersion
                 campaign={campaign}
-                versions={versions[key]}
+                versions={versions ? versions[key] : {}}
                 updatePlanCallback={updatePlanCallback}
-                latestVersion={campaignPlan[key]}
+                latestVersion={campaignPlan ? campaignPlan[key] : false}
               />
               <div className={`p-3 lg:p-6 my-6 rounded-xl ${styles.plan}`}>
                 {isFailed ? (

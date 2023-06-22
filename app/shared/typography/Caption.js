@@ -1,3 +1,7 @@
 export default function Caption({ children, className = '' }) {
-  return <div className={`font-semibold text-xs ${className}`}>{children}</div>;
+  return (
+    <div className={`font-semibold font-sfpro text-xs ${className}`}>
+      {children}
+    </div>
+  );
 }

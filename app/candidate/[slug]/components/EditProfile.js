@@ -1,8 +1,8 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H6 from '@shared/typography/H6';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
+import { flatStates } from 'helpers/statesHelper';
 import { useState } from 'react';
 
 const colors = ['#574AF0', '#EA932D', '#61B35F', '#55AFAA', '#E44A8B'];
@@ -16,7 +16,13 @@ export default function EditProfile(props) {
     color,
     updateColorCallback,
   } = props;
-  const { firstName, lastName, slogan, office, district } = candidate;
+  let firstName, lastName, slogan, office, district;
+  if (isStaged && campaign && campaign.details) {
+    ({ firstName, lastName, office, district } = campaign.details);
+    ({ slogan } = campaign.campaignPlan);
+  } else {
+    ({ firstName, lastName, slogan, office, district } = candidate);
+  }
 
   const [state, setState] = useState({
     firstName,
@@ -31,7 +37,7 @@ export default function EditProfile(props) {
   const fields = [
     { label: 'First Name', key: 'firstName', type: 'text' },
     { label: 'Last Name', key: 'lastName', type: 'text' },
-    { label: 'State', key: 'state', type: 'text' },
+    { label: 'State', key: 'state', type: 'select', options: flatStates },
     {
       key: 'office',
       label: 'Office',
@@ -116,8 +122,9 @@ export default function EditProfile(props) {
     if (isStaged && campaign) {
       const stateNoSlogan = { ...state };
       delete stateNoSlogan.slogan;
-      await updateCampaign({
+      await saveCallback({
         ...campaign,
+        color,
         details: {
           ...campaign.details,
           ...stateNoSlogan,
@@ -129,7 +136,7 @@ export default function EditProfile(props) {
       });
     } else {
       // update a real candidate
-      saveCallback({
+      await saveCallback({
         ...candidate,
         ...state,
       });

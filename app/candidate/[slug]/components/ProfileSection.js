@@ -2,7 +2,7 @@ import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
-import ImageUploader from 'app/candidate-old/[slug]/components/ImageUploader';
+import ImageUploader from 'app/candidate/[slug]/components/ImageUploader';
 import { partyResolver } from 'helpers/candidateHelper';
 import EditProfile from './EditProfile';
 import EditProfileButton from './EditProfileButton';
@@ -19,11 +19,11 @@ export default function ProfileSection(props) {
         <div>
           <VictoryTracker {...props} />
         </div>
-        <div className="absolute top-3 left-9 ">
+        <div className="absolute top-3 left-8 z-20">
           <div className={editMode ? 'opacity-60' : ''}>
             <CandidateAvatar candidate={candidate} priority />
           </div>
-          {editMode ? <ImageUploader campaign={campaign} /> : null}
+          {editMode ? <ImageUploader {...props} /> : null}
         </div>
       </div>
 

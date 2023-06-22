@@ -98,9 +98,6 @@ export default function ShareCandidate({ candidate, children }) {
               </div>
               <a
                 href={channel.link}
-                onClick={() => {
-                  trackShare(channel.label);
-                }}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
                 id={`${channel.label}-share`}

@@ -9,10 +9,18 @@ import {
   RiProfileLine,
 } from 'react-icons/ri';
 import TextPanel from '../TextPanel';
+import { TABS_ENUM } from './TabsSection';
 
 export default function InfoTab(props) {
-  const { candidate, previewMode, color, changeTabCallback, editMode } = props;
-  const { about } = candidate;
+  const {
+    candidate,
+    previewMode,
+    color,
+    changeTabCallback,
+    editMode,
+    isStaged,
+    campaign,
+  } = props;
 
   const sections = [
     {
@@ -72,17 +80,26 @@ export default function InfoTab(props) {
                   previewMode && !editMode ? 'h-16 overflow-hidden' : ''
                 }
               >
-                <TextPanel
-                  text={candidate[section.key]}
-                  {...props}
-                  section={section.section}
-                  sectionKey={section.key}
-                />
+                {isStaged ? (
+                  <TextPanel
+                    text={campaign[section.section][section.key]}
+                    {...props}
+                    section={section.section}
+                    sectionKey={section.key}
+                  />
+                ) : (
+                  <TextPanel
+                    text={candidate[section.key]}
+                    {...props}
+                    section={section.section}
+                    sectionKey={section.key}
+                  />
+                )}
               </div>
               {previewMode && (
                 <div
                   onClick={() => {
-                    changeTabCallback(3);
+                    changeTabCallback(TABS_ENUM.info);
                   }}
                 >
                   <Body1

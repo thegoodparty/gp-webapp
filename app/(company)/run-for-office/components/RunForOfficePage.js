@@ -7,7 +7,6 @@ import Hero from './Hero';
 import Cta from './Cta';
 import Blog from './Blog';
 import dynamic from 'next/dynamic';
-import styles from './RunForOffice.module.scss';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
 export default function RunForOfficePage({ articles }) {
@@ -23,12 +22,12 @@ export default function RunForOfficePage({ articles }) {
   return (
     <div className="">
       <Hero demoCallback={handleOpenModal} />
-      <div className={styles.boxTop} />
+      <div className="bg-[linear-gradient(-172deg,_#FFFFFF_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
       <WhatWeDo demoCallback={handleOpenModal} />
-      <div className={styles.boxBottom} />
+      <div className="bg-[linear-gradient(-172deg,_#13161A_54.5%,_#FFFFFF_55%)] h-[calc(100vw*.17)] w-full" />
       <Features demoCallback={handleOpenModal} />
       <Blog articles={articles} />
-      <Cta />
+      <Cta demoCallback={handleOpenModal} />
       {/* <div className={styles.boxFooter} /> */}
 
       {showModal && (

@@ -8,7 +8,7 @@ import teamImg from '/public/images/landing-pages/academy.png';
 
 export default function Hero({ openModalCallback }) {
   return (
-    <LandingPageHero wideBg>
+    <LandingPageHero>
       <div className="grid grid-cols-12 gap-4">
         <div className=" col-span-12 lg:col-span-6 pb-32">
           <h1 className=" text-6xl lg:text-8xl font-black">

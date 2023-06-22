@@ -11,6 +11,10 @@ module.exports = {
       ...defaultTheme.screens,
     },
     extend: {
+      fontFamily: {
+        outfit: 'var(--outfit-font)',
+        sfpro: 'var(--sfpro-font)',
+      },
       colors: {
         primary: '#13161A',
         darkPurple: '#250018',
@@ -162,7 +166,7 @@ module.exports = {
         200: '#F7E5C9',
         300: '#F3D8AE',
         400: '#EEC78A',
-        500: '#E8B667',
+        500: '#F3B822',
         600: '#E3A543',
         700: '#DD9321',
         800: '#BA7C1B',

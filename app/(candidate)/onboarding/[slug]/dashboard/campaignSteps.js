@@ -224,7 +224,7 @@ export const generateCampaignStatus = (campaign) => {
       const completedSteps = Object.keys(value).length || 0;
       if (completedSteps > 0) {
         step.status = 'inProgress';
-        if (!(step.key === 'campaignPlan' && completedSteps === 4)) {
+        if (!(key === 'campaignPlan' && completedSteps === 4)) {
           currentStep = `${key}-${completedSteps}`;
         }
       }
@@ -232,9 +232,9 @@ export const generateCampaignStatus = (campaign) => {
         step.status = 'completed';
         currentStep = `${key}-completed`;
       }
-      if (step.key === 'campaignPlan' && completedSteps === 4) {
+      if (key === 'campaignPlan' && completedSteps === 4) {
         // details has 4 steps.
-        step.status = 'notStarted';
+        step.status = 'locked';
       }
       step.completedSteps = completedSteps;
     }

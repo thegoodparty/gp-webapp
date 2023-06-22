@@ -2,16 +2,27 @@
 
 import WarningButton from '@shared/buttons/WarningButton';
 import ImageUpload from '@shared/inputs/ImageUpload';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { FaCamera } from 'react-icons/fa';
+import { revalidateCandidates } from 'helpers/cacheHelper';
 
-export default function ImageUploader({ campaign }) {
+export default function ImageUploader({
+  campaign,
+  candidate,
+  isStaged,
+  saveCallback,
+}) {
   const handleUpload = async (url) => {
-    console.log('url', url);
-    await updateCampaign({
-      ...campaign,
-      image: url,
-    });
+    if (isStaged && campaign) {
+      await saveCallback({
+        ...campaign,
+        image: url,
+      });
+    } else {
+      await saveCallback({
+        ...candidate,
+        image: url,
+      });
+      revalidateCandidates();
+    }
     window.location.reload();
   };
 
