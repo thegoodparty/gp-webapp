@@ -4,7 +4,7 @@ import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapp
 import { useRouter } from 'next/navigation';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import IssuesSelector from './IssuesSelector';
-import EditIssues from 'app/candidate/[slug]/components/EditIssues';
+import EditIssues from 'app/candidate/[slug]/components/issues/EditIssues';
 import { mapTopIssues } from 'app/candidate/[slug]/edit/mapTopIssues';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';

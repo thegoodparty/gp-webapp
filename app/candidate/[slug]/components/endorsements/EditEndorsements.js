@@ -4,7 +4,6 @@ import H4 from '@shared/typography/H4';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 import AddEndorsement from './AddEndorsement';
-import Endorsement from './Endorsement';
 import EndorsementList from './EndorsementList';
 
 export default function EditEndorsements(props) {

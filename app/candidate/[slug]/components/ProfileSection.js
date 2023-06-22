@@ -19,7 +19,7 @@ export default function ProfileSection(props) {
         <div>
           <VictoryTracker {...props} />
         </div>
-        <div className="absolute top-3 left-9 z-20">
+        <div className="absolute top-3 left-8 z-20">
           <div className={editMode ? 'opacity-60' : ''}>
             <CandidateAvatar candidate={candidate} priority />
           </div>

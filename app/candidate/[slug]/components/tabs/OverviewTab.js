@@ -1,8 +1,8 @@
 import InfoButton from '@shared/buttons/InfoButton';
 import H4 from '@shared/typography/H4';
-import EndorsementList from '../EndorsementList';
+import EndorsementList from '../endorsements/EndorsementList';
 import GetMeTrending from '../GetMeTrending';
-import IssuesList from '../IssuesList';
+import IssuesList from '../issues/IssuesList';
 import InfoTab from './InfoTab';
 import { TABS_ENUM } from './TabsSection';
 

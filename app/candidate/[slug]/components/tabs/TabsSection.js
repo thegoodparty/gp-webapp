@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { RiGroupLine, RiLandscapeLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
-import EndorsementsTab from './EndorsementsTab';
+import EndorsementsTab from '../endorsements/EndorsementsTab';
 import InfoTab from './InfoTab';
-import IssuesTab from './IssuesTab';
+import IssuesTab from '../issues/IssuesTab';
 import OverviewTab from './OverviewTab';
 
 const labels = [
