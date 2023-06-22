@@ -1,4 +1,4 @@
-import EditIssues from '../EditIssues';
+import EditIssues from './EditIssues';
 import IssuesList from '../IssuesList';
 
 export default function IssuesTab(props) {

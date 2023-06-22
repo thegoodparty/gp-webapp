@@ -3,7 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H4 from '@shared/typography/H4';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
-import AddEndorsement from './AddEndorsement';
+import AddEndorsement from './endorsements/AddEndorsement';
 import Endorsement from './Endorsement';
 import EndorsementList from './EndorsementList';
 
