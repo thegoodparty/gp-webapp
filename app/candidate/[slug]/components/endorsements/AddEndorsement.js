@@ -103,22 +103,23 @@ export default function AddEndorsement(props) {
           onChangeField('name', e.target.value);
         }}
       />
-      <TextField
-        fullWidth
-        className="mt-8"
-        value={state.content}
-        placeholder="Add your endorsement text"
-        label="Endorsement text"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        multiline
-        rows={5}
-        inputProps={{ maxLength: 400 }}
-        onChange={(e) => {
-          onChangeField('content', e.target.value);
-        }}
-      />
+      <div className="mt-8">
+        <TextField
+          fullWidth
+          value={state.content}
+          placeholder="Add your endorsement text"
+          label="Endorsement text"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          multiline
+          rows={5}
+          inputProps={{ maxLength: 400 }}
+          onChange={(e) => {
+            onChangeField('content', e.target.value);
+          }}
+        />
+      </div>
       <div className="mt-14 flex justify-end">
         <div onClick={cancelCallback}>
           <SecondaryButton>Cancel</SecondaryButton>
