@@ -1,5 +1,5 @@
 import H4 from '@shared/typography/H4';
-import CandidatePosition from './issues/CandidatePosition';
+import CandidatePosition from './CandidatePosition';
 
 export default function IssuesList({ candidatePositions, previewMode }) {
   let positions = candidatePositions;
