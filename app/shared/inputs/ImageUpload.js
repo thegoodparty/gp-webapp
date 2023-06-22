@@ -1,5 +1,4 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import React, { useState } from 'react';
 import { RiImageAddFill } from 'react-icons/ri';
 import Button from '@mui/material/Button';
@@ -30,18 +29,18 @@ const fileSelect = async (image, isUserImage) => {
 };
 
 export default function ImageUpload({
-  fileSelectCallback,
   uploadCallback,
   maxFileSize,
   customElement,
   isUserImage,
+  customId = 'file-uploader',
 }) {
   const snackbarState = useHookstate(globalSnackbarState);
   const [fileSizeError, setFileSizeError] = useState(false);
 
   const handleUploadImage = async () => {
     setFileSizeError(false);
-    const node = document.getElementById('file-uploader');
+    const node = document.getElementById(customId);
     const file = node.files ? node.files[0] : false;
     if (file) {
       if (file.size > maxFileSize) {
@@ -78,7 +77,7 @@ export default function ImageUpload({
             hidden
             onChange={handleUploadImage}
             accept="image/*"
-            id="file-uploader"
+            id={customId}
           />
         </Button>
       ) : (
@@ -102,7 +101,7 @@ export default function ImageUpload({
             hidden
             onChange={handleUploadImage}
             accept="image/*"
-            id="file-uploader"
+            id={customId}
           />
         </Button>
       )}

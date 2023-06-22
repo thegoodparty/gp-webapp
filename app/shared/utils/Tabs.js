@@ -51,7 +51,7 @@ export default function Tabs({
         >
           {tabLabels.map((label, index) => (
             <Tab
-              key={label}
+              key={index}
               sx={{
                 '&.MuiButtonBase-root': { padding: 0 },
               }}
