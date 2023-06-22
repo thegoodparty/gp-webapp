@@ -6,6 +6,7 @@ import H2 from '@shared/typography/H2';
 import IssuesSelector from 'app/(candidate)/onboarding/[slug]/details/[step]/components/IssuesSelector';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { revalidateCandidates } from 'helpers/cacheHelper';
 import { useState } from 'react';
 import CandidateIssuesSelector from './CandidateIssueSelector';
 import EditCandidatePosition from './EditCandidatePosition';
@@ -59,31 +60,41 @@ export default function EditIssues(props) {
 
   const [state, setState] = useState(candidatePositions);
   const [showAdd, setShowAdd] = useState(false);
-  const onAddPosition = async (position, candidatePosition, order) => {
-    if (isStaged && campaign) {
-      const existing = campaign.details?.topIssues || {};
-      existing[`position-${position.id}`] = candidatePosition;
-      if (!existing.positions) {
-        existing.positions = [];
-      }
-      existing.positions.push(position);
-      await saveCallback({
-        ...campaign,
-        details: {
-          ...campaign.details,
-          topIssues: existing,
-        },
-      });
-      window.location.reload();
+  const onAddPosition = async (
+    position,
+    candidatePosition,
+    customTitle,
+    order,
+  ) => {
+    if (customTitle !== '') {
+      await handleCustomIssue(candidatePosition, customTitle);
     } else {
-      await saveCandidatePosition({
-        description: candidatePosition,
-        candidateId: candidate.id,
-        positionId: position.id,
-        topIssueId: position.topIssue?.id,
-        order,
-      });
-      await loadPositions();
+      if (isStaged && campaign) {
+        const existing = campaign.details?.topIssues || {};
+        existing[`position-${position.id}`] = candidatePosition;
+        if (!existing.positions) {
+          existing.positions = [];
+        }
+        existing.positions.push(position);
+        await saveCallback({
+          ...campaign,
+          details: {
+            ...campaign.details,
+            topIssues: existing,
+          },
+        });
+        window.location.reload();
+      } else {
+        await saveCandidatePosition({
+          description: candidatePosition,
+          candidateId: candidate.id,
+          positionId: position.id,
+          topIssueId: position.topIssue?.id,
+          order,
+        });
+        await loadPositions();
+        await revalidateCandidates();
+      }
     }
   };
   const remainingSlotsCount = Math.max(0, 3 - state.length);
@@ -95,6 +106,18 @@ export default function EditIssues(props) {
   const loadPositions = async () => {
     const res = await loadCandidatePosition(candidate.slug);
     setState(res.candidatePositions);
+  };
+
+  const handleCustomIssue = async (candidatePosition, customTitle) => {
+    let entity = isStaged && campaign ? campaign : candidate;
+    let customIssues = entity.customIssues || [];
+    customIssues.push({ title: customTitle, position: candidatePosition });
+    await saveCallback({
+      ...entity,
+      customIssues,
+    });
+    await revalidateCandidates();
+    window.location.reload();
   };
 
   return (
@@ -128,8 +151,17 @@ export default function EditIssues(props) {
                 <div>
                   <CandidateIssuesSelector
                     positions={positions}
-                    onSaveCallback={(position, candidatePosition) => {
-                      onAddPosition(position, candidatePosition, num);
+                    onSaveCallback={(
+                      position,
+                      candidatePosition,
+                      customTitle,
+                    ) => {
+                      onAddPosition(
+                        position,
+                        candidatePosition,
+                        customTitle,
+                        num,
+                      );
                     }}
                   />
                 </div>

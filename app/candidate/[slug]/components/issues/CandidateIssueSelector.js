@@ -10,7 +10,12 @@ import { IoMdClose } from 'react-icons/io';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export default function CandidateIssueSelector({ positions, onSaveCallback }) {
-  const [state, setState] = useState({ position: '', text: '' });
+  const [state, setState] = useState({
+    position: '',
+    text: '',
+    customTitle: '',
+  });
+  const [showCustom, setShowCustom] = useState(false);
 
   const onChangeField = (key, value) => {
     setState({
@@ -20,12 +25,20 @@ export default function CandidateIssueSelector({ positions, onSaveCallback }) {
   };
 
   const onChangePositions = (position) => {
-    console.log('po', position);
     onChangeField('position', position);
   };
 
   const handleSave = () => {
-    onSaveCallback(state.position, state.text);
+    onSaveCallback(state.position, state.text, state.customTitle);
+  };
+
+  const reset = () => {
+    setState({
+      position: '',
+      text: '',
+      customTitle: '',
+    });
+    setShowCustom(false);
   };
 
   // const addCustom = () => {
@@ -57,16 +70,54 @@ export default function CandidateIssueSelector({ positions, onSaveCallback }) {
             </div>
           ) : (
             <div>
-              <PositionsSelector
-                positions={positions}
-                updateCallback={onChangePositions}
-                // initialSelected={state.positions}
-                square
+              {!showCustom && (
+                <PositionsSelector
+                  positions={positions}
+                  updateCallback={onChangePositions}
+                />
+              )}
+              {showCustom ? (
+                <div
+                  className="mt-3 text-right"
+                  onClick={() => {
+                    reset();
+                  }}
+                >
+                  <Body1 className="underline cursor-pointer">
+                    Select existing issue
+                  </Body1>
+                </div>
+              ) : (
+                <div
+                  className="mt-3 text-right"
+                  onClick={() => {
+                    setShowCustom(true);
+                  }}
+                >
+                  <Body1 className="underline cursor-pointer">
+                    Add custom issue
+                  </Body1>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        <div>
+          {showCustom && (
+            <div className="mt-6">
+              <TextField
+                placeholder="Title"
+                inputProps={{ maxLength: 150 }}
+                fullWidth
+                value={state.customTitle}
+                onChange={(e) => {
+                  onChangeField('customTitle', e.target.value);
+                }}
               />
             </div>
           )}
         </div>
-        {state.position ? (
+        {state.position || showCustom ? (
           <div className="mt-6">
             <TextField
               placeholder="Write 1 or 2 sentences about your position on this issue"
