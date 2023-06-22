@@ -94,11 +94,8 @@ export default function RegisterOrProfile({
                     {RESOURCES_LINKS.map((link) => (
                       <Link
                         href={link.href}
-                        id={`desktop-learn-more-nav-${link.label.replace(
-                          ' ',
-                          '-',
-                        )}`}
-                        key={link.href}
+                        id={`nav-${link.id}`}
+                        key={link.id}
                         className="no-underline font-normal"
                       >
                         <div
@@ -114,7 +111,7 @@ export default function RegisterOrProfile({
                 )}
                 <Link
                   href="/profile/settings"
-                  id={`desktop-profile-nav-settings`}
+                  id="nav-settings"
                   className="no-underline font-normal"
                 >
                   <div
@@ -140,6 +137,7 @@ export default function RegisterOrProfile({
                   data-cy="header-link"
                   className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
                   onClick={handleLogOut}
+                  id="nav-log-out"
                 >
                   <RiLogoutBoxLine />
                   <div className="ml-3">Log out</div>

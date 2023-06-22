@@ -10,10 +10,15 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 
 export const RESOURCES_LINKS = [
-  { label: 'About', href: '/about', icon: <VscHeart /> },
-  { label: 'Academy', href: '/academy', icon: <SlGraduation /> },
-  { label: 'Blog', href: '/blog', icon: <RiProfileLine /> },
-  { label: 'Glossary', href: '/political-terms', icon: <TfiList /> },
+  { label: 'About', href: '/about', icon: <VscHeart />, id: 'about' },
+  { label: 'Academy', href: '/academy', icon: <SlGraduation />, id: 'academy' },
+  { label: 'Blog', href: '/blog', icon: <RiProfileLine />, id: 'blog' },
+  {
+    label: 'Glossary',
+    href: '/political-terms',
+    icon: <TfiList />,
+    id: 'glossary',
+  },
 ];
 
 export default function LearnMore({ open, toggleCallback, campaignStatus }) {
@@ -24,6 +29,7 @@ export default function LearnMore({ open, toggleCallback, campaignStatus }) {
         status && 'hidden lg:block'
       }`}
       onClick={toggleCallback}
+      id="nav-learn-more-dropdown"
     >
       <PrimaryButton variant="text" size="medium">
         <div className="flex items-center">
@@ -48,8 +54,8 @@ export default function LearnMore({ open, toggleCallback, campaignStatus }) {
             {RESOURCES_LINKS.map((link) => (
               <Link
                 href={link.href}
-                id={`desktop-learn-more-nav-${link.label.replace(' ', '-')}`}
-                key={link.href}
+                id={`nav-${link.id}`}
+                key={link.id}
                 className="no-underline font-normal"
               >
                 <div
@@ -77,7 +83,7 @@ export default function LearnMore({ open, toggleCallback, campaignStatus }) {
                 <Link
                   href="run-for-office"
                   className="font-medium mr-5 lg:hidden"
-                  id="header-run-for-office"
+                  id="nav-run-for office"
                 >
                   <WarningButton size="medium" fullWidth>
                     <span className="font-medium">Run for Office</span>
