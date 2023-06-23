@@ -28,53 +28,11 @@ export default function GetInvolved({ closeAll, campaignStatus }) {
         status ? ' lg:hidden' : 'lg:block'
       }`}
       onClick={closeAll}
+      id="nav-get-involbed"
     >
       <PrimaryButton variant="text" size="medium">
         <div className="font-medium text-base">Get Involved</div>
       </PrimaryButton>
-
-      {/* {open ? (
-        <>
-          <div
-            className="fixed h-screen w-screen top-14 left-0 "
-            onClick={toggleCallback}
-          />
-          <div
-            className={`absolute z-50 top-14 right-0 min-w-[270px]  bg-primary text-gray-800 rounded-xl  shadow-md transition  ${
-              open ? 'p-3 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
-            }`}
-          >
-            {RESOURCES_LINKS.map((link) => (
-              <Link
-                href={link.href}
-                id={`desktop-learn-more-nav-${link.label.replace(' ', '-')}`}
-                key={link.href}
-                className="no-underline font-normal"
-              >
-                <div
-                  data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
-                  //   style={activeUrl === link.href ? { fontWeight: 'bold' } : {}}
-                >
-                  {link.icon}
-                  <div className="ml-3">{link.label}</div>
-                </div>
-              </Link>
-            ))}
-            {!status && (
-              <Link
-                href="run-for-office"
-                className="font-medium mr-5 lg:hidden"
-                id="header-run-for-office"
-              >
-                <WarningButton size="medium" fullWidth>
-                  Run for Office
-                </WarningButton>
-              </Link>
-            )}
-          </div>
-        </>
-      ) : null} */}
     </Link>
   );
 }

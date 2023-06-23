@@ -14,7 +14,7 @@ export default function OfficeOrContinueLink({
         <Link
           href="run-for-office"
           className="hidden lg:block font-medium mr-2"
-          id="header-run-for-office"
+          id="nav-run-for office"
           onClick={closeAll}
         >
           <PrimaryButton variant="text" size="medium">
@@ -26,13 +26,17 @@ export default function OfficeOrContinueLink({
           {status === 'candidate' ? (
             <>
               {!isDashboardPath && (
-                <Link href={`/dashboard`} onClick={closeAll}>
+                <Link href={`/dashboard`} onClick={closeAll} id="nav-dashboard">
                   <WarningButton size="medium">Dashboard</WarningButton>
                 </Link>
               )}
             </>
           ) : (
-            <Link href={`/onboarding/${slug}/dashboard`} onClick={closeAll}>
+            <Link
+              href={`/onboarding/${slug}/dashboard`}
+              onClick={closeAll}
+              id="nav-continue-onboarding"
+            >
               <WarningButton size="medium">
                 Continue<span className="hidden lg:inline"> Onboarding</span>
               </WarningButton>
