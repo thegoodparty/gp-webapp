@@ -26,14 +26,18 @@ export default function OfficeOrContinueLink({
           {status === 'candidate' ? (
             <>
               {!isDashboardPath && (
-                <Link href={`/dashboard`} onClick={closeAll} id="nav-dashboard">
+                <Link
+                  href={`/dashboard/plan`}
+                  onClick={closeAll}
+                  id="nav-dashboard"
+                >
                   <WarningButton size="medium">Dashboard</WarningButton>
                 </Link>
               )}
             </>
           ) : (
             <Link
-              href={`/onboarding/${slug}/dashboard`}
+              href={`/onboarding/${slug}/dashboard/plan`}
               onClick={closeAll}
               id="nav-continue-onboarding"
             >
