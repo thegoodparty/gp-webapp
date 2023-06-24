@@ -1,12 +1,10 @@
-import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
-import ImageUploader from 'app/candidate/[slug]/components/ImageUploader';
 import { partyResolver } from 'helpers/candidateHelper';
 import EditProfile from './EditProfile';
 import EditProfileButton from './EditProfileButton';
-import VictoryTracker from './VictoryTracker';
+import AvatarWithTracker from './AvatarWithTracker';
 
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign } = props;
@@ -15,17 +13,7 @@ export default function ProfileSection(props) {
     candidate;
   return (
     <section className="flex flex-col items-center mt-5  pt-5">
-      <div className="relative">
-        <div>
-          <VictoryTracker {...props} />
-        </div>
-        <div className="absolute top-3 left-8 z-20">
-          <div className={editMode ? 'opacity-60' : ''}>
-            <CandidateAvatar candidate={candidate} priority />
-          </div>
-          {editMode ? <ImageUploader {...props} /> : null}
-        </div>
-      </div>
+      <AvatarWithTracker {...props} />
 
       {editMode ? (
         <EditProfile {...props} />

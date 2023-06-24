@@ -62,10 +62,14 @@ export default function IssuesPage({
   };
 
   const canContinue = () => {
-    return (
-      campaign.details?.topIssues?.positions &&
-      campaign.details?.topIssues?.positions.length >= 3
-    );
+    let total = 0;
+    if (campaign.details?.topIssues?.positions) {
+      total += campaign.details.topIssues.positions.length;
+    }
+    if (campaign.customIssues) {
+      total += campaign.customIssues.length;
+    }
+    return total >= 3;
   };
 
   return (

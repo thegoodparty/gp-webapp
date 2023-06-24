@@ -23,6 +23,7 @@ const comparePositions = (a, b) => {
 export default function PositionsAutocomplete({ positions, updateCallback }) {
   const sorted = positions.sort(comparePositions);
   const [inputValue, setInputValue] = useState('');
+  console.log('sorted', sorted);
 
   const addPosition = (position) => {
     updateCallback(position);
@@ -59,21 +60,6 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
           addPosition(item);
         }}
       />
-      {/* <div className="mt-3">
-        {selected.length > 0 && (
-          <div className="text-sm font-bold">Selected issues:</div>
-        )}
-        {selected.map((position) => (
-          <div
-            key={position.id}
-            className="issue inline-flex items-center bg-gray-200 rounded py-2 px-4 mt-3 mr-3 font-black cursor-pointer transition hover:bg-neutral-200"
-            onClick={() => removePosition(position)}
-          >
-            <span className="mr-2">{position?.name}</span>
-            <MdDeleteForever />
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 }
