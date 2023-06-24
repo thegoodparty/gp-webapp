@@ -10,11 +10,13 @@ import gpFetch from 'gpApi/gpFetch';
 //   return await gpFetch(api, payload, 3600);
 // };
 
+const redirects = {
+  '/elections/senate/me': '/candidates',
+};
+
 export default async function middleware(req) {
   // const { content } = await fetchRedirects();
-  const redirects = {
-    '/elections/senate/me': '/candidates',
-  };
+
   if (redirects[req.nextUrl.pathname]) {
     return NextResponse.redirect(
       `${req.nextUrl.origin + redirects[req.nextUrl.pathname]}`,
