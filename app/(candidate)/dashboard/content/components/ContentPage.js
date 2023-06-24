@@ -1,6 +1,7 @@
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
 import AiContent from './AiContent';
+import MyContent from './MyContent';
 
 export default function ContentPage(props) {
   return (
@@ -12,6 +13,7 @@ export default function ContentPage(props) {
         imgWidth={120}
         imgHeight={120}
       />
+      <MyContent {...props} />
       <AiContent {...props} />
     </DashboardLayout>
   );

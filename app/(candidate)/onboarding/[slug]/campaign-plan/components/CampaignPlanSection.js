@@ -50,6 +50,7 @@ export default function CampaignPlanSection({
   versions = {},
   updateVersionsCallback,
   forceExpand,
+  subSectionKey = 'campaignPlan',
 }) {
   const [open, setOpen] = useState(initialOpen);
   const [editMode, setEditMode] = useState(false);
@@ -60,9 +61,8 @@ export default function CampaignPlanSection({
   const [isFailed, setIsFailed] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const { campaignPlan } = campaign;
+  const campaignPlan = campaign[subSectionKey];
   const { key } = section;
-  const subSectionKey = 'campaignPlan';
 
   useEffect(() => {
     if (!campaignPlan || !campaignPlan[key]) {
