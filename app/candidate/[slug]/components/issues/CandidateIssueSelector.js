@@ -95,7 +95,7 @@ export default function CandidateIssueSelector({ positions, onSaveCallback }) {
                   }}
                 >
                   <Body1 className="underline cursor-pointer">
-                    Add custom issue
+                    Add a new issue
                   </Body1>
                 </div>
               )}

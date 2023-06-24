@@ -8,8 +8,9 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { revalidateCandidates } from 'helpers/cacheHelper';
 import { useState } from 'react';
-import CandidateIssuesSelector from './CandidateIssueSelector';
+import CandidateIssueSelector from './CandidateIssueSelector';
 import EditCandidatePosition from './EditCandidatePosition';
+import { combinePositions } from './IssuesList';
 
 export async function saveCandidatePosition({
   description,
@@ -58,7 +59,11 @@ export default function EditIssues(props) {
     hideTitle = false,
   } = props;
 
-  const [state, setState] = useState(candidatePositions);
+  const combined = combinePositions(
+    candidatePositions,
+    candidate?.customIssues || campaign?.customIssues,
+  );
+  const [state, setState] = useState(combined);
   const [showAdd, setShowAdd] = useState(false);
   const onAddPosition = async (
     position,
@@ -67,7 +72,7 @@ export default function EditIssues(props) {
     order,
   ) => {
     if (customTitle !== '') {
-      await handleCustomIssue(candidatePosition, customTitle);
+      await handleCustomIssue(candidatePosition, customTitle, order);
     } else {
       if (isStaged && campaign) {
         const existing = campaign.details?.topIssues || {};
@@ -108,10 +113,14 @@ export default function EditIssues(props) {
     setState(res.candidatePositions);
   };
 
-  const handleCustomIssue = async (candidatePosition, customTitle) => {
+  const handleCustomIssue = async (candidatePosition, customTitle, order) => {
     let entity = isStaged && campaign ? campaign : candidate;
     let customIssues = entity.customIssues || [];
-    customIssues.push({ title: customTitle, position: candidatePosition });
+    customIssues.push({
+      title: customTitle,
+      position: candidatePosition,
+      order,
+    });
     await saveCallback({
       ...entity,
       customIssues,
@@ -149,7 +158,7 @@ export default function EditIssues(props) {
             <>
               {showAdd ? (
                 <div>
-                  <CandidateIssuesSelector
+                  <CandidateIssueSelector
                     positions={positions}
                     onSaveCallback={(
                       position,
