@@ -14,25 +14,8 @@ import { useState } from 'react';
 
 const subSectionKey = 'aiContent';
 
-const mapSections = (campaignSection) => {
-  if (!campaignSection) {
-    return {};
-  }
-  let mapped = {};
-  Object.keys(campaignSection).forEach((key) => {
-    mapped[key] = {
-      key,
-      title: camelToSentence(key),
-      icon: '/images/dashboard/slogan-icon.svg',
-    };
-  });
-  return mapped;
-};
-
 export default function MyContent({ campaign, prompts }) {
-  const [sections, setSections] = useState(
-    mapSections(campaign[subSectionKey]),
-  );
+  const [sections, setSections] = useState(campaign[subSectionKey] || {});
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState('');
   const versions = useVersions();
@@ -46,14 +29,10 @@ export default function MyContent({ campaign, prompts }) {
   const onSelectPrompt = () => {
     if (selected !== '') {
       const key = findKey();
-      setSections({
-        ...sections,
-        [key]: {
-          key,
-          title: camelToSentence(key),
-        },
-      });
-
+      sections[key] = {
+        key,
+        title: camelToSentence(key),
+      };
       setSelected('');
       setShowModal(false);
     }
