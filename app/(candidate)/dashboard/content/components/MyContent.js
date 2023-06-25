@@ -51,6 +51,7 @@ export default function MyContent({ campaign, prompts }) {
         [key]: {
           key,
           title: camelToSentence(key),
+          icon: '/images/dashboard/slogan-icon.svg',
         },
       });
 
