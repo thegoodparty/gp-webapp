@@ -16,7 +16,7 @@ const subSectionKey = 'aiContent';
 
 export default function MyContent({ campaign, prompts }) {
   const [sections, setSections] = useState(campaign[subSectionKey] || {});
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState('');
   const versions = useVersions();
   const [updatedVersions, setUpdatedVersions] = useState(false);
@@ -30,7 +30,7 @@ export default function MyContent({ campaign, prompts }) {
     if (selected !== '') {
       const key = findKey();
       sections[key] = {
-        key: selected,
+        key,
         title: camelToSentence(key),
       };
       setSelected('');
