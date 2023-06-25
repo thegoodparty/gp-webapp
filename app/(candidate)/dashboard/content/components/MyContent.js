@@ -33,7 +33,6 @@ export default function MyContent({ campaign, prompts }) {
   const [sections, setSections] = useState(
     mapSections(campaign[subSectionKey]),
   );
-  console.log('sections', sections);
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState('');
   const versions = useVersions();
