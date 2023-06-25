@@ -29,10 +29,14 @@ export default function MyContent({ campaign, prompts }) {
   const onSelectPrompt = () => {
     if (selected !== '') {
       const key = findKey();
-      sections[key] = {
-        key,
-        title: camelToSentence(key),
-      };
+      setSections({
+        ...sections,
+        [key]: {
+          key,
+          title: camelToSentence(key),
+        },
+      });
+
       setSelected('');
       setShowModal(false);
     }
