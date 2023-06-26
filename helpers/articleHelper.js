@@ -1,3 +1,4 @@
+import slugger from 'slugify';
 // const articleHash = {};
 // // returns only articles that match the page.
 // const articlesHelper = (articles, page) =>
@@ -16,18 +17,22 @@
 //   });
 
 export const slugify = (text, lowercase) => {
-  if (!text) {
-    return '';
-  }
-  let textStr = text;
-  if (typeof text === 'number') {
-    textStr = text + '';
-  }
-  const slug = textStr.replace(/[^\w ]+/g, '').replace(/ +/g, '-');
   if (lowercase) {
-    return slug.toLowerCase();
+    return slugger(text, { lower: true });
   }
-  return slug;
+  return slugger(text);
+  // if (!text) {
+  //   return '';
+  // }
+  // let textStr = text;
+  // if (typeof text === 'number') {
+  //   textStr = text + '';
+  // }
+  // const slug = textStr.replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+  // if (lowercase) {
+  //   return slug.toLowerCase();
+  // }
+  // return slug;
 };
 
 // export const getArticleById = (articles, id) => {
