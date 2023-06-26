@@ -16,7 +16,9 @@ export default function TitleSection({
         <Body1 className="mt-3">{subtitle}</Body1>
       </div>
       <div>
-        <Image src={image} width={imgWidth} height={imgHeight} alt={title} />
+        {image && (
+          <Image src={image} width={imgWidth} height={imgHeight} alt={title} />
+        )}
       </div>
     </div>
   );
