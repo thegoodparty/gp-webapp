@@ -5,7 +5,7 @@ import Link from 'next/link';
 import WarningButton from '@shared/buttons/WarningButton';
 
 export default function Blog(props) {
-  const { race } = props;
+  const { content } = props;
   return (
     <section className="bg-indigo-800 h-auto pt-20 pb-20">
       <MaxWidth>
@@ -16,7 +16,7 @@ export default function Blog(props) {
         </div>
 
         <div className="grid grid-cols-12 gap-3 mb-20 justify-items-center">
-          {race.articles.map((article) => {
+          {content.articles.map((article) => {
             const { id, title, mainImage, summary, slug } = article;
             return (
               <div key={id} className="flex col-span-12 lg:col-span-4">
@@ -29,7 +29,7 @@ export default function Blog(props) {
                     {mainImage && (
                       <div className="flex relative w-[300px] h-[300px]">
                         <Image
-                          src={`${mainImage.url}`}
+                          src={`https:${mainImage.url}`}
                           alt={mainImage.alt}
                           sizes="100vw"
                           fill

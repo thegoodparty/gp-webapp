@@ -3,8 +3,8 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailForm from '@shared/inputs/EmailForm';
 import Pill from '@shared/buttons/Pill';
 
-export default function RaceVolunteer(props) {
-  const { race } = props;
+export default function ElectionVolunteer(props) {
+  const { content } = props;
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function RaceVolunteer(props) {
             <div className="max-w-md">
               <EmailForm
                 formId="5d84452a-01df-422b-9734-580148677d2c"
-                pageName={race.slug}
+                pageName={content.slug}
                 labelId="subscribe-form"
                 label="Join us"
               />
@@ -34,14 +34,14 @@ export default function RaceVolunteer(props) {
           <div className="col-span-12 lg:col-span-5 relative w-full h-full lg:pt-10 items-center">
             <div className="flex flex-row justify-center">
               <Image
-                src="/images/races/volunteer1.png"
+                src="/images/elections/volunteer1.png"
                 width={239}
                 height={366}
                 alt=""
                 className="hidden md:block"
               />
               <Image
-                src="/images/races/volunteer2.png"
+                src="/images/elections/volunteer2.png"
                 width={239}
                 height={366}
                 alt=""

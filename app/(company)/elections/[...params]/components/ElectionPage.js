@@ -1,15 +1,15 @@
 'use client';
 import Script from 'next/script';
-import Hero from './RaceHero';
-import Candidates from './RaceCandidates';
-import Volunteer from './RaceVolunteer';
-import Blog from './RaceBlog';
+import Hero from './ElectionHero';
+import Candidates from './ElectionCandidates';
+import Volunteer from './ElectionVolunteer';
+import Blog from './ElectionBlog';
 
 export default function CityPage(props) {
-  const { race } = props;
+  const { content } = props;
 
   const childProps = {
-    race,
+    content,
   };
 
   return (
