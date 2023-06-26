@@ -120,7 +120,7 @@ export default function MyContent({ campaign, prompts }) {
               <SecondaryButton>Cancel</SecondaryButton>
             </div>
             <div className="ml-3" onClick={onSelectPrompt}>
-              <PrimaryButton>Create</PrimaryButton>
+              <PrimaryButton disabled={selected === ''}>Create</PrimaryButton>
             </div>
           </div>
         </div>
