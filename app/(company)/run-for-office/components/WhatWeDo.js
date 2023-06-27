@@ -74,11 +74,14 @@ export default function WhatWeDo({ demoCallback }) {
   return (
     <section className="bg-[#13161a]">
       <MaxWidth>
-        <div className="text-lg text-slate-400 text-center">What we do</div>
-        <h2 className="text-center text-slate-100 text-6xl">
+        <div className="text-[20px] leading-[28px] text-slate-900 text-center">
+          What we do
+        </div>
+        <h2 className="text-center text-slate-50 text-[36px] leading-[48px] lg:text-[56px] lg:leading-[64px]">
           Run your campaign
+          <br />
+          with confidence
         </h2>
-        <h2 className="text-center text-slate-100 text-6xl">with confidence</h2>
         <div className="grid grid-cols-12 gap-3 items-center justify-center text-center mt-8 pl-10 pr-10">
           {features.map((feature) => (
             <div
@@ -90,22 +93,24 @@ export default function WhatWeDo({ demoCallback }) {
               >
                 {feature.icon}
               </div>
-              <h3 className="text-3xl mt-12 text-slate-100">{feature.title}</h3>
-              <p className="mt-8 text-lg max-w-[90vw] text-slate-300">
+              <h3 className="text-[32px] leading-[40px] mt-12 text-slate-50">
+                {feature.title}
+              </h3>
+              <p className="font-sfpro mt-8 text-lg max-w-[90vw] text-slate-300">
                 {feature.description}
               </p>
               {feature.link == '' ? (
                 <p
                   href={feature.link}
                   onClick={demoCallback}
-                  className="mt-5 text-md text-lime-500 hover:underline cursor-pointer"
+                  className="mt-5 text-[15px] leading-[24px] text-lime-500 hover:underline cursor-pointer"
                 >
                   Learn More
                 </p>
               ) : (
                 <Link
                   href={feature.link}
-                  className="mt-5 text-md text-lime-500"
+                  className="mt-5 text-[15px] leading-[24px] text-lime-500"
                 >
                   Learn More
                 </Link>
