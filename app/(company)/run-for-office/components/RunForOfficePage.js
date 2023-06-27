@@ -20,15 +20,14 @@ export default function RunForOfficePage({ articles }) {
     setShowModal(false);
   };
   return (
-    <div className="">
+    <div className="bg-slate-50">
       <Hero demoCallback={handleOpenModal} />
-      <div className="bg-[linear-gradient(-172deg,_#FFFFFF_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
       <WhatWeDo demoCallback={handleOpenModal} />
-      <div className="bg-[linear-gradient(-172deg,_#13161A_54.5%,_#FFFFFF_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(-172deg,_#13161A_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
       <Features demoCallback={handleOpenModal} />
       <Blog articles={articles} />
       <Cta demoCallback={handleOpenModal} />
-      {/* <div className={styles.boxFooter} /> */}
 
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>

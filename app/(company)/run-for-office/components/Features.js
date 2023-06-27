@@ -37,25 +37,25 @@ const features = [
 
 export default function Features({ demoCallback }) {
   return (
-    <section className="my-24">
+    <section className="my-24 bg-slate-50">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3 items-stretch text-center">
           <div className="col-span-12 md:col-span-4">
-            <h2 className="font-black text-8xl">100+</h2>
-            <div className="text-lg mt-3">Candidates supported</div>
+            <h2 className="font-black text-[100px] leading-[140px]">100+</h2>
+            <div className="text-2xl mt-3">Candidates supported</div>
           </div>
           <div className="col-span-12 md:col-span-4">
-            <h2 className="font-black text-8xl">50+</h2>
-            <div className="text-lg mt-3">Years of Experience</div>
+            <h2 className="font-black text-[100px] leading-[140px]">50+</h2>
+            <div className="text-2xl mt-3">Years of Experience</div>
           </div>
           <div className="col-span-12 md:col-span-4">
-            <h2 className="font-black text-8xl">$0</h2>
-            <div className="text-lg mt-3">Cost to you</div>
+            <h2 className="font-black text-[100px] leading-[140px]">$0</h2>
+            <div className="text-2xl mt-3">Cost to you</div>
           </div>
         </div>
 
         <div className="grid grid-cols-12 gap-3 justify-center items-center mt-10 w-full h-auto">
-          <div className="col-span-12 md:col-span-4 justify-center items-center">
+          <div className="col-span-12 md:col-span-4 justify-center items-center text-xl font-normal">
             {features.map((feature, index) => (
               <div key={feature.name}>
                 <TogglePanel
@@ -68,7 +68,9 @@ export default function Features({ demoCallback }) {
                     </div>
                   }
                 >
-                  {feature.description}
+                  <span className="font-sfpro text-lg">
+                    {feature.description}
+                  </span>
                 </TogglePanel>
               </div>
             ))}

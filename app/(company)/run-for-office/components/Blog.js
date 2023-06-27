@@ -7,7 +7,9 @@ export default function Blog({ articles }) {
   return (
     <MaxWidth>
       <div className="flex items-center justify-center align-middle flex-col w-full mb-12">
-        <h3 className=" font-black text-4xl mt-5 mb-5">Our Blog</h3>
+        <h3 className=" font-semibold text-[24px] leading-[52px] lg:text-[40px] mt-5 mb-5">
+          Our blog
+        </h3>
       </div>
 
       <div className="grid grid-cols-12 gap-3 mb-20 justify-items-center">
@@ -32,8 +34,8 @@ export default function Blog({ articles }) {
                       />
                     </div>
                   )}
-                  <div className="text-lg font-medium mb-2">{title}</div>
-                  <div className="text-md font-normal">
+                  <div className="text-xl font-medium mb-2">{title}</div>
+                  <div className="font-sfpro text-md font-normal">
                     {summary.slice(0, 100)} ...
                   </div>
                 </div>
