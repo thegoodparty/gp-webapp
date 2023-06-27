@@ -1,4 +1,3 @@
-'use client';
 import Script from 'next/script';
 import Hero from './ElectionHero';
 import Candidates from './ElectionCandidates';
@@ -6,17 +5,11 @@ import Volunteer from './ElectionVolunteer';
 import Blog from './ElectionBlog';
 
 export default function CityPage(props) {
-  const { content } = props;
-
-  const childProps = {
-    content,
-  };
-
   return (
     <div className="bg-slate-50 pb-5">
-      <Hero {...childProps} />
-      <Candidates {...childProps} />
-      <Volunteer {...childProps} />
+      <Hero {...props} />
+      <Candidates {...props} />
+      <Volunteer {...props} />
       <div className="flex justify-center">
         <div className="w-[80vw] max-w-[900px] h-[90vh]">
           <iframe
@@ -27,7 +20,7 @@ export default function CityPage(props) {
         </div>
       </div>
 
-      <Blog {...childProps} />
+      <Blog {...props} />
 
       <Script
         type="text/javascript"

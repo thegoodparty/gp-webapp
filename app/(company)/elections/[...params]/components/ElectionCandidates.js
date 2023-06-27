@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
@@ -7,7 +6,7 @@ import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 
 export default function ElectionCandidates(props) {
   const { content } = props;
-  console.log(content);
+
   return (
     <section className="bg-[#13161A] h-auto pt-20 pb-40">
       <MaxWidth>

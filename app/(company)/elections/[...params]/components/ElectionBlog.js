@@ -1,4 +1,3 @@
-'use client';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import Link from 'next/link';
