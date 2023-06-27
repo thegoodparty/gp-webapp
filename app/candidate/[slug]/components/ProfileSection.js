@@ -5,6 +5,7 @@ import { partyResolver } from 'helpers/candidateHelper';
 import EditProfile from './EditProfile';
 import EditProfileButton from './EditProfileButton';
 import AvatarWithTracker from './AvatarWithTracker';
+import CandidatePill from './CandidatePill';
 
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign } = props;
@@ -26,25 +27,18 @@ export default function ProfileSection(props) {
             <Body2 className="text-indigo-50 ">Running for</Body2>
             <H3 className="mt-2 mb-5">{office}</H3>
             <div className="flex items-center justify-center">
-              <div className=" relative py-1 px-3 rounded-full mr-2">
-                <div
-                  className="absolute w-full h-full rounded-full top-0 left-0 opacity-10"
-                  style={{ backgroundColor: color }}
-                />
-                <div className="relative" style={{ color }}>
-                  {partyResolver(party)}
-                </div>
+              <div className="mr-2">
+                <CandidatePill text={partyResolver(party)} color={color} />
               </div>
-
-              <div className="relative py-1 px-3 rounded-full mr-2">
-                <div
-                  className="absolute w-full h-full rounded-full top-0 left-0 opacity-10"
-                  style={{ backgroundColor: color }}
+              <CandidatePill
+                text={`${district ? `${district}, ` : ''} ${{ state }}`}
+                color={color}
+              />
+              <div className="mr-2">
+                <CandidatePill
+                  text={`${district ? `${district}, ` : ''} ${{ state }}`}
+                  color={color}
                 />
-                <div className="relative" style={{ color }}>
-                  {district ? `${district}, ` : ''}
-                  {state}
-                </div>
               </div>
             </div>
           </div>
