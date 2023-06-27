@@ -15,7 +15,7 @@ export const fetchGlossaryByTitle = async (title) => {
       key: 'glossaryItemsByTitle',
       subKey: title,
     };
-    return await gpFetch(api, payload, 3600); // TODO: change later when glossary CMS is stable
+    return await gpFetch(api, payload, 3600);
   } catch (e) {
     return {};
   }
