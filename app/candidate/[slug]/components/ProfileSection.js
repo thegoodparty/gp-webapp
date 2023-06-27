@@ -31,15 +31,9 @@ export default function ProfileSection(props) {
                 <CandidatePill text={partyResolver(party)} color={color} />
               </div>
               <CandidatePill
-                text={`${district ? `${district}, ` : ''} ${{ state }}`}
+                text={`${district ? `${district}, ` : ''} ${state}`}
                 color={color}
               />
-              <div className="mr-2">
-                <CandidatePill
-                  text={`${district ? `${district}, ` : ''} ${{ state }}`}
-                  color={color}
-                />
-              </div>
             </div>
           </div>
           {slogan ? (
