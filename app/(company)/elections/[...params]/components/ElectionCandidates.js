@@ -3,6 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import AvatarWithTracker from '/app/candidate/[slug]/components/AvatarWithTracker';
+import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 
 export default function ElectionCandidates(props) {
   const { content } = props;
@@ -31,14 +32,22 @@ export default function ElectionCandidates(props) {
               className="col-span-12 lg:col-span-3 justify-items-center"
             >
               <div className="flex flex-col items-center justify-center text-slate-50 w-full">
-                <AvatarWithTracker candidate={candidate} />
+                <AvatarWithTracker
+                  candidate={candidate}
+                  color={candidate.color}
+                />
                 <span className=" text-slate-50 text-2xl p-3">
                   {candidate.firstName} {candidate.lastName}
                 </span>
-                <button className="bg-purple-400 bg-opacity-20 text-purple-400 py-2 px-6 no-underline rounded-full font-normal btn-primary">
-                  {candidate.office} {candidate.district}
-                </button>
+                <CandidatePill
+                  text={`${candidate.office} ${candidate.district}`}
+                  color={candidate.color}
+                />
+
                 <ul className="font-sfpro text-[16px] font-normal">
+                  <li className="text-slate-50 pt-2">
+                    {candidate.topPosition}
+                  </li>
                   <li className="text-slate-50 pt-2">{candidate.slogan}</li>
                   <li className="text-slate-50 pt-2">{candidate.occupation}</li>
                 </ul>

@@ -57,10 +57,19 @@ export default async function Page({ params }) {
   let candidates = [];
   const candidateSlugs = content?.candidates;
   for (const slug of candidateSlugs) {
-    const candidate = await fetchCandidate(slug);
-    // console.log('candidate', candidate);
+    const { candidate, candidatePositions, support } = await fetchCandidate(
+      slug,
+    );
+
+    let topPosition = '';
+    for (const position of candidatePositions) {
+      if (position?.order && position.order == 1) {
+        topPosition = `${position?.position?.name} - ${position?.description}`;
+      }
+    }
+    candidate.topPosition = topPosition;
     if (candidate != undefined) {
-      candidates.push(candidate.candidate);
+      candidates.push(candidate);
     }
   }
   content.candidates = candidates;

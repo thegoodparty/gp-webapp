@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailForm from '@shared/inputs/EmailForm';
-import Pill from '@shared/buttons/Pill';
+// import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 
 export default function ElectionVolunteer(props) {
   const { content } = props;
@@ -14,6 +14,7 @@ export default function ElectionVolunteer(props) {
             <button className="bg-[#F54966] bg-opacity-20 text-red-500 py-2 px-6 no-underline rounded-full font-normal  btn-primary">
               Volunteer
             </button>
+
             <h1 className="text-[32px] md:text-[64px] font-semibold mt-3">
               Help independent candidates run and win
             </h1>
