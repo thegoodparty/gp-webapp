@@ -6,7 +6,7 @@ import Blog from './ElectionBlog';
 
 export default function CityPage(props) {
   return (
-    <div className="bg-slate-50 pb-5">
+    <div className="bg-slate-50">
       <Hero {...props} />
       <Candidates {...props} />
       <Volunteer {...props} />
