@@ -15,7 +15,9 @@ export default function TrackerCard(props) {
       </div>
       <ProgressPie total={total} progress={progress} />
       <div className="mt-7">
-        <SecondaryButton fullWidth>Add</SecondaryButton>
+        <SecondaryButton fullWidth size="medium">
+          Add
+        </SecondaryButton>
       </div>
     </div>
   );

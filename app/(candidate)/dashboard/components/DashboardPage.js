@@ -1,7 +1,7 @@
-import H1 from '@shared/typography/H1';
 import DashboardLayout from '../shared/DashboardLayout';
 import TitleSection from '../shared/TitleSection';
 import ThisWeekSection from './ThisWeekSection';
+import ProgressSection from './ProgressSection';
 
 export default function DashboardPage(props) {
   return (
@@ -14,6 +14,7 @@ export default function DashboardPage(props) {
           imgHeight={120}
         />
         <ThisWeekSection {...props} />
+        <ProgressSection {...props} />
       </div>
     </DashboardLayout>
   );
