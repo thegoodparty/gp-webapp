@@ -62,9 +62,9 @@ export default async function Page({ params }) {
     );
 
     let topPosition = '';
-    for (const position of candidatePositions) {
-      if (position?.order && position.order == 1) {
-        topPosition = `${position?.position?.name} - ${position?.description}`;
+    for (const issue of candidatePositions) {
+      if (issue?.order && issue.order == 1) {
+        topPosition = `${issue?.position?.name}`;
       }
     }
     candidate.topPosition = topPosition;
