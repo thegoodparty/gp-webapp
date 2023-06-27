@@ -55,20 +55,27 @@ export default async function Page({ params }) {
   }
 
   let candidates = [];
-  const candidateSlugs = content?.candidates;
+  let candidateSlugs = content?.candidates;
+
+  if (process.env.NODE_ENV === 'development') {
+    candidateSlugs = ['tomer-almog', 'taylor-murray'];
+  }
+
   for (const slug of candidateSlugs) {
     const { candidate, candidatePositions, support } = await fetchCandidate(
       slug,
     );
 
     let topPosition = '';
-    for (const issue of candidatePositions) {
-      if (issue?.order && issue.order == 1) {
-        topPosition = `${issue?.position?.name}`;
+    if (candidatePositions && candidatePositions.length > 0) {
+      for (const issue of candidatePositions) {
+        if (issue?.order && issue.order == 1) {
+          topPosition = `${issue?.position?.name}`;
+        }
       }
     }
-    candidate.topPosition = topPosition;
     if (candidate != undefined) {
+      candidate.topPosition = topPosition;
       candidates.push(candidate);
     }
   }
