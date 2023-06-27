@@ -9,7 +9,7 @@ export async function fetchGlossaryByLetter() {
   const payload = {
     key: 'glossaryItemsByLetter',
   };
-  return await gpFetch(api, payload, 60);
+  return await gpFetch(api, payload, 3600);
 }
 
 const meta = pageMetaData({

@@ -6,14 +6,19 @@ import TermsHomePage from '../components/TermsHomePage';
 import TermsItemPage from './components/TermsItemPage';
 import DefinedTermSchema from './DefinedTermSchema';
 import pageMetaData from 'helpers/metadataHelper';
+import { notFound } from 'next/navigation';
 
 export const fetchGlossaryByTitle = async (title) => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'glossaryItemsByTitle',
-    subKey: title,
-  };
-  return await gpFetch(api, payload, 1); // TODO: change later when glossary CMS is stable
+  try {
+    const api = gpApi.content.contentByKey;
+    const payload = {
+      key: 'glossaryItemsByTitle',
+      subKey: title,
+    };
+    return await gpFetch(api, payload, 3600); // TODO: change later when glossary CMS is stable
+  } catch (e) {
+    return {};
+  }
 };
 
 export async function generateMetadata({ params }) {
@@ -40,21 +45,21 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = params;
-  let items = [];
-  let activeLetter;
 
-  if (slug != undefined) {
-    const { content } = await fetchGlossaryByLetter();
-    activeLetter = slug.charAt(0).toUpperCase();
-    items = content[activeLetter];
+  if (!slug) {
+    notFound();
   }
 
+  const activeLetter = slug.charAt(0).toUpperCase();
+  const { content } = await fetchGlossaryByLetter();
+  const items = content[activeLetter] || [];
   if (slug.length === 1) {
     return <TermsHomePage activeLetter={activeLetter} items={items} />;
   }
-  const { content } = await fetchGlossaryByTitle(slug);
+  const res = await fetchGlossaryByTitle(slug);
+  const titleContent = res.content;
+  const childProps = { item: titleContent, slug, activeLetter, items };
 
-  const childProps = { item: content, slug, items, activeLetter };
   return (
     <>
       <TermsItemPage {...childProps} />

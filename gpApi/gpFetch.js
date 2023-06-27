@@ -54,7 +54,6 @@ async function fetchCall(url, options = {}, revalidate) {
   if (options.method === 'GET') {
     delete options.body;
   }
-
   let res;
   if (revalidate) {
     res = await fetch(url, { ...options, next: { revalidate } });
