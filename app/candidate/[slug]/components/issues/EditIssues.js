@@ -109,6 +109,7 @@ export default function EditIssues(props) {
   }
 
   const loadPositions = async () => {
+    await revalidateCandidates();
     const res = await loadCandidatePosition(candidate.slug);
     setState(res.candidatePositions);
   };

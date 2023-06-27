@@ -6,8 +6,8 @@ import contentfulHelper from 'helpers/contentfulHelper';
 import Link from 'next/link';
 import TermsByLetter from '../../components/TermsByLetter';
 
-export default function TermsItemPage({ item, slug, items, activeLetter }) {
-  const letter = slug.charAt(0).toUpperCase();
+export default function TermsItemPage({ item, items, activeLetter }) {
+  const letter = activeLetter;
   const breadcrumbsLinks = [
     { href: '/', label: 'Good Party' },
 
@@ -67,7 +67,7 @@ export default function TermsItemPage({ item, slug, items, activeLetter }) {
           </>
         )}
       </div>
-      {activeLetter != undefined && (
+      {activeLetter && (
         <TermsByLetter
           letter={letter}
           items={items}
