@@ -37,7 +37,7 @@ export default function OfficeOrContinueLink({
             </>
           ) : (
             <Link
-              href={`/onboarding/${slug}/dashboard/plan`}
+              href={`/onboarding/${slug}/dashboard`}
               onClick={closeAll}
               id="nav-continue-onboarding"
             >
