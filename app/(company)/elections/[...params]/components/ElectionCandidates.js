@@ -31,7 +31,7 @@ export default function ElectionCandidates(props) {
           {content.candidates.map((candidate, index) => (
             <div
               key={index}
-              className="col-span-12 lg:col-span-3 justify-items-center lg:pl-20 max-w-2xl p-10"
+              className="col-span-12 lg:col-span-3 justify-items-center"
             >
               <div className="flex flex-col items-center justify-center text-slate-50 w-full">
                 <AvatarWithTracker
