@@ -55,9 +55,7 @@ function GoalsChart({ candidate, followers, color }) {
   let { voterProjection, voteGoal } = candidate;
   voteGoal = voteGoal || 100;
   let voters = voterProjection || 0;
-  if (followers?.thisWeek > voterProjection) {
-    voters = followers.thisWeek;
-  }
+
   const cappedLikely = voters > voteGoal ? voteGoal : voters;
 
   const data = [
