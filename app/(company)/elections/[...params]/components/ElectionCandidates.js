@@ -39,7 +39,9 @@ export default function ElectionCandidates(props) {
                   {candidate.firstName} {candidate.lastName}
                 </span>
                 <CandidatePill
-                  text={`${candidate.office} ${candidate.district}`}
+                  text={`${candidate.office} ${
+                    candidate.district ? candidate.district : candidate.state
+                  }`}
                   color={candidate.color}
                 />
 
