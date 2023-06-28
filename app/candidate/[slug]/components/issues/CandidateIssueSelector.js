@@ -9,12 +9,14 @@ import Body1 from '@shared/typography/Body1';
 import { IoMdClose } from 'react-icons/io';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
+const initialState = {
+  position: '',
+  text: '',
+  customTitle: '',
+};
+
 export default function CandidateIssueSelector({ positions, onSaveCallback }) {
-  const [state, setState] = useState({
-    position: '',
-    text: '',
-    customTitle: '',
-  });
+  const [state, setState] = useState(initialState);
   const [showCustom, setShowCustom] = useState(false);
 
   const onChangeField = (key, value) => {
@@ -30,14 +32,11 @@ export default function CandidateIssueSelector({ positions, onSaveCallback }) {
 
   const handleSave = () => {
     onSaveCallback(state.position, state.text, state.customTitle);
+    reset();
   };
 
   const reset = () => {
-    setState({
-      position: '',
-      text: '',
-      customTitle: '',
-    });
+    setState(initialState);
     setShowCustom(false);
   };
 
