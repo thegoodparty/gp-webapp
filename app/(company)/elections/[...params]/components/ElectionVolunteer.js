@@ -53,7 +53,7 @@ export default function ElectionVolunteer(props) {
         </div>
 
         <div className="flex text-center justify-center w-full pt-20">
-          <span className="text-indigo-800 text-[40px] font-semibold pb-10">
+          <span className="text-indigo-800 text-[40px] font-semibold pb-20">
             Schedule an info session
           </span>
         </div>

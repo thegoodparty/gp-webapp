@@ -33,7 +33,7 @@ export default function ElectionCandidates(props) {
               key={index}
               className="col-span-12 lg:col-span-3 justify-items-center"
             >
-              <div className="flex flex-col items-center justify-center text-slate-50 w-full">
+              <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
                 <AvatarWithTracker
                   candidate={candidate}
                   color={candidate.color}
@@ -42,7 +42,7 @@ export default function ElectionCandidates(props) {
                   {candidate.firstName} {candidate.lastName}
                 </span>
                 <CandidatePill
-                  text={`${candidate.office} ${
+                  text={`${candidate.office}, ${
                     candidate.district ? candidate.district : candidate.state
                   }`}
                   color={candidate.color}
