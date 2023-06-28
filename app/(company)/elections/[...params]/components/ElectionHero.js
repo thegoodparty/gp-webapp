@@ -21,21 +21,28 @@ export default function ElectionHero(props) {
             </h2>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
-                <Link href={`${content.heroButton1link}`} id="candidates_tool">
-                  <PrimaryButton size="medium">
-                    {content.heroButton1text}
-                  </PrimaryButton>
-                </Link>
+                {content.heroButton1text && content.heroButton1link && (
+                  <Link
+                    href={`${content.heroButton1link}`}
+                    id="candidates_tool"
+                  >
+                    <PrimaryButton size="medium">
+                      {content.heroButton1text}
+                    </PrimaryButton>
+                  </Link>
+                )}
               </div>
               <div className="mt-4 pl-0 md:pl-3">
-                <Link
-                  href={`${content.heroButton2link}`}
-                  id="candidates_academy"
-                >
-                  <WarningButton size="medium">
-                    {content.heroButton2text}
-                  </WarningButton>
-                </Link>
+                {content.heroButton2text && content.heroButton2link && (
+                  <Link
+                    href={`${content.heroButton2link}`}
+                    id="candidates_academy"
+                  >
+                    <WarningButton size="medium">
+                      {content.heroButton2text}
+                    </WarningButton>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
