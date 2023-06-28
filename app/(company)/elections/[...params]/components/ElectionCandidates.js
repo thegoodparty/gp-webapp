@@ -3,6 +3,7 @@ import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import AvatarWithTracker from '/app/candidate/[slug]/components/AvatarWithTracker';
 import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
+import styles from './Election.module.scss';
 
 export default function ElectionCandidates(props) {
   const { content } = props;
@@ -11,12 +12,14 @@ export default function ElectionCandidates(props) {
     <section className="bg-[#13161A] h-auto pt-20 pb-40">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-12 lg:col-span-6 pb-5">
-            <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px]  mt-2">
+          <div className="col-span-12 lg:col-span-6 pb-5 lg:pl-20 max-w-2xl p-10">
+            <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
               {content.candidatesTitle}
             </div>
 
-            <div className="font-sfpro text-slate-50 text-[18px] leading-6 mt-2 max-w-md">
+            <div
+              className={`font-sfpro text-slate-50 text-[18px] leading-6 mt-2 max-w-md ${styles.hyperlink}`}
+            >
               <CmsContentWrapper>
                 {contentfulHelper(content.candidatesSubTitle)}
               </CmsContentWrapper>
@@ -28,7 +31,7 @@ export default function ElectionCandidates(props) {
           {content.candidates.map((candidate, index) => (
             <div
               key={index}
-              className="col-span-12 lg:col-span-3 justify-items-center"
+              className="col-span-12 lg:col-span-3 justify-items-center lg:pl-20 max-w-2xl p-10"
             >
               <div className="flex flex-col items-center justify-center text-slate-50 w-full">
                 <AvatarWithTracker
