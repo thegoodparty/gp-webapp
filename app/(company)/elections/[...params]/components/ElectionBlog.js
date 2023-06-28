@@ -24,7 +24,7 @@ export default function Blog(props) {
                   href={`/blog/article/${slug}`}
                   className="no-underline"
                 >
-                  <div className="flex flex-col text-center items-center p-5">
+                  <div className="flex flex-col text-start items-center p-5">
                     {mainImage && (
                       <div className="flex relative w-[300px] h-[300px]">
                         <Image
@@ -36,10 +36,10 @@ export default function Blog(props) {
                         />
                       </div>
                     )}
-                    <div className="text-2xl font-semibold text-slate-50 mb-2">
+                    <div className="text-2xl font-semibold text-slate-50 mb-2 max-w-[300px] mt-3">
                       {title}
                     </div>
-                    <div className="font-sfpro text-lg text-slate-700 font-normal">
+                    <div className="font-sfpro text-lg text-slate-700 font-normal max-w-[300px]">
                       {summary.slice(0, 100)} ...
                     </div>
                   </div>
