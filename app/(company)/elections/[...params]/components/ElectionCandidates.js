@@ -9,7 +9,7 @@ export default function ElectionCandidates(props) {
   const { content } = props;
 
   return (
-    <section className="bg-[#13161A] h-auto pt-20 pb-40">
+    <section className="bg-primary h-auto pt-20 pb-40">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-12 lg:col-span-6 pb-5 lg:pl-20 max-w-2xl p-10">
