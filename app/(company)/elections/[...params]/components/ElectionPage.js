@@ -10,7 +10,7 @@ export default function CityPage(props) {
       <Hero {...props} />
       <Candidates {...props} />
       <Volunteer {...props} />
-      <div className="flex justify-center">
+      <div className="flex justify-center pb-20">
         <div className="w-[90vw] md:w-[80vw] max-w-[900px] h-[100vh] md:h-[90vh]">
           <iframe
             src="https://meetings.hubspot.com/jared-alper"
