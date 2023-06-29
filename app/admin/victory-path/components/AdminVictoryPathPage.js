@@ -12,6 +12,7 @@ import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { revalidateCandidates } from 'helpers/cacheHelper';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -68,7 +69,11 @@ const sections = [
     title: 'Goals',
     fields: [
       { key: 'voteGoal', label: 'Vote Goal', type: 'number' },
-      { key: 'voterProjection', label: 'Voter Projection', type: 'number' },
+      {
+        key: 'voterProjection',
+        label: 'Voter Projection (Likely Voters)',
+        type: 'number',
+      },
     ],
   },
   {
@@ -150,7 +155,7 @@ export default function AdminVictoryPathPage(props) {
       pathToVictory: state,
     };
     try {
-      await updateCampaign(campaign);
+      await updateCampaign(campaign, false, true);
       await sendVictoryMail(campaign.slug);
       snackbarState.set(() => {
         return {
@@ -159,6 +164,7 @@ export default function AdminVictoryPathPage(props) {
           isError: false,
         };
       });
+      await revalidateCandidates();
       window.location.reload();
     } catch (e) {
       snackbarState.set(() => {

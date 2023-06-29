@@ -55,15 +55,23 @@ export default function MyContent({ campaign, prompts }) {
     return `${selected}21`;
   };
 
+  const mappedSections = Object.keys(sections).map((key) => {
+    return {
+      key,
+      title: camelToSentence(key),
+      icon: '/images/dashboard/slogan-icon.svg',
+    };
+  });
+
   return (
     <div>
       <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
-      {Object.keys(sections).map((key) => (
+      {mappedSections.map((section) => (
         <CampaignPlanSection
-          key={key}
-          section={sections[key]}
+          key={section.key}
+          section={section}
           campaign={campaign}
           versions={updatedVersions || versions}
           updateVersionsCallback={updateVersionsCallback}

@@ -139,15 +139,15 @@ export default function LaunchChecklist({ campaign }) {
     });
   };
 
-  const canSave = () => {
-    const keys = Object.keys(state);
-    for (let i = 0; i < keys.length; i++) {
-      if (!state[keys[i]]) {
-        return false;
-      }
-    }
-    return true;
-  };
+  // const canSave = () => {
+  //   const keys = Object.keys(state);
+  //   for (let i = 0; i < keys.length; i++) {
+  //     if (!state[keys[i]]) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
   const handleSave = async () => {
     if (launchStatus === 'launched' && candidateSlug) {
       router.push(`/candidate/${candidateSlug}`);
@@ -216,7 +216,7 @@ export default function LaunchChecklist({ campaign }) {
         </a>
         <Confetti
           button={
-            <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
+            <YellowButtonClient onClick={handleSave}>
               <strong>
                 {launchStatus === 'launched' ? (
                   'VIEW YOUR PROFILE'
