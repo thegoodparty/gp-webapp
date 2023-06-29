@@ -250,6 +250,12 @@ export const generateCampaignStatus = (campaign) => {
     }
   });
 
+  // to prevent users from waiting for AI - allow the user to see the profile step even if the campaignPlan is not done
+  // i.e as soon as goals is done
+  if (status.goals.status === 'completed') {
+    status.profile.status = 'notStarted';
+  }
+
   // set incentive status
   if (status.profile.status === 'completed') {
     status.support.status = 'completed';
