@@ -36,7 +36,8 @@ export default function ProgressSection(props) {
                   key={index}
                   className="col-span-1  text-[11px] text-indigo-200 font-sfpro"
                 >
-                  {12 - index} weeks
+                  {12 - index}
+                  {index === 0 ? '+' : ''} weeks
                 </div>
               ))}
               <div className="col-span-1  text-[11px] text-indigo-200 font-sfpro">

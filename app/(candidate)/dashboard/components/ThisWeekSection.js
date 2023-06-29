@@ -5,26 +5,32 @@ import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
 import TrackerCard from './TrackerCard';
 
 export default function ThisWeekSection(props) {
+  const [showModal, setShowModal] = useState(false);
+  const { contactGoals, weeksUntil, reportedVoterGoals } = props;
+  const { doorKnocking, calls, digital } = reportedVoterGoals;
+  const { weeks, days } = weeksUntil;
+  const accumulatedTotal = calculateAccumulated(weeks, contactGoals);
+  console.log('accumulatedTotal', accumulatedTotal);
   const cards = [
     {
       key: 'doorsKnocked',
       title: 'Doors knocked',
-      progress: 100,
-      total: 2000,
+      progress: doorKnocking,
+      total: accumulatedTotal.doorKnocking,
       icon: <RiDoorOpenLine />,
     },
     {
       key: 'callsMade',
       title: 'Calls made',
-      progress: 200,
-      total: 2000,
+      progress: calls,
+      total: accumulatedTotal.calls,
       icon: <RiPhoneLine />,
     },
     {
       key: 'onlineImpressions',
       title: 'Online impressions',
-      progress: 300,
-      total: 2000,
+      progress: digital,
+      total: accumulatedTotal.digital,
       icon: <FaBullhorn />,
     },
   ];
@@ -43,4 +49,23 @@ export default function ThisWeekSection(props) {
       </div>
     </section>
   );
+}
+
+function calculateAccumulated(weeks, contactGoals) {
+  let accumulatedTotal = {
+    doorKnocking: 0,
+    calls: 0,
+    digital: 0,
+  };
+  if (weeks > 12) {
+    return contactGoals.week12;
+  }
+  for (let i = 0; i < 13 - weeks; i++) {
+    const key = `week${12 - i}`;
+    accumulatedTotal.doorKnocking += contactGoals[key].doorKnocking;
+    accumulatedTotal.calls += contactGoals[key].calls;
+    accumulatedTotal.digital += contactGoals[key].digital;
+  }
+
+  return accumulatedTotal;
 }
