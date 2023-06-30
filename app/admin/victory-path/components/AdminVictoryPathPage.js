@@ -35,6 +35,7 @@ const sections = [
       },
       { key: 'projectedTurnout', label: 'Projected Turnout', type: 'number' },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
+      { key: 'voterContactGoal', label: 'Voter Contact Goal', type: 'number' },
     ],
   },
 

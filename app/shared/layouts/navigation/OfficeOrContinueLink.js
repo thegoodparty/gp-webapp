@@ -26,11 +26,7 @@ export default function OfficeOrContinueLink({
           {status === 'candidate' ? (
             <>
               {!isDashboardPath && (
-                <Link
-                  href={`/dashboard/plan`}
-                  onClick={closeAll}
-                  id="nav-dashboard"
-                >
+                <Link href={`/dashboard`} onClick={closeAll} id="nav-dashboard">
                   <WarningButton size="medium">Dashboard</WarningButton>
                 </Link>
               )}
