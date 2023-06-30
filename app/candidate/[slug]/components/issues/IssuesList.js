@@ -30,6 +30,7 @@ export default function IssuesList({
   previewMode,
   candidate,
 }) {
+  console.log('candidate.customIssues', candidate.customIssues);
   let positions = combinePositions(candidatePositions, candidate.customIssues);
 
   if (previewMode) {

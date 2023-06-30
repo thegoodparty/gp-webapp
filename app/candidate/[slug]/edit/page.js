@@ -117,6 +117,8 @@ export function mapCampaignToCandidate(campaign) {
     twitch,
     hashtag,
     website,
+    customIssues,
+    endorsements,
   } = campaign;
   const {
     firstName,
@@ -162,5 +164,7 @@ export function mapCampaignToCandidate(campaign) {
     hashtag,
     website,
     district,
+    customIssues,
+    endorsements,
   };
 }
