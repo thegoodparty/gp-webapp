@@ -3,32 +3,34 @@ import H3 from '@shared/typography/H3';
 import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
 import TrackerCard from './TrackerCard';
+import { calculateAccumulated } from './voterGoalsHelpers';
 
 export default function ThisWeekSection(props) {
-  const [showModal, setShowModal] = useState(false);
   const { contactGoals, weeksUntil, reportedVoterGoals } = props;
   const { doorKnocking, calls, digital } = reportedVoterGoals;
   const { weeks, days } = weeksUntil;
   const accumulatedTotal = calculateAccumulated(weeks, contactGoals);
-  console.log('accumulatedTotal', accumulatedTotal);
   const cards = [
     {
-      key: 'doorsKnocked',
+      key: 'doorKnocking',
       title: 'Doors knocked',
+      subTitle: "doors you've knocked on",
       progress: doorKnocking,
       total: accumulatedTotal.doorKnocking,
       icon: <RiDoorOpenLine />,
     },
     {
-      key: 'callsMade',
+      key: 'calls',
       title: 'Calls made',
+      subTitle: "phone calls you've made",
       progress: calls,
       total: accumulatedTotal.calls,
       icon: <RiPhoneLine />,
     },
     {
-      key: 'onlineImpressions',
+      key: 'digital',
       title: 'Online impressions',
+      subTitle: "online impressions you've made",
       progress: digital,
       total: accumulatedTotal.digital,
       icon: <FaBullhorn />,
@@ -38,7 +40,7 @@ export default function ThisWeekSection(props) {
     <section>
       <div className="flex items-center mt-5 mb-3">
         <H3>This week</H3>
-        <Body2 className="ml-3">May 15-21, 2023</Body2>
+        {/* <Body2 className="ml-3">May 15-21, 2023</Body2> */}
       </div>
       <div className="grid grid-cols-12 gap-5">
         {cards.map((card) => (
@@ -49,23 +51,4 @@ export default function ThisWeekSection(props) {
       </div>
     </section>
   );
-}
-
-function calculateAccumulated(weeks, contactGoals) {
-  let accumulatedTotal = {
-    doorKnocking: 0,
-    calls: 0,
-    digital: 0,
-  };
-  if (weeks > 12) {
-    return contactGoals.week12;
-  }
-  for (let i = 0; i < 13 - weeks; i++) {
-    const key = `week${12 - i}`;
-    accumulatedTotal.doorKnocking += contactGoals[key].doorKnocking;
-    accumulatedTotal.calls += contactGoals[key].calls;
-    accumulatedTotal.digital += contactGoals[key].digital;
-  }
-
-  return accumulatedTotal;
 }

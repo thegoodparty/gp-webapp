@@ -4,34 +4,46 @@ import TitleSection from '../shared/TitleSection';
 import ThisWeekSection from './ThisWeekSection';
 import ProgressSection from './ProgressSection';
 import { weeksTill } from 'helpers/dateHelper';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { calculateContactGoals } from './voterGoalsHelpers';
+import H3 from '@shared/typography/H3';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function DashboardPage(props) {
-  const [state, setState] = useState({
-    doorKnocking: 0,
-    calls: 0,
-    digital: 0,
-  });
   const { campaign } = props;
-  useEffect(() => {
-    const { reportedVoterGoals } = campaign;
-    if (reportedVoterGoals) {
-      setState(reportedVoterGoals);
-    }
-  }, []);
-  const { pathToVictory, goals } = campaign;
+  const { pathToVictory, goals, reportedVoterGoals } = campaign;
+
+  const [state, setState] = useState({
+    doorKnocking: reportedVoterGoals?.doorKnocking || 0,
+    calls: reportedVoterGoals?.calls || 0,
+    digital: reportedVoterGoals?.digital || 0,
+  });
+
   const { electionDate } = goals;
   const { voterContactGoal } = pathToVictory;
   // const weeksUntil = weeksTill(electionDate);
-  const weeksUntil = { weeks: 10, days: 3 };
+  const weeksUntil = { weeks: 12, days: 3 };
   const contactGoals = calculateContactGoals(voterContactGoal, weeksUntil);
   console.log('contactGoals', contactGoals);
+
+  const updateCountCallback = async (key, value) => {
+    const newState = {
+      ...state,
+      [key]: value,
+    };
+    setState(newState);
+    await updateCampaign({
+      ...campaign,
+      reportedVoterGoals: newState,
+    });
+  };
 
   const childProps = {
     ...props,
     contactGoals,
     weeksUntil,
     reportedVoterGoals: state,
+    updateCountCallback,
   };
 
   console.log('cihldprops', childProps);
@@ -45,41 +57,15 @@ export default function DashboardPage(props) {
           imgWidth={128}
           imgHeight={120}
         />
-        <ThisWeekSection {...childProps} />
-        <ProgressSection {...childProps} />
+        {contactGoals ? (
+          <>
+            <ThisWeekSection {...childProps} />
+            <ProgressSection {...childProps} />
+          </>
+        ) : (
+          <H3 className="mt-12">Waiting for voter contact goals input.</H3>
+        )}
       </div>
     </DashboardLayout>
   );
-}
-
-function calculateContactGoals(total, weeksUntil) {
-  if (!total || !weeksUntil) {
-    return false;
-  }
-  const totals = {
-    week12: parseInt((total * 2.7) / 100, 10),
-    week11: parseInt((total * 4.05) / 100, 10),
-    week10: parseInt((total * 4.05) / 100, 10),
-    week9: parseInt((total * 5.41) / 100, 10),
-    week8: parseInt((total * 8.11) / 100, 10),
-    week7: parseInt((total * 8.11) / 100, 10),
-    week6: parseInt((total * 9.46) / 100, 10),
-    week5: parseInt((total * 9.46) / 100, 10),
-    week4: parseInt((total * 10.81) / 100, 10),
-    week3: parseInt((total * 10.81) / 100, 10),
-    week2: parseInt((total * 13.51) / 100, 10),
-    week1: parseInt((total * 13.51) / 100, 10),
-  };
-
-  const totalGoals = {};
-  Object.keys(totals).forEach((week) => {
-    totalGoals[week] = {
-      total: totals[week],
-      doorKnocking: parseInt(totals[week] * 0.2),
-      calls: parseInt(totals[week] * 0.35),
-      digital: parseInt(totals[week] * 0.45),
-    };
-  });
-
-  return totalGoals;
 }
