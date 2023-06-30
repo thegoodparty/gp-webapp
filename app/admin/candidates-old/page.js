@@ -12,20 +12,20 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export const fetchCampaigns = async () => {
-  const api = gpApi.campaign.onboarding.list;
+export const fetchCandidates = async () => {
+  const api = gpApi.admin.candidates;
   const token = getServerToken();
   return await gpFetch(api, false, false, token);
 };
 
 export default async function Page() {
   adminAccessOnly();
-  const { campaigns } = await fetchCampaigns();
+  const { candidates } = await fetchCandidates();
 
   const childProps = {
     pathname: '/admin/candidates',
     title: 'Candidate List',
-    campaigns,
+    candidates,
   };
   return <AdminCandidatesPage {...childProps} />;
 }

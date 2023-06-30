@@ -23,14 +23,14 @@ export const deleteCandidate = async (id) => {
 };
 
 export default function AdminCandidatesPage(props) {
-  const { campaigns } = props;
+  const { candidates } = props;
   const snackbarState = useHookstate(globalSnackbarState);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [candidateToDelete, setCandidateToDelete] = useState(false);
 
   const inputData = [];
-  if (campaigns) {
-    campaigns.map((candidate) => {
+  if (candidates) {
+    candidates.map((candidate) => {
       const fields = {
         active: candidate.isActive ? 'Yes' : 'No',
         id: candidate.id,
