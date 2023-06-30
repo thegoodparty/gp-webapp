@@ -9,7 +9,7 @@ import { candidateRoute } from 'helpers/candidateHelper';
 
 export default function ElectionCandidates(props) {
   const { content } = props;
-  if (content.candidates) {
+  if (!content.candidates || content.candidates.length === 0) {
     return null;
   }
 
