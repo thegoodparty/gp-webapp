@@ -10,8 +10,6 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 const COLORS = ['#DEE1E9', '#13161A'];
 
 export default function ProgressPie({ total, progress }) {
-  console.log('typeof total', typeof total);
-  console.log('typeof progress', typeof progress);
   const data = [
     { name: 'Total', value: total - progress >= 0 ? total - progress : 0 },
     { name: 'So Far', value: progress },
@@ -40,20 +38,13 @@ export default function ProgressPie({ total, progress }) {
               // label={renderCustomizedLabel}
               // isAnimationActive={false}
             >
-              {data.map((entry, index) => {
-                console.log('ndex', index);
-                console.log(
-                  'COLORS[index % COLORS.length]',
-                  COLORS[index % COLORS.length],
-                );
-                return (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                    // fill="#EDEDED"
-                  />
-                );
-              })}
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                  // fill="#EDEDED"
+                />
+              ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>

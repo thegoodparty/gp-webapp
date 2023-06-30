@@ -48,3 +48,81 @@ export function calculateAccumulated(weeks, contactGoals) {
 
   return accumulatedTotal;
 }
+
+export function calculateAccumulatedByWeek(contactGoals) {
+  let accumulatedTotal = {
+    week12: {
+      doorKnocking: contactGoals.week12.doorKnocking,
+      calls: contactGoals.week12.calls,
+      digital: contactGoals.week12.digital,
+    },
+    week11: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week10: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week9: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week8: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week7: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week6: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week5: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week4: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week3: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week2: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+    week1: {
+      doorKnocking: 0,
+      calls: 0,
+      digital: 0,
+    },
+  };
+
+  for (let i = 0; i < 11; i++) {
+    const key = `week${11 - i}`;
+    const prevKey = `week${12 - i}`;
+    accumulatedTotal[key].doorKnocking =
+      contactGoals[key].doorKnocking + accumulatedTotal[prevKey].doorKnocking;
+    accumulatedTotal[key].calls =
+      contactGoals[key].calls + accumulatedTotal[prevKey].calls;
+    accumulatedTotal[key].digital =
+      contactGoals[key].digital + accumulatedTotal[prevKey].digital;
+  }
+
+  return accumulatedTotal;
+}

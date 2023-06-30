@@ -21,10 +21,9 @@ export default function DashboardPage(props) {
 
   const { electionDate } = goals;
   const { voterContactGoal } = pathToVictory;
-  // const weeksUntil = weeksTill(electionDate);
-  const weeksUntil = { weeks: 12, days: 3 };
+  const weeksUntil = weeksTill(electionDate);
+  // const weeksUntil = { weeks: 10, days: 3 };
   const contactGoals = calculateContactGoals(voterContactGoal, weeksUntil);
-  console.log('contactGoals', contactGoals);
 
   const updateCountCallback = async (key, value) => {
     const newState = {
@@ -45,8 +44,6 @@ export default function DashboardPage(props) {
     reportedVoterGoals: state,
     updateCountCallback,
   };
-
-  console.log('cihldprops', childProps);
 
   return (
     <DashboardLayout {...childProps}>

@@ -16,7 +16,6 @@ export default function TrackerCard(props) {
   const { card, updateCountCallback, reportedVoterGoals } = props;
   const { key, title, subTitle, progress, total, icon } = card;
 
-  console.log('reportedVoterGoals', reportedVoterGoals);
   const [value, setValue] = useState(0);
 
   const onChangeField = (val) => {
