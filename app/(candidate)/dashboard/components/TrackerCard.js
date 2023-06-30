@@ -24,7 +24,8 @@ export default function TrackerCard(props) {
 
   const handleSubmit = () => {
     const newTotal = reportedVoterGoals[key] + parseInt(value, 10);
-    updateCountCallback(key, newTotal);
+    const positiveTotal = newTotal > 0 ? newTotal : 0;
+    updateCountCallback(key, positiveTotal);
     setShowModal(false);
     setValue(0);
   };
