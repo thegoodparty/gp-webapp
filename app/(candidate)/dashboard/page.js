@@ -18,6 +18,7 @@ export default async function Page({ params, searchParams }) {
   const childProps = {
     pathname: '/dashboard',
     candidateSlug,
+    campaign,
   };
   return <DashboardPage {...childProps} />;
 }

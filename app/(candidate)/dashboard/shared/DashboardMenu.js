@@ -11,7 +11,7 @@ const pages = [
   {
     label: 'Campaign Plan',
     icon: <TbBrain />,
-    link: '/dashboard/plan',
+    link: '/dashboard',
     section: 'Strategy',
   },
   { label: 'Campaign Team', icon: <RiTeamLine />, link: '/dashboard/team' },

@@ -62,6 +62,16 @@ export const daysTill = (date) => {
   return Math.ceil(daysDiff);
 };
 
+export function weeksTill(date) {
+  if (!date) {
+    return false;
+  }
+  const days = daysTill(date);
+  const weeks = Math.floor(days / 7);
+  const remainder = days - weeks * 7;
+  return { weeks, days: remainder };
+}
+
 export const dateWithMonthName = (date) => {
   if (!date) {
     return '';
