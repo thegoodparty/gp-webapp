@@ -2,7 +2,7 @@ import Body1 from '@shared/typography/Body1';
 import H4 from '@shared/typography/H4';
 import IssuesIcon from './IssuesIcon';
 
-export default function CandidatePosition({ candidatePosition }) {
+export default function CandidatePosition({ candidatePosition, previewMode }) {
   const { topIssue, position, description } = candidatePosition;
   return (
     <div
@@ -14,7 +14,9 @@ export default function CandidatePosition({ candidatePosition }) {
       </div>
       <div>
         <H4 className="">{position?.name}</H4>
-        <Body1 className="mt-3">{description}</Body1>
+        <Body1 className={`mt-3 ${previewMode ? 'line-clamp-3' : ''}`}>
+          {description}
+        </Body1>
       </div>
     </div>
   );

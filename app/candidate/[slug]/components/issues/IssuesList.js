@@ -48,6 +48,7 @@ export default function IssuesList({
         <CandidatePosition
           candidatePosition={candidatePosition}
           key={candidatePosition.id}
+          previewMode={previewMode}
         />
       ))}
     </div>
