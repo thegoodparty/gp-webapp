@@ -34,8 +34,6 @@ export default function ProgressSection(props) {
   const { contactGoals, weeksUntil, reportedVoterGoals } = props;
   const { weeks, days } = weeksUntil;
   const accumulated = calculateAccumulatedByWeek(contactGoals);
-  console.log('reportedVoterGoals', reportedVoterGoals);
-  console.log('accu', accumulated);
   const calculateReminder = (weekNum, key) => {
     const week = `week${weekNum}`;
     const reported = reportedVoterGoals[key];

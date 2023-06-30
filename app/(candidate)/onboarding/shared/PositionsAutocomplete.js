@@ -23,7 +23,6 @@ const comparePositions = (a, b) => {
 export default function PositionsAutocomplete({ positions, updateCallback }) {
   const sorted = positions.sort(comparePositions);
   const [inputValue, setInputValue] = useState('');
-  console.log('sorted', sorted);
 
   const addPosition = (position) => {
     updateCallback(position);
