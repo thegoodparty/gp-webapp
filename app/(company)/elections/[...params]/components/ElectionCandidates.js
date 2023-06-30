@@ -34,8 +34,11 @@ export default function ElectionCandidates(props) {
         </div>
         <div className="grid grid-cols-12 gap-3 mt-20 justify-items-center">
           {content.candidates.map((candidate) => (
-            <Link key={candidate.slug} href={candidateRoute(candidate)}>
-              <div className="col-span-12 lg:col-span-3 justify-items-center">
+            <div
+              className="col-span-12 lg:col-span-3 justify-items-center"
+              key={candidate.slug}
+            >
+              <Link href={candidateRoute(candidate)}>
                 <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
                   <AvatarWithTracker
                     candidate={candidate}
@@ -61,8 +64,8 @@ export default function ElectionCandidates(props) {
                     </li>
                   </ul>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </div>
       </MaxWidth>
