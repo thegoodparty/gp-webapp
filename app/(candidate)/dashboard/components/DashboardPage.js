@@ -20,10 +20,11 @@ export default function DashboardPage(props) {
   });
 
   const { electionDate } = goals;
-  const { voterContactGoal } = pathToVictory;
+  const { voterContactGoal, voteGoal } = pathToVictory;
+  let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const weeksUntil = weeksTill(electionDate);
   // const weeksUntil = { weeks: 10, days: 3 };
-  const contactGoals = calculateContactGoals(voterContactGoal, weeksUntil);
+  const contactGoals = calculateContactGoals(resolvedContactGoal, weeksUntil);
 
   const updateCountCallback = async (key, value) => {
     const newState = {
