@@ -9,6 +9,7 @@ import Instructors from './Instructors';
 import LearnMore from './LearnMore';
 import Timeline from './Timeline';
 import YouGet from './YouGet';
+import Testimonials from './Testimonials';
 
 export default function AcademyPage() {
   const [showModal, setShowModal] = useState(false);
@@ -22,6 +23,7 @@ export default function AcademyPage() {
         <Curriculum openModalCallback={handleOpenModal} />
         <Timeline />
         <YouGet openModalCallback={handleOpenModal} />
+        <Testimonials />
         <Instructors />
         <LearnMore openModalCallback={handleOpenModal} />
       </MaxWidth>
