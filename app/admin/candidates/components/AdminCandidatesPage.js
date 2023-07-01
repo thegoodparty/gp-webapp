@@ -15,12 +15,27 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';
+import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export const deleteCandidate = async (id) => {
   const api = gpApi.admin.deleteCandidate;
   const payload = { id };
   return await gpFetch(api, payload);
 };
+
+function mapStatus(status) {
+  if (!status) {
+    return 'No (Onboarding)';
+  }
+  if (status === 'launched') {
+    return 'Live';
+  }
+  if (status === 'pending') {
+    return 'Pending Review';
+  }
+  return 'No';
+}
 
 export default function AdminCandidatesPage(props) {
   const { campaigns } = props;
@@ -30,17 +45,25 @@ export default function AdminCandidatesPage(props) {
 
   const inputData = [];
   if (campaigns) {
-    campaigns.map((candidate) => {
+    campaigns.map((campaignObj) => {
+      console.log('camObj', campaignObj);
+      const campaign = mapCampaignToCandidate(campaignObj.data);
+      const { user } = campaignObj;
       const fields = {
-        active: candidate.isActive ? 'Yes' : 'No',
-        id: candidate.id,
-        slug: candidate.slug,
-        firstName: candidate.firstName,
-        lastName: candidate.lastName,
-        party: partyResolver(candidate.party),
-        chamber: candidate.chamber,
-        office: candidate.race,
-        state: candidate.state ? candidate.state.toUpperCase() : '?',
+        id: campaignObj.slug,
+        slug: campaign.slug,
+        firstName: campaign.firstName,
+        lastName: campaign.lastName,
+        launched: mapStatus(campaign.launchStatus),
+        party: partyResolver(campaign.party),
+        chamber: campaign.chamber,
+        office: campaign.office,
+        district: campaign.district || 'n/a',
+        state: campaign.state ? campaign.state.toUpperCase() : '?',
+        createdAt: dateUsHelper(campaignObj.createdAt),
+        updatedAt: dateUsHelper(campaignObj.updatedAt),
+        email: user.email,
+        phone: user.phone || 'n/a',
       };
       inputData.push(fields);
     });
@@ -71,18 +94,8 @@ export default function AdminCandidatesPage(props) {
 
   const columns = useMemo(() => [
     {
-      Header: 'Id',
-      accessor: 'id',
-      collapse: true,
-    },
-    {
-      Header: 'Active?',
-      accessor: 'active',
-      collapse: true,
-    },
-    {
-      Header: 'First Name',
-      accessor: 'firstName',
+      Header: 'Profile',
+      accessor: 'slug',
       Cell: ({ row }) => {
         const route = candidateRoute(row.original);
         return (
@@ -90,18 +103,71 @@ export default function AdminCandidatesPage(props) {
             href={route}
             target="_blank"
             rel="noopener noreferrer nofollow"
-            style={{
-              textDecoration: row.original.isHidden ? 'line-through' : '',
-            }}
+            className="underline"
           >
-            {row.original.firstName}
+            {row.original.slug}
           </a>
         );
       },
     },
     {
+      Header: 'First Name',
+      accessor: 'firstName',
+    },
+    {
       Header: 'Last Name',
       accessor: 'lastName',
+    },
+    {
+      Header: 'Launch Status',
+      accessor: 'launchStatus',
+      Cell: ({ row }) => {
+        const status = row.original.launched;
+        if (status === 'Pending Review') {
+          const route = `${candidateRoute(row.original)}/review`;
+          return (
+            <a
+              href={route}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="underline"
+            >
+              Pending Review
+            </a>
+          );
+        }
+        return (
+          <span
+            className={`font-bold ${status === 'Live' ? 'text-green-500' : ''}`}
+          >
+            {status}
+          </span>
+        );
+      },
+    },
+    {
+      Header: 'Date Created',
+      accessor: 'createdAt',
+    },
+    {
+      Header: 'Last Update',
+      accessor: 'updatedAt',
+    },
+    {
+      Header: 'Path to Victory',
+      accessor: 'victoryPath',
+      Cell: ({ row }) => {
+        return (
+          <a
+            href={`/admin/victory-path/${row.original.slug}`}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className="underline"
+          >
+            Path to victory
+          </a>
+        );
+      },
     },
     {
       Header: 'Party',
@@ -112,28 +178,48 @@ export default function AdminCandidatesPage(props) {
       accessor: 'office',
     },
     {
+      Header: 'Jurisdiction',
+      accessor: 'district',
+    },
+    {
       Header: 'State',
       accessor: 'state',
       collapse: true,
     },
-
     {
-      Header: 'Delete',
-      collapse: true,
-      accessor: 'name',
+      Header: 'Email',
+      accessor: 'email',
       Cell: ({ row }) => {
         return (
-          <div className="flex justify-center">
-            <GoTrashcan
-              onClick={() => {
-                handleDeleteCandidate(row.original.id);
-              }}
-              style={{ color: 'red', cursor: 'pointer' }}
-            />
-          </div>
+          <a href={`mailto:${row.original.email}`} className="underline">
+            {row.original.email}
+          </a>
         );
       },
     },
+    {
+      Header: 'Phone',
+      accessor: 'phone',
+      collapse: true,
+    },
+
+    // {
+    //   Header: 'Delete',
+    //   collapse: true,
+    //   accessor: 'name',
+    //   Cell: ({ row }) => {
+    //     return (
+    //       <div className="flex justify-center">
+    //         <GoTrashcan
+    //           onClick={() => {
+    //             handleDeleteCandidate(row.original.id);
+    //           }}
+    //           style={{ color: 'red', cursor: 'pointer' }}
+    //         />
+    //       </div>
+    //     );
+    //   },
+    // },
   ]);
 
   return (
