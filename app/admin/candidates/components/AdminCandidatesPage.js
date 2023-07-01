@@ -62,8 +62,8 @@ export default function AdminCandidatesPage(props) {
         state: campaign.state ? campaign.state.toUpperCase() : '?',
         createdAt: dateUsHelper(campaignObj.createdAt),
         updatedAt: dateUsHelper(campaignObj.updatedAt),
-        email: user.email,
-        phone: user.phone || 'n/a',
+        email: user?.email || 'n/a',
+        phone: user?.phone || 'n/a',
       };
       inputData.push(fields);
     });
