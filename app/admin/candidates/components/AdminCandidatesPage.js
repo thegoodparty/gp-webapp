@@ -47,8 +47,10 @@ export default function AdminCandidatesPage(props) {
   if (campaigns) {
     campaigns.map((campaignObj) => {
       console.log('camObj', campaignObj);
-      const campaign = mapCampaignToCandidate(campaignObj.data);
+      const { data } = campaignObj;
+      const campaign = mapCampaignToCandidate(data);
       const { user } = campaignObj;
+      const { currentStep } = data || {};
       const fields = {
         id: campaignObj.slug,
         slug: campaign.slug,
@@ -64,6 +66,7 @@ export default function AdminCandidatesPage(props) {
         updatedAt: dateUsHelper(campaignObj.updatedAt),
         email: user?.email || 'n/a',
         phone: user?.phone || 'n/a',
+        currentStep,
       };
       inputData.push(fields);
     });
@@ -144,6 +147,10 @@ export default function AdminCandidatesPage(props) {
           </span>
         );
       },
+    },
+    {
+      Header: 'Onboarding Step',
+      accessor: 'currentStep',
     },
     {
       Header: 'Date Created',

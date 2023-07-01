@@ -12,7 +12,7 @@ import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates } from 'helpers/cacheHelper';
+import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -105,31 +105,13 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  const [selected, setSelected] = useState(false);
-  const [campaignsBySlug, setCampaignsBySlug] = useState(false);
-  const [state, setState] = useState(initialState);
+  const { campaign } = props;
+
+  const [state, setState] = useState({
+    ...initialState,
+    ...campaign.pathToVictory,
+  });
   const snackbarState = useHookstate(globalSnackbarState);
-  console.log('props.campaigns', props.campaigns);
-  useEffect(() => {
-    const bySlug = {};
-    props.campaigns.forEach((campaign) => {
-      bySlug[campaign.slug] = campaign;
-    });
-    setCampaignsBySlug(bySlug);
-  }, []);
-
-  const { campaigns } = props;
-
-  const onSelectCallback = (e) => {
-    const campaign = campaignsBySlug[e.target.value];
-    setSelected(campaign);
-    if (campaign.data.pathToVictory) {
-      setState({
-        ...state,
-        ...campaign.data.pathToVictory,
-      });
-    }
-  };
 
   const onChangeField = (key, value) => {
     let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
@@ -151,13 +133,13 @@ export default function AdminVictoryPathPage(props) {
         isError: false,
       };
     });
-    const campaign = {
-      ...selected.data,
+    const updated = {
+      ...campaign,
       pathToVictory: state,
     };
     try {
-      await updateCampaign(campaign, false, true);
-      await sendVictoryMail(campaign.slug);
+      await updateCampaign(updated, false, true);
+      await sendVictoryMail(updated.slug);
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -166,7 +148,7 @@ export default function AdminVictoryPathPage(props) {
         };
       });
       await revalidateCandidates();
-      window.location.reload();
+      // window.location.reload();
     } catch (e) {
       snackbarState.set(() => {
         return {
@@ -181,87 +163,65 @@ export default function AdminVictoryPathPage(props) {
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
-        <Select
-          native
-          fullWidth
-          variant="outlined"
-          onChange={onSelectCallback}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        >
-          <option value="">Select a Campaign</option>
-          {campaigns.map((op) => (
-            <option value={op.slug} key={op.slug}>
-              {op.slug} (User: {op.user?.name}, Office:{' '}
-              {op.data?.details?.office || 'N/A'}, State:{' '}
-              {op.data?.details?.state || 'N/A'}, District:{' '}
-              {op.data?.details?.district || 'N/A'})
-            </option>
-          ))}
-        </Select>
-        {selected && (
-          <div className="mt-8">
-            <h2 className="my-6 text-xl">
-              Office: <strong>{selected.data?.details?.office || 'N/A'}</strong>
-              . State: <strong>{selected.data?.details?.state || 'N/A'}</strong>
-              . District:{' '}
-              <strong>{selected.data?.details?.district || 'N/A'}</strong>
-            </h2>
-            {selected.user && (
-              <div className="p-4 border border-gray-500 rounded-md mb-5 max-w-xl">
-                <h2 className="mb-6 text-xl font-black">User</h2>
-                <div className="pb-2 border-b border-gray-300 mb-2">
-                  id: <strong>{selected.user.id}</strong>
-                </div>
-                <div className="pb-2 border-b border-gray-300 mb-2">
-                  Name: <strong>{selected.user.name}</strong>
-                </div>
-                <div className="pb-2 border-b border-gray-300 mb-2">
-                  Email:{' '}
-                  <strong>
-                    <a href={`mailto:${selected.user.email}`}>
-                      {selected.user.email}
-                    </a>
-                  </strong>
-                </div>
+        <div className="mt-8">
+          <h2 className="my-6 text-xl">
+            Office: <strong>{campaign?.details?.office || 'N/A'}</strong>.
+            State: <strong>{campaign?.details?.state || 'N/A'}</strong>.
+            District: <strong>{campaign?.details?.district || 'N/A'}</strong>
+          </h2>
+          {/* {selected.user && (
+            <div className="p-4 border border-gray-500 rounded-md mb-5 max-w-xl">
+              <h2 className="mb-6 text-xl font-black">User</h2>
+              <div className="pb-2 border-b border-gray-300 mb-2">
+                id: <strong>{selected.user.id}</strong>
               </div>
-            )}
-            {sections.map((section) => (
-              <div className="mb-12" key={section.title}>
-                <h2 className="font-black text-2xl mb-8">{section.title}</h2>
-                <div className="grid grid-cols-12 gap-4">
-                  {section.fields.map((field) => (
-                    <div className="col-span-12 lg:col-span-6" key={field.key}>
-                      {field.formula ? (
-                        <div>
-                          <TextField
-                            label={field.label}
-                            fullWidth
-                            disabled
-                            value={state[field.key]}
-                          />
-                        </div>
-                      ) : (
-                        <RenderInputField
-                          field={field}
-                          onChangeCallback={onChangeField}
+              <div className="pb-2 border-b border-gray-300 mb-2">
+                Name: <strong>{selected.user.name}</strong>
+              </div>
+              <div className="pb-2 border-b border-gray-300 mb-2">
+                Email:{' '}
+                <strong>
+                  <a href={`mailto:${selected.user.email}`}>
+                    {selected.user.email}
+                  </a>
+                </strong>
+              </div>
+            </div>
+          )} */}
+          {sections.map((section) => (
+            <div className="mb-12" key={section.title}>
+              <h2 className="font-black text-2xl mb-8">{section.title}</h2>
+              <div className="grid grid-cols-12 gap-4">
+                {section.fields.map((field) => (
+                  <div className="col-span-12 lg:col-span-6" key={field.key}>
+                    {field.formula ? (
+                      <div>
+                        <TextField
+                          label={field.label}
+                          fullWidth
+                          disabled
                           value={state[field.key]}
                         />
-                      )}
-                    </div>
-                  ))}
-                </div>
+                      </div>
+                    ) : (
+                      <RenderInputField
+                        field={field}
+                        onChangeCallback={onChangeField}
+                        value={state[field.key]}
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-
-            <div className="flex justify-end">
-              <BlackButtonClient onClick={save}>
-                <strong>Save</strong>
-              </BlackButtonClient>
             </div>
+          ))}
+
+          <div className="flex justify-end">
+            <BlackButtonClient onClick={save}>
+              <strong>Save</strong>
+            </BlackButtonClient>
           </div>
-        )}
+        </div>
       </PortalPanel>
     </AdminWrapper>
   );

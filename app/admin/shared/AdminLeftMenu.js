@@ -17,10 +17,6 @@ export const leftMenuItems = [
     label: 'Top Issues',
     link: '/admin/top-issues',
   },
-  {
-    label: 'Path To Victory',
-    link: '/admin/victory-path',
-  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {
