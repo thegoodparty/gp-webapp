@@ -6,10 +6,11 @@ import pageMetaData from 'helpers/metadataHelper';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { mapCampaignToCandidate } from '../edit/page';
+
 import { getServerToken } from 'helpers/userServerHelper';
 import ReviewCandidatePage from '../components/ReviewCandidatePage';
 import { mapTopIssues } from '../edit/mapTopIssues';
+import mapCampaignToCandidate from '../edit/mapCampaignToCandidate';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;

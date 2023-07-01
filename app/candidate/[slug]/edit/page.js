@@ -2,13 +2,13 @@ export const dynamic = 'force-dynamic';
 import { notFound, redirect } from 'next/navigation';
 
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
-import { fetchCandidates } from 'app/candidates/[[...filters]]/page';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchCandidate } from '../page';
 import EditCandidatePage from '../components/EditCandidatePage';
 import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]/page';
 import pageMetaData from 'helpers/metadataHelper';
 import { mapTopIssues } from './mapTopIssues';
+import mapCampaignToCandidate from './mapCampaignToCandidate';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -95,76 +95,4 @@ export default async function Page({ params }) {
       {/* <TrackVisit /> */}
     </>
   );
-}
-
-export function mapCampaignToCandidate(campaign) {
-  if (!campaign) {
-    return false;
-  }
-  const {
-    slug,
-    details,
-    campaignPlan,
-    pathToVictory,
-    color,
-    image,
-    twitter,
-    instagram,
-    facebook,
-    linkedin,
-    tiktok,
-    snap,
-    twitch,
-    hashtag,
-    website,
-    customIssues,
-    endorsements,
-  } = campaign;
-  const {
-    firstName,
-    lastName,
-    party,
-    state,
-    office,
-    pastExperience,
-    occupation,
-    funFact,
-    district,
-  } = details;
-  const { slogan, aboutMe, why } = campaignPlan;
-
-  let voteGoal, voterProjection;
-  if (pathToVictory) {
-    ({ voteGoal, voterProjection } = pathToVictory);
-  }
-  return {
-    slug,
-    firstName,
-    lastName,
-    party,
-    state,
-    office,
-    slogan,
-    about: aboutMe,
-    why,
-    pastExperience,
-    occupation,
-    funFact,
-    voteGoal: parseInt(voteGoal) || 0,
-    voterProjection: parseInt(voterProjection) || 0,
-    color,
-    image,
-    twitter,
-    instagram,
-    facebook,
-    linkedin,
-    tiktok,
-    snap,
-    twitch,
-    hashtag,
-    website,
-    district,
-    customIssues,
-    endorsements,
-  };
 }
