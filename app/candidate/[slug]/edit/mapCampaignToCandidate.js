@@ -32,7 +32,7 @@ export default function mapCampaignToCandidate(campaign) {
     occupation,
     funFact,
     district,
-  } = details;
+  } = details || {};
   const { slogan, aboutMe, why } = campaignPlan || {};
 
   const { voteGoal, voterProjection } = pathToVictory || {};
