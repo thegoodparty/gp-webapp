@@ -1,10 +1,12 @@
+'use client';
 import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailForm from '@shared/inputs/EmailForm';
+import WarningButton from '@shared/buttons/WarningButton';
 // import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 
 export default function ElectionVolunteer(props) {
-  const { content } = props;
+  const { content, handleOpenModal } = props;
 
   return (
     <>
@@ -52,10 +54,33 @@ export default function ElectionVolunteer(props) {
           </div>
         </div>
 
-        <div className="flex text-center justify-center w-full pt-20">
-          <span className="text-indigo-800 text-[40px] font-semibold pb-20">
-            Schedule an info session
-          </span>
+        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50">
+          <div className="col-span-12 lg:col-span-5 relative w-full h-full lg:pt-10 lg:pl-20 max-w-2xl p-10 items-center">
+            <div className="flex flex-row justify-center">
+              <Image
+                src="/images/elections/meeting.jpg"
+                width={445}
+                height={366}
+                alt=""
+                className="rounded-xl"
+              />
+            </div>
+          </div>
+
+          <div className="col-span-12 lg:col-span-7 lg:pl-20 max-w-2xl p-10 mb-20">
+            <h1 className="text-[32px] md:text-[64px] font-semibold mt-3">
+              Schedule a virtual info session
+            </h1>
+            <h2 className="text-lg font-sfpro font-normal leading-6 mt-5 max-w-md">
+              Meet with us to learn about joining the movement to help make
+              people matter more than money in politics.
+            </h2>
+            <div className="pt-10">
+              <div onClick={handleOpenModal} id="election-demo-btn">
+                <WarningButton>Schedule info session</WarningButton>
+              </div>
+            </div>
+          </div>
         </div>
       </MaxWidth>
     </>
