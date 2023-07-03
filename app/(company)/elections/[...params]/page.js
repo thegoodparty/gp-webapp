@@ -69,9 +69,16 @@ export default async function Page({ params }) {
     let topPosition = '';
     if (candidatePositions && candidatePositions.length > 0) {
       for (const issue of candidatePositions) {
-        if (issue?.order && issue.order == 1) {
-          topPosition = `${issue?.position?.name}`;
+        if (issue?.order && issue.order === 1) {
+          topPosition = issue?.position?.name;
+          break;
         }
+      }
+    }
+    if (topPosition === '') {
+      // only custom issues.
+      if (candidate.customIssues && candidate.customIssues.length > 0) {
+        topPosition = candidate.customIssues[0].position;
       }
     }
     if (candidate != undefined) {
