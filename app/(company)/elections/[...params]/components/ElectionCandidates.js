@@ -7,6 +7,8 @@ import styles from './Election.module.scss';
 import Link from 'next/link';
 import { candidateRoute } from 'helpers/candidateHelper';
 import { colors } from '/app/candidate/[slug]/components/CandidateColors';
+import Image from 'next/image';
+import WarningButton from '@shared/buttons/WarningButton';
 
 export default function ElectionCandidates(props) {
   const { content } = props;
@@ -17,26 +19,23 @@ export default function ElectionCandidates(props) {
   return (
     <section className="bg-primary h-auto pt-20 pb-40">
       <MaxWidth>
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-12 lg:col-span-6 pb-5 lg:pl-20 max-w-2xl p-10">
-            <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
-              {content.candidatesTitle}
-            </div>
-
-            <div
-              className={`font-sfpro text-slate-50 text-[18px] leading-6 mt-2 max-w-md ${styles.hyperlink}`}
-            >
-              <CmsContentWrapper>
-                {contentfulHelper(content.candidatesSubTitle)}
-              </CmsContentWrapper>
-            </div>
+        <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
+          <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+            {content.candidatesTitle}
           </div>
-          <div className="col-span-12 lg:col-span-6"></div>
+
+          <div
+            className={`font-sfpro text-center text-slate-50 text-[18px] leading-6 mt-2 ${styles.hyperlink}`}
+          >
+            <CmsContentWrapper className="max-w-md">
+              {contentfulHelper(content.candidatesSubTitle)}
+            </CmsContentWrapper>
+          </div>
         </div>
-        <div className="grid grid-cols-12 gap-3 mt-20 justify-items-center">
+        <div className="flex flex-col lg:flex-row w-full flex-auto mt-20 justify-center justify-items-center">
           {content.candidates.map((candidate) => (
             <div
-              className="col-span-12 lg:col-span-3 justify-items-center"
+              className="flex w-auto justify-center justify-items-center"
               key={candidate.slug}
             >
               <Link href={candidateRoute(candidate)}>
@@ -70,6 +69,30 @@ export default function ElectionCandidates(props) {
               </Link>
             </div>
           ))}
+        </div>
+
+        <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
+          <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+            {content.districtTitle}
+          </div>
+          <div className="flex justify-center">
+            <Image
+              src={`https:${content.districtImage.url}`}
+              width={584}
+              height={524}
+              alt="Nashville District Map"
+            />
+          </div>
+          <div>
+            <a
+              id="district-link"
+              href={content.districtButtonLink}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <WarningButton>{content.districtButtonText}</WarningButton>
+            </a>
+          </div>
         </div>
       </MaxWidth>
     </section>
