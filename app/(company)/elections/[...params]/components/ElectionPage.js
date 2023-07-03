@@ -13,7 +13,7 @@ export default function ElectionPage(props) {
       <div className="flex justify-center pb-20">
         <div className="w-[90vw] md:w-[80vw] max-w-[900px] h-[70vh] md:h-[90vh]">
           <iframe
-            src="https://meetings.hubspot.com/jared-alper"
+            src="https://meetings.hubspot.com/robbooth/gp-info-session"
             width="100%"
             height="100%"
           />
