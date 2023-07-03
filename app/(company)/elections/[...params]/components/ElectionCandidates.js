@@ -6,6 +6,7 @@ import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 import styles from './Election.module.scss';
 import Link from 'next/link';
 import { candidateRoute } from 'helpers/candidateHelper';
+import { colors } from '/app/candidate/[slug]/components/CandidateColors';
 
 export default function ElectionCandidates(props) {
   const { content } = props;
@@ -42,7 +43,7 @@ export default function ElectionCandidates(props) {
                 <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
                   <AvatarWithTracker
                     candidate={candidate}
-                    color={candidate.color ? candidate.color : '#A180FF'}
+                    color={candidate.color ? candidate.color : colors[0]}
                   />
                   <span className=" text-slate-50 text-2xl p-3">
                     {candidate.firstName} {candidate.lastName}
@@ -51,7 +52,7 @@ export default function ElectionCandidates(props) {
                     text={`${candidate.office}, ${
                       candidate.district ? candidate.district : candidate.state
                     }`}
-                    color={candidate.color ? candidate.color : '#A180FF'}
+                    color={candidate.color ? candidate.color : colors[0]}
                   />
 
                   <ul className="font-sfpro text-[16px] font-normal max-w-[300px]">

@@ -4,8 +4,7 @@ import H6 from '@shared/typography/H6';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import { useState } from 'react';
-
-const colors = ['#574AF0', '#EA932D', '#61B35F', '#55AFAA', '#E44A8B'];
+import { colors } from './CandidateColors';
 
 export default function EditProfile(props) {
   const {
