@@ -123,7 +123,11 @@ export default function AdminCandidatesPage(props) {
     },
     {
       Header: 'Launch Status',
-      accessor: 'launchStatus',
+      accessor: 'launched',
+    },
+    {
+      Header: 'Review Link',
+      accessor: 'reviewLink',
       Cell: ({ row }) => {
         const status = row.original.launched;
         if (status === 'Pending Review') {
@@ -139,13 +143,7 @@ export default function AdminCandidatesPage(props) {
             </a>
           );
         }
-        return (
-          <span
-            className={`font-bold ${status === 'Live' ? 'text-green-500' : ''}`}
-          >
-            {status}
-          </span>
-        );
+        return <span>n/a</span>;
       },
     },
     {
