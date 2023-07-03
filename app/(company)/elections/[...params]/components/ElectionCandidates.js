@@ -42,7 +42,7 @@ export default function ElectionCandidates(props) {
                 <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
                   <AvatarWithTracker
                     candidate={candidate}
-                    color={candidate.color}
+                    color={candidate.color ? candidate.color : '#A180FF'}
                   />
                   <span className=" text-slate-50 text-2xl p-3">
                     {candidate.firstName} {candidate.lastName}
@@ -51,7 +51,7 @@ export default function ElectionCandidates(props) {
                     text={`${candidate.office}, ${
                       candidate.district ? candidate.district : candidate.state
                     }`}
-                    color={candidate.color}
+                    color={candidate.color ? candidate.color : '#A180FF'}
                   />
 
                   <ul className="font-sfpro text-[16px] font-normal max-w-[300px]">
