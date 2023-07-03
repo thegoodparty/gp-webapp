@@ -1,16 +1,19 @@
+import { FaTiktok, FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
+
 export const FOOTER_COLUMNS = [
   {
-    title: 'ORGANIZATION',
+    title: 'Our Org',
     links: [
-      { label: 'About Us', link: '/about' },
-      { label: 'Meet the Team', link: '/team' },
-      { label: 'Careers', link: '/work-with-us' },
       { label: 'Volunteer', link: '/volunteer' },
+      { label: 'About Us', link: '/about' },
+      { label: 'Our Team', link: '/team' },
+      { label: 'Careers', link: '/work-with-us' },
     ],
   },
   {
-    title: 'SUPPORT',
+    title: 'Support',
     links: [
+      { label: 'FAQs', link: '/faqs' },
       {
         label: 'Contact Us',
         link: '/contact',
@@ -18,40 +21,41 @@ export const FOOTER_COLUMNS = [
     ],
   },
   {
-    title: 'CAMPAIGNS',
+    title: 'Campaigns',
     links: [
       { label: 'Run for office', link: '/run-for-office' },
       { label: 'Good Party Academy', link: '/academy' },
       // { label: 'Meet the Candidates', link: '/candidates' },
-      { label: 'FAQs', link: '/faqs' },
-      { label: 'Pricing', link: '/pricing' },
       { label: 'Political Definitions', link: '/political-terms' },
-      { label: 'Declaration of Independence', link: '/declare' },
+      { label: 'Declare Independence', link: '/declare' },
+      { label: 'Pricing', link: '/pricing' },
     ],
   },
+];
+
+export const SOCIAL_LINKS = [
   {
-    title: 'CONNECT',
-    links: [
-      {
-        label: 'Twitter',
-        link: 'https://twitter.com/goodpartyorg',
-        isExternal: true,
-      },
-      {
-        label: 'Facebook',
-        link: 'https://www.facebook.com/goodpartyorg',
-        isExternal: true,
-      },
-      {
-        label: 'Instagram',
-        link: 'https://www.instagram.com/goodpartyorg/',
-        isExternal: true,
-      },
-      {
-        label: 'TikTok',
-        link: 'https://www.tiktok.com/@goodparty',
-        isExternal: true,
-      },
-    ],
+    label: 'TikTok',
+    link: 'https://www.tiktok.com/@goodparty',
+    isExternal: true,
+    icon: <FaTiktok />,
+  },
+  {
+    label: 'Twitter',
+    link: 'https://twitter.com/goodpartyorg',
+    icon: <FaTwitter />,
+    isExternal: true,
+  },
+  {
+    label: 'Instagram',
+    link: 'https://www.instagram.com/goodpartyorg/',
+    isExternal: true,
+    icon: <FaInstagram />,
+  },
+  {
+    label: 'Facebook',
+    link: 'https://www.facebook.com/goodpartyorg',
+    isExternal: true,
+    icon: <FaFacebook />,
   },
 ];
