@@ -56,8 +56,10 @@ export default function ElectionCandidates(props) {
                   />
 
                   <ul className="font-sfpro text-[16px] font-normal max-w-[300px]">
-                    <li className="text-slate-50 pt-2 line-clamp-3">
-                      {candidate.topPosition}
+                    <li className="text-slate-50 pt-2">
+                      <div className="line-clamp-3">
+                        {candidate.topPosition}
+                      </div>
                     </li>
                     <li className="text-slate-50 pt-2">{candidate.slogan}</li>
                     <li className="text-slate-50 pt-2">
