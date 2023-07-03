@@ -77,7 +77,7 @@ export default async function Page({ params }) {
     }
     if (topPosition === '') {
       // only custom issues.
-      if (candidate.customIssues && candidate.customIssues.length > 0) {
+      if (candidate?.customIssues && candidate.customIssues.length > 0) {
         topPosition = candidate.customIssues[0].position;
       }
     }
