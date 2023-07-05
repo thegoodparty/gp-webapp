@@ -22,6 +22,19 @@ async function deleteCampaign(slug) {
   }
 }
 
+async function deactivateCandidate(slug) {
+  try {
+    const api = gpApi.admin.deactivateCandidate;
+    const payload = {
+      slug,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 export default function DeleteAction({ slug, isLive }) {
   const [showDelete, setShowDelete] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
@@ -30,27 +43,41 @@ export default function DeleteAction({ slug, isLive }) {
   }
 
   const handleDelete = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting...',
-        isError: false,
-      };
-    });
     if (isLive) {
-      // await deleteCandidate(slug);
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'hiding candidate',
+          isError: false,
+        };
+      });
+      await deactivateCandidate(slug);
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Hidden',
+          isError: false,
+        };
+      });
     } else {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Deleting...',
+          isError: false,
+        };
+      });
       await deleteCampaign(slug);
+      await revalidatePage('/admin/candidates');
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Deleted',
+          isError: false,
+        };
+      });
+      window.location.reload();
     }
-    await revalidatePage('/admin/candidates');
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleted',
-        isError: false,
-      };
-    });
-    window.location.reload();
   };
 
   return (
