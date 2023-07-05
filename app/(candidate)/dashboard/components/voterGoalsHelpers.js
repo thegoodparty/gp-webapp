@@ -41,9 +41,9 @@ export function calculateAccumulated(weeks, contactGoals) {
   }
   for (let i = 0; i < 13 - weeks; i++) {
     const key = `week${12 - i}`;
-    accumulatedTotal.doorKnocking += contactGoals[key].doorKnocking;
-    accumulatedTotal.calls += contactGoals[key].calls;
-    accumulatedTotal.digital += contactGoals[key].digital;
+    accumulatedTotal.doorKnocking += contactGoals[key]?.doorKnocking || 0;
+    accumulatedTotal.calls += contactGoals[key]?.calls || 0;
+    accumulatedTotal.digital += contactGoals[key]?.digital || 0;
   }
 
   return accumulatedTotal;
@@ -52,9 +52,9 @@ export function calculateAccumulated(weeks, contactGoals) {
 export function calculateAccumulatedByWeek(contactGoals) {
   let accumulatedTotal = {
     week12: {
-      doorKnocking: contactGoals.week12.doorKnocking,
-      calls: contactGoals.week12.calls,
-      digital: contactGoals.week12.digital,
+      doorKnocking: contactGoals.week12?.doorKnocking,
+      calls: contactGoals.week12?.calls,
+      digital: contactGoals.week12?.digital,
     },
     week11: {
       doorKnocking: 0,

@@ -9,14 +9,14 @@ export default function ThisWeekSection(props) {
   const { contactGoals, weeksUntil, reportedVoterGoals } = props;
   const { doorKnocking, calls, digital } = reportedVoterGoals;
   const { weeks, days } = weeksUntil;
-  const accumulatedTotal = calculateAccumulated(weeks, contactGoals);
+  const accumulatedTotal = calculateAccumulated(weeks, contactGoals) || {};
   const cards = [
     {
       key: 'doorKnocking',
       title: 'Doors knocked',
       subTitle: "doors you've knocked on",
       progress: doorKnocking,
-      total: accumulatedTotal.doorKnocking,
+      total: accumulatedTotal?.doorKnocking,
       icon: <RiDoorOpenLine />,
     },
     {
@@ -24,7 +24,7 @@ export default function ThisWeekSection(props) {
       title: 'Calls made',
       subTitle: "phone calls you've made",
       progress: calls,
-      total: accumulatedTotal.calls,
+      total: accumulatedTotal?.calls,
       icon: <RiPhoneLine />,
     },
     {
@@ -32,7 +32,7 @@ export default function ThisWeekSection(props) {
       title: 'Online impressions',
       subTitle: "online impressions you've made",
       progress: digital,
-      total: accumulatedTotal.digital,
+      total: accumulatedTotal?.digital,
       icon: <FaBullhorn />,
     },
   ];
