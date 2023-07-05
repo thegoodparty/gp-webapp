@@ -3,6 +3,10 @@ import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailForm from '@shared/inputs/EmailForm';
 import WarningButton from '@shared/buttons/WarningButton';
+import volunteerImg1 from '/public/images/elections/volunteer1.png';
+import volunteerImg2 from '/public/images/elections/volunteer2.png';
+import meetingImg from '/public/images/elections/meeting.jpg';
+
 // import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 
 export default function ElectionVolunteer(props) {
@@ -36,20 +40,8 @@ export default function ElectionVolunteer(props) {
           </div>
           <div className="col-span-12 lg:col-span-5 relative w-full h-full lg:pt-10 items-center">
             <div className="flex flex-row justify-center">
-              <Image
-                src="/images/elections/volunteer1.png"
-                width={239}
-                height={366}
-                alt=""
-                className="hidden md:block"
-              />
-              <Image
-                src="/images/elections/volunteer2.png"
-                width={239}
-                height={366}
-                alt=""
-                className="md:ml-3"
-              />
+              <Image src={volunteerImg1} alt="" className="hidden md:block" />
+              <Image src={volunteerImg2} alt="" className="md:ml-3" />
             </div>
           </div>
         </div>
@@ -57,13 +49,7 @@ export default function ElectionVolunteer(props) {
         <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50">
           <div className="col-span-12 lg:col-span-5 relative w-full h-full lg:pt-10 lg:pl-20 max-w-2xl p-10 items-center">
             <div className="flex flex-row justify-center">
-              <Image
-                src="/images/elections/meeting.jpg"
-                width={445}
-                height={366}
-                alt=""
-                className="rounded-xl"
-              />
+              <Image src={meetingImg} alt="" className="rounded-xl" />
             </div>
           </div>
 

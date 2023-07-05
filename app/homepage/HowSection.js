@@ -2,6 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import softwareImg from '/public/images/homepage/software.png';
+import genzImg from '/public/images/homepage/genz.png';
+import mapImg from '/public/images/homepage/map.png';
 
 export default function HowSection() {
   return (
@@ -49,10 +52,8 @@ export default function HowSection() {
           <div className="col-span-12 md:col-span-5 justify-self-center lg:justify-self-start lg:pl-10">
             <div className="w-auto ml-0 flex relative">
               <Image
-                src="/images/homepage/software.png"
+                src={softwareImg}
                 sizes="100vw"
-                height={262}
-                width={419}
                 className="object-contain"
                 alt=""
               />
@@ -73,10 +74,8 @@ export default function HowSection() {
             </div>
             <div className="w-auto ml-0 flex relative items-start">
               <Image
-                src="/images/homepage/genz.png"
+                src={genzImg}
                 sizes="100vw"
-                height={372}
-                width={540}
                 className="object-contain"
                 alt=""
               />
@@ -136,10 +135,8 @@ export default function HowSection() {
           <div className="col-span-12 md:col-span-5 justify-self-center lg:justify-self-start lg:pl-10">
             <div className="w-auto ml-0 flex relative items-start">
               <Image
-                src="/images/homepage/map.png"
+                src={mapImg}
                 sizes="100vw"
-                height={300}
-                width={440}
                 className="object-contain"
                 alt=""
               />
