@@ -17,6 +17,8 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
 import { dateUsHelper } from 'helpers/dateHelper';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import Actions from './Actions';
 
 export const deleteCandidate = async (id) => {
   const api = gpApi.admin.deleteCandidate;
@@ -46,13 +48,13 @@ export default function AdminCandidatesPage(props) {
   const inputData = [];
   if (campaigns) {
     campaigns.map((campaignObj) => {
-      console.log('camObj', campaignObj);
       const { data } = campaignObj;
       const campaign = mapCampaignToCandidate(data);
+      console.log(`camObj: ${campaign.slug}`, campaignObj);
       const { user } = campaignObj;
       const { currentStep } = data || {};
       const fields = {
-        id: campaignObj.slug,
+        id: campaignObj.id,
         slug: campaign.slug,
         firstName: campaign.firstName,
         lastName: campaign.lastName,
@@ -206,6 +208,15 @@ export default function AdminCandidatesPage(props) {
       Header: 'Phone',
       accessor: 'phone',
       collapse: true,
+    },
+
+    {
+      Header: 'Actions',
+      collapse: true,
+      accessor: 'actions',
+      Cell: ({ row }) => {
+        return <Actions {...row.original} />;
+      },
     },
 
     // {

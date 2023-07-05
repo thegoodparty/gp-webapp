@@ -90,6 +90,7 @@ export default async function Page({ params }) {
 
   const childProps = {
     content,
+    city,
   };
 
   return (

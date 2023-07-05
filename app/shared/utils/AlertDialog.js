@@ -15,7 +15,11 @@ function AlertDialog({
   ariaLabel,
 }) {
   return (
-    <Dialog onClose={handleClose} aria-labelledby={ariaLabel} open={open}>
+    <Dialog
+      onClose={handleClose}
+      aria-labelledby={title || ariaLabel}
+      open={open}
+    >
       <div className="p-8">
         <div
           className="text-3xl flex items-center font-black"

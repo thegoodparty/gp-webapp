@@ -11,7 +11,7 @@ import Image from 'next/image';
 import WarningButton from '@shared/buttons/WarningButton';
 
 export default function ElectionCandidates(props) {
-  const { content } = props;
+  const { content, city } = props;
   if (!content.candidates || content.candidates.length === 0) {
     return null;
   }
@@ -67,6 +67,7 @@ export default function ElectionCandidates(props) {
                   </ul>
                 </div>
               </Link>
+              $
             </div>
           ))}
         </div>
@@ -77,10 +78,10 @@ export default function ElectionCandidates(props) {
           </div>
           <div className="flex justify-center">
             <Image
-              src={`https:${content.districtImage.url}`}
+              src={`https:${content?.districtImage?.url}`}
               width={584}
               height={524}
-              alt="Nashville District Map"
+              alt={`${city} district map`}
             />
           </div>
           <div>

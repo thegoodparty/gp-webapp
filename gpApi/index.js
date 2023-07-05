@@ -233,6 +233,11 @@ const gpApi = {
         method: 'DELETE',
         withAuth: true,
       },
+      adminDelete: {
+        url: `${base}campaign`,
+        method: 'DELETE',
+        withAuth: true,
+      },
       findByUser: {
         url: `${base}campaign/onboarding/by-user`,
         method: 'GET',
@@ -247,6 +252,12 @@ const gpApi = {
       launchRequest: {
         url: `${base}campaign/onboarding/launch-request`,
         method: 'POST',
+        withAuth: true,
+      },
+      cancelLaunchRequest: {
+        // admin
+        url: `${base}campaign/onboarding/launch-request`,
+        method: 'DELETE',
         withAuth: true,
       },
       launch: {
