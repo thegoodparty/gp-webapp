@@ -99,6 +99,14 @@ export default function AdminCandidatesPage(props) {
 
   const columns = useMemo(() => [
     {
+      Header: 'Actions',
+      collapse: true,
+      accessor: 'actions',
+      Cell: ({ row }) => {
+        return <Actions {...row.original} />;
+      },
+    },
+    {
       Header: 'Profile',
       accessor: 'slug',
       Cell: ({ row }) => {
@@ -208,15 +216,6 @@ export default function AdminCandidatesPage(props) {
       Header: 'Phone',
       accessor: 'phone',
       collapse: true,
-    },
-
-    {
-      Header: 'Actions',
-      collapse: true,
-      accessor: 'actions',
-      Cell: ({ row }) => {
-        return <Actions {...row.original} />;
-      },
     },
 
     // {
