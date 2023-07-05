@@ -38,9 +38,6 @@ async function deactivateCandidate(slug) {
 export default function DeleteAction({ slug, isLive }) {
   const [showDelete, setShowDelete] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
-  if (isLive) {
-    return null;
-  }
 
   const handleDelete = async () => {
     if (isLive) {
