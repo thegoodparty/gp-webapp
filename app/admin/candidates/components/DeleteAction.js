@@ -3,7 +3,7 @@ import ErrorButton from '@shared/buttons/ErrorButton';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidatePage } from 'helpers/cacheHelper';
+import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
 
 import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
@@ -49,6 +49,8 @@ export default function DeleteAction({ slug, isLive }) {
         };
       });
       await deactivateCandidate(slug);
+      await revalidateCandidates();
+      await revalidatePage('/candidates');
       snackbarState.set(() => {
         return {
           isOpen: true,
