@@ -56,6 +56,7 @@ export default function DeleteAction({ slug, isLive }) {
           isError: false,
         };
       });
+      setShowDelete(false);
     } else {
       snackbarState.set(() => {
         return {
