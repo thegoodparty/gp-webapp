@@ -453,6 +453,11 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+    impersonateUser: {
+      url: `${base}admin/user/impersonate`,
+      method: 'POST',
+      withAuth: true,
+    },
   },
   uploadImage: {
     url: `${base}application/upload-image`,

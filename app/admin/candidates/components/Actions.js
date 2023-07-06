@@ -6,6 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { setCookie } from 'helpers/cookieHelper';
 
 async function handleCancelRequest(slug) {
   try {
@@ -20,7 +21,24 @@ async function handleCancelRequest(slug) {
   }
 }
 
-export default function Actions({ launched, slug }) {
+async function handleImpersonateUser(email) {
+  try {
+    const api = gpApi.admin.impersonateUser;
+    const payload = {
+      email,
+    };
+    const resp = await gpFetch(api, payload);
+    if (resp?.token) {
+      setCookie('impersonateToken', resp.token);
+      return true;
+    }
+  } catch (e) {
+    console.log('error', e);
+  }
+  return false;
+}
+
+export default function Actions({ launched, slug, email }) {
   const [showMenu, setShowMenu] = useState(false);
   const isLive = launched === 'Live';
   const snackbarState = useHookstate(globalSnackbarState);
@@ -45,6 +63,32 @@ export default function Actions({ launched, slug }) {
     });
     window.location.reload();
   };
+
+  const impersonateUser = async () => {
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Impersonating user',
+        isError: false,
+      };
+    });
+
+    const impersonateResp = await handleImpersonateUser(email);
+    if (impersonateResp === true) {
+      let candidatePage = `/candidate/${slug}`;
+      await revalidatePage(candidatePage);
+      window.location = candidatePage;
+    } else {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Impersonate failed',
+          isError: true,
+        };
+      });
+    }
+  };
+
   return (
     <div className="flex justify-center relative">
       <BsThreeDotsVertical
@@ -62,7 +106,7 @@ export default function Actions({ launched, slug }) {
             }}
           />
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 right-10 top-3">
-            <div className="my-3">
+            <div className="my-3" onClick={impersonateUser}>
               <PrimaryButton size="small" fullWidth>
                 <span className="whitespace-nowrap">Impersonate</span>
               </PrimaryButton>
