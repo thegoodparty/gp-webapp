@@ -21,6 +21,7 @@ export default function mapCampaignToCandidate(campaign) {
     customIssues,
     endorsements,
     launchStatus,
+    lastVisited,
   } = campaign;
   const {
     firstName,
@@ -66,5 +67,6 @@ export default function mapCampaignToCandidate(campaign) {
     customIssues,
     endorsements,
     launchStatus,
+    lastVisited,
   };
 }

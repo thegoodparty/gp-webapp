@@ -29,14 +29,14 @@ export default function RightSideClient() {
   useEffect(() => {
     const cookieUser = getUserCookie(true);
     setUser(cookieUser);
+    if (cookieUser) {
+      updateStatus();
+    }
   }, []);
 
   const pathname = usePathname();
   const isDashboardPath = pathname.startsWith('/dashboard');
 
-  useEffect(() => {
-    updateStatus();
-  }, []);
   const updateStatus = async () => {
     const status = await fetchCampaignStatus();
     setCampaignStatus(status);
