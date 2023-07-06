@@ -38,7 +38,7 @@ export default function ElectionVolunteer(props) {
               />
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-5 relative w-full h-full lg:pt-10 flex items-center">
+          <div className="col-span-12 lg:col-span-5 relative w-full h-full lg:pt-10 flex items-center justify-center">
             <div className="flex flex-row justify-center items-center">
               <Image src={volunteerImg1} alt="" className="hidden md:block" />
               <Image src={volunteerImg2} alt="" className="md:ml-3" />
@@ -53,7 +53,7 @@ export default function ElectionVolunteer(props) {
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-5 max-w-2xl mb-20">
+          <div className="col-span-12 lg:col-span-5 max-w-2xl md:mb-20 order-first md:order-last">
             <h1 className="text-[32px] md:text-[64px] leading-[32px] md:leading-[72px] font-semibold mt-3">
               Schedule a virtual info session
             </h1>
