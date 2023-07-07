@@ -69,6 +69,14 @@ export const fetchSections = async () => {
   return await gpFetch(api, payload, 3600);
 };
 
+const fetchElections = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'elections',
+  };
+  return await gpFetch(api, payload, 3600);
+};
+
 export default async function sitemap(req, res) {
   try {
     const { faqArticles } = await fetchContent();
@@ -78,6 +86,9 @@ export default async function sitemap(req, res) {
     const blogArticles = blogRes.content;
     const blogSectionsRes = await fetchSections();
     const blogSections = blogSectionsRes.content;
+
+    const electionsRes = await fetchElections();
+    const elections = electionsRes.content;
 
     let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -144,6 +155,21 @@ export default async function sitemap(req, res) {
       xmlString += `
         <url>
           <loc>${appBase}/blog/section/${section.fields?.slug}</loc>
+          <lastmod>${currentDate}</lastmod>
+          <changefreq>monthly</changefreq>
+        </url>
+      `;
+    });
+
+    elections.forEach((election) => {
+      if (election.slug.includes('-') === false) {
+        return;
+      }
+      const city = election.slug.split('-')[0];
+      const year = election.slug.split('-')[1];
+      xmlString += `
+        <url>
+          <loc>${appBase}/elections/${city}/${year}</loc>
           <lastmod>${currentDate}</lastmod>
           <changefreq>monthly</changefreq>
         </url>
