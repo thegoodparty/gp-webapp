@@ -21,14 +21,23 @@ export const RESOURCES_LINKS = [
   },
 ];
 
-export default function LearnMore({ open, toggleCallback, campaignStatus }) {
+export default function LearnMore({
+  open,
+  toggleCallback,
+  campaignStatus,
+  closeAll,
+}) {
   const { status } = campaignStatus || {};
+  const handleClick = () => {
+    toggleCallback();
+    closeAll();
+  };
   return (
     <div
       className={`mr-2 relative cursor-pointer min-w-[100px] ${
         status && 'hidden lg:block'
       }`}
-      onClick={toggleCallback}
+      onClick={handleClick}
       id="nav-learn-more-dropdown"
     >
       <PrimaryButton variant="text" size="medium">
