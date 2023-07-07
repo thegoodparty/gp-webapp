@@ -19,7 +19,7 @@ async function gpFetch(endpoint, data, revalidate, token, isFormData = false) {
 
   let autoToken;
   if (withAuth) {
-    autoToken = token || getCookie('token');
+    autoToken = getCookie('impersonateToken') || token || getCookie('token');
     if (!autoToken) {
       throw new Error({ message: 'missing token' });
     }

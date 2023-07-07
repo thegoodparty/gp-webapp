@@ -8,9 +8,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FiChevronDown } from 'react-icons/fi';
 import { VscHeart } from 'react-icons/vsc';
 import { RiLogoutBoxLine, RiSettingsLine } from 'react-icons/ri';
-import { deleteCookies } from 'helpers/cookieHelper';
+import { deleteCookies, getCookie, deleteCookie } from 'helpers/cookieHelper';
 import { RESOURCES_LINKS } from './LearnMore';
 import { HiOutlineStar } from 'react-icons/hi';
+import { BsMask } from 'react-icons/bs';
 
 export const globalUserState = hookstate(false);
 
@@ -26,12 +27,20 @@ export default function RegisterOrProfile({
   campaignStatus,
 }) {
   const userState = useHookstate(globalUserState);
+  const [impersonating, setImpersonating] = useState(false);
+
   const { status, slug } = campaignStatus || {};
   useEffect(() => {
     if (user) {
       userState.set(() => user);
       hubspotIntegration(user);
       fullstoryIndentity(user);
+      const cookie = getCookie('impersonateToken');
+      if (cookie) {
+        setImpersonating(true);
+      } else {
+        setImpersonating(false);
+      }
     }
   }, [user]);
 
@@ -71,7 +80,12 @@ export default function RegisterOrProfile({
   return (
     <>
       {user?.name ? (
-        <div className="flex items-center relative" onClick={toggleCallback}>
+        <div
+          className={`flex items-center relative ${
+            impersonating ? 'bg-orange-500 rounded-full p-2' : ''
+          } `}
+          onClick={toggleCallback}
+        >
           <UserAvatar user={user} />
           <FiChevronDown
             className={`ml-1 transition-all ${open && 'rotate-180'}`}
@@ -132,6 +146,19 @@ export default function RegisterOrProfile({
                       <div className="ml-3">Admin</div>
                     </div>
                   </Link>
+                )}
+                {impersonating && (
+                  <div
+                    data-cy="header-link"
+                    className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                    onClick={() => {
+                      deleteCookie('impersonateToken');
+                      window.location.reload();
+                    }}
+                  >
+                    <BsMask />
+                    <div className="ml-3">Stop Impersonating</div>
+                  </div>
                 )}
                 <div
                   data-cy="header-link"

@@ -3,7 +3,13 @@ import { cookies } from 'next/headers';
 export const getServerToken = () => {
   const nextCookies = cookies();
   const cookie = nextCookies.get('token');
-  return cookie?.value ? nextCookies.get('token').value : false;
+  const impersonateCookie = nextCookies.get('impersonateToken');
+  if (impersonateCookie?.value) {
+    return impersonateCookie.value;
+  } else if (cookie?.value) {
+    return cookie.value;
+  }
+  return false;
 };
 
 export const getServerUser = () => {
