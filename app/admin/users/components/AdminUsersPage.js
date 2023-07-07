@@ -82,7 +82,9 @@ export default function AdminUsersPage(props) {
       accessor: 'createdAt',
       sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.createdAt);
+        return row.original.createdAt?.toString() !== 'Invalid Date'
+          ? dateUsHelper(row.original.createdAt)
+          : 'n/a';
       },
     },
 
