@@ -65,8 +65,8 @@ export default function AdminCandidatesPage(props) {
         office: campaign.office,
         district: campaign.district || 'n/a',
         state: campaign.state ? campaign.state.toUpperCase() : '?',
-        createdAt: dateUsHelper(campaignObj.createdAt),
-        updatedAt: dateUsHelper(campaignObj.updatedAt),
+        createdAt: campaignObj.createdAt,
+        updatedAt: campaignObj.updatedAt,
         email: user?.email || 'n/a',
         phone: user?.phone || 'n/a',
         currentStep,
@@ -171,12 +171,18 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Date Created',
       accessor: 'createdAt',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.createdAt);
+      },
     },
-
     {
       Header: 'Last Update',
       accessor: 'updatedAt',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.updatedAt);
+      },
     },
+
     {
       Header: 'Path to Victory',
       accessor: 'victoryPath',
