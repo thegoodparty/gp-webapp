@@ -378,6 +378,7 @@ const gpApi = {
     deactivateCandidate: {
       url: `${base}admin/deactivate-candidate-by-campaign`,
       method: 'PUT',
+      withAuth: true,
     },
     topIssues: {
       create: {

@@ -172,7 +172,7 @@ export default function EditCandidatePosition({
     <div className="border-2 py-5 px-8 mb-5 rounded-xl border-dashed border-slate-900 min-h-[150px] bg-slate-100">
       <H2 className="mb-5">Issue {index + 1}</H2>
       <div className="rounded-full bg-primary py-2 px-3 text-slate-50 inline-block">
-        <Body1>{candidatePosition.position.name}</Body1>
+        <Body1>{candidatePosition.position?.name}</Body1>
       </div>
       {edit ? (
         <div className="bg-slate-200 py-4 px-5 mt-7 rounded-lg">

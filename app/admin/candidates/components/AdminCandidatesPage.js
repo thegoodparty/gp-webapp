@@ -1,30 +1,16 @@
 'use client';
 
-import { GoTrashcan } from 'react-icons/go';
-
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import Table from './Table';
 import Link from 'next/link';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
-import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
-
-export const deleteCandidate = async (id) => {
-  const api = gpApi.admin.deleteCandidate;
-  const payload = { id };
-  return await gpFetch(api, payload);
-};
 
 function mapStatus(status) {
   if (!status) {
@@ -41,9 +27,6 @@ function mapStatus(status) {
 
 export default function AdminCandidatesPage(props) {
   const { campaigns } = props;
-  const snackbarState = useHookstate(globalSnackbarState);
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const [candidateToDelete, setCandidateToDelete] = useState(false);
 
   const inputData = [];
   if (campaigns) {
@@ -59,13 +42,14 @@ export default function AdminCandidatesPage(props) {
         firstName: campaign.firstName,
         lastName: campaign.lastName,
         launched: mapStatus(campaign.launchStatus),
+        lastVisited: new Date(campaign.lastVisited),
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
         office: campaign.office,
         district: campaign.district || 'n/a',
         state: campaign.state ? campaign.state.toUpperCase() : '?',
-        createdAt: dateUsHelper(campaignObj.createdAt),
-        updatedAt: dateUsHelper(campaignObj.updatedAt),
+        createdAt: new Date(campaignObj.createdAt),
+        updatedAt: new Date(campaignObj.updatedAt),
         email: user?.email || 'n/a',
         phone: user?.phone || 'n/a',
         currentStep,
@@ -74,28 +58,6 @@ export default function AdminCandidatesPage(props) {
     });
   }
   const data = useMemo(() => inputData);
-
-  const handleDeleteCandidate = (id) => {
-    setCandidateToDelete(id);
-    setShowDeleteAlert(true);
-  };
-
-  const handleProceedDelete = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting candidate...',
-        isError: false,
-      };
-    });
-    await deleteCandidate(candidateToDelete);
-    window.location.reload();
-  };
-
-  const handleCloseAlert = () => {
-    setCandidateToDelete(false);
-    setShowDeleteAlert(false);
-  };
 
   const columns = useMemo(() => [
     {
@@ -161,13 +123,33 @@ export default function AdminCandidatesPage(props) {
       accessor: 'currentStep',
     },
     {
+      Header: 'Last Visit',
+      accessor: 'lastVisited',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return row.original.lastVisited &&
+          row.original.lastVisited?.toString() !== 'Invalid Date'
+          ? dateWithTime(row.original.lastVisited)
+          : 'n/a';
+      },
+    },
+    {
       Header: 'Date Created',
       accessor: 'createdAt',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.createdAt);
+      },
     },
     {
       Header: 'Last Update',
       accessor: 'updatedAt',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.updatedAt);
+      },
     },
+
     {
       Header: 'Path to Victory',
       accessor: 'victoryPath',
@@ -217,24 +199,6 @@ export default function AdminCandidatesPage(props) {
       accessor: 'phone',
       collapse: true,
     },
-
-    // {
-    //   Header: 'Delete',
-    //   collapse: true,
-    //   accessor: 'name',
-    //   Cell: ({ row }) => {
-    //     return (
-    //       <div className="flex justify-center">
-    //         <GoTrashcan
-    //           onClick={() => {
-    //             handleDeleteCandidate(row.original.id);
-    //           }}
-    //           style={{ color: 'red', cursor: 'pointer' }}
-    //         />
-    //       </div>
-    //     );
-    //   },
-    // },
   ]);
 
   return (
@@ -252,13 +216,6 @@ export default function AdminCandidatesPage(props) {
         </div>
         <Table columns={columns} data={data} />
       </PortalPanel>
-      <AlertDialog
-        title="Delete Candidate?"
-        description="This can't be undone, and you will have to deal with it in your afterlife"
-        open={showDeleteAlert}
-        handleClose={handleCloseAlert}
-        handleProceed={handleProceedDelete}
-      />
     </AdminWrapper>
   );
 }

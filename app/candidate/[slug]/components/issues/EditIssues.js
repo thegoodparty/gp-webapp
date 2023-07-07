@@ -71,8 +71,16 @@ export default function EditIssues(props) {
     customTitle,
     order,
   ) => {
+    let maxOrder = order;
+    if (state.length > 0) {
+      //last element should have the max order;
+      const last = state[state.length - 1];
+      if (last.order >= order) {
+        maxOrder = last.order + 1;
+      }
+    }
     if (customTitle !== '') {
-      await handleCustomIssue(candidatePosition, customTitle, order);
+      await handleCustomIssue(candidatePosition, customTitle, maxOrder);
     } else {
       if (isStaged && campaign) {
         const existing = campaign.details?.topIssues || {};
@@ -95,14 +103,14 @@ export default function EditIssues(props) {
           candidateId: candidate.id,
           positionId: position.id,
           topIssueId: position.topIssue?.id,
-          order,
+          order: maxOrder,
         });
         await loadPositions();
         await revalidateCandidates();
       }
     }
   };
-  const remainingSlotsCount = Math.max(0, 3 - state.length);
+  const remainingSlotsCount = Math.max(0, 3 - (state?.length || 0));
   const remainingSlots = [];
   for (let i = 0; i < remainingSlotsCount; i++) {
     remainingSlots.push(i + 1);
@@ -117,6 +125,8 @@ export default function EditIssues(props) {
   const handleCustomIssue = async (candidatePosition, customTitle, order) => {
     let entity = isStaged && campaign ? campaign : candidate;
     let customIssues = entity.customIssues || [];
+    console.log('adding position with order', order);
+
     customIssues.push({
       title: customTitle,
       position: candidatePosition,
@@ -153,7 +163,7 @@ export default function EditIssues(props) {
           className="border-2 py-5 px-8 mb-5 rounded-xl border-dashed border-slate-900 min-h-[150px] bg-slate-100"
           key={num}
         >
-          <H2 className="mb-5">Issue {num + state.length}</H2>
+          <H2 className="mb-5">Issue {num + (state?.length || 0)}</H2>
 
           {num === 1 && (
             <>
@@ -170,7 +180,7 @@ export default function EditIssues(props) {
                         position,
                         candidatePosition,
                         customTitle,
-                        num,
+                        num + state.length,
                       );
                     }}
                   />

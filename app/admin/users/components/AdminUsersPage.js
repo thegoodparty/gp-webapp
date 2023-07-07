@@ -3,15 +3,13 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import Tooltip from '@mui/material/Tooltip';
 import Table from 'app/admin/candidates/components/Table';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { formatToPhone } from 'helpers/numberHelper';
-import gpApi, { isProd } from 'gpApi';
+import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { FaTrash } from 'react-icons/fa';
 
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
+import Actions from './Actions';
 
 export const deleteUserCallback = async (id) => {
   const api = gpApi.admin.deleteUser;
@@ -20,36 +18,20 @@ export const deleteUserCallback = async (id) => {
 };
 
 export default function AdminUsersPage(props) {
-  const { users } = props;
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const snackbarState = useHookstate(globalSnackbarState);
-
-  const handleDeleteUser = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting User...',
-        isError: false,
-      };
-    });
-    await deleteUserCallback(selectedUser);
-    setShowDeleteAlert(false);
-    window.location.reload();
-  };
-  const handleOpenAlert = (user) => {
-    setSelectedUser(user);
-    setShowDeleteAlert(true);
-  };
-
-  const handleCloseAlert = () => setShowDeleteAlert(false);
+  const users = props.users || [];
 
   const inputData = [];
 
   users.map((user) => {
+    let metaData = user.metaData;
+    if (metaData) {
+      metaData = JSON.parse(metaData);
+    }
     const fields = {
       ...user,
-      isAdmin: user.isAdmin ? 'admin' : user.candidate ? 'candidate' : 'no',
+      userType: user.isAdmin ? 'admin' : user.candidate ? 'candidate' : 'user',
+      lastVisited: new Date(metaData?.lastVisited),
+      createdAt: new Date(user.createdAt),
     };
 
     inputData.push(fields);
@@ -59,27 +41,14 @@ export default function AdminUsersPage(props) {
 
   let columns = useMemo(() => [
     {
-      Header: 'Id',
-      accessor: 'id',
+      Header: 'Actions',
+      collapse: true,
+      accessor: 'actions',
+      Cell: ({ row }) => {
+        return <Actions {...row.original} />;
+      },
+    },
 
-      collapse: true,
-    },
-    {
-      Header: 'Delete',
-      collapse: true,
-      Cell: ({ row }) => (
-        <div className="text-center text-red-600 cursor-pointer">
-          {isProd ? (
-            'Disabled'
-          ) : (
-            <FaTrash
-              size={24}
-              onClick={() => handleOpenAlert(row.original.id)}
-            />
-          )}
-        </div>
-      ),
-    },
     {
       Header: 'Name',
       accessor: 'name',
@@ -94,6 +63,27 @@ export default function AdminUsersPage(props) {
           <a href={`mailto:${row.original.email}`}>{row.original.email}</a>
         </Tooltip>
       ),
+    },
+
+    {
+      Header: 'Last Visit',
+      accessor: 'lastVisited',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return row.original.lastVisited &&
+          row.original.lastVisited?.toString() !== 'Invalid Date'
+          ? dateWithTime(row.original.lastVisited)
+          : 'n/a';
+      },
+    },
+
+    {
+      Header: 'Date Created',
+      accessor: 'createdAt',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.createdAt);
+      },
     },
 
     {
@@ -115,8 +105,8 @@ export default function AdminUsersPage(props) {
     },
 
     {
-      Header: 'Admin?',
-      accessor: 'isAdmin',
+      Header: 'User Type',
+      accessor: 'userType',
 
       collapse: true,
     },
@@ -133,16 +123,6 @@ export default function AdminUsersPage(props) {
           filterable
         />
       </PortalPanel>
-      {!isProd && (
-        <AlertDialog
-          open={showDeleteAlert}
-          handleClose={handleCloseAlert}
-          title={'Delete User'}
-          ariaLabel={'Delete User'}
-          description={'Are you sure you want to delete the user?'}
-          handleProceed={handleDeleteUser}
-        />
-      )}
     </AdminWrapper>
   );
 }
