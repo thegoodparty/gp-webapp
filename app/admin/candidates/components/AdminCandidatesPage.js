@@ -16,7 +16,7 @@ import gpFetch from 'gpApi/gpFetch';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
-import { dateNumericHelper, dateWithTimeNumeric } from 'helpers/dateHelper';
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Actions from './Actions';
 
@@ -59,14 +59,14 @@ export default function AdminCandidatesPage(props) {
         firstName: campaign.firstName,
         lastName: campaign.lastName,
         launched: mapStatus(campaign.launchStatus),
-        lastVisited: campaign.lastVisited,
+        lastVisited: new Date(campaign.lastVisited),
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
         office: campaign.office,
         district: campaign.district || 'n/a',
         state: campaign.state ? campaign.state.toUpperCase() : '?',
-        createdAt: campaignObj.createdAt,
-        updatedAt: campaignObj.updatedAt,
+        createdAt: new Date(campaignObj.createdAt),
+        updatedAt: new Date(campaignObj.updatedAt),
         email: user?.email || 'n/a',
         phone: user?.phone || 'n/a',
         currentStep,
@@ -164,22 +164,33 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Last Visit',
       accessor: 'lastVisited',
+      sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateWithTimeNumeric(row.original.lastVisited);
+        console.log(
+          'row.original.lastVisited',
+          row.original.lastVisited,
+          typeof row.original.lastVisited,
+        );
+        return row.original.lastVisited &&
+          row.original.lastVisited.toString() !== 'Invalid Date'
+          ? dateWithTime(row.original.lastVisited)
+          : 'n/a';
       },
     },
     {
       Header: 'Date Created',
       accessor: 'createdAt',
+      sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateNumericHelper(row.original.createdAt);
+        return dateUsHelper(row.original.createdAt);
       },
     },
     {
       Header: 'Last Update',
       accessor: 'updatedAt',
+      sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateNumericHelper(row.original.updatedAt);
+        return dateUsHelper(row.original.updatedAt);
       },
     },
 
