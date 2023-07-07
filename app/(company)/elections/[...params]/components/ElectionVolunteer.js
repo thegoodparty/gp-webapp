@@ -46,14 +46,14 @@ export default function ElectionVolunteer(props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50">
+        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50 items-center md:mb-20">
           <div className="col-span-12 lg:col-span-7 relative w-full h-full lg:pt-10 lg:pl-20 max-w-2xl p-10 items-center">
             <div className="flex flex-row justify-center">
               <Image src={meetingImg} alt="" className="rounded-xl" />
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-5 max-w-2xl md:mb-20 order-first md:order-last">
+          <div className="col-span-12 lg:col-span-5 max-w-2xl md:mb-5 order-first md:order-last items-center">
             <h1 className="text-[32px] md:text-[64px] leading-[32px] md:leading-[72px] font-semibold mt-3">
               Schedule a virtual info session
             </h1>
