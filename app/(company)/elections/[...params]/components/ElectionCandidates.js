@@ -35,7 +35,7 @@ export default function ElectionCandidates(props) {
         <div className="flex flex-col lg:flex-row w-full flex-auto mt-20 justify-center justify-items-center">
           {content.candidates.map((candidate) => (
             <div
-              className="flex w-auto justify-center justify-items-center"
+              className="flex w-auto justify-center justify-items-center mb-20"
               key={candidate.slug}
             >
               <Link href={candidateRoute(candidate)}>
