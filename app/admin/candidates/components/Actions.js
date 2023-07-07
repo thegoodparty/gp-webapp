@@ -75,6 +75,7 @@ export default function Actions({ launched, slug, email }) {
 
     const impersonateResp = await handleImpersonateUser(email);
     if (impersonateResp) {
+      const candidatePage = `/candidate/${slug}`;
       window.location = candidatePage;
     } else {
       snackbarState.set(() => {
