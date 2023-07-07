@@ -75,8 +75,13 @@ export default function Actions({ launched, slug, email }) {
 
     const impersonateResp = await handleImpersonateUser(email);
     if (impersonateResp) {
-      const candidatePage = `/candidate/${slug}`;
-      window.location.href = candidatePage;
+      if (launched == 'Live') {
+        window.location.href = `/candidate/${slug}`;
+      } else if (launched == 'Pending Review') {
+        window.location.href = `/candidate/${slug}/review`;
+      } else {
+        window.location.href = `/onboarding/${slug}/dashboard`;
+      }
     } else {
       snackbarState.set(() => {
         return {

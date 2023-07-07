@@ -136,7 +136,7 @@ export default function RegisterOrProfile({
                     <div className="ml-3">Settings</div>
                   </div>
                 </Link>
-                {user.isAdmin && (
+                {user.isAdmin && !impersonating && (
                   <Link href="/admin" className="no-underline font-normal">
                     <div
                       data-cy="header-link"
@@ -153,7 +153,7 @@ export default function RegisterOrProfile({
                     className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
                     onClick={() => {
                       deleteCookie('impersonateToken');
-                      window.location.reload();
+                      window.location.href = '/admin';
                     }}
                   >
                     <BsMask />
