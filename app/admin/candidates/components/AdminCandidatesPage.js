@@ -1,30 +1,16 @@
 'use client';
 
-import { GoTrashcan } from 'react-icons/go';
-
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import Table from './Table';
 import Link from 'next/link';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
-import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
-import { BsThreeDotsVertical } from 'react-icons/bs';
 import Actions from './Actions';
-
-export const deleteCandidate = async (id) => {
-  const api = gpApi.admin.deleteCandidate;
-  const payload = { id };
-  return await gpFetch(api, payload);
-};
 
 function mapStatus(status) {
   if (!status) {
@@ -41,9 +27,6 @@ function mapStatus(status) {
 
 export default function AdminCandidatesPage(props) {
   const { campaigns } = props;
-  const snackbarState = useHookstate(globalSnackbarState);
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-  const [candidateToDelete, setCandidateToDelete] = useState(false);
 
   const inputData = [];
   if (campaigns) {
@@ -75,28 +58,6 @@ export default function AdminCandidatesPage(props) {
     });
   }
   const data = useMemo(() => inputData);
-
-  const handleDeleteCandidate = (id) => {
-    setCandidateToDelete(id);
-    setShowDeleteAlert(true);
-  };
-
-  const handleProceedDelete = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting candidate...',
-        isError: false,
-      };
-    });
-    await deleteCandidate(candidateToDelete);
-    window.location.reload();
-  };
-
-  const handleCloseAlert = () => {
-    setCandidateToDelete(false);
-    setShowDeleteAlert(false);
-  };
 
   const columns = useMemo(() => [
     {
@@ -166,13 +127,8 @@ export default function AdminCandidatesPage(props) {
       accessor: 'lastVisited',
       sortType: 'datetime',
       Cell: ({ row }) => {
-        console.log(
-          'row.original.lastVisited',
-          row.original.lastVisited,
-          typeof row.original.lastVisited,
-        );
         return row.original.lastVisited &&
-          row.original.lastVisited.toString() !== 'Invalid Date'
+          row.original.lastVisited?.toString() !== 'Invalid Date'
           ? dateWithTime(row.original.lastVisited)
           : 'n/a';
       },
@@ -243,24 +199,6 @@ export default function AdminCandidatesPage(props) {
       accessor: 'phone',
       collapse: true,
     },
-
-    // {
-    //   Header: 'Delete',
-    //   collapse: true,
-    //   accessor: 'name',
-    //   Cell: ({ row }) => {
-    //     return (
-    //       <div className="flex justify-center">
-    //         <GoTrashcan
-    //           onClick={() => {
-    //             handleDeleteCandidate(row.original.id);
-    //           }}
-    //           style={{ color: 'red', cursor: 'pointer' }}
-    //         />
-    //       </div>
-    //     );
-    //   },
-    // },
   ]);
 
   return (
@@ -278,13 +216,6 @@ export default function AdminCandidatesPage(props) {
         </div>
         <Table columns={columns} data={data} />
       </PortalPanel>
-      <AlertDialog
-        title="Delete Candidate?"
-        description="This can't be undone, and you will have to deal with it in your afterlife"
-        open={showDeleteAlert}
-        handleClose={handleCloseAlert}
-        handleProceed={handleProceedDelete}
-      />
     </AdminWrapper>
   );
 }
