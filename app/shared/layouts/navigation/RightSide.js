@@ -67,6 +67,7 @@ export default function RightSideClient() {
         open={learnMoreOpen}
         toggleCallback={toggleLearnMore}
         campaignStatus={campaignStatus}
+        closeAll={closeAll}
       />
 
       <OfficeOrContinueLink
