@@ -8,7 +8,7 @@ import { formatToPhone } from 'helpers/numberHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-import { dateWithTime } from 'helpers/dateHelper';
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 
 export const deleteUserCallback = async (id) => {
