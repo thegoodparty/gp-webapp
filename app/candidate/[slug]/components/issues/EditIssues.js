@@ -71,8 +71,16 @@ export default function EditIssues(props) {
     customTitle,
     order,
   ) => {
+    let maxOrder = order;
+    if (state.length > 0) {
+      //last element should have the max order;
+      const last = state[state.length - 1];
+      if (last.order >= order) {
+        maxOrder = last.order + 1;
+      }
+    }
     if (customTitle !== '') {
-      await handleCustomIssue(candidatePosition, customTitle, order);
+      await handleCustomIssue(candidatePosition, customTitle, maxOrder);
     } else {
       if (isStaged && campaign) {
         const existing = campaign.details?.topIssues || {};
@@ -95,7 +103,7 @@ export default function EditIssues(props) {
           candidateId: candidate.id,
           positionId: position.id,
           topIssueId: position.topIssue?.id,
-          order,
+          order: maxOrder,
         });
         await loadPositions();
         await revalidateCandidates();
@@ -117,6 +125,8 @@ export default function EditIssues(props) {
   const handleCustomIssue = async (candidatePosition, customTitle, order) => {
     let entity = isStaged && campaign ? campaign : candidate;
     let customIssues = entity.customIssues || [];
+    console.log('adding position with order', order);
+
     customIssues.push({
       title: customTitle,
       position: candidatePosition,
@@ -170,7 +180,7 @@ export default function EditIssues(props) {
                         position,
                         candidatePosition,
                         customTitle,
-                        num,
+                        num + state.length,
                       );
                     }}
                   />
