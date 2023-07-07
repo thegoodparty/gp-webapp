@@ -107,7 +107,6 @@ export default function Actions({ launched, slug, email }) {
 
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
             <div className="my-3" onClick={impersonateUser}>
-
               <PrimaryButton size="small" fullWidth>
                 <span className="whitespace-nowrap">Impersonate</span>
               </PrimaryButton>
