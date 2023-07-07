@@ -16,7 +16,7 @@ import gpFetch from 'gpApi/gpFetch';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
-import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
+import { dateNumericHelper, dateWithTimeNumeric } from 'helpers/dateHelper';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Actions from './Actions';
 
@@ -165,21 +165,21 @@ export default function AdminCandidatesPage(props) {
       Header: 'Last Visit',
       accessor: 'lastVisited',
       Cell: ({ row }) => {
-        return dateWithTime(row.original.lastVisited);
+        return dateWithTimeNumeric(row.original.lastVisited);
       },
     },
     {
       Header: 'Date Created',
       accessor: 'createdAt',
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.createdAt);
+        return dateNumericHelper(row.original.createdAt);
       },
     },
     {
       Header: 'Last Update',
       accessor: 'updatedAt',
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.updatedAt);
+        return dateNumericHelper(row.original.updatedAt);
       },
     },
 

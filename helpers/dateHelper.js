@@ -19,6 +19,25 @@ export const dateUsHelper = (orgDate) => {
   }
 };
 
+export const dateNumericHelper = (orgDate) => {
+  if (!orgDate) {
+    return orgDate;
+  }
+  // return new Date(orgDate).toLocaleString("en-US")
+  try {
+    const date = new Date(orgDate);
+    const pstDate = new Date(date.getTime() + 8 * ONE_HOUR);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    }).format(pstDate);
+  } catch (err) {
+    console.log('error', err);
+    return orgDate;
+  }
+};
+
 export const dateWithTime = (orgDate) => {
   if (!orgDate) {
     return orgDate;
@@ -27,6 +46,24 @@ export const dateWithTime = (orgDate) => {
   return date.toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  });
+  return `${date.getHours()}:${
+    date.getMinutes() < 10 ? '0' : ''
+  }${date.getMinutes()}`;
+};
+
+export const dateWithTimeNumeric = (orgDate) => {
+  if (!orgDate) {
+    return orgDate;
+  }
+  const date = new Date(orgDate);
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'numeric',
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
