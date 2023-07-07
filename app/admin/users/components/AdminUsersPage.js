@@ -18,7 +18,7 @@ export const deleteUserCallback = async (id) => {
 };
 
 export default function AdminUsersPage(props) {
-  const { users } = props;
+  const users = props.users || [];
 
   const inputData = [];
 
@@ -31,6 +31,7 @@ export default function AdminUsersPage(props) {
       ...user,
       userType: user.isAdmin ? 'admin' : user.candidate ? 'candidate' : 'user',
       lastVisited: new Date(metaData?.lastVisited),
+      createdAt: new Date(user.createdAt),
     };
 
     inputData.push(fields);
@@ -73,6 +74,15 @@ export default function AdminUsersPage(props) {
           row.original.lastVisited?.toString() !== 'Invalid Date'
           ? dateWithTime(row.original.lastVisited)
           : 'n/a';
+      },
+    },
+
+    {
+      Header: 'Date Created',
+      accessor: 'createdAt',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.createdAt);
       },
     },
 
