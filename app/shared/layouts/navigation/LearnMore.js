@@ -29,8 +29,8 @@ export default function LearnMore({
 }) {
   const { status } = campaignStatus || {};
   const handleClick = () => {
-    toggleCallback();
     closeAll();
+    toggleCallback();
   };
   return (
     <div
