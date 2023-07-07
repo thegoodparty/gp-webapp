@@ -67,7 +67,6 @@ export default function ElectionCandidates(props) {
                   </ul>
                 </div>
               </Link>
-              $
             </div>
           ))}
         </div>
