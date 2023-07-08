@@ -9,6 +9,7 @@ import H2 from '@shared/typography/H2';
 import Body1 from '@shared/typography/Body1';
 import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import CardProgressPill from './CardProgressPill';
 
 export default function TrackerCard(props) {
   const [showModal, setShowModal] = useState(false);
@@ -30,11 +31,12 @@ export default function TrackerCard(props) {
     setValue(0);
   };
   return (
-    <div className="bg-gray-50 py-6 px-7 border border-slate-300 rounded-2xl">
+    <div className="bg-gray-50 pt-10 pb-6 px-7 border border-slate-300 rounded-2xl relative">
       <div className="flex items-center mb-5">
         <div className="text-indigo-50 mr-2">{icon}</div>
         <H4>{title}</H4>
       </div>
+      <CardProgressPill total={total} progress={progress} />
       <ProgressPie total={total} progress={progress} />
       <div
         className="mt-7"

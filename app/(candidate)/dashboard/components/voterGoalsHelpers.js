@@ -126,3 +126,22 @@ export function calculateAccumulatedByWeek(contactGoals) {
 
   return accumulatedTotal;
 }
+
+export function calculateOnTrack({
+  contactGoals,
+  weeksUntil,
+  reportedVoterGoals,
+}) {
+  const { weeks } = weeksUntil;
+  const { doorKnocking, calls, digital } = reportedVoterGoals;
+  const accumulatedTotal = calculateAccumulated(weeks, contactGoals) || {};
+
+  const doorsOnTrack = doorKnocking >= accumulatedTotal.doorKnocking;
+  const callsOnTrack = calls >= accumulatedTotal.calls;
+  const digitalOnTrack = digital >= accumulatedTotal.digital;
+  return {
+    doorsOnTrack,
+    callsOnTrack,
+    digitalOnTrack,
+  };
+}

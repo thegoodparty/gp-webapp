@@ -4,7 +4,11 @@ import H4 from '@shared/typography/H4';
 import { Fragment } from 'react';
 import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
-import { calculateAccumulatedByWeek } from './voterGoalsHelpers';
+import {
+  calculateAccumulatedByWeek,
+  calculateOnTrack,
+} from './voterGoalsHelpers';
+import ProgressPill from './ProgressPill';
 
 const rows = [
   {
@@ -32,6 +36,16 @@ const rows = [
 
 export default function ProgressSection(props) {
   const { contactGoals, weeksUntil, reportedVoterGoals } = props;
+
+  const { doorsOnTrack, callsOnTrack, digitalOnTrack } = calculateOnTrack({
+    contactGoals,
+    weeksUntil,
+    reportedVoterGoals,
+  });
+  rows[0].onTrack = doorsOnTrack;
+  rows[1].onTrack = callsOnTrack;
+  rows[2].onTrack = digitalOnTrack;
+
   const { weeks, days } = weeksUntil;
   const accumulated = calculateAccumulatedByWeek(contactGoals);
   const calculateReminder = (weekNum, key) => {
@@ -51,7 +65,8 @@ export default function ProgressSection(props) {
       <div className="mt-5 mb-3">
         <H3>Campaign Progress</H3>
       </div>
-      <div className="bg-slate-200 rounded-3xl py-6 px-8">
+      <div className="bg-slate-200 rounded-3xl py-6 px-8 relative">
+        <ProgressPill {...props} />
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <H4>{weeks} weeks left</H4>
@@ -106,12 +121,18 @@ export default function ProgressSection(props) {
                     >
                       {reportedVoterGoals[row.key] >
                       accumulated[`week${12 - index}`][row.key] ? (
-                        <div className="absolute w-full h-full left-0 top-0 bg-primary"></div>
+                        <div
+                          className={`absolute w-full h-full left-0 top-0 ${
+                            row.onTrack ? 'bg-primary' : 'bg-red-400'
+                          }`}
+                        ></div>
                       ) : (
                         <>
                           {calculateReminder(12 - index, row.key) > 0 ? (
                             <div
-                              className="absolute h-full left-0 top-0 bg-primary rounded-r-full"
+                              className={`absolute h-full left-0 top-0 ${
+                                row.onTrack ? 'bg-primary' : 'bg-red-400'
+                              } rounded-r-full`}
                               style={{
                                 width: `${
                                   calculateReminder(12 - index, row.key) * 100
