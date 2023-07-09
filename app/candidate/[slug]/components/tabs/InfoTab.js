@@ -60,7 +60,7 @@ export default function InfoTab(props) {
       <H4 className="text-indigo-50 mb-5">Candidate info</H4>
       {sections.map((section, index) => (
         <div key={section.key} className="mb-16">
-          {candidate[section.key] && (
+          {(candidate[section.key] || editMode) && (
             <>
               <div className="flex items-center mb-3">
                 <H2>{section.title}</H2>
@@ -82,14 +82,14 @@ export default function InfoTab(props) {
               >
                 {isStaged ? (
                   <TextPanel
-                    text={campaign[section.section][section.key]}
+                    text={campaign[section.section][section.key] || ''}
                     {...props}
                     section={section.section}
                     sectionKey={section.key}
                   />
                 ) : (
                   <TextPanel
-                    text={candidate[section.key]}
+                    text={candidate[section.key] || ''}
                     {...props}
                     section={section.section}
                     sectionKey={section.key}

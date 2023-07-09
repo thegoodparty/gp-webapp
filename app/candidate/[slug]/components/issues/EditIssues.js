@@ -140,6 +140,9 @@ export default function EditIssues(props) {
     window.location.reload();
   };
 
+  console.log('combined', combined);
+  console.log('campaign', campaign);
+
   return (
     <div>
       {!hideTitle && <H1>Add 3 Issues</H1>}
