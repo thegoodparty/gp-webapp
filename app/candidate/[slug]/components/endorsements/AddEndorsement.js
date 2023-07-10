@@ -41,7 +41,6 @@ export default function AddEndorsement(props) {
       });
     } else {
       const endorsements = candidate.endorsements || [];
-      console.log('here', endorsements);
       endorsements.push(state);
       await saveCallback({
         ...candidate,

@@ -39,7 +39,6 @@ export default async function Page({ params, searchParams }) {
 }
 
 function parsePrompts(promptsRaw) {
-  console.log('here');
   const keys = Object.keys(promptsRaw);
   const prompts = [];
   keys.forEach((key) => {

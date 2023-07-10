@@ -134,17 +134,14 @@ export function getAge(dateString) {
 
 // used in the dashboard to show the week x weeks from the election date
 export function weekRangeFromDate(dateStr, weeks) {
-  console.log('here', dateStr, weeks);
   if (!dateStr || !weeks) {
     return '';
   }
   const weekStart = new Date(dateStr);
   weekStart.setDate(weekStart.getDate() - 7 * (weeks + 1));
-  console.log('weekStart', weekStart);
 
   const weekEnd = new Date(dateStr);
   weekEnd.setDate(weekEnd.getDate() - 7 * weeks);
-  console.log('weekEnd', weekEnd);
 
   return `${dateUsHelper(weekStart)} - ${dateUsHelper(weekEnd)}`;
 }
