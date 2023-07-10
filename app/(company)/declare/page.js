@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import DeclarePage from './components/DeclarePage';
-import { Libre_Baskerville, Tangerine } from '@next/font/google';
+import { Libre_Baskerville, Tangerine } from 'next/font/google';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
