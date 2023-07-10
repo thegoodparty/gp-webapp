@@ -113,11 +113,6 @@ export default function InvolvedModal() {
               <strong>SUBMIT</strong>
             </BlackButtonClient>
           </form>
-          <br />
-          <br />
-          <div className="text-center">
-            <Link href="/candidates">Find Good Candidates</Link>
-          </div>
         </div>
       </Modal>
     </>

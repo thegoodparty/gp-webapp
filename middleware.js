@@ -11,7 +11,7 @@ import gpFetch from 'gpApi/gpFetch';
 // };
 
 const redirects = {
-  '/elections/senate/me': '/candidates',
+  '/elections/senate/me': '/',
 };
 
 export default async function middleware(req) {

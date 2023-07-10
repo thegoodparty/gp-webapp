@@ -20,7 +20,6 @@ const staticUrls = [
   '/about',
   '/run-for-office',
   '/team',
-  '/candidates',
   '/login',
   '/register',
   '/faqs',

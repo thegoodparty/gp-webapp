@@ -40,7 +40,7 @@ async function CandidatesSection() {
           </>
         )}
       </div>
-      {(!candidates || candidates?.length === 0) && (
+      {/* {(!candidates || candidates?.length === 0) && (
         <div className="text-center">
           <h3 className="text-xl tracking-wide font-black">
             You are not following any candidates yet.
@@ -48,7 +48,7 @@ async function CandidatesSection() {
           <br />
           <Link href="/candidates">Find Candidates</Link>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
