@@ -35,7 +35,7 @@ const rows = [
 ];
 
 export default function ProgressSection(props) {
-  const { contactGoals, weeksUntil, reportedVoterGoals } = props;
+  const { contactGoals, weeksUntil, reportedVoterGoals, dateRange } = props;
 
   const { doorsOnTrack, callsOnTrack, digitalOnTrack } = calculateOnTrack({
     contactGoals,
@@ -70,7 +70,7 @@ export default function ProgressSection(props) {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <H4>{weeks} weeks left</H4>
-            {/* <Body2 className="ml-3">May 15-21, 2023</Body2> */}
+            <Body2 className="ml-3">{dateRange}</Body2>
           </div>
           {/* <div>on track</div> */}
         </div>

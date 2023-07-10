@@ -6,7 +6,7 @@ import TrackerCard from './TrackerCard';
 import { calculateAccumulated } from './voterGoalsHelpers';
 
 export default function ThisWeekSection(props) {
-  const { contactGoals, weeksUntil, reportedVoterGoals } = props;
+  const { contactGoals, weeksUntil, reportedVoterGoals, dateRange } = props;
   const { doorKnocking, calls, digital } = reportedVoterGoals;
   const { weeks, days } = weeksUntil;
   const accumulatedTotal = calculateAccumulated(weeks, contactGoals) || {};
@@ -40,7 +40,7 @@ export default function ThisWeekSection(props) {
     <section>
       <div className="flex items-center mt-5 mb-3">
         <H3>This week</H3>
-        {/* <Body2 className="ml-3">May 15-21, 2023</Body2> */}
+        <Body2 className="ml-3">{dateRange}</Body2>
       </div>
       <div className="grid grid-cols-12 gap-5">
         {cards.map((card) => (

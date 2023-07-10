@@ -3,7 +3,7 @@ import DashboardLayout from '../shared/DashboardLayout';
 import TitleSection from '../shared/TitleSection';
 import ThisWeekSection from './ThisWeekSection';
 import ProgressSection from './ProgressSection';
-import { weeksTill } from 'helpers/dateHelper';
+import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
 import { useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
 import H3 from '@shared/typography/H3';
@@ -24,6 +24,8 @@ export default function DashboardPage(props) {
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const weeksUntil = weeksTill(electionDate);
   // const weeksUntil = { weeks: 10, days: 3 };
+
+  const dateRange = weekRangeFromDate(electionDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal, weeksUntil);
 
   const updateCountCallback = async (key, value) => {
@@ -44,6 +46,7 @@ export default function DashboardPage(props) {
     weeksUntil,
     reportedVoterGoals: state,
     updateCountCallback,
+    dateRange,
   };
 
   return (
