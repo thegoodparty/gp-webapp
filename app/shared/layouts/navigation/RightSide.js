@@ -88,6 +88,7 @@ export default function RightSideClient() {
         open={accountOpen}
         toggleCallback={toggleAccount}
         campaignStatus={campaignStatus}
+        closeAll={closeAll}
       />
       {isDashboardPath && (
         <TopDashboardMenu
