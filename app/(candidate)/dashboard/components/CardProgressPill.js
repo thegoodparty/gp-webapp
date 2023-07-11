@@ -1,7 +1,10 @@
 import Caption from '@shared/typography/Caption';
 
-export default function CardProgressPill({ total, progress }) {
+export default function CardProgressPill({ total, progress, weeksUntil }) {
   if (progress >= total) {
+    return null;
+  }
+  if (weeksUntil?.weeks > 11) {
     return null;
   }
   return (

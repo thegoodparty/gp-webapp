@@ -8,6 +8,9 @@ export default function ProgressPill(props) {
     weeksUntil,
     reportedVoterGoals,
   });
+  if (weeksUntil?.weeks > 11) {
+    return null;
+  }
 
   if (doorsOnTrack && callsOnTrack && digitalOnTrack) {
     return (

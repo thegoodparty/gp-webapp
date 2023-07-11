@@ -14,7 +14,7 @@ import CardProgressPill from './CardProgressPill';
 export default function TrackerCard(props) {
   const [showModal, setShowModal] = useState(false);
 
-  const { card, updateCountCallback, reportedVoterGoals } = props;
+  const { card, updateCountCallback, reportedVoterGoals, weeksUntil } = props;
   const { key, title, subTitle, progress, total, icon } = card;
 
   const [value, setValue] = useState(0);
@@ -36,7 +36,11 @@ export default function TrackerCard(props) {
         <div className="text-indigo-50 mr-2">{icon}</div>
         <H4>{title}</H4>
       </div>
-      <CardProgressPill total={total} progress={progress} />
+      <CardProgressPill
+        total={total}
+        progress={progress}
+        weeksUntil={weeksUntil}
+      />
       <ProgressPie total={total} progress={progress} />
       <div
         className="mt-7"
