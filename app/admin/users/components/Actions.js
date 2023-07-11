@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { setCookie } from 'helpers/cookieHelper';
+import { handleImpersonateUser } from 'app/admin/shared/impersonateUser';
 
 async function handleCancelRequest(slug) {
   try {
@@ -19,23 +19,6 @@ async function handleCancelRequest(slug) {
     console.log('error', e);
     return false;
   }
-}
-
-async function handleImpersonateUser(email) {
-  try {
-    const api = gpApi.admin.impersonateUser;
-    const payload = {
-      email,
-    };
-    const resp = await gpFetch(api, payload);
-    if (resp?.token) {
-      setCookie('impersonateToken', resp.token);
-      return true;
-    }
-  } catch (e) {
-    console.log('error', e);
-  }
-  return false;
 }
 
 export default function Actions({ id, email }) {

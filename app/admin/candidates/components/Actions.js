@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { setCookie } from 'helpers/cookieHelper';
+import { handleImpersonateUser } from 'app/admin/shared/impersonateUser';
 
 async function handleCancelRequest(slug) {
   try {
@@ -19,23 +19,6 @@ async function handleCancelRequest(slug) {
     console.log('error', e);
     return false;
   }
-}
-
-async function handleImpersonateUser(email) {
-  try {
-    const api = gpApi.admin.impersonateUser;
-    const payload = {
-      email,
-    };
-    const resp = await gpFetch(api, payload);
-    if (resp?.token) {
-      setCookie('impersonateToken', resp.token);
-      return true;
-    }
-  } catch (e) {
-    console.log('error', e);
-  }
-  return false;
 }
 
 export default function Actions({ launched, slug, email }) {
@@ -64,11 +47,11 @@ export default function Actions({ launched, slug, email }) {
     window.location.reload();
   };
 
-  const impersonateUser = async () => {
+  const impersonateCandidate = async () => {
     snackbarState.set(() => {
       return {
         isOpen: true,
-        message: 'Impersonating user',
+        message: 'Impersonating candidate',
         isError: false,
       };
     });
@@ -86,7 +69,7 @@ export default function Actions({ launched, slug, email }) {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Impersonate failed',
+          message: 'Impersonate candidate failed',
           isError: true,
         };
       });
@@ -111,7 +94,7 @@ export default function Actions({ launched, slug, email }) {
           />
 
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
-            <div className="my-3" onClick={impersonateUser}>
+            <div className="my-3" onClick={impersonateCandidate}>
               <PrimaryButton size="small" fullWidth>
                 <span className="whitespace-nowrap">Impersonate</span>
               </PrimaryButton>
