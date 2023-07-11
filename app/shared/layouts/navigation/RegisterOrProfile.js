@@ -25,6 +25,7 @@ export default function RegisterOrProfile({
   open,
   toggleCallback,
   campaignStatus,
+  closeAll,
 }) {
   const userState = useHookstate(globalUserState);
   const [impersonating, setImpersonating] = useState(false);
@@ -180,6 +181,7 @@ export default function RegisterOrProfile({
             className="px-1 cursor-pointer hover:underline"
             data-cy="header-sign-in"
             id="nav-sign-in"
+            onClick={closeAll}
           >
             <PrimaryButton size="medium">Sign in</PrimaryButton>
           </Link>
