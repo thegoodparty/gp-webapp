@@ -38,35 +38,35 @@ export default function ElectionCandidates(props) {
               className="flex w-auto justify-center justify-items-center mb-20"
               key={candidate.slug}
             >
-              <Link href={candidateRoute(candidate)}>
-                <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
-                  <AvatarWithTracker
-                    candidate={candidate}
-                    color={candidate.color ? candidate.color : colors[0]}
-                  />
+              <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
+                <AvatarWithTracker
+                  candidate={candidate}
+                  color={candidate.color ? candidate.color : colors[0]}
+                  candidateUrl={candidateRoute(candidate)}
+                />
+
+                <Link href={candidateRoute(candidate)}>
                   <span className=" text-slate-50 text-2xl p-3">
                     {candidate.firstName} {candidate.lastName}
                   </span>
-                  <CandidatePill
-                    text={`${candidate.office}, ${
-                      candidate.district ? candidate.district : candidate.state
-                    }`}
-                    color={candidate.color ? candidate.color : colors[0]}
-                  />
+                </Link>
 
-                  <ul className="font-sfpro text-[16px] font-normal max-w-[300px]">
-                    <li className="text-slate-50 pt-2">
-                      <div className="line-clamp-3">
-                        {candidate.topPosition}
-                      </div>
-                    </li>
-                    <li className="text-slate-50 pt-2">{candidate.slogan}</li>
-                    <li className="text-slate-50 pt-2">
-                      {candidate.occupation}
-                    </li>
-                  </ul>
-                </div>
-              </Link>
+                <CandidatePill
+                  text={`${candidate.office}, ${
+                    candidate.district ? candidate.district : candidate.state
+                  }`}
+                  color={candidate.color ? candidate.color : colors[0]}
+                  className="mt-3"
+                />
+
+                <ul className="font-sfpro text-[16px] font-normal max-w-[300px]">
+                  <li className="text-slate-50 pt-2">
+                    <div className="line-clamp-3">{candidate.topPosition}</div>
+                  </li>
+                  <li className="text-slate-50 pt-2">{candidate.slogan}</li>
+                  <li className="text-slate-50 pt-2">{candidate.occupation}</li>
+                </ul>
+              </div>
             </div>
           ))}
         </div>
