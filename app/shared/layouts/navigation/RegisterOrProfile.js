@@ -11,7 +11,7 @@ import { RiLogoutBoxLine, RiSettingsLine } from 'react-icons/ri';
 import { deleteCookies, getCookie, deleteCookie } from 'helpers/cookieHelper';
 import { RESOURCES_LINKS } from './LearnMore';
 import { HiOutlineStar } from 'react-icons/hi';
-import { BsMask } from 'react-icons/bs';
+import { FaTheaterMasks } from 'react-icons/fa';
 
 export const globalUserState = hookstate(false);
 
@@ -156,7 +156,7 @@ export default function RegisterOrProfile({
                       window.location.href = '/admin';
                     }}
                   >
-                    <BsMask />
+                    <FaTheaterMasks />
                     <div className="ml-3">Stop Impersonating</div>
                   </div>
                 )}
