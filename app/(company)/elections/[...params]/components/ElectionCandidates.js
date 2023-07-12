@@ -32,7 +32,7 @@ export default function ElectionCandidates(props) {
             </CmsContentWrapper>
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row w-full flex-auto mt-20 justify-stretch items-center">
+        <div className="flex flex-col lg:flex-row w-full flex-auto mt-20 justify-center items-center">
           {content.candidates.map((candidate) => (
             <div
               className="flex w-auto justify-center justify-items-center mb-20 h-full"
