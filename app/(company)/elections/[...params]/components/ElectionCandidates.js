@@ -41,7 +41,7 @@ export default function ElectionCandidates(props) {
               <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
                 <AvatarWithTracker
                   candidate={candidate}
-                  color={candidate.color ? candidate.color : colors[0]}
+                  color={candidate.color ?? colors[0]}
                   candidateUrl={candidateRoute(candidate)}
                 />
 
@@ -53,9 +53,9 @@ export default function ElectionCandidates(props) {
 
                 <CandidatePill
                   text={`${candidate.office}, ${
-                    candidate.district ? candidate.district : candidate.state
+                    candidate.district ?? candidate.state
                   }`}
-                  color={candidate.color ? candidate.color : colors[0]}
+                  color={candidate.color ?? colors[0]}
                   className="mt-3"
                 />
 
