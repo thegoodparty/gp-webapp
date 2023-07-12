@@ -38,7 +38,7 @@ export default function ElectionCandidate({ candidate }) {
       />
 
       <div className="font-sfpro text-base font-normal  text-center">
-        <div className="pt-2 text-lg italic">{slogan}</div>
+        <div className="pt-2 text-lg italic">&apos;{slogan}&apos;</div>
         <div className="flex justify-center w-full">
           <div className="w-10 border-b-2 border-slate-50 my-4"></div>
         </div>

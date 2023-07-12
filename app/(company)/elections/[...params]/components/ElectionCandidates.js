@@ -44,6 +44,7 @@ export default function ElectionCandidates(props) {
               &nbsp;
             </div>
           )}
+
           {content.candidates.map((candidate) => (
             <div
               className="col-span-12 md:col-span-6 lg:col-span-3"
