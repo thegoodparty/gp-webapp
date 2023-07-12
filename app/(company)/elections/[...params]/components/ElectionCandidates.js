@@ -75,29 +75,29 @@ export default function ElectionCandidates(props) {
               </div>
             ))}
           </div>
+        </div>
 
-          <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
-            <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
-              {content.districtTitle}
-            </div>
-            <div className="flex justify-center">
-              <Image
-                src={`https:${content?.districtImage?.url}`}
-                width={584}
-                height={524}
-                alt={`${city} district map`}
-              />
-            </div>
-            <div>
-              <a
-                id="district-link"
-                href={content.districtButtonLink}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-              >
-                <WarningButton>{content.districtButtonText}</WarningButton>
-              </a>
-            </div>
+        <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
+          <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+            {content.districtTitle}
+          </div>
+          <div className="flex justify-center">
+            <Image
+              src={`https:${content?.districtImage?.url}`}
+              width={584}
+              height={524}
+              alt={`${city} district map`}
+            />
+          </div>
+          <div>
+            <a
+              id="district-link"
+              href={content.districtButtonLink}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <WarningButton>{content.districtButtonText}</WarningButton>
+            </a>
           </div>
         </div>
       </MaxWidth>
