@@ -9,11 +9,17 @@ import { candidateRoute } from 'helpers/candidateHelper';
 import { colors } from '/app/candidate/[slug]/components/CandidateColors';
 import Image from 'next/image';
 import WarningButton from '@shared/buttons/WarningButton';
+import ElectionCandidate from './ElectionCandidate';
 
 export default function ElectionCandidates(props) {
   const { content, city } = props;
   if (!content.candidates || content.candidates.length === 0) {
     return null;
+  }
+
+  let startClass = '';
+  if (content.candidates.length === 2) {
+    startClass = 'lg:col-start-3';
   }
 
   return (
@@ -32,41 +38,18 @@ export default function ElectionCandidates(props) {
             </CmsContentWrapper>
           </div>
         </div>
-        <div className="flex flex-col lg:flex-row w-full flex-auto mt-20 justify-center items-center">
+        <div className="grid grid-cols-12 gap-6 justify-center">
+          {content.candidates.length === 2 && (
+            <div className="col-span-12 md:col-span-6 lg:col-span-3">
+              &nbsp;
+            </div>
+          )}
           {content.candidates.map((candidate) => (
             <div
-              className="flex w-auto justify-center justify-items-center mb-20 h-full"
+              className="col-span-12 md:col-span-6 lg:col-span-3"
               key={candidate.slug}
             >
-              <div className="flex flex-col items-center justify-center text-slate-50 w-full pl-2 pr-3">
-                <AvatarWithTracker
-                  candidate={candidate}
-                  color={candidate.color ?? colors[0]}
-                  candidateUrl={candidateRoute(candidate)}
-                />
-
-                <Link href={candidateRoute(candidate)}>
-                  <span className=" text-slate-50 text-2xl p-3">
-                    {candidate.firstName} {candidate.lastName}
-                  </span>
-                </Link>
-
-                <CandidatePill
-                  text={`${candidate.office}, ${
-                    candidate.district ?? candidate.state
-                  }`}
-                  color={candidate.color ?? colors[0]}
-                  className="mt-3"
-                />
-
-                <ul className="font-sfpro text-[16px] font-normal max-w-[300px]">
-                  <li className="text-slate-50 pt-2">
-                    <div className="line-clamp-3">{candidate.topPosition}</div>
-                  </li>
-                  <li className="text-slate-50 pt-2">{candidate.slogan}</li>
-                  <li className="text-slate-50 pt-2">{candidate.occupation}</li>
-                </ul>
-              </div>
+              <ElectionCandidate candidate={candidate} />
             </div>
           ))}
         </div>

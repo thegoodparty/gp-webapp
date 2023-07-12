@@ -11,7 +11,7 @@ export default function AvatarWithTracker(props) {
   const { candidate, editMode, candidateUrl } = props;
   return (
     <div className="relative">
-      <div className="flex w-full justify-end">
+      <div className="absolute -top-4 right-4">
         <QuestionButton
           className={
             candidateUrl
@@ -28,10 +28,11 @@ export default function AvatarWithTracker(props) {
           </div>
         </QuestionButton>
       </div>
+
       <div>
         <VictoryTracker {...props} />
       </div>
-      <div className="absolute top-9 left-[68px] z-20">
+      <div className="absolute top-3 w-full left-0 z-20 flex justify-center">
         <div className={editMode ? 'opacity-60' : ''}>
           {candidateUrl ? (
             <Link href={candidateUrl}>
