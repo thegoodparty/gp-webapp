@@ -82,8 +82,7 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
           href={`${
             isOnboardingLink ? `/onboarding/${campaign?.slug}` : ''
           }${href}`}
-          id="candidate_content"
-          className="text-violet-600 font-bold  text-sm"
+          className="text-violet-600 font-bold text-sm candidate_content"
         >
           Read More
         </Link>
@@ -91,8 +90,7 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
       {type === 'blog' && (
         <Link
           href={`/blog/article/${articleSlug}`}
-          id="candidate_content"
-          className="text-violet-600 font-bold  text-sm"
+          className="text-violet-600 font-bold text-sm candidate_content"
         >
           Read More
         </Link>
@@ -101,8 +99,7 @@ export default function CampaignPlanCard({ field, articlesBySlug, campaign }) {
         <div>
           <a
             href={file}
-            id="candidate_content"
-            className="text-white bg-black py-2 px-3 font-bold inline-block rounded text-sm"
+            className="text-white bg-black py-2 px-3 font-bold inline-block rounded text-sm candidate_content"
             target="_blank"
             rel="noopener noreferrer nofollow"
           >

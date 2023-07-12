@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function ResourceCard({ title, description, link }) {
   return (
-    <Link href={link} id="candidate_content" className="h-full">
+    <Link href={link} className="h-full candidate_content">
       <div className="p-4 bg-primary rounded-xl transition-colors hover:bg-indigo-600 h-full">
         <Body1 className="text-slate-50 h-12 line-clamp-2">{title}</Body1>
         <Body2 className="text-indigo-100 mt-1">{description}</Body2>
