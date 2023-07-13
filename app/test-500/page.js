@@ -1,4 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper';
+import ClientBreak from './clientBreak';
 
 const meta = pageMetaData({
   title: 'Blog | GOOD PARTY',
@@ -8,5 +9,5 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
-  return <div>testing 500 {thisShouldFail}</div>;
+  return <ClientBreak />;
 }
