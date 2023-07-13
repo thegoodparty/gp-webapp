@@ -464,6 +464,10 @@ const gpApi = {
     url: `${base}application/upload-image`,
     method: 'POST',
   },
+  logError: {
+    url: `${base}log-error`,
+    method: 'POST',
+  },
 };
 
 export default gpApi;

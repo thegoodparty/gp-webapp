@@ -2,10 +2,38 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import { getUserCookie } from 'helpers/cookieHelper';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useEffect } from 'react';
 
-export default function NotFound({ error }) {
+export async function sendError(message) {
+  try {
+    const api = gpApi.logError;
+    const payload = {
+      message,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error at fetchCampaignStatus', e);
+    return false;
+  }
+}
+
+export default function Error({ error }) {
+  useEffect(() => {
+    logError();
+  }, []);
+
+  const logError = async () => {
+    const user = getUserCookie(true);
+    await sendError({
+      message: error.message,
+      url: window.location.href,
+      userEmail: user?.email,
+    });
+  };
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">
