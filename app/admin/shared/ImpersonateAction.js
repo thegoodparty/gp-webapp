@@ -24,7 +24,6 @@ export default function ImpersonateAction({
     });
 
     const impersonateResp = await handleImpersonateUser(email);
-    console.log('impersonateResp', impersonateResp);
     if (impersonateResp) {
       if (isCandidate) {
         if (launched == 'Live') {
@@ -64,8 +63,9 @@ async function handleImpersonateUser(email) {
       email,
     };
     const resp = await gpFetch(api, payload);
-    if (resp?.token) {
+    if (resp?.token && resp?.user) {
       setCookie('impersonateToken', resp.token);
+      setCookie('impersonateUser', JSON.stringify(resp.user));
       return true;
     }
   } catch (e) {
