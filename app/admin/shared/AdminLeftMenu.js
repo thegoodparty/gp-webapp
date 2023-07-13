@@ -17,6 +17,10 @@ export const leftMenuItems = [
     label: 'Top Issues',
     link: '/admin/top-issues',
   },
+  {
+    label: 'Bust Cache',
+    link: '/admin/caches',
+  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {
