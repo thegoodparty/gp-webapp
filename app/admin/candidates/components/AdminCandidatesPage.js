@@ -17,9 +17,6 @@ function mapStatus(status, isActive) {
     return 'No (Onboarding)';
   }
   if (status === 'launched') {
-    if (!isActive) {
-      return 'Not Active (hidden)';
-    }
     return 'Live';
   }
   if (status === 'pending') {
@@ -44,7 +41,7 @@ export default function AdminCandidatesPage(props) {
         slug: campaign.slug,
         firstName: campaign.firstName,
         lastName: campaign.lastName,
-        launched: mapStatus(campaign.launchStatus, campaignObj.isActive),
+        launched: mapStatus(campaign.launchStatus),
         lastVisited: new Date(campaign.lastVisited),
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
