@@ -39,6 +39,11 @@ export default function AdminUsersPage(props) {
       paths: ['/political-terms/', '/political-terms/[slug]'],
     },
     {
+      name: 'Dashboard > my content',
+      description: 'Invalidate my content section of the dashboard',
+      paths: ['/dashboard/content'],
+    },
+    {
       name: 'custom path',
       description: 'Invalidate custom path',
       paths: [],
