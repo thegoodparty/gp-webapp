@@ -1,16 +1,10 @@
-export const getCookie = name => {
+export const getCookie = (name) => {
   if (typeof window === 'undefined') {
     return false;
   }
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2)
-    return decodeURI(
-      parts
-        .pop()
-        .split(';')
-        .shift(),
-    );
+  if (parts.length === 2) return decodeURI(parts.pop().split(';').shift());
   return false;
 };
 
@@ -31,14 +25,14 @@ export const deleteCookies = () => {
   if (typeof window === 'undefined') {
     return;
   }
-  document.cookie.split(';').forEach(c => {
+  document.cookie.split(';').forEach((c) => {
     document.cookie = c
       .replace(/^ +/, '')
       .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
   });
 };
 
-export const deleteCookie = name => {
+export const deleteCookie = (name) => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -46,7 +40,7 @@ export const deleteCookie = name => {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 };
 
-export const setUserCookie = value => {
+export const setUserCookie = (value) => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -58,6 +52,12 @@ export const getUserCookie = (withParse = false) => {
   if (typeof window === 'undefined') {
     return false;
   }
+
+  const impersonateUser = getCookie('impersonateUser');
+  if (impersonateUser && withParse) {
+    return JSON.parse(impersonateUser);
+  }
+
   const user = getCookie('user');
   if (user && withParse) {
     return JSON.parse(user);
