@@ -1,10 +1,11 @@
+'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function NotFound() {
+export default function NotFound({ error }) {
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">
@@ -22,17 +23,15 @@ export default function NotFound() {
         </div>
 
         <div className="col-span-12 lg:col-span-6">
-          <H1>Error: 404 Not Found</H1>
+          <H1>Error: 500 server error</H1>
           <Body1 className="my-7">
-            Whoops! It appears our internet gnomes took a nap.
-            <br />
-            <br />
-            It seems the page has decided to join one of the two major parties,
-            and therefore is no longer meet the standards of Good Party.
+            Something went wrong. Our engineers are blaming the
+            two-party-system.
           </Body1>
           <a href="/">
             <PrimaryButton>Back to our homepage</PrimaryButton>
           </a>
+          <div className="text-sm italic mt-12">{error?.message}</div>
         </div>
       </div>
     </div>
