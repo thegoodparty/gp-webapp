@@ -40,7 +40,7 @@ export default function Error({ error }) {
         <div className="col-span-12 lg:col-span-6 ">
           <div className="relative h-[50vh]">
             <Image
-              src="/images/error-pages/error-404.svg"
+              src="/images/error-pages/error-500.svg"
               data-cy="logo"
               fill
               className="object-contain object-center"
