@@ -54,8 +54,12 @@ export const getUserCookie = (withParse = false) => {
   }
 
   const impersonateUser = getCookie('impersonateUser');
-  if (impersonateUser && withParse) {
-    return JSON.parse(impersonateUser);
+  if (impersonateUser) {
+    if (withParse) {
+      return JSON.parse(impersonateUser);
+    } else {
+      return impersonateUser;
+    }
   }
 
   const user = getCookie('user');
