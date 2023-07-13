@@ -15,5 +15,11 @@ export const getServerToken = () => {
 export const getServerUser = () => {
   const nextCookies = cookies();
   const cookie = nextCookies.get('user');
-  return cookie && cookie.value ? JSON.parse(cookie.value) : false;
+  const impersonateCookie = nextCookies.get('impersonateUser');
+  if (impersonateCookie?.value) {
+    return JSON.parse(impersonateCookie.value);
+  } else if (cookie?.value) {
+    return JSON.parse(cookie.value);
+  }
+  return false;
 };

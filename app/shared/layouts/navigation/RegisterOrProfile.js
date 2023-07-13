@@ -154,6 +154,7 @@ export default function RegisterOrProfile({
                     className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
                     onClick={() => {
                       deleteCookie('impersonateToken');
+                      deleteCookie('impersonateUser');
                       window.location.href = '/admin';
                     }}
                   >
