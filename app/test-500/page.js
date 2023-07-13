@@ -8,9 +8,5 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
-  return (
-    <div>
-      testing 500 <ThisShouldFail />
-    </div>
-  );
+  return <div>testing 500 {thisShouldFail}</div>;
 }
