@@ -18,7 +18,7 @@ export default function ElectionCandidate({ candidate }) {
   } = candidate;
 
   return (
-    <div className="flex flex-col items-center text-slate-50">
+    <div className="flex flex-col items-center text-slate-50 px-5 mt-20">
       <AvatarWithTracker
         candidate={candidate}
         color={color ?? colors[0]}
@@ -37,14 +37,14 @@ export default function ElectionCandidate({ candidate }) {
         className="mt-3"
       />
 
-      <div className="font-sfpro text-base font-normal  text-center">
-        <div className="pt-2 text-lg italic">&apos;{slogan}&apos;</div>
+      <div className="font-sfpro  font-normal  text-center">
+        <div className="pt-2 text-base italic">&apos;{slogan}&apos;</div>
         <div className="flex justify-center w-full">
           <div className="w-10 border-b-2 border-slate-50 my-4"></div>
         </div>
 
-        <div className="line-clamp-3">{topPosition}</div>
-        <div className="pt-4 font-bold">{occupation}</div>
+        <div className="line-clamp-3 text-sm">{topPosition}</div>
+        <div className="pt-4 font-bold  text-sm">{occupation}</div>
       </div>
     </div>
   );

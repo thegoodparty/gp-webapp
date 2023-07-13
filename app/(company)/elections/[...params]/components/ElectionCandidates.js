@@ -38,18 +38,9 @@ export default function ElectionCandidates(props) {
             </CmsContentWrapper>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-6 justify-center">
-          {content.candidates.length === 2 && (
-            <div className="col-span-12 md:col-span-6 lg:col-span-3">
-              &nbsp;
-            </div>
-          )}
-
+        <div className="md:flex justify-center flex-wrap">
           {content.candidates.map((candidate) => (
-            <div
-              className="col-span-12 md:col-span-6 lg:col-span-3"
-              key={candidate.slug}
-            >
+            <div className="md:basis-1/2 xl:basis-1/4" key={candidate.slug}>
               <ElectionCandidate candidate={candidate} />
             </div>
           ))}
