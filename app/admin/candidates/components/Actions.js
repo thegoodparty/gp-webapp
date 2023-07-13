@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { handleImpersonateUser } from 'app/admin/shared/impersonateUser';
+import ImpersonateAction from '/app/admin/shared/ImpersonateAction';
 
 async function handleCancelRequest(slug) {
   try {
@@ -47,35 +47,6 @@ export default function Actions({ launched, slug, email }) {
     window.location.reload();
   };
 
-  const impersonateCandidate = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Impersonating candidate',
-        isError: false,
-      };
-    });
-
-    const impersonateResp = await handleImpersonateUser(email);
-    if (impersonateResp) {
-      if (launched == 'Live') {
-        window.location.href = `/candidate/${slug}`;
-      } else if (launched == 'Pending Review') {
-        window.location.href = `/candidate/${slug}/review`;
-      } else {
-        window.location.href = `/onboarding/${slug}/dashboard`;
-      }
-    } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Impersonate candidate failed',
-          isError: true,
-        };
-      });
-    }
-  };
-
   return (
     <div className="flex justify-center relative">
       <BsThreeDotsVertical
@@ -94,11 +65,12 @@ export default function Actions({ launched, slug, email }) {
           />
 
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
-            <div className="my-3" onClick={impersonateCandidate}>
-              <PrimaryButton size="small" fullWidth>
-                <span className="whitespace-nowrap">Impersonate</span>
-              </PrimaryButton>
-            </div>
+            <ImpersonateAction
+              email={email}
+              isCandidate={true}
+              slug={slug}
+              launched={launched}
+            />
             {launched == 'Pending Review' && (
               <div className="my-3" onClick={cancelRequest}>
                 <PrimaryButton size="small" fullWidth>
