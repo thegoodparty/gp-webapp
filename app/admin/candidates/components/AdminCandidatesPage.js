@@ -13,13 +13,13 @@ import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 
 function mapStatus(status, isActive) {
-  if (!isActive) {
-    return 'Not Active (hidden)';
-  }
   if (!status) {
     return 'No (Onboarding)';
   }
   if (status === 'launched') {
+    if (!isActive) {
+      return 'Not Active (hidden)';
+    }
     return 'Live';
   }
   if (status === 'pending') {
