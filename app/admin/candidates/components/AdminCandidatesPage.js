@@ -12,7 +12,10 @@ import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandi
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 
-function mapStatus(status) {
+function mapStatus(status, isActive) {
+  if (!isActive) {
+    return 'Not Active (hidden)';
+  }
   if (!status) {
     return 'No (Onboarding)';
   }
@@ -41,7 +44,7 @@ export default function AdminCandidatesPage(props) {
         slug: campaign.slug,
         firstName: campaign.firstName,
         lastName: campaign.lastName,
-        launched: mapStatus(campaign.launchStatus),
+        launched: mapStatus(campaign.launchStatus, campaignObj.isActive),
         lastVisited: new Date(campaign.lastVisited),
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
