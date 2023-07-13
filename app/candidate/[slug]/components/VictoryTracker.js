@@ -18,7 +18,7 @@ function VictoryTracker({ candidate, color }) {
           <H3>{kFormatter(voterProjection)}</H3>
           <Body2 className="text-indigo-50">Likely Votes Today</Body2>
         </div>
-        <div className="w-20" />
+        <div className="w-11" />
         <div data-cy="campaign-needed-votes">
           <H3>{kFormatter(voteGoal)}</H3>
           <Body2 className="text-indigo-50">Votes Needed to Win</Body2>
