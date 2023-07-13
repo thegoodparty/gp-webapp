@@ -42,7 +42,7 @@ export default function AdminCandidatesPage(props) {
         firstName: campaign.firstName,
         lastName: campaign.lastName,
         launched: mapStatus(campaign.launchStatus),
-        lastVisited: new Date(campaign.lastVisited),
+        lastVisited: campaign.lastVisited,
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
         office: campaign.office,
@@ -125,10 +125,8 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Last Visit',
       accessor: 'lastVisited',
-      sortType: 'datetime',
       Cell: ({ row }) => {
-        return row.original.lastVisited &&
-          row.original.lastVisited?.toString() !== 'Invalid Date'
+        return row.original.lastVisited
           ? dateWithTime(row.original.lastVisited)
           : 'n/a';
       },
