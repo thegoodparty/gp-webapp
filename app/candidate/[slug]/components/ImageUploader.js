@@ -30,7 +30,7 @@ export default function ImageUploader({
     <div className="absolute w-full h-full flex items-center justify-center top-0 left-0">
       <ImageUpload
         uploadCallback={handleUpload}
-        maxFileSize={4000000}
+        maxFileSize={10000000}
         customElement={
           <div className="bg-lime-400 text-primary text-sm py-1 px-3">
             Edit Image
