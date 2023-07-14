@@ -48,9 +48,6 @@ export default function DeleteAction({ slug, isLive }) {
           isError: false,
         };
       });
-      await deactivateCandidate(slug);
-      await revalidateCandidates();
-      await revalidatePage('/candidates');
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -67,8 +64,7 @@ export default function DeleteAction({ slug, isLive }) {
           isError: false,
         };
       });
-      await deleteCampaign(slug);
-      await revalidatePage('/admin/candidates');
+
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -76,8 +72,11 @@ export default function DeleteAction({ slug, isLive }) {
           isError: false,
         };
       });
-      window.location.reload();
     }
+    await deleteCampaign(slug);
+    await revalidateCandidates();
+    await revalidatePage('/admin/candidates');
+    window.location.reload();
   };
 
   return (
