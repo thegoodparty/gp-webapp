@@ -32,6 +32,7 @@ export default function Error({ error }) {
       message: error.message,
       url: window.location.href,
       userEmail: user?.email,
+      userAgent: window?.navigator?.userAgent,
     });
   };
   return (
