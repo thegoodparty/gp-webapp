@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
   const { firstName, lastName, party, otherParty, office, headline } = campaign;
 
   const title = `${firstName} ${lastName} ${partyResolver(party, otherParty)} ${
-    party !== 'I' ? 'Party ' : ''
+    party !== 'Independent' ? 'Party ' : ''
   }candidate for ${office}`;
 
   const description = `Join the crowd-voting campaign for ${firstName} ${lastName}, ${partyResolver(

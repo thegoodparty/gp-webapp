@@ -20,7 +20,7 @@ export default function CandidateSchema({ candidate }) {
     linkedin,
   } = candidate;
   const runForRace = `${partyResolver(party)} ${
-    party !== 'I' ? 'Party' : ''
+    party !== 'Independent' ? 'Party' : ''
   } Candidate for ${office}`;
   const sameAs = [];
 
