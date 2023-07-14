@@ -63,7 +63,7 @@ export default function ElectionCandidates(props) {
               </div>
             </>
           )}
-          <div class="flex flex-row justify-center">
+          <div class="flex flex-col md:flex-row justify-center">
             {content?.districtButtonText && (
               <div>
                 <a
@@ -72,20 +72,23 @@ export default function ElectionCandidates(props) {
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                 >
-                  <InfoButton>{content.districtButtonText}</InfoButton>
+                  <InfoButton className="whitespace-nowrap">
+                    {content.districtButtonText}
+                  </InfoButton>
                 </a>
               </div>
             )}
             {content?.districtButton2Text && (
-              <div>
+              <div className="mt-4 md:mt-0 md:ml-4">
                 <a
                   id="district-link2"
                   href={content.districtButton2Link}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  className="ml-4"
                 >
-                  <WarningButton>{content.districtButton2Text}</WarningButton>
+                  <WarningButton className="whitespace-nowrap">
+                    {content.districtButton2Text}
+                  </WarningButton>
                 </a>
               </div>
             )}
