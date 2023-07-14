@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { candidateRoute } from 'helpers/candidateHelper';
 import { colors } from '/app/candidate/[slug]/components/CandidateColors';
 import Image from 'next/image';
+import InfoButton from '@shared/buttons/InfoButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import ElectionCandidate from './ElectionCandidate';
 
@@ -47,26 +48,47 @@ export default function ElectionCandidates(props) {
         </div>
 
         <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
-          <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
-            {content.districtTitle}
-          </div>
-          <div className="flex justify-center">
-            <Image
-              src={`https:${content?.districtImage?.url}`}
-              width={584}
-              height={524}
-              alt={`${city} district map`}
-            />
-          </div>
-          <div>
-            <a
-              id="district-link"
-              href={content.districtButtonLink}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-            >
-              <WarningButton>{content.districtButtonText}</WarningButton>
-            </a>
+          {content?.districtImage && (
+            <>
+              <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+                {content.districtTitle}
+              </div>
+              <div className="flex justify-center">
+                <Image
+                  src={`https:${content?.districtImage?.url}`}
+                  width={584}
+                  height={524}
+                  alt={`${city} district map`}
+                />
+              </div>
+            </>
+          )}
+          <div class="flex flex-row justify-center">
+            {content?.districtButtonText && (
+              <div>
+                <a
+                  id="district-link"
+                  href={content.districtButtonLink}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                >
+                  <InfoButton>{content.districtButtonText}</InfoButton>
+                </a>
+              </div>
+            )}
+            {content?.districtButton2Text && (
+              <div>
+                <a
+                  id="district-link2"
+                  href={content.districtButton2Link}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="ml-4"
+                >
+                  <WarningButton>{content.districtButton2Text}</WarningButton>
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </MaxWidth>
