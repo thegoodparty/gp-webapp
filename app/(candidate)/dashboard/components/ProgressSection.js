@@ -42,11 +42,13 @@ export default function ProgressSection(props) {
     weeksUntil,
     reportedVoterGoals,
   });
-  rows[0].onTrack = doorsOnTrack;
-  rows[1].onTrack = callsOnTrack;
-  rows[2].onTrack = digitalOnTrack;
 
   const { weeks, days } = weeksUntil;
+
+  rows[0].onTrack = doorsOnTrack || weeks > 11;
+  rows[1].onTrack = callsOnTrack || weeks > 11;
+  rows[2].onTrack = digitalOnTrack || weeks > 11;
+
   const accumulated = calculateAccumulatedByWeek(contactGoals);
   const calculateReminder = (weekNum, key) => {
     const week = `week${weekNum}`;
