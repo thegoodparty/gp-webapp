@@ -40,7 +40,7 @@ export async function generateMetadata({ params }) {
     title: content?.pageTitle,
     description: content?.pageDescription,
     slug: `/elections/${city}/${year}`,
-    image: `https://assets.goodparty.org/${city}`,
+    image: `https://assets.goodparty.org/${city}.jpg`,
   });
   return meta;
 }
