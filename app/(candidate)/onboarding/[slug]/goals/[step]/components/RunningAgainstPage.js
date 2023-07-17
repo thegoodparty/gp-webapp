@@ -100,7 +100,7 @@ export default function RunningAgainstPage({
     savingState.set(() => true);
 
     setTimeout(() => {
-      router.push(`onboarding/${slug}/campaign-plan`);
+      router.push(`/onboarding/${slug}/campaign-plan`);
     }, 200);
   };
 

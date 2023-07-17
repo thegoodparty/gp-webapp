@@ -35,7 +35,7 @@ export default function IssuesPage({
       savingState.set(() => true);
 
       setTimeout(() => {
-        router.push(`onboarding/${slug}${path}`);
+        router.push(`/onboarding/${slug}${path}`);
       }, 200);
     }
   };
