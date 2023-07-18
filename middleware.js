@@ -13,6 +13,7 @@ import gpFetch from 'gpApi/gpFetch';
 const redirects = {
   '/elections/senate/me': '/',
   '/candidates': '/elections/nashville/2023',
+  '/nashville': '/elections/nashville/2023',
 };
 
 export default async function middleware(req) {
