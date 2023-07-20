@@ -56,7 +56,7 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = params;
-  const { candidate, candidatePositions, support } = await fetchCandidate(slug);
+  const { candidate, candidatePositions } = await fetchCandidate(slug);
   if (!candidate) {
     notFound();
   }
