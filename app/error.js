@@ -16,7 +16,7 @@ export async function sendError(message) {
     };
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error at fetchCampaignStatus', e);
+    console.log('error at sendError', e);
     return false;
   }
 }

@@ -15,9 +15,6 @@ export default function Signatures({ signatures, tangerine }) {
     }
   }, [signatures]);
 
-  console.log('signer: ', signer);
-  console.log('server signatures: ', signatures);
-
   return (
     <>
       <div className="flex font-bold text-xl max-w-[65%] md:max-w-[55%] mx-auto justify-between items-center align-middle mt-10">

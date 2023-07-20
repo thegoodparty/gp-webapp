@@ -39,7 +39,7 @@ async function SocialSection() {
 
 export default SocialSection;
 
-export async function generateStaticParams() {
-  const res = await gpFetch(gpApi.homepage.followers);
-  return res.json();
-}
+// export async function generateStaticParams() {
+//   const res = await gpFetch(gpApi.homepage.followers);
+//   return res.json();
+// }

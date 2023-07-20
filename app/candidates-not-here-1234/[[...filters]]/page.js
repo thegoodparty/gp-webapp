@@ -46,6 +46,6 @@ export default async function Page({ params, searchParams }) {
   return <CandidatesPage {...childProps} />;
 }
 
-export async function generateStaticParams() {
-  return [{ filters: ['', ''] }];
-}
+// export async function generateStaticParams() {
+//   return [{ filters: ['', ''] }];
+// }
