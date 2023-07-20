@@ -29,7 +29,7 @@ export default function Error({ error }) {
   const logError = async () => {
     const user = getUserCookie(true);
     await sendError({
-      message: error.message,
+      message: error?.message,
       url: window.location.href,
       userEmail: user?.email,
       userAgent: window?.navigator?.userAgent,
