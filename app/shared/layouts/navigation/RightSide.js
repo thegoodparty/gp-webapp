@@ -35,7 +35,7 @@ export default function RightSideClient() {
   }, []);
 
   const pathname = usePathname();
-  const isDashboardPath = pathname.startsWith('/dashboard');
+  const isDashboardPath = pathname?.startsWith('/dashboard');
 
   const updateStatus = async () => {
     const status = await fetchCampaignStatus();
