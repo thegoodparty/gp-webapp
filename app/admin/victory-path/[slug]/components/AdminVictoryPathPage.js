@@ -151,6 +151,7 @@ export default function AdminVictoryPathPage(props) {
         };
       });
       await revalidateCandidates();
+      await revalidatePage('/admin/victory-path/[slug]');
       // window.location.reload();
     } catch (e) {
       snackbarState.set(() => {
