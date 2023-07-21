@@ -10,19 +10,35 @@ import IssuesTab from '../issues/IssuesTab';
 import OverviewTab from './OverviewTab';
 
 const labels = [
-  <div key="overview" className="flex flex-col lg:flex-row items-center">
+  <div
+    key="overview"
+    className="flex flex-col lg:flex-row items-center"
+    id="overview-tab"
+  >
     <AiOutlineFlag />
     <div className="ml-2 font-medium text-xs lg:text-base">Overview</div>
   </div>,
-  <div key="issues" className="flex flex-col lg:flex-row items-center">
+  <div
+    key="issues"
+    className="flex flex-col lg:flex-row items-center"
+    id="issues-tab"
+  >
     <RiLandscapeLine />
     <div className="ml-2 font-medium text-xs lg:text-base">Issues</div>
   </div>,
-  <div key="endorsements" className="flex flex-col lg:flex-row items-center">
+  <div
+    key="endorsements"
+    className="flex flex-col lg:flex-row items-center"
+    id="endorsements-tab"
+  >
     <TbBrain />
     <div className="ml-2 font-medium text-xs lg:text-base">Endorsements</div>
   </div>,
-  <div key="info" className="flex flex-col lg:flex-row items-center">
+  <div
+    key="info"
+    className="flex flex-col lg:flex-row items-center"
+    id="info-tab"
+  >
     <RiGroupLine />
     <div className="ml-2 font-medium text-xs lg:text-base">Info</div>
   </div>,
