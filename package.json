@@ -52,6 +52,7 @@
     "react-loading": "^2.0.3",
     "react-responsive-masonry": "^2.1.6",
     "react-schemaorg": "^2.0.0",
+    "react-scroll-into-view": "^1.12.2",
     "react-slick": "^0.29.0",
     "react-social-login": "^3.4.17",
     "react-stickynode": "^4.1.0",
