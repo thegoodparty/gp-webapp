@@ -27,11 +27,6 @@ export default function ElectionCandidates(props) {
     return null;
   }
 
-  let startClass = '';
-  if (candidates.length === 2) {
-    startClass = 'lg:col-start-3';
-  }
-
   return (
     <section className="bg-primary h-auto pt-20 pb-40" id="candidate-section">
       <MaxWidth>
