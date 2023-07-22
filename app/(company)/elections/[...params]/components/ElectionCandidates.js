@@ -7,7 +7,6 @@ import InfoButton from '@shared/buttons/InfoButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import ElectionCandidate from './ElectionCandidate';
 import dynamic from 'next/dynamic';
-const ScrollIntoView = dynamic(() => import('react-scroll-into-view'));
 
 export default function ElectionCandidates(props) {
   const { content, city } = props;
@@ -21,7 +20,6 @@ export default function ElectionCandidates(props) {
     districtButtonLink,
     districtButton2Text,
     districtButton2Link,
-    isButton2Scroll,
   } = content || {};
   if (!candidates || candidates.length === 0) {
     return null;
@@ -84,25 +82,16 @@ export default function ElectionCandidates(props) {
             )}
             {districtButton2Text && (
               <div className="mt-4 md:mt-0 md:ml-4">
-                {isButton2Scroll ? (
-                  <ScrollIntoView selector="#candidate-section">
-                    {' '}
-                    <WarningButton className="whitespace-nowrap">
-                      {districtButton2Text}
-                    </WarningButton>
-                  </ScrollIntoView>
-                ) : (
-                  <a
-                    id="district-link2"
-                    href={districtButton2Link}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                  >
-                    <WarningButton className="whitespace-nowrap">
-                      {districtButton2Text}
-                    </WarningButton>
-                  </a>
-                )}
+                <a
+                  id="district-link2"
+                  href={districtButton2Link}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                >
+                  <WarningButton className="whitespace-nowrap">
+                    {districtButton2Text}
+                  </WarningButton>
+                </a>
               </div>
             )}
           </div>
