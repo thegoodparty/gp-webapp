@@ -9,6 +9,8 @@ export default function QuestionButton({ children, className }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
     setAnchorEl(event.currentTarget);
   };
 
