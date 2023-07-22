@@ -161,7 +161,7 @@ export default function LaunchChecklist({ campaign }) {
       });
       const res = await launchCampaign();
       if (res) {
-        router.push(`/onboarding/${slug}/dashboard`);
+        window.location.href = `/onboarding/${slug}/dashboard`;
       } else {
         snackbarState.set(() => {
           return {
