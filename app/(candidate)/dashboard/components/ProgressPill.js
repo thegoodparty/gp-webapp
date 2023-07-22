@@ -12,6 +12,14 @@ export default function ProgressPill(props) {
     return null;
   }
 
+  if (weeksUntil?.weeks < 0) {
+    return (
+      <div className="absolute  top-5 right-5 bg-green-200 text-indigo-900 rounded-full py-1 px-2">
+        <Caption>Election complete</Caption>
+      </div>
+    );
+  }
+
   if (doorsOnTrack && callsOnTrack && digitalOnTrack) {
     return (
       <div className="absolute  top-5 right-5 bg-green-200 text-indigo-900 rounded-full py-1 px-2">

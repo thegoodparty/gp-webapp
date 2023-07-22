@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
 import H3 from '@shared/typography/H3';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import ElectionOver from './ElectionOver';
 
 export default function DashboardPage(props) {
   const { campaign } = props;
@@ -23,7 +24,7 @@ export default function DashboardPage(props) {
   const { voterContactGoal, voteGoal } = pathToVictory;
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const weeksUntil = weeksTill(electionDate);
-  // const weeksUntil = { weeks: 10, days: 3 };
+  // const weeksUntil = { weeks: -1, days: 6 };
 
   const dateRange = weekRangeFromDate(electionDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal, weeksUntil);
@@ -60,7 +61,11 @@ export default function DashboardPage(props) {
         />
         {contactGoals ? (
           <>
-            <ThisWeekSection {...childProps} />
+            {weeksUntil.weeks > 0 ? (
+              <ThisWeekSection {...childProps} />
+            ) : (
+              <ElectionOver />
+            )}
             <ProgressSection {...childProps} />
           </>
         ) : (

@@ -45,9 +45,9 @@ export default function ProgressSection(props) {
 
   const { weeks, days } = weeksUntil;
 
-  rows[0].onTrack = doorsOnTrack || weeks > 11;
-  rows[1].onTrack = callsOnTrack || weeks > 11;
-  rows[2].onTrack = digitalOnTrack || weeks > 11;
+  rows[0].onTrack = weeks < 0 || doorsOnTrack || weeks > 11;
+  rows[1].onTrack = weeks < 0 || callsOnTrack || weeks > 11;
+  rows[2].onTrack = weeks < 0 || digitalOnTrack || weeks > 11;
 
   const accumulated = calculateAccumulatedByWeek(contactGoals);
   const calculateReminder = (weekNum, key) => {
@@ -70,11 +70,14 @@ export default function ProgressSection(props) {
       <div className="bg-slate-200 rounded-3xl py-6 px-8 relative">
         <ProgressPill {...props} />
         <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <H4>{weeks} weeks left</H4>
-            <Body2 className="ml-3">{dateRange}</Body2>
-          </div>
-          {/* <div>on track</div> */}
+          {weeks > 0 ? (
+            <div className="flex items-center">
+              <H4>{weeks} weeks left</H4>
+              <Body2 className="ml-3">{dateRange}</Body2>
+            </div>
+          ) : (
+            <div>Election Recap</div>
+          )}
         </div>
         <div className="grid grid-cols-12 mt-4 lg:mt-6">
           <div className=" col-span-1 text-[11px] text-indigo-200 font-sfpro hidden lg:block">
@@ -82,27 +85,30 @@ export default function ProgressSection(props) {
           </div>
           <div className=" col-span-11  hidden lg:block">
             <div className="grid grid-cols-12 gap-1">
-              {[...Array(11).keys()].map((index) => (
+              {[...Array(12).keys()].map((index) => (
                 <div
                   key={index}
                   className="col-span-1 relative text-[11px] text-indigo-200 font-sfpro"
                 >
-                  {weeks === 12 - index ? (
+                  {weeks === 12 - index || (weeks === 0 && index === 11) ? (
                     <>
                       <strong>current</strong>
                       <div className="absolute w-full h-[116px] bg-gray-400 rounded-lg opacity-50 top-7 left-0"></div>
                     </>
                   ) : (
                     <>
-                      {12 - index}
-                      {index === 0 ? '+' : ''} weeks
+                      {index === 11 ? (
+                        <>Election</>
+                      ) : (
+                        <>
+                          {12 - index}
+                          {index === 0 ? '+' : ''} weeks
+                        </>
+                      )}
                     </>
                   )}
                 </div>
               ))}
-              <div className="col-span-1  text-[11px] text-indigo-200 font-sfpro">
-                Election
-              </div>
             </div>
           </div>
           {/*  Second Row */}
