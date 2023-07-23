@@ -6,12 +6,45 @@ import EditProfile from './EditProfile';
 import EditProfileButton from './EditProfileButton';
 import AvatarWithTracker from './AvatarWithTracker';
 import CandidatePill from './CandidatePill';
+import { Fragment } from 'react';
+
+const federalOffices = ['US Senate', 'US House of Representatives'];
+
+const calcLocation = ({ office, state, district }) => {
+  const isFederal = federalOffices.includes(office);
+  if (isFederal) {
+    return `${office}, ${state}, ${district}`;
+  }
+  return `${district}, ${state}, ${office}`;
+};
 
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign } = props;
 
   const { firstName, lastName, slogan, party, office, state, district } =
     candidate;
+
+  let fields;
+  const isFederal = federalOffices.includes(office);
+  if (isFederal) {
+    fields = [
+      { label: 'Running For', value: office },
+      {
+        label: 'Location',
+        value: `${district ? `${district}, ` : ''} ${state}`,
+      },
+      { label: 'Affiliation', value: partyResolver(party) },
+    ];
+  } else {
+    fields = [
+      {
+        label: 'Location',
+        value: `${district ? `${district}, ` : ''} ${state}`,
+      },
+      { label: 'Running For', value: office },
+      { label: 'Affiliation', value: partyResolver(party) },
+    ];
+  }
   return (
     <section className="flex flex-col items-center mt-5  pt-5">
       <AvatarWithTracker {...props} />
@@ -23,18 +56,13 @@ export default function ProfileSection(props) {
           <H1 className="font-semibold">
             {firstName} {lastName}
           </H1>
-          <div className="border-slate-500 border rounded-xl pt-2 pb-6 w-full flex flex-col items-center mt-6">
-            <Body2 className="text-indigo-50 ">Running for</Body2>
-            <H3 className="mt-2 mb-5">{office}</H3>
-            <div className="flex items-center justify-center">
-              <div className="mr-2">
-                <CandidatePill text={partyResolver(party)} color={color} />
-              </div>
-              <CandidatePill
-                text={`${district ? `${district}, ` : ''} ${state}`}
-                color={color}
-              />
-            </div>
+          <div className="border-slate-500 border rounded-xl w-full flex flex-col mt-6 py-5 px-10">
+            {fields.map((field) => (
+              <Fragment key={field.label}>
+                <Body2 className="text-indigo-50 ">{field.label}</Body2>
+                <H3 className="mt-1 mb-4">{field.value}</H3>
+              </Fragment>
+            ))}
           </div>
           {slogan ? (
             <Body2 className="mt-6 text-center mb-8">
