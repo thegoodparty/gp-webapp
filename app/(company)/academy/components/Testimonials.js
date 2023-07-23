@@ -22,7 +22,7 @@ const sections = [
     title: 'Regulatory Writer',
     subtitle: 'Good Party Academy Graduate',
     description:
-      '“The most valuable part about good party academy for me has been the knowledge that I can do this”',
+      '“The most valuable part about Good Party academy for me has been the knowledge that I can do this”',
     img: '/images/run-for-office/carlos.jpg',
   },
   {

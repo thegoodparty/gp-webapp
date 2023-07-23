@@ -71,7 +71,7 @@ export default function RootLayout({ children }) {
           content="width=device-width,initial-scale=1.0"
         ></meta>
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta property="og:site_name" content="GOOD PARTY" />
+        <meta property="og:site_name" content="Good Party" />
         <meta property="og:type" content="website" />
 
         <meta property="twitter:card" content="summary_large_image" />

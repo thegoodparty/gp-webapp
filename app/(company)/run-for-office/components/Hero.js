@@ -28,27 +28,32 @@ export default function Hero({ demoCallback }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-12 md:gap-10 pl-8 pr-8">
+      <div className="grid grid-cols-12 md:gap-10 md:pl-8 md:pr-8">
         <div className="col-span-12 md:col-span-7">
-          <h1 className="font-semibold text-[42px] md:text-[60px] lg:text-[92px] leading-[42px] lg:leading-[92px] -mt-10">
-            Free tools to help real people run and win
+          <h1 className="font-semibold text-[38px] leading-[38px] xs:text-[48px] xs:leading-[48px] md:text-[52px] md:leading-[52px] lg:text-[72px] lg:leading-[72px] xl:text-[92px] xl:leading-[92px] -mt-10">
+            Free tools to
+            <br />
+            help real people
+            <br />
+            run and win
           </h1>
           <h2 className="mt-3 mb-12 font-sfpro text-black font-normal text-[18px] leading-[24px]">
             Our free AI Campaign Manager and team with 50+ years of experience
             power independent campaigns. We&apos;re here to make running as an
             independent possible!
           </h2>
-          <div className="grid grid-cols-12 gap-6">
-            <div className="flex flex-row w-full col-span-12">
-              <div className="mr-4">
-                <RunCampaignButton id="hero-get-started-btn" />
-              </div>
-              <div onClick={demoCallback} id="hero-demo-btn">
-                <SecondaryButton outlined className="w-full">
-                  <div className="tracking-wide">Get a Demo</div>
-                </SecondaryButton>
-              </div>
-            </div>
+          <div className="mr-4 inline-block mb-2 xs:mb-0">
+            <RunCampaignButton id="hero-get-started-btn" />
+          </div>
+          <div className="xs:hidden"></div>
+          <div
+            onClick={demoCallback}
+            className="inline-block"
+            id="hero-demo-btn"
+          >
+            <SecondaryButton outlined className="w-full">
+              <div className="tracking-wide">Get a Demo</div>
+            </SecondaryButton>
           </div>
         </div>
         <div className="col-span-12 md:col-span-5 text-center">
