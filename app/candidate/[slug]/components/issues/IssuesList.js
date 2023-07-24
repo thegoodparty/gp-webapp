@@ -10,7 +10,7 @@ export const combinePositions = (candidatePositions, customPositions) => {
   }
   const transformed = customPositions.map((pos) => {
     return {
-      order: pos.order || 1, // remove later
+      order: pos.order, // remove later
       description: pos.position,
       isCustom: true,
       position: { name: pos.title },
@@ -21,6 +21,10 @@ export const combinePositions = (candidatePositions, customPositions) => {
   const sorted = combined.sort((a, b) => {
     return a.order - b.order;
   });
+
+  // sorted.forEach((item, index) => {
+  //   item.order = index;
+  // });
 
   return sorted;
 };
