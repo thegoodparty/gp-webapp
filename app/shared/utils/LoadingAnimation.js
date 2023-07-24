@@ -4,7 +4,7 @@ import { BsChatDots } from 'react-icons/bs';
 import LinearProgress from '@mui/material/LinearProgress';
 import Image from 'next/image';
 
-const LoadingAnimation = ({ label, fullPage = true }) => (
+const LoadingAnimation = ({ label, fullPage = true, title }) => (
   <div
     className={`flex justify-center items-center p-8 w-full flex-col ${
       fullPage &&
@@ -14,9 +14,15 @@ const LoadingAnimation = ({ label, fullPage = true }) => (
     <div className="py-12 px-6 text-center bg-zinc-100 rounded-xl flex flex-col items-center">
       <BsChatDots size={30} />
       <div className="text-4xl mt-2">
-        <strong>Loading...</strong> Something
-        <br />
-        awesome.
+        {title ? (
+          title
+        ) : (
+          <>
+            <strong>Loading...</strong> Something
+            <br />
+            awesome.
+          </>
+        )}
         <LinearProgress className="h-2 mt-4 mb-2 bg-black rounded [&>.MuiLinearProgress-bar]:bg-slate-600" />
       </div>
       {label && (

@@ -5,12 +5,13 @@ import H1 from '@shared/typography/H1';
 import H2 from '@shared/typography/H2';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates } from 'helpers/cacheHelper';
+import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
 import { useState } from 'react';
 import CandidateIssueSelector from './CandidateIssueSelector';
 import EditCandidatePosition from './EditCandidatePosition';
 import { combinePositions } from './IssuesList';
 import { Draggable } from 'react-drag-reorder';
+import LoadingAnimation from '@shared/utils/LoadingAnimation';
 
 export async function saveCandidatePosition({
   description,
@@ -71,7 +72,6 @@ export default function EditIssues(props) {
     isStaged,
     saveCallback,
     hideTitle = false,
-    updatePositionsCallback,
   } = props;
 
   const combined = combinePositions(
@@ -79,13 +79,14 @@ export default function EditIssues(props) {
     candidate?.customIssues || campaign?.customIssues,
   );
   const [state, setState] = useState(combined);
+  const [saving, setSaving] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
-  const Wrapper = () => {
+  const Wrapper = ({ children, onPosChange }) => {
     if (isStaged) {
-      return <div />;
+      return <div>{children}</div>;
     }
-    return <Draggable />;
+    return <Draggable onPosChange={onPosChange}>{children}</Draggable>;
   };
   const onAddPosition = async (
     position,
@@ -160,13 +161,17 @@ export default function EditIssues(props) {
     await revalidateCandidates();
     window.location.reload();
   };
-  console.log('state', state);
+
   const handlePosChange = async (currentPos, newPos) => {
     console.log(currentPos, newPos);
     console.log('state', state);
+
     if (currentPos !== newPos) {
+      setSaving(true);
       await handleReorderSave(state[currentPos], newPos);
       await handleReorderSave(state[newPos], currentPos);
+      await revalidateCandidates();
+      window.location.reload();
     }
   };
 
@@ -175,7 +180,6 @@ export default function EditIssues(props) {
       await handleCustomReorder(pos, newOrder);
     } else {
       await updateCandidatePosition(pos.id, newOrder);
-      await updatePositionsCallback();
     }
   };
 
@@ -198,7 +202,6 @@ export default function EditIssues(props) {
         customIssues,
       });
       await revalidateCandidates();
-      window.location.reload();
     }
   };
 
@@ -212,54 +215,63 @@ export default function EditIssues(props) {
         <br />
         {!isStaged && <strong>Drag and drop the issues to reorder</strong>}
       </Body1>
-      <Draggable onPosChange={handlePosChange}>
-        {state &&
-          state.map((candidatePosition, index) => (
-            <EditCandidatePosition
-              candidatePosition={candidatePosition}
-              index={index}
-              key={candidatePosition.id}
-              updatePositionsCallback={loadPositions}
-              {...props}
-            />
-          ))}
-      </Draggable>
-      {remainingSlots.map((num) => (
-        <div
-          className="border-2 py-5 px-8 mb-5 rounded-xl border-dashed border-slate-900 min-h-[150px] bg-slate-100"
-          key={num}
-        >
-          <H2 className="mb-5">Issue {num + (state?.length || 0)}</H2>
+      {saving ? (
+        <LoadingAnimation
+          title="Saving..."
+          label="This make take a few seconds."
+        />
+      ) : (
+        <>
+          <Wrapper onPosChange={handlePosChange}>
+            {state &&
+              state.map((candidatePosition, index) => (
+                <EditCandidatePosition
+                  candidatePosition={candidatePosition}
+                  index={index}
+                  key={candidatePosition.id}
+                  updatePositionsCallback={loadPositions}
+                  {...props}
+                />
+              ))}
+          </Wrapper>
+          {remainingSlots.map((num) => (
+            <div
+              className="border-2 py-5 px-8 mb-5 rounded-xl border-dashed border-slate-900 min-h-[150px] bg-slate-100"
+              key={num}
+            >
+              <H2 className="mb-5">Issue {num + (state?.length || 0)}</H2>
 
-          {num === 1 && (
-            <>
-              {showAdd ? (
-                <div>
-                  <CandidateIssueSelector
-                    positions={positions}
-                    onSaveCallback={(
-                      position,
-                      candidatePosition,
-                      customTitle,
-                    ) => {
-                      onAddPosition(
-                        position,
-                        candidatePosition,
-                        customTitle,
-                        num + state.length,
-                      );
-                    }}
-                  />
-                </div>
-              ) : (
-                <div onClick={() => setShowAdd(true)}>
-                  <WarningButton size="medium">+ Add issue</WarningButton>
-                </div>
+              {num === 1 && (
+                <>
+                  {showAdd ? (
+                    <div>
+                      <CandidateIssueSelector
+                        positions={positions}
+                        onSaveCallback={(
+                          position,
+                          candidatePosition,
+                          customTitle,
+                        ) => {
+                          onAddPosition(
+                            position,
+                            candidatePosition,
+                            customTitle,
+                            num + state.length,
+                          );
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div onClick={() => setShowAdd(true)}>
+                      <WarningButton size="medium">+ Add issue</WarningButton>
+                    </div>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </div>
-      ))}
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }
