@@ -210,7 +210,7 @@ export default function EditIssues(props) {
         foundation of your campaign and your connection with the community.
         <br />
         <br />
-        <strong>Drag and drop the issues to reorder</strong>
+        {!isStaged && <strong>Drag and drop the issues to reorder</strong>}
       </Body1>
       <Draggable onPosChange={handlePosChange}>
         {state &&

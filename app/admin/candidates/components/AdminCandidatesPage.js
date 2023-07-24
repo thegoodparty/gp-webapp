@@ -11,6 +11,9 @@ import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import WarningButton from '@shared/buttons/WarningButton';
+import { MdVisibilityOff } from 'react-icons/md';
 
 function mapStatus(status, isActive) {
   if (!status) {
@@ -204,12 +207,20 @@ export default function AdminCandidatesPage(props) {
       <PortalPanel color="#2CCDB0">
         <div className="text-right">
           <Link href="/admin/add-candidate">
-            <BlackButtonClient>
+            <PrimaryButton>
               <div className="font-black flex items-center">
                 <IoIosPersonAdd size={24} />{' '}
                 <div className="ml-1"> Add a candidate</div>
               </div>
-            </BlackButtonClient>
+            </PrimaryButton>
+          </Link>
+          <Link href="/admin/hidden-candidates" className="ml-3">
+            <WarningButton>
+              <div className="font-black flex items-center">
+                <MdVisibilityOff size={24} />{' '}
+                <div className="ml-1">Hidden candidates</div>
+              </div>
+            </WarningButton>
           </Link>
         </div>
         <Table columns={columns} data={data} />
