@@ -43,7 +43,10 @@ export default function ElectionCandidates(props) {
         </div>
         <div className="md:flex justify-center flex-wrap items-stretch">
           {candidates.map((candidate) => (
-            <div className="md:basis-1/2 xl:basis-1/4" key={candidate.slug}>
+            <div
+              className="md:basis-1/2 xl:basis-1/4 h-full"
+              key={candidate.slug}
+            >
               <ElectionCandidate candidate={candidate} />
             </div>
           ))}
