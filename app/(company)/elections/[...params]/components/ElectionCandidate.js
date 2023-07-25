@@ -6,7 +6,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 import { FaChevronRight } from 'react-icons/fa';
 import CandidatePill from 'app/candidate/[slug]/components/CandidatePill';
 
-export default function ElectionCandidate({ candidate }) {
+export default function ElectionCandidate({ candidate, more }) {
   const {
     firstName,
     lastName,
@@ -21,7 +21,7 @@ export default function ElectionCandidate({ candidate }) {
 
   return (
     <Link href={candidateRoute(candidate)} className="no-underline h-full">
-      <div className=" no-underline md:px-2">
+      <div className=" no-underline md:px-2  h-full">
         <div className="flex flex-col items-center text-slate-50 px-5 bg-indigo-700 rounded-2xl pt-10 pb-5 transition-colors hover:bg-indigo-600 h-full">
           <AvatarWithTracker
             candidate={candidate}
@@ -45,7 +45,9 @@ export default function ElectionCandidate({ candidate }) {
               <div className="w-10 border-b-2 border-slate-50 my-4"></div>
             </div>
 
-            <div className="line-clamp-3 text-sm">{topPosition}</div>
+            <div className="line-clamp-3 text-sm">
+              {topPosition} {more && 'adlakjd alkjd alkdj alkjd lakjd lkasd'}
+            </div>
             <div className="pt-4 font-bold  text-sm">{occupation}</div>
           </div>
           <WarningButton variant="text" size="medium">
