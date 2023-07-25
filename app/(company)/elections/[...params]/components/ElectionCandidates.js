@@ -41,7 +41,7 @@ export default function ElectionCandidates(props) {
             </CmsContentWrapper>
           </div>
         </div>
-        <div className="md:flex justify-center flex-wrap">
+        <div className="md:flex justify-center flex-wrap items-stretch">
           {candidates.map((candidate) => (
             <div className="md:basis-1/2 xl:basis-1/4" key={candidate.slug}>
               <ElectionCandidate candidate={candidate} />

@@ -20,9 +20,9 @@ export default function ElectionCandidate({ candidate }) {
   } = candidate;
 
   return (
-    <Link href={candidateRoute(candidate)} className=" no-underline">
+    <Link href={candidateRoute(candidate)} className="no-underline  h-full">
       <div className=" no-underline md:px-2">
-        <div className="flex flex-col items-center text-slate-50 px-5 mt-20 bg-indigo-700 rounded-2xl pt-10 pb-5 transition-colors hover:bg-indigo-600">
+        <div className="flex flex-col items-center text-slate-50 px-5 bg-indigo-700 rounded-2xl pt-10 pb-5 transition-colors hover:bg-indigo-600 h-full">
           <AvatarWithTracker
             candidate={candidate}
             color={color ?? colors[0]}
