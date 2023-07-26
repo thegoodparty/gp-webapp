@@ -22,9 +22,9 @@ export const combinePositions = (candidatePositions, customPositions) => {
     return a.order - b.order;
   });
 
-  // sorted.forEach((item, index) => {
-  //   item.order = index;
-  // });
+  sorted.forEach((item, index) => {
+    item.order = index;
+  });
 
   return sorted;
 };

@@ -170,6 +170,13 @@ export default function EditIssues(props) {
       setSaving(true);
       await handleReorderSave(state[currentPos], newPos);
       await handleReorderSave(state[newPos], currentPos);
+      if (state.length === 3) {
+        const indexes = [0, 1, 2];
+        indexes.splice(currentPos, 1);
+        indexes.splice(newPos, 1);
+        const missingIndex = indexes[0];
+        await handleReorderSave(state[missingIndex], state[missingIndex].order);
+      }
       await revalidateCandidates();
       window.location.reload();
     }
@@ -187,10 +194,7 @@ export default function EditIssues(props) {
     let customIssues = candidate.customIssues;
     let index;
     for (let i = 0; i < customIssues.length; i++) {
-      if (
-        customIssues[i].order === pos.order &&
-        customIssues[i].position === pos.description
-      ) {
+      if (customIssues[i].position === pos.description) {
         index = i;
         break;
       }
