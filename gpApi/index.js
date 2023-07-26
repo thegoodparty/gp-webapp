@@ -430,6 +430,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    hiddenCandidates: {
+      url: `${base}admin/hidden-candidates`,
+      method: 'GET',
+      withAuth: true,
+    },
     deleteCandidate: {
       url: `${base}new-candidate`,
       method: 'DELETE',
