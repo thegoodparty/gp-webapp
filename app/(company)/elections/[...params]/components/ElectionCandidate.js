@@ -19,6 +19,13 @@ export default function ElectionCandidate({ candidate, more }) {
     occupation,
   } = candidate;
 
+  let pillText = office;
+  if (district && district !== '') {
+    pillText += `, ${district}`;
+  } else if (state && state !== '') {
+    pillText += `, ${state}`;
+  }
+
   return (
     <Link href={candidateRoute(candidate)} className="no-underline h-full">
       <div className=" no-underline md:px-2  h-full">
@@ -34,7 +41,7 @@ export default function ElectionCandidate({ candidate, more }) {
           </span>
 
           <CandidatePill
-            text={`${office}, ${district ?? state}`}
+            text={pillText}
             color={color ?? colors[0]}
             className="mt-3"
           />

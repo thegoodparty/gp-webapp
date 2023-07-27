@@ -5,7 +5,7 @@ export default function CandidatePill({ text, color, className }) {
         className="absolute w-full h-full rounded-full top-0 left-0 opacity-10"
         style={{ backgroundColor: color }}
       />
-      <div className="relative" style={{ color }}>
+      <div className="relative text-center" style={{ color }}>
         {text}
       </div>
     </div>
