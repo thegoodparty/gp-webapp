@@ -2,38 +2,22 @@
 
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
+import { partyResolver } from 'helpers/candidateHelper';
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { IoIosPersonAdd } from 'react-icons/io';
-import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
-import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
+import { dateUsHelper } from 'helpers/dateHelper';
 import Actions from './Actions';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import { MdVisibilityOff } from 'react-icons/md';
 import Table from 'app/admin/candidates/components/Table';
 
-function mapStatus(status, isActive) {
-  if (!status) {
-    return 'No (Onboarding)';
-  }
-  if (status === 'launched') {
-    return 'Live';
-  }
-  if (status === 'pending') {
-    return 'Pending Review';
-  }
-  return 'No';
-}
-
-export default function AdminHiddenCandidatesPage(props) {
+export default function AdminAllCandidatesPage(props) {
   const { candidates } = props;
 
   const inputData = [];
   if (candidates) {
     candidates.map((candidateObj) => {
-      const { data, createdAt, updatedAt } = candidateObj;
+      const { data, isActive } = candidateObj;
       const candidate = JSON.parse(data);
       const { currentStep } = data || {};
       const fields = {
@@ -42,8 +26,7 @@ export default function AdminHiddenCandidatesPage(props) {
         firstName: candidate.firstName,
         lastName: candidate.lastName,
         party: partyResolver(candidate.party),
-        createdAt,
-        updatedAt,
+        campaignOnboardingSlug: candidate.campaignOnboardingSlug,
       };
       inputData.push(fields);
     });
@@ -64,6 +47,11 @@ export default function AdminHiddenCandidatesPage(props) {
       Header: 'Slug',
       accessor: 'slug',
     },
+
+    {
+      Header: 'Is Active',
+      accessor: 'isActive',
+    },
     {
       Header: 'First Name',
       accessor: 'firstName',
@@ -71,23 +59,6 @@ export default function AdminHiddenCandidatesPage(props) {
     {
       Header: 'Last Name',
       accessor: 'lastName',
-    },
-
-    {
-      Header: 'Date Created',
-      accessor: 'createdAt',
-      sortType: 'datetime',
-      Cell: ({ row }) => {
-        return dateUsHelper(row.original.createdAt);
-      },
-    },
-    {
-      Header: 'Last Update',
-      accessor: 'updatedAt',
-      sortType: 'datetime',
-      Cell: ({ row }) => {
-        return dateUsHelper(row.original.updatedAt);
-      },
     },
 
     {

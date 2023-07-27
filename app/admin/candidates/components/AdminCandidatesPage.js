@@ -214,11 +214,11 @@ export default function AdminCandidatesPage(props) {
               </div>
             </PrimaryButton>
           </Link>
-          <Link href="/admin/hidden-candidates" className="ml-3">
+          <Link href="/admin/all-candidates" className="ml-3">
             <WarningButton>
               <div className="font-black flex items-center">
                 <MdVisibilityOff size={24} />{' '}
-                <div className="ml-1">Hidden candidates</div>
+                <div className="ml-1">All candidates</div>
               </div>
             </WarningButton>
           </Link>

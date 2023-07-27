@@ -3,7 +3,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import pageMetaData from 'helpers/metadataHelper';
-import AdminHiddenCandidatesPage from './components/AdminHiddenCandidatesPage';
+import AdminAllCandidatesPage from './components/AdminAllCandidatesPage';
 
 const meta = pageMetaData({
   title: 'Hidden Candidates | GOOD PARTY',
@@ -12,20 +12,20 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export const fetchHiddenCandidates = async () => {
-  const api = gpApi.admin.hiddenCandidates;
+export const fetchCandidates = async () => {
+  const api = gpApi.admin.candidates;
   const token = getServerToken();
   return await gpFetch(api, false, false, token);
 };
 
 export default async function Page() {
   adminAccessOnly();
-  const { candidates } = await fetchHiddenCandidates();
+  const { candidates } = await fetchCandidates();
 
   const childProps = {
     pathname: '/admin/candidates',
     title: 'Hidden Candidate List',
     candidates,
   };
-  return <AdminHiddenCandidatesPage {...childProps} />;
+  return <AdminAllCandidatesPage {...childProps} />;
 }

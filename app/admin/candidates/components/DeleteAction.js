@@ -48,6 +48,7 @@ export default function DeleteAction({ slug, isLive }) {
           isError: false,
         };
       });
+      await deactivateCandidate(slug);
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -65,6 +66,8 @@ export default function DeleteAction({ slug, isLive }) {
         };
       });
 
+      await deleteCampaign(slug);
+
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -73,7 +76,6 @@ export default function DeleteAction({ slug, isLive }) {
         };
       });
     }
-    await deleteCampaign(slug);
     await revalidateCandidates();
     await revalidatePage('/admin/candidates');
     window.location.reload();

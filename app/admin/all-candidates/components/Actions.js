@@ -18,7 +18,7 @@ async function handleCancelRequest(slug) {
   }
 }
 
-export default function Actions({ launched, slug, email }) {
+export default function Actions({ campaignOnboardingSlug }) {
   const [showMenu, setShowMenu] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
@@ -40,7 +40,7 @@ export default function Actions({ launched, slug, email }) {
           />
 
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-24 top-3">
-            coming soon
+            {campaignOnboardingSlug}
           </div>
         </>
       )}

@@ -26,7 +26,7 @@ export default function ElectionPage(props) {
 
   return (
     <div className="bg-slate-50">
-      <Hero {...props} />
+      {/* <Hero {...props} /> */}
       <Candidates {...props} />
       <Volunteer {...volunteerProps} />
 
