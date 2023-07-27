@@ -11,7 +11,7 @@ export default function AvatarWithTracker(props) {
   const { candidate, editMode, candidateUrl } = props;
   return (
     <div className="relative">
-      <div className="absolute -top-4 right-4">
+      <div className="absolute -top-4 right-4 z-20">
         <QuestionButton
           className={
             candidateUrl

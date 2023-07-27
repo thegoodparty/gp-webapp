@@ -23,14 +23,9 @@ export default function QuestionButton({ children, className }) {
 
   return (
     <div>
-      <ButtonBase
-        aria-describedby={id}
-        variant="text"
-        disableRipple={true}
-        onClick={handleClick}
-      >
+      <div onClick={handleClick} className="cursor-pointer">
         <FaQuestionCircle className={className} />
-      </ButtonBase>
+      </div>
       <Popover
         id={id}
         open={open}
