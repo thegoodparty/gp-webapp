@@ -14,7 +14,9 @@ export default function QuestionButton({ children, className }) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
     setAnchorEl(null);
   };
 
