@@ -87,6 +87,12 @@ const sections = [
       { key: 'budgetHigh', label: 'Budget High', type: 'number' },
     ],
   },
+  {
+    title: 'Dashboard',
+    fields: [
+      { key: 'voterMap', label: 'Voter Map', type: 'text', fullRow: true },
+    ],
+  },
 ];
 
 const initialState = {};
@@ -207,7 +213,12 @@ export default function AdminVictoryPathPage(props) {
               <h2 className="font-black text-2xl mb-8">{section.title}</h2>
               <div className="grid grid-cols-12 gap-4">
                 {section.fields.map((field) => (
-                  <div className="col-span-12 lg:col-span-6" key={field.key}>
+                  <div
+                    className={`col-span-12 ${
+                      field.fullRow ? '' : 'lg:col-span-6'
+                    }`}
+                    key={field.key}
+                  >
                     {field.formula ? (
                       <div>
                         <TextField
