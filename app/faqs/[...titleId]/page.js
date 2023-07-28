@@ -53,18 +53,18 @@ export default async function Page({ params, searchParams }) {
   return <FaqsArticlePage {...childProps} />;
 }
 
-export async function generateStaticParams() {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'faqArticles',
-  };
-  const { content } = await gpFetch(api, payload, 3600);
+// export async function generateStaticParams() {
+//   const api = gpApi.content.contentByKey;
+//   const payload = {
+//     key: 'faqArticles',
+//   };
+//   const { content } = await gpFetch(api, payload, 3600);
 
-  return content.map((article) => {
-    const title = slugify(article.title);
-    const id = article.id;
-    return {
-      titleId: [title, id + ''],
-    };
-  });
-}
+//   return content.map((article) => {
+//     const title = slugify(article.title);
+//     const id = article.id;
+//     return {
+//       titleId: [title, id + ''],
+//     };
+//   });
+// }
