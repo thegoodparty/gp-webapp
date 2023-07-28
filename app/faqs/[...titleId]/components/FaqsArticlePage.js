@@ -1,24 +1,23 @@
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import MaxWidth from '@shared/layouts/MaxWidth';
-// import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import Breadcrumbs1 from '@shared/utils/Breadcrumbs1';
+import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import contentfulHelper from 'helpers/contentfulHelper';
 
 export default function FaqsArticlePage({ article }) {
   const breadcrumbsLinks = [
     { href: '/', label: 'Good Party' },
-    // {
-    //   href: '/faqs',
-    //   label: 'Frequently asked questions',
-    // },
-    // {
-    //   label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
-    // },
+    {
+      href: '/faqs',
+      label: 'Frequently asked questions',
+    },
+    {
+      label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
+    },
   ];
 
   return (
     <MaxWidth>
-      <Breadcrumbs1 />
+      <Breadcrumbs links={breadcrumbsLinks} />
       <h1
         className="text-3xl font-black mb-8 lg:text-4xl mt-12"
         data-cy="article-title"
