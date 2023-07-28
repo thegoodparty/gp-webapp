@@ -31,6 +31,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Page({ params, searchParams }) {
+  return <div>does this work?</div>;
   const { titleId } = params;
   const title = titleId?.length > 0 ? titleId[0] : false;
   const id = titleId?.length > 1 ? titleId[1] : false;
