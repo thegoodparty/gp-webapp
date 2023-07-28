@@ -14,6 +14,8 @@ export default function FaqsArticlePage({ article }) {
       label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
     },
   ];
+  return <div>does this work3?</div>;
+
   return (
     <MaxWidth>
       <Breadcrumbs links={breadcrumbsLinks} />

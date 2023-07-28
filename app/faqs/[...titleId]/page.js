@@ -50,7 +50,6 @@ export default async function Page({ params, searchParams }) {
   const childProps = {
     article: content,
   };
-  return <div>does this work2?</div>;
 
   return <FaqsArticlePage {...childProps} />;
 }
