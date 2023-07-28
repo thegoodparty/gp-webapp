@@ -1,6 +1,6 @@
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Breadcrumbs from './Breadcrumbs';
+import Links from './Links';
 import contentfulHelper from 'helpers/contentfulHelper';
 
 export default function FaqsArticlePage({ article }) {
@@ -10,14 +10,14 @@ export default function FaqsArticlePage({ article }) {
       href: '/faqs',
       label: 'Frequently asked questions',
     },
-    {
-      label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
-    },
+    // {
+    //   label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
+    // },
   ];
 
   return (
     <MaxWidth>
-      <Breadcrumbs links={breadcrumbsLinks} />
+      <Links links={breadcrumbsLinks} />
       <h1
         className="text-3xl font-black mb-8 lg:text-4xl mt-12"
         data-cy="article-title"
