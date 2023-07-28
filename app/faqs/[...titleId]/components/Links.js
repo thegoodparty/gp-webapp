@@ -1,21 +1,21 @@
 import Link from 'next/link';
-import { TbSlash } from 'react-icons/tb';
+// import { TbSlash } from 'react-icons/tb';
 // import { JsonLd } from 'react-schemaorg';
 
 // import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
 export default function Links({ links, withRefresh = false }) {
-  const schema = [];
-  links.forEach((link, index) => {
-    schema.push({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@id': link.href, // || router.asPath,
-        name: link.label,
-      },
-    });
-  });
+  // const schema = [];
+  // links.forEach((link, index) => {
+  //   schema.push({
+  //     '@type': 'ListItem',
+  //     position: index + 1,
+  //     item: {
+  //       '@id': link.href, // || router.asPath,
+  //       name: link.label,
+  //     },
+  //   });
+  // });
 
   return (
     <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
@@ -47,7 +47,7 @@ export default function Links({ links, withRefresh = false }) {
                       <div className="text-xs lg:text-base">{link.label}</div>
                     </Link>
                   )}
-                  <TbSlash className="ml-2" />
+                  {/* <TbSlash className="ml-2" /> */}
                 </div>
               )}
             </li>
