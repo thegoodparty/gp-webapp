@@ -14,11 +14,12 @@ export default function FaqsArticlePage({ article }) {
       label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
     },
   ];
+
   return (
     <MaxWidth>
-      <Breadcrumbs links={breadcrumbsLinks} />
+      {/* <Breadcrumbs links={breadcrumbsLinks} /> */}
       <h1
-        className="text-3xl font-black mb-8 lg:text-4xl"
+        className="text-3xl font-black mb-8 lg:text-4xl mt-12"
         data-cy="article-title"
       >
         {article.title}
