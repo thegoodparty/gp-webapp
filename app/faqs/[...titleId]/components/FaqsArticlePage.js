@@ -17,14 +17,14 @@ export default function FaqsArticlePage({ article }) {
 
   return (
     <MaxWidth>
-      <Breadcrumbs links={breadcrumbsLinks} />
-      {/* <h1
+      {/* <Breadcrumbs links={breadcrumbsLinks} /> */}
+      <h1
         className="text-3xl font-black mb-8 lg:text-4xl"
         data-cy="article-title"
       >
         {article.title}
       </h1>
-      <CmsContentWrapper>
+      {/* <CmsContentWrapper>
         {contentfulHelper(article.articleBody)}
       </CmsContentWrapper>
       <div className="h-12"></div> */}
