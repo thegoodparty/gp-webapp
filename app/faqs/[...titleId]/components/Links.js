@@ -26,23 +26,23 @@ export default function Links({ links, withRefresh = false }) {
           itemListElement: schema,
         }}
       /> */}
-      <nav class="flex" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1">
+      <nav className="flex" aria-label="Breadcrumb">
+        <ol className="inline-flex items-center space-x-1">
           {links.map((link, index) => (
             <li key={link.label}>
               {index < links.length - 1 && (
-                <div class="flex items-center">
+                <div className="flex items-center">
                   {withRefresh ? (
                     <a
                       href={link.href}
-                      class="inline-flex items-center text-xs lg:text-base text-indigo-400 hover:text-indigo-800 hover:underline"
+                      className="inline-flex items-center text-xs lg:text-base text-indigo-400 hover:text-indigo-800 hover:underline"
                     >
                       <div className="text-xs lg:text-base">{link.label}</div>
                     </a>
                   ) : (
                     <Link
                       href={link.href}
-                      class="inline-flex items-center text-xs lg:text-base text-indigo-400 hover:text-indigo-800 hover:underline"
+                      className="inline-flex items-center text-xs lg:text-base text-indigo-400 hover:text-indigo-800 hover:underline"
                     >
                       <div className="text-xs lg:text-base">{link.label}</div>
                     </Link>
