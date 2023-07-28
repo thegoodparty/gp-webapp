@@ -4,8 +4,8 @@
 
 // import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
-export default function Breadcrumbs({ links, withRefresh = false }) {
-  return <div>breadcrumbs</div>;
+export default function Breadcrumbs1({ links, withRefresh = false }) {
+  return <div>breadcrumbs1</div>;
   // const schema = [];
   // links.forEach((link, index) => {
   //   schema.push({
