@@ -60,6 +60,11 @@ export default function RegisterOrProfile({
     if (typeof FS === 'undefined') {
       return;
     }
+    const impersonateUser = getCookie('impersonateUser');
+    if (impersonateUser) {
+      FS.shutdown();
+      return;
+    }
     if (userI && userI.email) {
       const domain = userI.email.split('@')[1];
       if (domain === 'goodparty.org') {
