@@ -440,6 +440,11 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
+    reactivateCandidate: {
+      url: `${base}admin/candidate/reactivate`,
+      method: 'PUT',
+      withAuth: true,
+    },
 
     users: {
       url: `${base}admin/users`,

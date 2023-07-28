@@ -6,8 +6,8 @@ import pageMetaData from 'helpers/metadataHelper';
 import AdminAllCandidatesPage from './components/AdminAllCandidatesPage';
 
 const meta = pageMetaData({
-  title: 'Hidden Candidates | GOOD PARTY',
-  description: 'Admin Hidden Candidates',
+  title: 'All Candidates | GOOD PARTY',
+  description: 'Admin all Candidates',
   slug: '/admin/candidates',
 });
 export const metadata = meta;
@@ -24,7 +24,7 @@ export default async function Page() {
 
   const childProps = {
     pathname: '/admin/candidates',
-    title: 'Hidden Candidate List',
+    title: 'All Candidate List',
     candidates,
   };
   return <AdminAllCandidatesPage {...childProps} />;

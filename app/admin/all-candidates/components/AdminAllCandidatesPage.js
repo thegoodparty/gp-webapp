@@ -13,15 +13,16 @@ import Table from 'app/admin/candidates/components/Table';
 
 export default function AdminAllCandidatesPage(props) {
   const { candidates } = props;
+  console.log('candidates', candidates);
 
   const inputData = [];
   if (candidates) {
     candidates.map((candidateObj) => {
       const { data, isActive } = candidateObj;
       const candidate = JSON.parse(data);
-      const { currentStep } = data || {};
       const fields = {
         id: candidateObj.id,
+        isActive: candidateObj.isActive,
         slug: candidate.slug,
         firstName: candidate.firstName,
         lastName: candidate.lastName,
@@ -51,6 +52,9 @@ export default function AdminAllCandidatesPage(props) {
     {
       Header: 'Is Active',
       accessor: 'isActive',
+      Cell: ({ row }) => {
+        return <div>{row.original.isActive ? 'yes' : 'no'}</div>;
+      },
     },
     {
       Header: 'First Name',
@@ -59,6 +63,11 @@ export default function AdminAllCandidatesPage(props) {
     {
       Header: 'Last Name',
       accessor: 'lastName',
+    },
+
+    {
+      Header: 'Campaign Slug',
+      accessor: 'campaignOnboardingSlug',
     },
 
     {
@@ -74,7 +83,6 @@ export default function AdminAllCandidatesPage(props) {
           <Link href="/admin/candidates">
             <WarningButton>
               <div className="font-black flex items-center">
-                <MdVisibilityOff size={24} />{' '}
                 <div className="ml-1">Back to candidates</div>
               </div>
             </WarningButton>
