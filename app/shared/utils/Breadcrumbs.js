@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { JsonLd } from 'react-schemaorg';
+// import { JsonLd } from 'react-schemaorg';
 
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
@@ -19,13 +19,13 @@ export default function Breadcrumbs({ links, withRefresh = false }) {
 
   return (
     <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
-      <JsonLd
+      {/* <JsonLd
         item={{
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
           itemListElement: schema,
         }}
-      />
+      /> */}
       <MuiBreadcrumbs aria-label="breadcrumb">
         {links.map((link, index) => (
           <span key={link.label}>
