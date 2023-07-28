@@ -1,6 +1,6 @@
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Breadcrumbs from './Breadcrumbs';
 import contentfulHelper from 'helpers/contentfulHelper';
 
 export default function FaqsArticlePage({ article }) {
