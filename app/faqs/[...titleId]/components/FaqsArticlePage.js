@@ -18,7 +18,7 @@ export default function FaqsArticlePage({ article }) {
 
   return (
     <MaxWidth>
-      <Breadcrumbs1 links={breadcrumbsLinks} />
+      <Breadcrumbs1 />
       <h1
         className="text-3xl font-black mb-8 lg:text-4xl mt-12"
         data-cy="article-title"
