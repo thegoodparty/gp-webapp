@@ -14,12 +14,11 @@ export default function FaqsArticlePage({ article }) {
       label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
     },
   ];
-  return <div>does this work3?</div>;
 
   return (
     <MaxWidth>
       <Breadcrumbs links={breadcrumbsLinks} />
-      <h1
+      {/* <h1
         className="text-3xl font-black mb-8 lg:text-4xl"
         data-cy="article-title"
       >
@@ -28,7 +27,7 @@ export default function FaqsArticlePage({ article }) {
       <CmsContentWrapper>
         {contentfulHelper(article.articleBody)}
       </CmsContentWrapper>
-      <div className="h-12"></div>
+      <div className="h-12"></div> */}
     </MaxWidth>
   );
 }
