@@ -24,10 +24,10 @@ export default function FaqsArticlePage({ article }) {
       >
         {article.title}
       </h1>
-      {/* <CmsContentWrapper>
+      <CmsContentWrapper>
         {contentfulHelper(article.articleBody)}
       </CmsContentWrapper>
-      <div className="h-12"></div> */}
+      <div className="h-12"></div>
     </MaxWidth>
   );
 }
