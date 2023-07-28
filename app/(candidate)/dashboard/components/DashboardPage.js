@@ -62,10 +62,10 @@ export default function DashboardPage(props) {
         />
         {contactGoals ? (
           <>
-            {weeksUntil.weeks > 0 ? (
-              <ThisWeekSection {...childProps} />
-            ) : (
+            {weeksUntil.weeks < 0 ? (
               <ElectionOver />
+            ) : (
+              <ThisWeekSection {...childProps} />
             )}
             {voterMap ? <MapSection map={voterMap} /> : null}
             <ProgressSection {...childProps} />
