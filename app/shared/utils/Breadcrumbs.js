@@ -2,7 +2,7 @@
 import Link from 'next/link';
 // import { JsonLd } from 'react-schemaorg';
 
-import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
+// import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
 export default function Breadcrumbs({ links, withRefresh = false }) {
   const schema = [];
@@ -26,7 +26,7 @@ export default function Breadcrumbs({ links, withRefresh = false }) {
           itemListElement: schema,
         }}
       /> */}
-      <MuiBreadcrumbs aria-label="breadcrumb">
+      {/* <MuiBreadcrumbs aria-label="breadcrumb">
         {links.map((link, index) => (
           <span key={link.label}>
             {index < links.length - 1 && (
@@ -44,7 +44,7 @@ export default function Breadcrumbs({ links, withRefresh = false }) {
             )}
           </span>
         ))}
-      </MuiBreadcrumbs>
+      </MuiBreadcrumbs> */}
       <div className="text-xs lg:text-base">
         {links[links.length - 1].label}
       </div>
