@@ -1,3 +1,4 @@
+'use client';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
