@@ -1,33 +1,32 @@
 'use client';
-// import Link from 'next/link';
-// import { JsonLd } from 'react-schemaorg';
+import Link from 'next/link';
+import { JsonLd } from 'react-schemaorg';
 
-// import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
+import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
 export default function Breadcrumbs({ links, withRefresh = false }) {
-  return <div>breadcrumbs</div>;
-  // const schema = [];
-  // links.forEach((link, index) => {
-  //   schema.push({
-  //     '@type': 'ListItem',
-  //     position: index + 1,
-  //     item: {
-  //       '@id': link.href, // || router.asPath,
-  //       name: link.label,
-  //     },
-  //   });
-  // });
+  const schema = [];
+  links.forEach((link, index) => {
+    schema.push({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@id': link.href, // || router.asPath,
+        name: link.label,
+      },
+    });
+  });
 
   return (
     <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
-      {/* <JsonLd
+      <JsonLd
         item={{
           '@context': 'https://schema.org',
           '@type': 'BreadcrumbList',
           itemListElement: schema,
         }}
-      /> */}
-      {/* <MuiBreadcrumbs aria-label="breadcrumb">
+      />
+      <MuiBreadcrumbs aria-label="breadcrumb">
         {links.map((link, index) => (
           <span key={link.label}>
             {index < links.length - 1 && (
@@ -45,10 +44,10 @@ export default function Breadcrumbs({ links, withRefresh = false }) {
             )}
           </span>
         ))}
-      </MuiBreadcrumbs> */}
-      {/* <div className="text-xs lg:text-base">
+      </MuiBreadcrumbs>
+      <div className="text-xs lg:text-base">
         {links[links.length - 1].label}
-      </div> */}
+      </div>
     </div>
   );
 }
