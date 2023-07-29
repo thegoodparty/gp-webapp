@@ -8,7 +8,11 @@ export default function Links({ links, withRefresh = false }) {
   return (
     <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
       <nav className="flex" aria-label="Breadcrumb">
-        Tomer2
+        <ol className="inline-flex items-center space-x-1">
+          {links.map((link, index) => (
+            <li key={link.label}>{link.label}</li>
+          ))}
+        </ol>
       </nav>
     </div>
   );
