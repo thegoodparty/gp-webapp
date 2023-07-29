@@ -7,7 +7,9 @@
 export default function Links({ links, withRefresh = false }) {
   return (
     <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
-      Tomer2
+      <nav className="flex" aria-label="Breadcrumb">
+        Tomer2
+      </nav>
     </div>
   );
 
