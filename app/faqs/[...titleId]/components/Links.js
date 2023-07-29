@@ -5,7 +5,11 @@
 // import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
 export default function Links({ links, withRefresh = false }) {
-  return <div>Tomer</div>;
+  return (
+    <div className="flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6">
+      Tomer2
+    </div>
+  );
 
   // const schema = [];
   // links.forEach((link, index) => {
