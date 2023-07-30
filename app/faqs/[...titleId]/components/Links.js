@@ -2,6 +2,8 @@
 // import { TbSlash } from 'react-icons/tb';
 // import { JsonLd } from 'react-schemaorg';
 
+import Link from 'next/link';
+
 // import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 
 export default function Links({ links, withRefresh = false }) {
@@ -19,12 +21,12 @@ export default function Links({ links, withRefresh = false }) {
                   <div className="text-xs lg:text-base">{link.label}</div>
                 </a>
               ) : (
-                <a
+                <Link
                   href={link.href}
                   className="inline-flex items-center text-xs lg:text-base text-indigo-400 hover:text-indigo-800 hover:underline"
                 >
-                  <div className="text-xs lg:text-base">{link.label}</div>
-                </a>
+                  {link.label}
+                </Link>
               )}
             </li>
           ))}
