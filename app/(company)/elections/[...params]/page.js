@@ -3,6 +3,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionPage from './components/ElectionPage';
 import pageMetaData from 'helpers/metadataHelper';
+import OptimizeScript from '@shared/scripts/OptimizeScript';
 // import ElectionSchema from './ElectionSchema';
 
 export const fetchElection = async (slug) => {
@@ -95,6 +96,7 @@ export default async function Page({ params }) {
 
   return (
     <>
+      <OptimizeScript />
       <ElectionPage {...childProps} />
     </>
   );
