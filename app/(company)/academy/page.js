@@ -1,3 +1,4 @@
+import OptimizeScript from '@shared/scripts/OptimizeScript';
 import AcademyPage from './components/AcademyPage';
 import pageMetaData from 'helpers/metadataHelper';
 
@@ -11,5 +12,10 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page(params) {
-  return <AcademyPage />;
+  return (
+    <>
+      <OptimizeScript />
+      <AcademyPage />
+    </>
+  );
 }

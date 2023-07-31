@@ -3,6 +3,7 @@ import Banner from './Banner';
 import Help from './Help';
 import Hero from './Hero';
 import Steps from './Steps';
+import UserSnapScript from '@shared/scripts/UserSnapScript';
 
 export default function Dashboard(props) {
   return (
@@ -18,6 +19,7 @@ export default function Dashboard(props) {
           strategy="afterInteractive"
           src="//js.hs-scripts.com/21589597.js"
         />
+        <UserSnapScript />
       </div>
     </div>
   );

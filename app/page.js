@@ -1,6 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper';
 import './globals.css';
 import HomePage from './homepage/HomePage';
+import OptimizeScript from '@shared/scripts/OptimizeScript';
 
 const meta = pageMetaData({
   title: 'GOOD PARTY | Free tools to change the rules and disrupt the corrupt.',
@@ -12,5 +13,10 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default function Page() {
-  return <HomePage />;
+  return (
+    <>
+      <OptimizeScript />
+      <HomePage />
+    </>
+  );
 }
