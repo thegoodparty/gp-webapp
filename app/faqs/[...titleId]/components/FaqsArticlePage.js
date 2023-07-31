@@ -1,7 +1,7 @@
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Links from './Links';
 import contentfulHelper from 'helpers/contentfulHelper';
+import Breadcrumbs from '@shared/utils/Breadcrumbs';
 
 export default function FaqsArticlePage({ article }) {
   const breadcrumbsLinks = [
@@ -17,7 +17,7 @@ export default function FaqsArticlePage({ article }) {
 
   return (
     <MaxWidth>
-      <Links links={breadcrumbsLinks} />
+      <Breadcrumbs links={breadcrumbsLinks} />
       <h1
         className="text-3xl font-black mb-8 lg:text-4xl mt-12"
         data-cy="article-title"
