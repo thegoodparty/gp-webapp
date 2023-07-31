@@ -10,9 +10,9 @@ export default function FaqsArticlePage({ article }) {
       href: '/faqs',
       label: 'Frequently asked questions',
     },
-    // {
-    //   label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
-    // },
+    {
+      label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
+    },
   ];
 
   return (
