@@ -15,6 +15,7 @@ export default function ForSection() {
               src={candidatesImg}
               blur
               className="inline-block max-w-[220px]"
+              alt="Candidates"
             />
           </div>
           <div className="col-span-12 lg:col-span-6">
@@ -39,6 +40,7 @@ export default function ForSection() {
               src={votersImg}
               blur
               className="inline-block max-w-[240px]"
+              alt="Voters"
             />
           </div>
           <div className="col-span-12 lg:col-span-6">

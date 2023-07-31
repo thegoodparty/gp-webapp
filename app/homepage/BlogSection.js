@@ -18,7 +18,7 @@ export default function BlogSection() {
                 id="blog-read-more"
                 style={{ backgroundColor: 'white', color: '#46002E' }}
               >
-                READ MORE
+                GOOD PARTY BLOG
               </PurpleButton>
             </Link>
           </div>
