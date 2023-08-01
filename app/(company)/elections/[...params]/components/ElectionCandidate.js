@@ -36,7 +36,7 @@ export default function ElectionCandidate({ candidate, more }) {
             candidateUrl={candidateRoute(candidate)}
           />
 
-          <span className=" text-slate-50 text-2xl p-3">
+          <span className=" text-slate-50 text-2xl p-3 text-center">
             {firstName} {lastName}
           </span>
 
