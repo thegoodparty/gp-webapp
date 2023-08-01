@@ -9,6 +9,7 @@ import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]
 import pageMetaData from 'helpers/metadataHelper';
 import { mapTopIssues } from './mapTopIssues';
 import mapCampaignToCandidate from './mapCampaignToCandidate';
+import UserSnapScript from '@shared/scripts/UserSnapScript';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -91,6 +92,7 @@ export default async function Page({ params }) {
   return (
     <>
       <EditCandidatePage {...childProps} />
+      <UserSnapScript />
       {/* <CandidateSchema candidate={candidate} /> */}
       {/* <TrackVisit /> */}
     </>

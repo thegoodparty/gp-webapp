@@ -11,6 +11,7 @@ import { getServerToken } from 'helpers/userServerHelper';
 import ReviewCandidatePage from '../components/ReviewCandidatePage';
 import { mapTopIssues } from '../edit/mapTopIssues';
 import mapCampaignToCandidate from '../edit/mapCampaignToCandidate';
+import UserSnapScript from '@shared/scripts/UserSnapScript';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -58,5 +59,10 @@ export default async function Page({ params }) {
     positions, // for issuesSelector
   };
 
-  return <ReviewCandidatePage {...childProps} />;
+  return (
+    <>
+      <ReviewCandidatePage {...childProps} />
+      <UserSnapScript />
+    </>
+  );
 }
