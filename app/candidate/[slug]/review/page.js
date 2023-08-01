@@ -12,6 +12,7 @@ import ReviewCandidatePage from '../components/ReviewCandidatePage';
 import { mapTopIssues } from '../edit/mapTopIssues';
 import mapCampaignToCandidate from '../edit/mapCampaignToCandidate';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -63,6 +64,7 @@ export default async function Page({ params }) {
     <>
       <ReviewCandidatePage {...childProps} />
       <UserSnapScript />
+      <FullStoryScript />
     </>
   );
 }

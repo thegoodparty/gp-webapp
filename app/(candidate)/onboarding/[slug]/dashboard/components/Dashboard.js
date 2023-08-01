@@ -4,6 +4,7 @@ import Help from './Help';
 import Hero from './Hero';
 import Steps from './Steps';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export default function Dashboard(props) {
   return (
@@ -20,6 +21,7 @@ export default function Dashboard(props) {
           src="//js.hs-scripts.com/21589597.js"
         />
         <UserSnapScript />
+        <FullStoryScript />
       </div>
     </div>
   );

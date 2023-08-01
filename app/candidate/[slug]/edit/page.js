@@ -10,6 +10,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import { mapTopIssues } from './mapTopIssues';
 import mapCampaignToCandidate from './mapCampaignToCandidate';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -93,6 +94,7 @@ export default async function Page({ params }) {
     <>
       <EditCandidatePage {...childProps} />
       <UserSnapScript />
+      <FullStoryScript />
       {/* <CandidateSchema candidate={candidate} /> */}
       {/* <TrackVisit /> */}
     </>

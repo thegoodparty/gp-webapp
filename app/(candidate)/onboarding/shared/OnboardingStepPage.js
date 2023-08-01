@@ -5,6 +5,7 @@ import PlanPreviewPage from '../[slug]/details/[step]/components/PlanPreviewPage
 import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import RunningAgainstPage from '../[slug]/goals/[step]/components/RunningAgainstPage';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export default function OnboardingStepPage(props) {
   const { pageType } = props;
@@ -13,6 +14,7 @@ export default function OnboardingStepPage(props) {
       <>
         <IssuesPage {...props} />
         <UserSnapScript />
+        <FullStoryScript />
       </>
     );
   }
@@ -21,6 +23,7 @@ export default function OnboardingStepPage(props) {
       <>
         <PledgePage {...props} />
         <UserSnapScript />
+        <FullStoryScript />
       </>
     );
   }
@@ -29,6 +32,7 @@ export default function OnboardingStepPage(props) {
       <>
         <PlanPreviewPage {...props} />
         <UserSnapScript />
+        <FullStoryScript />
       </>
     );
   }
@@ -37,6 +41,7 @@ export default function OnboardingStepPage(props) {
       <>
         <RunningAgainstPage {...props} />
         <UserSnapScript />
+        <FullStoryScript />
       </>
     );
   }
