@@ -56,7 +56,7 @@ export default function DashboardPage(props) {
       <div className="max-w-[940px] mx-auto">
         {contactGoals ? (
           <>
-            {weeksUntil.weeks > 0 ? (
+            {weeksUntil.weeks < 0 ? (
               <ElectionOver />
             ) : (
               <>
