@@ -10,15 +10,18 @@ import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxAct
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
 import { camelToSentence } from 'helpers/stringHelper';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Table from './Table';
 import Actions from './Actions';
 import { useMemo } from 'react';
 import { dateUsHelper } from 'helpers/dateHelper';
 
 const subSectionKey = 'aiContent';
+let aiCount = 0;
+let aiTotalCount = 0;
 
 export default function MyContent({ campaign, prompts }) {
+  const [section, setSection] = useState('');
   const [sections, setSections] = useState(campaign[subSectionKey] || {});
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState('');
@@ -33,6 +36,7 @@ export default function MyContent({ campaign, prompts }) {
   const onSelectPrompt = () => {
     if (selected !== '') {
       const key = findKey();
+      setSection(key);
       setSections({
         ...sections,
         [key]: {
@@ -49,14 +53,14 @@ export default function MyContent({ campaign, prompts }) {
 
   const findKey = () => {
     if (!sections[selected]) {
-      return selected;
+      return selected.toLowerCase();
     }
     for (let i = 2; i < 20; i++) {
       if (!sections[`${selected}${i}`]) {
-        return `${selected}${i}`;
+        return `${selected}${i}`.toLowerCase();
       }
     }
-    return `${selected}21`;
+    return `${selected}21`.toLowerCase();
   };
 
   const mappedSections = Object.keys(sections).map((key) => {
@@ -104,23 +108,81 @@ export default function MyContent({ campaign, prompts }) {
     },
   ]);
 
-  // const campaignPlan = campaign[subSectionKey];
-  // const key = section.toLowerCase();
+  const campaignPlan = campaign[subSectionKey];
+  const key = section.toLowerCase();
 
-  // useEffect(() => {
-  //   console.log('key', key);
-  //   console.log('campaignPlan', campaignPlan);
-  //   console.log('campaignPlan[key]', campaignPlan[key]);
-  //   if (!campaignPlan || !campaignPlan[key]) {
-  //     console.log('Creating AI!!!');
-  //     createInitialAI();
-  //   } else {
-  //     console.log('AI Found. Loading...');
-  //     setPlan(campaignPlan[key].content);
-  //     setLoading(false);
-  //     setIsTyped(true);
-  //   }
-  // }, [campaignPlan]);
+  useEffect(() => {
+    console.log('section', section);
+    console.log('campaignPlan', campaignPlan);
+    console.log('campaignPlan[section]', campaignPlan[section]);
+    if (section && section != '' && (!campaignPlan || !campaignPlan[section])) {
+      console.log('Creating AI!!!');
+      createInitialAI();
+    }
+  }, [campaignPlan, section]);
+
+  async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+    try {
+      const api = gpApi.campaign.onboarding.ai.create;
+      return await gpFetch(api, {
+        subSectionKey,
+        key,
+        regenerate,
+        chat,
+        editMode,
+      });
+    } catch (e) {
+      console.log('error', e);
+      return false;
+    }
+  }
+
+  const createInitialAI = async (regenerate, chat, editMode) => {
+    aiCount++;
+    aiTotalCount++;
+    if (aiTotalCount >= 100) {
+      //fail
+      setPlan(
+        'Failed to generate a campaign plan. Please contact us for help.',
+      );
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+
+    // print out all params
+    // console.log('subSectionKey', subSectionKey);
+    // console.log('key', key);
+    // console.log('regenerate', regenerate);
+    // console.log('chat', chat);
+    // console.log('editMode', editMode);
+    const { chatResponse, status } = await generateAI(
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    );
+    if (!chatResponse && status === 'processing') {
+      if (aiCount < 40) {
+        setTimeout(async () => {
+          await createInitialAI();
+        }, 5000);
+      } else {
+        //something went wrong, we are stuck in a loop. reCreate the response
+        console.log('regenerating');
+        aiCount = 0;
+        createInitialAI(true);
+      }
+    } else {
+      // here, we no longer setPlan.
+      // parse the chatResponse and then forward them to their new content url.
+      console.log('chatResponse', chatResponse);
+      aiCount = 0;
+      // setPlan(chatResponse);
+      // setLoading(false);
+    }
+  };
 
   return (
     <div>
