@@ -4,7 +4,12 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { generateCampaignStatus } from '../[slug]/dashboard/campaignSteps';
 
-export async function updateCampaign(campaign, versionKey, updateCandidate) {
+export async function updateCampaign(
+  campaign,
+  versionKey,
+  updateCandidate,
+  subSectionKey,
+) {
   try {
     const api = gpApi.campaign.onboarding.update;
     const currentStep = calcCampaignStep(campaign);
@@ -15,6 +20,7 @@ export async function updateCampaign(campaign, versionKey, updateCandidate) {
       },
       versionKey,
       updateCandidate,
+      subSectionKey,
     };
     return await gpFetch(api, payload);
   } catch (e) {

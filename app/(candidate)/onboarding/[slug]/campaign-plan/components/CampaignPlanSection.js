@@ -163,7 +163,7 @@ export default function CampaignPlanSection({
     updated[subSectionKey][key] = plan;
     setIsEdited(false);
     setEditMode(false);
-    await updateCampaign(updated, key);
+    await updateCampaign(updated, key, false, subSectionKey);
     await updateVersionsCallback();
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
