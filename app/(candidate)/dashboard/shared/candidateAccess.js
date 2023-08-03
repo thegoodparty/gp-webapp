@@ -17,6 +17,6 @@ export async function fetchCampaignStatus() {
 export default async function candidateAccess() {
   const campaignStatus = await fetchCampaignStatus();
   if (!campaignStatus || campaignStatus.status !== 'candidate') {
-    redirect('/profile');
+    redirect('/');
   }
 }

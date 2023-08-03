@@ -6,26 +6,49 @@ import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 
 const pages = [
-  { label: 'Campaign Tracker', icon: <AiOutlineFlag />, link: '/dashboard' },
-  { label: 'Profile', icon: <RiUserHeartLine />, link: '/profile' },
+  {
+    label: 'Campaign Tracker',
+    icon: <AiOutlineFlag />,
+    link: '/dashboard',
+    id: 'campaign-tracker-dashboard',
+  },
+  {
+    label: 'Profile',
+    icon: <RiUserHeartLine />,
+    link: '/profile',
+    id: 'profile-dashboard',
+  },
   {
     label: 'Campaign Plan',
     icon: <TbBrain />,
     link: '/dashboard/plan',
     section: 'Strategy',
+    id: 'campaign-plan-dashboard',
   },
-  { label: 'Campaign Team', icon: <RiTeamLine />, link: '/dashboard/team' },
-  { label: 'Funding', icon: <BsGraphUp />, link: '/dashboard/funding' },
+  {
+    label: 'Campaign Team',
+    icon: <RiTeamLine />,
+    link: '/dashboard/team',
+    id: 'campaign-team-dashboard',
+  },
+  {
+    label: 'Funding',
+    icon: <BsGraphUp />,
+    link: '/dashboard/funding',
+    id: 'funding-dashboard',
+  },
   {
     label: 'My Content',
     icon: <BsPostcardHeart />,
     link: '/dashboard/content',
     section: 'Resources',
+    id: 'my-content-dashboard',
   },
   {
     label: 'Resources Library',
     icon: <RiBook2Line />,
     link: '/dashboard/resources',
+    id: 'resources-library',
   },
 ];
 export default function DashboardMenu({
@@ -47,6 +70,7 @@ export default function DashboardMenu({
             href={page.link}
             className="no-underline"
             onClick={toggleCallback}
+            id={page.id}
           >
             <div
               className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 ${
