@@ -50,6 +50,7 @@ export default function WhoWhySection() {
           blur
           fill
           className="object-contain object-right-top"
+          alt="About us"
         />
       </div>
     </section>
