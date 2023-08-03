@@ -19,6 +19,7 @@ function AlertDialog({
       onClose={handleClose}
       aria-labelledby={title || ariaLabel}
       open={open}
+      PaperProps={{ sx: { borderRadius: "20px" } }}
     >
       <div className="p-8">
         <div

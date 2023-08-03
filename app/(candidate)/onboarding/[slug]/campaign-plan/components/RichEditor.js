@@ -21,6 +21,9 @@ export default function RichEditor({
     readonly: false, // all options from https://xdsoft.net/jodit/doc/
     enableDragAndDropFileToEditor: false,
     useSearch: false,
+    toolbar: false,
+    showCharsCounter: false,
+    showWordsCounter: false,
     showXPathInStatusbar: false,
     toolbarInlineForSelection: true,
     showPlaceholder: false,

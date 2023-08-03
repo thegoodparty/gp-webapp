@@ -11,6 +11,10 @@ import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
 import { camelToSentence } from 'helpers/stringHelper';
 import { useState } from 'react';
+import Table from './Table';
+import Actions from './Actions';
+import { useMemo } from 'react';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 const subSectionKey = 'aiContent';
 
@@ -63,21 +67,68 @@ export default function MyContent({ campaign, prompts }) {
     };
   });
 
+  console.log('sections', sections);
+
+  let inputData = [];
+  Object.keys(sections).forEach((key) => {
+    const section = sections[key];
+    inputData.push({
+      name: section.name,
+      updatedAt: section.updatedAt,
+      slug: key,
+    });
+  });
+
+  const data = useMemo(() => inputData);
+
+  const columns = useMemo(() => [
+    {
+      Header: 'Name',
+      accessor: 'name',
+    },
+    {
+      Header: 'Last Modified',
+      accessor: 'updatedAt',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.updatedAt);
+      },
+    },
+    {
+      Header: '',
+      collapse: true,
+      accessor: 'actions',
+      Cell: ({ row }) => {
+        return <Actions {...row.original} />;
+      },
+    },
+  ]);
+
+  // const campaignPlan = campaign[subSectionKey];
+  // const key = section.toLowerCase();
+
+  // useEffect(() => {
+  //   console.log('key', key);
+  //   console.log('campaignPlan', campaignPlan);
+  //   console.log('campaignPlan[key]', campaignPlan[key]);
+  //   if (!campaignPlan || !campaignPlan[key]) {
+  //     console.log('Creating AI!!!');
+  //     createInitialAI();
+  //   } else {
+  //     console.log('AI Found. Loading...');
+  //     setPlan(campaignPlan[key].content);
+  //     setLoading(false);
+  //     setIsTyped(true);
+  //   }
+  // }, [campaignPlan]);
+
   return (
     <div>
       <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
-      {mappedSections.map((section) => (
-        <CampaignPlanSection
-          key={section.key}
-          section={section}
-          campaign={campaign}
-          versions={updatedVersions || versions}
-          updateVersionsCallback={updateVersionsCallback}
-          subSectionKey={subSectionKey}
-        />
-      ))}
+
+      <Table columns={columns} data={data} />
 
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="lg:min-w-[740px]">

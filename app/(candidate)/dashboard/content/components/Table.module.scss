@@ -1,0 +1,80 @@
+.wrapper {
+  padding: 1rem 0 100px;
+  display: block;
+  max-width: 100%;
+
+  display: block;
+  max-width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  /* This will make the table scrollable when it gets too small */
+  :global(.tableWrap) {
+    display: block;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    border-bottom: 1px solid #BBCBDE;
+  }
+
+  :global(table) {
+    /* Make sure the inner table is always as wide as needed */
+    width: 100%;
+    border-spacing: 0;
+
+    :global(tr) {
+      &:first-child {
+        :global(th:first-child) {
+          border-radius: 8px 0 0 0; /* Rounded top-left corner */
+        }
+
+        :global(th:last-child) {
+          border-radius: 0 8px 0 0; /* Rounded top-right corner */
+        }
+      }
+
+      :last-child {
+        :global(td) {
+          border-bottom: 0;
+        }
+      }
+    }
+
+    :global(th) {
+      background-color: #E0E6EC;
+      font-size: 16px;
+      font-weight: 400;
+      height: 56px;
+    }
+
+    :global(th),
+    :global(td) {
+      margin: 0;
+      padding: 0.5rem;
+      border-bottom: 1px solid #BBCBDE;
+
+      /* The secret sauce */
+      /* Each cell should grow equally */
+      width: 1%;
+      /* But "collapsed" cells should be as small as possible */
+      &:global(.collapseCell) {
+        width: 0.0000000001%;
+      }
+
+      :last-child {
+        border-right: 0;
+      }
+    }
+
+    :global(input) {
+      padding: 4px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+  }
+}
+
+// .odd {
+//   background-color: #f9f9f9;
+// }
