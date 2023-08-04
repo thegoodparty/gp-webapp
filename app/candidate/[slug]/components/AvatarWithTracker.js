@@ -15,16 +15,16 @@ export default function AvatarWithTracker(props) {
         <QuestionButton
           className={
             candidateUrl
-              ? `text-indigo-50 text-2xl mr-3`
-              : `text-indigo-800 text-2xl mr-3`
+              ? `text-indigo-50 text-2xl`
+              : `text-indigo-800 text-2xl`
           }
         >
           <div className="max-w-md">
-            This meter offers Good Party’s latest projections of the number of
-            likely votes a candidate would get if the elections was held today,
-            and how many votes needed to win on election day. We continuously
-            update our projections using a range of data sources including
-            polling, market signals and previous election data.
+            This meter offers Good Party&apos;s latest projections of the number
+            of likely votes a candidate would get if the elections was held
+            today, and how many votes needed to win on election day. We
+            continuously update our projections using a range of data sources
+            including polling, market signals and previous election data.
           </div>
         </QuestionButton>
       </div>
