@@ -93,6 +93,17 @@ const sections = [
       { key: 'voterMap', label: 'Voter Map', type: 'text', fullRow: true },
     ],
   },
+  {
+    title: 'Results',
+    fields: [
+      {
+        key: 'finalVotes',
+        label: 'Final Votes count (post election)',
+        type: 'number',
+        fullRow: true,
+      },
+    ],
+  },
 ];
 
 const initialState = {};

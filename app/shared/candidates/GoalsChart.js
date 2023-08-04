@@ -51,10 +51,14 @@ export function hexToRgb(hex) {
     : null;
 }
 
-function GoalsChart({ candidate, followers, color }) {
-  let { voterProjection, voteGoal } = candidate;
+function GoalsChart({ candidate, color }) {
+  let { voterProjection, voteGoal, finalVotes } = candidate;
   voteGoal = voteGoal || 100;
   let voters = voterProjection || 0;
+
+  if (finalVotes && finalVotes > 0) {
+    voters = finalVotes;
+  }
 
   const cappedLikely = voters > voteGoal ? voteGoal : voters;
 
