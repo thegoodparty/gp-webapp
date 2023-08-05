@@ -49,6 +49,7 @@ export default function AdminCandidatesPage(props) {
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
         office: campaign.office,
+        city: campaign.city,
         district: campaign.district || 'n/a',
         state: campaign.state ? campaign.state.toUpperCase() : '?',
         createdAt: new Date(campaignObj.createdAt),
@@ -99,6 +100,22 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Launch Status',
       accessor: 'launched',
+    },
+    {
+      Header: 'Path to Victory',
+      accessor: 'victoryPath',
+      Cell: ({ row }) => {
+        return (
+          <a
+            href={`/admin/victory-path/${row.original.slug}`}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className="underline"
+          >
+            Path to victory
+          </a>
+        );
+      },
     },
     {
       Header: 'Review Link',
@@ -152,22 +169,6 @@ export default function AdminCandidatesPage(props) {
     },
 
     {
-      Header: 'Path to Victory',
-      accessor: 'victoryPath',
-      Cell: ({ row }) => {
-        return (
-          <a
-            href={`/admin/victory-path/${row.original.slug}`}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="underline"
-          >
-            Path to victory
-          </a>
-        );
-      },
-    },
-    {
       Header: 'Party',
       accessor: 'party',
     },
@@ -176,8 +177,12 @@ export default function AdminCandidatesPage(props) {
       accessor: 'office',
     },
     {
-      Header: 'Jurisdiction',
+      Header: 'District',
       accessor: 'district',
+    },
+    {
+      Header: 'City',
+      accessor: 'city',
     },
     {
       Header: 'State',
