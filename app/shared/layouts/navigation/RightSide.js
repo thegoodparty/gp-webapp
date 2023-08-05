@@ -49,6 +49,7 @@ export default function RightSideClient() {
     setLearnMoreOpen(false);
     setDashboardOpen(false);
     setNotificationsOpen(false);
+    document.body.style.overflow = 'visible';
   };
 
   const toggleLearnMore = () => {
@@ -67,6 +68,9 @@ export default function RightSideClient() {
 
   const toggleNotifications = () => {
     closeAll();
+    if (!notificationsOpen) {
+      document.body.style.overflow = 'hidden';
+    }
     setNotificationsOpen(!notificationsOpen);
   };
   return (
