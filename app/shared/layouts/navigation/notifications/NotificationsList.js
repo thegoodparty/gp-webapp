@@ -34,16 +34,11 @@ const notifications = [
     dueDate: '9/8/2023',
   },
 ];
-export default function NotificationsList({ unreadOnly }) {
+export default function NotificationsList() {
   return (
     <div className="">
       {notifications.map((notification) => (
-        <Fragment key={notification.id}>
-          {(!unreadOnly ||
-            (unreadOnly && notification.status === 'unread')) && (
-            <Notification notification={notification} key={notification.id} />
-          )}
-        </Fragment>
+        <Notification notification={notification} key={notification.id} />
       ))}
     </div>
   );
