@@ -10,60 +10,53 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { Button } from '@mui/material';
 
 async function deleteContent(key) {
+  const subSectionKey = 'aiContent';
+  console.log('deleting key', key);
   try {
-    const api = gpApi.campaign.onboarding.adminDelete;
+    const api = gpApi.campaign.onboarding.ai.delete;
     const payload = {
       key,
+      subSectionKey,
     };
-    return await gpFetch(api, payload);
+    const deleteResp = await gpFetch(api, payload);
+    return true;
   } catch (e) {
     console.log('error', e);
     return false;
   }
 }
 
-export default function DeleteAction({ key }) {
-  const [showDelete, setShowDelete] = useState(false);
+export default function DeleteAction({
+  documentKey,
+  showDelete,
+  setShowDelete,
+}) {
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const handleDelete = async () => {
-
+  const handleDelete = async (documentKey) => {
+    const deleteResp = await deleteContent(documentKey);
+    if (deleteResp === true) {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Deleting...',
+          message: 'Deleted',
           isError: false,
         };
       });
-
-    //   snackbarState.set(() => {
-    //     return {
-    //       isOpen: true,
-    //       message: 'Deleted',
-    //       isError: false,
-    //     };
-    //   });
-    // await deleteContent(key);
-    // await revalidateContent();
-    // await revalidatePage('/admin/candidates');
-    // window.location.reload();
+      window.location.href = '/dashboard/content';
+    } else {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Failed to delete.',
+          isError: true,
+        };
+      });
+    }
   };
 
   return (
     <>
-      <Button onClick={() => setShowDelete(true)}>
-        <span
-          className="text-red-400 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3"
-        >
-          <div
-            className="whitespace-nowrap text-lg flex items-center w-full"
-          >
-            <FaTrashAlt className="text-[14px]" />
-            <div className="ml-3 font-sfpro text-[17px]">Delete</div>
-          </div>
-        </span>
-      </Button>
-
       <AlertDialog
         open={showDelete}
         handleClose={() => {
@@ -71,7 +64,9 @@ export default function DeleteAction({ key }) {
         }}
         title={'Delete Content'}
         description={`Are you sure you want to delete this content? This cannot be undone.`}
-        handleProceed={handleDelete}
+        handleProceed={() => {
+          handleDelete(documentKey);
+        }}
       />
     </>
   );

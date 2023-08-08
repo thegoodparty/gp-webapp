@@ -1,42 +1,70 @@
 'use client';
 import { useState } from 'react';
 import { dateWithTime } from 'helpers/dateHelper';
-// import { Select } from '@mui/material';
-// import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown } from 'react-icons/io';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
+import { Button } from '@mui/material';
 
 export default function PlanVersion({
   versions,
   updatePlanCallback,
   latestVersion,
 }) {
-  const [state, setState] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
+  // console.log('versions', versions);
   if (!versions) {
     return null;
   }
-  const onChange = (version) => {
-    setState(version);
-    if (version === '') {
-      updatePlanCallback(latestVersion);
-    } else {
-      updatePlanCallback(version);
-    }
-  };
+
   return (
-    <div>
-      {/* redo this to use the dropdown instead of the select componenet (go back to the elite button) */}
-      <select
-        class="rounded-lg font-medium bg-slate-300 text-primary px-3 py-2 md:py-3 max-w-[100px]"
-        onChange={(e) => {
-          onChange(e.target.value);
+    <div className="flex justify-center relative">
+      <div
+        onClick={() => {
+          setShowMenu(!showMenu);
         }}
       >
-        <option value="">Version</option>
-        {versions.map((version) => (
-          <option key={version.date} value={version.text}>
-            {dateWithTime(version.date)}
-          </option>
-        ))}
-      </select>
+        <SecondaryButton size="medium">
+          <div className="flex items-center whitespace-nowrap p-1">
+            Version &nbsp;
+            <IoIosArrowDown className="text-sm" />
+          </div>
+        </SecondaryButton>
+      </div>
+
+      {showMenu && (
+        <>
+          <div
+            className="fixed h-screen w-screen top-14 left-0"
+            onClick={() => {
+              setShowMenu(false);
+            }}
+          />
+
+          <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary text-gray-800 rounded-xl shadow-md transition">
+            {versions.map((version) => (
+              <Button
+                key={version.date}
+                onClick={() => {
+                  setShowMenu(false);
+                  if (version === '') {
+                    updatePlanCallback(latestVersion);
+                  } else {
+                    updatePlanCallback(version);
+                  }
+                }}
+              >
+                <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                  <div className="whitespace-nowrap text-lg flex items-center w-full">
+                    <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
+                      {dateWithTime(version.date)}
+                    </div>
+                  </div>
+                </span>
+              </Button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

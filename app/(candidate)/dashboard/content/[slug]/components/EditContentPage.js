@@ -3,19 +3,13 @@ import { useState } from 'react';
 import ContentEditor from './ContentEditor';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { kebabToCamel } from '@shared/common/functions';
 
 export default function EditContentPage(props) {
+  const { slug, campaign } = props;
 
-  const {slug, campaign, prompts} = props; 
-
-  console.log("slug: ", slug);
-
-//   const key = section;
-//   const key = slug; 
-  const key = 'socialMediaCopy';
+  const section = kebabToCamel(slug);
   const subSectionKey = 'aiContent';
-
-  const campaignPlan = campaign[subSectionKey];
 
   const versions = useVersions();
   const [updatedVersions, setUpdatedVersions] = useState(false);
@@ -25,20 +19,15 @@ export default function EditContentPage(props) {
     setUpdatedVersions(versions);
   };
 
-  
   return (
-    // <DashboardLayout {...props}>
-
     <>
-        <ContentEditor
-          key={slug}
-          section={"socialMediaCopy"}
-          campaign={campaign}
-          versions={updatedVersions || versions}
-          updateVersionsCallback={updateVersionsCallback}
-          subSectionKey={subSectionKey}
-        />
-
+      <ContentEditor
+        section={section}
+        campaign={campaign}
+        versions={updatedVersions || versions}
+        updateVersionsCallback={updateVersionsCallback}
+        subSectionKey={subSectionKey}
+      />
     </>
-    );
+  );
 }

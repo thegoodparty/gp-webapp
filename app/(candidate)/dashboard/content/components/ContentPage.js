@@ -1,12 +1,9 @@
 'use client';
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
-// import AiContent from './AiContent';
 import MyContent from './MyContent';
 
 export default function ContentPage(props) {
-
-
   return (
     <DashboardLayout {...props}>
       <TitleSection
@@ -17,8 +14,6 @@ export default function ContentPage(props) {
         imgHeight={120}
       />
       <MyContent {...props} />
-      {/* <AiContent {...props} /> */}
-
     </DashboardLayout>
   );
 }

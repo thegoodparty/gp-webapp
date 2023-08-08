@@ -7,10 +7,14 @@ import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../../shared/candidateAccess';
 import EditContentPage from './components/EditContentPage';
 
+// the idea is that slug and key will be different things.
+// slug is obviously the url slug. it is in kebab case.
+// so when im getting a key from a slug, it needs to be converted to camel case.
+
 const meta = pageMetaData({
   title: 'Campaign Content | GOOD PARTY',
   description: 'Campaign Content',
-//   slug: '/dashboard/content',
+  //   slug: '/dashboard/content',
 });
 export const metadata = meta;
 
@@ -27,7 +31,7 @@ export default async function Page({ params }) {
   const childProps = {
     slug,
     campaign,
-    prompts
+    prompts,
   };
 
   return <EditContentPage {...childProps} />;

@@ -14,13 +14,14 @@
     max-width: 100%;
     overflow-x: scroll;
     overflow-y: hidden;
-    border-bottom: 1px solid #BBCBDE;
+    border-bottom: 1px solid #bbcbde;
   }
 
   :global(table) {
     /* Make sure the inner table is always as wide as needed */
     width: 100%;
     border-spacing: 0;
+    font-size: 16px;
 
     :global(tr) {
       &:first-child {
@@ -41,9 +42,13 @@
     }
 
     :global(th) {
-      background-color: #E0E6EC;
+      background-color: #e0e6ec;
       font-size: 16px;
       font-weight: 400;
+      height: 56px;
+    }
+
+    :global(tr) {
       height: 56px;
     }
 
@@ -51,7 +56,7 @@
     :global(td) {
       margin: 0;
       padding: 0.5rem;
-      border-bottom: 1px solid #BBCBDE;
+      border-bottom: 1px solid #bbcbde;
 
       /* The secret sauce */
       /* Each cell should grow equally */

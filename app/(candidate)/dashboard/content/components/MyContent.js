@@ -8,13 +8,17 @@ import H6 from '@shared/typography/H6';
 import Modal from '@shared/utils/Modal';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
-import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
 import { camelToSentence } from 'helpers/stringHelper';
 import { useState, useEffect } from 'react';
 import Table from './Table';
 import Actions from './Actions';
 import { useMemo } from 'react';
 import { dateUsHelper } from 'helpers/dateHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import Link from 'next/link';
+import { camelToKebab, kebabToCamel } from '@shared/common/functions';
+import { IoDocumentText } from 'react-icons/io5';
 
 const subSectionKey = 'aiContent';
 let aiCount = 0;
@@ -27,6 +31,8 @@ export default function MyContent({ campaign, prompts }) {
   const [selected, setSelected] = useState('');
   const versions = useVersions();
   const [updatedVersions, setUpdatedVersions] = useState(false);
+
+  let tableVersion = true;
 
   const updateVersionsCallback = async () => {
     const { versions } = await fetchCampaignVersions();
@@ -42,6 +48,7 @@ export default function MyContent({ campaign, prompts }) {
         [key]: {
           key,
           title: camelToSentence(key),
+          name: camelToSentence(key),
           icon: '/images/dashboard/slogan-icon.svg',
         },
       });
@@ -53,25 +60,15 @@ export default function MyContent({ campaign, prompts }) {
 
   const findKey = () => {
     if (!sections[selected]) {
-      return selected.toLowerCase();
+      return selected;
     }
     for (let i = 2; i < 20; i++) {
       if (!sections[`${selected}${i}`]) {
-        return `${selected}${i}`.toLowerCase();
+        return `${selected}${i}`;
       }
     }
-    return `${selected}21`.toLowerCase();
+    return `${selected}21`;
   };
-
-  const mappedSections = Object.keys(sections).map((key) => {
-    return {
-      key,
-      title: camelToSentence(key),
-      icon: '/images/dashboard/slogan-icon.svg',
-    };
-  });
-
-  console.log('sections', sections);
 
   let inputData = [];
   Object.keys(sections).forEach((key) => {
@@ -79,9 +76,12 @@ export default function MyContent({ campaign, prompts }) {
     inputData.push({
       name: section.name,
       updatedAt: section.updatedAt,
-      slug: key,
+      slug: camelToKebab(key),
+      documentKey: key,
     });
   });
+
+  console.log('inputData', inputData);
 
   const data = useMemo(() => inputData);
 
@@ -89,13 +89,30 @@ export default function MyContent({ campaign, prompts }) {
     {
       Header: 'Name',
       accessor: 'name',
+      Cell: ({ row }) => {
+        return (
+          <Link
+            href="/dashboard/content/[slug]"
+            as={`/dashboard/content/${row.original.slug}`}
+          >
+            <div className="flex flex-row items-center font-semibold">
+              <IoDocumentText className="ml-3" />
+              <div className="ml-3">{row.original.name}</div>
+            </div>
+          </Link>
+        );
+      },
     },
     {
       Header: 'Last Modified',
       accessor: 'updatedAt',
       sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.updatedAt);
+        return (
+          <div className="pl-[40px]">
+            {dateUsHelper(row.original.updatedAt)}
+          </div>
+        );
       },
     },
     {
@@ -103,20 +120,28 @@ export default function MyContent({ campaign, prompts }) {
       collapse: true,
       accessor: 'actions',
       Cell: ({ row }) => {
-        return <Actions {...row.original} />;
+        const actionProps = {
+          slug: row.original?.slug ? row.original.slug : '',
+          name: row.original?.name ? row.original.name : '',
+          documentKey: row.original?.documentKey
+            ? row.original.documentKey
+            : '',
+          tableVersion,
+          updatedAt: row.original.updatedAt
+            ? row.original.updatedAt
+            : undefined,
+        };
+        return <Actions {...actionProps} />;
       },
     },
   ]);
 
   const campaignPlan = campaign[subSectionKey];
-  const key = section.toLowerCase();
+  // const key = section.toLowerCase();
+  const key = section;
 
   useEffect(() => {
-    console.log('section', section);
-    console.log('campaignPlan', campaignPlan);
-    console.log('campaignPlan[section]', campaignPlan[section]);
     if (section && section != '' && (!campaignPlan || !campaignPlan[section])) {
-      console.log('Creating AI!!!');
       createInitialAI();
     }
   }, [campaignPlan, section]);
@@ -150,12 +175,6 @@ export default function MyContent({ campaign, prompts }) {
       return;
     }
 
-    // print out all params
-    // console.log('subSectionKey', subSectionKey);
-    // console.log('key', key);
-    // console.log('regenerate', regenerate);
-    // console.log('chat', chat);
-    // console.log('editMode', editMode);
     const { chatResponse, status } = await generateAI(
       subSectionKey,
       key,
@@ -175,11 +194,11 @@ export default function MyContent({ campaign, prompts }) {
         createInitialAI(true);
       }
     } else {
-      // here, we no longer setPlan.
-      // parse the chatResponse and then forward them to their new content url.
       console.log('chatResponse', chatResponse);
       aiCount = 0;
-      // setPlan(chatResponse);
+      if (status === 'completed') {
+        window.location.href = '/dashboard/content';
+      }
       // setLoading(false);
     }
   };

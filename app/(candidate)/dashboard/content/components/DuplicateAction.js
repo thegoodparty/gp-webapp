@@ -22,19 +22,21 @@ async function duplicateContent(key) {
   }
 }
 
-export default function DuplicateAction({ key }) {
-  const [showDuplicate, setShowDuplicate] = useState(false);
+export default function DuplicateAction({
+  key,
+  showDuplicate,
+  setShowDuplicate,
+}) {
   const snackbarState = useHookstate(globalSnackbarState);
 
   const handleDuplicate = async () => {
-
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Duplicating...',
-          isError: false,
-        };
-      });
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Duplicating...',
+        isError: false,
+      };
+    });
 
     //   snackbarState.set(() => {
     //     return {
@@ -51,28 +53,15 @@ export default function DuplicateAction({ key }) {
 
   return (
     <>
-    <Button onClick={() => setShowDuplicate(true)}>
-        <span
-        className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3"
-        >
-        <div
-            className="whitespace-nowrap text-lg flex items-center w-full"
-        >
-            <FaCopy className="text-[14px]" />
-            <div className="ml-3 font-sfpro text-[17px]">Duplicate</div>
-        </div>
-        </span>
-    </Button>
-
-    <AlertDialog
+      <AlertDialog
         open={showDuplicate}
         handleClose={() => {
-            setShowDuplicate(false);
+          setShowDuplicate(false);
         }}
         title={'Duplicate Content'}
         description={`Are you sure you want to duplicate this content?`}
         handleProceed={handleDuplicate}
-    />
+      />
     </>
   );
 }

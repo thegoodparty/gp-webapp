@@ -3,23 +3,18 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import styles from './ContentEditor.module.scss';
 import LoadingAI from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/LoadingAI';
 import BlackButton from '@shared/buttons/BlackButton';
 import AiModal from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/AiModal';
 import Typewriter from 'typewriter-effect';
 import { FaPencilAlt, FaSave } from 'react-icons/fa';
-
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
-import { IoIosArrowDown } from 'react-icons/io';
-import { BsThreeDots } from 'react-icons/bs';
-import { FaPlus } from 'react-icons/fa';
+import Link from 'next/link';
+import Actions from '../../components/Actions';
 
 const RichEditor = dynamic(
   () =>
@@ -46,34 +41,26 @@ export default function ContentEditor({
   subSectionKey = 'aiContent',
 }) {
   const [open, setOpen] = useState(initialOpen);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true);
   const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
+  const [documentName, setDocumentName] = useState('Untitled Document');
 
   const campaignPlan = campaign[subSectionKey];
-  const key = section.toLowerCase();
+  const key = section;
 
   useEffect(() => {
-    console.log('key', key);
-    console.log('campaignPlan', campaignPlan);
-    console.log('campaignPlan[key]', campaignPlan[key]);
     if (campaignPlan && campaignPlan[key]) {
-      console.log('AI Found. Loading...');
       setPlan(campaignPlan[key].content);
+      setDocumentName(campaignPlan[key].name);
       setLoading(false);
       setIsTyped(true);
     }
   }, [campaignPlan]);
-
-  // const { plan, loading, isFailed, isTyped } = useAiPlan(
-  //   campaign,
-  //   'campaignPlan',
-  //   section.key,
-  // );
 
   const toggleSelect = () => {
     setOpen(!open);
@@ -147,51 +134,40 @@ export default function ContentEditor({
 
   return (
     <div>
-      <div className="flex w-full h-full p-5 items-center justify-items-center bg-slate-50">
+      <div className="flex w-full h-auto p-5 items-center justify-items-center bg-slate-50">
         <div className="flex justify-start">
           {/* desktop back button */}
-          <div className="hidden md:block">
-            <SecondaryButton size="medium">
-              <div className="flex items-center whitespace-nowrap p-1">
-                <MdOutlineArrowBackIos className="text-sm" />
-                &nbsp; Back
-              </div>
-            </SecondaryButton>
-          </div>
+          <Link href="/dashboard/content">
+            <div className="hidden md:block">
+              <SecondaryButton size="medium">
+                <div className="flex items-center whitespace-nowrap p-1">
+                  <MdOutlineArrowBackIos className="text-sm" />
+                  &nbsp; Back
+                </div>
+              </SecondaryButton>
+            </div>
+          </Link>
 
           {/* mobile back button */}
-          <div className="md:hidden">
-            <SecondaryButton size="small">
-              <div className="flex items-center whitespace-nowrap p-1">
-                <MdOutlineArrowBackIos className="text-sm" />
-                &nbsp;
-              </div>
-            </SecondaryButton>
+          <Link href="/dashboard/content">
+            <div className="md:hidden">
+              <SecondaryButton size="small">
+                <div className="flex items-center whitespace-nowrap p-1">
+                  <MdOutlineArrowBackIos className="text-sm" />
+                  &nbsp;
+                </div>
+              </SecondaryButton>
+            </div>
+          </Link>
+
+          {/* desktop new document name. (not shown on mobile) */}
+          <div className="ml-5 hidden md:block whitespace-nowrap">
+            <div className="text-indigo-800 p-1 md:mt-2">{documentName}</div>
           </div>
 
-          {/* desktop new document button */}
-          <div className="ml-5 hidden md:block">
-            <SecondaryButton size="medium" variant="text">
-              <div className="flex items-center whitespace-nowrap p-1">
-                <FaPlus className="text-sm" />
-                &nbsp; New document
-              </div>
-            </SecondaryButton>
-          </div>
-
-          {/* mobile new document button */}
-          <div className="ml-3 md:hidden">
-            <SecondaryButton size="small" variant="text">
-              <div className="flex items-center whitespace-nowrap p-1">
-                <FaPlus className="text-sm" />
-                &nbsp;
-              </div>
-            </SecondaryButton>
-          </div>
-
-          <div className="ml-3">
+          {/* <div className="ml-3">
             <div className="text-indigo-100 p-1 md:mt-2">Saved</div>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex w-full justify-end">
@@ -203,30 +179,16 @@ export default function ContentEditor({
             latestVersion={campaignPlan ? campaignPlan[key] : false}
           />
 
-          {/* mobile three dots button */}
-          <div className="ml-3 md:hidden">
-            <SecondaryButton size="small">
-              <div className="flex items-center whitespace-nowrap p-1">
-                <BsThreeDots className="text-sm" />
-                &nbsp;
-              </div>
-            </SecondaryButton>
-          </div>
-
-          {/* desktop three dots button */}
-          <div className="ml-5 hidden md:block">
-            <SecondaryButton size="medium">
-              <div className="flex items-center whitespace-nowrap p-1">
-                <BsThreeDots className="text-sm" />
-                &nbsp;
-              </div>
-            </SecondaryButton>
-          </div>
+          <Actions
+            slug={key}
+            setDocumentName={setDocumentName}
+            documentKey={key}
+          />
         </div>
       </div>
 
-      <div className="flex w-full h-screen justify-items-center justify-center">
-        <div className="max-w-3xl w-full h-full p-10 font-sfpro">
+      <div className="flex w-full h-auto justify-items-center justify-center">
+        <div className="max-w-3xl w-full h-auto p-10 font-sfpro">
           <section key={section.key} className="my-3">
             <div className="">
               {loading ? (
