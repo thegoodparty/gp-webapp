@@ -1,8 +1,9 @@
 'use client';
 
-import H2 from '@shared/typography/H2';
 import { FaBell } from 'react-icons/fa';
 import NotificationsPanel from './NotificationsPanel';
+import { useEffect, useState } from 'react';
+import useNotifications from './useNotifications';
 
 export default function NotificationsDropdown({
   open,
@@ -10,10 +11,21 @@ export default function NotificationsDropdown({
   user,
   closeAll,
 }) {
+  const notifications = useNotifications();
+  const [showDot, setShowDot] = useState(false);
+  useEffect(() => {
+    if (notifications && notifications.length > 0 && !notifications[0].isRead) {
+      setShowDot(true);
+    }
+  }, [notifications]);
+
   if (!user) {
     return null;
   }
   const handleClick = () => {
+    if (open) {
+      setShowDot(false);
+    }
     closeAll();
     toggleCallback();
   };
@@ -25,7 +37,9 @@ export default function NotificationsDropdown({
     >
       <div className="relative">
         <FaBell />
-        <div className="absolute w-2 h-2 bg-red-400 rounded-full -top-1 -right-2"></div>
+        {showDot && (
+          <div className="absolute w-2 h-2 bg-red-400 rounded-full -top-1 -right-2"></div>
+        )}
       </div>
       {open ? (
         <>
@@ -34,10 +48,10 @@ export default function NotificationsDropdown({
             onClick={toggleCallback}
           />
           <div
-            className="fixed md:absolute z-50 top-20 md:top-14  w-[90vw] left-[5vw] md:left-auto md:right-0 md:max-w-[460px] bg-primary text-gray-800 rounded-xl  shadow-md transition h-[calc(100vh-92px)] cursor-default"
+            className="fixed md:absolute z-50 top-20 md:top-14  w-[90vw] left-[5vw] md:left-auto md:right-0 md:max-w-[460px] bg-primary text-gray-800 rounded-xl  shadow-md transition h-[calc(100vh-92px)] cursor-default overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <NotificationsPanel />
+            <NotificationsPanel notifications={notifications} />
           </div>
         </>
       ) : null}

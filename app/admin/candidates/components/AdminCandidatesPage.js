@@ -36,7 +36,6 @@ export default function AdminCandidatesPage(props) {
     campaigns.map((campaignObj) => {
       const { data } = campaignObj;
       const campaign = mapCampaignToCandidate(data);
-      console.log(`camObj: ${campaign.slug}`, campaignObj);
       const { user } = campaignObj;
       const { currentStep } = data || {};
       const fields = {

@@ -28,7 +28,7 @@ export default function DashboardPage(props) {
   // const weeksUntil = { weeks: -1, days: 6 };
 
   const dateRange = weekRangeFromDate(electionDate, weeksUntil.weeks);
-  const contactGoals = calculateContactGoals(resolvedContactGoal, weeksUntil);
+  const contactGoals = calculateContactGoals(resolvedContactGoal);
 
   const updateCountCallback = async (key, value) => {
     const newState = {
