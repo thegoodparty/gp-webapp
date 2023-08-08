@@ -77,6 +77,7 @@ function PasswordSection() {
 
   const canSave = () => {
     if (
+      user &&
       user.hasPassword &&
       state.password !== '' &&
       state.oldPassword !== '' &&
@@ -114,11 +115,11 @@ function PasswordSection() {
             className="text-[22px] tracking-wide font-black mb-16"
             data-cy="settings-title"
           >
-            {user.hasPassword ? 'Change' : 'Create'} your password
+            {user?.hasPassword ? 'Change' : 'Create'} your password
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              {user.hasPassword && (
+              {user?.hasPassword && (
                 <div className="mb-4">
                   <TextField
                     label="Old Password"

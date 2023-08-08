@@ -100,14 +100,14 @@ export default function Footer() {
         <div className="grid grid-cols-12 mt-12">
           <div className="col-span-12 md:col-span-9">
             <div
-              className="font-sfpro text-start lg:text-left text-indigo-200"
+              className="font-sfpro text-start lg:text-left text-slate-900"
               data-cy="footer-copyright"
             >
               Copyright &copy; {year} Good Party. All rights reserved. &nbsp;
               <Link
                 href="/privacy"
                 data-cy="footer-privacy-link"
-                className="font-normal text-slate-900"
+                className="font-normal text-slate-400"
               >
                 Privacy Policy.
               </Link>

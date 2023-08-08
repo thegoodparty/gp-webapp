@@ -28,7 +28,7 @@ export default function DashboardPage(props) {
   // const weeksUntil = { weeks: -1, days: 6 };
 
   const dateRange = weekRangeFromDate(electionDate, weeksUntil.weeks);
-  const contactGoals = calculateContactGoals(resolvedContactGoal, weeksUntil);
+  const contactGoals = calculateContactGoals(resolvedContactGoal);
 
   const updateCountCallback = async (key, value) => {
     const newState = {
@@ -50,25 +50,27 @@ export default function DashboardPage(props) {
     updateCountCallback,
     dateRange,
   };
-
+  console.log('weeksUntil.weeks', weeksUntil.weeks, !weeksUntil.weeks < 0);
   return (
     <DashboardLayout {...childProps}>
       <div className="max-w-[940px] mx-auto">
-        <TitleSection
-          title="Campaign Tracker"
-          subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."
-          imgWidth={128}
-          imgHeight={120}
-        />
         {contactGoals ? (
           <>
             {weeksUntil.weeks < 0 ? (
               <ElectionOver />
             ) : (
-              <ThisWeekSection {...childProps} />
+              <>
+                <TitleSection
+                  title="Campaign Tracker"
+                  subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."
+                  imgWidth={128}
+                  imgHeight={120}
+                />
+                <ThisWeekSection {...childProps} />
+                {voterMap ? <MapSection map={voterMap} /> : null}
+                <ProgressSection {...childProps} />
+              </>
             )}
-            {voterMap ? <MapSection map={voterMap} /> : null}
-            <ProgressSection {...childProps} />
           </>
         ) : (
           <H3 className="mt-12">Waiting for voter contact goals input.</H3>

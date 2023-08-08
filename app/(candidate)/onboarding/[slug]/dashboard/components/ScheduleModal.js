@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
-export default function ScheduleModal({ calendar }) {
+export default function ScheduleModal({ calendar, btn }) {
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {
@@ -22,7 +22,7 @@ export default function ScheduleModal({ calendar }) {
         className="text-sm text-center underline mt-1 cursor-pointer"
         onClick={handleOpenModal}
       >
-        Book a Time
+        {btn ? btn : 'Book a Time'}
       </div>
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>

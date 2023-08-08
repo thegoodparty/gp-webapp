@@ -10,18 +10,19 @@ import { Fragment } from 'react';
 
 const federalOffices = ['US Senate', 'US House of Representatives'];
 
-const calcLocation = ({ office, state, district }) => {
+const calcLocation = ({ office, state, district, city }) => {
   const isFederal = federalOffices.includes(office);
+  let str = '';
   if (isFederal) {
-    return `${office}, ${state}, ${district}`;
+    return `${district ? `${district}, ` : ''} ${state}`;
   }
-  return `${district}, ${state}, ${office}`;
+  return `${city ? `District ${district}, ${city}` : district}, ${state}`;
 };
 
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign } = props;
 
-  const { firstName, lastName, slogan, party, office, state, district } =
+  const { firstName, lastName, slogan, party, office, state, district, city } =
     candidate;
 
   let fields;
@@ -31,7 +32,8 @@ export default function ProfileSection(props) {
       { label: 'Running For', value: office },
       {
         label: 'Location',
-        value: `${district ? `${district}, ` : ''} ${state}`,
+        value: calcLocation({ office, state, district, city }),
+        // value: `${district ? `${district}, ` : ''} ${state}`,
       },
       { label: 'Affiliation', value: partyResolver(party) },
     ];
@@ -39,7 +41,8 @@ export default function ProfileSection(props) {
     fields = [
       {
         label: 'Location',
-        value: `${district ? `${district}, ` : ''} ${state}`,
+        // value: `${district ? `${district}, ` : ''} ${state}`,
+        value: calcLocation({ office, state, district, city }),
       },
       { label: 'Running For', value: office },
       { label: 'Affiliation', value: partyResolver(party) },
