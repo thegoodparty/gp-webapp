@@ -8,7 +8,11 @@ import H6 from '@shared/typography/H6';
 import Modal from '@shared/utils/Modal';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
-import { camelToSentence } from 'helpers/stringHelper';
+import {
+  camelToSentence,
+  camelToKebab,
+  kebabToCamel,
+} from 'helpers/stringHelper';
 import { useState, useEffect } from 'react';
 import Table from './Table';
 import Actions from './Actions';
@@ -17,7 +21,6 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
-import { camelToKebab, kebabToCamel } from '@shared/common/functions';
 import { IoDocumentText } from 'react-icons/io5';
 
 const subSectionKey = 'aiContent';
