@@ -1,15 +1,13 @@
+import H1 from '@shared/typography/H1';
 import { faqArticleRoute } from 'helpers/articleHelper';
 import Link from 'next/link';
 
 export default function Categories({ content }) {
   return (
     <div>
-      <h2
-        className="text-3xl font-black my-6 lg:my-8 lg:text-4xl"
-        data-cy="faqs-page-title"
-      >
+      <H1 className="my-6 lg:my-8" data-cy="faqs-page-title">
         Frequently Asked Questions
-      </h2>
+      </H1>
       {content &&
         content.map((category) => (
           <div

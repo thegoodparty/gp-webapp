@@ -54,9 +54,9 @@ export default function ElectionVolunteer(props) {
           </div>
 
           <div className="col-span-12 lg:col-span-5 max-w-2xl md:mb-5 order-first md:order-last items-center">
-            <h1 className="text-[32px] md:text-[64px] leading-[32px] md:leading-[72px] font-semibold mt-3">
+            <h2 className="text-[32px] md:text-[64px] leading-[32px] md:leading-[72px] font-semibold mt-3">
               Schedule a virtual info session
-            </h1>
+            </h2>
             <h2 className="text-lg font-sfpro font-normal leading-6 mt-5 max-w-md">
               Meet with us to learn about joining the movement to help make
               people matter more than money in politics.
