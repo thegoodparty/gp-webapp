@@ -83,7 +83,7 @@ export default function Footer() {
               alt="GOOD PARTY"
             />
             <div
-              className="font-sfpro font-normal text-slate-700 text-[16px] leading-[24px] mt-4 max-w-lg"
+              className="font-sfpro font-normal text-slate-200 text-[16px] leading-[24px] mt-4 max-w-lg"
               data-cy="footer-join-us"
             >
               Not a political party. We&apos;re building free tools to change
@@ -100,14 +100,14 @@ export default function Footer() {
         <div className="grid grid-cols-12 mt-12">
           <div className="col-span-12 md:col-span-9">
             <div
-              className="font-sfpro text-start lg:text-left text-slate-900"
+              className="font-sfpro text-start lg:text-left text-slate-200"
               data-cy="footer-copyright"
             >
               Copyright &copy; {year} Good Party. All rights reserved. &nbsp;
               <Link
                 href="/privacy"
                 data-cy="footer-privacy-link"
-                className="font-normal text-slate-400"
+                className="font-normal text-slate-200"
               >
                 Privacy Policy.
               </Link>

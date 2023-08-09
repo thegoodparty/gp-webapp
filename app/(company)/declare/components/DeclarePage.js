@@ -1,6 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import Signatures from './Signatures';
+import H1 from '@shared/typography/H1';
 
 export default function DeclarePage({ signatures, baskerville, tangerine }) {
   const content = [
@@ -61,10 +62,9 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
                 width={56}
                 height={56}
                 className="mr-3"
+                priority
               />
-              <p className="text-4xl font-bold">
-                GOOD PARTY Declaration of Independence
-              </p>
+              <H1>GOOD PARTY Declaration of Independence</H1>
             </div>
             <div className="flex flex-col justify-center md:items-center">
               {content.map((line) => (

@@ -90,7 +90,7 @@ export default function LearnMore({
                   </Link>
                 </div>
                 <Link
-                  href="run-for-office"
+                  href="/run-for-office"
                   className="font-medium mr-5 lg:hidden"
                   id="nav-run-for office"
                 >

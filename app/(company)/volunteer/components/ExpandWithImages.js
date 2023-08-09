@@ -62,6 +62,7 @@ export default function ExpandWithImages() {
           <div className="w-[120%] -ml-[10%] lg:ml-8">
             <Image
               src={selected !== false ? items[selected].img : defaultImg}
+              alt=""
             />
           </div>
         </div>

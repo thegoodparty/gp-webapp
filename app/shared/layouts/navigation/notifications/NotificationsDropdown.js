@@ -4,6 +4,18 @@ import { FaBell } from 'react-icons/fa';
 import NotificationsPanel from './NotificationsPanel';
 import { useEffect, useState } from 'react';
 import useNotifications from './useNotifications';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+export async function updateNotifications() {
+  try {
+    const api = gpApi.notification.update;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error at updateNotifications', e);
+    return {};
+  }
+}
 
 export default function NotificationsDropdown({
   open,
@@ -22,9 +34,10 @@ export default function NotificationsDropdown({
   if (!user) {
     return null;
   }
-  const handleClick = () => {
+  const handleClick = async () => {
     if (open) {
       setShowDot(false);
+      await updateNotifications();
     }
     closeAll();
     toggleCallback();
