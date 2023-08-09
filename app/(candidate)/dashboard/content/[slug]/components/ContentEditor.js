@@ -119,14 +119,13 @@ export default function ContentEditor({
     // updated[subSectionKey][key] = plan;
     setIsEdited(false);
     setEditMode(false);
-    await updateCampaign(updated, key);
+    await updateCampaign(updated, key, false, 'aiContent');
     await updateVersionsCallback();
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
-    console.log('version', version);
-    setPlan(version.content);
+    setPlan(version.text);
     setIsEdited(true);
   };
 
