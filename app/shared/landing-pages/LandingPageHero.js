@@ -13,9 +13,8 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
           fill
           className="object-contain object-right-top"
           alt=""
-          placeholder="blur"
           priority
-          quality={50}
+          quality={40}
         />
       </div>
       <MaxWidth>
