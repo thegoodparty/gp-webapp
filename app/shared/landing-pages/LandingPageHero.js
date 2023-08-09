@@ -13,6 +13,7 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
           fill
           className="object-contain object-right-top"
           alt=""
+          placeholder="blur"
           priority
           quality={40}
         />
