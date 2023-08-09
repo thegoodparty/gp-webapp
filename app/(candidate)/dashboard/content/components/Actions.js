@@ -6,7 +6,7 @@ import { FaPencilAlt, FaTrashAlt, FaCopy } from 'react-icons/fa';
 import DeleteAction from './DeleteAction';
 // import DuplicateAction from './DuplicateAction';
 import RenameAction from './RenameAction';
-import { kebabToCamel } from '@shared/common/functions';
+import { kebabToCamel } from '/helpers/stringHelper';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CircularProgress from '@mui/material/CircularProgress';

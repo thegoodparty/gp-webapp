@@ -14,7 +14,7 @@ import {
   kebabToCamel,
 } from 'helpers/stringHelper';
 import { useState, useEffect } from 'react';
-import Table from './Table';
+import Table from '@shared/utils/Table';
 import Actions from './Actions';
 import { useMemo } from 'react';
 import { dateUsHelper } from 'helpers/dateHelper';
@@ -212,7 +212,7 @@ export default function MyContent({ campaign, prompts }) {
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
 
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={data} filterColumns={false} />
 
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="lg:min-w-[740px]">

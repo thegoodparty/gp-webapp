@@ -20,8 +20,6 @@ export default async function Page({ params, searchParams }) {
   const prompts = parsePrompts(promptsRaw);
   const { campaign } = await fetchUserCampaign();
 
-  console.log('prompts', prompts);
-
   const childProps = {
     pathname: '/dashboard/content',
     campaign,

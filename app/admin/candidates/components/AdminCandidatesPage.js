@@ -4,7 +4,7 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import { useMemo } from 'react';
-import Table from './Table';
+import Table from '@shared/utils/Table';
 import Link from 'next/link';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { IoIosPersonAdd } from 'react-icons/io';

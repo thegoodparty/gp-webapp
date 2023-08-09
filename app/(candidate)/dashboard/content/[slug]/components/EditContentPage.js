@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ContentEditor from './ContentEditor';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { kebabToCamel } from '@shared/common/functions';
+import { kebabToCamel } from 'helpers/stringHelper';
 
 export default function EditContentPage(props) {
   const { slug, campaign } = props;
