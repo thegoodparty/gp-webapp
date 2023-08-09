@@ -27,7 +27,10 @@ export default function Modal({
   boxStyle = {},
 }) {
   return (
-    <MuiModal open={open} onClose={closeCallback} maxWidth="lg">
+    // maxWidth="lg"
+    // Note: maxWidth is not a prop on the MuiModal component
+    // only on the Dialog component
+    <MuiModal open={open} onClose={closeCallback}>
       <div className="bg-blue-400">
         <Box sx={style} style={boxStyle}>
           <div

@@ -9,7 +9,7 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import Actions from './Actions';
 import WarningButton from '@shared/buttons/WarningButton';
 import { MdVisibilityOff } from 'react-icons/md';
-import Table from 'app/admin/candidates/components/Table';
+import Table from '@shared/utils/Table';
 
 export default function AdminAllCandidatesPage(props) {
   const { candidates } = props;

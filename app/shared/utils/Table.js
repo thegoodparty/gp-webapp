@@ -2,12 +2,14 @@
 import {
   useTable,
   useSortBy,
+  usePagination,
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
-  usePagination,
 } from 'react-table';
 import styles from './Table.module.scss';
+import { FaArrowUp } from 'react-icons/fa';
+import { FaArrowDown } from 'react-icons/fa';
 import { matchSorter } from 'match-sorter';
 import { useMemo } from 'react';
 
@@ -21,7 +23,6 @@ function GlobalFilter({
   const onChange = useAsyncDebounce((value) => {
     setGlobalFilter(value || undefined);
   }, 200);
-
   return (
     <span>
       Search:{' '}
@@ -40,13 +41,11 @@ function GlobalFilter({
     </span>
   );
 }
-
 // Define a default UI for filtering
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
 }) {
   const count = preFilteredRows.length;
-
   return (
     <input
       value={filterValue || ''}
@@ -57,19 +56,17 @@ function DefaultColumnFilter({
     />
   );
 }
-
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 }
-
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
-export default function Table({ columns, data }) {
-  const filterTypes = useMemo(
+export default function Table({ columns, data, filterColumns = true }) {
+  let filterTypes = useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
-      fuzzyText: fuzzyTextFilterFn,
+      fuzzyText: filterColumns ? fuzzyTextFilterFn : undefined,
       // Or, override the default text filter to use
       // "startWith"
       text: (rows, id, filterValue) => {
@@ -85,17 +82,16 @@ export default function Table({ columns, data }) {
     }),
     [],
   );
-
-  const defaultColumn = useMemo(
+  let defaultColumn = useMemo(
     () => ({
       // Let's set up our default Filter UI
-      Filter: DefaultColumnFilter,
+      Filter: filterColumns ? DefaultColumnFilter : undefined,
     }),
     [],
   );
 
   // Use the state and functions returned from useTable to build your UI
-  const {
+  let {
     getTableProps,
     getTableBodyProps,
     headerGroups,
@@ -115,9 +111,9 @@ export default function Table({ columns, data }) {
     {
       columns,
       data,
-      defaultColumn, // Be sure to pass the defaultColumn option
-      filterTypes,
       initialState: { pageIndex: 0 },
+      defaultColumn,
+      filterTypes,
     },
     useFilters,
     useGlobalFilter,
@@ -128,32 +124,39 @@ export default function Table({ columns, data }) {
   // Render the UI for your table
   return (
     <div className={styles.wrapper}>
-      <table {...getTableProps()}>
+      <table
+        {...getTableProps()}
+        className="font-sfpro text-lg text-indigo-800 font-normal"
+      >
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, i) => (
                 <th
                   key={`${index}_${i}`}
+                  // className="flex flex-row w-full"
                   {...column.getHeaderProps(
                     column.getSortByToggleProps({
                       className: column.collapse ? 'collapseCell' : '',
                     }),
                   )}
                 >
-                  {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
-                  {/* Render the columns filter UI */}
-                  <div className="font-normal">
-                    {column.canFilter ? column.render('Filter') : null}
+                  <div className="flex flex-row items-center pl-10">
+                    {column.render('Header')}
+                    {/* Add a sort direction indicator */}
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
+                      ) : (
+                        <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
+                      )
+                    ) : (
+                      ''
+                    )}
                   </div>
+                  {column.canFilter && filterColumns
+                    ? column.render('Filter')
+                    : null}
                 </th>
               ))}
             </tr>
@@ -165,7 +168,7 @@ export default function Table({ columns, data }) {
             return (
               <tr
                 {...row.getRowProps()}
-                className={i % 2 !== 0 && styles.odd}
+                // className={i % 2 !== 0 && styles.odd}
                 key={`tr_${i}`}
               >
                 {row.cells.map((cell, j) => {

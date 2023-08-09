@@ -1,5 +1,5 @@
 .wrapper {
-  padding: 1rem;
+  padding: 1rem 0 100px;
   display: block;
   max-width: 100%;
 
@@ -14,15 +14,26 @@
     max-width: 100%;
     overflow-x: scroll;
     overflow-y: hidden;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #bbcbde;
   }
 
   :global(table) {
     /* Make sure the inner table is always as wide as needed */
     width: 100%;
     border-spacing: 0;
+    font-size: 16px;
 
     :global(tr) {
+      &:first-child {
+        :global(th:first-child) {
+          border-radius: 8px 0 0 0; /* Rounded top-left corner */
+        }
+
+        :global(th:last-child) {
+          border-radius: 0 8px 0 0; /* Rounded top-right corner */
+        }
+      }
+
       :last-child {
         :global(td) {
           border-bottom: 0;
@@ -31,17 +42,21 @@
     }
 
     :global(th) {
-      background-color: #eee;
-      border-right: solid 1px #ddd;
-      font-size: 1.1rem;
-      font-weight: 900;
+      background-color: #e0e6ec;
+      font-size: 16px;
+      font-weight: 400;
+      height: 56px;
+    }
+
+    :global(tr) {
+      height: 56px;
     }
 
     :global(th),
     :global(td) {
       margin: 0;
       padding: 0.5rem;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #bbcbde;
 
       /* The secret sauce */
       /* Each cell should grow equally */
@@ -65,6 +80,6 @@
   }
 }
 
-.odd {
-  background-color: #f9f9f9;
-}
+// .odd {
+//   background-color: #f9f9f9;
+// }
