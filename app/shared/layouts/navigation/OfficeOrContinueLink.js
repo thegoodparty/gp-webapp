@@ -12,7 +12,7 @@ export default function OfficeOrContinueLink({
     <>
       {!status ? (
         <Link
-          href="run-for-office"
+          href="/run-for-office"
           className="hidden lg:block font-medium mr-2"
           id="nav-run-for office"
           onClick={closeAll}
