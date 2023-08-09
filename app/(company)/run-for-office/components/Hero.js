@@ -16,6 +16,7 @@ export default function Hero({ demoCallback }) {
             height="90"
             className="ml-12"
             alt=""
+            priority
           />
 
           <Image
@@ -24,6 +25,7 @@ export default function Hero({ demoCallback }) {
             height="120"
             className="mt-5"
             alt=""
+            priority
           />
         </div>
       </div>
