@@ -14,6 +14,7 @@ export default function LandingPageHero({ children, wideBg, ...props }) {
           className="object-contain object-right-top"
           alt=""
           priority
+          quality={50}
         />
       </div>
       <MaxWidth>
