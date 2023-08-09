@@ -476,6 +476,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    update: {
+      url: `${base}notification`,
+      method: 'PUT',
+      withAuth: true,
+    },
   },
 };
 
