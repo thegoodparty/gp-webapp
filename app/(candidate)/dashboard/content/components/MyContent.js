@@ -84,8 +84,6 @@ export default function MyContent({ campaign, prompts }) {
     });
   });
 
-  console.log('inputData', inputData);
-
   const data = useMemo(() => inputData);
 
   const columns = useMemo(() => [
@@ -208,8 +206,6 @@ export default function MyContent({ campaign, prompts }) {
       // setLoading(false);
     }
   };
-
-  console.log('whoa nelly', new Date().valueOf());
 
   return (
     <div>
