@@ -203,7 +203,7 @@ export default function Table({ columns, data, filterColumns = true }) {
         >
           {'<'}
         </button>
-        <div className="px-3 flex items-center justify-center">
+        <div className="px-3 flex items-center justify-center hidden md:block">
           <span>
             Page{' '}
             <strong>
