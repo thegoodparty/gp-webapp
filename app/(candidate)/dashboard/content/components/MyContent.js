@@ -17,7 +17,7 @@ import { useState, useEffect } from 'react';
 import Table from '@shared/utils/Table';
 import Actions from './Actions';
 import { useMemo } from 'react';
-import { dateUsHelper } from 'helpers/dateHelper';
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
@@ -78,13 +78,11 @@ export default function MyContent({ campaign, prompts }) {
     const section = sections[key];
     inputData.push({
       name: section.name,
-      updatedAt: section.updatedAt,
+      updatedAt: new Date(section.updatedAt),
       slug: camelToKebab(key),
       documentKey: key,
     });
   });
-
-  console.log('inputData', inputData);
 
   const data = useMemo(() => inputData);
 
@@ -113,7 +111,10 @@ export default function MyContent({ campaign, prompts }) {
       Cell: ({ row }) => {
         return (
           <div className="pl-[40px]">
-            {dateUsHelper(row.original.updatedAt)}
+            {row.original.updatedAt
+              ? dateWithTime(row.original.updatedAt)
+              : undefined}
+            ;
           </div>
         );
       },
