@@ -40,6 +40,7 @@ export default function RenameAction({
   setShowRename,
   setDocumentName,
   tableVersion,
+  documentName = '',
 }) {
   // const [showRename, setShowRename] = useState(false);
   const [newName, setNewName] = useState('');
@@ -88,6 +89,8 @@ export default function RenameAction({
             required
             variant="outlined"
             placeholder="Enter document name"
+            maxLength={50}
+            defaultValue={documentName ? documentName : ''}
             fullWidth
             onChange={(e) => {
               setNewName(e.target.value);
@@ -107,7 +110,11 @@ export default function RenameAction({
                 handleRename(documentKey, newName);
               }}
             >
-              <PrimaryButton>Save</PrimaryButton>
+              <PrimaryButton
+                disabled={newName.length === 0 || newName.length >= 50}
+              >
+                Save
+              </PrimaryButton>
             </div>
           </div>
         </div>
