@@ -83,6 +83,7 @@ export default function BustCacheButton({ name, description, paths }) {
         title="Bust Cache?"
         description={`Are you sure you want to: ${description} ?`}
         handleProceed={handleBustCache}
+        redButton={false}
       />
 
       <Modal

@@ -102,6 +102,7 @@ export default function FollowButton({ candidate, color, textColor }) {
         ariaLabel={'Unfollow?'}
         description={'Are you sure you want to unfollow this candidate?'}
         handleProceed={handleDelete}
+        redButton={false}
       />
     </>
   );
