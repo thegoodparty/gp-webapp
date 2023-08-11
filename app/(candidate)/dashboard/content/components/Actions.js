@@ -12,7 +12,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Actions(props) {
-  let { slug, tableVersion, setDocumentName, documentKey, updatedAt } = props;
+  let { name, slug, tableVersion, setDocumentName, documentKey, updatedAt } =
+    props;
+
+  console.log('name', name);
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRename, setShowRename] = useState(false);
@@ -140,6 +143,7 @@ export default function Actions(props) {
         setShowRename={setShowRename}
         setDocumentName={setDocumentName}
         tableVersion={tableVersion}
+        documentName={name}
       />
 
       {/* <DuplicateAction

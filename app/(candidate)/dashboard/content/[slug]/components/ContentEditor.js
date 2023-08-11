@@ -182,6 +182,7 @@ export default function ContentEditor({
             slug={key}
             setDocumentName={setDocumentName}
             documentKey={key}
+            name={documentName}
           />
         </div>
       </div>
