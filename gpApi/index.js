@@ -470,6 +470,18 @@ const gpApi = {
     url: `${base}log-error`,
     method: 'POST',
   },
+  notification: {
+    list: {
+      url: `${base}notifications`,
+      method: 'GET',
+      withAuth: true,
+    },
+    update: {
+      url: `${base}notification`,
+      method: 'PUT',
+      withAuth: true,
+    },
+  },
 };
 
 export default gpApi;

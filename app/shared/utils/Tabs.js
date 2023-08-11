@@ -14,6 +14,8 @@ export default function Tabs({
   centered = false,
   // controlledMode
   activeTab = false,
+  color = '#000',
+  size = 'medium',
   changeCallback = () => {},
 }) {
   const [value, setValue] = useState(0);
@@ -47,7 +49,7 @@ export default function Tabs({
           variant={variant}
           centered={centered}
           sx={{
-            '.MuiTabs-indicator': { backgroundColor: '#000' },
+            '.MuiTabs-indicator': { backgroundColor: color },
           }}
         >
           {tabLabels.map((label, index) => (
@@ -57,11 +59,9 @@ export default function Tabs({
                 '&.MuiButtonBase-root': { padding: 0 },
               }}
               label={
-                <SecondaryButton variant="text" size="medium">
+                <SecondaryButton variant="text" size={size}>
                   <span
-                    className={
-                      isSelected(index) ? 'text-primary' : 'text-gray-700'
-                    }
+                    style={isSelected(index) ? { color } : { color: '#ADB6C8' }}
                   >
                     {label}
                   </span>

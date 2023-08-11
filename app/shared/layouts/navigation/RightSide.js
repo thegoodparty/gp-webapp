@@ -9,6 +9,7 @@ import LearnMore from './LearnMore';
 import OfficeOrContinueLink from './OfficeOrContinueLink';
 import RegisterOrProfile from './RegisterOrProfile';
 import TopDashboardMenu from './TopDashboardMenu';
+import NotificationsDropdown from './notifications/NotificationsDropdown';
 
 export async function fetchCampaignStatus() {
   try {
@@ -24,6 +25,7 @@ export default function RightSideClient() {
   const [learnMoreOpen, setLearnMoreOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [campaignStatus, setCampaignStatus] = useState(false);
 
   useEffect(() => {
@@ -46,6 +48,8 @@ export default function RightSideClient() {
     setAccountOpen(false);
     setLearnMoreOpen(false);
     setDashboardOpen(false);
+    setNotificationsOpen(false);
+    document.body.style.overflow = 'visible';
   };
 
   const toggleLearnMore = () => {
@@ -61,12 +65,26 @@ export default function RightSideClient() {
     closeAll();
     setDashboardOpen(!dashboardOpen);
   };
+
+  const toggleNotifications = () => {
+    closeAll();
+    if (!notificationsOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    setNotificationsOpen(!notificationsOpen);
+  };
   return (
     <>
       <LearnMore
         open={learnMoreOpen}
         toggleCallback={toggleLearnMore}
         campaignStatus={campaignStatus}
+        closeAll={closeAll}
+      />
+      <NotificationsDropdown
+        open={notificationsOpen}
+        toggleCallback={toggleNotifications}
+        user={user}
         closeAll={closeAll}
       />
 

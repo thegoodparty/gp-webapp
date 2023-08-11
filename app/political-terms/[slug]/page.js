@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
   let meta;
   if (slug.length === 1) {
     meta = pageMetaData({
-      title: `Political Terms | GOOD PARTY`,
+      title: `Political Terms - ${slug.toUpperCase} | GOOD PARTY`,
       description:
         'Political terms and definitions, elevate your political game with our easy to use political database at Good Party',
       slug: `/political-terms/${slug}`,

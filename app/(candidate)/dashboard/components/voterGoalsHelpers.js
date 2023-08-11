@@ -1,5 +1,5 @@
-export function calculateContactGoals(total, weeksUntil) {
-  if (!total || !weeksUntil) {
+export function calculateContactGoals(total) {
+  if (!total) {
     return false;
   }
   const totals = {
