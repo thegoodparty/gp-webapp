@@ -11,7 +11,7 @@ import styles from './Table.module.scss';
 import { FaArrowUp } from 'react-icons/fa';
 import { FaArrowDown } from 'react-icons/fa';
 import { matchSorter } from 'match-sorter';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -62,7 +62,12 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
-export default function Table({ columns, data, filterColumns = true }) {
+export default function Table({
+  columns,
+  data,
+  filterColumns = true,
+  pagination = true,
+}) {
   let filterTypes = useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -121,12 +126,18 @@ export default function Table({ columns, data, filterColumns = true }) {
     usePagination,
   );
 
+  useEffect(() => {
+    if (pagination === false) {
+      setPageSize(10000);
+    }
+  }, [setPageSize]);
+
   // Render the UI for your table
   return (
     <div className={styles.wrapper}>
       <table
         {...getTableProps()}
-        className="font-sfpro text-lg text-indigo-800 font-normal"
+        className="font-sfpro text-lg text-indigo-800 font-normal shrink-0"
       >
         <thead>
           {headerGroups.map((headerGroup, index) => (
@@ -188,69 +199,71 @@ export default function Table({ columns, data, filterColumns = true }) {
           })}
         </tbody>
       </table>
-      <div className="flex items-center justify-center my-4">
-        <button
-          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-          onClick={() => gotoPage(0)}
-          disabled={!canPreviousPage}
-        >
-          {'<<'}
-        </button>{' '}
-        <button
-          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-          onClick={() => previousPage()}
-          disabled={!canPreviousPage}
-        >
-          {'<'}
-        </button>
-        <div className="px-3 flex items-center justify-center hidden md:block">
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-          <span>
-            | Go to page:{' '}
-            <input
-              className="w-8 border p-1"
-              type="number"
-              defaultValue={pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                gotoPage(page);
-              }}
-            />
-          </span>
+      {pagination && (
+        <div className="flex items-center justify-center my-4">
+          <button
+            className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+            onClick={() => gotoPage(0)}
+            disabled={!canPreviousPage}
+          >
+            {'<<'}
+          </button>{' '}
+          <button
+            className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+            onClick={() => previousPage()}
+            disabled={!canPreviousPage}
+          >
+            {'<'}
+          </button>
+          <div className="px-3 flex items-center justify-center hidden md:block">
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+            <span>
+              | Go to page:{' '}
+              <input
+                className="w-8 border p-1"
+                type="number"
+                defaultValue={pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                }}
+              />
+            </span>
+          </div>
+          <select
+            className="border px-2 py-1 mx-1"
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+          <button
+            className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+            onClick={() => nextPage()}
+            disabled={!canNextPage}
+          >
+            {'>'}
+          </button>{' '}
+          <button
+            className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
+            onClick={() => gotoPage(pageCount - 1)}
+            disabled={!canNextPage}
+          >
+            {'>>'}
+          </button>{' '}
         </div>
-        <select
-          className="border px-2 py-1 mx-1"
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-        <button
-          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-          onClick={() => nextPage()}
-          disabled={!canNextPage}
-        >
-          {'>'}
-        </button>{' '}
-        <button
-          className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-        >
-          {'>>'}
-        </button>{' '}
-      </div>
+      )}
     </div>
   );
 }

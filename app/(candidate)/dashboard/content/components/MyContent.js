@@ -97,7 +97,7 @@ export default function MyContent({ campaign, prompts }) {
             as={`/dashboard/content/${row.original.slug}`}
           >
             <div className="flex flex-row items-center font-semibold">
-              <IoDocumentText className="ml-3" />
+              <IoDocumentText className="ml-3 text-md shrink-0" />
               <div className="ml-3">{row.original.name}</div>
             </div>
           </Link>
@@ -114,7 +114,6 @@ export default function MyContent({ campaign, prompts }) {
             {row.original.updatedAt
               ? dateWithTime(row.original.updatedAt)
               : undefined}
-            ;
           </div>
         );
       },
@@ -213,7 +212,12 @@ export default function MyContent({ campaign, prompts }) {
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
 
-      <Table columns={columns} data={data} filterColumns={false} />
+      <Table
+        columns={columns}
+        data={data}
+        filterColumns={false}
+        pagination={false}
+      />
 
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="lg:min-w-[740px]">
