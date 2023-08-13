@@ -16,6 +16,11 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { passwordRegex } from 'helpers/userHelper';
 import { setUserCookie } from 'helpers/cookieHelper';
+import { TfiLock } from 'react-icons/tfi';
+import H4 from '@shared/typography/H4';
+import Body2 from '@shared/typography/Body2';
+import Caption from '@shared/typography/Caption';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function changePasswordCallback(password, oldPassword) {
   try {
@@ -108,17 +113,18 @@ function PasswordSection() {
   };
 
   return (
-    <section>
-      <PortalPanel color="#CA2CCD">
+    <section className="py-4 border-b border-slate-300 flex">
+      <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
+        <TfiLock />
+      </div>
+      <div className="flex-1">
         <form noValidate onSubmit={(e) => e.preventDefault()}>
-          <h3
-            className="text-[22px] tracking-wide font-black mb-16"
-            data-cy="settings-title"
-          >
+          <H4>Password</H4>
+          <Body2 className="text-indigo-200 mb-6">
             {user?.hasPassword ? 'Change' : 'Create'} your password
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
+          </Body2>
+          <div className="grid grid-cols-12 gap-3">
+            <div className="col-span-12 lg:col-span-6">
               {user?.hasPassword && (
                 <div className="mb-4">
                   <TextField
@@ -133,41 +139,43 @@ function PasswordSection() {
                   />
                 </div>
               )}
-              <div className="mb-4">
-                <TextField
-                  label="Password"
-                  fullWidth
-                  variant="outlined"
-                  value={state.password}
-                  type="password"
-                  onChange={(e) => {
-                    onChangeField('password', e.target.value);
-                  }}
-                />
-              </div>
-              <small>
+            </div>
+            <div className="col-span-12 lg:col-span-6 hidden lg:block">
+              &nbsp;
+            </div>
+            <div className="col-span-12 lg:col-span-6">
+              <TextField
+                label="Password"
+                fullWidth
+                variant="outlined"
+                value={state.password}
+                type="password"
+                onChange={(e) => {
+                  onChangeField('password', e.target.value);
+                }}
+              />
+            </div>
+            <div className="col-span-12 lg:col-span-8 mt-4">
+              <Caption>
                 For security, passwords must have at least 1 capital letter, 1
                 lowercase, 1 special character or number, and 8 characters
                 minimum
-              </small>
-              <br />
-
-              <div className="row mt-20">
-                <BlackButtonClient
+              </Caption>
+            </div>
+            <div className="col-span-12 lg:col-span-4 flex justify-end items-end">
+              <div onClick={handleSavePassword}>
+                <PrimaryButton
                   disabled={!canSave()}
-                  onClick={handleSavePassword}
                   type="submit"
+                  size="medium"
                 >
-                  <div className="py-0 px-6 font-black">Save</div>
-                </BlackButtonClient>
-                <div onClick={reset} className="ml-5 underline cursor-pointer">
-                  cancel
-                </div>
+                  Save
+                </PrimaryButton>
               </div>
             </div>
           </div>
         </form>
-      </PortalPanel>
+      </div>
     </section>
   );
 }

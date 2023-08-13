@@ -481,6 +481,11 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
+    updatePreferences: {
+      url: `${base}notification-preferences`,
+      method: 'PUT',
+      withAuth: true,
+    },
   },
 };
 

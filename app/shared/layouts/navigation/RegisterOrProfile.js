@@ -130,7 +130,7 @@ export default function RegisterOrProfile({
                   </div>
                 )}
                 <Link
-                  href="/profile/settings"
+                  href="/profile"
                   id="nav-settings"
                   className="no-underline font-normal"
                 >
