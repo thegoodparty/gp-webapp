@@ -16,10 +16,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          app_id: 93163296
-          app_code: 42181812
-          api_request: https://app.endtest.io/api.php?action=runWeb&appId=93163296&appCode=42181812&suite=1091891&platform=windows&os=windows10&browser=chrome&browserVersion=latest&resolution=1280x1024&geolocation=sanfrancisco&cases=all&notes=
-          number_of_loops: 1
+          app_id: '93163296'
+          app_code: '42181812'
+          api_request: 'https://app.endtest.io/api.php?action=runWeb&appId=93163296&appCode=42181812&suite=1091891&platform=windows&os=windows10&browser=chrome&browserVersion=latest&resolution=1280x1024&geolocation=sanfrancisco&cases=all&notes='
+          number_of_loops: '1'
 
       - name: Use the outputs from test execution in a different step
         run: |
