@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Functional test deployment
         id: endtest_functional_tests
-        uses: endtest-technologies/github-run-tests-action@v1.5
+        uses: endtest-technologies/github-run-tests-action@v1.7
         with:
-          app_id: '93163296'
-          app_code: '42181812'
+          app_id: 93163296
+          app_code: 42181812
 
       - name: Use the outputs from test execution in a different step
         run: |
