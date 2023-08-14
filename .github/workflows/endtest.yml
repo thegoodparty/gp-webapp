@@ -10,7 +10,7 @@ jobs:
     name: Endtest Functional Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@qa
 
       - name: Functional test deployment
         id: endtest_functional_tests
