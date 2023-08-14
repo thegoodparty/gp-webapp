@@ -1,0 +1,35 @@
+name: endtest
+on:
+  push:
+    branches: [qa]
+  pull_request:
+    branches: [qa]
+
+jobs:
+  test:
+    name: Endtest Functional Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Functional test deployment
+        id: endtest_functional_tests
+        uses: endtest-technologies/github-run-tests-action@v1.5
+        with:
+          app_id: 93163296
+          app_code: 42181812
+
+      - name: Use the outputs from test execution in a different step
+        run: |
+          echo ${{ steps.endtest_functional_tests.outputs.test_suite_name }}
+          echo ${{ steps.endtest_functional_tests.outputs.configuration }}
+          echo ${{ steps.endtest_functional_tests.outputs.test_cases }}
+          echo ${{ steps.endtest_functional_tests.outputs.passed }}
+          echo ${{ steps.endtest_functional_tests.outputs.failed }}
+          echo ${{ steps.endtest_functional_tests.outputs.errors }}
+          echo ${{ steps.endtest_functional_tests.outputs.start_time }}
+          echo ${{ steps.endtest_functional_tests.outputs.end_time }}
+          echo ${{ steps.endtest_functional_tests.outputs.detailed_logs }}
+          echo ${{ steps.endtest_functional_tests.outputs.screenshots_and_video }}
+          echo ${{ steps.endtest_functional_tests.outputs.hash }}
+          echo ${{ steps.endtest_functional_tests.outputs.results }}
