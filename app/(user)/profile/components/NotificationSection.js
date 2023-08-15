@@ -47,12 +47,6 @@ const fields = [
 
 export default function NotificationSection() {
   const user = getUserCookie(true);
-  // let updatedState = {};
-
-  // if (user && user.metaData && user.metaData !== '') {
-  //   updatedState = JSON.parse(user.metaData);
-  // }
-  // console.log('intiial updatedState', updatedState);
   const [state, setState] = useState({});
   const [initialUpdate, setInitialUpdate] = useState(false);
 
@@ -61,7 +55,6 @@ export default function NotificationSection() {
       const meta = user.metaData !== '' ? JSON.parse(user.metaData) : {};
       setState(meta);
       setInitialUpdate(true);
-      console.log('useEffect', meta);
     }
   }, [user]);
 
@@ -101,11 +94,8 @@ export default function NotificationSection() {
                 onChange={(e) => {
                   handleChange(field.key, e);
                 }}
-                checked={
-                  typeof state[field.key] === 'undefined' // default is true
-                    ? true
-                    : state[field.key]
-                }
+                //
+                checked={state[field.key]}
                 sx={{
                   '&.MuiSwitch-root .MuiSwitch-switchBase': {
                     color: '#F54966',
