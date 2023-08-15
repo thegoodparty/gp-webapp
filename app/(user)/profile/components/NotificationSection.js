@@ -47,26 +47,23 @@ const fields = [
 
 export default function NotificationSection() {
   const user = getUserCookie(true);
-  let updatedState = {};
+  // let updatedState = {};
 
-  if (user && user.metaData && user.metaData !== '') {
-    updatedState = JSON.parse(user.metaData);
-  }
-  console.log('intiial updatedState', updatedState);
-  const [state, setState] = useState(updatedState);
+  // if (user && user.metaData && user.metaData !== '') {
+  //   updatedState = JSON.parse(user.metaData);
+  // }
+  // console.log('intiial updatedState', updatedState);
+  const [state, setState] = useState({});
+  const [initialUpdate, setInitialUpdate] = useState(false);
 
-  // useEffect(() => {
-  //   if (
-  //     typeof state.notificationEmails !== 'undefined' &&
-  //     user &&
-  //     user.metaData &&
-  //     user.metaData !== ''
-  //   ) {
-  //     const meta = JSON.parse(user.metaData);
-  //     setState(meta);
-  //     console.log('useEffect', meta);
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user && !initialUpdate) {
+      const meta = user.metaData !== '' ? JSON.parse(user.metaData) : {};
+      setState(meta);
+      setInitialUpdate(true);
+      console.log('useEffect', meta);
+    }
+  }, [user]);
 
   const handleChange = (key, event) => {
     const updatedState = {
@@ -74,6 +71,7 @@ export default function NotificationSection() {
       [key]: event.target.checked,
     };
     setState(updatedState);
+    setInitialUpdate(false);
     updateUserCallback(updatedState);
   };
 
