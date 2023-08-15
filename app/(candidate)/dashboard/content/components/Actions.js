@@ -15,7 +15,7 @@ export default function Actions(props) {
   let { name, slug, tableVersion, setDocumentName, documentKey, updatedAt } =
     props;
 
-  console.log('name', name);
+  console.log('props', props);
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRename, setShowRename] = useState(false);
@@ -30,12 +30,14 @@ export default function Actions(props) {
     <>
       <div className="flex justify-center relative">
         {tableVersion === true && updatedAt !== undefined ? (
-          <BsThreeDotsVertical
-            onClick={() => {
-              setShowMenu(!showMenu);
-            }}
-            className=" text-xl cursor-pointer"
-          />
+          <div>
+            <BsThreeDots
+              onClick={() => {
+                setShowMenu(!showMenu);
+              }}
+              className="text-xl cursor-pointer mr-10"
+            />
+          </div>
         ) : // otherwise if tableVersion === true and updatedAt === undefined, then it's a new document
         tableVersion === true && updatedAt === undefined ? (
           <div
