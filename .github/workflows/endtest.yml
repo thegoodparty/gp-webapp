@@ -16,9 +16,9 @@ jobs:
           BRANCH=${GITHUB_REF#refs/heads/}
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
-      - name: Print GITHUB_REF Directly
-        run: echo "Direct GITHUB_REF: $GITHUB_REF"
-        
+      - name: Print GITHUB_BRANCH
+        run: echo "GITHUB_REF is $GITHUB_REF"
+
       - name: Print BRANCH
         run: echo "Current branch is $BRANCH"
 
