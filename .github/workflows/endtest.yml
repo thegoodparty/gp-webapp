@@ -16,6 +16,9 @@ jobs:
           BRANCH=${GITHUB_REF#refs/heads/}
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
+      - name: Print BRANCH
+        run: echo "Current branch is $BRANCH"
+
       - name: Set env NEED
         run: |
           if [[ $BRANCH == 'master' ]]; then
@@ -25,6 +28,9 @@ jobs:
           else
               echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
           fi
+
+      - name: Print BASE_URL
+        run: echo "Current BASE_URL is $BASE_URL"
 
       - name: Functional test deployment
         id: endtest_functional_tests
