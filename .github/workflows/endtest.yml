@@ -4,7 +4,10 @@ on:
 
 jobs:
   test:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    if: >
+      github.event_name == 'deployment_status' &&
+      github.event.deployment_status.state == 'success' &&
+      ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
     name: Endtest Functional Test
     runs-on: ubuntu-latest
     steps:
