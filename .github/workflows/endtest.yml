@@ -15,7 +15,7 @@ jobs:
         run: |
           if [[ $BRANCH == 'master' ]]; then
               echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
-          else if [[ $BRANCH == 'qa' ]]; then
+          elif [[ $BRANCH == 'qa' ]]; then
               echo "BASE_URL=https://qa.goodparty.org" >> "$GITHUB_ENV"
           else
               echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
