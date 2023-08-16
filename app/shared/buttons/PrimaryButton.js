@@ -26,6 +26,7 @@ export default function PrimaryButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  type = 'button',
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -100,6 +101,7 @@ export default function PrimaryButton({
       className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
+      type={type}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

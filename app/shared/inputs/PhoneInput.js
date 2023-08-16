@@ -79,7 +79,7 @@ function PhoneInput({
     <TextField
       className={styles.input}
       value={displayValue}
-      label="(555) 555-5555"
+      label="Phone"
       size="medium"
       fullWidth
       name="phone"

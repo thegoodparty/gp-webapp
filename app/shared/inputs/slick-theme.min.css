@@ -25,6 +25,7 @@
     url(fonts/slick.woff) format('woff'),
     url(fonts/slick.ttf) format('truetype'),
     url(fonts/slick.svg#slick) format('svg');
+  font-display: swap;
 }
 .slick-next,
 .slick-prev {

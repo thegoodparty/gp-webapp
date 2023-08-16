@@ -5,22 +5,22 @@
  *
  */
 
-import React, { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
-import PortalPanel from '@shared/layouts/PortalPanel';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PhoneInput from '@shared/inputs/PhoneInput';
-import styles from './PersonalSection.module.scss';
 import { setUserCookie } from 'helpers/cookieHelper';
+import H4 from '@shared/typography/H4';
+import Body2 from '@shared/typography/Body2';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { FiSettings } from 'react-icons/fi';
 
 async function updateUserCallback(updatedFields, userState) {
   try {
-    //   yield put(snackbarActions.showSnakbarAction('Saving...'));
     const api = gpApi.user.updateUser;
     const payload = {
       ...updatedFields,
@@ -30,12 +30,8 @@ async function updateUserCallback(updatedFields, userState) {
     const { user } = response;
     userState.set(() => user);
     setUserCookie(user);
-    //   yield put(snackbarActions.showSnakbarAction('Your Profile is updated'));
   } catch (error) {
     console.log('Error updating user', error);
-    //   yield put(
-    //     snackbarActions.showSnakbarAction('Error updating your profile', 'error'),
-    //   );
   }
 }
 export const USER_SETTING_FIELDS = [
@@ -73,7 +69,6 @@ export const USER_SETTING_FIELDS = [
     initialValue: '',
     maxLength: 16,
   },
-  // { key: 'pronouns', label: 'Preferred Pronouns', initialValue: '' },
 ];
 
 function PersonalSection() {
@@ -84,7 +79,6 @@ function PersonalSection() {
     USER_SETTING_FIELDS.forEach((field) => {
       updatedState[field.key] = user[field.key] || field.initialValue;
     });
-    // setState(updatedState);
   }
   const [state, setState] = useState(updatedState);
   const [isPhoneValid, setIsPhoneValid] = useState(true);
@@ -142,61 +136,60 @@ function PersonalSection() {
   };
 
   return (
-    <section className={styles.section}>
-      <PortalPanel color="#EE6C3B">
-        <h3
-          className="text-[22px] tracking-wide font-black mb-16"
-          data-cy="settings-title"
-        >
-          Settings
-        </h3>
+    <section className="py-4 border-b border-slate-300 flex">
+      <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
+        <FiSettings />
+      </div>
+      <div className="flex-1">
+        <H4>General</H4>
+        <Body2 className="text-indigo-200 mb-6">
+          Update your general information here
+        </Body2>
         <form noValidate onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              {USER_SETTING_FIELDS.map((field) => (
-                <Fragment key={field.key}>
-                  {field.type === 'phone' ? (
-                    <div className="mb-4">
-                      <PhoneInput
-                        value={state[field.key]}
-                        onChangeCallback={(phone, isValid) => {
-                          onChangeField(field.key, phone);
-                          setIsPhoneValid(isValid);
-                        }}
-                        hideIcon
-                      />
-                    </div>
-                  ) : (
-                    <TextField
-                      key={field.label}
+          <div className="grid grid-cols-12 gap-3">
+            {USER_SETTING_FIELDS.map((field) => (
+              <div key={field.key} className="col-span-12 lg:col-span-6">
+                {field.type === 'phone' ? (
+                  <div>
+                    <PhoneInput
                       value={state[field.key]}
-                      fullWidth
-                      variant="outlined"
-                      label={field.label}
-                      onChange={(e) => onChangeField(field.key, e.target.value)}
-                      required={field.required}
-                      style={{ marginBottom: '16px' }}
-                      InputLabelProps={{ shrink: true }}
+                      onChangeCallback={(phone, isValid) => {
+                        onChangeField(field.key, phone);
+                        setIsPhoneValid(isValid);
+                      }}
+                      hideIcon
+                      shrink
                     />
-                  )}
-                </Fragment>
-              ))}
-              <div className="row mt-20">
-                <BlackButtonClient
+                  </div>
+                ) : (
+                  <TextField
+                    key={field.label}
+                    value={state[field.key]}
+                    fullWidth
+                    variant="outlined"
+                    label={field.label}
+                    onChange={(e) => onChangeField(field.key, e.target.value)}
+                    required={field.required}
+                    style={{ marginBottom: '16px' }}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                )}
+              </div>
+            ))}
+            <div className="col-span-12 lg:col-span-6 flex justify-end items-end pb-4">
+              <div onClick={submit}>
+                <PrimaryButton
                   disabled={!canSave()}
                   type="submit"
-                  onClick={submit}
+                  size="medium"
                 >
-                  <div className="py-0 px-6  font-black">Save</div>
-                </BlackButtonClient>
-                <div onClick={cancel} className="ml-5 underline cursor-pointer">
-                  cancel
-                </div>
+                  Save
+                </PrimaryButton>
               </div>
             </div>
           </div>
         </form>
-      </PortalPanel>
+      </div>
     </section>
   );
 }

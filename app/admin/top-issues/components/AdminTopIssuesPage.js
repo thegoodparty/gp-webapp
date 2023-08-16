@@ -2,7 +2,7 @@
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import Tooltip from '@mui/material/Tooltip';
-import Table from 'app/admin/candidates/components/Table';
+import Table from '@shared/utils/Table';
 import { useMemo, useState } from 'react';
 import { formatToPhone } from 'helpers/numberHelper';
 import gpApi, { isProd } from 'gpApi';

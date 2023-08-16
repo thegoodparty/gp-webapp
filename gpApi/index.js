@@ -280,6 +280,16 @@ const gpApi = {
           method: 'PUT',
           withAuth: true,
         },
+        rename: {
+          url: `${base}campaign/onboarding/ai/rename`,
+          method: 'POST',
+          withAuth: true,
+        },
+        delete: {
+          url: `${base}campaign/onboarding/ai`,
+          method: 'DELETE',
+          withAuth: true,
+        },
       },
       planVersions: {
         url: `${base}campaign/onboarding/planVersion`,
@@ -478,6 +488,11 @@ const gpApi = {
     },
     update: {
       url: `${base}notification`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    updatePreferences: {
+      url: `${base}notification-preferences`,
       method: 'PUT',
       withAuth: true,
     },

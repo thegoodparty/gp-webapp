@@ -3,6 +3,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 async function launchCampaign(slug) {
   try {
@@ -19,9 +20,11 @@ async function launchCampaign(slug) {
 
 export default function ReviewBanner({ campaign }) {
   const router = useRouter();
+  const [launching, setLaunching] = useState(false);
 
   const { launchStatus } = campaign;
   const launch = async () => {
+    setLaunching(true);
     const { slug } = await launchCampaign(campaign.slug);
     if (slug) {
       router.push(`/candidate/${slug}`);
@@ -33,7 +36,9 @@ export default function ReviewBanner({ campaign }) {
         Admin Review mode
         {launchStatus !== 'launched' && (
           <div onClick={launch} className="mt-4">
-            <SecondaryButton size="medium">Approve</SecondaryButton>
+            <SecondaryButton size="medium" disabled={launching}>
+              Approve
+            </SecondaryButton>
           </div>
         )}
       </div>

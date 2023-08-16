@@ -5,6 +5,8 @@ import WarningIcon from '@mui/icons-material/Warning';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import BlackOutlinedButton from '@shared/buttons/BlackOutlinedButton';
 import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
+import ErrorButton from '@shared/buttons/ErrorButton';
+import H2 from '@shared/typography/H2';
 
 function AlertDialog({
   handleClose,
@@ -13,19 +15,23 @@ function AlertDialog({
   title,
   description,
   ariaLabel,
+  redButton = true,
 }) {
   return (
     <Dialog
       onClose={handleClose}
       aria-labelledby={title || ariaLabel}
       open={open}
+      PaperProps={{ sx: { borderRadius: '20px' } }}
     >
       <div className="p-8">
         <div
           className="text-3xl flex items-center font-black"
           id="alert-dialog-title"
         >
-          <WarningIcon /> &nbsp; {title}
+          <H2 className="pb-5 mb-5 border-b border-slate-500 text-center w-full">
+            {title}
+          </H2>
         </div>
         <div className="text-lg my-8 mx-0" id="alert-dialog-description">
           {description}
@@ -38,9 +44,18 @@ function AlertDialog({
           >
             <div className="py-0 px-6 text-sm font-black">Cancel</div>
           </BlackOutlinedButtonClient>
-          <BlackButtonClient onClick={handleProceed}>
-            <div className="py-0 px-6 text-sm font-black">Proceed</div>
-          </BlackButtonClient>
+
+          {redButton ? (
+            <div onClick={handleProceed}>
+              <ErrorButton>
+                <div className="py-0 px-6 text-sm font-black ">Proceed</div>
+              </ErrorButton>
+            </div>
+          ) : (
+            <BlackButtonClient onClick={handleProceed}>
+              <div className="py-0 px-6 text-sm font-black ">Proceed</div>
+            </BlackButtonClient>
+          )}
         </div>
       </div>
     </Dialog>

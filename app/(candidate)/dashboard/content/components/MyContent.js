@@ -8,18 +8,34 @@ import H6 from '@shared/typography/H6';
 import Modal from '@shared/utils/Modal';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
-import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
-import { camelToSentence } from 'helpers/stringHelper';
-import { useState } from 'react';
+import {
+  camelToSentence,
+  camelToKebab,
+  kebabToCamel,
+} from 'helpers/stringHelper';
+import { useState, useEffect } from 'react';
+import Table from '@shared/utils/Table';
+import Actions from './Actions';
+import { useMemo } from 'react';
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import Link from 'next/link';
+import { IoDocumentText } from 'react-icons/io5';
 
 const subSectionKey = 'aiContent';
+let aiCount = 0;
+let aiTotalCount = 0;
 
 export default function MyContent({ campaign, prompts }) {
+  const [section, setSection] = useState('');
   const [sections, setSections] = useState(campaign[subSectionKey] || {});
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState('');
   const versions = useVersions();
   const [updatedVersions, setUpdatedVersions] = useState(false);
+
+  let tableVersion = true;
 
   const updateVersionsCallback = async () => {
     const { versions } = await fetchCampaignVersions();
@@ -29,11 +45,13 @@ export default function MyContent({ campaign, prompts }) {
   const onSelectPrompt = () => {
     if (selected !== '') {
       const key = findKey();
+      setSection(key);
       setSections({
         ...sections,
         [key]: {
           key,
           title: camelToSentence(key),
+          name: camelToSentence(key),
           icon: '/images/dashboard/slogan-icon.svg',
         },
       });
@@ -55,29 +73,151 @@ export default function MyContent({ campaign, prompts }) {
     return `${selected}21`;
   };
 
-  const mappedSections = Object.keys(sections).map((key) => {
-    return {
-      key,
-      title: camelToSentence(key),
-      icon: '/images/dashboard/slogan-icon.svg',
-    };
+  let inputData = [];
+  Object.keys(sections).forEach((key) => {
+    const section = sections[key];
+    inputData.push({
+      name: section.name,
+      updatedAt: new Date(section.updatedAt),
+      slug: camelToKebab(key),
+      documentKey: key,
+    });
   });
+
+  const data = useMemo(() => inputData);
+
+  const columns = useMemo(() => [
+    {
+      Header: 'Name',
+      accessor: 'name',
+      Cell: ({ row }) => {
+        return (
+          <Link
+            href="/dashboard/content/[slug]"
+            as={`/dashboard/content/${row.original.slug}`}
+          >
+            <div className="flex flex-row items-center font-semibold">
+              <IoDocumentText className="ml-3 text-md shrink-0" />
+              <div className="ml-3">{row.original.name}</div>
+            </div>
+          </Link>
+        );
+      },
+    },
+    {
+      Header: 'Last Modified',
+      accessor: 'updatedAt',
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return (
+          <div className="pl-[40px]">
+            {row.original.updatedAt
+              ? dateWithTime(row.original.updatedAt)
+              : undefined}
+          </div>
+        );
+      },
+    },
+    {
+      Header: '',
+      collapse: true,
+      accessor: 'actions',
+      Cell: ({ row }) => {
+        const actionProps = {
+          slug: row.original?.slug ? row.original.slug : '',
+          name: row.original?.name ? row.original.name : '',
+          documentKey: row.original?.documentKey
+            ? row.original.documentKey
+            : '',
+          tableVersion,
+          updatedAt: row.original.updatedAt
+            ? row.original.updatedAt
+            : undefined,
+        };
+        return <Actions {...actionProps} />;
+      },
+    },
+  ]);
+
+  const campaignPlan = campaign[subSectionKey];
+  // const key = section.toLowerCase();
+  const key = section;
+
+  useEffect(() => {
+    if (section && section != '' && (!campaignPlan || !campaignPlan[section])) {
+      createInitialAI();
+    }
+  }, [campaignPlan, section]);
+
+  async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+    try {
+      const api = gpApi.campaign.onboarding.ai.create;
+      return await gpFetch(api, {
+        subSectionKey,
+        key,
+        regenerate,
+        chat,
+        editMode,
+      });
+    } catch (e) {
+      console.log('error', e);
+      return false;
+    }
+  }
+
+  const createInitialAI = async (regenerate, chat, editMode) => {
+    aiCount++;
+    aiTotalCount++;
+    if (aiTotalCount >= 100) {
+      //fail
+      setPlan(
+        'Failed to generate a campaign plan. Please contact us for help.',
+      );
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+
+    const { chatResponse, status } = await generateAI(
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    );
+    if (!chatResponse && status === 'processing') {
+      if (aiCount < 40) {
+        setTimeout(async () => {
+          await createInitialAI();
+        }, 5000);
+      } else {
+        //something went wrong, we are stuck in a loop. reCreate the response
+        console.log('regenerating');
+        aiCount = 0;
+        createInitialAI(true);
+      }
+    } else {
+      console.log('chatResponse', chatResponse);
+      aiCount = 0;
+      if (status === 'completed') {
+        window.location.href = '/dashboard/content';
+      }
+      // setLoading(false);
+    }
+  };
 
   return (
     <div>
       <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
-      {mappedSections.map((section) => (
-        <CampaignPlanSection
-          key={section.key}
-          section={section}
-          campaign={campaign}
-          versions={updatedVersions || versions}
-          updateVersionsCallback={updateVersionsCallback}
-          subSectionKey={subSectionKey}
-        />
-      ))}
+
+      <Table
+        columns={columns}
+        data={data}
+        filterColumns={false}
+        pagination={false}
+      />
 
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="lg:min-w-[740px]">

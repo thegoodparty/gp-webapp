@@ -1,4 +1,10 @@
-import { FaTiktok, FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
+import {
+  FaTiktok,
+  FaTwitter,
+  FaInstagram,
+  FaFacebook,
+  FaDiscord,
+} from 'react-icons/fa';
 
 export const FOOTER_COLUMNS = [
   {
@@ -57,5 +63,11 @@ export const SOCIAL_LINKS = [
     link: 'https://www.facebook.com/goodpartyorg',
     isExternal: true,
     icon: <FaFacebook />,
+  },
+  {
+    label: 'Discord',
+    link: 'https://join.goodparty.org/discord-signup',
+    isExternal: true,
+    icon: <FaDiscord />,
   },
 ];
