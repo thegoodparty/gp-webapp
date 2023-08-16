@@ -11,11 +11,11 @@ jobs:
       - name: Set variables
         id: setvars
         run: |
-          if [[ "${{github.base_ref}}" == "master"]]; then
+          if [[ "${{github.base_ref}}" == "master"]] then
             echo "::set-output name=base_url::https://goodparty.org"
           fi
 
-          if [[ "${{github.base_ref}}" == "qa"]]; then
+          if [[ "${{github.base_ref}}" == "qa"]] then
             echo "::set-output name=base_url::https://qa.goodparty.org"
           fi
 
