@@ -11,13 +11,11 @@ jobs:
       - name: Set variables
         id: setvars
         run: |
-          if [[ "${{github.base_ref}}" == "master"]] then
+          if: github.base_ref == 'master'
             echo "::set-output name=base_url::https://goodparty.org"
-          fi
 
-          if [[ "${{github.base_ref}}" == "qa"]] then
+          if: github.base_ref == 'qa'
             echo "::set-output name=base_url::https://qa.goodparty.org"
-          fi
 
       - name: Functional test deployment
         id: endtest_functional_tests
@@ -27,7 +25,7 @@ jobs:
         with:
           app_id: ${{ secrets.ENDTEST_APP_ID }}
           app_code: ${{ secrets.ENDTEST_APP_CODE }}
-          api_request: ${{ format('{0}&base_url={1}', secrets.ENDTEST_API_REQUEST, needs.test.outputs.base_url) }}
+          api_request: ${{ format('{0}&base_url={1}', secrets.ENDTEST_API_REQUEST, steps.setvars.outputs.base_url) }}
           number_of_loops: "1"
 
       - name: Use the outputs from test execution in a different step
