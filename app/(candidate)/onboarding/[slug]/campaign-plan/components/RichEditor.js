@@ -43,14 +43,22 @@ export default function RichEditor({
       value={content}
       config={config}
       tabIndex={1} // tabIndex of textarea
-      onBlur={(newContent) => {
+      onChange={(newContent) => {
+        // console.log(newContent);
         if (typeof newContent === 'string') {
           onBlur(newContent);
         } else {
-          // preferred to use only this option to update the content for performance reasons
           onBlur(newContent?.target?.innerHTML);
         }
       }}
+      // onBlur={(newContent) => {
+      //   if (typeof newContent === 'string') {
+      //     onBlur(newContent);
+      //   } else {
+      //     // preferred to use only this option to update the content for performance reasons
+      //     onBlur(newContent?.target?.innerHTML);
+      //   }
+      // }}
     />
   );
 }

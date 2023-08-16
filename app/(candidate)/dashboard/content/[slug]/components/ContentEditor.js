@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
@@ -9,24 +9,26 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingAI from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/LoadingAI';
 import BlackButton from '@shared/buttons/BlackButton';
 import AiModal from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/AiModal';
-import Typewriter from 'typewriter-effect';
-import { FaPencilAlt, FaSave } from 'react-icons/fa';
+// import Typewriter from 'typewriter-effect';
+import { FaSave } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Link from 'next/link';
 import Actions from '../../components/Actions';
+import { debounce } from '/helpers/debounceHelper';
+import JoditEditor from 'jodit-react';
 
-const RichEditor = dynamic(
-  () =>
-    import(
-      'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor'
-    ),
-  {
-    loading: () => (
-      <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
-    ),
-  },
-);
+// const RichEditor = dynamic(
+//   () =>
+//     import(
+//       'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor'
+//     ),
+//   {
+//     loading: () => (
+//       <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+//     ),
+//   },
+// );
 
 let aiCount = 0;
 let aiTotalCount = 0;
@@ -45,16 +47,20 @@ export default function ContentEditor({
   const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
+  const [isDirty, setIsDirty] = useState(false); // dirty text means unsaved
   const snackbarState = useHookstate(globalSnackbarState);
   const [documentName, setDocumentName] = useState('Untitled Document');
+  const editor = useRef(null);
 
   const campaignPlan = campaign[subSectionKey];
   const key = section;
 
   useEffect(() => {
     if (campaignPlan && campaignPlan[key]) {
+      console.log('setting plan - content!', campaignPlan[key].content);
       setPlan(campaignPlan[key].content);
       setDocumentName(campaignPlan[key].name);
       setLoading(false);
@@ -62,18 +68,44 @@ export default function ContentEditor({
     }
   }, [campaignPlan]);
 
-  const toggleSelect = () => {
-    setOpen(!open);
-  };
+  useEffect(() => {
+    if (editor != null && plan != false && initialized != true) {
+      console.log('muhplan', plan);
+      console.log('SETTING PLAN!');
+      editor.current.value = plan;
+      setInitialized(true);
 
-  const setEdit = () => {
-    setIsEdited(true);
-    setEditMode(true);
-  };
+      // check that editor has the function setEditorValue
+      // if (editor?.current?.setEditorValue) {
+      // }
+    }
+  }, [editor, plan]);
+
+  // const toggleSelect = () => {
+  //   setOpen(!open);
+  // };
+
+  // const setEdit = () => {
+  //   setIsEdited(true);
+  //   setEditMode(true);
+  // };
 
   const handleEdit = async (editedPlan) => {
+    console.log('setting plan - editedPlan!', editedPlan);
     setPlan(editedPlan);
   };
+
+  // Function to be called when the user has finished typing
+  const handleTypingComplete = async () => {
+    setIsDirty(true);
+    console.log('calling handle save...');
+    await handleSave();
+  };
+
+  // useEffect(() => {
+  //   // Set up a timer to trigger save when typing is complete
+  //   debounce(handleTypingComplete, undefined, 5000); // Adjust the delay as needed
+  // }, [plan]);
 
   const handleRegenerate = async (improveQuery) => {
     setLoading(true);
@@ -84,6 +116,7 @@ export default function ContentEditor({
         { role: 'user', content: improveQuery },
       ];
     }
+    console.log('setting plan - false!');
     setPlan(false);
     aiCount = 0;
     aiTotalCount = 0;
@@ -117,19 +150,35 @@ export default function ContentEditor({
     };
 
     // updated[subSectionKey][key] = plan;
-    setIsEdited(false);
-    setEditMode(false);
+    // setIsEdited(true);
+    // setEditMode(true);
     await updateCampaign(updated, key, false, 'aiContent');
     await updateVersionsCallback();
+    setIsDirty(false); // Reset the dirty flag
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
+    console.log('setting plan - callback!');
     setPlan(version.text);
-    setIsEdited(true);
+    // setIsEdited(true);
   };
 
-  const expand = open || forceExpand;
+  // const expand = open || forceExpand;
+
+  const config = {
+    readonly: false, // all options from https://xdsoft.net/jodit/doc/
+    enableDragAndDropFileToEditor: false,
+    useSearch: false,
+    toolbar: false,
+    showCharsCounter: false,
+    showWordsCounter: false,
+    showXPathInStatusbar: false,
+    toolbarInlineForSelection: true,
+    showPlaceholder: false,
+    buttons:
+      'bold,italic,underline,strikethrough,ul,ol,fontsize,paragraph,copy,paste,hr,table,print',
+  };
 
   return (
     <div>
@@ -210,47 +259,50 @@ export default function ContentEditor({
                       </div>
                     ) : (
                       <>
-                        {editMode ? (
-                          <RichEditor
-                            initialText={plan}
-                            onChangeCallback={handleEdit}
-                            // sx={{'jd-color-border': '#ffffff'}}
-                          />
-                        ) : (
-                          <div
-                            className="relative pb-10 cursor-text"
-                            onClick={setEdit}
-                          >
-                            {initialOpen && !isTyped ? (
-                              <Typewriter
-                                options={{
-                                  delay: 1,
-                                }}
-                                onInit={(typewriter) => {
-                                  typewriter
-                                    .typeString(plan)
-                                    .callFunction(() => {
-                                      setIsTyped(true);
-                                    })
+                        {/* <RichEditor
+                          initialText={plan}
+                          onChangeCallback={handleEdit}
+                          // sx={{'jd-color-border': '#ffffff'}}
+                        /> */}
 
-                                    .start();
-                                }}
-                              />
-                            ) : (
-                              <div dangerouslySetInnerHTML={{ __html: plan }} />
-                            )}
-                            <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-500 cursor-pointer hidden-for-print">
-                              <FaPencilAlt />
-                            </div>
-                          </div>
-                        )}
+                        <JoditEditor
+                          ref={editor}
+                          // value={plan}
+                          config={config}
+                          tabIndex={0} // tabIndex of textarea
+                          autofocus={true}
+                          cursorAfterAutofocus="end" // 'start';
+                          // defaultMode="wysiwyg"
+                          onChange={(newContent) => {
+                            console.log('newContent', newContent);
+                            if (typeof newContent === 'string') {
+                              if (newContent != '<p><br></p>') {
+                                // setting Plan makes the component re-render and jodit loses focus.
+                                // setPlan(newContent);
+                                // handleEdit(newContent);
+                              }
+                            } else {
+                              setPlan(newContent?.target?.innerHTML);
+
+                              // handleEdit(newContent?.target?.innerHTML);
+                            }
+                          }}
+                          // onBlur={(newContent) => {
+                          //   if (typeof newContent === 'string') {
+                          //     onBlur(newContent);
+                          //   } else {
+                          //     // preferred to use only this option to update the content for performance reasons
+                          //     onBlur(newContent?.target?.innerHTML);
+                          //   }
+                          // }}
+                        />
                       </>
                     )}
                   </div>
                   <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
                     <AiModal
                       submitCallback={handleRegenerate}
-                      showWarning={isEdited}
+                      showWarning={false}
                     />
                     <div onClick={handleSave}>
                       <PrimaryButton>
