@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Set env BRANCH
         run: |
-          BRANCH=${{ github.event.deployment.ref }}
+          BRANCH=${{ github.event.deployment }}
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
       - name: Print BRANCH
