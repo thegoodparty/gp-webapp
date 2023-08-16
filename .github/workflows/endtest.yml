@@ -24,7 +24,7 @@ jobs:
       - name: Print BRANCH
         run: echo "Current branch is $BRANCH_NAME"
 
-      - name: Set env NEED
+      - name: Set env BASE_URL
         run: |
           if [[ $BRANCH_NAME == 'master' ]]; then
               echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
