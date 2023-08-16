@@ -1,12 +1,10 @@
 name: endtest
 on:
-  push:
-    branches: [qa]
-  pull_request:
-    branches: [qa]
+  deployment_status:
 
 jobs:
   test:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     name: Endtest Functional Test
     runs-on: ubuntu-latest
     steps:
@@ -18,7 +16,7 @@ jobs:
         with:
           app_id: ${{ secrets.ENDTEST_APP_ID }}
           app_code: ${{ secrets.ENDTEST_APP_CODE }}
-          api_request: ${{ secrets.ENDTEST_API_REQUEST }}
+          api_request: ${{ format('{0}&base_url={1}', secrets.ENDTEST_API_REQUEST, github.event.deployment_status.target_url) }}
           number_of_loops: "1"
 
       - name: Use the outputs from test execution in a different step
