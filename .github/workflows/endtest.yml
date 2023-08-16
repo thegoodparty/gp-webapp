@@ -8,14 +8,18 @@ jobs:
     name: Endtest Functional Test
     runs-on: ubuntu-latest
     steps:
-      - name: Set variables
-        id: setvars
-        run: |
-          if: github.base_ref == 'master'
-            echo "::set-output name=base_url::https://goodparty.org"
+      - name: Set env BRANCH
+        run: echo "BRANCH=$(echo $GITHUB_REF | cut -d'/' -f 3)" >> $GITHUB_ENV
 
-          if: github.base_ref == 'qa'
-            echo "::set-output name=base_url::https://qa.goodparty.org"
+      - name: Set env NEED
+        run: |
+          if [[ $BRANCH == 'master' ]]; then
+              echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
+          else if [[ $BRANCH == 'qa' ]]; then
+              echo "BASE_URL=https://qa.goodparty.org" >> "$GITHUB_ENV"
+          else
+              echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
+          fi
 
       - name: Functional test deployment
         id: endtest_functional_tests
@@ -25,7 +29,7 @@ jobs:
         with:
           app_id: ${{ secrets.ENDTEST_APP_ID }}
           app_code: ${{ secrets.ENDTEST_APP_CODE }}
-          api_request: ${{ format('{0}&base_url={1}', secrets.ENDTEST_API_REQUEST, steps.setvars.outputs.base_url) }}
+          api_request: ${{ format('{0}&base_url={1}', secrets.ENDTEST_API_REQUEST, env.BASE_URL) }}
           number_of_loops: "1"
 
       - name: Use the outputs from test execution in a different step
