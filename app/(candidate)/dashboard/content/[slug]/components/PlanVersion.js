@@ -17,8 +17,25 @@ export default function PlanVersion({
   }
 
   return (
-    <div className="flex justify-center relative">
+    <>
+      {/* mobile version button */}
       <div
+        className="md:hidden"
+        onClick={() => {
+          setShowMenu(!showMenu);
+        }}
+      >
+        <SecondaryButton size="small">
+          <div className="flex items-center whitespace-nowrap p-1">
+            Version &nbsp;
+            <IoIosArrowDown className="text-sm" />
+          </div>
+        </SecondaryButton>
+      </div>
+
+      {/* desktop version button */}
+      <div
+        className="hidden md:block"
         onClick={() => {
           setShowMenu(!showMenu);
         }}
@@ -65,6 +82,6 @@ export default function PlanVersion({
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

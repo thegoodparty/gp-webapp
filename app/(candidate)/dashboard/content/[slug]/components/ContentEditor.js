@@ -13,6 +13,7 @@ import Typewriter from 'typewriter-effect';
 import { FaPencilAlt, FaSave } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { LuClipboard } from 'react-icons/lu';
 import Link from 'next/link';
 import Actions from '../../components/Actions';
 
@@ -129,6 +130,18 @@ export default function ContentEditor({
     setIsEdited(true);
   };
 
+  const copyPlanCallBack = () => {
+    // copy the plan variable to the clipboard and launch a snackbar
+    navigator.clipboard.writeText(plan);
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Copied to clipboard',
+        isError: false,
+      };
+    });
+  };
+
   const expand = open || forceExpand;
 
   return (
@@ -170,20 +183,42 @@ export default function ContentEditor({
         </div>
 
         <div className="flex w-full justify-end">
-          {/* version button */}
-          <PlanVersion
-            campaign={campaign}
-            versions={versions ? versions[key] : {}}
-            updatePlanCallback={updatePlanCallback}
-            latestVersion={campaignPlan ? campaignPlan[key] : false}
-          />
+          <div className="flex justify-center relative">
+            {/* copy button mobile */}
+            <div className="md:hidden mr-3" onClick={copyPlanCallBack}>
+              <PrimaryButton size="small">
+                <div className="flex items-center whitespace-nowrap p-1">
+                  <LuClipboard className="text-sm" />
+                  &nbsp;
+                </div>
+              </PrimaryButton>
+            </div>
 
-          <Actions
-            slug={key}
-            setDocumentName={setDocumentName}
-            documentKey={key}
-            name={documentName}
-          />
+            {/* copy button desktop */}
+            <div className="hidden md:block mr-3" onClick={copyPlanCallBack}>
+              <PrimaryButton size="medium">
+                <div className="flex items-center whitespace-nowrap p-1">
+                  <LuClipboard className="text-sm" />
+                  &nbsp; Copy
+                </div>
+              </PrimaryButton>
+            </div>
+
+            {/* version button */}
+            <PlanVersion
+              campaign={campaign}
+              versions={versions ? versions[key] : {}}
+              updatePlanCallback={updatePlanCallback}
+              latestVersion={campaignPlan ? campaignPlan[key] : false}
+            />
+
+            <Actions
+              slug={key}
+              setDocumentName={setDocumentName}
+              documentKey={key}
+              name={documentName}
+            />
+          </div>
         </div>
       </div>
 
