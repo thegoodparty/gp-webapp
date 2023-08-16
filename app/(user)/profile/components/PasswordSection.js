@@ -158,7 +158,7 @@ function PasswordSection() {
             <div className="col-span-12 lg:col-span-8 mt-4">
               <Caption>
                 For security, passwords must have at least 1 capital letter, 1
-                lowercase, 1 special character or number, and 8 characters
+                lowercase, 1 special character, 1 number, and 8 characters
                 minimum
               </Caption>
             </div>

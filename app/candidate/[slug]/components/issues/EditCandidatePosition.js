@@ -241,6 +241,7 @@ export default function EditCandidatePosition({
         ariaLabel="Are you sure?"
         description="This can not be undone, Are you sure you want to proceed?"
         handleProceed={handleDelete}
+        redButton={false}
       />
     </div>
   );
