@@ -1,12 +1,15 @@
+import ImageSection from './components/ImageSection';
+import PersonalSection from './components/PersonalSection';
+import PasswordSection from './components/PasswordSection';
+import DeleteSection from './components/DeleteSection';
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import ProfilePage from './components/ProfilePage';
 import pageMetaData from 'helpers/metadataHelper';
+import ProfilePage from './components/ProfilePage';
 
 const meta = pageMetaData({
-  title: 'Profile | GOOD PARTY',
-  description: 'Sign into your profile on GOOD PARTY.',
-  slug: '/profile',
+  title: 'Profile Settings',
+  description: 'Profile settings for Good Party.',
 });
 export const metadata = meta;
 
@@ -15,5 +18,13 @@ export default function Page() {
   if (!user) {
     redirect('/login');
   }
-  return <ProfilePage />;
+  return (
+    <ProfilePage user={user} />
+    // <>
+    //   <ImageSection />
+    //   <PersonalSection />
+    //   <PasswordSection />
+    //   <DeleteSection />
+    // </>
+  );
 }

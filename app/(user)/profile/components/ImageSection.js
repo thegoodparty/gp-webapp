@@ -12,6 +12,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
+import Body2 from '@shared/typography/Body2';
 
 function ImageSection() {
   const userState = useHookstate(globalUserState);
@@ -22,23 +23,22 @@ function ImageSection() {
 
   useEffect(() => {
     if (uploadedImage) {
-      const updatedUser = getUserCookie(true);
-      userState.set(() => updatedUser);
+      const updated = getUserCookie(true);
+      userState.set(() => updated);
     }
   }, [uploadedImage]);
   return (
-    <section>
-      <div className="flex items-center flex-col mb-12">
+    <div>
+      <div className="flex items-center flex-col">
         <UserAvatar user={updatedUser} size="large" />
-        <br />
         <ImageUpload
-          customElement={<div className="underline">Change Photo</div>}
+          customElement={<Body2 className="underline">Change Photo</Body2>}
           isUserImage
           uploadCallback={(image) => setUploadedImage(image)}
           maxFileSize={1000000}
         />
       </div>
-    </section>
+    </div>
   );
 }
 

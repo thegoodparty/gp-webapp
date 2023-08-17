@@ -4,15 +4,15 @@ import Subtitle2 from '@shared/typography/Subtitle2';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Link from 'next/link';
 import { AiOutlineFlag } from 'react-icons/ai';
-import { BiBook } from 'react-icons/bi';
+import { GiFairyWand } from 'react-icons/gi';
 
 const TypeIcon = (type) => {
   const baseClass =
     'rounded-full flex items-center justify-center w-9 h-9 text-primary';
-  if (type === 'blog') {
+  if (type === 'content') {
     return (
       <div className={`${baseClass} bg-cyan-400`}>
-        <BiBook />
+        <GiFairyWand />
       </div>
     );
   }
