@@ -208,7 +208,7 @@ export default function ContentEditor({
                       />
                     )}
                   </div>
-                  <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
+                  {/* <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
                     <AiModal
                       submitCallback={handleRegenerate}
                       showWarning={false}
@@ -220,7 +220,7 @@ export default function ContentEditor({
                         </div>
                       </PrimaryButton>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>
