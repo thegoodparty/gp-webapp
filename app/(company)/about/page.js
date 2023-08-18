@@ -8,6 +8,8 @@ const meta = pageMetaData({
   slug: '/about',
 });
 
+export const metadata = meta;
+
 export default async function Page(params) {
   return <AboutPage />;
 }
