@@ -25,8 +25,8 @@ export const fetchArticles = async () => {
 
 export default async function Page(params) {
   const articlesRes = await fetchArticles();
-  const fullArticles = articlesRes.content;
-  const articles = fullArticles.slice(0, 3);
+  const articlesTitles = articlesRes.content;
+  const articles = articlesTitles.slice(0, 3);
 
   const childProps = {
     articles,

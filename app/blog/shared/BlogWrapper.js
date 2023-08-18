@@ -12,7 +12,7 @@ export default function BlogWrapper({
   useH1,
   sectionSlug,
   sectionTitle,
-  fullArticles,
+  articlesTitles,
   isArticle,
 }) {
   // console.log('sectionSlug', sectionSlug);
@@ -29,7 +29,7 @@ export default function BlogWrapper({
           </div>
         </div>
         <div className="col-span-12 lg:col-span-3 pb-5 lg:pt-10">
-          <BlogSearch blogItems={fullArticles} />
+          <BlogSearch blogItems={articlesTitles} />
         </div>
       </div>
 
