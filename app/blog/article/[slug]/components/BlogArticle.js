@@ -20,7 +20,11 @@ export default function BlogArticle({ sections, article }) {
   } = article;
   const sectionSlug = section?.fields?.slug;
   return (
-    <BlogWrapper sections={sections} sectionSlug={sectionSlug}>
+    <BlogWrapper
+      sections={sections}
+      sectionSlug={sectionSlug}
+      isArticle={!!title}
+    >
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
         {mainImage && (
           <div>

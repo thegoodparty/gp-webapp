@@ -13,6 +13,7 @@ export default function BlogWrapper({
   sectionSlug,
   sectionTitle,
   fullArticles,
+  isArticle,
 }) {
   // console.log('sectionSlug', sectionSlug);
   return (
@@ -50,25 +51,30 @@ export default function BlogWrapper({
           {sections.map((section) => (
             <React.Fragment key={section.fields.slug}>
               {section.fields.slug === sectionSlug ? (
-                <div className={styles.section}>
+                <Link
+                  className={styles.section}
+                  href={
+                    isArticle ? `/blog/section/${section.fields.slug}` : '#'
+                  }
+                >
                   <BaseButtonClient
                     className={`${
                       section.fields.slug === 'onboarding-live'
                         ? 'bg-indigo-900'
                         : section.fields.slug === 'politics'
                         ? 'bg-violet-600'
-                        : section.fields.slug === 'the-independent-cause'
+                        : section.fields.slug === 'for-voters'
                         ? 'bg-pink-600'
-                        : section.fields.slug === 'temp-section'
+                        : section.fields.slug === 'independent-cause'
                         ? 'bg-orange-600'
-                        : section.fields.slug === 'candidates'
+                        : section.fields.slug === 'for-candidates'
                         ? 'bg-teal-500'
                         : 'bg-gray-800'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}
                   </BaseButtonClient>
-                </div>
+                </Link>
               ) : (
                 <Link
                   id={`blog-section-${section.fields.slug}`}
@@ -84,11 +90,11 @@ export default function BlogWrapper({
                         ? 'bg-indigo-900'
                         : section.fields.slug === 'politics'
                         ? 'bg-violet-600'
-                        : section.fields.slug === 'the-independent-cause'
+                        : section.fields.slug === 'for-voters'
                         ? 'bg-pink-600'
-                        : section.fields.slug === 'temp-section'
+                        : section.fields.slug === 'independent-cause'
                         ? 'bg-orange-600'
-                        : section.fields.slug === 'candidates'
+                        : section.fields.slug === 'for-candidates'
                         ? 'bg-teal-500'
                         : 'bg-gray-800'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
