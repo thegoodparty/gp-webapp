@@ -1,40 +1,44 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
-
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import JoditEditor from 'jodit-react';
-import gpApi from 'gpApi';
-import { getCookie } from 'helpers/cookieHelper';
 
 export default function RichEditor({
   initialText = '',
   onChangeCallback = () => {},
+  useOnChange = false,
 }) {
   const editor = useRef(null);
   const [content, setContent] = useState('');
   useEffect(() => {
-    if (content !== initialText) {
+    if (content !== initialText && initialText !== null) {
       setContent(initialText);
     }
   }, [initialText]);
 
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/doc/
-    enableDragAndDropFileToEditor: false,
-    useSearch: false,
-    toolbar: false,
-    showCharsCounter: false,
-    showWordsCounter: false,
-    showXPathInStatusbar: false,
-    toolbarInlineForSelection: true,
-    showPlaceholder: false,
-    buttons:
-      'bold,italic,underline,strikethrough,ul,ol,fontsize,paragraph,copy,paste,hr,table,print',
-  };
+  // it is very important to memoize this config
+  const config = useMemo(
+    () => ({
+      readonly: false, // all options from https://xdsoft.net/jodit/doc/
+      enableDragAndDropFileToEditor: false,
+      useSearch: false,
+      toolbar: false,
+      showCharsCounter: false,
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
+      toolbarInlineForSelection: true,
+      showPlaceholder: false,
+      buttons:
+        'bold,italic,underline,strikethrough,ul,ol,fontsize,paragraph,copy,paste,hr,table,print',
+    }),
+    [],
+  );
 
-  const onBlur = (value) => {
-    setContent(value);
-    // console.log(value);
-    onChangeCallback(value);
+  const contentChanged = (value) => {
+    if (value != null) {
+      setContent(value);
+      // console.log(value);
+      onChangeCallback(value);
+    }
   };
 
   return (
@@ -44,21 +48,25 @@ export default function RichEditor({
       config={config}
       tabIndex={1} // tabIndex of textarea
       onChange={(newContent) => {
-        // console.log(newContent);
-        if (typeof newContent === 'string') {
-          onBlur(newContent);
-        } else {
-          onBlur(newContent?.target?.innerHTML);
+        if (useOnChange) {
+          // console.log(newContent);
+          if (typeof newContent === 'string') {
+            contentChanged(newContent);
+          } else {
+            contentChanged(newContent?.target?.innerHTML);
+          }
         }
       }}
-      // onBlur={(newContent) => {
-      //   if (typeof newContent === 'string') {
-      //     onBlur(newContent);
-      //   } else {
-      //     // preferred to use only this option to update the content for performance reasons
-      //     onBlur(newContent?.target?.innerHTML);
-      //   }
-      // }}
+      onBlur={(newContent) => {
+        if (!useOnChange) {
+          if (typeof newContent === 'string') {
+            onBlur(newContent);
+          } else {
+            // preferred to use only this option to update the content for performance reasons
+            onBlur(newContent?.target?.innerHTML);
+          }
+        }
+      }}
     />
   );
 }

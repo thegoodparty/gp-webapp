@@ -11,7 +11,6 @@ export default function PlanVersion({
   latestVersion,
 }) {
   const [showMenu, setShowMenu] = useState(false);
-  // console.log('versions', versions);
   if (!versions) {
     return null;
   }
@@ -62,7 +61,7 @@ export default function PlanVersion({
                 key={version.date}
                 onClick={() => {
                   setShowMenu(false);
-                  updatePlanCallback(version);
+                  updatePlanCallback(version.text);
                 }}
               >
                 <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">

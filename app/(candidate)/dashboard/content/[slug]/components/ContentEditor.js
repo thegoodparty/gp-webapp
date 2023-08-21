@@ -1,21 +1,36 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingAI from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/LoadingAI';
 import BlackButton from '@shared/buttons/BlackButton';
 import AiModal from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/AiModal';
+import Typewriter from 'typewriter-effect';
 import { FaSave } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Link from 'next/link';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
-import JoditEditor from 'jodit-react';
-// import Typewriter from 'typewriter-effect';
-// import { useHookstate } from '@hookstate/core';
-// import { globalSnackbarState } from '@shared/utils/Snackbar';
+
+const RichEditor = dynamic(
+  () =>
+    import(
+      'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor'
+    ),
+  {
+    loading: () => (
+      <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+    ),
+  },
+);
+
+let aiCount = 0;
+let aiTotalCount = 0;
 
 export default function ContentEditor({
   section = '',
@@ -24,35 +39,39 @@ export default function ContentEditor({
   updateVersionsCallback,
   subSectionKey = 'aiContent',
 }) {
+  const [isEdited, setIsEdited] = useState(false);
+  const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
   const [documentName, setDocumentName] = useState('Untitled Document');
-  const [saved, setSaved] = useState('');
-  // const snackbarState = useHookstate(globalSnackbarState);
+  const [saved, setSaved] = useState('Saved');
 
-  const editor = useRef(null);
-  const plan = useRef('');
+  const campaignPlan = campaign[subSectionKey];
   const key = section;
 
   useEffect(() => {
-    if (campaign && campaign[subSectionKey][key]) {
-      plan.current = campaign[subSectionKey][key].content;
-      setDocumentName(campaign[subSectionKey][key].name);
-      setSaved('Saved');
+    if (campaignPlan && campaignPlan[key]) {
+      setPlan(campaignPlan[key].content);
+      setDocumentName(campaignPlan[key].name);
       setLoading(false);
       setIsTyped(true);
     }
-  }, [campaign]);
+  }, [campaignPlan]);
+
+  const handleEdit = async (editedPlan) => {
+    setPlan(editedPlan);
+    if (campaignPlan[key].content != plan) {
+      // Setting Unsave re-renders the component and resets the jodit editor cursor position
+      // setSaved('Unsaved');
+      debounce(handleTypingComplete, undefined, 5000);
+    }
+  };
 
   // Function to be called when the user has finished typing
   const handleTypingComplete = async () => {
-    if (campaign[subSectionKey][key].content === plan.current) {
-      // do not call save if the content has not changed from load.
-      return;
-    } else {
-      await handleSave();
-    }
+    await handleSave();
   };
 
   const handleRegenerate = async (improveQuery) => {
@@ -60,11 +79,11 @@ export default function ContentEditor({
     let chat = [];
     if (improveQuery !== '') {
       chat = [
-        { role: 'system', content: plan.current },
+        { role: 'system', content: plan },
         { role: 'user', content: improveQuery },
       ];
     }
-    plan.current = '';
+    setPlan(false);
     aiCount = 0;
     aiTotalCount = 0;
     setIsTyped(false);
@@ -72,6 +91,14 @@ export default function ContentEditor({
   };
 
   const handleSave = async () => {
+    // snackbarState.set(() => {
+    //   return {
+    //     isOpen: true,
+    //     message: 'Saving...',
+    //     isError: false,
+    //   };
+    // });
+
     setSaved('Saving...');
 
     const updated = campaign;
@@ -87,30 +114,20 @@ export default function ContentEditor({
     updated[subSectionKey][key] = {
       name: existing_name ? existing_name : key,
       updatedAt: updatedAt,
-      content: plan.current,
+      content: plan,
     };
 
+    // updated[subSectionKey][key] = plan;
+    setIsEdited(false);
     await updateCampaign(updated, key, false, 'aiContent');
-    await updateVersionsCallback();
+    // await updateVersionsCallback();
+    setSaved('Saved');
+    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
-    console.log('setting plan - callback!');
-    plan.current = version.text;
-  };
-
-  const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/doc/
-    enableDragAndDropFileToEditor: false,
-    useSearch: false,
-    toolbar: false,
-    showCharsCounter: false,
-    showWordsCounter: false,
-    showXPathInStatusbar: false,
-    toolbarInlineForSelection: true,
-    showPlaceholder: false,
-    buttons:
-      'bold,italic,underline,strikethrough,ul,ol,fontsize,paragraph,copy,paste,hr,table,print',
+    setPlan(version);
+    setIsEdited(true);
   };
 
   return (
@@ -157,7 +174,7 @@ export default function ContentEditor({
             campaign={campaign}
             versions={versions ? versions[key] : {}}
             updatePlanCallback={updatePlanCallback}
-            latestVersion={campaign ? campaign[subSectionKey][key] : false}
+            latestVersion={campaignPlan ? campaignPlan[key].content : ''}
           />
 
           <Actions
@@ -170,7 +187,7 @@ export default function ContentEditor({
       </div>
 
       <div className="flex w-full h-auto justify-items-center justify-center">
-        <div className="max-w-3xl w-full h-auto p-10 font-sfpro">
+        <div className="max-w-6xl w-full h-auto p-10 font-sfpro">
           <section key={section.key} className="my-3">
             <div className="">
               {loading ? (
@@ -191,27 +208,20 @@ export default function ContentEditor({
                         </div>
                       </div>
                     ) : (
-                      <JoditEditor
-                        ref={editor}
-                        value={plan.current}
-                        config={config}
-                        tabIndex={0}
-                        onChange={(newContent) => {
-                          if (typeof newContent === 'string') {
-                            plan.current = newContent;
-                            debounce(handleTypingComplete, undefined, 5000);
-                          } else {
-                            plan.current = newContent?.target?.innerHTML;
-                            debounce(handleTypingComplete, undefined, 5000);
-                          }
-                        }}
-                      />
+                      <>
+                        <RichEditor
+                          initialText={plan}
+                          onChangeCallback={handleEdit}
+                          useOnChange={true}
+                          // sx={{'jd-color-border': '#ffffff'}}
+                        />
+                      </>
                     )}
                   </div>
                   {/* <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
                     <AiModal
                       submitCallback={handleRegenerate}
-                      showWarning={false}
+                      showWarning={isEdited}
                     />
                     <div onClick={handleSave}>
                       <PrimaryButton>
