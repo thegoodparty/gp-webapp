@@ -211,7 +211,7 @@ export default function ContentEditor({
                         <RichEditor
                           initialText={plan}
                           onChangeCallback={handleEdit}
-                          useOnChange={true}
+                          useOnChange={false}
                           // sx={{'jd-color-border': '#ffffff'}}
                         />
                       </>
