@@ -12,6 +12,7 @@ export default function ElectionCandidate({ candidate, more }) {
     lastName,
     color,
     office,
+    otherOffice,
     district,
     state,
     topPosition,
@@ -19,7 +20,9 @@ export default function ElectionCandidate({ candidate, more }) {
     occupation,
   } = candidate;
 
-  let pillText = office;
+  const resolvedOffice = office === 'Other' ? otherOffice : office;
+
+  let pillText = resolvedOffice;
   if (district && district !== '') {
     pillText += `, ${district}`;
   } else if (state && state !== '') {
