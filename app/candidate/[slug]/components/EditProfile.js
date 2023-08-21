@@ -15,12 +15,13 @@ export default function EditProfile(props) {
     color,
     updateColorCallback,
   } = props;
-  let firstName, lastName, slogan, office, district;
+  let firstName, lastName, slogan, office, otherOffice, district;
   if (isStaged && campaign && campaign.details) {
-    ({ firstName, lastName, office, district } = campaign.details);
+    ({ firstName, lastName, office, otherOffice, district } = campaign.details);
     ({ slogan } = campaign.campaignPlan);
   } else {
-    ({ firstName, lastName, slogan, office, district } = candidate);
+    ({ firstName, lastName, slogan, office, otherOffice, district } =
+      candidate);
   }
 
   const [state, setState] = useState({
@@ -28,6 +29,7 @@ export default function EditProfile(props) {
     lastName,
     state: candidate.state,
     office,
+    otherOffice,
     district,
     slogan,
     color,
@@ -70,6 +72,15 @@ export default function EditProfile(props) {
         'School Board',
         'Other',
       ],
+    },
+    {
+      key: 'otherOffice',
+      label: 'Other Office',
+      type: 'text',
+      hidden: true,
+      requiredHidden: true,
+      showKey: 'office',
+      showCondition: ['Other'],
     },
     {
       key: 'district',

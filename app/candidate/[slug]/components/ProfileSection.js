@@ -22,14 +22,25 @@ const calcLocation = ({ office, state, district, city }) => {
 export default function ProfileSection(props) {
   const { candidate, color, editMode, campaign } = props;
 
-  const { firstName, lastName, slogan, party, office, state, district, city } =
-    candidate;
+  const {
+    firstName,
+    lastName,
+    slogan,
+    party,
+    office,
+    otherOffice,
+    state,
+    district,
+    city,
+  } = candidate;
+
+  const resolvedOffice = office === 'Other' ? otherOffice : office;
 
   let fields;
   const isFederal = federalOffices.includes(office);
   if (isFederal) {
     fields = [
-      { label: 'Running For', value: office },
+      { label: 'Running For', value: resolvedOffice },
       {
         label: 'Location',
         value: calcLocation({ office, state, district, city }),
@@ -44,7 +55,7 @@ export default function ProfileSection(props) {
         // value: `${district ? `${district}, ` : ''} ${state}`,
         value: calcLocation({ office, state, district, city }),
       },
-      { label: 'Running For', value: office },
+      { label: 'Running For', value: resolvedOffice },
       { label: 'Affiliation', value: partyResolver(party) },
     ];
   }

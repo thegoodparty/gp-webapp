@@ -182,6 +182,11 @@ export default function AdminVictoryPathPage(props) {
     }
   };
 
+  const office =
+    campaign?.details?.office === 'Other'
+      ? `${campaign?.details?.otherOffice} (Other)`
+      : campaign?.details?.office;
+
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
@@ -197,9 +202,9 @@ export default function AdminVictoryPathPage(props) {
             .
           </H2>
           <H4 className="my-8">
-            Office: <strong>{campaign?.details?.office || 'N/A'}</strong>.{' '}
-            State: <strong>{campaign?.details?.state || 'N/A'}</strong>.{' '}
-            District: <strong>{campaign?.details?.district || 'N/A'}</strong>.{' '}
+            Office: <strong>{office || 'N/A'}</strong>. State:{' '}
+            <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}
+            <strong>{campaign?.details?.district || 'N/A'}</strong>.{' '}
             ElectionDate:{' '}
             <strong>
               {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
