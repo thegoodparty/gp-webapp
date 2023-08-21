@@ -60,10 +60,10 @@ export default function RichEditor({
       onBlur={(newContent) => {
         if (!useOnChange) {
           if (typeof newContent === 'string') {
-            onBlur(newContent);
+            contentChanged(newContent);
           } else {
             // preferred to use only this option to update the content for performance reasons
-            onBlur(newContent?.target?.innerHTML);
+            contentChanged(newContent?.target?.innerHTML);
           }
         }
       }}

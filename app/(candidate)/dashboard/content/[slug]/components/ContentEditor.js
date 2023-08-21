@@ -62,11 +62,10 @@ export default function ContentEditor({
 
   const handleEdit = async (editedPlan) => {
     setPlan(editedPlan);
-    if (campaignPlan[key].content != plan) {
-      // Setting Unsave re-renders the component and resets the jodit editor cursor position
-      // setSaved('Unsaved');
-      debounce(handleTypingComplete, undefined, 5000);
-    }
+    // add this back to turn autoSave back on.
+    // if (campaignPlan[key].content != plan) {
+    //   debounce(handleTypingComplete, undefined, 5000);
+    // }
   };
 
   // Function to be called when the user has finished typing
@@ -91,13 +90,13 @@ export default function ContentEditor({
   };
 
   const handleSave = async () => {
-    // snackbarState.set(() => {
-    //   return {
-    //     isOpen: true,
-    //     message: 'Saving...',
-    //     isError: false,
-    //   };
-    // });
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saving...',
+        isError: false,
+      };
+    });
 
     setSaved('Saving...');
 
@@ -218,7 +217,7 @@ export default function ContentEditor({
                       </>
                     )}
                   </div>
-                  {/* <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
+                  <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
                     <AiModal
                       submitCallback={handleRegenerate}
                       showWarning={isEdited}
@@ -230,7 +229,7 @@ export default function ContentEditor({
                         </div>
                       </PrimaryButton>
                     </div>
-                  </div> */}
+                  </div>
                 </div>
               )}
             </div>
