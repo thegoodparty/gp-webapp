@@ -47,7 +47,8 @@ export default function AdminCandidatesPage(props) {
         lastVisited: campaign.lastVisited,
         party: partyResolver(campaign.party),
         chamber: campaign.chamber,
-        office: campaign.office,
+        office:
+          campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
         city: campaign.city,
         district: campaign.district || 'n/a',
         state: campaign.state ? campaign.state.toUpperCase() : '?',

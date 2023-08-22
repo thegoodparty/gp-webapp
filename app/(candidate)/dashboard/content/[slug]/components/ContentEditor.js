@@ -10,11 +10,14 @@ import LoadingAI from 'app/(candidate)/onboarding/[slug]/campaign-plan/component
 import BlackButton from '@shared/buttons/BlackButton';
 import AiModal from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/AiModal';
 import Typewriter from 'typewriter-effect';
-import { FaPencilAlt, FaSave } from 'react-icons/fa';
+import { FaSave } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Link from 'next/link';
 import Actions from '../../components/Actions';
+import { debounce } from '/helpers/debounceHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
 const RichEditor = dynamic(
   () =>
@@ -34,14 +37,10 @@ let aiTotalCount = 0;
 export default function ContentEditor({
   section = '',
   campaign,
-  initialOpen,
   versions = {},
   updateVersionsCallback,
-  forceExpand,
   subSectionKey = 'aiContent',
 }) {
-  const [open, setOpen] = useState(initialOpen);
-  const [editMode, setEditMode] = useState(true);
   const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,6 +48,7 @@ export default function ContentEditor({
   const [isFailed, setIsFailed] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
   const [documentName, setDocumentName] = useState('Untitled Document');
+  const [saved, setSaved] = useState('Saved');
 
   const campaignPlan = campaign[subSectionKey];
   const key = section;
@@ -62,17 +62,17 @@ export default function ContentEditor({
     }
   }, [campaignPlan]);
 
-  const toggleSelect = () => {
-    setOpen(!open);
-  };
-
-  const setEdit = () => {
-    setIsEdited(true);
-    setEditMode(true);
-  };
-
   const handleEdit = async (editedPlan) => {
     setPlan(editedPlan);
+    // add this back to turn autoSave back on.
+    // if (campaignPlan[key].content != plan) {
+    //   debounce(handleTypingComplete, undefined, 5000);
+    // }
+  };
+
+  // Function to be called when the user has finished typing
+  const handleTypingComplete = async () => {
+    await handleSave();
   };
 
   const handleRegenerate = async (improveQuery) => {
@@ -100,6 +100,8 @@ export default function ContentEditor({
       };
     });
 
+    setSaved('Saving...');
+
     const updated = campaign;
     let existing_name;
     if (!updated[subSectionKey]) {
@@ -118,18 +120,75 @@ export default function ContentEditor({
 
     // updated[subSectionKey][key] = plan;
     setIsEdited(false);
-    setEditMode(false);
     await updateCampaign(updated, key, false, 'aiContent');
-    await updateVersionsCallback();
+    // await updateVersionsCallback();
+    setSaved('Saved');
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
-    setPlan(version.text);
+    setPlan(version);
     setIsEdited(true);
   };
 
-  const expand = open || forceExpand;
+  async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+    try {
+      const api = gpApi.campaign.onboarding.ai.create;
+      return await gpFetch(api, {
+        subSectionKey,
+        key,
+        regenerate,
+        chat,
+        editMode,
+      });
+    } catch (e) {
+      console.log('error', e);
+      return false;
+    }
+  }
+
+  const createInitialAI = async (regenerate, chat, editMode) => {
+    aiCount++;
+    aiTotalCount++;
+    if (aiTotalCount >= 100) {
+      //fail
+      setPlan(
+        'Failed to generate a campaign plan. Please contact us for help.',
+      );
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+
+    const { chatResponse, status } = await generateAI(
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    );
+    if (!chatResponse && status === 'processing') {
+      if (aiCount < 40) {
+        setTimeout(async () => {
+          await createInitialAI();
+        }, 5000);
+      } else {
+        //something went wrong, we are stuck in a loop. reCreate the response
+        console.log('regenerating');
+        aiCount = 0;
+        createInitialAI(true);
+      }
+    } else {
+      console.log('chatResponse', chatResponse);
+      aiCount = 0;
+      if (status === 'completed') {
+        setPlan(chatResponse.content);
+        await updateVersionsCallback();
+        setLoading(false);
+        setSaved('Saved');
+      }
+    }
+  };
 
   return (
     <div>
@@ -164,9 +223,9 @@ export default function ContentEditor({
             <div className="text-indigo-800 p-1 md:mt-2">{documentName}</div>
           </div>
 
-          {/* <div className="ml-3">
-            <div className="text-indigo-100 p-1 md:mt-2">Saved</div>
-          </div> */}
+          <div className="ml-3">
+            <div className="text-indigo-100 p-1 md:mt-2">{saved}</div>
+          </div>
         </div>
 
         <div className="flex w-full justify-end">
@@ -175,7 +234,7 @@ export default function ContentEditor({
             campaign={campaign}
             versions={versions ? versions[key] : {}}
             updatePlanCallback={updatePlanCallback}
-            latestVersion={campaignPlan ? campaignPlan[key] : false}
+            latestVersion={campaignPlan ? campaignPlan[key].content : ''}
           />
 
           <Actions
@@ -188,7 +247,7 @@ export default function ContentEditor({
       </div>
 
       <div className="flex w-full h-auto justify-items-center justify-center">
-        <div className="max-w-3xl w-full h-auto p-10 font-sfpro">
+        <div className="max-w-6xl w-full h-auto p-10 font-sfpro">
           <section key={section.key} className="my-3">
             <div className="">
               {loading ? (
@@ -210,40 +269,12 @@ export default function ContentEditor({
                       </div>
                     ) : (
                       <>
-                        {editMode ? (
-                          <RichEditor
-                            initialText={plan}
-                            onChangeCallback={handleEdit}
-                            // sx={{'jd-color-border': '#ffffff'}}
-                          />
-                        ) : (
-                          <div
-                            className="relative pb-10 cursor-text"
-                            onClick={setEdit}
-                          >
-                            {initialOpen && !isTyped ? (
-                              <Typewriter
-                                options={{
-                                  delay: 1,
-                                }}
-                                onInit={(typewriter) => {
-                                  typewriter
-                                    .typeString(plan)
-                                    .callFunction(() => {
-                                      setIsTyped(true);
-                                    })
-
-                                    .start();
-                                }}
-                              />
-                            ) : (
-                              <div dangerouslySetInnerHTML={{ __html: plan }} />
-                            )}
-                            <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-500 cursor-pointer hidden-for-print">
-                              <FaPencilAlt />
-                            </div>
-                          </div>
-                        )}
+                        <RichEditor
+                          initialText={plan}
+                          onChangeCallback={handleEdit}
+                          useOnChange={false}
+                          // sx={{'jd-color-border': '#ffffff'}}
+                        />
                       </>
                     )}
                   </div>

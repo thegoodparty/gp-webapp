@@ -15,8 +15,6 @@ export default function Actions(props) {
   let { name, slug, tableVersion, setDocumentName, documentKey, updatedAt } =
     props;
 
-  console.log('props', props);
-
   const [showMenu, setShowMenu] = useState(false);
   const [showRename, setShowRename] = useState(false);
   const [showDuplicate, setShowDuplicate] = useState(false);
@@ -29,7 +27,9 @@ export default function Actions(props) {
   return (
     <>
       <div className="flex justify-center relative">
-        {tableVersion === true && updatedAt !== undefined ? (
+        {tableVersion === true &&
+        updatedAt !== undefined &&
+        updatedAt != 'Invalid Date' ? (
           <div>
             <BsThreeDots
               onClick={() => {
@@ -39,12 +39,13 @@ export default function Actions(props) {
             />
           </div>
         ) : // otherwise if tableVersion === true and updatedAt === undefined, then it's a new document
-        tableVersion === true && updatedAt === undefined ? (
+        tableVersion === true &&
+          (updatedAt === undefined || updatedAt == 'Invalid Date') ? (
           <div
             onClick={() => {
               setShowMenu(!showMenu);
             }}
-            className="ml-5 hidden md:block"
+            className="mr-10 hidden md:block"
           >
             <CircularProgress size={20} />
           </div>
@@ -57,7 +58,7 @@ export default function Actions(props) {
                 setShowMenu(!showMenu);
               }}
             >
-              <SecondaryButton size="small">
+              <SecondaryButton size="medium">
                 <div className="flex items-center whitespace-nowrap p-1">
                   <BsThreeDots className="text-sm" />
                   &nbsp;

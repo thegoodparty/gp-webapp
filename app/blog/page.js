@@ -23,25 +23,26 @@ export const fetchArticles = async () => {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'blogArticles',
-    // limit: 20,
+    limit: 30,
   };
   return await gpFetch(api, payload, 3600);
+};
+
+export const fetchArticlesTitles = async () => {
+  const api = gpApi.content.articlesTitles;
+  return await gpFetch(api, false, 3600);
 };
 
 export default async function Page({ params, searchParams }) {
   const sectionsRes = await fetchSections();
   const sections = sectionsRes.content;
   const articlesRes = await fetchArticles();
-  const fullArticles = articlesRes?.content;
-  let articles = [];
-  if (fullArticles != undefined) {
-    articles = fullArticles.slice(0, 20);
-  }
+  const { titles } = await fetchArticlesTitles();
 
   const childProps = {
     sections,
-    articles,
-    fullArticles,
+    articles: articlesRes.content,
+    articlesTitles: titles,
   };
   return <BlogPage {...childProps} />;
 }

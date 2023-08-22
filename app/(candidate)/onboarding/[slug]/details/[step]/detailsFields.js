@@ -141,6 +141,15 @@ const detailsFields = [
         ],
       },
       {
+        key: 'otherOffice',
+        label: 'Other Office',
+        type: 'text',
+        hidden: true,
+        requiredHidden: true,
+        showKey: 'office',
+        showCondition: ['Other'],
+      },
+      {
         key: 'district',
         label: 'District',
         type: 'text',

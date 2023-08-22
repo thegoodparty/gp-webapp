@@ -30,7 +30,7 @@ export default function BlogPage({
   articles,
   sectionSlug,
   sectionTitle,
-  fullArticles,
+  articlesTitles,
 }) {
   const hero = articles && articles.length > 0 ? articles[0] : false;
   // console.log('sectionSlug', sectionSlug);
@@ -40,7 +40,7 @@ export default function BlogPage({
       sections={sections}
       sectionSlug={sectionSlug}
       sectionTitle={sectionTitle}
-      fullArticles={fullArticles}
+      articlesTitles={articlesTitles}
       useH1
     >
       {sectionSlug === undefined && sections && sections.length > 0 && (

@@ -7,6 +7,7 @@ import CandidatePage from './CandidatePage';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { revalidateCandidates } from 'helpers/cacheHelper';
+// import { debounce } from '/helpers/debounceHelper';
 
 export async function updateCandidate(candidate) {
   try {
@@ -19,13 +20,6 @@ export async function updateCandidate(candidate) {
     console.log('error', e);
     return false;
   }
-}
-
-export function debounce(func, args, timeout = 600) {
-  clearTimeout(window.timer);
-  window.timer = setTimeout(() => {
-    func(args);
-  }, timeout);
 }
 
 export default function EditCandidatePage(props) {

@@ -109,13 +109,14 @@ export default function MyContent({ campaign, prompts }) {
       accessor: 'updatedAt',
       sortType: 'datetime',
       Cell: ({ row }) => {
-        return (
-          <div className="pl-[40px]">
-            {row.original.updatedAt
-              ? dateWithTime(row.original.updatedAt)
-              : undefined}
-          </div>
-        );
+        let updatedAt;
+        if (row.original.updatedAt) {
+          updatedAt = dateWithTime(row.original.updatedAt);
+          if (updatedAt === undefined || updatedAt === 'Invalid Date') {
+            updatedAt = '';
+          }
+        }
+        return <div className="pl-[40px]">{updatedAt}</div>;
       },
     },
     {

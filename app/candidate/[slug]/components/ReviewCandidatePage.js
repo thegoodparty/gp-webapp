@@ -2,7 +2,7 @@
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useEffect, useState } from 'react';
 import CandidatePage from './CandidatePage';
-import { debounce } from './EditCandidatePage';
+import { debounce } from '/helpers/debounceHelper';
 
 export default function ReviewCandidatePage(props) {
   const { candidate, campaign } = props;

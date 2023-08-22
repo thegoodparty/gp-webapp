@@ -16,6 +16,7 @@ import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
 import H3 from '@shared/typography/H3';
 import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -181,6 +182,11 @@ export default function AdminVictoryPathPage(props) {
     }
   };
 
+  const office =
+    campaign?.details?.office === 'Other'
+      ? `${campaign?.details?.otherOffice} (Other)`
+      : campaign?.details?.office;
+
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
@@ -196,9 +202,13 @@ export default function AdminVictoryPathPage(props) {
             .
           </H2>
           <H4 className="my-8">
-            Office: <strong>{campaign?.details?.office || 'N/A'}</strong>.
-            State: <strong>{campaign?.details?.state || 'N/A'}</strong>.
-            District: <strong>{campaign?.details?.district || 'N/A'}</strong>
+            Office: <strong>{office || 'N/A'}</strong>. State:{' '}
+            <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}
+            <strong>{campaign?.details?.district || 'N/A'}</strong>.{' '}
+            ElectionDate:{' '}
+            <strong>
+              {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
+            </strong>
           </H4>
           {/* {selected.user && (
             <div className="p-4 border border-gray-500 rounded-md mb-5 max-w-xl">
