@@ -16,6 +16,8 @@ import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Link from 'next/link';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
 const RichEditor = dynamic(
   () =>
@@ -127,6 +129,65 @@ export default function ContentEditor({
   const updatePlanCallback = (version) => {
     setPlan(version);
     setIsEdited(true);
+  };
+
+  async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+    try {
+      const api = gpApi.campaign.onboarding.ai.create;
+      return await gpFetch(api, {
+        subSectionKey,
+        key,
+        regenerate,
+        chat,
+        editMode,
+      });
+    } catch (e) {
+      console.log('error', e);
+      return false;
+    }
+  }
+
+  const createInitialAI = async (regenerate, chat, editMode) => {
+    aiCount++;
+    aiTotalCount++;
+    if (aiTotalCount >= 100) {
+      //fail
+      setPlan(
+        'Failed to generate a campaign plan. Please contact us for help.',
+      );
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+
+    const { chatResponse, status } = await generateAI(
+      subSectionKey,
+      key,
+      regenerate,
+      chat,
+      editMode,
+    );
+    if (!chatResponse && status === 'processing') {
+      if (aiCount < 40) {
+        setTimeout(async () => {
+          await createInitialAI();
+        }, 5000);
+      } else {
+        //something went wrong, we are stuck in a loop. reCreate the response
+        console.log('regenerating');
+        aiCount = 0;
+        createInitialAI(true);
+      }
+    } else {
+      console.log('chatResponse', chatResponse);
+      aiCount = 0;
+      if (status === 'completed') {
+        setPlan(chatResponse.content);
+        await updateVersionsCallback();
+        setLoading(false);
+        setSaved('Saved');
+      }
+    }
   };
 
   return (
