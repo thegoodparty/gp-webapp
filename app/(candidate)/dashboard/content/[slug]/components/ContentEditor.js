@@ -18,6 +18,8 @@ import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { LuClipboard } from 'react-icons/lu';
+import CopyToClipboard from '@shared/utils/CopyToClipboard';
 
 const RichEditor = dynamic(
   () =>
@@ -209,7 +211,7 @@ export default function ContentEditor({
           {/* mobile back button */}
           <Link href="/dashboard/content">
             <div className="md:hidden">
-              <SecondaryButton size="small">
+              <SecondaryButton size="medium">
                 <div className="flex items-center whitespace-nowrap p-1">
                   <MdOutlineArrowBackIos className="text-sm" />
                   &nbsp;
@@ -223,12 +225,36 @@ export default function ContentEditor({
             <div className="text-indigo-800 p-1 md:mt-2">{documentName}</div>
           </div>
 
-          <div className="ml-3">
-            <div className="text-indigo-100 p-1 md:mt-2">{saved}</div>
+          <div className="ml-1 mr-1">
+            <div className="text-indigo-100 p-1 mt-2">{saved}</div>
           </div>
         </div>
 
-        <div className="flex w-full justify-end">
+        <div className="flex w-full justify-end items-center justify-items-center">
+          {/* copy button mobile */}
+          <div className="md:hidden mr-3">
+            <CopyToClipboard text={plan}>
+              <PrimaryButton size="medium">
+                <div className="flex items-center whitespace-nowrap p-1">
+                  <LuClipboard className="text-sm" />
+                  &nbsp;
+                </div>
+              </PrimaryButton>
+            </CopyToClipboard>
+          </div>
+
+          {/* copy button desktop */}
+          <div className="hidden md:block mr-3">
+            <CopyToClipboard text={plan} usePadding={false}>
+              <PrimaryButton size="medium">
+                <div className="flex items-center whitespace-nowrap p-1">
+                  <LuClipboard className="text-sm" />
+                  &nbsp; Copy
+                </div>
+              </PrimaryButton>
+            </CopyToClipboard>
+          </div>
+
           {/* version button */}
           <PlanVersion
             campaign={campaign}
