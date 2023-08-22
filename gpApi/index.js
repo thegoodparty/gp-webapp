@@ -480,6 +480,11 @@ const gpApi = {
     url: `${base}application/upload-image`,
     method: 'POST',
   },
+  uploadBase64Image: {
+    url: `${base}upload-base64-image`,
+    method: 'POST',
+    withAuth: true,
+  },
   logError: {
     url: `${base}log-error`,
     method: 'POST',
