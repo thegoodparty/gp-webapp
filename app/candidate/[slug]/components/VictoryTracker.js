@@ -15,9 +15,15 @@ function VictoryTracker({ candidate, color, reportedVoterGoals }) {
   let additionalVotes = 0;
   if (reportedVoterGoals) {
     const { doorKnocking, calls, digital } = reportedVoterGoals;
-    additionalVotes += Math.floor(doorKnocking * 0.1);
-    additionalVotes += Math.floor(calls * 0.2);
-    additionalVotes += Math.floor(digital * 0.01);
+    if (doorKnocking) {
+      additionalVotes += Math.floor(doorKnocking * 0.1);
+    }
+    if (calls) {
+      additionalVotes += Math.floor(calls * 0.2);
+    }
+    if (digital) {
+      additionalVotes += Math.floor(digital * 0.01);
+    }
   }
   let isWon = false;
   let progress = voterProjection + additionalVotes;
