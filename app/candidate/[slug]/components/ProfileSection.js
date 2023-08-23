@@ -29,7 +29,7 @@ const calcLocation = ({ office, state, district, city }) => {
     return `${district ? `${district}, ` : ''} ${state}`;
   }
   if (noDistrict) {
-    return `${city ?? ''}, ${state}`;
+    return `${city ? `${city},` : ''} ${state}`;
   }
   return `${city ? `District ${district}, ${city}` : district}, ${state}`;
 };
