@@ -34,7 +34,11 @@ function VictoryTracker({ candidate, color, reportedVoterGoals }) {
 
   return (
     <div className="relative z-10">
-      <GoalsChart candidate={candidate} color={color} />
+      <GoalsChart
+        candidate={candidate}
+        color={color}
+        additionalVotes={additionalVotes}
+      />
       {isWon && (
         <div className="absolute top-[160px] right-[26px] rotate-[30deg]">
           <Image src="/images/heart.svg" width={25} height={20} alt="win" />
