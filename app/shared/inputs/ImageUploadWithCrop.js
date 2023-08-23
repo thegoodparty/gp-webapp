@@ -2,8 +2,6 @@
 import React, { useRef, useState } from 'react';
 import { RiImageAddFill } from 'react-icons/ri';
 import Button from '@mui/material/Button';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop';
@@ -12,6 +10,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useDebounceEffect } from '@shared/hooks/useDebounceEffect';
 import { canvasPreview } from '@shared/CanvasPreview';
+import { CircularProgress } from '@mui/material';
 
 function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
   return centerCrop(
@@ -46,7 +45,6 @@ const uploadImage = async (image) => {
 export default function ImageUploadWithCrop({
   uploadCallback,
   customElement,
-  isUserImage,
   customId = 'file-uploader',
 }) {
   // const snackbarState = useHookstate(globalSnackbarState);
@@ -60,6 +58,7 @@ export default function ImageUploadWithCrop({
   });
   const [imgSrc, setImgSrc] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [completedCrop, setCompletedCrop] = useState(null);
   const previewCanvasRef = useRef(null);
 
@@ -83,6 +82,7 @@ export default function ImageUploadWithCrop({
   }
 
   const handleSave = async () => {
+    setUploading(true);
     const canvas = previewCanvasRef.current;
     const base64 = canvas.toDataURL('image/jpeg');
     const url = await uploadImage(base64);
@@ -91,6 +91,7 @@ export default function ImageUploadWithCrop({
     setShowModal(false);
     setImgSrc('');
     setCompletedCrop(null);
+    setUploading(false);
   };
 
   useDebounceEffect(
@@ -171,7 +172,7 @@ export default function ImageUploadWithCrop({
                 src={imgSrc}
                 // style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
                 onLoad={onImageLoad}
-                className=" h-[70vh] w-auto"
+                style={{ maxHeight: '60vh' }}
               />
             </ReactCrop>
             <div className="absolute opacity-0 left-[3000px]">
@@ -183,9 +184,18 @@ export default function ImageUploadWithCrop({
                 }}
               />
             </div>
-            <div onClick={handleSave} className="text-center">
-              <PrimaryButton>Save</PrimaryButton>
-            </div>
+            {uploading ? (
+              <div className="text-center mt-2">
+                Uploading
+                <br />
+                <br />
+                <CircularProgress size={20} />
+              </div>
+            ) : (
+              <div onClick={handleSave} className="text-center mt-2">
+                <PrimaryButton>Save</PrimaryButton>
+              </div>
+            )}
           </div>
         </Modal>
       )}
