@@ -29,27 +29,6 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
   );
 }
 
-const fileSelect = async (image, isUserImage) => {
-  let api;
-  if (isUserImage) {
-    api = gpApi.user.uploadAvatar;
-  } else {
-    api = gpApi.uploadImage;
-  }
-
-  const formData = new FormData();
-  formData.append('files[0]', image);
-  const res = await gpFetch(api, formData, false, false, true);
-  if (res.success && res.data.files.length > 0) {
-    if (isUserImage) {
-      setUserCookie(res.updatedUser);
-    }
-    return `${res.data.baseurl}${res.data.files[0]}`;
-  } else {
-    return false;
-  }
-};
-
 const uploadImage = async (image) => {
   try {
     const api = gpApi.uploadBase64Image;
@@ -57,7 +36,6 @@ const uploadImage = async (image) => {
       image,
     };
     const { url } = await gpFetch(api, payload);
-    console.log('res', url);
     return url;
   } catch (e) {
     console.log('error', e);
@@ -89,7 +67,6 @@ export default function ImageUploadWithCrop({
 
   const handleUploadImage = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      // setCrop(undefined); // Makes crop preview update between images.
       const reader = new FileReader();
       reader.addEventListener('load', () => {
         setImgSrc(reader.result?.toString() || '');
@@ -107,10 +84,10 @@ export default function ImageUploadWithCrop({
 
   const handleSave = async () => {
     const canvas = previewCanvasRef.current;
-    console.log('canvas', canvas.toDataURL('image/jpeg'));
     const base64 = canvas.toDataURL('image/jpeg');
     const url = await uploadImage(base64);
-    console.log('handle save url', url);
+    uploadCallback(url);
+
     setShowModal(false);
     setImgSrc('');
     setCompletedCrop(null);
