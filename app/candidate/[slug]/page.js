@@ -56,7 +56,8 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = params;
-  const { candidate, candidatePositions } = await fetchCandidate(slug);
+  const { candidate, candidatePositions, reportedVoterGoals } =
+    await fetchCandidate(slug);
   if (!candidate) {
     notFound();
   }
@@ -64,9 +65,11 @@ export default async function Page({ params }) {
   if (candidateRoute(candidate) !== `/candidate/${slug}`) {
     redirect(candidateRoute(candidate));
   }
+
   const childProps = {
     candidate,
     candidatePositions,
+    reportedVoterGoals,
   };
 
   return (

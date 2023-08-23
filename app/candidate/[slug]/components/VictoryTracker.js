@@ -9,10 +9,18 @@ import Image from 'next/image';
 
 // import GoalsChart from 'components/candidate-portal/CandidatePortalHomeWrapper/GoalsChart';
 
-function VictoryTracker({ candidate, color }) {
+function VictoryTracker({ candidate, color, reportedVoterGoals }) {
   const { voteGoal, voterProjection, finalVotes } = candidate;
+
+  let additionalVotes = 0;
+  if (reportedVoterGoals) {
+    const { doorKnocking, calls, digital } = reportedVoterGoals;
+    additionalVotes += Math.floor(doorKnocking * 0.1);
+    additionalVotes += Math.floor(calls * 0.2);
+    additionalVotes += Math.floor(digital * 0.01);
+  }
   let isWon = false;
-  let progress = voterProjection;
+  let progress = voterProjection + additionalVotes;
   if (finalVotes && finalVotes > voteGoal) {
     isWon = true;
     progress = finalVotes;

@@ -20,7 +20,7 @@ const calcLocation = ({ office, state, district, city }) => {
 };
 
 export default function ProfileSection(props) {
-  const { candidate, color, editMode, campaign } = props;
+  const { candidate, editMode } = props;
 
   const {
     firstName,
