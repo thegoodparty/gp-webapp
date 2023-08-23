@@ -14,6 +14,7 @@ const redirects = {
   '/elections/senate/me': '/',
   '/candidates': '/elections/nashville/2023',
   '/nashville': '/elections/nashville/2023',
+  '/run': '/run-for-office',
 };
 
 export default async function middleware(req) {
