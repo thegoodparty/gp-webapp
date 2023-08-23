@@ -51,7 +51,7 @@ export function hexToRgb(hex) {
     : null;
 }
 
-function GoalsChart({ candidate, color, additionalVotes }) {
+function GoalsChart({ candidate, color, additionalVotes = 0 }) {
   let { voterProjection, voteGoal, finalVotes } = candidate;
   voteGoal = voteGoal || 100;
   let voters = additionalVotes + (voterProjection || 0);
