@@ -13,7 +13,7 @@ export default function CopyToClipboard({ children, text }) {
   };
 
   return (
-    <div className={copied ? '' : 'pb-4'}>
+    <div>
       <CopyHelper text={text} onCopy={onCopyHandler}>
         <div>{children}</div>
       </CopyHelper>
