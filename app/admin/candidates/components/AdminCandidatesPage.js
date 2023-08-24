@@ -6,7 +6,7 @@ import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
 import { useMemo } from 'react';
 import Table from '@shared/utils/Table';
 import Link from 'next/link';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
+import { CSVLink } from 'react-csv';
 import { IoIosPersonAdd } from 'react-icons/io';
 import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
@@ -14,6 +14,7 @@ import Actions from './Actions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import { MdVisibilityOff } from 'react-icons/md';
+import { BsFiletypeCsv } from 'react-icons/bs';
 
 function mapStatus(status, isActive) {
   if (!status) {
@@ -30,6 +31,26 @@ function mapStatus(status, isActive) {
 
 export default function AdminCandidatesPage(props) {
   const { campaigns } = props;
+  const csvData = [
+    [
+      'id',
+      'slug',
+      'firstName',
+      'lastName',
+      'launched',
+      'lastVisited',
+      'party',
+      'office',
+      'city',
+      'district',
+      'state',
+      'createdAt',
+      'updatedAt',
+      'email',
+      'phone',
+      'currentStep',
+    ],
+  ];
 
   const inputData = [];
   if (campaigns) {
@@ -46,7 +67,6 @@ export default function AdminCandidatesPage(props) {
         launched: mapStatus(campaign.launchStatus),
         lastVisited: campaign.lastVisited,
         party: partyResolver(campaign.party),
-        chamber: campaign.chamber,
         office:
           campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
         city: campaign.city,
@@ -59,6 +79,8 @@ export default function AdminCandidatesPage(props) {
         currentStep,
       };
       inputData.push(fields);
+      console.log('Object.values(fields)', Object.values(fields));
+      csvData.push(Object.values(fields));
     });
   }
   const data = useMemo(() => inputData);
@@ -212,21 +234,31 @@ export default function AdminCandidatesPage(props) {
       <PortalPanel color="#2CCDB0">
         <div className="text-right">
           <Link href="/admin/add-candidate">
-            <PrimaryButton>
+            <PrimaryButton size="medium">
               <div className="font-black flex items-center">
                 <IoIosPersonAdd size={24} />{' '}
                 <div className="ml-1"> Add a candidate</div>
               </div>
             </PrimaryButton>
           </Link>
-          <Link href="/admin/all-candidates" className="ml-3">
-            <WarningButton>
+          <Link href="/admin/all-candidates" className="mx-3">
+            <WarningButton size="medium">
               <div className="font-black flex items-center">
                 <MdVisibilityOff size={24} />{' '}
                 <div className="ml-1">All candidates</div>
               </div>
             </WarningButton>
           </Link>
+          <CSVLink
+            data={csvData}
+            filename={`candidates-${dateUsHelper(new Date())}.csv`}
+          >
+            <PrimaryButton size="medium">
+              <div className="font-black flex items-center">
+                <BsFiletypeCsv size={24} />
+              </div>
+            </PrimaryButton>
+          </CSVLink>
         </div>
         <Table columns={columns} data={data} />
       </PortalPanel>
