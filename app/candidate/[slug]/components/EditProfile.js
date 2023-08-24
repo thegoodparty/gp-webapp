@@ -108,6 +108,7 @@ export default function EditProfile(props) {
         'Other',
       ],
     },
+    { label: 'Website', key: 'website', type: 'text' },
     { label: 'Slogan', key: 'slogan', type: 'text', rows: 5 },
   ];
 
