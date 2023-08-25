@@ -56,7 +56,7 @@ export default function PasswordInput({
   onChangeCallback,
   variant = 'outlined',
   label = 'Password',
-  helperText = 'For security, passwords must have at least 1 capital letter, 1 lowercase, 1 number, and 8 minimum characters.',
+  helperText = 'For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character, 1 number, and 8 minimum characters.',
   autoFocus = false,
   className = '',
   InputLabelProps = {},
