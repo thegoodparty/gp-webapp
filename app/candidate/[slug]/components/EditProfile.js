@@ -5,6 +5,10 @@ import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField
 import { flatStates } from 'helpers/statesHelper';
 import { useState } from 'react';
 import { colors } from './CandidateColors';
+import Body2 from '@shared/typography/Body2';
+import { isValidUrl } from 'helpers/linkhelper';
+
+let errorMessage = false;
 
 export default function EditProfile(props) {
   const {
@@ -15,12 +19,13 @@ export default function EditProfile(props) {
     color,
     updateColorCallback,
   } = props;
-  let firstName, lastName, slogan, office, otherOffice, district;
+  let firstName, lastName, slogan, office, otherOffice, district, website;
   if (isStaged && campaign && campaign.details) {
-    ({ firstName, lastName, office, otherOffice, district } = campaign.details);
+    ({ firstName, lastName, office, otherOffice, district, website } =
+      campaign.details);
     ({ slogan } = campaign.campaignPlan);
   } else {
-    ({ firstName, lastName, slogan, office, otherOffice, district } =
+    ({ firstName, lastName, slogan, office, otherOffice, district, website } =
       candidate);
   }
 
@@ -33,7 +38,9 @@ export default function EditProfile(props) {
     district,
     slogan,
     color,
+    website,
   });
+  const [error, setError] = useState(false);
 
   const fields = [
     { label: 'First Name', key: 'firstName', type: 'text' },
@@ -130,6 +137,10 @@ export default function EditProfile(props) {
   };
 
   const handleEdit = async () => {
+    if (!canSubmit()) {
+      setError(errorMessage);
+      return;
+    }
     if (isStaged && campaign) {
       const stateNoSlogan = { ...state };
       delete stateNoSlogan.slogan;
@@ -152,6 +163,33 @@ export default function EditProfile(props) {
         ...state,
       });
     }
+  };
+
+  const canSubmit = () => {
+    if (state.website && state.website !== '' && !isValidUrl(state.website)) {
+      errorMessage = 'Website is required and should start with http';
+      return false;
+    }
+
+    if (state.firstName === '') {
+      errorMessage = 'First name is required';
+      return false;
+    }
+    if (state.lastName === '') {
+      errorMessage = 'Last name is required';
+      return false;
+    }
+    if (state.slogan === '') {
+      errorMessage = 'Slogan is required';
+      return false;
+    }
+    if (state.website && state.website !== '' && !isValidUrl(state.website)) {
+      errorMessage = 'Website is required and should start with http';
+      return false;
+    }
+    errorMessage = false;
+
+    return true;
   };
 
   return (
@@ -192,6 +230,7 @@ export default function EditProfile(props) {
       <div className="mt-16" onClick={handleEdit}>
         <PrimaryButton fullWidth>Save</PrimaryButton>
       </div>
+      {error && <Body2 className="mt-2 text-red text-center">{error}</Body2>}
     </div>
   );
 }
