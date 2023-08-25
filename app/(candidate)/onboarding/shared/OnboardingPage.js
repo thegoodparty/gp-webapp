@@ -71,13 +71,16 @@ export default function OnboardingPage({
         if (field.type === 'text' && value === '') {
           return false;
         }
-
+        if (field.type === 'select' && value === '') {
+          return false;
+        }
         if (!field.initialValue && value === '') {
           return false;
         }
-
         if (field.type === 'radio' && field.validateOptions) {
-          return field.validateOptions.includes(value);
+          if (!field.validateOptions.includes(value)) {
+            return false;
+          }
         }
       }
 
@@ -91,7 +94,6 @@ export default function OnboardingPage({
           return false;
         }
       }
-
       if (field.validate && typeof field.validate === 'function') {
         return field.validate(value);
       }
