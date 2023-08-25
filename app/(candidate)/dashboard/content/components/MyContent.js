@@ -27,20 +27,11 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
+import { fetchUserCampaignClient } from '/helpers/campaignHelper';
 
 const subSectionKey = 'aiContent';
 let aiCount = 0;
 let aiTotalCount = 0;
-
-async function fetchUserCampaignClient() {
-  try {
-    const api = gpApi.campaign.onboarding.findByUser;
-    return await gpFetch(api, false, false);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
 
 export default function MyContent({ prompts }) {
   const [loading, setLoading] = useState(true);
@@ -189,7 +180,7 @@ export default function MyContent({ prompts }) {
       setSections(sectionsObj);
       setLoading(false);
 
-      if (jobsProcessing === true) {
+      if (jobsProcessing) {
         aiCount++;
         aiTotalCount++;
 
@@ -330,12 +321,10 @@ export default function MyContent({ prompts }) {
                 setShowModal(false);
               }}
             >
-              <SecondaryButton disabled={jobStarting === true}>
-                Cancel
-              </SecondaryButton>
+              <SecondaryButton disabled={jobStarting}>Cancel</SecondaryButton>
             </div>
             <div className="ml-3" onClick={onSelectPrompt}>
-              <PrimaryButton disabled={jobStarting === true || selected === ''}>
+              <PrimaryButton disabled={jobStarting || selected === ''}>
                 {jobStarting ? <CircularProgress size={20} /> : 'Create'}
               </PrimaryButton>
             </div>

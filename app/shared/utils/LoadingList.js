@@ -1,6 +1,6 @@
 'use client';
 
-const LoadingList = () => {
+export default function LoadingList() {
   return (
     <div
       role="status"
@@ -44,6 +44,4 @@ const LoadingList = () => {
       <span className="sr-only">Loading...</span>
     </div>
   );
-};
-
-export default LoadingList;
+}
