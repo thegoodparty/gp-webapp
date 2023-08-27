@@ -64,12 +64,12 @@ export default function ContentEditor({
     }
   }, [campaignPlan]);
 
-  const handleEdit = async (editedPlan) => {
+  const handleEdit = async (editedPlan, debounceTime = 5000) => {
     setPlan(editedPlan);
     // add this back to turn autoSave back on.
-    // if (campaignPlan[key].content != plan) {
-    //   debounce(handleTypingComplete, undefined, 5000);
-    // }
+    if (campaignPlan[key].content != plan) {
+      debounce(handleTypingComplete, undefined, debounceTime);
+    }
   };
 
   // Function to be called when the user has finished typing
@@ -298,7 +298,7 @@ export default function ContentEditor({
                         <RichEditor
                           initialText={plan}
                           onChangeCallback={handleEdit}
-                          useOnChange={false}
+                          useOnChange
                           // sx={{'jd-color-border': '#ffffff'}}
                         />
                       </>
@@ -309,13 +309,13 @@ export default function ContentEditor({
                       submitCallback={handleRegenerate}
                       showWarning={isEdited}
                     />
-                    <div onClick={handleSave}>
+                    {/* <div onClick={handleSave}>
                       <PrimaryButton>
                         <div className="flex items-center">
                           <FaSave className="mr-2" /> Save
                         </div>
                       </PrimaryButton>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               )}

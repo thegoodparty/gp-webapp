@@ -22,18 +22,29 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
 import { IoDocumentText } from 'react-icons/io5';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
+import LoadingList from '@shared/utils/LoadingList';
+import { debounce } from '/helpers/debounceHelper';
+import { fetchUserCampaignClient } from '/helpers/campaignHelper';
 
 const subSectionKey = 'aiContent';
 let aiCount = 0;
 let aiTotalCount = 0;
 
-export default function MyContent({ campaign, prompts }) {
+export default function MyContent({ prompts }) {
+  const [loading, setLoading] = useState(true);
   const [section, setSection] = useState('');
-  const [sections, setSections] = useState(campaign[subSectionKey] || {});
+  const [sections, setSections] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState('');
+  const [campaign, setCampaign] = useState(undefined);
+  const [campaignPlan, setCampaignPlan] = useState(undefined);
+  const [jobStarting, setJobStarting] = useState(false);
   const versions = useVersions();
   const [updatedVersions, setUpdatedVersions] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
 
   let tableVersion = true;
 
@@ -44,20 +55,9 @@ export default function MyContent({ campaign, prompts }) {
 
   const onSelectPrompt = () => {
     if (selected !== '') {
+      setJobStarting(true);
       const key = findKey();
       setSection(key);
-      setSections({
-        ...sections,
-        [key]: {
-          key,
-          title: camelToSentence(key),
-          name: camelToSentence(key),
-          icon: '/images/dashboard/slogan-icon.svg',
-        },
-      });
-
-      setSelected('');
-      setShowModal(false);
     }
   };
 
@@ -74,15 +74,17 @@ export default function MyContent({ campaign, prompts }) {
   };
 
   let inputData = [];
-  Object.keys(sections).forEach((key) => {
-    const section = sections[key];
-    inputData.push({
-      name: section.name,
-      updatedAt: new Date(section.updatedAt),
-      slug: camelToKebab(key),
-      documentKey: key,
+  if (sections) {
+    Object.keys(sections).forEach((key) => {
+      const section = sections[key];
+      inputData.push({
+        name: section.name,
+        updatedAt: new Date(section.updatedAt),
+        slug: camelToKebab(key),
+        documentKey: key,
+      });
     });
-  });
+  }
 
   const data = useMemo(() => inputData);
 
@@ -91,17 +93,30 @@ export default function MyContent({ campaign, prompts }) {
       Header: 'Name',
       accessor: 'name',
       Cell: ({ row }) => {
-        return (
-          <Link
-            href="/dashboard/content/[slug]"
-            as={`/dashboard/content/${row.original.slug}`}
-          >
+        if (
+          row.original.updatedAt !== undefined &&
+          row.original.updatedAt != 'Invalid Date'
+        ) {
+          return (
+            <Link
+              href="/dashboard/content/[slug]"
+              as={`/dashboard/content/${row.original.slug}`}
+            >
+              <div className="flex flex-row items-center font-semibold">
+                <IoDocumentText className="ml-3 text-md shrink-0" />
+                <div className="ml-3">{row.original.name}</div>
+              </div>
+            </Link>
+          );
+        } else {
+          return (
+            // do not show link for documents that are processing.
             <div className="flex flex-row items-center font-semibold">
               <IoDocumentText className="ml-3 text-md shrink-0" />
               <div className="ml-3">{row.original.name}</div>
             </div>
-          </Link>
-        );
+          );
+        }
       },
     },
     {
@@ -140,12 +155,66 @@ export default function MyContent({ campaign, prompts }) {
     },
   ]);
 
-  const campaignPlan = campaign[subSectionKey];
-  // const key = section.toLowerCase();
-  const key = section;
+  async function getUserCampaign() {
+    const campaignResponse = await fetchUserCampaignClient();
+    const campaignObj = campaignResponse.campaign;
+    if (campaignObj) {
+      setCampaign(campaignObj);
+      const campaignPlanObj = campaignObj[subSectionKey];
+      setCampaignPlan(campaignPlanObj);
+      const sectionsObj = campaignObj[subSectionKey] || {};
+
+      let jobsProcessing = false;
+      const statusObj = campaignObj.campaignPlanStatus || {};
+      for (const statusKey in statusObj) {
+        if (statusObj[statusKey] === 'processing') {
+          jobsProcessing = true;
+          sectionsObj[statusKey] = {
+            key: statusKey,
+            name: camelToSentence(statusKey),
+            updatedAt: undefined,
+          };
+        }
+      }
+
+      setSections(sectionsObj);
+      setLoading(false);
+
+      if (jobsProcessing) {
+        aiCount++;
+        aiTotalCount++;
+
+        debounce(getUserCampaign, undefined, 10000);
+
+        if (aiTotalCount >= 100) {
+          //fail
+          snackbarState.set(() => {
+            return {
+              isOpen: true,
+              message:
+                'We are experiencing an issue creating your content. Please reach out to your campaign manager.',
+              isError: true,
+            };
+          });
+          setLoading(false);
+          setIsFailed(true);
+          return;
+        }
+      }
+    }
+  }
 
   useEffect(() => {
-    if (section && section != '' && (!campaignPlan || !campaignPlan[section])) {
+    getUserCampaign();
+  }, []);
+
+  useEffect(() => {
+    if (
+      section &&
+      section != '' &&
+      campaign &&
+      (!campaignPlan || !campaignPlan[section])
+    ) {
       createInitialAI();
     }
   }, [campaignPlan, section]);
@@ -167,58 +236,61 @@ export default function MyContent({ campaign, prompts }) {
   }
 
   const createInitialAI = async (regenerate, chat, editMode) => {
-    aiCount++;
-    aiTotalCount++;
-    if (aiTotalCount >= 100) {
-      //fail
-      setPlan(
-        'Failed to generate a campaign plan. Please contact us for help.',
-      );
-      setLoading(false);
-      setIsFailed(true);
-      return;
-    }
-
+    // this is only called once now.
     const { chatResponse, status } = await generateAI(
       subSectionKey,
-      key,
+      section,
       regenerate,
       chat,
       editMode,
     );
+
     if (!chatResponse && status === 'processing') {
-      if (aiCount < 40) {
-        setTimeout(async () => {
-          await createInitialAI();
-        }, 5000);
-      } else {
-        //something went wrong, we are stuck in a loop. reCreate the response
-        console.log('regenerating');
-        aiCount = 0;
-        createInitialAI(true);
+      // job has started.
+      if (jobStarting === true) {
+        console.log('job has started processing!');
+        setJobStarting(false);
+        setShowModal(false);
+        setSelected('');
+        // refresh the campaign.
+        getUserCampaign();
       }
     } else {
-      console.log('chatResponse', chatResponse);
-      aiCount = 0;
-      if (status === 'completed') {
-        window.location.href = '/dashboard/content';
-      }
-      // setLoading(false);
+      setJobStarting(false);
+      setLoading(false);
+      //fail
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message:
+            'There was an error creating your content. Please try again.',
+          isError: true,
+        };
+      });
     }
   };
 
   return (
     <div>
-      <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
-        <PrimaryButton>+ New Content</PrimaryButton>
-      </div>
+      {loading ? (
+        <div className="flex justify-center w-full">
+          {/* <CircularProgress size={50} /> */}
+          <LoadingList />
+        </div>
+      ) : (
+        <>
+          <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
+            <PrimaryButton>+ New Content</PrimaryButton>
+          </div>
 
-      <Table
-        columns={columns}
-        data={data}
-        filterColumns={false}
-        pagination={false}
-      />
+          <Table
+            columns={columns}
+            data={data}
+            filterColumns={false}
+            pagination={false}
+          />
+        </>
+      )}
 
       <Modal closeCallback={() => setShowModal(false)} open={showModal}>
         <div className="lg:min-w-[740px]">
@@ -249,10 +321,12 @@ export default function MyContent({ campaign, prompts }) {
                 setShowModal(false);
               }}
             >
-              <SecondaryButton>Cancel</SecondaryButton>
+              <SecondaryButton disabled={jobStarting}>Cancel</SecondaryButton>
             </div>
             <div className="ml-3" onClick={onSelectPrompt}>
-              <PrimaryButton disabled={selected === ''}>Create</PrimaryButton>
+              <PrimaryButton disabled={jobStarting || selected === ''}>
+                {jobStarting ? <CircularProgress size={20} /> : 'Create'}
+              </PrimaryButton>
             </div>
           </div>
         </div>

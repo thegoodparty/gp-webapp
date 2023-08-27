@@ -1,13 +1,12 @@
 'use client';
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import JoditEditor from 'jodit-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.bubble.css';
 
 export default function RichEditor({
   initialText = '',
   onChangeCallback = () => {},
-  useOnChange = false,
 }) {
-  const editor = useRef(null);
   const [content, setContent] = useState('');
   useEffect(() => {
     if (content !== initialText && initialText !== null) {
@@ -15,58 +14,29 @@ export default function RichEditor({
     }
   }, [initialText]);
 
-  // it is very important to memoize this config
-  const config = useMemo(
-    () => ({
-      readonly: false, // all options from https://xdsoft.net/jodit/doc/
-      enableDragAndDropFileToEditor: false,
-      useSearch: false,
-      toolbar: false,
-      showCharsCounter: false,
-      showWordsCounter: false,
-      showXPathInStatusbar: false,
-      toolbarInlineForSelection: true,
-      showPlaceholder: false,
-      buttons:
-        'bold,italic,underline,strikethrough,ul,ol,fontsize,paragraph,copy,paste,hr,table,print',
-    }),
-    [],
-  );
-
-  const contentChanged = (value) => {
-    if (value != null) {
+  const handleChange = (value) => {
+    if (value) {
       setContent(value);
-      // console.log(value);
       onChangeCallback(value);
     }
   };
 
+  const handleBlur = (previousRange, source, editor) => {
+    const value = editor.getHTML();
+    if (value) {
+      setContent(value);
+      onChangeCallback(value, 1);
+    }
+  };
+
   return (
-    <JoditEditor
-      ref={editor}
-      value={content}
-      config={config}
-      tabIndex={1} // tabIndex of textarea
-      onChange={(newContent) => {
-        if (useOnChange) {
-          // console.log(newContent);
-          if (typeof newContent === 'string') {
-            contentChanged(newContent);
-          } else {
-            contentChanged(newContent?.target?.innerHTML);
-          }
-        }
-      }}
-      onBlur={(newContent) => {
-        if (!useOnChange) {
-          if (typeof newContent === 'string') {
-            contentChanged(newContent);
-          } else {
-            // preferred to use only this option to update the content for performance reasons
-            contentChanged(newContent?.target?.innerHTML);
-          }
-        }
-      }}
-    />
+    <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base">
+      <ReactQuill
+        theme="bubble"
+        value={content}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+    </div>
   );
 }
