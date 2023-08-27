@@ -4,7 +4,7 @@ import TitleSection from '../shared/TitleSection';
 import ThisWeekSection from './ThisWeekSection';
 import ProgressSection from './ProgressSection';
 import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
 import H3 from '@shared/typography/H3';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
@@ -20,6 +20,16 @@ export default function DashboardPage(props) {
     calls: reportedVoterGoals?.calls || 0,
     digital: reportedVoterGoals?.digital || 0,
   });
+
+  useEffect(() => {
+    if (campaign) {
+      setState({
+        doorKnocking: reportedVoterGoals?.doorKnocking || 0,
+        calls: reportedVoterGoals?.calls || 0,
+        digital: reportedVoterGoals?.digital || 0,
+      });
+    }
+  }, [campaign]);
 
   const { electionDate } = goals;
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory;
@@ -50,7 +60,7 @@ export default function DashboardPage(props) {
     updateCountCallback,
     dateRange,
   };
-  console.log('weeksUntil.weeks', weeksUntil.weeks, !weeksUntil.weeks < 0);
+
   return (
     <DashboardLayout {...childProps}>
       <div className="max-w-[940px] mx-auto">
