@@ -12,10 +12,10 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@shared/inputs/TextField';
-import JoditEditorWrapper from '@shared/inputs/JoditEditorWrapper';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { trimObject } from 'helpers/stringHelper';
 import { useRouter } from 'next/navigation.js';
+import RichEditor from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor';
 
 export const createCandidateCallback = async (candidate) => {
   const api = gpApi.candidate.create;
@@ -164,7 +164,7 @@ export default function AddCandidatePage(props) {
           </Fragment>
         ))}
         <div className="mt-8 mb-4">About</div>
-        <JoditEditorWrapper
+        <RichEditor
           onChangeCallback={(value) => setAbout(value)}
           initialText={about}
         />
