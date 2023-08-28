@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -48,7 +47,6 @@ export default function ContentEditor({
   const [loading, setLoading] = useState(true);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
   const [documentName, setDocumentName] = useState('Untitled Document');
   const [saved, setSaved] = useState('Saved');
 
@@ -94,14 +92,6 @@ export default function ContentEditor({
   };
 
   const handleSave = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
-
     setSaved('Saving...');
 
     const updated = campaign;
@@ -226,7 +216,13 @@ export default function ContentEditor({
           </div>
 
           <div className="ml-1 mr-1">
-            <div className="text-indigo-100 p-1 mt-2">{saved}</div>
+            <div
+              className={`p-1 mt-2 ${
+                saved === 'Saving...' ? 'text-primary' : 'text-indigo-100'
+              }`}
+            >
+              {saved}
+            </div>
           </div>
         </div>
 
