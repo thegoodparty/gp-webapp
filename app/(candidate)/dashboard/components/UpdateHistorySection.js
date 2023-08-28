@@ -7,10 +7,10 @@ import { useMemo } from 'react';
 import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
 
-const icons = {
-  doorKnocking: <RiDoorOpenLine />,
-  calls: <RiPhoneLine />,
-  digital: <FaBullhorn />,
+const fields = {
+  doorKnocking: { icon: <RiDoorOpenLine />, title: 'Doors knocked' },
+  calls: { icon: <RiPhoneLine />, title: 'Calls made' },
+  digital: { icon: <FaBullhorn />, title: 'Online impressions' },
 };
 
 export default function UpdateHistorySection(props) {
@@ -44,7 +44,8 @@ export default function UpdateHistorySection(props) {
       Cell: ({ row }) => {
         return (
           <div className="flex items-center pl-2">
-            {icons[row.original.type]} &nbsp; {row.original.type}
+            {fields[row.original.type].icon} &nbsp;{' '}
+            {fields[row.original.type].title}
           </div>
         );
       },

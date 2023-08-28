@@ -13,6 +13,7 @@ import CardProgressPill from './CardProgressPill';
 
 export default function TrackerCard(props) {
   const [showModal, setShowModal] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const { card, updateCountCallback, reportedVoterGoals, weeksUntil } = props;
   const { key, title, subTitle, progress, total, icon } = card;
@@ -24,12 +25,16 @@ export default function TrackerCard(props) {
   };
 
   const handleSubmit = () => {
-    const newAddition = parseInt(value, 10);
+    let newAddition = parseInt(value, 10);
+    if (newAddition < 0) {
+      setShowError('Positive numbers only');
+      return;
+    }
     const newTotal = reportedVoterGoals[key] + newAddition;
-    const positiveTotal = newTotal > 0 ? newTotal : 0;
-    updateCountCallback(key, positiveTotal, newAddition);
+    updateCountCallback(key, newTotal, newAddition);
     setShowModal(false);
     setValue(0);
+    setShowError(false);
   };
   return (
     <div className="bg-gray-50 pt-10 pb-6 px-7 border border-slate-300 rounded-2xl relative">
@@ -69,6 +74,7 @@ export default function TrackerCard(props) {
               fullWidth
               type="number"
             />
+            {showError && <div className="mt-3 text-red">{showError}</div>}
             <div className="flex justify-center items-center mt-3">
               <div
                 className="mr-6 cursor-pointer hover:underline"
