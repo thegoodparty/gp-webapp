@@ -158,6 +158,19 @@ const gpApi = {
       },
     },
 
+    UpdateHistory: {
+      create: {
+        url: `${base}campaign/update-history`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/update-histories`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,

@@ -93,7 +93,7 @@ export default function ProgressSection(props) {
                   {weeks === 12 - index || (weeks === 0 && index === 11) ? (
                     <>
                       <strong>current</strong>
-                      <div className="absolute w-full h-[116px] bg-gray-400 rounded-lg opacity-50 top-7 left-0"></div>
+                      <div className="absolute w-full h-[116px] bg-lime-100 rounded-lg opacity-50 top-7 left-0"></div>
                     </>
                   ) : (
                     <>
