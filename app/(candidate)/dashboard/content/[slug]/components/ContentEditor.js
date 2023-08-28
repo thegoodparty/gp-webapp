@@ -62,7 +62,7 @@ export default function ContentEditor({
     }
   }, [campaignPlan]);
 
-  const handleEdit = async (editedPlan, debounceTime = 5000) => {
+  const handleEdit = async (editedPlan, debounceTime = 1500) => {
     setPlan(editedPlan);
     // add this back to turn autoSave back on.
     if (campaignPlan[key].content != plan) {
