@@ -67,6 +67,7 @@ export default function Table({
   data,
   filterColumns = true,
   pagination = true,
+  initialSortById = '',
 }) {
   let filterTypes = useMemo(
     () => ({
@@ -116,7 +117,11 @@ export default function Table({
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: {
+        pageIndex: 0,
+        sortBy:
+          initialSortById != '' ? [{ id: initialSortById, desc: true }] : [],
+      },
       defaultColumn,
       filterTypes,
     },
