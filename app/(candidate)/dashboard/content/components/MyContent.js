@@ -288,6 +288,7 @@ export default function MyContent({ prompts }) {
             data={data}
             filterColumns={false}
             pagination={false}
+            initialSortById="updatedAt"
           />
         </>
       )}
