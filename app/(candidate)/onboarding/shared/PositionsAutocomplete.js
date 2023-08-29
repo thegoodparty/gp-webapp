@@ -5,7 +5,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@shared/inputs/TextField';
 import { MdDeleteForever } from 'react-icons/md';
 
-import styles from './PositionsSelector.module.scss';
 import H5 from '@shared/typography/H5';
 import { Paper } from '@mui/material';
 import { RiSearch2Line } from 'react-icons/ri';
@@ -29,7 +28,7 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
   };
 
   return (
-    <div className={styles.square}>
+    <div>
       <Autocomplete
         options={sorted}
         groupBy={(option) => {
