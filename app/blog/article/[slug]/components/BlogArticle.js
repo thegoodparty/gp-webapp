@@ -5,6 +5,7 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import Image from 'next/image';
 import styles from './BlogArticle.module.scss';
 import Banner from './Banner';
+import ShareBlog from 'app/blog/shared/ShareBlog';
 
 export default function BlogArticle({ sections, article }) {
   const {
@@ -40,6 +41,7 @@ export default function BlogArticle({ sections, article }) {
           </div>
         )}
         <div>
+          <ShareBlog />
           <div>
             <div className={styles.section}>{section.fields?.title}</div>
             <h1 className={styles.h1}>{title}</h1>
