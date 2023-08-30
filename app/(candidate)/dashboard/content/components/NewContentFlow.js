@@ -13,6 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TextField from '@shared/inputs/TextField';
+import InputFieldsModal from './InputFieldsModal';
 
 export async function fetchInputFields(subKey) {
   const api = gpApi.content.contentByKey;
@@ -20,7 +21,7 @@ export async function fetchInputFields(subKey) {
     key: 'promptInputFields',
     subKey,
   };
-  return await gpFetch(api, payload, 120);
+  return await gpFetch(api, payload, 3600);
 }
 
 export default function NewContentFlow({
@@ -140,34 +141,14 @@ export default function NewContentFlow({
         </div>
       </Modal>
 
-      <Modal closeCallback={() => setShowModal2(false)} open={showModal2}>
-        <div className="lg:min-w-[400px] max-w-lg">
-          <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
-            Additional Inputs
-          </H2>
-          {inputFields.map((field) => (
-            <div className="mb-6" key={field.title}>
-              <TextField
-                required
-                type={field.isDate ? 'date' : 'text'}
-                label={field.title}
-                helperText={field.helperText}
-                fullWidth
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={inputState[field.title] || ''}
-                onChange={(e) => {
-                  onChangeField(field.title, e.target.value);
-                }}
-              />
-            </div>
-          ))}
-          <div className="flex justify-center" onClick={handleCreate}>
-            <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
-          </div>
-        </div>
-      </Modal>
+      <InputFieldsModal
+        onSelectCallback={onSelectCallback}
+        sections={sections}
+        closeModalCallback={() => setShowModal2(false)}
+        showModal={showModal2 && selected}
+        selectedKey={selected}
+        inputFields={inputFields}
+      />
     </div>
   );
 }

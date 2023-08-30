@@ -19,6 +19,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
+import { fetchInputFields } from '../../components/NewContentFlow';
+import InputFieldsModal from '../../components/InputFieldsModal';
 
 const RichEditor = dynamic(
   () =>
@@ -49,6 +51,8 @@ export default function ContentEditor({
   const [isFailed, setIsFailed] = useState(false);
   const [documentName, setDocumentName] = useState('Untitled Document');
   const [saved, setSaved] = useState('Saved');
+  const [inputFields, setInputFields] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const campaignPlan = campaign[subSectionKey];
   const key = section;
@@ -59,8 +63,19 @@ export default function ContentEditor({
       setDocumentName(campaignPlan[key].name);
       setLoading(false);
       setIsTyped(true);
+      loadInputFields();
     }
   }, [campaignPlan]);
+
+  const loadInputFields = async () => {
+    const keyNoDigits = key.replace(/\d+$/, '');
+    const { content } = await fetchInputFields(keyNoDigits);
+    if (content) {
+      setInputFields(content);
+    } else {
+      setInputFields(false);
+    }
+  };
 
   const handleEdit = async (editedPlan, debounceTime = 5000) => {
     setPlan(editedPlan);
@@ -227,30 +242,38 @@ export default function ContentEditor({
         </div>
 
         <div className="flex w-full justify-end items-center justify-items-center">
+          {inputFields && (
+            <div className="mr-3" onClick={() => setShowModal(true)}>
+              <PrimaryButton size="medium">
+                Change <span className="hidden md:inline-block">details</span>
+              </PrimaryButton>
+            </div>
+          )}
           {/* copy button mobile */}
           <div className="md:hidden mr-3">
             <CopyToClipboard text={plan}>
               <PrimaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap p-1">
+                <div className="flex items-center whitespace-nowrap px-1  h-6">
                   <LuClipboard className="text-sm" />
                   &nbsp;
                 </div>
               </PrimaryButton>
             </CopyToClipboard>
           </div>
-
           {/* copy button desktop */}
           <div className="hidden md:block mr-3">
             <CopyToClipboard text={plan} usePadding={false}>
-              <PrimaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap p-1">
-                  <LuClipboard className="text-sm" />
-                  &nbsp; Copy
+              <PrimaryButton
+                size="medium"
+                className="flex items-center whitespace-nowrap"
+              >
+                <div className="flex items-center whitespace-nowrap h-6">
+                  <LuClipboard className="text-sm mr-1" />
+                  <div>Copy</div>
                 </div>
               </PrimaryButton>
             </CopyToClipboard>
           </div>
-
           {/* version button */}
           <PlanVersion
             campaign={campaign}
@@ -258,7 +281,6 @@ export default function ContentEditor({
             updatePlanCallback={updatePlanCallback}
             latestVersion={campaignPlan ? campaignPlan[key].content : ''}
           />
-
           <Actions
             slug={key}
             setDocumentName={setDocumentName}
@@ -319,6 +341,14 @@ export default function ContentEditor({
           </section>
         </div>
       </div>
+      <InputFieldsModal
+        onSelectCallback={onSelectCallback}
+        sections={campaignPlan}
+        closeModalCallback={() => setShowModal(false)}
+        showModal={showModal}
+        selectedKey={key}
+        inputFields={inputFields}
+      />
     </div>
   );
 }
