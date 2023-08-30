@@ -17,7 +17,7 @@ function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
     makeAspectCrop(
       {
         unit: '%',
-        width: 90,
+        width: 10,
       },
       aspect,
       mediaWidth,
@@ -82,6 +82,9 @@ export default function ImageUploadWithCrop({
   }
 
   const handleSave = async () => {
+    if (!completedCrop?.width) {
+      return null;
+    }
     setUploading(true);
     const canvas = previewCanvasRef.current;
     const base64 = canvas.toDataURL('image/jpeg');
@@ -193,7 +196,9 @@ export default function ImageUploadWithCrop({
               </div>
             ) : (
               <div onClick={handleSave} className="text-center mt-2">
-                <PrimaryButton>Save</PrimaryButton>
+                <PrimaryButton disabled={!completedCrop?.width}>
+                  Save
+                </PrimaryButton>
               </div>
             )}
           </div>
