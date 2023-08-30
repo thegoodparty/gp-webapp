@@ -5,7 +5,7 @@ import { useHookstate } from '@hookstate/core';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import LoadingAI from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/LoadingAI';
+import LoadingContent from './LoadingContent';
 import BlackButton from '@shared/buttons/BlackButton';
 import AiModal from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/AiModal';
 import Typewriter from 'typewriter-effect';
@@ -45,6 +45,7 @@ export default function ContentEditor({
   const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [regenerating, setRegenerating] = useState(false);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const [documentName, setDocumentName] = useState('Untitled Document');
@@ -58,6 +59,7 @@ export default function ContentEditor({
       setPlan(campaignPlan[key].content);
       setDocumentName(campaignPlan[key].name);
       setLoading(false);
+      setRegenerating(false);
       setIsTyped(true);
     }
   }, [campaignPlan]);
@@ -76,7 +78,8 @@ export default function ContentEditor({
   };
 
   const handleRegenerate = async (improveQuery) => {
-    setLoading(true);
+    // setLoading(true);
+    setRegenerating(true);
     let chat = [];
     if (improveQuery !== '') {
       chat = [
@@ -148,6 +151,7 @@ export default function ContentEditor({
         'Failed to generate a campaign plan. Please contact us for help.',
       );
       setLoading(false);
+      setRegenerating(false);
       setIsFailed(true);
       return;
     }
@@ -177,6 +181,7 @@ export default function ContentEditor({
         setPlan(chatResponse.content);
         await updateVersionsCallback();
         setLoading(false);
+        setRegenerating(false);
         setSaved('Saved');
       }
     }
@@ -273,7 +278,12 @@ export default function ContentEditor({
           <section key={section.key} className="my-3">
             <div className="">
               {loading ? (
-                <LoadingAI />
+                <LoadingContent
+                  title="Your content is loading ..."
+                  subtitle="Please wait"
+                />
+              ) : regenerating ? (
+                <LoadingContent />
               ) : (
                 <div className="border-0">
                   {/* <div className={`p-3 ${styles.root}`}> */}
