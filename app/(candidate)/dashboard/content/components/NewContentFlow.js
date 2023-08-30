@@ -69,6 +69,9 @@ export default function NewContentFlow({
   };
 
   const handleCreate = () => {
+    if (!canCreate) {
+      return;
+    }
     let additionalPrompt = 'additional info:\n';
     inputFields.forEach((field) => {
       additionalPrompt += `${field.title}: ${inputState[field.title]}\n`;
@@ -79,6 +82,16 @@ export default function NewContentFlow({
     setShowModal2(false);
     setInputFields([]);
     setInputState({});
+  };
+
+  const canCreate = () => {
+    for (let i = 0; i < inputFields.length; i++) {
+      const field = inputFields[i];
+      if (!inputState[field.title] || inputState[field.title] === '') {
+        return false;
+      }
+    }
+    return true;
   };
 
   return (
@@ -135,6 +148,7 @@ export default function NewContentFlow({
           {inputFields.map((field) => (
             <div className="mb-6" key={field.title}>
               <TextField
+                required
                 type={field.isDate ? 'date' : 'text'}
                 label={field.title}
                 helperText={field.helperText}
@@ -150,7 +164,7 @@ export default function NewContentFlow({
             </div>
           ))}
           <div className="flex justify-center" onClick={handleCreate}>
-            <PrimaryButton>Create</PrimaryButton>
+            <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
           </div>
         </div>
       </Modal>

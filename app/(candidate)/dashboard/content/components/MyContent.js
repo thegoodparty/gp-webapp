@@ -238,15 +238,16 @@ export default function MyContent({ prompts }) {
       // job has started.
       if (jobStarting === true) {
         console.log('job has started processing!');
-        setJobStarting(false);
-        setChat(false);
+
         // refresh the campaign.
         await getUserCampaign();
+        setJobStarting(false);
+        setInitialChat(false);
       }
     } else {
       setJobStarting(false);
       setLoading(false);
-      setChat(false);
+      setInitialChat(false);
       //fail
       snackbarState.set(() => {
         return {
