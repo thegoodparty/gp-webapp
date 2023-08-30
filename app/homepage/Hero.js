@@ -30,8 +30,8 @@ export default function Hero() {
             and free tech to end America&apos;s two-party political dysfunction
           </h2>
           <h3 className="text-lg font-sfpro font-normal leading-6 mt-5">
-            Discover independent candidates, volunteer, or run for office to
-            join the movement
+            Learn how you can plug in to inspiring independent campaigns or get
+            access to our free tools for people-powered candidates
           </h3>
           <EmailForm
             formId="5d84452a-01df-422b-9734-580148677d2c"
