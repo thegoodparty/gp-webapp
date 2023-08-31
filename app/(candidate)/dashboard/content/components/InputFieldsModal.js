@@ -10,25 +10,11 @@ import TextField from '@shared/inputs/TextField';
 
 export default function InputFieldsModal({
   onSelectCallback,
-  sections,
   closeModalCallback,
   showModal,
-  selectedKey,
   inputFields,
 }) {
   const [inputState, setInputState] = useState({});
-
-  const findKey = () => {
-    if (!sections[selectedKey]) {
-      return selectedKey;
-    }
-    for (let i = 2; i < 20; i++) {
-      if (!sections[`${selectedKey}${i}`]) {
-        return `${selectedKey}${i}`;
-      }
-    }
-    return `${selectedKey}21`;
-  };
 
   const onChangeField = (key, value) => {
     setInputState({
@@ -45,9 +31,7 @@ export default function InputFieldsModal({
     inputFields.forEach((field) => {
       additionalPrompt += `${field.title}: ${inputState[field.title]}\n`;
     });
-    const chat = [{ role: 'user', content: additionalPrompt }];
-    const newKey = findKey();
-    onSelectCallback(newKey, chat);
+    onSelectCallback(additionalPrompt);
     closeModalCallback();
     setInputState({});
   };
@@ -86,7 +70,20 @@ export default function InputFieldsModal({
             />
           </div>
         ))}
-        <div className="flex justify-center" onClick={handleCreate}>
+        <TextField
+          type="text"
+          label="Additional instructions"
+          helperText="you can ask anything here"
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={inputState['Additional instructions']}
+          onChange={(e) => {
+            onChangeField('Additional instructions', e.target.value);
+          }}
+        />
+        <div className="flex justify-center mt-6" onClick={handleCreate}>
           <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
         </div>
       </div>

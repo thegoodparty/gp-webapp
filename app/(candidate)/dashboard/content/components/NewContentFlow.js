@@ -34,7 +34,6 @@ export default function NewContentFlow({
   const [showModal2, setShowModal2] = useState(false);
   const [selected, setSelected] = useState('');
   const [inputFields, setInputFields] = useState([]);
-  const [inputState, setInputState] = useState({});
 
   const onSelectPrompt = async () => {
     if (selected !== '') {
@@ -62,37 +61,12 @@ export default function NewContentFlow({
     return `${selected}21`;
   };
 
-  const onChangeField = (key, value) => {
-    setInputState({
-      ...inputState,
-      [key]: value,
-    });
-  };
-
-  const handleCreate = () => {
-    if (!canCreate) {
-      return;
-    }
-    let additionalPrompt = 'additional info:\n';
-    inputFields.forEach((field) => {
-      additionalPrompt += `${field.title}: ${inputState[field.title]}\n`;
-    });
+  const handleAdditionalInput = (additionalPrompt) => {
     const chat = [{ role: 'user', content: additionalPrompt }];
     const key = findKey();
     onSelectCallback(key, chat);
     setShowModal2(false);
     setInputFields([]);
-    setInputState({});
-  };
-
-  const canCreate = () => {
-    for (let i = 0; i < inputFields.length; i++) {
-      const field = inputFields[i];
-      if (!inputState[field.title] || inputState[field.title] === '') {
-        return false;
-      }
-    }
-    return true;
   };
 
   return (
@@ -142,11 +116,9 @@ export default function NewContentFlow({
       </Modal>
 
       <InputFieldsModal
-        onSelectCallback={onSelectCallback}
-        sections={sections}
+        onSelectCallback={handleAdditionalInput}
         closeModalCallback={() => setShowModal2(false)}
         showModal={showModal2 && selected}
-        selectedKey={selected}
         inputFields={inputFields}
       />
     </div>

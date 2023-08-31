@@ -52,7 +52,7 @@ export default function ContentEditor({
   const [isFailed, setIsFailed] = useState(false);
   const [documentName, setDocumentName] = useState('Untitled Document');
   const [saved, setSaved] = useState('Saved');
-  const [inputFields, setInputFields] = useState(false);
+  const [inputFields, setInputFields] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
   const campaignPlan = campaign[subSectionKey];
@@ -75,7 +75,7 @@ export default function ContentEditor({
     if (content) {
       setInputFields(content);
     } else {
-      setInputFields(false);
+      setInputFields([]);
     }
   };
 
@@ -200,6 +200,17 @@ export default function ContentEditor({
         setSaved('Saved');
       }
     }
+  };
+
+  const handleAdditionalInput = async (additionalPrompt) => {
+    setLoading(true);
+    const chat = [
+      { role: 'system', content: plan },
+      { role: 'user', content: additionalPrompt },
+    ];
+    await createInitialAI(true, chat, true);
+
+    setShowModal(false);
   };
 
   return (
@@ -352,11 +363,9 @@ export default function ContentEditor({
         </div>
       </div>
       <InputFieldsModal
-        onSelectCallback={onSelectCallback}
-        sections={campaignPlan}
+        onSelectCallback={handleAdditionalInput}
         closeModalCallback={() => setShowModal(false)}
         showModal={showModal}
-        selectedKey={key}
         inputFields={inputFields}
       />
     </div>
