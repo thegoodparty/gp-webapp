@@ -28,6 +28,7 @@ import { globalSnackbarState } from '@shared/utils/Snackbar';
 import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
 import { fetchUserCampaignClient } from '/helpers/campaignHelper';
+import NewContentFlow from './NewContentFlow';
 
 const subSectionKey = 'aiContent';
 let aiCount = 0;
@@ -37,8 +38,7 @@ export default function MyContent({ prompts }) {
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState('');
   const [sections, setSections] = useState(undefined);
-  const [showModal, setShowModal] = useState(false);
-  const [selected, setSelected] = useState('');
+  const [initialChat, setInitialChat] = useState(false);
   const [campaign, setCampaign] = useState(undefined);
   const [campaignPlan, setCampaignPlan] = useState(undefined);
   const [jobStarting, setJobStarting] = useState(false);
@@ -53,24 +53,12 @@ export default function MyContent({ prompts }) {
     setUpdatedVersions(versions);
   };
 
-  const onSelectPrompt = () => {
-    if (selected !== '') {
-      setJobStarting(true);
-      const key = findKey();
-      setSection(key);
+  const onSelectPrompt = (key, additionalPrompts) => {
+    setJobStarting(true);
+    if (additionalPrompts) {
+      setInitialChat(additionalPrompts);
     }
-  };
-
-  const findKey = () => {
-    if (!sections[selected]) {
-      return selected;
-    }
-    for (let i = 2; i < 20; i++) {
-      if (!sections[`${selected}${i}`]) {
-        return `${selected}${i}`;
-      }
-    }
-    return `${selected}21`;
+    setSection(key);
   };
 
   let inputData = [];
@@ -237,11 +225,12 @@ export default function MyContent({ prompts }) {
 
   const createInitialAI = async (regenerate, chat, editMode) => {
     // this is only called once now.
+    const resolvedChat = chat || initialChat;
     const { chatResponse, status } = await generateAI(
       subSectionKey,
       section,
       regenerate,
-      chat,
+      resolvedChat,
       editMode,
     );
 
@@ -249,15 +238,16 @@ export default function MyContent({ prompts }) {
       // job has started.
       if (jobStarting === true) {
         console.log('job has started processing!');
-        setJobStarting(false);
-        setShowModal(false);
-        setSelected('');
+
         // refresh the campaign.
-        getUserCampaign();
+        await getUserCampaign();
+        setJobStarting(false);
+        setInitialChat(false);
       }
     } else {
       setJobStarting(false);
       setLoading(false);
+      setInitialChat(false);
       //fail
       snackbarState.set(() => {
         return {
@@ -279,9 +269,12 @@ export default function MyContent({ prompts }) {
         </div>
       ) : (
         <>
-          <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
-            <PrimaryButton>+ New Content</PrimaryButton>
-          </div>
+          <NewContentFlow
+            prompts={prompts}
+            onSelectCallback={onSelectPrompt}
+            sections={sections}
+            isProcessing={jobStarting}
+          />
 
           <Table
             columns={columns}
@@ -292,46 +285,6 @@ export default function MyContent({ prompts }) {
           />
         </>
       )}
-
-      <Modal closeCallback={() => setShowModal(false)} open={showModal}>
-        <div className="lg:min-w-[740px]">
-          <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
-            Create content
-          </H2>
-          <H6 className="mt-14 mb-2">Select a template</H6>
-          <Select
-            native
-            value={selected}
-            required
-            variant="outlined"
-            fullWidth
-            onChange={(e) => {
-              setSelected(e.target.value);
-            }}
-          >
-            <option value="">Select an option</option>
-            {prompts.map((prompt) => (
-              <option key={prompt.key} value={prompt.key}>
-                {prompt.title}
-              </option>
-            ))}
-          </Select>
-          <div className="mt-16 flex w-full justify-end">
-            <div
-              onClick={() => {
-                setShowModal(false);
-              }}
-            >
-              <SecondaryButton disabled={jobStarting}>Cancel</SecondaryButton>
-            </div>
-            <div className="ml-3" onClick={onSelectPrompt}>
-              <PrimaryButton disabled={jobStarting || selected === ''}>
-                {jobStarting ? <CircularProgress size={20} /> : 'Create'}
-              </PrimaryButton>
-            </div>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }
