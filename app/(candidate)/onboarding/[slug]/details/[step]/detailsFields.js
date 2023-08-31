@@ -152,10 +152,9 @@ const detailsFields = [
       },
       {
         key: 'district',
-        label: 'District',
+        label: 'District (if applicable)',
         type: 'text',
         hidden: true,
-        requiredHidden: true,
         showKey: 'office',
         showCondition: [
           'City Council',
@@ -178,7 +177,7 @@ const detailsFields = [
       },
       {
         key: 'city',
-        label: 'City',
+        label: 'City/Town',
         type: 'text',
         hidden: true,
         requiredHidden: true,
