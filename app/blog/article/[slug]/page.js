@@ -42,8 +42,7 @@ export default async function Page({ params }) {
     notFound();
   }
 
-  const sectionsRes = await fetchSections();
-  const sections = sectionsRes.content;
+  const sections = await fetchSections();
 
   const childProps = {
     article: content,

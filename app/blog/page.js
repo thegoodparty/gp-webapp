@@ -16,7 +16,14 @@ export const fetchSections = async () => {
     key: 'blogSections',
     deleteKey: 'articles',
   };
-  return await gpFetch(api, payload, 3600);
+  const { content } = await gpFetch(api, payload, 3600);
+
+  let sections = [];
+  for (let i = 0; i < content.length; i++) {
+    const section = content[i];
+    sections[section.fields.order] = section;
+  }
+  return sections;
 };
 
 export const fetchArticles = async () => {
@@ -34,8 +41,7 @@ export const fetchArticlesTitles = async () => {
 };
 
 export default async function Page({ params, searchParams }) {
-  const sectionsRes = await fetchSections();
-  const sections = sectionsRes.content;
+  const sections = await fetchSections();
   const articlesRes = await fetchArticles();
   const { titles } = await fetchArticlesTitles();
 
