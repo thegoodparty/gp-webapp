@@ -5,16 +5,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getUserCookie, setCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
 import WarningButton from '@shared/buttons/WarningButton';
-
-export async function fetchUserCampaign() {
-  try {
-    const api = gpApi.campaign.onboarding.findByUser;
-    return await gpFetch(api, false, 1);
-  } catch (e) {
-    console.log('error1', JSON.stringify(e));
-    return false;
-  }
-}
+import { fetchUserCampaignClient } from 'helpers/campaignHelper';
 
 export async function createCampaign() {
   try {
@@ -43,7 +34,7 @@ export default function RunCampaignButton({
       setCookie('afterAction', 'createCampaign');
       router.push('/register');
     } else {
-      const { campaign } = await fetchUserCampaign();
+      const { campaign } = await fetchUserCampaignClient();
       if (campaign?.slug) {
         router.push(`/onboarding/${campaign.slug}/dashboard`);
       } else {

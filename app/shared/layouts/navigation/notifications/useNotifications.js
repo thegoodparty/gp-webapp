@@ -24,7 +24,6 @@ export default function useNotifications() {
   }, []);
 
   const loadNotifications = async () => {
-    console.log('fetching notifications');
     const res = await fetchNotifications();
     setNotifications(res.notifications);
   };

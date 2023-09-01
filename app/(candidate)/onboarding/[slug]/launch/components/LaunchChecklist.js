@@ -102,6 +102,7 @@ export default function LaunchChecklist({ campaign }) {
   const { slug, launchStatus, candidateSlug } = campaign;
   const [selected, setSelected] = useState(false);
   const [state, setState] = useState(initialState);
+  const [processing, setProcessing] = useState(false);
   const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
 
@@ -152,6 +153,7 @@ export default function LaunchChecklist({ campaign }) {
     if (launchStatus === 'launched' && candidateSlug) {
       router.push(`/candidate/${candidateSlug}`);
     } else {
+      setProcessing(true);
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -163,6 +165,7 @@ export default function LaunchChecklist({ campaign }) {
       if (res) {
         window.location.href = `/onboarding/${slug}/dashboard`;
       } else {
+        setProcessing(false);
         snackbarState.set(() => {
           return {
             isOpen: true,
@@ -216,7 +219,7 @@ export default function LaunchChecklist({ campaign }) {
         </a>
         <Confetti
           button={
-            <YellowButtonClient onClick={handleSave}>
+            <YellowButtonClient onClick={handleSave} disabled={processing}>
               <strong>
                 {launchStatus === 'launched' ? (
                   'VIEW YOUR PROFILE'

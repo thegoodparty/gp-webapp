@@ -9,10 +9,24 @@ import Image from 'next/image';
 
 // import GoalsChart from 'components/candidate-portal/CandidatePortalHomeWrapper/GoalsChart';
 
-function VictoryTracker({ candidate, color }) {
+function VictoryTracker({ candidate, color, reportedVoterGoals }) {
   const { voteGoal, voterProjection, finalVotes } = candidate;
+
+  let additionalVotes = 0;
+  if (reportedVoterGoals) {
+    const { doorKnocking, calls, digital } = reportedVoterGoals;
+    if (doorKnocking) {
+      additionalVotes += Math.floor(doorKnocking * 0.1);
+    }
+    if (calls) {
+      additionalVotes += Math.floor(calls * 0.2);
+    }
+    if (digital) {
+      additionalVotes += Math.floor(digital * 0.01);
+    }
+  }
   let isWon = false;
-  let progress = voterProjection;
+  let progress = voterProjection + additionalVotes;
   if (finalVotes && finalVotes > voteGoal) {
     isWon = true;
     progress = finalVotes;
@@ -20,7 +34,11 @@ function VictoryTracker({ candidate, color }) {
 
   return (
     <div className="relative z-10">
-      <GoalsChart candidate={candidate} color={color} />
+      <GoalsChart
+        candidate={candidate}
+        color={color}
+        additionalVotes={additionalVotes}
+      />
       {isWon && (
         <div className="absolute top-[160px] right-[26px] rotate-[30deg]">
           <Image src="/images/heart.svg" width={25} height={20} alt="win" />

@@ -7,7 +7,6 @@ import FactsSection from './FactsSection';
 import HowSection from './HowSection';
 import ToolsSection from './ToolsSection';
 import Cta from './Cta';
-import Nashville from './Nashville';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
 export default function HomePage() {
@@ -24,7 +23,6 @@ export default function HomePage() {
   return (
     <div className="bg-slate-50">
       <Hero />
-      <Nashville />
       <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
       <FactsSection />
       <div className="bg-[linear-gradient(-172deg,_#13161A_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />

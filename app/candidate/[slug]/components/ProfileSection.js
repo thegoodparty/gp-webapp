@@ -9,18 +9,33 @@ import CandidatePill from './CandidatePill';
 import { Fragment } from 'react';
 
 const federalOffices = ['US Senate', 'US House of Representatives'];
+const noDistrictOffices = [
+  'US Senate',
+  'Mayor',
+  'Governor',
+  'Lieutenant Governor',
+  'Attorney General',
+  'Comptroller',
+  'Treasurer',
+  'Secretary of State',
+  'State Supreme Court Justice',
+];
 
 const calcLocation = ({ office, state, district, city }) => {
   const isFederal = federalOffices.includes(office);
+  const noDistrict = noDistrictOffices.includes(office);
   let str = '';
   if (isFederal) {
     return `${district ? `${district}, ` : ''} ${state}`;
+  }
+  if (noDistrict) {
+    return `${city ? `${city},` : ''} ${state}`;
   }
   return `${city ? `District ${district}, ${city}` : district}, ${state}`;
 };
 
 export default function ProfileSection(props) {
-  const { candidate, color, editMode, campaign } = props;
+  const { candidate, editMode } = props;
 
   const {
     firstName,

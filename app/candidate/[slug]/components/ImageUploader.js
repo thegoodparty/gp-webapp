@@ -2,6 +2,7 @@
 
 import WarningButton from '@shared/buttons/WarningButton';
 import ImageUpload from '@shared/inputs/ImageUpload';
+import ImageUploadWithCrop from '@shared/inputs/ImageUploadWithCrop';
 import { revalidateCandidates } from 'helpers/cacheHelper';
 
 export default function ImageUploader({
@@ -28,7 +29,7 @@ export default function ImageUploader({
 
   return (
     <div className="absolute w-full h-full flex items-center justify-center top-0 left-0">
-      <ImageUpload
+      <ImageUploadWithCrop
         uploadCallback={handleUpload}
         maxFileSize={10000000}
         customElement={
@@ -37,6 +38,16 @@ export default function ImageUploader({
           </div>
         }
       />
+
+      {/* <ImageUpload
+        uploadCallback={handleUpload}
+        maxFileSize={10000000}
+        customElement={
+          <div className="bg-lime-400 text-primary text-sm py-1 px-3">
+            Edit Image
+          </div>
+        }
+      /> */}
     </div>
   );
 }

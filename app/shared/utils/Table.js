@@ -67,6 +67,7 @@ export default function Table({
   data,
   filterColumns = true,
   pagination = true,
+  initialSortById = '',
 }) {
   let filterTypes = useMemo(
     () => ({
@@ -116,7 +117,11 @@ export default function Table({
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: {
+        pageIndex: 0,
+        sortBy:
+          initialSortById != '' ? [{ id: initialSortById, desc: true }] : [],
+      },
       defaultColumn,
       filterTypes,
     },
@@ -152,7 +157,11 @@ export default function Table({
                     }),
                   )}
                 >
-                  <div className="flex flex-row items-center pl-10">
+                  <div
+                    className={`flex flex-row items-center ${
+                      index === 0 && 'pl-2'
+                    }`}
+                  >
                     {column.render('Header')}
                     {/* Add a sort direction indicator */}
                     {column.isSorted ? (

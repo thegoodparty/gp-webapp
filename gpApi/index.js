@@ -158,6 +158,19 @@ const gpApi = {
       },
     },
 
+    UpdateHistory: {
+      create: {
+        url: `${base}campaign/update-history`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/update-histories`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,
@@ -479,6 +492,11 @@ const gpApi = {
   uploadImage: {
     url: `${base}application/upload-image`,
     method: 'POST',
+  },
+  uploadBase64Image: {
+    url: `${base}upload-base64-image`,
+    method: 'POST',
+    withAuth: true,
   },
   logError: {
     url: `${base}log-error`,
