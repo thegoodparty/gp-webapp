@@ -52,7 +52,7 @@ export default function ShareBlog() {
   ];
 
   return (
-    <div className="hidden md:block fixed top-[300px] right-[80px] h-screen flex flex-col justify-center items-center p-4">
+    <div className="hidden lg:block fixed top-[600px] right-[20px] h-screen flex flex-col justify-center items-center p-4">
       {channels.map((channel, index) => (
         <Fragment key={channel.label}>
           {channel.link && (
