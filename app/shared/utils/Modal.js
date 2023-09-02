@@ -25,12 +25,19 @@ export default function Modal({
   closeCallback,
   children,
   boxStyle = {},
+  preventBackdropClose = false,
 }) {
+  const handleClose = (e, reason) => {
+    if (reason === 'backdropClick' && preventBackdropClose) {
+      return;
+    }
+    closeCallback();
+  };
   return (
     // maxWidth="lg"
     // Note: maxWidth is not a prop on the MuiModal component
     // only on the Dialog component
-    <MuiModal open={open} onClose={closeCallback}>
+    <MuiModal open={open} onClose={handleClose}>
       <div className="bg-blue-400">
         <Box sx={style} style={boxStyle}>
           <div

@@ -47,7 +47,11 @@ export default function InputFieldsModal({
   };
 
   return (
-    <Modal closeCallback={closeModalCallback} open={showModal}>
+    <Modal
+      closeCallback={closeModalCallback}
+      open={showModal}
+      preventBackdropClose
+    >
       <div className="lg:min-w-[400px] max-w-lg">
         <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
           Additional Inputs

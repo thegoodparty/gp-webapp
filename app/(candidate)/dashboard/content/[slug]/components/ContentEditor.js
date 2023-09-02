@@ -1,15 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useHookstate } from '@hookstate/core';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
 import BlackButton from '@shared/buttons/BlackButton';
-import AiModal from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/AiModal';
-import Typewriter from 'typewriter-effect';
-import { FaSave } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import Link from 'next/link';
@@ -44,11 +40,9 @@ export default function ContentEditor({
   updateVersionsCallback,
   subSectionKey = 'aiContent',
 }) {
-  const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [regenerating, setRegenerating] = useState(false);
-  const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const [documentName, setDocumentName] = useState('Untitled Document');
   const [saved, setSaved] = useState('Saved');
@@ -64,7 +58,6 @@ export default function ContentEditor({
       setDocumentName(campaignPlan[key].name);
       setLoading(false);
       setRegenerating(false);
-      setIsTyped(true);
       loadInputFields();
     }
   }, [campaignPlan]);
@@ -92,23 +85,6 @@ export default function ContentEditor({
     await handleSave();
   };
 
-  const handleRegenerate = async (improveQuery) => {
-    // setLoading(true);
-    setRegenerating(true);
-    let chat = [];
-    if (improveQuery !== '') {
-      chat = [
-        { role: 'system', content: plan },
-        { role: 'user', content: improveQuery },
-      ];
-    }
-    setPlan(false);
-    aiCount = 0;
-    aiTotalCount = 0;
-    setIsTyped(false);
-    await createInitialAI(true, chat, true);
-  };
-
   const handleSave = async () => {
     setSaved('Saving...');
 
@@ -129,7 +105,6 @@ export default function ContentEditor({
     };
 
     // updated[subSectionKey][key] = plan;
-    setIsEdited(false);
     await updateCampaign(updated, key, false, 'aiContent');
     // await updateVersionsCallback();
     setSaved('Saved');
@@ -138,7 +113,6 @@ export default function ContentEditor({
 
   const updatePlanCallback = (version) => {
     setPlan(version);
-    setIsEdited(true);
   };
 
   async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
@@ -342,19 +316,6 @@ export default function ContentEditor({
                         />
                       </>
                     )}
-                  </div>
-                  <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
-                    <AiModal
-                      submitCallback={handleRegenerate}
-                      showWarning={isEdited}
-                    />
-                    {/* <div onClick={handleSave}>
-                      <PrimaryButton>
-                        <div className="flex items-center">
-                          <FaSave className="mr-2" /> Save
-                        </div>
-                      </PrimaryButton>
-                    </div> */}
                   </div>
                 </div>
               )}
