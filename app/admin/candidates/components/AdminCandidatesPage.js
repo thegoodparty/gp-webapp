@@ -15,6 +15,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import { MdVisibilityOff } from 'react-icons/md';
 import { BsFiletypeCsv } from 'react-icons/bs';
+import { formatToPhone } from 'helpers/numberHelper';
 
 function mapStatus(status, isActive) {
   if (!status) {
@@ -75,7 +76,7 @@ export default function AdminCandidatesPage(props) {
         createdAt: new Date(campaignObj.createdAt),
         updatedAt: new Date(campaignObj.updatedAt),
         email: user?.email || 'n/a',
-        phone: user?.phone || 'n/a',
+        phone: campaign.campaignPhone || user?.phone || 'n/a',
         currentStep,
         shortVersion: campaign.filedStatement,
       };
@@ -169,6 +170,32 @@ export default function AdminCandidatesPage(props) {
       },
     },
     {
+      Header: 'Email',
+      accessor: 'email',
+      Cell: ({ row }) => {
+        return (
+          <a href={`mailto:${row.original.email}`} className="underline">
+            {row.original.email}
+          </a>
+        );
+      },
+    },
+    {
+      Header: 'Phone',
+      accessor: 'phone',
+      collapse: true,
+      Cell: ({ row }) => {
+        if (row.original.phone === 'n/a') {
+          return 'n/a';
+        }
+        return (
+          <a href={`tel:${row.original.phone}`} className="underline">
+            {formatToPhone(row.original.phone)}
+          </a>
+        );
+      },
+    },
+    {
       Header: 'Onboarding Step',
       accessor: 'currentStep',
     },
@@ -217,22 +244,6 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'State',
       accessor: 'state',
-      collapse: true,
-    },
-    {
-      Header: 'Email',
-      accessor: 'email',
-      Cell: ({ row }) => {
-        return (
-          <a href={`mailto:${row.original.email}`} className="underline">
-            {row.original.email}
-          </a>
-        );
-      },
-    },
-    {
-      Header: 'Phone',
-      accessor: 'phone',
       collapse: true,
     },
   ]);

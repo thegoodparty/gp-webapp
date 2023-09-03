@@ -22,6 +22,18 @@ const detailsFields = [
     ],
   },
   {
+    title: 'Please provide your phone number',
+    fields: [
+      {
+        key: 'campaignPhone',
+        label: 'Phone',
+        required: true,
+        type: 'phone',
+        validate: 'validPhone',
+      },
+    ],
+  },
+  {
     title:
       "We'll help you figure out the best way to run a successful campaign where you live.",
     fields: [
@@ -34,6 +46,7 @@ const detailsFields = [
       },
     ],
   },
+
   {
     title: "Let's verify your eligibility to run for office.",
     fields: [
