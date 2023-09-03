@@ -77,6 +77,7 @@ export default function AdminCandidatesPage(props) {
         email: user?.email || 'n/a',
         phone: user?.phone || 'n/a',
         currentStep,
+        shortVersion: campaign.filedStatement,
       };
       inputData.push(fields);
       console.log('Object.values(fields)', Object.values(fields));
@@ -158,6 +159,13 @@ export default function AdminCandidatesPage(props) {
           );
         }
         return <span>n/a</span>;
+      },
+    },
+    {
+      Header: 'Short Version',
+      accessor: 'shortVersion',
+      Cell: ({ row }) => {
+        return row.original.shortVersion ? 'yes' : 'no';
       },
     },
     {
