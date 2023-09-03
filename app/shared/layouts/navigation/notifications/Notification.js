@@ -25,12 +25,19 @@ const TypeIcon = (type) => {
   }
 };
 
-export default function Notifications({ notification }) {
+export default function Notifications({
+  notification,
+  closeNotificationCallback,
+}) {
   const { data, createdAt, isRead } = notification;
 
   const { type, title, link, subTitle, dueDate } = data;
   return (
-    <Link href={link} className="no-underline">
+    <Link
+      href={link}
+      className="no-underline"
+      onClick={closeNotificationCallback}
+    >
       <div className="py-3 px-5 border-t border-indigo-700 flex justify-between items-center transition-colors hover:bg-indigo-700">
         <div className="flex">
           <div>{TypeIcon(type)}</div>
