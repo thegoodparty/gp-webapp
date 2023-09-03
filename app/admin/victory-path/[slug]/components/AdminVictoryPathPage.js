@@ -159,8 +159,12 @@ export default function AdminVictoryPathPage(props) {
       pathToVictory: state,
     };
     try {
+      // only send mail the first time we update pathToVictory
+      if (!campaign.pathToVictory) {
+        await sendVictoryMail(updated.slug);
+      }
       await updateCampaign(updated, false, true);
-      await sendVictoryMail(updated.slug);
+
       snackbarState.set(() => {
         return {
           isOpen: true,
