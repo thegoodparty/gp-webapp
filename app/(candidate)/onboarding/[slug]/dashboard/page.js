@@ -21,6 +21,7 @@ export default async function Page({ params }) {
   //   section && section.length > 0 ? parseInt(section[0]) - 1 : false;
 
   const campaignStatus = generateCampaignStatus(campaign);
+  const shortVersion = !!campaign?.details?.filedStatement;
 
   const nextStep = { ...campaignStatus.nextStep };
   delete campaignStatus.nextStep;
@@ -30,6 +31,7 @@ export default async function Page({ params }) {
     campaignSteps,
     campaignStatus,
     nextStep,
+    shortVersion,
   };
 
   return <Dashboard {...childProps} />;

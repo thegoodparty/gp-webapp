@@ -16,7 +16,6 @@ import gpFetch from 'gpApi/gpFetch';
 
 export async function createUpdateHistory(payload) {
   try {
-    console.log('update history create', payload);
     const api = gpApi.campaign.UpdateHistory.create;
     return await gpFetch(api, payload);
   } catch (e) {
@@ -36,6 +35,7 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
+  console.log('hi');
   const { campaign } = props;
   const { pathToVictory, goals, reportedVoterGoals } = campaign;
   const [updateHistory, setUpdateHistory] = useState([]);

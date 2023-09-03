@@ -42,6 +42,7 @@ export default function RenderInputField({
             shrink: true,
           }}
           inputProps={field.maxLength ? { maxLength: field.maxLength } : {}}
+          helperText={field.helperText}
         />
       )}
       {field.type === 'email' && (

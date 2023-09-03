@@ -12,6 +12,8 @@ import Modal from '@shared/utils/Modal';
 import { FaExclamationCircle } from 'react-icons/fa';
 import Pill from '@shared/buttons/Pill';
 import { getAge } from 'helpers/dateHelper';
+import { isValidUrl } from 'helpers/linkhelper';
+import { isValidPhone } from '@shared/inputs/PhoneInput';
 
 export const savingState = hookstate(false);
 
@@ -93,6 +95,12 @@ export default function OnboardingPage({
         } catch (e) {
           return false;
         }
+      }
+      if (field.type === 'text' && field.validate === 'url') {
+        return isValidUrl(value);
+      }
+      if (field.type === 'phone' && field.validate === 'validPhone') {
+        return isValidPhone(value);
       }
       if (field.validate && typeof field.validate === 'function') {
         return field.validate(value);

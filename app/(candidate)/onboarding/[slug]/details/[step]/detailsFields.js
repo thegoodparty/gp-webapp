@@ -22,6 +22,18 @@ const detailsFields = [
     ],
   },
   {
+    title: 'Please provide your phone number',
+    fields: [
+      {
+        key: 'campaignPhone',
+        label: 'Phone',
+        required: true,
+        type: 'phone',
+        validate: 'validPhone',
+      },
+    ],
+  },
+  {
     title:
       "We'll help you figure out the best way to run a successful campaign where you live.",
     fields: [
@@ -34,6 +46,7 @@ const detailsFields = [
       },
     ],
   },
+
   {
     title: "Let's verify your eligibility to run for office.",
     fields: [
@@ -51,6 +64,27 @@ const detailsFields = [
         type: 'radio',
         options: ['Yes', 'No'],
         validateOptions: ['yes', 'No'],
+      },
+    ],
+  },
+
+  {
+    title: 'Have you filed a statement of candidacy?',
+    fields: [
+      {
+        key: 'filedStatement',
+        label: '',
+        required: true,
+        type: 'radio',
+      },
+      {
+        key: 'campaignCommittee',
+        label: 'Name of Campaign Committee',
+        placeholder: 'Campaign Committee',
+        type: 'text',
+        hidden: true,
+        showKey: 'filedStatement',
+        showCondition: ['yes'],
       },
     ],
   },
@@ -304,5 +338,5 @@ detailsFields.forEach((step) => {
   detailFieldsCount += step.fields?.length || 0;
 });
 
-detailFieldsCount = detailFieldsCount - 5; // pledge and top issues
+detailFieldsCount = detailFieldsCount - 8; // pledge and top issues
 export { detailFieldsCount };
