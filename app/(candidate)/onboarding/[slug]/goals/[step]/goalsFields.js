@@ -1,25 +1,5 @@
 const goalsFields = [
   {
-    title: 'Have you filed a statement of candidacy?',
-    fields: [
-      {
-        key: 'filedStatement',
-        label: '',
-        required: true,
-        type: 'radio',
-      },
-      {
-        key: 'campaignCommittee',
-        label: 'Name of Campaign Committee',
-        placeholder: 'Campaign Committee',
-        type: 'text',
-        hidden: true,
-        showKey: 'filedStatement',
-        showCondition: ['yes'],
-      },
-    ],
-  },
-  {
     title: "What's the date of election?",
     skipable: true,
     skipLabel: "I don't know",

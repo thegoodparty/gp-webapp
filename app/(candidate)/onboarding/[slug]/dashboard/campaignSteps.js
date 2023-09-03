@@ -295,3 +295,13 @@ export const generateCampaignStatus = (campaign) => {
   status.currentStep = currentStep;
   return status;
 };
+
+export const shortVersionStep4 = {
+  key: 'profile',
+  title: 'Campaign Website',
+  plainTitle: 'Campaign Website',
+  subTitle: 'Provide your campaign website',
+  stepNum: 4,
+  connectedLine: true,
+  // link: 'custom',
+};

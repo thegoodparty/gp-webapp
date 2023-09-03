@@ -56,6 +56,27 @@ const detailsFields = [
   },
 
   {
+    title: 'Have you filed a statement of candidacy?',
+    fields: [
+      {
+        key: 'filedStatement',
+        label: '',
+        required: true,
+        type: 'radio',
+      },
+      {
+        key: 'campaignCommittee',
+        label: 'Name of Campaign Committee',
+        placeholder: 'Campaign Committee',
+        type: 'text',
+        hidden: true,
+        showKey: 'filedStatement',
+        showCondition: ['yes'],
+      },
+    ],
+  },
+
+  {
     title: "Thanks! What's your political affiliation, if you have any?",
     fields: [
       {
@@ -304,5 +325,5 @@ detailsFields.forEach((step) => {
   detailFieldsCount += step.fields?.length || 0;
 });
 
-detailFieldsCount = detailFieldsCount - 5; // pledge and top issues
+detailFieldsCount = detailFieldsCount - 8; // pledge and top issues
 export { detailFieldsCount };
