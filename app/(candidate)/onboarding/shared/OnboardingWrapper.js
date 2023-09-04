@@ -50,10 +50,10 @@ export default function OnboardingWrapper({
       } shadow-inner relative pt-10 lg:pt-0 pb-6 min-h-screen lg:min-h-[calc(100vh-56px)] `}
     >
       <div
-        className="absolute h-1 bg-purple  top-0 rounded-r transition-all"
+        className="fixed w-screen h-1 bg-purple  top-14 rounded-r transition-all"
         style={{ width: `calc(100vw * ${progress})` }}
       ></div>
-      <div className="relative mb-6 lg:mb-0 w-20 h-20  left-1/2 -ml-14 lg:absolute lg:-top-10 z-50">
+      <div className="fixed top-2 w-20 h-20  left-1/2 -ml-14  z-50">
         <div
           className="w-20 h-20 flex items-center justify-center border-4 border-zinc-300 rounded-full bg-white relative transition"
           style={progress >= 0.5 ? { borderColor: '#46002E' } : {}}
