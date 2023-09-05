@@ -70,6 +70,7 @@ export default function AdminCandidatesPage(props) {
         party: partyResolver(campaign.party),
         office:
           campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
+        officeTermLength: campaign.officeTermLength,
         city: campaign.city,
         district: campaign.district || 'n/a',
         state: campaign.state ? campaign.state.toUpperCase() : '?',
@@ -232,6 +233,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Office',
       accessor: 'office',
+    },
+    {
+      Header: 'Term Length',
+      accessor: 'officeTermLength',
     },
     {
       Header: 'District',

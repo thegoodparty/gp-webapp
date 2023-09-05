@@ -176,6 +176,17 @@ const detailsFields = [
         ],
       },
       {
+        key: 'officeTermLength',
+        label: 'Term Length',
+        type: 'select',
+        hidden: false,
+        showKey: 'knowRun',
+        requiredHidden: true,
+        required: true,
+        showCondition: ['yes'],
+        options: ['2 years', '3 years', '4 years', '6 years'],
+      },
+      {
         key: 'otherOffice',
         label: 'Other Office',
         type: 'text',
