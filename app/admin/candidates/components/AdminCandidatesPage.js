@@ -80,6 +80,7 @@ export default function AdminCandidatesPage(props) {
         phone: campaign.campaignPhone || user?.phone || 'n/a',
         currentStep,
         shortVersion: campaign.filedStatement,
+        campaignCommittee: campaign.campaignCommittee,
       };
       inputData.push(fields);
       console.log('Object.values(fields)', Object.values(fields));
@@ -250,6 +251,10 @@ export default function AdminCandidatesPage(props) {
       Header: 'State',
       accessor: 'state',
       collapse: true,
+    },
+    {
+      Header: 'Candidacy',
+      accessor: 'campaignCommittee',
     },
   ]);
 

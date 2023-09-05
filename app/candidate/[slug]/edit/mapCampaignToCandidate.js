@@ -39,6 +39,7 @@ export default function mapCampaignToCandidate(campaign) {
     city,
     filedStatement,
     campaignPhone,
+    campaignCommittee,
   } = details || {};
   const { slogan, aboutMe, why } = campaignPlan || {};
 
@@ -79,5 +80,6 @@ export default function mapCampaignToCandidate(campaign) {
     lastVisited,
     filedStatement,
     campaignPhone,
+    campaignCommittee,
   };
 }
