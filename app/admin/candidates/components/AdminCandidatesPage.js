@@ -77,7 +77,7 @@ export default function AdminCandidatesPage(props) {
         createdAt: new Date(campaignObj.createdAt),
         updatedAt: new Date(campaignObj.updatedAt),
         email: user?.email || 'n/a',
-        phone: campaign.campaignPhone || user?.phone || 'n/a',
+        phone: user?.phone || 'n/a',
         currentStep,
         shortVersion: campaign.filedStatement,
         campaignCommittee: campaign.campaignCommittee,

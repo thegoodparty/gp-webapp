@@ -14,6 +14,7 @@ import Pill from '@shared/buttons/Pill';
 import { getAge } from 'helpers/dateHelper';
 import { isValidUrl } from 'helpers/linkhelper';
 import { isValidPhone } from '@shared/inputs/PhoneInput';
+import { revalidatePage } from 'helpers/cacheHelper';
 
 export const savingState = hookstate(false);
 
@@ -28,6 +29,7 @@ export default function OnboardingPage({
   skipable,
   skipLabel,
   step,
+  forceRefresh,
   ...props
 }) {
   useEffect(() => {
@@ -144,7 +146,12 @@ export default function OnboardingPage({
     savingState.set(() => true);
 
     setTimeout(() => {
-      router.push(`/onboarding/${slug}${path}`);
+      if (forceRefresh) {
+        revalidatePage('/onboarding/[slug]/dashboard');
+        window.location.href = `/onboarding/${slug}${path}`;
+      } else {
+        router.push(`/onboarding/${slug}${path}`);
+      }
     }, 200);
   };
 
