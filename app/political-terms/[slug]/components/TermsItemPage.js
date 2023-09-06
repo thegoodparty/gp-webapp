@@ -44,7 +44,7 @@ export default function TermsItemPage({ item, items, activeLetter }) {
 
       <div className="my-7 lg:my-14">
         <h1 className="font-black text-4xl lg:text-5xl mb-4">
-          What is {title}
+          What is {title}?
         </h1>
         <div className="text-lg mb-6">
           <CmsContentWrapper>{contentfulHelper(description)}</CmsContentWrapper>

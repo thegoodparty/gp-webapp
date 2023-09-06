@@ -76,7 +76,7 @@ const sections = [
       { key: 'voteGoal', label: 'Vote Goal', type: 'number' },
       {
         key: 'voterProjection',
-        label: 'Voter Projection (Likely Voters)',
+        label: 'Voter Projection - Victory Meter',
         type: 'number',
       },
     ],
