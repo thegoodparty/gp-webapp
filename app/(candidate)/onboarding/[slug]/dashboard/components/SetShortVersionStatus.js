@@ -22,6 +22,7 @@ export default function SetShortVersionStatus(props) {
       campaign.launchStatus !== 'pending'
     ) {
       await launchCampaign();
+      window.location.reload();
     }
   };
   return null;
