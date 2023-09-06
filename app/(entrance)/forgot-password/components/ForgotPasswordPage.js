@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
                 onClick={handleSubmit}
                 type="submit"
               >
-                <strong>SEND CODE</strong>
+                <strong>Send Recovery Email</strong>
               </BlackButtonClient>
             </form>
           )}
