@@ -179,7 +179,7 @@ const detailsFields = [
         key: 'officeTermLength',
         label: 'Term Length',
         type: 'select',
-        hidden: false,
+        hidden: true,
         showKey: 'knowRun',
         requiredHidden: true,
         required: true,
