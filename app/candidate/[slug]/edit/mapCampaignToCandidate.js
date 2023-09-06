@@ -30,6 +30,7 @@ export default function mapCampaignToCandidate(campaign) {
     otherParty,
     state,
     office,
+    officeTermLength,
     otherOffice,
     pastExperience,
     occupation,
@@ -37,6 +38,7 @@ export default function mapCampaignToCandidate(campaign) {
     district,
     city,
     filedStatement,
+    campaignCommittee,
   } = details || {};
   const { slogan, aboutMe, why } = campaignPlan || {};
 
@@ -48,6 +50,7 @@ export default function mapCampaignToCandidate(campaign) {
     party: party === 'Other' ? otherParty : party,
     state,
     office,
+    officeTermLength,
     otherOffice,
     slogan,
     about: aboutMe,
@@ -75,5 +78,6 @@ export default function mapCampaignToCandidate(campaign) {
     launchStatus,
     lastVisited,
     filedStatement,
+    campaignCommittee,
   };
 }
