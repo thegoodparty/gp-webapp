@@ -28,6 +28,7 @@ export default function OnboardingPage({
   skipable,
   skipLabel,
   step,
+  forceRefresh,
   ...props
 }) {
   useEffect(() => {
@@ -144,7 +145,11 @@ export default function OnboardingPage({
     savingState.set(() => true);
 
     setTimeout(() => {
-      router.push(`/onboarding/${slug}${path}`);
+      if (forceRefresh) {
+        window.location.href = `/onboarding/${slug}${path}`;
+      } else {
+        router.push(`/onboarding/${slug}${path}`);
+      }
     }, 200);
   };
 

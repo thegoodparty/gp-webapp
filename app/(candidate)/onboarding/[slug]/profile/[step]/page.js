@@ -26,8 +26,6 @@ export default async function Page({ params }) {
   const subSectionKey = shortVersionStep4.key;
   const subSectionLabel = shortVersionStep4.plainTitle;
 
-  console.log('subsectionKeu', subSectionKey);
-
   const nextPath = '/dashboard';
 
   const childProps = {
@@ -42,6 +40,7 @@ export default async function Page({ params }) {
     pathname: `/${subSectionKey}/${stepInt}`,
     pageType,
     nextPath,
+    forceRefresh: true,
     subSectionKey,
     subSectionLabel,
     totalSteps: profileFields.length,
