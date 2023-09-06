@@ -347,6 +347,11 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
+    refresh: {
+      url: `${base}user/refresh`,
+      method: 'PUT',
+      withAuth: true,
+    },
     changePassword: {
       url: `${base}user/password`,
       method: 'PUT',

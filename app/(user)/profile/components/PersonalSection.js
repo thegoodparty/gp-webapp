@@ -19,6 +19,17 @@ import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FiSettings } from 'react-icons/fi';
 
+async function refreshUser() {
+  try {
+    const api = gpApi.user.refresh;
+
+    const { user } = await gpFetch(api);
+    return user;
+  } catch (error) {
+    console.log('Error updating user', error);
+  }
+}
+
 async function updateUserCallback(updatedFields, userState) {
   try {
     const api = gpApi.user.updateUser;
@@ -74,6 +85,7 @@ export const USER_SETTING_FIELDS = [
 function PersonalSection() {
   const userState = useHookstate(globalUserState);
   const user = userState.get('user');
+
   const updatedState = {};
   if (user) {
     USER_SETTING_FIELDS.forEach((field) => {
@@ -84,10 +96,20 @@ function PersonalSection() {
   const [isPhoneValid, setIsPhoneValid] = useState(true);
 
   useEffect(() => {
+    updateUser();
+  }, []);
+
+  useEffect(() => {
     if (!state.name) {
       setState(user);
     }
   }, [user]);
+
+  const updateUser = async () => {
+    const updated = await refreshUser();
+    userState.set(() => updated);
+    setUserCookie(updated);
+  };
 
   const onChangeField = (key, val) => {
     setState({
