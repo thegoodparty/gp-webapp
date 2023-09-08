@@ -46,6 +46,11 @@ export default async function Page({ params }) {
 
   if (stepInt === 2) {
     const user = getServerUser();
+    stepFields.fields[0].initialValue = user.phone;
+  }
+
+  if (stepInt === 3) {
+    const user = getServerUser();
     stepFields.fields[0].initialValue = user.zip;
   }
 
