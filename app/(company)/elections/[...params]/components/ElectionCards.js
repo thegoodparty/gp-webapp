@@ -11,7 +11,7 @@ const cards = [
     content: (
       <>
         We&apos;re <strong>not a political party</strong>, but are seeking to
-        replace the corrupt and ineffective two-party system with
+        replace the corrupt and ineffective two-party system with{' '}
         <strong>people-powered, independent candidates</strong>. Candidates earn
         the Good Party Certified label when they take our pledge, in which
         candidates agree to not run as Republicans or Democrats, raise a
@@ -28,7 +28,7 @@ const cards = [
   },
   {
     id: '2',
-    title: 'Why North Carolina ?',
+    title: 'Why North Carolina?',
     bgColor: 'bg-lime-600',
     content: (
       <>
