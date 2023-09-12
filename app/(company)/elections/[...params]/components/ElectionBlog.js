@@ -24,7 +24,7 @@ export default function Blog(props) {
   return (
     <section className={`${blogBgColor} h-auto pb-20`}>
       <MaxWidth>
-        <div className="grid grid-cols-12 md:justify-items-center gap-10">
+        <div className="grid grid-cols-12 md:justify-items-center">
           {blogCTA && (
             <div className="col-span-12 lg:col-span-6 w-full h-full py-10 lg:py-0">
               <div className="flex flex-col w-full h-full justify-center">
