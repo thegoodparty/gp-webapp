@@ -165,7 +165,6 @@ export default function LaunchChecklist({ campaign }) {
       if (res) {
         window.location.href = `/onboarding/${slug}/dashboard`;
       } else {
-        setProcessing(false);
         snackbarState.set(() => {
           return {
             isOpen: true,
@@ -173,6 +172,7 @@ export default function LaunchChecklist({ campaign }) {
             isError: true,
           };
         });
+        window.location.reload();
       }
     }
   };
