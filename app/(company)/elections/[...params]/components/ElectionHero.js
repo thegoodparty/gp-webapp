@@ -19,6 +19,7 @@ export default function ElectionHero(props) {
     skylineImage,
     isHeroButton1Scroll,
   } = content || {};
+
   return (
     <>
       <MaxWidth>
@@ -82,14 +83,16 @@ export default function ElectionHero(props) {
         <div className="flex flex-row">
           <div className="flex relative lg:w-full"></div>
           <div className="flex relative w-full h-[171px] md:h-[300px]">
-            <Image
-              src={`https:${skylineImage.url}`}
-              sizes="50vw"
-              className="object-cover object-right-top z-50"
-              alt=""
-              fill
-              priority
-            />
+            {skylineImage != null && skylineImage?.url != null && (
+              <Image
+                src={`https:${skylineImage.url}`}
+                sizes="50vw"
+                className="object-cover object-right-top z-50"
+                alt=""
+                fill
+                priority
+              />
+            )}
           </div>
         </div>
       </MaxWidth>
