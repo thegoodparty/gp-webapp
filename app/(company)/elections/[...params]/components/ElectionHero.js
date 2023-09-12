@@ -3,11 +3,12 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import WarningButton from '@shared/buttons/WarningButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import EmailForm from '@shared/inputs/EmailForm';
 import dynamic from 'next/dynamic';
 const ScrollIntoView = dynamic(() => import('react-scroll-into-view'));
 
 export default function ElectionHero(props) {
-  const { content } = props;
+  const { content, city } = props;
   const {
     heroTitle,
     heroSubTitle,
@@ -19,6 +20,7 @@ export default function ElectionHero(props) {
     skylineImage,
     isHeroButton1Scroll,
   } = content || {};
+
   return (
     <>
       <MaxWidth>
@@ -38,6 +40,17 @@ export default function ElectionHero(props) {
             </h2>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
+                {city === 'durham' ? (
+                  <EmailForm
+                    formId="c7d78873-1ed0-4202-ab01-76577e57352c"
+                    pageName="durham"
+                    label="Get involved"
+                    labelId="volunteer-form"
+                  />
+                ) : (
+                  <></>
+                )}
+
                 {heroButton1text && (
                   <>
                     {isHeroButton1Scroll ? (
@@ -82,19 +95,25 @@ export default function ElectionHero(props) {
         <div className="flex flex-row">
           <div className="flex relative lg:w-full"></div>
           <div className="flex relative w-full h-[171px] md:h-[300px]">
-            <Image
-              src={`https:${skylineImage.url}`}
-              sizes="50vw"
-              className="object-cover object-right-top z-50"
-              alt=""
-              fill
-              priority
-            />
+            {skylineImage != null && skylineImage?.url != null && (
+              <Image
+                src={`https:${skylineImage.url}`}
+                sizes="50vw"
+                className="object-cover object-right-top z-50"
+                alt=""
+                fill
+                priority
+              />
+            )}
           </div>
         </div>
       </MaxWidth>
 
-      <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
+      {city === 'nashville' ? (
+        <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
+      ) : (
+        <div className="bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
+      )}
     </>
   );
 }

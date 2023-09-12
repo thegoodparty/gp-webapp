@@ -4,12 +4,16 @@ import { useState } from 'react';
 import Hero from './ElectionHero';
 import Candidates from './ElectionCandidates';
 import Volunteer from './ElectionVolunteer';
+import ElectionInfo from './ElectionInfo';
+import ElectionDates from './ElectionDates';
 import Blog from './ElectionBlog';
 import dynamic from 'next/dynamic';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
 export default function ElectionPage(props) {
   const [showModal, setShowModal] = useState(false);
+
+  const { city } = props;
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -24,11 +28,27 @@ export default function ElectionPage(props) {
     ...props,
   };
 
+  let blogCTA = city === 'durham' ? true : false;
+  let blogDark = city === 'nashville' ? true : false;
+  let blogItems = blogCTA ? 2 : 3;
+
+  let childProps = {
+    ...props,
+    blogCTA,
+    blogDark,
+    blogItems,
+  };
+
   return (
     <div className="bg-slate-50">
-      {/* <Hero {...props} /> */}
+      {city === 'durham' && <Hero {...props} />}
       <Candidates {...props} />
-      <Volunteer {...volunteerProps} />
+
+      {city === 'nashville' && <Volunteer {...volunteerProps} />}
+
+      {city === 'durham' && <ElectionInfo {...props} />}
+
+      {city === 'durham' && <ElectionDates {...props} />}
 
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>
@@ -42,7 +62,7 @@ export default function ElectionPage(props) {
         </Modal>
       )}
 
-      <Blog {...props} />
+      <Blog {...childProps} />
 
       <Script
         type="text/javascript"
