@@ -18,7 +18,7 @@ export default function ElectionInfo(props) {
         <div className="grid grid-cols-12 md:justify-items-center pt-10 bg-slate-50">
           <div className="col-span-12 lg:col-span-6 p-10 w-full">
             <div
-              className="flex flex-col w-full h-auto bg-yellow-500 rounded-2xl"
+              className="flex flex-col w-full h-[420px] bg-yellow-500 rounded-2xl"
               onClick={() => {
                 setCard1Flipped(!card1Flipped);
               }}
@@ -63,7 +63,7 @@ export default function ElectionInfo(props) {
           </div>
           <div className="col-span-12 lg:col-span-6 p-10 w-full">
             <div
-              className="flex flex-col w-full h-[auto] bg-lime-600 rounded-2xl"
+              className="flex flex-col w-full h-[420px] bg-lime-600 rounded-2xl"
               onClick={() => {
                 setCard2Flipped(!card2Flipped);
               }}

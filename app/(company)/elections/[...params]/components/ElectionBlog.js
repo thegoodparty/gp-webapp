@@ -11,10 +11,13 @@ export default function Blog(props) {
   let blogItemsColSpan =
     blogItems === 3 ? 'col-span-12 lg:col-span-4' : 'col-span-12 lg:col-span-6';
   let blogImageSize = blogCTA ? 'w-[200px] h-[200px]' : 'w-[300px] h-[300px]';
+  let blogMaxWidth = blogCTA ? 'max-w-[200px]' : 'max-w-[300px]';
 
   let blogBgColor = blogDark ? 'bg-indigo-800' : 'bg-slate-50';
   let blogFontTitle = blogDark ? 'text-slate-50' : 'text-indigo-800';
   let blogFontSubtitle = blogDark ? 'text-slate-700' : 'text-indigo-800';
+  let blogTitleSize = blogCTA ? 'text-md' : 'text-2xl';
+  let blogSubtitleSize = blogCTA ? 'text-md' : 'text-lg';
 
   return (
     <section className={`${blogBgColor} h-auto pb-20`}>
@@ -78,12 +81,12 @@ export default function Blog(props) {
                           </div>
                         )}
                         <div
-                          className={`text-2xl font-semibold ${blogFontTitle} mb-2 max-w-[300px] mt-3`}
+                          className={`${blogTitleSize} ${blogFontTitle} font-semibold mb-2 ${blogMaxWidth} mt-3`}
                         >
                           {title}
                         </div>
                         <div
-                          className={`font-sfpro text-lg ${blogFontSubtitle} font-normal max-w-[300px]`}
+                          className={`${blogSubtitleSize} ${blogFontSubtitle} font-sfpro font-normal ${blogMaxWidth}`}
                         >
                           {summary.slice(0, 100)} ...
                         </div>
