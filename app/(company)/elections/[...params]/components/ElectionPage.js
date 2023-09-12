@@ -4,10 +4,10 @@ import { useState } from 'react';
 import Hero from './ElectionHero';
 import Candidates from './ElectionCandidates';
 import Volunteer from './ElectionVolunteer';
-import ElectionInfo from './ElectionInfo';
 import ElectionDates from './ElectionDates';
 import Blog from './ElectionBlog';
 import dynamic from 'next/dynamic';
+import ElectionCards from './ElectionCards';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
 export default function ElectionPage(props) {
@@ -46,7 +46,7 @@ export default function ElectionPage(props) {
 
       {city === 'nashville' && <Volunteer {...volunteerProps} />}
 
-      {city === 'durham' && <ElectionInfo {...props} />}
+      {city === 'durham' && <ElectionCards {...props} />}
 
       {city === 'durham' && <ElectionDates {...props} />}
 
