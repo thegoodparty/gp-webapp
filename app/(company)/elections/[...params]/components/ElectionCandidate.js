@@ -6,7 +6,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 import { FaChevronRight } from 'react-icons/fa';
 import CandidatePill from 'app/candidate/[slug]/components/CandidatePill';
 
-export default function ElectionCandidate({ candidate, more }) {
+export default function ElectionCandidate({ candidate }) {
   const {
     firstName,
     lastName,
@@ -55,9 +55,7 @@ export default function ElectionCandidate({ candidate, more }) {
               <div className="w-10 border-b-2 border-slate-50 my-4"></div>
             </div>
 
-            <div className="line-clamp-3 text-sm">
-              {topPosition} {more && 'adlakjd alkjd alkdj alkjd lakjd lkasd'}
-            </div>
+            <div className="line-clamp-3 text-sm">{topPosition}</div>
             <div className="pt-4 font-bold  text-sm">{occupation}</div>
           </div>
           <WarningButton variant="text" size="medium">
