@@ -31,6 +31,12 @@ export const calcLocation = ({ office, state, district, city }) => {
   if (noDistrict) {
     return `${city ? `${city},` : ''} ${state}`;
   }
+  if (!district && city) {
+    return `${city}, ${state}`;
+  }
+  if (!district) {
+    return `${state}`;
+  }
   return `${city ? `District ${district}, ${city}` : district}, ${state}`;
 };
 
