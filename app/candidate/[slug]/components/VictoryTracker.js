@@ -9,9 +9,7 @@ import Image from 'next/image';
 
 // import GoalsChart from 'components/candidate-portal/CandidatePortalHomeWrapper/GoalsChart';
 
-function VictoryTracker({ candidate, color, reportedVoterGoals }) {
-  const { voteGoal, voterProjection, finalVotes } = candidate;
-
+export function additionalGoalsVotes(reportedVoterGoals) {
   let additionalVotes = 0;
   if (reportedVoterGoals) {
     const { doorKnocking, calls, digital } = reportedVoterGoals;
@@ -25,6 +23,14 @@ function VictoryTracker({ candidate, color, reportedVoterGoals }) {
       additionalVotes += Math.floor(digital * 0.01);
     }
   }
+  return additionalVotes;
+}
+
+function VictoryTracker({ candidate, color, reportedVoterGoals }) {
+  const { voteGoal, voterProjection, finalVotes } = candidate;
+
+  const additionalVotes = additionalGoalsVotes(reportedVoterGoals);
+
   let isWon = false;
   let progress = voterProjection + additionalVotes;
   if (finalVotes && finalVotes > voteGoal) {

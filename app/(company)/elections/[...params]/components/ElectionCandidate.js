@@ -37,6 +37,7 @@ export default function ElectionCandidate({ candidate }) {
             candidate={candidate}
             color={color ?? colors[0]}
             candidateUrl={candidateRoute(candidate)}
+            reportedVoterGoals={candidate.reportedVoterGoals}
           />
 
           <span className=" text-slate-50 text-2xl p-3 text-center">

@@ -4,6 +4,7 @@ import gpFetch from 'gpApi/gpFetch';
 import ElectionPage from './components/ElectionPage';
 import pageMetaData from 'helpers/metadataHelper';
 import OptimizeScript from '@shared/scripts/OptimizeScript';
+import { fetchCandidate } from 'app/candidate/[slug]/page';
 // import ElectionSchema from './ElectionSchema';
 
 export const fetchElection = async (slug) => {
@@ -15,19 +16,6 @@ export const fetchElection = async (slug) => {
   };
 
   return await gpFetch(api, payload, 3600);
-};
-
-export const fetchCandidate = async (slug) => {
-  try {
-    const api = gpApi.candidate.find;
-    const payload = {
-      slug,
-      allFields: true,
-    };
-    return await gpFetch(api, payload, 3600);
-  } catch (e) {
-    return false;
-  }
 };
 
 export async function generateMetadata({ params }) {
@@ -64,9 +52,8 @@ export default async function Page({ params }) {
   }
 
   for (const slug of candidateSlugs) {
-    const { candidate, candidatePositions, support } = await fetchCandidate(
-      slug,
-    );
+    const { candidate, candidatePositions, reportedVoterGoals } =
+      await fetchCandidate(slug);
 
     let topPosition = '';
     if (candidatePositions && candidatePositions.length > 0) {
@@ -85,6 +72,7 @@ export default async function Page({ params }) {
     }
     if (candidate != undefined) {
       candidate.topPosition = topPosition;
+      candidate.reportedVoterGoals = reportedVoterGoals;
       candidates.push(candidate);
     }
   }
