@@ -21,7 +21,7 @@ const noDistrictOffices = [
   'State Supreme Court Justice',
 ];
 
-const calcLocation = ({ office, state, district, city }) => {
+export const calcLocation = ({ office, state, district, city }) => {
   const isFederal = federalOffices.includes(office);
   const noDistrict = noDistrictOffices.includes(office);
   let str = '';

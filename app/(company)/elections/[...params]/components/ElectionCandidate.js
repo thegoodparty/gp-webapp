@@ -5,6 +5,7 @@ import AvatarWithTracker from 'app/candidate/[slug]/components/AvatarWithTracker
 import WarningButton from '@shared/buttons/WarningButton';
 import { FaChevronRight } from 'react-icons/fa';
 import CandidatePill from 'app/candidate/[slug]/components/CandidatePill';
+import { calcLocation } from 'app/candidate/[slug]/components/ProfileSection';
 
 export default function ElectionCandidate({ candidate }) {
   const {
@@ -18,16 +19,13 @@ export default function ElectionCandidate({ candidate }) {
     topPosition,
     slogan,
     occupation,
+    city,
   } = candidate;
 
   const resolvedOffice = office === 'Other' ? otherOffice : office;
+  const loc = calcLocation({ office, state, district, city });
 
-  let pillText = resolvedOffice;
-  if (district && district !== '') {
-    pillText += `, ${district}`;
-  } else if (state && state !== '') {
-    pillText += `, ${state}`;
-  }
+  let pillText = `${resolvedOffice}, ${loc}`; // herer
 
   return (
     <Link href={candidateRoute(candidate)} className="no-underline h-full">
