@@ -1,14 +1,19 @@
+'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import WarningButton from '@shared/buttons/WarningButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import EmailForm from '@shared/inputs/EmailForm';
+import SignupForm from '@shared/inputs/SignupForm';
 import dynamic from 'next/dynamic';
 const ScrollIntoView = dynamic(() => import('react-scroll-into-view'));
 
 export default function ElectionHero(props) {
   const { content, city } = props;
+  const [showSignup, setShowSignup] = useState(false);
+
   const {
     heroTitle,
     heroSubTitle,
@@ -40,17 +45,6 @@ export default function ElectionHero(props) {
             </h2>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
-                {city === 'durham' ? (
-                  <EmailForm
-                    formId="c7d78873-1ed0-4202-ab01-76577e57352c"
-                    pageName="durham"
-                    label="Get involved"
-                    labelId="volunteer-form"
-                  />
-                ) : (
-                  <></>
-                )}
-
                 {heroButton1text && (
                   <>
                     {isHeroButton1Scroll ? (
@@ -92,10 +86,10 @@ export default function ElectionHero(props) {
           </div>
         </div>
 
-        <div className="flex flex-row">
-          <div className="flex relative lg:w-full"></div>
-          <div className="flex relative w-full h-[171px] md:h-[300px]">
-            {skylineImage != null && skylineImage?.url != null && (
+        {skylineImage != null && skylineImage?.url != null && (
+          <div className="flex flex-row">
+            <div className="flex relative lg:w-full"></div>
+            <div className="flex relative w-full h-[171px] md:h-[300px]">
               <Image
                 src={`https:${skylineImage.url}`}
                 sizes="50vw"
@@ -104,8 +98,33 @@ export default function ElectionHero(props) {
                 fill
                 priority
               />
-            )}
+            </div>
           </div>
+        )}
+
+        <div className="flex w-full h-full md:min-h-[500px]">
+          {city === 'durham' && !showSignup ? (
+            <div
+              className="whitespace-nowrap pl-20"
+              onClick={() => {
+                setShowSignup(true);
+              }}
+            >
+              <PrimaryButton size="large">Get Involved</PrimaryButton>
+            </div>
+          ) : (
+            <></>
+          )}
+          {city === 'durham' && showSignup ? (
+            <SignupForm
+              formId="c7d78873-1ed0-4202-ab01-76577e57352c"
+              pageName="durham"
+              label="Get involved"
+              labelId="volunteer-form"
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </MaxWidth>
 
