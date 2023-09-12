@@ -26,6 +26,10 @@ export default function ElectionCard(props) {
             setFlipped(true);
           }}
         >
+          <div className="absolute right-6 top-6">
+            <LuRefreshCw size={24} />
+          </div>
+
           <Image
             src="/images/heart-hologram.svg"
             alt="GoodParty"
@@ -35,12 +39,12 @@ export default function ElectionCard(props) {
           <H2 className="mt-4 text-center">{title}</H2>
         </div>
         <div
-          className={`absolute w-full h-full ${styles.back} min-h-[400px] p-12 `}
+          className={`absolute top-0  w-full h-full ${styles.back} min-h-[400px] p-12 `}
           onClick={() => {
             setFlipped(false);
           }}
         >
-          <div className="flex items-center h-full">
+          <div className="lg:flex lg:items-center h-full">
             <Body1>{content}</Body1>
           </div>
         </div>
