@@ -11,7 +11,7 @@ export default function ElectionDates(props) {
       <MaxWidth>
         <div className="grid grid-cols-12 md:justify-items-center  bg-indigo-800">
           <div className="col-span-12 lg:col-span-8  w-full">
-            <div className="flex flex-col w-full h-auto border-slate-50 border-[2px] rounded-2xl p-10">
+            <div className="flex flex-col w-full h-auto border-slate-50 border-2 rounded-2xl p-10">
               <div className="flex flex-row items-center mx-auto w-full text-slate-50 text-2xl">
                 <AiOutlineCalendar />
                 <span className="ml-2">Upcoming elections and dates</span>
