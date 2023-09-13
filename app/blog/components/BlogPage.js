@@ -36,6 +36,13 @@ export default function BlogPage({
   const hero = articles && articles.length > 0 ? articles[0] : false;
   // console.log('sectionSlug', sectionSlug);
   // console.log('sections !', sections);
+
+  let colors = [
+    'bg-fuchsia-400',
+    'bg-orange-400',
+    'bg-teal-400',
+    'bg-violet-400',
+  ];
   return (
     <BlogWrapper
       sections={sections}
@@ -58,15 +65,7 @@ export default function BlogPage({
                 >
                   <button
                     className={`${
-                      index === 0
-                        ? 'bg-fuchsia-400'
-                        : index === 1
-                        ? 'bg-orange-400'
-                        : index === 2
-                        ? 'bg-teal-400'
-                        : index === 3
-                        ? 'bg-violet-400'
-                        : 'bg-indigo-800'
+                      index <= 3 ? colors[index] : 'bg-indigo-800'
                     } py-2 px-4 mb-3 mt-10 text-sm font-bold text-white cursor-pointer rounded-full`}
                   >
                     {section.fields.title}
