@@ -3,6 +3,8 @@ import ArticleSnippet from '../shared/ArticleSnippet';
 import BlogWrapper from '../shared/BlogWrapper';
 import BlogSearch from './BlogSearch';
 import SubscribeBlog from './SubscribeBlog';
+import Link from 'next/link';
+import { colors } from '../shared/BlogColors';
 
 function getSectionArticles(section, articles) {
   // get the first 3 articles for each section
@@ -35,6 +37,7 @@ export default function BlogPage({
   const hero = articles && articles.length > 0 ? articles[0] : false;
   // console.log('sectionSlug', sectionSlug);
   // console.log('sections !', sections);
+
   return (
     <BlogWrapper
       sections={sections}
@@ -50,23 +53,19 @@ export default function BlogPage({
             const sectionArticles = getSectionArticles(section, articles);
             return (
               <Fragment key={section.id}>
-                <button
-                  className={`${
-                    section.fields.slug === 'onboarding-live'
-                      ? 'bg-indigo-800'
-                      : section.fields.slug === 'politics'
-                      ? 'bg-violet-400'
-                      : section.fields.slug === 'the-independent-cause'
-                      ? 'bg-fuchsia-400'
-                      : section.fields.slug === 'temp-section'
-                      ? 'bg-orange-400'
-                      : section.fields.slug === 'candidates'
-                      ? 'bg-teal-400'
-                      : 'bg-gray-600'
-                  } py-2 px-4 mb-3 mt-10 text-sm font-bold text-white cursor-default rounded-full`}
+                <Link
+                  href={`/blog/section/${section.fields.slug}`}
+                  id={`blog-${section.fields.slug}`}
+                  aria-label={section.fields.title}
                 >
-                  {section.fields.title}
-                </button>
+                  <button
+                    className={`${
+                      index <= 3 ? colors[index] : 'bg-indigo-800'
+                    } py-2 px-4 mb-3 mt-10 text-sm font-bold text-white cursor-pointer rounded-full`}
+                  >
+                    {section.fields.title}
+                  </button>
+                </Link>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {sectionArticles.map((article) => (
                     <ArticleSnippet key={article.id} article={article} />
