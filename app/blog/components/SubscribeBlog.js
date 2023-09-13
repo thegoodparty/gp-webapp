@@ -1,4 +1,4 @@
-import EmailFirstLastForm from '@shared/inputs/EmailFirstLastForm';
+import SignupForm from '@shared/inputs/SignupForm';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import styles from '../shared/ArticleSnippet.module.scss';
 
@@ -16,7 +16,7 @@ export default function SubscribeBlog() {
             {/* <div className="text-lg font-light lg:w-[80%] mx-auto text-left lg:text-center">          
             </div> */}
             <div className="mx-auto">
-              <EmailFirstLastForm
+              <SignupForm
                 fullWidth
                 formId="5d84452a-01df-422b-9734-580148677d2c"
                 pageName="Blog"

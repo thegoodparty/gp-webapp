@@ -1,14 +1,19 @@
+'use client';
+import { useState } from 'react';
 import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import WarningButton from '@shared/buttons/WarningButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import EmailForm from '@shared/inputs/EmailForm';
+import SignupForm from '@shared/inputs/SignupForm';
 import dynamic from 'next/dynamic';
 const ScrollIntoView = dynamic(() => import('react-scroll-into-view'));
 
 export default function ElectionHero(props) {
   const { content, city } = props;
+  const [showSignup, setShowSignup] = useState(false);
+
   const {
     heroTitle,
     heroSubTitle,
@@ -25,7 +30,7 @@ export default function ElectionHero(props) {
     <>
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50 items-stretch">
-          <div className="col-span-12 lg:col-span-6 lg:pl-20 max-w-2xl p-10">
+          <div className="col-span-12 lg:col-span-6 max-w-2xl pt-10 pl-5">
             {heroTitle?.length <= 45 ? (
               <h1 className="text-4xl md:text-6xl font-semibold">
                 {heroTitle}
@@ -40,17 +45,6 @@ export default function ElectionHero(props) {
             </h2>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
-                {city === 'durham' ? (
-                  <EmailForm
-                    formId="c7d78873-1ed0-4202-ab01-76577e57352c"
-                    pageName="durham"
-                    label="Get involved"
-                    labelId="volunteer-form"
-                  />
-                ) : (
-                  <></>
-                )}
-
                 {heroButton1text && (
                   <>
                     {isHeroButton1Scroll ? (
@@ -92,10 +86,10 @@ export default function ElectionHero(props) {
           </div>
         </div>
 
-        <div className="flex flex-row">
-          <div className="flex relative lg:w-full"></div>
-          <div className="flex relative w-full h-[171px] md:h-[300px]">
-            {skylineImage != null && skylineImage?.url != null && (
+        {skylineImage != null && skylineImage?.url != null && (
+          <div className="flex flex-row">
+            <div className="flex relative lg:w-full"></div>
+            <div className="flex relative w-full h-[171px] md:h-[300px]">
               <Image
                 src={`https:${skylineImage.url}`}
                 sizes="50vw"
@@ -104,9 +98,36 @@ export default function ElectionHero(props) {
                 fill
                 priority
               />
-            )}
+            </div>
           </div>
-        </div>
+        )}
+
+        {city === 'durham' && !showSignup ? (
+          <div className="w-full h-full min-h-[200px]">
+            <div
+              className="whitespace-nowrap pl-5"
+              onClick={() => {
+                setShowSignup(true);
+              }}
+            >
+              <PrimaryButton size="large">Get Involved</PrimaryButton>
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {city === 'durham' && showSignup ? (
+          <div className="w-full h-full min-h-[300px]">
+            <SignupForm
+              formId="c7d78873-1ed0-4202-ab01-76577e57352c"
+              pageName="durham"
+              label="Get involved"
+              labelId="volunteer-form"
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </MaxWidth>
 
       {city === 'nashville' ? (

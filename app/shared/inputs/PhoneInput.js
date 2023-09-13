@@ -31,6 +31,9 @@ function PhoneInput({
   hideIcon,
   shrink,
   required = false,
+  className,
+  placeholder,
+  useLabel = true,
 }) {
   const [displayValue, setDisplayValue] = useState('');
   const [validPhone, setValidPhone] = useState(false);
@@ -77,9 +80,9 @@ function PhoneInput({
 
   return (
     <TextField
-      className={styles.input}
+      className={className ? className : styles.input}
       value={displayValue}
-      label="Phone"
+      label={useLabel ? 'Phone' : ''}
       size="medium"
       fullWidth
       name="phone"
@@ -88,6 +91,7 @@ function PhoneInput({
       variant="outlined"
       error={!validPhone && displayValue !== ''}
       required={required}
+      placeholder={useLabel === false ? placeholder : ''}
       InputProps={
         !hideIcon
           ? {

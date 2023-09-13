@@ -8,6 +8,7 @@ export const globalSnackbarState = hookstate({
   isOpen: false,
   message: '',
   isError: false,
+  autoHideDuration: 4000,
 });
 
 const Alert = forwardRef(function Alert(props, ref) {
@@ -18,7 +19,7 @@ export default function Snackbar() {
   const state = useHookstate(globalSnackbarState);
   const snackbarState = state.get();
 
-  const { isOpen, message, isError } = snackbarState;
+  const { isOpen, message, isError, autoHideDuration } = snackbarState;
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -37,7 +38,7 @@ export default function Snackbar() {
     <div>
       <MuiSnackbar
         open={isOpen}
-        autoHideDuration={4000}
+        autoHideDuration={autoHideDuration}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         style={{ zIndex: 5000 }}
