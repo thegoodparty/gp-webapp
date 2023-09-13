@@ -33,7 +33,7 @@ function PhoneInput({
   required = false,
   className,
   placeholder,
-  useLabel = false,
+  useLabel = true,
 }) {
   const [displayValue, setDisplayValue] = useState('');
   const [validPhone, setValidPhone] = useState(false);
