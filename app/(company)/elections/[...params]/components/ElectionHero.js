@@ -30,7 +30,7 @@ export default function ElectionHero(props) {
     <>
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50 items-stretch">
-          <div className="col-span-12 lg:col-span-6 lg:pl-20 max-w-2xl p-10">
+          <div className="col-span-12 lg:col-span-6 max-w-2xl pt-10 pl-5">
             {heroTitle?.length <= 45 ? (
               <h1 className="text-4xl md:text-6xl font-semibold">
                 {heroTitle}
@@ -102,30 +102,32 @@ export default function ElectionHero(props) {
           </div>
         )}
 
-        <div className="flex w-full h-full md:min-h-[500px]">
-          {city === 'durham' && !showSignup ? (
+        {city === 'durham' && !showSignup ? (
+          <div className="w-full h-full min-h-[200px]">
             <div
-              className="whitespace-nowrap pl-20"
+              className="whitespace-nowrap pl-5"
               onClick={() => {
                 setShowSignup(true);
               }}
             >
               <PrimaryButton size="large">Get Involved</PrimaryButton>
             </div>
-          ) : (
-            <></>
-          )}
-          {city === 'durham' && showSignup ? (
+          </div>
+        ) : (
+          <></>
+        )}
+        {city === 'durham' && showSignup ? (
+          <div className="w-full h-full min-h-[300px]">
             <SignupForm
               formId="c7d78873-1ed0-4202-ab01-76577e57352c"
               pageName="durham"
               label="Get involved"
               labelId="volunteer-form"
             />
-          ) : (
-            <></>
-          )}
-        </div>
+          </div>
+        ) : (
+          <></>
+        )}
       </MaxWidth>
 
       {city === 'nashville' ? (
