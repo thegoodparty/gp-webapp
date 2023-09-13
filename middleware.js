@@ -21,7 +21,6 @@ const redirects = {
 
 export default async function middleware(req) {
   // const { content } = await fetchRedirects();
-  console.log('req.nextUrl.query', req.nextUrl);
 
   if (redirects[req.nextUrl.pathname]) {
     return NextResponse.redirect(
