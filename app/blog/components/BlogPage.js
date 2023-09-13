@@ -4,6 +4,7 @@ import BlogWrapper from '../shared/BlogWrapper';
 import BlogSearch from './BlogSearch';
 import SubscribeBlog from './SubscribeBlog';
 import Link from 'next/link';
+import { colors } from '../shared/BlogColors';
 
 function getSectionArticles(section, articles) {
   // get the first 3 articles for each section
@@ -37,12 +38,6 @@ export default function BlogPage({
   // console.log('sectionSlug', sectionSlug);
   // console.log('sections !', sections);
 
-  let colors = [
-    'bg-fuchsia-400',
-    'bg-orange-400',
-    'bg-teal-400',
-    'bg-violet-400',
-  ];
   return (
     <BlogWrapper
       sections={sections}

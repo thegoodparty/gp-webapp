@@ -5,6 +5,7 @@ import { AiOutlineHome } from 'react-icons/ai';
 import BlogSearch from '../components/BlogSearch';
 import BaseButtonClient from '../../shared/buttons/BaseButtonClient';
 import styles from './BlogWrapper.module.scss';
+import { colors } from './BlogColors';
 
 export default function BlogWrapper({
   children,
@@ -48,7 +49,7 @@ export default function BlogWrapper({
               <AiOutlineHome size={18} />
             </BaseButtonClient>
           </Link>
-          {sections.map((section) => (
+          {sections.map((section, index) => (
             <React.Fragment key={section.fields.slug}>
               {section.fields.slug === sectionSlug ? (
                 <Link
@@ -59,17 +60,7 @@ export default function BlogWrapper({
                 >
                   <BaseButtonClient
                     className={`${
-                      section.fields.slug === 'onboarding-live'
-                        ? 'bg-indigo-900'
-                        : section.fields.slug === 'politics'
-                        ? 'bg-violet-600'
-                        : section.fields.slug === 'for-voters'
-                        ? 'bg-pink-600'
-                        : section.fields.slug === 'independent-cause'
-                        ? 'bg-orange-600'
-                        : section.fields.slug === 'for-candidates'
-                        ? 'bg-teal-500'
-                        : 'bg-gray-800'
+                      index <= 3 ? colors[index] : 'bg-indigo-800'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}
@@ -84,19 +75,7 @@ export default function BlogWrapper({
                 >
                   <BaseButtonClient
                     className={`${
-                      sectionSlug != undefined
-                        ? 'bg-gray-800'
-                        : section.fields.slug === 'onboarding-live'
-                        ? 'bg-indigo-900'
-                        : section.fields.slug === 'politics'
-                        ? 'bg-violet-600'
-                        : section.fields.slug === 'for-voters'
-                        ? 'bg-pink-600'
-                        : section.fields.slug === 'independent-cause'
-                        ? 'bg-orange-600'
-                        : section.fields.slug === 'for-candidates'
-                        ? 'bg-teal-500'
-                        : 'bg-gray-800'
+                      index <= 3 ? colors[index] : 'bg-indigo-800'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}
