@@ -67,7 +67,7 @@ export const SOCIAL_LINKS = [
   },
   {
     label: 'Discord',
-    link: 'https://join.goodparty.org/discord-signup',
+    link: 'https://discord.gg/goodparty',
     isExternal: true,
     icon: <FaDiscord />,
   },
