@@ -102,7 +102,7 @@ export default function ElectionHero(props) {
           </div>
         )}
 
-        {city === 'durham' && !showSignup ? (
+        {(city === 'durham' || city === 'nc') && !showSignup ? (
           <div className="w-full h-full min-h-[200px]">
             <div
               className="whitespace-nowrap pl-5"
@@ -116,11 +116,11 @@ export default function ElectionHero(props) {
         ) : (
           <></>
         )}
-        {city === 'durham' && showSignup ? (
+        {(city === 'durham' || city === 'nc') && showSignup ? (
           <div className="w-full h-full min-h-[300px]">
             <SignupForm
               formId="c7d78873-1ed0-4202-ab01-76577e57352c"
-              pageName="durham"
+              pageName={`elections/${city}`}
               label="Get involved"
               labelId="volunteer-form"
             />
