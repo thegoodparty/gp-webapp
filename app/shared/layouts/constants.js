@@ -34,6 +34,7 @@ export const FOOTER_COLUMNS = [
       // { label: 'Meet the Candidates', link: '/candidates' },
       { label: 'Political Definitions', link: '/political-terms' },
       { label: 'Declare Independence', link: '/declare' },
+      { label: 'Discord Community', link: 'https://discord.gg/goodparty' },
       { label: 'Pricing', link: '/pricing' },
     ],
   },
@@ -66,7 +67,7 @@ export const SOCIAL_LINKS = [
   },
   {
     label: 'Discord',
-    link: 'https://join.goodparty.org/discord-signup',
+    link: 'https://discord.gg/goodparty',
     isExternal: true,
     icon: <FaDiscord />,
   },
