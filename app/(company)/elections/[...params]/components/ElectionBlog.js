@@ -83,8 +83,12 @@ export default function Blog(props) {
                               />
                             </div>
                           )}
-                          <H5 className="my-4 line-clamp-3">{title}</H5>
-                          <Body2 className="line-clamp-2">{summary}</Body2>
+                          <H5 className={`my-4 line-clamp-3 ${blogFontTitle}`}>
+                            {title}
+                          </H5>
+                          <Body2 className={`line-clamp-2 ${blogFontSubtitle}`}>
+                            {summary}
+                          </Body2>
 
                           <Link
                             href={`/blog/article/${slug}`}

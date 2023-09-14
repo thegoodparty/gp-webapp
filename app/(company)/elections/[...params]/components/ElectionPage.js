@@ -28,7 +28,7 @@ export default function ElectionPage(props) {
     ...props,
   };
 
-  let blogCTA = city === 'durham' ? true : false;
+  let blogCTA = city === 'durham' || city === 'nc' ? true : false;
   let blogDark = city === 'nashville' ? true : false;
   let blogItems = blogCTA ? 2 : 3;
 
@@ -41,14 +41,14 @@ export default function ElectionPage(props) {
 
   return (
     <div className="bg-slate-50">
-      {city === 'durham' && <Hero {...props} />}
+      {(city === 'durham' || city === 'nc') && <Hero {...props} />}
       <Candidates {...props} />
 
       {city === 'nashville' && <Volunteer {...volunteerProps} />}
 
-      {city === 'durham' && <ElectionCards {...props} />}
+      {(city === 'durham' || city === 'nc') && <ElectionCards {...props} />}
 
-      {city === 'durham' && <ElectionDates {...props} />}
+      {(city === 'durham' || city === 'nc') && <ElectionDates {...props} />}
 
       {showModal && (
         <Modal closeCallback={handleCloseModal} open>

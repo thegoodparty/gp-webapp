@@ -35,9 +35,15 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Page({ params }) {
+  // get the current year: ie: 2023
+  const currentYear = new Date().getFullYear();
+
   let paramsList = params?.params;
   const city = paramsList?.length > 0 ? paramsList[0] : '';
-  const year = paramsList?.length > 1 ? paramsList[1] : '';
+  const year = paramsList?.length > 1 ? paramsList[1] : currentYear;
+  if (!city || city === '') {
+    notFound();
+  }
   const slug = `${city}-${year}`;
   const { content } = await fetchElection(slug);
   if (!content) {
