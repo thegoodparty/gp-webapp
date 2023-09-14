@@ -4,6 +4,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlogPage from 'app/blog/components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
+import VwoScript from '@shared/scripts/VwoScript';
 
 export const fetchSections = async (slug) => {
   const api = { ...gpApi.content.contentByKey };
@@ -61,6 +62,7 @@ export default async function Page({ params }) {
 
   return (
     <>
+      <VwoScript />
       <BlogPage {...childProps} />
     </>
   );
