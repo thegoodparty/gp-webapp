@@ -87,7 +87,6 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <OptimizeScript />
       <ElectionPage {...childProps} />
     </>
   );

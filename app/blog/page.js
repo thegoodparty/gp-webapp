@@ -2,6 +2,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlogPage from './components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
+import VwoScript from '@shared/scripts/VwoScript';
 
 const meta = pageMetaData({
   title: 'Blog | GOOD PARTY',
@@ -44,5 +45,10 @@ export default async function Page({ params, searchParams }) {
     articles: articlesRes.content,
     articlesTitles: titles,
   };
-  return <BlogPage {...childProps} />;
+  return (
+    <>
+      <VwoScript />
+      <BlogPage {...childProps} />
+    </>
+  );
 }

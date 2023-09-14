@@ -15,7 +15,6 @@ export const metadata = meta;
 export default function Page() {
   return (
     <>
-      <OptimizeScript />
       <HomePage />
     </>
   );

@@ -14,7 +14,6 @@ export const metadata = meta;
 export default async function Page(params) {
   return (
     <>
-      <OptimizeScript />
       <VolunteerPage />
     </>
   );
