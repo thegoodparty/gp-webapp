@@ -14,6 +14,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TextField from '@shared/inputs/TextField';
 import InputFieldsModal from './InputFieldsModal';
+import TemplateList from './TemplatesList';
 
 export async function fetchInputFields(subKey) {
   const api = gpApi.content.contentByKey;
@@ -24,12 +25,8 @@ export async function fetchInputFields(subKey) {
   return await gpFetch(api, payload, 3600);
 }
 
-export default function NewContentFlow({
-  prompts,
-  onSelectCallback,
-  sections,
-  isProcessing,
-}) {
+export default function NewContentFlow(props) {
+  const { prompts, onSelectCallback, sections, isProcessing } = props;
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [selected, setSelected] = useState('');
@@ -69,47 +66,39 @@ export default function NewContentFlow({
     setInputFields([]);
   };
 
+  const handelSelect = async (key) => {
+    setSelected(key);
+    await onSelectPrompt();
+  };
+
+  const closeModal = () => {
+    setSelected(false);
+    setShowModal(false);
+    setShowModal2(false);
+  };
+
   return (
     <div>
       <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
 
-      <Modal closeCallback={() => setShowModal(false)} open={showModal}>
-        <div className="lg:min-w-[740px]">
+      <Modal closeCallback={closeModal} open={showModal}>
+        <div className="w-[calc(90vw-64px)]">
           <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
-            Create content
+            Select a Template
           </H2>
-          <H6 className="mt-14 mb-2">Select a template</H6>
-          <Select
-            native
-            value={selected}
-            required
-            variant="outlined"
-            fullWidth
-            onChange={(e) => {
-              setSelected(e.target.value);
-            }}
-          >
-            <option value="">Select an option</option>
-            {prompts.map((prompt) => (
-              <option key={prompt.key} value={prompt.key}>
-                {prompt.title}
-              </option>
-            ))}
-          </Select>
+          <TemplateList
+            {...props}
+            onSelectCallback={handelSelect}
+            selectedKey={selected}
+          />
+
           <div className="mt-16 flex w-full justify-end">
-            <div
-              onClick={() => {
-                setShowModal(false);
-              }}
-            >
-              <SecondaryButton disabled={isProcessing}>Cancel</SecondaryButton>
-            </div>
-            <div className="ml-3" onClick={onSelectPrompt}>
-              <PrimaryButton disabled={isProcessing || selected === ''}>
-                {isProcessing ? <CircularProgress size={20} /> : 'Create'}
-              </PrimaryButton>
+            <div onClick={closeModal}>
+              <SecondaryButton disabled={isProcessing} size="medium">
+                Cancel
+              </SecondaryButton>
             </div>
           </div>
         </div>
@@ -117,7 +106,7 @@ export default function NewContentFlow({
 
       <InputFieldsModal
         onSelectCallback={handleAdditionalInput}
-        closeModalCallback={() => setShowModal2(false)}
+        closeModalCallback={closeModal}
         showModal={showModal2 && selected}
         inputFields={inputFields}
       />

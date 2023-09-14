@@ -34,7 +34,7 @@ const subSectionKey = 'aiContent';
 let aiCount = 0;
 let aiTotalCount = 0;
 
-export default function MyContent({ prompts }) {
+export default function MyContent(props) {
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState('');
   const [sections, setSections] = useState(undefined);
@@ -270,7 +270,7 @@ export default function MyContent({ prompts }) {
       ) : (
         <>
           <NewContentFlow
-            prompts={prompts}
+            {...props}
             onSelectCallback={onSelectPrompt}
             sections={sections}
             isProcessing={jobStarting}

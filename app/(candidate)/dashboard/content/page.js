@@ -18,12 +18,18 @@ export default async function Page({ params, searchParams }) {
   const promptsRaw = (await fetchContentByKey('candidateContentPrompts'))
     .content;
   const prompts = parsePrompts(promptsRaw);
-  // const { campaign } = await fetchUserCampaign();
+
+  const templates = (await fetchContentByKey('candidateContentPrompts'))
+    .content;
+
+  const categories = (await fetchContentByKey('aiContentCategories')).content;
 
   const childProps = {
     pathname: '/dashboard/content',
     // campaign,
     prompts,
+    templates,
+    categories,
   };
 
   return <ContentPage {...childProps} />;

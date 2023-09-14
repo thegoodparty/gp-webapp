@@ -15,8 +15,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
-import { fetchInputFields } from '../../components/NewContentFlow';
 import InputFieldsModal from '../../components/InputFieldsModal';
+import { fetchInputFields } from '../../select-template/components/TemplatesList';
 
 const RichEditor = dynamic(
   () =>
