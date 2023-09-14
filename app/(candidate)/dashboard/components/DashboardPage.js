@@ -35,7 +35,6 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
-  console.log('hi');
   const { campaign } = props;
   const { pathToVictory, goals, reportedVoterGoals } = campaign;
   const [updateHistory, setUpdateHistory] = useState([]);
