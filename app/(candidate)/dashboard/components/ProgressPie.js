@@ -63,7 +63,7 @@ export default function ProgressPie({ total, progress }) {
           <H2 className={`text-4xl mb-1 ${overMode ? 'text-green-500' : ''}`}>
             {overMode && '+'}
             {overMode
-              ? -1 * kFormatter(total - progress)
+              ? `${kFormatter(progress - total)}`
               : kFormatter(total - progress)}
           </H2>
           <Body2>left this week</Body2>
