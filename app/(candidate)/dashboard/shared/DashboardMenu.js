@@ -7,24 +7,32 @@ import { TbBrain } from 'react-icons/tb';
 
 const pages = [
   {
-    label: 'Campaign Tracker',
-    icon: <AiOutlineFlag />,
-    link: '/dashboard',
-    id: 'campaign-tracker-dashboard',
-  },
-  {
-    label: 'Profile',
-    icon: <RiUserHeartLine />,
-    link: '/profile',
-    id: 'profile-dashboard',
-  },
-  {
-    label: 'Campaign Plan',
+    label: 'AI Campaign Plan',
     icon: <TbBrain />,
     link: '/dashboard/plan',
     section: 'Strategy',
     id: 'campaign-plan-dashboard',
   },
+  {
+    label: 'AI Campaign Tool',
+    icon: <BsPostcardHeart />,
+    link: '/dashboard/content',
+    section: 'Resources',
+    id: 'my-content-dashboard',
+  },
+  {
+    label: 'Campaign Tracker',
+    icon: <AiOutlineFlag />,
+    link: '/dashboard',
+    id: 'campaign-tracker-dashboard',
+  },
+  // {
+  //   label: 'Profile',
+  //   icon: <RiUserHeartLine />,
+  //   link: '/profile',
+  //   id: 'profile-dashboard',
+  // },
+
   {
     label: 'Campaign Team',
     icon: <RiTeamLine />,
@@ -37,13 +45,7 @@ const pages = [
     link: '/dashboard/funding',
     id: 'funding-dashboard',
   },
-  {
-    label: 'My Content',
-    icon: <BsPostcardHeart />,
-    link: '/dashboard/content',
-    section: 'Resources',
-    id: 'my-content-dashboard',
-  },
+
   {
     label: 'Resources Library',
     icon: <RiBook2Line />,
@@ -57,7 +59,7 @@ export default function DashboardMenu({
   candidateSlug,
 }) {
   // make profile link dynamic
-  pages[1].link = `/candidate/${candidateSlug}`;
+  // pages[1].link = `/candidate/${candidateSlug}`;
 
   return (
     <div className="w-[calc(100vw-16px)] lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">

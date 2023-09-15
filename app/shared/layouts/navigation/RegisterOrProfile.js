@@ -12,6 +12,7 @@ import { deleteCookies, getCookie, deleteCookie } from 'helpers/cookieHelper';
 import { RESOURCES_LINKS } from './LearnMore';
 import { HiOutlineStar } from 'react-icons/hi';
 import { FaTheaterMasks } from 'react-icons/fa';
+import { BsFillPersonFill } from 'react-icons/bs';
 
 export const globalUserState = hookstate(false);
 
@@ -30,7 +31,7 @@ export default function RegisterOrProfile({
   const userState = useHookstate(globalUserState);
   const [impersonating, setImpersonating] = useState(false);
 
-  const { status, slug } = campaignStatus || {};
+  const { status, profile } = campaignStatus || {};
   useEffect(() => {
     if (user) {
       userState.set(() => user);
@@ -109,6 +110,18 @@ export default function RegisterOrProfile({
                     : 'p-0 opacity-0 overflow-visible'
                 }`}
               >
+                {profile && (
+                  <Link
+                    href={`/candidate/${profile}`}
+                    id="nav-candidate-profile"
+                    className="no-underline font-normal"
+                  >
+                    <div className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center">
+                      <BsFillPersonFill />
+                      <div className="ml-3">Public Profile</div>
+                    </div>
+                  </Link>
+                )}
                 {status && (
                   <div className="lg:hidden border-b border-gray-800 pb-3 mb-3">
                     {RESOURCES_LINKS.map((link) => (
