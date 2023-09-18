@@ -12,10 +12,10 @@ import gpFetch from 'gpApi/gpFetch';
 
 const redirects = {
   '/elections/senate/me': '/',
-  '/candidates': '/elections/nashville/2023',
-  '/nashville': '/elections/nashville/2023',
-  '/northcarolina': '/elections/durham/2023',
-  '/nc': '/elections/durham/2023',
+  '/candidates': '/elections/nashville',
+  '/nashville': '/elections/nashville',
+  '/northcarolina': '/elections/nc',
+  '/nc': '/elections/nc',
   '/run': '/run-for-office',
 };
 
