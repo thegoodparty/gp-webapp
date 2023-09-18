@@ -6,6 +6,7 @@ export default function mapCampaignToCandidate(campaign) {
     slug,
     details,
     campaignPlan,
+    goals,
     pathToVictory,
     color,
     image,
@@ -41,6 +42,8 @@ export default function mapCampaignToCandidate(campaign) {
     campaignCommittee,
   } = details || {};
   const { slogan, aboutMe, why } = campaignPlan || {};
+
+  const { electionDate } = goals || {};
 
   const { voteGoal, voterProjection } = pathToVictory || {};
   return {
@@ -79,5 +82,6 @@ export default function mapCampaignToCandidate(campaign) {
     lastVisited,
     filedStatement,
     campaignCommittee,
+    electionDate,
   };
 }
