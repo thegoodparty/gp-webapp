@@ -228,6 +228,14 @@ export default function AdminCandidatesPage(props) {
       },
     },
     {
+      Header: 'Party',
+      accessor: 'party',
+    },
+    {
+      Header: 'Office',
+      accessor: 'office',
+    },
+    {
       Header: 'Election Date',
       accessor: (data) =>
         data.electionDate
@@ -237,14 +245,6 @@ export default function AdminCandidatesPage(props) {
       Cell: ({ row }) => {
         return dateUsHelper(row.original.electionDate);
       },
-    },
-    {
-      Header: 'Party',
-      accessor: 'party',
-    },
-    {
-      Header: 'Office',
-      accessor: 'office',
     },
     {
       Header: 'Term Length',
