@@ -7,6 +7,7 @@ import styles from './BlogArticle.module.scss';
 import Banner from './Banner';
 import ShareBlog from 'app/blog/shared/ShareBlog';
 import BlogPopup from './BlogPopup';
+import Callout from '@shared/utils/Callout';
 
 export default function BlogArticle({ sections, article }) {
   const {
@@ -23,85 +24,90 @@ export default function BlogArticle({ sections, article }) {
   const sectionSlug = section?.fields?.slug;
 
   return (
-    <BlogWrapper
-      sections={sections}
-      sectionSlug={sectionSlug}
-      isArticle={!!title}
-    >
-      <BlogPopup />
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
-        {mainImage && (
-          <div>
-            <div className={styles.image}>
-              <Image
-                src={`https:${mainImage.url}`}
-                alt={mainImage.alt}
-                sizes="100vw"
-                fill
-                priority
-              />
-            </div>
-          </div>
-        )}
-        <div>
-          <ShareBlog />
-          <div>
-            <div className={styles.section}>{section.fields?.title}</div>
-            <h1 className={styles.h1}>{title}</h1>
-            <div className={styles.time}>{readingTime?.text}</div>
-            <div className={styles.topAuthorWrapper}>
-              <div className={styles.authorImage}>
-                {author.fields.image?.url && (
-                  <Image
-                    src={`https:${author.fields.image?.url}`}
-                    alt={mainImage?.alt}
-                    width={60}
-                    height={60}
-                  />
-                )}
-              </div>
-              <div className={styles.authorNameTop}>
-                {author.fields.name} &middot; {dateUsHelper(publishDate)}
+    <>
+      <Callout />
+      <BlogWrapper
+        sections={sections}
+        sectionSlug={sectionSlug}
+        isArticle={!!title}
+      >
+        <BlogPopup />
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
+          {mainImage && (
+            <div>
+              <div className={styles.image}>
+                <Image
+                  src={`https:${mainImage.url}`}
+                  alt={mainImage.alt}
+                  sizes="100vw"
+                  fill
+                  priority
+                />
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className={styles.maxWidth}>
-        <div className={styles.copy}>
-          <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
-          {body2 && banner && <Banner banner={banner} />}
-          {body2 && (
-            <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
           )}
-          {banner && <Banner banner={banner} />}
-        </div>
-
-        <div className={styles.authorWrapper}>
-          <div className={styles.authorInner}>
-            <div className={styles.author}>
-              <div>
-                {author.fields.image?.url && (
-                  <div className={styles.authorImage}>
+          <div>
+            <ShareBlog />
+            <div>
+              <div className={styles.section}>{section.fields?.title}</div>
+              <h1 className={styles.h1}>{title}</h1>
+              <div className={styles.time}>{readingTime?.text}</div>
+              <div className={styles.topAuthorWrapper}>
+                <div className={styles.authorImage}>
+                  {author.fields.image?.url && (
                     <Image
                       src={`https:${author.fields.image?.url}`}
                       alt={mainImage?.alt}
                       width={60}
                       height={60}
                     />
-                  </div>
-                )}
-              </div>
-              <div>
-                <div className={styles.authorName}>By {author.fields.name}</div>
-                <div className={styles.authorSummary}>
-                  {author.fields.summary}
+                  )}
+                </div>
+                <div className={styles.authorNameTop}>
+                  {author.fields.name} &middot; {dateUsHelper(publishDate)}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </BlogWrapper>
+        <div className={styles.maxWidth}>
+          <div className={styles.copy}>
+            <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
+            {body2 && banner && <Banner banner={banner} />}
+            {body2 && (
+              <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
+            )}
+            {banner && <Banner banner={banner} />}
+          </div>
+
+          <div className={styles.authorWrapper}>
+            <div className={styles.authorInner}>
+              <div className={styles.author}>
+                <div>
+                  {author.fields.image?.url && (
+                    <div className={styles.authorImage}>
+                      <Image
+                        src={`https:${author.fields.image?.url}`}
+                        alt={mainImage?.alt}
+                        width={60}
+                        height={60}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className={styles.authorName}>
+                    By {author.fields.name}
+                  </div>
+                  <div className={styles.authorSummary}>
+                    {author.fields.summary}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </BlogWrapper>
+    </>
   );
 }

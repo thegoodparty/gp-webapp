@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-
 import RightSide from './RightSide';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export default function Nav() {
   return (
@@ -44,24 +42,6 @@ export default function Nav() {
         </div>
       </div>
       <div className="h-14 relative">&nbsp;</div>
-      <div className="flex w-screen h-14">
-        <div className="flex w-full bg-lime-400 lg:block border-solid border-b border-zinc-200 px-5 lg:px-8 h-14">
-          <div className="flex w-full justify-center items-center h-14">
-            Join our Discord community - meet like-minded independents and get
-            involved!
-            <Link
-              id="nav-join-discord"
-              href="https://discord.gg/goodparty"
-              target="_blank"
-              aria-label="Join our Discord community - meet like-minded independents and get involved!"
-            >
-              <div className="whitespace-nowrap ml-5">
-                <PrimaryButton size="medium">Join Now</PrimaryButton>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

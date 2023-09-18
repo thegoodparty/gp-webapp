@@ -7,6 +7,7 @@ import FactsSection from './FactsSection';
 import HowSection from './HowSection';
 import ToolsSection from './ToolsSection';
 import Cta from './Cta';
+import Callout from '@shared/utils/Callout';
 const Modal = dynamic(() => import('@shared/utils/Modal'));
 
 export default function HomePage() {
@@ -22,6 +23,8 @@ export default function HomePage() {
 
   return (
     <div className="bg-slate-50">
+      <Callout />
+
       <Hero />
       <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
       <FactsSection />
