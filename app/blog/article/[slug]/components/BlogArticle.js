@@ -6,6 +6,7 @@ import Image from 'next/image';
 import styles from './BlogArticle.module.scss';
 import Banner from './Banner';
 import ShareBlog from 'app/blog/shared/ShareBlog';
+import BlogPopup from './BlogPopup';
 
 export default function BlogArticle({ sections, article }) {
   const {
@@ -20,12 +21,14 @@ export default function BlogArticle({ sections, article }) {
     title,
   } = article;
   const sectionSlug = section?.fields?.slug;
+
   return (
     <BlogWrapper
       sections={sections}
       sectionSlug={sectionSlug}
       isArticle={!!title}
     >
+      <BlogPopup />
       <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
         {mainImage && (
           <div>
