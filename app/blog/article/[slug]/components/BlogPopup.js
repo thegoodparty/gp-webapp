@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import HubSpotForm from '@shared/utils/HubSpotForm';
 import Modal from '@shared/utils/Modal';
 import Image from 'next/image';
+import { setCookie, getCookie } from 'helpers/cookieHelper.js';
 
 export default function BlogPopup() {
   const [showModal, setShowModal] = useState(false);
@@ -11,7 +12,13 @@ export default function BlogPopup() {
   };
 
   useEffect(() => {
-    setTimeout(handleOpenModal, 60000);
+    const cookie = getCookie('blogPopup');
+    if (!cookie || cookie !== 'closed') {
+      const timer = setTimeout(handleOpenModal, 60000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
   }, []);
 
   return (
@@ -19,6 +26,7 @@ export default function BlogPopup() {
       open={showModal}
       closeCallback={() => {
         setShowModal(false);
+        setCookie('blogPopup', 'closed', 1);
       }}
       center={false}
     >
