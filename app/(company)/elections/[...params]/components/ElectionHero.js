@@ -77,11 +77,11 @@ export default function ElectionHero(props) {
           <div className="col-span-12 lg:col-span-6 relative w-full h-auto lg:pt-10 items-center md:mt-[100px]">
             <Image
               src={`https:${heroImage.url}`}
-              sizes="50vw"
-              className="object-contain object-right-top"
+              className="w-full"
               alt=""
-              fill
               priority
+              width="643"
+              height="395"
             />
           </div>
         </div>
