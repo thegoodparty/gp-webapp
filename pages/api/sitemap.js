@@ -166,13 +166,24 @@ export default async function sitemap(req, res) {
       }
       const city = election.slug.split('-')[0];
       const year = election.slug.split('-')[1];
-      xmlString += `
+      const currentYear = new Date().getFullYear();
+      if (year.toString() != currentYear.toString()) {
+        xmlString += `
         <url>
           <loc>${appBase}/elections/${city}/${year}</loc>
           <lastmod>${currentDate}</lastmod>
           <changefreq>monthly</changefreq>
         </url>
       `;
+      } else {
+        xmlString += `
+        <url>
+          <loc>${appBase}/elections/${city}</loc>
+          <lastmod>${currentDate}</lastmod>
+          <changefreq>monthly</changefreq>
+        </url>
+      `;
+      }
     });
 
     xmlString += '</urlset>';
