@@ -46,7 +46,9 @@ export default function TemplateList(props) {
                 className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"
               >
                 <div
-                  onClick={() => onSelectCallback(template.key)}
+                  onClick={() => {
+                    onSelectCallback(template.key);
+                  }}
                   className={`bg-gray-50 border flex md:flex-col  rounded-xl pt-5 px-7 pb-5 md:pb-14 ${
                     selectedKey === template.key
                       ? ' shadow-lg border-black'
