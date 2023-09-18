@@ -7,7 +7,7 @@ import H2 from '@shared/typography/H2';
 import H6 from '@shared/typography/H6';
 import Modal from '@shared/utils/Modal';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import gpApi from 'gpApi';
@@ -31,6 +31,12 @@ export default function NewContentFlow(props) {
   const [showModal2, setShowModal2] = useState(false);
   const [selected, setSelected] = useState('');
   const [inputFields, setInputFields] = useState([]);
+
+  useEffect(() => {
+    if (selected !== '') {
+      onSelectPrompt();
+    }
+  }, [selected]);
 
   const onSelectPrompt = async () => {
     if (selected !== '') {
@@ -68,7 +74,6 @@ export default function NewContentFlow(props) {
 
   const handelSelect = async (key) => {
     setSelected(key);
-    await onSelectPrompt();
   };
 
   const closeModal = () => {

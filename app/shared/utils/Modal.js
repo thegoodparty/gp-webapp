@@ -52,7 +52,6 @@ export default function Modal({
   };
 
   const desktopMode = useMediaQuery('(min-width: 768px)');
-  console.log('desktopMode', desktopMode);
   return (
     <MuiModal open={open} onClose={handleClose}>
       <div className="bg-blue-400">
