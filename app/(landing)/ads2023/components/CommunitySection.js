@@ -15,7 +15,7 @@ export default function CommunitySection() {
         <h2 className="text-center font-semibold text-6xl">
           Ready to serve your community?
         </h2>
-        <div className="grid grid-cols-12 gap-12 items-center mt-20">
+        <div className="grid grid-cols-12 gap-4 lg:gap-12 items-center mt-20">
           <div className="col-span-12 md:col-span-6">
             <h3 className="font-semibold  text-2xl mb-4">
               We make running as an independent possible.
@@ -26,12 +26,12 @@ export default function CommunitySection() {
               in touch to learn more!
             </Body1>
             <div className="grid grid-cols-12 mt-8 gap-4">
-              <div className="col-span-6">
+              <div className="col-span-12 md:col-span-6">
                 <Link href="/run-for-office" id="ads23-try-tools">
                   <WarningButton fullWidth>Try our tools</WarningButton>
                 </Link>
               </div>
-              <div className="col-span-6">
+              <div className="col-span-12 md:col-span-6">
                 <Link href="/academy" id="ads23-free-course">
                   <SecondaryButton fullWidth>Free course</SecondaryButton>
                 </Link>
