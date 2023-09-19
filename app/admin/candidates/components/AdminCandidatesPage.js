@@ -81,6 +81,7 @@ export default function AdminCandidatesPage(props) {
         currentStep,
         shortVersion: campaign.filedStatement,
         campaignCommittee: campaign.campaignCommittee,
+        electionDate: campaign.electionDate,
       };
       inputData.push(fields);
       console.log('Object.values(fields)', Object.values(fields));
@@ -226,7 +227,6 @@ export default function AdminCandidatesPage(props) {
         return dateUsHelper(row.original.updatedAt);
       },
     },
-
     {
       Header: 'Party',
       accessor: 'party',
@@ -234,6 +234,17 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Office',
       accessor: 'office',
+    },
+    {
+      Header: 'Election Date',
+      accessor: (data) =>
+        data.electionDate
+          ? new Date(data.electionDate)
+          : new Date('1970-01-01'),
+      sortType: 'datetime',
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.electionDate);
+      },
     },
     {
       Header: 'Term Length',
