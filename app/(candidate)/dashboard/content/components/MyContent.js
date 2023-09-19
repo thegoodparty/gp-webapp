@@ -109,17 +109,19 @@ export default function MyContent(props) {
     },
     {
       Header: 'Last Modified',
-      accessor: 'updatedAt',
-      sortType: 'datetime',
+      accessor: (data) =>
+        data.updatedAt ? data.updatedAt.getTime() : new Date().getTime(),
+      sortType: 'date',
       Cell: ({ row }) => {
         let updatedAt;
         if (row.original.updatedAt) {
           updatedAt = dateWithTime(row.original.updatedAt);
           if (updatedAt === undefined || updatedAt === 'Invalid Date') {
-            updatedAt = '';
+            const now = new Date();
+            updatedAt = dateWithTime(now);
           }
         }
-        return <div className="pl-[40px]">{updatedAt}</div>;
+        return updatedAt;
       },
     },
     {
