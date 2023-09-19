@@ -27,12 +27,12 @@ export default function CommunitySection() {
             </Body1>
             <div className="grid grid-cols-12 mt-8 gap-4">
               <div className="col-span-6">
-                <Link href="/run-for-office">
+                <Link href="/run-for-office" id="ads23-try-tools">
                   <WarningButton fullWidth>Try our tools</WarningButton>
                 </Link>
               </div>
               <div className="col-span-6">
-                <Link href="/academy">
+                <Link href="/academy" id="ads23-free-course">
                   <SecondaryButton fullWidth>Free course</SecondaryButton>
                 </Link>
               </div>

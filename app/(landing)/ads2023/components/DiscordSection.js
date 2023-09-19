@@ -43,6 +43,7 @@ export default function DiscordSection() {
           target="_blank"
           rel="noopener noreferrer nofollow"
           className="mt-12 inline-block"
+          id="ads23-join-discord"
         >
           <WarningButton>Join our Discord</WarningButton>
         </a>

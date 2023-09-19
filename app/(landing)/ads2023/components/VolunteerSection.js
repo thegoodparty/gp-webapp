@@ -26,7 +26,11 @@ export default function VolunteerSection() {
             </Body1>
             <div className="mt-8">
               <ScheduleModal
-                btn={<PrimaryButton>Schedule info session</PrimaryButton>}
+                btn={
+                  <PrimaryButton id="ads23-schedule">
+                    Schedule info session
+                  </PrimaryButton>
+                }
                 calendar="https://meetings.hubspot.com/robbooth/gp-info-session"
               />
             </div>

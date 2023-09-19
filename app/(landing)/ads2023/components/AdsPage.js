@@ -5,11 +5,11 @@ import VolunteerSection from './VolunteerSection';
 
 export default function AdsPage() {
   return (
-    <div>
+    <>
       <HeroSection />
       <DiscordSection />
       <VolunteerSection />
       <CommunitySection />
-    </div>
+    </>
   );
 }
