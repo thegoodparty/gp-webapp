@@ -19,7 +19,9 @@ export default function ScheduleModal({ calendar, btn }) {
   return (
     <>
       <div
-        className="text-sm text-center underline mt-1 cursor-pointer"
+        className={`text-sm  underline mt-1 cursor-pointer ${
+          !btn && 'text-center'
+        }`}
         onClick={handleOpenModal}
       >
         {btn ? btn : 'Book a Time'}

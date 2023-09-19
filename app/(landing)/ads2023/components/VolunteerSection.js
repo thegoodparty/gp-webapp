@@ -4,6 +4,7 @@ import img from 'public/images/landing-pages/change.png';
 
 import Body1 from '@shared/typography/Body1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import ScheduleModal from 'app/(candidate)/onboarding/[slug]/dashboard/components/ScheduleModal';
 
 export default function VolunteerSection() {
   return (
@@ -15,7 +16,7 @@ export default function VolunteerSection() {
         </h2>
         <div className="grid grid-cols-12 gap-8 items-center mt-20">
           <div className="col-span-12 md:col-span-6">
-            <h3 className="font-semibold  text-2xl ">
+            <h3 className="font-semibold  text-2xl mb-4">
               Use your skills for good
             </h3>
             <Body1>
@@ -24,7 +25,10 @@ export default function VolunteerSection() {
               inspiring leaders that reject the duopoly.
             </Body1>
             <div className="mt-8">
-              <PrimaryButton>Schedule info session</PrimaryButton>
+              <ScheduleModal
+                btn={<PrimaryButton>Schedule info session</PrimaryButton>}
+                calendar="https://meetings.hubspot.com/robbooth/gp-info-session"
+              />
             </div>
           </div>
           <div className="col-span-12 md:col-span-6">
