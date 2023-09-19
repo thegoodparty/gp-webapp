@@ -22,7 +22,7 @@ export default function HeroSection() {
         priority
         fill
       />
-      <div className="pb-12 relative z-10">
+      <div className="relative z-10">
         <MaxWidth>
           <div className="grid grid-cols-12 gap-8 pt-12 md:pt-28">
             <div className="col-span-12 md:col-span-6">
@@ -39,7 +39,7 @@ export default function HeroSection() {
             </div>
           </div>
         </MaxWidth>
-        <div className="hidden md:block absolute bottom-0 bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#13161A_55%)] h-[calc(100vw*0.09)] w-full" />
+        <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#13161A_55%)] h-[calc(100vw*0.09)] w-full" />
       </div>
     </section>
   );

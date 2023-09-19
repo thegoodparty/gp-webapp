@@ -7,10 +7,11 @@ import user3 from 'public/images/landing-pages/discord-user3.png';
 import user4 from 'public/images/landing-pages/discord-user4.png';
 import user5 from 'public/images/landing-pages/discord-user5.png';
 import H2 from '@shared/typography/H2';
+import WarningButton from '@shared/buttons/WarningButton';
 
 export default function DiscordSection() {
   return (
-    <section className="bg-primary py-12 text-white">
+    <section className="bg-primary pt-12 text-white">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-8 items-center">
           <div className="col-span-12 md:col-span-6">
@@ -37,7 +38,16 @@ export default function DiscordSection() {
           <Image alt="" src={user4} width={64} height={64} className="mr-2" />
           <Image alt="" src={user5} width={64} height={64} className="" />
         </div>
+        <a
+          href="https://discord.gg/goodparty"
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          className="mt-12 inline-block"
+        >
+          <WarningButton>Join our Discord</WarningButton>
+        </a>
       </MaxWidth>
+      <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#DFF265_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
   );
 }
