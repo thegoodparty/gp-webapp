@@ -157,13 +157,11 @@ export default function MyContent(props) {
       let jobsProcessing = false;
       const statusObj = campaignObj.campaignPlanStatus || {};
       for (const statusKey in statusObj) {
-        if (statusObj[statusKey] === 'processing') {
+        if (statusObj[statusKey]['status'] === 'processing') {
           jobsProcessing = true;
-          sectionsObj[statusKey] = {
-            key: statusKey,
-            name: camelToSentence(statusKey),
-            updatedAt: undefined,
-          };
+          statusObj[statusKey]['key'] = statusKey;
+          statusObj[statusKey]['name'] = camelToSentence(statusKey);
+          statusObj[statusKey]['updatedAt'] = undefined;
         }
       }
 
