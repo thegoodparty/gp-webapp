@@ -50,15 +50,25 @@ export default function IssuesPage({
         isError: false,
       };
     });
-    await updateCampaign(camp);
-
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saved',
-        isError: false,
-      };
-    });
+    const saveResp = await updateCampaign(camp);
+    if (!saveResp || typeof saveResp !== 'object') {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message:
+            'Error saving issue. Please report an issue on the Feedback sidebar.',
+          isError: true,
+        };
+      });
+    } else {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Saved',
+          isError: false,
+        };
+      });
+    }
   };
 
   const canContinue = () => {

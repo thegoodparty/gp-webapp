@@ -122,7 +122,7 @@ export default function ElectionHero(props) {
               formId="c7d78873-1ed0-4202-ab01-76577e57352c"
               pageName={`elections/${city}`}
               label="Get involved"
-              labelId="volunteer-form"
+              labelId={`${city}-form`}
             />
           </div>
         ) : (

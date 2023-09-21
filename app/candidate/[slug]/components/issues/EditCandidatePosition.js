@@ -88,7 +88,17 @@ export default function EditCandidatePosition({
         });
         window.location.reload();
       } else {
-        await deleteCandidatePosition(candidatePosition.id);
+        const deleteResp = await deleteCandidatePosition(candidatePosition.id);
+        if (!deleteResp || deleteResp === false) {
+          snackbarState.set(() => {
+            return {
+              isOpen: true,
+              message:
+                'Error deleting item. Please report an issue on the Feedback sidebar.',
+              isError: true,
+            };
+          });
+        }
         updatePositionsCallback();
       }
     }
@@ -137,7 +147,20 @@ export default function EditCandidatePosition({
         });
         window.location.reload();
       } else {
-        await updateCandidatePosition(candidatePosition.id, description);
+        const updateResp = await updateCandidatePosition(
+          candidatePosition.id,
+          description,
+        );
+        if (!updateResp || updateResp === false) {
+          snackbarState.set(() => {
+            return {
+              isOpen: true,
+              message:
+                'Error saving item. Please report an issue on the Feedback sidebar.',
+              isError: true,
+            };
+          });
+        }
         await updatePositionsCallback();
       }
     }
