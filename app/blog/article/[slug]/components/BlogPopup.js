@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
 import HubSpotForm from '@shared/utils/HubSpotForm';
-import Modal from '@shared/utils/Modal';
+import SignupForm from '@shared/inputs/SignupForm';
+import ModalCorner from '@shared/utils/ModalCorner';
 import Image from 'next/image';
 import { setCookie, getCookie } from 'helpers/cookieHelper.js';
 
 export default function BlogPopup() {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const handleOpenModal = () => {
     setShowModal(true);
   };
@@ -14,7 +15,7 @@ export default function BlogPopup() {
   useEffect(() => {
     const cookie = getCookie('blogPopup');
     if (!cookie || cookie !== 'closed') {
-      const timer = setTimeout(handleOpenModal, 60000);
+      const timer = setTimeout(handleOpenModal, 30000);
       return () => {
         clearTimeout(timer);
       };
@@ -22,13 +23,12 @@ export default function BlogPopup() {
   }, []);
 
   return (
-    <Modal
+    <ModalCorner
       open={showModal}
       closeCallback={() => {
         setShowModal(false);
         setCookie('blogPopup', 'closed', 1);
       }}
-      center={false}
     >
       <Image
         src="/images/heart-hologram.svg"
@@ -37,10 +37,23 @@ export default function BlogPopup() {
         height={46}
       />
 
-      <h2 className="text-2xl font-black my-6">
+      <h2 className="text-2xl font-black my-1">
         Stay up to date with Good Party
       </h2>
-      <HubSpotForm formId="5d84452a-01df-422b-9734-580148677d2c" />
-    </Modal>
+      {/* <HubSpotForm formId="5d84452a-01df-422b-9734-580148677d2c" /> */}
+
+      <SignupForm
+        formId="5d84452a-01df-422b-9734-580148677d2c"
+        pageName={`blog-article`}
+        label="Get involved"
+        labelId="blog-form"
+        horizontal={false}
+        phoneField={false}
+        onSuccessCallback={() => {
+          setShowModal(false);
+          setCookie('blogPopup', 'closed', 1);
+        }}
+      />
+    </ModalCorner>
   );
 }

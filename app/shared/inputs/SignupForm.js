@@ -28,6 +28,9 @@ export default function SignupForm({
   pageName,
   label = 'Get Started',
   labelId,
+  horizontal = true,
+  phoneField = true,
+  onSuccessCallback = () => {},
 }) {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -92,7 +95,10 @@ export default function SignupForm({
       ),
       required: true,
     },
-    {
+  ];
+
+  if (phoneField) {
+    fields.push({
       label: 'Phone Number (optional)',
       key: 'phone',
       field: (
@@ -108,8 +114,8 @@ export default function SignupForm({
         />
       ),
       required: false,
-    },
-  ];
+    });
+  }
 
   const submitForm = async () => {
     if (canSubmit()) {
@@ -131,6 +137,7 @@ export default function SignupForm({
             autoHideDuration: null,
           };
         });
+        onSuccessCallback();
         setShowForm(false);
       } else {
         snackbarState.set(() => {
@@ -154,11 +161,19 @@ export default function SignupForm({
         className="w-full"
       >
         <>
-          <div className="grid grid-cols-12 md:grid-cols-10 w-full mb-10 mt-10">
+          <div
+            className={`grid grid-cols-12 ${
+              horizontal ? 'md:grid-cols-10' : ''
+            }  w-full mb-1 mt-1`}
+          >
             {fields.map((field) => {
               return (
                 <Fragment key={field.key}>
-                  <div className="col-span-12 lg:col-span-2 w-full">
+                  <div
+                    className={`col-span-12 ${
+                      horizontal ? 'lg:col-span-2' : 'lg:col-span-12'
+                    } w-full`}
+                  >
                     <div className="mt-5 lg:ml-5 max-w-sm">
                       <span className="text-sm">{field.label}</span>
                       {field.required && (
@@ -172,7 +187,10 @@ export default function SignupForm({
             })}
 
             <div className="col-span-12 lg:col-span-2 w-full">
-              <div onClick={submitForm} className="mt-10 lg:ml-5">
+              <div
+                onClick={submitForm}
+                className="mt-10 lg:ml-5 whitespace-nowrap"
+              >
                 <PrimaryButton
                   id="submit-email"
                   type="submit"
