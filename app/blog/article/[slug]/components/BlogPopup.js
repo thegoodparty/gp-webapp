@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { setCookie, getCookie } from 'helpers/cookieHelper.js';
 
 export default function BlogPopup() {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => {
     setShowModal(true);
   };
