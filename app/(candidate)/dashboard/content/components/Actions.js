@@ -12,8 +12,15 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Actions(props) {
-  let { name, slug, tableVersion, setDocumentName, documentKey, updatedAt } =
-    props;
+  let {
+    name,
+    slug,
+    tableVersion,
+    setDocumentName,
+    documentKey,
+    updatedAt,
+    status,
+  } = props;
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRename, setShowRename] = useState(false);
@@ -27,9 +34,7 @@ export default function Actions(props) {
   return (
     <>
       <div className="flex justify-center relative">
-        {tableVersion === true &&
-        updatedAt !== undefined &&
-        updatedAt != 'Invalid Date' ? (
+        {tableVersion === true && (!status || status != 'processing') ? (
           <div>
             <BsThreeDots
               onClick={() => {
@@ -40,7 +45,8 @@ export default function Actions(props) {
           </div>
         ) : // otherwise if tableVersion === true and updatedAt === undefined, then it's a new document
         tableVersion === true &&
-          (updatedAt === undefined || updatedAt == 'Invalid Date') ? (
+          status !== undefined &&
+          status === 'processing' ? (
           <div
             onClick={() => {
               setShowMenu(!showMenu);
