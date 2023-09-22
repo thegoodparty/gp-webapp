@@ -139,6 +139,10 @@ export default function MyContent(props) {
           updatedAt: row.original.updatedAt
             ? row.original.updatedAt
             : undefined,
+          status:
+            row.original.updatedAt && row.original.updatedAt != 'Invalid Date'
+              ? undefined
+              : 'processing',
         };
         return <Actions {...actionProps} />;
       },
@@ -152,16 +156,21 @@ export default function MyContent(props) {
       setCampaign(campaignObj);
       const campaignPlanObj = campaignObj[subSectionKey];
       setCampaignPlan(campaignPlanObj);
-      const sectionsObj = campaignObj[subSectionKey] || {};
+      let sectionsObj = campaignObj[subSectionKey] || {};
 
       let jobsProcessing = false;
       const statusObj = campaignObj.campaignPlanStatus || {};
+
       for (const statusKey in statusObj) {
         if (statusObj[statusKey]['status'] === 'processing') {
           jobsProcessing = true;
-          statusObj[statusKey]['key'] = statusKey;
-          statusObj[statusKey]['name'] = camelToSentence(statusKey);
-          statusObj[statusKey]['updatedAt'] = undefined;
+          if (sectionsObj[statusKey] === undefined) {
+            sectionsObj[statusKey] = {};
+          }
+          sectionsObj[statusKey]['key'] = statusKey;
+          sectionsObj[statusKey]['name'] = camelToSentence(statusKey);
+          sectionsObj[statusKey]['updatedAt'] = undefined;
+          sectionsObj[statusKey]['status'] = 'processing';
         }
       }
 
@@ -253,7 +262,7 @@ export default function MyContent(props) {
         return {
           isOpen: true,
           message:
-            'There was an error creating your content. Please try again.',
+            'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
           isError: true,
         };
       });
