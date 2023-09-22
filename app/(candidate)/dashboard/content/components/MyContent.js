@@ -189,7 +189,7 @@ export default function MyContent(props) {
             return {
               isOpen: true,
               message:
-                'We are experiencing an issue creating your content. Please reach out to your campaign manager.',
+                'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
               isError: true,
             };
           });
