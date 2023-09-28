@@ -64,10 +64,10 @@ export default function NewContentFlow(props) {
     return `${selected}21`;
   };
 
-  const handleAdditionalInput = (additionalPrompt) => {
+  const handleAdditionalInput = (additionalPrompt, inputValues) => {
     const chat = [{ role: 'user', content: additionalPrompt }];
     const key = findKey();
-    onSelectCallback(key, chat);
+    onSelectCallback(key, chat, inputValues);
     setShowModal2(false);
     setInputFields([]);
   };

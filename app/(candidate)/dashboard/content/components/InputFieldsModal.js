@@ -13,6 +13,7 @@ export default function InputFieldsModal({
   closeModalCallback,
   showModal,
   inputFields,
+  inputValues,
 }) {
   const [inputState, setInputState] = useState({});
 
@@ -28,10 +29,23 @@ export default function InputFieldsModal({
       return;
     }
     let additionalPrompt = 'additional info:\n';
+    let inputValues = {};
     inputFields.forEach((field) => {
       additionalPrompt += `${field.title}: ${inputState[field.title]}\n`;
+      inputValues[field.title] = inputState[field.title];
     });
-    onSelectCallback(additionalPrompt);
+
+    additionalPrompt += inputState.hasOwnProperty('Additional instructions')
+      ? inputState['Additional instructions']
+      : '';
+
+    inputValues['Additional instructions'] = inputState.hasOwnProperty(
+      'Additional instructions',
+    )
+      ? inputState['Additional instructions']
+      : '';
+
+    onSelectCallback(additionalPrompt, inputValues);
     closeModalCallback();
     setInputState({});
   };
@@ -45,6 +59,9 @@ export default function InputFieldsModal({
     }
     return true;
   };
+
+  console.log('inputFields', inputFields);
+  console.log('inputValues', inputValues);
 
   return (
     <Modal
@@ -67,7 +84,14 @@ export default function InputFieldsModal({
               InputLabelProps={{
                 shrink: true,
               }}
-              value={inputState[field.title] || ''}
+              // value={inputState[field.title] || inputValues[field.title] || ''}
+              value={
+                inputState && inputState[field.title]
+                  ? inputState[field.title]
+                  : inputValues && inputValues[field.title]
+                  ? inputValues[field.title]
+                  : ''
+              }
               onChange={(e) => {
                 onChangeField(field.title, e.target.value);
               }}
@@ -82,7 +106,17 @@ export default function InputFieldsModal({
           InputLabelProps={{
             shrink: true,
           }}
-          value={inputState['Additional instructions']}
+          value={
+            inputState &&
+            inputState['Additional instructions'] !== undefined &&
+            inputState['Additional instructions'] !== ''
+              ? inputState['Additional instructions']
+              : inputValues &&
+                inputValues['Additional instructions'] !== undefined &&
+                inputValues['Additional instructions'] !== ''
+              ? inputValues['Additional instructions']
+              : ''
+          }
           onChange={(e) => {
             onChangeField('Additional instructions', e.target.value);
           }}

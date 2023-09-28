@@ -1,12 +1,15 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ContentEditor from './ContentEditor';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
+// import { fetchUserCampaignClient } from 'helpers/campaignHelper';
 import { kebabToCamel } from 'helpers/stringHelper';
+import LoadingContent from './LoadingContent';
 
 export default function EditContentPage(props) {
   const { slug, campaign } = props;
+  // const [campaign, setCampaign] = useState(undefined);
 
   const section = kebabToCamel(slug);
   const subSectionKey = 'aiContent';
@@ -19,15 +22,31 @@ export default function EditContentPage(props) {
     setUpdatedVersions(versions);
   };
 
+  // const updateCampaignCallback = async () => {
+  //   const campaignResp = await fetchUserCampaignClient();
+  //   setCampaign(campaignResp.campaign);
+  // };
+
+  // useEffect(() => {
+  //   updateCampaignCallback();
+  // }, []);
+
   return (
     <>
-      <ContentEditor
-        section={section}
-        campaign={campaign}
-        versions={updatedVersions || versions}
-        updateVersionsCallback={updateVersionsCallback}
-        subSectionKey={subSectionKey}
-      />
+      {campaign != undefined ? (
+        <ContentEditor
+          section={section}
+          campaign={campaign}
+          versions={updatedVersions || versions}
+          updateVersionsCallback={updateVersionsCallback}
+          subSectionKey={subSectionKey}
+        />
+      ) : (
+        <LoadingContent
+          title="Loading your content ..."
+          subtitle="Please wait"
+        />
+      )}
     </>
   );
 }

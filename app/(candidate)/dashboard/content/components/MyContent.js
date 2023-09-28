@@ -39,6 +39,7 @@ export default function MyContent(props) {
   const [section, setSection] = useState('');
   const [sections, setSections] = useState(undefined);
   const [initialChat, setInitialChat] = useState(false);
+  const [initialValues, setInitialValues] = useState({});
   const [campaign, setCampaign] = useState(undefined);
   const [campaignPlan, setCampaignPlan] = useState(undefined);
   const [jobStarting, setJobStarting] = useState(false);
@@ -53,10 +54,13 @@ export default function MyContent(props) {
     setUpdatedVersions(versions);
   };
 
-  const onSelectPrompt = (key, additionalPrompts) => {
+  const onSelectPrompt = (key, additionalPrompts, inputValues) => {
     setJobStarting(true);
     if (additionalPrompts) {
       setInitialChat(additionalPrompts);
+    }
+    if (inputValues) {
+      setInitialValues(inputValues);
     }
     setSection(key);
   };
@@ -216,7 +220,14 @@ export default function MyContent(props) {
     }
   }, [campaignPlan, section]);
 
-  async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+  async function generateAI(
+    subSectionKey,
+    key,
+    regenerate,
+    chat,
+    editMode,
+    inputValues = {},
+  ) {
     try {
       const api = gpApi.campaign.onboarding.ai.create;
       return await gpFetch(api, {
@@ -225,6 +236,7 @@ export default function MyContent(props) {
         regenerate,
         chat,
         editMode,
+        inputValues,
       });
     } catch (e) {
       console.log('error', e);
@@ -232,15 +244,23 @@ export default function MyContent(props) {
     }
   }
 
-  const createInitialAI = async (regenerate, chat, editMode) => {
+  const createInitialAI = async (
+    regenerate,
+    chat,
+    editMode,
+    inputValues = {},
+  ) => {
     // this is only called once now.
     const resolvedChat = chat || initialChat;
+    const resolvedInitialValues =
+      (inputValues && Object.keys(inputValues) > 0) || initialValues;
     const { chatResponse, status } = await generateAI(
       subSectionKey,
       section,
       regenerate,
       resolvedChat,
       editMode,
+      resolvedInitialValues,
     );
 
     if (!chatResponse && status === 'processing') {

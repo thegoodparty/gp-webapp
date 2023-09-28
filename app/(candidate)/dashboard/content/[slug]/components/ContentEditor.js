@@ -47,6 +47,7 @@ export default function ContentEditor({
   const [documentName, setDocumentName] = useState('Untitled Document');
   const [saved, setSaved] = useState('Saved');
   const [inputFields, setInputFields] = useState([]);
+  const [initialInputValues, setInitialInputValues] = useState({});
   const [showModal, setShowModal] = useState(false);
 
   const campaignPlan = campaign[subSectionKey];
@@ -59,6 +60,7 @@ export default function ContentEditor({
       setLoading(false);
       setRegenerating(false);
       loadInputFields();
+      loadInputValues();
     }
   }, [campaignPlan]);
 
@@ -69,6 +71,12 @@ export default function ContentEditor({
       setInputFields(content);
     } else {
       setInputFields([]);
+    }
+  };
+
+  const loadInputValues = async () => {
+    if (campaignPlan[key]?.inputValues) {
+      setInitialInputValues(campaignPlan[key].inputValues);
     }
   };
 
@@ -89,18 +97,22 @@ export default function ContentEditor({
     setSaved('Saving...');
 
     const updated = campaign;
-    let existing_name;
+    let existingName;
+    let existingInputs = {};
     if (!updated[subSectionKey]) {
       updated[subSectionKey] = {};
     } else if (updated[subSectionKey][key]) {
-      existing_name = updated[subSectionKey][key].name;
+      existingName = updated[subSectionKey][key].name;
+      existingInputs = updated[subSectionKey][key].inputValues;
+      console.log('existingInputs', existingInputs);
     }
 
     let now = new Date();
     let updatedAt = now.toISOString().split('T')[0];
     updated[subSectionKey][key] = {
-      name: existing_name ? existing_name : key,
+      name: existingName ? existingName : key,
       updatedAt: updatedAt,
+      inputValues: existingInputs,
       content: plan,
     };
 
@@ -115,7 +127,14 @@ export default function ContentEditor({
     setPlan(version);
   };
 
-  async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+  async function generateAI(
+    subSectionKey,
+    key,
+    regenerate,
+    chat,
+    editMode,
+    inputValues = {},
+  ) {
     try {
       const api = gpApi.campaign.onboarding.ai.create;
       return await gpFetch(api, {
@@ -124,6 +143,7 @@ export default function ContentEditor({
         regenerate,
         chat,
         editMode,
+        inputValues,
       });
     } catch (e) {
       console.log('error', e);
@@ -131,7 +151,12 @@ export default function ContentEditor({
     }
   }
 
-  const createInitialAI = async (regenerate, chat, editMode) => {
+  const createInitialAI = async (
+    regenerate,
+    chat,
+    editMode,
+    inputValues = {},
+  ) => {
     aiCount++;
     aiTotalCount++;
     if (aiTotalCount >= 100) {
@@ -151,6 +176,7 @@ export default function ContentEditor({
       regenerate,
       chat,
       editMode,
+      inputValues,
     );
     if (!chatResponse && status === 'processing') {
       if (aiCount < 40) {
@@ -176,13 +202,15 @@ export default function ContentEditor({
     }
   };
 
-  const handleAdditionalInput = async (additionalPrompt) => {
+  const handleAdditionalInput = async (additionalPrompt, inputValues) => {
     setLoading(true);
+    setInitialInputValues(inputValues);
     const chat = [
-      { role: 'system', content: plan },
+      // the re-generate does not need the context of the old plan.
+      // { role: 'system', content: plan },
       { role: 'user', content: additionalPrompt },
     ];
-    await createInitialAI(true, chat, true);
+    await createInitialAI(true, chat, true, inputValues);
 
     setShowModal(false);
   };
@@ -328,6 +356,7 @@ export default function ContentEditor({
         closeModalCallback={() => setShowModal(false)}
         showModal={showModal}
         inputFields={inputFields}
+        inputValues={initialInputValues}
       />
     </div>
   );

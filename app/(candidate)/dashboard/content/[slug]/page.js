@@ -1,15 +1,12 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import { mapArticlesBySlug } from 'app/(candidate)/onboarding/[slug]/campaign-plan/page';
-import { fetchCandidate } from 'app/candidate/[slug]/page';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../../shared/candidateAccess';
 import EditContentPage from './components/EditContentPage';
 
-// the idea is that slug and key will be different things.
-// slug is obviously the url slug. it is in kebab case.
-// so when im getting a key from a slug, it needs to be converted to camel case.
+// slug = kebab case.
+// key = camel case
 
 const meta = pageMetaData({
   title: 'Campaign Content | GOOD PARTY',
