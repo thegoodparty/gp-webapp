@@ -4,7 +4,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import TextField from '@shared/inputs/TextField';
 
@@ -16,6 +16,12 @@ export default function InputFieldsModal({
   inputValues,
 }) {
   const [inputState, setInputState] = useState({});
+
+  useEffect(() => {
+    if (inputValues) {
+      setInputState(inputValues);
+    }
+  }, [inputValues]);
 
   const onChangeField = (key, value) => {
     setInputState({
@@ -60,14 +66,11 @@ export default function InputFieldsModal({
     return true;
   };
 
-  console.log('inputFields', inputFields);
-  console.log('inputValues', inputValues);
-
   return (
     <Modal
       closeCallback={closeModalCallback}
       open={showModal}
-      preventBackdropClose
+      preventBackdropClose={true}
     >
       <div className="lg:min-w-[400px] max-w-lg">
         <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
@@ -84,12 +87,9 @@ export default function InputFieldsModal({
               InputLabelProps={{
                 shrink: true,
               }}
-              // value={inputState[field.title] || inputValues[field.title] || ''}
               value={
                 inputState && inputState[field.title]
                   ? inputState[field.title]
-                  : inputValues && inputValues[field.title]
-                  ? inputValues[field.title]
                   : ''
               }
               onChange={(e) => {
@@ -107,22 +107,18 @@ export default function InputFieldsModal({
             shrink: true,
           }}
           value={
-            inputState &&
-            inputState['Additional instructions'] !== undefined &&
-            inputState['Additional instructions'] !== ''
+            inputState && inputState['Additional instructions'] !== ''
               ? inputState['Additional instructions']
-              : inputValues &&
-                inputValues['Additional instructions'] !== undefined &&
-                inputValues['Additional instructions'] !== ''
-              ? inputValues['Additional instructions']
               : ''
           }
           onChange={(e) => {
             onChangeField('Additional instructions', e.target.value);
           }}
         />
-        <div className="flex justify-center mt-6" onClick={handleCreate}>
-          <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
+        <div className="flex justify-center mt-6">
+          <div onClick={handleCreate}>
+            <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
+          </div>
         </div>
       </div>
     </Modal>
