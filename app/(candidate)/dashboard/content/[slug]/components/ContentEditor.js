@@ -124,7 +124,8 @@ export default function ContentEditor({
   };
 
   const updatePlanCallback = (version) => {
-    setPlan(version);
+    setPlan(version.text);
+    setInitialInputValues(version.inputValues);
   };
 
   async function generateAI(
@@ -297,7 +298,17 @@ export default function ContentEditor({
             campaign={campaign}
             versions={versions ? versions[key] : {}}
             updatePlanCallback={updatePlanCallback}
-            latestVersion={campaignPlan ? campaignPlan[key].content : ''}
+            latestVersion={
+              campaignPlan
+                ? {
+                    text: campaignPlan[key].content,
+                    inputValues: initialInputValues,
+                  }
+                : {
+                    text: '',
+                    inputValues: {},
+                  }
+            }
           />
           <Actions
             slug={key}

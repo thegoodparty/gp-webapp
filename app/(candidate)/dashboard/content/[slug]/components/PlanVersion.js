@@ -61,7 +61,7 @@ export default function PlanVersion({
                 key={version.date}
                 onClick={() => {
                   setShowMenu(false);
-                  updatePlanCallback(version.text);
+                  updatePlanCallback(version);
                 }}
               >
                 <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
