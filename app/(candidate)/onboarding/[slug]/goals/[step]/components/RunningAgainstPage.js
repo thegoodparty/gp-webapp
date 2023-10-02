@@ -219,7 +219,7 @@ export default function RunningAgainstPage({
         <div className="flex justify-center  my-8">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
             <div>
-              {shortVersion ? 'LAUNCH CAMPAIGN' : 'GENERATE CAMPAIGN PLAN'}
+              {shortVersion ? 'VIEW DASHBOARD' : 'GENERATE CAMPAIGN PLAN'}
             </div>
           </BlackButtonClient>
         </div>

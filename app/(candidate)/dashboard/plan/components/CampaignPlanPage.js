@@ -1,5 +1,4 @@
 'use client';
-import Tabs from '@shared/utils/Tabs';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { useState } from 'react';
@@ -8,8 +7,7 @@ import TitleSection from '../../shared/TitleSection';
 import MessagingPanel from './MessagingPanel';
 import SocialPanel from './SocialPanel';
 import VisionPanel from './VisionPanel';
-
-const tabLabels = ['Messaging', 'Social Media', 'Vision'];
+import H3 from '@shared/typography/H3';
 
 export default function CampaignPlanPage(props) {
   const versions = useVersions();
@@ -19,31 +17,32 @@ export default function CampaignPlanPage(props) {
     const { versions } = await fetchCampaignVersions();
     setUpdatedVersions(versions);
   };
-  const tabPanels = [
-    <MessagingPanel
-      key="messagingPanel"
-      {...props}
-      versions={updatedVersions || versions}
-      updateVersionsCallback={updateVersionsCallback}
-    />,
-    <SocialPanel key="socialMediaPanel" {...props} />,
-    <VisionPanel
-      key="visionPanel"
-      {...props}
-      versions={updatedVersions || versions}
-      updateVersionsCallback={updateVersionsCallback}
-    />,
-  ];
+
   return (
     <DashboardLayout {...props}>
       <TitleSection
-        title="Campaign Plan"
+        title="AI Campaign Plan"
         subtitle="Your personalized plan powered by Good Party GPT and our team of campaign experts"
         image="/images/dashboard/plan.svg"
         imgWidth={132}
         imgHeight={120}
       />
-      <Tabs tabLabels={tabLabels} tabPanels={tabPanels} />
+      <H3 className="mt-5 mb-3">Messaging</H3>
+      <MessagingPanel
+        {...props}
+        versions={updatedVersions || versions}
+        updateVersionsCallback={updateVersionsCallback}
+      />
+      <H3 className="mt-5 mb-3">Social Media</H3>
+      <SocialPanel {...props} />
+
+      <H3 className="mt-5 mb-3">Vision</H3>
+      <VisionPanel
+        {...props}
+        versions={updatedVersions || versions}
+        updateVersionsCallback={updateVersionsCallback}
+      />
+      {/* <Tabs tabLabels={tabLabels} tabPanels={tabPanels} /> */}
     </DashboardLayout>
   );
 }
