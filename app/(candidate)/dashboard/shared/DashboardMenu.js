@@ -10,14 +10,12 @@ const pages = [
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
     link: '/dashboard/plan',
-    section: 'Strategy',
     id: 'campaign-plan-dashboard',
   },
   {
     label: 'AI Campaign Tool',
     icon: <BsPostcardHeart />,
     link: '/dashboard/content',
-    section: 'Resources',
     id: 'my-content-dashboard',
   },
   {
@@ -37,6 +35,7 @@ const pages = [
     label: 'Campaign Team',
     icon: <RiTeamLine />,
     link: '/dashboard/team',
+    section: 'Strategy',
     id: 'campaign-team-dashboard',
   },
   {
@@ -50,6 +49,7 @@ const pages = [
     label: 'Resources Library',
     icon: <RiBook2Line />,
     link: '/dashboard/resources',
+    section: 'Resources',
     id: 'resources-library',
   },
 ];
