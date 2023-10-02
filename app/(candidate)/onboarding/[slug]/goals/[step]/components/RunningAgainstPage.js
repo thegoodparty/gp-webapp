@@ -7,6 +7,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import TextField from '@shared/inputs/TextField';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import { Select } from '@mui/material';
+import { launchCampaign } from 'app/candidate/[slug]/components/ReviewBanner';
 
 const partyOptions = [
   'Independent',
@@ -35,7 +36,7 @@ export default function RunningAgainstPage({
     newDesc: '',
     newParty: '',
   };
-  const keys = ['runningAgainst'];
+  const shortVersion = !!campaign?.details?.filedStatement;
   if (campaign?.[subSectionKey]?.runningAgainst) {
     initialState.runningAgainst = campaign[subSectionKey].runningAgainst;
   }
@@ -98,10 +99,17 @@ export default function RunningAgainstPage({
     await updateCampaign(updated);
 
     savingState.set(() => true);
-
-    setTimeout(() => {
-      router.push(`/onboarding/${slug}/campaign-plan`);
-    }, 200);
+    if (shortVersion) {
+      // launch then redirect to dashboard.
+      await launchCampaign();
+      setTimeout(() => {
+        window.location.href = '/dashboard/plan';
+      }, 200);
+    } else {
+      setTimeout(() => {
+        router.push(`/onboarding/${slug}/campaign-plan`);
+      }, 200);
+    }
   };
 
   const onChangeField = (key, value) => {
@@ -210,7 +218,9 @@ export default function RunningAgainstPage({
         </div>
         <div className="flex justify-center  my-8">
           <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
-            <div>GENERATE CAMPAIGN PLAN</div>
+            <div>
+              {shortVersion ? 'LAUNCH CAMPAIGN' : 'GENERATE CAMPAIGN PLAN'}
+            </div>
           </BlackButtonClient>
         </div>
       </div>

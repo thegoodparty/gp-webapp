@@ -12,6 +12,18 @@ const goalsFields = [
       },
     ],
   },
+  {
+    title: 'Campaign Website',
+    fields: [
+      {
+        key: 'campaignWebsite',
+        label: 'Campaign website',
+        type: 'text',
+        validate: 'url',
+        helperText: 'Please provide a full url starting with http',
+      },
+    ],
+  },
 
   {
     title: 'Who are you running against?',

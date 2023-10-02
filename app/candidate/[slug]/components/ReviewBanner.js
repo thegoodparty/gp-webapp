@@ -5,7 +5,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-async function launchCampaign(slug) {
+export async function launchCampaign(slug) {
   try {
     const api = gpApi.campaign.onboarding.launch;
     const payload = {

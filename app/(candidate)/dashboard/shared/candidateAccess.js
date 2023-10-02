@@ -7,7 +7,7 @@ export async function fetchCampaignStatus() {
   try {
     const api = gpApi.user.campaignStatus;
     const token = getServerToken();
-    return await gpFetch(api, false, 10, token);
+    return await gpFetch(api, false, false, token);
   } catch (e) {
     console.log('error at fetchCampaignStatus', e);
     return { status: false };

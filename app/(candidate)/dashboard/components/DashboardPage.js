@@ -62,7 +62,7 @@ export default function DashboardPage(props) {
   };
 
   const { electionDate } = goals;
-  const { voterContactGoal, voteGoal, voterMap } = pathToVictory;
+  const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const weeksUntil = weeksTill(electionDate);
   // const weeksUntil = { weeks: -1, days: 6 };

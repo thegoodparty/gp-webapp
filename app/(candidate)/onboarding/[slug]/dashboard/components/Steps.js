@@ -1,14 +1,14 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import IncentiveCard from './IncentiveCard';
 import Step from './Step';
-import { shortVersionStep4 } from '../campaignSteps';
+// import { shortVersionStep4 } from '../campaignSteps';
 
 export default function Steps(props) {
   const { campaignSteps, shortVersion } = props;
   let steps;
   if (shortVersion) {
-    steps = campaignSteps.slice(0, 6);
-    steps[4] = shortVersionStep4;
+    steps = campaignSteps.slice(0, 3);
+    // steps[4] = shortVersionStep4;
   } else {
     steps = campaignSteps;
   }
