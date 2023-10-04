@@ -209,7 +209,7 @@ export default function AdminVictoryPathPage(props) {
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}
             <strong>{campaign?.details?.district || 'N/A'}</strong>.{' '}
-            ElectionDate:{' '}
+            <strong>{campaign?.details?.city || 'N/A'}</strong>. ElectionDate:{' '}
             <strong>
               {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
             </strong>
