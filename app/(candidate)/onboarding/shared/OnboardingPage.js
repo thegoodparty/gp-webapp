@@ -75,7 +75,10 @@ export default function OnboardingPage({
         if (field.type === 'text' && value === '') {
           return false;
         }
-        if (field.type === 'select' && value === '') {
+        if (
+          (field.type === 'select' && value === '') ||
+          (field.type === 'select' && value === 'Select')
+        ) {
           return false;
         }
         if (!field.initialValue && value === '') {
