@@ -24,12 +24,12 @@ const pages = [
     link: '/dashboard',
     id: 'campaign-tracker-dashboard',
   },
-  // {
-  //   label: 'Profile',
-  //   icon: <RiUserHeartLine />,
-  //   link: '/profile',
-  //   id: 'profile-dashboard',
-  // },
+  {
+    label: 'My Details',
+    icon: <RiUserHeartLine />,
+    link: '/dashboard/details',
+    id: 'details-dashboard',
+  },
 
   {
     label: 'Campaign Team',

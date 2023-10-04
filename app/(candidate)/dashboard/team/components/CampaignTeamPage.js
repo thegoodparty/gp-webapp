@@ -2,7 +2,6 @@
 import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import ListItem from '@shared/utils/ListItem';
-import TogglePanel from '@shared/utils/TogglePanel';
 import { teamFields } from 'app/(candidate)/onboarding/[slug]/team/components/TeamList';
 
 import DashboardLayout from '../../shared/DashboardLayout';

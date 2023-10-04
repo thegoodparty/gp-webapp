@@ -65,8 +65,12 @@ export default function RenderInputField({
       )}
 
       {field.type === 'radio' && (
-        <div className="mb-4 flex justify-center items-center flex-col">
-          <div className="text-zinc-500 mb-2">
+        <div
+          className={`mb-4 flex justify-center flex-col ${
+            field.alignLeft ? 'ml-2' : 'items-center'
+          }`}
+        >
+          <div className="text-zinc-500 mb-1">
             {field.label}
             {field.label && field.required && <sup> *</sup>}
           </div>
