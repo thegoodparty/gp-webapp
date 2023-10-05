@@ -55,7 +55,7 @@ jobs:
         with:
           app_id: ${{ secrets.ENDTEST_APP_ID }}
           app_code: ${{ secrets.ENDTEST_APP_CODE }}
-          api_request: ${{ format('{0}&base_url={1}', secrets.ENDTEST_API_REQUEST, env.BASE_URL) }}
+          api_request: ${{ format('{0}{1}&base_url={2}', secrets.ENDTEST_API_REQUEST, env.ENDTEST_OPTIONS, env.BASE_URL) }}
           number_of_loops: "1"
 
       - name: Use the outputs from test execution in a different step
