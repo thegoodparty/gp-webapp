@@ -33,7 +33,7 @@ fi
 
 # if the platform is mac we specify a browser
 if [ "$RANDOM_PLATFORM" == "mac" ]; then
-  browser_options=("chrome" "firefox" "safari")
+  browser_options=("chrome" "firefox" ) # "safari" requires pro plan.
   RANDOM_BROWSER="${browser_options[$RANDOM % ${#browser_options[@]}]}"
   export ENDTEST_OPTIONS="&platform=$RANDOM_PLATFORM&os=bigsur&browser=$RANDOM_BROWSER&browserVersion=latest&resolution=1280x1024&geolocation=sanfrancisco&cases=all&notes="
   echo "ENDTEST_OPTIONS=$ENDTEST_OPTIONS" >> $GITHUB_ENV
