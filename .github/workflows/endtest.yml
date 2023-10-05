@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set env
-        run: echo "browser[0]='chrome'; browser[1]='firefox'; browser[2]='edge'; browser[3]='ie11'; size=${#browser[@]}; index=$(($RANDOM % $size)); echo ${browser[$index]};" >> $BROWSER_ENV
+        # run: echo "browser[0]='chrome'; browser[1]='firefox'; browser[2]='edge'; browser[3]='ie11'; size=${#browser[@]}; index=$(($RANDOM % $size)); echo ${browser[$index]};" >> $BROWSER_ENV
+        run: echo "options=('chrome' 'firefox' 'edge' 'safari'); RANDOM_CHOICE="${options[$RANDOM % ${#options[@]}]}"; echo $RANDOM_CHOICE;" >> $BROWSER_ENV
       - name: Test
         run: echo $BROWSER_ENV
 
