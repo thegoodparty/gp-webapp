@@ -24,7 +24,7 @@ export default function Hero({ demoCallback }) {
             width="120"
             height="120"
             className="mt-5"
-            alt=""
+            alt="star"
             priority
           />
         </div>

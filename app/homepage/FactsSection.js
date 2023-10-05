@@ -45,7 +45,7 @@ export default function FactsSection() {
                 height={140}
                 width={140}
                 className="object-cover"
-                alt=""
+                alt="Pie"
               />
             </div>
             <div className="text-center w-full">
@@ -75,7 +75,7 @@ export default function FactsSection() {
                 height={178}
                 width={270}
                 className="object-cover"
-                alt=""
+                alt="GP"
               />
             </div>
             <div className="text-[32px] font-semibold text-center w-full">
