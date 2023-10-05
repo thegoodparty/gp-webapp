@@ -98,7 +98,6 @@ export default function RunningAgainstPage({
 
     await updateCampaign(updated);
 
-    savingState.set(() => true);
     if (shortVersion) {
       // launch then redirect to dashboard.
       await launchCampaign();
@@ -106,6 +105,7 @@ export default function RunningAgainstPage({
         window.location.href = '/dashboard/plan';
       }, 200);
     } else {
+      savingState.set(() => true);
       setTimeout(() => {
         router.push(`/onboarding/${slug}/campaign-plan`);
       }, 200);
