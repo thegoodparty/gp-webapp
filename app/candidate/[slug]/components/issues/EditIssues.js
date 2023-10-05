@@ -72,6 +72,7 @@ export default function EditIssues(props) {
     isStaged,
     saveCallback,
     hideTitle = false,
+    noDrag = false,
   } = props;
 
   const combined = combinePositions(
@@ -83,7 +84,7 @@ export default function EditIssues(props) {
   const [showAdd, setShowAdd] = useState(false);
 
   const Wrapper = ({ children, onPosChange }) => {
-    if (isStaged) {
+    if (isStaged || noDrag) {
       return <div>{children}</div>;
     }
     return <Draggable onPosChange={onPosChange}>{children}</Draggable>;
@@ -217,7 +218,9 @@ export default function EditIssues(props) {
         foundation of your campaign and your connection with the community.
         <br />
         <br />
-        {!isStaged && <strong>Drag and drop the issues to reorder</strong>}
+        {!isStaged && !noDrag && (
+          <strong>Drag and drop the issues to reorder</strong>
+        )}
       </Body1>
       {saving ? (
         <LoadingAnimation

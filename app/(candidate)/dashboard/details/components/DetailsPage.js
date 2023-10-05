@@ -4,6 +4,7 @@ import DashboardLayout from '../../shared/DashboardLayout';
 import CampaignSection from './CampaignSection';
 import DetailsSection from './DetailsSection';
 import FunFactSection from './FunFactSection';
+import IssuesSection from './IssuesSection';
 import RunningAgainstSection from './RunningAgainstSection';
 import WhySection from './WhySection';
 
@@ -18,6 +19,7 @@ export default function DetailsPage(props) {
         <RunningAgainstSection {...props} />
         <WhySection {...props} />
         <FunFactSection {...props} />
+        <IssuesSection {...props} />
       </div>
     </DashboardLayout>
   );

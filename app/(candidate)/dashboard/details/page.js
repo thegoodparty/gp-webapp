@@ -3,6 +3,7 @@ import { fetchCandidate } from 'app/candidate/[slug]/page';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import DetailsPage from './components/DetailsPage';
+import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]/page';
 
 const meta = pageMetaData({
   title: 'My Details | GOOD PARTY',
@@ -16,12 +17,16 @@ export default async function Page({ params, searchParams }) {
 
   const { campaign } = await fetchUserCampaign();
   const { candidateSlug } = campaign;
-  // const { candidate } = await fetchCandidate(candidateSlug);
+  const { candidate, candidatePositions } = await fetchCandidate(candidateSlug);
+  const { positions } = await fetchPositions();
 
   const childProps = {
     pathname: '/dashboard/details',
     candidateSlug,
     campaign,
+    candidatePositions,
+    positions,
+    candidate,
   };
 
   return <DetailsPage {...childProps} />;
