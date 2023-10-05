@@ -24,9 +24,9 @@ fi
 
 # if the platform is windows we specify a browser
 if [ "$RANDOM_PLATFORM" == "windows" ]; then
-  browser_options=("chrome" "firefox" "edge" "ie11")
+  browser_options=("chrome" "firefox" "edge" )  # "ie11" requires pro plan. 
   RANDOM_BROWSER="${browser_options[$RANDOM % ${#browser_options[@]}]}"
-  export ENDTEST_OPTIONS="&platform=$RANDOM_PLATFORM&os=windows10&browser=$RANDOM_BROWSER&browserVersion=latest&geolocation=sanfrancisco&cases=all&notes="
+  export ENDTEST_OPTIONS="&platform=$RANDOM_PLATFORM&os=windows10&browser=$RANDOM_BROWSER&browserVersion=latest&resolution=1280x1024&geolocation=sanfrancisco&cases=all&notes="
   echo "ENDTEST_OPTIONS=$ENDTEST_OPTIONS" >> $GITHUB_ENV
   exit 0
 fi
@@ -35,7 +35,7 @@ fi
 if [ "$RANDOM_PLATFORM" == "mac" ]; then
   browser_options=("chrome" "firefox" "safari")
   RANDOM_BROWSER="${browser_options[$RANDOM % ${#browser_options[@]}]}"
-  export ENDTEST_OPTIONS="&platform=$RANDOM_PLATFORM&os=bigsur&browser=$RANDOM_BROWSER&browserVersion=latest&geolocation=sanfrancisco&cases=all&notes="
+  export ENDTEST_OPTIONS="&platform=$RANDOM_PLATFORM&os=bigsur&browser=$RANDOM_BROWSER&browserVersion=latest&resolution=1280x1024&geolocation=sanfrancisco&cases=all&notes="
   echo "ENDTEST_OPTIONS=$ENDTEST_OPTIONS" >> $GITHUB_ENV
   exit 0
 fi
