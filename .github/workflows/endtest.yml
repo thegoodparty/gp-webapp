@@ -17,11 +17,11 @@ jobs:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
 
-      - name: Load browser environment variable
-        run: source browser.sh
+      - name: Load ENDTEST_OPTIONS environment variable
+        run: source endtest.sh
 
       - name: Test browser environment variable
-        run: echo "Browser is $BROWSER"
+        run: echo "ENDTEST_OPTIONS is $ENDTEST_OPTIONS"
 
       - name: Install jq
         run: sudo apt-get install -y jq
