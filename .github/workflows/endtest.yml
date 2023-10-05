@@ -16,10 +16,13 @@ jobs:
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
+
       - name: Load browser environment variable
         run: source browser.sh
+
       - name: Test browser environment variable
-        run: echo $BROWSER
+        run: echo "Browser is $BROWSER"
+
       - name: Install jq
         run: sudo apt-get install -y jq
 
