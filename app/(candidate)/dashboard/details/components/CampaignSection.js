@@ -8,49 +8,138 @@ import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
+import { flatStates } from 'helpers/statesHelper';
 
 const fields = [
   {
-    key: 'firstName',
-    label: 'Candidate First Name',
-    required: true,
+    key: 'campaignCommittee',
+    label: 'Name of Campaign Committee',
+    placeholder: 'Campaign Committee',
     type: 'text',
   },
   {
-    key: 'lastName',
-    label: 'Candidate Last Name',
+    key: 'occupation',
+    label: 'Occupation',
     required: true,
     type: 'text',
   },
+
   {
-    key: 'campaignPhone',
-    label: 'Phone',
+    key: 'office',
+    label: 'Office',
+    type: 'select',
+    hidden: true,
+    showKey: 'knowRun',
+    requiredHidden: true,
     required: true,
-    type: 'phone',
-    validate: 'validPhone',
+    showCondition: ['yes'],
+    options: [
+      'City Council',
+      'Mayor',
+      'US Senate',
+      'US House of Representatives',
+      'Governor',
+      'Lieutenant Governor',
+      'Attorney General',
+      'Comptroller',
+      'Treasurer',
+      'Secretary of State',
+      'State Supreme Court Justice',
+      'State Senate',
+      'State House of Representatives',
+      'County Executive',
+      'District Attorney',
+      'Sheriff',
+      'Clerk',
+      'Auditor',
+      'Public Administrator',
+      'Judge',
+      'County Commissioner',
+      'Council member',
+      'School Board',
+      'Other',
+    ],
   },
   {
-    key: 'zip',
-    label: 'Zip Code',
+    key: 'state',
+    label: 'State',
+    type: 'select',
+    options: flatStates,
     required: true,
+  },
+  {
+    key: 'city',
+    label: 'City/Town',
     type: 'text',
-    validate: validateZip,
+    hidden: true,
+    requiredHidden: true,
+    showKey: 'office',
+    showCondition: [
+      'City Council',
+      'Mayor',
+      'US House of Representatives',
+      'State Senate',
+      'State House of Representatives',
+      'County Executive',
+      'District Attorney',
+      'Sheriff',
+      'Clerk',
+      'Auditor',
+      'Public Administrator',
+      'Judge',
+      'County Commissioner',
+      'Council member',
+      'School Board',
+      'Other',
+    ],
   },
   {
-    key: 'dob',
-    label: 'Date of Birth',
+    key: 'district',
+    label: 'District (if applicable)',
+    type: 'text',
+  },
+  {
+    key: 'party',
+    label: 'Political Party Affiliation (select one)',
     required: true,
+    type: 'select',
+    options: [
+      'Independent',
+      'Democratic Party',
+      'Republican Party',
+      'Green Party',
+      'Libertarian Party',
+      'Forward Party',
+      'Other',
+    ],
+    invalidOptions: ['Democratic Party', 'Republican Party'],
+  },
+  {
+    key: 'officeTermLength',
+    label: 'Term Length',
+    type: 'select',
+    hidden: true,
+    showKey: 'knowRun',
+    requiredHidden: true,
+    required: true,
+    showCondition: ['yes'],
+    options: ['2 years', '3 years', '4 years', '6 years'],
+  },
+
+  {
+    key: 'electionDate',
+    label: 'Date of Election',
     type: 'date',
-    validate: 'over 18',
+    validate: 'futureDateOnly',
+    campaignObj: 'goals',
   },
   {
-    key: 'citizen',
-    label: 'Are you a U.S. Citizen?',
-    required: true,
-    type: 'radio',
-    options: ['Yes', 'No'],
-    validateOptions: ['yes', 'No'],
-    alignLeft: true,
+    key: 'campaignWebsite',
+    label: 'Campaign website',
+    type: 'text',
+    validate: 'url',
+    helperText: 'Please provide a full url starting with http',
+    campaignObj: 'goals',
   },
 ];
 
@@ -62,12 +151,17 @@ export default function CampaignSection(props) {
   const [state, setState] = useState(initialState);
   const [saving, setSaving] = useState(false);
   const { campaign } = props;
+  console.log('cam', campaign);
   useEffect(() => {
     console.log('campaign', campaign);
-    if (campaign?.details) {
+    if (campaign?.details && campaign?.goals) {
       const newState = {};
       fields.forEach((field) => {
-        newState[field.key] = campaign.details[field.key] || '';
+        if (field.campaignObj === 'goals') {
+          newState[field.key] = campaign.goals[field.key] || '';
+        } else {
+          newState[field.key] = campaign.details[field.key] || '';
+        }
       });
       setState(newState);
     }
@@ -85,13 +179,23 @@ export default function CampaignSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      await updateCampaign({
+      const newCampaign = {
         ...campaign,
-        details: {
-          ...campaign.details,
-          ...state,
-        },
+      };
+      fields.forEach((field) => {
+        if (field.campaignObj === 'goals') {
+          newCampaign.goals = {
+            ...newCampaign.goals,
+            [field.key]: state[field.key],
+          };
+        } else {
+          newCampaign.details = {
+            ...newCampaign.details,
+            [field.key]: state[field.key],
+          };
+        }
       });
+      await updateCampaign(newCampaign);
       setSaving(false);
     }
   };

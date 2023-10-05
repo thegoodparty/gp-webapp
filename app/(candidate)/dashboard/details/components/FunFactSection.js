@@ -2,7 +2,6 @@
 
 import H3 from '@shared/typography/H3';
 import Body1 from '@shared/typography/Body1';
-import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -11,50 +10,17 @@ import { CircularProgress } from '@mui/material';
 
 const fields = [
   {
-    key: 'firstName',
-    label: 'Candidate First Name',
+    key: 'funFact',
+    label: '',
+    placeholder:
+      "EXAMPLE: In my free time, I love to play the guitar and write songs. I've even performed at a few local open mic nights! Music has been a passion of mine for as long as I can remember, and I believe that it has helped me to develop creativity, perseverance, and a willingness to take risks. Whether I'm writing a song or crafting a policy proposal, I bring the same level of enthusiasm and dedication to everything I do.",
     required: true,
     type: 'text',
-  },
-  {
-    key: 'lastName',
-    label: 'Candidate Last Name',
-    required: true,
-    type: 'text',
-  },
-  {
-    key: 'campaignPhone',
-    label: 'Phone',
-    required: true,
-    type: 'phone',
-    validate: 'validPhone',
-  },
-  {
-    key: 'zip',
-    label: 'Zip Code',
-    required: true,
-    type: 'text',
-    validate: validateZip,
-  },
-  {
-    key: 'dob',
-    label: 'Date of Birth',
-    required: true,
-    type: 'date',
-    validate: 'over 18',
-  },
-  {
-    key: 'citizen',
-    label: 'Are you a U.S. Citizen?',
-    required: true,
-    type: 'radio',
-    options: ['Yes', 'No'],
-    validateOptions: ['yes', 'No'],
-    alignLeft: true,
+    rows: 8,
   },
 ];
 
-export default function DetailsSection(props) {
+export default function FunFactSection(props) {
   const initialState = {};
   fields.forEach((field) => {
     initialState[field.key] = '';
@@ -105,25 +71,24 @@ export default function DetailsSection(props) {
   };
 
   return (
-    <section>
-      <H3>My Details</H3>
-      <Body1 className="text-indigo-300 mt-2 border-b border-gray-600 pb-6 mb-12">
-        Update your details so our AI can give you even more personalized tips
-        and suggestions.
+    <section className="border-t pt-6 border-gray-600">
+      <H3>Fun Fact About Yourself</H3>
+      <Body1 className="text-indigo-300 mt-2  pb-6 mb-12">
+        What&apos;s something fun or interesting about you- unrelated to
+        politics- that you think people in your community would like to know?
+        This will help humanize your campaign.
       </Body1>
-      <div className="grid grid-cols-12 gap-3">
-        {fields.map((field) => (
-          <div key={field.key} className="col-span-12 md:col-span-6">
-            <div className="">
-              <RenderInputField
-                field={field}
-                value={state[field.key]}
-                onChangeCallback={onChangeField}
-              />
-            </div>
+      {fields.map((field) => (
+        <div key={field.key}>
+          <div className="">
+            <RenderInputField
+              field={field}
+              value={state[field.key]}
+              onChangeCallback={onChangeField}
+            />
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
       <div className="flex justify-end mb-6">
         {saving ? (
           <PrimaryButton disabled>
