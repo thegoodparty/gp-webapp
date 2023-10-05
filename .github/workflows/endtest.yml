@@ -11,6 +11,12 @@ jobs:
     name: Endtest Functional Test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Set env
+        run: echo "browser[0]='chrome'; browser[1]='firefox'; browser[2]='edge'; browser[3]='ie11'; size=${#browser[@]}; index=$(($RANDOM % $size)); echo ${browser[$index]}" >> $BROWSER_ENV
+      - name: Test
+        run: echo $BROWSER_ENV
+
       - name: Install jq
         run: sudo apt-get install -y jq
 
