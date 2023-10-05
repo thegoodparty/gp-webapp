@@ -54,7 +54,6 @@ export const TEAM_MEMBERS = [
     flipImg: 'https://assets.goodparty.org/team/matthew-party.jpg',
     partyRole: 'Social Storyteller',
   },
-
   {
     name: 'Jack Nagel',
     role: 'Marketing Manager',
@@ -76,15 +75,6 @@ export const TEAM_MEMBERS = [
     flipImg: 'https://assets.goodparty.org/team/taylor-party.png',
     partyRole: 'Good Vibes',
   },
-
-  {
-    name: 'Gabby Coll',
-    role: 'Jr. Product Designer',
-    img: 'https://assets.goodparty.org/team/gabby-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/gabby-party.jpg',
-    partyRole: 'Community+based curator+creative',
-  },
-
   {
     name: 'Colton Hess',
     role: 'Creator Community Lead',
@@ -92,20 +82,12 @@ export const TEAM_MEMBERS = [
     flipImg: 'https://assets.goodparty.org/team/colton-party.jpg',
     partyRole: 'Radical Generalist',
   },
-
   {
     name: 'Quinn McCully',
     role: 'Community Manager',
     img: 'https://assets.goodparty.org/team/quinn-goodparty.jpg',
     flipImg: 'https://assets.goodparty.org/team/quinn-party.jpg',
     partyRole: 'Community Manager',
-  },
-  {
-    name: 'Evan Scronce',
-    role: 'Design Contributor',
-    img: 'https://assets.goodparty.org/team/evan-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/evan-party.png',
-    partyRole: 'Dad',
   },
 ];
 

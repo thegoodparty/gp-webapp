@@ -14,20 +14,15 @@ export default function CampaignTeamPage(props) {
     <DashboardLayout {...props}>
       <TitleSection
         title="Campaign Team"
-        subtitle="Good Party AI can help you create high quality content for your campaign"
+        subtitle="Keep in mind that in a small campaign team, individuals may take on
+        multiple roles, combining responsibilities to ensure efficient use of
+        resources. The specific roles and team composition will also depend on
+        the campaign's unique goals, strategy, and resources."
         image="/images/dashboard/team.svg"
         imgWidth={160}
         imgHeight={120}
       />
       <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
-        <H3>Things to consider:</H3>
-        <Body2 className="mt-2">
-          Keep in mind that in a small campaign team, individuals may take on
-          multiple roles, combining responsibilities to ensure efficient use of
-          resources. The specific roles and team composition will also depend on
-          the campaign&apos;s unique goals, strategy, and resources.
-        </Body2>
-
         {teamFields.map((section) => (
           <div key={section.title}>
             <H3 className="mt-8 mb-7">{section.title}</H3>
