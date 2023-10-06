@@ -3,15 +3,16 @@ import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan
 
 const sections = [
   {
-    key: 'why',
-    title: "Why I'm Running",
-    icon: '/images/dashboard/running-icon.svg',
+    key: 'communicationsStrategy',
+    title: 'Communication Strategy',
+    icon: '/images/dashboard/strategy-icon.svg',
   },
   {
-    key: 'aboutMe',
-    title: 'My Persona',
-    icon: '/images/dashboard/persona-icon.svg',
+    key: 'messageBox',
+    title: 'Campaign Positioning',
+    icon: '/images/dashboard/positioning-icon.svg',
   },
+
   {
     key: 'pathToVictory',
     title: 'Voter Report',
@@ -19,7 +20,7 @@ const sections = [
   },
   {
     key: 'mobilizing',
-    title: 'Mobilizing voters & volunteers',
+    title: 'Mobilizing Voters & Volunteers',
     icon: '/images/dashboard/mobilizing-icon.svg',
   },
 ];

@@ -4,11 +4,11 @@ import ListItem from '@shared/utils/ListItem';
 import TogglePanel from '@shared/utils/TogglePanel';
 import { websiteSteps } from 'app/(candidate)/onboarding/[slug]/social/components/SocialList';
 
-export default function SocialPanel(props) {
+export default function CampaignWebsite(props) {
   return (
     <div>
       <TogglePanel
-        label="Build a Campaign Website"
+        label="Campaign Website"
         icon="/images/dashboard/website-icon.svg"
       >
         <div className="bg-slate-50 rounded-xl py-5 px-7">

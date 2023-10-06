@@ -5,7 +5,7 @@ import { useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
 import MessagingPanel from './MessagingPanel';
-import SocialPanel from './SocialPanel';
+import SocialPanel from './CampaignWebsite';
 import VisionPanel from './VisionPanel';
 import H3 from '@shared/typography/H3';
 
@@ -33,8 +33,6 @@ export default function CampaignPlanPage(props) {
         versions={updatedVersions || versions}
         updateVersionsCallback={updateVersionsCallback}
       />
-      <H3 className="mt-5 mb-3">Social Media</H3>
-      <SocialPanel {...props} />
 
       <H3 className="mt-5 mb-3">Vision</H3>
       <VisionPanel

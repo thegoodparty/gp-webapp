@@ -1,21 +1,24 @@
 'use client';
+import ListItem from '@shared/utils/ListItem';
 import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
+import { websiteSteps } from 'app/(candidate)/onboarding/[slug]/social/components/SocialList';
+import CampaignWebsite from './CampaignWebsite';
 
 const sections = [
   {
+    key: 'why',
+    title: "Why I'm Running",
+    icon: '/images/dashboard/running-icon.svg',
+  },
+  {
+    key: 'aboutMe',
+    title: 'Bio',
+    icon: '/images/dashboard/persona-icon.svg',
+  },
+  {
     key: 'slogan',
-    title: 'Slogans',
+    title: 'Campaign Slogans',
     icon: '/images/dashboard/slogan-icon.svg',
-  },
-  {
-    key: 'messageBox',
-    title: 'Campaign Positioning',
-    icon: '/images/dashboard/positioning-icon.svg',
-  },
-  {
-    key: 'communicationsStrategy',
-    title: 'Communication Strategy',
-    icon: '/images/dashboard/strategy-icon.svg',
   },
   {
     key: 'policyPlatform',
@@ -37,6 +40,7 @@ export default function MessagingPanel(props) {
           updateVersionsCallback={updateVersionsCallback}
         />
       ))}
+      <CampaignWebsite {...props} />
     </div>
   );
 }
