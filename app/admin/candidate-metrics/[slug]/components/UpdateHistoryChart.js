@@ -74,6 +74,11 @@ const transformedData = (input) => {
 export default function UpdateHistoryChart(props) {
   const { updateHistory } = props;
   const data = transformedData(updateHistory);
+  const allUsers = [
+    ...new Set(
+      data.flatMap((item) => Object.keys(item)).filter((key) => key !== 'name'),
+    ),
+  ];
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -93,12 +98,15 @@ export default function UpdateHistoryChart(props) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line
-          type="monotone"
-          dataKey="Tomer Almog"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
+        {allUsers.map((user, index) => (
+          <Line
+            key={user}
+            type="monotone"
+            dataKey={user}
+            stroke="#8884d8" // Optional: Get a unique color for each user
+            activeDot={{ r: 8 }}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   );
