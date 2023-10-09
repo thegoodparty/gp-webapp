@@ -5,6 +5,7 @@ import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
 import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 
+// ok.
 let pages = [
   {
     label: 'AI Campaign Plan',
