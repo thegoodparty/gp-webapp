@@ -32,8 +32,6 @@ export default function UpdateHistorySection(props) {
     });
   }
 
-  console.log('inputData', inputData);
-
   const data = useMemo(() => inputData);
 
   const columns = useMemo(() => [

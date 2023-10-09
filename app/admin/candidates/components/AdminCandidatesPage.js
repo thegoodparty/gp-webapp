@@ -145,6 +145,22 @@ export default function AdminCandidatesPage(props) {
       },
     },
     {
+      Header: 'Metrics',
+      accessor: 'metrics',
+      Cell: ({ row }) => {
+        return (
+          <a
+            href={`/admin/candidate-metrics/${row.original.slug}`}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            className="underline"
+          >
+            Candidate Metrics
+          </a>
+        );
+      },
+    },
+    {
       Header: 'Review Link',
       accessor: 'reviewLink',
       Cell: ({ row }) => {
