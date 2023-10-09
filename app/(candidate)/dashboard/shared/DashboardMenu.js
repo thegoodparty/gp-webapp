@@ -5,7 +5,7 @@ import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
 import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 
-const pages = [
+let pages = [
   {
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
@@ -19,18 +19,11 @@ const pages = [
     id: 'my-content-dashboard',
   },
   {
-    label: 'Campaign Tracker',
-    icon: <AiOutlineFlag />,
-    link: '/dashboard',
-    id: 'campaign-tracker-dashboard',
-  },
-  {
     label: 'My Details',
     icon: <RiUserHeartLine />,
     link: '/dashboard/details',
     id: 'details-dashboard',
   },
-
   {
     label: 'Campaign Team',
     icon: <RiTeamLine />,
@@ -44,7 +37,6 @@ const pages = [
     link: '/dashboard/funding',
     id: 'funding-dashboard',
   },
-
   {
     label: 'Resources Library',
     icon: <RiBook2Line />,
@@ -57,9 +49,19 @@ export default function DashboardMenu({
   pathname,
   toggleCallback,
   candidateSlug,
+  pathToVictory,
 }) {
   // make profile link dynamic
   // pages[1].link = `/candidate/${candidateSlug}`;
+
+  if (pathToVictory && pages.length === 6) {
+    pages.unshift({
+      label: 'Campaign Tracker',
+      icon: <AiOutlineFlag />,
+      link: '/dashboard',
+      id: 'campaign-tracker-dashboard',
+    });
+  }
 
   return (
     <div className="w-[calc(100vw-16px)] lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">

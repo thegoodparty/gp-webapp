@@ -27,6 +27,7 @@ export default async function Page({ params, searchParams }) {
     candidatePositions,
     positions,
     candidate,
+    pathToVictory: campaign?.pathToVictory,
   };
 
   return <DetailsPage {...childProps} />;

@@ -23,6 +23,7 @@ export default async function Page({ params, searchParams }) {
     campaign,
     candidate,
     candidateSlug,
+    pathToVictory: campaign?.pathToVictory,
   };
 
   return <CampaignPlanPage {...childProps} />;
