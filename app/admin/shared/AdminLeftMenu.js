@@ -21,6 +21,10 @@ export const leftMenuItems = [
     label: 'Bust Cache',
     link: '/admin/caches',
   },
+  {
+    label: 'AI Content',
+    link: '/admin/ai-content',
+  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {
