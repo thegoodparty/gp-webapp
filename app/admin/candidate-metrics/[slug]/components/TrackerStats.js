@@ -30,7 +30,6 @@ export default function TrackerStats(props) {
   if (!reportedVoterGoals) {
     return <div className="my-4 text-xl">No reported voter goals</div>;
   }
-  console.log('vc', campaign);
 
   const { voterContactGoal, voteGoal } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;

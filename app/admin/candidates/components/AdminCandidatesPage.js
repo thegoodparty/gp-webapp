@@ -59,7 +59,7 @@ export default function AdminCandidatesPage(props) {
       const { data } = campaignObj;
       const campaign = mapCampaignToCandidate(data);
       const { user } = campaignObj;
-      const { currentStep } = data || {};
+      const { currentStep, reportedVoterGoals, aiContent } = data || {};
       const fields = {
         id: campaignObj.id,
         slug: campaign.slug,
@@ -82,9 +82,12 @@ export default function AdminCandidatesPage(props) {
         shortVersion: campaign.filedStatement,
         campaignCommittee: campaign.campaignCommittee,
         electionDate: campaign.electionDate,
+        doorKnocking: reportedVoterGoals?.doorKnocking || 0,
+        calls: reportedVoterGoals?.calls || 0,
+        digital: reportedVoterGoals?.digital || 0,
+        aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
       };
       inputData.push(fields);
-      console.log('Object.values(fields)', Object.values(fields));
       csvData.push(Object.values(fields));
     });
   }
@@ -159,6 +162,22 @@ export default function AdminCandidatesPage(props) {
           </a>
         );
       },
+    },
+    {
+      Header: 'Door Knocked',
+      accessor: 'doorKnocking',
+    },
+    {
+      Header: 'Calls Made',
+      accessor: 'calls',
+    },
+    {
+      Header: 'Online Impressions',
+      accessor: 'digital',
+    },
+    {
+      Header: 'AI Docs Created',
+      accessor: 'aiDocsCreated',
     },
     {
       Header: 'Review Link',
