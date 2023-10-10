@@ -185,6 +185,14 @@ export default function CampaignPlanSection({
         <div className="">
           {loading ? (
             <LoadingAI />
+          ) : (section.key === 'pathToVictory' ||
+              section.key === 'mobilizing') &&
+            campaign?.pathToVictory === undefined ? (
+            <div className="text-center text-xl">
+              Our team is working on your campaign materials now. This can take
+              up to 48 hours. In the meantime, create some content in the AI
+              Campaign Content section.
+            </div>
           ) : (
             <div className="border border-slate-500 bg-slate-50 rounded-xl">
               <PlanVersion
