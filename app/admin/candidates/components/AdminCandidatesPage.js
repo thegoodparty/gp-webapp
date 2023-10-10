@@ -88,7 +88,11 @@ export default function AdminCandidatesPage(props) {
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
       };
       inputData.push(fields);
-      csvData.push(Object.values(fields));
+      let csvFields = fields;
+      csvFields.lastVisited = dateUsHelper(fields.lastVisited);
+      csvFields.createdAt = dateUsHelper(fields.createdAt);
+      csvFields.updatedAt = dateUsHelper(fields.updatedAt);
+      csvData.push(Object.values(csvFields));
     });
   }
   const data = useMemo(() => inputData);
