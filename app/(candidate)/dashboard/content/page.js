@@ -4,6 +4,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../shared/candidateAccess';
 import ContentPage from './components/ContentPage';
+import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 
 const meta = pageMetaData({
   title: 'Campaign Content | GOOD PARTY',
@@ -14,6 +15,7 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
+  const { campaign } = await fetchUserCampaign();
 
   const promptsRaw = (await fetchContentByKey('candidateContentPrompts'))
     .content;
