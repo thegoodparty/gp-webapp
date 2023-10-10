@@ -96,6 +96,7 @@ export default function DashboardPage(props) {
     updateCountCallback,
     dateRange,
     updateHistory,
+    pathToVictory,
   };
 
   return (

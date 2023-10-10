@@ -30,6 +30,7 @@ export default async function Page({ params, searchParams }) {
     prompts,
     templates,
     categories,
+    pathToVictory: campaign?.pathToVictory,
   };
 
   return <ContentPage {...childProps} />;

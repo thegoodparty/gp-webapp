@@ -26,6 +26,7 @@ export default async function Page({ params }) {
     campaign,
     sections,
     articlesBySlug,
+    pathToVictory: campaign?.pathToVictory,
   };
 
   return <CampaignPlanPage {...childProps} />;

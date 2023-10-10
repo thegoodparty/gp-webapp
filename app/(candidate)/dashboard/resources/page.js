@@ -27,6 +27,7 @@ export default async function Page({ params, searchParams }) {
     pathname: '/dashboard/resources',
     articlesBySlug,
     candidateSlug,
+    pathToVictory: campaign?.pathToVictory,
   };
 
   return <ResourcesPage {...childProps} />;

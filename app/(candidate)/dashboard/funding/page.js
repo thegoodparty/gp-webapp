@@ -21,6 +21,7 @@ export default async function Page({ params, searchParams }) {
   const childProps = {
     pathname: '/dashboard/funding',
     candidateSlug,
+    pathToVictory: campaign?.pathToVictory,
   };
 
   return <CampaignFundingPage {...childProps} />;

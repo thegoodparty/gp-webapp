@@ -7,7 +7,13 @@ export default function OfficeOrContinueLink({
   isDashboardPath,
   closeAll,
 }) {
-  const { status, slug } = campaignStatus || {};
+  const { status, slug, pathToVictory } = campaignStatus || {};
+
+  let dashboardLink = '/dashboard';
+  if (!pathToVictory || pathToVictory !== 'Complete') {
+    dashboardLink = '/dashboard/plan';
+  }
+
   return (
     <>
       {!status ? (
@@ -26,7 +32,11 @@ export default function OfficeOrContinueLink({
           {status === 'candidate' ? (
             <>
               {!isDashboardPath && (
-                <Link href={`/dashboard`} onClick={closeAll} id="nav-dashboard">
+                <Link
+                  href={`${dashboardLink}`}
+                  onClick={closeAll}
+                  id="nav-dashboard"
+                >
                   <WarningButton size="medium">Dashboard</WarningButton>
                 </Link>
               )}
