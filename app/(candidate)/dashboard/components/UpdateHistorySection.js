@@ -6,6 +6,7 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import { useMemo } from 'react';
 import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
+import Actions from './Actions';
 
 const fields = {
   doorKnocking: { icon: <RiDoorOpenLine />, title: 'Doors knocked' },
@@ -20,6 +21,7 @@ export default function UpdateHistorySection(props) {
     updateHistory.map((update) => {
       if (update.type && update.type !== '') {
         const fields = {
+          id: update.id,
           name: update.user?.name,
           user: update.user,
           type: update.type,
@@ -73,6 +75,13 @@ export default function UpdateHistorySection(props) {
       sortType: 'datetime',
       Cell: ({ row }) => {
         return dateUsHelper(row.original.createdAt);
+      },
+    },
+    {
+      Header: 'Actions',
+      collapse: true,
+      Cell: ({ row }) => {
+        return <Actions {...row.original} />;
       },
     },
   ]);
