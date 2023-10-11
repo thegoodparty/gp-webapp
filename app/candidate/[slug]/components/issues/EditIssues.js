@@ -83,6 +83,7 @@ export default function EditIssues(props) {
   const [state, setState] = useState(combined);
   const [saving, setSaving] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [suggested, setSuggested] = useState(false);
 
   const Wrapper = ({ children, onPosChange }) => {
     if (isStaged || noDrag) {
@@ -165,9 +166,6 @@ export default function EditIssues(props) {
   };
 
   const handlePosChange = async (currentPos, newPos) => {
-    console.log(currentPos, newPos);
-    console.log('state', state);
-
     if (currentPos !== newPos) {
       setSaving(true);
       await handleReorderSave(state[currentPos], newPos);
@@ -211,6 +209,10 @@ export default function EditIssues(props) {
     }
   };
 
+  const handleSuggested = (issue) => {
+    setShowAdd(true);
+    setSuggested(issue);
+  };
   return (
     <div>
       {!hideTitle && <H1>Add 3 Issues</H1>}
@@ -223,7 +225,10 @@ export default function EditIssues(props) {
           <strong>Drag and drop the issues to reorder</strong>
         )}
       </Body1>
-      <SuggestedIssues campaign={campaign} />
+      <SuggestedIssues
+        campaign={campaign}
+        suggestedCallback={handleSuggested}
+      />
       {saving ? (
         <LoadingAnimation
           title="Saving..."
@@ -256,6 +261,7 @@ export default function EditIssues(props) {
                     <div>
                       <CandidateIssueSelector
                         positions={positions}
+                        suggested={suggested}
                         onSaveCallback={(
                           position,
                           candidatePosition,

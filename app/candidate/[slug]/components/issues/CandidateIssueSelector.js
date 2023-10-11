@@ -15,9 +15,24 @@ const initialState = {
   customTitle: '',
 };
 
-export default function CandidateIssueSelector({ positions, onSaveCallback }) {
+export default function CandidateIssueSelector({
+  positions,
+  onSaveCallback,
+  suggested,
+}) {
   const [state, setState] = useState(initialState);
   const [showCustom, setShowCustom] = useState(false);
+
+  useEffect(() => {
+    if (suggested) {
+      setState({
+        position: '',
+        text: '',
+        customTitle: suggested,
+      });
+      setShowCustom(true);
+    }
+  }, [suggested]);
 
   const onChangeField = (key, value) => {
     setState({
