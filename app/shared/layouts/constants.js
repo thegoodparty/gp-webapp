@@ -24,6 +24,10 @@ export const FOOTER_COLUMNS = [
         label: 'Contact Us',
         link: '/contact',
       },
+      {
+        label: 'Interactive Demo',
+        link: 'https://good-party.navattic.com/dt60c62',
+      },
     ],
   },
   {
