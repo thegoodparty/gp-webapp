@@ -169,6 +169,11 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      delete: {
+        url: `${base}campaign/update-history`,
+        method: 'DELETE',
+        withAuth: true,
+      },
     },
 
     candidatePosition: {
