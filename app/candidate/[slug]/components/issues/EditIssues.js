@@ -12,6 +12,7 @@ import EditCandidatePosition from './EditCandidatePosition';
 import { combinePositions } from './IssuesList';
 import { Draggable } from 'react-drag-reorder';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
+import SuggestedIssues from './SuggestedIssues';
 
 export async function saveCandidatePosition({
   description,
@@ -213,7 +214,7 @@ export default function EditIssues(props) {
   return (
     <div>
       {!hideTitle && <H1>Add 3 Issues</H1>}
-      <Body1 className="mt-5 mb-7">
+      <Body1 className="mt-3 mb-6">
         Select the issues that resonate deeply with you. These will form the
         foundation of your campaign and your connection with the community.
         <br />
@@ -222,6 +223,7 @@ export default function EditIssues(props) {
           <strong>Drag and drop the issues to reorder</strong>
         )}
       </Body1>
+      <SuggestedIssues campaign={campaign} />
       {saving ? (
         <LoadingAnimation
           title="Saving..."

@@ -9,6 +9,8 @@ import { useHookstate } from '@hookstate/core';
 import { savingState } from './OnboardingPage';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Script from 'next/script';
+import H1 from '@shared/typography/H1';
+import H2 from '@shared/typography/H2';
 
 export default function OnboardingWrapper({
   children,
@@ -81,8 +83,8 @@ export default function OnboardingWrapper({
           } mx-auto pt-10 lg:pt-24`}
         >
           <div className="text-center  tracking-tight pb-14">
-            <h1 className="font-black text-4xl ">{title}</h1>
-            {subTitle && <h2 className="zinc-500 mt-8">{subTitle}</h2>}
+            <H1>{title}</H1>
+            {subTitle && <H2 className="zinc-500 mt-8">{subTitle}</H2>}
           </div>
           {/* <AnimatePresence mode="wait"> */}
           <motion.div

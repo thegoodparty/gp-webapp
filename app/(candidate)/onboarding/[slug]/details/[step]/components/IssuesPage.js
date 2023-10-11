@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
-import IssuesSelector from './IssuesSelector';
 import EditIssues from 'app/candidate/[slug]/components/issues/EditIssues';
 import { mapTopIssues } from 'app/candidate/[slug]/edit/mapTopIssues';
 import { useHookstate } from '@hookstate/core';

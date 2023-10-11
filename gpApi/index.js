@@ -336,6 +336,11 @@ const gpApi = {
       url: `${base}top-issues`, // non admin
       method: 'GET',
     },
+    byLocation: {
+      url: `${base}top-issue/by-location`, // non admin, for onboarding
+      method: 'GET',
+      withAuth: true,
+    },
   },
 
   //
