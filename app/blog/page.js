@@ -47,7 +47,6 @@ export default async function Page({ params, searchParams }) {
   };
   return (
     <>
-      <VwoScript />
       <BlogPage {...childProps} />
     </>
   );

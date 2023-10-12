@@ -62,7 +62,6 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <VwoScript />
       <BlogPage {...childProps} />
     </>
   );

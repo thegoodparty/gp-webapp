@@ -53,7 +53,6 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <VwoScript />
       <BlogArticle {...childProps} />
       <ArticleSchema article={content} />
     </>
