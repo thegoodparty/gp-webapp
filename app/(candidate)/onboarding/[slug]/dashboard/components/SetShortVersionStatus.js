@@ -14,7 +14,7 @@ export default function SetShortVersionStatus(props) {
   const checkShortVersionLaunchStatus = async () => {
     // if the user is in the short version and completed step 4 (website),
     // and the campaign is not marked as pending - set it as pending
-    const shortVersion = !!campaign.details?.filedStatement;
+    const shortVersion = campaign?.details?.filedStatement == 'yes';
     if (
       shortVersion &&
       campaign.profile?.campaignWebsite &&

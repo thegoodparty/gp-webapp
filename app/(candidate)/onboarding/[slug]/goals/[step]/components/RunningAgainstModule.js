@@ -31,7 +31,7 @@ export default function RunningAgainstModule({
     newDesc: '',
     newParty: '',
   };
-  const shortVersion = !!campaign?.details?.filedStatement;
+  const shortVersion = campaign?.details?.filedStatement == 'yes';
   if (campaign?.[subSectionKey]?.runningAgainst) {
     initialState.runningAgainst = campaign[subSectionKey].runningAgainst;
   }

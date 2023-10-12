@@ -19,7 +19,7 @@ export default function RunningAgainstPage({
     savingState.set(() => false);
   }, []);
 
-  const shortVersion = !!campaign?.details?.filedStatement;
+  const shortVersion = campaign?.details?.filedStatement == 'yes';
 
   const router = useRouter();
 
