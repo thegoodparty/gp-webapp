@@ -14,6 +14,7 @@ const goalsFields = [
   },
   {
     title: 'Campaign Website',
+    skipable: true,
     fields: [
       {
         key: 'campaignWebsite',

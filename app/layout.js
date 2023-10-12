@@ -6,6 +6,7 @@ import Script from 'next/script';
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
 import { appBase, isProd } from 'gpApi';
+import VwoScript from '@shared/scripts/VwoScript';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
 
@@ -99,6 +100,7 @@ export default function RootLayout({ children }) {
           />
         </noscript>
       </body>
+      <VwoScript />
       <Script
         strategy="afterInteractive"
         type="text/javascript"
