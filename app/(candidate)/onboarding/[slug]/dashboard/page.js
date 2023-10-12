@@ -22,7 +22,6 @@ export default async function Page({ params }) {
 
   const campaignStatus = generateCampaignStatus(campaign);
   const shortVersion = campaign?.details?.filedStatement == 'yes';
-  console.log('shortVersion', shortVersion, campaign.details.filedStatement);
 
   const nextStep = { ...campaignStatus.nextStep };
   delete campaignStatus.nextStep;
