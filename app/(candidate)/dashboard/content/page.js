@@ -17,14 +17,15 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
   const { campaign } = await fetchUserCampaign();
 
-  const promptsRaw = (await fetchContentByKey('candidateContentPrompts'))
+  const promptsRaw = (await fetchContentByKey('candidateContentPrompts', 360))
     .content;
   const prompts = parsePrompts(promptsRaw);
 
-  const templates = (await fetchContentByKey('candidateContentPrompts'))
+  const templates = (await fetchContentByKey('candidateContentPrompts', 360))
     .content;
 
-  const categories = (await fetchContentByKey('aiContentCategories')).content;
+  const categories = (await fetchContentByKey('aiContentCategories', 360))
+    .content;
 
   const childProps = {
     pathname: '/dashboard/content',

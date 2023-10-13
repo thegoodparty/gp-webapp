@@ -31,7 +31,7 @@ export default function AdminUsersPage(props) {
     {
       name: 'election pages',
       description: 'Invalidate election pages',
-      paths: ['(company)/elections/[...params]'],
+      paths: ['/(company)/elections/[...params]'],
     },
     {
       name: 'political terms',

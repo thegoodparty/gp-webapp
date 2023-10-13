@@ -58,7 +58,7 @@ async function fetchCall(url, options = {}, revalidate) {
   if (revalidate) {
     res = await fetch(url, { ...options, next: { revalidate } });
   } else {
-    res = await fetch(url, options);
+    res = await fetch(url, { ...options, cache: 'no-store' });
   }
   try {
     // console.log('res', res);
