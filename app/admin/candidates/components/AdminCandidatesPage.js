@@ -42,6 +42,7 @@ export default function AdminCandidatesPage(props) {
       'lastVisited',
       'party',
       'office',
+      'officeTermLength',
       'city',
       'district',
       'state',
@@ -50,6 +51,13 @@ export default function AdminCandidatesPage(props) {
       'email',
       'phone',
       'currentStep',
+      'shortVersion',
+      'campaignCommittee',
+      'electionDate',
+      'doorKnocking',
+      'calls',
+      'digital',
+      'aiDocsCreated',
     ],
   ];
 
