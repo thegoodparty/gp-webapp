@@ -44,6 +44,7 @@ export default function TogglePanel({
                   height={28}
                   alt=""
                   className="mr-4"
+                  priority
                 />
               ) : (
                 <div className="mr-4">{icon}</div>
