@@ -10,6 +10,7 @@ import Body1 from '@shared/typography/Body1';
 import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CardProgressPill from './CardProgressPill';
+import { revalidateCandidates } from 'helpers/cacheHelper';
 
 export default function TrackerCard(props) {
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +25,7 @@ export default function TrackerCard(props) {
     setValue(val);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let newAddition = parseInt(value, 10);
     if (newAddition < 0) {
       setShowError('Positive numbers only');
@@ -35,6 +36,7 @@ export default function TrackerCard(props) {
     setShowModal(false);
     setValue(0);
     setShowError(false);
+    await revalidateCandidates();
   };
   return (
     <div className="bg-gray-50 pt-10 pb-6 px-7 border border-slate-300 rounded-2xl relative">
