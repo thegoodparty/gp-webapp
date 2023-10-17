@@ -5,8 +5,11 @@ import Image from 'next/image';
 import VictoriaImg from 'public/images/landing-pages/victoria.png';
 import BreannaImg from 'public/images/landing-pages/breanna.png';
 import CarlosImg from 'public/images/landing-pages/carlos.png';
+import MapImg from 'public/images/landing-pages/map.png';
 import Body1 from '@shared/typography/Body1';
 import { BiSolidQuoteAltRight } from 'react-icons/bi';
+import CTA from './components/CTA';
+import WarningButton from '@shared/buttons/WarningButton';
 
 const graduates = [
   {
@@ -81,8 +84,33 @@ export default function Graduates() {
               </div>
             </div>
           </div>
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 md:col-span-6">
+              <Image
+                src="/images/landing-pages/window-heart.svg"
+                height={106}
+                width={380}
+                alt="window"
+                className="block"
+              />
+              <MarketingH2 className="my-12">Join our community</MarketingH2>
+              <Body1 className="mb-12">
+                Good Party is open to everyone from all walks of life. The
+                program is built for people eager to serve their community
+                independent of partisanship and special interests. Join up to
+                meet people from all over the political spectrum passionate
+                about building community power!
+              </Body1>
+              <CTA>
+                <WarningButton>Sign up</WarningButton>
+              </CTA>
+            </div>
+            <div className="col-span-12 md:col-span-6">
+              <Image src={MapImg} height={548} width={490} alt="map" />
+            </div>
+          </div>
         </div>
-        <div className="absolute w-full left-0 h-full top-0">
+        <div className="absolute w-full left-0 h-2/3 top-0">
           <Image
             src="/images/landing-pages/spot-bg.svg"
             fill
