@@ -22,11 +22,16 @@ async function handleDeleteHistory(id) {
   return false;
 }
 
-export default function DeleteAction({ id }) {
+export default function DeleteAction({
+  id,
+  setShowMenu,
+  deleteHistoryCallBack,
+}) {
   const [showDelete, setShowDelete] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
   const handleDelete = async () => {
+    setShowMenu(0);
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -44,7 +49,8 @@ export default function DeleteAction({ id }) {
         };
       });
     }
-    window.location.reload();
+    // window.location.reload();
+    await deleteHistoryCallBack();
   };
 
   return (

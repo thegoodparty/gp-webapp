@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
 import H3 from '@shared/typography/H3';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { fetchUserCampaignClient } from '/helpers/campaignHelper';
 import ElectionOver from './ElectionOver';
 import MapSection from './MapSection';
 import UpdateHistorySection from './UpdateHistorySection';
@@ -70,6 +71,20 @@ export default function DashboardPage(props) {
   const dateRange = weekRangeFromDate(electionDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
+  const deleteHistoryCallBack = async () => {
+    const resp = await fetchUserCampaignClient();
+    if (resp && resp?.campaign) {
+      const campaignObj = resp.campaign;
+      setState({
+        doorKnocking: campaignObj?.reportedVoterGoals?.doorKnocking || 0,
+        calls: campaignObj?.reportedVoterGoals?.calls || 0,
+        digital: campaignObj?.reportedVoterGoals?.digital || 0,
+      });
+    }
+
+    await loadHistory();
+  };
+
   const updateCountCallback = async (key, value, newAddition) => {
     const newState = {
       ...state,
@@ -97,6 +112,7 @@ export default function DashboardPage(props) {
     dateRange,
     updateHistory,
     pathToVictory,
+    deleteHistoryCallBack,
   };
 
   return (
