@@ -1,3 +1,4 @@
+import Graduates from '../Graduates';
 import Sessions from '../Sessions';
 import Experts from './Experts';
 import Hero from './Hero';
@@ -17,6 +18,7 @@ export default function WebinarPage() {
       <WhyAcademy />
       <Experts />
       <Sessions />
+      <Graduates />
     </>
   );
 }

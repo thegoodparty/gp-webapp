@@ -35,7 +35,7 @@ export default function Sessions() {
       <div className="grid grid-cols-12 gap-8">
         {weeks.map((week) => (
           <div key={week.name} className="col-span-12 md:col-span-4">
-            <div className="text-3xl py-5 px-7 border border-primary rounded-2xl inline-block">
+            <div className="text-3xl py-5 px-7 border-2 border-primary rounded-2xl inline-block bg-slate-100 shadow-md">
               {week.name}
             </div>
             <h4 className="text-3xl my-5">{week.title}</h4>
