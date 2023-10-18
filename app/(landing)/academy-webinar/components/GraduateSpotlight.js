@@ -58,7 +58,7 @@ export default function GraduateSpotlight() {
                 href={graduate.link}
                 className="mt-4 text-purple-400 font-bold"
               >
-                Read More about {graduate.name}
+                Read more about {graduate.name}
               </a>
             </div>
           ))}
