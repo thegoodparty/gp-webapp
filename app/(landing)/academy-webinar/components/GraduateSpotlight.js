@@ -54,12 +54,12 @@ export default function GraduateSpotlight() {
                 </div>
                 <div className="text-lg ">{graduate.desc}</div>
               </div>
-              <Link
+              <a
                 href={graduate.link}
                 className="mt-4 text-purple-400 font-bold"
               >
-                Read More
-              </Link>
+                Read More about {graduate.name}
+              </a>
             </div>
           ))}
         </div>

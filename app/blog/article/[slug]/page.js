@@ -6,7 +6,6 @@ import { fetchSections } from 'app/blog/page';
 import ArticleSchema from './ArticleSchema';
 import BlogArticle from './components/BlogArticle';
 import pageMetaData from 'helpers/metadataHelper';
-import VwoScript from '@shared/scripts/VwoScript';
 
 export const fetchArticle = async (slug) => {
   const api = gpApi.content.contentByKey;
@@ -59,15 +58,15 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams() {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += `?key=blogArticles`;
+// export async function generateStaticParams() {
+//   const api = { ...gpApi.content.contentByKey };
+//   api.url += `?key=blogArticles`;
 
-  const { content } = await gpFetch(api, false);
+//   const { content } = await gpFetch(api, false);
 
-  return content.map((article) => {
-    return {
-      slug: article.slug,
-    };
-  });
-}
+//   return content.map((article) => {
+//     return {
+//       slug: article.slug,
+//     };
+//   });
+// }
