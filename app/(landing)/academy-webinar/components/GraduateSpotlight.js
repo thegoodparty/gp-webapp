@@ -11,19 +11,19 @@ const graduates = [
     name: 'Carlos Rousselin',
     desc: 'Carlos Rousselin, a pharmaceutical scientist from Nashville, Tennessee, began wondering whether he should run for local office after learning about Good Party Academy.',
     img: CarlosImg,
-    link: 'https://goodparty.org/blog/article/gpa-grad-carlos-rousselin',
+    link: '/blog/article/gpa-grad-carlos-rousselin',
   },
   {
     name: 'Breanna Stott',
     desc: 'After discovering GPA on Instagram, Stott connected with the vision of Good Party — working to make people matter more than money in our democracy.',
     img: BreannaImg,
-    link: 'https://goodparty.org/blog/article/gpa-grad-breanna-stott',
+    link: '/blog/article/gpa-grad-breanna-stott',
   },
   {
     name: 'Victoria Masika',
     desc: 'Since announcing her run in early July, Masika has become one of the first candidates in North Carolina to affiliate with the Forward Party.',
     img: VictoriaImg,
-    link: 'https://goodparty.org/blog/article/race-update-victoria-masika',
+    link: '/blog/article/race-update-victoria-masika',
   },
 ];
 
