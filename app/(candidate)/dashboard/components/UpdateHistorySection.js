@@ -3,7 +3,7 @@ import H3 from '@shared/typography/H3';
 import UserAvatar from '@shared/user/UserAvatar';
 import Table from '@shared/utils/Table';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
 import Actions from './Actions';
@@ -15,7 +15,10 @@ const fields = {
 };
 
 export default function UpdateHistorySection(props) {
-  const updateHistory = props.updateHistory;
+  const [showMenu, setShowMenu] = useState(0);
+
+  const { deleteHistoryCallBack, updateHistory } = props;
+
   const inputData = [];
   if (updateHistory) {
     updateHistory.map((update) => {
@@ -81,7 +84,14 @@ export default function UpdateHistorySection(props) {
       Header: 'Actions',
       collapse: true,
       Cell: ({ row }) => {
-        return <Actions {...row.original} />;
+        return (
+          <Actions
+            {...row.original}
+            showMenu={showMenu}
+            setShowMenu={setShowMenu}
+            deleteHistoryCallBack={deleteHistoryCallBack}
+          />
+        );
       },
     },
   ]);
