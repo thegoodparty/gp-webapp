@@ -29,13 +29,15 @@ export default function Dates() {
             }`}
           >
             <div>{d}</div>
-            <div className="ml-3">
-              <CTA>
-                <PrimaryButton size="medium">
-                  <div className=" whitespace-nowrap">Sign up</div>
-                </PrimaryButton>
-              </CTA>
-            </div>
+            {index !== dates.length - 1 && (
+              <div className="ml-3">
+                <CTA clickId={`dates-cta${index + 1}`}>
+                  <PrimaryButton size="medium">
+                    <div className=" whitespace-nowrap">Sign up</div>
+                  </PrimaryButton>
+                </CTA>
+              </div>
+            )}
           </div>
         ))}
       </div>

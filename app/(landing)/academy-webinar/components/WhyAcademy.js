@@ -72,7 +72,7 @@ export default function WhyAcademy() {
             ))}
           </div>
           <div className="mt-16 md:mt-20 flex  justify-center">
-            <CTA>
+            <CTA clickId="why-academy-cta">
               <WarningButton>Reserve your spot</WarningButton>
             </CTA>
           </div>

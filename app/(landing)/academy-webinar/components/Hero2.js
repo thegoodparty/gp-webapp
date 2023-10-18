@@ -37,7 +37,7 @@ export default function Hero2({ content }) {
               coaching
             </ul>
           </div>
-          <CTA>
+          <CTA clickId="hero2-reserve-cta">
             <div className="flex items-center">
               <WarningButton>Reserve your free spot</WarningButton>
               <div className="text-xl font-medium text-purple-400 ml-3">
