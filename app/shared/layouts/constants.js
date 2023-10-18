@@ -26,7 +26,7 @@ export const FOOTER_COLUMNS = [
       },
       {
         label: 'Interactive Demo',
-        link: 'https://good-party.navattic.com/dt60c62',
+        link: '/product-tour',
       },
     ],
   },
