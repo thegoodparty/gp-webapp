@@ -7,7 +7,7 @@ const weeks = [
   {
     name: '1',
     title: 'Finding your “why”',
-    desc: 'The most important aspect of a political campaign is the reason for why you\'re running. We\'ll help you find your "why" and how to message it to your supporters.',
+    desc: 'The most important aspect of a political campaign is the reason why you\'re running. We\'ll help you find your "why" and how to message it to your supporters.',
   },
   {
     name: '2',

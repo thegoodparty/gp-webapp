@@ -27,7 +27,9 @@ export default function GraduateSpotlight() {
   return (
     <section className="my-20">
       <MaxWidth>
-        <MarketingH2 className="text-center mb-16">Our curriculum</MarketingH2>
+        <MarketingH2 className="text-center mb-16">
+          Graduate spotlight
+        </MarketingH2>
         <div className="grid grid-cols-12 gap-6 md:gap-12">
           {graduates.map((graduate) => (
             <div key={graduate.name} className="col-span-12 md:col-span-4">
