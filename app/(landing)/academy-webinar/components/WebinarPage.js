@@ -23,7 +23,7 @@ export default function WebinarPage() {
       {/* <Sessions /> */}
       <Curriculum />
       <Dates />
-      {/* <Graduates /> */}
+      <Graduates />
       <GraduateSpotlight />
     </>
   );
