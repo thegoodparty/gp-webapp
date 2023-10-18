@@ -67,7 +67,10 @@ export default function PlanVersion({
                 <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
-                      {dateWithTime(version.date)}
+                      {dateWithTime(version.date)}{' '}
+                      {version?.language &&
+                        version.language !== 'English' &&
+                        `(${version.language})`}
                     </div>
                   </div>
                 </span>
