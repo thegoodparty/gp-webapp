@@ -14,7 +14,7 @@ export default function Hero({ content }) {
           <MarketingH1>
             Good Party Academy - Learn how to run for office
           </MarketingH1>
-          <Subtitle1 className="my-12">{content.heroDesc}</Subtitle1>
+          <div className="my-8 text-xl">{content.heroDesc}</div>
           <CTA>
             <PrimaryButton>Sign up for free</PrimaryButton>
           </CTA>

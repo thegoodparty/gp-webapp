@@ -84,14 +84,14 @@ export default function Graduates() {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-12 gap-6">
+          <div className="grid grid-cols-12 gap-6 relative">
             <div className="col-span-12 md:col-span-6">
               <Image
                 src="/images/landing-pages/window-heart.svg"
                 height={106}
                 width={380}
                 alt="window"
-                className="block"
+                className="block absolute md:static -top-44 right-6"
               />
               <MarketingH2 className="my-12">Join our community</MarketingH2>
               <Body1 className="mb-12">

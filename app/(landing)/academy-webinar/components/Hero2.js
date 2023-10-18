@@ -23,10 +23,11 @@ export default function Hero2({ content }) {
           <MarketingH2>
             Turning community leaders into elected officials
           </MarketingH2>
-          <Subtitle1 className="my-12">
-            A 3-week course designed to guide you through every step of running
-            for public office. Meet our team so we can get to know you and your
-            goals!
+          <div className="my-12 text-xl">
+            A 90-minute webinar designed to guide you the basics of running for
+            public office and the free tools Good Party provides to help you
+            continue on your journey. Meet our team so we can get to know you
+            and your goals!
             <br />
             <br />
             <ul>
@@ -35,10 +36,10 @@ export default function Hero2({ content }) {
               <li>Personalized</li>
               coaching
             </ul>
-          </Subtitle1>
+          </div>
           <CTA>
             <div className="flex items-center">
-              <WarningButton>Reserve your spot</WarningButton>
+              <WarningButton>Reserve your free spot</WarningButton>
               <div className="text-xl font-medium text-purple-400 ml-3">
                 Free!
               </div>

@@ -1,13 +1,16 @@
+import Curriculum from '../Curriculum';
+import Dates from '../Dates';
 import Graduates from '../Graduates';
 import Sessions from '../Sessions';
 import Experts from './Experts';
+import GraduateSpotlight from './GraduateSpotlight';
 import Hero from './Hero';
 import Hero2 from './Hero2';
 import WhyAcademy from './WhyAcademy';
 
 const content = {
   heroDesc:
-    'Discover how you can run for office and make a real impact in your community. Meet with our team to learn more and reserve your spot.',
+    'Join our free webinar to discover how you can run for office and make a real impact in your community.',
 };
 
 export default function WebinarPage() {
@@ -17,8 +20,11 @@ export default function WebinarPage() {
       <Hero2 />
       <WhyAcademy />
       <Experts />
-      <Sessions />
-      <Graduates />
+      {/* <Sessions /> */}
+      <Curriculum />
+      <Dates />
+      {/* <Graduates /> */}
+      <GraduateSpotlight />
     </>
   );
 }
