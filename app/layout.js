@@ -88,6 +88,7 @@ export default function RootLayout({ children }) {
         />
 
         <link rel="manifest" href="/manifest.json" />
+        <VwoScript />
       </head>
       <body>
         <PageWrapper>{children}</PageWrapper>
@@ -100,7 +101,6 @@ export default function RootLayout({ children }) {
           />
         </noscript>
       </body>
-      <VwoScript />
       <Script
         strategy="afterInteractive"
         type="text/javascript"
