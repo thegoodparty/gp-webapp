@@ -29,7 +29,7 @@ const graduates = [
   },
 ];
 
-export default function GraduateSpotlight() {
+export default function GraduateSpotlight({ content }) {
   return (
     <section className="my-20">
       <MaxWidth>
@@ -66,7 +66,7 @@ export default function GraduateSpotlight() {
           ))}
         </div>
         <div className="mt-16 flex justify-center">
-          <CTA clickId="spotlight-cta">
+          <CTA clickId="spotlight-cta" content={content}>
             <PrimaryButton>Sign up for free</PrimaryButton>
           </CTA>
         </div>

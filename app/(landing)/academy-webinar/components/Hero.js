@@ -15,7 +15,7 @@ export default function Hero({ content }) {
             Good Party Academy - Learn how to run for office
           </MarketingH1>
           <div className="my-8 text-xl">{content.heroDesc}</div>
-          <CTA clickId="hero-cta">
+          <CTA clickId="hero-cta" content={content}>
             <PrimaryButton>Sign up for free</PrimaryButton>
           </CTA>
         </div>

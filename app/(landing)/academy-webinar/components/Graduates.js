@@ -29,7 +29,7 @@ const graduates = [
   },
 ];
 
-export default function Graduates() {
+export default function Graduates({ content }) {
   return (
     <div className="max-w-screen-xl mx-auto">
       <section className="mt-48 px-4 py-10 md:p-20 md:rounded-xl relative shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -101,7 +101,7 @@ export default function Graduates() {
                 meet people from all over the political spectrum passionate
                 about building community power!
               </Body1>
-              <CTA>
+              <CTA content={content} id="graduate-cta">
                 <WarningButton>Sign up</WarningButton>
               </CTA>
             </div>

@@ -14,7 +14,7 @@ const dates = [
   'More dates coming soon!',
 ];
 
-export default function Dates() {
+export default function Dates({ content }) {
   return (
     <MaxWidth>
       <div className="lg:w-1/2 mt-24 mb-12">
@@ -31,7 +31,7 @@ export default function Dates() {
             <div>{d}</div>
             {index !== dates.length - 1 && (
               <div className="ml-3">
-                <CTA clickId={`dates-cta${index + 1}`}>
+                <CTA clickId={`dates-cta${index + 1}`} content={content}>
                   <PrimaryButton size="medium">
                     <div className=" whitespace-nowrap">Sign up</div>
                   </PrimaryButton>

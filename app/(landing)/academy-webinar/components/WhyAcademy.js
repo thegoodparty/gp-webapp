@@ -52,7 +52,7 @@ const icons = [
   },
 ];
 
-export default function WhyAcademy() {
+export default function WhyAcademy({ content }) {
   return (
     <>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#13161A_55%)] h-[calc(100vw*0.09)] w-full" />
@@ -72,7 +72,7 @@ export default function WhyAcademy() {
             ))}
           </div>
           <div className="mt-16 md:mt-20 flex  justify-center">
-            <CTA clickId="why-academy-cta">
+            <CTA clickId="why-academy-cta" content={content}>
               <WarningButton>Reserve your spot</WarningButton>
             </CTA>
           </div>

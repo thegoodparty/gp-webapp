@@ -10,6 +10,7 @@ const content = {
     'Discover how you can run for office and make a real impact in your community. Meet with our team to learn more and reserve your spot.',
   hero2Desc:
     'A 3-week course designed to guide you through every step of running for public office. Meet our team so we can get to know you and your goals!',
+  formId: '46116311-525b-42a2-b88e-d2ab86f26b8a',
 };
 
 export default function AcademyPage() {
@@ -17,11 +18,11 @@ export default function AcademyPage() {
     <>
       <Hero content={content} />
       <Hero2 content={content} />
-      <WhyAcademy />
-      <Experts />
+      <WhyAcademy content={content} />
+      <Experts content={content} />
       <Sessions />
-      <Graduates />
-      <GraduateSpotlight />
+      <Graduates content={content} />
+      <GraduateSpotlight content={content} />
     </>
   );
 }
