@@ -2,10 +2,11 @@
 import { useState } from 'react';
 import { BsThreeDotsVertical, BsThreeDots } from 'react-icons/bs';
 import { Button } from '@mui/material';
-import { FaPencilAlt, FaTrashAlt, FaCopy } from 'react-icons/fa';
+import { FaPencilAlt, FaTrashAlt, FaCopy, FaGlobe } from 'react-icons/fa';
 import DeleteAction from './DeleteAction';
 // import DuplicateAction from './DuplicateAction';
 import RenameAction from './RenameAction';
+import TranslateAction from './TranslateAction';
 import { kebabToCamel } from '/helpers/stringHelper';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -20,10 +21,12 @@ export default function Actions(props) {
     documentKey,
     updatedAt,
     status,
+    handleTranslateCallback,
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRename, setShowRename] = useState(false);
+  const [showTranslate, setShowTranslate] = useState(false);
   const [showDuplicate, setShowDuplicate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -112,6 +115,20 @@ export default function Actions(props) {
                 </span>
               </Button>
 
+              <Button
+                onClick={() => {
+                  setShowTranslate(true);
+                  setShowMenu(false);
+                }}
+              >
+                <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                  <div className="whitespace-nowrap text-lg flex items-center w-full">
+                    <FaGlobe className="text-[14px]" />
+                    <div className="ml-3 font-sfpro text-[17px]">Translate</div>
+                  </div>
+                </span>
+              </Button>
+
               {/* <Button
                 onClick={() => {
                   setShowDuplicate(true);
@@ -153,6 +170,12 @@ export default function Actions(props) {
         setDocumentName={setDocumentName}
         tableVersion={tableVersion}
         documentName={name}
+      />
+
+      <TranslateAction
+        showTranslate={showTranslate}
+        setShowTranslate={setShowTranslate}
+        handleTranslateCallback={handleTranslateCallback}
       />
 
       {/* <DuplicateAction

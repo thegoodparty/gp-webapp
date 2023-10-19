@@ -216,6 +216,21 @@ export default function ContentEditor({
     setShowModal(false);
   };
 
+  const handleTranslate = async (language) => {
+    setLoading(true);
+    setInitialInputValues([]);
+    const chat = [
+      { role: 'system', content: plan },
+      {
+        role: 'user',
+        content: 'Please translate the above text to: ' + language,
+      },
+    ];
+    await createInitialAI(true, chat, true, [{ language: language }]);
+
+    setShowModal(false);
+  };
+
   return (
     <div>
       <div className="flex w-full h-auto p-5 items-center justify-items-center bg-slate-50">
@@ -315,6 +330,7 @@ export default function ContentEditor({
             setDocumentName={setDocumentName}
             documentKey={key}
             name={documentName}
+            handleTranslateCallback={handleTranslate}
           />
         </div>
       </div>
