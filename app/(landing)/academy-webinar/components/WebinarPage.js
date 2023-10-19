@@ -1,7 +1,6 @@
 import Curriculum from './Curriculum';
 import Dates from './Dates';
 import Graduates from './Graduates';
-import Sessions from '../Sessions';
 import Experts from './Experts';
 import GraduateSpotlight from './GraduateSpotlight';
 import Hero from './Hero';
@@ -23,7 +22,6 @@ export default function WebinarPage() {
       <Hero2 content={content} />
       <WhyAcademy content={content} />
       <Experts content={content} />
-      {/* <Sessions /> */}
       <Curriculum />
       <Dates content={content} />
       <Graduates content={content} />
