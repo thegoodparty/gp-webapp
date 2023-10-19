@@ -1,6 +1,4 @@
 import Sessions from 'app/(landing)/academy-webinar/Sessions';
-import Curriculum from 'app/(landing)/academy-webinar/components/Curriculum';
-import Dates from 'app/(landing)/academy-webinar/components/Dates';
 import Experts from 'app/(landing)/academy-webinar/components/Experts';
 import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
 import Graduates from 'app/(landing)/academy-webinar/components/Graduates';
@@ -22,8 +20,6 @@ export default function AcademyPage() {
       <WhyAcademy />
       <Experts />
       <Sessions />
-      {/* <Curriculum /> */}
-      {/* <Dates /> */}
       <Graduates />
       <GraduateSpotlight />
     </>
