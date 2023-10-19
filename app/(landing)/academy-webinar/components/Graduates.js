@@ -8,7 +8,7 @@ import CarlosImg from 'public/images/landing-pages/carlos.png';
 import MapImg from 'public/images/landing-pages/map.png';
 import Body1 from '@shared/typography/Body1';
 import { BiSolidQuoteAltRight } from 'react-icons/bi';
-import CTA from './components/CTA';
+import CTA from './CTA';
 import WarningButton from '@shared/buttons/WarningButton';
 
 const graduates = [

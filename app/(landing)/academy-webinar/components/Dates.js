@@ -3,7 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
-import CTA from './components/CTA';
+import CTA from './CTA';
 
 const dates = [
   'Wednesday, October 25th, 2023 @ 7pm EST',

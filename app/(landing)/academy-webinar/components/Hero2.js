@@ -24,10 +24,7 @@ export default function Hero2({ content }) {
             Turning community leaders into elected officials
           </MarketingH2>
           <div className="my-12 text-xl">
-            A 90-minute webinar designed to guide you in the basics of running
-            for public office and the free tools Good Party provides to help you
-            continue on your journey. Meet our team so we can get to know you
-            and your goals!
+            {content.hero2Desc}
             <br />
             <br />
             <ul>
