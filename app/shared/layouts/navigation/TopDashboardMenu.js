@@ -33,7 +33,7 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
 
   const getSlug = async () => {
     const { campaign } = await fetchUserCampaignClient();
-    const { candidateSlug } = campaign;
+    const { candidateSlug } = campaign || {};
     setSlug(candidateSlug);
   };
   return (
