@@ -11,6 +11,7 @@ const content = {
   hero2Desc:
     'A 3-week course designed to guide you through every step of running for public office. Meet our team so we can get to know you and your goals!',
   formId: '46116311-525b-42a2-b88e-d2ab86f26b8a',
+  ctaRedirect: true,
 };
 
 export default function AcademyPage() {

@@ -13,6 +13,7 @@ const content = {
   hero2Desc:
     'A 90-minute webinar designed to guide you in the basics of running for public office and the free tools Good Party provides to help you continue on your journey. Meet our team so we can get to know you and your goals!',
   formId: '28d49682-0766-4fca-98ba-22394f79ec45',
+  ctaRedirect: false,
 };
 
 export default function WebinarPage() {

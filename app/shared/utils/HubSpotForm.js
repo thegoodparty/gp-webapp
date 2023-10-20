@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export default function HubSpotForm({ formId }) {
+export default function HubSpotForm({ formId, calendarRedirect = true }) {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://js.hsforms.net/forms/v2.js';
@@ -17,8 +17,10 @@ export default function HubSpotForm({ formId }) {
           formId,
           target: '#hubspotForm',
           onFormSubmitted: () => {
-            window.location.href =
-              'https://meetings.hubspot.com/jared-alper/good-party-academy-meeting';
+            if (calendarRedirect) {
+              window.location.href =
+                'https://meetings.hubspot.com/jared-alper/good-party-academy-meeting';
+            }
           },
         });
       }

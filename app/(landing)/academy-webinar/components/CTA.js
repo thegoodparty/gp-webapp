@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 export default function CTA({ children, content }) {
   const [open, setOpen] = useState(false);
+  const { formId, ctaRedirect } = content;
   return (
     <>
       <div
@@ -32,7 +33,7 @@ export default function CTA({ children, content }) {
               Sign up for an intro webinar with our team and take the first step
               towards a brighter political future for your community.
             </Subtitle1>
-            <HubSpotForm formId={content.formId} />
+            <HubSpotForm formId={content.formId} ctaRedirect={ctaRedirect} />
           </div>
         </Modal>
       ) : null}
