@@ -104,14 +104,6 @@ const campaignSteps = [
     link: '/social',
   },
   {
-    key: 'socialSupport',
-    type: 'incentive',
-    title: 'Expert Social Media Support',
-    icon: <BsFillMegaphoneFill />,
-    calendar:
-      'https://meetings.hubspot.com/colton-hess/social-media-onboarding',
-  },
-  {
     key: 'finance',
     title: (
       <>
@@ -141,13 +133,6 @@ const campaignSteps = [
     stepNum: 8,
     connectedLine: true,
     link: '/launch',
-  },
-  {
-    key: 'financeSupport',
-    type: 'incentive',
-    title: 'Expert Field & Mobilization Support',
-    icon: <FaHeart />,
-    calendar: 'https://meetings.hubspot.com/robbooth/mobilization-onboarding',
   },
 ];
 
@@ -191,12 +176,6 @@ export const generateCampaignStatus = (campaign) => {
       completedSteps: 0,
       totalSteps: 1,
     },
-    socialSupport: {
-      status: 'locked',
-      completedSteps: 0,
-      totalSteps: 1,
-    },
-
     finance: {
       status: 'locked',
       completedSteps: 0,
@@ -206,11 +185,6 @@ export const generateCampaignStatus = (campaign) => {
       status: 'locked',
       completedSteps: 0,
       totalSteps: 21,
-    },
-    financeSupport: {
-      status: 'locked',
-      completedSteps: 0,
-      totalSteps: 5,
     },
   };
   if (!campaign) {
@@ -270,19 +244,11 @@ export const generateCampaignStatus = (campaign) => {
   }
 
   if (status.social.status === 'completed') {
-    status.socialSupport.status = 'completed';
     if (status.finance.status === 'locked') {
       status.finance.status = 'notStarted';
     }
-  } else {
-    status.socialSupport.status = 'locked';
   }
 
-  if (status.finance.status === 'completed') {
-    status.financeSupport.status = 'completed';
-  } else {
-    status.financeSupport.status = 'locked';
-  }
   if (campaign.launchStatus === 'pending') {
     status.launch.completedSteps = 21;
     status.launch.status = 'inReview';
