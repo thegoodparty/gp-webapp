@@ -15,7 +15,7 @@ const graduates = [
   {
     name: 'Victoria - School Teacher, NC',
     img: VictoriaImg,
-    desc: 'Either we can complain about it, or we can do something about it.’ Toward the beginning of this year, I decided to get off the sidelines and make a decision to run for office.',
+    desc: 'Either we can complain about it, or we can do something about it. Toward the beginning of this year, I decided to get off the sidelines and make a decision to run for office.',
   },
   {
     name: 'Breanna - Startup Founder, TN',
