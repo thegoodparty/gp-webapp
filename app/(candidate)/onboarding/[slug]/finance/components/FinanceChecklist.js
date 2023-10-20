@@ -316,7 +316,7 @@ export default function FinanceChecklist({ campaign }) {
         </div>
         <div className="mt-12 text-center">
           <a href={`/onboarding/${slug}/dashboard`}>
-            <YellowButtonClient disabled={!canSave()} onClick={handleSave}>
+            <YellowButtonClient onClick={handleSave}>
               <strong>CONTINUE</strong>
             </YellowButtonClient>
           </a>
