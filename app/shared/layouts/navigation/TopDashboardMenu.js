@@ -18,6 +18,7 @@ function enableScroll() {
 
 export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
   const [slug, setSlug] = useState('');
+  const [campaign, setCampaign] = useState(false);
   useEffect(() => {
     if (open) {
       disableScroll();
@@ -32,9 +33,10 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
   }, []);
 
   const getSlug = async () => {
-    const { campaign } = await fetchUserCampaignClient();
-    const { candidateSlug } = campaign || {};
+    const res = await fetchUserCampaignClient();
+    const { candidateSlug } = res.campaign || {};
     setSlug(candidateSlug);
+    setCampaign(res.campaign);
   };
   return (
     <div className="lg:hidden">
@@ -45,7 +47,7 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
             pathname={pathname}
             toggleCallback={toggleCallback}
             candidateSlug={slug}
-            pathToVictory={campaign?.pathToVictory}
+            pathToVictory={campaign ? campaign.pathToVictory : false}
           />
         </div>
       )}
