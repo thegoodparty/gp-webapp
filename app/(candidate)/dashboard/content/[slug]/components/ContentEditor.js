@@ -8,6 +8,7 @@ import LoadingContent from './LoadingContent';
 import BlackButton from '@shared/buttons/BlackButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { FaGlobe } from 'react-icons/fa';
 import Link from 'next/link';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
@@ -49,6 +50,7 @@ export default function ContentEditor({
   const [inputFields, setInputFields] = useState([]);
   const [initialInputValues, setInitialInputValues] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showTranslate, setShowTranslate] = useState(false);
 
   const campaignPlan = campaign[subSectionKey];
   const key = section;
@@ -308,6 +310,25 @@ export default function ContentEditor({
               </PrimaryButton>
             </CopyToClipboard>
           </div>
+
+          {/* translate button desktop */}
+          <div
+            className="hidden md:block mr-3"
+            onClick={() => {
+              setShowTranslate(true);
+            }}
+          >
+            <PrimaryButton
+              size="medium"
+              className="flex items-center whitespace-nowrap"
+            >
+              <div className="flex items-center whitespace-nowrap h-6">
+                <FaGlobe className="text-sm mr-1" />
+                <div>Translate</div>
+              </div>
+            </PrimaryButton>
+          </div>
+
           {/* version button */}
           <PlanVersion
             campaign={campaign}
@@ -331,6 +352,8 @@ export default function ContentEditor({
             documentKey={key}
             name={documentName}
             handleTranslateCallback={handleTranslate}
+            showTranslate={showTranslate}
+            setShowTranslate={setShowTranslate}
           />
         </div>
       </div>

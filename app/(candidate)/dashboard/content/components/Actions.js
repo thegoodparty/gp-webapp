@@ -22,11 +22,12 @@ export default function Actions(props) {
     updatedAt,
     status,
     handleTranslateCallback,
+    showTranslate,
+    setShowTranslate,
   } = props;
 
   const [showMenu, setShowMenu] = useState(false);
   const [showRename, setShowRename] = useState(false);
-  const [showTranslate, setShowTranslate] = useState(false);
   const [showDuplicate, setShowDuplicate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -115,19 +116,23 @@ export default function Actions(props) {
                 </span>
               </Button>
 
-              <Button
-                onClick={() => {
-                  setShowTranslate(true);
-                  setShowMenu(false);
-                }}
-              >
-                <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
-                  <div className="whitespace-nowrap text-lg flex items-center w-full">
-                    <FaGlobe className="text-[14px]" />
-                    <div className="ml-3 font-sfpro text-[17px]">Translate</div>
-                  </div>
-                </span>
-              </Button>
+              <div class="md:hidden">
+                <Button
+                  onClick={() => {
+                    setShowTranslate(true);
+                    setShowMenu(false);
+                  }}
+                >
+                  <span className="text-gray-800 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                    <div className="whitespace-nowrap text-lg flex items-center w-full">
+                      <FaGlobe className="text-[14px]" />
+                      <div className="ml-3 font-sfpro text-[17px]">
+                        Translate
+                      </div>
+                    </div>
+                  </span>
+                </Button>
+              </div>
 
               {/* <Button
                 onClick={() => {
