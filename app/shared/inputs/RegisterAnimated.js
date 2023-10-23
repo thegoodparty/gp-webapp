@@ -31,7 +31,11 @@ const fields = [
 
 export async function register(payload) {
   try {
-    const { user, token } = await gpFetch(gpApi.entrance.register, payload);
+    const res = await gpFetch(gpApi.entrance.register, payload);
+    if (res.exists) {
+      return res;
+    }
+    const { user, token } = res;
     if (user && token) {
       setUserCookie(user);
       setCookie('token', token);
@@ -39,7 +43,7 @@ export async function register(payload) {
 
     return user;
   } catch (e) {
-    console.log('error', e);
+    console.log('error', e.exists);
     return false;
   }
 }
