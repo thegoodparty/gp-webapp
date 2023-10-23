@@ -16,6 +16,7 @@ import SocialRegisterButtons from './SocialRegisterButtons';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
+import { useRouter } from 'next/navigation';
 
 // const SocialButtons = dynamic(() => import('./SocialButtons'), { ssr: false });
 
@@ -50,6 +51,7 @@ export const validateZip = (zip) => {
 
 export default function RegisterPage({}) {
   const [score, setScore] = useState('good');
+  const router = useRouter();
   const snackbarState = useHookstate(globalSnackbarState);
 
   const userState = useHookstate(globalUserState);
@@ -88,6 +90,17 @@ export default function RegisterPage({}) {
         zip: state.zipcode,
         password: state.password,
       });
+      if (user.exists) {
+        router.push('/login');
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message: 'An account already exists with this email. Please login',
+            isError: true,
+          };
+        });
+        return;
+      }
       if (user) {
         userState.set(() => user);
         const afterAction = getCookie('afterAction');
