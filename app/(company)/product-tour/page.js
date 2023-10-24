@@ -1,6 +1,9 @@
 import React from 'react';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import pageMetaData from 'helpers/metadataHelper';
+import H2 from '@shared/typography/H2';
+import H3 from '@shared/typography/H3';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Link from 'next/link';
 
 const meta = pageMetaData({
   title: 'AI Campaign Manager Product Tour | GOOD PARTY',
@@ -12,8 +15,21 @@ export const metadata = meta;
 
 export default function Page() {
   return (
-    <MaxWidth>
-      <div className="w-[80vw] max-w-[900px] h-[90vh]">
+    <>
+      <div className="md:hidden text-center p-10">
+        <H2 className="p-5">
+          The Interactive Tour is not available on mobile.
+        </H2>
+        <H3 className="p-5">
+          Please come back and view this page on a desktop device.
+        </H3>
+        <Link href="/run-for-office">
+          <div className="flex justify-center p-5">
+            <PrimaryButton>Learn More</PrimaryButton>
+          </div>
+        </Link>
+      </div>
+      <div className="w-[100%] h-[calc(100vh-56px)] hidden md:block">
         <iframe
           src="https://capture.navattic.com/clnkk83pm00m208l76gq2arcm"
           width="100%"
@@ -21,6 +37,6 @@ export default function Page() {
           allow="fullscreen"
         ></iframe>
       </div>
-    </MaxWidth>
+    </>
   );
 }
