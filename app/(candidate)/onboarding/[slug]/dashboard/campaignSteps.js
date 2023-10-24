@@ -116,7 +116,7 @@ const campaignSteps = [
     subTitle:
       'A tailored Fundraising Strategy and tools to secure vital financial support efficiently',
     stepNum: 7,
-    connectedLine: true,
+    connectedLine: false,
     link: '/finance',
   },
   {
@@ -131,7 +131,7 @@ const campaignSteps = [
     plainTitle: 'Launch Your Campaign',
     subTitle: 'Effortlessly launch your campaign with our comprehensive guide',
     stepNum: 8,
-    connectedLine: true,
+    connectedLine: false,
     link: '/launch',
   },
 ];
