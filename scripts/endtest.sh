@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # platform
-platform_options=("windows" "mac" "ios" "android")
+# platform_options=("windows" "mac" "ios" "android")
+platform_options=("windows" "mac")
 RANDOM_PLATFORM="${platform_options[$RANDOM % ${#platform_options[@]}]}"
 
 # if the platform is ios we specify a device
