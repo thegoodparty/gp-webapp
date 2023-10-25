@@ -534,6 +534,13 @@ const gpApi = {
       withAuth: true,
     },
   },
+  ballotData: {
+    races: {
+      url: `${base}ballot-data/races`,
+      method: 'GET',
+      withAuth: true,
+    },
+  },
 };
 
 export default gpApi;

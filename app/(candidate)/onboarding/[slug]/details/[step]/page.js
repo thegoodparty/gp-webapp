@@ -17,6 +17,13 @@ export const fetchPositions = async () => {
   return await gpFetch(api, false, 3600, token);
 };
 
+export const fetchRaces = async (zip) => {
+  const api = gpApi.ballotData.races;
+  const payload = { zip };
+  const token = getServerToken(payload);
+  return await gpFetch(api, payload, 3600, token);
+};
+
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GOOD PARTY',
   description: 'Candidate Onboarding.',
@@ -54,6 +61,11 @@ export default async function Page({ params }) {
     stepFields.fields[0].initialValue = user.zip;
   }
 
+  let races;
+  if (stepInt === 7) {
+    ({ races } = await fetchRaces(campaign?.details?.zip));
+  }
+
   let pledge;
   if (pageType === 'pledgePage') {
     const res = await fetchContentByKey('pledge');
@@ -78,6 +90,7 @@ export default async function Page({ params }) {
     subSectionKey,
     totalSteps: detailsFields.length,
     subSectionLabel,
+    races,
   };
   return <OnboardingStepPage {...childProps} />;
 }
