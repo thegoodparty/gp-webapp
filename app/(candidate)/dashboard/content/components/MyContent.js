@@ -113,9 +113,10 @@ export default function MyContent(props) {
     },
     {
       Header: 'Last Modified',
-      accessor: (data) =>
-        data.updatedAt ? data.updatedAt.getTime() : new Date().getTime(),
-      sortType: 'date',
+      accessor: (data) => {
+        return data.updatedAt ? new Date(data.updatedAt) : new Date();
+      },
+      sortType: 'datetime',
       Cell: ({ row }) => {
         let updatedAt;
         if (row.original.updatedAt) {
