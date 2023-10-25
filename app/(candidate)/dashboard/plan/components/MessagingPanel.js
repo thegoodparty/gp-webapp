@@ -17,7 +17,7 @@ const sections = [
   },
   {
     key: 'slogan',
-    title: 'Campaign Slogans',
+    title: 'Campaign Slogan',
     icon: '/images/dashboard/slogan-icon.svg',
   },
   {
