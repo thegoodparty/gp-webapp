@@ -28,7 +28,10 @@ export default function Page() {
           </div>
           <div>
             <Suspense fallback="loading...">
-              <HubSpotForm formId="c60165c3-704d-4cfa-a8de-d89e28f06a7c" />
+              <HubSpotForm
+                formId="c60165c3-704d-4cfa-a8de-d89e28f06a7c"
+                gtmName="contact_form_submit"
+              />
             </Suspense>
           </div>
         </div>
