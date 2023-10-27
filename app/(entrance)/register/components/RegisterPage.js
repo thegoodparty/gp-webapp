@@ -90,6 +90,14 @@ export default function RegisterPage({}) {
         zip: state.zipcode,
         password: state.password,
       });
+
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'register-form-success',
+          label: 'register_form_submit',
+        });
+      }
+
       if (user.exists) {
         router.push('/login');
         snackbarState.set(() => {

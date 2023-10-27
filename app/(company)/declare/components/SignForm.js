@@ -47,6 +47,15 @@ export default function SignatureForm({
         formId,
         pageName,
       });
+
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'hubspot-form-success',
+          'hs-form-guid': formId,
+          'hs-form-name': labelId,
+        });
+      }
+
       if (success) {
         setSuccess(true);
         setShowError(false);

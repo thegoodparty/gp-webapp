@@ -20,7 +20,6 @@ export async function subscribeEmail(payload) {
 
 export default function EmailForm({
   formId,
-  fullWidth = false,
   pageName,
   label = 'Get Started',
   labelId,
@@ -39,6 +38,15 @@ export default function EmailForm({
         formId,
         pageName,
       });
+
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'hubspot-form-success',
+          'hs-form-guid': formId,
+          'hs-form-name': labelId,
+        });
+      }
+
       if (success) {
         setSuccess(true);
         setShowError(false);
