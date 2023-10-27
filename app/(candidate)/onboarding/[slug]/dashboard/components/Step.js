@@ -53,9 +53,9 @@ export default function Step({ campaign, step, campaignStatus }) {
   );
 
   let link = `/onboarding/${campaign.slug}/${step.key}/1`;
-  if (status === 'inProgress' || status === 'inReview') {
-    link = `/onboarding/${campaign.slug}/${step.key}/${completedSteps}`;
-  }
+  // if (status === 'inProgress' || status === 'inReview') {
+  //   link = `/onboarding/${campaign.slug}/${step.key}/${completedSteps}`;
+  // }
   if (step.link) {
     link = `/onboarding/${campaign.slug}${step.link}`;
   }
