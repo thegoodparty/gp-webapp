@@ -61,10 +61,10 @@ export default async function Page({ params }) {
     stepFields.fields[0].initialValue = user.zip;
   }
 
-  let races;
-  if (stepInt === 7) {
-    ({ races } = await fetchRaces(campaign?.details?.zip));
-  }
+  // let races;
+  // if (stepInt === 7) {
+  //   ({ races } = await fetchRaces(campaign?.details?.zip));
+  // }
 
   let pledge;
   if (pageType === 'pledgePage') {

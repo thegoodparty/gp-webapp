@@ -6,7 +6,7 @@ import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import RunningAgainstPage from '../[slug]/goals/[step]/components/RunningAgainstPage';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
-import BallotRaces from '../[slug]/details/[step]/components/BallotRaces';
+// import BallotRaces from '../[slug]/details/[step]/components/BallotRaces';
 
 export default function OnboardingStepPage(props) {
   const { pageType, races } = props;
@@ -50,7 +50,7 @@ export default function OnboardingStepPage(props) {
   return (
     <>
       <OnboardingPage {...props} />
-      {races ? <BallotRaces races={races} /> : null}
+      {/* {races ? <BallotRaces races={races} /> : null} */}
       <UserSnapScript />
     </>
   );
