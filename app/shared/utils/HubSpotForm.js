@@ -21,11 +21,15 @@ export default function HubSpotForm({
           formId,
           target: '#hubspotForm',
           onFormSubmitted: () => {
-            window.dataLayer.push({
-              event: 'hubspot-form-success',
-              'hs-form-guid': formId,
-              'hs-form-name': gtmName,
-            });
+            if (window.dataLayer) {
+              window.dataLayer.push({
+                event: 'hubspot-form-success',
+                'hs-form-guid': formId,
+                'hs-form-name': gtmName,
+              });
+            } else {
+              console.log('no data layer');
+            }
 
             if (calendarRedirect) {
               window.location.href =
