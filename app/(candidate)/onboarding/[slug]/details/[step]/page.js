@@ -90,7 +90,7 @@ export default async function Page({ params }) {
     subSectionKey,
     totalSteps: detailsFields.length,
     subSectionLabel,
-    races,
+    // races,
   };
   return <OnboardingStepPage {...childProps} />;
 }

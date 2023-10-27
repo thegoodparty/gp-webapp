@@ -6,6 +6,8 @@ import { deleteCookie, getUserCookie, setCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
 import WarningButton from '@shared/buttons/WarningButton';
 import { fetchUserCampaignClient } from 'helpers/campaignHelper';
+import { useState } from 'react';
+import { CircularProgress } from '@mui/material';
 
 export async function createCampaign() {
   try {
@@ -27,8 +29,13 @@ export default function RunCampaignButton({
   id = '',
   label = 'Get Started',
 }) {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleRun = async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     const user = getUserCookie(true);
     if (!user) {
       setCookie('afterAction', 'createCampaign');
@@ -45,7 +52,13 @@ export default function RunCampaignButton({
   return (
     <div className="relative z-10" onClick={handleRun} id={id}>
       <WarningButton className={`${fullWidth ? 'w-full' : 'w-full lg:w-48'}`}>
-        <div className="text-black tracking-wide">{label}</div>
+        {loading ? (
+          <div className="px-10">
+            <CircularProgress size={18} />
+          </div>
+        ) : (
+          <div className="text-black tracking-wide">{label}</div>
+        )}
       </WarningButton>
     </div>
   );
