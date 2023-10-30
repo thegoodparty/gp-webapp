@@ -7,7 +7,16 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
   images: {
-    domains: ['assets.goodparty.org', 'images.ctfassets.net'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.goodparty.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.ctfassets.net',
+      },
+    ],
   },
   env: {
     NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE,
