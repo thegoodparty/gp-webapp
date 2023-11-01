@@ -67,7 +67,7 @@ export default function ProgressPie({ total, progress }) {
               ? `${kFormatter(progress - total)}`
               : kFormatter(total - progress)}
           </H2>
-          <Body2>{overMode ? '' : 'left'} this week</Body2>
+          <Body2>{overMode ? 'over' : 'left'} this week</Body2>
         </div>
       </div>
     </div>
