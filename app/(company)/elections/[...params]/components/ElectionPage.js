@@ -14,7 +14,7 @@ export default function ElectionPage(props) {
   const [showModal, setShowModal] = useState(false);
 
   const { city } = props;
-  console.log('city', city);
+  console.log('city1', city);
 
   const handleOpenModal = () => {
     setShowModal(true);
