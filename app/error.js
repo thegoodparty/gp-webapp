@@ -24,7 +24,10 @@ export async function sendError(message) {
 export default function Error({ error }) {
   useEffect(() => {
     logError();
-  }, []);
+    if (error?.message?.startsWith('Loading chunk')) {
+      window.location.reload();
+    }
+  }, [error]);
 
   const logError = async () => {
     const user = getUserCookie(true);
