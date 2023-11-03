@@ -20,7 +20,7 @@ export async function fetchCampaignStatus() {
   }
 }
 
-export default function RightSideClient() {
+export default function RightSide() {
   const [user, setUser] = useState(false);
   const [learnMoreOpen, setLearnMoreOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
