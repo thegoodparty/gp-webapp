@@ -95,8 +95,12 @@ const gpApi = {
       url: `${base}new-candidates`,
       method: 'GET',
     },
-    find: {
+    findOld: {
       url: `${base}new-candidate`,
+      method: 'GET',
+    },
+    find: {
+      url: `${base}candidate`,
       method: 'GET',
     },
     update: {
