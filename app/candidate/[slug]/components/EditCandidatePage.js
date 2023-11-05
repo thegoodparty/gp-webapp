@@ -46,6 +46,7 @@ export default function EditCandidatePage(props) {
   };
 
   const saveCallback = async (candidate) => {
+    let res;
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -54,18 +55,30 @@ export default function EditCandidatePage(props) {
       };
     });
     if (isStaged && campaign) {
-      await updateCampaign(candidate);
+      res = await updateCampaign(candidate);
     } else {
-      await updateCandidate(candidate);
-      await revalidateCandidates();
+      res = await updateCandidate(candidate);
+      if (res) {
+        await revalidateCandidates();
+      }
     }
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saved',
-        isError: false,
-      };
-    });
+    if (res) {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Saved',
+          isError: false,
+        };
+      });
+    } else {
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message: 'Error Saving',
+          isError: true,
+        };
+      });
+    }
   };
 
   const childProps = {

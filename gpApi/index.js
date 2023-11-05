@@ -104,6 +104,11 @@ const gpApi = {
       method: 'GET',
     },
     update: {
+      url: `${base}candidate`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    updateOld: {
       url: `${base}new-candidate`,
       method: 'PUT',
       withAuth: true,
