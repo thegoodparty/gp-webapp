@@ -16,7 +16,7 @@ import SuggestedIssues from './SuggestedIssues';
 
 export async function saveCandidatePosition({
   description,
-  candidateId,
+  campaignId,
   positionId,
   topIssueId,
   order,
@@ -25,7 +25,7 @@ export async function saveCandidatePosition({
     const api = gpApi.campaign.candidatePosition.create;
     const payload = {
       description,
-      candidateId,
+      campaignId,
       positionId,
       topIssueId,
       order,
@@ -76,10 +76,9 @@ export default function EditIssues(props) {
     noDrag = false,
   } = props;
 
-  const combined = combinePositions(
-    candidatePositions,
-    candidate?.customIssues || campaign?.customIssues,
-  );
+  console.log('campaign', campaign);
+
+  const combined = combinePositions(candidatePositions, campaign.customIssues);
   const [state, setState] = useState(combined);
   const [saving, setSaving] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -98,7 +97,7 @@ export default function EditIssues(props) {
     order,
   ) => {
     let maxOrder = order;
-    if (state.length > 0) {
+    if (state?.length > 0) {
       //last element should have the max order;
       const last = state[state.length - 1];
       if (last.order >= order) {
@@ -108,32 +107,32 @@ export default function EditIssues(props) {
     if (customTitle !== '') {
       await handleCustomIssue(candidatePosition, customTitle, maxOrder);
     } else {
-      if (isStaged && campaign) {
-        const existing = campaign.details?.topIssues || {};
-        existing[`position-${position.id}`] = candidatePosition;
-        if (!existing.positions) {
-          existing.positions = [];
-        }
-        existing.positions.push(position);
-        await saveCallback({
-          ...campaign,
-          details: {
-            ...campaign.details,
-            topIssues: existing,
-          },
-        });
-        window.location.reload();
-      } else {
-        await saveCandidatePosition({
-          description: candidatePosition,
-          candidateId: candidate.id,
-          positionId: position.id,
-          topIssueId: position.topIssue?.id,
-          order: maxOrder,
-        });
-        await loadPositions();
-        await revalidateCandidates();
-      }
+      // if (isStaged && campaign) {
+      //   const existing = campaign.details?.topIssues || {};
+      //   existing[`position-${position.id}`] = candidatePosition;
+      //   if (!existing.positions) {
+      //     existing.positions = [];
+      //   }
+      //   existing.positions.push(position);
+      //   await saveCallback({
+      //     ...campaign,
+      //     details: {
+      //       ...campaign.details,
+      //       topIssues: existing,
+      //     },
+      //   });
+      //   window.location.reload();
+      // } else {
+      await saveCandidatePosition({
+        description: candidatePosition,
+        campaignId: campaign.id,
+        positionId: position.id,
+        topIssueId: position.topIssue?.id,
+        order: maxOrder,
+      });
+      await loadPositions();
+      await revalidateCandidates();
+      // }
     }
   };
   const remainingSlotsCount = Math.max(0, 3 - (state?.length || 0));
@@ -144,7 +143,7 @@ export default function EditIssues(props) {
 
   const loadPositions = async () => {
     await revalidateCandidates();
-    const res = await loadCandidatePosition(candidate.slug);
+    const res = await loadCandidatePosition(campaign.slug);
     setState(res.candidatePositions);
   };
 
