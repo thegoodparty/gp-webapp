@@ -70,6 +70,7 @@ export default function AdminCandidatesPage(props) {
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
       const fields = {
         id: campaignObj.id,
+        isActive: campaignObj.isActive ? 'yes' : 'no',
         slug: campaign.slug,
         firstName: campaign.firstName,
         lastName: campaign.lastName,
@@ -142,6 +143,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Launch Status',
       accessor: 'launched',
+    },
+    {
+      Header: 'Active (Live)',
+      accessor: 'isActive',
     },
     {
       Header: 'Path to Victory',
