@@ -79,8 +79,6 @@ export default async function Page({ params }) {
     ({ candidatePositions } = await loadCandidatePosition(slug));
   }
 
-  console.log('candidatePositions', candidatePositions);
-
   // let races;
   // if (stepInt === 7) {
   //   ({ races } = await fetchRaces(campaign?.details?.zip));
