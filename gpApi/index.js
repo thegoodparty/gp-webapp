@@ -92,6 +92,10 @@ const gpApi = {
   },
   candidate: {
     list: {
+      url: `${base}candidates`,
+      method: 'GET',
+    },
+    listOld: {
       url: `${base}new-candidates`,
       method: 'GET',
     },
@@ -123,7 +127,7 @@ const gpApi = {
       withAuth: true,
     },
     canEdit: {
-      url: `${base}new-candidate/can-edit`,
+      url: `${base}candidate/can-edit`,
       method: 'GET',
       withAuth: true,
     },
