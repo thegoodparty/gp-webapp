@@ -76,8 +76,6 @@ export default function EditIssues(props) {
     noDrag = false,
   } = props;
 
-  console.log('campaign', campaign);
-
   const combined = combinePositions(candidatePositions, campaign.customIssues);
   const [state, setState] = useState(combined);
   const [saving, setSaving] = useState(false);
@@ -90,12 +88,14 @@ export default function EditIssues(props) {
     }
     return <Draggable onPosChange={onPosChange}>{children}</Draggable>;
   };
+
   const onAddPosition = async (
     position,
     candidatePosition,
     customTitle,
     order,
   ) => {
+    console.log('on add1');
     let maxOrder = order;
     if (state?.length > 0) {
       //last element should have the max order;
@@ -104,9 +104,11 @@ export default function EditIssues(props) {
         maxOrder = last.order + 1;
       }
     }
+    console.log('on add2');
     if (customTitle !== '') {
       await handleCustomIssue(candidatePosition, customTitle, maxOrder);
     } else {
+      console.log('on add3');
       // if (isStaged && campaign) {
       //   const existing = campaign.details?.topIssues || {};
       //   existing[`position-${position.id}`] = candidatePosition;
@@ -123,6 +125,7 @@ export default function EditIssues(props) {
       //   });
       //   window.location.reload();
       // } else {
+      console.log('on add4');
       await saveCandidatePosition({
         description: candidatePosition,
         campaignId: campaign.id,
@@ -130,8 +133,11 @@ export default function EditIssues(props) {
         topIssueId: position.topIssue?.id,
         order: maxOrder,
       });
+      console.log('on add5');
       await loadPositions();
+      console.log('on add6');
       await revalidateCandidates();
+      console.log('on add7');
       // }
     }
   };
@@ -144,6 +150,7 @@ export default function EditIssues(props) {
   const loadPositions = async () => {
     await revalidateCandidates();
     const res = await loadCandidatePosition(campaign.slug);
+    console.log('here', res);
     setState(res.candidatePositions);
   };
 

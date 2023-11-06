@@ -18,6 +18,7 @@ export default function IssuesPage({
   subHeader,
   positions,
   subSectionKey,
+  candidatePositions,
   ...props
 }) {
   useEffect(() => {
@@ -38,8 +39,6 @@ export default function IssuesPage({
       }, 200);
     }
   };
-
-  const candidatePositions = mapTopIssues(campaign.details?.topIssues);
 
   const saveCallback = async (camp) => {
     snackbarState.set(() => {

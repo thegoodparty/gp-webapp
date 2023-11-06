@@ -55,52 +55,18 @@ export default function EditCandidatePosition({
     if (candidatePosition.isCustom) {
       await handleDeleteCustom();
     } else {
-      if (isStaged && campaign) {
-        const existing = JSON.parse(
-          JSON.stringify(campaign.details?.topIssues),
-        );
-        /* in the form of
-      {
-        position-id: 'candidate position here',
-        positions:[
-          {db-position-here, topIssue: db-top-issue here}
-        ]
-      }
-      */
-        const positionId = candidatePosition.id.replace('position-', '');
-        let index;
-        existing.positions.forEach((position, i) => {
-          if (position.id == positionId) {
-            index = i;
-          }
+      const deleteResp = await deleteCandidatePosition(candidatePosition.id);
+      if (!deleteResp || deleteResp === false) {
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message:
+              'Error deleting item. Please report an issue on the Feedback sidebar.',
+            isError: true,
+          };
         });
-        existing.positions.splice(index, 1);
-        if (existing.positions.length === 0) {
-          delete existing.positions;
-        }
-        delete existing[candidatePosition.id];
-        await saveCallback({
-          ...campaign,
-          details: {
-            ...campaign.details,
-            topIssues: existing,
-          },
-        });
-        window.location.reload();
-      } else {
-        const deleteResp = await deleteCandidatePosition(candidatePosition.id);
-        if (!deleteResp || deleteResp === false) {
-          snackbarState.set(() => {
-            return {
-              isOpen: true,
-              message:
-                'Error deleting item. Please report an issue on the Feedback sidebar.',
-              isError: true,
-            };
-          });
-        }
-        updatePositionsCallback();
       }
+      updatePositionsCallback();
     }
     setShowAlert(false);
   };
@@ -133,34 +99,19 @@ export default function EditCandidatePosition({
     if (candidatePosition.isCustom) {
       await handleEditCustom();
     } else {
-      if (isStaged && campaign) {
-        const existing = JSON.parse(
-          JSON.stringify(campaign.details?.topIssues),
-        );
-        existing[candidatePosition.id] = description;
-        await saveCallback({
-          ...campaign,
-          details: {
-            ...campaign.details,
-            topIssues: existing,
-          },
+      const updateResp = await updateCandidatePosition(
+        candidatePosition.id,
+        description,
+      );
+      if (!updateResp || updateResp === false) {
+        snackbarState.set(() => {
+          return {
+            isOpen: true,
+            message:
+              'Error saving item. Please report an issue on the Feedback sidebar.',
+            isError: true,
+          };
         });
-        window.location.reload();
-      } else {
-        const updateResp = await updateCandidatePosition(
-          candidatePosition.id,
-          description,
-        );
-        if (!updateResp || updateResp === false) {
-          snackbarState.set(() => {
-            return {
-              isOpen: true,
-              message:
-                'Error saving item. Please report an issue on the Feedback sidebar.',
-              isError: true,
-            };
-          });
-        }
         await updatePositionsCallback();
       }
     }

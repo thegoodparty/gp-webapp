@@ -24,6 +24,19 @@ export const fetchRaces = async (zip) => {
   return await gpFetch(api, payload, 3600, token);
 };
 
+async function loadCandidatePosition(slug) {
+  try {
+    const api = gpApi.campaign.candidatePosition.find;
+    const payload = {
+      slug,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error at loadCandidatePosition', e);
+    return false;
+  }
+}
+
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GOOD PARTY',
   description: 'Candidate Onboarding.',
@@ -60,6 +73,13 @@ export default async function Page({ params }) {
     const user = getServerUser();
     stepFields.fields[0].initialValue = user.zip;
   }
+  let candidatePositions;
+
+  if (stepInt === 12) {
+    ({ candidatePositions } = await loadCandidatePosition(slug));
+  }
+
+  console.log('candidatePositions', candidatePositions);
 
   // let races;
   // if (stepInt === 7) {
@@ -90,6 +110,7 @@ export default async function Page({ params }) {
     subSectionKey,
     totalSteps: detailsFields.length,
     subSectionLabel,
+    candidatePositions,
     // races,
   };
   return <OnboardingStepPage {...childProps} />;
