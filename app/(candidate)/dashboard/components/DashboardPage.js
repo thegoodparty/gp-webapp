@@ -20,7 +20,7 @@ export async function createUpdateHistory(payload) {
     const api = gpApi.campaign.UpdateHistory.create;
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error at createUpdateHistory', e);
+    console.log('error at createUpdateHistory.', e);
     return {};
   }
 }
