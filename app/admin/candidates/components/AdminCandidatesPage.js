@@ -260,18 +260,38 @@ export default function AdminCandidatesPage(props) {
     },
     {
       Header: 'Date Created',
-      accessor: 'createdAt',
+      accessor: (data) => {
+        return data.createdAt ? new Date(data.createdAt) : new Date();
+      },
       sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.createdAt);
+        let createdAt;
+        if (row.original.createdAt) {
+          createdAt = dateUsHelper(row.original.createdAt);
+          if (createdAt === undefined || createdAt === 'Invalid Date') {
+            const now = new Date();
+            createdAt = dateUsHelper(now);
+          }
+        }
+        return createdAt;
       },
     },
     {
-      Header: 'Last Update',
-      accessor: 'updatedAt',
+      Header: 'Last Modified',
+      accessor: (data) => {
+        return data.updatedAt ? new Date(data.updatedAt) : new Date();
+      },
       sortType: 'datetime',
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.updatedAt);
+        let updatedAt;
+        if (row.original.updatedAt) {
+          updatedAt = dateUsHelper(row.original.updatedAt);
+          if (updatedAt === undefined || updatedAt === 'Invalid Date') {
+            const now = new Date();
+            updatedAt = dateUsHelper(now);
+          }
+        }
+        return updatedAt;
       },
     },
     {
