@@ -51,7 +51,14 @@ export default async function Page({ params }) {
   }
 
   let candidates = [];
-  let candidateSlugs = content?.candidates;
+  let candidateSlugs = [
+    'michael-woods',
+    'crystal-rasnake',
+    'benjamin-j-weisner',
+    'hattie-m-robinson',
+    'cynthia-m-calos',
+    'bob-ciullo',
+  ];
 
   if (process.env.NODE_ENV === 'development') {
     candidateSlugs = ['tomer-almog', 'taylor-murray'];

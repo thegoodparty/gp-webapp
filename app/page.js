@@ -2,6 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import './globals.css';
 import HomePage from './homepage/HomePage';
 import OptimizeScript from '@shared/scripts/OptimizeScript';
+import { fetchCandidate } from './candidate/[slug]/page';
 
 const meta = pageMetaData({
   title: 'GOOD PARTY | Free tools to change the rules and disrupt the corrupt.',
@@ -12,10 +13,55 @@ const meta = pageMetaData({
 
 export const metadata = meta;
 
-export default function Page() {
-  return (
-    <>
-      <HomePage />
-    </>
-  );
+export default async function Page() {
+  let candidates = [];
+  let candidateSlugs = ['tomer-almog', 'taylor-murray'];
+
+  if (process.env.NODE_ENV === 'development') {
+    candidateSlugs = ['tomer-almog', 'taylor-murray'];
+  }
+
+  for (const slug of candidateSlugs) {
+    const { candidate, candidatePositions, reportedVoterGoals } =
+      await fetchCandidate(slug);
+
+    let topPosition = '';
+    if (candidatePositions && candidatePositions.length > 0) {
+      for (const issue of candidatePositions) {
+        if (issue?.order && issue.order === 1) {
+          topPosition = issue?.position?.name;
+          break;
+        }
+      }
+    }
+    if (topPosition === '') {
+      // only custom issues.
+      if (candidate?.customIssues && candidate.customIssues.length > 0) {
+        topPosition = candidate.customIssues[0].position;
+      }
+    }
+    if (candidate != undefined) {
+      candidate.topPosition = topPosition;
+      candidate.reportedVoterGoals = reportedVoterGoals;
+      candidates.push(candidate);
+    }
+  }
+
+  const content = {
+    candidates,
+    candidatesTitle: (
+      <>
+        2023 Winners:
+        <br />
+        Independent Candidates Making History
+      </>
+    ),
+    candidatesSubTitle:
+      'These Good Party Certified candidates won their elections with people-powered campaigns and support from Good Party volunteers and AI Campaign Manager. This is only the beginning - join the movement for wins in your community in 2024!',
+  };
+
+  const childProps = {
+    content,
+  };
+  return <HomePage {...childProps} />;
 }

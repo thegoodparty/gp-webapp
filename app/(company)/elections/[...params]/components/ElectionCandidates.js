@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 
 export default function ElectionCandidates(props) {
   const { content, city } = props;
+  const theme = props.theme || 'dark';
   const {
     candidates,
     candidatesTitle,
@@ -26,19 +27,36 @@ export default function ElectionCandidates(props) {
   }
 
   return (
-    <section className="bg-primary h-auto pt-20 pb-40" id="candidate-section">
+    <section
+      className={`${
+        theme === 'dark'
+          ? 'bg-primary text-slate-50'
+          : 'bg-slate-50 text-primary'
+      } h-auto pt-20 pb-40`}
+      id="candidate-section"
+    >
       <MaxWidth>
-        <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
-          <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+        <div
+          className={`flex flex-col  pb-5 lg:pl-20 p-10 ${
+            theme === 'dark' ? 'text-center' : 'text-left'
+          }`}
+        >
+          <div className="font-sfpro  font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
             {candidatesTitle}
           </div>
 
           <div
-            className={`font-sfpro text-center text-slate-50 text-[18px] leading-6 mt-2 ${styles.hyperlink}`}
+            className={`font-sfpro ${
+              theme === 'dark' ? 'text-center mt-2' : 'text-left my-6'
+            }  text-[18px] leading-6  ${styles.hyperlink}`}
           >
-            <CmsContentWrapper className="max-w-md">
-              {contentfulHelper(candidatesSubTitle)}
-            </CmsContentWrapper>
+            {theme === 'dark' ? (
+              <CmsContentWrapper className="max-w-md">
+                {contentfulHelper(candidatesSubTitle)}
+              </CmsContentWrapper>
+            ) : (
+              <>{candidatesSubTitle}</>
+            )}
           </div>
         </div>
         <div className="md:flex justify-center flex-wrap items-stretch ">
@@ -47,7 +65,10 @@ export default function ElectionCandidates(props) {
               className="md:basis-1/2 xl:basis-1/4  mb-4 "
               key={candidate.slug}
             >
-              <ElectionCandidate candidate={candidate} />
+              <ElectionCandidate
+                candidate={candidate}
+                shortVersion={theme === 'light'}
+              />
             </div>
           ))}
         </div>
@@ -55,7 +76,7 @@ export default function ElectionCandidates(props) {
         <div className="flex flex-col text-center pb-5 lg:pl-20 p-10">
           {districtImage && (
             <>
-              <div className="font-sfpro text-slate-50 font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+              <div className="font-sfpro  font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
                 {districtTitle}
               </div>
               <div className="flex justify-center">
@@ -68,7 +89,7 @@ export default function ElectionCandidates(props) {
               </div>
             </>
           )}
-          <div class="flex flex-col md:flex-row justify-center">
+          <div className="flex flex-col md:flex-row justify-center">
             {districtButtonText && (
               <div>
                 <a

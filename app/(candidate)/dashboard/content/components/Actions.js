@@ -116,7 +116,7 @@ export default function Actions(props) {
                 </span>
               </Button>
 
-              <div class="md:hidden">
+              <div className="md:hidden">
                 <Button
                   onClick={() => {
                     setShowTranslate(true);
