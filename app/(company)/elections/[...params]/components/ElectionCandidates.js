@@ -30,9 +30,9 @@ export default function ElectionCandidates(props) {
     <section
       className={`${
         theme === 'dark'
-          ? 'bg-primary text-slate-50'
+          ? 'bg-primary text-slate-50 pb-40'
           : 'bg-slate-50 text-primary'
-      } h-auto pt-20 pb-40`}
+      } h-auto pt-20 `}
       id="candidate-section"
     >
       <MaxWidth>
@@ -41,7 +41,13 @@ export default function ElectionCandidates(props) {
             theme === 'dark' ? 'text-center' : 'text-left'
           }`}
         >
-          <div className="font-sfpro  font-semibold text-[32px] md:text-[54px] leading-[36px] md:leading-[64px] mt-2">
+          <div
+            className={`font-sfpro  font-bold  mt-2 ${
+              theme === 'dark'
+                ? 'text-[32px] md:text-[54px] leading-[36px] md:leading-[64px]'
+                : 'text-4xl md:text-6xl'
+            }`}
+          >
             {candidatesTitle}
           </div>
 
