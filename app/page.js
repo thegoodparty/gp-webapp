@@ -15,7 +15,15 @@ export const metadata = meta;
 
 export default async function Page() {
   let candidates = [];
-  let candidateSlugs = ['tomer-almog', 'taylor-murray'];
+  let candidateSlugs = [
+    'terry-vo',
+    'michael-woods',
+    'crystal-rasnake',
+    'benjamin-j-weisner',
+    'hattie-m-robinson',
+    'cynthia-m-calos',
+    'bob-ciullo',
+  ];
 
   if (process.env.NODE_ENV === 'development') {
     candidateSlugs = ['tomer-almog', 'taylor-murray'];
