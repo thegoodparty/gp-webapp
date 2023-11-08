@@ -17,12 +17,16 @@ export default async function Page() {
   let candidates = [];
   let candidateSlugs = [
     'terry-vo',
+    'marty-grohman',
+    'guillermo-nurse',
+    'benjamin-j-weisner',
+    'belinda-gerry',
+    'bob-ciullo',
     'michael-woods',
     'crystal-rasnake',
-    'benjamin-j-weisner',
     'hattie-m-robinson',
-    'cynthia-m-calos',
-    'bob-ciullo',
+    'jane-rebelowski',
+    'troy-meyers',
   ];
 
   if (process.env.NODE_ENV === 'development') {
