@@ -30,9 +30,9 @@ export default function ElectionCandidates(props) {
     <section
       className={`${
         theme === 'dark'
-          ? 'bg-primary text-slate-50 pb-40'
-          : 'bg-slate-50 text-primary'
-      } h-auto pt-20 `}
+          ? 'bg-primary text-slate-50 pb-40 pt-20 '
+          : 'bg-slate-50 text-primary pt-4'
+      } h-auto `}
       id="candidate-section"
     >
       <MaxWidth>
@@ -41,28 +41,16 @@ export default function ElectionCandidates(props) {
             theme === 'dark' ? 'text-center' : 'text-left'
           }`}
         >
-          <div
-            className={`font-sfpro  font-bold  mt-2 ${
-              theme === 'dark'
-                ? 'text-[32px] md:text-[54px] leading-[36px] md:leading-[64px]'
-                : 'text-4xl md:text-6xl'
-            }`}
-          >
+          <div className="font-sfpro  font-bold  mt-2 text-[32px] md:text-[54px] leading-[36px] md:leading-[64px]">
             {candidatesTitle}
           </div>
 
           <div
-            className={`font-sfpro ${
-              theme === 'dark' ? 'text-center mt-2' : 'text-left my-6'
-            }  text-[18px] leading-6  ${styles.hyperlink}`}
+            className={`font-sfpro text-center mt-2  text-[18px] leading-6  ${styles.hyperlink}`}
           >
-            {theme === 'dark' ? (
-              <CmsContentWrapper className="max-w-md">
-                {contentfulHelper(candidatesSubTitle)}
-              </CmsContentWrapper>
-            ) : (
-              <>{candidatesSubTitle}</>
-            )}
+            <CmsContentWrapper className="max-w-md">
+              {contentfulHelper(candidatesSubTitle)}
+            </CmsContentWrapper>
           </div>
         </div>
         <div className="md:flex justify-center flex-wrap items-stretch ">

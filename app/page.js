@@ -49,15 +49,6 @@ export default async function Page() {
 
   const content = {
     candidates,
-    candidatesTitle: (
-      <>
-        2023 Winners:
-        <br />
-        Independent Candidates Making History
-      </>
-    ),
-    candidatesSubTitle:
-      'These Good Party Certified candidates won their elections with people-powered campaigns and support from Good Party volunteers and AI Campaign Manager. This is only the beginning - join the movement for wins in your community in 2024!',
   };
 
   const childProps = {
