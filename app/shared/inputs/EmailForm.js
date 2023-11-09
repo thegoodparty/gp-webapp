@@ -41,7 +41,7 @@ export default function EmailForm({
 
       if (window.dataLayer) {
         window.dataLayer.push({
-          event: 'hubspot-form-success',
+          event: labelId,
           'hs-form-guid': formId,
           'hs-form-name': labelId,
         });
