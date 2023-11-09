@@ -17,7 +17,12 @@ export const combinePositions = (candidatePositions, customPositions) => {
       topIssue: { name: 'custom' },
     };
   });
-  const combined = [...candidatePositions, ...transformed];
+  let combined;
+  if (!candidatePositions) {
+    combined = [...transformed];
+  } else {
+    combined = [...candidatePositions, ...transformed];
+  }
   const sorted = combined.sort((a, b) => {
     return a.order - b.order;
   });
