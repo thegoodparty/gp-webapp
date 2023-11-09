@@ -23,7 +23,7 @@ export default function HubSpotForm({
           onFormSubmitted: () => {
             if (window.dataLayer) {
               window.dataLayer.push({
-                event: 'hubspot-form-success',
+                event: gtmName,
                 'hs-form-guid': formId,
                 'hs-form-name': gtmName,
               });
