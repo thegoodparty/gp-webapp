@@ -101,7 +101,7 @@ export default function Graduates({ content }) {
                 meet people from all over the political spectrum passionate
                 about building community power!
               </Body1>
-              <CTA content={content} id="graduate-cta">
+              <CTA content={content} clickId="graduate-cta">
                 <WarningButton>Sign up</WarningButton>
               </CTA>
             </div>
