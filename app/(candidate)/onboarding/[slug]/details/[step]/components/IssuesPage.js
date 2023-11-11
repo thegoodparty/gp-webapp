@@ -71,8 +71,8 @@ export default function IssuesPage({
 
   const canContinue = () => {
     let total = 0;
-    if (campaign.details?.topIssues?.positions) {
-      total += campaign.details.topIssues.positions.length;
+    if (candidatePositions) {
+      total += candidatePositions.length;
     }
     if (campaign.customIssues) {
       total += campaign.customIssues.length;
