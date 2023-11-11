@@ -182,7 +182,7 @@ export default function RegisterOrProfile({
                 )}
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center cursor-pointer"
                   onClick={handleLogOut}
                   id="nav-log-out"
                 >
