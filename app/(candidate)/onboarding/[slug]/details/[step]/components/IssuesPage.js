@@ -44,7 +44,7 @@ export default function IssuesPage({
     snackbarState.set(() => {
       return {
         isOpen: true,
-        message: 'Saving...',
+        message: 'Saving... ',
         isError: false,
       };
     });
