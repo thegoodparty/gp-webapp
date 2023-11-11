@@ -8,7 +8,7 @@ import HubSpotForm from '@shared/utils/HubSpotForm';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 
-export default function CTA({ children, content }) {
+export default function CTA({ children, content, clickId }) {
   const [open, setOpen] = useState(false);
   const { formId, ctaRedirect } = content;
   return (
@@ -33,7 +33,11 @@ export default function CTA({ children, content }) {
               Sign up for an intro webinar with our team and take the first step
               towards a brighter political future for your community.
             </Subtitle1>
-            <HubSpotForm formId={content.formId} ctaRedirect={ctaRedirect} />
+            <HubSpotForm
+              formId={formId}
+              ctaRedirect={ctaRedirect}
+              gtmName={clickId}
+            />
           </div>
         </Modal>
       ) : null}
