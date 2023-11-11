@@ -98,7 +98,7 @@ export default function EditIssues(props) {
     order,
   ) => {
     let maxOrder = order;
-    if (state.length > 0) {
+    if (state?.length > 0) {
       //last element should have the max order;
       const last = state[state.length - 1];
       if (last.order >= order) {
@@ -170,7 +170,7 @@ export default function EditIssues(props) {
       setSaving(true);
       await handleReorderSave(state[currentPos], newPos);
       await handleReorderSave(state[newPos], currentPos);
-      if (state.length === 3) {
+      if (state?.length === 3) {
         const indexes = [0, 1, 2];
         indexes.splice(currentPos, 1);
         indexes.splice(newPos, 1);
@@ -193,7 +193,7 @@ export default function EditIssues(props) {
   const handleCustomReorder = async (pos, newOrder) => {
     let customIssues = candidate.customIssues;
     let index;
-    for (let i = 0; i < customIssues.length; i++) {
+    for (let i = 0; i < customIssues?.length; i++) {
       if (customIssues[i].position === pos.description) {
         index = i;
         break;
@@ -271,7 +271,7 @@ export default function EditIssues(props) {
                             position,
                             candidatePosition,
                             customTitle,
-                            num + state.length,
+                            num + (state?.length || 0),
                           );
                         }}
                       />
