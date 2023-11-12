@@ -92,6 +92,7 @@ export default function RegisterOrProfile({
             impersonating ? 'bg-orange-500 rounded-full p-2' : ''
           } `}
           onClick={toggleCallback}
+          id="nav-profile"
         >
           <UserAvatar user={user} />
           <FiChevronDown
