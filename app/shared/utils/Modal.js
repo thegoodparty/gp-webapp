@@ -38,7 +38,7 @@ export default function Modal({
       <div className="bg-blue-400">
         <Box sx={style} style={boxStyle}>
           <div
-            className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center"
+            className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
             onClick={closeCallback}
           >
             <IoIosCloseCircle size={24} />
