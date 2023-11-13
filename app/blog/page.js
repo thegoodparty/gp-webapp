@@ -24,7 +24,7 @@ export const fetchArticles = async () => {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'blogArticles',
-    limit: 30,
+    limit: 120,
   };
   return await gpFetch(api, payload, 3600);
 };
