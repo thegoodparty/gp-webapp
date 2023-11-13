@@ -37,7 +37,7 @@ export default function Callout() {
               </Link>
             </div>
             <div
-              className="flex pl-3 ml-2 cursor-pointer"
+              className="flex px-3 mr-2 cursor-pointer"
               onClick={() => {
                 localStorage.setItem('callout', true);
                 setShowCallout(false);
