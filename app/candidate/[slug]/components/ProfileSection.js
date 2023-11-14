@@ -82,7 +82,7 @@ export default function ProfileSection(props) {
   }
   return (
     <section className="flex flex-col items-center mt-5  pt-5">
-      <AvatarWithTracker {...props} />
+      <AvatarWithTracker {...props} priority />
 
       {editMode ? (
         <EditProfile {...props} />

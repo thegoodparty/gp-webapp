@@ -7,7 +7,11 @@ import { FaChevronRight } from 'react-icons/fa';
 import CandidatePill from 'app/candidate/[slug]/components/CandidatePill';
 import { calcLocation } from 'app/candidate/[slug]/components/ProfileSection';
 
-export default function ElectionCandidate({ candidate, shortVersion = false }) {
+export default function ElectionCandidate({
+  candidate,
+  shortVersion = false,
+  priority = true,
+}) {
   const {
     firstName,
     lastName,
@@ -40,6 +44,7 @@ export default function ElectionCandidate({ candidate, shortVersion = false }) {
             color={color ?? colors[0]}
             candidateUrl={candidateRoute(candidate)}
             reportedVoterGoals={candidate.reportedVoterGoals}
+            priority={priority}
           />
 
           <span className=" text-slate-50 text-2xl p-3 text-center">

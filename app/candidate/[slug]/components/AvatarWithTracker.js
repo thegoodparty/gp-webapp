@@ -8,7 +8,7 @@ const ImageUploader = dynamic(() =>
 );
 
 export default function AvatarWithTracker(props) {
-  const { candidate, editMode, candidateUrl } = props;
+  const { candidate, editMode, candidateUrl, priority } = props;
   return (
     <div className="relative">
       <div className="absolute -top-4 right-4 z-20">
@@ -36,10 +36,10 @@ export default function AvatarWithTracker(props) {
         <div className={editMode ? 'opacity-60' : ''}>
           {candidateUrl ? (
             <Link href={candidateUrl}>
-              <CandidateAvatar candidate={candidate} priority />
+              <CandidateAvatar candidate={candidate} priority={priority} />
             </Link>
           ) : (
-            <CandidateAvatar candidate={candidate} priority />
+            <CandidateAvatar candidate={candidate} priority={priority} />
           )}
         </div>
         {editMode ? <ImageUploader {...props} /> : null}

@@ -54,7 +54,7 @@ export default function ElectionCandidates(props) {
           </div>
         </div>
         <div className="md:flex justify-center flex-wrap items-stretch ">
-          {candidates.map((candidate) => (
+          {candidates.map((candidate, index) => (
             <div
               className="md:basis-1/2 xl:basis-1/4  mb-4 "
               key={candidate.slug}
@@ -62,6 +62,7 @@ export default function ElectionCandidates(props) {
               <ElectionCandidate
                 candidate={candidate}
                 shortVersion={theme === 'light'}
+                priority={index < 4}
               />
             </div>
           ))}
