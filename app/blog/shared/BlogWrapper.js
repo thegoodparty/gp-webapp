@@ -16,7 +16,6 @@ export default function BlogWrapper({
   articlesTitles,
   isArticle,
 }) {
-  // console.log('sectionSlug', sectionSlug);
   return (
     <MaxWidth>
       <div className="grid grid-cols-12 gap-3">
@@ -60,7 +59,7 @@ export default function BlogWrapper({
                 >
                   <BaseButtonClient
                     className={`${
-                      index <= 3 ? colors[index] : 'bg-indigo-800'
+                      index <= 4 ? colors[index] : 'bg-indigo-800'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}
@@ -75,7 +74,9 @@ export default function BlogWrapper({
                 >
                   <BaseButtonClient
                     className={`${
-                      index <= 3 ? colors[index] : 'bg-indigo-800'
+                      !sectionTitle && index <= 4
+                        ? colors[index]
+                        : 'bg-gray-800'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}

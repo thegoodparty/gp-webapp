@@ -20,6 +20,12 @@ export const fetchSections = async () => {
   return await gpFetch(api, payload, 3600);
 };
 
+const fetchArticlesBySections = async () => {
+  const api = gpApi.content.articlesBySection;
+
+  return await gpFetch(api, false, 3600);
+};
+
 export const fetchArticles = async () => {
   const api = gpApi.content.contentByKey;
   const payload = {
@@ -35,19 +41,16 @@ export const fetchArticlesTitles = async () => {
 };
 
 export default async function Page({ params, searchParams }) {
-  const sectionsRes = await fetchSections();
-  const sections = sectionsRes.content;
-  const articlesRes = await fetchArticles();
+  const { sections, hero } = await fetchArticlesBySections();
+  // const sectionsRes = await fetchSections();
+  // const sections = sectionsRes.content;
+  // const articlesRes = await fetchArticles();
   const { titles } = await fetchArticlesTitles();
 
   const childProps = {
     sections,
-    articles: articlesRes.content,
+    hero,
     articlesTitles: titles,
   };
-  return (
-    <>
-      <BlogPage {...childProps} />
-    </>
-  );
+  return <BlogPage {...childProps} />;
 }

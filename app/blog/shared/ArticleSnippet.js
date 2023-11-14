@@ -12,12 +12,17 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import styles from './ArticleSnippet.module.scss';
 import TimeAgoClient from '@shared/utils/TimeAgoClient';
 
-function ArticleSnippet({ article, heroMode, target = false, minimal }) {
+function ArticleSnippet({
+  article,
+  heroMode,
+  target = false,
+  minimal,
+  section,
+}) {
   if (!article) {
     return null;
   }
-  const { title, mainImage, section, publishDate, summary, readingTime, slug } =
-    article;
+  const { title, mainImage, publishDate, summary, readingTime, slug } = article;
   const sectionName = section?.fields?.title;
 
   return (

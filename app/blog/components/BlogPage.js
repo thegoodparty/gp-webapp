@@ -1,43 +1,18 @@
 import { Fragment } from 'react';
 import ArticleSnippet from '../shared/ArticleSnippet';
 import BlogWrapper from '../shared/BlogWrapper';
-import BlogSearch from './BlogSearch';
 import SubscribeBlog from './SubscribeBlog';
 import Link from 'next/link';
 import { colors } from '../shared/BlogColors';
 
-function getSectionArticles(section, articles) {
-  // get the first 3 articles for each section
-  let sectionArticles = [];
-  for (let i = 0; i < articles.length; i++) {
-    if (i == 0) {
-      // dont include the hero
-      continue;
-    }
-    // console.log('articles[i]', articles[i]);
-    if (articles[i]?.section?.fields?.slug === section.fields.slug) {
-      sectionArticles.push(articles[i]);
-    }
-  }
-
-  if (section.fields.slug === 'onboarding-live') {
-    return sectionArticles.slice(0, 2);
-  } else {
-    return sectionArticles.slice(0, 3);
-  }
-}
-
 export default function BlogPage({
   sections,
-  articles,
+  hero,
   sectionSlug,
   sectionTitle,
+  sectionId,
   articlesTitles,
 }) {
-  const hero = articles && articles.length > 0 ? articles[0] : false;
-  // console.log('sectionSlug', sectionSlug);
-  // console.log('sections !', sections);
-
   return (
     <BlogWrapper
       sections={sections}
@@ -48,9 +23,8 @@ export default function BlogPage({
     >
       {sectionSlug === undefined && sections && sections.length > 0 && (
         <div className="grid-cols-12 col-span-12">
-          <ArticleSnippet article={hero} heroMode />
+          <ArticleSnippet article={hero} heroMode section={hero.section} />
           {sections.map((section, index) => {
-            const sectionArticles = getSectionArticles(section, articles);
             return (
               <Fragment key={section.id}>
                 <Link
@@ -67,8 +41,12 @@ export default function BlogPage({
                   </button>
                 </Link>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {sectionArticles.map((article) => (
-                    <ArticleSnippet key={article.id} article={article} />
+                  {section.articles.map((article) => (
+                    <ArticleSnippet
+                      key={article.id}
+                      article={article}
+                      section={section}
+                    />
                   ))}
                   {section.fields.slug == 'onboarding-live' ? (
                     <SubscribeBlog />
@@ -81,15 +59,22 @@ export default function BlogPage({
           })}
         </div>
       )}
-      {sectionSlug != undefined && articles && articles.length > 1 ? (
+      {sectionSlug && sections[0].articles.length > 1 ? (
         <>
-          <ArticleSnippet article={hero} heroMode />
+          <ArticleSnippet
+            article={hero}
+            heroMode
+            section={sections[sectionId]}
+          />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {articles.map((article, index) => (
+            {sections[sectionId].articles.map((article, index) => (
               <Fragment key={article.id}>
                 {index > 0 && (
                   <div>
-                    <ArticleSnippet article={article} />
+                    <ArticleSnippet
+                      article={article}
+                      section={sections[sectionId]}
+                    />
                   </div>
                 )}
               </Fragment>
