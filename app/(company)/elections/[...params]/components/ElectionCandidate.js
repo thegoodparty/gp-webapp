@@ -6,6 +6,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 import { FaChevronRight } from 'react-icons/fa';
 import CandidatePill from 'app/candidate/[slug]/components/CandidatePill';
 import { calcLocation } from 'app/candidate/[slug]/components/ProfileSection';
+import contentfulHelper from 'helpers/contentfulHelper';
 
 export default function ElectionCandidate({
   candidate,
@@ -59,9 +60,11 @@ export default function ElectionCandidate({
           {!shortVersion && (
             <>
               <div className="font-sfpro  font-normal  text-center mb-4">
-                <div className="pt-2 text-base italic">
-                  &apos;{slogan}&apos;
-                </div>
+                <div
+                  className="pt-2 text-base italic"
+                  dangerouslySetInnerHTML={{ __html: slogan }}
+                />
+
                 <div className="flex justify-center w-full">
                   <div className="w-10 border-b-2 border-slate-50 my-4"></div>
                 </div>
