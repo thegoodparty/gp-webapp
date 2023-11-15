@@ -10,7 +10,7 @@ export default function BlogPage({
   hero,
   sectionSlug,
   sectionTitle,
-  sectionId,
+  sectionIndex,
   articlesTitles,
 }) {
   return (
@@ -59,21 +59,21 @@ export default function BlogPage({
           })}
         </div>
       )}
-      {sectionSlug && sections[0].articles.length > 1 ? (
+      {sectionSlug && sections[sectionIndex].articles.length > 1 ? (
         <>
           <ArticleSnippet
             article={hero}
             heroMode
-            section={sections[sectionId]}
+            section={sections[sectionIndex]}
           />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {sections[sectionId].articles.map((article, index) => (
+            {sections[sectionIndex].articles.map((article, index) => (
               <Fragment key={article.id}>
                 {index > 0 && (
                   <div>
                     <ArticleSnippet
                       article={article}
-                      section={sections[sectionId]}
+                      section={sections[sectionIndex]}
                     />
                   </div>
                 )}
