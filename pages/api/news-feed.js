@@ -16,7 +16,7 @@ export default async function feed(req, res) {
       image_url: 'https://assets.goodparty.org/heart-hologram.svg',
       language: 'en',
       description:
-        'Good Party is a movement bringing together voters and exciting independent candidates that can win',
+        'Good Party is a movement bringing together voters and exciting independent candidates that can win.',
     });
     sections[sectionIndex].articles.forEach((article) => {
       const { title, id, mainImage, publishDate, slug, summary } = article;
