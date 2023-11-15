@@ -29,6 +29,10 @@ const nextConfig = {
         destination: '/api/sitemap',
       },
       {
+        source: '/news-feed.xml',
+        destination: '/api/news-feed',
+      },
+      {
         source: '/robots.txt',
         destination: '/api/robots',
       },
