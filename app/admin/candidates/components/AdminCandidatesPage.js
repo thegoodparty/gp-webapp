@@ -313,7 +313,14 @@ export default function AdminCandidatesPage(props) {
         data.electionDate
           ? new Date(data.electionDate)
           : new Date('1970-01-01'),
-      sortType: 'datetime',
+      // sortType: 'datetime',
+      sortMethod: (a, b) => {
+        var a1 = new Date(a).getTime();
+        var b1 = new Date(b).getTime();
+        if (a1 < b1) return 1;
+        else if (a1 > b1) return -1;
+        else return 0;
+      },
       Cell: ({ row }) => {
         return dateUsHelper(row.original.electionDate);
       },
