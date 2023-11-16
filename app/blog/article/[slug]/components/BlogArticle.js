@@ -8,6 +8,7 @@ import Banner from './Banner';
 import ShareBlog from 'app/blog/shared/ShareBlog';
 import BlogPopup from './BlogPopup';
 import Callout from '@shared/utils/Callout';
+import ArticleTags from './ArticleTags';
 
 export default function BlogArticle({ sections, article }) {
   const {
@@ -20,6 +21,7 @@ export default function BlogArticle({ sections, article }) {
     publishDate,
     readingTime,
     title,
+    tags,
   } = article;
   const sectionSlug = section?.fields?.slug;
 
@@ -79,6 +81,7 @@ export default function BlogArticle({ sections, article }) {
             )}
             {banner && <Banner banner={banner} />}
           </div>
+          <ArticleTags tags={tags} />
 
           <div className={styles.authorWrapper}>
             <div className={styles.authorInner}>

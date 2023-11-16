@@ -93,6 +93,10 @@ const gpApi = {
       url: `${base}content/blog-articles-by-section`,
       method: 'GET',
     },
+    articlesByTag: {
+      url: `${base}content/blog-articles-by-tag`,
+      method: 'GET',
+    },
   },
   candidate: {
     list: {

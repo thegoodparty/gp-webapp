@@ -26,7 +26,7 @@ export const fetchArticlesBySections = async (sectionSlug) => {
     sectionSlug,
   };
 
-  return await gpFetch(api, sectionSlug ? payload : false, 5);
+  return await gpFetch(api, sectionSlug ? payload : false, 3600);
 };
 
 export const fetchArticlesTitles = async () => {
