@@ -5,6 +5,7 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import contentfulHelper from 'helpers/contentfulHelper';
 import Link from 'next/link';
 import TermsByLetter from '../../components/TermsByLetter';
+import Banner from '/app/blog/article/[slug]/components/Banner';
 
 export default function TermsItemPage({ item, items, activeLetter }) {
   const letter = activeLetter;
@@ -34,7 +35,7 @@ export default function TermsItemPage({ item, items, activeLetter }) {
       </MaxWidth>
     );
   }
-  const { title, description, cta, ctaLink } = item;
+  const { title, description, cta, ctaLink, banner } = item;
   const isAbsolute = ctaLink && ctaLink.startsWith('http');
   return (
     <MaxWidth>
@@ -49,7 +50,7 @@ export default function TermsItemPage({ item, items, activeLetter }) {
         <div className="text-lg mb-6">
           <CmsContentWrapper>{contentfulHelper(description)}</CmsContentWrapper>
         </div>
-        {cta && ctaLink && (
+        {cta && ctaLink && !banner && (
           <>
             {isAbsolute ? (
               <a
@@ -68,6 +69,8 @@ export default function TermsItemPage({ item, items, activeLetter }) {
             )}
           </>
         )}
+
+        {banner && <Banner banner={banner} />}
       </div>
       {activeLetter && (
         <TermsByLetter
