@@ -20,9 +20,10 @@ export async function fetchInputFields(subKey) {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'promptInputFields',
-    subKey,
   };
-  return await gpFetch(api, payload, 3600);
+
+  const { content } = await gpFetch(api, payload, 3600);
+  return content[subKey];
 }
 
 export default function NewContentFlow(props) {
@@ -40,7 +41,7 @@ export default function NewContentFlow(props) {
 
   const onSelectPrompt = async () => {
     if (selected !== '') {
-      const { content } = await fetchInputFields(selected);
+      const content = await fetchInputFields(selected);
       if (!content) {
         const key = findKey();
         onSelectCallback(key);

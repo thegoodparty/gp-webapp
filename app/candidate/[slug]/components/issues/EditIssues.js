@@ -76,7 +76,7 @@ export default function EditIssues(props) {
     noDrag = false,
   } = props;
 
-  const combined = combinePositions(candidatePositions, campaign.customIssues);
+  const combined = combinePositions(candidatePositions, campaign?.customIssues);
   const [state, setState] = useState(combined);
   const [saving, setSaving] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
