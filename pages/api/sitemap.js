@@ -35,9 +35,12 @@ const staticUrls = [
   '/ads2023',
 ];
 
-export const fetchContent = async () => {
-  const api = gpApi.content.all;
-  return await gpFetch(api, false, 3600);
+export const fetchFAQs = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'faqArticles',
+  };
+  return await gpFetch(api, payload);
 };
 
 export const fetchCandidates = async () => {
@@ -80,7 +83,7 @@ const fetchElections = async () => {
 
 export default async function sitemap(req, res) {
   try {
-    const { faqArticles } = await fetchContent();
+    const faqArticles = (await fetchFAQs()).content;
     const { candidates } = await fetchCandidates();
     const { content } = await fetchGlossaryByTitle();
     const blogRes = await fetchArticles();

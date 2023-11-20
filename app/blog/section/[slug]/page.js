@@ -29,6 +29,9 @@ export default async function Page({ params }) {
 
   const { titles } = await fetchArticlesTitles();
 
+  console.log('sectionIndex', sectionIndex);
+  console.log('sections', sections);
+
   const childProps = {
     sections,
     sectionSlug: slug,
