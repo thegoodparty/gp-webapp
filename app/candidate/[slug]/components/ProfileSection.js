@@ -11,7 +11,6 @@ import { Fragment } from 'react';
 const federalOffices = ['US Senate', 'US House of Representatives'];
 const noDistrictOffices = [
   'US Senate',
-  'Mayor',
   'Governor',
   'Lieutenant Governor',
   'Attorney General',
