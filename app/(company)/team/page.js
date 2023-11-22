@@ -3,6 +3,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Hero from './components/Hero';
 import Team from './components/Team';
 import Volunteers from './components/Volunteers';
+import Interns from './components/Interns';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
@@ -19,6 +20,9 @@ export default function Page() {
       <Hero />
       <Suspense>
         <Team />
+      </Suspense>
+      <Suspense>
+        <Interns />
       </Suspense>
       <Suspense>
         <Volunteers />

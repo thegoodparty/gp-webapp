@@ -8,9 +8,9 @@ import { fetchArticlesBySections, fetchArticlesTitles } from 'app/blog/page';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { sections, hero, sectionIndex } = await fetchArticlesBySections(slug);
+  const { sections, sectionIndex } = await fetchArticlesBySections(slug);
 
-  const sectionTitle = sections[sectionIndex].fields.title;
+  const sectionTitle = sections[sectionIndex]?.fields?.title || '';
 
   const meta = pageMetaData({
     title: `${sectionTitle} | Good Party Blog`,
@@ -28,6 +28,9 @@ export default async function Page({ params }) {
   const { sections, hero, sectionIndex } = await fetchArticlesBySections(slug);
 
   const { titles } = await fetchArticlesTitles();
+
+  console.log('sectionIndex', sectionIndex);
+  console.log('sections', sections);
 
   const childProps = {
     sections,
@@ -53,7 +56,7 @@ export async function generateStaticParams() {
 
   return content.map((section) => {
     return {
-      slug: section.fields.slug,
+      slug: section?.fields?.slug,
     };
   });
 }

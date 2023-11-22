@@ -81,16 +81,16 @@ const gpApi = {
       url: `${base}content/content-by-key`,
       method: 'GET',
     },
-    all: {
-      url: `${base}content/all-content`,
-      method: 'GET',
-    },
     articlesTitles: {
       url: `${base}content/blog-articles-titles`,
       method: 'GET',
     },
     articlesBySection: {
       url: `${base}content/blog-articles-by-section`,
+      method: 'GET',
+    },
+    articlesByTag: {
+      url: `${base}content/blog-articles-by-tag`,
       method: 'GET',
     },
   },
