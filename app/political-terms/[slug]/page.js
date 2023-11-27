@@ -8,12 +8,12 @@ import DefinedTermSchema from './DefinedTermSchema';
 import pageMetaData from 'helpers/metadataHelper';
 import { notFound } from 'next/navigation';
 
-export const fetchGlossaryByTitle = async (title) => {
+const fetchGlossaryBySlug = async (slug) => {
   try {
     const api = gpApi.content.contentByKey;
     const payload = {
-      key: 'glossaryItemsByTitle',
-      subKey: title,
+      key: 'glossaryItems',
+      subValue: slug,
     };
     return await gpFetch(api, payload, 3600);
   } catch (e) {
@@ -23,7 +23,7 @@ export const fetchGlossaryByTitle = async (title) => {
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { content } = await fetchGlossaryByTitle(slug);
+  const { content } = await fetchGlossaryBySlug(slug);
   let meta;
   if (slug.length === 1) {
     meta = pageMetaData({
@@ -56,7 +56,7 @@ export default async function Page({ params }) {
   if (slug.length === 1) {
     return <TermsHomePage activeLetter={activeLetter} items={items} />;
   }
-  const res = await fetchGlossaryByTitle(slug);
+  const res = await fetchGlossaryBySlug(slug);
   const titleContent = res.content;
   const childProps = { item: titleContent, slug, activeLetter, items };
 

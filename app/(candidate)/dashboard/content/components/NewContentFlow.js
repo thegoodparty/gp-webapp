@@ -57,12 +57,12 @@ export default function NewContentFlow(props) {
     if (!sections[selected]) {
       return selected;
     }
-    for (let i = 2; i < 20; i++) {
+    for (let i = 2; i <= 100; i++) {
       if (!sections[`${selected}${i}`]) {
         return `${selected}${i}`;
       }
     }
-    return `${selected}21`;
+    return `${selected}101`;
   };
 
   const handleAdditionalInput = (additionalPrompt, inputValues) => {
