@@ -56,10 +56,8 @@ export default async function Page({ params }) {
   if (slug.length === 1) {
     return <TermsHomePage activeLetter={activeLetter} items={items} />;
   }
-  console.log('slug', slug);
   const res = await fetchGlossaryBySlug(slug);
   const titleContent = res.content;
-  console.log('titleC', titleContent);
   const childProps = { item: titleContent, slug, activeLetter, items };
 
   return (
