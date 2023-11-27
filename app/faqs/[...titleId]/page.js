@@ -9,7 +9,6 @@ export const fetchArticle = async (id) => {
   const api = gpApi.content.contentByKey;
   const payload = {
     key: 'faqArticles',
-    subKey: 'id',
     subValue: id,
   };
 

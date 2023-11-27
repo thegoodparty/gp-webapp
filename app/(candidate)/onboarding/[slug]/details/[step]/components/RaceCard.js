@@ -115,7 +115,7 @@ export default function RaceCard({ race }) {
     });
   }
   return (
-    <div className="col-span-12 md:col-span-6 rounded-xl bg-slate-50 shadow p-4 text-left">
+    <div className=" rounded-xl bg-slate-50 shadow p-4 text-left">
       {sections.map((section) => (
         <div key={section.title}>
           <H3 className="mt-2">{section.title}</H3>

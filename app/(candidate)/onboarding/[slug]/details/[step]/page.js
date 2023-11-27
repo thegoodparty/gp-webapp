@@ -79,10 +79,10 @@ export default async function Page({ params }) {
     ({ candidatePositions } = await loadCandidatePosition(slug));
   }
 
-  // let races;
-  // if (stepInt === 7) {
-  //   ({ races } = await fetchRaces(campaign?.details?.zip));
-  // }
+  let races;
+  if (stepInt === 7) {
+    ({ races } = await fetchRaces(campaign?.details?.zip));
+  }
 
   let pledge;
   if (pageType === 'pledgePage') {
@@ -109,7 +109,23 @@ export default async function Page({ params }) {
     totalSteps: detailsFields.length,
     subSectionLabel,
     candidatePositions,
-    // races,
+    races: [
+      {
+        node: {
+          election: {
+            electionDay: 'May 13, 2024',
+            name: 'election name here',
+            originalElectionDate: 'original date',
+            state: 'CA',
+          },
+          position: {
+            appointed: 'tes',
+            description: 'desc',
+            eligibilityRequirements: 'elig',
+          },
+        },
+      },
+    ],
   };
   return <OnboardingStepPage {...childProps} />;
 }

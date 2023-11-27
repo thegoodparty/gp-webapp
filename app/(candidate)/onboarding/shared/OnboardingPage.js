@@ -15,6 +15,7 @@ import { getAge } from 'helpers/dateHelper';
 import { isValidUrl } from 'helpers/linkhelper';
 import { isValidPhone } from '@shared/inputs/PhoneInput';
 import { revalidatePage } from 'helpers/cacheHelper';
+import BallotRaces from '../[slug]/details/[step]/components/BallotRaces';
 
 export const savingState = hookstate(false);
 
@@ -30,6 +31,7 @@ export default function OnboardingPage({
   skipLabel,
   step,
   forceRefresh,
+  races,
   ...props
 }) {
   useEffect(() => {
@@ -215,6 +217,7 @@ export default function OnboardingPage({
               </Fragment>
             ))}
           </div>
+          {races ? <BallotRaces races={races} campaign={campaign} /> : null}
 
           <div className="flex justify-center">
             {user?.isAdmin && reGenerateAiCallback && (

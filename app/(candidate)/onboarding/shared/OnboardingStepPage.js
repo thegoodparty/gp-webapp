@@ -50,7 +50,6 @@ export default function OnboardingStepPage(props) {
   return (
     <>
       <OnboardingPage {...props} />
-      {/* {races ? <BallotRaces races={races} /> : null} */}
       <UserSnapScript />
     </>
   );

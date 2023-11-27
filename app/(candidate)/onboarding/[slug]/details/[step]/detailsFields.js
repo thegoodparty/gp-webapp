@@ -246,18 +246,6 @@ const detailsFields = [
           'Other',
         ],
       },
-      {
-        key: 'articles',
-        type: 'articles',
-        hidden: true,
-        showKey: 'knowRun',
-        showCondition: ['no'],
-        articles: [],
-        title:
-          "Looks like you want to explore running for office but aren't sure where to start? No problem!",
-        subTitle:
-          "You have a ton of options to choose from. With over 500,000 local, state and federal offices to choose from it can be a bit overwhelming. Good news though, we've narrowed it down to the offices you can choose from based on your current residency.",
-      },
     ],
   },
   {
