@@ -17,7 +17,7 @@ export const fetchPositions = async () => {
   return await gpFetch(api, false, 3600, token);
 };
 
-export const fetchRaces = async (zip) => {
+const fetchRaces = async (zip) => {
   const api = gpApi.ballotData.races;
   const payload = { zip };
   const token = getServerToken(payload);
@@ -109,23 +109,24 @@ export default async function Page({ params }) {
     totalSteps: detailsFields.length,
     subSectionLabel,
     candidatePositions,
-    races: [
-      {
-        node: {
-          election: {
-            electionDay: 'May 13, 2024',
-            name: 'election name here',
-            originalElectionDate: 'original date',
-            state: 'CA',
-          },
-          position: {
-            appointed: 'tes',
-            description: 'desc',
-            eligibilityRequirements: 'elig',
-          },
-        },
-      },
-    ],
+    races,
+    // races: [
+    //   {
+    //     node: {
+    //       election: {
+    //         electionDay: 'May 13, 2024',
+    //         name: 'election name here',
+    //         originalElectionDate: 'original date',
+    //         state: 'CA',
+    //       },
+    //       position: {
+    //         appointed: 'tes',
+    //         description: 'desc',
+    //         eligibilityRequirements: 'elig',
+    //       },
+    //     },
+    //   },
+    // ],
   };
   return <OnboardingStepPage {...childProps} />;
 }
