@@ -6,11 +6,9 @@ import Image from 'next/image';
 import CTA from './CTA';
 
 const dates = [
-  'Wednesday, October 25th, 2023 @ 7pm EST',
-  'Saturday, October 28th, 2023 @ 4pm EST ',
-  'Wednesday, November 1st, 2023 @ 7pm EST',
-  'Friday, November 3rd, 2023 @ 3pm EST',
-  'Saturday, November 4th, 2023 @ 1pm EST',
+  'Thursday, November 30th, 2023 @ 12pm PST',
+  'Tuesday, December 5th, 2023 @ 9am PST ',
+  'Friday, December 8th, 2023 @ 11am PST',
   'More dates coming soon!',
 ];
 
