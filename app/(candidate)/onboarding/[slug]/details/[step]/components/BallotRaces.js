@@ -9,6 +9,7 @@ import ZipChanger from './ZipChanger';
 import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const values = ['local', 'state', 'federal'];
 
@@ -19,7 +20,7 @@ const fetchRaces = async (zip) => {
 };
 
 export default function BallotRaces(props) {
-  const { campaign } = props;
+  const { campaign, selectedOfficeCallback } = props;
   const [tab, setTab] = useState(0);
   const [zip, setZip] = useState(campaign.details.zip);
   const [races, setRaces] = useState(props.races);
@@ -48,8 +49,10 @@ export default function BallotRaces(props) {
   const handleSelect = (race) => {
     if (race?.position?.id === selected?.position?.id) {
       setSelected(false);
+      selectedOfficeCallback(false);
     } else {
       setSelected(race);
+      selectedOfficeCallback(race);
     }
   };
 
@@ -61,6 +64,14 @@ export default function BallotRaces(props) {
       setZip(newZip);
       setSelected(false);
       setLoading(false);
+      const updatedCampaign = {
+        ...campaign,
+        details: {
+          ...campaign.details,
+          zip: newZip,
+        },
+      };
+      await updateCampaign(updatedCampaign);
     }
   };
 

@@ -19,9 +19,12 @@ export const fetchPositions = async () => {
 
 const fetchRaces = async (zip) => {
   const api = gpApi.ballotData.races;
+  console.log('api', api);
   const payload = { zip };
   const token = getServerToken(payload);
-  return await gpFetch(api, payload, 3600, token);
+  const res = await gpFetch(api, payload, 360, token);
+  console.log('res', res);
+  return res;
 };
 
 async function loadCandidatePosition(slug) {
@@ -110,23 +113,6 @@ export default async function Page({ params }) {
     subSectionLabel,
     candidatePositions,
     races,
-    // races: [
-    //   {
-    //     node: {
-    //       election: {
-    //         electionDay: 'May 13, 2024',
-    //         name: 'election name here',
-    //         originalElectionDate: 'original date',
-    //         state: 'CA',
-    //       },
-    //       position: {
-    //         appointed: 'tes',
-    //         description: 'desc',
-    //         eligibilityRequirements: 'elig',
-    //       },
-    //     },
-    //   },
-    // ],
   };
   return <OnboardingStepPage {...childProps} />;
 }

@@ -217,7 +217,6 @@ export default function OnboardingPage({
               </Fragment>
             ))}
           </div>
-          {races ? <BallotRaces races={races} campaign={campaign} /> : null}
 
           <div className="flex justify-center">
             {user?.isAdmin && reGenerateAiCallback && (
