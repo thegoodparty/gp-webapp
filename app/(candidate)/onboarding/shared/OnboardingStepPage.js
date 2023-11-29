@@ -6,6 +6,7 @@ import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import RunningAgainstPage from '../[slug]/goals/[step]/components/RunningAgainstPage';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
+import OfficePage from '../[slug]/details/[step]/components/OfficePage';
 // import BallotRaces from '../[slug]/details/[step]/components/BallotRaces';
 
 export default function OnboardingStepPage(props) {
@@ -23,6 +24,15 @@ export default function OnboardingStepPage(props) {
     return (
       <>
         <PledgePage {...props} />
+        <UserSnapScript />
+        <FullStoryScript />
+      </>
+    );
+  }
+  if (pageType === 'officePage') {
+    return (
+      <>
+        <OfficePage {...props} />
         <UserSnapScript />
         <FullStoryScript />
       </>
@@ -50,7 +60,6 @@ export default function OnboardingStepPage(props) {
   return (
     <>
       <OnboardingPage {...props} />
-      {/* {races ? <BallotRaces races={races} /> : null} */}
       <UserSnapScript />
     </>
   );
