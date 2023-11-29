@@ -154,7 +154,9 @@ export default function OfficePage({
     console.log('state', state);
     if (state.knowRun === 'yes') {
       return (
-        state.state !== '' && state.office !== '' && officeTermLength !== ''
+        state.state !== '' &&
+        state.office !== '' &&
+        state.officeTermLength !== ''
       );
     }
     if (state.knowRun === 'no') {
