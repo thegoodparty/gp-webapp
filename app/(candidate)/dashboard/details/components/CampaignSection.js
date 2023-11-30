@@ -60,12 +60,22 @@ const fields = [
       'Other',
     ],
   },
+
   {
     key: 'state',
     label: 'State',
     type: 'select',
     options: flatStates,
     required: true,
+  },
+  {
+    key: 'otherOffice',
+    label: 'Other Office',
+    type: 'text',
+    hidden: true,
+    requiredHidden: true,
+    showKey: 'office',
+    showCondition: ['Other'],
   },
   {
     key: 'city',
@@ -99,6 +109,13 @@ const fields = [
     type: 'text',
   },
   {
+    key: 'electionDate',
+    label: 'Date of Election',
+    type: 'date',
+    validate: 'futureDateOnly',
+    campaignObj: 'goals',
+  },
+  {
     key: 'party',
     label: 'Political Party Affiliation (select one)',
     required: true,
@@ -126,13 +143,6 @@ const fields = [
     options: ['2 years', '3 years', '4 years', '6 years'],
   },
 
-  {
-    key: 'electionDate',
-    label: 'Date of Election',
-    type: 'date',
-    validate: 'futureDateOnly',
-    campaignObj: 'goals',
-  },
   {
     key: 'campaignWebsite',
     label: 'Campaign website',
