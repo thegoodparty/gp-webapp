@@ -22,8 +22,7 @@ const fetchRaces = async (zip) => {
   console.log('api', api);
   const payload = { zip };
   const token = getServerToken(payload);
-  const res = await gpFetch(api, payload, 360, token);
-  console.log('res', res);
+  const res = await gpFetch(api, payload, 3600, token);
   return res;
 };
 

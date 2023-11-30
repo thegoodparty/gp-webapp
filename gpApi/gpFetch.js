@@ -61,7 +61,6 @@ async function fetchCall(url, options = {}, revalidate) {
     res = await fetch(url, { ...options, cache: 'no-store' });
   }
   try {
-    // console.log('res', res);
     let jsonRes = res.json();
     return jsonRes;
   } catch (e) {

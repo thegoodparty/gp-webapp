@@ -139,19 +139,18 @@ export default function OfficePage({
 }) {
   const [state, setState] = useState({
     knowRun: null,
-    state: '',
-    office: '',
-    officeTermLength: '',
-    otherOffice: '',
-    district: '',
-    city: '',
-    ballotOffice: false,
+    state: campaign.details?.state || '',
+    office: campaign.details?.office || '',
+    officeTermLength: campaign.details?.officeTermLength || '',
+    otherOffice: campaign.details?.otherOffice || '',
+    district: campaign.details?.district || '',
+    city: campaign.details?.city || '',
+    ballotOffice: campaign.details?.ballotOffice || false,
   });
 
   const router = useRouter();
 
   const canSave = () => {
-    console.log('state', state);
     if (state.knowRun === 'yes') {
       return (
         state.state !== '' &&
@@ -174,10 +173,22 @@ export default function OfficePage({
 
   const handleSave = async () => {
     const updated = campaign;
-    updated.details = {
-      ...campaign.details,
-      ...state,
-    };
+    if (state.ballotOffice) {
+      const { position, election } = state.ballotOffice;
+      updated.details = {
+        ...campaign.details,
+        positionId: position.id,
+        electionId: election.id,
+        state: election.state,
+        office: 'Other',
+        otherOffice: position.name,
+      };
+    } else {
+      updated.details = {
+        ...campaign.details,
+        ...state,
+      };
+    }
 
     await updateCampaign(updated);
     let path = nextPath;
@@ -199,11 +210,7 @@ export default function OfficePage({
 
   const handleBallotOffice = (office) => {
     if (office) {
-      const { position, election } = office;
-      onChange('ballotOffice', {
-        position: position.id,
-        election: election.id,
-      });
+      onChange('ballotOffice', office);
     } else {
       onChange('ballotOffice', false);
     }
