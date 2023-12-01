@@ -30,6 +30,7 @@ const staticUrls = [
   '/political-terms',
   '/volunteer',
   '/academy',
+  '/academy-intro',
   '/academy-webinar',
   '/blog',
   '/ads2023',
