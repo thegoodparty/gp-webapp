@@ -138,7 +138,7 @@ export default function OfficePage({
   ...props
 }) {
   const [state, setState] = useState({
-    knowRun: null,
+    knowRun: campaign.details?.knowRun || null,
     state: campaign.details?.state || '',
     office: campaign.details?.office || '',
     officeTermLength: campaign.details?.officeTermLength || '',
@@ -171,10 +171,11 @@ export default function OfficePage({
     });
   };
 
-  const handleSave = async () => {
+  const handleSave = async (ballotOffice) => {
     const updated = campaign;
-    if (state.ballotOffice) {
-      const { position, election } = state.ballotOffice;
+    if (state.knowRun === 'no' && ballotOffice) {
+      console.log('with office');
+      const { position, election } = ballotOffice;
       updated.details = {
         ...campaign.details,
         positionId: position.id,
@@ -184,9 +185,13 @@ export default function OfficePage({
         otherOffice: position.name,
       };
     } else {
+      console.log('without office');
       updated.details = {
         ...campaign.details,
         ...state,
+        positionId: null,
+        electionId: null,
+        ballotOffice: null,
       };
     }
 
@@ -208,13 +213,22 @@ export default function OfficePage({
     return showCondition.includes(state[showKey]);
   };
 
-  const handleBallotOffice = (office) => {
+  const handleBallotOffice = async (office) => {
     if (office) {
       onChange('ballotOffice', office);
+      // need to wait for state to update
+      await handleSave(office);
     } else {
       onChange('ballotOffice', false);
     }
   };
+
+  const selectedOffice = campaign.details?.positionId
+    ? {
+        position: { id: campaign.details.positionId },
+        election: { id: campaign.details.electionId },
+      }
+    : false;
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
@@ -254,6 +268,7 @@ export default function OfficePage({
             races={races}
             campaign={campaign}
             selectedOfficeCallback={handleBallotOffice}
+            selectedOffice={selectedOffice}
           />
         ) : null}
         <div className="flex justify-center mb-8">

@@ -20,13 +20,13 @@ const fetchRaces = async (zip) => {
 };
 
 export default function BallotRaces(props) {
-  const { campaign, selectedOfficeCallback } = props;
+  const { campaign, selectedOfficeCallback, selectedOffice } = props;
   const [tab, setTab] = useState(0);
   const [zip, setZip] = useState(campaign.details.zip);
   const [races, setRaces] = useState(props.races);
   const [groupedRaces, setGroupedRaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
