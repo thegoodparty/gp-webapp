@@ -11,7 +11,18 @@ import WarningButton from '@shared/buttons/WarningButton';
 
 export const RESOURCES_LINKS = [
   { label: 'About', href: '/about', icon: <VscHeart />, id: 'about' },
-  { label: 'Academy', href: '/academy', icon: <SlGraduation />, id: 'academy' },
+  {
+    label: 'Academy',
+    href: '/academy',
+    icon: <SlGraduation />,
+    id: 'academy-intro',
+  },
+  {
+    label: 'Academy Intro',
+    href: '/academy-intro',
+    icon: <SlGraduation />,
+    id: 'academy',
+  },
   { label: 'Blog', href: '/blog', icon: <RiProfileLine />, id: 'blog' },
   {
     label: 'Glossary',

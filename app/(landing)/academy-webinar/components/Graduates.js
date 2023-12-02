@@ -1,4 +1,3 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
 
@@ -8,8 +7,8 @@ import CarlosImg from 'public/images/landing-pages/carlos.png';
 import MapImg from 'public/images/landing-pages/map.png';
 import Body1 from '@shared/typography/Body1';
 import { BiSolidQuoteAltRight } from 'react-icons/bi';
-import CTA from './CTA';
 import WarningButton from '@shared/buttons/WarningButton';
+import Link from 'next/link';
 
 const graduates = [
   {
@@ -101,9 +100,9 @@ export default function Graduates({ content }) {
                 meet people from all over the political spectrum passionate
                 about building community power!
               </Body1>
-              <CTA content={content} clickId="graduate-cta">
+              <Link href="/academy-intro" id="graduate-cta">
                 <WarningButton>Sign up</WarningButton>
-              </CTA>
+              </Link>
             </div>
             <div className="col-span-12 md:col-span-6">
               <Image src={MapImg} height={548} width={490} alt="map" />

@@ -2,8 +2,8 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
-import CTA from './CTA';
 import WarningButton from '@shared/buttons/WarningButton';
+import Link from 'next/link';
 
 const icons = [
   {
@@ -72,9 +72,9 @@ export default function WhyAcademy({ content }) {
             ))}
           </div>
           <div className="mt-16 md:mt-20 flex  justify-center">
-            <CTA clickId="why-academy-cta" content={content}>
+            <Link href="/academy-intro" id="why-academy-cta">
               <WarningButton>Reserve your spot</WarningButton>
-            </CTA>
+            </Link>
           </div>
         </MaxWidth>
       </div>
