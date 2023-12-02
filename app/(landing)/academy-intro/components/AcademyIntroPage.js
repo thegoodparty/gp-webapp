@@ -1,7 +1,8 @@
-import Body1 from '@shared/typography/Body1';
 import Image from 'next/image';
 import jarobImg from 'public/images/landing-pages/jarob.png';
 import starImg from 'public/images/landing-pages/star.png';
+import BreannaBottom from './BreannaBottom';
+import { Suspense } from 'react';
 
 const points = [
   {
@@ -25,7 +26,7 @@ export default function AcademyIntroPage() {
   return (
     <div className="grid grid-cols-12 min-h-screen">
       <div className="col-span-12 md:col-span-6 bg-slate-50 h-full flex justify-end">
-        <div className="max-w-[640px] md:w-[50vw] pr-4 lg:pr-20 pl-4 xl:pl-0">
+        <div className="max-w-[640px] md:w-[50vw] pr-4 lg:pr-20 pl-4 xl:pl-0 pb-12">
           <h1 className="mt-16 lg:mt-24 font-semibold text-4xl ">
             Meet our team to learn about Good Party Academy and secure your spot
           </h1>
@@ -58,6 +59,11 @@ export default function AcademyIntroPage() {
               </div>
             ))}
           </div>
+          <div className="hidden md:block">
+            <Suspense>
+              <BreannaBottom />
+            </Suspense>
+          </div>
         </div>
       </div>
       <div className="col-span-12 md:col-span-6  h-full bg-[linear-gradient(142deg,_#8436F8_15.75%,_#8EAFE0_52.68%,_#90EEBF_88.1%)]">
@@ -68,6 +74,11 @@ export default function AcademyIntroPage() {
             height="620"
           />
         </div>
+      </div>
+      <div className="col-span-12 md:hidden">
+        <Suspense>
+          <BreannaBottom />
+        </Suspense>
       </div>
     </div>
   );
