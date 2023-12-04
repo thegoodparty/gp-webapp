@@ -1,20 +1,27 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import ExpandWithImages from './ExpandWithImages';
 import Hero from './Hero';
-import InvolvedSection from './InvolvedSection';
-import VolunteerWithGoodParty from './VolunteerWithGoodParty';
-import Callout from '@shared/utils/Callout';
+import Dissatisfaction from './Dissatisfaction';
+import WhatWillDo from './WhatWillDo';
+import Community from './Community';
+import Benefits from './Benefits';
+import { Suspense } from 'react';
 
 export default function RunForOfficePage() {
   return (
-    <div className="mb-40">
-      <Callout />
+    <div className="mt-16 md:mt-32">
       <Hero />
-      <div className="max-w-screen-xl mx-auto px-0 xl:p-0">
-        <VolunteerWithGoodParty />
-        <ExpandWithImages />
-        <InvolvedSection />
-      </div>
+      <Suspense>
+        <Dissatisfaction />
+      </Suspense>
+      <Suspense>
+        <WhatWillDo />
+      </Suspense>
+      <Suspense>
+        <Community />
+      </Suspense>
+      <Suspense>
+        <Benefits />
+      </Suspense>
     </div>
   );
 }
