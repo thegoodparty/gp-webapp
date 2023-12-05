@@ -35,6 +35,13 @@ const fields = [
     required: true,
     type: 'email',
   },
+  {
+    key: 'sms_opt_in_out',
+    label:
+      'I would like to receive text messages about Good Party, opportunities to get involved, and appointment reminders. You will receive no more than 1 message per day and can unsubscribe at any time.',
+    type: 'checkbox',
+    columns: 12,
+  },
 ];
 export default function HeroForm() {
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -78,6 +85,7 @@ export default function HeroForm() {
     }
     const payload = {
       ...state,
+      sms_opt_in_out: state.sms_opt_in_out ? 'Yes' : 'No',
       uri: window.location.href,
       pageName: 'ads2023',
       formId: 'c7d78873-1ed0-4202-ab01-76577e57352c',
@@ -102,7 +110,12 @@ export default function HeroForm() {
         >
           <div className="grid grid-cols-12 gap-4">
             {fields.map((field) => (
-              <div key={field.key} className="col-span-12 md:col-span-6">
+              <div
+                key={field.key}
+                className={`col-span-12 ${
+                  field.columns === 12 ? 'md:col-span-12' : 'md:col-span-6'
+                }`}
+              >
                 <RenderInputField
                   field={field}
                   value={state[field.key]}
