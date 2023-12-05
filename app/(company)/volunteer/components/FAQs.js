@@ -54,7 +54,7 @@ const faqs = [
 
 export default function FAQs() {
   return (
-    <section className=" bg-slate-50">
+    <section className=" bg-slate-50 pb-12 pt-12 md:mt-0">
       <MaxWidth>
         <h3 className="font-semibold text-5xl text-center pb-6">FAQ</h3>
         {faqs.map((faq, index) => (

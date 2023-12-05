@@ -3,6 +3,7 @@ import Image from 'next/image';
 import peopleImg from 'public/images/landing-pages/discord-people.png';
 import ballotBoxImg from 'public/images/landing-pages/ballot-box.png';
 import CTA from './CTA';
+import WarningButton from '@shared/buttons/WarningButton';
 
 export default function JoinDiscord() {
   return (
@@ -27,7 +28,14 @@ export default function JoinDiscord() {
               height={64}
               className="mb-10"
             />
-            <CTA id="cta-discord" />
+            <a
+              href="https://join.goodparty.org/discord-signup"
+              id="cta-discord"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <WarningButton>Join our Discord</WarningButton>
+            </a>
           </div>
           <div className="col-span-12 md:col-span-6">
             <div className="md:px-10">

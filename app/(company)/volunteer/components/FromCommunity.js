@@ -1,4 +1,3 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import CTA from './CTA';
 import kierynImg from 'public/images/landing-pages/kieryn-small.png';

@@ -64,16 +64,16 @@ export default function WhatWillDo() {
                 </div>
               )}
               <div className="col-span-12 md:col-span-7">
-                <div className="flex items-start">
+                <div className="md:flex items-start">
                   <Image
                     src={starImg}
                     alt={point.title}
                     height={28}
                     width={28}
-                    className="mr-3 mt-1"
+                    className="mr-3 mt-1 mb-2 md:mb-0"
                   />
                   <div>
-                    <h3 className="text-4xl mb-2">{point.title}</h3>
+                    <h3 className="text-2xl md:text-4xl mb-2">{point.title}</h3>
                     <div className="text-lg mb-10">
                       {Array.isArray(point.subTitle) ? (
                         <ul>
@@ -85,7 +85,9 @@ export default function WhatWillDo() {
                         point.subTitle
                       )}
                     </div>
-                    <CTA id={`cta-${point.title}`} />
+                    <div className="hidden md:block">
+                      <CTA id={`cta-${point.title}`} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -98,7 +100,11 @@ export default function WhatWillDo() {
               )}
             </Fragment>
           ))}
+
           <div className=" md:hidden col-span-12">
+            <div className="text-center mb-12">
+              <CTA id={`cta-will-do-mobile`} />
+            </div>
             <Image src={friendsImg} alt="friends" />
           </div>
         </div>

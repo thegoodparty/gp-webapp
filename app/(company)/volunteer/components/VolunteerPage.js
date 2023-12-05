@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import JoinDiscord from './JoinDiscord';
 import FromCommunity from './FromCommunity';
 import FAQs from './FAQs';
+import HelpWin from './HelpWin';
 
 export default function RunForOfficePage() {
   return (
@@ -33,6 +34,9 @@ export default function RunForOfficePage() {
       </Suspense>
       <Suspense>
         <FAQs />
+      </Suspense>
+      <Suspense>
+        <HelpWin />
       </Suspense>
     </div>
   );
