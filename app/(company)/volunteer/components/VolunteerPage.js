@@ -5,6 +5,9 @@ import WhatWillDo from './WhatWillDo';
 import Community from './Community';
 import Benefits from './Benefits';
 import { Suspense } from 'react';
+import JoinDiscord from './JoinDiscord';
+import FromCommunity from './FromCommunity';
+import FAQs from './FAQs';
 
 export default function RunForOfficePage() {
   return (
@@ -21,6 +24,15 @@ export default function RunForOfficePage() {
       </Suspense>
       <Suspense>
         <Benefits />
+      </Suspense>
+      <Suspense>
+        <JoinDiscord />
+      </Suspense>
+      <Suspense>
+        <FromCommunity />
+      </Suspense>
+      <Suspense>
+        <FAQs />
       </Suspense>
     </div>
   );

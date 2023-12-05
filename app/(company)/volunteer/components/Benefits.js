@@ -4,8 +4,6 @@ import levelImg from 'public/images/landing-pages/levelup.png';
 import networkingImg from 'public/images/landing-pages/networking.png';
 import perksImg from 'public/images/landing-pages/perks.png';
 import impactImg from 'public/images/landing-pages/impact.png';
-import Link from 'next/link';
-import WarningButton from '@shared/buttons/WarningButton';
 import CTA from './CTA';
 
 const points = [

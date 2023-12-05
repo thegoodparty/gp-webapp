@@ -1,5 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import robImg from 'public/images/landing-pages/rob2.png';
+import robImg from 'public/images/landing-pages/rob3.png';
 import creativityImg from 'public/images/landing-pages/creativity.png';
 import friendsImg from 'public/images/landing-pages/friends.png';
 import electoralImg from 'public/images/landing-pages/electoral.png';
