@@ -129,11 +129,13 @@ export default function RenderInputField({
           {field.groupLabel && (
             <div className="font-bold mb-3">{field.groupLabel}</div>
           )}
-          <Checkbox
-            value={value}
-            onChange={(e) => onChangeCallback(field.key, e.target.checked)}
-          />{' '}
-          {field.label}
+          <div className="flex items-start">
+            <Checkbox
+              value={value}
+              onChange={(e) => onChangeCallback(field.key, e.target.checked)}
+            />
+            <div className="ml-1 pt-1">{field.label}</div>
+          </div>
         </div>
       )}
       {field.type === 'positionsSelector' && (

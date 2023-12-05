@@ -12,7 +12,7 @@ const points = [
   {
     title: 'Whatever you can do!',
     subTitle: [
-      "We meet your where you're at.",
+      "We meet you where you're at.",
       '2 minutes or many hours.',
       'Civic activism should be fun!',
     ],
@@ -22,7 +22,7 @@ const points = [
   {
     title: 'Help with your creativity!',
     subTitle: [
-      'Make memes, info graphics or graphics.',
+      'Make memes, info graphics or campaign images.',
       'Make music, a jingle or sound.',
       'Put your passions into making people matter more than money!',
     ],
