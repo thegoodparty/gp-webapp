@@ -68,6 +68,9 @@ export default function AdminCandidatesPage(props) {
       const campaign = mapCampaignToCandidate(data);
       const { user } = campaignObj;
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
+
+      const waitingForP2v = data.p2vStatus === 'Waiting' ? 'yes' : no;
+
       const fields = {
         id: campaignObj.id,
         isActive: campaignObj.isActive ? 'yes' : 'no',
@@ -95,6 +98,7 @@ export default function AdminCandidatesPage(props) {
         calls: reportedVoterGoals?.calls || 0,
         digital: reportedVoterGoals?.digital || 0,
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
+        waitingForP2v,
       };
       inputData.push(fields);
       let csvFields = fields;
@@ -147,6 +151,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Active (Live)',
       accessor: 'isActive',
+    },
+    {
+      Header: 'Waiting for P2V',
+      accessor: 'waitingForP2v',
     },
     {
       Header: 'Path to Victory',
