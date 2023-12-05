@@ -7,7 +7,7 @@ const meta = pageMetaData({
   description:
     'Learn about volunteer opportunities to help independent candidates and build connections. Good Party needs your help in the mission to make people matter more than money in our democracy.',
   slug: '/volunteer',
-  // image: 'https://assets.goodparty.org/volunteer.jpg',
+  image: 'https://assets.goodparty.org/volunteer.png',
 });
 export const metadata = meta;
 
