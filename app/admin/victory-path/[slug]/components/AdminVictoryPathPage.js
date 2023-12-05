@@ -157,6 +157,7 @@ export default function AdminVictoryPathPage(props) {
     const updated = {
       ...campaign,
       pathToVictory: state,
+      p2vStatus: 'Complete',
     };
     try {
       // only send mail the first time we update pathToVictory
