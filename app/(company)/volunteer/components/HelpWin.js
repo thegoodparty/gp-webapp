@@ -31,7 +31,7 @@ export default function HelpWin() {
               </Link>
               <Link
                 href="/info-session"
-                id="schedule-info-session"
+                id="schedule-info-session-mobile"
                 className=" md:hidden"
               >
                 <PrimaryButton fullWidth>Schedule info session</PrimaryButton>

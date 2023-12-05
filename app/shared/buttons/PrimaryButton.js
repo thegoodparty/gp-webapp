@@ -27,6 +27,7 @@ export default function PrimaryButton({
   loading = false,
   fullWidth = false,
   type = 'button',
+  ariaLabel,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -102,6 +103,7 @@ export default function PrimaryButton({
       style={style}
       disabled={disabled}
       type={type}
+      aria-label={ariaLabel}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

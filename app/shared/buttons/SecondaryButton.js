@@ -11,6 +11,7 @@ export default function SecondaryButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  ariaLabel,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -87,6 +88,7 @@ export default function SecondaryButton({
       className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
+      aria-label={ariaLabel}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

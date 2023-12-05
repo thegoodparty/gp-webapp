@@ -56,11 +56,11 @@ export default function TogglePanel({
         <div className="flex items-center">
           {/* {badge && <div>badge</div>} */}
           {open ? (
-            <PrimaryButton size="medium">
+            <PrimaryButton size="medium" ariaLabel="collapse">
               <FiChevronUp />
             </PrimaryButton>
           ) : (
-            <SecondaryButton size="medium">
+            <SecondaryButton size="medium" ariaLabel="expand">
               <FiChevronDown />
             </SecondaryButton>
           )}
