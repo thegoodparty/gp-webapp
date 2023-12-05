@@ -17,12 +17,6 @@ export const RESOURCES_LINKS = [
     icon: <SlGraduation />,
     id: 'academy-intro',
   },
-  {
-    label: 'Academy Intro',
-    href: '/academy-intro',
-    icon: <SlGraduation />,
-    id: 'academy',
-  },
   { label: 'Blog', href: '/blog', icon: <RiProfileLine />, id: 'blog' },
   {
     label: 'Glossary',

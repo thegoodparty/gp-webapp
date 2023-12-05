@@ -1,31 +1,36 @@
-import LandingPageHero from '@shared/landing-pages/LandingPageHero';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import MarketingH1 from '@shared/typography/MarketingH1';
 import Image from 'next/image';
-import EmailForm from '../../../shared/inputs/EmailForm';
-
-import bgImg from '/public/images/landing-pages/hero-bg.png';
+import HeroForm from './HeroForm';
+import heroImg from 'public/images/landing-pages/volunteer-hero.png';
 
 export default function Hero() {
   return (
-    <LandingPageHero>
-      <div className="relative lg:pb-12">
-        <div className="lg:w-[70%]">
-          <h1 className="text-6xl leading-tight font-black">
-            Join the movement to end the two-party system
-          </h1>
-          <h2 className="text-xl mt-5 lg:w-[80%]">
-            We&apos;re organizing a community of Good Partiers to realize our
-            collective power to elect promising independents around the country
-            and fix our broken system.
-          </h2>
-          <EmailForm
-            formId="c7d78873-1ed0-4202-ab01-76577e57352c"
-            pageName="volunteer"
-            label="Join an info session"
-            labelId="volunteer-form"
-          />
+    <>
+      <MaxWidth>
+        <div className="grid grid-cols-12 gap-4 md:gap-10">
+          <div className=" col-span-12 md:col-span-6">
+            <MarketingH1 className="md:text-8xl">
+              Get involved with{' '}
+              <Image
+                src="/images/heart-hologram.svg"
+                alt="GoodParty"
+                width={64}
+                height={64}
+                priority
+                className="inline-block"
+              />{' '}
+              civics
+            </MarketingH1>
+            <HeroForm />
+          </div>
+          <div className=" col-span-12 md:col-span-6">
+            <Image src={heroImg} alt="volunteer" width={629} height={880} />
+          </div>
         </div>
-      </div>
-    </LandingPageHero>
+      </MaxWidth>
+      <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#D0DBE8_55%)] h-[calc(100vw*0.09)] w-full md:-mt-40" />
+      <div className="h-20 md:h-40 bg-slate-400"></div>
+    </>
   );
 }
