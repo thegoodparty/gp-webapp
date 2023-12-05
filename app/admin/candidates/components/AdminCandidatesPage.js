@@ -70,7 +70,7 @@ export default function AdminCandidatesPage(props) {
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
       const waitingForP2v =
-        !data.pathToVictory && data.p2vStatus === 'Waiting' ? 'yes' : no;
+        !data.pathToVictory && data.p2vStatus === 'Waiting' ? 'yes' : 'no';
 
       const fields = {
         id: campaignObj.id,
