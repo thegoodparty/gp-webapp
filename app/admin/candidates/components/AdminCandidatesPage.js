@@ -35,6 +35,7 @@ export default function AdminCandidatesPage(props) {
   const csvData = [
     [
       'id',
+      'isActive',
       'slug',
       'firstName',
       'lastName',
@@ -58,6 +59,7 @@ export default function AdminCandidatesPage(props) {
       'calls',
       'digital',
       'aiDocsCreated',
+      'waitingForP2v',
     ],
   ];
 
