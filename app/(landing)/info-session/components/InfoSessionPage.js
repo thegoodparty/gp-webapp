@@ -72,7 +72,7 @@ export default function InfoSessionPage() {
       <div className="col-span-12 md:col-span-6  h-full bg-[linear-gradient(142deg,_#8436F8_15.75%,_#8EAFE0_52.68%,_#90EEBF_88.1%)]">
         <div className="max-w-[640px] md:w-[50vw] pr-4 pl-4 xl:pr-0 flex items-center justify-center h-full">
           <iframe
-            src="https://meetings.hubspot.com/colton-hess/volunteer-interest-chat?embed=true%22"
+            src="https://meetings.hubspot.com/colton-hess/volunteer-interest-chat?embed=true"
             width="100%"
             height="620"
           />
