@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { FiChevronDown } from 'react-icons/fi';
 import { VscHeart } from 'react-icons/vsc';
 import { SlGraduation } from 'react-icons/sl';
-import { RiHandHeartLine, RiProfileLine } from 'react-icons/ri';
+import { RiProfileLine } from 'react-icons/ri';
 import { TfiList } from 'react-icons/tfi';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
+import { FaRegCalendarCheck } from 'react-icons/fa';
 
 export const RESOURCES_LINKS = [
   { label: 'About', href: '/about', icon: <VscHeart />, id: 'about' },
@@ -16,6 +17,12 @@ export const RESOURCES_LINKS = [
     href: '/academy',
     icon: <SlGraduation />,
     id: 'academy-intro',
+  },
+  {
+    label: 'Info Session',
+    href: '/info-session',
+    icon: <FaRegCalendarCheck />,
+    id: 'info-session',
   },
   { label: 'Blog', href: '/blog', icon: <RiProfileLine />, id: 'blog' },
   {

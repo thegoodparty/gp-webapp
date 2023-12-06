@@ -31,6 +31,7 @@ const staticUrls = [
   '/volunteer',
   '/academy',
   '/academy-intro',
+  '/info-session',
   '/academy-webinar',
   '/blog',
   '/ads2023',
