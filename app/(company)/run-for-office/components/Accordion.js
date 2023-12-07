@@ -9,6 +9,7 @@ import { FaChevronCircleDown } from 'react-icons/fa';
 import Image from 'next/image';
 import Pill from '@shared/buttons/Pill';
 import RunCampaignButton from './RunCampaignButton';
+import Link from 'next/link';
 
 const sections = [
   {
@@ -37,7 +38,7 @@ const sections = [
   },
 ];
 
-export default function Accordion({ demoCallback }) {
+export default function Accordion() {
   const [selected, setSelected] = useState(0);
   return (
     <section className="py-28 bg-orange-400 bg-opacity-10">
@@ -113,11 +114,11 @@ export default function Accordion({ demoCallback }) {
               OR
             </div>
             <div className="col-span-12 lg:col-span-6">
-              <div onClick={demoCallback} id="accordion-demo-btn">
+              <Link href="/get-a-demo" id="accordion-demo-btn">
                 <Pill outlined className="w-full lg:w-48">
                   <div className="tracking-wide">GET A DEMO</div>
                 </Pill>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

@@ -36,6 +36,7 @@ export const FOOTER_COLUMNS = [
       { label: 'Run for office', link: '/run-for-office' },
       { label: 'Good Party Academy', link: '/academy' },
       { label: 'Book an Info Session', link: '/info-session' },
+      { label: 'Book a Demo', link: '/book-a-demo' },
       { label: 'Political Definitions', link: '/political-terms' },
       { label: 'Declare Independence', link: '/declare' },
       { label: 'Discord Community', link: 'https://discord.gg/goodparty' },

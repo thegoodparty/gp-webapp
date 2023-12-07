@@ -44,7 +44,7 @@ const features = [
     icon: <LuStars className="text-6xl text-black" />,
     bg_from: 'from-[#AFA8FF]',
     bg_to: 'to-[#FFD78A]',
-    link: '',
+    link: '/get-a-demo',
   },
   {
     name: 'Academy',
@@ -68,7 +68,7 @@ const features = [
   },
 ];
 
-export default function WhatWeDo({ demoCallback }) {
+export default function WhatWeDo() {
   const [selected, setSelected] = useState(0);
 
   return (
@@ -99,22 +99,13 @@ export default function WhatWeDo({ demoCallback }) {
               <p className="font-sfpro mt-8 text-lg max-w-[90vw] text-slate-300">
                 {feature.description}
               </p>
-              {feature.link == '' ? (
-                <p
-                  href={feature.link}
-                  onClick={demoCallback}
-                  className="mt-5 text-[15px] leading-[24px] text-lime-500 hover:underline cursor-pointer"
-                >
-                  Learn More
-                </p>
-              ) : (
-                <Link
-                  href={feature.link}
-                  className="mt-5 text-[15px] leading-[24px] text-lime-500"
-                >
-                  Learn More
-                </Link>
-              )}
+
+              <Link
+                href={feature.link}
+                className="mt-5 text-[15px] leading-[24px] text-lime-500"
+              >
+                Learn More
+              </Link>
             </div>
           ))}
         </div>

@@ -1,6 +1,7 @@
 import Pill from '@shared/buttons/Pill';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const instructors = [
   {
@@ -26,7 +27,7 @@ const instructors = [
   },
 ];
 
-export default function Experts({ demoCallback }) {
+export default function Experts() {
   return (
     <section className="my-24">
       <MaxWidth>
@@ -60,11 +61,11 @@ export default function Experts({ demoCallback }) {
             Any questions? Schedule a demo with our team
           </h3>
           <div>
-            <div onClick={demoCallback} id="experts-demo-btn">
-              <Pill outlined className="w-48">
+            <Link href="/get-a-demo" id="experts-demo-btn">
+              <Pill outlined className="w-48 ">
                 <div className="tracking-wide">GET A DEMO</div>
               </Pill>
-            </div>
+            </Link>
           </div>
         </div>
       </MaxWidth>

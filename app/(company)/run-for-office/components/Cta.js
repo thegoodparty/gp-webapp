@@ -1,8 +1,9 @@
 'use client';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Pill from '@shared/buttons/Pill';
+import Link from 'next/link';
 
-export default function Cta({ demoCallback }) {
+export default function Cta() {
   return (
     <MaxWidth className="bg-slate-50">
       <div className="flex items-center flex-col w-full">
@@ -10,11 +11,15 @@ export default function Cta({ demoCallback }) {
           Any questions? Schedule a demo with our team
         </h3>
         <div>
-          <div onClick={demoCallback} id="experts-demo-btn" className="pb-20">
+          <Link
+            href="/get-a-demo"
+            id="experts-demo-btn"
+            className="pb-20 block"
+          >
             <Pill outlined className="w-48">
               <div className="tracking-wide">GET A DEMO</div>
             </Pill>
-          </div>
+          </Link>
         </div>
       </div>
     </MaxWidth>

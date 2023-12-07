@@ -4,8 +4,9 @@ import RunCampaignButton from './RunCampaignButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import HeroImages from './HeroImages';
 import Image from 'next/image';
+import Link from 'next/link';
 
-export default function Hero({ demoCallback }) {
+export default function Hero() {
   return (
     <MaxWidth>
       <div className="flex flex-row w-full">
@@ -48,15 +49,11 @@ export default function Hero({ demoCallback }) {
             <RunCampaignButton id="hero-get-started-btn" />
           </div>
           <div className="xs:hidden"></div>
-          <div
-            onClick={demoCallback}
-            className="inline-block"
-            id="hero-demo-btn"
-          >
+          <Link href="/get-a-demo" className="inline-block" id="hero-demo-btn">
             <SecondaryButton outlined className="w-full">
               <div className="tracking-wide">Get a Demo</div>
             </SecondaryButton>
-          </div>
+          </Link>
         </div>
         <div className="col-span-12 md:col-span-5 text-center">
           <HeroImages />

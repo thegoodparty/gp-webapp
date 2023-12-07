@@ -35,7 +35,7 @@ const features = [
   },
 ];
 
-export default function Features({ demoCallback }) {
+export default function Features() {
   return (
     <section className="my-24 bg-slate-50">
       <MaxWidth>
