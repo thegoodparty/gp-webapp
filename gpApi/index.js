@@ -525,6 +525,13 @@ const gpApi = {
       withAuth: true,
     },
   },
+
+  race: {
+    byState: {
+      url: `${base}race/by-state`,
+      method: 'GET',
+    },
+  },
 };
 
 export default gpApi;
