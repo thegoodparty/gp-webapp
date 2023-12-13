@@ -531,6 +531,14 @@ const gpApi = {
       url: `${base}race/by-state`,
       method: 'GET',
     },
+    byCounty: {
+      url: `${base}race/by-county`,
+      method: 'GET',
+    },
+    byCity: {
+      url: `${base}race/by-city`,
+      method: 'GET',
+    },
   },
 };
 

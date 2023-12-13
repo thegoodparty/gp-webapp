@@ -1,14 +1,15 @@
 import pageMetaData from 'helpers/metadataHelper';
-import HowToRunStatePage from './components/HowToRunStatePage';
 import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import HowToRunCountyPage from './components/HowToRunCountyPage';
 
-const fetchState = async (state) => {
-  const api = gpApi.race.byState;
+const fetchCounty = async (state, county) => {
+  const api = gpApi.race.byCounty;
   const payload = {
     state,
+    county,
   };
 
   return await gpFetch(api, payload, 3600);
@@ -17,11 +18,12 @@ const fetchState = async (state) => {
 export async function generateMetadata({ params }) {
   const { state } = params;
   const stateName = shortToLongState[state.toUpperCase()];
+  const { county } = await fetchCounty(state, params.county);
 
   const meta = pageMetaData({
-    title: `How to run in ${stateName}`,
-    description: `How to run in ${stateName}`,
-    slug: `/how-to-run/${state}`,
+    title: `How to run in ${county.county} county`,
+    description: `How to run in ${county.county} county`,
+    slug: `/how-to-run/${state}/${params.county}`,
   });
   return meta;
 }
@@ -32,13 +34,17 @@ export default async function Page({ params }) {
     notFound();
   }
 
-  const { counties, races } = await fetchState(state);
+  const { municipalities, races, county } = await fetchCounty(
+    state,
+    params.county,
+  );
 
   const childProps = {
     state,
-    childEntity: counties,
+    childEntities: municipalities,
     races,
+    county,
   };
 
-  return <HowToRunStatePage {...childProps} />;
+  return <HowToRunCountyPage {...childProps} />;
 }
