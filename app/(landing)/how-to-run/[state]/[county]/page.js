@@ -16,6 +16,15 @@ const fetchCounty = async (state, county) => {
   return await gpFetch(api, payload, 3600);
 };
 
+const fetchPosition = async (id) => {
+  const api = gpApi.race.byRace;
+  const payload = {
+    id,
+  };
+
+  return await gpFetch(api, payload, 3600);
+};
+
 export async function generateMetadata({ params }) {
   const { state } = params;
   if (state.length === 2) {
@@ -29,10 +38,10 @@ export async function generateMetadata({ params }) {
     });
     return meta;
   }
-
+  const { race } = await fetchPosition(params.county);
   const meta = pageMetaData({
-    title: `position`,
-    description: `postion`,
+    title: race.data.normalized_position_name,
+    description: race.data.position_description,
     slug: `/how-to-run/${state}/${params.county}`,
   });
   return meta;
@@ -47,7 +56,9 @@ export default async function Page({ params }) {
     notFound();
   }
   if (state.length > 2) {
-    const childProps = {};
+    // state is the slug, county is the id
+    const { race } = await fetchPosition(params.county); // this is the id
+    const childProps = { race };
     return <PositionPage {...childProps} />;
   }
 

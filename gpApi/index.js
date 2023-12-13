@@ -539,6 +539,10 @@ const gpApi = {
       url: `${base}race/by-city`,
       method: 'GET',
     },
+    byRace: {
+      url: `${base}race`,
+      method: 'GET',
+    },
   },
 };
 
