@@ -6,6 +6,7 @@ import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import CTA from './CTA';
 
 const graduates = [
   {
@@ -65,9 +66,9 @@ export default function GraduateSpotlight({ content }) {
           ))}
         </div>
         <div className="mt-16 flex justify-center">
-          <Link href="/academy-intro" id="spotlight-cta">
+          <CTA clickId="spotlight-cta" content={content}>
             <PrimaryButton>Sign up for free</PrimaryButton>
-          </Link>
+          </CTA>
         </div>
       </MaxWidth>
     </section>

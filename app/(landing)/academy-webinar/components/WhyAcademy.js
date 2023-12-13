@@ -3,7 +3,7 @@ import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
 import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
+import CTA from './CTA';
 
 const icons = [
   {
@@ -72,9 +72,9 @@ export default function WhyAcademy({ content }) {
             ))}
           </div>
           <div className="mt-16 md:mt-20 flex  justify-center">
-            <Link href="/academy-intro" id="why-academy-cta">
+            <CTA clickId="why-academy-cta" content={content}>
               <WarningButton>Reserve your spot</WarningButton>
-            </Link>
+            </CTA>
           </div>
         </MaxWidth>
       </div>

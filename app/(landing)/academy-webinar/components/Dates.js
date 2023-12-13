@@ -8,7 +8,7 @@ import CTA from './CTA';
 const dates = [
   'Thursday, December 14th, 2023 @ 9am PST',
   'Friday, December 15th, 2023 @ 10am PST',
-  'Monday, December 18th, 2023 @ 1pm PST',
+  'Wednesday, December 20th, 2023 @ 1pm PST',
   'More dates coming soon!',
 ];
 
