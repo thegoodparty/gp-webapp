@@ -40,7 +40,7 @@ export async function generateMetadata({ params }) {
   }
   const { race } = await fetchPosition(params.county);
   const meta = pageMetaData({
-    title: race.data.normalized_position_name,
+    title: race.data.position_name,
     description: race.data.position_description,
     slug: `/how-to-run/${state}/${params.county}`,
   });
