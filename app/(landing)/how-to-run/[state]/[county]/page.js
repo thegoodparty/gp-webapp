@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import HowToRunCountyPage from './components/HowToRunCountyPage';
+import PositionPage from './components/PositionPage';
 
 const fetchCounty = async (state, county) => {
   const api = gpApi.race.byCounty;
@@ -17,12 +18,21 @@ const fetchCounty = async (state, county) => {
 
 export async function generateMetadata({ params }) {
   const { state } = params;
-  const stateName = shortToLongState[state.toUpperCase()];
-  const { county } = await fetchCounty(state, params.county);
+  if (state.length === 2) {
+    const stateName = shortToLongState[state.toUpperCase()];
+    const { county } = await fetchCounty(state, params.county);
+
+    const meta = pageMetaData({
+      title: `How to run in ${county.county} county, ${stateName}`,
+      description: `How to run in ${county.county} county, ${stateName}`,
+      slug: `/how-to-run/${state}/${params.county}`,
+    });
+    return meta;
+  }
 
   const meta = pageMetaData({
-    title: `How to run in ${county.county} county`,
-    description: `How to run in ${county.county} county`,
+    title: `position`,
+    description: `postion`,
     slug: `/how-to-run/${state}/${params.county}`,
   });
   return meta;
@@ -30,8 +40,15 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { state } = params;
-  if (!state || !shortToLongState[state.toUpperCase()]) {
+  if (
+    !state ||
+    (state.length === 2 && !shortToLongState[state.toUpperCase()])
+  ) {
     notFound();
+  }
+  if (state.length > 2) {
+    const childProps = {};
+    return <PositionPage {...childProps} />;
   }
 
   const { municipalities, races, county } = await fetchCounty(

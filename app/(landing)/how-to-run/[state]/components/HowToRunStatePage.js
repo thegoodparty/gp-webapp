@@ -27,7 +27,7 @@ export default function HowToRunStatePage(props) {
           How to Run in {shortToLongState[state.toUpperCase()]}
         </H1>
 
-        <H2 className="mt-12">Counties Links {stateName}</H2>
+        <H2 className="mt-12">Counties in {stateName}</H2>
         <div className="flex items-center flex-wrap mt-6">
           {childEntity.map((entity) => (
             <div key={entity.id} className="mr-4 pb-4">

@@ -31,7 +31,7 @@ export default function HowToRunCountyPage(props) {
           How to Run in {countyName}, {stateName}
         </H1>
 
-        <H2 className="mt-12">Cities Links {countyName}</H2>
+        <H2 className="mt-12">Cities in {countyName}</H2>
         <div className="flex items-center flex-wrap mt-6">
           {childEntities.map((entity) => (
             <div key={entity.id} className="mr-4 pb-4">
