@@ -17,14 +17,14 @@ export const fetchPositions = async () => {
   return await gpFetch(api, false, 3600, token);
 };
 
-const fetchRaces = async (zip) => {
-  const api = gpApi.ballotData.races;
-  console.log('api', api);
-  const payload = { zip };
-  const token = getServerToken(payload);
-  const res = await gpFetch(api, payload, 3600, token);
-  return res;
-};
+// const fetchRaces = async (zip) => {
+//   const api = gpApi.ballotData.races;
+//   console.log('api', api);
+//   const payload = { zip };
+//   const token = getServerToken(payload);
+//   const res = await gpFetch(api, payload, 3600, token);
+//   return res;
+// };
 
 async function loadCandidatePosition(slug) {
   try {
@@ -81,10 +81,10 @@ export default async function Page({ params }) {
     ({ candidatePositions } = await loadCandidatePosition(slug));
   }
 
-  let races;
-  if (stepInt === 7) {
-    ({ races } = await fetchRaces(campaign?.details?.zip));
-  }
+  // let races;
+  // if (stepInt === 7) {
+  //   ({ races } = await fetchRaces(campaign?.details?.zip));
+  // }
 
   let pledge;
   if (pageType === 'pledgePage') {
@@ -111,7 +111,6 @@ export default async function Page({ params }) {
     totalSteps: detailsFields.length,
     subSectionLabel,
     candidatePositions,
-    races,
   };
   return <OnboardingStepPage {...childProps} />;
 }
