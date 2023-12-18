@@ -172,7 +172,6 @@ export default function OfficePage({ campaign, nextPath, slug, ...props }) {
   const handleSave = async (ballotOffice) => {
     const updated = campaign;
     if (state.knowRun === 'no' && ballotOffice) {
-      console.log('with office');
       const { position, election } = ballotOffice;
       updated.details = {
         ...campaign.details,
