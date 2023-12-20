@@ -73,13 +73,6 @@ export const TEAM_MEMBERS = [
     partyRole: 'Good Vibes',
   },
   {
-    name: 'Colton Hess',
-    role: 'Creator Community Lead',
-    img: 'https://assets.goodparty.org/team/colton-goodparty.png',
-    flipImg: 'https://assets.goodparty.org/team/colton-party.jpg',
-    partyRole: 'Radical Generalist',
-  },
-  {
     name: 'Quinn McCully',
     role: 'Community Manager',
     img: 'https://assets.goodparty.org/team/quinn-goodparty.jpg',
