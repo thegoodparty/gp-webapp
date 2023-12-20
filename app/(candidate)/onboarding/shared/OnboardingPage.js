@@ -93,6 +93,10 @@ export default function OnboardingPage({
         }
       }
 
+      if (field.invalidOptions && field.invalidOptions.includes(value)) {
+        return false;
+      }
+
       if (field.type === 'date' && field.validate === 'futureDateOnly') {
         try {
           const electionDate = new Date(value);

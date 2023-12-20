@@ -8,7 +8,7 @@ import MapImg from 'public/images/landing-pages/map.png';
 import Body1 from '@shared/typography/Body1';
 import { BiSolidQuoteAltRight } from 'react-icons/bi';
 import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
+import CTA from './CTA';
 
 const graduates = [
   {
@@ -100,9 +100,9 @@ export default function Graduates({ content }) {
                 meet people from all over the political spectrum passionate
                 about building community power!
               </Body1>
-              <Link href="/academy-intro" id="graduate-cta">
+              <CTA clickId="graduate-cta" content={content}>
                 <WarningButton>Sign up</WarningButton>
-              </Link>
+              </CTA>
             </div>
             <div className="col-span-12 md:col-span-6">
               <Image src={MapImg} height={548} width={490} alt="map" />

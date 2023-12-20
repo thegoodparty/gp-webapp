@@ -115,6 +115,7 @@ const detailsFields = [
         hidden: true,
         showKey: 'party',
         showCondition: ['Other'],
+        invalidOptions: ['Democrat', 'Republican', 'democrat', 'republican'],
       },
     ],
   },

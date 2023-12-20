@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import BallotRaces from './BallotRaces';
@@ -130,13 +130,7 @@ const fields = [
   },
 ];
 
-export default function OfficePage({
-  campaign,
-  nextPath,
-  slug,
-  races,
-  ...props
-}) {
+export default function OfficePage({ campaign, nextPath, slug, ...props }) {
   const [state, setState] = useState({
     knowRun: campaign.details?.knowRun || null,
     state: campaign.details?.state || '',
@@ -149,6 +143,10 @@ export default function OfficePage({
   });
 
   const router = useRouter();
+
+  useEffect(() => {
+    savingState.set(() => false);
+  }, []);
 
   const canSave = () => {
     if (state.knowRun === 'yes') {
@@ -174,7 +172,6 @@ export default function OfficePage({
   const handleSave = async (ballotOffice) => {
     const updated = campaign;
     if (state.knowRun === 'no' && ballotOffice) {
-      console.log('with office');
       const { position, election } = ballotOffice;
       updated.details = {
         ...campaign.details,
@@ -263,9 +260,8 @@ export default function OfficePage({
             )}
           </>
         ))}
-        {races && state.knowRun === 'no' ? (
+        {state.knowRun === 'no' ? (
           <BallotRaces
-            races={races}
             campaign={campaign}
             selectedOfficeCallback={handleBallotOffice}
             selectedOffice={selectedOffice}

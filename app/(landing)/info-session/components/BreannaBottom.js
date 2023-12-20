@@ -23,7 +23,7 @@ export default function BreannaBottom() {
         <div className="col-span-4 text-center">
           <div className="text-4xl text-blue-500 font-extrabold mb-2">52%</div>
           <div className="text-sm font-sfpro">
-            of millennials and Gen-Z are indepednents
+            of millennials and Gen-Z are independents
           </div>
         </div>
       </div>

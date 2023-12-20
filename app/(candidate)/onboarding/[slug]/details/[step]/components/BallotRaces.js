@@ -10,6 +10,7 @@ import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import H3 from '@shared/typography/H3';
 
 const values = ['local', 'state', 'federal'];
 
@@ -23,27 +24,36 @@ export default function BallotRaces(props) {
   const { campaign, selectedOfficeCallback, selectedOffice } = props;
   const [tab, setTab] = useState(0);
   const [zip, setZip] = useState(campaign.details.zip);
-  const [races, setRaces] = useState(props.races);
+  const [races, setRaces] = useState(false);
   const [groupedRaces, setGroupedRaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    loadRaces();
+  }, []);
+
+  const loadRaces = async () => {
+    setLoading(true);
+    const initRaces = await fetchRaces(campaign.details.zip);
+    setRaces(initRaces.races);
+    setGroupedRaces(initRaces.races[values[tab]]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
     setGroupedRaces(races[values[tab]]);
     // setGroupedRaces(races.federal);
   }, [races, tab]);
 
-  if (!races || !races.local) {
-    return null;
-  }
   const changeTabCallback = (index) => {
     setTab(index);
   };
   const labels = [
-    `Local (${loading ? '0' : races?.local.length})`,
-    `State (${loading ? '0' : races?.state.length})`,
-    `Federal (${loading ? '0' : races?.federal.length})`,
+    `Local (${loading ? '0' : races?.local?.length || '0'})`,
+    `State (${loading ? '0' : races?.state?.length || '0'})`,
+    `Federal (${loading ? '0' : races?.federal?.length || '0'})`,
   ];
 
   const handleSelect = (race) => {
@@ -88,40 +98,45 @@ export default function BallotRaces(props) {
       <Sticky top={56} innerZ={10}>
         <div className="bg-white pt-10 pb-2">
           <div className="grid grid-cols-12">
-            {labels.map((label, index) => (
-              <div className=" col-span-4" key={label}>
-                <div
-                  className={`${
-                    index === tab ? 'bg-primary text-white' : 'text-indigo-50'
-                  } text-center py-4 rounded-xl cursor-pointer`}
-                  onClick={() => {
-                    changeTabCallback(index);
-                  }}
-                >
-                  {label}
+            {labels &&
+              labels.map((label, index) => (
+                <div className=" col-span-4" key={label}>
+                  <div
+                    className={`${
+                      index === tab ? 'bg-primary text-white' : 'text-indigo-50'
+                    } text-center py-4 rounded-xl cursor-pointer`}
+                    onClick={() => {
+                      changeTabCallback(index);
+                    }}
+                  >
+                    {label}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </Sticky>
       {loading ? (
         <div className="mt-6 text-center">
           <CircularProgress />
+          <br />
+          <br />
+          <H3>Loading Races</H3>
         </div>
       ) : (
         <div className="mt-6">
-          {groupedRaces.map((race, index) => (
-            <RaceCard
-              key={index}
-              race={race}
-              modalCallback={(race) => {
-                setShowModal(race);
-              }}
-              selected={race.position?.id === selected.position?.id}
-              selectCallback={handleSelect}
-            />
-          ))}
+          {groupedRaces &&
+            groupedRaces.map((race, index) => (
+              <RaceCard
+                key={index}
+                race={race}
+                modalCallback={(race) => {
+                  setShowModal(race);
+                }}
+                selected={race?.position?.id === selected.position?.id}
+                selectCallback={handleSelect}
+              />
+            ))}
         </div>
       )}
       {showModal && (

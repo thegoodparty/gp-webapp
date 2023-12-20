@@ -122,8 +122,6 @@ const fields = [
     type: 'select',
     options: [
       'Independent',
-      'Democratic Party',
-      'Republican Party',
       'Green Party',
       'Libertarian Party',
       'Forward Party',
@@ -161,9 +159,7 @@ export default function CampaignSection(props) {
   const [state, setState] = useState(initialState);
   const [saving, setSaving] = useState(false);
   const { campaign } = props;
-  console.log('cam', campaign);
   useEffect(() => {
-    console.log('campaign', campaign);
     if (campaign?.details && campaign?.goals) {
       const newState = {};
       fields.forEach((field) => {
