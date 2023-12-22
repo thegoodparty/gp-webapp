@@ -93,7 +93,7 @@ export default function OnboardingPage({
         }
       }
 
-      if (field.invalidOptions && field.invalidOptions.includes(value)) {
+      if (field.invalidOptions && field.invalidOptions.includes(value.toLowerCase())) {
         return false;
       }
 
@@ -169,7 +169,7 @@ export default function OnboardingPage({
   };
 
   const onChangeField = (key, value, invalidOptions) => {
-    if (invalidOptions && invalidOptions.includes(value)) {
+    if (invalidOptions && invalidOptions.includes(value.toLowerCase())) {
       setShowInvalidModal(true);
     } else {
       setState({
