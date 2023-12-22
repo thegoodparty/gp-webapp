@@ -10,12 +10,15 @@ export default function Banner({ banner }) {
     buttonLink,
     smallImage,
     largeImage,
+    bannerClassName,
   } = banner;
 
   let isExternalLink = buttonLink?.startsWith('http');
   return (
     <div
-      className="pt-10 my-12 flex flex-col items-center rounded-lg overflow-hidden"
+      className={`pt-10 my-12 flex flex-col items-center rounded-lg overflow-hidden ${
+        bannerClassName || ''
+      }`}
       style={{ boxShadow: '0 0 6px 3px rgba(0, 0, 0, 0.1)' }}
     >
       <Image
