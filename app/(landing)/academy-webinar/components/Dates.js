@@ -1,9 +1,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
-import CTA from './CTA';
+import Link from 'next/link';
 
 const dates = [
   'Thursday, December 14th, 2023 @ 9am PST',
@@ -29,11 +27,11 @@ export default function Dates({ content }) {
             <div>{d}</div>
             {index !== dates.length - 1 && (
               <div className="ml-3">
-                <CTA clickId={`dates-cta${index + 1}`} content={content}>
+                <Link href="/academy-intro" id={`dates-cta${index + 1}`}>
                   <PrimaryButton size="medium">
                     <div className=" whitespace-nowrap">Sign up</div>
                   </PrimaryButton>
-                </CTA>
+                </Link>
               </div>
             )}
           </div>
