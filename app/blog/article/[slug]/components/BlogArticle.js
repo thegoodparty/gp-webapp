@@ -75,11 +75,11 @@ export default function BlogArticle({ sections, article }) {
         <div className={styles.maxWidth}>
           <div className={styles.copy}>
             <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
-            {body2 && banner && <Banner banner={banner} />}
+            {body2 && banner && <Banner banner={banner} idIndex="1" />}
             {body2 && (
               <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
             )}
-            {banner && <Banner banner={banner} />}
+            {banner && <Banner banner={banner} idIndex="2" />}
           </div>
           <ArticleTags tags={tags} />
 

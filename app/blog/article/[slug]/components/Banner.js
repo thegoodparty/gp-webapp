@@ -2,7 +2,7 @@ import BlackButton from '@shared/buttons/BlackButton';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function Banner({ banner }) {
+export default function Banner({ banner, idIndex = '1' }) {
   const {
     title,
     description,
@@ -19,6 +19,7 @@ export default function Banner({ banner }) {
       className={`pt-10 my-12 flex flex-col items-center rounded-lg overflow-hidden ${
         bannerClassName || ''
       }`}
+      id={`${bannerClassName || 'banner-id'}-${idIndex}`}
       style={{ boxShadow: '0 0 6px 3px rgba(0, 0, 0, 0.1)' }}
     >
       <Image
