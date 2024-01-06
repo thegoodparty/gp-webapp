@@ -22,9 +22,17 @@ export default function RunningAgainstModule({
   handleSave,
   smallButton = false,
 }) {
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     savingState.set(() => false);
   }, []);
+
+  const save = () => {
+    setSaving(true);
+    handleSave(state);
+  };
+
   let initialState = {
     runningAgainst: [],
     newName: '',
@@ -188,12 +196,7 @@ export default function RunningAgainstModule({
         </div>
       ) : (
         <div className="flex justify-center  my-8">
-          <BlackButtonClient
-            onClick={() => {
-              handleSave(state);
-            }}
-            disabled={!canSave()}
-          >
+          <BlackButtonClient onClick={save} disabled={!canSave() || saving}>
             <div>
               {shortVersion ? 'VIEW DASHBOARD' : 'GENERATE CAMPAIGN PLAN'}
             </div>

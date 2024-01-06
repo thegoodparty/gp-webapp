@@ -79,7 +79,7 @@ export default function RenameAction({
   return (
     <>
       <Modal closeCallback={() => setShowRename(false)} open={showRename}>
-        <div className="lg:min-w-[740px]">
+        <div className="min-w-[80vw] lg:min-w-[740px]">
           <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
             Rename document
           </H2>
