@@ -71,8 +71,16 @@ export default function AdminCandidatesPage(props) {
       const { user } = campaignObj;
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
+      console.log(data);
+
       const waitingForP2v =
         !data.pathToVictory && data.p2vStatus === 'Waiting' ? 'yes' : 'no';
+      let electionDate;
+      if (campaign.electionDate && campaign.electionDate !== '') {
+        electionDate = new Date(campaign.electionDate);
+      } else {
+        electionDate = new Date('1970-01-01');
+      }
 
       const fields = {
         id: campaignObj.id,
@@ -96,10 +104,7 @@ export default function AdminCandidatesPage(props) {
         currentStep,
         shortVersion: campaign.filedStatement,
         campaignCommittee: campaign.campaignCommittee,
-        electionDate:
-          campaign.electionDate && campaign.electionDate !== ''
-            ? new Date(campaign.electionDate)
-            : new Date('1970-01-01'),
+        electionDate,
         doorKnocking: reportedVoterGoals?.doorKnocking || 0,
         calls: reportedVoterGoals?.calls || 0,
         digital: reportedVoterGoals?.digital || 0,
