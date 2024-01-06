@@ -332,38 +332,43 @@ export default function AdminCandidatesPage(props) {
       Header: 'Office',
       accessor: 'office',
     },
-    // {
-    //   Header: 'Election Date',
-    //   accessor: 'electionDate',
-    //   sortType: 'datetime',
-    //   // sortMethod: (a, b) => {
-    //   //   try {
-    //   //     var a1 = new Date(a).getTime();
-    //   //   } catch (e) {
-    //   //     return 1;
-    //   //   }
-    //   //   try {
-    //   //     var b1 = new Date(b).getTime();
-    //   //   } catch (e) {
-    //   //     return -1;
-    //   //   }
-    //   //   if (a1 < b1) return 1;
-    //   //   else if (a1 > b1) return -1;
-    //   //   else return 0;
-    //   // },
-    //   Cell: ({ row }) => {
-    //     try {
-    //       const formatted = dateUsHelper(row.original.electionDate);
+    {
+      Header: 'Election Date',
+      accessor: 'electionDate',
+      sortType: 'datetime',
+      // sortMethod: (a, b) => {
+      //   try {
+      //     var a1 = new Date(a).getTime();
+      //   } catch (e) {
+      //     return 1;
+      //   }
+      //   try {
+      //     var b1 = new Date(b).getTime();
+      //   } catch (e) {
+      //     return -1;
+      //   }
+      //   if (a1 < b1) return 1;
+      //   else if (a1 > b1) return -1;
+      //   else return 0;
+      // },
+      Cell: ({ row }) => {
+        console.log('cell1');
+        try {
+          const formatted = dateUsHelper(row.original.electionDate);
+          console.log('cell2');
 
-    //       if (formatted === 'Jan 1, 1970') {
-    //         return '';
-    //       }
-    //       return formatted;
-    //     } catch (e) {
-    //       return '';
-    //     }
-    //   },
-    // },
+          if (formatted === 'Jan 1, 1970') {
+            console.log('cell3');
+            return '';
+          }
+          console.log('cell4');
+          return formatted;
+        } catch (e) {
+          console.log('cell5');
+          return '';
+        }
+      },
+    },
     {
       Header: 'Term Length',
       accessor: 'officeTermLength',
