@@ -93,7 +93,10 @@ export default function OnboardingPage({
         }
       }
 
-      if (field.invalidOptions && field.invalidOptions.includes(value.toLowerCase())) {
+      if (
+        field.invalidOptions &&
+        field.invalidOptions.includes(value.toLowerCase())
+      ) {
         return false;
       }
 
@@ -108,13 +111,22 @@ export default function OnboardingPage({
         }
       }
       if (field.type === 'text' && field.validate === 'url') {
-        return isValidUrl(value);
+        const isValid = isValidUrl(value);
+        if (!isValid) {
+          return false;
+        }
       }
       if (field.type === 'phone' && field.validate === 'validPhone') {
-        return isValidPhone(value);
+        const isValid = isValidPhone(value);
+        if (!isValid) {
+          return false;
+        }
       }
       if (field.validate && typeof field.validate === 'function') {
-        return field.validate(value);
+        const isValid = field.validate(value);
+        if (!isValid) {
+          return false;
+        }
       }
 
       if (field.requiredHidden && canShowField(field) && value === '') {
@@ -131,7 +143,10 @@ export default function OnboardingPage({
           );
         }
         // setError('minimun age');
-        return age >= 18;
+        const isValid = age >= 18;
+        if (!isValid) {
+          return false;
+        }
       }
     }
 
