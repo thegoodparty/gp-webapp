@@ -76,9 +76,13 @@ export default function AdminCandidatesPage(props) {
       const waitingForP2v =
         !data.pathToVictory && data.p2vStatus === 'Waiting' ? 'yes' : 'no';
       let electionDate;
-      if (campaign.electionDate && campaign.electionDate !== '') {
-        electionDate = new Date(campaign.electionDate);
-      } else {
+      try {
+        if (campaign.electionDate && campaign.electionDate !== '') {
+          electionDate = new Date(campaign.electionDate);
+        } else {
+          electionDate = new Date('1970-01-01');
+        }
+      } catch (e) {
         electionDate = new Date('1970-01-01');
       }
 
