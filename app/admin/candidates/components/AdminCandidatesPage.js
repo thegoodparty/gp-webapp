@@ -346,7 +346,16 @@ export default function AdminCandidatesPage(props) {
       //   else return 0;
       // },
       Cell: ({ row }) => {
-        return dateUsHelper(row.original.electionDate);
+        try {
+          const formatted = dateUsHelper(row.original.electionDate);
+
+          if (formatted === 'Jan 1, 1970') {
+            return '';
+          }
+          return formatted;
+        } catch (e) {
+          return '';
+        }
       },
     },
     {
