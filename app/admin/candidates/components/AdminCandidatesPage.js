@@ -71,7 +71,9 @@ export default function AdminCandidatesPage(props) {
       const { user } = campaignObj;
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
-      console.log(data);
+      console.log('data: ', data);
+      console.log('mapped campaign: ', campaign);
+      console.log('campaignObj: ', campaignObj);
 
       const waitingForP2v =
         !data.pathToVictory && data.p2vStatus === 'Waiting' ? 'yes' : 'no';
@@ -330,38 +332,38 @@ export default function AdminCandidatesPage(props) {
       Header: 'Office',
       accessor: 'office',
     },
-    {
-      Header: 'Election Date',
-      accessor: 'electionDate',
-      sortType: 'datetime',
-      // sortMethod: (a, b) => {
-      //   try {
-      //     var a1 = new Date(a).getTime();
-      //   } catch (e) {
-      //     return 1;
-      //   }
-      //   try {
-      //     var b1 = new Date(b).getTime();
-      //   } catch (e) {
-      //     return -1;
-      //   }
-      //   if (a1 < b1) return 1;
-      //   else if (a1 > b1) return -1;
-      //   else return 0;
-      // },
-      Cell: ({ row }) => {
-        try {
-          const formatted = dateUsHelper(row.original.electionDate);
+    // {
+    //   Header: 'Election Date',
+    //   accessor: 'electionDate',
+    //   sortType: 'datetime',
+    //   // sortMethod: (a, b) => {
+    //   //   try {
+    //   //     var a1 = new Date(a).getTime();
+    //   //   } catch (e) {
+    //   //     return 1;
+    //   //   }
+    //   //   try {
+    //   //     var b1 = new Date(b).getTime();
+    //   //   } catch (e) {
+    //   //     return -1;
+    //   //   }
+    //   //   if (a1 < b1) return 1;
+    //   //   else if (a1 > b1) return -1;
+    //   //   else return 0;
+    //   // },
+    //   Cell: ({ row }) => {
+    //     try {
+    //       const formatted = dateUsHelper(row.original.electionDate);
 
-          if (formatted === 'Jan 1, 1970') {
-            return '';
-          }
-          return formatted;
-        } catch (e) {
-          return '';
-        }
-      },
-    },
+    //       if (formatted === 'Jan 1, 1970') {
+    //         return '';
+    //       }
+    //       return formatted;
+    //     } catch (e) {
+    //       return '';
+    //     }
+    //   },
+    // },
     {
       Header: 'Term Length',
       accessor: 'officeTermLength',
