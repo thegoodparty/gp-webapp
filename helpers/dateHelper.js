@@ -1,7 +1,7 @@
 const ONE_HOUR = 60 * 60 * 1000;
 
 export const dateUsHelper = (orgDate) => {
-  if (!orgDate) {
+  if (!orgDate || orgDate === '') {
     return orgDate;
   }
   // return new Date(orgDate).toLocaleString("en-US")

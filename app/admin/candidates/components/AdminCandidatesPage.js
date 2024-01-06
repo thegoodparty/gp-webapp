@@ -96,7 +96,10 @@ export default function AdminCandidatesPage(props) {
         currentStep,
         shortVersion: campaign.filedStatement,
         campaignCommittee: campaign.campaignCommittee,
-        electionDate: campaign.electionDate,
+        electionDate:
+          campaign.electionDate && campaign.electionDate !== ''
+            ? new Date(campaign.electionDate)
+            : new Date('1970-01-01'),
         doorKnocking: reportedVoterGoals?.doorKnocking || 0,
         calls: reportedVoterGoals?.calls || 0,
         digital: reportedVoterGoals?.digital || 0,
@@ -320,26 +323,23 @@ export default function AdminCandidatesPage(props) {
     },
     {
       Header: 'Election Date',
-      accessor: (data) =>
-        data.electionDate && data.electionDate !== ''
-          ? new Date(data.electionDate)
-          : new Date('1970-01-01'),
-      // sortType: 'datetime',
-      sortMethod: (a, b) => {
-        try {
-          var a1 = new Date(a).getTime();
-        } catch (e) {
-          return 1;
-        }
-        try {
-          var b1 = new Date(b).getTime();
-        } catch (e) {
-          return -1;
-        }
-        if (a1 < b1) return 1;
-        else if (a1 > b1) return -1;
-        else return 0;
-      },
+      accessor: 'electionDate',
+      sortType: 'datetime',
+      // sortMethod: (a, b) => {
+      //   try {
+      //     var a1 = new Date(a).getTime();
+      //   } catch (e) {
+      //     return 1;
+      //   }
+      //   try {
+      //     var b1 = new Date(b).getTime();
+      //   } catch (e) {
+      //     return -1;
+      //   }
+      //   if (a1 < b1) return 1;
+      //   else if (a1 > b1) return -1;
+      //   else return 0;
+      // },
       Cell: ({ row }) => {
         return dateUsHelper(row.original.electionDate);
       },
