@@ -335,7 +335,7 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Election Date',
       accessor: 'electionDate',
-      sortType: 'datetime',
+      // sortType: 'datetime',
       // sortMethod: (a, b) => {
       //   try {
       //     var a1 = new Date(a).getTime();
