@@ -342,10 +342,10 @@ export default function AdminCandidatesPage(props) {
           return 0;
         }
         if (errorA) {
-          return 1;
+          return -1;
         }
         if (errorB) {
-          return -1;
+          return 1;
         }
         if (a1 < b1) return 1;
         else if (a1 > b1) return -1;
