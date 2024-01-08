@@ -325,7 +325,9 @@ export default function AdminCandidatesPage(props) {
           ? new Date(data.electionDate)
           : new Date('1970-01-01'),
       // sortType: 'datetime',
-      sortMethod: (a, b) => {
+      sortType: (rowA, rowB) => {
+        const a = rowA.original.electionDate;
+        const b = rowB.original.electionDate;
         let errorA, errorB, aDate, bDate;
 
         try {
