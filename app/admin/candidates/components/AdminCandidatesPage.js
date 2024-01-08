@@ -344,10 +344,10 @@ export default function AdminCandidatesPage(props) {
           return 0;
         }
         if (!a || a == '' || !aDate || errorA) {
-          return -1;
+          return 1;
         }
         if (!b || b == '' || !bDate || errorB) {
-          return 1;
+          return -1;
         }
         if (aDate < bDate) return 1;
         else if (aDate > bDate) return -1;
