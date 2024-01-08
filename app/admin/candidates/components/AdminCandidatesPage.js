@@ -326,29 +326,29 @@ export default function AdminCandidatesPage(props) {
           : new Date('1970-01-01'),
       // sortType: 'datetime',
       sortMethod: (a, b) => {
-        let errorA, errorB, a1, b1;
+        let errorA, errorB, aDate, bDate;
 
         try {
-          a1 = new Date(a).getTime();
+          aDate = new Date(a).getTime();
         } catch (e) {
           errorA = true;
         }
         try {
-          b1 = new Date(b).getTime();
+          bDate = new Date(b).getTime();
         } catch (e) {
           errorB = true;
         }
-        if (errorA && errorB) {
+        if ((!a && !b) || (!aDate && !bDate) || (errorA && errorB)) {
           return 0;
         }
-        if (errorA) {
+        if (!a || a == '' || !aDate || errorA) {
           return -1;
         }
-        if (errorB) {
+        if (!b || b == '' || !bDate || errorB) {
           return 1;
         }
-        if (a1 < b1) return 1;
-        else if (a1 > b1) return -1;
+        if (aDate < bDate) return 1;
+        else if (aDate > bDate) return -1;
         else return 0;
       },
       Cell: ({ row }) => {
