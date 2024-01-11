@@ -1,7 +1,3 @@
-import ImageSection from './components/ImageSection';
-import PersonalSection from './components/PersonalSection';
-import PasswordSection from './components/PasswordSection';
-import DeleteSection from './components/DeleteSection';
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
@@ -18,13 +14,5 @@ export default function Page() {
   if (!user) {
     redirect('/login');
   }
-  return (
-    <ProfilePage user={user} />
-    // <>
-    //   <ImageSection />
-    //   <PersonalSection />
-    //   <PasswordSection />
-    //   <DeleteSection />
-    // </>
-  );
+  return <ProfilePage user={user} />;
 }

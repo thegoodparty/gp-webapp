@@ -167,6 +167,11 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      listByUser: {
+        url: `${base}campaign/volunteer/invitations-by-user`,
+        method: 'GET',
+        withAuth: true,
+      },
       delete: {
         url: `${base}campaign/volunteer/invitation`,
         method: 'DELETE',
