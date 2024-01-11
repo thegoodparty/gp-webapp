@@ -5,7 +5,6 @@ import { useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
 import MessagingPanel from './MessagingPanel';
-import SocialPanel from './CampaignWebsite';
 import VisionPanel from './VisionPanel';
 import H3 from '@shared/typography/H3';
 

@@ -156,6 +156,24 @@ const gpApi = {
       },
     },
 
+    volunteerInvitation: {
+      create: {
+        url: `${base}campaign/volunteer/invitation`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteer/invitations`,
+        method: 'GET',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/volunteer/invitation`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,
