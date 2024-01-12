@@ -7,10 +7,12 @@ import { teamFields } from 'app/(candidate)/onboarding/[slug]/team/components/Te
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
 import InvitationSection from './InvitationSection';
+import VolunteersSection from './VolunteersSection';
 
 const tabLabels = ['Messaging', 'Social Media', 'Vision'];
 
 export default function CampaignTeamPage(props) {
+  const { volunteers } = props;
   return (
     <DashboardLayout {...props}>
       <TitleSection
@@ -23,7 +25,9 @@ export default function CampaignTeamPage(props) {
         imgWidth={160}
         imgHeight={120}
       />
+
       <InvitationSection {...props} />
+      <VolunteersSection {...props} />
       <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
         {teamFields.map((section) => (
           <div key={section.title}>

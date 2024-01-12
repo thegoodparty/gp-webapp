@@ -179,6 +179,19 @@ const gpApi = {
       },
     },
 
+    campaignVolunteer: {
+      create: {
+        url: `${base}campaign/volunteer`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteers`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,

@@ -1,5 +1,6 @@
 'use client';
 
+import { Select } from '@mui/material';
 import WarningButton from '@shared/buttons/WarningButton';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput';
 import H2 from '@shared/typography/H2';
@@ -10,12 +11,13 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import { Fragment, useEffect, useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
 
-async function sendInvitation(email) {
+async function sendInvitation(email, role) {
   try {
     const api = gpApi.campaign.volunteerInvitation.create;
 
     const payload = {
       email,
+      role,
     };
     return await gpFetch(api, payload);
   } catch (e) {
@@ -49,8 +51,8 @@ async function fetchInvitations() {
 }
 
 export default function InvitationSection(props) {
-  const { volunteers } = props;
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
   const [invitations, setInvitations] = useState(false);
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function InvitationSection(props) {
     if (!canSubmit()) {
       return;
     }
-    const res = await sendInvitation(email);
+    const res = await sendInvitation(email, role);
     if (res?.invitations) {
       setInvitations(res.invitations);
     }
@@ -86,21 +88,36 @@ export default function InvitationSection(props) {
   };
   return (
     <section className="bg-gray-50 border border-slate-300 mb-6 py-6 px-8 rounded-xl">
-      <H2>Volunteers</H2>
-      {!volunteers && (
-        <div className="mt-3">You don&apos;t have any volunteers</div>
-      )}
-      <H3 className="mt-8">Invite volunteers</H3>
+      <H2 className="mb-8">Invite volunteers</H2>
+
       <div className="grid grid-cols-12 gap-2 mt-4">
-        <div className="col-span-12 md:col-span-8 lg:col-span-9">
+        <div className="col-span-12 md:col-span-4 lg:col-span-5">
           <EmailInput
             value={email}
-            onChangeCallback={(e) => onChangeField(e.target.value)}
+            onChangeCallback={(e) => setEmail(e.target.value)}
             shrink
           />
         </div>
 
-        <div className="col-span-12 md:col-span-4 lg:col-span-3">
+        <div className="col-span-12 md:col-span-4 lg:col-span-5">
+          <Select
+            native
+            value={role}
+            fullWidth
+            variant="outlined"
+            onChange={(e) => setRole(e.target.value)}
+            label="Role"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          >
+            <option value="">Select Role</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="staff">Staff</option>
+          </Select>
+        </div>
+
+        <div className="col-span-12 md:col-span-4 lg:col-span-2">
           <div onClick={handleInvite}>
             <WarningButton fullWidth disabled={!canSubmit()}>
               Invite
@@ -127,7 +144,7 @@ export default function InvitationSection(props) {
                   {invitation.email}
                 </div>
                 <div className="col-span-3 md:col-span-4 line-clamp-1  px-2 py-2">
-                  {invitation.status}
+                  {invitation.role}
                 </div>
                 <div className="col-span-2 md:col-span-3 line-clamp-1  px-2 py-2">
                   {dateUsHelper(invitation.createdAt)}

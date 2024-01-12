@@ -1,11 +1,31 @@
+'use client';
 import Body1 from '@shared/typography/Body1';
 import H3 from '@shared/typography/H3';
-import H4 from '@shared/typography/H4';
-import ElectionCandidate from 'app/(company)/elections/[...params]/components/ElectionCandidate';
+
 import Invitation from './Invitation';
+import { useState } from 'react';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function fetchInvitations() {
+  try {
+    const api = gpApi.campaign.volunteerInvitation.listByUser;
+
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error at fetchInvitations', e);
+    return {};
+  }
+}
 
 export default function InvitationsPage(props) {
-  const { invitations } = props;
+  const [invitations, setInvitations] = useState(props.invitations);
+
+  const reloadInvitations = async () => {
+    const res = await fetchInvitations();
+    setInvitations(res.invitations);
+  };
+
   return (
     <div className="bg-slate-50 py-6">
       <div className="max-w-4xl mx-auto bg-gray-50 py-5 px-6 rounded-xl">
@@ -25,13 +45,16 @@ export default function InvitationsPage(props) {
           <H3 className="mt-12">No invitations available at the moment.</H3>
         )}
         {invitations && invitations.length > 0 && (
-          <>
+          <div className="grid grid-cols-12 gap-4">
             {invitations.map((invitation) => (
-              <div key={invitation.id}>
-                <Invitation invitation={invitation} />
+              <div key={invitation.id} className="col-span-12 md:col-span-6">
+                <Invitation
+                  invitation={invitation}
+                  reloadInvitationsCallback={reloadInvitations}
+                />
               </div>
             ))}
-          </>
+          </div>
         )}
       </div>
     </div>
