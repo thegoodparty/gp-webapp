@@ -19,7 +19,7 @@ export default async function Page({ params }) {
   const totalSteps = 6;
 
   let stepInt = step ? parseInt(step, 10) : 1;
-  if (Number.isNaN(stepInt)) {
+  if (Number.isNaN(stepInt) || stepInt < 1 || stepInt > totalSteps) {
     redirect(`/onboarding/${slug}/1`);
   }
 
