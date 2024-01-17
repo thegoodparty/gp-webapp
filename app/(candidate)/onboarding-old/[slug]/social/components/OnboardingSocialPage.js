@@ -29,7 +29,7 @@ const cards = [
 export default function OnboardingSocialPage({ campaign }) {
   const { slug } = campaign;
   const breadcrumbsLinks = [
-    { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
+    { href: `/onboarding/${slug}/1`, label: 'Dashboard' },
     {
       label: 'Online presence & social media',
     },

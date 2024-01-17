@@ -6,7 +6,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { useEffect, useState } from 'react';
-import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
+import RenderInputField from '@shared/inputs/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import BallotRaces from './BallotRaces';
 

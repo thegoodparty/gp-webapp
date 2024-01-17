@@ -2,7 +2,7 @@
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { generateCampaignStatus } from '../[slug]/dashboard/campaignSteps';
+import { generateCampaignStatus } from '../../onboarding-old/[slug]/dashboard/campaignSteps';
 
 export async function updateCampaign(
   campaign,
@@ -12,11 +12,10 @@ export async function updateCampaign(
 ) {
   try {
     const api = gpApi.campaign.onboarding.update;
-    const currentStep = calcCampaignStep(campaign);
+    // const currentStep = calcCampaignStep(campaign);
     const payload = {
       campaign: {
         ...campaign,
-        currentStep,
       },
       versionKey,
       updateCandidate,

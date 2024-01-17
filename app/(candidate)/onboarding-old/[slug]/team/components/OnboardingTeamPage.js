@@ -46,7 +46,7 @@ const cards = [
 export default function OnboardingTeamPage({ campaign }) {
   const { slug } = campaign;
   const breadcrumbsLinks = [
-    { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
+    { href: `/onboarding/${slug}/1`, label: 'Dashboard' },
     {
       label: 'Build a Campaign Team',
     },

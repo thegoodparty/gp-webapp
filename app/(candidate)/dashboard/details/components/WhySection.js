@@ -2,7 +2,7 @@
 
 import H3 from '@shared/typography/H3';
 import Body1 from '@shared/typography/Body1';
-import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
+import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';

@@ -40,14 +40,14 @@ function PhoneInput({
 
   useEffect(() => {
     formatDisplay(value);
-    setValidPhone(value);
+    const isValid = isValidPhone(value);
+    setValidPhone(isValid);
   }, [value]);
 
   const onChangeValue = async (event) => {
     if (event) {
       const val = event.target.value;
       const isValid = isValidPhone(val);
-      setValidPhone(isValid);
       formatDisplay(val);
       onChangeCallback(val.replace(/\D/g, ''), isValid);
     }

@@ -33,7 +33,7 @@ export default function OnboardingWrapper({
   const saving = savingGlobalState.get();
 
   const breadcrumbsLinks = [
-    { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
+    { href: `/onboarding/${slug}/1`, label: 'Dashboard' },
     {
       label: subSectionLabel,
     },

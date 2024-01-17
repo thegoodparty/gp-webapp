@@ -16,7 +16,7 @@ export async function createCampaign() {
     if (slug) {
       deleteCookie('afterAction');
       deleteCookie('returnUrl');
-      window.location.href = `/onboarding/${slug}/dashboard`;
+      window.location.href = `/onboarding/${slug}/1`;
     }
   } catch (e) {
     console.log('error2', JSON.stringify(e));

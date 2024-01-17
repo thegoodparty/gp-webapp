@@ -31,7 +31,7 @@ export default function ImpersonateAction({
         } else if (launched == 'Pending Review') {
           window.location.href = `/candidate/${slug}/review`;
         } else {
-          window.location.href = `/onboarding/${slug}/dashboard`;
+          window.location.href = `/onboarding/${slug}/1`;
         }
       } else {
         window.location.href = '/';

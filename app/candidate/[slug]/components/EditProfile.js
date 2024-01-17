@@ -1,7 +1,7 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H6 from '@shared/typography/H6';
-import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
+import RenderInputField from '@shared/inputs/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import { useState } from 'react';
 import { colors } from './CandidateColors';

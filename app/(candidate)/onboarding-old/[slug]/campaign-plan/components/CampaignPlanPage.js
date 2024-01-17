@@ -26,7 +26,7 @@ export default function CampaignPlanPage(props) {
   });
 
   const breadcrumbsLinks = [
-    { href: `/onboarding/${slug}/dashboard`, label: 'Dashboard' },
+    { href: `/onboarding/${slug}/1`, label: 'Dashboard' },
     {
       label: 'Your Campaign Plan',
     },
@@ -39,7 +39,7 @@ export default function CampaignPlanPage(props) {
         <CampaignPlanSections {...props} ref={printRef} expandAll={expandAll} />
         <CampaignAccordion {...props} />
         <div className="text-center mb-8 font-black">
-          <a href={`/onboarding/${slug}/dashboard`}>
+          <a href={`/onboarding/${slug}/1`}>
             <BlackButton>CONTINUE</BlackButton>
           </a>
         </div>

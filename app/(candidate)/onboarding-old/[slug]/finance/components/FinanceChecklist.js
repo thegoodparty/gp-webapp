@@ -221,7 +221,7 @@ export default function FinanceChecklist({ campaign }) {
       ...campaign,
       finance: state,
     });
-    window.location.href = `/onboarding/${slug}/dashboard`;
+    window.location.href = `/onboarding/${slug}/1`;
   };
 
   return (
@@ -315,7 +315,7 @@ export default function FinanceChecklist({ campaign }) {
           ))}
         </div>
         <div className="mt-12 text-center">
-          <a href={`/onboarding/${slug}/dashboard`}>
+          <a href={`/onboarding/${slug}/1`}>
             <YellowButtonClient onClick={handleSave}>
               <strong>CONTINUE</strong>
             </YellowButtonClient>

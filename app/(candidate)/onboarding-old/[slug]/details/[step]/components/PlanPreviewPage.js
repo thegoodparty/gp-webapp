@@ -61,7 +61,7 @@ export default function PlanPreviewPage({ slug, ...props }) {
           ))}
         </div>
         <div className="flex justify-center  mb-8">
-          <a href={`/onboarding/${slug}/dashboard`}>
+          <a href={`/onboarding/${slug}/1`}>
             <BlackButtonClient>
               <div>GO TO MY DASHBOARD</div>
             </BlackButtonClient>

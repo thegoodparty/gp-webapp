@@ -65,7 +65,7 @@ export default function SocialList({ slug }) {
         </div>
       </div>
       <div className="mt-12 text-center">
-        <a href={`/onboarding/${slug}/dashboard`}>
+        <a href={`/onboarding/${slug}/1`}>
           <YellowButton>CONTINUE</YellowButton>
         </a>
       </div>

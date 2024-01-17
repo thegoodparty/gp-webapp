@@ -163,7 +163,7 @@ export default function LaunchChecklist({ campaign }) {
       });
       const res = await launchCampaign();
       if (res) {
-        window.location.href = `/onboarding/${slug}/dashboard`;
+        window.location.href = `/onboarding/${slug}/1`;
       } else {
         snackbarState.set(() => {
           return {
@@ -212,7 +212,7 @@ export default function LaunchChecklist({ campaign }) {
       ))}
       <div className="flex items-center justify-center mt-14 mb-10">
         <a
-          href={`/onboarding/${slug}/dashboard`}
+          href={`/onboarding/${slug}/1`}
           className="bg-black bg-opacity-5 py-5 px-8 rounded-lg mr-4"
         >
           BACK TO DASHBOARD

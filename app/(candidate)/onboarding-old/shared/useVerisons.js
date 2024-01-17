@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchCampaignVersions } from './ajaxActions';
+import { fetchCampaignVersions } from '../../onboarding/shared/ajaxActions';
 
 export default function useVersions() {
   const [versions, setVersions] = useState({});

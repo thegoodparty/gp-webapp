@@ -7,7 +7,7 @@ import { isValidEmail } from '@shared/inputs/EmailInput';
 import { isValidPhone } from '@shared/inputs/PhoneInput';
 import Body1 from '@shared/typography/Body1';
 import H3 from '@shared/typography/H3';
-import RenderInputField from 'app/(candidate)/onboarding/shared/RenderInputField';
+import RenderInputField from '@shared/inputs/RenderInputField';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { useEffect, useState } from 'react';
 
