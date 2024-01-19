@@ -4,6 +4,7 @@ import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
 import OnboardingPage from './components/OnboardingPage';
+import { fetchContentByKey } from 'helpers/fetchHelper';
 
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GOOD PARTY',
@@ -23,10 +24,17 @@ export default async function Page({ params }) {
     redirect(`/onboarding/${slug}/1`);
   }
 
+  let pledge;
+  if (stepInt === 6) {
+    const res = await fetchContentByKey('pledge');
+    pledge = res.content;
+  }
+
   const childProps = {
     step: stepInt,
     campaign,
     totalSteps,
+    pledge,
   };
   return <OnboardingPage {...childProps} />;
 }

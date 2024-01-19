@@ -6,7 +6,7 @@ import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
-import PositionsSelector from '../../(candidate)/onboarding/shared/PositionsAutocomplete';
+// import PositionsSelector from '../../(candidate)/onboarding/shared/PositionsAutocomplete';
 import Checkbox from '@mui/material/Checkbox';
 
 export default function RenderInputField({
@@ -140,14 +140,14 @@ export default function RenderInputField({
           </div>
         </div>
       )}
-      {field.type === 'positionsSelector' && (
+      {/* {field.type === 'positionsSelector' && (
         <PositionsSelector
           positions={positions}
           updateCallback={(positions) =>
             onChangeCallback('positions', positions)
           }
         />
-      )}
+      )} */}
     </div>
   );
 }

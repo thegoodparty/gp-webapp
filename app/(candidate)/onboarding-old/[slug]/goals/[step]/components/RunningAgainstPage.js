@@ -4,7 +4,7 @@ import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapp
 import { useRouter } from 'next/navigation';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
-import { launchCampaign } from 'app/candidate/[slug]/components/ReviewBanner';
+// import { launchCampaign } from 'app/candidate/[slug]/components/ReviewBanner';
 import RunningAgainstModule from './RunningAgainstModule';
 
 export default function RunningAgainstPage({
@@ -46,7 +46,7 @@ export default function RunningAgainstPage({
 
     if (shortVersion) {
       // launch then redirect to dashboard.
-      await launchCampaign();
+      // await launchCampaign();
       setTimeout(() => {
         window.location.href = '/dashboard/plan';
       }, 200);

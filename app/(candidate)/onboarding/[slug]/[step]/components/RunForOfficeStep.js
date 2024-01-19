@@ -1,9 +1,7 @@
 'use client';
 import { Checkbox, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import PhoneInput from '@shared/inputs/PhoneInput';
 import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
@@ -36,7 +34,7 @@ export default function RunForOfficeStep(props) {
     );
   };
 
-  const handSave = async () => {
+  const handleSave = async () => {
     if (canSubmit) {
       const updated = {
         ...campaign,
@@ -99,7 +97,7 @@ export default function RunForOfficeStep(props) {
             </div>
           )}
         </div>
-        <div className="mt-10" onClick={handSave}>
+        <div className="mt-10" onClick={handleSave}>
           <PrimaryButton disabled={!canSubmit()} type="submit">
             Next
           </PrimaryButton>

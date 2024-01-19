@@ -14,8 +14,6 @@ import wfpLogo from '/public/images/parties-logos/wfp-logo.png';
 import Image from 'next/image';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
-import { FaExclamationCircle } from 'react-icons/fa';
-import Pill from '@shared/buttons/Pill';
 
 const parties = [
   { name: 'Independent', logo: independentLogo },
@@ -152,7 +150,7 @@ export default function PartyStep(props) {
     return state.party !== '' || state.otherParty !== '';
   };
 
-  const handSave = async () => {
+  const handleSave = async () => {
     // const isInvalid = invalidOtherParty();
     // console.log('isInvalid', isInvalid, state.otherParty);
     // return;
@@ -246,7 +244,7 @@ export default function PartyStep(props) {
             />
           </div>
         </div>
-        <div className="mt-10" onClick={handSave}>
+        <div className="mt-10" onClick={handleSave}>
           <PrimaryButton disabled={!canSubmit()} type="submit">
             Next
           </PrimaryButton>

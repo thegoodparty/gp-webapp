@@ -2,6 +2,9 @@ import OnboardingLayout from 'app/(candidate)/onboarding/shared/OnboardingLayout
 import PhoneStep from './PhoneStep';
 import RunForOfficeStep from './RunForOfficeStep';
 import PartyStep from './PartyStep';
+import ZipStep from './ZipStep';
+import OfficeStep from './OfficeStep';
+import PledgeStep from './PledgeStep';
 
 export default function OnboardingPage(props) {
   const { step } = props;
@@ -11,6 +14,9 @@ export default function OnboardingPage(props) {
         {step === 1 && <PhoneStep {...props} />}
         {step === 2 && <RunForOfficeStep {...props} />}
         {step === 3 && <PartyStep {...props} />}
+        {step === 4 && <ZipStep {...props} />}
+        {step === 5 && <OfficeStep {...props} />}
+        {step === 6 && <PledgeStep {...props} />}
       </div>
     </OnboardingLayout>
   );

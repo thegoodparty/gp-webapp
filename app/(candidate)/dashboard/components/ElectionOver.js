@@ -1,7 +1,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import ScheduleModal from 'app/(candidate)/onboarding/[slug]/dashboard/components/ScheduleModal';
+import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal';
 
 import Image from 'next/image';
 

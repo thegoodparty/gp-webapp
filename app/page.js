@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import './globals.css';
 import HomePage from './homepage/HomePage';
 import OptimizeScript from '@shared/scripts/OptimizeScript';
-import { fetchCandidate } from './candidate/[slug]/page';
+// import { fetchCandidate } from './candidate/[slug]/page';
 
 const meta = pageMetaData({
   title: 'GOOD PARTY | Free tools to change the rules and disrupt the corrupt.',
@@ -33,31 +33,31 @@ export default async function Page() {
     candidateSlugs = ['tomer-almog', 'taylor-murray'];
   }
 
-  for (const slug of candidateSlugs) {
-    const { candidate, candidatePositions, reportedVoterGoals } =
-      await fetchCandidate(slug);
+  // for (const slug of candidateSlugs) {
+  //   const { candidate, candidatePositions, reportedVoterGoals } =
+  //     await fetchCandidate(slug);
 
-    let topPosition = '';
-    if (candidatePositions && candidatePositions.length > 0) {
-      for (const issue of candidatePositions) {
-        if (issue?.order && issue.order === 1) {
-          topPosition = issue?.position?.name;
-          break;
-        }
-      }
-    }
-    if (topPosition === '') {
-      // only custom issues.
-      if (candidate?.customIssues && candidate.customIssues.length > 0) {
-        topPosition = candidate.customIssues[0].position;
-      }
-    }
-    if (candidate) {
-      candidate.topPosition = topPosition;
-      candidate.reportedVoterGoals = reportedVoterGoals;
-      candidates.push(candidate);
-    }
-  }
+  //   let topPosition = '';
+  //   if (candidatePositions && candidatePositions.length > 0) {
+  //     for (const issue of candidatePositions) {
+  //       if (issue?.order && issue.order === 1) {
+  //         topPosition = issue?.position?.name;
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   if (topPosition === '') {
+  //     // only custom issues.
+  //     if (candidate?.customIssues && candidate.customIssues.length > 0) {
+  //       topPosition = candidate.customIssues[0].position;
+  //     }
+  //   }
+  //   if (candidate) {
+  //     candidate.topPosition = topPosition;
+  //     candidate.reportedVoterGoals = reportedVoterGoals;
+  //     candidates.push(candidate);
+  //   }
+  // }
 
   const content = {
     candidates,

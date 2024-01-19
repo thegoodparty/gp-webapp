@@ -4,7 +4,7 @@ import img from 'public/images/landing-pages/change.png';
 
 import Body1 from '@shared/typography/Body1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import ScheduleModal from 'app/(candidate)/onboarding/[slug]/dashboard/components/ScheduleModal';
+import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal';
 
 export default function VolunteerSection() {
   return (

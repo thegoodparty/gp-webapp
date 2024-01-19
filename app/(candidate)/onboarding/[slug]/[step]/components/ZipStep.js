@@ -1,28 +1,34 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import PhoneInput from '@shared/inputs/PhoneInput';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
 
-export default function PhoneStep(props) {
+import TextField from '@shared/inputs/TextField';
+
+export default function ZipStep(props) {
   const { campaign, step } = props;
   const router = useRouter();
   const [state, setState] = useState({
-    phone: campaign?.details?.phone || '',
-    error: false,
+    zip: campaign?.details?.zip || '',
   });
-  const onChangeField = (phone, isValid) => {
+
+  const onChangeField = (key, value) => {
     setState({
-      phone,
-      error: !isValid,
+      ...state,
+      [key]: value,
     });
   };
 
+  const canSubmit = () => {
+    return validateZip(state.zip);
+  };
+
   const handleSave = async () => {
-    if (!state.error) {
+    if (canSubmit) {
       const updated = {
         ...campaign,
         currentStep: campaign.currentStep
@@ -30,43 +36,39 @@ export default function PhoneStep(props) {
           : step,
         details: {
           ...campaign.details,
-          phone: state.phone,
+          ...state,
         },
       };
-      await updateCampaign(updated, false, true, false);
+      await updateCampaign(updated);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };
+
+  const knowsRun = campaign?.details?.runForOffice === 'yes';
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">
         <H1>
-          Hi, I&apos;m your AI
-          <br />
-          Campaign Manager
+          {knowsRun
+            ? 'What zip code are you running in?'
+            : 'What zip code would you run in?'}
         </H1>
-        <Body1 className="mt-8 mb-10">
-          I just need a little bit of information to get you started. Don&apos;t
-          worry, your personal information is safe with us and will never be
-          shared.
-        </Body1>
-        <div className="w-full max-w-md">
-          <PhoneInput
-            value={state.phone}
-            required
-            onChangeCallback={(phone, isValid) => {
-              onChangeField(phone, isValid);
+
+        <div className="w-full max-w-md mt-10">
+          <TextField
+            label="Zip code"
+            fullWidth
+            value={state.zip}
+            onChange={(e) => onChangeField('zip', e.target.value)}
+            InputLabelProps={{
+              shrink: true,
             }}
-            hideIcon
-            shrink
+            error={!validateZip(state.zip)}
           />
         </div>
         <div className="mt-10" onClick={handleSave}>
-          <PrimaryButton
-            disabled={state.error || state.phone === ''}
-            type="submit"
-          >
+          <PrimaryButton disabled={!canSubmit()} type="submit">
             Next
           </PrimaryButton>
         </div>

@@ -40,3 +40,9 @@ export function camelToKebab(camelCase) {
   }
   return camelCase.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
+
+export function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
