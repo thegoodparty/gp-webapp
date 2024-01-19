@@ -2,7 +2,7 @@
 
 import H3 from '@shared/typography/H3';
 
-import EditIssues from 'app/candidate/[slug]/components/issues/EditIssues';
+import EditIssues from './issues/EditIssues';
 
 export default function IssuesSection(props) {
   return (

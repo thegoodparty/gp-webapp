@@ -1,7 +1,5 @@
 'use client';
-import ListItem from '@shared/utils/ListItem';
-import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
-import { websiteSteps } from 'app/(candidate)/onboarding/[slug]/social/components/SocialList';
+import CampaignPlanSection from './CampaignPlanSection';
 import CampaignWebsite from './CampaignWebsite';
 
 const sections = [

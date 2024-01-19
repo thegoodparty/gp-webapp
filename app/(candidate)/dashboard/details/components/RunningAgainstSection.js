@@ -2,7 +2,7 @@
 
 import H3 from '@shared/typography/H3';
 import Body1 from '@shared/typography/Body1';
-import RunningAgainstModule from 'app/(candidate)/onboarding/[slug]/goals/[step]/components/RunningAgainstModule';
+import RunningAgainstModule from './RunningAgainstModule';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function RunningAgainstSection(props) {

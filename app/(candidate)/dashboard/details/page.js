@@ -1,9 +1,29 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import { fetchCandidate } from 'app/candidate/[slug]/page';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import DetailsPage from './components/DetailsPage';
-import { fetchPositions } from 'app/(candidate)/onboarding/[slug]/details/[step]/page';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import { getServerToken } from 'helpers/userServerHelper';
+
+export const fetchCandidate = async (slug) => {
+  try {
+    const api = gpApi.candidate.find;
+    const payload = {
+      slug,
+      allFields: true,
+    };
+    return await gpFetch(api, payload, 3600);
+  } catch (e) {
+    return false;
+  }
+};
+
+const fetchPositions = async () => {
+  const api = gpApi.admin.position.list;
+  const token = getServerToken();
+  return await gpFetch(api, false, 3600, token);
+};
 
 const meta = pageMetaData({
   title: 'My Details | GOOD PARTY',

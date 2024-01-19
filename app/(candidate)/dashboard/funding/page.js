@@ -1,5 +1,4 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import { fetchCandidate } from 'app/candidate/[slug]/page';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import CampaignFundingPage from './components/CampaignFundingPage';

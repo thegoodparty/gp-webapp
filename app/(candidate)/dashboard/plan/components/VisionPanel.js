@@ -1,5 +1,5 @@
 'use client';
-import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
+import CampaignPlanSection from './CampaignPlanSection';
 
 const sections = [
   {

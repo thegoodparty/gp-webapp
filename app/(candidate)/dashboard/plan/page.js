@@ -1,8 +1,8 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import { fetchCandidate } from 'app/candidate/[slug]/page';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import CampaignPlanPage from './components/CampaignPlanPage';
+import { fetchCandidate } from '../details/page';
 
 const meta = pageMetaData({
   title: 'Campaign Plan | GOOD PARTY',
