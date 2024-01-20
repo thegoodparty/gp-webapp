@@ -1,5 +1,5 @@
 'use client';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 

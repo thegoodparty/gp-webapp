@@ -3,7 +3,7 @@ export const fetchCache = 'force-no-store'; //https://beta.nextjs.org/docs/api-r
 
 import Dashboard from './components/Dashboard';
 import campaignSteps, { generateCampaignStatus } from './campaignSteps';
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import getCampaign from 'app/(candidate)/onboarding-old/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({

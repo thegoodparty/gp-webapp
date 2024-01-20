@@ -1,10 +1,10 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { Fragment, useEffect, useState } from 'react';
-import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import OnboardingWrapper from 'app/(candidate)/onboarding-old/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import { getUserCookie } from 'helpers/cookieHelper';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import { hookstate } from '@hookstate/core';
 import ArticlesSnippets from '../[slug]/details/[step]/components/ArticlesSnippets';
 import RenderInputField from './RenderInputField';

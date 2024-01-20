@@ -9,7 +9,7 @@ import BlackButton from '@shared/buttons/BlackButton';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import Image from 'next/image';
-import ShareCandidate from 'app/candidate/[slug]/components/ShareCandidate';
+// import ShareCandidate from 'app/candidate/[slug]/components/ShareCandidate';
 export async function subscribeEmail(payload) {
   try {
     await gpFetch(gpApi.homepage.subscribeEmail, payload);
@@ -127,7 +127,8 @@ export default function SignatureForm({
           </div>
         </div>
       ) : showShare ? (
-        <ShareCandidate />
+        // <ShareCandidate />
+        <div></div>
       ) : (
         <>
           <div className="flex flex-col">

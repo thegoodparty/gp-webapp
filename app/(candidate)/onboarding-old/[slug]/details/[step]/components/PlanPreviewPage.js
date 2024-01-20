@@ -1,9 +1,9 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
-import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
-import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
+import { fetchCampaignVersions } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
+import OnboardingWrapper from 'app/(candidate)/onboarding-old/shared/OnboardingWrapper';
+import useVersions from 'app/(candidate)/onboarding-old/shared/useVerisons';
 import Image from 'next/image';
 
 import { useEffect, useState } from 'react';

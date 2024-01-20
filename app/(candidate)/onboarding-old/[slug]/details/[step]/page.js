@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import getCampaign from 'app/(candidate)/onboarding-old/shared/getCampaign';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';

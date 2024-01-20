@@ -1,5 +1,5 @@
 'use client';
-import OnboardingPage from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import OnboardingPage from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 import IssuesPage from '../[slug]/details/[step]/components/IssuesPage';
 import PlanPreviewPage from '../[slug]/details/[step]/components/PlanPreviewPage';
 import PledgePage from '../[slug]/details/[step]/components/pledgePage';

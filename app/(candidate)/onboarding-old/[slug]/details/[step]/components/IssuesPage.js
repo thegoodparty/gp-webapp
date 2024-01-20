@@ -1,13 +1,13 @@
 'use client';
 import { useEffect } from 'react';
-import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import OnboardingWrapper from 'app/(candidate)/onboarding-old/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
-import EditIssues from 'app/candidate/[slug]/components/issues/EditIssues';
-import { mapTopIssues } from 'app/candidate/[slug]/edit/mapTopIssues';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
+// import EditIssues from 'app/candidate/[slug]/components/issues/EditIssues';
+// import { mapTopIssues } from 'app/candidate/[slug]/edit/mapTopIssues';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export default function IssuesPage({
@@ -82,7 +82,7 @@ export default function IssuesPage({
 
   return (
     <OnboardingWrapper {...props} slug={slug}>
-      <EditIssues
+      {/* <EditIssues
         campaign={campaign}
         positions={positions}
         subSectionKey={subSectionKey}
@@ -90,7 +90,7 @@ export default function IssuesPage({
         isStaged
         candidatePositions={candidatePositions}
         hideTitle
-      />
+      /> */}
       <div className="text-center mt-12" onClick={onNext}>
         <PrimaryButton disabled={!canContinue()}>NEXT</PrimaryButton>
       </div>

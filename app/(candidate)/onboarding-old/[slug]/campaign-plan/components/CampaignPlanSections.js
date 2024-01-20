@@ -1,6 +1,6 @@
 import BlackButton from '@shared/buttons/BlackButton';
-import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
+import { fetchCampaignVersions } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
+import useVersions from 'app/(candidate)/onboarding-old/shared/useVerisons';
 import { forwardRef, Fragment, useEffect, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
 import CampaignPlanSection from './CampaignPlanSection';

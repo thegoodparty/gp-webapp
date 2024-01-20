@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import getCampaign from 'app/(candidate)/onboarding-old/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 import OnboardingTeamPage from './components/OnboardingTeamPage';
 

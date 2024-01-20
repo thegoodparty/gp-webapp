@@ -1,10 +1,10 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useEffect, useState } from 'react';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PositionsAutocomplete from 'app/(candidate)/onboarding/shared/PositionsAutocomplete';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
+import PositionsAutocomplete from 'app/(candidate)/onboarding-old/shared/PositionsAutocomplete';
 import TextField from '@shared/inputs/TextField';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 
 export default function IssuesSelector({
   campaign,

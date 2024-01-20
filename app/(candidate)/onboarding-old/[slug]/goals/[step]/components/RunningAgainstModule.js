@@ -2,7 +2,7 @@
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useEffect, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 import { Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 

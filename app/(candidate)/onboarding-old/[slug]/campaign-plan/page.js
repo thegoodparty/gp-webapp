@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import CampaignPlanPage from './components/CampaignPlanPage';
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+import getCampaign from 'app/(candidate)/onboarding-old/shared/getCampaign';
 import campaignPlanFields from './campaignPlanFields';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';

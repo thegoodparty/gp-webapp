@@ -1,9 +1,9 @@
 'use client';
 import { useEffect } from 'react';
-import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import OnboardingWrapper from 'app/(candidate)/onboarding-old/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 // import { launchCampaign } from 'app/candidate/[slug]/components/ReviewBanner';
 import RunningAgainstModule from './RunningAgainstModule';
 

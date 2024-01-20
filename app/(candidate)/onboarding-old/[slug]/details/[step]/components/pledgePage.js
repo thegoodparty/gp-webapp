@@ -1,14 +1,14 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { Fragment, useEffect, useState } from 'react';
-import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import OnboardingWrapper from 'app/(candidate)/onboarding-old/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
 import ReactLoading from 'react-loading';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import { Checkbox } from '@mui/material';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 import Image from 'next/image';
 
 export default function PledgePage({

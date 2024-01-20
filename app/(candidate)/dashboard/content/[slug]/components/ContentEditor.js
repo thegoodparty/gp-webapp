@@ -19,17 +19,11 @@ import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { fetchInputFields } from '../../components/NewContentFlow';
 
-const RichEditor = dynamic(
-  () =>
-    import(
-      'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor'
-    ),
-  {
-    loading: () => (
-      <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
-    ),
-  },
-);
+const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
+  loading: () => (
+    <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+  ),
+});
 
 let aiCount = 0;
 let aiTotalCount = 0;

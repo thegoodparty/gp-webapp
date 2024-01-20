@@ -1,9 +1,9 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import OnboardingWrapper from 'app/(candidate)/onboarding/shared/OnboardingWrapper';
+import OnboardingWrapper from 'app/(candidate)/onboarding-old/shared/OnboardingWrapper';
 import { useRouter } from 'next/navigation';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { savingState } from 'app/(candidate)/onboarding/shared/OnboardingPage';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
+import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import { useEffect, useState } from 'react';
 import RenderInputField from '@shared/inputs/RenderInputField';

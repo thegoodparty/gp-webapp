@@ -15,7 +15,7 @@ import TextField from '@shared/inputs/TextField';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { trimObject } from 'helpers/stringHelper';
 import { useRouter } from 'next/navigation.js';
-import RichEditor from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/RichEditor';
+import RichEditor from 'app/shared/utils/RichEditor';
 
 export const createCandidateCallback = async (candidate) => {
   const api = gpApi.candidate.create;

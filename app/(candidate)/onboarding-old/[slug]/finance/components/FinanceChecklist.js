@@ -2,7 +2,7 @@
 import { Checkbox } from '@mui/material';
 import YellowButton from '@shared/buttons/YellowButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 import { FaChevronDown, FaExclamation } from 'react-icons/fa';

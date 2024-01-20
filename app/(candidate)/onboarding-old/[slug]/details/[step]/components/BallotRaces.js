@@ -9,7 +9,7 @@ import ZipChanger from './ZipChanger';
 import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 
 const values = ['local', 'state', 'federal'];

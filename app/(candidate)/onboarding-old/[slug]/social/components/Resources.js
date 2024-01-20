@@ -1,4 +1,4 @@
-import BlackResourceCard from 'app/(candidate)/onboarding/shared/BlackResourceCard';
+import BlackResourceCard from 'app/(candidate)/onboarding-old/shared/BlackResourceCard';
 
 export default function Resources({ cards }) {
   return (

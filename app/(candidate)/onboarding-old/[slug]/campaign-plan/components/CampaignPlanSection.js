@@ -14,7 +14,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import TogglePanel from '@shared/utils/TogglePanel';
 import PrimaryButton from '@shared/buttons/PrimaryButton';

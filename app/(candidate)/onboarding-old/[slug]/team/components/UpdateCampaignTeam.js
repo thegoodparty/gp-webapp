@@ -1,6 +1,6 @@
 'use client';
 
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import { useEffect } from 'react';
 
 export default function UpdateCampaignTeam({ campaign }) {
