@@ -28,13 +28,23 @@ const graduates = [
   },
 ];
 
-export default function GraduateSpotlight({ content }) {
+export default function GraduateSpotlight({ title, cta }) {
+  const header = title ? (
+    title
+  ) : (
+    <MarketingH2 className="text-center mb-16">Graduate spotlight</MarketingH2>
+  );
+  const ctaButton = cta ? (
+    cta
+  ) : (
+    <Link href="/academy-intro" id="spotlight-cta">
+      <PrimaryButton>Sign up for free</PrimaryButton>
+    </Link>
+  );
   return (
     <section className="my-20">
       <MaxWidth>
-        <MarketingH2 className="text-center mb-16">
-          Graduate spotlight
-        </MarketingH2>
+        {header}
         <div className="grid grid-cols-12 gap-6 md:gap-12">
           {graduates.map((graduate) => (
             <div
@@ -64,11 +74,7 @@ export default function GraduateSpotlight({ content }) {
             </div>
           ))}
         </div>
-        <div className="mt-16 flex justify-center">
-          <Link href="/academy-intro" id="spotlight-cta">
-            <PrimaryButton>Sign up for free</PrimaryButton>
-          </Link>
-        </div>
+        <div className="mt-16 flex justify-center">{ctaButton}</div>
       </MaxWidth>
     </section>
   );

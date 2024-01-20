@@ -2,22 +2,53 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import H1 from '@shared/typography/H1';
 import { states } from 'helpers/statesHelper';
 import Link from 'next/link';
+import Hero from './Hero';
+import FeaturedCities from './FeaturedCities';
+import LinksSection from '../shared/LinksSection';
+import Tools from './Tools';
+import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export default function HowToRunPage() {
+  const divisionLink = (state) => {
+    return `/how-to-run/${state.abbreviation.toLowerCase()}`;
+  };
   return (
-    <div className="min-h-[calc(100vh-56px)]">
-      <MaxWidth>
-        <H1 className="pt-12">How to Run main landing page</H1>
-        <div className="flex items-center flex-wrap mt-12 text-xl">
-          {states.map((state) => (
-            <div key={state.abbreviation} className="mr-4 pb-4">
-              <Link href={`/how-to-run/${state.abbreviation.toLowerCase()}`}>
-                {state.name}
-              </Link>
-            </div>
-          ))}
+    <div className="bg-slate-50 pb-14">
+      <Hero />
+      <div className="bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
+      <FeaturedCities />
+      <div className="bg-primary -mt-12 pt-24 md:pt-32 md:pb-12">
+        <div className="max-w-screen-xl mx-auto">
+          <LinksSection
+            entities={states}
+            linkFunc={divisionLink}
+            title="Explore elections in your state"
+          />
         </div>
-      </MaxWidth>
+      </div>
+      <div className="hidden md:block bg-[linear-gradient(172deg,_#13161A_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
+      <Tools />
+      <div className="mt-14">
+        <GraduateSpotlight
+          title={
+            <div className="text-center flex items-center flex-col mb-10 md:mb-14">
+              <h2 className=" font-semibold text-3xl md:text-5xl">
+                Real people. Real victories. Real change.
+              </h2>
+              <h3 className="mt-5 md:mt-8 text-xl md:text-3xl md:w-2/3">
+                How real people are learning how to run for office and win with
+                our free course, Good Party Academy
+              </h3>
+            </div>
+          }
+          cta={
+            <Link href="/academy">
+              <PrimaryButton>Learn more about Good Party Academy</PrimaryButton>
+            </Link>
+          }
+        />
+      </div>
     </div>
   );
 }
