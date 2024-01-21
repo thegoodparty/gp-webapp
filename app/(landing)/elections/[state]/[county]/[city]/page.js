@@ -3,7 +3,7 @@ import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import HowToRunCityPage from './components/HowToRunCityPage';
+import ElectionsCityPage from './components/ElectionsCityPage';
 
 const fetchCity = async (state, county, city) => {
   const api = gpApi.race.byCity;
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
   const meta = pageMetaData({
     title: `How to run in ${municipality.city}, ${stateName}`,
     description: `How to run in ${municipality.city}, ${stateName}`,
-    slug: `/how-to-run/${state}/${county}/${city}`,
+    slug: `/elections/${state}/${county}/${city}`,
   });
   return meta;
 }
@@ -47,5 +47,5 @@ export default async function Page({ params }) {
     county,
   };
 
-  return <HowToRunCityPage {...childProps} />;
+  return <ElectionsCityPage {...childProps} />;
 }

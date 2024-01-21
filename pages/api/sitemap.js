@@ -177,7 +177,7 @@ export default async function sitemap(req, res) {
       if (year.toString() != currentYear.toString()) {
         xmlString += `
         <url>
-          <loc>${appBase}/elections/${city}/${year}</loc>
+          <loc>${appBase}/election-results/${city}/${year}</loc>
           <lastmod>${currentDate}</lastmod>
           <changefreq>monthly</changefreq>
         </url>

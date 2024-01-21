@@ -1,5 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper';
-import HowToRunStatePage from './components/HowToRunStatePage';
+import ElectionsStatePage from './components/ElectionsStatePage';
 import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
   const meta = pageMetaData({
     title: `How to run in ${stateName}`,
     description: `How to run in ${stateName}`,
-    slug: `/how-to-run/${state}`,
+    slug: `/elections/${state}`,
   });
   return meta;
 }
@@ -40,5 +40,5 @@ export default async function Page({ params }) {
     races,
   };
 
-  return <HowToRunStatePage {...childProps} />;
+  return <ElectionsStatePage {...childProps} />;
 }

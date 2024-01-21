@@ -15,10 +15,10 @@ export default function PositionPage(props) {
   }
   const stateName = shortToLongState[data.state];
   const breadcrumbsLinks = [
-    { href: `/how-to-run`, label: 'How to run' },
+    { href: `/elections`, label: 'How to run' },
     {
       label: `how to run in ${stateName}`,
-      href: `/how-to-run/${data.state.toLowerCase()}`,
+      href: `/elections/${data.state.toLowerCase()}`,
     },
     {
       label: data.position_name,
