@@ -3,9 +3,9 @@ import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailForm from '@shared/inputs/EmailForm';
 import WarningButton from '@shared/buttons/WarningButton';
-import volunteerImg1 from '/public/images/elections/volunteer1.png';
-import volunteerImg2 from '/public/images/elections/volunteer2.png';
-import meetingImg from '/public/images/elections/meeting.jpg';
+import volunteerImg1 from '/public/images/election-results/volunteer1.png';
+import volunteerImg2 from '/public/images/election-results/volunteer2.png';
+import meetingImg from '/public/images/election-results/meeting.jpg';
 
 // import CandidatePill from '/app/candidate/[slug]/components/CandidatePill';
 

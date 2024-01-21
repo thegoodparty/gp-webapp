@@ -9,14 +9,16 @@ import Tools from './Tools';
 import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
-export default function HowToRunPage() {
+export default function ElectionsPage() {
   const divisionLink = (state) => {
-    return `/how-to-run/${state.abbreviation.toLowerCase()}`;
+    return `/elections/${state.abbreviation.toLowerCase()}`;
   };
   return (
     <div className="bg-slate-50 pb-14">
       <Hero />
-      <div className="bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
+      <div
+        className={`bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full`}
+      />
       <FeaturedCities />
       <div className="bg-primary -mt-12 pt-24 md:pt-32 md:pb-12">
         <div className="max-w-screen-xl mx-auto">

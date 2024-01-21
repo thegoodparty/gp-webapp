@@ -24,7 +24,8 @@ export default function Hero() {
             />
           </div>
         </div>
-        <SearchLocation />
+        <SearchLocation withHeader />
+        <div className="h-3"></div>
       </MaxWidth>
     </div>
   );

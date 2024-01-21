@@ -15,7 +15,7 @@ export default function Race({ race }) {
         <Body1 className="line-clamp-4">{position_description}</Body1>
         <Body1 className="my-2 font-semibold">{election_day}</Body1>
       </div>
-      <Link href={`/how-to-run/${slug}/${race.hashId}/`}>
+      <Link href={`/elections/${slug}/${race.hashId}/`}>
         <PrimaryButton fullWidth>Read More</PrimaryButton>
       </Link>
     </div>

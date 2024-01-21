@@ -8,19 +8,21 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import Race from './Race';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Hero from './Hero';
 
-export default function HowToRunStatePage(props) {
+export default function ElectionsStatePage(props) {
   const { state, childEntity, races } = props;
   const stateName = shortToLongState[state.toUpperCase()];
 
   const breadcrumbsLinks = [
-    { href: `/how-to-run`, label: 'How to run' },
+    { href: `/elections`, label: 'How to run' },
     {
       label: `how to run in ${stateName}`,
     },
   ];
   return (
-    <div className="min-h-[calc(100vh-56px)]">
+    <div className="bg-slate-50">
+      <Hero {...props} color1="#3EE996" color2="#31D3C8" />
       <MaxWidth>
         <Breadcrumbs links={breadcrumbsLinks} />
         <H1 className="pt-12">
@@ -31,7 +33,7 @@ export default function HowToRunStatePage(props) {
         <div className="flex items-center flex-wrap mt-6">
           {childEntity.map((entity) => (
             <div key={entity.id} className="mr-4 pb-4">
-              <Link href={`/how-to-run/${state}/${slugify(entity.name, true)}`}>
+              <Link href={`/elections/${state}/${slugify(entity.name, true)}`}>
                 {entity.name} county
               </Link>
             </div>

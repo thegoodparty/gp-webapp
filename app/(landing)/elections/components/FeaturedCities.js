@@ -2,7 +2,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import Link from 'next/link';
-import map from 'public/images/how-to-run/map.png';
+import map from 'public/images/elections/map.png';
 
 const cities = [
   { name: 'Los Angeles', state: 'CA', county: 'Los Angeles', openElections: 2 },
@@ -16,7 +16,7 @@ const cities = [
 ];
 export default function FeaturedCities() {
   const link = (city) => {
-    return `/how-to-run/${city.state.toLowerCase()}/${city.county.toLowerCase()}/${city.name.toLowerCase()}`;
+    return `/elections/${city.state.toLowerCase()}/${city.county.toLowerCase()}/${city.name.toLowerCase()}`;
   };
   return (
     <section>

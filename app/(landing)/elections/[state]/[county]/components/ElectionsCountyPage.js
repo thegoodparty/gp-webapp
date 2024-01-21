@@ -6,25 +6,24 @@ import { shortToLongState } from 'helpers/statesHelper';
 import Link from 'next/link';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Race from '../../components/Race';
-import { Fragment } from 'react';
 
-export default function HowToRunCountyPage(props) {
+export default function ElectionsCountyPage(props) {
   const { state, childEntities, races, county } = props;
   const stateName = shortToLongState[state.toUpperCase()];
   const countyName = `${county?.county} County`;
 
   const breadcrumbsLinks = [
-    { href: `/how-to-run`, label: 'How to run' },
+    { href: `/elections`, label: 'How to run' },
     {
       label: `how to run in ${stateName}`,
-      href: `/how-to-run/${state}`,
+      href: `/elections/${state}`,
     },
     {
       label: `how to run in ${countyName}`,
     },
   ];
   return (
-    <div className="min-h-[calc(100vh-56px)]">
+    <div className="">
       <MaxWidth>
         <Breadcrumbs links={breadcrumbsLinks} />
         <H1 className="pt-12">
@@ -36,7 +35,7 @@ export default function HowToRunCountyPage(props) {
           {childEntities.map((entity) => (
             <div key={entity.id} className="mr-4 pb-4">
               <Link
-                href={`/how-to-run/${state}/${slugify(
+                href={`/elections/${state}/${slugify(
                   county.county,
                   true,
                 )}/${slugify(entity.name, true)}`}

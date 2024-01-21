@@ -30,9 +30,9 @@ const fetchCounty = async (state, county) => {
   return await gpFetch(api, payload, 3600);
 };
 
-export default function SearchLocation() {
+export default function SearchLocation({ withHeader = false, initialState }) {
   const [state, setState] = useState({
-    state: '',
+    state: initialState || '',
     county: '',
     municipality: '',
     countyOptions: [],
@@ -67,7 +67,7 @@ export default function SearchLocation() {
     if (state.state === '') {
       return;
     }
-    let url = `/how-to-run/${slugify(state.state, true)}`;
+    let url = `/elections/${slugify(state.state, true)}`;
     if (state.county !== '') {
       url += `/${slugify(state.county, true)}`;
     }
@@ -78,23 +78,27 @@ export default function SearchLocation() {
   };
 
   return (
-    <div className="mb-10">
-      <H2 className="mb-6">
-        Find elections at the State, County or City level
-      </H2>
+    <div>
+      {withHeader && (
+        <H2 className="mb-6">
+          Find elections at the State, County or City level
+        </H2>
+      )}
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12 md:col-span-3">
           <Select
             native
             value={state.state}
             fullWidth
+            label="State"
             variant="outlined"
             onChange={(e) => onChangeState(e.target.value)}
+            sx={{ backgroundColor: 'white' }}
             startAdornment={
               // Placing the icon as startAdornment
               <InputAdornment position="start">
                 <Image
-                  src="/images/how-to-run/state-select.svg"
+                  src="/images/elections/state-select.svg"
                   alt="state"
                   width={28}
                   height={28}
@@ -118,13 +122,15 @@ export default function SearchLocation() {
             value={state.county}
             fullWidth
             variant="outlined"
+            sx={{ backgroundColor: 'white' }}
+            label="County"
             disabled={state.state === '' || state.countyOptions.length === 0}
             onChange={(e) => onChangeCounty(e.target.value)}
             startAdornment={
               // Placing the icon as startAdornment
               <InputAdornment position="start">
                 <Image
-                  src="/images/how-to-run/county-select.svg"
+                  src="/images/elections/county-select.svg"
                   alt="state"
                   width={28}
                   height={28}
@@ -154,13 +160,15 @@ export default function SearchLocation() {
             value={state.municipality}
             fullWidth
             variant="outlined"
+            sx={{ backgroundColor: 'white' }}
+            label="Municipality"
             disabled={state.county === '' || state.munOptions.length === 0}
             onChange={(e) => onChangeMun(e.target.value)}
             startAdornment={
               // Placing the icon as startAdornment
               <InputAdornment position="start">
                 <Image
-                  src="/images/how-to-run/mun-select.svg"
+                  src="/images/elections/mun-select.svg"
                   alt="state"
                   width={28}
                   height={28}
