@@ -1,9 +1,9 @@
 import WarningButton from '@shared/buttons/WarningButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import { slugify } from 'helpers/articleHelper';
 import Image from 'next/image';
 import Link from 'next/link';
 import map from 'public/images/elections/map.png';
-import slugify from 'slugify';
 
 const cities = [
   { name: 'Los Angeles', state: 'CA', county: 'Los Angeles', openElections: 2 },
@@ -56,7 +56,7 @@ export default function FeaturedCities() {
                   <div className="mt-6 md:mt-10">
                     <Link
                       href={link(city)}
-                      id={`view-city-${slugify(city, true)}`}
+                      id={`view-city-${slugify(city.name, true)}`}
                     >
                       <WarningButton size="medium">
                         View {city.name} elections
