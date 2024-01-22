@@ -6,54 +6,33 @@ import { slugify } from 'helpers/articleHelper';
 import { shortToLongState } from 'helpers/statesHelper';
 import Link from 'next/link';
 import { Fragment } from 'react';
-import Race from './Race';
+import Race from '../../shared/Race';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Hero from './Hero';
+import LinksSection from '../../shared/LinksSection';
+import RacesSection from '../../shared/RacesSection';
 
 export default function ElectionsStatePage(props) {
   const { state, childEntity, races } = props;
   const stateName = shortToLongState[state.toUpperCase()];
 
-  const breadcrumbsLinks = [
-    { href: `/elections`, label: 'How to run' },
-    {
-      label: `how to run in ${stateName}`,
-    },
-  ];
+  const countyLink = (county) => {
+    console.log('county', county);
+    return `/elections/${state}/${slugify(county.name, true)}`;
+  };
   return (
-    <div className="bg-slate-50">
-      <Hero {...props} color1="#3EE996" color2="#31D3C8" />
+    <div className="bg-slate-50 pb-20">
+      <Hero {...props} color1="#3EE996" color2="#31D3C8" level="state" />
       <MaxWidth>
-        <Breadcrumbs links={breadcrumbsLinks} />
-        <H1 className="pt-12">
-          How to Run in {shortToLongState[state.toUpperCase()]}
-        </H1>
-
-        <H2 className="mt-12">Counties in {stateName}</H2>
-        <div className="flex items-center flex-wrap mt-6">
-          {childEntity.map((entity) => (
-            <div key={entity.id} className="mr-4 pb-4">
-              <Link href={`/elections/${state}/${slugify(entity.name, true)}`}>
-                {entity.name} county
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12">
-          <H2>State level Races in {stateName}</H2>
-          <div className="grid grid-cols-12 gap-6 mt-6">
-            {races.map((race) => (
-              <div
-                key={race.id}
-                className=" col-span-12 md:col-span-6 lg:col-span-4"
-              >
-                <Race race={race} />
-              </div>
-            ))}
-          </div>
-        </div>
+        <RacesSection races={races} />
       </MaxWidth>
+      <div className="max-w-screen-xl mx-auto mt-20">
+        <LinksSection
+          entities={childEntity}
+          linkFunc={countyLink}
+          title={`Explore 2024 county elections in ${stateName}`}
+        />
+      </div>
     </div>
   );
 }

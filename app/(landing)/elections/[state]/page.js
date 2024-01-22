@@ -5,13 +5,14 @@ import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-const fetchState = async (state) => {
+const fetchState = async (state, viewAll) => {
   const api = gpApi.race.byState;
   const payload = {
     state,
+    viewAll: viewAll === 'true',
   };
 
-  return await gpFetch(api, payload, 3600);
+  return await gpFetch(api, payload, 1);
 };
 
 export async function generateMetadata({ params }) {
@@ -26,18 +27,20 @@ export async function generateMetadata({ params }) {
   return meta;
 }
 
-export default async function Page({ params }) {
+export default async function Page({ params, searchParams }) {
   const { state } = params;
+  const { viewAll } = searchParams;
   if (!state || !shortToLongState[state.toUpperCase()]) {
     notFound();
   }
 
-  const { counties, races } = await fetchState(state);
+  const { counties, races } = await fetchState(state, viewAll);
 
   const childProps = {
     state,
     childEntity: counties,
     races,
+    viewAll,
   };
 
   return <ElectionsStatePage {...childProps} />;
