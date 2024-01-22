@@ -16,13 +16,15 @@ const fetchState = async (state, viewAll) => {
   return await gpFetch(api, payload, 1);
 };
 
+const year = new Date().getFullYear();
+
 export async function generateMetadata({ params }) {
   const { state } = params;
   const stateName = shortToLongState[state.toUpperCase()];
 
   const meta = pageMetaData({
-    title: `How to run in ${stateName}`,
-    description: `How to run in ${stateName}`,
+    title: `Run for Office in ${stateName} ${year}`,
+    description: `Learn about available opportunities to run for office in ${stateName} and tips for launching a successful campaign.`,
     slug: `/elections/${state}`,
   });
   return meta;

@@ -12,7 +12,11 @@ export default function Race({ race }) {
   if (level === 'state') {
   }
   return (
-    <Link href={`/elections/${slug}/${race.hashId}/`} className="no-underline">
+    <Link
+      href={`/elections/${slug}/${race.hashId}/`}
+      className="no-underline"
+      id={`office-${slug}-${race.hashId}`}
+    >
       <div
         className={` py-5 px-5 mb-3 rounded-lg transition-colors ${
           level === 'state'

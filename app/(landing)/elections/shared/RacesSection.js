@@ -25,7 +25,7 @@ export default function RacesSection({ races }) {
         </div>
       ))}
       <div className="mt-6 flex justify-center">
-        <Link href="?viewAll=true">
+        <Link href="?viewAll=true" id="view-all">
           <PrimaryButton> View all</PrimaryButton>
         </Link>
       </div>
