@@ -3,14 +3,15 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import Link from 'next/link';
 import map from 'public/images/elections/map.png';
+import slugify from 'slugify';
 
 const cities = [
   { name: 'Los Angeles', state: 'CA', county: 'Los Angeles', openElections: 2 },
-  { name: 'Austin', state: 'Tx', county: 'Los Angeles', openElections: 3 },
+  { name: 'Austin', state: 'Tx', county: 'Whatever', openElections: 3 },
   {
-    name: 'Los Angeles',
+    name: 'San Diego',
     state: 'CA',
-    county: 'Los Angeles',
+    county: 'San Diego',
     openElections: 133,
   },
 ];
@@ -53,7 +54,10 @@ export default function FeaturedCities() {
                     open elections
                   </div>
                   <div className="mt-6 md:mt-10">
-                    <Link href={link(city)}>
+                    <Link
+                      href={link(city)}
+                      id={`view-city-${slugify(city, true)}`}
+                    >
                       <WarningButton size="medium">
                         View {city.name} elections
                       </WarningButton>
