@@ -192,7 +192,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
           </Select>
         </div>
         <div className="col-span-12 md:col-span-3">
-          <div onClick={handleSubmit}>
+          <div onClick={handleSubmit} id="location-search-go">
             <SuccessButton
               style={{ padding: '12px 20px', marginTop: '4px' }}
               disabled={state.state === ''}

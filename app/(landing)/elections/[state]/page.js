@@ -4,6 +4,7 @@ import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { fetchArticle } from 'app/blog/article/[slug]/page';
 
 const fetchState = async (state, viewAll) => {
   const api = gpApi.race.byState;
@@ -35,12 +36,23 @@ export default async function Page({ params, searchParams }) {
   }
 
   const { counties, races } = await fetchState(state, viewAll);
+  const articleSlugs = [
+    '8-things-to-know-before-running-for-local-office',
+    'turning-passion-into-action-campaign-launch',
+    'comprehensive-guide-running-for-local-office',
+  ];
+  const articles = [];
+  for (const slug of articleSlugs) {
+    const { content } = await fetchArticle(slug);
+    articles.push(content);
+  }
 
   const childProps = {
     state,
     childEntity: counties,
     races,
     viewAll,
+    articles,
   };
 
   return <ElectionsStatePage {...childProps} />;

@@ -11,9 +11,11 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Hero from './Hero';
 import LinksSection from '../../shared/LinksSection';
 import RacesSection from '../../shared/RacesSection';
+import LearnToRun from '../../shared/LearnToRun';
+import Guides from '../../shared/Guides';
 
 export default function ElectionsStatePage(props) {
-  const { state, childEntity, races } = props;
+  const { state, childEntity, races, articles } = props;
   const stateName = shortToLongState[state.toUpperCase()];
 
   const countyLink = (county) => {
@@ -26,13 +28,17 @@ export default function ElectionsStatePage(props) {
       <MaxWidth>
         <RacesSection races={races} />
       </MaxWidth>
-      <div className="max-w-screen-xl mx-auto mt-20">
-        <LinksSection
-          entities={childEntity}
-          linkFunc={countyLink}
-          title={`Explore 2024 county elections in ${stateName}`}
-        />
+      <div className="bg-primary pt-1 pb-20 mt-10">
+        <div className="max-w-screen-xl mx-auto mt-20">
+          <LinksSection
+            entities={childEntity}
+            linkFunc={countyLink}
+            title={`Explore 2024 county elections in ${stateName}`}
+          />
+        </div>
       </div>
+      <LearnToRun stateName={stateName} />
+      <Guides articles={articles} />
     </div>
   );
 }

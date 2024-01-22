@@ -30,7 +30,7 @@ export default function Tools() {
                 how the AI Campaign Manager can streamline your campaign
                 strategy.
               </Body1>
-              <Link href="/get-a-demo">
+              <Link href="/get-a-demo" id="get-a-demo">
                 <WarningButton>Get a free demo</WarningButton>
               </Link>
             </div>
@@ -71,6 +71,7 @@ export default function Tools() {
             <Link
               href="/run-for-office"
               aria-label="Try the AI campaign manager today"
+              id="run-for-office-get-started"
             >
               <WarningButton>Get Started</WarningButton>
             </Link>
