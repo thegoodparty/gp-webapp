@@ -8,8 +8,11 @@ import { FaArrowRightLong } from 'react-icons/fa6';
 export default function Race({ race }) {
   const { positionName, positionDescription, date, level } = race;
   const slug = slugify(positionName, true);
-  let color = '#F5FFFC';
+  let color = '';
   if (level === 'state') {
+    color = '#F5FFFC';
+  } else if (level === 'county') {
+    color = '#3ABBEA';
   }
   return (
     <Link
@@ -22,8 +25,11 @@ export default function Race({ race }) {
           level === 'state'
             ? 'bg-[#F5FFFC] hover:bg-[rgba(51,225,178,0.8)]'
             : ''
+        } ${
+          level === 'county'
+            ? 'bg-[#F5FFFC] hover:bg-[rgba(58,187,234,0.5)]'
+            : ''
         }`}
-        // style={{ backgroundColor: color }}
       >
         <div className="grid-cols-12 gap-3 grid items-center">
           <div className="col-span-12 md:col-span-9">

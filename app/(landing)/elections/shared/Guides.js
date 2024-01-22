@@ -5,7 +5,6 @@ import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
 import Link from 'next/link';
 
 export default function Guides({ articles }) {
-  console.log('articles', articles);
   return (
     <section className="mt-10 md:mt-20">
       <MaxWidth>

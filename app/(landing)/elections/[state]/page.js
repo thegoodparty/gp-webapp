@@ -13,7 +13,7 @@ const fetchState = async (state, viewAll) => {
     viewAll: viewAll === 'true',
   };
 
-  return await gpFetch(api, payload, 1);
+  return await gpFetch(api, payload, 3600);
 };
 
 const year = new Date().getFullYear();

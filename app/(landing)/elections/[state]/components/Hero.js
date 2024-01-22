@@ -7,7 +7,7 @@ import H2 from '@shared/typography/H2';
 import Subtitle2 from '@shared/typography/Subtitle2';
 const year = new Date().getFullYear();
 
-export default function Hero({ state, color1, color2, level }) {
+export default function Hero({ state, county, color1, color2, level }) {
   const stateName = shortToLongState[state.toUpperCase()];
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
@@ -15,6 +15,21 @@ export default function Hero({ state, color1, color2, level }) {
       label: `how to run in ${stateName}`,
     },
   ];
+  if (level === 'county') {
+    breadcrumbsLinks[1].href = `/elections/${state}`;
+    breadcrumbsLinks.push({
+      label: county.county_full,
+    });
+  }
+  let title = '';
+  let subTitle = '';
+  if (level === 'state') {
+    title = `Run for ${stateName} state office`;
+    subTitle = `${stateName} state elections ${year}`;
+  } else if (level === 'county') {
+    title = `Run for ${county.county_full}, ${state.toUpperCase()} office`;
+    subTitle = `${county.county_full} elections ${year}`;
+  }
   return (
     <>
       <div
@@ -25,7 +40,7 @@ export default function Hero({ state, color1, color2, level }) {
       >
         <div className="bg-white bg-opacity-60 py-5">
           <MaxWidth>
-            <SearchLocation initialState={state?.toUpperCase()} />
+            <SearchLocation />
           </MaxWidth>
         </div>
         <div className="mt-8 md:mt-20">
@@ -33,11 +48,7 @@ export default function Hero({ state, color1, color2, level }) {
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-12 md:col-span-9">
                 <Breadcrumbs links={breadcrumbsLinks} />
-                <h1 className="text-3xl md:text-6xl font-medium">
-                  Run for {stateName}
-                  <br />
-                  state office
-                </h1>
+                <h1 className="text-3xl md:text-6xl font-medium">{title}</h1>
               </div>
               <div className="col-span-12 md:col-span-3 flex justify-end md:block">
                 <div className="w-1/4  md:w-full -mt-14 md:-mt-0">
@@ -65,7 +76,7 @@ export default function Hero({ state, color1, color2, level }) {
                 height={28}
               />
               <h2 className="ml-2 font-semibold text-lg md:text-2xl">
-                {stateName} {level} elections {year}
+                {subTitle}
               </h2>
             </div>
             <div className="items-center hidden md:flex">
