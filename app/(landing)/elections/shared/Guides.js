@@ -22,6 +22,7 @@ export default function Guides({ articles }) {
         <Link
           href="/blog/section/for-candidates"
           className="block mt-10 text-center"
+          id="explore-more-resources"
         >
           <PrimaryButton>Explore more resources</PrimaryButton>
         </Link>

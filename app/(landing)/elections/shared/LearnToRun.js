@@ -52,7 +52,11 @@ export default function LearnToRun({ stateName }) {
                 takes to run for office, from getting out the vote to navigating
                 the world of campaign finance.
               </Body1>
-              <Link href="/academy" className="mt-10 block">
+              <Link
+                href="/academy"
+                className="mt-10 block"
+                id="signup-for-academy"
+              >
                 <WarningButton>Sign up for Good Party Academy</WarningButton>
               </Link>
             </div>

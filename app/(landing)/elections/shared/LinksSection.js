@@ -10,7 +10,9 @@ export default function LinksSection({ entities, linkFunc, title }) {
             key={entity.name}
             className=" col-span-6 md:col-span-3 text-sm text-blue-500"
           >
-            <Link href={linkFunc(entity)}>{entity.name}</Link>
+            <Link href={linkFunc(entity)} id={`location-${linkFunc(entity)}`}>
+              {entity.name}
+            </Link>
           </div>
         ))}
       </div>
