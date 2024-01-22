@@ -2,6 +2,7 @@ import { FaCity, FaPeopleGroup, FaPeopleRoof } from 'react-icons/fa6';
 import { MdOutlineWorkOff } from 'react-icons/md';
 import { SlWallet } from 'react-icons/sl';
 import { TbHomeShare } from 'react-icons/tb';
+import { numberFormatter } from 'helpers/numberHelper';
 
 export default function CountyFacts({ county }) {
   console.log('county', county);
@@ -16,19 +17,32 @@ export default function CountyFacts({ county }) {
 
   const fields = [
     { label: 'Largest city', value: city_largest, icon: <FaCity /> },
-    { label: 'Population', value: population, icon: <FaPeopleGroup /> },
-    { label: 'Density', value: density, icon: <FaPeopleRoof /> },
+    {
+      label: 'Population',
+      value: population,
+      icon: <FaPeopleGroup />,
+      isNumber: true,
+    },
+    { label: 'Density', value: `${density} per Sq KM`, icon: <FaPeopleRoof /> },
     {
       label: 'Median income',
       value: income_household_median,
       icon: <SlWallet />,
+      isNumber: true,
     },
     {
       label: 'Unemployment rate',
       value: unemployment_rate,
       icon: <MdOutlineWorkOff />,
+      isPercent: true,
     },
-    { label: 'Home Value', value: home_value, icon: <TbHomeShare /> },
+    {
+      label: 'Home Value',
+      value: home_value,
+      icon: <TbHomeShare />,
+      isNumber: true,
+      isMoney: true,
+    },
   ];
 
   return (
@@ -49,7 +63,9 @@ export default function CountyFacts({ county }) {
               <div className="mt-4 text-center">
                 <div className="text-2xl font-semibold">{field.label}</div>
                 <div className="text-lg text-slate-700 mt-2 mb-10">
-                  {field.value}
+                  {field.isMoney ? '$' : ''}
+                  {field.isNumber ? numberFormatter(field.value) : field.value}
+                  {field.isPercent ? '%' : ''}
                 </div>
               </div>
             </div>
