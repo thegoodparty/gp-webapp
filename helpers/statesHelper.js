@@ -66,10 +66,6 @@ export const states = [
     abbreviation: 'AK',
   },
   {
-    name: 'American Samoa',
-    abbreviation: 'AS',
-  },
-  {
     name: 'Arizona',
     abbreviation: 'AZ',
   },
@@ -96,10 +92,6 @@ export const states = [
   {
     name: 'District Of Columbia',
     abbreviation: 'DC',
-  },
-  {
-    name: 'Federated States Of Micronesia',
-    abbreviation: 'FM',
   },
   {
     name: 'Florida',
@@ -148,10 +140,6 @@ export const states = [
   {
     name: 'Maine',
     abbreviation: 'ME',
-  },
-  {
-    name: 'Marshall Islands',
-    abbreviation: 'MH',
   },
   {
     name: 'Maryland',
@@ -212,10 +200,6 @@ export const states = [
   {
     name: 'North Dakota',
     abbreviation: 'ND',
-  },
-  {
-    name: 'Northern Mariana Islands',
-    abbreviation: 'MP',
   },
   {
     name: 'Ohio',

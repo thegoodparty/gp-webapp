@@ -5,23 +5,23 @@ import { slugify } from 'helpers/articleHelper';
 import { shortToLongState } from 'helpers/statesHelper';
 import Link from 'next/link';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import Race from '../../../components/Race';
+import Race from '../../../../shared/Race';
 
-export default function HowToRunCityPage(props) {
+export default function ElectionsCityPage(props) {
   const { state, municipality, races, county } = props;
   const stateName = shortToLongState[state.toUpperCase()];
   const countyName = `${municipality.county_name} County`;
   const cityName = `${municipality.city}`;
 
   const breadcrumbsLinks = [
-    { href: `/how-to-run`, label: 'How to run' },
+    { href: `/elections`, label: 'How to run' },
     {
       label: `how to run in ${stateName}`,
-      href: `/how-to-run/${state}`,
+      href: `/elections/${state}`,
     },
     {
       label: `how to run in ${countyName}`,
-      href: `/how-to-run/${state}/${county}`,
+      href: `/elections/${state}/${county}`,
     },
     {
       label: `how to run in ${countyName}`,

@@ -3,7 +3,7 @@ import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import HowToRunCountyPage from './components/HowToRunCountyPage';
+import ElectionsCountyPage from './components/ElectionsCountyPage';
 import PositionPage from './components/PositionPage';
 
 const fetchCounty = async (state, county) => {
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
     const meta = pageMetaData({
       title: `How to run in ${county.county} county, ${stateName}`,
       description: `How to run in ${county.county} county, ${stateName}`,
-      slug: `/how-to-run/${state}/${params.county}`,
+      slug: `/elections/${state}/${params.county}`,
     });
     return meta;
   }
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }) {
   const meta = pageMetaData({
     title: race.data.position_name,
     description: race.data.position_description,
-    slug: `/how-to-run/${state}/${params.county}`,
+    slug: `/elections/${state}/${params.county}`,
   });
   return meta;
 }
@@ -74,5 +74,5 @@ export default async function Page({ params }) {
     county,
   };
 
-  return <HowToRunCountyPage {...childProps} />;
+  return <ElectionsCountyPage {...childProps} />;
 }
