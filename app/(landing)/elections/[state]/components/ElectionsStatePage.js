@@ -1,13 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import H1 from '@shared/typography/H1';
-import H2 from '@shared/typography/H2';
-import H3 from '@shared/typography/H3';
 import { slugify } from 'helpers/articleHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import Link from 'next/link';
-import { Fragment } from 'react';
-import Race from '../../shared/Race';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Hero from './Hero';
 import LinksSection from '../../shared/LinksSection';
 import RacesSection from '../../shared/RacesSection';
@@ -19,7 +12,6 @@ export default function ElectionsStatePage(props) {
   const stateName = shortToLongState[state.toUpperCase()];
 
   const countyLink = (county) => {
-    console.log('county', county);
     return `/elections/${state}/${slugify(county.name, true)}`;
   };
   return (

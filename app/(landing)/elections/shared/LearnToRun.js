@@ -33,79 +33,82 @@ const graduates = [
 
 export default function LearnToRun({ stateName }) {
   return (
-    <div className="max-w-screen-xl mx-auto">
-      <section className="mt-20 md:mt-48 px-4 py-10 md:p-20 md:rounded-xl relative shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-        <div className="relative z-10">
-          <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12 md:col-span-6">
-              <Image
-                src="/images/heart-hologram.svg"
-                alt="GoodParty"
-                width={200}
-                height={200}
-              />
-              <MarketingH2 className="my-10 md:pr-8">
-                Learn how to run for office in {stateName}
-              </MarketingH2>
-              <Body1>
-                Good Party Academy is your crash course for learning what it
-                takes to run for office, from getting out the vote to navigating
-                the world of campaign finance.
-              </Body1>
-              <Link
-                href="/academy"
-                className="mt-10 block"
-                id="signup-for-academy"
-              >
-                <WarningButton>Sign up for Good Party Academy</WarningButton>
-              </Link>
-            </div>
-            <div className="col-span-12 md:col-span-6">
-              <div className="relative md:-mt-40">
-                {graduates.map((graduate) => (
-                  <div
-                    key={graduate.name}
-                    className="px-6 py-5  shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] bg-white rounded-xl mb-7 grid grid-cols-12 gap-4"
-                  >
-                    <div className="col-span-3 relative">
-                      <Image
-                        src={graduate.img}
-                        alt={graduate.name}
-                        className=" object-contain object-top rounded-full"
-                      />
-                    </div>
-                    <div className=" col-span-9">
-                      <Body1 className="">{graduate.desc}</Body1>
-                    </div>
-                    <div className="col-span-3"></div>
-                    <div className="col-span-6">
-                      <div className="font-bold text-purple-400">
-                        {graduate.name}
+    <div className="relative pt-20 md:pt-48">
+      <div className="absolute bg-primary top-0 h-1/2 w-full left-0"></div>
+      <div className="max-w-screen-xl mx-auto relative z-10">
+        <section className=" px-4 py-10 md:p-20 md:rounded-xl relative bg-slate-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <div className="relative z-10">
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-12 md:col-span-6">
+                <Image
+                  src="/images/heart-hologram.svg"
+                  alt="GoodParty"
+                  width={200}
+                  height={200}
+                />
+                <MarketingH2 className="my-10 md:pr-8">
+                  Learn how to run for office in {stateName}
+                </MarketingH2>
+                <Body1>
+                  Good Party Academy is your crash course for learning what it
+                  takes to run for office, from getting out the vote to
+                  navigating the world of campaign finance.
+                </Body1>
+                <Link
+                  href="/academy"
+                  className="mt-10 block"
+                  id="signup-for-academy"
+                >
+                  <WarningButton>Sign up for Good Party Academy</WarningButton>
+                </Link>
+              </div>
+              <div className="col-span-12 md:col-span-6">
+                <div className="relative md:-mt-40">
+                  {graduates.map((graduate) => (
+                    <div
+                      key={graduate.name}
+                      className="px-6 py-5  shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] bg-white rounded-xl mb-7 grid grid-cols-12 gap-4"
+                    >
+                      <div className="col-span-3 relative">
+                        <Image
+                          src={graduate.img}
+                          alt={graduate.name}
+                          className=" object-contain object-top rounded-full"
+                        />
                       </div>
-                      <Body2 className="text-purple-400 mt-2">
-                        {graduate.run}
-                      </Body2>
-                    </div>
-                    <div className="col-span-3 flex justify-end">
-                      <div className=" text-purple-400 text-6xl ">
-                        <BiSolidQuoteAltRight />
+                      <div className=" col-span-9">
+                        <Body1 className="">{graduate.desc}</Body1>
+                      </div>
+                      <div className="col-span-3"></div>
+                      <div className="col-span-6">
+                        <div className="font-bold text-purple-400">
+                          {graduate.name}
+                        </div>
+                        <Body2 className="text-purple-400 mt-2">
+                          {graduate.run}
+                        </Body2>
+                      </div>
+                      <div className="col-span-3 flex justify-end">
+                        <div className=" text-purple-400 text-6xl ">
+                          <BiSolidQuoteAltRight />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="absolute w-full left-0 h-2/3 top-0">
-          <Image
-            src="/images/landing-pages/spot-bg.svg"
-            fill
-            alt="bg"
-            className="object-cover md:object-contain object-right-top"
-          />
-        </div>
-      </section>
+          <div className="absolute w-full left-0 h-2/3 top-0">
+            <Image
+              src="/images/landing-pages/spot-bg.svg"
+              fill
+              alt="bg"
+              className="object-cover md:object-contain object-right-top"
+            />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
