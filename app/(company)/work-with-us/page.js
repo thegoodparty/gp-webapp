@@ -8,7 +8,8 @@ import React, { Suspense } from 'react';
 
 import Hero from './components/Hero';
 import Values from './components/Values';
-import LeverCareers from './components/LeverCareers';
+// import LeverCareers from './components/LeverCareers';
+import AshbyCareers from './components/AshbyCareers';
 import Why from './components/Why';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import pageMetaData from 'helpers/metadataHelper';
@@ -32,7 +33,8 @@ function CareersWrapper() {
       </Suspense>
       <MaxWidth>
         <Suspense fallback={`Loading...`}>
-          <LeverCareers />
+          {/* <LeverCareers /> */}
+          <AshbyCareers />
         </Suspense>
         <Suspense fallback={`Loading...`}>
           <Why />
