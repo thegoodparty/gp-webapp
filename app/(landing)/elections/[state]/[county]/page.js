@@ -15,7 +15,7 @@ const fetchCounty = async (state, county, viewAll) => {
     viewAll,
   };
 
-  return await gpFetch(api, payload, 1);
+  return await gpFetch(api, payload, 3600);
 };
 
 const fetchPosition = async (id) => {
