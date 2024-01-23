@@ -18,11 +18,11 @@ export default function Hero() {
             />
           </div>
           <h1 className="text-6xl md:text-[92px] font-semibold">
-            Shape our
+            Helping
             <br />
-            country&apos;s
+            independents
             <br />
-            destiny
+            run and win
             <br />
           </h1>
           <h2 className="text-lg font-sfpro font-normal leading-6 mt-5">
