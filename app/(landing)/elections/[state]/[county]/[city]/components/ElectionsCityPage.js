@@ -1,64 +1,28 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import H1 from '@shared/typography/H1';
-import H2 from '@shared/typography/H2';
 import { slugify } from 'helpers/articleHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import Link from 'next/link';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import Race from '../../../../shared/Race';
+import LinksSection from '../../../../shared/LinksSection';
+import RacesSection from '../../../../shared/RacesSection';
+import LearnToRun from '../../../../shared/LearnToRun';
+import Guides from '../../../../shared/Guides';
+import Hero from '../../../components/Hero';
+import CityFacts from './CityFacts';
 
-export default function ElectionsCityPage(props) {
-  const { state, municipality, races, county } = props;
+export default function ElectionsCountyPage(props) {
+  const { state, municipality, races, articles, county } = props;
   const stateName = shortToLongState[state.toUpperCase()];
-  const countyName = `${municipality.county_name} County`;
-  const cityName = `${municipality.city}`;
 
-  const breadcrumbsLinks = [
-    { href: `/elections`, label: 'How to run' },
-    {
-      label: `how to run in ${stateName}`,
-      href: `/elections/${state}`,
-    },
-    {
-      label: `how to run in ${countyName}`,
-      href: `/elections/${state}/${county}`,
-    },
-    {
-      label: `how to run in ${countyName}`,
-    },
-  ];
   return (
-    <div className="min-h-[calc(100vh-56px)]">
+    <div className="bg-slate-50 pb-20">
+      <Hero {...props} color1="#897AF1" color2="#C985F2" level="city" />
       <MaxWidth>
-        <Breadcrumbs links={breadcrumbsLinks} />
-        <H1 className="pt-12">
-          How to Run in {cityName}, {stateName}
-        </H1>
-
-        <div className="mt-12">
-          <H2>City level Races in {cityName}</H2>
-          <div className="grid grid-cols-12 gap-6 mt-6">
-            {races.map((race) => (
-              <div
-                key={race.id}
-                className=" col-span-12 md:col-span-6 lg:col-span-4"
-              >
-                <Race race={race} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <H2 className="mt-12">City data</H2>
-        <div className="grid grid-cols-12 gap-6 mt-6">
-          {Object.keys(municipality).map((key) => (
-            <div key={key} className=" col-span-12 md:col-span-6 lg:col-span-3">
-              <div className=" font-semibold">{key}</div>
-              <div className="mt-2 mb-6">{municipality[key]}</div>
-            </div>
-          ))}
-        </div>
+        <RacesSection races={races} />
       </MaxWidth>
+
+      <CityFacts city={municipality} county={county} />
+
+      <LearnToRun stateName={stateName} />
+      <Guides articles={articles} />
     </div>
   );
 }
