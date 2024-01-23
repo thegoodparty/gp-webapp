@@ -5,16 +5,16 @@ import { TbHomeShare } from 'react-icons/tb';
 import { numberFormatter } from 'helpers/numberHelper';
 
 export default function CityFacts({ city, county }) {
-  console.log('county', city);
   const {
     population,
     density,
     income_household_median,
     unemployment_rate,
     home_value,
+    county_name,
   } = city;
   const fields = [
-    { label: 'County', value: city.county_name, icon: <FaCity /> },
+    { label: 'County', value: county_name, icon: <FaCity /> },
     {
       label: 'Population',
       value: population,
