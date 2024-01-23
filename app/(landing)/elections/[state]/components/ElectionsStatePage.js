@@ -12,7 +12,7 @@ export default function ElectionsStatePage(props) {
   const stateName = shortToLongState[state.toUpperCase()];
 
   const countyLink = (county) => {
-    return `/elections/${state}/${slugify(county.name, true)}`;
+    return `/elections/${county.slug}`;
   };
   return (
     <div className="bg-slate-50 pb-20">
