@@ -13,7 +13,6 @@ export default function CityFacts({ city, county }) {
     unemployment_rate,
     home_value,
   } = city;
-  console.log('county', county);
   const fields = [
     { label: 'County', value: city.county_name, icon: <FaCity /> },
     {
@@ -56,7 +55,7 @@ export default function CityFacts({ city, county }) {
               key={field.label}
               className="col-span-6 md:col-span-4 flex flex-col items-center"
             >
-              <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-[#2AC8E2] to-[#8578ED] flex items-center justify-center text-3xl md:text-5xl text-primary">
+              <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-[#897AF1] to-[#C985F2] flex items-center justify-center text-3xl md:text-5xl text-primary">
                 {field.icon}
               </div>
               <div className="mt-4 text-center">
