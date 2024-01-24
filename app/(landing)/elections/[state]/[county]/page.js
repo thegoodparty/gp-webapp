@@ -12,7 +12,7 @@ const fetchCounty = async (state, county, viewAll) => {
   const payload = {
     state,
     county,
-    viewAll,
+    viewAll: viewAll === 'true',
   };
 
   return await gpFetch(api, payload, 3600);

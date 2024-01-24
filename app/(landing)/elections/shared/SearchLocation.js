@@ -84,13 +84,13 @@ export default function SearchLocation({ withHeader = false, initialState }) {
           Find elections at the State, County or City level
         </H2>
       )}
-      <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-12 gap-4 location-selects">
         <div className="col-span-12 md:col-span-3">
           <Select
             native
             value={state.state}
             fullWidth
-            label="State"
+            label=" state "
             variant="outlined"
             onChange={(e) => onChangeState(e.target.value)}
             sx={{ backgroundColor: 'white' }}
@@ -123,7 +123,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             fullWidth
             variant="outlined"
             sx={{ backgroundColor: 'white' }}
-            label="County"
+            label=" "
             disabled={state.state === '' || state.countyOptions.length === 0}
             onChange={(e) => onChangeCounty(e.target.value)}
             startAdornment={
@@ -161,7 +161,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             fullWidth
             variant="outlined"
             sx={{ backgroundColor: 'white' }}
-            label="Municipality"
+            label=" "
             disabled={state.county === '' || state.munOptions.length === 0}
             onChange={(e) => onChangeMun(e.target.value)}
             startAdornment={

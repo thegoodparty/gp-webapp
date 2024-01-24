@@ -7,7 +7,14 @@ import H2 from '@shared/typography/H2';
 import Subtitle2 from '@shared/typography/Subtitle2';
 const year = new Date().getFullYear();
 
-export default function Hero({ state, county, color1, color2, level }) {
+export default function Hero({
+  state,
+  county,
+  color1,
+  color2,
+  level,
+  municipality,
+}) {
   const stateName = shortToLongState[state.toUpperCase()];
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
@@ -29,6 +36,10 @@ export default function Hero({ state, county, color1, color2, level }) {
   } else if (level === 'county') {
     title = `Run for ${county.county_full}, ${state.toUpperCase()} office`;
     subTitle = `${county.county_full} elections ${year}`;
+  } else if (level === 'city') {
+    const cityName = `${municipality.city}`;
+    title = `Run for ${cityName} city office`;
+    subTitle = `${cityName} city elections ${year}`;
   }
   return (
     <>

@@ -13,7 +13,7 @@ export default function ElectionsCountyPage(props) {
   const stateName = shortToLongState[state.toUpperCase()];
 
   const cityLink = (city) => {
-    return `/elections/${state}/${slugify(city.city, true)}`;
+    return `/elections/${city.slug}`;
   };
   return (
     <div className="bg-slate-50 pb-20">
@@ -25,7 +25,9 @@ export default function ElectionsCountyPage(props) {
         <LinksSection
           entities={childEntities}
           linkFunc={cityLink}
-          title={`Explore 2024 city elections in ${county.county_full}`}
+          title={`Explore 2024 city elections in ${
+            county?.county_full ? county.county_full : 'county'
+          }`}
         />
       </div>
       <CountyFacts county={county} />
