@@ -62,7 +62,7 @@ export default function Hero({
                 <h1 className="text-3xl md:text-6xl font-medium">{title}</h1>
               </div>
               <div className="col-span-12 md:col-span-3 flex justify-end md:block">
-                <div className="w-1/4  md:w-full -mt-14 md:-mt-0">
+                <div className="w-1/4  md:w-full">
                   <Image
                     src={`/images/elections/states/${state}.png`}
                     width={300}
