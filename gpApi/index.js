@@ -544,6 +544,17 @@ const gpApi = {
       method: 'GET',
     },
   },
+
+  jobs: {
+    list: {
+      url: `${base}jobs`,
+      method: 'GET',
+    },
+    find: {
+      url: `${base}job`,
+      method: 'GET',
+    },
+  },
 };
 
 export default gpApi;
