@@ -5,7 +5,8 @@
  */
 
 import React, { Suspense } from 'react';
-
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import Hero from './components/Hero';
 import Values from './components/Values';
 // import LeverCareers from './components/LeverCareers';
@@ -22,7 +23,18 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-function CareersWrapper() {
+export const fetchJobs = async () => {
+  const api = gpApi.jobs.list;
+  return await gpFetch(api, false, 3600);
+};
+
+async function CareersWrapper() {
+  const { jobs } = await fetchJobs();
+
+  const childProps = {
+    jobs,
+  };
+
   return (
     <>
       <MaxWidth>
@@ -34,7 +46,7 @@ function CareersWrapper() {
       <MaxWidth>
         <Suspense fallback={`Loading...`}>
           {/* <LeverCareers /> */}
-          <AshbyCareers />
+          <AshbyCareers {...childProps} />
         </Suspense>
         <Suspense fallback={`Loading...`}>
           <Why />
