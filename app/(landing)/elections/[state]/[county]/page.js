@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionsCountyPage from './components/ElectionsCountyPage';
-import PositionPage from './components/PositionPage';
+import PositionPage from './components/poistionPage/PositionPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
 const fetchCounty = async (state, county, viewAll) => {
@@ -24,7 +24,9 @@ const fetchPosition = async (id) => {
     id,
   };
 
-  return await gpFetch(api, payload, 3600);
+  console.log('api', api);
+
+  return await gpFetch(api, payload, 10);
 };
 
 const year = new Date().getFullYear();
@@ -43,9 +45,25 @@ export async function generateMetadata({ params }) {
     return meta;
   }
   const { race } = await fetchPosition(params.county);
+  console.log('race', race);
+  const {
+    level,
+    positionName,
+    positionDescription,
+    locationName,
+    normalizedPositionName,
+  } = race;
+  let loc = locationName;
+  if (level === 'city') {
+    loc += ` City, ${race.state}`;
+  } else if (level === 'county') {
+    loc += ` County, ${race.state}`;
+  } else if (level === 'state') {
+    loc += ` ${race.state}`;
+  }
   const meta = pageMetaData({
-    title: race.data.position_name,
-    description: race.data.position_description,
+    title: `Run for ${positionName} in ${loc}`,
+    description: `Learn the details about running for ${normalizedPositionName} in ${loc}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
     slug: `/elections/${state}/${params.county}`,
   });
   return meta;
@@ -60,19 +78,6 @@ export default async function Page({ params, searchParams }) {
   ) {
     notFound();
   }
-  if (state.length > 2) {
-    // state is the slug, county is the id
-    const { race } = await fetchPosition(params.county); // this is the id
-    const childProps = { race };
-    return <PositionPage {...childProps} />;
-  }
-
-  const { municipalities, races, county } = await fetchCounty(
-    state,
-    params.county,
-    viewAll,
-  );
-
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',
@@ -83,6 +88,19 @@ export default async function Page({ params, searchParams }) {
     const { content } = await fetchArticle(slug);
     articles.push(content);
   }
+  if (state.length > 2) {
+    // state is the slug, county is the id
+    const { race, otherRaces } = await fetchPosition(params.county); // this is the id
+
+    const childProps = { race, otherRaces, articles };
+    return <PositionPage {...childProps} />;
+  }
+
+  const { municipalities, races, county } = await fetchCounty(
+    state,
+    params.county,
+    viewAll,
+  );
 
   const childProps = {
     state,

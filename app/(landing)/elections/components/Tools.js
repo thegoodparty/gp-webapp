@@ -5,11 +5,15 @@ import Link from 'next/link';
 import dashboardImg from 'public/images/elections/dashboard.png';
 import helpImg from 'public/images/elections/help.png';
 
-export default function Tools() {
+export default function Tools({ negativeMargin = true }) {
   return (
     <section>
       <div className="max-w-screen-xl mx-auto">
-        <div className="bg-[#F7FAFD] md:rounded-3xl p-12 md:-mt-[100px] lg:-mt-[150px]">
+        <div
+          className={`bg-[#F7FAFD] md:rounded-3xl p-12 ${
+            negativeMargin ? 'md:-mt-[100px] lg:-mt-[150px]' : ''
+          } `}
+        >
           <Image
             src="/images/black-logo.svg"
             width={350}
