@@ -18,11 +18,10 @@ export default function PositionPage(props) {
 
   let loc = locationName;
   if (level === 'city') {
-    loc += ` City, ${state}`;
+    loc += `, ${state}`;
   } else if (level === 'county') {
     loc += ` County, ${state}`;
   } else if (level === 'state') {
-    loc += ` ${state}`;
   }
 
   const positionLink = (race) => {

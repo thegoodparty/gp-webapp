@@ -8,7 +8,9 @@ export default function PositionFaq({ q, a }) {
   return (
     <div className="mb-1 text-white">
       <div
-        className="py-5 px-6 bg-[#2A2E33] cursor-pointer flex justify-between items-center"
+        className={`py-5 px-6 bg-[#2A2E33] cursor-pointer flex justify-between items-center ${
+          open ? 'bg-indigo-600' : ''
+        }`}
         onClick={() => {
           setOpen(!open);
         }}
@@ -17,8 +19,8 @@ export default function PositionFaq({ q, a }) {
         <FaPlus className={`transition ${open ? ' rotate-45' : ''}`} />
       </div>
       <div
-        className={` px-6 bg-[#2A2E33] border-t border-primary transition-all ${
-          open ? 'h-auto py-5' : ' h-0 overflow-hidden'
+        className={` px-6 bg-[#2A2E33] border-t border-primary transition-all text-slate-50 ${
+          open ? 'h-auto py-5 mb-2' : ' h-0 overflow-hidden'
         }`}
       >
         {a}

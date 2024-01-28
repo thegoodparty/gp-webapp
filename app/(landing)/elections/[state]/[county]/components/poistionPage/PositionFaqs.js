@@ -13,20 +13,36 @@ export default function PositionFaqs({ race }) {
     paperworkInstructions,
     filingRequirements,
     isRunoff,
+    isPrimary,
     partisanType,
     positionName,
     loc,
   } = race;
   const term = frequency.match(/\d+/g);
 
+  let runOffPrimary = '';
+  if (!isRunoff && !isPrimary) {
+    runOffPrimary = `The next election for ${normalizedPositionName} does not include a primary or runoff election.`;
+  } else if (isRunoff && isPrimary) {
+    runOffPrimary = `The next election for ${normalizedPositionName} includes both a primary and runoff election.`;
+  } else if (isRunoff && !isPrimary) {
+    runOffPrimary = `The next election for ${normalizedPositionName}  includes a primary, but not a runoff election.`;
+  } else if (!isRunoff && isPrimary) {
+    runOffPrimary = `The next election for ${normalizedPositionName}  includes a runoff, but not a primary election.`;
+  }
+
   const faqs = [
     {
       q: `How often is ${normalizedPositionName} elected?`,
-      a: `Every ${term} years.`,
+      a: `The position of ${normalizedPositionName} is typically elected every ${term} years`,
     },
     {
       q: `What does it mean for an election to be ${partisanType}?`,
-      a: `something here`,
+      a: `${
+        partisanType === 'partisan'
+          ? 'Partisan elections require candidates to declare a party affiliation, like Democrat, Republican, Libertarian, or Independent.'
+          : 'Nonpartisan elections do not require candidates to declare a party affiliation.'
+      }`,
     },
     {
       q: `What are the filing requirements to get on the ballot in ${loc}?`,
@@ -42,15 +58,15 @@ export default function PositionFaqs({ race }) {
     },
     {
       q: `How can I get in touch with the filing office?`,
-      a: filingPhoneNumber,
+      a: `You can contact the filing office by calling ${filingPhoneNumber}`,
     },
     {
       q: `How do I get started running for ${positionName}?`,
-      a: dateUsHelper(filingDateStart),
+      a: `You can start running for ${positionName} by checking to ensure you meet all filing deadlines and requirements. Next, you can prepare to file for office and start planning your campaign strategy. Get in touch with our team of campaign experts for help with any step of the campaign process!`,
     },
     {
-      q: `Is there a primary or runoff election for this office??`,
-      a: isRunoff ? 'Yes' : 'No',
+      q: `Is there a primary or runoff election for this office?`,
+      a: runOffPrimary,
     },
   ];
   return (
