@@ -8,9 +8,13 @@ export default function Callout() {
   const [showCallout, setShowCallout] = useState(true);
 
   useEffect(() => {
-    const callout = localStorage.getItem('callout');
-    if (callout) {
-      setShowCallout(false);
+    try {
+      const callout = localStorage.getItem('callout');
+      if (callout) {
+        setShowCallout(false);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }, []);
 
@@ -39,8 +43,12 @@ export default function Callout() {
             <div
               className="flex px-3 mr-2 cursor-pointer"
               onClick={() => {
-                localStorage.setItem('callout', true);
-                setShowCallout(false);
+                try {
+                  localStorage.setItem('callout', true);
+                  setShowCallout(false);
+                } catch (e) {
+                  console.log(e);
+                }
               }}
             >
               <IoIosCloseCircle size={24} />

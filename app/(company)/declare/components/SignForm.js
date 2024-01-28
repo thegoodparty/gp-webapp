@@ -61,7 +61,11 @@ export default function SignatureForm({
         setShowError(false);
         const signature = `${firstName} ${lastName}, `;
         setSigner(signature);
-        localStorage.setItem('signature', signature);
+        try {
+          localStorage.setItem('signature', signature);
+        } catch (e) {
+          console.log(e);
+        }
       } else {
         setShowError('An error occurred. Please try again.');
       }
