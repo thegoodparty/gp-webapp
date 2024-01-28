@@ -93,7 +93,11 @@ export default async function Page({ params, searchParams }) {
     // state is the slug, county is the id
     const { race, otherRaces } = await fetchPosition(params.county); // this is the id
 
-    const childProps = { race, otherRaces, articles };
+    const childProps = {
+      race,
+      otherRaces,
+      articles,
+    };
     return (
       <>
         <PositionPage {...childProps} />
@@ -114,6 +118,7 @@ export default async function Page({ params, searchParams }) {
     races,
     county,
     articles,
+    viewAll: viewAll === 'true',
   };
 
   return <ElectionsCountyPage {...childProps} />;

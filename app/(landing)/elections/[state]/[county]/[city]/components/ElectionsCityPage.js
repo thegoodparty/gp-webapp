@@ -9,14 +9,14 @@ import Hero from '../../../components/Hero';
 import CityFacts from './CityFacts';
 
 export default function ElectionsCountyPage(props) {
-  const { state, municipality, races, articles, county } = props;
+  const { state, municipality, races, articles, county, viewAll } = props;
   const stateName = shortToLongState[state.toUpperCase()];
 
   return (
     <div className="bg-slate-50 pb-20">
       <Hero {...props} color1="#897AF1" color2="#C985F2" level="city" />
       <MaxWidth>
-        <RacesSection races={races} />
+        <RacesSection races={races} viewAll={viewAll} />
       </MaxWidth>
 
       <CityFacts city={municipality} county={county} />

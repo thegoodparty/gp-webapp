@@ -53,7 +53,7 @@ export default async function Page({ params, searchParams }) {
     state,
     childEntity: counties,
     races,
-    viewAll,
+    viewAll: viewAll === 'true',
     articles,
   };
 

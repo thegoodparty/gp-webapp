@@ -3,7 +3,8 @@ import Race from './Race';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
-export default function RacesSection({ races }) {
+export default function RacesSection({ races, viewAll }) {
+  console.log('viewAll race', typeof viewAll);
   return (
     <section>
       <div className="grid-cols-12 gap-3 hidden md:grid mb-2 px-5">
@@ -25,9 +26,15 @@ export default function RacesSection({ races }) {
         </div>
       ))}
       <div className="mt-6 flex justify-center">
-        <Link href="?viewAll=true" id="view-all">
-          <PrimaryButton> View all</PrimaryButton>
-        </Link>
+        {viewAll ? (
+          <Link href="?viewAll=false" id="view-less">
+            <PrimaryButton> View less</PrimaryButton>
+          </Link>
+        ) : (
+          <Link href="?viewAll=true" id="view-all">
+            <PrimaryButton> View all</PrimaryButton>
+          </Link>
+        )}
       </div>
     </section>
   );
