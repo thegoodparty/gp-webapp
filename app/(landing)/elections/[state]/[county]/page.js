@@ -6,6 +6,7 @@ import gpFetch from 'gpApi/gpFetch';
 import ElectionsCountyPage from './components/ElectionsCountyPage';
 import PositionPage from './components/poistionPage/PositionPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
+import PositionSchema from './PositionSchema';
 
 const fetchCounty = async (state, county, viewAll) => {
   const api = gpApi.race.byCounty;
@@ -26,7 +27,7 @@ const fetchPosition = async (id) => {
 
   console.log('api', api);
 
-  return await gpFetch(api, payload, 10);
+  return await gpFetch(api, payload, 3600);
 };
 
 const year = new Date().getFullYear();
@@ -93,7 +94,12 @@ export default async function Page({ params, searchParams }) {
     const { race, otherRaces } = await fetchPosition(params.county); // this is the id
 
     const childProps = { race, otherRaces, articles };
-    return <PositionPage {...childProps} />;
+    return (
+      <>
+        <PositionPage {...childProps} />
+        <PositionSchema race={race} />
+      </>
+    );
   }
 
   const { municipalities, races, county } = await fetchCounty(
