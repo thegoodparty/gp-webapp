@@ -34,6 +34,7 @@ export const FOOTER_COLUMNS = [
     title: 'Campaigns',
     links: [
       { label: 'Run for office', link: '/run-for-office' },
+      { label: 'Explore offices', link: '/elections' },
       { label: 'Good Party Academy', link: '/academy' },
       { label: 'Book an Info Session', link: '/info-session' },
       { label: 'Book a Demo', link: '/get-a-demo' },
