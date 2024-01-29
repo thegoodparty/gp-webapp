@@ -10,19 +10,24 @@ function AshbyCareers({ jobs }) {
       <H2 data-cy="opening-title">Current Openings</H2>
 
       {jobs && jobs.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-12 gap-4">
           {jobs.map((job) => (
-            <Link href={`/work-with-us/${job.id}`} key={job.id}>
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-violet-600">
-                  {job.title}
-                </h3>
-                <p className="text-sm">
-                  {job.departmentName} • {job.locationName} •{' '}
-                  {job.employmentType}
-                </p>
-              </div>
-            </Link>
+            <div
+              className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3"
+              key={job.id}
+            >
+              <Link href={`/work-with-us/${job.id}`}>
+                <div className="flex flex-col h-full bg-white rounded-lg shadow-lg p-6">
+                  <h3 className="text-lg font-semibold text-violet-600">
+                    {job.title}
+                  </h3>
+                  <p className="text-sm">
+                    {job.departmentName} • {job.locationName} •{' '}
+                    {job.employmentType}
+                  </p>
+                </div>
+              </Link>
+            </div>
           ))}
         </div>
       )}

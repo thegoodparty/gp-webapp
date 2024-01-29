@@ -6,6 +6,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { ArrowBackIos } from '@mui/icons-material';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
 
 function JobPage({ job }) {
   const [jobId, setJobId] = useState(null);
@@ -41,7 +42,11 @@ function JobPage({ job }) {
       {job && (
         <>
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <div dangerouslySetInnerHTML={{ __html: job.descriptionHtml }} />
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(job.descriptionHtml),
+              }}
+            />
 
             <div
               className="pt-10 mb-6"
