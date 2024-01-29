@@ -213,10 +213,10 @@ export const states = [
     name: 'Oregon',
     abbreviation: 'OR',
   },
-  {
-    name: 'Palau',
-    abbreviation: 'PW',
-  },
+  // {
+  //   name: 'Palau',
+  //   abbreviation: 'PW',
+  // },
   {
     name: 'Pennsylvania',
     abbreviation: 'PA',
@@ -253,10 +253,10 @@ export const states = [
     name: 'Vermont',
     abbreviation: 'VT',
   },
-  {
-    name: 'Virgin Islands',
-    abbreviation: 'VI',
-  },
+  // {
+  //   name: 'Virgin Islands',
+  //   abbreviation: 'VI',
+  // },
   {
     name: 'Virginia',
     abbreviation: 'VA',
