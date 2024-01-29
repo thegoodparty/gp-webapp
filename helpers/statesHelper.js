@@ -221,10 +221,10 @@ export const states = [
     name: 'Pennsylvania',
     abbreviation: 'PA',
   },
-  {
-    name: 'Puerto Rico',
-    abbreviation: 'PR',
-  },
+  // {
+  //   name: 'Puerto Rico',
+  //   abbreviation: 'PR',
+  // },
   {
     name: 'Rhode Island',
     abbreviation: 'RI',
