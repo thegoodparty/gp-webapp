@@ -325,11 +325,32 @@ export default function AdminCandidatesPage(props) {
           ? new Date(data.electionDate)
           : new Date('1970-01-01'),
       // sortType: 'datetime',
-      sortMethod: (a, b) => {
-        var a1 = new Date(a).getTime();
-        var b1 = new Date(b).getTime();
-        if (a1 < b1) return 1;
-        else if (a1 > b1) return -1;
+      sortType: (rowA, rowB) => {
+        const a = rowA.original.electionDate;
+        const b = rowB.original.electionDate;
+        let errorA, errorB, aDate, bDate;
+
+        try {
+          aDate = new Date(a).getTime();
+        } catch (e) {
+          errorA = true;
+        }
+        try {
+          bDate = new Date(b).getTime();
+        } catch (e) {
+          errorB = true;
+        }
+        if ((!a && !b) || (!aDate && !bDate) || (errorA && errorB)) {
+          return 0;
+        }
+        if (!a || a == '' || !aDate || errorA) {
+          return 1;
+        }
+        if (!b || b == '' || !bDate || errorB) {
+          return -1;
+        }
+        if (aDate < bDate) return 1;
+        else if (aDate > bDate) return -1;
         else return 0;
       },
       Cell: ({ row }) => {

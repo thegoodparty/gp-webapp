@@ -11,6 +11,7 @@ import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute } from '../../helpers/articleHelper';
 import { candidateRoute } from '../../helpers/candidateHelper';
+import { flatStates } from 'helpers/statesHelper';
 
 let yourDate = new Date();
 const currentDate = yourDate.toISOString().split('T')[0];
@@ -35,6 +36,7 @@ const staticUrls = [
   '/academy-webinar',
   '/blog',
   '/ads2023',
+  '/elections',
 ];
 
 export const fetchFAQs = async () => {
@@ -167,6 +169,16 @@ export default async function sitemap(req, res) {
       `;
     });
 
+    flatStates.forEach((state) => {
+      xmlString += `
+        <url>
+          <loc>${appBase}/elections/${state.toLowerCase()}</loc>
+          <lastmod>${currentDate}</lastmod>
+          <changefreq>monthly</changefreq>
+        </url>
+      `;
+    });
+
     elections.forEach((election) => {
       if (election.slug.includes('-') === false) {
         return;
@@ -177,7 +189,7 @@ export default async function sitemap(req, res) {
       if (year.toString() != currentYear.toString()) {
         xmlString += `
         <url>
-          <loc>${appBase}/elections/${city}/${year}</loc>
+          <loc>${appBase}/election-results/${city}/${year}</loc>
           <lastmod>${currentDate}</lastmod>
           <changefreq>monthly</changefreq>
         </url>

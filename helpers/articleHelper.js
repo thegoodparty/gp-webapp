@@ -17,6 +17,9 @@ import slugger from 'slugify';
 //   });
 
 export const slugify = (text, lowercase) => {
+  if (!text) {
+    return '';
+  }
   if (lowercase) {
     return slugger(text, { lower: true });
   }

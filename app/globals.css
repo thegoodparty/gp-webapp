@@ -102,6 +102,12 @@ div.MuiAutocomplete-popper div {
   border-top-left-radius: 0px;
 }
 
+.location-selects {
+  legend {
+    width: 0;
+  }
+}
+
 @media all {
   .print-page-break {
     display: none;
