@@ -34,7 +34,7 @@ export default function PositionFaqs({ race }) {
   const faqs = [
     {
       q: `How often is ${normalizedPositionName} elected?`,
-      a: `The position of ${normalizedPositionName} is typically elected every ${term} years`,
+      a: `The position of ${normalizedPositionName} is typically elected every ${term} years.`,
     },
     {
       q: `What does it mean for an election to be ${partisanType}?`,
@@ -54,11 +54,11 @@ export default function PositionFaqs({ race }) {
     },
     {
       q: `Where is the filing office?`,
-      a: filingOfficeAddress,
+      a: `${filingOfficeAddress}.`,
     },
     {
       q: `How can I get in touch with the filing office?`,
-      a: `You can contact the filing office by calling ${filingPhoneNumber}`,
+      a: `You can contact the filing office by calling ${filingPhoneNumber}.`,
     },
     {
       q: `How do I get started running for ${positionName}?`,

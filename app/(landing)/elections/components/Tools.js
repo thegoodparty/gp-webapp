@@ -59,7 +59,7 @@ export default function Tools({ negativeMargin = true }) {
               <h3 className="text-2xl md:text-3xl font-medium">
                 Good Party AI can help you
               </h3>
-              <Body1 className="mt-8 mb-8 md:mb-14 leading-relaxed">
+              <Body1 className="mt-8 mb-8 md:mb-14 leading-relaxed text-xl">
                 <ul>
                   <li>Generate engaging content in seconds</li>
                   <li>Refine your campaign strategy with voter data</li>
@@ -77,7 +77,7 @@ export default function Tools({ negativeMargin = true }) {
               aria-label="Try the AI campaign manager today"
               id="run-for-office-get-started"
             >
-              <WarningButton>Get Started</WarningButton>
+              <WarningButton>Get started</WarningButton>
             </Link>
           </div>
         </div>
