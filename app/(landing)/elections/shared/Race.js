@@ -29,6 +29,10 @@ export default function Race({ race }) {
           level === 'county'
             ? 'bg-[#F5FFFC] hover:bg-[rgba(58,187,234,0.5)]'
             : ''
+        }  ${
+          level === 'city'
+            ? 'bg-[#FDF9FF] hover:bg-[rgba(201,133,242,0.35)]'
+            : ''
         }`}
       >
         <div className="grid-cols-12 gap-3 grid items-center">

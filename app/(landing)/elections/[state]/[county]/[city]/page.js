@@ -61,6 +61,7 @@ export default async function Page({ params, searchParams }) {
     municipality,
     races,
     county,
+    viewAll: viewAll === 'true',
     articles,
   };
 

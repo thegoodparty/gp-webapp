@@ -9,7 +9,8 @@ import Hero from '../../components/Hero';
 import CountyFacts from './CountyFacts';
 
 export default function ElectionsCountyPage(props) {
-  const { state, childEntities, races, articles, county } = props;
+  const { state, childEntities, races, articles, county, viewAll } = props;
+  console.log('viewAll', viewAll);
   const stateName = shortToLongState[state.toUpperCase()];
 
   const cityLink = (city) => {
@@ -19,7 +20,7 @@ export default function ElectionsCountyPage(props) {
     <div className="bg-slate-50 pb-20">
       <Hero {...props} color1="#2AC8E2" color2="#6a9de2" level="county" />
       <MaxWidth>
-        <RacesSection races={races} />
+        <RacesSection races={races} viewAll={viewAll} />
       </MaxWidth>
       <div className="max-w-screen-xl mx-auto mt-20">
         <LinksSection

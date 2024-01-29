@@ -8,7 +8,7 @@ import LearnToRun from '../../shared/LearnToRun';
 import Guides from '../../shared/Guides';
 
 export default function ElectionsStatePage(props) {
-  const { state, childEntity, races, articles } = props;
+  const { state, childEntity, races, articles, viewAll } = props;
   const stateName = shortToLongState[state.toUpperCase()];
 
   const countyLink = (county) => {
@@ -18,7 +18,7 @@ export default function ElectionsStatePage(props) {
     <div className="bg-slate-50 pb-20">
       <Hero {...props} color1="#3EE996" color2="#31D3C8" level="state" />
       <MaxWidth>
-        <RacesSection races={races} />
+        <RacesSection races={races} viewAll={viewAll} />
       </MaxWidth>
       <div className="bg-primary pt-1 pb-20 mt-10">
         <div className="max-w-screen-xl mx-auto mt-20">
