@@ -101,10 +101,10 @@ export const states = [
     name: 'Georgia',
     abbreviation: 'GA',
   },
-  {
-    name: 'Guam',
-    abbreviation: 'GU',
-  },
+  // {
+  //   name: 'Guam',
+  //   abbreviation: 'GU',
+  // },
   {
     name: 'Hawaii',
     abbreviation: 'HI',
