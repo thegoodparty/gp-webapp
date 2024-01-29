@@ -61,9 +61,13 @@ export default function Tools({ negativeMargin = true }) {
               </h3>
               <Body1 className="mt-8 mb-8 md:mb-14 leading-relaxed text-xl">
                 <ul>
-                  <li>Generate engaging content in seconds</li>
-                  <li>Refine your campaign strategy with voter data</li>
-                  <li>Recruit volunteers and fill key campaign roles</li>
+                  <li className="mb-3">Generate engaging content in seconds</li>
+                  <li className="mb-3">
+                    Refine your campaign strategy with voter data
+                  </li>
+                  <li className="mb-3">
+                    Recruit volunteers and fill key campaign roles
+                  </li>
                 </ul>
               </Body1>
             </div>
