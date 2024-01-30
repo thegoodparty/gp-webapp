@@ -102,6 +102,7 @@ export default function AdminCandidatesPage(props) {
         digital: reportedVoterGoals?.digital || 0,
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
         waitingForP2v,
+        pledged: campaign?.pledged && campaign.pledged === true ? 'yes' : 'no',
       };
       inputData.push(fields);
       let csvFields = fields;
@@ -377,6 +378,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Candidacy',
       accessor: 'campaignCommittee',
+    },
+    {
+      Header: 'Pledged',
+      accessor: 'pledged',
     },
   ]);
 
