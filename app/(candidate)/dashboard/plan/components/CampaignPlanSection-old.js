@@ -1,8 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { FaPencilAlt, FaSave } from 'react-icons/fa';
+import styles from './CampaignPlan.module.scss';
 import LoadingAI from './LoadingAI';
 import CircularProgress from '@mui/material/CircularProgress';
+import BlackButton from '@shared/buttons/BlackButton';
 import dynamic from 'next/dynamic';
+import AiModal from './AiModal';
+import Pill from '@shared/buttons/Pill';
+import Typewriter from 'typewriter-effect';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
@@ -11,10 +17,12 @@ import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import TogglePanel from '@shared/utils/TogglePanel';
-import PlanDisplay from './PlanDisplay';
-import PlanActions from './PlanActions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
+const RichEditor = dynamic(() => import('./RichEditor'), {
+  loading: () => (
+    <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+  ),
+});
 
 async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
   try {
@@ -40,6 +48,7 @@ export default function CampaignPlanSection({
   campaign,
   versions = {},
   updateVersionsCallback,
+  forceExpand,
   subSectionKey = 'campaignPlan',
 }) {
   const [open, setOpen] = useState(false);
@@ -54,13 +63,15 @@ export default function CampaignPlanSection({
   const campaignPlan = campaign[subSectionKey];
   const { key } = section;
 
-  useEffect(() => {
-    if (campaignPlan && campaignPlan[key]) {
-      setPlan(campaignPlan[key]);
-      setLoading(false);
-      setIsTyped(true);
-    }
-  }, [campaignPlan]);
+  // useEffect(() => {
+  //   if (!campaignPlan || !campaignPlan[key]) {
+  //     createInitialAI();
+  //   } else {
+  //     setPlan(campaignPlan[key]);
+  //     setLoading(false);
+  //     setIsTyped(true);
+  //   }
+  // }, [campaignPlan]);
 
   const createInitialAI = async (regenerate, chat, editMode) => {
     aiCount++;
@@ -161,48 +172,95 @@ export default function CampaignPlanSection({
     setIsEdited(true);
   };
 
+  const expand = open || forceExpand;
+
   return (
     <section key={section.key} className="my-3">
       <TogglePanel
         label={section.title}
         icon={loading ? <CircularProgress size={20} /> : section.icon}
+        forceExpand={forceExpand}
       >
         <div className="">
           {loading ? (
             <LoadingAI />
+          ) : (section.key === 'pathToVictory' ||
+              section.key === 'mobilizing') &&
+            campaign?.pathToVictory === undefined ? (
+            <div className="text-center text-xl">
+              Our team is working on your campaign materials now. This can take
+              up to 48 hours. In the meantime, create some content in the AI
+              Campaign Content section.
+            </div>
           ) : (
             <div className="border border-slate-500 bg-slate-50 rounded-xl">
-              {plan ? (
-                <>
-                  <PlanVersion
-                    campaign={campaign}
-                    versions={versions ? versions[key] : {}}
-                    updatePlanCallback={updatePlanCallback}
-                    latestVersion={campaignPlan ? campaignPlan[key] : false}
-                  />
-                  <PlanDisplay
-                    plan={plan}
-                    isTyped={isTyped}
-                    setIsTyped={setIsTyped}
-                    setEdit={setEdit}
-                    isFailed={isFailed}
-                    handleEdit={handleEdit}
-                    editMode={editMode}
-                  />
+              <PlanVersion
+                campaign={campaign}
+                versions={versions ? versions[key] : {}}
+                updatePlanCallback={updatePlanCallback}
+                latestVersion={campaignPlan ? campaignPlan[key] : false}
+              />
+              <div className={`p-3 lg:p-6 my-6 rounded-xl ${styles.plan}`}>
+                {isFailed ? (
+                  <div className="text-center text-xl">
+                    Failed to generate plan click here to try again
+                    <div className="mt-4 text-base font-black">
+                      <a href={`/onboarding/${campaign.slug}/campaign-plan`}>
+                        <BlackButton>Regenerate</BlackButton>
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {editMode ? (
+                      <RichEditor
+                        initialText={plan}
+                        onChangeCallback={handleEdit}
+                      />
+                    ) : (
+                      <div
+                        className="relative pb-10 cursor-text"
+                        onClick={setEdit}
+                      >
+                        {!isTyped ? (
+                          <Typewriter
+                            options={{
+                              delay: 1,
+                            }}
+                            onInit={(typewriter) => {
+                              typewriter
+                                .typeString(plan)
+                                .callFunction(() => {
+                                  setIsTyped(true);
+                                })
 
-                  <PlanActions
-                    isEdited={isEdited}
-                    handleSave={handleSave}
-                    handleRegenerate={handleRegenerate}
-                  />
-                </>
-              ) : (
-                <div className="py-8 flex justify-center">
-                  <Link href={`/dashboard/questions?generate=${key}`}>
-                    <PrimaryButton>Answer additional questions</PrimaryButton>
-                  </Link>
+                                .start();
+                            }}
+                          />
+                        ) : (
+                          <div dangerouslySetInnerHTML={{ __html: plan }} />
+                        )}
+                        <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-500 cursor-pointer hidden-for-print">
+                          <FaPencilAlt />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+              <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">
+                <AiModal
+                  submitCallback={handleRegenerate}
+                  showWarning={isEdited}
+                />
+                <div onClick={handleSave}>
+                  <PrimaryButton>
+                    <div className="flex items-center">
+                      <FaSave className="mr-2" /> Save
+                    </div>
+                  </PrimaryButton>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>

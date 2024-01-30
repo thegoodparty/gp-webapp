@@ -1,0 +1,83 @@
+'use client';
+import { TextField } from '@mui/material';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import MaxWidth from '@shared/layouts/MaxWidth';
+import Body1 from '@shared/typography/Body1';
+import H1 from '@shared/typography/H1';
+import { useState } from 'react';
+
+const flows = {
+  all: [
+    'occupation',
+    'funFact',
+    'pastExperience',
+    'issues',
+    'website',
+    'opponents',
+  ],
+  why: ['occupation', 'funFact', 'pastExperience', 'issues'],
+  bio: ['funFact', 'pastExperience', 'issues'],
+  slogan: ['funFact', 'occupation', 'pastExperience', 'issues'],
+  politics: ['issues'],
+  website: ['website'],
+  positioning: [
+    'occupation',
+    'funFact',
+    'pastExperience',
+    'issues',
+    'opponents',
+  ],
+};
+export default function FunFact({
+  value,
+  onChangeCallback,
+  saveCallback,
+  campaign,
+  campaignKey,
+}) {
+  const handleSave = () => {
+    if (!canSave()) return;
+    const updated = {
+      ...campaign,
+      details: {
+        ...campaign.details,
+        [campaignKey]: value,
+      },
+    };
+    saveCallback(updated);
+  };
+
+  const canSave = () => {
+    return value !== '';
+  };
+  return (
+    <div className="max-w-xl m-auto">
+      <H1 className="mb-10">What is a fun fact about yourself?</H1>
+      <Body1 className="my-8 text-center">
+        What&apos;s something fun or exciting about you, unrelated to politics,
+        that you think people in your community would like to know?
+      </Body1>
+      <div className="max-w-md m-auto">
+        <TextField
+          required
+          label="Fun fact about yourself"
+          fullWidth
+          multiline
+          rows={6}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={value}
+          onChange={(e) => {
+            onChangeCallback(campaignKey, e.target.value);
+          }}
+        />
+        <div className="flex justify-center mt-10" onClick={handleSave}>
+          <PrimaryButton className="mt-3" disabled={!canSave()}>
+            Next
+          </PrimaryButton>
+        </div>
+      </div>
+    </div>
+  );
+}

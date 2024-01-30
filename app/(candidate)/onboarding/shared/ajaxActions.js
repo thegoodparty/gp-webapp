@@ -28,6 +28,16 @@ export async function updateCampaign(
   }
 }
 
+export async function getCampaign() {
+  try {
+    const api = gpApi.campaign.onboarding.findByUser;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 export async function fetchCampaignVersions() {
   try {
     const api = gpApi.campaign.onboarding.planVersions;
