@@ -32,7 +32,7 @@ export default function CtaBanner({ race }) {
           </div>
           <div className=" col-span-12 md:col-span-3 lg:col-span-2">
             <Link href="/run-for-office">
-              <WarningButton fullWidth>Learn More</WarningButton>
+              <WarningButton fullWidth>Learn more</WarningButton>
             </Link>
           </div>
         </div>

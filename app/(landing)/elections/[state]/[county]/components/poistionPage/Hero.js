@@ -21,7 +21,7 @@ export default function Hero({
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
     {
-      label: `how to run in ${stateName}`,
+      label: `How to run in ${stateName}`,
     },
   ];
   if (level === 'county' && county) {

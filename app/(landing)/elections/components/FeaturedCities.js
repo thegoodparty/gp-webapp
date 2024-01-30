@@ -6,13 +6,18 @@ import Link from 'next/link';
 import map from 'public/images/elections/map.png';
 
 const cities = [
-  { name: 'Los Angeles', state: 'CA', county: 'Los Angeles', openElections: 2 },
-  { name: 'Austin', state: 'Tx', county: 'Whatever', openElections: 3 },
+  {
+    name: 'Los Angeles',
+    state: 'CA',
+    county: 'Los Angeles',
+    openElections: 72,
+  },
+  { name: 'Austin', state: 'Tx', county: 'Travis', openElections: 68 },
   {
     name: 'San Diego',
     state: 'CA',
     county: 'San Diego',
-    openElections: 133,
+    openElections: 44,
   },
 ];
 export default function FeaturedCities() {
