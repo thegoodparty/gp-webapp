@@ -1,7 +1,5 @@
 'use client';
-import { TextField } from '@mui/material';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import H1 from '@shared/typography/H1';
 import { useState } from 'react';
 import Occupation from './Occupation';
 import {
@@ -10,6 +8,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
+import AddIssues from './issues/AddIssues';
 
 const flows = {
   all: [
@@ -34,7 +33,7 @@ const flows = {
   ],
 };
 export default function QuestionsPage(props) {
-  const { generate } = props;
+  const { generate, candidatePositions, positions } = props;
   const [campaign, setCampaign] = useState(props.campaign);
   const [state, setState] = useState({
     occupation: '',
@@ -102,7 +101,7 @@ export default function QuestionsPage(props) {
             campaignKey={nextKey}
           />
         )}
-        {campaign && nextKey === 'issues' && <div>issues</div>}
+        {campaign && nextKey === 'issues' && <AddIssues {...props} />}
       </div>
     </MaxWidth>
   );
