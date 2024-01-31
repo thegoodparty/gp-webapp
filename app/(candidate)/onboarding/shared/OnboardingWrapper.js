@@ -101,12 +101,6 @@ export default function OnboardingWrapper({
           {pathname === '/details/1' && <AdminDelete />}
         </div>
       </MaxWidth>
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
     </div>
   );
 }

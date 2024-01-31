@@ -118,6 +118,13 @@ export default function RootLayout({ children }) {
         `,
         }}
       />
+
+      <Script
+        type="text/javascript"
+        id="hs-script-loader"
+        strategy="afterInteractive"
+        src="//js.hs-scripts.com/21589597.js"
+      />
     </html>
   );
 }

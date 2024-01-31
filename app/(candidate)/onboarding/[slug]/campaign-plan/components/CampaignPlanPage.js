@@ -44,12 +44,6 @@ export default function CampaignPlanPage(props) {
           </a>
         </div>
       </MaxWidth>
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
     </div>
   );
 }
