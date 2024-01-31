@@ -29,7 +29,7 @@ export default function QuestionProgress({ campaign }) {
       answeredQuestions++;
     }
   }
-  let progress = answeredQuestions / totalQuestions;
+  let progress = (answeredQuestions * 100) / totalQuestions;
 
   return (
     <div className="bg-purple-100 rounded-2xl p-6 grid grid-cols-12">

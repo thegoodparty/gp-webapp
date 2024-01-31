@@ -1,32 +1,8 @@
 'use client';
-import { TextField } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
-import { useState } from 'react';
 
-const flows = {
-  all: [
-    'occupation',
-    'funFact',
-    'pastExperience',
-    'issues',
-    'website',
-    'opponents',
-  ],
-  why: ['occupation', 'funFact', 'pastExperience', 'issues'],
-  bio: ['funFact', 'pastExperience', 'issues'],
-  slogan: ['funFact', 'occupation', 'pastExperience', 'issues'],
-  politics: ['issues'],
-  website: ['website'],
-  positioning: [
-    'occupation',
-    'funFact',
-    'pastExperience',
-    'issues',
-    'opponents',
-  ],
-};
 export default function Occupation({
   value,
   onChangeCallback,

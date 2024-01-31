@@ -102,7 +102,7 @@ export default function QuestionsPage(props) {
             campaignKey={nextKey}
           />
         )}
-        {campaign && nextKey === 'issues' && <div>Issues</div>}
+        {campaign && nextKey === 'issues' && <div>issues</div>}
       </div>
     </MaxWidth>
   );
