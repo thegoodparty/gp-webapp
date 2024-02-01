@@ -9,6 +9,11 @@ import {
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
 import AddIssues from './issues/AddIssues';
+import RunningAgainstSection from '../../details/components/RunningAgainstSection';
+import H1 from '@shared/typography/H1';
+import Body1 from '@shared/typography/Body1';
+import Website from './Website';
+import Done from './Done';
 
 const flows = {
   all: [
@@ -56,11 +61,18 @@ export default function QuestionsPage(props) {
       nextStep = i;
       break;
     } else if (flow[i] === 'issues' && combinedIssuedCount >= 3) {
-      nextStep = i + 1;
-      break;
+      continue;
+    } else if (
+      flow[i] === 'runningAgainst' &&
+      campaign?.goals?.runningAgainst
+    ) {
+      continue;
     } else if (!campaign?.details || !campaign.details[flow[i]]) {
       nextStep = i;
       break;
+    } else if (i === flow.length - 1) {
+      // end
+      nextStep = i + 1;
     }
   }
 
@@ -81,9 +93,12 @@ export default function QuestionsPage(props) {
     const res = await getCampaign();
     setCampaign(res.campaign);
   };
-
-  const nextKey = flow[nextStep];
-  console.log('nextKey', nextKey);
+  let nextKey;
+  if (nextStep < flow.length) {
+    nextKey = flow[nextStep];
+  } else {
+    nextKey = 'done';
+  }
 
   return (
     <MaxWidth>
@@ -119,9 +134,36 @@ export default function QuestionsPage(props) {
           <AddIssues {...props} completeCallback={handleComplete} />
         )}
 
-        {/* {campaign && nextKey === 'runningAgainst' && (
-          <AddIssues {...props} completeCallback={handleComplete} />
-        )} */}
+        {campaign && nextKey === 'runningAgainst' && (
+          <div className="max-w-xl m-auto">
+            <RunningAgainstSection
+              campaign={campaign}
+              nextCallback={handleComplete}
+              header={
+                <>
+                  <H1 className="mb-10 text-center">
+                    Who are you running against
+                  </H1>
+                  <Body1 className="my-8 text-center">
+                    List the names or describe who you will be running against.
+                    We&apos;ll use this information to generate a messaging
+                    strategy. If you don&apos;t know, Google it.
+                  </Body1>
+                </>
+              }
+            />
+          </div>
+        )}
+        {campaign && nextKey === 'website' && (
+          <Website
+            value={state.website}
+            onChangeCallback={onChangeField}
+            saveCallback={handleSave}
+            campaign={campaign}
+            campaignKey={nextKey}
+          />
+        )}
+        {nextKey === 'done' && <Done />}
       </div>
     </MaxWidth>
   );

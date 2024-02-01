@@ -3,6 +3,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import CampaignPlanPage from './components/CampaignPlanPage';
 import { fetchCandidate } from '../details/page';
+import { loadCandidatePosition } from '../questions/page';
 
 const meta = pageMetaData({
   title: 'Campaign Plan | GOOD PARTY',
@@ -17,6 +18,7 @@ export default async function Page({ params, searchParams }) {
   const { campaign } = await fetchUserCampaign();
   const { candidateSlug } = campaign;
   const { candidate } = await fetchCandidate(candidateSlug);
+  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
 
   const childProps = {
     pathname: '/dashboard/plan',
@@ -24,6 +26,7 @@ export default async function Page({ params, searchParams }) {
     candidate,
     candidateSlug,
     pathToVictory: campaign?.pathToVictory,
+    candidatePositions,
   };
 
   return <CampaignPlanPage {...childProps} />;

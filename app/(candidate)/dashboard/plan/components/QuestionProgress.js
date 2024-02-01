@@ -1,15 +1,22 @@
+'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import Link from 'next/link';
 
-export default function QuestionProgress({ campaign }) {
-  console.log('campaign', campaign);
+export default function QuestionProgress({ campaign, candidatePositions }) {
   const totalQuestions = 6;
   let answeredQuestions = 0;
+  console.log('campaign', campaign);
+  console.log('candidatePositions', candidatePositions);
+  const { customIssues } = campaign;
+  const issuesCount =
+    (customIssues?.length || 0) + candidatePositions?.length || 0;
   if (campaign.details) {
-    const { occupation, funFact, pastExperience, issues, website, opponents } =
-      campaign.details;
+    const { occupation, funFact, pastExperience, website } =
+      campaign.details || {};
+
+    const { runningAgainst } = campaign.goals || {};
     if (occupation) {
       answeredQuestions++;
     }
@@ -19,17 +26,20 @@ export default function QuestionProgress({ campaign }) {
     if (pastExperience) {
       answeredQuestions++;
     }
-    if (issues) {
+    if (issuesCount >= 3) {
       answeredQuestions++;
     }
     if (website) {
       answeredQuestions++;
     }
-    if (opponents) {
+    if (runningAgainst) {
       answeredQuestions++;
     }
   }
   let progress = (answeredQuestions * 100) / totalQuestions;
+  if (answeredQuestions === totalQuestions) {
+    return null;
+  }
 
   return (
     <div className="bg-purple-100 rounded-2xl p-6 grid grid-cols-12">

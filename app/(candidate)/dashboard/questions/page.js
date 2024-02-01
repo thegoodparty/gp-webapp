@@ -12,7 +12,7 @@ export const fetchIssues = async () => {
   return await gpFetch(api, false, 3600, token);
 };
 
-async function loadCandidatePosition(slug) {
+export async function loadCandidatePosition(slug) {
   try {
     const api = gpApi.campaign.candidatePosition.find;
     const payload = {

@@ -6,7 +6,7 @@ import RunningAgainstModule from './RunningAgainstModule';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function RunningAgainstSection(props) {
-  const { campaign } = props;
+  const { campaign, nextCallback, header } = props;
   const handleSave = async (newCampaign) => {
     const updated = campaign;
     if (!updated.goals) {
@@ -25,16 +25,26 @@ export default function RunningAgainstSection(props) {
     updated.goals.runningAgainst = newAgainst;
 
     await updateCampaign(updated);
-    window.location.reload();
+    if (nextCallback) {
+      nextCallback();
+    } else {
+      window.location.reload();
+    }
   };
   return (
-    <section className="border-t pt-6 border-gray-600">
-      <H3>Who You&apos;re Running Against</H3>
-      <Body1 className="text-indigo-300 mt-2  pb-6 mb-12">
-        List the name or describe you will be running against. We&apos;ll use
-        this information to generate a messaging strategy. If you don’t know,
-        Google it.
-      </Body1>
+    <section className={` pt-6  ${header ? '' : 'border-t  border-gray-600'}`}>
+      {header ? (
+        <>{header}</>
+      ) : (
+        <>
+          <H3>Who You&apos;re Running Against</H3>
+          <Body1 className="text-indigo-300 mt-2  pb-6 mb-12">
+            List the name or describe you will be running against. We&apos;ll
+            use this information to generate a messaging strategy. If you
+            don&apos;t know, Google it.
+          </Body1>
+        </>
+      )}
       <RunningAgainstModule
         campaign={campaign}
         handleSave={handleSave}
