@@ -4,7 +4,7 @@ import ButtonLoading from './ButtonLoading';
 export function setSize(baseClass, size) {
   if (size === 'large') {
     baseClass['text-lg'] = true;
-    baseClass['py-4'] = true;
+    baseClass['py-3'] = true;
     baseClass['px-6'] = true;
   } else if (size === 'medium') {
     baseClass['text-base'] = true;

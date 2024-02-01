@@ -16,8 +16,8 @@ const flows = {
     'funFact',
     'pastExperience',
     'issues',
+    'runningAgainst',
     'website',
-    'opponents',
   ],
   why: ['occupation', 'funFact', 'pastExperience', 'issues'],
   bio: ['funFact', 'pastExperience', 'issues'],
@@ -29,11 +29,11 @@ const flows = {
     'funFact',
     'pastExperience',
     'issues',
-    'opponents',
+    'runningAgainst',
   ],
 };
 export default function QuestionsPage(props) {
-  const { generate, candidatePositions, positions } = props;
+  const { generate, candidatePositions } = props;
   const [campaign, setCampaign] = useState(props.campaign);
   const [state, setState] = useState({
     occupation: '',
@@ -41,16 +41,24 @@ export default function QuestionsPage(props) {
     pastExperience: '',
     issues: '',
     website: '',
-    opponents: '',
+    // runningAgainst: '',
   });
   //   if (campaign.details) {
-  //     const { occupation, funFact, pastExperience, issues, website, opponents } =
+  //     const { occupation, funFact, pastExperience, issues, website, runningAgainst } =
   //       campaign.details;
   //   }
   const flow = flows[generate];
   let nextStep = 0;
   for (let i = 0; i < flow.length; i++) {
-    if (!campaign?.details || !campaign.details[flow[i]]) {
+    const combinedIssuedCount =
+      (candidatePositions?.length || 0) + (campaign?.customIssues?.length || 0);
+    if (flow[i] === 'issues' && combinedIssuedCount < 3) {
+      nextStep = i;
+      break;
+    } else if (flow[i] === 'issues' && combinedIssuedCount >= 3) {
+      nextStep = i + 1;
+      break;
+    } else if (!campaign?.details || !campaign.details[flow[i]]) {
       nextStep = i;
       break;
     }
@@ -69,7 +77,13 @@ export default function QuestionsPage(props) {
     setCampaign(res.campaign);
   };
 
+  const handleComplete = async () => {
+    const res = await getCampaign();
+    setCampaign(res.campaign);
+  };
+
   const nextKey = flow[nextStep];
+  console.log('nextKey', nextKey);
 
   return (
     <MaxWidth>
@@ -101,7 +115,13 @@ export default function QuestionsPage(props) {
             campaignKey={nextKey}
           />
         )}
-        {campaign && nextKey === 'issues' && <AddIssues {...props} />}
+        {campaign && nextKey === 'issues' && (
+          <AddIssues {...props} completeCallback={handleComplete} />
+        )}
+
+        {/* {campaign && nextKey === 'runningAgainst' && (
+          <AddIssues {...props} completeCallback={handleComplete} />
+        )} */}
       </div>
     </MaxWidth>
   );
