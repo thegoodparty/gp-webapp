@@ -111,18 +111,18 @@ export default function RegisterPage({}) {
       }
       if (user) {
         userState.set(() => user);
-        const afterAction = getCookie('afterAction');
-        if (afterAction === 'createCampaign') {
-          await createCampaign();
+        // const afterAction = getCookie('afterAction');
+        // if (afterAction === 'createCampaign') {
+
+        // } else {
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          window.location.href = returnUrl;
         } else {
-          const returnUrl = getCookie('returnUrl');
-          if (returnUrl) {
-            deleteCookie('returnUrl');
-            window.location.href = returnUrl;
-          } else {
-            window.location.href = '/';
-          }
+          await createCampaign();
         }
+        // }
         snackbarState.set(() => {
           return {
             isOpen: true,

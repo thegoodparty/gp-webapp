@@ -12,13 +12,13 @@ import { useRouter } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-async function launchCampaign(slug) {
+async function launchCampaign() {
   try {
     const api = gpApi.campaign.onboarding.launch;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
+    // const payload = {
+    //   slug,
+    // };
+    return await gpFetch(api);
   } catch (e) {
     console.log('error at launchCampaign', e);
     return {};
@@ -54,7 +54,7 @@ export default function PledgeStep({ campaign, pledge }) {
       state.pledged1 && state.pledged2 && state.pledged3;
     updated.goals = {};
     await updateCampaign(updated);
-    await launchCampaign(campaign.slug);
+    await launchCampaign();
     router.push('/dashboard');
   };
 

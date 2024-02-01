@@ -80,7 +80,7 @@ export default function SocialLoginButtons() {
           isError: false,
         };
       });
-      const afterAction = getCookie('afterAction');
+      // const afterAction = getCookie('afterAction');
       if (afterAction === 'createCampaign') {
         await createCampaign(router);
       }

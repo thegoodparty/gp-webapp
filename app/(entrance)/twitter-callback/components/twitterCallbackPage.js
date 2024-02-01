@@ -15,6 +15,7 @@ import {
   setCookie,
   setUserCookie,
 } from 'helpers/cookieHelper';
+import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 
 async function verifyToken(oauthToken, oauthVerifier) {
   try {
@@ -48,17 +49,17 @@ export default function TwitterCallbackPage() {
   useEffect(() => {
     if (!oauthToken || !oauthVerifier) {
       const afterAction = getCookie('afterAction');
-      if (afterAction === 'createCampaign') {
-        createCampaign(router);
+      // if (afterAction === 'createCampaign') {
+      //   createCampaign(router);
+      // } else {
+      const returnUrl = getCookie('returnUrl');
+      if (returnUrl) {
+        deleteCookie('returnUrl');
+        router.push(returnUrl);
       } else {
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          router.push(returnUrl);
-        } else {
-          router.push('/');
-        }
+        createCampaign(router);
       }
+      // }
     } else {
       handleLogin();
     }

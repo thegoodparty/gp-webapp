@@ -38,7 +38,7 @@ export default function RunCampaignButton({
     setLoading(true);
     const user = getUserCookie(true);
     if (!user) {
-      setCookie('afterAction', 'createCampaign');
+      // setCookie('afterAction', 'createCampaign');
       router.push('/register');
     } else {
       const { campaign } = await fetchUserCampaignClient();

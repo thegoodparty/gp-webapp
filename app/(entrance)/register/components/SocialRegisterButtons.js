@@ -78,17 +78,12 @@ export default function SocialRegisterButtons() {
     if (user) {
       userState.set(() => user);
 
-      const afterAction = getCookie('afterAction');
-      if (afterAction === 'createCampaign') {
-        await createCampaign(router);
+      const returnUrl = getCookie('returnUrl');
+      if (returnUrl) {
+        deleteCookie('returnUrl');
+        router.push(returnUrl);
       } else {
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          router.push(returnUrl);
-        } else {
-          router.push('/');
-        }
+        await createCampaign(router);
       }
 
       snackbarState.set(() => {
