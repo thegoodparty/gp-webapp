@@ -15,6 +15,7 @@ import PlanDisplay from './PlanDisplay';
 import PlanActions from './PlanActions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
+import { flows } from '../../questions/components/QuestionsPage';
 
 async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
   try {
@@ -35,17 +36,62 @@ async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
 let aiCount = 0;
 let aiTotalCount = 0;
 
+function canGenerate(campaign, key, candidatePositions) {
+  const questions = flows[key];
+  const { customIssues } = campaign;
+  if (!campaign.details) {
+    return false;
+  }
+  const issuesCount =
+    (customIssues?.length || 0) + candidatePositions?.length || 0;
+  const { occupation, funFact, pastExperience, website } =
+    campaign.details || {};
+  const { runningAgainst } = campaign.goals || {};
+  /*
+'occupation',
+    'funFact',
+    'pastExperience',
+    'issues',
+    'runningAgainst',
+    'website',
+  */
+  let answeredQuestions = 0;
+  questions.forEach((question) => {
+    if (question === 'occupation' && occupation) {
+      answeredQuestions++;
+    }
+    if (question === 'funFact' && funFact) {
+      answeredQuestions++;
+    }
+    if (question === 'pastExperience' && pastExperience) {
+      answeredQuestions++;
+    }
+    if (question === 'issues' && issuesCount >= 3) {
+      answeredQuestions++;
+    }
+    if (question === 'runningAgainst' && runningAgainst) {
+      answeredQuestions++;
+    }
+    if (question === 'website' && website) {
+      answeredQuestions++;
+    }
+  });
+  return answeredQuestions >= questions.length;
+}
+
 export default function CampaignPlanSection({
   section,
   campaign,
   versions = {},
   updateVersionsCallback,
   subSectionKey = 'campaignPlan',
+  candidatePositions,
 }) {
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
+  const [canGenerateAi, setCanGenerateAi] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
@@ -53,6 +99,7 @@ export default function CampaignPlanSection({
 
   const campaignPlan = campaign[subSectionKey];
   const { key } = section;
+  console.log('key', key);
 
   useEffect(() => {
     if (campaignPlan && campaignPlan[key]) {
@@ -61,6 +108,11 @@ export default function CampaignPlanSection({
       setIsTyped(true);
     }
   }, [campaignPlan]);
+
+  useEffect(() => {
+    const can = canGenerate(campaign, key, candidatePositions);
+    setCanGenerateAi(can);
+  }, [campaign, key]);
 
   const createInitialAI = async (regenerate, chat, editMode) => {
     aiCount++;
@@ -197,11 +249,27 @@ export default function CampaignPlanSection({
                   />
                 </>
               ) : (
-                <div className="py-8 flex justify-center">
-                  <Link href={`/dashboard/questions?generate=${key}`}>
-                    <PrimaryButton>Answer additional questions</PrimaryButton>
-                  </Link>
-                </div>
+                <>
+                  {canGenerateAi ? (
+                    <div className="py-12 flex justify-center">
+                      <div
+                        onClick={() => {
+                          handleRegenerate('');
+                        }}
+                      >
+                        <PrimaryButton>Generate {section.title}</PrimaryButton>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="py-8 flex justify-center">
+                      <Link href={`/dashboard/questions?generate=${key}`}>
+                        <PrimaryButton>
+                          Answer additional questions
+                        </PrimaryButton>
+                      </Link>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}

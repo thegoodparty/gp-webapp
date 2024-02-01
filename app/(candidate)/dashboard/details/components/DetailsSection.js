@@ -11,46 +11,11 @@ import { CircularProgress } from '@mui/material';
 
 const fields = [
   {
-    key: 'firstName',
-    label: 'Candidate First Name',
-    required: true,
-    type: 'text',
-  },
-  {
-    key: 'lastName',
-    label: 'Candidate Last Name',
-    required: true,
-    type: 'text',
-  },
-  {
-    key: 'campaignPhone',
-    label: 'Phone',
-    required: true,
-    type: 'phone',
-    validate: 'validPhone',
-  },
-  {
     key: 'zip',
     label: 'Zip Code',
     required: true,
     type: 'text',
     validate: validateZip,
-  },
-  {
-    key: 'dob',
-    label: 'Date of Birth',
-    required: true,
-    type: 'date',
-    validate: 'over 18',
-  },
-  {
-    key: 'citizen',
-    label: 'Are you a U.S. Citizen?',
-    required: true,
-    type: 'radio',
-    options: ['Yes', 'No'],
-    validateOptions: ['yes', 'No'],
-    alignLeft: true,
   },
 ];
 

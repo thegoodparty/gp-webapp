@@ -1,4 +1,3 @@
-'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
@@ -7,8 +6,6 @@ import Link from 'next/link';
 export default function QuestionProgress({ campaign, candidatePositions }) {
   const totalQuestions = 6;
   let answeredQuestions = 0;
-  console.log('campaign', campaign);
-  console.log('candidatePositions', candidatePositions);
   const { customIssues } = campaign;
   const issuesCount =
     (customIssues?.length || 0) + candidatePositions?.length || 0;

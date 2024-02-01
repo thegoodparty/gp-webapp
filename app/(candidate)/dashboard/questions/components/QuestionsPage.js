@@ -15,7 +15,7 @@ import Body1 from '@shared/typography/Body1';
 import Website from './Website';
 import Done from './Done';
 
-const flows = {
+export const flows = {
   all: [
     'occupation',
     'funFact',
@@ -25,11 +25,13 @@ const flows = {
     'website',
   ],
   why: ['occupation', 'funFact', 'pastExperience', 'issues'],
-  bio: ['funFact', 'pastExperience', 'issues'],
+  aboutMe: ['funFact', 'pastExperience', 'issues'],
   slogan: ['funFact', 'occupation', 'pastExperience', 'issues'],
-  politics: ['issues'],
-  website: ['website'],
-  positioning: [
+  policyPlatform: ['issues'],
+  communicationsStrategy: ['website'],
+  messageBox: ['website'],
+  pathToVictory: ['website'],
+  mobilizing: [
     'occupation',
     'funFact',
     'pastExperience',
