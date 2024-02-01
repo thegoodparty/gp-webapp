@@ -3,9 +3,20 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionPage from './components/ElectionPage';
 import pageMetaData from 'helpers/metadataHelper';
-import OptimizeScript from '@shared/scripts/OptimizeScript';
-import { fetchCandidate } from 'app/candidate/[slug]/page';
 // import ElectionSchema from './ElectionSchema';
+
+export const fetchCandidate = async (slug) => {
+  try {
+    const api = gpApi.candidate.find;
+    const payload = {
+      slug,
+      allFields: true,
+    };
+    return await gpFetch(api, payload, 3600);
+  } catch (e) {
+    return false;
+  }
+};
 
 export const fetchElection = async (slug) => {
   const api = gpApi.content.contentByKey;

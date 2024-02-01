@@ -4,7 +4,7 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminVictoryPathPage from './components/AdminVictoryPathPage';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchCampaign } from 'app/candidate/[slug]/review/page';
+import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 
 const meta = pageMetaData({
   title: 'Admin Path to Victory | GOOD PARTY',
@@ -22,7 +22,7 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaign(slug);
+  const { campaign } = await getCampaign(slug);
 
   const childProps = {
     pathname: '/admin/candidates',

@@ -4,7 +4,8 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminVictoryPathPage from './components/CandidateMetricsPage';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchCampaign } from 'app/candidate/[slug]/review/page';
+import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+// import { fetchCampaign } from 'app/candidate/[slug]/review/page';
 
 async function fetchAdminUpdateHistory(slug) {
   try {
@@ -30,7 +31,7 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaign(slug);
+  const { campaign } = await getCampaign(slug);
   const { updateHistory } = await fetchAdminUpdateHistory(slug);
 
   const childProps = {

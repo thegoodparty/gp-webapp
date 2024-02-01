@@ -1,12 +1,41 @@
 import Link from 'next/link';
 import { candidateRoute } from 'helpers/candidateHelper';
-import { colors } from 'app/candidate/[slug]/components/CandidateColors';
-import AvatarWithTracker from 'app/candidate/[slug]/components/AvatarWithTracker';
+import { colors } from './CandidateColors';
+import AvatarWithTracker from './AvatarWithTracker';
 import WarningButton from '@shared/buttons/WarningButton';
 import { FaChevronRight } from 'react-icons/fa';
-import CandidatePill from 'app/candidate/[slug]/components/CandidatePill';
-import { calcLocation } from 'app/candidate/[slug]/components/ProfileSection';
-import contentfulHelper from 'helpers/contentfulHelper';
+import CandidatePill from './CandidatePill';
+
+const federalOffices = ['US Senate', 'US House of Representatives'];
+const noDistrictOffices = [
+  'US Senate',
+  'Governor',
+  'Lieutenant Governor',
+  'Attorney General',
+  'Comptroller',
+  'Treasurer',
+  'Secretary of State',
+  'State Supreme Court Justice',
+];
+
+export const calcLocation = ({ office, state, district, city }) => {
+  const isFederal = federalOffices.includes(office);
+  const noDistrict = noDistrictOffices.includes(office);
+  let str = '';
+  if (isFederal) {
+    return `${district ? `${district}, ` : ''} ${state}`;
+  }
+  if (noDistrict) {
+    return `${city ? `${city},` : ''} ${state}`;
+  }
+  if (!district && city) {
+    return `${city}, ${state}`;
+  }
+  if (!district) {
+    return `${state}`;
+  }
+  return `${city ? `District ${district}, ${city}` : district}, ${state}`;
+};
 
 export default function ElectionCandidate({
   candidate,

@@ -8,7 +8,7 @@ import Table from '@shared/utils/Table';
 import Link from 'next/link';
 import { CSVLink } from 'react-csv';
 import { IoIosPersonAdd } from 'react-icons/io';
-import mapCampaignToCandidate from 'app/candidate/[slug]/edit/mapCampaignToCandidate';
+import mapCampaignToCandidate from './mapCampaignToCandidate';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
