@@ -16,12 +16,6 @@ export default function Dashboard(props) {
         <Steps {...props} />
         <SetShortVersionStatus {...props} />
         <Help />
-        <Script
-          type="text/javascript"
-          id="hs-script-loader"
-          strategy="afterInteractive"
-          src="//js.hs-scripts.com/21589597.js"
-        />
         <UserSnapScript />
         <FullStoryScript />
       </div>

@@ -64,13 +64,6 @@ export default function ElectionPage(props) {
       )}
 
       <Blog {...childProps} />
-
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
     </div>
   );
 }
