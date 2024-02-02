@@ -5,6 +5,7 @@ import { shortToLongState } from 'helpers/statesHelper';
 import Image from 'next/image';
 import H2 from '@shared/typography/H2';
 import Subtitle2 from '@shared/typography/Subtitle2';
+import { slugify } from 'helpers/articleHelper';
 const year = new Date().getFullYear();
 
 export default function Hero({
@@ -19,7 +20,7 @@ export default function Hero({
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
     {
-      label: `how to run in ${stateName}`,
+      label: `How to run in ${stateName}`,
     },
   ];
   if (level === 'county') {
@@ -28,6 +29,18 @@ export default function Hero({
       label: county.county_full,
     });
   }
+
+  if (level === 'city') {
+    breadcrumbsLinks[1].href = `/elections/${state}`;
+    breadcrumbsLinks.push({
+      label: `${municipality.county_name} county`,
+      href: `/elections/${state}/${slugify(municipality.county_name, true)}`,
+    });
+    breadcrumbsLinks.push({
+      label: municipality.city,
+    });
+  }
+  console.log('breadcrumbsLinks', breadcrumbsLinks);
   let title = '';
   let subTitle = '';
   if (level === 'state') {

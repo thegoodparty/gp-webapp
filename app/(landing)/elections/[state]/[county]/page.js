@@ -41,7 +41,7 @@ export async function generateMetadata({ params }) {
     const meta = pageMetaData({
       title: `Run for Office in ${county.county} county, ${stateName} ${year}`,
       description: `Learn about available opportunities to run for office in ${county.county} county, ${stateName} and tips for launching a successful campaign.`,
-      slug: `/elections/${state}/${params.county}`,
+      slug: `/elections/${state}/${params.county}?viewAll=true`,
     });
     return meta;
   }

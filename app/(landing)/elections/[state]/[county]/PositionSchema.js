@@ -9,14 +9,16 @@ export default function PositionSchema({ race }) {
     positionName,
     positionDescription,
     locationName,
-    normalizedPositionName,
     electionDay,
     eligibilityRequirements,
     state,
     salary,
     employmentType,
-    hashId,
+    filingOfficeAddress,
+    filingPhoneNumber,
+    filingDateEnd,
   } = race;
+  console.log('rr', race);
   let loc = locationName;
   if (level === 'city') {
     loc += ` City, ${race.state}`;
@@ -34,12 +36,15 @@ export default function PositionSchema({ race }) {
       item={{
         '@context': 'https://schema.org',
         '@type': 'JobPosting',
+        datePosted: '2024-01-01',
+        validThrough: filingDateEnd,
         title: positionName,
         name: positionName,
         description: positionDescription,
         hiringOrganization: {
-          '@type': 'GovernmentOrganization',
+          '@type': 'Organization',
           name: loc,
+          location: filingOfficeAddress,
         },
         jobLocation: {
           '@type': 'Place',
@@ -47,6 +52,7 @@ export default function PositionSchema({ race }) {
             '@type': 'PostalAddress',
             addressLocality: locationName,
             addressRegion: state,
+            telephone: filingPhoneNumber,
           },
         },
         employmentType: 'Elected',
