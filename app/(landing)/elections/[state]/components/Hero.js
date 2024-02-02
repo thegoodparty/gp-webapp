@@ -29,8 +29,6 @@ export default function Hero({
       label: county.county_full,
     });
   }
-  console.log('municipality', municipality);
-  console.log('level, level', level);
 
   if (level === 'city') {
     breadcrumbsLinks[1].href = `/elections/${state}`;
