@@ -46,6 +46,7 @@ export const flatStates = [
   'VA',
   'VT',
   'WA',
+  'WI',
   'WV',
   'WY',
 ];
