@@ -16,7 +16,17 @@ import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
 
 const parties = [
-  { name: 'Independent', logo: independentLogo },
+  {
+    name: 'Independent',
+    label: (
+      <>
+        Independent /
+        <br />
+        Non-Partisan
+      </>
+    ),
+    logo: independentLogo,
+  },
   { name: 'Libertarian Party', logo: libertarianLogo },
   { name: 'Forward Party', logo: fwdLogo },
   { name: 'Green Party', logo: greedLogo },
@@ -226,7 +236,7 @@ export default function PartyStep(props) {
                         : 'text-indigo-300'
                     }`}
                   >
-                    {party.name}
+                    {party.label || party.name}
                   </div>
                 </div>
               </div>

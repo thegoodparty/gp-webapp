@@ -25,19 +25,18 @@ export default function OfficeStep(props) {
   };
 
   const canSubmit = () => {
-    console.log('state.ballotOffice', state.ballotOffice);
-    console.log('!!state.ballotOffice', !!state.ballotOffice);
     return !!state.ballotOffice || !!state.originalPosition;
   };
 
   const handleSave = async () => {
     if (canSubmit()) {
       const updated = campaign;
-      const { position, election } = state.ballotOffice;
+      const { position, election, id } = state.ballotOffice;
       updated.details = {
         ...campaign.details,
         positionId: position?.id,
         electionId: election?.id,
+        raceId: id,
         state: election?.state,
         office: 'Other',
         otherOffice: position?.name,

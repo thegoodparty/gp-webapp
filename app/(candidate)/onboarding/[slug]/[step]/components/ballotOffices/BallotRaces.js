@@ -23,7 +23,6 @@ const fetchRaces = async (zip) => {
 
 export default function BallotRaces(props) {
   const { campaign, selectedOfficeCallback, selectedOffice } = props;
-  const [tab, setTab] = useState(0);
   const [zip, setZip] = useState(campaign.details.zip);
   const [races, setRaces] = useState(false);
   const [filteredRaces, setFilteredRaces] = useState(false);
