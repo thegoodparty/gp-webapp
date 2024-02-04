@@ -28,16 +28,16 @@ export const flows = {
   aboutMe: ['funFact', 'pastExperience', 'issues'],
   slogan: ['funFact', 'occupation', 'pastExperience', 'issues'],
   policyPlatform: ['issues'],
-  communicationsStrategy: ['website'],
-  messageBox: ['website'],
-  pathToVictory: ['website'],
-  mobilizing: [
+  communicationsStrategy: [],
+  messageBox: [
     'occupation',
     'funFact',
     'pastExperience',
     'issues',
     'runningAgainst',
   ],
+  pathToVictory: ['occupation', 'funFact', 'pastExperience', 'issues'],
+  mobilizing: ['occupation', 'funFact', 'pastExperience', 'issues'],
 };
 export default function QuestionsPage(props) {
   const { generate, candidatePositions } = props;
