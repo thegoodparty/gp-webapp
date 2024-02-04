@@ -213,11 +213,18 @@ export default function CampaignPlanSection({
     setIsEdited(true);
   };
 
+  const handleOpen = (isOpen) => {
+    if (isOpen && !loading && !plan && canGenerateAi) {
+      handleRegenerate('');
+    }
+  };
+
   return (
     <section key={section.key} className="my-3">
       <TogglePanel
         label={section.title}
         icon={loading ? <CircularProgress size={20} /> : section.icon}
+        openCallback={handleOpen}
       >
         <div className="">
           {loading ? (

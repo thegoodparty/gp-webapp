@@ -13,10 +13,14 @@ export default function TogglePanel({
   forceExpand,
   // badge,
   children,
+  openCallback,
 }) {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
     setOpen(!open);
+    if (openCallback) {
+      openCallback(!open);
+    }
   };
 
   /*
