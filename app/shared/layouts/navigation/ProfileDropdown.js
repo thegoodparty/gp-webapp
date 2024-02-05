@@ -11,7 +11,7 @@ import {
 import { hookstate, useHookstate } from '@hookstate/core';
 import { memo, useEffect, useState } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
-import { getCookie } from 'helpers/cookieHelper';
+import { deleteCookies, getCookie } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 
 export const globalUserState = hookstate(false);
