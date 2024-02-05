@@ -20,7 +20,7 @@ const links = [
   {
     id: 'nav-settings',
     label: 'Settings',
-    href: '/profile/settings',
+    href: '/profile',
     icon: <FaToolbox />,
   },
   // {

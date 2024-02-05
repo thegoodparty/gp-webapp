@@ -97,11 +97,7 @@ export default function DashboardMenu({
       ))}
       {mobileMode && (
         <div className="mt-4 border-t border-indigo-400 pt-4">
-          <Link
-            href="/profile/settings"
-            className="no-underline"
-            id="nav-dash-settings"
-          >
+          <Link href="/profile" className="no-underline" id="nav-dash-settings">
             <div
               className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 `}
             >
