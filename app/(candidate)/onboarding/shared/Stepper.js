@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 export default function Stepper(props) {
   const { step, totalSteps } = props;
   return (
-    <div className="flex items-center justify-center py-8 lg:py-0 lg:fixed lg:top-5 lg:left-0 lg:w-screen lg:z-50">
+    <div className="flex items-center justify-center py-8 lg:py-0 lg:fixed lg:top-5 lg:w-[calc(100vw-300px)] lg:left-[150px] lg:z-50">
       {[...Array(totalSteps)].map((e, i) => (
         <Fragment key={i}>
           <div

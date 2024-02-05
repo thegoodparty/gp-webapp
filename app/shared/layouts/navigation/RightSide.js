@@ -75,7 +75,7 @@ export default function RightSide() {
       <Link
         href="/"
         id="nav-onboarding-finish-later"
-        className="hidden lg:block"
+        className="hidden lg:block relative z-[60]"
       >
         <InfoButton size="medium">Finish later</InfoButton>
       </Link>
