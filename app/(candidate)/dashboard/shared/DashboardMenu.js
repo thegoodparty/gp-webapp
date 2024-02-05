@@ -1,3 +1,4 @@
+import { deleteCookies } from 'helpers/cookieHelper';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
@@ -51,6 +52,7 @@ export default function DashboardMenu({
   toggleCallback,
   candidateSlug,
   pathToVictory,
+  mobileMode,
 }) {
   // make profile link dynamic
   // pages[1].link = `/candidate/${candidateSlug}`;
@@ -64,8 +66,13 @@ export default function DashboardMenu({
     });
   }
 
+  const handleLogOut = () => {
+    deleteCookies();
+    window.location.replace('/');
+  };
+
   return (
-    <div className="w-[calc(100vw-16px)] lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
+    <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
       {pages.map((page) => (
         <Fragment key={page.label}>
           {page.section && (
@@ -88,6 +95,28 @@ export default function DashboardMenu({
           </Link>
         </Fragment>
       ))}
+      {mobileMode && (
+        <div className="mt-4 border-t border-indigo-400 pt-4">
+          <Link
+            href="/profile/settings"
+            className="no-underline"
+            id="nav-dash-settings"
+          >
+            <div
+              className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 `}
+            >
+              <div className="ml-2">Settings</div>
+            </div>
+          </Link>
+
+          <div
+            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 cursor-pointer "
+            onClick={handleLogOut}
+          >
+            <div className="ml-2">Logout</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

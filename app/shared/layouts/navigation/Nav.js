@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import LeftSide from './LeftSide';
 import RightSide from './RightSide';
+import RightSideMobile from './RightSideMobile';
 
 export default function Nav() {
   return (
@@ -10,37 +12,22 @@ export default function Nav() {
           <div className="flex justify-between items-center h-14">
             <div className="flex items-center">
               <Link href="/" id="nav-logo">
-                <div className="xs:hidden">
-                  <Image
-                    src="/images/heart-hologram.svg"
-                    data-cy="logo"
-                    width={40}
-                    height={32}
-                    alt="GOOD PARTY"
-                    priority
-                  />
-                </div>
-                <div className="hidden xs:block">
-                  <Image
-                    src="/images/logo-hologram.svg"
-                    data-cy="logo"
-                    width={145}
-                    height={32}
-                    alt="GOOD PARTY"
-                    priority
-                  />
-                </div>
+                <Image
+                  src="/images/heart-hologram.svg"
+                  data-cy="logo"
+                  width={30}
+                  height={24}
+                  alt="GOOD PARTY"
+                  priority
+                />
               </Link>
-              <div className="pl-4 text-sm hidden lg:block">
-                Helping real people run and win!
-              </div>
+              <LeftSide />
             </div>
-            <div className="flex justify-end items-center">
-              <RightSide />
-            </div>
+            <RightSide />
           </div>
         </div>
       </div>
+      <RightSideMobile />
       <div className="h-14 relative">&nbsp;</div>
     </>
   );

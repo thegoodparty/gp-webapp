@@ -4,12 +4,13 @@ import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import GetInvolved from './GetInvolved';
-import LearnMore from './LearnMore';
-import OfficeOrContinueLink from './OfficeOrContinueLink';
-import RegisterOrProfile from './RegisterOrProfile';
 import TopDashboardMenu from './TopDashboardMenu';
+import Link from 'next/link';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Notifications from './notifications/Notification';
 import NotificationsDropdown from './notifications/NotificationsDropdown';
+import ProfileDropdown from './ProfileDropdown';
+import DashboardOrContinue from './DashboardOrContinue';
 
 export async function fetchCampaignStatus() {
   try {
@@ -22,11 +23,11 @@ export async function fetchCampaignStatus() {
 
 export default function RightSide() {
   const [user, setUser] = useState(false);
-  const [learnMoreOpen, setLearnMoreOpen] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
-  const [dashboardOpen, setDashboardOpen] = useState(false);
+
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [campaignStatus, setCampaignStatus] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
 
   useEffect(() => {
     const cookieUser = getUserCookie(true);
@@ -44,28 +45,6 @@ export default function RightSide() {
     setCampaignStatus(status);
   };
 
-  const closeAll = () => {
-    setAccountOpen(false);
-    setLearnMoreOpen(false);
-    setDashboardOpen(false);
-    setNotificationsOpen(false);
-    document.body.style.overflow = 'visible';
-  };
-
-  const toggleLearnMore = () => {
-    closeAll();
-    setLearnMoreOpen(!learnMoreOpen);
-  };
-
-  const toggleAccount = () => {
-    closeAll();
-    setAccountOpen(!accountOpen);
-  };
-  const toggleDashboard = () => {
-    closeAll();
-    setDashboardOpen(!dashboardOpen);
-  };
-
   const toggleNotifications = () => {
     closeAll();
     if (!notificationsOpen) {
@@ -73,48 +52,60 @@ export default function RightSide() {
     }
     setNotificationsOpen(!notificationsOpen);
   };
+
+  const toggleProfile = () => {
+    closeAll();
+    setProfileOpen(!profileOpen);
+  };
+
+  const toggleDashboard = () => {
+    closeAll();
+    setDashboardOpen(!dashboardOpen);
+  };
+
+  const closeAll = () => {
+    setNotificationsOpen(false);
+    setProfileOpen(false);
+    document.body.style.overflow = 'visible';
+  };
+
   return (
-    <>
-      <LearnMore
-        open={learnMoreOpen}
-        toggleCallback={toggleLearnMore}
-        campaignStatus={campaignStatus}
-        closeAll={closeAll}
-      />
-      <NotificationsDropdown
-        open={notificationsOpen}
-        toggleCallback={toggleNotifications}
-        user={user}
-        closeAll={closeAll}
-      />
-
-      <OfficeOrContinueLink
-        campaignStatus={campaignStatus}
-        isDashboardPath={isDashboardPath}
-        closeAll={closeAll}
-      />
-
-      <GetInvolved
-        toggleCallback={toggleLearnMore}
-        user={user}
-        campaignStatus={campaignStatus}
-        closeAll={closeAll}
-      />
-
-      <RegisterOrProfile
-        user={user}
-        open={accountOpen}
-        toggleCallback={toggleAccount}
-        campaignStatus={campaignStatus}
-        closeAll={closeAll}
-      />
-      {isDashboardPath && (
-        <TopDashboardMenu
-          open={dashboardOpen}
-          toggleCallback={toggleDashboard}
-          pathname={pathname}
-        />
+    <div className="hidden lg:flex justify-end items-center">
+      {user ? (
+        <>
+          <NotificationsDropdown
+            open={notificationsOpen}
+            toggleCallback={toggleNotifications}
+            user={user}
+          />
+          <ProfileDropdown open={profileOpen} toggleCallback={toggleProfile} />
+          <DashboardOrContinue
+            campaignStatus={campaignStatus}
+            isDashboardPath={isDashboardPath}
+            closeAll={closeAll}
+          />
+          {isDashboardPath && (
+            <TopDashboardMenu
+              open={dashboardOpen}
+              toggleCallback={toggleDashboard}
+              pathname={pathname}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          <Link href="/register" id="nav-sign-in" className="mr-6">
+            <PrimaryButton variant="text" size="medium">
+              <div className="font-medium text-base">Sign in</div>
+            </PrimaryButton>
+          </Link>
+          <Link href="/run-for-office" id="nav-get-tools">
+            <PrimaryButton size="medium">
+              <div className="font-medium text-base">Get Campaign Tools</div>
+            </PrimaryButton>
+          </Link>
+        </>
       )}
-    </>
+    </div>
   );
 }

@@ -17,12 +17,7 @@ export async function updateNotifications() {
   }
 }
 
-export default function NotificationsDropdown({
-  open,
-  toggleCallback,
-  user,
-  closeAll,
-}) {
+export default function NotificationsDropdown({ open, toggleCallback, user }) {
   const notifications = useNotifications();
   const [showDot, setShowDot] = useState(false);
   useEffect(() => {
@@ -39,7 +34,6 @@ export default function NotificationsDropdown({
       setShowDot(false);
       await updateNotifications();
     }
-    closeAll();
     toggleCallback();
   };
   return (
@@ -49,7 +43,7 @@ export default function NotificationsDropdown({
       id="nav-notifications-dropdown"
     >
       <div className="relative">
-        <FaBell />
+        <FaBell size={18} />
         {showDot && (
           <div className="absolute w-2 h-2 bg-red-400 rounded-full -top-1 -right-2"></div>
         )}
@@ -64,7 +58,10 @@ export default function NotificationsDropdown({
             className="fixed md:absolute z-50 top-20 md:top-14  w-[90vw] left-[5vw] md:left-auto md:right-0 md:max-w-[460px] bg-primary text-gray-800 rounded-xl  shadow-md transition h-[calc(100vh-92px)] cursor-default overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <NotificationsPanel notifications={notifications} closeNotificationCallback={closeAll} />
+            <NotificationsPanel
+              notifications={notifications}
+              closeNotificationCallback={toggleCallback}
+            />
           </div>
         </>
       ) : null}

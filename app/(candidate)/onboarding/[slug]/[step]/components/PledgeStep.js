@@ -55,7 +55,7 @@ export default function PledgeStep({ campaign, pledge }) {
     updated.goals = {};
     await updateCampaign(updated);
     await launchCampaign();
-    router.push('/dashboard');
+    router.push('/dashboard/plan');
   };
 
   const onChangeField = (key, value) => {
