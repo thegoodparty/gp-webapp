@@ -40,7 +40,7 @@ export default function RightSideMobile() {
     setCampaignStatus(status);
   };
 
-  const { status, pathToVictory } = campaignStatus || {};
+  const { status, pathToVictory, slug } = campaignStatus || {};
 
   let dashboardLink = '/dashboard';
   if (!pathToVictory || pathToVictory !== 'Complete') {
