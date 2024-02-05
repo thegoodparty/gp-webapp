@@ -1,6 +1,4 @@
 import WarningButton from '@shared/buttons/WarningButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import LearnMore from '@shared/layouts/navigation/LearnMore';
 import Image from 'next/image';
 import Link from 'next/link';
 
