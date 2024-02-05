@@ -44,9 +44,6 @@ export default function RightSideMobile() {
   };
 
   const { status, pathToVictory } = campaignStatus || {};
-  if (!status) {
-    return null;
-  }
 
   let dashboardLink = '/dashboard';
   if (!pathToVictory || pathToVictory !== 'Complete') {
@@ -120,7 +117,7 @@ export default function RightSideMobile() {
                 >
                   {user ? (
                     <>
-                      {status === 'candidate' ? (
+                      {status === 'candidate' && (
                         <>
                           {!isDashboardPath && (
                             <Link href={`${dashboardLink}`} id="nav-dashboard">
@@ -138,7 +135,8 @@ export default function RightSideMobile() {
                             </Link>
                           )}
                         </>
-                      ) : (
+                      )}
+                      {status === 'onboarding' && (
                         <Link
                           href={`/onboarding/${slug}/1`}
                           id="nav-continue-onboarding"
