@@ -12,6 +12,7 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
+import NotificationsDropdown from './notifications/NotificationsDropdown';
 
 const sections = [
   { title: 'Run For Office', links: RUN_LINKS },
@@ -23,6 +24,7 @@ export default function RightSideMobile() {
   const [isOpen, setOpen] = useState(false);
   const [user, setUser] = useState(false);
   const [campaignStatus, setCampaignStatus] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   useEffect(() => {
     const cookieUser = getUserCookie(true);
@@ -51,14 +53,33 @@ export default function RightSideMobile() {
     setOpen(false);
   };
 
+  const toggleNotifications = () => {
+    // closeAll();
+    if (notificationsOpen) {
+      document.body.style.overflow = 'visible';
+    } else {
+      document.body.style.overflow = 'hidden';
+    }
+    setNotificationsOpen(!notificationsOpen);
+  };
+
   return (
     <div className="lg:hidden">
       <div>
         <div
-          className={`z-[1300] fixed top-1 right-0 ${
+          className={`z-[1300] fixed top-1 right-0 flex items-center ${
             isOpen ? 'text-white' : ''
           }`}
         >
+          {!isOpen && user && (
+            <div>
+              <NotificationsDropdown
+                open={notificationsOpen}
+                toggleCallback={toggleNotifications}
+                user={user}
+              />
+            </div>
+          )}
           <Hamburger toggled={isOpen} toggle={setOpen} size={24} rounded />
         </div>
         <SwipeableDrawer
