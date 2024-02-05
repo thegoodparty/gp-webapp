@@ -10,6 +10,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import NotificationsDropdown from './notifications/NotificationsDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import DashboardOrContinue from './DashboardOrContinue';
+import InfoButton from '@shared/buttons/InfoButton';
 
 export async function fetchCampaignStatus() {
   try {
@@ -38,6 +39,7 @@ export default function RightSide() {
 
   const pathname = usePathname();
   const isDashboardPath = pathname?.startsWith('/dashboard');
+  const isOnboardingPath = pathname?.startsWith('/onboarding');
 
   const updateStatus = async () => {
     const status = await fetchCampaignStatus();
@@ -67,6 +69,18 @@ export default function RightSide() {
     setProfileOpen(false);
     document.body.style.overflow = 'visible';
   };
+
+  if (isOnboardingPath) {
+    return (
+      <Link
+        href="/"
+        id="nav-onboarding-finish-later"
+        className="hidden lg:block"
+      >
+        <InfoButton size="medium">Finish later</InfoButton>
+      </Link>
+    );
+  }
 
   return (
     <div className="hidden lg:flex justify-end items-center">

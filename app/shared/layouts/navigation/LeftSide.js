@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export const RUN_LINKS = [
   {
@@ -92,6 +93,9 @@ export default function LeftSide() {
   const [communityOpen, setCommunityOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
 
+  const pathname = usePathname();
+  const isOnboardingPath = pathname?.startsWith('/onboarding');
+
   const closeAll = () => {
     setRunOpen(false);
     setCommunityOpen(false);
@@ -112,6 +116,10 @@ export default function LeftSide() {
     closeAll();
     setResourcesOpen(!resourcesOpen);
   }, [resourcesOpen]);
+
+  if (isOnboardingPath) {
+    return null;
+  }
 
   return (
     <div className="items-center hidden lg:flex">

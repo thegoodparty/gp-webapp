@@ -10,7 +10,6 @@ import { useState } from 'react';
 
 export default function RunForOfficeStep(props) {
   const { campaign, step } = props;
-  console.log('campaign', campaign);
   const router = useRouter();
   const [state, setState] = useState({
     runForOffice: campaign?.details?.runForOffice || null,
