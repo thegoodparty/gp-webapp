@@ -6,14 +6,11 @@ import { COMMUNITY_LINKS, RESOURCES_LINKS, RUN_LINKS } from './LeftSide';
 import Caption from '@shared/typography/Caption';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { Primary } from '@shared/buttons/ErrorButton.stories';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import PurpleButton from '@shared/buttons/PurpleButton';
 import { fetchCampaignStatus } from './RightSide';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
-import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu';
 import DashboardMobile from '../DashboardMobile';
 
 const sections = [
@@ -49,6 +46,10 @@ export default function RightSideMobile() {
   if (!pathToVictory || pathToVictory !== 'Complete') {
     dashboardLink = '/dashboard/plan';
   }
+
+  const closeMenu = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="lg:hidden">
@@ -91,6 +92,7 @@ export default function RightSideMobile() {
                       rel={`${
                         link.external ? 'noopener noreferrer nofollow' : ''
                       }`}
+                      onClick={closeMenu}
                     >
                       <div
                         data-cy="header-link"
@@ -120,7 +122,11 @@ export default function RightSideMobile() {
                       {status === 'candidate' && (
                         <>
                           {!isDashboardPath && (
-                            <Link href={`${dashboardLink}`} id="nav-dashboard">
+                            <Link
+                              href={`${dashboardLink}`}
+                              id="nav-dashboard"
+                              onClick={closeMenu}
+                            >
                               <PurpleButton
                                 fullWidth
                                 style={{
@@ -140,6 +146,7 @@ export default function RightSideMobile() {
                         <Link
                           href={`/onboarding/${slug}/1`}
                           id="nav-continue-onboarding"
+                          onClick={closeMenu}
                         >
                           <PurpleButton
                             fullWidth
@@ -157,12 +164,16 @@ export default function RightSideMobile() {
                     </>
                   ) : (
                     <>
-                      <Link href="/login">
+                      <Link href="/login" onClick={closeMenu}>
                         <div className="w-full text-white py-4 text-center font-medium">
                           Login
                         </div>
                       </Link>
-                      <Link href="/run-for-office" className="mt-4 block">
+                      <Link
+                        href="/run-for-office"
+                        className="mt-4 block"
+                        onClick={closeMenu}
+                      >
                         <PurpleButton
                           fullWidth
                           style={{
