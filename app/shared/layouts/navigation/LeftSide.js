@@ -32,7 +32,7 @@ export const RUN_LINKS = [
   },
   {
     label: 'Talk to an expert',
-    href: '/info-session',
+    href: '/get-a-demo',
     icon: <FaUserTie />,
     id: 'nav-talk-expert',
   },
@@ -61,7 +61,7 @@ export const COMMUNITY_LINKS = [
     label: 'Info session',
     href: '/info-session',
     icon: <FaRegCalendarCheck />,
-    id: 'nav-talk-expert',
+    id: 'nav-info-session',
   },
   {
     label: 'Discord',
