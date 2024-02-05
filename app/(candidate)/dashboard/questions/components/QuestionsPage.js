@@ -56,24 +56,23 @@ export default function QuestionsPage(props) {
   //   }
   const flow = flows[generate];
   let nextStep = 0;
+  const combinedIssuedCount =
+    (candidatePositions?.length || 0) + (campaign?.customIssues?.length || 0);
+
   for (let i = 0; i < flow.length; i++) {
-    const combinedIssuedCount =
-      (candidatePositions?.length || 0) + (campaign?.customIssues?.length || 0);
-    if (flow[i] === 'issues' && combinedIssuedCount < 3) {
-      nextStep = i;
-      break;
-    } else if (flow[i] === 'issues' && combinedIssuedCount >= 3) {
-      continue;
-    } else if (
-      flow[i] === 'runningAgainst' &&
-      campaign?.goals?.runningAgainst
-    ) {
-      continue;
+    nextStep = i;
+    if (flow[i] === 'issues') {
+      if (combinedIssuedCount < 3) {
+        break;
+      }
+    } else if (flow[i] === 'runningAgainst') {
+      if (!campaign?.goals?.runningAgainst) {
+        break;
+      }
     } else if (!campaign?.details || !campaign.details[flow[i]]) {
-      nextStep = i;
       break;
-    } else if (i === flow.length - 1) {
-      // end
+    }
+    if (i === flow.length - 1) {
       nextStep = i + 1;
     }
   }
