@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { getUserCookie, setUserCookie } from 'helpers/cookieHelper';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';

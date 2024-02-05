@@ -1,15 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import {
   FaChevronDown,
   FaExternalLinkAlt,
+  FaTheaterMasks,
   FaToolbox,
   FaUserCircle,
 } from 'react-icons/fa';
-import { memo } from 'react';
+import { hookstate, useHookstate } from '@hookstate/core';
+import { memo, useEffect, useState } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
+import { getCookie } from 'helpers/cookieHelper';
+import { HiOutlineStar } from 'react-icons/hi';
+
+export const globalUserState = hookstate(false);
+
 const links = [
   {
     id: 'nav-settings',
@@ -30,7 +36,56 @@ const handleLogOut = () => {
   window.location.replace('/');
 };
 
-function ProfileDropdown({ open, toggleCallback }) {
+function ProfileDropdown({ open, toggleCallback, user }) {
+  const [impersonating, setImpersonating] = useState(false);
+  const userState = useHookstate(globalUserState);
+
+  useEffect(() => {
+    if (user) {
+      userState.set(() => user);
+      hubspotIntegration(user);
+      fullstoryIndentity(user);
+      const cookie = getCookie('impersonateToken');
+      if (cookie) {
+        setImpersonating(true);
+      } else {
+        setImpersonating(false);
+      }
+    }
+  }, [user]);
+
+  const hubspotIntegration = (user) => {
+    var _hsq = (window._hsq = window._hsq || []);
+    _hsq.push([
+      'identify',
+      {
+        email: user.email,
+        name: user.name,
+      },
+    ]);
+  };
+
+  const fullstoryIndentity = (userI) => {
+    if (typeof FS === 'undefined') {
+      return;
+    }
+    const impersonateUser = getCookie('impersonateUser');
+    if (impersonateUser) {
+      FS.shutdown();
+      return;
+    }
+    if (userI && userI.email) {
+      const domain = userI.email.split('@')[1];
+      if (domain === 'goodparty.org') {
+        FS.shutdown();
+      } else {
+        FS.identify(userI.id, {
+          displayName: userI.name,
+          email: userI.email,
+        });
+      }
+    }
+  };
   return (
     <div
       className="ml-2 relative cursor-pointer "
@@ -79,9 +134,35 @@ function ProfileDropdown({ open, toggleCallback }) {
                 </div>
               </Link>
             ))}
+            {user.isAdmin && !impersonating && (
+              <Link href="/admin" className="no-underline font-normal">
+                <div
+                  data-cy="header-link"
+                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                >
+                  <HiOutlineStar />
+                  <div className="ml-3">Admin</div>
+                </div>
+              </Link>
+            )}
+            {impersonating && (
+              <div
+                data-cy="header-link"
+                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                onClick={() => {
+                  deleteCookie('impersonateToken');
+                  deleteCookie('impersonateUser');
+                  window.location.href = '/admin';
+                }}
+              >
+                <FaTheaterMasks />
+                <div className="ml-3">Stop Impersonating</div>
+              </div>
+            )}
             <div
               data-cy="header-link"
               className="py-3 whitespace-nowrap text-base px-4 hover:bg-indigo-700  rounded flex items-center justify-between"
+              onClick={handleLogOut}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />

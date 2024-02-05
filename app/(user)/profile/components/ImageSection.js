@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import UserAvatar from '@shared/user/UserAvatar';
 import ImageUpload from '@shared/utils/ImageUpload';
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
 import Body2 from '@shared/typography/Body2';

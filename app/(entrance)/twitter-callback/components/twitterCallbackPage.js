@@ -7,7 +7,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useHookstate } from '@hookstate/core';
 import { useEffect } from 'react';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import {
   deleteCookie,

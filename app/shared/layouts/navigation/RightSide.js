@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import TopDashboardMenu from './TopDashboardMenu';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Notifications from './notifications/Notification';
 import NotificationsDropdown from './notifications/NotificationsDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import DashboardOrContinue from './DashboardOrContinue';
@@ -78,7 +77,11 @@ export default function RightSide() {
             toggleCallback={toggleNotifications}
             user={user}
           />
-          <ProfileDropdown open={profileOpen} toggleCallback={toggleProfile} />
+          <ProfileDropdown
+            open={profileOpen}
+            toggleCallback={toggleProfile}
+            user={user}
+          />
           <DashboardOrContinue
             campaignStatus={campaignStatus}
             isDashboardPath={isDashboardPath}

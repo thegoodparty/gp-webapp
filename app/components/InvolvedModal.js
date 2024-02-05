@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 
 import gpApi from '/gpApi';
 import gpFetch from '/gpApi/gpFetch';

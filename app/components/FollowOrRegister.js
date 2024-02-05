@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import YellowButton from '@shared/buttons/YellowButton';
 import RegisterAnimated from '@shared/inputs/RegisterAnimated';
-import { globalUserState } from '@shared/layouts/navigation/RegisterOrProfile';
+import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { useHookstate } from '@hookstate/core';
 
 export default function FollowOrRegister() {
