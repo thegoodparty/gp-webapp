@@ -60,7 +60,7 @@ export default function LoginPage() {
       const user = await login(state.email, state.password);
       if (user) {
         userState.set(() => user);
-        // const afterAction = getCookie('afterAction');
+        const afterAction = getCookie('afterAction');
         if (afterAction === 'createCampaign') {
           await createCampaign();
         } else {
