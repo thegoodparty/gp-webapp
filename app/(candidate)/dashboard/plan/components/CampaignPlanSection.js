@@ -99,7 +99,6 @@ export default function CampaignPlanSection({
 
   const campaignPlan = campaign[subSectionKey];
   const { key } = section;
-  console.log('key', key);
 
   useEffect(() => {
     if (campaignPlan && campaignPlan[key]) {
