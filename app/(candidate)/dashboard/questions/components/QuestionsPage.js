@@ -78,7 +78,7 @@ export default function QuestionsPage(props) {
   for (let i = 0; i < flow.length; i++) {
     nextStep = i;
     if (flow[i] === 'issues') {
-      if (combinedIssuedCount < 3) {
+      if (combinedIssuedCount < 30) {
         break;
       }
     } else if (flow[i] === 'runningAgainst') {

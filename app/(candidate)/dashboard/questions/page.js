@@ -9,7 +9,7 @@ import gpFetch from 'gpApi/gpFetch';
 export const fetchIssues = async () => {
   const api = gpApi.admin.topIssues.list;
   const token = getServerToken();
-  return await gpFetch(api, false, 10, token);
+  return await gpFetch(api, false, 3600, token);
 };
 
 export async function loadCandidatePosition(slug) {
