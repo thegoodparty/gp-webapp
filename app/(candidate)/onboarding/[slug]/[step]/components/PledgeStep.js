@@ -58,7 +58,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
     updated.currentStep = onboardingStep(campaign, step);
     await updateCampaign(updated);
     await launchCampaign();
-    router.push('/dashboard/plan');
+    window.location.href = '/dashboard/plan';
   };
 
   const onChangeField = (key, value) => {
