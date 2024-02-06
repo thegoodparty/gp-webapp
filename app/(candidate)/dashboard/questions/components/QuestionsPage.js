@@ -14,6 +14,20 @@ import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import Website from './Website';
 import Done from './Done';
+import gpApi from 'gpApi';
+
+export async function loadCandidatePosition(slug) {
+  try {
+    const api = gpApi.campaign.candidatePosition.find;
+    const payload = {
+      slug,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error at loadCandidatePosition', e);
+    return false;
+  }
+}
 
 export const flows = {
   all: [
@@ -48,6 +62,7 @@ export default function QuestionsPage(props) {
     pastExperience: '',
     issues: '',
     website: '',
+    candidatePositions,
     // runningAgainst: '',
   });
   //   if (campaign.details) {
@@ -57,7 +72,8 @@ export default function QuestionsPage(props) {
   const flow = flows[generate];
   let nextStep = 0;
   const combinedIssuedCount =
-    (candidatePositions?.length || 0) + (campaign?.customIssues?.length || 0);
+    (state.candidatePositions?.length || 0) +
+    (campaign?.customIssues?.length || 0);
 
   for (let i = 0; i < flow.length; i++) {
     nextStep = i;
@@ -90,9 +106,13 @@ export default function QuestionsPage(props) {
     setCampaign(res.campaign);
   };
 
-  const handleComplete = async () => {
+  const handleComplete = async (type = false) => {
     const res = await getCampaign();
     setCampaign(res.campaign);
+    if (type === 'issues') {
+      const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+      onChangeField('candidatePositions', candidatePositions);
+    }
   };
   let nextKey;
   if (nextStep < flow.length) {

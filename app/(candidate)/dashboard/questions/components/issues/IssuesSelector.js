@@ -17,7 +17,7 @@ export default function IssuesSelector(props) {
       setTab(tab + 1);
     } else {
       console.log('next');
-      completeCallback();
+      completeCallback('issues');
     }
   };
 

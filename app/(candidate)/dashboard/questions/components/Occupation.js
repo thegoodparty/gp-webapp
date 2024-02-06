@@ -27,25 +27,27 @@ export default function Occupation({
   return (
     <div>
       <H1 className="mb-10">What is your current occupation?</H1>
-      <div className="max-w-md m-auto">
-        <TextField
-          required
-          label="Occupation"
-          fullWidth
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={value}
-          onChange={(e) => {
-            onChangeCallback(campaignKey, e.target.value);
-          }}
-        />
-        <div className="flex justify-center mt-10" onClick={handleSave}>
-          <PrimaryButton className="mt-3" disabled={!canSave()}>
-            Next
-          </PrimaryButton>
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <div className="max-w-md m-auto">
+          <TextField
+            required
+            label="Occupation"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={value}
+            onChange={(e) => {
+              onChangeCallback(campaignKey, e.target.value);
+            }}
+          />
+          <div className="flex justify-center mt-10" onClick={handleSave}>
+            <PrimaryButton className="mt-3" disabled={!canSave()} type="submit">
+              Next
+            </PrimaryButton>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
