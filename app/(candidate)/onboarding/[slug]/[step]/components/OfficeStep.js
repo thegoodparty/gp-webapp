@@ -1,7 +1,10 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H1 from '@shared/typography/H1';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
 import { useState } from 'react';
@@ -41,9 +44,7 @@ export default function OfficeStep(props) {
         office: 'Other',
         otherOffice: position?.name,
       };
-      updated.currentStep = campaign.currentStep
-        ? Math.max(campaign.currentStep, step)
-        : step;
+      updated.currentStep = onboardingStep(campaign, step);
       await updateCampaign(updated);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }

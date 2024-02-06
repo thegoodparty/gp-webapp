@@ -25,7 +25,7 @@ async function launchCampaign() {
   }
 }
 
-export default function PledgeStep({ campaign, pledge }) {
+export default function PledgeStep({ campaign, pledge, step }) {
   let initialState = {
     pledged1: campaign.details?.pledged1 || false,
     pledged2: campaign.details?.pledged2 || false,
@@ -52,6 +52,7 @@ export default function PledgeStep({ campaign, pledge }) {
 
     updated.details.pledged =
       state.pledged1 && state.pledged2 && state.pledged3;
+    updated.currentStep = onboardingStep(campaign, step);
     await updateCampaign(updated);
     await launchCampaign();
     router.push('/dashboard/plan');

@@ -2,7 +2,6 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import Modal from '@shared/utils/Modal';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';

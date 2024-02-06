@@ -2,7 +2,10 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import independentLogo from '/public/images/parties-logos/independent.png';
@@ -172,9 +175,7 @@ export default function PartyStep(props) {
     if (canSubmit) {
       const updated = {
         ...campaign,
-        currentStep: campaign.currentStep
-          ? Math.max(campaign.currentStep, step)
-          : step,
+        currentStep: onboardingStep(campaign, step),
         details: {
           ...campaign.details,
           ...state,

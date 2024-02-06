@@ -3,7 +3,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -25,9 +28,7 @@ export default function PhoneStep(props) {
     if (!state.error) {
       const updated = {
         ...campaign,
-        currentStep: campaign.currentStep
-          ? Math.max(campaign.currentStep, step)
-          : step,
+        currentStep: onboardingStep(campaign, step),
         details: {
           ...campaign.details,
           phone: state.phone,

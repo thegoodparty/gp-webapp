@@ -52,3 +52,10 @@ function calcCampaignStep(campaign) {
   const status = generateCampaignStatus(campaign);
   return status.currentStep;
 }
+export function onboardingStep(campaign, step) {
+  const numericStep = campaign?.currentStep
+    ? campaign.currentStep.replace(/\D/g, '')
+    : 0;
+  const nextStep = Math.max(numericStep, step);
+  return `onboarding-${nextStep}`;
+}

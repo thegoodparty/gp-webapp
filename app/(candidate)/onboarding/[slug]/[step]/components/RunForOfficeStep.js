@@ -4,7 +4,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -37,9 +40,7 @@ export default function RunForOfficeStep(props) {
     if (canSubmit) {
       const updated = {
         ...campaign,
-        currentStep: campaign.currentStep
-          ? Math.max(campaign.currentStep, step)
-          : step,
+        currentStep: onboardingStep(campaign, step),
         details: {
           ...campaign.details,
           ...state,
