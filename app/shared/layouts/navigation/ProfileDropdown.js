@@ -11,7 +11,7 @@ import {
 import { hookstate, useHookstate } from '@hookstate/core';
 import { memo, useEffect, useState } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
-import { deleteCookies, getCookie } from 'helpers/cookieHelper';
+import { deleteCookie, deleteCookies, getCookie } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 
 export const globalUserState = hookstate(false);
@@ -93,7 +93,11 @@ function ProfileDropdown({ open, toggleCallback, user }) {
       id="nav-run-dropdown"
     >
       <div>
-        <div className="flex items-center bg-slate-400 rounded-full px-2 py-1">
+        <div
+          className={`flex items-center  rounded-full px-2 py-1 ${
+            impersonating ? 'bg-orange-400' : 'bg-slate-400'
+          }`}
+        >
           <div className="">
             <FaUserCircle size={24} />
           </div>
