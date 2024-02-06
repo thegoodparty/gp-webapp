@@ -77,8 +77,8 @@ export default function PledgeStep({ campaign, pledge, step }) {
         <Fragment key={step}>
           <div className="bg-gray-200 p-4 font-bold rounded mb-6 flex justify-between items-center">
             <div className="flex items-center">
-              {step === '1' && <FaPeopleGroup className="mr-2" />}
-              {step === '2' && <FaFlagUsa className="mr-2" />}
+              {step === '1' && <FaFlagUsa className="mr-2" />}
+              {step === '2' && <FaPeopleGroup className="mr-2" />}
               {step === '3' && <FaLightbulb className="mr-2" />}
               <div>{pledge[`title${step}`]}</div>
             </div>
