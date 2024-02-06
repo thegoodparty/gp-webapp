@@ -52,7 +52,6 @@ export default function PledgeStep({ campaign, pledge }) {
 
     updated.details.pledged =
       state.pledged1 && state.pledged2 && state.pledged3;
-    updated.goals = {};
     await updateCampaign(updated);
     await launchCampaign();
     router.push('/dashboard/plan');
