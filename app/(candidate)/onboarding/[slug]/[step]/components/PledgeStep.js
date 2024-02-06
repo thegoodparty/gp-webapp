@@ -1,7 +1,10 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { Fragment, useState } from 'react';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import { Checkbox } from '@mui/material';
