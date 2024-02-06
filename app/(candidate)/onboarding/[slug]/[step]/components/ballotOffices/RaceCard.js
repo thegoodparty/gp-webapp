@@ -55,7 +55,11 @@ export default function RaceCard({
               <div key={item.label} className="flex mb-2 items-baseline">
                 <div>{item.icon}</div>
                 <div className="ml-3 mr-2 font-medium">{item.label}</div>
-                <div className=" text-indigo-800">{item.value}</div>
+                <div
+                  className={`${selected ? 'text-white' : 'text-indigo-800'}`}
+                >
+                  {item.value}
+                </div>
               </div>
             )}
           </>
