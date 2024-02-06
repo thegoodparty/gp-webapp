@@ -24,8 +24,9 @@ export default function AddCustomIssue(props) {
       }
       return { existingIssue, index };
     }
+    return {};
   };
-  let { existingIssue } = findExisting();
+  let { existingIssue } = findExisting() || {};
 
   const [selectCustom, setSelectCustom] = useState(
     existingIssue ? 'custom' : false,
