@@ -44,6 +44,13 @@ export default function OfficeStep(props) {
         office: 'Other',
         otherOffice: position?.name,
       };
+      if (!updated.goals) {
+        updated.goals = {};
+      }
+      updated.goals = {
+        ...updated.goals,
+        electionDate: election?.electionDay,
+      };
       updated.currentStep = onboardingStep(campaign, step);
       await updateCampaign(updated);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
