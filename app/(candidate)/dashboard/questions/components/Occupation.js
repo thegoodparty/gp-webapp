@@ -26,7 +26,7 @@ export default function Occupation({
   };
   return (
     <div>
-      <H1 className="mb-10">What is your current occupation?</H1>
+      <H1 className="mb-10 text-center">What is your current occupation?</H1>
       <form noValidate onSubmit={(e) => e.preventDefault()}>
         <div className="max-w-md m-auto">
           <TextField
