@@ -123,7 +123,7 @@ export default function QuestionsPage(props) {
 
   return (
     <MaxWidth>
-      <div className="min-h-[calc(100vh-56px)] py-20 flex flex-col  items-center w-full">
+      <div className="min-h-[calc(100vh-56px)] py-20 w-full">
         {campaign && nextKey === 'occupation' && (
           <Occupation
             value={state.occupation}
