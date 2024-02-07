@@ -17,6 +17,7 @@ export default function CampaignPlanPage(props) {
     const { versions } = await fetchCampaignVersions();
     setUpdatedVersions(versions);
   };
+  // console.log('campaign', props.campaign);
 
   return (
     <DashboardLayout {...props}>
