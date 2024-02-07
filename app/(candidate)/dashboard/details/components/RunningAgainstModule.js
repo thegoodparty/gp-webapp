@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 import { Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { FaTrash } from 'react-icons/fa';
 
 const partyOptions = [
   'Independent',
@@ -110,18 +111,23 @@ export default function RunningAgainstModule({
   return (
     <div>
       {state.runningAgainst?.map((against, index) => (
-        <div className="my-6 border-b border-gray-200 pb-3" key={against.name}>
-          <div className="font-bold mb-2">{against.name}</div>
-          <div>{against.party}</div>
-          <div>{against.description}</div>
+        <div
+          className="my-6 border rounded-xl p-4 border-gray-400 flex justify-between"
+          key={against.name}
+        >
+          <div>
+            <div className="font-bold mb-2">{against.name}</div>
+            <div>{against.party}</div>
+            <div>{against.description}</div>
+          </div>
 
           <div
-            className="mt-4 underline text-blue-600 cursor-pointer"
+            className=" text-red cursor-pointer"
             onClick={() => {
               removeAgainst(index);
             }}
           >
-            Remove
+            <FaTrash />
           </div>
         </div>
       ))}

@@ -33,18 +33,7 @@ export default function RunningAgainstSection(props) {
   };
   return (
     <section className={` pt-6  ${header ? '' : 'border-t  border-gray-600'}`}>
-      {header ? (
-        <>{header}</>
-      ) : (
-        <>
-          <H3>Who You&apos;re Running Against</H3>
-          <Body1 className="text-indigo-300 mt-2  pb-6 mb-12">
-            List the name or describe you will be running against. We&apos;ll
-            use this information to generate a messaging strategy. If you
-            don&apos;t know, Google it.
-          </Body1>
-        </>
-      )}
+      {header ? <>{header}</> : <H3>Who You&apos;re Running Against</H3>}
       <RunningAgainstModule
         campaign={campaign}
         handleSave={handleSave}
