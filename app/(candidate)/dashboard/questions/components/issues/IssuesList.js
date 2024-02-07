@@ -105,7 +105,7 @@ export default function IssuesList(props) {
   };
 
   return (
-    <div>
+    <div className=" max-w-3xl mx-auto">
       {/* <div>search</div> */}
       {topIssues.map((topIssue, index) => (
         <Fragment key={topIssue.id}>
