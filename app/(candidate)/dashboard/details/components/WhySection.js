@@ -31,9 +31,18 @@ export default function WhySection(props) {
   useEffect(() => {
     if (campaign?.details) {
       const newState = {};
-      fields.forEach((field) => {
-        newState[field.key] = campaign.details[field.key] || '';
-      });
+      if (typeof campaign.details.pastExperience === 'string') {
+        newState.pastExperience = campaign.details.pastExperience || '';
+      } else if (typeof campaign.details.pastExperience === 'object') {
+        newState.pastExperience = `Achievements: ${
+          campaign.details.pastExperience.achievements || ''
+        }\nResponsibilities: ${
+          campaign.details.pastExperience.responsibility || ''
+        }\nSkills: ${campaign.details.pastExperience.skills || ''}`;
+      } else {
+        newState.pastExperience = '';
+      }
+
       setState(newState);
     }
   }, [campaign]);
