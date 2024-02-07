@@ -15,6 +15,7 @@ import Body1 from '@shared/typography/Body1';
 import Website from './Website';
 import Done from './Done';
 import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
 export async function loadCandidatePosition(slug) {
   try {
