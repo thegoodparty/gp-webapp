@@ -44,7 +44,8 @@ async function deleteCandidatePosition(id) {
 }
 
 export default function IssuesList(props) {
-  const { topIssues, nextCallback, candidatePositions, order } = props;
+  const { topIssues, nextCallback, candidatePositions, order, saveButton } =
+    props;
   const [campaign, setCampaign] = useState(props.campaign);
 
   const [selectedIssue, setSelectedIssue] = useState(false);
@@ -116,6 +117,7 @@ export default function IssuesList(props) {
               saveCallback={saveCallback}
               candidatePositions={candidatePositions}
               initialSaved={savedCandidatePosition}
+              saveButton={saveButton}
             />
           ) : null}
         </Fragment>

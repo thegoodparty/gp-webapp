@@ -12,6 +12,7 @@ export default function IssueItem({
   selectIssueCallback,
   saveCallback,
   initialSaved,
+  saveButton,
 }) {
   const [selectedIssue, setSelectedIssue] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState(false);
@@ -113,7 +114,9 @@ export default function IssueItem({
             </div>
           </div>
           <div className="mt-10 flex justify-center" onClick={handleSave}>
-            <PrimaryButton disabled={!canSave()}>Next</PrimaryButton>
+            <PrimaryButton disabled={!canSave()}>
+              {saveButton ? 'Save' : 'Next'}
+            </PrimaryButton>
           </div>
         </>
       ) : (

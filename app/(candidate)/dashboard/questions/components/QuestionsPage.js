@@ -122,6 +122,11 @@ export default function QuestionsPage(props) {
     nextKey = 'done';
   }
 
+  const updatePositionsCallback = async () => {
+    const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+    onChangeField('candidatePositions', candidatePositions);
+  };
+
   return (
     <MaxWidth>
       <div className="min-h-[calc(100vh-56px)] py-20 w-full">
@@ -153,7 +158,11 @@ export default function QuestionsPage(props) {
           />
         )}
         {campaign && nextKey === 'issues' && (
-          <AddIssues {...props} completeCallback={handleComplete} />
+          <AddIssues
+            {...props}
+            completeCallback={handleComplete}
+            updatePositionsCallback={updatePositionsCallback}
+          />
         )}
 
         {campaign && nextKey === 'runningAgainst' && (

@@ -4,7 +4,7 @@ import Tabs from '@shared/utils/Tabs';
 import { useState } from 'react';
 import IssuesList from './IssuesList';
 export default function IssuesSelector(props) {
-  const { completeCallback } = props;
+  const { completeCallback, standaloneMode, updatePositionsCallback } = props;
   const [tab, setTab] = useState(0);
   const labels = [
     <H6 key="issue1">Issue One</H6>,
@@ -12,11 +12,12 @@ export default function IssuesSelector(props) {
     <H6 key="issue3">Issue Three</H6>,
   ];
   const nextCallback = () => {
-    console.log('nextCallback', tab);
     if (tab < 2) {
       setTab(tab + 1);
+      if (updatePositionsCallback) {
+        updatePositionsCallback();
+      }
     } else {
-      console.log('next');
       completeCallback('issues');
     }
   };
@@ -27,6 +28,7 @@ export default function IssuesSelector(props) {
       nextCallback={nextCallback}
       order={order}
       key={order}
+      saveButton={order === 3 && standaloneMode}
     />
   ));
 
