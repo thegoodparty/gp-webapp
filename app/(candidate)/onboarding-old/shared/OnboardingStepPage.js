@@ -4,7 +4,6 @@ import IssuesPage from '../[slug]/details/[step]/components/IssuesPage';
 import PlanPreviewPage from '../[slug]/details/[step]/components/PlanPreviewPage';
 import PledgePage from '../[slug]/details/[step]/components/pledgePage';
 import RunningAgainstPage from '../[slug]/goals/[step]/components/RunningAgainstPage';
-import UserSnapScript from '@shared/scripts/UserSnapScript';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
 import OfficePage from '../[slug]/details/[step]/components/OfficePage';
 // import BallotRaces from '../[slug]/details/[step]/components/BallotRaces';
@@ -15,7 +14,6 @@ export default function OnboardingStepPage(props) {
     return (
       <>
         <IssuesPage {...props} />
-        <UserSnapScript />
         <FullStoryScript />
       </>
     );
@@ -24,7 +22,6 @@ export default function OnboardingStepPage(props) {
     return (
       <>
         <PledgePage {...props} />
-        <UserSnapScript />
         <FullStoryScript />
       </>
     );
@@ -33,7 +30,6 @@ export default function OnboardingStepPage(props) {
     return (
       <>
         <OfficePage {...props} />
-        <UserSnapScript />
         <FullStoryScript />
       </>
     );
@@ -42,7 +38,6 @@ export default function OnboardingStepPage(props) {
     return (
       <>
         <PlanPreviewPage {...props} />
-        <UserSnapScript />
         <FullStoryScript />
       </>
     );
@@ -51,7 +46,6 @@ export default function OnboardingStepPage(props) {
     return (
       <>
         <RunningAgainstPage {...props} />
-        <UserSnapScript />
         <FullStoryScript />
       </>
     );
@@ -60,7 +54,6 @@ export default function OnboardingStepPage(props) {
   return (
     <>
       <OnboardingPage {...props} />
-      <UserSnapScript />
     </>
   );
 }

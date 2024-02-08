@@ -1,5 +1,3 @@
-'use client';
-
 import DashboardLayout from '../../shared/DashboardLayout';
 import CampaignSection from './CampaignSection';
 import DetailsSection from './DetailsSection';
