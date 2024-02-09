@@ -15,6 +15,9 @@ import gpFetch from 'gpApi/gpFetch';
 import TextField from '@shared/inputs/TextField';
 import InputFieldsModal from './InputFieldsModal';
 import TemplateList from './TemplatesList';
+import QuestionProgress, {
+  calcAnswers,
+} from '../../plan/components/QuestionProgress';
 
 export async function fetchInputFields(subKey) {
   const api = gpApi.content.contentByKey;
@@ -27,7 +30,15 @@ export async function fetchInputFields(subKey) {
 }
 
 export default function NewContentFlow(props) {
-  const { prompts, onSelectCallback, sections, isProcessing } = props;
+  const {
+    prompts,
+    onSelectCallback,
+    sections,
+    isProcessing,
+    campaign,
+    requiresQuestions,
+    candidatePositions,
+  } = props;
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [selected, setSelected] = useState('');
@@ -83,6 +94,11 @@ export default function NewContentFlow(props) {
     setShowModal2(false);
   };
 
+  const { answeredQuestions, totalQuestions } = calcAnswers(
+    campaign,
+    candidatePositions,
+  );
+
   return (
     <div>
       <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
@@ -94,12 +110,15 @@ export default function NewContentFlow(props) {
           <H2 className="pb-5 mb-5 border-b border-slate-500 text-center">
             Select a Template
           </H2>
+          <QuestionProgress {...props} />
           <TemplateList
             {...props}
+            requiresQuestions={
+              answeredQuestions < totalQuestions ? requiresQuestions : {}
+            }
             onSelectCallback={handelSelect}
             selectedKey={selected}
           />
-
           <div className="mt-16 flex w-full justify-end">
             <div onClick={closeModal}>
               <SecondaryButton disabled={isProcessing} size="medium">

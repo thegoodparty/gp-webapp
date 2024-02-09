@@ -17,6 +17,8 @@ import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import InputFieldsModal from './InputFieldsModal';
+import Subtitle1 from '@shared/typography/Subtitle1';
+import Caption from '@shared/typography/Caption';
 
 const categoryIcons = {
   'Email & Correspondence': <LuMailPlus className="text-purple-300" />,
@@ -32,7 +34,16 @@ const categoryIcons = {
 };
 
 export default function TemplateList(props) {
-  const { categories, onSelectCallback, selectedKey } = props;
+  const { categories, onSelectCallback, selectedKey, requiresQuestions } =
+    props;
+
+  const handleClick = (key) => {
+    if (requiresQuestions[key]) {
+      // check if the questions are already answered
+    } else {
+      onSelectCallback();
+    }
+  };
 
   return (
     <>
@@ -47,19 +58,32 @@ export default function TemplateList(props) {
               >
                 <div
                   onClick={() => {
-                    onSelectCallback(template.key);
+                    handleClick(template.key);
                   }}
                   className={`bg-gray-50 border flex md:flex-col  rounded-xl pt-5 px-7 pb-5 md:pb-14 ${
                     selectedKey === template.key
                       ? ' shadow-lg border-black'
                       : 'border-slate-700'
-                  } transition duration-300 ease-in-out hover:shadow-lg cursor-pointer`}
+                  } transition duration-300 ease-in-out  
+                  
+                  ${
+                    requiresQuestions[template.key]
+                      ? 'opacity-40 cursor-not-allowed'
+                      : 'cursor-pointer hover:shadow-lg'
+                  }
+                  
+                  `}
                 >
                   <div className="mr-3 md:mr-0 md:mb-4 text-2xl ">
                     {categoryIcons[category.name]}
                   </div>
                   <H5>{template.name}</H5>
                 </div>
+                {requiresQuestions[template.key] && (
+                  <Caption className="mt-2 text-center">
+                    Answer all questions to unlock
+                  </Caption>
+                )}
               </div>
             ))}
           </div>

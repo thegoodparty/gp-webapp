@@ -3,7 +3,7 @@ import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import Link from 'next/link';
 
-export default function QuestionProgress({ campaign, candidatePositions }) {
+export function calcAnswers(campaign, candidatePositions) {
   const totalQuestions = 6;
   let answeredQuestions = 0;
   const { customIssues } = campaign;
@@ -33,7 +33,16 @@ export default function QuestionProgress({ campaign, candidatePositions }) {
       answeredQuestions++;
     }
   }
-  let progress = (answeredQuestions * 100) / totalQuestions;
+  return { answeredQuestions, totalQuestions };
+}
+
+export default function QuestionProgress({ campaign, candidatePositions }) {
+  const { answeredQuestions, totalQuestions } = calcAnswers(
+    campaign,
+    candidatePositions,
+  );
+
+  const progress = (answeredQuestions * 100) / totalQuestions;
   if (answeredQuestions === totalQuestions) {
     return null;
   }
@@ -54,10 +63,12 @@ export default function QuestionProgress({ campaign, candidatePositions }) {
           ></div>
         </div>
       </div>
-      <div className=" col-span-12 md:col-span-4 lg:col-span-3 justify-end flex">
-        <Link href={`/dashboard/questions?generate=all`}>
-          <PrimaryButton>Continue to questions</PrimaryButton>
-        </Link>
+      <div className=" col-span-12 md:col-span-4 lg:col-span-3 ">
+        <div className="flex justify-center md:justify-end mt-4 md:mt-0">
+          <Link href={`/dashboard/questions?generate=all`}>
+            <PrimaryButton>Continue to questions</PrimaryButton>
+          </Link>
+        </div>
       </div>
     </div>
   );

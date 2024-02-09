@@ -5,6 +5,7 @@ import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../shared/candidateAccess';
 import ContentPage from './components/ContentPage';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
+import { loadCandidatePosition } from '../questions/page';
 
 const meta = pageMetaData({
   title: 'Campaign Content | GOOD PARTY',
@@ -17,23 +18,28 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
   const { campaign } = await fetchUserCampaign();
 
-  const promptsRaw = (await fetchContentByKey('candidateContentPrompts', 360))
+  const promptsRaw = (await fetchContentByKey('candidateContentPrompts', 3600))
     .content;
   const prompts = parsePrompts(promptsRaw);
 
-  const templates = (await fetchContentByKey('candidateContentPrompts', 360))
+  const requiresQuestions = (
+    await fetchContentByKey('contentPromptsQuestions', 3600)
+  ).content;
+
+  const categories = (await fetchContentByKey('aiContentCategories', 3600))
     .content;
 
-  const categories = (await fetchContentByKey('aiContentCategories', 360))
-    .content;
+  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
 
   const childProps = {
     pathname: '/dashboard/content',
-    // campaign,
+    campaign,
     prompts,
-    templates,
+    templates: promptsRaw,
     categories,
     pathToVictory: campaign?.pathToVictory,
+    requiresQuestions,
+    candidatePositions,
   };
 
   return <ContentPage {...childProps} />;
