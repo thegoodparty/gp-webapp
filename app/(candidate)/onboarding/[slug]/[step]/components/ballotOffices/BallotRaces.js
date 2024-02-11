@@ -76,10 +76,24 @@ export default function BallotRaces(props) {
   };
 
   const filterRaces = (value) => {
-    const filtered = races.filter((option) =>
-      option.position.name.toLowerCase().includes(value.toLowerCase()),
-    );
-    setFilteredRaces(filtered);
+    if (races && typeof races.filter === 'function') {
+      const filtered = races.filter((option) =>
+        option.position.name.toLowerCase().includes(value.toLowerCase()),
+      );
+      setFilteredRaces(filtered);
+    }
+  };
+
+  const filterOptions = (options, { inputValue }) => {
+    console.log('options', options);
+    console.log('inputValue', inputValue);
+
+    if (options && typeof options.filter === 'function') {
+      console.log('here');
+      return options.filter((option) =>
+        option.position.name.toLowerCase().includes(inputValue.toLowerCase()),
+      );
+    }
   };
 
   return (
@@ -98,19 +112,13 @@ export default function BallotRaces(props) {
               filterRaces(newInputValue);
             }}
             className="office-autocomplete"
-            options={races}
+            options={races || []}
             clearOnBlur={false}
             renderInput={(params) => (
               <TextField {...params} label="Search for offices" />
             )}
             getOptionLabel={(option) => option.position.name}
-            filterOptions={(options, { inputValue }) => {
-              return options.filter((option) =>
-                option.position.name
-                  .toLowerCase()
-                  .includes(inputValue.toLowerCase()),
-              );
-            }}
+            filterOptions={filterOptions}
           />
         </div>
       </Sticky>
