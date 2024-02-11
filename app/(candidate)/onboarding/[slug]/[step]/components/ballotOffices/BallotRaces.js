@@ -85,11 +85,7 @@ export default function BallotRaces(props) {
   };
 
   const filterOptions = (options, { inputValue }) => {
-    console.log('options', options);
-    console.log('inputValue', inputValue);
-
     if (options && typeof options.filter === 'function') {
-      console.log('here');
       return options.filter((option) =>
         option.position.name.toLowerCase().includes(inputValue.toLowerCase()),
       );
