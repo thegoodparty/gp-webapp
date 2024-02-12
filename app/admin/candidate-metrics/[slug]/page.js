@@ -31,7 +31,7 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await getCampaign(slug);
+  const { campaign } = await getCampaign(params);
   const { updateHistory } = await fetchAdminUpdateHistory(slug);
 
   const childProps = {
