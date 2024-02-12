@@ -2,7 +2,7 @@
 import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';
 import { useState } from 'react';
-import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
+import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 
 export default function ZipChanger({ zip, updateZipCallback }) {
   const [editMode, setEditMode] = useState(false);

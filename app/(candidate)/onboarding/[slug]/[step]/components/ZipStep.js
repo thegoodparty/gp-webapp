@@ -8,7 +8,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
+import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 
 import TextField from '@shared/inputs/TextField';
 

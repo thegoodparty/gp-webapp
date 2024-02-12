@@ -9,10 +9,11 @@ import { fetchUserCampaignClient } from 'helpers/campaignHelper';
 import { useState } from 'react';
 import { CircularProgress } from '@mui/material';
 
-export async function createCampaign() {
+export async function createCampaign(name) {
   try {
     const api = gpApi.campaign.onboarding.create;
-    const { slug } = await gpFetch(api);
+    const payload = { name };
+    const { slug } = await gpFetch(api, payload);
     if (slug) {
       deleteCookie('afterAction');
       deleteCookie('returnUrl');
@@ -39,7 +40,7 @@ export default function RunCampaignButton({
     const user = getUserCookie(true);
     if (!user) {
       // setCookie('afterAction', 'createCampaign');
-      router.push('/register');
+      router.push('/login');
     } else {
       const { campaign } = await fetchUserCampaignClient();
       if (campaign?.slug) {

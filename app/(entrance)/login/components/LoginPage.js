@@ -16,10 +16,12 @@ import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import SocialLoginButtons from './SocialLoginButtons';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
+import SocialRegisterButtons from './SocialRegisterButtons';
+import H1 from '@shared/typography/H1';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function login(email, password) {
   try {
@@ -28,13 +30,7 @@ async function login(email, password) {
       email,
       password,
     };
-    const { user, token } = await gpFetch(api, payload);
-    if (user && token) {
-      setUserCookie(user);
-      setCookie('token', token);
-      return user;
-    }
-    return false;
+    return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -57,20 +53,31 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const user = await login(state.email, state.password);
-      if (user) {
+      const { user, token } = await login(state.email, state.password);
+
+      if (user && token) {
+        setUserCookie(user);
+        setCookie('token', token);
         userState.set(() => user);
         const afterAction = getCookie('afterAction');
-        if (afterAction === 'createCampaign') {
+        if (
+          (user.name && user.name !== '') ||
+          afterAction === 'createCampaign'
+        ) {
           await createCampaign();
+          return;
+        }
+        if (user.name === '' || !user.name) {
+          window.location.href = '/set-name';
+          return;
         } else {
           const returnUrl = getCookie('returnUrl');
           if (returnUrl) {
             deleteCookie('returnUrl');
             window.location.href = returnUrl;
-          } else {
-            window.location.href = '/';
+            return;
           }
+          window.location.href = '/';
         }
       } else {
         snackbarState.set(() => {
@@ -97,32 +104,9 @@ export default function LoginPage() {
         <div className={`flex items-center justify-center ${styles.wrapper}`}>
           <div className="grid py-6 max-w-lg w-[75vw]">
             <div className="text-center mb-8 pt-8">
-              <h1
-                data-cy="register-title"
-                className="text-2xl lg:text-4xl font-black"
-              >
-                Log into your account
-              </h1>
+              <H1>Sign in or sign up below</H1>
             </div>
-            <div className="flex justify-center">
-              <div
-                className="mb-10 mt-6 flex rounded-xl bg-zinc-100 items-center justify-center"
-                data-cy="register-label"
-              >
-                <Link
-                  href="/register"
-                  data-cy="redirect-to-login"
-                  className=" no-underline"
-                >
-                  <div className="transition text-neutral-400 py-3 px-6 rounded-xl hover:text-black">
-                    Sign up
-                  </div>
-                </Link>
-                <div className="bg-black text-white py-3 px-6 rounded-xl">
-                  Sign In
-                </div>
-              </div>
-            </div>
+
             <form
               noValidate
               onSubmit={(e) => {
@@ -146,25 +130,20 @@ export default function LoginPage() {
                   onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
                 />
               </div>
-              <div className="flex mt-5">
-                <YellowButtonClient
-                  style={{ width: '100%' }}
-                  disabled={!enableSubmit()}
-                  onClick={handleSubmit}
-                  type="submit"
-                >
-                  <strong>LOGIN</strong>
-                </YellowButtonClient>
+              <div className="flex justify-center mt-12" onClick={handleSubmit}>
+                <PrimaryButton disabled={!enableSubmit()} type="submit">
+                  <strong>Continue with email</strong>
+                </PrimaryButton>
               </div>
             </form>
-            <div className="flex mt-5">
-              <Link href="/forgot-password" className="text-sm">
+            <div className="mt-5 text-center">
+              <Link href="/forgot-password" className="text-sm underline">
                 Forgot your password?
               </Link>
             </div>
 
             <Suspense>
-              <SocialLoginButtons />
+              <SocialRegisterButtons />
             </Suspense>
           </div>
         </div>

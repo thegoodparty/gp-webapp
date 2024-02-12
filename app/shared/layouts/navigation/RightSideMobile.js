@@ -88,6 +88,7 @@ export default function RightSideMobile() {
             setOpen(false);
           }}
           anchor="right"
+          onOpen={() => {}}
         >
           {user && isDashboardPath ? (
             <DashboardMobile user={user} pathname={pathname} />

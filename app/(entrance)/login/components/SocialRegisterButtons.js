@@ -11,7 +11,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
-import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
+// import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
 import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -19,14 +19,8 @@ import FacebookRegisterButton from './FacebookRegisterButton';
 
 async function register(payload) {
   try {
-    const api = gpApi.entrance.register;
-    const { user, token } = await gpFetch(api, payload);
-    if (user && token) {
-      setUserCookie(user);
-      setCookie('token', token);
-    }
-
-    return user;
+    const api = gpApi.entrance.socialLogin;
+    return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -71,28 +65,37 @@ export default function SocialRegisterButtons() {
       name,
       email,
       socialToken: idToken,
-      source: 'registerPage',
-      uri: window?.location.href,
     };
-    const user = await register(payload);
+    const { user, token, newUser } = await register(payload);
+    console.log('user', user);
     if (user) {
-      userState.set(() => user);
-
-      const returnUrl = getCookie('returnUrl');
-      if (returnUrl) {
-        deleteCookie('returnUrl');
-        router.push(returnUrl);
-      } else {
-        await createCampaign(router);
-      }
-
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Welcome to Good Party!',
+          message: `Welcome ${newUser ? '' : 'back'} to Good Party!`,
           isError: false,
         };
       });
+      setUserCookie(user);
+      setCookie('token', token);
+      userState.set(() => user);
+      if (newUser && user.name !== '') {
+        console.log('creating campaign');
+        await createCampaign();
+        return;
+      }
+      if (newUser) {
+        console.log('setting name');
+        window.location.href = '/set-name';
+        return;
+      }
+      const returnUrl = getCookie('returnUrl');
+      if (returnUrl) {
+        deleteCookie('returnUrl');
+        window.location.href = returnUrl;
+        return;
+      }
+      console.log('redirecting to home');
 
       window.location.href = '/';
     } else {
@@ -105,7 +108,6 @@ export default function SocialRegisterButtons() {
       });
     }
   };
-  const socialRegisterFailureCallback = () => {};
   return (
     <>
       <div className="my-8 h-4 relative">
@@ -124,9 +126,9 @@ export default function SocialRegisterButtons() {
 
       <FacebookRegisterButton loginSuccessCallback={socialRegisterCallback} />
 
-      <div data-cy="twitter-register" className="mt-6">
+      {/* <div data-cy="twitter-register" className="mt-6">
         <TwitterButton />
-      </div>
+      </div> */}
     </>
   );
 }

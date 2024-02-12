@@ -1,19 +1,19 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import RegisterPage from './components/RegisterPage';
+import SetNamePage from './components/SetNamePage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Register | GOOD PARTY',
-  description: 'Join us at Good Party.',
-  slug: '/register',
+  title: 'Set Name',
+  description: 'Set Name',
+  slug: '/set-name',
 });
 export const metadata = meta;
 
 export default async function Page() {
   const user = getServerUser();
-  if (user) {
-    redirect('/profile');
+  if (!user) {
+    redirect('/login');
   }
-  return <RegisterPage />;
+  return <SetNamePage />;
 }

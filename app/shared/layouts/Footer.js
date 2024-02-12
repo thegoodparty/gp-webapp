@@ -90,7 +90,7 @@ export default function Footer() {
               the rules, so good independent candidates can run and win!
               <br />
               <br />
-              <Link href="/register" data-cy="footer-join-us-link">
+              <Link href="/login" data-cy="footer-join-us-link">
                 Join us!
               </Link>
             </div>

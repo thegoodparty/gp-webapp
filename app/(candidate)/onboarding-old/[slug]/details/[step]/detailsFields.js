@@ -1,4 +1,4 @@
-import { validateZip } from 'app/(entrance)/register/components/RegisterPage';
+import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 import { flatStates } from 'helpers/statesHelper';
 
 const detailsFields = [
