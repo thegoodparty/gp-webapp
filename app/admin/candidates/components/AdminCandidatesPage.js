@@ -165,14 +165,13 @@ export default function AdminCandidatesPage(props) {
       accessor: 'victoryPath',
       Cell: ({ row }) => {
         return (
-          <a
+          <Link
             href={`/admin/victory-path/${row.original.slug}`}
             target="_blank"
-            rel="noopener noreferrer nofollow"
             className="underline"
           >
             Path to victory
-          </a>
+          </Link>
         );
       },
     },
