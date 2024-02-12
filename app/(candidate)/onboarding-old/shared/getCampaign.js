@@ -19,7 +19,7 @@ export default async function getCampaign(params) {
 
   let { campaign } = await fetchUserCampaign();
   if (campaign?.slug !== slug) {
-    redirect('/run-for-office');
+    // redirect('/run-for-office');
   }
   return campaign;
 }
