@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
+import { GiProgression } from 'react-icons/gi';
 import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 
@@ -25,6 +26,12 @@ let pages = [
     icon: <RiUserHeartLine />,
     link: '/dashboard/details',
     id: 'details-dashboard',
+  },
+  {
+    label: 'Upgrade to Pro',
+    icon: <GiProgression />,
+    link: '/pro-consultation',
+    id: 'upgrade-pro',
   },
   {
     label: 'Campaign Team',
