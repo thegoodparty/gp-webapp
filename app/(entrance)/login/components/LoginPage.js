@@ -59,23 +59,25 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, token } = await login(state.email, state.password);
+      const { user, token, newUser } = await login(state.email, state.password);
 
       if (user && token) {
         setUserCookie(user);
         setCookie('token', token);
         userState.set(() => user);
-        const afterAction = getCookie('afterAction');
-        if (
-          (user.name && user.name !== '') ||
-          afterAction === 'createCampaign'
-        ) {
-          await createCampaign();
-          return;
-        }
-        if (user.name === '' || !user.name) {
-          window.location.href = '/set-name';
-          return;
+        if (newUser) {
+          const afterAction = getCookie('afterAction');
+          if (
+            (user.name && user.name !== '') ||
+            afterAction === 'createCampaign'
+          ) {
+            await createCampaign();
+            return;
+          }
+          if (user.name === '' || !user.name) {
+            window.location.href = '/set-name';
+            return;
+          }
         } else {
           const returnUrl = getCookie('returnUrl');
           if (returnUrl) {
