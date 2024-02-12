@@ -23,6 +23,12 @@ import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
+export const validateZip = (zip) => {
+  // let zipInt = parseInt(zip);
+  const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+  return validZip.test(zip);
+};
+
 async function login(email, password) {
   try {
     const api = gpApi.entrance.login;
