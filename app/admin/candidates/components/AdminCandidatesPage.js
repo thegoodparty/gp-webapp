@@ -167,7 +167,6 @@ export default function AdminCandidatesPage(props) {
         return (
           <Link
             href={`/admin/victory-path/${row.original.slug}`}
-            target="_blank"
             className="underline"
           >
             Path to victory
