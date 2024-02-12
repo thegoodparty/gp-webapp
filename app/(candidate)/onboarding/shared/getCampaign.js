@@ -14,11 +14,11 @@ export async function fetchUserCampaign() {
   }
 }
 
-export default async function getCampaign(params, skipRedirect = false) {
+export default async function getCampaign(params) {
   const { slug } = params;
 
   let { campaign } = await fetchUserCampaign();
-  if (!skipRedirect && campaign?.slug !== slug) {
+  if (campaign?.slug !== slug) {
     redirect('/run-for-office');
   }
   return campaign;

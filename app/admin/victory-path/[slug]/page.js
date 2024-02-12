@@ -4,7 +4,21 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminVictoryPathPage from './components/AdminVictoryPathPage';
 import pageMetaData from 'helpers/metadataHelper';
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
+
+export async function fetchCampaignBySlug(slug) {
+  // admin only
+  try {
+    const api = gpApi.campaign.onboarding.findBySlug;
+    const payload = {
+      slug,
+    };
+    const token = getServerToken();
+    return await gpFetch(api, payload, false, token);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
 
 const meta = pageMetaData({
   title: 'Admin Path to Victory | GOOD PARTY',
@@ -21,7 +35,8 @@ export const metadata = meta;
 
 export default async function Page({ params }) {
   adminAccessOnly();
-  const campaign = await getCampaign(params, true);
+  const { slug } = params;
+  const { campaign } = await fetchCampaignBySlug(slug);
 
   const childProps = {
     pathname: '/admin/candidates',
