@@ -21,7 +21,7 @@ export const metadata = meta;
 
 export default async function Page({ params }) {
   adminAccessOnly();
-  const { campaign } = await getCampaign(params);
+  const campaign = await getCampaign(params, true);
 
   const childProps = {
     pathname: '/admin/candidates',
