@@ -16,6 +16,7 @@ export default function Hero({
   filingDateEnd,
   positionName,
   loc,
+  locationName,
 }) {
   const stateName = shortToLongState[state.toUpperCase()];
   const breadcrumbsLinks = [
@@ -27,7 +28,7 @@ export default function Hero({
   if (level === 'county' && county) {
     breadcrumbsLinks[1].href = `/elections/${state}`;
     breadcrumbsLinks.push({
-      label: county.county_full,
+      label: `${locationName} county`,
     });
   }
   if (level === 'city' && municipality) {

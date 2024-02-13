@@ -14,7 +14,6 @@ import Explore from './Explore';
 export default function PositionPage(props) {
   const { race, otherRaces, articles } = props;
   const { level, state, locationName } = race;
-  console.log('otherRce', otherRaces);
 
   let loc = locationName;
   if (level === 'city') {
