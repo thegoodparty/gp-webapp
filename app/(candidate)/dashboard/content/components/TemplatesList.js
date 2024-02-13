@@ -12,6 +12,7 @@ import { GoPeople } from 'react-icons/go';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { FaHandHoldingHeart } from 'react-icons/fa';
 import { HiOutlineScale } from 'react-icons/hi';
+import { SiMinutemailer } from 'react-icons/si';
 import { useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
@@ -19,9 +20,11 @@ import gpFetch from 'gpApi/gpFetch';
 import InputFieldsModal from './InputFieldsModal';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import Caption from '@shared/typography/Caption';
+import { calcAnswers } from '../../plan/components/QuestionProgress';
 
 const categoryIcons = {
   'Email & Correspondence': <LuMailPlus className="text-purple-300" />,
+  'Email Blasts': <SiMinutemailer className="text-purple-300" />,
   'Media & PR': <BsMegaphone className="text-orange-600" />,
   'Social Media Content': <FiShare2 className="text-cyan-600" />,
   'Speeches & Scripts': <GrMicrophone className="text-purple-800" />,
@@ -34,14 +37,28 @@ const categoryIcons = {
 };
 
 export default function TemplateList(props) {
-  const { categories, onSelectCallback, selectedKey, requiresQuestions } =
-    props;
+  const {
+    categories,
+    onSelectCallback,
+    selectedKey,
+    requiresQuestions,
+    campaign,
+    candidatePositions,
+  } = props;
 
   const handleClick = (key) => {
     if (requiresQuestions[key]) {
       // check if the questions are already answered
+      const { answeredQuestions, totalQuestions } = calcAnswers(
+        campaign,
+        candidatePositions,
+      );
+
+      if (answeredQuestions >= totalQuestions) {
+        onSelectCallback(key);
+      }
     } else {
-      onSelectCallback();
+      onSelectCallback(key);
     }
   };
 

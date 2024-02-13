@@ -84,7 +84,7 @@ export default function NewContentFlow(props) {
     setInputFields([]);
   };
 
-  const handelSelect = async (key) => {
+  const handelSelect = (key) => {
     setSelected(key);
   };
 
