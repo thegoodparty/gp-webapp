@@ -2,14 +2,12 @@ export const getInitials = (user) => {
   if (!user) {
     return '';
   }
-  const { name } = user;
-  if (!name) {
-    return name;
+  const { firstName, lastName } = user;
+  if (!firstName) {
+    return false;
   }
   const initialsArr = name.split(' ');
-  return `${initialsArr[0].charAt(0)}${
-    initialsArr.length > 1 ? initialsArr[initialsArr.length - 1].charAt(0) : ''
-  }`;
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`;
 };
 
 export const passwordRegex =

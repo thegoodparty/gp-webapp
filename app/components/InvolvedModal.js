@@ -29,7 +29,9 @@ export default function InvolvedModal() {
   const [open, setOpen] = useState(false);
   const userState = useHookstate(globalUserState);
   const user = userState.get();
-  const [name, setName] = useState(user ? `${user.name}` : '');
+  const [name, setName] = useState(
+    user ? `${user.firstName} ${user.lastName}` : '',
+  );
   const [email, setEmail] = useState(user ? user.email : '');
 
   const handleEmailChange = (e) => {

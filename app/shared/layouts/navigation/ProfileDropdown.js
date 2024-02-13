@@ -60,7 +60,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
       'identify',
       {
         email: user.email,
-        name: user.name,
+        name: `${user.name} ${user.lastName}`,
       },
     ]);
   };

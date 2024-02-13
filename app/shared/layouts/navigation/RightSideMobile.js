@@ -98,7 +98,11 @@ export default function RightSideMobile() {
                 user ? 'pb-36' : 'pb-60'
               } relative`}
             >
-              {user && <H3 className="mb-8">{user.name}</H3>}
+              {user && (
+                <H3 className="mb-8">
+                  {user.firstName} {user.lastName}
+                </H3>
+              )}
               {sections.map((section) => (
                 <div
                   key={section.title}

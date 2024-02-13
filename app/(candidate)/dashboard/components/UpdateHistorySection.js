@@ -25,7 +25,9 @@ export default function UpdateHistorySection(props) {
       if (update.type && update.type !== '') {
         const fields = {
           id: update.id,
-          name: update.user?.name,
+          name: update.user?.firstName
+            ? `${update.user.firstName} ${update.user.lastName}`
+            : '',
           user: update.user,
           type: update.type,
           quantity: update.quantity,

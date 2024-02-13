@@ -25,10 +25,10 @@ const groupedData = (input) => {
     if (!acc[date]) {
       acc[date] = {};
     }
-    if (!acc[date][item.user.name]) {
-      acc[date][item.user.name] = 0;
+    if (!acc[date][item.user.firstName]) {
+      acc[date][item.user.firstName] = 0;
     }
-    acc[date][item.user.name]++;
+    acc[date][item.user.firstName]++;
     return acc;
   }, {});
 };
@@ -59,7 +59,7 @@ const transformedData = (input) => {
   const allDates = getDatesBetween(minDate, maxDate);
 
   // Extract all unique users from the input data
-  const allUsers = [...new Set(input.map((item) => item.user.name))];
+  const allUsers = [...new Set(input.map((item) => item.user.firstName))];
 
   // Merge with actual data
   return allDates.map((date) => {

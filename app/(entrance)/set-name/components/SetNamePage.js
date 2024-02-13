@@ -13,18 +13,20 @@ import TextField from '@shared/inputs/TextField';
 
 export default function SetNamePage() {
   const [state, setState] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     processing: false,
   });
 
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const enableSubmit = () => !state.processing && state.name !== '';
+  const enableSubmit = () =>
+    !state.processing && state.firstName !== '' && state.lastName !== '';
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
       setState({ ...state, processing: true });
-      await createCampaign(state.name);
+      await createCampaign(state.firstName, state.lastName);
     } else {
       snackbarState.set(() => {
         return {
@@ -59,13 +61,24 @@ export default function SetNamePage() {
             >
               <div className="flex mt-12">
                 <TextField
-                  onChange={(e) => onChangeField(e.target.value, 'name')}
+                  onChange={(e) => onChangeField(e.target.value, 'firstName')}
                   fullWidth
-                  value={state.name}
+                  value={state.firstName}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  label="Name"
+                  label="First Name"
+                />
+              </div>
+              <div className="flex mt-6">
+                <TextField
+                  onChange={(e) => onChangeField(e.target.value, 'lastName')}
+                  fullWidth
+                  value={state.lastName}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label="Last Name"
                 />
               </div>
 

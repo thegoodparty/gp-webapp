@@ -47,8 +47,15 @@ async function updateUserCallback(updatedFields, userState) {
 }
 export const USER_SETTING_FIELDS = [
   {
-    key: 'name',
-    label: 'Name',
+    key: 'firstName',
+    label: 'First Name',
+    initialValue: '',
+    maxLength: 20,
+    required: true,
+  },
+  {
+    key: 'lastName',
+    label: 'Last Name',
     initialValue: '',
     maxLength: 20,
     required: true,

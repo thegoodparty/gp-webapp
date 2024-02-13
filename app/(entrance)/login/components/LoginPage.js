@@ -68,13 +68,13 @@ export default function LoginPage() {
         if (newUser) {
           const afterAction = getCookie('afterAction');
           if (
-            (user.name && user.name !== '') ||
+            (user.firstName && user.firstName !== '') ||
             afterAction === 'createCampaign'
           ) {
             await createCampaign();
             return;
           }
-          if (user.name === '' || !user.name) {
+          if (user.firstName === '' || !user.firstName) {
             window.location.href = '/set-name';
             return;
           }

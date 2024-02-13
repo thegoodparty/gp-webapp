@@ -79,13 +79,11 @@ export default function SocialRegisterButtons() {
       setUserCookie(user);
       setCookie('token', token);
       userState.set(() => user);
-      if (newUser && user.name !== '') {
-        console.log('creating campaign');
+      if (newUser && user.firstName !== '') {
         await createCampaign();
         return;
       }
       if (newUser) {
-        console.log('setting name');
         window.location.href = '/set-name';
         return;
       }

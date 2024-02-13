@@ -10,7 +10,9 @@ export default function UserSnapScript() {
       api.init({
         custom: {
           userEmail: user?.email || 'visitor',
-          userName: user?.name || 'visitor',
+          userName: user?.firstName
+            ? `${user.firstName} ${user.lastName}`
+            : 'visitor',
         },
       });
     };
