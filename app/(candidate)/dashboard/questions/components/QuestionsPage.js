@@ -194,7 +194,14 @@ export default function QuestionsPage(props) {
             campaignKey={nextKey}
           />
         )}
-        {nextKey === 'done' && <Done />}
+        {/* {nextKey === 'done' && <Done />} */}
+        {nextKey === 'done' && (
+          <AddIssues
+            {...props}
+            completeCallback={handleComplete}
+            updatePositionsCallback={updatePositionsCallback}
+          />
+        )}
       </div>
     </MaxWidth>
   );

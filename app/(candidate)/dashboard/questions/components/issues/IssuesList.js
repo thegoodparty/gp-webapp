@@ -6,6 +6,8 @@ import { Fragment, useEffect, useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import AddCustomIssue from './AddCustomIssue';
+import TextField from '@shared/inputs/TextField';
+import { Autocomplete } from '@mui/material';
 
 export async function saveCandidatePosition({
   description,
@@ -44,9 +46,11 @@ async function deleteCandidatePosition(id) {
 }
 
 export default function IssuesList(props) {
-  const { topIssues, nextCallback, candidatePositions, order, saveButton } =
-    props;
+  const { nextCallback, candidatePositions, order, saveButton } = props;
   const [campaign, setCampaign] = useState(props.campaign);
+  const [topIssues, setTopIssues] = useState(props.topIssues || []);
+  const [inputValue, setInputValue] = useState('');
+  const [value, setValue] = useState(null);
 
   const [selectedIssue, setSelectedIssue] = useState(false);
   const [savedCandidatePosition, setSavedCandidatePosition] = useState(false);
@@ -105,9 +109,50 @@ export default function IssuesList(props) {
     nextCallback();
   };
 
+  const filterIssues = (value) => {
+    if (value === '') {
+      setTopIssues(props.topIssues);
+    } else if (topIssues && typeof topIssues.filter === 'function') {
+      const filtered = topIssues.filter((option) =>
+        option.name.toLowerCase().includes(value.toLowerCase()),
+      );
+      setTopIssues(filtered);
+    }
+  };
+
+  const filterOptions = (options, { inputValue }) => {
+    if (options && typeof options.filter === 'function') {
+      return options.filter((option) => {
+        return option.name.toLowerCase().includes(inputValue.toLowerCase());
+      });
+    }
+  };
+
   return (
     <div className=" max-w-3xl mx-auto">
-      {/* <div>search</div> */}
+      {!selectedIssue && (
+        <div className="bg-white pt-4 pb-2">
+          <Autocomplete
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+              filterIssues(newInputValue);
+            }}
+            className="office-autocomplete"
+            options={topIssues || []}
+            clearOnBlur={false}
+            renderInput={(params) => (
+              <TextField {...params} label="Search for Issues" />
+            )}
+            getOptionLabel={(option) => option.name}
+            filterOptions={filterOptions}
+          />
+        </div>
+      )}
       {topIssues.map((topIssue, index) => (
         <Fragment key={topIssue.id}>
           {!selectedIssue || selectedIssue.id === topIssue.id ? (
