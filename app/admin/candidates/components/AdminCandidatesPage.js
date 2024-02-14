@@ -80,7 +80,7 @@ export default function AdminCandidatesPage(props) {
         slug: campaign.slug,
         userName: user?.firstName
           ? `${user.firstName} ${user.lastName}`
-          : user.name || '',
+          : user?.name || '',
         firstName: campaign.firstName,
         lastName: campaign.lastName,
         launched: mapStatus(campaign.launchStatus),
