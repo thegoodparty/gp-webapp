@@ -18,7 +18,6 @@ export default function PositionSchema({ race }) {
     filingPhoneNumber,
     filingDateEnd,
   } = race;
-  console.log('rr', race);
   let loc = locationName;
   if (level === 'city') {
     loc += ` City, ${race.state}`;

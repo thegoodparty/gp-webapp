@@ -38,7 +38,6 @@ const fields = [
     label: 'Term Length',
     type: 'select',
     required: true,
-    showCondition: ['yes'],
     options: ['2 years', '3 years', '4 years', '6 years'],
   },
 ];

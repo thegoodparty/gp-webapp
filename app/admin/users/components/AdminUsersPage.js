@@ -53,6 +53,13 @@ export default function AdminUsersPage(props) {
     {
       Header: 'Name',
       accessor: 'name',
+      Cell: ({ row }) => {
+        return (
+          <>
+            {row.original.firstName} {row.original.lastName}
+          </>
+        );
+      },
     },
 
     {
