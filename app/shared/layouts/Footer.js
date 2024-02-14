@@ -1,12 +1,24 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FOOTER_COLUMNS, SOCIAL_LINKS } from './constants';
 import MaxWidth from './MaxWidth';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+// import { headers } from 'next/dist/client/components/headers';
+import { usePathname } from 'next/navigation';
 
 const year = new Date().getFullYear();
 
 export default function Footer() {
+  // const _headers = headers();
+  // const currentUrl = _headers.get('x-url');
+  const pathname = usePathname();
+  const isOnboardingPath = pathname?.startsWith('/onboarding');
+  const isDashboardPath = pathname?.startsWith('/dashboard');
+  const isProfilePath = pathname?.startsWith('/profile');
+  if (isOnboardingPath || isDashboardPath || isProfilePath) {
+    return null;
+  }
   return (
     <footer className="bg-indigo-800 px-8 py-6 border-solid border-t border-zinc-200 pt-10">
       <MaxWidth>

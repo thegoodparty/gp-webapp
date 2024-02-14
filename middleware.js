@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+// import gpApi from 'gpApi';
+// import gpFetch from 'gpApi/gpFetch';
 
 // export const fetchRedirects = async () => {
 //   const api = gpApi.content.contentByKey;
