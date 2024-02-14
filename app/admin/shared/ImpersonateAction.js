@@ -9,7 +9,7 @@ import gpFetch from 'gpApi/gpFetch';
 export default function ImpersonateAction({
   email,
   isCandidate,
-  launched,
+  launched: launchStatus,
   slug,
 }) {
   const snackbarState = useHookstate(globalSnackbarState);
@@ -25,14 +25,8 @@ export default function ImpersonateAction({
 
     const impersonateResp = await handleImpersonateUser(email);
     if (impersonateResp) {
-      if (isCandidate) {
-        if (launched == 'Live') {
-          window.location.href = `/candidate/${slug}`;
-        } else if (launched == 'Pending Review') {
-          window.location.href = `/candidate/${slug}/review`;
-        } else {
-          window.location.href = `/onboarding/${slug}/1`;
-        }
+      if (isCandidate && launchStatus == 'Live') {
+        window.location.href = `/dashboard`;
       } else {
         window.location.href = '/';
       }
