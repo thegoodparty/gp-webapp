@@ -25,7 +25,7 @@ export default function ImpersonateAction({
 
     const impersonateResp = await handleImpersonateUser(email);
     if (impersonateResp) {
-      if (isCandidate && launchStatus == 'Live') {
+      if (isCandidate && launchStatus === 'Live') {
         window.location.href = `/dashboard`;
       } else {
         window.location.href = '/';
