@@ -78,6 +78,9 @@ export default function AdminCandidatesPage(props) {
         id: campaignObj.id,
         isActive: campaignObj.isActive ? 'yes' : 'no',
         slug: campaign.slug,
+        userName: user?.firstName
+          ? `${user.firstName} ${user.lastName}`
+          : user.name || '',
         firstName: campaign.firstName,
         lastName: campaign.lastName,
         launched: mapStatus(campaign.launchStatus),
@@ -139,6 +142,11 @@ export default function AdminCandidatesPage(props) {
           </a>
         );
       },
+    },
+    // todo - remove later
+    {
+      Header: 'User Name',
+      accessor: 'userName',
     },
     {
       Header: 'First Name',
