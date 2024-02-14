@@ -27,7 +27,7 @@ export const RUN_LINKS = [
   },
   {
     label: 'Academy',
-    href: '/academy-intro',
+    href: '/academy',
     icon: <FaGraduationCap />,
     id: 'nav-academy',
   },
