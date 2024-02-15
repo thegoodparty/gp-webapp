@@ -28,10 +28,10 @@ let pages = [
     id: 'details-dashboard',
   },
   {
-    label: 'Upgrade to Pro',
+    label: 'Voter Records',
     icon: <GiProgression />,
     link: '/pro-consultation',
-    id: 'upgrade-pro',
+    id: 'vote-records-dashboard',
   },
   {
     label: 'Campaign Team',
