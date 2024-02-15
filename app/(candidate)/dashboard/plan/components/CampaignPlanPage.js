@@ -8,6 +8,7 @@ import MessagingPanel from './MessagingPanel';
 import VisionPanel from './VisionPanel';
 import H3 from '@shared/typography/H3';
 import QuestionProgress from './QuestionProgress';
+import IntroTutorial from './IntroTutorial';
 
 export default function CampaignPlanPage(props) {
   const versions = useVersions();
@@ -42,6 +43,7 @@ export default function CampaignPlanPage(props) {
         versions={updatedVersions || versions}
         updateVersionsCallback={updateVersionsCallback}
       />
+      <IntroTutorial />
     </DashboardLayout>
   );
 }
