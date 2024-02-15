@@ -81,8 +81,6 @@ export default function AdminCandidatesPage(props) {
         userName: user?.firstName
           ? `${user.firstName} ${user.lastName}`
           : user?.name || '',
-        firstName: campaign.firstName,
-        lastName: campaign.lastName,
         launched: mapStatus(campaign.launchStatus),
         lastVisited: campaign.lastVisited,
         party: partyResolver(campaign.party),
@@ -147,14 +145,6 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'User Name',
       accessor: 'userName',
-    },
-    {
-      Header: 'First Name',
-      accessor: 'firstName',
-    },
-    {
-      Header: 'Last Name',
-      accessor: 'lastName',
     },
     {
       Header: 'Launch Status',
