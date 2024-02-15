@@ -26,13 +26,13 @@ export default function Hero({
     },
   ];
   if (level === 'county' && county) {
-    breadcrumbsLinks[1].href = `/elections/${state}`;
+    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`;
     breadcrumbsLinks.push({
       label: `${locationName} county`,
     });
   }
   if (level === 'city' && municipality) {
-    breadcrumbsLinks[1].href = `/elections/${state}`;
+    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`;
     breadcrumbsLinks.push({
       label: municipality.name,
       href: `/elections/${municipality.slug}`,
