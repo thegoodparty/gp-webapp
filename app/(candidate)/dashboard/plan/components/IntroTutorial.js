@@ -45,7 +45,7 @@ const steps = [
         <div className="px-5 ">
           <H2>Provide your additional information</H2>
           <Body1 className="mt-12">
-            Our AI model and generate your specific campaign plan based on your
+            Our AI model will generate your custom campaign plan based on your
             answers.
           </Body1>
         </div>

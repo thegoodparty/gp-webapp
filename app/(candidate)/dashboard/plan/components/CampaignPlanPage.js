@@ -21,11 +21,11 @@ export default function CampaignPlanPage(props) {
     const { versions } = await fetchCampaignVersions();
     setUpdatedVersions(versions);
   };
-  // console.log('campaign', props.campaign);
 
   const expandKeyCallback = (key) => {
     setExpandKey(key);
   };
+  const shouldShowTutorial = !cookie && !props.campaign?.campaignPlan;
 
   return (
     <DashboardLayout {...props}>
@@ -51,7 +51,9 @@ export default function CampaignPlanPage(props) {
         versions={updatedVersions || versions}
         updateVersionsCallback={updateVersionsCallback}
       />
-      {!cookie && <IntroTutorial expandKeyCallback={expandKeyCallback} />}
+      {shouldShowTutorial && (
+        <IntroTutorial expandKeyCallback={expandKeyCallback} />
+      )}
     </DashboardLayout>
   );
 }
