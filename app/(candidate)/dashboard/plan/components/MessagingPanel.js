@@ -25,8 +25,13 @@ const sections = [
   },
 ];
 export default function MessagingPanel(props) {
-  const { campaign, versions, updateVersionsCallback, candidatePositions } =
-    props;
+  const {
+    campaign,
+    versions,
+    updateVersionsCallback,
+    candidatePositions,
+    expandSection,
+  } = props;
   return (
     <div>
       {sections.map((section) => (
@@ -38,6 +43,7 @@ export default function MessagingPanel(props) {
           versions={versions}
           updateVersionsCallback={updateVersionsCallback}
           candidatePositions={candidatePositions}
+          expandSection={section.key === expandSection}
         />
       ))}
       <CampaignWebsite {...props} />

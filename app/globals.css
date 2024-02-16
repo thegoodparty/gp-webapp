@@ -110,10 +110,6 @@ div.MuiAutocomplete-popper div {
   }
 }
 
-.introjs-tooltipReferenceLayer .introjs-tooltip{
-  max-width: 600px;
-}
-
 
 @media all {
   .print-page-break {
