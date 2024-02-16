@@ -86,6 +86,7 @@ export default function CampaignPlanSection({
   updateVersionsCallback,
   subSectionKey = 'campaignPlan',
   candidatePositions,
+  expandSection,
 }) {
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -107,6 +108,12 @@ export default function CampaignPlanSection({
       setIsTyped(true);
     }
   }, [campaignPlan]);
+
+  // useEffect(() => {
+  //   if (expandSection) {
+  //     handleOpen(false);
+  //   }
+  // }, [expandSection]);
 
   useEffect(() => {
     const can = canGenerate(campaign, key, candidatePositions);
@@ -219,13 +226,18 @@ export default function CampaignPlanSection({
   };
 
   return (
-    <section key={section.key} className="my-3">
+    <section
+      key={section.key}
+      id={`plan-section-${section.key}`}
+      className="my-3"
+    >
       <TogglePanel
         label={section.title}
         icon={loading ? <CircularProgress size={20} /> : section.icon}
         openCallback={handleOpen}
+        forceExpand={expandSection}
       >
-        <div className="">
+        <div className={`section-content-${section.key}`}>
           {loading ? (
             <LoadingAI />
           ) : (
