@@ -61,10 +61,7 @@ export default function DashboardMenu({
   pathToVictory,
   mobileMode,
 }) {
-  // make profile link dynamic
-  // pages[1].link = `/candidate/${candidateSlug}`;
-
-  if (pathToVictory && pages.length === 6) {
+  if (pathToVictory && pages.length === 7) {
     pages.unshift({
       label: 'Campaign Tracker',
       icon: <AiOutlineFlag />,
