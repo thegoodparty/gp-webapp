@@ -11,7 +11,6 @@ import { Checkbox } from '@mui/material';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import { FaLightbulb } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
@@ -29,16 +28,22 @@ async function launchCampaign() {
 }
 
 export default function PledgeStep({ campaign, pledge, step }) {
+  console.log('campaign', campaign);
   let initialState = {
     pledged1: campaign.details?.pledged1 || false,
     pledged2: campaign.details?.pledged2 || false,
     pledged3: campaign.details?.pledged3 || false,
+    pledged4: campaign.details?.pledged4 || false,
   };
 
-  const router = useRouter();
-
   if (campaign?.details?.pledged) {
-    initialState = { pledged: true };
+    initialState = {
+      pledged: true,
+      pledged1: true,
+      pledged2: true,
+      pledged3: true,
+      pledged4: true,
+    };
   }
   const [state, setState] = useState(initialState);
 
@@ -47,14 +52,14 @@ export default function PledgeStep({ campaign, pledge, step }) {
   }
 
   const canSave = () => {
-    return state.pledged1 && state.pledged2 && state.pledged3;
+    return state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
   };
 
   const handleSave = async () => {
     const updated = campaign;
 
     updated.details.pledged =
-      state.pledged1 && state.pledged2 && state.pledged3;
+      state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
     updated.currentStep = onboardingStep(campaign, step);
     await updateCampaign(updated);
     await launchCampaign();
@@ -68,7 +73,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
     });
   };
 
-  const steps = ['1', '2', '3'];
+  const steps = ['1', '2', '3', '4'];
 
   return (
     <div>
@@ -80,6 +85,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
               {step === '1' && <FaFlagUsa className="mr-2" />}
               {step === '2' && <FaPeopleGroup className="mr-2" />}
               {step === '3' && <FaLightbulb className="mr-2" />}
+              {step === '4' && <FaLightbulb className="mr-2" />}
               <div>{pledge[`title${step}`]}</div>
             </div>
             <div className="">
@@ -99,7 +105,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
           >
             <CmsContentWrapper>
               {contentfulHelper(pledge[`content${step}`])}
-              {index === 1 && (
+              {index === 3 && (
                 <ul>
                   <li>
                     I will abide by a{' '}
@@ -113,6 +119,20 @@ export default function PledgeStep({ campaign, pledge, step }) {
                     and acknowledge that Good Party maintains the right to
                     withdraw its Good Party Certified endorsement and remove me
                     from the site if I actively engage in such conduct.
+                  </li>
+                  <li>
+                    I agree to the Good Party{' '}
+                    <a className="underline" href="/privacy" target="_blank">
+                      privacy policy
+                    </a>{' '}
+                    and{' '}
+                    <a
+                      className="underline"
+                      href="/faqs/terms-of-service/2rnff8oqgd3ogf9y1cvnxg"
+                      target="_blank"
+                    >
+                      terms of service
+                    </a>
                   </li>
                 </ul>
               )}
