@@ -21,6 +21,7 @@ export default function Snackbar() {
 
   const { isOpen, message, isError, autoHideDuration } = snackbarState;
   const handleClose = (event, reason) => {
+    console.log('reason', reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -38,7 +39,7 @@ export default function Snackbar() {
     <div>
       <MuiSnackbar
         open={isOpen}
-        autoHideDuration={autoHideDuration}
+        autoHideDuration={autoHideDuration || 4000}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         style={{ zIndex: 5000 }}
