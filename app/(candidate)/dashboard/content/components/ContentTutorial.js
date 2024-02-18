@@ -10,7 +10,7 @@ import { setCookie } from 'helpers/cookieHelper';
 const steps = [
   {
     intro: (
-      <div className="text-center w-[500px]">
+      <div className="text-center w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Content Creation, Simplified</H2>
           <Body1 className="mt-12">
@@ -25,7 +25,7 @@ const steps = [
   {
     element: '.new-content-btn',
     intro: (
-      <div className="w-[500px]">
+      <div className="w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Campaign Content Creator</H2>
           <Body1 className="mt-12">
@@ -42,7 +42,7 @@ const steps = [
   },
   {
     intro: (
-      <div className="w-[500px]">
+      <div className="w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Find a Template to fit your needs</H2>
           <Body1 className="mt-12">

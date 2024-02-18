@@ -39,7 +39,10 @@ export default function TrackerCard(props) {
     await revalidateCandidates();
   };
   return (
-    <div className="bg-gray-50 pt-10 pb-6 px-7 border border-slate-300 rounded-2xl relative">
+    <div
+      className="bg-gray-50 pt-10 pb-6 px-7 border border-slate-300 rounded-2xl relative"
+      id={`tracker-card-${key}`}
+    >
       <div className="flex items-center mb-5">
         <div className="text-indigo-50 mr-2">{icon}</div>
         <H4>{title}</H4>

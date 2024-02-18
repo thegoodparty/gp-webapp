@@ -14,6 +14,8 @@ import MapSection from './MapSection';
 import UpdateHistorySection from './UpdateHistorySection';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import TrackerTutorial from './TrackerTutorial';
+import { getCookie } from 'helpers/cookieHelper';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -114,6 +116,7 @@ export default function DashboardPage(props) {
     pathToVictory,
     deleteHistoryCallBack,
   };
+  const cookie = getCookie('tutorial-tracker');
 
   return (
     <DashboardLayout {...childProps}>
@@ -134,6 +137,7 @@ export default function DashboardPage(props) {
                 {voterMap ? <MapSection map={voterMap} /> : null}
                 <ProgressSection {...childProps} />
                 <UpdateHistorySection {...childProps} />
+                {!cookie && <TrackerTutorial />}
               </>
             )}
           </>

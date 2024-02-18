@@ -12,7 +12,7 @@ const steps = [
   {
     // element: '',
     intro: (
-      <div className="text-center w-[500px]">
+      <div className="text-center w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Learn how to use your personalized campaign plan</H2>
           <Body1 className="mt-12">
@@ -27,7 +27,7 @@ const steps = [
   {
     element: '#plan-section-why',
     intro: (
-      <div className="w-[500px]">
+      <div className="w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Generate your campaign plan</H2>
           <Body1 className="mt-12">
@@ -41,7 +41,7 @@ const steps = [
   {
     element: '#plan-section-why',
     intro: (
-      <div className="w-[500px]">
+      <div className="w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Provide your additional information</H2>
           <Body1 className="mt-12">
@@ -54,7 +54,7 @@ const steps = [
   },
   {
     intro: (
-      <div className="text-center w-[500px]">
+      <div className="text-center w-[80vw] max-w-[500px]">
         <div className="px-5 ">
           <H2>Navigating to Questions...</H2>
         </div>

@@ -63,7 +63,7 @@ export default function ProgressSection(props) {
     return reportedMinusPrevWeek > 0 ? reportedMinusPrevWeek / weekGoals : 0;
   };
   return (
-    <section>
+    <section id="progress-section">
       <div className="mt-5 mb-3">
         <H3>Campaign Progress</H3>
       </div>
