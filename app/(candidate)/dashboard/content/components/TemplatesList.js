@@ -77,6 +77,7 @@ export default function TemplateList(props) {
                   onClick={() => {
                     handleClick(template.key);
                   }}
+                  id={`template-card-${template.key}`}
                   className={`bg-gray-50 border flex md:flex-col  rounded-xl pt-5 px-7 pb-5 md:pb-14 ${
                     selectedKey === template.key
                       ? ' shadow-lg border-black'

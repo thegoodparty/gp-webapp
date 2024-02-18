@@ -304,6 +304,7 @@ export default function MyContent(props) {
             onSelectCallback={onSelectPrompt}
             sections={sections}
             isProcessing={jobStarting}
+            forceOpenModal={props.forceOpenModal}
           />
 
           <Table

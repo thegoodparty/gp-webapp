@@ -8,7 +8,7 @@ import MessagingPanel from './MessagingPanel';
 import VisionPanel from './VisionPanel';
 import H3 from '@shared/typography/H3';
 import QuestionProgress from './QuestionProgress';
-import IntroTutorial from './IntroTutorial';
+import PlanTutorial from './PlanTutorial';
 import { getCookie } from 'helpers/cookieHelper';
 
 export default function CampaignPlanPage(props) {
@@ -52,7 +52,7 @@ export default function CampaignPlanPage(props) {
         updateVersionsCallback={updateVersionsCallback}
       />
       {shouldShowTutorial && (
-        <IntroTutorial expandKeyCallback={expandKeyCallback} />
+        <PlanTutorial expandKeyCallback={expandKeyCallback} />
       )}
     </DashboardLayout>
   );

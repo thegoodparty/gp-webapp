@@ -38,6 +38,7 @@ export default function NewContentFlow(props) {
     campaign,
     requiresQuestions,
     candidatePositions,
+    forceOpenModal,
   } = props;
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -49,6 +50,13 @@ export default function NewContentFlow(props) {
       onSelectPrompt();
     }
   }, [selected]);
+
+  // used from tutorial
+  useEffect(() => {
+    if (forceOpenModal) {
+      setShowModal(true);
+    }
+  }, [forceOpenModal]);
 
   const onSelectPrompt = async () => {
     if (selected !== '') {
@@ -101,7 +109,11 @@ export default function NewContentFlow(props) {
 
   return (
     <div>
-      <div className="mb-7 inline-block" onClick={() => setShowModal(true)}>
+      <div
+        className="mb-7 inline-block new-content-btn"
+        onClick={() => setShowModal(true)}
+        id="new-content-btn"
+      >
         <PrimaryButton>+ New Content</PrimaryButton>
       </div>
 

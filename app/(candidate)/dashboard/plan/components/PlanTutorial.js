@@ -1,6 +1,6 @@
 'use client';
 import 'intro.js/introjs.css';
-import './IntroTutorial.css';
+import './PlanTutorial.css';
 import { Steps } from 'intro.js-react';
 import { useRef } from 'react';
 import H2 from '@shared/typography/H2';
@@ -63,7 +63,7 @@ const steps = [
   },
 ];
 
-export default function IntroTutorial({ expandKeyCallback }) {
+export default function PlanTutorial({ expandKeyCallback }) {
   const router = useRouter();
   const stepsRef = useRef(null);
 

@@ -41,8 +41,11 @@ export default async function Page({ params, searchParams }) {
   }
   const articleTitle = content.title;
 
+  console.log('slugify(articleTitle, true)', slugify(articleTitle, true));
+  console.log('title.toLowerCase()', title.toLowerCase());
   if (slugify(articleTitle, true) !== title.toLowerCase()) {
     const correctRoute = faqArticleRoute(content);
+    console.log('correctRoute', correctRoute);
     redirect(correctRoute);
   }
 
