@@ -13,6 +13,8 @@ import { memo, useEffect, useState } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
 import { deleteCookie, deleteCookies, getCookie } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
+import Image from 'next/image';
+import UserAvatar from '@shared/user/UserAvatar';
 
 export const globalUserState = hookstate(false);
 
@@ -99,7 +101,11 @@ function ProfileDropdown({ open, toggleCallback, user }) {
           }`}
         >
           <div className="">
-            <FaUserCircle size={24} />
+            {user?.avatar ? (
+              <UserAvatar user={user} size="smaller" />
+            ) : (
+              <FaUserCircle size={24} />
+            )}
           </div>
           <FaChevronDown
             className={`ml-2 mt-[2px] transition-all ${open && 'rotate-180'}`}
