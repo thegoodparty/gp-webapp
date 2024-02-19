@@ -13,6 +13,8 @@ import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import { FaLightbulb } from 'react-icons/fa';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { FcDocument } from 'react-icons/fc';
+import { IoDocumentText } from 'react-icons/io5';
 
 async function launchCampaign() {
   try {
@@ -85,7 +87,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
               {step === '1' && <FaFlagUsa className="mr-2" />}
               {step === '2' && <FaPeopleGroup className="mr-2" />}
               {step === '3' && <FaLightbulb className="mr-2" />}
-              {step === '4' && <FaLightbulb className="mr-2" />}
+              {step === '4' && <IoDocumentText className="mr-2" />}
               <div>{pledge[`title${step}`]}</div>
             </div>
             <div className="">
@@ -133,6 +135,12 @@ export default function PledgeStep({ campaign, pledge, step }) {
                     >
                       terms of service
                     </a>
+                  </li>
+                  <li>
+                    I acknowledge Good Party maintains the right to remove users
+                    from the platform and withdraw its Good Party certification
+                    and endorsement if users engage in conduct that violates
+                    these terms of service.
                   </li>
                 </ul>
               )}
