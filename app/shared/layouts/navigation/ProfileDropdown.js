@@ -82,7 +82,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
         FS.shutdown();
       } else {
         FS.identify(userI.id, {
-          displayName: userI.name,
+          displayName: `${userI.firstName} ${userI.lastName}`,
           email: userI.email,
         });
       }
