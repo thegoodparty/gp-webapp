@@ -7,7 +7,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import { Checkbox } from '@mui/material';
+import Checkbox from '@shared/inputs/Checkbox';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import { FaLightbulb } from 'react-icons/fa';

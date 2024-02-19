@@ -7,7 +7,7 @@ import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 // import PositionsSelector from '../../(candidate)/onboarding/shared/PositionsAutocomplete';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@shared/inputs/Checkbox';
 
 export default function RenderInputField({
   field,

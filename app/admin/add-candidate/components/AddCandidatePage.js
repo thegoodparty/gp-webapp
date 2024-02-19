@@ -10,7 +10,7 @@ import { Fragment, useState } from 'react';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@shared/inputs/Checkbox';
 import TextField from '@shared/inputs/TextField';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { trimObject } from 'helpers/stringHelper';
