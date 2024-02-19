@@ -7,7 +7,7 @@ import ReactLoading from 'react-loading';
 import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import { Checkbox } from '@mui/material';
+import Checkbox from '@shared/inputs/Checkbox';
 import { savingState } from 'app/(candidate)/onboarding-old/shared/OnboardingPage';
 import Image from 'next/image';
 

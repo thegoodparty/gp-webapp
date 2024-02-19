@@ -5,9 +5,9 @@ import PhoneInput from '@shared/inputs/PhoneInput';
 import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import RadioGroup from '@mui/material/RadioGroup';
+import RadioGroup from '@shared/inputs/RadioGroup';
 import PositionsSelector from './PositionsAutocomplete';
-import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@shared/inputs/Checkbox';
 
 export default function RenderInputField({
   field,
@@ -86,12 +86,12 @@ export default function RenderInputField({
           >
             <FormControlLabel
               value="yes"
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={field.options ? field.options[0] : 'Yes'}
             />
             <FormControlLabel
               value="no"
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={field.options ? field.options[1] : 'No'}
             />
           </RadioGroup>

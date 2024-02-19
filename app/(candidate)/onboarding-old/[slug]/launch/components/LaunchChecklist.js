@@ -1,6 +1,5 @@
 'use client';
-import { Checkbox } from '@mui/material';
-import YellowButton from '@shared/buttons/YellowButton';
+import Checkbox from '@shared/inputs/Checkbox';
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import { updateCampaign } from 'app/(candidate)/onboarding-old/shared/ajaxActions';
 import gpApi from 'gpApi';

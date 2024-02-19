@@ -1,6 +1,8 @@
 'use client';
-import { Checkbox, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControlLabel, Radio } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Checkbox from '@shared/inputs/Checkbox';
+import RadioGroup from '@shared/inputs/RadioGroup';
 import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
