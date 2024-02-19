@@ -6,6 +6,7 @@ import ZipStep from './ZipStep';
 import OfficeStep from './OfficeStep';
 import PledgeStep from './PledgeStep';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export default function OnboardingPage(props) {
   const { step } = props;
@@ -20,6 +21,7 @@ export default function OnboardingPage(props) {
         {step === 6 && <PledgeStep {...props} />}
       </div>
       <UserSnapScript />
+      <FullStoryScript />
     </OnboardingLayout>
   );
 }
