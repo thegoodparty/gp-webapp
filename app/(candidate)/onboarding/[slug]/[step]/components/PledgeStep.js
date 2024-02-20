@@ -30,7 +30,6 @@ async function launchCampaign() {
 }
 
 export default function PledgeStep({ campaign, pledge, step }) {
-  console.log('campaign', campaign);
   let initialState = {
     pledged1: campaign.details?.pledged1 || false,
     pledged2: campaign.details?.pledged2 || false,
