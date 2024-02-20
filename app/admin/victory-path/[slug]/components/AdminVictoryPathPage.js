@@ -199,12 +199,7 @@ export default function AdminVictoryPathPage(props) {
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
             <br />
-            Name:{' '}
-            <strong>
-              {campaign?.details?.firstName || 'N/A'}{' '}
-              {campaign?.details?.lastName || ''}
-            </strong>
-            .
+            Name: <strong>{campaign?.name || 'N/A'} </strong>.
           </H2>
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
