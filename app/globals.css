@@ -1,5 +1,3 @@
-@import '/styles/scss/colors';
-@import '/styles/scss/breakpoints';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
