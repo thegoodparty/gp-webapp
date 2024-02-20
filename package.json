@@ -30,6 +30,7 @@
     "@mui/material": "^5.10.13",
     "@react-oauth/google": "^0.11.0",
     "@tailwindcss/line-clamp": "^0.4.4",
+    "autosuggest-highlight": "^3.3.4",
     "classnames": "^2.3.2",
     "clsx": "^1.2.1",
     "dompurify": "^3.0.8",

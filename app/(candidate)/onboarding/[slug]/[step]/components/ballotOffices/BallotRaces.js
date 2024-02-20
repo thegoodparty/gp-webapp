@@ -12,6 +12,8 @@ import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import TextField from '@shared/inputs/TextField';
+import parse from 'autosuggest-highlight/parse';
+import match from 'autosuggest-highlight/match';
 
 const values = ['local', 'state', 'federal'];
 
@@ -91,6 +93,29 @@ export default function BallotRaces(props) {
       );
     }
   };
+  const renderOption = (props, option, { inputValue }) => {
+    const matches = match(option.position.name, inputValue, {
+      insideWords: true,
+    });
+    const parts = parse(option.position.name, matches);
+
+    return (
+      <li {...props}>
+        <div>
+          {(parts || []).map((part, index) => (
+            <span
+              key={index}
+              style={{
+                fontWeight: part.highlight ? 700 : 400,
+              }}
+            >
+              {part.text}
+            </span>
+          ))}
+        </div>
+      </li>
+    );
+  };
 
   return (
     <section className="mb-10">
@@ -115,6 +140,7 @@ export default function BallotRaces(props) {
             )}
             getOptionLabel={(option) => option.position.name}
             filterOptions={filterOptions}
+            renderOption={renderOption}
           />
         </div>
       </Sticky>
