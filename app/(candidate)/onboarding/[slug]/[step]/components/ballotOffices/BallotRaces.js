@@ -1,6 +1,5 @@
 'use client';
 import RaceCard from './RaceCard';
-import Body1 from '@shared/typography/Body1';
 import Sticky from 'react-stickynode';
 import { useEffect, useState } from 'react';
 import Modal from '@shared/utils/Modal';
