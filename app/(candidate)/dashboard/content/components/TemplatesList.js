@@ -2,9 +2,6 @@
 
 import H3 from '@shared/typography/H3';
 import H5 from '@shared/typography/H5';
-import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
-import TitleSection from 'app/(candidate)/dashboard/shared/TitleSection';
-import { LuMailPlus } from 'react-icons/lu';
 import { BsMegaphone } from 'react-icons/bs';
 import { FiShare2 } from 'react-icons/fi';
 import { GrMicrophone } from 'react-icons/gr';
@@ -13,17 +10,11 @@ import { AiOutlineFlag } from 'react-icons/ai';
 import { FaHandHoldingHeart } from 'react-icons/fa';
 import { HiOutlineScale } from 'react-icons/hi';
 import { SiMinutemailer } from 'react-icons/si';
-import { useState } from 'react';
-import { CircularProgress } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import InputFieldsModal from './InputFieldsModal';
-import Subtitle1 from '@shared/typography/Subtitle1';
+
 import Caption from '@shared/typography/Caption';
 import { calcAnswers } from '../../plan/components/QuestionProgress';
 
 const categoryIcons = {
-  'Email & Correspondence': <LuMailPlus className="text-purple-300" />,
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,
   'Media & PR': <BsMegaphone className="text-orange-600" />,
   'Social Media Content': <FiShare2 className="text-cyan-600" />,
