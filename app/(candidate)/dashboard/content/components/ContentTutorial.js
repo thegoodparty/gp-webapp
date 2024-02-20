@@ -67,7 +67,7 @@ export default function ContentTutorial({ newContentCallback }) {
   }, []);
 
   const onExit = () => {
-    setCookie('tutorial-plan', true);
+    setCookie('tutorial-content', true);
   };
 
   const onComplete = () => {

@@ -11,7 +11,7 @@ export default function ContentPage(props) {
   const newContentCallback = () => {
     setForceOpenModal(true);
   };
-  const cookie = getCookie('tutorial-plan');
+  const cookie = getCookie('tutorial-content');
   const shouldShowTutorial = !cookie && !props.campaign?.aiContent;
   return (
     <DashboardLayout {...props}>
