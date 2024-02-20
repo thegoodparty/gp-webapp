@@ -40,6 +40,12 @@ const fields = [
     required: true,
     options: ['2 years', '3 years', '4 years', '6 years'],
   },
+  {
+    key: 'electionDate',
+    label: 'Election Date',
+    type: 'date',
+    required: true,
+  },
 ];
 
 export default function CustomOfficeModal({ campaign, nextCallback }) {
@@ -51,11 +57,15 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
     district: campaign.details?.district || '',
     city: campaign.details?.city || '',
     ballotOffice: campaign.details?.ballotOffice || false,
+    electionDate: campaign.goals?.electionDate || '',
   });
 
   const canSave = () => {
     return (
-      state.state !== '' && state.office !== '' && state.officeTermLength !== ''
+      state.state !== '' &&
+      state.office !== '' &&
+      state.officeTermLength !== '' &&
+      state.electionDate !== ''
     );
   };
 
@@ -78,6 +88,10 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
       positionId: null,
       electionId: null,
       ballotOffice: null,
+    };
+    updated.goals = {
+      ...campaign.goals,
+      electionDate: state.electionDate,
     };
 
     nextCallback(updated);
