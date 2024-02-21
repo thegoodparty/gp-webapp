@@ -1,7 +1,3 @@
-import MarketingH2 from '@shared/typography/MarketingH2';
-import VictoriaImg from 'public/images/landing-pages/victoria.png';
-import BreannaImg from 'public/images/landing-pages/breanna.png';
-import CarlosImg from 'public/images/landing-pages/carlos.png';
 import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
@@ -14,21 +10,21 @@ const graduates = [
     name: 'Marty Grohman’s Independent win in Maine',
     desc: "Independent candidate Marty Grohman was elected as Biddeford, Maine's newest mayor in November 2023. Now, Grohman is serving his community and sharing his insight.",
     img: martyImg,
-    link: '/blog/article/gpa-grad-carlos-rousselin',
+    link: '/blog/article/case-study-marty-grohman',
     cta: 'Read more about Marty Grohman',
   },
   {
     name: '10 Good Party certified candidates win in 2023',
     desc: 'In the November 7, 2023 off-year elections, 10 Good Party Certified candidates won local elections in North Carolina, Maine, Virginia and Washington.',
     img: certifiedImg,
-    link: '/blog/article/gpa-grad-breanna-stott',
+    link: '/blog/article/10-good-party-candidates-won-11-7-23',
     cta: 'Read more about winners',
   },
   {
     name: 'Good Party helps Terry Vo to City Council win',
     desc: "Learn how Terry Vo became the first Good Party Certified candidate to win her election with the help of Good Party's free tools and grassroots volunteer network.",
     img: terryImg,
-    link: '/blog/article/race-update-victoria-masika',
+    link: '/blog/article/case-study-terry-vo-win',
     cta: 'Read more about Terry Vo',
   },
 ];
