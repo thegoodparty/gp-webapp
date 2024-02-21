@@ -110,12 +110,12 @@ export default function OfficeStep(props) {
               Next
             </PrimaryButton>
           </div>
-          <div onClick={showCustomModal} className="mt-2 cursor-pointer">
+          {/* <div onClick={showCustomModal} className="mt-2 cursor-pointer">
             I don&apos;t see my office
-          </div>
+          </div> */}
         </div>
       </div>
-      {showModal && (
+      {/* {showModal && (
         <Modal
           open
           closeCallback={() => {
@@ -127,7 +127,7 @@ export default function OfficeStep(props) {
             nextCallback={saveCustomOffice}
           />
         </Modal>
-      )}
+      )} */}
     </form>
   );
 }
