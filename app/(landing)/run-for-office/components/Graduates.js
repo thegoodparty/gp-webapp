@@ -7,7 +7,7 @@ import martyImg from 'public/images/run-for-office/marty.png';
 
 const graduates = [
   {
-    name: 'Marty Grohman’s Independent win in Maine',
+    name: "Marty Grohman's Independent win in Maine",
     desc: "Independent candidate Marty Grohman was elected as Biddeford, Maine's newest mayor in November 2023. Now, Grohman is serving his community and sharing his insight.",
     img: martyImg,
     link: '/blog/article/case-study-marty-grohman',
