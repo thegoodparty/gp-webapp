@@ -1,0 +1,72 @@
+import MarketingH2 from '@shared/typography/MarketingH2';
+import VictoriaImg from 'public/images/landing-pages/victoria.png';
+import BreannaImg from 'public/images/landing-pages/breanna.png';
+import CarlosImg from 'public/images/landing-pages/carlos.png';
+import Image from 'next/image';
+import MaxWidth from '@shared/layouts/MaxWidth';
+import Link from 'next/link';
+import terryImg from 'public/images/run-for-office/terry.png';
+import certifiedImg from 'public/images/run-for-office/certified.png';
+import martyImg from 'public/images/run-for-office/marty.png';
+
+const graduates = [
+  {
+    name: 'Marty Grohman’s Independent win in Maine',
+    desc: "Independent candidate Marty Grohman was elected as Biddeford, Maine's newest mayor in November 2023. Now, Grohman is serving his community and sharing his insight.",
+    img: martyImg,
+    link: '/blog/article/gpa-grad-carlos-rousselin',
+    cta: 'Read more about Marty Grohman',
+  },
+  {
+    name: '10 Good Party certified candidates win in 2023',
+    desc: 'In the November 7, 2023 off-year elections, 10 Good Party Certified candidates won local elections in North Carolina, Maine, Virginia and Washington.',
+    img: certifiedImg,
+    link: '/blog/article/gpa-grad-breanna-stott',
+    cta: 'Read more about winners',
+  },
+  {
+    name: 'Good Party helps Terry Vo to City Council win',
+    desc: "Learn how Terry Vo became the first Good Party Certified candidate to win her election with the help of Good Party's free tools and grassroots volunteer network.",
+    img: terryImg,
+    link: '/blog/article/race-update-victoria-masika',
+    cta: 'Read more about Terry Vo',
+  },
+];
+
+export default function Graduates() {
+  return (
+    <section className="pb-12">
+      <MaxWidth>
+        <div className="grid grid-cols-12 gap-6 md:gap-12">
+          {graduates.map((graduate) => (
+            <div
+              key={graduate.name}
+              className="col-span-12 md:col-span-4 h-full flex flex-col justify-between"
+            >
+              <div>
+                <Image
+                  src={graduate.img}
+                  alt={graduate.name}
+                  width={400}
+                  height={400}
+                  className="rounded-2xl w-full h-auto"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="text-2xl font-medium mt-5 mb-3">
+                  {graduate.name}
+                </div>
+                <div className="text-indigo-600">{graduate.desc}</div>
+              </div>
+              <Link
+                href={graduate.link}
+                className="mt-4 text-purple-400 font-bold"
+              >
+                {graduate.cta}
+              </Link>
+            </div>
+          ))}
+        </div>
+      </MaxWidth>
+    </section>
+  );
+}

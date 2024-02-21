@@ -20,7 +20,7 @@ export default function WhatIsCampaign() {
             <h2 className="text-3xl lg:text-6xl font-semibold ">
               What is
               <Image
-                src="/images/heart.svg"
+                src="/images/logo-hologram-white.svg"
                 width={88}
                 height={72}
                 alt="gp"
@@ -37,7 +37,7 @@ export default function WhatIsCampaign() {
             <div className="my-10 flex">
               <RunCampaignButton id="hero-get-started" color="warning" />
               <Link href="/get-a-demo" id="hero-demo" className="block ml-5">
-                <WhiteButton label="GET A DEMO" />
+                <WhiteButton label="Book a free demo" />
               </Link>
             </div>
             <div className="grid grid-cols-12 gap-4">
