@@ -29,7 +29,7 @@ export default function Hero() {
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 mt-10 lg:mt-0">
-            <Image src={heroImg} alt="run for office" />
+            <Image src={heroImg} alt="run for office" priority />
           </div>
         </div>
       </section>
