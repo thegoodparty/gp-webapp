@@ -1,5 +1,6 @@
 import Hero from './Hero';
 import KeyFeatures from './KeyFeatures';
+import Pricing from './Pricing';
 import ProTools from './ProTools';
 import WhatIsCampaign from './WhatIsCampaign';
 
@@ -11,6 +12,7 @@ export default function RunForOfficePage({ articles }) {
       <WhatIsCampaign />
       <KeyFeatures />
       <ProTools />
+      <Pricing />
     </div>
   );
 }

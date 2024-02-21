@@ -1,4 +1,3 @@
-import { CircularProgress } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';
@@ -19,13 +18,7 @@ export default function RunCampaignButton({
   return (
     <Link href="/login" id={id}>
       <Wrapper fullWidth={fullWidth} color={color}>
-        {loading ? (
-          <div className="px-10">
-            <CircularProgress size={18} />
-          </div>
-        ) : (
-          <div className=" tracking-wide">{label}</div>
-        )}
+        <div className=" tracking-wide">{label}</div>
       </Wrapper>
     </Link>
   );
