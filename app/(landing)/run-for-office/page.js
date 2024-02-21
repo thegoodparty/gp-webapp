@@ -8,7 +8,7 @@ const meta = pageMetaData({
   description:
     'We help independent-minded people who want to get things done run for office. Chat with an expert to learn how.',
   slug: '/run-for-office',
-  image: 'https://assets.goodparty.org/dashboard.jpg',
+  image: 'https://assets.goodparty.org/run-og.png',
 });
 
 export const metadata = meta;
