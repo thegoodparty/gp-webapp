@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import GreatSuccess from './GreatSuccess';
 import Hero from './Hero';
 import KeyFeatures from './KeyFeatures';
@@ -12,24 +11,12 @@ export default function RunForOfficePage({ articles }) {
     <div className="bg-slate-50">
       <Hero />
       <div className="bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full" />
-      <Suspense>
-        <WhatIsCampaign />
-      </Suspense>
-      <Suspense>
-        <KeyFeatures />
-      </Suspense>
-      <Suspense>
-        <ProTools />
-      </Suspense>
-      <Suspense>
-        <Pricing />
-      </Suspense>
-      <Suspense>
-        <GreatSuccess />
-      </Suspense>
-      <Suspense>
-        <StartedBottom />
-      </Suspense>
+      <WhatIsCampaign />
+      <KeyFeatures />
+      <ProTools />
+      <Pricing />
+      <GreatSuccess />
+      <StartedBottom />
     </div>
   );
 }
