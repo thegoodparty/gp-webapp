@@ -1,5 +1,4 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { Fragment, useState } from 'react';
 import {
   onboardingStep,
@@ -13,8 +12,8 @@ import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import { FaLightbulb } from 'react-icons/fa';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { FcDocument } from 'react-icons/fc';
 import { IoDocumentText } from 'react-icons/io5';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function launchCampaign() {
   try {
@@ -47,16 +46,27 @@ export default function PledgeStep({ campaign, pledge, step }) {
     };
   }
   const [state, setState] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
   if (!pledge) {
     return null;
   }
 
   const canSave = () => {
-    return state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
+    return (
+      !loading &&
+      state.pledged1 &&
+      state.pledged2 &&
+      state.pledged3 &&
+      state.pledged4
+    );
   };
 
   const handleSave = async () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     const updated = campaign;
 
     updated.details.pledged =
@@ -148,10 +158,10 @@ export default function PledgeStep({ campaign, pledge, step }) {
         </Fragment>
       ))}
 
-      <div className="flex justify-center mb-8">
-        <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+      <div className="flex justify-center mb-8" onClick={handleSave}>
+        <PrimaryButton disabled={!canSave()} loading={loading}>
           <div className="font-black">FINISH</div>
-        </BlackButtonClient>
+        </PrimaryButton>
       </div>
     </div>
   );
