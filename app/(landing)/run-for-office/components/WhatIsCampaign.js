@@ -35,8 +35,8 @@ export default function WhatIsCampaign() {
               create content, and more.
             </div>
             <div className="my-10 flex">
-              <RunCampaignButton id="hero-get-started" color="warning" />
-              <Link href="/get-a-demo" id="hero-demo" className="block ml-5">
+              <RunCampaignButton id="what-is-get-started" color="warning" />
+              <Link href="/get-a-demo" id="what-is-demo" className="block ml-5">
                 <WhiteButton label="Book a free demo" />
               </Link>
             </div>
