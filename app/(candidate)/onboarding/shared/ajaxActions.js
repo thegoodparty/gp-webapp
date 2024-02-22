@@ -2,7 +2,7 @@
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { generateCampaignStatus } from '../../onboarding-old/[slug]/dashboard/campaignSteps';
+import { deleteCookie } from 'helpers/cookieHelper';
 
 export async function updateCampaign(
   campaign,
@@ -12,7 +12,6 @@ export async function updateCampaign(
 ) {
   try {
     const api = gpApi.campaign.onboarding.update;
-    // const currentStep = calcCampaignStep(campaign);
     const payload = {
       campaign: {
         ...campaign,
@@ -48,14 +47,25 @@ export async function fetchCampaignVersions() {
   }
 }
 
-function calcCampaignStep(campaign) {
-  const status = generateCampaignStatus(campaign);
-  return status.currentStep;
-}
 export function onboardingStep(campaign, step) {
   const numericStep = campaign?.currentStep
     ? `${campaign.currentStep}`.replace(/\D/g, '')
     : 0;
   const nextStep = Math.max(numericStep, step);
   return `onboarding-${nextStep}`;
+}
+
+export async function createCampaign(firstName, lastName) {
+  try {
+    const api = gpApi.campaign.onboarding.create;
+    const payload = { firstName, lastName };
+    const { slug } = await gpFetch(api, payload);
+    if (slug) {
+      deleteCookie('afterAction');
+      deleteCookie('returnUrl');
+      window.location.href = `/onboarding/${slug}/1`;
+    }
+  } catch (e) {
+    return false;
+  }
 }

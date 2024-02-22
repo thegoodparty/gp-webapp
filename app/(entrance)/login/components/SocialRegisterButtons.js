@@ -12,7 +12,7 @@ import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 // import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
-import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import FacebookRegisterButton from './FacebookRegisterButton';

@@ -16,12 +16,13 @@ import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+
 import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export const validateZip = (zip) => {
   // let zipInt = parseInt(zip);

@@ -6,7 +6,7 @@ import { useHookstate } from '@hookstate/core';
 import { passwordRegex } from 'helpers/userHelper.js';
 import { useState } from 'react';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { createCampaign } from 'app/(company)/run-for-office/components/RunCampaignButton';
+import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
