@@ -10,13 +10,13 @@ const points1 = [
   'Path to Victory report',
   'Consultation with a campaign manager',
   'Discord community',
-  'Good Party Academy ',
+  'Good Party Academy',
 ];
 
 const points2 = [
   'Voter data and records',
   'Dedicated support',
-  'Peer-to-peer texting',
+  'Peer-to-peer texting and calling platform',
 ];
 
 export default function Pricing() {
@@ -69,7 +69,7 @@ export default function Pricing() {
               </div>
               <div>
                 <div className="mt-14 mb-8 text-4xl font-light">$10/month</div>
-                <Link href="/login">
+                <Link href="/pro-consultation">
                   <PrimaryButton fullWidth>Get Started</PrimaryButton>
                 </Link>
               </div>
