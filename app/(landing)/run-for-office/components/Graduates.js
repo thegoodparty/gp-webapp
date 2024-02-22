@@ -55,7 +55,7 @@ export default function Graduates() {
               </div>
               <Link
                 href={graduate.link}
-                className="mt-4 text-purple-400 font-bold"
+                className="mt-4 text-purple-500 font-bold"
               >
                 {graduate.cta}
               </Link>
