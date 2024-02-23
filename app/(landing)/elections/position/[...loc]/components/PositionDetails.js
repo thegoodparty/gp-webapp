@@ -1,6 +1,5 @@
 import Body1 from '@shared/typography/Body1';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { Fragment } from 'react';
 
 export default function PoistionDetails({ race, positions }) {
   const {
@@ -13,7 +12,6 @@ export default function PoistionDetails({ race, positions }) {
     salary,
     positionDescription,
     eligibilityRequirements,
-    normalizedPositionName,
   } = race;
   const term = frequency.match(/\d+/g);
   return (
@@ -54,9 +52,7 @@ export default function PoistionDetails({ race, positions }) {
             Positions:
             <span className="font-normal">
               {positions.map((position) => (
-                <div key={position}>
-                  {position.replace(normalizedPositionName, '')}
-                </div>
+                <div key={position}>{position}</div>
               ))}
             </span>
           </li>
