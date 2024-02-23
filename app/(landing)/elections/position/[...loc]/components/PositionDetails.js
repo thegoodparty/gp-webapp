@@ -1,7 +1,8 @@
 import Body1 from '@shared/typography/Body1';
 import { dateUsHelper } from 'helpers/dateHelper';
+import { Fragment } from 'react';
 
-export default function PoistionDetails({ race }) {
+export default function PoistionDetails({ race, positions }) {
   const {
     level,
     filingDateStart,
@@ -46,6 +47,14 @@ export default function PoistionDetails({ race }) {
             <span className="font-normal">
               {dateUsHelper(filingDateStart) || 'N/A'} -{' '}
               {dateUsHelper(filingDateEnd) || 'N/A'}
+            </span>
+          </li>
+          <li className=" leading-loose">
+            Positions:
+            <span className="font-normal">
+              {positions.map((position) => (
+                <div key={position}>{position}</div>
+              ))}
             </span>
           </li>
         </ul>

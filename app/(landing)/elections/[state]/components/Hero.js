@@ -40,7 +40,6 @@ export default function Hero({
       label: municipality.city,
     });
   }
-  console.log('breadcrumbsLinks', breadcrumbsLinks);
   let title = '';
   let subTitle = '';
   if (level === 'state') {

@@ -6,9 +6,24 @@ import Link from 'next/link';
 import { FaArrowRightLong } from 'react-icons/fa6';
 
 export default function Race({ race }) {
-  const { positionName, positionDescription, date, level } = race;
-  const slug = slugify(positionName, true);
+  const {
+    normalizedPositionName,
+    positionDescription,
+    date,
+    level,
+    state,
+    county,
+    city,
+  } = race;
+  const slug = slugify(normalizedPositionName, true);
   let color = '';
+  let locationSlug = state?.toLowerCase();
+  if (county) {
+    locationSlug += `/${county}`;
+  }
+  if (city) {
+    locationSlug += `/${city}`;
+  }
   if (level === 'state') {
     color = '#F5FFFC';
   } else if (level === 'county') {
@@ -16,7 +31,7 @@ export default function Race({ race }) {
   }
   return (
     <Link
-      href={`/elections/${slug}/${race.hashId}/`}
+      href={`/elections/position/${locationSlug}/${slug}`}
       className="no-underline"
       id={`office-${slug}-${race.hashId}`}
     >
@@ -37,7 +52,7 @@ export default function Race({ race }) {
       >
         <div className="grid-cols-12 gap-3 grid items-center">
           <div className="col-span-12 md:col-span-9">
-            <H3>{positionName}</H3>
+            <H3>{normalizedPositionName}</H3>
             <Body2 className="line-clamp-4 mt-1">{positionDescription}</Body2>
           </div>
           <div className="col-span-6 md:col-span-2 text-center">

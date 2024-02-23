@@ -14,7 +14,6 @@ export default function Hero({
   normalizedPositionName,
   electionDate,
   filingDateEnd,
-  positionName,
   loc,
   locationName,
 }) {
@@ -23,12 +22,14 @@ export default function Hero({
     { href: `/elections`, label: 'How to run' },
     {
       label: `How to run in ${stateName}`,
+      href: `/elections/${state}`,
     },
   ];
-  if (level === 'county' && county) {
+  if ((level === 'city' && county) || (level === 'county' && county)) {
     breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`;
     breadcrumbsLinks.push({
       label: `${locationName} county`,
+      href: `/elections/${county.slug}`,
     });
   }
   if (level === 'city' && municipality) {
@@ -37,10 +38,10 @@ export default function Hero({
       label: municipality.name,
       href: `/elections/${municipality.slug}`,
     });
-    breadcrumbsLinks.push({
-      label: positionName,
-    });
   }
+  breadcrumbsLinks.push({
+    label: normalizedPositionName,
+  });
 
   let title = `Run for ${normalizedPositionName} in ${loc}`;
 

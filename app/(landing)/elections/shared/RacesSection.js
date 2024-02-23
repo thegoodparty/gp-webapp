@@ -4,7 +4,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
 export default function RacesSection({ races, viewAll }) {
-  console.log('viewAll race', typeof viewAll);
   return (
     <section>
       <div className="grid-cols-12 gap-3 hidden md:grid mb-2 px-5">

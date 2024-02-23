@@ -12,20 +12,21 @@ import Guides from 'app/(landing)/elections/shared/Guides';
 import Explore from './Explore';
 
 export default function PositionPage(props) {
-  const { race, otherRaces, articles } = props;
+  const { race, otherRaces, articles, county, city, positions } = props;
   const { level, state, locationName } = race;
 
   let loc = locationName;
   if (level === 'city') {
-    loc += `, ${state}`;
+    loc += `, ${state.toUpperCase()}`;
   } else if (level === 'county') {
-    loc += ` County, ${state}`;
+    loc += ` County, ${state.toUpperCase()}`;
   } else if (level === 'state') {
   }
 
   const positionLink = (race) => {
-    const slug = slugify(race.name, true);
-    return `/elections/${slug}/${race.hashId}/`;
+    return `/elections/${state}/${county ? `${county}/` : ''}${
+      city ? `${city}/` : ''
+    }${race.slug}`;
   };
   race.loc = loc;
 
@@ -34,7 +35,7 @@ export default function PositionPage(props) {
       <MaxWidth>
         {/* <Breadcrumbs links={breadcrumbsLinks} /> */}
         <Hero {...race} />
-        <PositionDetails race={race} />
+        <PositionDetails race={race} positions={positions} />
       </MaxWidth>
 
       <CtaBanner race={race} />

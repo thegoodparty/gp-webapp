@@ -5,7 +5,6 @@ import { Fragment } from 'react';
 
 export default function PositionFaqs({ race }) {
   const {
-    filingDateStart,
     frequency,
     normalizedPositionName,
     filingOfficeAddress,
@@ -15,7 +14,6 @@ export default function PositionFaqs({ race }) {
     isRunoff,
     isPrimary,
     partisanType,
-    positionName,
     loc,
   } = race;
   const term = frequency.match(/\d+/g);
@@ -61,8 +59,8 @@ export default function PositionFaqs({ race }) {
       a: `You can contact the filing office by calling ${filingPhoneNumber}.`,
     },
     {
-      q: `How do I get started running for ${positionName}?`,
-      a: `You can start running for ${positionName} by checking to ensure you meet all filing deadlines and requirements. Next, you can prepare to file for office and start planning your campaign strategy. Get in touch with our team of campaign experts for help with any step of the campaign process!`,
+      q: `How do I get started running for ${normalizedPositionName}?`,
+      a: `You can start running for ${normalizedPositionName} by checking to ensure you meet all filing deadlines and requirements. Next, you can prepare to file for office and start planning your campaign strategy. Get in touch with our team of campaign experts for help with any step of the campaign process!`,
     },
     {
       q: `Is there a primary or runoff election for this office?`,
