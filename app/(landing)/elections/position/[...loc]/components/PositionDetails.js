@@ -13,6 +13,7 @@ export default function PoistionDetails({ race, positions }) {
     salary,
     positionDescription,
     eligibilityRequirements,
+    normalizedPositionName,
   } = race;
   const term = frequency.match(/\d+/g);
   return (
@@ -53,7 +54,9 @@ export default function PoistionDetails({ race, positions }) {
             Positions:
             <span className="font-normal">
               {positions.map((position) => (
-                <div key={position}>{position}</div>
+                <div key={position}>
+                  {position.replace(normalizedPositionName, '')}
+                </div>
               ))}
             </span>
           </li>
