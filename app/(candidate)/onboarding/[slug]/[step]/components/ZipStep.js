@@ -65,7 +65,7 @@ export default function ZipStep(props) {
             InputLabelProps={{
               shrink: true,
             }}
-            error={!validateZip(state.zip)}
+            error={!validateZip(state.zip) && state.zip !== ''}
           />
         </div>
         <div className="mt-10" onClick={handleSave}>
