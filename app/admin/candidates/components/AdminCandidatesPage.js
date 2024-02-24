@@ -71,8 +71,11 @@ export default function AdminCandidatesPage(props) {
       const { user } = campaignObj;
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
-      const waitingForP2v =
+      let waitingForP2v =
         !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'no' : 'yes';
+      if (data.p2vNotNeeded) {
+        waitingForP2v = 'Not Needed';
+      }
 
       const fields = {
         id: campaignObj.id,

@@ -17,6 +17,7 @@ import H3 from '@shared/typography/H3';
 import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { dateUsHelper } from 'helpers/dateHelper';
+import Checkbox from '@shared/inputs/Checkbox';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -132,6 +133,8 @@ export default function AdminVictoryPathPage(props) {
     ...initialState,
     ...campaign.pathToVictory,
   });
+  console.log('campaign.p2vNotNeeded', campaign.p2vNotNeeded);
+  const [notNeeded, setNotNeeded] = useState(campaign.p2vNotNeeded || false);
   const snackbarState = useHookstate(globalSnackbarState);
 
   const onChangeField = (key, value) => {
@@ -192,6 +195,14 @@ export default function AdminVictoryPathPage(props) {
       ? `${campaign?.details?.otherOffice} (Other)`
       : campaign?.details?.office;
 
+  const handleNotNeeded = async (e) => {
+    setNotNeeded(e.target.checked);
+    const updated = {
+      ...campaign,
+      p2vNotNeeded: e.target.checked,
+    };
+    await updateCampaign(updated);
+  };
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
@@ -201,6 +212,14 @@ export default function AdminVictoryPathPage(props) {
             <br />
             Name: <strong>{campaign?.name || 'N/A'} </strong>.
           </H2>
+          <H3 className="mt-12 mb-6 flex items-center">
+            <Checkbox
+              value={notNeeded}
+              defaultChecked={notNeeded}
+              onChange={handleNotNeeded}
+            />
+            <div>Mark campaign as not needing Path to Victory</div>
+          </H3>{' '}
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}
@@ -261,7 +280,6 @@ export default function AdminVictoryPathPage(props) {
               </div>
             </div>
           ))}
-
           <div className="flex justify-end">
             <BlackButtonClient onClick={save}>
               <strong>Save</strong>
