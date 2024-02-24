@@ -6,11 +6,10 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
-const fetchState = async (state, viewAll) => {
+const fetchState = async (state) => {
   const api = gpApi.race.byState;
   const payload = {
     state,
-    viewAll: viewAll === 'true',
   };
 
   return await gpFetch(api, payload, 3600);
@@ -25,19 +24,18 @@ export async function generateMetadata({ params }) {
   const meta = pageMetaData({
     title: `Run for Office in ${stateName} ${year}`,
     description: `Learn about available opportunities to run for office in ${stateName} and tips for launching a successful campaign.`,
-    slug: `/elections/${state}?viewAll=true`,
+    slug: `/elections/${state}`,
   });
   return meta;
 }
 
-export default async function Page({ params, searchParams }) {
+export default async function Page({ params }) {
   const { state } = params;
-  const { viewAll } = searchParams;
   if (!state || !shortToLongState[state.toUpperCase()]) {
     notFound();
   }
 
-  const { counties, races } = await fetchState(state, viewAll);
+  const { counties, races } = await fetchState(state);
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',
@@ -53,7 +51,6 @@ export default async function Page({ params, searchParams }) {
     state,
     childEntity: counties,
     races,
-    viewAll: viewAll === 'true',
     articles,
   };
 

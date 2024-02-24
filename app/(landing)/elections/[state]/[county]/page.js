@@ -6,12 +6,11 @@ import gpFetch from 'gpApi/gpFetch';
 import ElectionsCountyPage from './components/ElectionsCountyPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
-const fetchCounty = async (state, county, viewAll) => {
+const fetchCounty = async (state, county) => {
   const api = gpApi.race.byCounty;
   const payload = {
     state,
     county,
-    viewAll: viewAll === 'true',
   };
 
   return await gpFetch(api, payload, 3600);
@@ -39,15 +38,14 @@ export async function generateMetadata({ params }) {
     const meta = pageMetaData({
       title: `Run for Office in ${county.county} county, ${stateName} ${year}`,
       description: `Learn about available opportunities to run for office in ${county.county} county, ${stateName} and tips for launching a successful campaign.`,
-      slug: `/elections/${state}/${params.county}?viewAll=true`,
+      slug: `/elections/${state}/${params.county}`,
     });
     return meta;
   }
 }
 
-export default async function Page({ params, searchParams }) {
+export default async function Page({ params }) {
   const { state } = params;
-  const { viewAll } = searchParams;
   if (
     !state ||
     (state.length === 2 && !shortToLongState[state.toUpperCase()])
@@ -87,7 +85,6 @@ export default async function Page({ params, searchParams }) {
   const { municipalities, races, county } = await fetchCounty(
     state,
     params.county,
-    viewAll,
   );
 
   console.log('races', races);
@@ -98,7 +95,6 @@ export default async function Page({ params, searchParams }) {
     races,
     county,
     articles,
-    viewAll: viewAll === 'true',
   };
 
   return <ElectionsCountyPage {...childProps} />;
