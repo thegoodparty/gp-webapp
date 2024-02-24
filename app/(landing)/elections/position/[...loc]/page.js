@@ -52,7 +52,7 @@ export async function generateMetadata({ params }) {
     positionDescription,
     locationName,
     normalizedPositionName,
-  } = race;
+  } = race || {};
   let locStr = locationName;
   if (level === 'city') {
     locStr += ` City, ${race.state.toUpperCase()}`;
@@ -83,6 +83,9 @@ export default async function Page({ params }) {
     city,
     positionSlug,
   );
+  if (!race) {
+    return notFound();
+  }
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
@@ -107,7 +110,7 @@ export default async function Page({ params }) {
   return (
     <>
       <PositionPage {...childProps} />
-      <PositionSchema race={race} />
+      <PositionSchema race={race} loc={loc} />
     </>
   );
 }

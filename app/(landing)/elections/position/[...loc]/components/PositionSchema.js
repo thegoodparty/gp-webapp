@@ -3,10 +3,10 @@ import { slugify } from 'helpers/articleHelper';
 import React from 'react';
 import { JsonLd } from 'react-schemaorg';
 
-export default function PositionSchema({ race }) {
+export default function PositionSchema({ race, loc }) {
   const {
     level,
-    positionName,
+    normalizedPositionName,
     positionDescription,
     locationName,
     electionDay,
@@ -18,16 +18,16 @@ export default function PositionSchema({ race }) {
     filingPhoneNumber,
     filingDateEnd,
   } = race;
-  let loc = locationName;
+  let locStr = locationName;
   if (level === 'city') {
-    loc += ` City, ${race.state}`;
+    locStr += ` City, ${race.state}`;
   } else if (level === 'county') {
-    loc += ` County, ${race.state}`;
+    locStr += ` County, ${race.state}`;
   } else if (level === 'state') {
-    loc += ` ${race.state}`;
+    locStr += ` ${race.state}`;
   }
-  const slug = slugify(positionName, true);
-  const url = `${appBase}/elections/${slug}/${race.hashId}/`;
+  const slug = `elections/position/${loc.join('/')}`;
+  const url = `${appBase}/${slug}`;
   const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified';
 
   return (
@@ -37,12 +37,12 @@ export default function PositionSchema({ race }) {
         '@type': 'JobPosting',
         datePosted: '2024-01-01',
         validThrough: filingDateEnd,
-        title: positionName,
-        name: positionName,
+        title: normalizedPositionName,
+        name: normalizedPositionName,
         description: positionDescription,
         hiringOrganization: {
           '@type': 'Organization',
-          name: loc,
+          name: locStr,
           location: filingOfficeAddress,
         },
         jobLocation: {
