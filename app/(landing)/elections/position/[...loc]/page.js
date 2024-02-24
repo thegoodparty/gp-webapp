@@ -59,7 +59,7 @@ export async function generateMetadata({ params }) {
   } else if (level === 'county') {
     locStr += ` County, ${race.state.toUpperCase()}`;
   } else if (level === 'state') {
-    // locStr += ` ${race.state.toUpperCase()}`;
+    // locStr += ` ${race.state.toUpperCase()}`
   }
 
   console.log('slug', slug);
