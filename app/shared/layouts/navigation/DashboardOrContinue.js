@@ -13,9 +13,9 @@ export default function DashboardOrContinue({
   }
 
   let dashboardLink = '/dashboard';
-  if (!pathToVictory || pathToVictory !== 'Complete') {
-    dashboardLink = '/dashboard/plan';
-  }
+  // if (!pathToVictory || pathToVictory !== 'Complete') {
+  //   dashboardLink = '/dashboard/plan';
+  // }
 
   return (
     <div className="ml-4">

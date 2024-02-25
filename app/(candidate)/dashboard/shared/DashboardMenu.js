@@ -10,6 +10,12 @@ import { TbBrain } from 'react-icons/tb';
 // ok.
 let pages = [
   {
+    label: 'Campaign Tracker',
+    icon: <AiOutlineFlag />,
+    link: '/dashboard',
+    id: 'campaign-tracker-dashboard',
+  },
+  {
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
     link: '/dashboard/plan',
@@ -61,15 +67,6 @@ export default function DashboardMenu({
   pathToVictory,
   mobileMode,
 }) {
-  if (pathToVictory && pages.length === 7) {
-    pages.unshift({
-      label: 'Campaign Tracker',
-      icon: <AiOutlineFlag />,
-      link: '/dashboard',
-      id: 'campaign-tracker-dashboard',
-    });
-  }
-
   const handleLogOut = () => {
     deleteCookies();
     window.location.replace('/');

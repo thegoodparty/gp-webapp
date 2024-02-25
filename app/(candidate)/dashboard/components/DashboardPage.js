@@ -16,6 +16,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import TrackerTutorial from './TrackerTutorial';
 import { getCookie } from 'helpers/cookieHelper';
+import EmptyState from './EmptyState';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -142,7 +143,7 @@ export default function DashboardPage(props) {
             )}
           </>
         ) : (
-          <H3 className="mt-12">Waiting for voter contact goals input.</H3>
+          <EmptyState />
         )}
       </div>
     </DashboardLayout>

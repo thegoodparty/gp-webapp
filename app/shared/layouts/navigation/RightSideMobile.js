@@ -45,9 +45,9 @@ export default function RightSideMobile() {
   const { status, pathToVictory, slug } = campaignStatus || {};
 
   let dashboardLink = '/dashboard';
-  if (!pathToVictory || pathToVictory !== 'Complete') {
-    dashboardLink = '/dashboard/plan';
-  }
+  // if (!pathToVictory || pathToVictory !== 'Complete') {
+  //   dashboardLink = '/dashboard/plan';
+  // }
 
   const closeMenu = () => {
     setOpen(false);
