@@ -78,7 +78,7 @@ export default function AdminCandidatesPage(props) {
         id: campaignObj.id,
         isActive: campaignObj.isActive ? 'yes' : 'no',
         slug: campaign.slug,
-        firstName: user?.firstName ? user.firstName : user.name,
+        firstName: user?.firstName ? user.firstName : user?.name || 'n/a',
         lastName: user?.lastName ? user.lastName : 'n/a',
         launched: mapStatus(campaign.launchStatus),
         lastVisited: campaign.lastVisited,
