@@ -72,7 +72,7 @@ export default function AdminCandidatesPage(props) {
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
       let waitingForP2v =
-        !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'no' : 'yes';
+        !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'yes' : 'no';
       if (data.p2vNotNeeded) {
         waitingForP2v = 'Not Needed';
       }
