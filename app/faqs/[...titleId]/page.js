@@ -1,7 +1,7 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute, slugify } from 'helpers/articleHelper';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import FaqsArticlePage from './components/FaqsArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 
@@ -46,7 +46,7 @@ export default async function Page({ params, searchParams }) {
   if (slugify(articleTitle, true) !== title.toLowerCase()) {
     const correctRoute = faqArticleRoute(content);
     console.log('correctRoute', correctRoute);
-    redirect(correctRoute);
+    permanentRedirect(correctRoute);
   }
 
   const childProps = {

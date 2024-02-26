@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionsCountyPage from './components/ElectionsCountyPage';
@@ -65,8 +65,6 @@ export default async function Page({ params }) {
   if (state.length > 2) {
     // state is the slug, county is the id
     const { race } = await fetchPosition(params.county); // this is the id
-    //redirect if the slug is not matching
-    console.log('race', race);
     const { county, municipality, state } = race;
     let url = `/elections/position/`;
     if (!county && !municipality) {
@@ -79,7 +77,7 @@ export default async function Page({ params }) {
     }
     url += race.positionSlug;
 
-    redirect(url);
+    permanentRedirect(url);
   }
 
   const { municipalities, races, county } = await fetchCounty(
