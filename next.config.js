@@ -4,6 +4,9 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig = {
+  experimental: {
+    ppr: true, // https://nextjs.org/docs/app/api-reference/next-config-js/partial-prerendering
+  },
   reactStrictMode: true,
   transpilePackages: ['ui'],
   images: {
