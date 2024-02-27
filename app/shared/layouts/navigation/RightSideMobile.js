@@ -112,7 +112,7 @@ export default function RightSideMobile() {
                   {section.links.map((link) => (
                     <Link
                       href={link.href}
-                      id={`nav-${link.id}`}
+                      id={`mobile-nav-${link.id}`}
                       key={link.id}
                       className="no-underline font-medium"
                       rel={`${
@@ -150,7 +150,7 @@ export default function RightSideMobile() {
                           {!isDashboardPath && (
                             <Link
                               href={`${dashboardLink}`}
-                              id="nav-dashboard"
+                              id="mobile-nav-dashboard"
                               onClick={closeMenu}
                             >
                               <PurpleButton
@@ -171,7 +171,7 @@ export default function RightSideMobile() {
                       {status === 'onboarding' && (
                         <Link
                           href={`/onboarding/${slug}/1`}
-                          id="nav-continue-onboarding"
+                          id="mobile-nav-continue-onboarding"
                           onClick={closeMenu}
                         >
                           <PurpleButton
