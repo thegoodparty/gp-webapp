@@ -3,6 +3,7 @@ import Image from 'next/image';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
+import { Suspense } from 'react';
 
 export default function Nav() {
   return (
@@ -21,13 +22,19 @@ export default function Nav() {
                   priority
                 />
               </Link>
-              <LeftSide />
+              <Suspense>
+                <LeftSide />
+              </Suspense>
             </div>
-            <RightSide />
+            <Suspense>
+              <RightSide />
+            </Suspense>
           </div>
         </div>
       </div>
-      <RightSideMobile />
+      <Suspense>
+        <RightSideMobile />
+      </Suspense>
       <div className="h-14 relative">&nbsp;</div>
     </>
   );
