@@ -5,12 +5,12 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaChevronDown, FaExternalLinkAlt } from 'react-icons/fa';
 import { memo } from 'react';
 
-function NavDropdown({ open, toggleCallback, links, label = '' }) {
+function NavDropdown({ open, toggleCallback, links, label = '', id }) {
   return (
     <div
       className="ml-6 relative cursor-pointer "
       onClick={toggleCallback}
-      id="nav-run-dropdown"
+      id={id}
     >
       <PrimaryButton variant="text" size="medium">
         <div className="flex items-center">
