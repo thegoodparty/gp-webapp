@@ -17,7 +17,6 @@ import {
   deleteUserCookies,
 } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
-import Image from 'next/image';
 import UserAvatar from '@shared/user/UserAvatar';
 
 export const globalUserState = hookstate(false);

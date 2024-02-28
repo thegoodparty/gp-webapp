@@ -3,6 +3,8 @@ import { Suspense } from 'react';
 import Footer from './Footer';
 import JsonLdSchema from './JsonLdSchema';
 import Nav from './navigation/Nav';
+import { Cookie } from 'next/font/google';
+import CookiesSnackbar from './CookiesSnackbar';
 
 export default function PageWrapper({ children, hideFooter }) {
   return (
@@ -17,6 +19,9 @@ export default function PageWrapper({ children, hideFooter }) {
       )}
       {/* <Suspense> */}
       <Snackbar />
+      <Suspense>
+        <CookiesSnackbar />
+      </Suspense>
       {/* </Suspense> */}
     </div>
   );
