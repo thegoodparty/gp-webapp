@@ -283,7 +283,7 @@ export const shortToLongState = {
   CO: 'Colorado',
   CT: 'Connecticut',
   DE: 'Delaware',
-  // DC: 'District Of Columbia',
+  DC: 'District Of Columbia',
   // FM: 'Federated States Of Micronesia',
   FL: 'Florida',
   GA: 'Georgia',
