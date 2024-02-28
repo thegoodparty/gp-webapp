@@ -45,7 +45,7 @@ export default function Race({ race }) {
             ? 'bg-[#F5FFFC] hover:bg-[rgba(58,187,234,0.5)]'
             : ''
         }  ${
-          level === 'city'
+          level === 'city' || level === 'local'
             ? 'bg-[#FDF9FF] hover:bg-[rgba(201,133,242,0.35)]'
             : ''
         }`}
