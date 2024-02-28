@@ -2,15 +2,22 @@
 
 import ErrorButton from '@shared/buttons/ErrorButton';
 import { getCookie, setCookie } from 'helpers/cookieHelper';
+import { useEffect, useState } from 'react';
 
 export default function CookiesSnackbar() {
-  const cookie = getCookie('cookiesAccepted');
-  if (cookie) {
+  const [showBanner, setShowBanner] = useState(false);
+  useEffect(() => {
+    const cookie = getCookie('cookiesAccepted');
+    if (!cookie) {
+      setShowBanner(true);
+    }
+  }, []);
+  if (!showBanner) {
     return null;
   }
   const handleAccept = () => {
     setCookie('cookiesAccepted', 'true', 365);
-    document.location.reload();
+    setShowBanner(false);
   };
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-primary text-white p-4 text-center">
