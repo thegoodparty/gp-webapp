@@ -1,4 +1,4 @@
-import { deleteCookies } from 'helpers/cookieHelper';
+import { deleteUserCookies } from 'helpers/cookieHelper';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
@@ -68,7 +68,7 @@ export default function DashboardMenu({
   mobileMode,
 }) {
   const handleLogOut = () => {
-    deleteCookies();
+    deleteUserCookies();
     window.location.replace('/');
   };
 

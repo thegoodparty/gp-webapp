@@ -32,6 +32,13 @@ export const deleteCookies = () => {
   });
 };
 
+export const deleteUserCookies = () => {
+  deleteCookie('user');
+  deleteCookie('token');
+  deleteCookie('impersonateUser');
+  deleteCookie('signupRedirect');
+};
+
 export const deleteCookie = (name) => {
   if (typeof window === 'undefined') {
     return;

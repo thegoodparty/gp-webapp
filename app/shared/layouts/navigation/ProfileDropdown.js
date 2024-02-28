@@ -11,7 +11,11 @@ import {
 import { hookstate, useHookstate } from '@hookstate/core';
 import { memo, useEffect, useState } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
-import { deleteCookie, deleteCookies, getCookie } from 'helpers/cookieHelper';
+import {
+  deleteCookie,
+  getCookie,
+  deleteUserCookies,
+} from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 import Image from 'next/image';
 import UserAvatar from '@shared/user/UserAvatar';
@@ -34,7 +38,7 @@ const links = [
 ];
 
 const handleLogOut = () => {
-  deleteCookies();
+  deleteUserCookies();
   window.location.replace('/');
 };
 
