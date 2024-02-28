@@ -1,6 +1,33 @@
 import Body1 from '@shared/typography/Body1';
 import { dateUsHelper } from 'helpers/dateHelper';
 
+function processAndSort(strings) {
+  try {
+    return strings
+      .map((s) => {
+        let label = '',
+          number = 0,
+          original = s;
+        if (s.includes(' - District ')) {
+          label = 'District';
+          number = parseInt(s.split(' - District ')[1], 10);
+        } else if (s.includes(' - Office ')) {
+          label = 'Office';
+          number = parseInt(s.split(' - Office ')[1], 10);
+        } else {
+          return { original, sortKey: Infinity }; // Keep original and set sort key to ensure it goes to the end
+        }
+        return { label, number, sortKey: number, original };
+      })
+      .sort((a, b) => a.sortKey - b.sortKey)
+      .map((item) =>
+        item.label ? `${item.label} ${item.number}` : item.original,
+      );
+  } catch (e) {
+    return strings;
+  }
+}
+
 export default function PoistionDetails({ race, positions }) {
   const {
     level,
@@ -14,6 +41,7 @@ export default function PoistionDetails({ race, positions }) {
     eligibilityRequirements,
   } = race;
   const term = frequency.match(/\d+/g);
+  let cleanPositions = processAndSort(positions);
   return (
     <section className="grid grid-cols-12 gap-4 mt-6 md:mt-12">
       <div className="col-span-12 md:col-span-6 text-lg md:text-2xl font-medium">
@@ -51,7 +79,7 @@ export default function PoistionDetails({ race, positions }) {
           <li className=" leading-loose">
             Positions:
             <span className="font-normal">
-              {positions.map((position) => (
+              {cleanPositions.map((position) => (
                 <div key={position}>{position}</div>
               ))}
             </span>
