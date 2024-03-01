@@ -111,6 +111,7 @@ export default function AdminCandidatesPage(props) {
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
         waitingForP2v,
         pledged: campaign?.pledged && campaign.pledged === true ? 'yes' : 'no',
+        knowRun: campaign?.knowRun && campaign.knowRun === 'yes' ? 'yes' : 'no',
       };
       inputData.push(fields);
       let csvFields = fields;
@@ -385,6 +386,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Pledged',
       accessor: 'pledged',
+    },
+    {
+      Header: 'Running',
+      accessor: 'knowRun',
     },
   ]);
 
