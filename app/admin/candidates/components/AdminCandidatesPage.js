@@ -73,6 +73,11 @@ export default function AdminCandidatesPage(props) {
 
       let waitingForP2v =
         !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'yes' : 'no';
+
+      if (!data?.details?.pledged) {
+        waitingForP2v = 'n/a';
+      }
+
       if (data.p2vNotNeeded) {
         waitingForP2v = 'Not Needed';
       }
