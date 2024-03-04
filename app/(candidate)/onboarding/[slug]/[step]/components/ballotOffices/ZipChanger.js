@@ -7,7 +7,7 @@ import Modal from '@shared/utils/Modal';
 import H2 from '@shared/typography/H2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
-export default function ZipChanger({ zip, updateZipCallback }) {
+export default function ZipChanger({ zip, updateZipCallback, count }) {
   const [editMode, setEditMode] = useState(false);
   const [updatedZip, setUpdatedZip] = useState(zip);
   const isValid = validateZip(updatedZip);
@@ -26,7 +26,7 @@ export default function ZipChanger({ zip, updateZipCallback }) {
   return (
     <div className="">
       <Body1 className="font-semibold  text-left">
-        Offices available in
+        {count} Offices available in
         <span
           className="inline-block ml-2 text-purple-400 font-medium cursor-pointer underline"
           onClick={handleToggle}

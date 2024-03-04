@@ -8,8 +8,6 @@ import {
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
 import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import CustomOfficeModal from './ballotOffices/CustomOfficeModal';
 
 export default function OfficeStep(props) {
   const { campaign, step } = props;
@@ -18,14 +16,6 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   });
-  const [showModal, setShowModal] = useState(false);
-
-  const onChangeField = (key, value) => {
-    setState({
-      ...state,
-      [key]: value,
-    });
-  };
 
   const canSubmit = () => {
     return !!state.ballotOffice || !!state.originalPosition;
@@ -43,6 +33,9 @@ export default function OfficeStep(props) {
         state: election?.state,
         office: 'Other',
         otherOffice: position?.name,
+        officeTermLength: position?.electionFrequencies?.frequency
+          ? `${position?.electionFrequencies?.frequency} years`
+          : undefined,
       };
       if (!updated.goals) {
         updated.goals = {};
@@ -55,15 +48,6 @@ export default function OfficeStep(props) {
       await updateCampaign(updated);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
-  };
-
-  const saveCustomOffice = async (updated) => {
-    await updateCampaign(updated);
-    updated.currentStep = campaign.currentStep
-      ? Math.max(campaign.currentStep, step)
-      : step;
-    await updateCampaign(updated);
-    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };
 
   const handleBallotOffice = async (office) => {
@@ -89,15 +73,12 @@ export default function OfficeStep(props) {
       }
     : false;
 
-  const showCustomModal = () => {
-    setShowModal(true);
-  };
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">
         <H1>What office are you interested in?</H1>
 
-        <div className="w-full max-w-md mt-10">
+        <div className="w-full max-w-2xl mt-10">
           <BallotRaces
             campaign={campaign}
             selectedOfficeCallback={handleBallotOffice}
@@ -110,24 +91,8 @@ export default function OfficeStep(props) {
               Next
             </PrimaryButton>
           </div>
-          {/* <div onClick={showCustomModal} className="mt-2 cursor-pointer">
-            I don&apos;t see my office
-          </div> */}
         </div>
       </div>
-      {/* {showModal && (
-        <Modal
-          open
-          closeCallback={() => {
-            setShowModal(false);
-          }}
-        >
-          <CustomOfficeModal
-            campaign={campaign}
-            nextCallback={saveCustomOffice}
-          />
-        </Modal>
-      )} */}
     </form>
   );
 }

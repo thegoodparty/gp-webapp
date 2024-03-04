@@ -98,7 +98,7 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
   };
 
   return (
-    <div className="max-w-[640px] mx-auto">
+    <div className="max-w-[640px] mx-auto w-[80vw]">
       <H2 className="text-center">Office Details</H2>
       <Body1 className="my-8">
         What are the details about the office you&apos;re running for?
