@@ -82,6 +82,16 @@ export default function AdminCandidatesPage(props) {
         waitingForP2v = 'Not Needed';
       }
 
+      let runningForOffice = 'no';
+      if (data?.details?.knowRun && data.details.knowRun === 'yes') {
+        runningForOffice = 'yes';
+      } else if (
+        data?.details?.runForOffice &&
+        data.details.runForOffice === 'yes'
+      ) {
+        runningForOffice = 'yes';
+      }
+
       const fields = {
         id: campaignObj.id,
         isActive: campaignObj.isActive ? 'yes' : 'no',
@@ -112,7 +122,7 @@ export default function AdminCandidatesPage(props) {
         aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
         waitingForP2v,
         pledged: campaign?.pledged && campaign.pledged === true ? 'yes' : 'no',
-        knowRun: campaign?.knowRun && campaign.knowRun === 'yes' ? 'yes' : 'no',
+        knowRun: runningForOffice,
       };
       inputData.push(fields);
       let csvFields = fields;
