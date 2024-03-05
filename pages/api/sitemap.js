@@ -10,7 +10,6 @@ import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
 import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute } from '../../helpers/articleHelper';
-import { candidateRoute } from '../../helpers/candidateHelper';
 import { flatStates } from 'helpers/statesHelper';
 
 let yourDate = new Date();
@@ -45,11 +44,6 @@ export const fetchFAQs = async () => {
     key: 'faqArticles',
   };
   return await gpFetch(api, payload);
-};
-
-export const fetchCandidates = async () => {
-  const api = { ...gpApi.candidate.list };
-  return await gpFetch(api, false, 3600);
 };
 
 export const fetchGlossaryByTitle = async () => {
@@ -88,7 +82,6 @@ const fetchElections = async () => {
 export default async function sitemap(req, res) {
   try {
     const faqArticles = (await fetchFAQs()).content;
-    const { candidates } = await fetchCandidates();
     const { content } = await fetchGlossaryByTitle();
     const blogRes = await fetchArticles();
     const blogArticles = blogRes.content;
@@ -114,15 +107,6 @@ export default async function sitemap(req, res) {
       xmlString += `
         <url>
           <loc>${appBase}${faqArticleRoute(article)}</loc>
-          <lastmod>${currentDate}</lastmod>
-          <changefreq>monthly</changefreq>
-        </url>
-      `;
-    });
-    candidates.forEach((candidate) => {
-      xmlString += `
-        <url>
-          <loc>${appBase}${candidateRoute(candidate)}</loc>
           <lastmod>${currentDate}</lastmod>
           <changefreq>monthly</changefreq>
         </url>
@@ -187,13 +171,13 @@ export default async function sitemap(req, res) {
       const year = election.slug.split('-')[1];
       const currentYear = new Date().getFullYear();
       if (year.toString() != currentYear.toString()) {
-        xmlString += `
-        <url>
-          <loc>${appBase}/election-results/${city}/${year}</loc>
-          <lastmod>${currentDate}</lastmod>
-          <changefreq>monthly</changefreq>
-        </url>
-      `;
+        //   xmlString += `
+        //   <url>
+        //     <loc>${appBase}/election-results/${city}/${year}</loc>
+        //     <lastmod>${currentDate}</lastmod>
+        //     <changefreq>monthly</changefreq>
+        //   </url>
+        // `;
       } else {
         xmlString += `
         <url>
