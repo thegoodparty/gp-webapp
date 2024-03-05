@@ -10,7 +10,7 @@ import BallotRaces from './ballotOffices/BallotRaces';
 import { useState } from 'react';
 
 export default function OfficeStep(props) {
-  const { campaign, step } = props;
+  const { campaign, step, updateCallback } = props;
   const router = useRouter();
   const [state, setState] = useState({
     ballotOffice: false,
@@ -19,6 +19,13 @@ export default function OfficeStep(props) {
 
   const canSubmit = () => {
     return !!state.ballotOffice || !!state.originalPosition;
+  };
+
+  const calcTerm = (position) => {
+    if (!position) return undefined;
+    if (!position.electionFrequencies) return undefined;
+    if (!position.electionFrequencies.length === 0) return undefined;
+    return `${position.electionFrequencies[0].frequency} years`;
   };
 
   const handleSave = async () => {
@@ -33,9 +40,7 @@ export default function OfficeStep(props) {
         state: election?.state,
         office: 'Other',
         otherOffice: position?.name,
-        officeTermLength: position?.electionFrequencies?.frequency
-          ? `${position?.electionFrequencies?.frequency} years`
-          : undefined,
+        officeTermLength: calcTerm(position),
       };
       if (!updated.goals) {
         updated.goals = {};
@@ -44,9 +49,15 @@ export default function OfficeStep(props) {
         ...updated.goals,
         electionDate: election?.electionDay,
       };
-      updated.currentStep = onboardingStep(campaign, step);
       await updateCampaign(updated);
-      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+
+      if (step) {
+        updated.currentStep = onboardingStep(campaign, step);
+        router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+      }
+      if (updateCallback) {
+        updateCallback();
+      }
     }
   };
 
@@ -83,9 +94,10 @@ export default function OfficeStep(props) {
             campaign={campaign}
             selectedOfficeCallback={handleBallotOffice}
             selectedOffice={selectedOffice}
+            updateCallback={updateCallback}
           />
         </div>
-        <div className="fixed bottom-0 w-full bg-white py-4">
+        <div className={`${step ? 'fixed bottom-0 w-full bg-white py-4' : ''}`}>
           <div onClick={handleSave}>
             <PrimaryButton disabled={!canSubmit()} type="submit">
               Next

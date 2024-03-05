@@ -20,7 +20,13 @@ const fetchRaces = async (zip) => {
 };
 
 export default function BallotRaces(props) {
-  const { campaign, selectedOfficeCallback, selectedOffice } = props;
+  const {
+    campaign,
+    selectedOfficeCallback,
+    selectedOffice,
+    step,
+    updateCallback,
+  } = props;
   const [zip, setZip] = useState(campaign.details.zip);
   const [races, setRaces] = useState(false);
   const [filteredRaces, setFilteredRaces] = useState(false);
@@ -109,12 +115,21 @@ export default function BallotRaces(props) {
   };
 
   const saveCustomOffice = async (updated) => {
-    await updateCampaign(updated);
-    updated.currentStep = campaign.currentStep
-      ? Math.max(campaign.currentStep, step)
-      : step;
-    await updateCampaign(updated);
-    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+    updated.details.otherOffice = '';
+    updated.details.positionId = null;
+    updated.details.electionId = null;
+    if (step) {
+      updated.currentStep = campaign.currentStep
+        ? Math.max(campaign.currentStep, step)
+        : step;
+      await updateCampaign(updated);
+      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+    } else {
+      await updateCampaign(updated);
+      if (updateCallback) {
+        updateCallback();
+      }
+    }
   };
 
   return (

@@ -25,97 +25,6 @@ const fields = [
   },
 
   {
-    key: 'office',
-    label: 'Office',
-    type: 'select',
-    hidden: true,
-    showKey: 'knowRun',
-    requiredHidden: true,
-    required: true,
-    showCondition: ['yes'],
-    options: [
-      'City Council',
-      'Mayor',
-      'US Senate',
-      'US House of Representatives',
-      'Governor',
-      'Lieutenant Governor',
-      'Attorney General',
-      'Comptroller',
-      'Treasurer',
-      'Secretary of State',
-      'State Supreme Court Justice',
-      'State Senate',
-      'State House of Representatives',
-      'County Executive',
-      'District Attorney',
-      'Sheriff',
-      'Clerk',
-      'Auditor',
-      'Public Administrator',
-      'Judge',
-      'County Commissioner',
-      'Council member',
-      'School Board',
-      'Other',
-    ],
-  },
-
-  {
-    key: 'state',
-    label: 'State',
-    type: 'select',
-    options: flatStates,
-    required: true,
-  },
-  {
-    key: 'otherOffice',
-    label: 'Other Office',
-    type: 'text',
-    hidden: true,
-    requiredHidden: true,
-    showKey: 'office',
-    showCondition: ['Other'],
-  },
-  // {
-  //   key: 'city',
-  //   label: 'City/Town',
-  //   type: 'text',
-  //   hidden: true,
-  //   requiredHidden: true,
-  //   showKey: 'office',
-  //   showCondition: [
-  //     'City Council',
-  //     'Mayor',
-  //     'US House of Representatives',
-  //     'State Senate',
-  //     'State House of Representatives',
-  //     'County Executive',
-  //     'District Attorney',
-  //     'Sheriff',
-  //     'Clerk',
-  //     'Auditor',
-  //     'Public Administrator',
-  //     'Judge',
-  //     'County Commissioner',
-  //     'Council member',
-  //     'School Board',
-  //     'Other',
-  //   ],
-  // },
-  // {
-  //   key: 'district',
-  //   label: 'District (if applicable)',
-  //   type: 'text',
-  // },
-  {
-    key: 'electionDate',
-    label: 'Date of Election',
-    type: 'date',
-    validate: 'futureDateOnly',
-    campaignObj: 'goals',
-  },
-  {
     key: 'party',
     label: 'Political Party Affiliation (select one)',
     required: true,
@@ -128,17 +37,6 @@ const fields = [
       'Other',
     ],
     invalidOptions: ['Democratic Party', 'Republican Party'],
-  },
-  {
-    key: 'officeTermLength',
-    label: 'Term Length',
-    type: 'select',
-    hidden: true,
-    showKey: 'knowRun',
-    requiredHidden: true,
-    required: true,
-    showCondition: ['yes'],
-    options: ['2 years', '3 years', '4 years', '6 years'],
   },
 
   {
@@ -214,15 +112,11 @@ export default function CampaignSection(props) {
 
   return (
     <section className="border-t pt-6 border-gray-600">
-      <H3>Campaign Details</H3>
-      <Body1 className="text-indigo-300 mt-2  pb-6 mb-12">
-        Update your details so our AI can give you even more personalized tips
-        and suggestions.
-      </Body1>
+      <H3 className="pb-6">Campaign Details</H3>
       <div className="grid grid-cols-12 gap-3">
         {fields.map((field) => (
           <div key={field.key} className="col-span-12 md:col-span-6">
-            <div className="">
+            <div className={`${field.type === 'select' ? '' : 'pt-5'}`}>
               <RenderInputField
                 field={field}
                 value={state[field.key]}
