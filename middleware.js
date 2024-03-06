@@ -19,8 +19,18 @@ const redirects = {
   '/run': '/run-for-office',
 };
 
+const blockedIPs = ['142.198.200.33'];
+
 export default async function middleware(req) {
   // const { content } = await fetchRedirects();
+  const forwarded = req.headers.get('x-forwarded-for');
+  const ip = forwarded ? forwarded.split(',')[0] : request.ip;
+  if (blockedIPs.includes(ip)) {
+    return NextResponse.redirect(
+      `https://www.youtube.com/watch?v=dQw4w9WgXcQ`,
+      { status: 301 },
+    );
+  }
 
   if (redirects[req.nextUrl.pathname]) {
     return NextResponse.redirect(
