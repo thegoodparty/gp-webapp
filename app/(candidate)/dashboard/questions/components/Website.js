@@ -37,7 +37,7 @@ export default function Website({
     saveCallback(updated);
   };
   return (
-    <div>
+    <div className="max-w-xl m-auto">
       <form noValidate onSubmit={(e) => e.preventDefault()}>
         <H1 className="mb-10">Campaign Website</H1>
         <TextField
