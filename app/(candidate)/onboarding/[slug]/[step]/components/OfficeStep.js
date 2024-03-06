@@ -75,7 +75,7 @@ export default function OfficeStep(props) {
         router.push(`/onboarding/${campaign.slug}/${step + 1}`);
       }
       if (updateCallback) {
-        updateCallback();
+        await updateCallback();
       }
     }
   };
