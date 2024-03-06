@@ -14,7 +14,7 @@ export default function PositionPage(props) {
   const { level, state, locationName } = race;
   let loc = locationName;
   if (level === 'local') {
-    loc += `${race.municipality}, ${race.state.toUpperCase()}`;
+    loc += `${race.municipality?.name}, ${race.state.toUpperCase()}`;
   }
   if (level === 'city') {
     loc += `, ${state.toUpperCase()}`;
