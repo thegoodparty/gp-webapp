@@ -54,7 +54,7 @@ export async function generateMetadata({ params }) {
     normalizedPositionName,
   } = race || {};
   let locStr = locationName;
-  if (level === 'city') {
+  if (level === 'city' || level === 'local') {
     locStr += ` City, ${race.state.toUpperCase()}`;
   } else if (level === 'county') {
     locStr += ` County, ${race.state.toUpperCase()}`;
