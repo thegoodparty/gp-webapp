@@ -64,6 +64,10 @@ export default function OfficeStep(props) {
         ...updated.goals,
         electionDate: election?.electionDay,
       };
+      if (!step) {
+        // delete p2vStatus so the backend will recalculate it
+        delete updated.p2vStatus;
+      }
       await updateCampaign(updated);
 
       if (step) {
