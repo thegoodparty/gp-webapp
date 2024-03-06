@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import PositionPage from './components/PositionPage';
 import PositionSchema from './components/PositionSchema';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
-import { shortToLongState } from 'helpers/statesHelper';
 
 const fetchPosition = async (state, county, city, positionSlug) => {
   const api = gpApi.race.byRace;
@@ -44,7 +43,6 @@ export async function generateMetadata({ params }) {
     positionSlug,
   );
   const slug = `elections/position/${loc.join('/')}`;
-  const stateName = shortToLongState[state.toUpperCase()];
 
   const {
     level,
@@ -55,7 +53,7 @@ export async function generateMetadata({ params }) {
   } = race || {};
   let locStr = locationName;
   if (level === 'local') {
-    locStr += ` ${stateName}`;
+    locStr += `${race.municipality}, ${race.state.toUpperCase()}`;
   }
   if (level === 'city') {
     locStr += ` City, ${race.state.toUpperCase()}`;

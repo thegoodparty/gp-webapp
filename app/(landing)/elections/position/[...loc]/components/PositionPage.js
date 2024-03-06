@@ -1,6 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 
-import { shortToLongState } from 'helpers/statesHelper';
 import Hero from './Hero';
 import PositionDetails from './PositionDetails';
 import CtaBanner from './CtaBanner';
@@ -13,10 +12,9 @@ import Explore from './Explore';
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props;
   const { level, state, locationName } = race;
-  const stateName = shortToLongState[state.toUpperCase()];
   let loc = locationName;
   if (level === 'local') {
-    loc += ` ${stateName}`;
+    loc += `${race.municipality}, ${race.state.toUpperCase()}`;
   }
   if (level === 'city') {
     loc += `, ${state.toUpperCase()}`;
