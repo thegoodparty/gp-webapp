@@ -18,7 +18,22 @@ export default function OfficeStep(props) {
   });
 
   const canSubmit = () => {
-    return !!state.ballotOffice || !!state.originalPosition;
+    if (step) {
+      return !!state.ballotOffice || !!state.originalPosition;
+    }
+    const orgPosition = campaign.details?.positionId;
+    const orgElection = campaign.details?.electionId;
+    const orgRace = campaign.details?.raceId;
+    const { position, election, id } = state.ballotOffice;
+    if (!position || !election) {
+      return false;
+    }
+
+    return !(
+      position?.id === orgPosition &&
+      election?.id === orgElection &&
+      id === orgRace
+    );
   };
 
   const calcTerm = (position) => {
@@ -100,7 +115,7 @@ export default function OfficeStep(props) {
         <div className={`${step ? 'fixed bottom-0 w-full bg-white py-4' : ''}`}>
           <div onClick={handleSave}>
             <PrimaryButton disabled={!canSubmit()} type="submit">
-              Next
+              {step ? 'Next' : 'Save'}
             </PrimaryButton>
           </div>
         </div>
