@@ -56,7 +56,7 @@ export default function RunForOfficeStep(props) {
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">
-        <H1>Are you planning to run for office?</H1>
+        <H1>Have you filled to run for office?</H1>
         <div className="w-full max-w-md">
           <div className="py-8 px-6 border-2 border-slate-200 rounded-lg mt-10">
             <RadioGroup
@@ -68,7 +68,7 @@ export default function RunForOfficeStep(props) {
               <FormControlLabel
                 value="no"
                 control={<Radio />}
-                label="No, just exploring"
+                label="Not yet"
               />
             </RadioGroup>
           </div>
