@@ -13,7 +13,8 @@ import libertarianLogo from '/public/images/parties-logos/libertarian-logo.png';
 import fwdLogo from '/public/images/parties-logos/fwd-logo.png';
 import greedLogo from '/public/images/parties-logos/green-logo.png';
 import reformLogo from '/public/images/parties-logos/reform-logo.png';
-import wfpLogo from '/public/images/parties-logos/wfp-logo.png';
+import demLogo from '/public/images/parties-logos/democratic-logo.png';
+import repLogo from '/public/images/parties-logos/republican-logo.png';
 import Image from 'next/image';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
@@ -21,20 +22,16 @@ import Modal from '@shared/utils/Modal';
 const parties = [
   {
     name: 'Independent',
-    label: (
-      <>
-        Independent /
-        <br />
-        Non-Partisan
-      </>
-    ),
+    label: 'Independent / Non-Partisan',
     logo: independentLogo,
+    wide: true,
   },
   { name: 'Libertarian Party', logo: libertarianLogo },
   { name: 'Forward Party', logo: fwdLogo },
   { name: 'Green Party', logo: greedLogo },
   { name: 'Reform Party', logo: reformLogo },
-  { name: 'Working Families Party', logo: wfpLogo },
+  { name: 'Democratic Party', logo: demLogo },
+  { name: 'Republican Party', logo: repLogo },
 ];
 
 const invalidOptions = [
@@ -196,8 +193,10 @@ export default function PartyStep(props) {
 
   const invalidOtherParty = () => {
     return (
-      state.otherParty !== '' &&
-      invalidOptions.includes(state.otherParty.toLowerCase())
+      state.party === 'Republican Party' ||
+      state.party === 'Democratic Party' ||
+      (state.otherParty !== '' &&
+        invalidOptions.includes(state.otherParty.toLowerCase()))
     );
   };
 
@@ -211,7 +210,10 @@ export default function PartyStep(props) {
         <div className="w-full max-w-md">
           <div className="grid grid-cols-12 gap-4">
             {parties.map((party) => (
-              <div key={party.name} className=" col-span-12 lg:col-span-6">
+              <div
+                key={party.name}
+                className={`col-span-12 ${party.wide ? '' : 'lg:col-span-6'}`}
+              >
                 <div
                   className={`border-2  rounded-lg p-6 flex flex-col items-center h-full group cursor-pointer hover:border-black transition-colors ${
                     party.name === state.party
