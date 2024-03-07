@@ -203,7 +203,10 @@ export default function PartyStep(props) {
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">
-        <H1>What&apos;s your political affiliation?</H1>
+        <H1>
+          What&apos;s your campaign&apos;s political affiliation? Also, did you
+          know you can for office in other districts? Learn more…
+        </H1>
         <Body1 className="mt-8 mb-10">
           We only support candidates outside of the Two Party system.
         </Body1>
