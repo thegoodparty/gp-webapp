@@ -531,6 +531,11 @@ const gpApi = {
       url: `${base}race/by-state`,
       method: 'GET',
     },
+    allStates: {
+      // for sitemaps
+      url: `${base}race/all-state`,
+      method: 'GET',
+    },
     byCounty: {
       url: `${base}race/by-county`,
       method: 'GET',
