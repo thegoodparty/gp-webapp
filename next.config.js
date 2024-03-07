@@ -31,6 +31,10 @@ const nextConfig = {
         source: '/sitemap.xml',
         destination: '/api/sitemap',
       },
+      // {
+      //   source: '/sitemap-main.xml',
+      //   destination: '/api/sitemap-main',
+      // },
       {
         source: '/news-feed.xml',
         destination: '/api/news-feed',
