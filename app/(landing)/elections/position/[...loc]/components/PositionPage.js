@@ -1,22 +1,22 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 
-import { shortToLongState } from 'helpers/statesHelper';
 import Hero from './Hero';
 import PositionDetails from './PositionDetails';
 import CtaBanner from './CtaBanner';
 import PositionFaqs from './PositionFaqs';
 import Tools from 'app/(landing)/elections/components/Tools';
 import LinksSection from 'app/(landing)/elections/shared/LinksSection';
-import { slugify } from 'helpers/articleHelper';
 import Guides from 'app/(landing)/elections/shared/Guides';
 import Explore from './Explore';
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props;
   const { level, state, locationName } = race;
-
   let loc = locationName;
-  if (level === 'city' || level === 'local') {
+  if (level === 'local') {
+    loc += `${race.municipality?.name}, ${race.state.toUpperCase()}`;
+  }
+  if (level === 'city') {
     loc += `, ${state.toUpperCase()}`;
   } else if (level === 'county') {
     loc += ` County, ${state.toUpperCase()}`;
