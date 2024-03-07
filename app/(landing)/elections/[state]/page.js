@@ -6,7 +6,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
-const fetchState = async (state) => {
+export const fetchState = async (state) => {
   const api = gpApi.race.byState;
   const payload = {
     state,

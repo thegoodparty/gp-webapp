@@ -6,7 +6,7 @@ import gpFetch from 'gpApi/gpFetch';
 import ElectionsCityPage from './components/ElectionsCityPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
-const fetchCity = async (state, county, city) => {
+export const fetchCity = async (state, county, city) => {
   const api = gpApi.race.byCity;
   const payload = {
     state,
