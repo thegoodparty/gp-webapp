@@ -9,11 +9,13 @@ import contentfulHelper from 'helpers/contentfulHelper';
 import Checkbox from '@shared/inputs/Checkbox';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
-import { FaLightbulb } from 'react-icons/fa';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { IoDocumentText } from 'react-icons/io5';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { FaChild } from 'react-icons/fa';
+import SuccessButton from '@shared/buttons/SuccessButton';
+import Body1 from '@shared/typography/Body1';
 
 async function launchCampaign() {
   try {
@@ -89,25 +91,19 @@ export default function PledgeStep({ campaign, pledge, step }) {
   return (
     <div>
       <H1 className="py-10 text-center">Good Party User Agreement</H1>
+      <Body1 className="text-center mb-10">
+        I order to use Good Party tools you must Accept each part of our user
+        agreement confirming that you will run an Independent, People Powered,
+        Anti-corruption campaign that adheres to our terms of service.
+      </Body1>
       {steps.map((step, index) => (
         <Fragment key={step}>
-          <div className="bg-gray-200 p-4 font-bold rounded mb-6 flex justify-between items-center">
-            <div className="flex items-center">
-              {step === '1' && <FaFlagUsa className="mr-2" />}
-              {step === '2' && <FaPeopleGroup className="mr-2" />}
-              {step === '3' && <FaLightbulb className="mr-2" />}
-              {step === '4' && <IoDocumentText className="mr-2" />}
-              <div>{pledge[`title${step}`]}</div>
-            </div>
-            <div className="">
-              I agree &nbsp; &nbsp;
-              <Checkbox
-                checked={state[`pledged${step}`]}
-                onChange={(e) =>
-                  onChangeField(`pledged${step}`, e.target.checked)
-                }
-              />
-            </div>
+          <div className="bg-gray-200 p-4 font-bold rounded mb-6 flex  items-center">
+            {step === '1' && <FaChild className="mr-2" />}
+            {step === '2' && <FaPeopleGroup className="mr-2" />}
+            {step === '3' && <FaFlagUsa className="mr-2" />}
+            {step === '4' && <IoDocumentText className="mr-2" />}
+            <div>{pledge[`title${step}`]}</div>
           </div>
           <div
             className={`px-6 pb-10 ${
@@ -154,13 +150,35 @@ export default function PledgeStep({ campaign, pledge, step }) {
                 </ul>
               )}
             </CmsContentWrapper>
+
+            <div className=" flex justify-center mt-8">
+              {state[`pledged${step}`] ? (
+                <div
+                  onClick={() => {
+                    onChangeField(`pledged${step}`, false);
+                  }}
+                >
+                  <SuccessButton>I Agree</SuccessButton>
+                </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    onChangeField(`pledged${step}`, true);
+                  }}
+                >
+                  <PrimaryButton>I Agree</PrimaryButton>
+                </div>
+              )}
+            </div>
           </div>
         </Fragment>
       ))}
-
-      <div className="flex justify-center mb-8" onClick={handleSave}>
+      <div className="flex justify-center pt-10 mb-4  border-t border-primary">
+        <Body1>I understand I am legally bound to this user agreement. </Body1>
+      </div>
+      <div className="flex justify-center mb-10" onClick={handleSave}>
         <PrimaryButton disabled={!canSave()} loading={loading}>
-          <div className="font-black">FINISH</div>
+          <div className="font-black">SUBMIT</div>
         </PrimaryButton>
       </div>
     </div>
