@@ -59,8 +59,7 @@ export default function AddCustomIssue(props) {
       updated.customIssues = [];
     }
     let { index } = findExisting();
-    console.log('undex', index);
-    if (index !== -1) {
+    if (index && index !== -1) {
       updated.customIssues[index] = {
         title,
         position,
