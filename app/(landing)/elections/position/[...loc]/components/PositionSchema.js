@@ -17,14 +17,18 @@ export default function PositionSchema({ race, loc }) {
     filingOfficeAddress,
     filingPhoneNumber,
     filingDateEnd,
+    municipality,
   } = race;
   let locStr = locationName;
+  if (level === 'local') {
+    locStr += `${municipality?.name}, ${state.toUpperCase()}`;
+  }
   if (level === 'city') {
-    locStr += ` City, ${race.state}`;
+    locStr += ` City, ${state}`;
   } else if (level === 'county') {
     locStr += ` County, ${race.state}`;
   } else if (level === 'state') {
-    locStr += ` ${race.state}`;
+    locStr += ` ${state}`;
   }
   const slug = `elections/position/${loc.join('/')}`;
   const url = `${appBase}/${slug}`;

@@ -10,8 +10,9 @@ export default function IssuesSelector(props) {
     updatePositionsCallback,
     candidatePositions,
     campaign,
+    startTab = 0,
   } = props;
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(startTab);
   const labels = [
     <H6 key="issue1">Issue One</H6>,
     <H6 key="issue2">Issue Two</H6>,

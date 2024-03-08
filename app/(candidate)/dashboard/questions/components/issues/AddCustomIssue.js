@@ -23,7 +23,7 @@ export default function AddCustomIssue(props) {
       }
       return { existingIssue, index };
     }
-    return {};
+    return { index };
   };
   let { existingIssue } = findExisting() || {};
 
@@ -59,7 +59,6 @@ export default function AddCustomIssue(props) {
       updated.customIssues = [];
     }
     let { index } = findExisting();
-    console.log('undex', index);
     if (index !== -1) {
       updated.customIssues[index] = {
         title,
@@ -73,7 +72,6 @@ export default function AddCustomIssue(props) {
         order,
       });
     }
-
     await updateCampaign(updated);
     await saveCallback(updated);
   };
