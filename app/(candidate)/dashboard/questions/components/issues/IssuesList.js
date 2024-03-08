@@ -104,6 +104,7 @@ export default function IssuesList(props) {
     if (savedPosition) {
       await deleteCandidatePosition(savedPosition.id);
     }
+
     setCampaign(updatedCampaign);
 
     nextCallback();
