@@ -13,9 +13,10 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { IoDocumentText } from 'react-icons/io5';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { FaChild } from 'react-icons/fa';
+import { FaCheck, FaChild } from 'react-icons/fa';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
+import InfoButton from '@shared/buttons/InfoButton';
 
 async function launchCampaign() {
   try {
@@ -88,6 +89,10 @@ export default function PledgeStep({ campaign, pledge, step }) {
 
   const steps = ['1', '2', '3', '4'];
 
+  const openChat = () => {
+    window.HubSpotConversations?.widget?.open();
+  };
+
   return (
     <div>
       <H1 className="py-10 text-center">Good Party User Agreement</H1>
@@ -158,7 +163,11 @@ export default function PledgeStep({ campaign, pledge, step }) {
                     onChangeField(`pledged${step}`, false);
                   }}
                 >
-                  <SuccessButton>I Agree</SuccessButton>
+                  <SuccessButton>
+                    <div className="flex items-center">
+                      <FaCheck /> <div className="ml-2">Agreed</div>
+                    </div>
+                  </SuccessButton>
                 </div>
               ) : (
                 <div
@@ -176,10 +185,15 @@ export default function PledgeStep({ campaign, pledge, step }) {
       <div className="flex justify-center pt-10 mb-4  border-t border-primary">
         <Body1>I understand I am legally bound to this user agreement. </Body1>
       </div>
-      <div className="flex justify-center mb-10" onClick={handleSave}>
-        <PrimaryButton disabled={!canSave()} loading={loading}>
-          <div className="font-black">SUBMIT</div>
-        </PrimaryButton>
+      <div className="flex justify-center mb-10">
+        <div onClick={openChat} className="mr-4">
+          <InfoButton>Ask a question</InfoButton>
+        </div>
+        <div onClick={handleSave}>
+          <PrimaryButton disabled={!canSave()} loading={loading}>
+            Submit
+          </PrimaryButton>
+        </div>
       </div>
     </div>
   );
