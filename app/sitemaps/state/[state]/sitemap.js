@@ -1,3 +1,10 @@
+/*
+note: on local (dev) enviroment the path is http://localhost:4000/sitemaps/state/ca/sitemap.xml/4
+on production the path is https://www.getelected.com/sitemaps/state/ca/sitemap/4.xml
+
+https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
+*/
+
 import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { flatStates } from 'helpers/statesHelper';
