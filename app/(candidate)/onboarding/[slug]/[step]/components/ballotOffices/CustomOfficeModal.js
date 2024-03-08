@@ -23,7 +23,7 @@ const fields = [
 
   {
     key: 'city',
-    label: 'City/Town',
+    label: 'City, Town or Country',
     type: 'text',
   },
 
