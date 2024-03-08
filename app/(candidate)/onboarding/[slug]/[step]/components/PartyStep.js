@@ -279,7 +279,7 @@ export default function PartyStep(props) {
             </div>
             <a href="/about">
               <PrimaryButton>
-                <div className="px-6 ">Got it</div>
+                <div className="px-6 ">Learn more</div>
               </PrimaryButton>
             </a>
           </div>
