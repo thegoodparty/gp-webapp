@@ -178,6 +178,10 @@ export default function AdminCandidatesPage(props) {
       accessor: 'waitingForP2v',
     },
     {
+      Header: 'Running',
+      accessor: 'knowRun',
+    },
+    {
       Header: 'Path to Victory',
       accessor: 'victoryPath',
       Cell: ({ row }) => {
@@ -397,10 +401,6 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Pledged',
       accessor: 'pledged',
-    },
-    {
-      Header: 'Running',
-      accessor: 'knowRun',
     },
   ]);
 
