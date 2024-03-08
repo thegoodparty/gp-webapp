@@ -18,6 +18,7 @@ import repLogo from '/public/images/parties-logos/republican-logo.png';
 import Image from 'next/image';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
+import InfoButton from '@shared/buttons/InfoButton';
 
 const parties = [
   {
@@ -203,10 +204,7 @@ export default function PartyStep(props) {
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">
-        <H1>
-          What&apos;s your campaign&apos;s political affiliation? Also, did you
-          know you can for office in other districts? Learn more…
-        </H1>
+        <H1>What&apos;s your campaign&apos;s political affiliation?</H1>
         <Body1 className="mt-8 mb-10">
           We only support candidates outside of the Two Party system.
         </Body1>
@@ -273,13 +271,17 @@ export default function PartyStep(props) {
             <br />
             outside of the Two Party system.
           </div>
-          <div
-            className="text-center mt-10"
-            onClick={() => setShowInvalidModal(false)}
-          >
-            <PrimaryButton>
-              <div className="px-6 ">Got it</div>
-            </PrimaryButton>
+          <div className="mt-10 flex items-center justify-center">
+            <div className="mr-4" onClick={() => setShowInvalidModal(false)}>
+              <InfoButton>
+                <div className="px-6 ">Okay</div>
+              </InfoButton>
+            </div>
+            <a href="/about">
+              <PrimaryButton>
+                <div className="px-6 ">Got it</div>
+              </PrimaryButton>
+            </a>
           </div>
         </Modal>
       )}
