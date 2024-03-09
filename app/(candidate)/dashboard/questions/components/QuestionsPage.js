@@ -70,6 +70,7 @@ export default function QuestionsPage(props) {
   //     const { occupation, funFact, pastExperience, issues, website, runningAgainst } =
   //       campaign.details;
   //   }
+
   const flow = flows[generate];
   let nextStep = 0;
   const combinedIssuedCount =
@@ -113,6 +114,8 @@ export default function QuestionsPage(props) {
     if (type === 'issues') {
       const { candidatePositions } = await loadCandidatePosition(campaign.slug);
       onChangeField('candidatePositions', candidatePositions);
+      const res = await getCampaign();
+      setCampaign(res.campaign);
     }
   };
   let nextKey;
@@ -125,6 +128,8 @@ export default function QuestionsPage(props) {
   const updatePositionsCallback = async () => {
     const { candidatePositions } = await loadCandidatePosition(campaign.slug);
     onChangeField('candidatePositions', candidatePositions);
+    const res = await getCampaign();
+    setCampaign(res.campaign);
   };
 
   return (

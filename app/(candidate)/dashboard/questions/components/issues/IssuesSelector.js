@@ -18,7 +18,7 @@ export default function IssuesSelector(props) {
     <H6 key="issue2">Issue Two</H6>,
     <H6 key="issue3">Issue Three</H6>,
   ];
-  const nextCallback = () => {
+  const nextCallback = async () => {
     if (tab < 2) {
       setTab(tab + 1);
       if (updatePositionsCallback) {
@@ -28,9 +28,9 @@ export default function IssuesSelector(props) {
       const combinedIssuedCount =
         (candidatePositions?.length || 0) +
         (campaign?.customIssues?.length || 0);
-      updatePositionsCallback();
+      await updatePositionsCallback();
       if (combinedIssuedCount > 2) {
-        completeCallback('issues');
+        await completeCallback('issues');
       }
     }
   };
