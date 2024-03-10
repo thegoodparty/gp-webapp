@@ -104,10 +104,8 @@ export default function CampaignTeamPage(props) {
     <DashboardLayout {...props}>
       <TitleSection
         title="Campaign Team"
-        subtitle="Keep in mind that in a small campaign team, individuals may take on
-        multiple roles, combining responsibilities to ensure efficient use of
-        resources. The specific roles and team composition will also depend on
-        the campaign's unique goals, strategy, and resources."
+        subtitle="An upstart independent campaign is scrappy. You start with friends and family and scale up from there. The following are key roles that larger, well-funded campaigns typically fill. They’re not required for success but the more you these roles you can fill with volunteers the better.  Also your AI-Campaign Manager is designed to save you time and money while doing the work of many of these roles. 
+        They're not required for success, but the more these roles you can fill with volunteers, the better."
         image="/images/dashboard/team.svg"
         imgWidth={160}
         imgHeight={120}
