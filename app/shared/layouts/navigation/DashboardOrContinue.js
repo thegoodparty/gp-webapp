@@ -7,15 +7,12 @@ export default function DashboardOrContinue({
   isDashboardPath,
   closeAll,
 }) {
-  const { status, slug, pathToVictory } = campaignStatus || {};
+  const { status, slug, step } = campaignStatus || {};
   if (!status) {
     return null;
   }
 
   let dashboardLink = '/dashboard';
-  // if (!pathToVictory || pathToVictory !== 'Complete') {
-  //   dashboardLink = '/dashboard/plan';
-  // }
 
   return (
     <div className="ml-4">
@@ -33,7 +30,7 @@ export default function DashboardOrContinue({
         </>
       ) : (
         <Link
-          href={`/onboarding/${slug}/1`}
+          href={`/onboarding/${slug}/${step || 1}`}
           onClick={closeAll}
           id="nav-continue-onboarding"
         >
