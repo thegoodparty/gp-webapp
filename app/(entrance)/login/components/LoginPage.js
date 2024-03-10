@@ -23,6 +23,7 @@ import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { fetchCampaignStatus } from '@shared/layouts/navigation/RightSide';
 
 export const validateZip = (zip) => {
   // let zipInt = parseInt(zip);
@@ -84,6 +85,11 @@ export default function LoginPage() {
           if (returnUrl) {
             deleteCookie('returnUrl');
             window.location.href = returnUrl;
+            return;
+          }
+          const status = await fetchCampaignStatus();
+          if (status?.status === 'candidate') {
+            window.location.href = '/dashboard';
             return;
           }
           window.location.href = '/';
