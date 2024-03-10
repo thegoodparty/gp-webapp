@@ -31,22 +31,29 @@ export default async function middleware(req) {
   //     { status: 301 },
   //   );
   // }
+  const { pathname } = req.nextUrl;
 
-  if (redirects[req.nextUrl.pathname]) {
+  if (redirects[pathname]) {
     return NextResponse.redirect(
-      `${req.nextUrl.origin}${redirects[req.nextUrl.pathname]}${
-        req.nextUrl.search || ''
-      }`,
+      `${req.nextUrl.origin}${redirects[pathname]}${req.nextUrl.search || ''}`,
       { status: 301 },
     );
   }
 
-  if (req.nextUrl.pathname === req.nextUrl.pathname.toLowerCase()) {
+  // match /candidate/firstName-lastName old candidate url
+  // /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/
+  const pattern = /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/;
+  const match = pathname.match(pattern);
+  if (match) {
+    return NextResponse.redirect(`${req.nextUrl.origin}`, { status: 301 });
+  }
+
+  if (pathname === pathname.toLowerCase()) {
     return NextResponse.next();
   }
 
   return NextResponse.redirect(
-    `${req.nextUrl.origin + req.nextUrl.pathname.toLowerCase()}`,
+    `${req.nextUrl.origin + pathname.toLowerCase()}`,
     { status: 301 },
   );
 
