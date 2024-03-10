@@ -42,12 +42,9 @@ export default function RightSideMobile() {
     setCampaignStatus(status);
   };
 
-  const { status, pathToVictory, slug } = campaignStatus || {};
+  const { status, step, slug } = campaignStatus || {};
 
   let dashboardLink = '/dashboard';
-  // if (!pathToVictory || pathToVictory !== 'Complete') {
-  //   dashboardLink = '/dashboard/plan';
-  // }
 
   const closeMenu = () => {
     setOpen(false);
@@ -170,7 +167,7 @@ export default function RightSideMobile() {
                       )}
                       {status === 'onboarding' && (
                         <Link
-                          href={`/onboarding/${slug}/1`}
+                          href={`/onboarding/${slug}/${step || 1}`}
                           id="mobile-nav-continue-onboarding"
                           onClick={closeMenu}
                         >
