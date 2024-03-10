@@ -3,17 +3,11 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { FaCirclePlus } from 'react-icons/fa6';
 
 export default function AddCustomIssue(props) {
-  const [testVariant, setTestVariant] = useState(false);
-  useEffect(() => {
-    if (window.gpBlogPopupTest) {
-      setTestVariant(true);
-    }
-  }, []);
   const { selectIssueCallback, saveCallback, campaign, order } = props;
   const findExisting = () => {
     let existingIssue;
