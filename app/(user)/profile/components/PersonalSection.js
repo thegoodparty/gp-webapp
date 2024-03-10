@@ -107,7 +107,7 @@ function PersonalSection() {
   }, []);
 
   useEffect(() => {
-    if (!state.name) {
+    if (!state.firstName) {
       setState(user);
     }
   }, [user]);
