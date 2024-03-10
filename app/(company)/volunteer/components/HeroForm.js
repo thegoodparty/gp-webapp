@@ -75,7 +75,7 @@ export default function HeroForm() {
       state.firstName !== '' &&
       state.lastName !== '' &&
       isValidEmail(state.email) &&
-      isValidPhone(state.phone)
+      (state.phone === '' || isValidPhone(state.phone))
     );
   };
 

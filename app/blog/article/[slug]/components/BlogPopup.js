@@ -9,7 +9,7 @@ import Modal from '@shared/utils/Modal';
 
 export default function BlogPopup() {
   const [showModal, setShowModal] = useState(false);
-  const [testVariant, setTestVariant] = useState(true);
+  const [testVariant, setTestVariant] = useState(false);
 
   const handleOpenModal = () => {
     setShowModal(true);
