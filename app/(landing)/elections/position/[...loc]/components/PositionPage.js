@@ -24,7 +24,7 @@ export default function PositionPage(props) {
   }
 
   const positionLink = (race) => {
-    return `/elections/${state}/${county ? `${county}/` : ''}${
+    return `/elections/position/${state}/${county ? `${county}/` : ''}${
       city ? `${city}/` : ''
     }${race.slug}`;
   };
