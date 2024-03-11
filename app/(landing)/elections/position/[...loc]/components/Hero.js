@@ -5,6 +5,7 @@ import Subtitle2 from '@shared/typography/Subtitle2';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import Link from 'next/link';
+import classNames from 'classnames';
 
 export default function Hero({
   state,
@@ -66,7 +67,16 @@ export default function Hero({
         </div>
       </div>
       <div className="pb-5">
-        <div className="flex justify-between items-end">
+        <div className={
+          classNames(
+            'flex',
+            'justify-between',
+            'md:items-end',
+            'md:flex-row',
+            'flex-col',
+            'items-start'
+          )
+        }>
           <h2 className="ml-2 font-semibold text-lg md:text-2xl">
             Election Date: {dateUsHelper(electionDate)}
             <div className="mt-2">
@@ -84,8 +94,18 @@ export default function Hero({
               />
             </div>
             <Link href="/run-for-office">
-              <div className="mt-2 justify-end flex items-center text-blue-500">
-                <div className="mr-2">Learn more</div>
+              <div className={
+                 classNames(
+                  'md:mt-2',
+                  'justify-end',
+                  'flex',
+                  'items-center',
+                  'text-blue-500',
+                  'ml-2',
+                  'mt-3'
+                )
+              }>
+                <div className="mr-2">Get free tools to run and win</div>
                 <FaArrowRightLong />
               </div>
             </Link>
