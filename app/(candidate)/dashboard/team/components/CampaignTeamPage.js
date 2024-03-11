@@ -104,7 +104,7 @@ export default function CampaignTeamPage(props) {
     <DashboardLayout {...props}>
       <TitleSection
         title="Campaign Team"
-        subtitle="An upstart independent campaign is scrappy. You start with friends and family and scale up from there. The following are key roles that larger, well-funded campaigns typically fill. They're not required for success, but the more of these roles you can fill with volunteers, the better.  Also your AI-Campaign Manager is designed to save you time and money while doing the work of many of these roles."
+        subtitle="An upstart independent campaign is scrappy. You start with friends and family and scale up from there. The following are key roles that larger, well-funded campaigns typically fill. They're not required for success, but the more of these roles you can fill with volunteers, the better.  Also, your AI-Campaign Manager is designed to save you time and money while doing the work of many of these roles."
         image="/images/dashboard/team.svg"
         imgWidth={160}
         imgHeight={120}
