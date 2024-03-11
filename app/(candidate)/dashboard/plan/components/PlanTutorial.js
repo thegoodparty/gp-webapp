@@ -86,6 +86,20 @@ export default function PlanTutorial({ expandKeyCallback }) {
       setCookie('tutorial-plan', true);
       router.push('/dashboard/questions?generate=why');
     }
+
+    setTimeout(() => {
+      if (nextStepIndex === 0) {
+        const backButton = document.querySelector('.introjs-prevbutton');
+        if (backButton) {
+          backButton.style.display = 'none';
+        }
+      } else {
+        const backButton = document.querySelector('.introjs-prevbutton');
+        if (backButton) {
+          backButton.style.display = 'inline-block';
+        }
+      }
+    }, 1); // Short delay to ensure DOM elements are updated
   };
 
   const handleBeforeChange = (nextStepIndex) => {
