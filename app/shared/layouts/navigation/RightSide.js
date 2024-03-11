@@ -72,13 +72,13 @@ export default function RightSide() {
 
   if (isOnboardingPath) {
     return (
-      <Link
+      <a
         href="/"
         id="nav-onboarding-finish-later"
         className="hidden lg:block relative z-[60]"
       >
         <InfoButton size="medium">Finish later</InfoButton>
-      </Link>
+      </a>
     );
   }
 

@@ -76,12 +76,24 @@ export default function ContentTutorial({ newContentCallback }) {
 
   const handleChange = (nextStepIndex) => {
     if (nextStepIndex === 2) {
-      console.log('step2');
       newContentCallback();
     }
   };
   const onBeforeChange = (nextStepIndex) => {
     stepsRef.current.updateStepElement(nextStepIndex);
+    setTimeout(() => {
+      if (nextStepIndex === 0) {
+        const backButton = document.querySelector('.introjs-prevbutton');
+        if (backButton) {
+          backButton.style.display = 'none';
+        }
+      } else {
+        const backButton = document.querySelector('.introjs-prevbutton');
+        if (backButton) {
+          backButton.style.display = 'inline-block';
+        }
+      }
+    }, 1); // Short delay to ensure DOM elements are updated
   };
 
   return (

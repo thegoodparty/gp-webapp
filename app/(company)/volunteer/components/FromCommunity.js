@@ -58,12 +58,14 @@ export default function FromCommunity() {
                     key={card.name}
                     className="md:flex bg-white rounded-lg shadow-md px-5 pt-7 pb-12 mb-7 relative"
                   >
-                    <Image
-                      src={card.image}
-                      alt={card.name}
-                      width={120}
-                      height={120}
-                    />
+                    <div className="w-28 h-28 md:w-48 md:h-48">
+                      <Image
+                        src={card.image}
+                        alt={card.name}
+                        width={192}
+                        height={192}
+                      />
+                    </div>
                     <div className=" mt-5 md:mt-0 md:pl-5">
                       <div className=" font-sfpro leading-relaxed">
                         {card.content}

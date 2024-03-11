@@ -97,6 +97,22 @@ export default function TrackerTutorial({ newContentCallback }) {
     setCookie('tutorial-tracker', true);
   };
 
+  const onBeforeChange = (nextStepIndex) => {
+    setTimeout(() => {
+      if (nextStepIndex === 0) {
+        const backButton = document.querySelector('.introjs-prevbutton');
+        if (backButton) {
+          backButton.style.display = 'none';
+        }
+      } else {
+        const backButton = document.querySelector('.introjs-prevbutton');
+        if (backButton) {
+          backButton.style.display = 'inline-block';
+        }
+      }
+    }, 1); // Short delay to ensure DOM elements are updated
+  };
+
   return (
     <div>
       <Steps
@@ -104,6 +120,7 @@ export default function TrackerTutorial({ newContentCallback }) {
         steps={steps}
         initialStep={0}
         onExit={onExit}
+        onBeforeChange={onBeforeChange}
         options={{
           showBullets: false,
           doneLabel: 'Finish',

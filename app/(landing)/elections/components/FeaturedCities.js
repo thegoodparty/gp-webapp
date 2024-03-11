@@ -1,9 +1,22 @@
+'use client';
 import WarningButton from '@shared/buttons/WarningButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import gpFetch from 'gpApi/gpFetch';
 import { slugify } from 'helpers/articleHelper';
+import { isbot } from 'isbot';
 import Image from 'next/image';
 import Link from 'next/link';
 import map from 'public/images/elections/map.png';
+import { useEffect } from 'react';
+
+const fetchLocFromIp = async () => {
+  const api = {
+    url: 'http://ip-api.com/json/',
+    method: 'GET',
+  };
+
+  return await gpFetch(api);
+};
 
 const cities = [
   {
@@ -21,6 +34,31 @@ const cities = [
   },
 ];
 export default function FeaturedCities() {
+  useEffect(() => {
+    console.log('in use effect');
+    getIpLocation();
+  }, []);
+
+  const getIpLocation = async () => {
+    try {
+      const isBot = isbot(navigator.userAgent);
+      if (!isBot) {
+        // const { region, city, countryCode } = await fetchLocFromIp();
+        const region = 'CA';
+        const city = 'Simi Valley';
+        const countryCode = 'US';
+        if (countryCode !== 'US') {
+          return;
+        }
+
+        console.log('region', region);
+        console.log('city', city);
+      }
+    } catch (error) {
+      console.log('error in getIpLocation', error);
+    }
+  };
+
   const link = (city) => {
     return `/elections/${city.state.toLowerCase()}/${city.county.toLowerCase()}/${city.name.toLowerCase()}`;
   };

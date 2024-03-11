@@ -5,25 +5,54 @@ import SignupForm from '@shared/inputs/SignupForm';
 import ModalCorner from '@shared/utils/ModalCorner';
 import Image from 'next/image';
 import { setCookie, getCookie } from 'helpers/cookieHelper.js';
+import Modal from '@shared/utils/Modal';
 
 export default function BlogPopup() {
   const [showModal, setShowModal] = useState(false);
+  const [testVariant, setTestVariant] = useState(false);
+
   const handleOpenModal = () => {
     setShowModal(true);
   };
 
   useEffect(() => {
     const cookie = getCookie('blogPopup');
+    const timerTest = setTimeout(() => {
+      if (window.gpBlogPopupTest) {
+        //this is setup as a js variable in blog test on VWO
+        setTestVariant(true);
+      }
+    }, 500);
     if (!cookie || cookie !== 'closed') {
       const timer = setTimeout(handleOpenModal, 30000);
       return () => {
         clearTimeout(timer);
+        clearTimeout(timerTest);
       };
     }
   }, []);
 
+  useEffect(() => {
+    if (window.gpBlogPopupTest) {
+      setTestVariant(true);
+    }
+  }, []);
+
+  const WrapperElement = (props) => {
+    if (testVariant) {
+      return (
+        <Modal {...props}>
+          <div className=" w-[90vw] max-w-[420px] mx-auto">
+            {props.children}
+          </div>
+        </Modal>
+      );
+    }
+    return <ModalCorner {...props}>{props.children}</ModalCorner>;
+  };
+
   return (
-    <ModalCorner
+    <WrapperElement
       open={showModal}
       closeCallback={() => {
         setShowModal(false);
@@ -54,6 +83,6 @@ export default function BlogPopup() {
           setCookie('blogPopup', 'closed', 1);
         }}
       />
-    </ModalCorner>
+    </WrapperElement>
   );
 }
