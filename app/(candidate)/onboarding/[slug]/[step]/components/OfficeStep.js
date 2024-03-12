@@ -56,6 +56,7 @@ export default function OfficeStep(props) {
         office: 'Other',
         otherOffice: position?.name,
         officeTermLength: calcTerm(position),
+        ballotLevel: position?.level,
       };
       if (!updated.goals) {
         updated.goals = {};
