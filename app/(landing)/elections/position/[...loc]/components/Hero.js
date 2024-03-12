@@ -67,16 +67,7 @@ export default function Hero({
         </div>
       </div>
       <div className="pb-5">
-        <div className={
-          classNames(
-            'flex',
-            'justify-between',
-            'md:items-end',
-            'md:flex-row',
-            'flex-col',
-            'items-start'
-          )
-        }>
+        <div className="flex justify-between md:items-end md:flex-row flex-col items-start">
           <h2 className="ml-2 font-semibold text-lg md:text-2xl">
             Election Date: {dateUsHelper(electionDate)}
             <div className="mt-2">
@@ -94,17 +85,7 @@ export default function Hero({
               />
             </div>
             <Link href="/run-for-office">
-              <div className={
-                 classNames(
-                  'md:mt-2',
-                  'justify-end',
-                  'flex',
-                  'items-center',
-                  'text-blue-500',
-                  'ml-2',
-                  'mt-3'
-                )
-              }>
+              <div className="md:mt-2 justify-end flex items-center text-blue-500 ml-2 mt-3">
                 <div className="mr-2">Get free tools to run and win</div>
                 <FaArrowRightLong />
               </div>
