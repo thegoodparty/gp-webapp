@@ -17,9 +17,10 @@ const redirects = {
   '/northcarolina': '/elections-results/nc',
   '/nc': '/elections-results/nc',
   '/run': '/run-for-office',
+  '/pricing': '/run-for-office#pricing-section',
 };
 
-const blockedIPs = ['142.198.200.33'];
+// const blockedIPs = ['142.198.200.33'];
 
 export default async function middleware(req) {
   // const { content } = await fetchRedirects();
