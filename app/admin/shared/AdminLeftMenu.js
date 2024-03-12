@@ -25,6 +25,10 @@ export const leftMenuItems = [
     label: 'AI Content',
     link: '/admin/ai-content',
   },
+  {
+    label: 'Misc Actions',
+    link: '/admin/misc-actions',
+  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {

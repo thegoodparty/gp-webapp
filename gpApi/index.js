@@ -393,6 +393,12 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    enhanceCandidates: {
+      url: `${base}admin/candidate-enhance`,
+      method: 'POST',
+      withAuth: true,
+    },
+
     deactivateCandidate: {
       url: `${base}admin/deactivate-candidate-by-campaign`,
       method: 'PUT',
