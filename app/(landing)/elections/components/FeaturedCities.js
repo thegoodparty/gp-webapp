@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 
 const fetchLocFromIp = async () => {
   const api = {
-    url: 'https://ip-api.com/json/',
+    url: 'https://ip-api.com/json/?key=c8O5omxoySWBzAi',
     method: 'GET',
   };
 
