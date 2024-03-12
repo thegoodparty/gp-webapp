@@ -548,6 +548,10 @@ const gpApi = {
       url: `${base}race`,
       method: 'GET',
     },
+    proximity: {
+      url: `${base}race/proximity-cities`,
+      method: 'GET',
+    },
   },
 
   jobs: {
