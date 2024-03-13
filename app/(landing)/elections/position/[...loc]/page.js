@@ -1,7 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import PositionPage from './components/PositionPage';
 import PositionSchema from './components/PositionSchema';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
@@ -85,7 +85,11 @@ export default async function Page({ params }) {
     positionSlug,
   );
   if (!race) {
-    return notFound();
+    redirect(
+      `/elections/${state}${county ? `/${county}` : ''}${
+        city ? `/${city}` : ''
+      }`,
+    );
   }
 
   const articleSlugs = [

@@ -85,7 +85,9 @@ export default async function Page({ params }) {
     params.county,
   );
 
-  console.log('races', races);
+  if (races?.length === 0) {
+    redirect(`/elections/${state}`);
+  }
 
   const childProps = {
     state,
