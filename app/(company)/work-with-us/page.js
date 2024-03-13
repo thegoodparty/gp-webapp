@@ -40,14 +40,13 @@ async function CareersWrapper() {
       <MaxWidth>
         <Hero />
       </MaxWidth>
-      <Suspense fallback={`Loading...`}>
-        <Values />
-      </Suspense>
       <MaxWidth>
+        {/* <LeverCareers /> */}
+        <AshbyCareers {...childProps} />
         <Suspense fallback={`Loading...`}>
-          {/* <LeverCareers /> */}
-          <AshbyCareers {...childProps} />
+          <Values />
         </Suspense>
+
         <Suspense fallback={`Loading...`}>
           <Why />
         </Suspense>
