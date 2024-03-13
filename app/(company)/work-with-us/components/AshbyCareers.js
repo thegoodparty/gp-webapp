@@ -5,6 +5,17 @@ import Link from 'next/link';
 import H2 from '@shared/typography/H2';
 
 function AshbyCareers({ jobs }) {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const queryParams = new URLSearchParams(window.location.search);
+      const jid = queryParams.get('ashby_jid');
+
+      if (jid) {
+        window.location.href = `/work-with-us/${jid}`;
+      }
+    }
+  }, [window]);
+
   return (
     <section className={styles.wrapper}>
       <H2 data-cy="opening-title">Current Openings</H2>
