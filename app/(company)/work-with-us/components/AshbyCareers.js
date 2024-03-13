@@ -14,7 +14,7 @@ function AshbyCareers({ jobs }) {
         window.location.href = `/work-with-us/${jid}`;
       }
     }
-  }, [window]);
+  }, []);
 
   return (
     <section className={styles.wrapper}>
