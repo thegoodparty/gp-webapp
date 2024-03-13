@@ -19,10 +19,10 @@ export default function CtaBanner({ race }) {
           </div>
           <div className=" col-span-12 md:col-span-6 lg:col-span-8">
             <div className="px-3">
-              <h3 className="font-medium text-3xl">
+              <h3 className="font-medium text-3xl" id="cta-header">
                 Running for {normalizedPositionName}?
               </h3>
-              <div className="mt-4 text-xl">
+              <div className="mt-4 text-xl" id="cta-body">
                 Explore free campaign tools and training.
               </div>
             </div>

@@ -8,6 +8,7 @@ import Tools from 'app/(landing)/elections/components/Tools';
 import LinksSection from 'app/(landing)/elections/shared/LinksSection';
 import Guides from 'app/(landing)/elections/shared/Guides';
 import Explore from './Explore';
+import VwoVariable from './VwoVariable';
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props;
@@ -52,6 +53,7 @@ export default function PositionPage(props) {
       </div>
       <Guides articles={articles} />
       <Explore />
+      <VwoVariable race={race} />
     </div>
   );
 }
