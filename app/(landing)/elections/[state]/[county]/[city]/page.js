@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionsCityPage from './components/ElectionsCityPage';
@@ -41,6 +41,10 @@ export default async function Page({ params }) {
   const { municipality, races } = await fetchCity(state, county, city);
   if (!municipality) {
     notFound();
+  }
+
+  if (races.length === 0) {
+    redirect(`/elections/${state}/${county}`);
   }
 
   const articleSlugs = [

@@ -5,6 +5,7 @@ import TitleSection from '../../shared/TitleSection';
 import ContentTutorial from './ContentTutorial';
 import MyContent from './MyContent';
 import { getCookie } from 'helpers/cookieHelper';
+import Image from 'next/image';
 
 export default function ContentPage(props) {
   const [forceOpenModal, setForceOpenModal] = useState(false);
@@ -17,7 +18,19 @@ export default function ContentPage(props) {
     <DashboardLayout {...props}>
       <TitleSection
         title="My Content"
-        subtitle="Good Party GPT can help you create high quality content for your campaign"
+        subtitle={
+          <div className="flex items-start">
+            <Image
+              className="mr-1 mt-0.5"
+              src="/images/heart-hologram.svg"
+              data-cy="logo"
+              width={18}
+              height={14}
+              alt="GOOD PARTY"
+              priority
+            /><span>AI can help you create high quality personalized content for your campaign in seconds.</span>
+          </div>
+        }
         image="/images/dashboard/content.svg"
         imgWidth={120}
         imgHeight={120}

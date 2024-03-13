@@ -21,7 +21,10 @@ const points2 = [
 
 export default function Pricing() {
   return (
-    <section className="bg-primary py-20 lg:py-28 text-white">
+    <section
+      className="bg-primary py-20 lg:py-28 text-white"
+      id="pricing-section"
+    >
       <MaxWidth>
         <h2 className="text-3xl lg:text-6xl font-semibold text-center">
           Affordable and accessible

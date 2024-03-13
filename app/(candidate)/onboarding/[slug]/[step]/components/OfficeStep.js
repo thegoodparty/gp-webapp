@@ -56,6 +56,7 @@ export default function OfficeStep(props) {
         office: 'Other',
         otherOffice: position?.name,
         officeTermLength: calcTerm(position),
+        ballotLevel: position?.level,
       };
       if (!updated.goals) {
         updated.goals = {};
@@ -114,6 +115,7 @@ export default function OfficeStep(props) {
             selectedOfficeCallback={handleBallotOffice}
             selectedOffice={selectedOffice}
             updateCallback={updateCallback}
+            step={step}
           />
         </div>
         <div className={`${step ? 'fixed bottom-0 w-full bg-white py-4' : ''}`}>

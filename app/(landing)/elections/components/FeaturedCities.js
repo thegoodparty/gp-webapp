@@ -1,39 +1,61 @@
 'use client';
 import WarningButton from '@shared/buttons/WarningButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { slugify } from 'helpers/articleHelper';
 import { isbot } from 'isbot';
 import Image from 'next/image';
 import Link from 'next/link';
 import map from 'public/images/elections/map.png';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const fetchLocFromIp = async () => {
   const api = {
-    url: 'http://ip-api.com/json/',
+    url: 'https://pro.ip-api.com/json/?fields=status,countryCode,region,city&key=c8O5omxoySWBzAi',
     method: 'GET',
   };
 
   return await gpFetch(api);
 };
 
-const cities = [
+async function fetchFeatured(city, state) {
+  try {
+    const api = gpApi.race.proximity;
+    const payload = {
+      city,
+      state,
+    };
+    return await gpFetch(api, payload, 3600);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
+const defaultCities = [
   {
     name: 'Los Angeles',
     state: 'CA',
-    county: 'Los Angeles',
+    slug: `ca/los-angeles/los-angeles`,
     openElections: 72,
   },
-  { name: 'Austin', state: 'Tx', county: 'Travis', openElections: 68 },
+  {
+    name: 'Austin',
+    state: 'Tx',
+    openElections: 68,
+    slug: 'tx/travis/austin',
+  },
   {
     name: 'San Diego',
     state: 'CA',
-    county: 'San Diego',
     openElections: 44,
+    slug: 'ca/san%20diego/san%20diego',
   },
 ];
 export default function FeaturedCities() {
+  const [featuredCities, setFeaturedCities] = useState(defaultCities);
+
   useEffect(() => {
     console.log('in use effect');
     getIpLocation();
@@ -43,12 +65,14 @@ export default function FeaturedCities() {
     try {
       const isBot = isbot(navigator.userAgent);
       if (!isBot) {
-        // const { region, city, countryCode } = await fetchLocFromIp();
-        const region = 'CA';
-        const city = 'Simi Valley';
-        const countryCode = 'US';
+        const { region, city, countryCode } = await fetchLocFromIp();
+
         if (countryCode !== 'US') {
           return;
+        }
+        const { cities } = await fetchFeatured(city, region);
+        if (cities && cities.length > 0) {
+          setFeaturedCities(cities);
         }
 
         console.log('region', region);
@@ -60,7 +84,7 @@ export default function FeaturedCities() {
   };
 
   const link = (city) => {
-    return `/elections/${city.state.toLowerCase()}/${city.county.toLowerCase()}/${city.name.toLowerCase()}`;
+    return `/elections/${city.slug}`;
   };
   return (
     <section>
@@ -82,7 +106,7 @@ export default function FeaturedCities() {
               Featured cities
             </h2>
             <div className="grid grid-cols-12 gap-4">
-              {cities.map((city) => (
+              {featuredCities.map((city) => (
                 <div
                   key={city.name}
                   className="col-span-12 md:col-span-4 text-center mb-10"

@@ -180,10 +180,7 @@ export default function CampaignFundingPage(props) {
       <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
         <H3>Let&apos;s get your finances in order</H3>
         <Body2 className="mt-2">
-          Setting up accounts and coming up with a plan to manage your money can
-          be daunting; we get it. That&apos;s why we&apos;ve broken down the
-          most important parts into easily manageable steps. Click into each
-          section to get started and learn more:
+          Our tools make it possible to run for office and serve without having to raise tons of money. But many people will want to show support for your campaign with money, so here is a checklist from our campaign experts to keep you organized and maximize your fundraising efficiency.
         </Body2>
 
         {fundingFields.map((section) => (
