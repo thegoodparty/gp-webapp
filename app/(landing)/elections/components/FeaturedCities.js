@@ -26,7 +26,7 @@ async function fetchFeatured(city, state) {
       city,
       state,
     };
-    return await gpFetch(api, payload, 10);
+    return await gpFetch(api, payload, 3600);
   } catch (e) {
     console.log('error', e);
     return false;
