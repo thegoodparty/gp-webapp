@@ -114,7 +114,7 @@ export default function NewContentFlow(props) {
         onClick={() => setShowModal(true)}
         id="new-content-btn"
       >
-        <PrimaryButton>+ New Content</PrimaryButton>
+        <PrimaryButton>+ Generate...</PrimaryButton>
       </div>
 
       <Modal closeCallback={closeModal} open={showModal}>
