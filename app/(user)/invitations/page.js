@@ -2,7 +2,6 @@ import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
 import InvitationsPage from './components/InvitationsPage';
-import { setCookie } from 'helpers/cookieHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
@@ -26,10 +25,6 @@ export const metadata = meta;
 
 export default async function Page() {
   const user = getServerUser();
-  if (!user) {
-    setCookie('returnUrl', '/invitations');
-    redirect('/login');
-  }
 
   const { invitations } = await fetchInvitations();
   const childProps = {

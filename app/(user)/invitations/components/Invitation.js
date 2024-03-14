@@ -2,7 +2,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H4 from '@shared/typography/H4';
-import { calcLocation } from 'app/candidate/[slug]/components/ProfileSection';
+import { calcLocation } from 'app/(landing)/election-results/[...params]/components/ElectionCandidate';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 

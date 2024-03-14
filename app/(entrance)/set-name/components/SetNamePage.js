@@ -10,6 +10,22 @@ import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import gpApi from 'gpApi';
+
+async function updateUser(updatedFields) {
+  try {
+    const api = gpApi.user.updateUser;
+    const payload = {
+      ...updatedFields,
+    };
+
+    return await gpFetch(api, payload);
+    // const { user } = response;
+  } catch (error) {
+    console.log('Error updating user', error);
+  }
+}
 
 export default function SetNamePage() {
   const [state, setState] = useState({
@@ -25,8 +41,19 @@ export default function SetNamePage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      setState({ ...state, processing: true });
-      await createCampaign(state.firstName, state.lastName);
+      const returnUrl = getCookie('returnUrl');
+      if (returnUrl) {
+        await updateUser({
+          firstName: state.firstName,
+          lastName: state.lastName,
+        });
+        deleteCookie('returnUrl');
+        window.location.href = returnUrl;
+        return;
+      } else {
+        setState({ ...state, processing: true });
+        await createCampaign(state.firstName, state.lastName);
+      }
     } else {
       snackbarState.set(() => {
         return {

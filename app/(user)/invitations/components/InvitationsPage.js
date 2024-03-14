@@ -3,9 +3,10 @@ import Body1 from '@shared/typography/Body1';
 import H3 from '@shared/typography/H3';
 
 import Invitation from './Invitation';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { setCookie } from 'helpers/cookieHelper';
 
 async function fetchInvitations() {
   try {
@@ -19,7 +20,14 @@ async function fetchInvitations() {
 }
 
 export default function InvitationsPage(props) {
+  const { user } = props;
   const [invitations, setInvitations] = useState(props.invitations);
+  useEffect(() => {
+    if (!user) {
+      setCookie('returnUrl', '/invitations');
+      window.location.href = '/login';
+    }
+  }, []);
 
   const reloadInvitations = async () => {
     const res = await fetchInvitations();

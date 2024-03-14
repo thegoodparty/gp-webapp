@@ -22,7 +22,9 @@ export default function VolunteersSection(props) {
           <div className="col-span-3 bg-slate-300 px-2 py-2">Role</div>
           {volunteers.map((volunteer) => (
             <Fragment key={volunteer.id}>
-              <div className="col-span-3 px-2 py-2">{volunteer.name}</div>
+              <div className="col-span-3 px-2 py-2">
+                {volunteer.firstName} {volunteer.lastName}
+              </div>
               <div className="col-span-3 px-2 py-2">
                 <a href={`mailto:volunteer.email`}>{volunteer.email}</a>
               </div>

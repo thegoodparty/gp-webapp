@@ -7,6 +7,7 @@ import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
 import InvitationSection from './InvitationSection';
 import VolunteersSection from './VolunteersSection';
+import { getUserCookie } from 'helpers/cookieHelper';
 
 const teamFields = [
   {
@@ -102,7 +103,7 @@ const teamFields = [
 ];
 
 export default function CampaignTeamPage(props) {
-  const { volunteers } = props;
+  const user = getUserCookie(true);
   return (
     <DashboardLayout {...props}>
       <TitleSection
@@ -113,8 +114,8 @@ export default function CampaignTeamPage(props) {
         imgHeight={120}
       />
 
-      <InvitationSection {...props} />
-      <VolunteersSection {...props} />
+      {user?.isAdmin && <InvitationSection {...props} />}
+      {user?.isAdmin && <VolunteersSection {...props} />}
       <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
         {teamFields.map((section) => (
           <div key={section.title}>
