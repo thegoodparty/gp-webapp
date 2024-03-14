@@ -156,6 +156,42 @@ const gpApi = {
       },
     },
 
+    volunteerInvitation: {
+      create: {
+        url: `${base}campaign/volunteer/invitation`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteer/invitations`,
+        method: 'GET',
+        withAuth: true,
+      },
+      listByUser: {
+        url: `${base}campaign/volunteer/invitations-by-user`,
+        method: 'GET',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/volunteer/invitation`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
+    campaignVolunteer: {
+      create: {
+        url: `${base}campaign/volunteer`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteers`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,

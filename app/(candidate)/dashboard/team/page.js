@@ -2,6 +2,21 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import CampaignTeamPage from './components/CampaignTeamPage';
+import gpApi from 'gpApi';
+import { getServerToken } from 'helpers/userServerHelper';
+import gpFetch from 'gpApi/gpFetch';
+
+async function loadVolunteers() {
+  try {
+    const api = gpApi.campaign.campaignVolunteer.list;
+
+    const token = getServerToken();
+    return await gpFetch(api, false, false, token);
+  } catch (e) {
+    console.log('error at loadVolunteers', e);
+    return {};
+  }
+}
 
 const meta = pageMetaData({
   title: 'Campaign Team | GOOD PARTY',
@@ -15,12 +30,13 @@ export default async function Page({ params, searchParams }) {
 
   const { campaign } = await fetchUserCampaign();
   const { candidateSlug } = campaign;
-  // const { candidate } = await fetchCandidate(candidateSlug);
+  const { volunteers } = await loadVolunteers();
 
   const childProps = {
     pathname: '/dashboard/team',
     candidateSlug,
     pathToVictory: campaign?.pathToVictory,
+    volunteers,
   };
 
   return <CampaignTeamPage {...childProps} />;
