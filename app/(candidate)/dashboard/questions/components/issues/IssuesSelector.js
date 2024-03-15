@@ -1,7 +1,7 @@
 'use client';
 import H6 from '@shared/typography/H6';
 import Tabs from '@shared/utils/Tabs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IssuesList from './IssuesList';
 export default function IssuesSelector(props) {
   const {
@@ -13,6 +13,23 @@ export default function IssuesSelector(props) {
     startTab = 0,
   } = props;
   const [tab, setTab] = useState(startTab);
+
+  const [panels, setPanels] = useState([]);
+
+  useEffect(() => {
+    const newPanels = [1, 2, 3].map((order) => (
+      <IssuesList
+        {...props}
+        campaign={campaign}
+        nextCallback={nextCallback}
+        order={order}
+        key={order}
+        saveButton={order === 3 && standaloneMode}
+      />
+    ));
+    setPanels(newPanels);
+  }, [campaign]);
+
   const labels = [
     <H6 key="issue1">Issue One</H6>,
     <H6 key="issue2">Issue Two</H6>,
@@ -35,15 +52,16 @@ export default function IssuesSelector(props) {
     }
   };
 
-  const panels = [1, 2, 3].map((order) => (
-    <IssuesList
-      {...props}
-      nextCallback={nextCallback}
-      order={order}
-      key={order}
-      saveButton={order === 3 && standaloneMode}
-    />
-  ));
+  // const panels = [1, 2, 3].map((order) => (
+  //   <IssuesList
+  //     {...props}
+  //     campaign={campaign}
+  //     nextCallback={nextCallback}
+  //     order={order}
+  //     key={order}
+  //     saveButton={order === 3 && standaloneMode}
+  //   />
+  // ));
 
   const changeTabCallback = (index) => {
     setTab(index);

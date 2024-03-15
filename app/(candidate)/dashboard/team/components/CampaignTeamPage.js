@@ -113,21 +113,29 @@ export default function CampaignTeamPage(props) {
         imgWidth={160}
         imgHeight={120}
       />
-
-      {user?.isAdmin && <InvitationSection {...props} />}
-      {user?.isAdmin && <VolunteersSection {...props} />}
-      <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
-        {teamFields.map((section) => (
-          <div key={section.title}>
-            <H3 className="mt-8 mb-7">{section.title}</H3>
-            {section.steps.map((step, index) => (
-              <ListItem key={step.title} title={step.title} number={index + 1}>
-                {step.description}
-              </ListItem>
-            ))}
-          </div>
-        ))}
-      </div>
+      {user?.isAdmin ? (
+        <>
+          <InvitationSection {...props} />
+          <VolunteersSection {...props} />
+        </>
+      ) : (
+        <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
+          {teamFields.map((section) => (
+            <div key={section.title}>
+              <H3 className="mt-8 mb-7">{section.title}</H3>
+              {section.steps.map((step, index) => (
+                <ListItem
+                  key={step.title}
+                  title={step.title}
+                  number={index + 1}
+                >
+                  {step.description}
+                </ListItem>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </DashboardLayout>
   );
 }
