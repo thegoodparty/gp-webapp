@@ -4,7 +4,7 @@ import candidateAccess from '../shared/candidateAccess';
 import DetailsPage from './components/DetailsPage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { getServerToken } from 'helpers/userServerHelper';
+import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { fetchIssues, loadCandidatePosition } from '../questions/page';
 
 export const fetchCandidate = async (slug) => {
@@ -37,21 +37,21 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
   const { campaign } = await fetchUserCampaign();
-  const { candidateSlug } = campaign;
   // const { candidate, candidatePositions } = await fetchCandidate(candidateSlug);
   // const { positions } = await fetchPositions();
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
   const { topIssues } = await fetchIssues();
+  const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/details',
-    candidateSlug,
     campaign,
     candidatePositions,
     // positions,
     // candidate,
     topIssues,
     pathToVictory: campaign?.pathToVictory,
+    user,
   };
 
   return <DetailsPage {...childProps} />;

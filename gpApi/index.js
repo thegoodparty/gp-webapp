@@ -606,6 +606,24 @@ const gpApi = {
       method: 'GET',
     },
   },
+
+  doorKnocking: {
+    create: {
+      url: `${base}campaign/door-knocking`,
+      method: 'POST',
+      withAuth: true,
+    },
+    list: {
+      url: `${base}campaign/door-knockings`,
+      method: 'GET',
+      withAuth: true,
+    },
+    get: {
+      url: `${base}campaign/door-knocking`,
+      method: 'GET',
+      withAuth: true,
+    },
+  },
 };
 
 export default gpApi;

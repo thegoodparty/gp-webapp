@@ -6,6 +6,7 @@ import candidateAccess from '../shared/candidateAccess';
 import ContentPage from './components/ContentPage';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { loadCandidatePosition } from '../questions/page';
+import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
   title: 'Campaign Content | GOOD PARTY',
@@ -30,6 +31,7 @@ export default async function Page({ params, searchParams }) {
     .content;
 
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+  const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/content',
@@ -40,6 +42,7 @@ export default async function Page({ params, searchParams }) {
     pathToVictory: campaign?.pathToVictory,
     requiresQuestions,
     candidatePositions,
+    user,
   };
 
   return <ContentPage {...childProps} />;

@@ -4,10 +4,14 @@ import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
-import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
+import {
+  RiBook2Line,
+  RiTeamLine,
+  RiUserHeartLine,
+  RiDoorOpenLine,
+} from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 
-// ok.
 let pages = [
   {
     label: 'Campaign Tracker',
@@ -63,14 +67,21 @@ let pages = [
 export default function DashboardMenu({
   pathname,
   toggleCallback,
-  candidateSlug,
-  pathToVictory,
   mobileMode,
+  user,
 }) {
   const handleLogOut = () => {
     deleteUserCookies();
     window.location.replace('/');
   };
+  if (user?.isAdmin && pages.length === 8) {
+    pages.splice(5, 0, {
+      label: 'Door Knocking',
+      icon: <RiDoorOpenLine />,
+      link: '/dashboard/door-knocking/main',
+      id: 'door-knocking-dashboard',
+    });
+  }
 
   return (
     <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">

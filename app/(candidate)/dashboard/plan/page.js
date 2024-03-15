@@ -4,6 +4,7 @@ import candidateAccess from '../shared/candidateAccess';
 import CampaignPlanPage from './components/CampaignPlanPage';
 import { fetchCandidate } from '../details/page';
 import { loadCandidatePosition } from '../questions/page';
+import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
   title: 'Campaign Plan | GOOD PARTY',
@@ -16,17 +17,20 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
   const { campaign } = await fetchUserCampaign();
-  const { candidateSlug } = campaign;
-  const { candidate } = await fetchCandidate(candidateSlug);
+  // const { candidateSlug } = campaign;
+  // const { candidate } = await fetchCandidate(candidateSlug);
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+
+  const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/plan',
     campaign,
-    candidate,
-    candidateSlug,
+    // candidate,
+    // candidateSlug,
     pathToVictory: campaign?.pathToVictory,
     candidatePositions,
+    user,
   };
 
   return <CampaignPlanPage {...childProps} />;

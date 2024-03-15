@@ -3,6 +3,7 @@ import { fetchContentByKey } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import ResourcesPage from './components/ResourcesPage';
+import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
   title: 'Campaign Resources | GOOD PARTY',
@@ -17,15 +18,12 @@ export default async function Page({ params, searchParams }) {
   const { content } = await fetchContentByKey('blogArticles');
   const articlesBySlug = mapArticlesBySlug(content);
 
-  const { campaign } = await fetchUserCampaign();
-  const { candidateSlug } = campaign;
-  // const { candidate } = await fetchCandidate(candidateSlug);
+  const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/resources',
     articlesBySlug,
-    candidateSlug,
-    pathToVictory: campaign?.pathToVictory,
+    user,
   };
 
   return <ResourcesPage {...childProps} />;
