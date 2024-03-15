@@ -1,20 +1,15 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import Tooltip from '@mui/material/Tooltip';
-import Table from '@shared/utils/Table';
-import { useMemo, useState } from 'react';
-import { formatToPhone } from 'helpers/numberHelper';
-import gpApi, { isProd } from 'gpApi';
+import React, { useState } from 'react';
+import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { FaTrash } from 'react-icons/fa';
-
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import TextField from '@shared/inputs/TextField';
 import TopIssuesList from './TopIssuesList';
+import { SVGIconChooser } from '@shared/buttons/SVGIconChooser';
 
 export const createTopIssue = async (name) => {
   const api = gpApi.admin.topIssues.create;
@@ -24,9 +19,9 @@ export const createTopIssue = async (name) => {
 
 export default function AdminTopIssuesPage(props) {
   const snackbarState = useHookstate(globalSnackbarState);
-
-  const [addNewIssue, setAddNewIssue] = useState(false);
+  const [addNewIssue, setAddNewIssue] = useState(true);
   const [topIssueName, setTopIssueName] = useState('');
+  const [svgData, setSvgData] = useState(null)
   const handleCreate = async () => {
     snackbarState.set(() => {
       return {
@@ -54,25 +49,26 @@ export default function AdminTopIssuesPage(props) {
         </BlackButtonClient>
 
         {addNewIssue && (
-          <div>
-            <br />
-            <br />
+          <div  className="flex mt-4 items-center" >
+            <SVGIconChooser {...{
+              svgData,
+              setSvgData
+            }} />
             <TextField
+              className="mx-4"
               fullWidth
               primary
               label="Top Issue Name"
               value={topIssueName}
               onChange={(e) => setTopIssueName(e.target.value)}
             />
-            <br />
-            <br />
             <div className="text-right">
               <BlackButtonClient
                 disabled={topIssueName === ''}
                 onClick={handleCreate}
                 className="font-black"
               >
-                <strong>Save New Top Issue</strong>
+                <strong>Save</strong>
               </BlackButtonClient>
             </div>
           </div>
