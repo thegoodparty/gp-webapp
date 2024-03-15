@@ -18,15 +18,9 @@ export const SVGIconChooser = ({
   };
 
   const handleFileInputOnChange = e => {
-    console.log(`handleFileUpload =>`, e);
     const file = e.target.files[0];
-    console.log(`file =>`, file);
     const reader = new FileReader();
-    reader.onloadend = e => {
-      console.log(`reader.result =>`, reader.result);
-      setSvgData(reader.result);
-    };
-
+    reader.onloadend = () => setSvgData(reader.result);
     reader.readAsText(file);
   };
 
