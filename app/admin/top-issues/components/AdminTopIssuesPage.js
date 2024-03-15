@@ -11,9 +11,14 @@ import TextField from '@shared/inputs/TextField';
 import TopIssuesList from './TopIssuesList';
 import { SVGIconChooser } from '@shared/buttons/SVGIconChooser';
 
-export const createTopIssue = async (name) => {
+export const createTopIssue = async (name, icon) => {
   const api = gpApi.admin.topIssues.create;
-  const payload = { name };
+  const payload = {
+    name,
+    ...(
+      icon ? {icon} : {}
+    )
+  };
   return await gpFetch(api, payload);
 };
 
@@ -30,7 +35,7 @@ export default function AdminTopIssuesPage(props) {
         isError: false,
       };
     });
-    await createTopIssue(topIssueName);
+    await createTopIssue(topIssueName, svgData);
     setAddNewIssue(false);
     setTopIssueName('');
     window.location.reload();
