@@ -32,10 +32,13 @@ async function rerunP2V(slug) {
 
 export default function VoterFileSection(props) {
   const { campaign } = props;
+  const [processing, setProcessing] = useState(false);
 
   const snackbarState = useHookstate(globalSnackbarState);
 
   const handlePurchase = async () => {
+    if (processing) return;
+    setProcessing(true);
     const response = await purchaseVoterFile(campaign.slug);
     if (response) {
       snackbarState.set(() => {
@@ -55,6 +58,7 @@ export default function VoterFileSection(props) {
           isError: true,
         };
       });
+      setProcessing(false);
     }
   };
 
@@ -70,6 +74,8 @@ export default function VoterFileSection(props) {
   }
 
   const handleRerun = async () => {
+    if (processing) return;
+    setProcessing(true);
     const response = await rerunP2V(campaign.slug);
     if (response) {
       snackbarState.set(() => {
@@ -89,6 +95,7 @@ export default function VoterFileSection(props) {
           isError: true,
         };
       });
+      setProcessing(false);
     }
   };
 
@@ -107,7 +114,9 @@ export default function VoterFileSection(props) {
             </div>
           )}
           <div className="my-4" onClick={handleRerun}>
-            <SuccessButton>Rerun Path to Victory</SuccessButton>
+            <SuccessButton disabled={processing}>
+              Rerun Path to Victory
+            </SuccessButton>
           </div>
         </div>
       )}
@@ -115,7 +124,9 @@ export default function VoterFileSection(props) {
         <div>
           <div className="flex items-center mt-4">
             <div onClick={handlePurchase}>
-              <SuccessButton>Purchase Voter File</SuccessButton>
+              <SuccessButton disabled={processing}>
+                Purchase Voter File
+              </SuccessButton>
             </div>
           </div>
           <Body1 className="mt-4">

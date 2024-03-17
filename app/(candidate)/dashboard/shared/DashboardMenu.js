@@ -75,7 +75,10 @@ export default function DashboardMenu({
     deleteUserCookies();
     window.location.replace('/');
   };
-  if (user?.isAdmin && pages.length === 8) {
+  if (user?.isAdmin && pages.length === 8 && campaign?.hasVoterFile) {
+    pages[4].link = '/dashboard/voter-records';
+    pages[4].id = 'vote-records-dashboard';
+
     pages.splice(5, 0, {
       label: 'Door Knocking',
       icon: <RiDoorOpenLine />,
@@ -83,9 +86,7 @@ export default function DashboardMenu({
       id: 'door-knocking-dashboard',
     });
   }
-  if (campaign?.hasVoterFile) {
-    pages[4].link = '/dashboard/voter-records';
-  }
+
   return (
     <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
       {pages.map((page) => (
