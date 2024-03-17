@@ -8,6 +8,7 @@ export default function DashboardLayout({
   candidateSlug,
   pathToVictory,
   user,
+  campaign,
 }) {
   return (
     <>
@@ -21,6 +22,7 @@ export default function DashboardLayout({
             candidateSlug={candidateSlug}
             pathToVictory={pathToVictory}
             user={user}
+            campaign={campaign}
           />
         </div>
         <main className="lg:ml-8 flex-1">{children}</main>

@@ -48,6 +48,7 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
             toggleCallback={toggleCallback}
             candidateSlug={slug}
             pathToVictory={campaign ? campaign.pathToVictory : false}
+            campaign={campaign}
           />
         </div>
       )}

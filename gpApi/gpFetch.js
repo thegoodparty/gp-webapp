@@ -1,6 +1,13 @@
 import { getCookie, setCookie } from '/helpers/cookieHelper';
 
-async function gpFetch(endpoint, data, revalidate, token, isFormData = false) {
+async function gpFetch(
+  endpoint,
+  data,
+  revalidate,
+  token,
+  isFormData = false,
+  nonJSON = false,
+) {
   let { url, method, withAuth } = endpoint;
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
@@ -27,7 +34,7 @@ async function gpFetch(endpoint, data, revalidate, token, isFormData = false) {
 
   const requestOptions = headersOptions(body, endpoint.method, autoToken);
 
-  return await fetchCall(url, requestOptions, revalidate);
+  return await fetchCall(url, requestOptions, revalidate, nonJSON);
 }
 
 export default gpFetch;
@@ -50,7 +57,7 @@ function headersOptions(body, method = 'GET', token) {
   };
 }
 
-async function fetchCall(url, options = {}, revalidate) {
+async function fetchCall(url, options = {}, revalidate, nonJSON) {
   if (options.method === 'GET') {
     delete options.body;
   }
@@ -59,6 +66,9 @@ async function fetchCall(url, options = {}, revalidate) {
     res = await fetch(url, { ...options, next: { revalidate } });
   } else {
     res = await fetch(url, { ...options, cache: 'no-store' });
+  }
+  if (nonJSON) {
+    return res;
   }
   try {
     let jsonRes = res.json();

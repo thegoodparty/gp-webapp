@@ -69,6 +69,7 @@ export default function DashboardMenu({
   toggleCallback,
   mobileMode,
   user,
+  campaign,
 }) {
   const handleLogOut = () => {
     deleteUserCookies();
@@ -82,7 +83,9 @@ export default function DashboardMenu({
       id: 'door-knocking-dashboard',
     });
   }
-
+  if (campaign?.hasVoterFile) {
+    pages[4].link = '/dashboard/voter-records';
+  }
   return (
     <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
       {pages.map((page) => (
