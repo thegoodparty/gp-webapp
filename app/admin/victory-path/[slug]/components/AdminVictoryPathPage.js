@@ -18,6 +18,10 @@ import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Checkbox from '@shared/inputs/Checkbox';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import SuccessButton from '@shared/buttons/SuccessButton';
+import Body1 from '@shared/typography/Body1';
+import VoterFileSection from './VoterFileSection';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -212,6 +216,7 @@ export default function AdminVictoryPathPage(props) {
             <br />
             Name: <strong>{campaign?.name || 'N/A'} </strong>.
           </H2>
+          {!notNeeded && <VoterFileSection campaign={campaign} />}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}

@@ -429,6 +429,7 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+
     enhanceCandidates: {
       url: `${base}admin/candidate-enhance`,
       method: 'POST',
@@ -621,6 +622,18 @@ const gpApi = {
     get: {
       url: `${base}campaign/door-knocking`,
       method: 'GET',
+      withAuth: true,
+    },
+  },
+  voterData: {
+    purchaseVoterFile: {
+      url: `${base}voter-data/voter-file`, //admin
+      method: 'POST',
+      withAuth: true,
+    },
+    pathToVictory: {
+      url: `${base}voter-data/path-to-victory`, //admin
+      method: 'POST',
       withAuth: true,
     },
   },
