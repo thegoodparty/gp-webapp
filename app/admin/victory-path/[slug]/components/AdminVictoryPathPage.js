@@ -214,7 +214,12 @@ export default function AdminVictoryPathPage(props) {
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
             <br />
-            Name: <strong>{campaign?.name || 'N/A'} </strong>.
+            Name:{' '}
+            <strong>
+              {campaign?.details?.firstName || ''}{' '}
+              {campaign?.details?.lastName || ''}
+            </strong>
+            .
           </H2>
           {!notNeeded && <VoterFileSection campaign={campaign} />}
           <H3 className="mt-12 mb-6 flex items-center">
