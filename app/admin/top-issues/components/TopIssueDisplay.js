@@ -12,6 +12,12 @@ import IconButton from '@mui/material/IconButton';
 import { updateTopIssue } from './TopIssuesList';
 import { useTopIssues } from './UseTopIssuesContext';
 
+const insertItemInArray = (arr, item, placement) => [
+  ...arr.slice(0, placement),
+  item,
+  ...arr.slice(placement + 1)
+]
+
 export const TopIssueDisplay = ({
   issue
 }) => {
@@ -39,21 +45,13 @@ export const TopIssueDisplay = ({
       name: editTopIssueName,
       icon: editTopIssueIcon,
     };
-    const { icon } = await updateTopIssue({
-      ...issue,
-      ...updateIssue,
-    });
+    await updateTopIssue(updateIssue);
     const issueIndx = topIssues.findIndex(({ id }) => id === issue.id);
-    setTopIssues(
-      [
-        ...topIssues.slice(0, issueIndx),
-        {
-          ...updateIssue,
-          ...(icon ? { icon } : {}),
-        },
-        ...topIssues.slice(issueIndx + 1),
-      ],
-    );
+    setTopIssues(insertItemInArray(
+      topIssues,
+      updateIssue,
+      issueIndx
+    ));
     handleClearIssueEdit();
   };
 

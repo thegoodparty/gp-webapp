@@ -1,3 +1,4 @@
+'use client'
 import React, { useRef, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
