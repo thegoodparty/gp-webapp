@@ -33,8 +33,6 @@ export default async function Page({ params, searchParams }) {
 
   const { dkCampaigns } = await fetchDkCampaigns();
 
-  console.log('dkCampaigns', dkCampaigns);
-
   const childProps = {
     pathname: '/dashboard/door-knocking',
     user,
