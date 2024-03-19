@@ -40,6 +40,7 @@ export default function AdminCandidatesPage(props) {
       'slug',
       'firstName',
       'lastName',
+      'userName',
       'launched',
       'lastVisited',
       'party',
@@ -61,6 +62,8 @@ export default function AdminCandidatesPage(props) {
       'digital',
       'aiDocsCreated',
       'waitingForP2v',
+      'pledged',
+      'knowRun',
     ],
   ];
 
@@ -290,10 +293,8 @@ export default function AdminCandidatesPage(props) {
       Header: 'Last Visit',
       accessor: 'lastVisited',
       sortDescFirst: true,
-      sortType: (rowA, rowB) =>  dateColumnSort(
-        rowA.original.lastVisited,
-        rowB.original.lastVisited
-      ),
+      sortType: (rowA, rowB) =>
+        dateColumnSort(rowA.original.lastVisited, rowB.original.lastVisited),
       Cell: ({ row }) => {
         return row.original.lastVisited
           ? dateWithTime(row.original.lastVisited)
@@ -352,10 +353,8 @@ export default function AdminCandidatesPage(props) {
           ? new Date(data.electionDate)
           : new Date('1970-01-01'),
       sortDescFirst: true,
-      sortType: (rowA, rowB) => dateColumnSort(
-        rowA.original.electionDate,
-        rowB.original.electionDate
-      ),
+      sortType: (rowA, rowB) =>
+        dateColumnSort(rowA.original.electionDate, rowB.original.electionDate),
       Cell: ({ row }) => {
         return dateUsHelper(row.original.electionDate);
       },
