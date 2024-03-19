@@ -32,55 +32,50 @@ export const SVGIconChooser = ({
   };
 
   return <div>
-    <div {...{
-      onMouseEnter: () => setButtonHover(true),
-      onMouseLeave: () => setButtonHover(false),
-      className: `relative block min-w-[2.5rem] min-h-[2.5rem]`,
-    }}>
+    <div
+      onMouseEnter={() => setButtonHover(true)}
+      onMouseLeave={() => setButtonHover(false)}
+      className="relative block min-w-[2.5rem] min-h-[2.5rem]">
       {
         svgData && (
           svgData.startsWith('http') ?
-            <Image {...{
-              height: 40,
-              width: 40,
-              src: svgData
-            }} /> :
-          <DynamicSVGIcon {...{
-            svgData,
-            className: buttonWrapHover ? ' opacity-40' : ''
-          }} />
+            <Image
+              height={40}
+              width={40}
+              src={svgData}
+            /> :
+            <DynamicSVGIcon
+              svgData={svgData}
+              className={buttonWrapHover ? 'opacity-40' : ''}
+            />
         )
       }
-      <Tooltip {...{
-        title: `${svgData ? 'Change' : 'Upload an'} SVG icon`,
-        placement: 'top',
-      }}>
-        <IconButton {...{
-          className: `absolute z-10 left-0 top-0${
-            svgData ?
-              ' opacity-0 hover:opacity-100' : ''
-          }`,
-          onClick: handleUploadSvgClick,
-        }}>
-          <PiUploadSimpleBold {...{
-            className: 'text-black',
-          }} />
+      <Tooltip
+        title={`${svgData ? 'Change' : 'Upload an'} SVG icon`}
+        placement="top"
+      >
+        <IconButton
+          className={`absolute z-10 left-0 top-0${
+            svgData ? ' opacity-0 hover:opacity-100' : ''
+          }`}
+          onClick={handleUploadSvgClick} >
+          <PiUploadSimpleBold
+            className="text-black" />
         </IconButton>
       </Tooltip>
-      <input {...{
-        className: 'hidden',
-        ref: fileInputRef,
-        type: 'file',
-        accept: '.svg',
-        onChange: handleFileInputOnChange,
-      }} />
+      <input
+        className="hidden"
+        ref={fileInputRef}
+        type="file"
+        accept=".svg"
+        onChange={handleFileInputOnChange} />
     </div>
     {
-      svgData && <Link {...{
-        className: 'text-xs',
-        href: '#',
-        onClick: handleRemoveClick,
-      }}>Remove</Link>
+      svgData && <Link
+        className="text-xs"
+        href="#"
+        onClick={handleRemoveClick}
+      >Remove</Link>
     }
   </div>;
 };

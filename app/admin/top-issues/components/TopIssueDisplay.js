@@ -59,49 +59,44 @@ export const TopIssueDisplay = ({
 
   return editTopIssueId === issue.id ?
     <>
-      {
-        <SVGIconChooser {...{
-          svgData: editTopIssueIcon,
-          setSvgData: data => setEditTopIssueIcon(data),
-        }} />
-      }
-      <TextField {...{
-        className: 'mx-2',
-        fullWidth: true,
-        primary: true,
-        size: 'small',
-        label: 'Top Issue Name',
-        value: editTopIssueName,
-        onChange: (e) => setEditTopIssueName(e.target.value),
-      }} />
-      <ButtonGroup {...{
-        className: 'mr-2',
-        variant: 'outlined',
-      }}>
-        <Button {...{
-          onClick: handleTopIssueUpdate(issue),
-        }}>
+      <SVGIconChooser
+        svgData={editTopIssueIcon}
+        setSvgData={data => setEditTopIssueIcon(data)}
+      />
+      <TextField
+        className='mx-2'
+        fullWidth={true}
+        primary={true}
+        size='small'
+        label='Top Issue Name'
+        value={editTopIssueName}
+        onChange={(e) => setEditTopIssueName(e.target.value)}
+      />
+      <ButtonGroup
+        className='mr-2'
+        variant='outlined'
+      >
+        <Button onClick={handleTopIssueUpdate(issue)}>
           <FaCheck /> Save
         </Button>
-        <Button {...{
-          onClick: handleClearIssueEdit,
-        }}>
+        <Button onClick={handleClearIssueEdit}>
           <FaXmark /> Cancel
         </Button>
       </ButtonGroup>
-    </> : <>
-      {
-        issue.icon && <Image {...{
-          width: 40,
-          height: 40,
-          src: issue.icon,
-        }} />
+    </> :
+    <>
+      {issue.icon &&
+        <Image
+          width={40}
+          height={40}
+          src={issue.icon}
+        />
       }
       <strong>&nbsp; {issue.name}</strong>
-      <IconButton {...{
-        size: 'small',
-        onClick: handleIssueEdit(issue),
-      }} size="small">
+      <IconButton
+        size='small'
+        onClick={handleIssueEdit(issue)}
+      >
         <FaEdit />
       </IconButton>
     </>;
