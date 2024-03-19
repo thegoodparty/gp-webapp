@@ -14,8 +14,8 @@ import { useState } from 'react';
 async function createDkCampaign(
   name,
   type,
-  housesPerRoute,
-  minutesPerHouse,
+  minHousesPerRoute,
+  maxHousesPerRoute,
   startDate,
   endDate,
 ) {
@@ -25,8 +25,8 @@ async function createDkCampaign(
     const payload = {
       name,
       type,
-      housesPerRoute,
-      minutesPerHouse,
+      minHousesPerRoute,
+      maxHousesPerRoute,
       startDate,
       endDate,
     };
@@ -55,19 +55,20 @@ const fields = [
     ],
   },
   {
-    key: 'housesPerRoute',
-    label: 'Approx. # Of Houses Per Route',
+    key: 'minHousesPerRoute',
+    label: 'Minimum Houses Per Route',
     type: 'number',
-    placeholder: '100 houses',
+    placeholder: '10 houses',
     cols: 6,
   },
   {
-    key: 'minutesAtHouse',
-    label: 'Approx. Minutes @ Each House',
+    key: 'maxHousesPerRoute',
+    label: 'Maximum Houses Per Route (max - 100)',
     type: 'number',
-    placeholder: '10 minutes',
+    placeholder: '30 houses',
     cols: 6,
   },
+
   {
     key: 'startDate',
     label: 'Start Date',
@@ -89,8 +90,8 @@ export default function NoCampaign(props) {
   const [state, setState] = useState({
     campaignName: '',
     campaignType: '',
-    housesPerRoute: '',
-    minutesAtHouse: '',
+    minHousesPerRoute: '',
+    maxHousesPerRoute: '',
     startDate: '',
     endDate: '',
   });
@@ -111,7 +112,10 @@ export default function NoCampaign(props) {
     } catch (e) {
       return false;
     }
-    if (state.housesPerRoute < 1 || state.minutesAtHouse < 1) {
+    if (state.minHousesPerRoute < 1 || state.maxHousesPerRoute > 100) {
+      return false;
+    }
+    if (state.minHousesPerRoute > state.maxHousesPerRoute) {
       return false;
     }
     return true;
@@ -132,16 +136,16 @@ export default function NoCampaign(props) {
     const {
       campaignName,
       campaignType,
-      housesPerRoute,
-      minutesAtHouse,
+      minHousesPerRoute,
+      maxHousesPerRoute,
       startDate,
       endDate,
     } = state;
     const { slug } = await createDkCampaign(
       campaignName,
       campaignType,
-      housesPerRoute,
-      minutesAtHouse,
+      minHousesPerRoute,
+      maxHousesPerRoute,
       startDate,
       endDate,
     );
