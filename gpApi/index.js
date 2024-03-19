@@ -624,6 +624,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    delete: {
+      url: `${base}campaign/door-knocking`,
+      method: 'DELETE',
+      withAuth: true,
+    },
   },
   voterData: {
     purchaseVoterFile: {
