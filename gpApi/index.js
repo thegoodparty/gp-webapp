@@ -156,6 +156,42 @@ const gpApi = {
       },
     },
 
+    volunteerInvitation: {
+      create: {
+        url: `${base}campaign/volunteer/invitation`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteer/invitations`,
+        method: 'GET',
+        withAuth: true,
+      },
+      listByUser: {
+        url: `${base}campaign/volunteer/invitations-by-user`,
+        method: 'GET',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/volunteer/invitation`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
+    campaignVolunteer: {
+      create: {
+        url: `${base}campaign/volunteer`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteers`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+
     candidatePosition: {
       create: {
         url: `${base}candidate-position`,
@@ -393,6 +429,7 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+
     enhanceCandidates: {
       url: `${base}admin/candidate-enhance`,
       method: 'POST',
@@ -568,6 +605,41 @@ const gpApi = {
     find: {
       url: `${base}job`,
       method: 'GET',
+    },
+  },
+
+  doorKnocking: {
+    create: {
+      url: `${base}campaign/door-knocking`,
+      method: 'POST',
+      withAuth: true,
+    },
+    list: {
+      url: `${base}campaign/door-knockings`,
+      method: 'GET',
+      withAuth: true,
+    },
+    get: {
+      url: `${base}campaign/door-knocking`,
+      method: 'GET',
+      withAuth: true,
+    },
+  },
+  voterData: {
+    purchaseVoterFile: {
+      url: `${base}voter-data/voter-file`, //admin
+      method: 'POST',
+      withAuth: true,
+    },
+    pathToVictory: {
+      url: `${base}voter-data/path-to-victory`, //admin
+      method: 'POST',
+      withAuth: true,
+    },
+    getVoterFile: {
+      url: `${base}voter-data/voter-file`, //admin
+      method: 'GET',
+      withAuth: true,
     },
   },
 };

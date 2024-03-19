@@ -15,7 +15,7 @@ import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import FacebookRegisterButton from './FacebookRegisterButton';
+// import FacebookRegisterButton from './FacebookRegisterButton';
 
 async function register(payload) {
   try {
@@ -122,7 +122,7 @@ export default function SocialRegisterButtons() {
         <GoogleRegisterButton loginSuccessCallback={socialRegisterCallback} />
       </GoogleOAuthProvider>
 
-      <FacebookRegisterButton loginSuccessCallback={socialRegisterCallback} />
+      {/* <FacebookRegisterButton loginSuccessCallback={socialRegisterCallback} /> */}
 
       {/* <div data-cy="twitter-register" className="mt-6">
         <TwitterButton />

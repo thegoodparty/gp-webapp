@@ -1,11 +1,15 @@
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 
-export function setSize(baseClass, size) {
+export function setSize(baseClass, size, variant) {
   if (size === 'large') {
     baseClass['text-lg'] = true;
     baseClass['py-3'] = true;
     baseClass['px-6'] = true;
+    if (variant === 'outlined') {
+      baseClass['py-3'] = false;
+      baseClass['py-[10px]'] = true;
+    }
   } else if (size === 'medium') {
     baseClass['text-base'] = true;
     baseClass['py-2'] = true;
@@ -55,7 +59,7 @@ export default function PrimaryButton({
     baseClass['hover:bg-primary'] = true;
     baseClass['active:bg-primary'] = true;
   }
-  setSize(baseClass, size);
+  setSize(baseClass, size, variant);
   if (disabled) {
     baseClass['cursor-not-allowed'] = true;
     baseClass['bg-gray-600'] = true;

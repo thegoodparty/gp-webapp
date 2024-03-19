@@ -127,8 +127,9 @@ export default function QuestionsPage(props) {
 
   const updatePositionsCallback = async () => {
     const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-    onChangeField('candidatePositions', candidatePositions);
     const res = await getCampaign();
+
+    onChangeField('candidatePositions', candidatePositions);
     setCampaign(res.campaign);
   };
 

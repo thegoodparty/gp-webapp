@@ -24,6 +24,7 @@ async function refreshUser() {
     const api = gpApi.user.refresh;
 
     const { user } = await gpFetch(api);
+    console.log('returned', user);
     return user;
   } catch (error) {
     console.log('Error updating user', error);
@@ -107,7 +108,7 @@ function PersonalSection() {
   }, []);
 
   useEffect(() => {
-    if (!state.firstName) {
+    if (!state.email) {
       setState(user);
     }
   }, [user]);
@@ -116,6 +117,15 @@ function PersonalSection() {
     const updated = await refreshUser();
     userState.set(() => updated);
     setUserCookie(updated);
+    // if (!state.email) {
+    //   if (user) {
+    //     const updatedState = {};
+    //     USER_SETTING_FIELDS.forEach((field) => {
+    //       updatedState[field.key] = updated[field.key] || field.initialValue;
+    //     });
+    //     setState(updatedState);
+    //   }
+    // }
   };
 
   const onChangeField = (key, val) => {
