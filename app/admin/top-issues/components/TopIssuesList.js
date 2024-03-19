@@ -11,6 +11,7 @@ import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { TopIssueDisplay } from './TopIssueDisplay';
+import { useTopIssues } from './UseTopIssuesContext';
 
 const createPositionCallback = async (name, topIssueId) => {
   const api = gpApi.admin.position.create;
@@ -40,7 +41,8 @@ export const updateTopIssue = async (issue) => {
   return await gpFetch(gpApi.admin.topIssues.update, issue);
 }
 
-export default function TopIssuesList({ topIssues, setTopIssues }) {
+export default function TopIssuesList() {
+  const [topIssues, setTopIssues] = useTopIssues()
   const [addNewPosition, setAddNewPosition] = useState(false);
   const [editPosition, setEditPosition] = useState(false);
   const [positionName, setPositionName] = useState('');
@@ -62,7 +64,7 @@ export default function TopIssuesList({ topIssues, setTopIssues }) {
     window.location.reload();
   };
 
-  const saveEdit = async () => {
+  const savePositionEdit = async () => {
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -108,11 +110,7 @@ export default function TopIssuesList({ topIssues, setTopIssues }) {
           <div className="py-3 mb-3 border-t border-t-stone-500" key={issue.id}>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <TopIssueDisplay {...{
-                  issue,
-                  topIssues,
-                  setTopIssues
-                }} />
+                <TopIssueDisplay issue={issue} />
               </div>
               <div className="flex items-center">
                 <BlackButtonClient
@@ -182,7 +180,7 @@ export default function TopIssuesList({ topIssues, setTopIssues }) {
                     />
                     &nbsp; &nbsp;
                     <BlackButtonClient
-                      onClick={saveEdit}>Save</BlackButtonClient>
+                      onClick={savePositionEdit}>Save</BlackButtonClient>
                   </div>
                 ) : (
                   <>
