@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react';
-import InlineSVG from 'react-inlinesvg';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { PiUploadSimpleBold } from 'react-icons/pi';
 import Link from 'next/link';
+import { DynamicSVGIcon } from '@shared/DynamicSVGIcon';
+import Image from 'next/image'
 
 export const SVGIconChooser = ({
   svgData = null,
@@ -37,13 +38,18 @@ export const SVGIconChooser = ({
       className: `relative block min-w-[2.5rem] min-h-[2.5rem]`,
     }}>
       {
-        svgData &&
-        <InlineSVG {...{
-          src: svgData,
-          className: `relative block w-[2.5rem] h-[2.5rem]${
-            buttonWrapHover ? ' opacity-40' : ''
-          }`,
-        }} />
+        svgData && (
+          svgData.startsWith('http') ?
+            <Image {...{
+              height: 40,
+              width: 40,
+              src: svgData
+            }} /> :
+          <DynamicSVGIcon {...{
+            svgData,
+            className: buttonWrapHover ? ' opacity-40' : ''
+          }} />
+        )
       }
       <Tooltip {...{
         title: `${svgData ? 'Change' : 'Upload an'} SVG icon`,

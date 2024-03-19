@@ -22,7 +22,10 @@ export const createTopIssue = async (name, icon) => {
   return await gpFetch(api, payload);
 };
 
-export default function AdminTopIssuesPage(props) {
+export default function AdminTopIssuesPage({
+  topIssues: initTopIssues = [], ...rest
+}) {
+  const [topIssues, setTopIssues] = useState(initTopIssues)
   const snackbarState = useHookstate(globalSnackbarState);
   const [addNewIssue, setAddNewIssue] = useState(true);
   const [topIssueName, setTopIssueName] = useState('');
@@ -35,14 +38,16 @@ export default function AdminTopIssuesPage(props) {
         isError: false,
       };
     });
-    await createTopIssue(topIssueName, svgData);
+    setTopIssues([
+      await createTopIssue(topIssueName, svgData),
+      ...topIssues
+    ])
     setAddNewIssue(false);
     setTopIssueName('');
-    window.location.reload();
   };
 
   return (
-    <AdminWrapper {...props}>
+    <AdminWrapper {...rest}>
       <PortalPanel color="#2CCDB0">
         <BlackButtonClient
           onClick={() => {
@@ -81,7 +86,10 @@ export default function AdminTopIssuesPage(props) {
         <br />
         <br />
         <br />
-        <TopIssuesList {...props} />
+        <TopIssuesList {...{
+          topIssues,
+          setTopIssues
+        }} />
       </PortalPanel>
     </AdminWrapper>
   );
