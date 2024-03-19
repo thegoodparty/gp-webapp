@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from 'react';
 import { SVGIconChooser } from '@shared/buttons/SVGIconChooser';
 import TextField from '@shared/inputs/TextField';
@@ -8,13 +10,12 @@ import { FaXmark } from 'react-icons/fa6';
 import Image from 'next/image';
 import IconButton from '@mui/material/IconButton';
 import { updateTopIssue } from './TopIssuesList';
+import { useTopIssues } from './UseTopIssuesContext';
 
 export const TopIssueDisplay = ({
-  issue,
-  topIssues = [],
-  setTopIssues = () => {
-  },
+  issue
 }) => {
+  const [topIssues, setTopIssues] = useTopIssues()
   const [editTopIssueId, setEditTopIssueId] = useState(null);
   const [editTopIssueName, setEditTopIssueName] = useState(null);
   const [editTopIssueIcon, setEditTopIssueIcon] = useState(null);
