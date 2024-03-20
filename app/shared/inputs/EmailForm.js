@@ -5,7 +5,6 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
-import BaseButtonClient from '../buttons/BaseButtonClient';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export async function subscribeEmail(payload) {
@@ -91,11 +90,11 @@ export default function EmailForm({
 
             <div
               className="flex flex-col flex-auto whitespace-nowrap md:pl-3 pt-2 pb-2 md:pb-0 md:pt-0"
-              onClick={submitForm}
               id="submit-email"
               type="submit"
             >
-              <PrimaryButton>{label}</PrimaryButton>
+              <PrimaryButton
+                onClick={submitForm} >{label}</PrimaryButton>
             </div>
 
             {!!showError && (
