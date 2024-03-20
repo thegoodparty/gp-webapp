@@ -3,10 +3,11 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import React, { useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { SVGIconChooser } from '@shared/buttons/SVGIconChooser';
+import { SVGIconChooser } from './SVGIconChooser';
 import TextField from '@shared/inputs/TextField';
 import gpApi from '../../../../gpApi';
 import gpFetch from '../../../../gpApi/gpFetch';
+import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
 
 export const createTopIssue = async (name, icon) => {
   const api = gpApi.admin.topIssues.create;
@@ -44,11 +45,15 @@ export const TopIssueCreator = ({}) => {
   return <>
     <BlackButtonClient
       onClick={() => {
-        setAddNewIssue(true);
+        setAddNewIssue(!addNewIssue);
       }}
-      className="font-black"
+      className="font-black align-middle"
     >
-      Add a Top Issue
+      Add a Top Issue {
+      addNewIssue ?
+        <FaCaretDown className="inline-block" /> :
+        <FaCaretRight className="inline-block" />
+    }
     </BlackButtonClient>
 
     {addNewIssue && (

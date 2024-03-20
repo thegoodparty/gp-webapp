@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { SVGIconChooser } from '@shared/buttons/SVGIconChooser';
+import { SVGIconChooser } from './SVGIconChooser';
 import TextField from '@shared/inputs/TextField';
 import { ButtonGroup } from '@mui/material';
 import Button from '@mui/material/Button';
