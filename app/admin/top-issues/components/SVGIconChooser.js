@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { PiUploadSimpleBold } from 'react-icons/pi';
 import Link from 'next/link';
-import { DynamicSVGIcon } from '@shared/DynamicSVGIcon';
+import { DynamicSVGIcon } from './DynamicSVGIcon';
 import Image from 'next/image'
 
 export const SVGIconChooser = ({

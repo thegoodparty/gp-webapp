@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { BsArrowRightShort } from 'react-icons/bs';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaCaretDown, FaCaretRight, FaEdit, FaTrash } from 'react-icons/fa';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import TextField from '@shared/inputs/TextField';
 import AlertDialog from '@shared/utils/AlertDialog';
@@ -115,10 +115,14 @@ export default function TopIssuesList() {
               <div className="flex items-center">
                 <BlackButtonClient
                   onClick={() => {
-                    setAddNewPosition(issue.id);
+                    setAddNewPosition(addNewPosition ? false : issue.id);
                   }}
                 >
-                  <strong>Add a position for {issue.name}</strong>
+                  <strong>Add a position for {issue.name}&nbsp;{
+                    addNewPosition ?
+                      <FaCaretDown className="inline-block" /> :
+                      <FaCaretRight className="inline-block" />
+                  }</strong>
                 </BlackButtonClient>{' '}
                 <div
                   className="text-red-600 inline-block ml-4 bg-stone-300 rounded-full p-4 w-12 h-12 text-center cursor-pointer"
