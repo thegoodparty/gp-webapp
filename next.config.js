@@ -10,7 +10,11 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
   images: {
-    domains: ['assets.goodparty.org', 'images.ctfassets.net'],
+    domains: [
+      'assets.goodparty.org',
+      'images.ctfassets.net',
+      'maps.googleapis.com',
+    ],
     // remotePatterns: [
     //   {
     //     protocol: 'https',
