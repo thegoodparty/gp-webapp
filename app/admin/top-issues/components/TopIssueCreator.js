@@ -1,13 +1,14 @@
+'use client'
 import { useTopIssues } from './UseTopIssuesContext';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import React, { useState } from 'react';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { SVGIconChooser } from './SVGIconChooser';
 import TextField from '@shared/inputs/TextField';
 import gpApi from '../../../../gpApi';
 import gpFetch from '../../../../gpApi/gpFetch';
 import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export const createTopIssue = async (name, icon) => {
   const api = gpApi.admin.topIssues.create;
@@ -43,7 +44,7 @@ export const TopIssueCreator = ({}) => {
   };
 
   return <>
-    <BlackButtonClient
+    <PrimaryButton
       onClick={() => {
         setAddNewIssue(!addNewIssue);
       }}
@@ -54,7 +55,7 @@ export const TopIssueCreator = ({}) => {
         <FaCaretDown className="inline-block" /> :
         <FaCaretRight className="inline-block" />
     }
-    </BlackButtonClient>
+    </PrimaryButton>
 
     {addNewIssue && (
       <div className="flex mt-4 items-center">
@@ -70,13 +71,11 @@ export const TopIssueCreator = ({}) => {
           onChange={(e) => setTopIssueName(e.target.value)}
         />
         <div className="text-right">
-          <BlackButtonClient
+          <PrimaryButton
             disabled={topIssueName === ''}
             onClick={handleCreate}
             className="font-black"
-          >
-            <strong>Save</strong>
-          </BlackButtonClient>
+          >Save</PrimaryButton>
         </div>
       </div>
     )}

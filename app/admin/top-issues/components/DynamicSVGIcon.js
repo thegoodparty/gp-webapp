@@ -1,3 +1,4 @@
+'use client'
 import InlineSVG from 'react-inlinesvg';
 import React from 'react';
 

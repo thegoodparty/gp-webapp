@@ -12,6 +12,7 @@ export default function SecondaryButton({
   loading = false,
   fullWidth = false,
   ariaLabel,
+  ...restProps
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -89,6 +90,7 @@ export default function SecondaryButton({
       style={style}
       disabled={disabled}
       aria-label={ariaLabel}
+      {...restProps}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

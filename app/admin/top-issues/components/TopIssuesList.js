@@ -12,6 +12,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { TopIssueDisplay } from './TopIssueDisplay';
 import { useTopIssues } from './UseTopIssuesContext';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 const createPositionCallback = async (name, topIssueId) => {
   const api = gpApi.admin.position.create;
@@ -113,17 +114,17 @@ export default function TopIssuesList() {
                 <TopIssueDisplay issue={issue} />
               </div>
               <div className="flex items-center">
-                <BlackButtonClient
+                <PrimaryButton
                   onClick={() => {
                     setAddNewPosition(addNewPosition ? false : issue.id);
                   }}
                 >
-                  <strong>Add a position for {issue.name}&nbsp;{
+                  Add a position for {issue.name}&nbsp;{
                     addNewPosition ?
                       <FaCaretDown className="inline-block" /> :
                       <FaCaretRight className="inline-block" />
-                  }</strong>
-                </BlackButtonClient>{' '}
+                  }
+                </PrimaryButton>{' '}
                 <div
                   className="text-red-600 inline-block ml-4 bg-stone-300 rounded-full p-4 w-12 h-12 text-center cursor-pointer"
                   onClick={() => {
