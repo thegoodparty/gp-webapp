@@ -101,7 +101,7 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
     <div className="max-w-[640px] mx-auto w-[80vw]">
       <H2 className="text-center">Office Details</H2>
       <Body1 className="my-8">
-        What are the details about the office you&apos;re running for?
+        Please Note: Make sure your office was not in the list. Manual entry of your office details requires our team&apos;s review, which can delay full access to features. Wait times vary based on demand.
       </Body1>
       {fields.map((field) => (
         <RenderInputField
