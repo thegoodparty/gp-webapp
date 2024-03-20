@@ -12,9 +12,13 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Tooltip from '@mui/material/Tooltip';
+import { IoIosHelpCircle } from 'react-icons/io';
+import IconButton from '@mui/material/IconButton';
 
 export default function RunForOfficeStep(props) {
   const { campaign, step } = props;
+  const [tooltipOpen, setTooltipOpen] = useState(false)
   const router = useRouter();
   const [state, setState] = useState({
     runForOffice: campaign?.details?.runForOffice || null,
@@ -75,7 +79,21 @@ export default function RunForOfficeStep(props) {
 
           {state.runForOffice === 'yes' && (
             <div className="mt-10">
-              <H3 className="mb-6">What&apos;s the name of your committee?</H3>
+              <div className="flex justify-center items-center mb-6">
+                <H3>
+                  What&apos;s the name of your committee?
+                </H3>
+                <Tooltip
+                  title="This is the official name you&apos;ve registered or will register your campaign under with the relevant electoral authorities. It&apos;s how your campaign is recognized for legal, financial, and reporting purposes. Commonly, it includes the candidate&apos;s name, office sought, and may include terms like &apos;Committee&apos;, &apos;Friends of&apos;, or &apos;Elect&apos;. For example, &apos;Friends of Jane Doe for Mayor&apos;. If you haven&apos;t registered yet, enter a provisional name you plan to use."
+                  open={tooltipOpen}
+                  onClick={() => setTooltipOpen(!tooltipOpen)}
+                  onClose={() => setTooltipOpen(false)}
+                >
+                  <IconButton size="small">
+                    <IoIosHelpCircle />
+                  </IconButton>
+                </Tooltip>
+              </div>
               <TextField
                 label="Committee Name"
                 fullWidth
