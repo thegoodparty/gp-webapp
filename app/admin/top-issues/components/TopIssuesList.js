@@ -149,14 +149,14 @@ export default function TopIssuesList() {
                 <br />
                 <br />
                 <div className="text-right">
-                  <BlackButtonClient
+                  <PrimaryButton
                     disabled={positionName === ''}
                     onClick={() => {
                       savePosition(issue.id);
                     }}
                   >
                     Save New Position
-                  </BlackButtonClient>
+                  </PrimaryButton>
                 </div>
               </div>
             )}
@@ -184,8 +184,8 @@ export default function TopIssuesList() {
                       }
                     />
                     &nbsp; &nbsp;
-                    <BlackButtonClient
-                      onClick={savePositionEdit}>Save</BlackButtonClient>
+                    <PrimaryButton
+                      onClick={savePositionEdit}>Save</PrimaryButton>
                   </div>
                 ) : (
                   <>
