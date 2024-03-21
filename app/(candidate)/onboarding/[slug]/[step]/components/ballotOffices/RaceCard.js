@@ -65,9 +65,9 @@ export default function RaceCard({
     >
       <div className="flex items-center">
         {selected ? (
-          <GrRadialSelected className="text-primary" />
+          <GrRadialSelected className="text-primary min-w-[16px]" />
         ) : (
-          <GrRadial />
+          <GrRadial className="min-w-[16px]" />
         )}
         <Body1 className="ml-2 text-left">{renderOption(name)}</Body1>
       </div>
