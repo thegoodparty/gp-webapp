@@ -19,6 +19,8 @@ export default function IssuesSelector(props) {
   useEffect(() => {
     // make sure the key is different every time
     const randomKey = (Math.random() + 1).toString(36).substring(4);
+    console.log('randomKey', randomKey);
+    console.log('campaign', campaign);
 
     const newPanels = [1, 2, 3].map((order) => (
       <IssuesList

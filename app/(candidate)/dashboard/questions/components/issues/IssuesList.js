@@ -56,6 +56,10 @@ export default function IssuesList(props) {
   const [savedCandidatePosition, setSavedCandidatePosition] = useState(false);
 
   useEffect(() => {
+    setCampaign(props.campaign);
+  }, [props.campaign]);
+
+  useEffect(() => {
     let savedPosition = findSavedPosition(order);
     if (savedPosition) {
       setSavedCandidatePosition(savedPosition);
