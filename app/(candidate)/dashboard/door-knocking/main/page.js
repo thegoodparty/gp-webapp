@@ -33,9 +33,9 @@ export default async function Page({ params, searchParams }) {
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const { dkCampaigns } = await fetchDkCampaigns();
-  if (dkCampaigns && dkCampaigns.length === 1) {
-    redirect(`/dashboard/door-knocking/campaign/${dkCampaigns[0].slug}`);
-  }
+  // if (dkCampaigns && dkCampaigns.length === 1) {
+  //   redirect(`/dashboard/door-knocking/campaign/${dkCampaigns[0].slug}`);
+  // }
 
   const childProps = {
     pathname: '/dashboard/door-knocking',
