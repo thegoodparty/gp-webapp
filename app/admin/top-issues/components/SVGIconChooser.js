@@ -6,6 +6,7 @@ import { PiUploadSimpleBold } from 'react-icons/pi';
 import Link from 'next/link';
 import { DynamicSVGIcon } from './DynamicSVGIcon';
 import Image from 'next/image'
+import { SvgIconImage } from './SvgIconImage';
 
 export const SVGIconChooser = ({
   svgData = null,
@@ -26,7 +27,7 @@ export const SVGIconChooser = ({
     reader.readAsText(file);
   };
 
-  const handleRemoveClick = (e) => {
+  const handleRemoveClick = e => {
     e.preventDefault();
     fileInputRef.current.value = null;
     setSvgData(null);
@@ -40,11 +41,7 @@ export const SVGIconChooser = ({
       {
         svgData && (
           svgData.startsWith('http') ?
-            <Image
-              height={40}
-              width={40}
-              src={svgData}
-            /> :
+            <SvgIconImage src={svgData} /> :
             <DynamicSVGIcon
               svgData={svgData}
               className={buttonWrapHover ? 'opacity-40' : ''}
