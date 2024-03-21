@@ -193,9 +193,6 @@ export default function BallotRaces(props) {
               <RaceCard
                 key={index}
                 race={race}
-                // modalCallback={(race) => {
-                //   setShowModal(race);
-                // }}
                 selected={race?.position?.id === selected.position?.id}
                 selectCallback={handleSelect}
                 inputValue={inputValue}
@@ -214,6 +211,7 @@ export default function BallotRaces(props) {
       {showModal && (
         <Modal
           open
+          boxStyle={{}}
           closeCallback={() => {
             setShowModal(false);
           }}
