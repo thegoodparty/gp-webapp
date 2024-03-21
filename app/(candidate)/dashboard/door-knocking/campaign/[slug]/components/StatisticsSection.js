@@ -4,6 +4,7 @@ import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import H3 from '@shared/typography/H3';
 import { dateUsHelper } from 'helpers/dateHelper';
+import CircularProgressChart from './CircularProgressChart';
 
 export default function StatisticsSection(props) {
   const { dkCampaign, routes } = props;
@@ -28,9 +29,9 @@ export default function StatisticsSection(props) {
       value: routesInProgress,
     },
     { key: 'routesTotal', label: 'Total Routes', value: routes?.length || 0 },
-    { key: 'voterCount', label: 'Total Voters', value: '100,000' },
+    // { key: 'voterCount', label: 'Total Voters', value: '100,000' },
     { key: 'knockedOn', label: 'Total Doors Knocked On', value: 500 },
-    { key: 'positiveExperience', label: 'Positive Experiences', value: '56%' },
+    // { key: 'positiveExperience', label: 'Positive Experiences', value: '56%' },
   ];
 
   return (
@@ -47,22 +48,25 @@ export default function StatisticsSection(props) {
             Campaign Type: <span className="font-semibold">{type}</span>
           </Body2>
         </div>
-        <div>
+        {/* <div>
           <PrimaryButton>Manage Campaign</PrimaryButton>
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-12 gap-3 mt-12">
-        <div className="col-span-12 lg:col-span-3 h-full">
-          <div className="bg-gray-50 border border-slate-300 rounded-xl  h-full p-4 flex items-center justify-center">
-            <h3 className="text-5xl font-medium">Circle</h3>
+        <div className="col-span-12 lg:col-span-4 h-full">
+          <div className="bg-gray-50 border border-slate-300 rounded-xl  h-full p-4 flex items-center justify-center pt-10 relative">
+            <CircularProgressChart goal={100} progress={40} />
+            <div className="absolute h-full w-full flex items-center justify-center">
+              <H3>Progress</H3>
+            </div>
           </div>
         </div>
-        <div className="col-span-12 lg:col-span-9">
+        <div className="col-span-12 lg:col-span-8">
           <div className="grid grid-cols-12 gap-3">
             {fields.map((field) => (
               <div
                 key={field.key}
-                className="col-span-12 md:col-span-12 lg:col-span-4"
+                className="col-span-12 md:col-span-12 lg:col-span-6"
               >
                 <div className="bg-gray-50 border border-slate-300 rounded-xl p-4">
                   <h3 className="mb-2  text-center text-4xl xl:text-5xl font-medium">

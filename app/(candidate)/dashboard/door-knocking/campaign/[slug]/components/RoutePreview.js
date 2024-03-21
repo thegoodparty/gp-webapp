@@ -2,6 +2,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H3 from '@shared/typography/H3';
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 import { FaHandSparkles } from 'react-icons/fa';
 import {
   MdDoorFront,
@@ -10,7 +11,7 @@ import {
 } from 'react-icons/md';
 import { TbProgressCheck } from 'react-icons/tb';
 
-export default function RoutePreview(props) {
+function RoutePreview(props) {
   const { route } = props;
   if (!route.data?.response?.routes && route.data?.response?.routes[0])
     return null;
@@ -86,3 +87,5 @@ export default function RoutePreview(props) {
     </div>
   );
 }
+
+export default memo(RoutePreview);
