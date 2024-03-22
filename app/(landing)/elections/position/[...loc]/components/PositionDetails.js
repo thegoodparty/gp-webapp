@@ -1,5 +1,6 @@
 import Body1 from '@shared/typography/Body1';
 import { dateUsHelper } from 'helpers/dateHelper';
+import { PositionsListItem } from './PositionsListItem';
 
 function processAndSort(strings) {
   try {
@@ -28,7 +29,7 @@ function processAndSort(strings) {
   }
 }
 
-export default function PoistionDetails({ race, positions }) {
+export default function PositionDetails({ race, positions }) {
   const {
     level,
     filingDateStart,
@@ -41,7 +42,7 @@ export default function PoistionDetails({ race, positions }) {
     eligibilityRequirements,
   } = race;
   const term = frequency.match(/\d+/g);
-  let cleanPositions = processAndSort(positions);
+  const cleanPositions = processAndSort(positions)
   return (
     <section className="grid grid-cols-12 gap-4 mt-6 md:mt-12">
       <div className="col-span-12 md:col-span-6 text-lg md:text-2xl font-medium">
@@ -76,14 +77,7 @@ export default function PoistionDetails({ race, positions }) {
               {dateUsHelper(filingDateEnd) || 'N/A'}
             </span>
           </li>
-          <li className=" leading-loose">
-            Positions:
-            <span className="font-normal">
-              {cleanPositions.map((position) => (
-                <div key={position}>{position}</div>
-              ))}
-            </span>
-          </li>
+          <PositionsListItem positions={cleanPositions} />
         </ul>
       </div>
       <div className="col-span-12 md:col-span-6 ">
