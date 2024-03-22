@@ -4,17 +4,10 @@ import TeamSection from './TeamSection';
 // Interns
 export const TEAM_MEMBERS = [
   {
-    name: 'Emily Dexter',
-    role: 'Growth Marketing Intern',
-    img: 'https://assets.goodparty.org/team/emily-goodparty.jpg',
-    flipImg: 'https://assets.goodparty.org/team/emily-party.jpg',
-    partyRole: 'Growth Marketing Intern',
-  },
-  {
     name: 'Cameron Farrar',
     role: 'Social Media Marketing Intern',
-    img: 'https://assets.goodparty.org/team/cameron-goodparty.jpg',
-    flipImg: 'https://assets.goodparty.org/team/cameron-party.jpg',
+    img: 'https://assets.goodparty.org/team/cameron-good1.jpg',
+    flipImg: 'https://assets.goodparty.org/team/cameron-Party1.jpg',
     partyRole: 'Social Media Marketing Intern',
   },
   {

@@ -9,13 +9,10 @@ export default function TeamSection(props) {
   const [selected, setSelected] = useState({});
   const [flipAll, setFlipAll] = useState(false);
 
-  const handleSelected = (index) => {
-    console.log('selected index', index);
-    setSelected({
-      ...selected,
-      [index]: !selected[index],
-    });
-  };
+  const handleSelected = (index) => setSelected({
+    ...selected,
+    [index]: !selected[index],
+  });
 
   const handleFlipAll = () => {
     const all = {};
