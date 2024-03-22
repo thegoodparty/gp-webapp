@@ -15,6 +15,7 @@ import Subtitle2 from '@shared/typography/Subtitle2';
 import { MdOutlineDirectionsWalk } from 'react-icons/md';
 import { Primary } from '@storybook/blocks';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Actions from './Actions';
 
 async function deleteDkCampaign(slug) {
   try {
@@ -66,41 +67,39 @@ export default function DkCampaignPreview(props) {
               <CircularProgress />
             </div>
           )}
-          <div className="relative">
+          <div className="flex items-center justify-between">
+            <H2 className="mt-4">{campaign.name}</H2>
             <div
-              className="absolute right-3 top-3"
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                setShowDeleteWarning(true);
               }}
             >
-              <FaTrash className="text-red-500" />
+              <Actions campaign={campaign} />
             </div>
-            <H2 className="mt-4">{campaign.name}</H2>
-            <Subtitle1 className="mb-2">{type}</Subtitle1>
-            <Subtitle2 className="mb-2">
-              {dateUsHelper(campaign.startDate)} -{' '}
-              {dateUsHelper(campaign.endDate)}
-            </Subtitle2>
-            <div className="bg-green-50 text-green-800 uppercase  p-2 rounded inline-flex items-center font-medium mr-2 text-xs">
-              {campaignStatus}
-            </div>
-            <div className="bg-slate-50 text-indigo-600  p-2 rounded inline-flex items-center font-medium text-xs">
-              <MdOutlineDirectionsWalk />
-              <div className="ml-1  ">{routesCount || 0} ROUTES</div>
-            </div>
-            {hasRoutes ? (
-              <Link
-                className="mt-4 block"
-                href={`/dashboard/door-knocking/campaign/${campaign.slug}`}
-              >
-                <PrimaryButton variant="outlined" fullWidth>
-                  View Campaign
-                </PrimaryButton>
-              </Link>
-            ) : null}
           </div>
+          <Subtitle1 className="mb-2">{type}</Subtitle1>
+          <Subtitle2 className="mb-2">
+            {dateUsHelper(campaign.startDate)} -{' '}
+            {dateUsHelper(campaign.endDate)}
+          </Subtitle2>
+          <div className="bg-green-50 text-green-800 uppercase  p-2 rounded inline-flex items-center font-medium mr-2 text-xs">
+            {campaignStatus}
+          </div>
+          <div className="bg-slate-50 text-indigo-600  p-2 rounded inline-flex items-center font-medium text-xs">
+            <MdOutlineDirectionsWalk />
+            <div className="ml-1  ">{routesCount || 0} ROUTES</div>
+          </div>
+          {hasRoutes ? (
+            <Link
+              className="mt-4 block"
+              href={`/dashboard/door-knocking/campaign/${campaign.slug}`}
+            >
+              <PrimaryButton variant="outlined" fullWidth>
+                View Campaign
+              </PrimaryButton>
+            </Link>
+          ) : null}
         </div>
       </Link>
       <AlertDialog
