@@ -12,7 +12,7 @@ const Wrapper = ({ children, color, ...props }) => {
 export default function RunCampaignButton({
   fullWidth,
   id = '',
-  label = 'Get Started',
+  label = 'Get Free Tools',
   color = 'primary',
 }) {
   return (

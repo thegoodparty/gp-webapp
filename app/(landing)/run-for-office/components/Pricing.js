@@ -50,7 +50,7 @@ export default function Pricing() {
               ))}
               <div className="mt-14 mb-8 text-4xl font-light">$0/month</div>
               <Link href="/login">
-                <WarningButton fullWidth>Get Started</WarningButton>
+                <WarningButton fullWidth>Get Free Tools</WarningButton>
               </Link>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function Pricing() {
               <div>
                 <div className="mt-14 mb-8 text-4xl font-light">$10/month</div>
                 <Link href="/pro-consultation">
-                  <PrimaryButton fullWidth>Get Started</PrimaryButton>
+                  <PrimaryButton fullWidth>Get Free Tools</PrimaryButton>
                 </Link>
               </div>
             </div>
