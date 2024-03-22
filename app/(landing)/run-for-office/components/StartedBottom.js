@@ -25,7 +25,7 @@ export default function StartedBottom() {
         <div className="mt-10 flex">
           <RunCampaignButton id="bottom-get-started" />
           <Link href="/get-a-demo" id="bottom-demo" className="block ml-5">
-            <WhiteButton label="Book a free demo" />
+            <WhiteButton label="Get a Demo" />
           </Link>
         </div>
       </section>
