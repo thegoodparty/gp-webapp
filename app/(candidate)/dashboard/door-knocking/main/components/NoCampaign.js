@@ -152,7 +152,8 @@ export default function NoCampaign(props) {
     );
 
     if (slug) {
-      router.push(`/dashboard/door-knocking/campaign/${slug}`);
+      // router.push(`/dashboard/door-knocking/campaign/${slug}`);
+      window.location.reload();
     }
     setSaving(false);
   };
