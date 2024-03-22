@@ -128,14 +128,14 @@ export default function LeftSide() {
         open={runOpen}
         toggleCallback={toggleRun}
         links={RUN_LINKS}
-        label="Run For Office"
+        label="For Candidates"
         id="nav-run-dropdown"
       />
       <NavDropdown
         open={communityOpen}
         toggleCallback={toggleCommunity}
         links={COMMUNITY_LINKS}
-        label="Community"
+        label="For Voters"
         id="nav-community-dropdown"
       />
       <NavDropdown
