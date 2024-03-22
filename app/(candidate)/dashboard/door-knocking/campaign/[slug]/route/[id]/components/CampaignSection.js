@@ -7,6 +7,7 @@ export default function CampaignSection({ dkCampaign, route }) {
   const { name, endDate, startDate } = dkCampaign;
   const res = route.data?.response?.routes[0];
   const { summary } = res;
+
   return (
     <Paper>
       <H2>
