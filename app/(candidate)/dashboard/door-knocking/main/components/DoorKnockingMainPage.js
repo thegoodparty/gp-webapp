@@ -1,4 +1,3 @@
-'use client';
 import DashboardLayout from '../../../shared/DashboardLayout';
 import NoCampaign from './NoCampaign';
 import H1 from '@shared/typography/H1';
