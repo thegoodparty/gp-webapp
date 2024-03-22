@@ -1,62 +1,18 @@
 'use client';
 import React, { useState } from 'react';
-import passwordValidator from 'password-validator';
-
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import TextField from './TextField';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-// import Visibility from '@material-ui/icons/Visibility';
-// import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
-//  const Input = styled(TextField)`
-//    && {
-//      margin-bottom: 18px;
-
-//      .MuiInputBase-input {
-//        line-height: 22px;
-//        font-size: 16px;
-//        letter-spacing: 0.1px;
-//        background-color: #fff;
-
-//        @media only screen and (min-width: ${({ theme }) =>
-//            theme.breakpointsPixels.md}) {
-//          font-size: 20px;
-//          line-height: 26px;
-//        }
-//      }
-//    }
-//  `;
-
-const schema = new passwordValidator();
-schema
-  .is()
-  .min(8) // Minimum length 8
-  .is()
-  .max(40) // Maximum length 100
-  .has()
-  .uppercase() // Must have uppercase letters
-  .has()
-  .lowercase() // Must have lowercase letters
-  .has()
-  .digits(1) // Must have at least 1 digits
-  .has()
-  .not()
-  .spaces(); // Should not have spaces
-
-export const isValidPassword = (pwd) => {
-  return schema.validate(pwd);
-};
-
-export const invalidPasswordReasons = (pwd) => {
-  return schema.validate(pwd, { list: true });
-};
+import {
+  isValidPassword
+} from './IsValidPassword';
 
 export default function PasswordInput({
   onChangeCallback,
   variant = 'outlined',
   label = 'Password',
-  helperText = 'For security, passwords must have at least 1 capital letter, 1 lowercase, 1 special character, 1 number, and 8 minimum characters.',
+  helperText = 'Please ensure your password has at least 8 characters, including at least one letter and one number.',
   autoFocus = false,
   className = '',
   InputLabelProps = {},
