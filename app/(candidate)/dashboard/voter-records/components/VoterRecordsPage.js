@@ -6,6 +6,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import Paper from '../../door-knocking/shared/Paper';
 
 async function fetchVoterFile() {
   try {
@@ -38,7 +39,7 @@ export default function VoterRecordsPage(props) {
   return (
     <DashboardLayout {...props}>
       <H1>Voter Records</H1>
-      <div className="bg-white border border-slate-300 py-6 px-8 rounded-xl mt-6 md:py-12 md:px-6">
+      <Paper className=" mt-6 md:py-12 md:px-6">
         <Body1>
           To download your voter records, please click the button below. This
           might take a minute.
@@ -46,7 +47,7 @@ export default function VoterRecordsPage(props) {
         <div className="mt-12 cursor-pointer" onClick={handleDownload}>
           <PrimaryButton>Download Voter file (.csv)</PrimaryButton>
         </div>
-      </div>
+      </Paper>
     </DashboardLayout>
   );
 }

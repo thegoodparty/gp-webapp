@@ -4,10 +4,11 @@ import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess';
+import RoutePage from './components/RoutePage';
 
 async function fetchDkRoute(slug, id) {
   try {
-    const api = gpApi.doorKnocking.get;
+    const api = gpApi.doorKnocking.route.find;
     const payload = {
       slug,
       id,
@@ -35,11 +36,13 @@ export default async function Page({ params, searchParams }) {
   const { dkCampaign, route } = await fetchDkRoute(slug, id);
   const { campaign } = await fetchUserCampaign();
 
+  console.log('route', route);
+
   const childProps = {
     user,
     dkCampaign,
     route,
     campaign,
   };
-  return <div>route</div>;
+  return <RoutePage {...childProps} />;
 }

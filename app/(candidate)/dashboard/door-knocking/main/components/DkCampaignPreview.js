@@ -90,14 +90,16 @@ export default function DkCampaignPreview(props) {
               <MdOutlineDirectionsWalk />
               <div className="ml-1  ">{routesCount || 0} ROUTES</div>
             </div>
-            <Link
-              className="mt-4 block"
-              href={`/dashboard/door-knocking/campaign/${campaign.slug}`}
-            >
-              <PrimaryButton variant="outlined" fullWidth>
-                View Campaign
-              </PrimaryButton>
-            </Link>
+            {hasRoutes ? (
+              <Link
+                className="mt-4 block"
+                href={`/dashboard/door-knocking/campaign/${campaign.slug}`}
+              >
+                <PrimaryButton variant="outlined" fullWidth>
+                  View Campaign
+                </PrimaryButton>
+              </Link>
+            ) : null}
           </div>
         </div>
       </Link>

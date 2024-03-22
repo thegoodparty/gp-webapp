@@ -10,6 +10,7 @@ import gpFetch from 'gpApi/gpFetch';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Paper from '../../shared/Paper';
 
 async function createDkCampaign(
   name,
@@ -158,7 +159,7 @@ export default function NoCampaign(props) {
   return (
     <div className="p-4">
       <H1>Route Dashboard</H1>
-      <div className="bg-white border border-slate-300 py-6 px-8 rounded-xl mt-6 md:py-12 md:px-6 flex flex-col items-center">
+      <Paper className=" mt-6 md:py-12 md:px-6 flex flex-col items-center">
         <Image
           src="/images/door-knocking/marker-clouds.svg"
           alt="Marker"
@@ -178,7 +179,7 @@ export default function NoCampaign(props) {
         >
           <PrimaryButton>Get Started</PrimaryButton>
         </div>
-      </div>
+      </Paper>
       {
         <Modal
           open={showModal}

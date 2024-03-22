@@ -34,7 +34,7 @@ export function boundsToImage(bounds, overview_polyline) {
 }
 
 function RoutePreview(props) {
-  const { route, dkCampaign } = props;
+  const { route, dkCampaign, noCard } = props;
   if (!route.data?.response?.routes && route.data?.response?.routes[0])
     return null;
   const { status, data } = route;
@@ -45,7 +45,11 @@ function RoutePreview(props) {
   const mapImageUrl = boundsToImage(bounds, overview_polyline);
 
   return (
-    <div className="p-4 rounded-md shadow border border-slate-300 h-full">
+    <div
+      className={`${
+        noCard ? '' : 'p-4 rounded-md  border border-slate-300 h-full'
+      }`}
+    >
       <Image
         src={mapImageUrl}
         alt="map"
@@ -86,15 +90,17 @@ function RoutePreview(props) {
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <Link
-          href={`/dashboard/door-knocking/campaign/${dkCampaign.slug}/route/${route.id}`}
-        >
-          <PrimaryButton variant="outlined" fullWidth>
-            View Route
-          </PrimaryButton>
-        </Link>
-      </div>
+      {!noCard ? (
+        <div className="mt-4">
+          <Link
+            href={`/dashboard/door-knocking/campaign/${dkCampaign.slug}/route/${route.id}`}
+          >
+            <PrimaryButton variant="outlined" fullWidth>
+              View Route
+            </PrimaryButton>
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }
