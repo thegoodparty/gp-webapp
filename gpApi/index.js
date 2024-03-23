@@ -138,6 +138,12 @@ const gpApi = {
   },
 
   campaign: {
+    adminUpdate: {
+      url: `${base}campaign-admin`,
+      method: 'PUT',
+      withAuth: true,
+    },
+
     UpdateHistory: {
       create: {
         url: `${base}campaign/update-history`,
@@ -257,11 +263,7 @@ const gpApi = {
         method: 'PUT',
         withAuth: true,
       },
-      adminUpdate: {
-        url: `${base}campaign/onboarding/admin-update`,
-        method: 'PUT',
-        withAuth: true,
-      },
+
       delete: {
         url: `${base}campaign/onboarding`,
         method: 'DELETE',
@@ -270,6 +272,11 @@ const gpApi = {
       adminDelete: {
         url: `${base}campaign`,
         method: 'DELETE',
+        withAuth: true,
+      },
+      adminUpdate: {
+        url: `${base}campaign-admin`,
+        method: 'PUT',
         withAuth: true,
       },
       findByUser: {
