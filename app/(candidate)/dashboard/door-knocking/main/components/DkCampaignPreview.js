@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { FaTrash } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -31,14 +31,32 @@ async function deleteDkCampaign(slug) {
 }
 
 export default function DkCampaignPreview(props) {
-  const { campaign } = props;
+  const { campaign, updateCampaignsCallback } = props;
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
-    window.location.reload();
+    await props.updateCampaignsCallback();
   };
 
   const { hasRoutes, bounds, type, routesCount, status } = campaign;
+
+  useEffect(() => {
+    let timeoutId;
+
+    if (!campaign.hasRoutes) {
+      timeoutId = setTimeout(() => {
+        console.log('callback');
+        updateCampaignsCallback();
+      }, 2000);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [campaign, updateCampaignsCallback]); // Dependency array, re-run the effect if campaign or updateCampaignsCallback changes
+
   let mapImageUrl = '';
   if (hasRoutes && bounds) {
     mapImageUrl = boundsToImage(bounds);
