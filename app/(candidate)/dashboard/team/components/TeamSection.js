@@ -1,15 +1,12 @@
 'use client';
 import Paper from '@shared/utils/Paper';
-import Image from 'next/image';
 import { useState } from 'react';
-import waveImg from 'public/images/dashboard/wave.png';
-import H3 from '@shared/typography/H3';
-import Body1 from '@shared/typography/Body1';
-import InviteButton from './InviteButton';
+
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import PendingInvitations from './PendingInvitations';
+import VolunteersSection from './VolunteersSection';
 
 async function fetchInvitations() {
   try {
@@ -25,6 +22,8 @@ async function fetchInvitations() {
 export default function TeamSection(props) {
   const [volunteers, setVolunteers] = useState(props.volunteers || []);
   const [invitations, setInvitations] = useState(props.invitations || []);
+
+  console.log('volunteers', volunteers);
 
   const reloadInvitationsCallback = async () => {
     const { invitations } = await fetchInvitations();
@@ -43,7 +42,9 @@ export default function TeamSection(props) {
           {...props}
         />
       ) : null}
-      {volunteers && volunteers.length > 0 ? <Paper>volunteers</Paper> : null}
+      {volunteers && volunteers.length > 0 ? (
+        <VolunteersSection volunteers={volunteers} />
+      ) : null}
     </section>
   );
 }
