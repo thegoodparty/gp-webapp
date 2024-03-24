@@ -3,7 +3,7 @@ import NoCampaign from './NoCampaign';
 import H1 from '@shared/typography/H1';
 
 import DkCampaignPreview from './DkCampaignPreview';
-import Paper from '../../shared/Paper';
+import Paper from '../../../../../shared/utils/Paper';
 import gpApi from 'gpApi';
 import CampaignsSection from './CampaignsSection';
 import { Add } from '@mui/icons-material';

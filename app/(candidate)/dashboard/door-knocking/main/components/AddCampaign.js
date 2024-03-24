@@ -82,7 +82,7 @@ const fields = [
 
 export default function AddCampaign(props) {
   const { buttonLabel } = props;
-  const [showModal, setShowModal] = useState(false);
+
   const [saving, setSaving] = useState(false);
   const [state, setState] = useState({
     campaignName: '',

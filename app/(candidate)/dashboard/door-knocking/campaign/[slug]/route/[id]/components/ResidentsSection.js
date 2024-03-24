@@ -1,6 +1,6 @@
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
-import Paper from 'app/(candidate)/dashboard/door-knocking/shared/Paper';
+import Paper from '@shared/utils/Paper';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { MdOutlineCheck } from 'react-icons/md';
 

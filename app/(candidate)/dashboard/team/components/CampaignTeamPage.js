@@ -1,13 +1,10 @@
-'use client';
-import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import ListItem from '@shared/utils/ListItem';
 
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
-import InvitationSection from './InvitationSection';
-import VolunteersSection from './VolunteersSection';
-import { getUserCookie } from 'helpers/cookieHelper';
+import { getServerUser } from 'helpers/userServerHelper';
+import TeamSection from './TeamSection';
 
 const teamFields = [
   {
@@ -103,38 +100,37 @@ const teamFields = [
 ];
 
 export default function CampaignTeamPage(props) {
-  const user = getUserCookie(true);
+  const user = getServerUser();
   return (
     <DashboardLayout {...props}>
-      <TitleSection
-        title="Campaign Team"
-        subtitle="An upstart independent campaign is scrappy. You start with friends and family and scale up from there. The following are key roles that larger, well-funded campaigns typically fill. They're not required for success, but the more of these roles you can fill with volunteers, the better.  Also, your AI-Campaign Manager is designed to save you time and money while doing the work of many of these roles."
-        image="/images/dashboard/team.svg"
-        imgWidth={160}
-        imgHeight={120}
-      />
       {user?.isAdmin ? (
-        <>
-          <InvitationSection {...props} />
-          <VolunteersSection {...props} />
-        </>
+        <TeamSection {...props} />
       ) : (
-        <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
-          {teamFields.map((section) => (
-            <div key={section.title}>
-              <H3 className="mt-8 mb-7">{section.title}</H3>
-              {section.steps.map((step, index) => (
-                <ListItem
-                  key={step.title}
-                  title={step.title}
-                  number={index + 1}
-                >
-                  {step.description}
-                </ListItem>
-              ))}
-            </div>
-          ))}
-        </div>
+        <>
+          <TitleSection
+            title="Campaign Team"
+            subtitle="An upstart independent campaign is scrappy. You start with friends and family and scale up from there. The following are key roles that larger, well-funded campaigns typically fill. They're not required for success, but the more of these roles you can fill with volunteers, the better.  Also, your AI-Campaign Manager is designed to save you time and money while doing the work of many of these roles."
+            image="/images/dashboard/team.svg"
+            imgWidth={160}
+            imgHeight={120}
+          />
+          <div className="bg-gray-50 border border-slate-300 py-6 px-8 rounded-xl">
+            {teamFields.map((section) => (
+              <div key={section.title}>
+                <H3 className="mt-8 mb-7">{section.title}</H3>
+                {section.steps.map((step, index) => (
+                  <ListItem
+                    key={step.title}
+                    title={step.title}
+                    number={index + 1}
+                  >
+                    {step.description}
+                  </ListItem>
+                ))}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </DashboardLayout>
   );

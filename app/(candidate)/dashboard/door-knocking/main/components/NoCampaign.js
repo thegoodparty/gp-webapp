@@ -3,7 +3,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import H2 from '@shared/typography/H2';
 import Image from 'next/image';
-import Paper from '../../shared/Paper';
+import Paper from '../../../../../shared/utils/Paper';
 import AddCampaign from './AddCampaign';
 
 export default function NoCampaign() {
