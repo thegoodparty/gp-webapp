@@ -6,25 +6,26 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import AlertDialog from '@shared/utils/AlertDialog';
 
-async function deleteDkCampaign(slug) {
+async function deleteInvitation(id) {
   try {
-    const api = gpApi.doorKnocking.delete;
+    const api = gpApi.campaign.volunteerInvitation.delete;
+
     const payload = {
-      slug,
+      id,
     };
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error', e);
-    return false;
+    console.log('error at sendInvitation', e);
+    return {};
   }
 }
 
-export default function Actions({ campaign }) {
+export default function Actions({ invitation, reloadInvitationsCallback }) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const handleDelete = async () => {
-    await deleteDkCampaign(campaign.slug);
-    window.location.reload();
+    await deleteInvitation(invitation.id);
+    reloadInvitationsCallback();
   };
 
   return (
@@ -45,14 +46,13 @@ export default function Actions({ campaign }) {
           />
 
           <div className="absolute bg-white py-3 rounded-xl shadow-lg z-10 right-6 top-1">
-            {/* <div className="p-4  whitespace-nowrap">Archive Campaign</div> */}
             <div
-              className="p-4 whitespace-nowrap "
+              className="p-4 whitespace-nowrap  cursor-pointer"
               onClick={() => {
                 setShowDeleteWarning(true);
               }}
             >
-              Delete Campaign
+              Delete Invitation
             </div>
           </div>
         </>
@@ -62,8 +62,8 @@ export default function Actions({ campaign }) {
         handleClose={() => {
           setShowDeleteWarning(false);
         }}
-        title={`Are you sure you want to delete ${campaign.name}`}
-        description="Deleting your campaign will permanently erase all associated data. Once deleted, campaigns cannot be recovered or retrieved."
+        title={`Are you sure you want to delete this invitation?`}
+        description="The invitation email was already sent."
         handleProceed={handleDelete}
       />
     </div>

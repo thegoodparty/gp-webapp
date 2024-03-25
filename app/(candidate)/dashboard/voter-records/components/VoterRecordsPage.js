@@ -6,7 +6,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import Paper from '../../door-knocking/shared/Paper';
+import Paper from '../../../../shared/utils/Paper';
 
 async function fetchVoterFile() {
   try {

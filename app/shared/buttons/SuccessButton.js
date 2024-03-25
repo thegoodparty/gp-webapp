@@ -11,6 +11,7 @@ export default function SuccessButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  ...restProps
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -80,6 +81,7 @@ export default function SuccessButton({
       className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
+      {...restProps}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

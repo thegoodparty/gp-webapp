@@ -138,6 +138,12 @@ const gpApi = {
   },
 
   campaign: {
+    adminUpdate: {
+      url: `${base}campaign-admin`,
+      method: 'PUT',
+      withAuth: true,
+    },
+
     UpdateHistory: {
       create: {
         url: `${base}campaign/update-history`,
@@ -189,6 +195,34 @@ const gpApi = {
         url: `${base}campaign/volunteers`,
         method: 'GET',
         withAuth: true,
+      },
+      listByUser: {
+        url: `${base}campaign/volunteer-by-user`,
+        method: 'GET',
+        withAuth: true,
+      },
+
+      routes: {
+        list: {
+          url: `${base}campaign/volunteer/routes`,
+          method: 'GET',
+          withAuth: true,
+        },
+        find: {
+          url: `${base}campaign/volunteer/route`,
+          method: 'GET',
+          withAuth: true,
+        },
+        claim: {
+          url: `${base}campaign/volunteer/route/claim`,
+          method: 'PUT',
+          withAuth: true,
+        },
+        unclaim: {
+          url: `${base}campaign/volunteer/route/unclaim`,
+          method: 'PUT',
+          withAuth: true,
+        },
       },
     },
 
@@ -257,11 +291,7 @@ const gpApi = {
         method: 'PUT',
         withAuth: true,
       },
-      adminUpdate: {
-        url: `${base}campaign/onboarding/admin-update`,
-        method: 'PUT',
-        withAuth: true,
-      },
+
       delete: {
         url: `${base}campaign/onboarding`,
         method: 'DELETE',
@@ -270,6 +300,11 @@ const gpApi = {
       adminDelete: {
         url: `${base}campaign`,
         method: 'DELETE',
+        withAuth: true,
+      },
+      adminUpdate: {
+        url: `${base}campaign-admin`,
+        method: 'PUT',
         withAuth: true,
       },
       findByUser: {

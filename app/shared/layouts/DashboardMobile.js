@@ -1,6 +1,5 @@
 import H3 from '@shared/typography/H3';
 import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu';
-import Link from 'next/link';
 
 export default function DashboardMobile({ user, pathname, campaign }) {
   return (

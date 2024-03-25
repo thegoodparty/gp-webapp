@@ -72,7 +72,7 @@ export default function AdminCandidatesPage(props) {
     campaigns.map((campaignObj) => {
       const { data } = campaignObj;
       const campaign = mapCampaignToCandidate(data);
-      const { user } = campaignObj;
+      const { user, isPro, isVerified, didWin } = campaignObj;
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
       let waitingForP2v =
@@ -127,6 +127,9 @@ export default function AdminCandidatesPage(props) {
         waitingForP2v,
         pledged: campaign?.pledged && campaign.pledged === true ? 'yes' : 'no',
         knowRun: runningForOffice,
+        isPro: isPro ? 'yes' : 'no',
+        isVerified: isVerified ? 'yes' : 'no',
+        didWin: didWin ? 'yes' : 'no',
       };
       inputData.push(fields);
       let csvFields = fields;
@@ -200,6 +203,17 @@ export default function AdminCandidatesPage(props) {
       },
     },
     {
+      Header: 'Email',
+      accessor: 'email',
+      Cell: ({ row }) => {
+        return (
+          <a href={`mailto:${row.original.email}`} className="underline">
+            {row.original.email}
+          </a>
+        );
+      },
+    },
+    {
       Header: 'Metrics',
       accessor: 'metrics',
       Cell: ({ row }) => {
@@ -214,6 +228,18 @@ export default function AdminCandidatesPage(props) {
           </a>
         );
       },
+    },
+    {
+      Header: 'Is Pro?',
+      accessor: 'isPro',
+    },
+    {
+      Header: 'Is Verified?',
+      accessor: 'isVerified',
+    },
+    {
+      Header: 'Did Win?',
+      accessor: 'didWin',
     },
     {
       Header: 'Door Knocked',
@@ -231,45 +257,7 @@ export default function AdminCandidatesPage(props) {
       Header: 'AI Docs Created',
       accessor: 'aiDocsCreated',
     },
-    {
-      Header: 'Review Link',
-      accessor: 'reviewLink',
-      Cell: ({ row }) => {
-        const status = row.original.launched;
-        if (status === 'Pending Review') {
-          const route = `${candidateRoute(row.original)}/review`;
-          return (
-            <a
-              href={route}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="underline"
-            >
-              Pending Review
-            </a>
-          );
-        }
-        return <span>n/a</span>;
-      },
-    },
-    {
-      Header: 'Short Version',
-      accessor: 'shortVersion',
-      Cell: ({ row }) => {
-        return row.original.shortVersion ? 'yes' : 'no';
-      },
-    },
-    {
-      Header: 'Email',
-      accessor: 'email',
-      Cell: ({ row }) => {
-        return (
-          <a href={`mailto:${row.original.email}`} className="underline">
-            {row.original.email}
-          </a>
-        );
-      },
-    },
+
     {
       Header: 'Phone',
       accessor: 'phone',
