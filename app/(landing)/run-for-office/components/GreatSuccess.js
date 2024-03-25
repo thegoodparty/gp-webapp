@@ -1,6 +1,7 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import Graduates from './Graduates';
+import TerryImgSrc from '/public/images/run-for-office/Screen Shot 2024-03-14 at 9.13.40 AM.png'
 
 export default function GreatSuccess() {
   return (
@@ -12,10 +13,10 @@ export default function GreatSuccess() {
             <div className="grid grid-cols-12 bg-[#2A2E33] rounded-lg">
               <div className=" col-span-12 lg:col-span-3 p-5 lg:p-0">
                 <Image
-                  src={'https://assets.goodparty.org/candidates/terry-vo.png'}
+                  src="https://assets.goodparty.org/candidates/terry-vo.png"
                   alt="Terry Vo"
-                  width={1122}
-                  height={988}
+                  width={561}
+                  height={494}
                   className="rounded-lg lg:rounded-none lg:rounded-l-lg w-full"
                 />
               </div>
