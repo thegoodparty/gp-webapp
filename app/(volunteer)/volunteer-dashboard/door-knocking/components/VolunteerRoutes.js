@@ -11,7 +11,7 @@ export default function VolunteerRoutes(props) {
   return (
     <section className="lg:hidden">
       <div className="p-2">
-        {claimedRoutes.length > 0 && (
+        {claimedRoutes && claimedRoutes.length > 0 && (
           <>
             <H1 className="mb-4"> My Routes</H1>
 
@@ -36,7 +36,7 @@ export default function VolunteerRoutes(props) {
             ))}
           </>
         )}
-        {unclaimedRoutes.length > 0 && (
+        {unclaimedRoutes && unclaimedRoutes.length > 0 && (
           <>
             <H2 className="my-4"> Unclaimed Routes</H2>
             {unclaimedRoutes.map((route) => (

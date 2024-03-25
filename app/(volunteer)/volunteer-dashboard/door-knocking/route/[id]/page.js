@@ -1,5 +1,4 @@
 import pageMetaData from 'helpers/metadataHelper';
-import VolunteerDoorKnocking from './components/VolunteerDoorKnocking';
 import volunteerAccess from '../shared/volunteerAccess';
 import gpApi from 'gpApi';
 import { getServerToken } from 'helpers/userServerHelper';
