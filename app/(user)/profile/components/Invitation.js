@@ -21,7 +21,7 @@ async function acceptInvitation(id) {
 }
 
 export default function Invitation(props) {
-  const { invitation, acceptInvitationsCallback } = props;
+  const { invitation } = props;
   const { firstName, lastName, office, otherOffice, district, state, city } =
     invitation?.campaign || {};
 
@@ -30,7 +30,7 @@ export default function Invitation(props) {
 
   const handleAccept = async () => {
     await acceptInvitation(invitation.id);
-    await acceptInvitationsCallback(invitation.slug);
+    window.location.href = '/volunteer-dashboard';
   };
   return (
     <div className="my-6 border border-slate-300 px-3 py-4 rounded-lg">

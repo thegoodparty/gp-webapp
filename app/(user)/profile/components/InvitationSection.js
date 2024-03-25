@@ -4,17 +4,13 @@ import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import { LuHeartHandshake } from 'react-icons/lu';
 import Invitation from './Invitation';
-import { setCookie } from 'helpers/cookieHelper';
 
 function InvitationSection(props) {
   const { invitations } = props;
   if (!invitations || invitations.length === 0) {
     return null;
   }
-  const acceptInvitations = async (slug) => {
-    setCookie('volunteer', slug);
-    window.location.href = '/volunteer-dashboard';
-  };
+
   return (
     <section className="py-4 border-b border-slate-300">
       <div className="flex">
@@ -31,10 +27,7 @@ function InvitationSection(props) {
       <div className="grid grid-cols-12 gap-4 mt-8">
         {invitations.map((invitation) => (
           <div key={invitation.id} className="col-span-12 md:col-span-6">
-            <Invitation
-              invitation={invitation}
-              acceptInvitationsCallback={acceptInvitations}
-            />
+            <Invitation invitation={invitation} />
           </div>
         ))}
       </div>

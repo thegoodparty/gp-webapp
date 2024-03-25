@@ -196,6 +196,19 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+      listByUser: {
+        url: `${base}campaign/volunteer-by-user`,
+        method: 'GET',
+        withAuth: true,
+      },
+
+      routes: {
+        list: {
+          url: `${base}campaign/volunteer/routes`,
+          method: 'GET',
+          withAuth: true,
+        },
+      },
     },
 
     candidatePosition: {
