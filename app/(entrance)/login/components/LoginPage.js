@@ -10,20 +10,18 @@ import {
   setUserCookie,
 } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
-import { passwordRegex } from 'helpers/userHelper.js';
 import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-
-import YellowButtonClient from '@shared/buttons/YellowButtonClient';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { fetchCampaignStatus } from '@shared/layouts/navigation/RightSide';
+import { isValidPassword } from '@shared/inputs/IsValidPassword';
 
 export const validateZip = (zip) => {
   // let zipInt = parseInt(zip);
@@ -56,8 +54,7 @@ export default function LoginPage() {
 
   const enableSubmit = () =>
     isValidEmail(state.email) &&
-    state.password !== '' &&
-    state.password.match(passwordRegex);
+    isValidPassword(state.password)
 
   const handleSubmit = async () => {
     if (enableSubmit()) {

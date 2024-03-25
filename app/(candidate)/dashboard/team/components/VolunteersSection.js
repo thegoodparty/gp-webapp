@@ -1,6 +1,9 @@
+import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
+import Paper from '@shared/utils/Paper';
 import { formatToPhone } from 'helpers/numberHelper';
 import { Fragment } from 'react';
+import Volunteer from './Volunteer';
 
 export default function VolunteersSection(props) {
   const { volunteers } = props;
@@ -8,40 +11,22 @@ export default function VolunteersSection(props) {
     return null;
   }
   return (
-    <section className="bg-gray-50 border border-slate-300 mb-6 py-6 px-8 rounded-xl">
-      <H2 className="mb-8">Campaign volunteers</H2>
-      {!volunteers && (
-        <div className="mt-3">You don&apos;t have any volunteers</div>
-      )}
+    <section className="mt-6">
+      <Paper>
+        <H2 className="mb-2">Campaign Team</H2>
+        <Body2>Manage all your team members in one place. </Body2>
 
-      {volunteers && (
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-3 bg-slate-300 px-2 py-2">Name</div>
-          <div className="col-span-3 bg-slate-300 px-2 py-2">Email</div>
-          <div className="col-span-3 bg-slate-300 px-2 py-2">Phone</div>
-          <div className="col-span-3 bg-slate-300 px-2 py-2">Role</div>
+        <div className="grid grid-cols-12 gap-4 mt-8">
           {volunteers.map((volunteer) => (
-            <Fragment key={volunteer.id}>
-              <div className="col-span-3 px-2 py-2">
-                {volunteer.firstName} {volunteer.lastName}
-              </div>
-              <div className="col-span-3 px-2 py-2">
-                <a href={`mailto:volunteer.email`}>{volunteer.email}</a>
-              </div>
-              <div className="col-span-3 px-2 py-2">
-                {volunteer.phone ? (
-                  <a href={`tel:${volunteer.phone}`}>
-                    {formatToPhone(volunteer.phone)}
-                  </a>
-                ) : (
-                  'n/a'
-                )}
-              </div>
-              <div className="col-span-3 px-2 py-2">{volunteer.role}</div>
-            </Fragment>
+            <div
+              className="col-span-6 md:col-span-6 lg:col-span-4"
+              key={volunteer.id}
+            >
+              <Volunteer volunteer={volunteer} />
+            </div>
           ))}
         </div>
-      )}
+      </Paper>
     </section>
   );
 }

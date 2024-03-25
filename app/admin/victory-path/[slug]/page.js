@@ -36,12 +36,13 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaignBySlug(slug);
+  const { campaign, campaignObj } = await fetchCampaignBySlug(slug);
 
   const childProps = {
     pathname: '/admin/candidates',
     title: 'Path to Victory',
     campaign,
+    campaignObj,
   };
   return <AdminVictoryPathPage {...childProps} />;
 }

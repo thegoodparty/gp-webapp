@@ -5,6 +5,7 @@ import H2 from '@shared/typography/H2';
 import H3 from '@shared/typography/H3';
 import { dateUsHelper } from 'helpers/dateHelper';
 import CircularProgressChart from './CircularProgressChart';
+import StatisticsCard from '../../../shared/StatisticsCard';
 
 export default function StatisticsSection(props) {
   const { dkCampaign, routes } = props;
@@ -68,12 +69,7 @@ export default function StatisticsSection(props) {
                 key={field.key}
                 className="col-span-12 md:col-span-12 lg:col-span-6"
               >
-                <div className="bg-gray-50 border border-slate-300 rounded-xl p-4">
-                  <h3 className="mb-2  text-center text-4xl xl:text-5xl font-medium">
-                    {field.value}
-                  </h3>
-                  <Body2 className="text-center">{field.label}</Body2>
-                </div>
+                <StatisticsCard {...field} />
               </div>
             ))}
           </div>

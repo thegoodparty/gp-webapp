@@ -11,15 +11,8 @@ import {
 } from 'react-icons/md';
 import { TbProgressCheck } from 'react-icons/tb';
 
-function RoutePreview(props) {
-  const { route } = props;
-  if (!route.data?.response?.routes && route.data?.response?.routes[0])
-    return null;
-  const { status, data } = route;
-  const { optimizedAddresses } = data;
-  const res = route.data?.response?.routes[0];
-  const { bounds, summary, overview_polyline } = res;
-  if (!bounds) return null;
+export function boundsToImage(bounds, overview_polyline) {
+  if (!bounds) return false;
   const centerCords = {
     lat: (bounds.northeast.lat + bounds.southwest.lat) / 2,
     lng: (bounds.northeast.lng + bounds.southwest.lng) / 2,
@@ -29,14 +22,34 @@ function RoutePreview(props) {
   const zoom = 14; // Example zoom level, adjust as needed
   const size = '380x250'; // Map image size in pixels (width x height)
   const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'; // Make sure to use your actual API key
-  const path = `color:#4B3BFF|weight:2|enc:${overview_polyline.points}`;
+  const path = overview_polyline
+    ? `color:#4B3BFF|weight:2|enc:${overview_polyline.points}`
+    : false;
 
-  const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${center}&path=${encodeURIComponent(
-    path,
-  )}&zoom=${zoom}&size=${size}&key=${apiKey}`;
+  let mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${center}&zoom=${zoom}&size=${size}&key=${apiKey}`;
+  if (path) {
+    mapImageUrl += `&path=${encodeURIComponent(path)}`;
+  }
+  return mapImageUrl;
+}
+
+function RoutePreview(props) {
+  const { route, dkCampaign, noCard } = props;
+  if (!route.data?.response?.routes && route.data?.response?.routes[0])
+    return null;
+  const { status, data } = route;
+  const { optimizedAddresses } = data;
+  const res = route.data?.response?.routes[0];
+  const { bounds, summary, overview_polyline } = res;
+
+  const mapImageUrl = boundsToImage(bounds, overview_polyline);
 
   return (
-    <div className="p-4 rounded-md shadow border border-slate-300 h-full">
+    <div
+      className={`${
+        noCard ? '' : 'p-4 rounded-md  border border-slate-300 h-full'
+      }`}
+    >
       <Image
         src={mapImageUrl}
         alt="map"
@@ -77,13 +90,17 @@ function RoutePreview(props) {
           </div>
         </div>
       </div>
-      <div className="mt-4">
-        <Link href={`${route.id}`}>
-          <PrimaryButton variant="outlined" fullWidth>
-            View Route
-          </PrimaryButton>
-        </Link>
-      </div>
+      {!noCard ? (
+        <div className="mt-4">
+          <Link
+            href={`/dashboard/door-knocking/campaign/${dkCampaign.slug}/route/${route.id}`}
+          >
+            <PrimaryButton variant="outlined" fullWidth>
+              View Route
+            </PrimaryButton>
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

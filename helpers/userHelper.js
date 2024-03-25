@@ -10,5 +10,4 @@ export const getInitials = (user) => {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`;
 };
 
-export const passwordRegex =
-  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+export const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;

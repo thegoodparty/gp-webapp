@@ -22,6 +22,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
 import VoterFileSection from './VoterFileSection';
+import ProFieldsSection from './ProFieldsSection';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -230,6 +231,7 @@ export default function AdminVictoryPathPage(props) {
             />
             <div>Mark campaign as not needing Path to Victory</div>
           </H3>{' '}
+          <ProFieldsSection {...props} />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}

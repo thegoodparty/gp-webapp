@@ -16,7 +16,7 @@ const style = {
   borderRadius: 2,
   outline: 'none',
   maxHeight: '90vh',
-  minWidth: ['90vw', '90vw', '65vw', '50vw'],
+  minWidth: 280,
   overflowY: 'auto',
 };
 
