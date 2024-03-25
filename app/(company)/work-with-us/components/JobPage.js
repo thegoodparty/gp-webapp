@@ -41,7 +41,7 @@ function JobPage({ job }) {
     <div key="1">
       {job && (
         <>
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="bg-white rounded-lg shadow-lg p-6 [&_p]:mb-3">
             <div
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(job.descriptionHtml),

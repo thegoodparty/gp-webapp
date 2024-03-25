@@ -166,6 +166,7 @@ export default function QuestionsPage(props) {
         {campaign && nextKey === 'issues' && (
           <AddIssues
             {...props}
+            campaign={campaign}
             completeCallback={handleComplete}
             updatePositionsCallback={updatePositionsCallback}
           />

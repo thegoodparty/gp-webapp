@@ -55,7 +55,7 @@ export default function ProTools() {
                     className="flex items-center"
                   >
                     <BsArrowUpRightCircleFill size={30} />{' '}
-                    <div className="ml-2">Get Started</div>
+                    <div className="ml-2">Get Free Tools</div>
                   </Link>
                 </div>
               ))}

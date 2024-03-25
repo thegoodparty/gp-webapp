@@ -37,7 +37,7 @@ export default function WhatIsCampaign() {
             <div className="my-10 flex">
               <RunCampaignButton id="what-is-get-started" color="warning" />
               <Link href="/get-a-demo" id="what-is-demo" className="block ml-5">
-                <WhiteButton label="Book a free demo" />
+                <WhiteButton label="Get a Demo" />
               </Link>
             </div>
             <div className="grid grid-cols-12 gap-4">

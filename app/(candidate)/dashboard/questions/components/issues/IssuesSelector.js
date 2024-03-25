@@ -17,13 +17,16 @@ export default function IssuesSelector(props) {
   const [panels, setPanels] = useState([]);
 
   useEffect(() => {
+    // make sure the key is different every time
+    const randomKey = (Math.random() + 1).toString(36).substring(4);
+
     const newPanels = [1, 2, 3].map((order) => (
       <IssuesList
         {...props}
         campaign={campaign}
         nextCallback={nextCallback}
         order={order}
-        key={order}
+        key={`${order}-${randomKey}`}
         saveButton={order === 3 && standaloneMode}
       />
     ));

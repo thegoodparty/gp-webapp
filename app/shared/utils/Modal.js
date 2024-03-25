@@ -10,13 +10,13 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  minWidth: 280,
   bgcolor: 'white',
   boxShadow: 8,
   p: 4,
   borderRadius: 2,
   outline: 'none',
   maxHeight: '90vh',
+  minWidth: 280,
   overflowY: 'auto',
 };
 

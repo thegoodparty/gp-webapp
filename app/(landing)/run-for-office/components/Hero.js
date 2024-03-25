@@ -24,7 +24,7 @@ export default function Hero() {
             <div className="mt-10 flex">
               <RunCampaignButton id="hero-get-started" />
               <Link href="/get-a-demo" id="hero-demo" className="block ml-5">
-                <WhiteButton label="Book a free demo" />
+                <WhiteButton label="Get a Demo" />
               </Link>
             </div>
           </div>
