@@ -1,7 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
 import Image from 'next/image';
-import TerryImg from 'public/images/run-for-office/terry-c.png';
 import Graduates from './Graduates';
 
 export default function GreatSuccess() {
@@ -14,8 +12,10 @@ export default function GreatSuccess() {
             <div className="grid grid-cols-12 bg-[#2A2E33] rounded-lg">
               <div className=" col-span-12 lg:col-span-3 p-5 lg:p-0">
                 <Image
-                  src={TerryImg}
-                  alt="Terry C"
+                  src={'https://assets.goodparty.org/candidates/terry-vo.png'}
+                  alt="Terry Vo"
+                  width={1122}
+                  height={988}
                   className="rounded-lg lg:rounded-none lg:rounded-l-lg w-full"
                 />
               </div>
@@ -26,10 +26,10 @@ export default function GreatSuccess() {
                     we are going to turn out more voters and turn around our
                     country in a way that is people-centered.
                     <div className="mt-6 text-slate-600 text-xl">
-                      Terry C., Winner
+                      Terry Vo, Winner
                     </div>
                     <div className="text-lime-400 text-xl mt-1">
-                      TN Metro Council, Nashville
+                      Nashville Metro Council, District 17
                     </div>
                   </div>
                 </div>
