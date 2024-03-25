@@ -208,6 +208,11 @@ const gpApi = {
           method: 'GET',
           withAuth: true,
         },
+        get: {
+          url: `${base}campaign/volunteer/route`,
+          method: 'GET',
+          withAuth: true,
+        },
       },
     },
 

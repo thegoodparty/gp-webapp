@@ -4,8 +4,9 @@ import volunteerAccess from '../shared/volunteerAccess';
 import gpApi from 'gpApi';
 import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
+import VolunteerRoutePage from './components/VolunteerRoutePage';
 
-async function fetchRoutes(slug) {
+async function fetchRoute(slug) {
   try {
     const api = gpApi.campaign.campaignVolunteer.routes.list;
     const token = getServerToken();
@@ -21,22 +22,21 @@ async function fetchRoutes(slug) {
 }
 
 const meta = pageMetaData({
-  title: 'Door Knocking | GOOD PARTY',
-  description: 'Volunteer Door Knocking',
-  slug: '/volunteer-dashboard/door-knocking',
+  title: 'Volunteer Route | GOOD PARTY',
+  description: 'Volunteer Route',
+  slug: '/volunteer-dashboard/door-knocking/route',
 });
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const campaigns = await volunteerAccess();
-  const campaign = campaigns[0];
-  const { unclaimedRoutes, claimedRoutes } = await fetchRoutes(campaign.slug);
+  const { id } = params;
+
+  const { route } = await fetchRoute(id);
   const childProps = {
     pathname: '/volunteer-dashboard/door-knocking',
-    campaign,
-    unclaimedRoutes,
-    claimedRoutes,
+    route,
   };
 
-  return <VolunteerDoorKnocking {...childProps} />;
+  return <VolunteerRoutePage {...childProps} />;
 }
