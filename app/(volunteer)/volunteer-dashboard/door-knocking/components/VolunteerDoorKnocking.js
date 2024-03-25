@@ -6,8 +6,10 @@ import VolunteerRoutes from './VolunteerRoutes';
 export default function VolunteerDoorKnocking(props) {
   return (
     <VolunteerDashboardLayout {...props}>
-      <DesktopQr />
-      <VolunteerRoutes {...props} />
+      <div className="p-2">
+        <DesktopQr />
+        <VolunteerRoutes {...props} />
+      </div>
     </VolunteerDashboardLayout>
   );
 }

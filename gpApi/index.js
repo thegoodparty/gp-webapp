@@ -208,7 +208,7 @@ const gpApi = {
           method: 'GET',
           withAuth: true,
         },
-        get: {
+        find: {
           url: `${base}campaign/volunteer/route`,
           method: 'GET',
           withAuth: true,

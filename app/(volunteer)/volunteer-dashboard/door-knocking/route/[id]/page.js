@@ -5,12 +5,12 @@ import gpFetch from 'gpApi/gpFetch';
 import VolunteerRoutePage from './components/VolunteerRoutePage';
 import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/volunteerAccess';
 
-async function fetchRoute(slug) {
+async function fetchRoute(id) {
   try {
-    const api = gpApi.campaign.campaignVolunteer.routes.list;
+    const api = gpApi.campaign.campaignVolunteer.routes.find;
     const token = getServerToken();
     const payload = {
-      slug,
+      id,
     };
 
     return await gpFetch(api, payload, false, token);
