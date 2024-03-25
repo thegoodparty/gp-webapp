@@ -23,8 +23,6 @@ export default function TeamSection(props) {
   const [volunteers, setVolunteers] = useState(props.volunteers || []);
   const [invitations, setInvitations] = useState(props.invitations || []);
 
-  console.log('volunteers', volunteers);
-
   const reloadInvitationsCallback = async () => {
     const { invitations } = await fetchInvitations();
     setInvitations(invitations);

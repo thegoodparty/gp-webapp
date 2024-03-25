@@ -213,6 +213,16 @@ const gpApi = {
           method: 'GET',
           withAuth: true,
         },
+        claim: {
+          url: `${base}campaign/volunteer/route/claim`,
+          method: 'PUT',
+          withAuth: true,
+        },
+        unclaim: {
+          url: `${base}campaign/volunteer/route/unclaim`,
+          method: 'PUT',
+          withAuth: true,
+        },
       },
     },
 
