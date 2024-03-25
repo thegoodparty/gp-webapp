@@ -72,7 +72,7 @@ export default function AdminCandidatesPage(props) {
     campaigns.map((campaignObj) => {
       const { data } = campaignObj;
       const campaign = mapCampaignToCandidate(data);
-      const { user, isPro } = campaignObj;
+      const { user, isPro, isVerified, didWin } = campaignObj;
       const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
       let waitingForP2v =
@@ -128,6 +128,8 @@ export default function AdminCandidatesPage(props) {
         pledged: campaign?.pledged && campaign.pledged === true ? 'yes' : 'no',
         knowRun: runningForOffice,
         isPro: isPro ? 'yes' : 'no',
+        isVerified: isVerified ? 'yes' : 'no',
+        didWin: didWin ? 'yes' : 'no',
       };
       inputData.push(fields);
       let csvFields = fields;
@@ -230,6 +232,14 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Is Pro?',
       accessor: 'isPro',
+    },
+    {
+      Header: 'Is Verified?',
+      accessor: 'isVerified',
+    },
+    {
+      Header: 'Did Win?',
+      accessor: 'didWin',
     },
     {
       Header: 'Door Knocked',

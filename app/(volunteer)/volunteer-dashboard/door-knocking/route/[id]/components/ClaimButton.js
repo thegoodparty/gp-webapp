@@ -53,7 +53,7 @@ export default function ClaimButton(props) {
     <div className="mt-4 mb-2">
       {claimed ? (
         <PrimaryButton fullWidth onClick={handleUnclaim}>
-          Release Route
+          Leave Route
         </PrimaryButton>
       ) : (
         <PrimaryButton variant="outlined" fullWidth onClick={handleClaim}>
