@@ -1,7 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import Graduates from './Graduates';
-import TerryImgSrc from '/public/images/run-for-office/Screen Shot 2024-03-14 at 9.13.40 AM.png'
 
 export default function GreatSuccess() {
   return (
