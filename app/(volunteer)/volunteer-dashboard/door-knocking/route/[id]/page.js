@@ -1,9 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper';
-import volunteerAccess from '../shared/volunteerAccess';
 import gpApi from 'gpApi';
 import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
 import VolunteerRoutePage from './components/VolunteerRoutePage';
+import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/volunteerAccess';
 
 async function fetchRoute(slug) {
   try {
