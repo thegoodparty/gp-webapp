@@ -15,9 +15,10 @@ import DashboardMobile from '../DashboardMobile';
 import NotificationsDropdown from './notifications/NotificationsDropdown';
 import VolunteerDashboardMobile from '../VolunteerDashboardMobile';
 
+// TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
-  { title: 'Run For Office', links: RUN_LINKS },
-  { title: 'Community', links: COMMUNITY_LINKS },
+  { title: 'For Candidates', links: RUN_LINKS },
+  { title: 'For Voters', links: COMMUNITY_LINKS },
   { title: 'Resources', links: RESOURCES_LINKS },
 ];
 
