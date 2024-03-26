@@ -4,7 +4,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
-import { useState } from 'react';
 
 async function claimRoute(id) {
   try {
@@ -37,16 +36,16 @@ async function unclaimRoute(id) {
 export default function ClaimButton(props) {
   const { route } = props;
   const user = getUserCookie(true);
-  const [claimed, setClaimed] = useState(route.volunteer === user.id);
+  const claimed = route.volunteer === user.id;
 
   const handleClaim = async () => {
     await claimRoute(route.id);
-    setClaimed(true);
+    window.location.reload();
   };
 
   const handleUnclaim = async () => {
     await unclaimRoute(route.id);
-    setClaimed(false);
+    window.location.reload();
   };
 
   return (
