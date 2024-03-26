@@ -34,6 +34,7 @@ export function boundsToImage(bounds, overview_polyline) {
 }
 
 function RoutePreview(props) {
+  console.error('route preview', props);
   const { route, dkCampaign, noCard } = props;
   if (!route.data?.response?.routes && route.data?.response?.routes[0])
     return null;
