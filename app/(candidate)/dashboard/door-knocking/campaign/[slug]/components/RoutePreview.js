@@ -40,7 +40,7 @@ function RoutePreview(props) {
   const { status, data } = route;
   const { optimizedAddresses } = data;
   const res = route.data?.response?.routes[0];
-  const { bounds, summary, overview_polyline } = res;
+  const { bounds, summary, overview_polyline } = res || {};
 
   const mapImageUrl = boundsToImage(bounds, overview_polyline);
 

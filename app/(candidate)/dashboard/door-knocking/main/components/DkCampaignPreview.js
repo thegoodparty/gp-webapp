@@ -33,17 +33,18 @@ async function deleteDkCampaign(slug) {
 export default function DkCampaignPreview(props) {
   const { campaign, updateCampaignsCallback } = props;
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
     await props.updateCampaignsCallback();
   };
 
-  const { hasRoutes, bounds, type, routesCount, status } = campaign;
+  const { hasRoutes, bounds, type, routesCount, status } = campaign || {};
 
   useEffect(() => {
     let timeoutId;
 
-    if (!campaign.hasRoutes) {
+    if (campaign && !campaign.hasRoutes) {
       timeoutId = setTimeout(() => {
         console.log('callback');
         updateCampaignsCallback();
@@ -56,6 +57,8 @@ export default function DkCampaignPreview(props) {
       }
     };
   }, [campaign, updateCampaignsCallback]); // Dependency array, re-run the effect if campaign or updateCampaignsCallback changes
+
+  if (!campaign) return null;
 
   let mapImageUrl = '';
   if (hasRoutes && bounds) {
