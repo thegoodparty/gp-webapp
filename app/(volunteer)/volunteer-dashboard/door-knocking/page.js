@@ -29,7 +29,7 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const campaigns = await volunteerAccess();
-  console.log('campaigns', campaigns);
+  console.error('campaigns', campaigns);
   const campaign = campaigns[0];
   const { unclaimedRoutes, claimedRoutes } = await fetchRoutes(campaign.slug);
   const childProps = {
@@ -39,7 +39,7 @@ export default async function Page({ params, searchParams }) {
     claimedRoutes,
   };
 
-  console.log('childProps', childProps);
+  console.error('childProps', childProps);
 
   return <VolunteerDoorKnocking {...childProps} />;
 }
