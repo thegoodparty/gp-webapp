@@ -89,7 +89,6 @@ export default function OfficeSection(props) {
                     ? dateUsHelper(state[field.key])
                     : state[field.key]
                 }
-                // onChangeCallback={onChangeField}
                 disabled
                 fullWidth
               />
@@ -107,6 +106,7 @@ export default function OfficeSection(props) {
         closeCallback={() => {
           setShowModal(false);
         }}
+        boxClassName="w-[95vw] lg:w-[60vw]"
       >
         <OfficeStep campaign={campaign} updateCallback={handleUpdate} />
       </Modal>

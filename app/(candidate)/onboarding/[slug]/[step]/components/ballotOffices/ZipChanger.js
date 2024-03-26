@@ -25,7 +25,7 @@ export default function ZipChanger({ zip, updateZipCallback, count }) {
 
   return (
     <div className="">
-      <Body1 className="font-semibold  text-left">
+      <Body1 className="font-semibold">
         {count} Offices available in
         <span
           className="inline-block ml-2 text-purple-400 font-medium cursor-pointer underline"
