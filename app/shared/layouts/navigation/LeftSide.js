@@ -95,7 +95,9 @@ export default function LeftSide() {
 
   const pathname = usePathname();
   const isOnboardingPath = pathname?.startsWith('/onboarding');
-  const isDashboardPath = pathname?.startsWith('/dashboard');
+  const isDashboardPath =
+    pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/volunteer-dashboard');
 
   const closeAll = () => {
     setRunOpen(false);
