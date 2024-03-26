@@ -7,9 +7,6 @@ import { RxTarget } from 'react-icons/rx';
 
 export default function VolunteerRoutes(props) {
   const { unclaimedRoutes, claimedRoutes } = props;
-  console.log('unclaimedRoutes', unclaimedRoutes);
-  console.log('claimedRoutes', claimedRoutes);
-
   return (
     <section className="lg:hidden">
       <div className="p-2">

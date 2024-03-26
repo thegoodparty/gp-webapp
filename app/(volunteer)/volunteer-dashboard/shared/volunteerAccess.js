@@ -23,7 +23,6 @@ export default async function volunteerAccess() {
     redirect('/login');
   }
   const { campaigns } = await fetchCampaignVolunteered();
-  console.error('campaigns volunteer access', campaigns);
   if (!campaigns || campaigns.length === 0) {
     redirect('/');
   }
