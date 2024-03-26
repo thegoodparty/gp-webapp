@@ -39,7 +39,11 @@ export default function BallotRaces(props) {
   const [showModal, setShowModal] = useState(false);
   const [electionYears, setElectionYears] = useState([])
   const [collapsedYears, setCollapsedYears] = useState({})
-  const numOfRaces = electionYears?.reduce((n, year) => n + ((races && races[year]?.length) || 0), 0)
+  const numOfRaces = electionYears?.reduce(
+    (n, year) => n + (
+      (races && races[year]?.length) || 0
+    ), 0
+  )
   const router = useRouter();
 
   useEffect(() => {
@@ -222,7 +226,10 @@ export default function BallotRaces(props) {
         <div className="mt-6">
           {
             filtered && electionYears?.map(
-              electionYear => (!yearFilter || (yearFilter && electionYear === yearFilter)) && <div key={electionYear}>
+              electionYear => (
+                !yearFilter ||
+                (yearFilter && electionYear === yearFilter)
+              ) && <div key={electionYear}>
                 <H4
                   className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
                   onClick={() => setCollapsedYears({
