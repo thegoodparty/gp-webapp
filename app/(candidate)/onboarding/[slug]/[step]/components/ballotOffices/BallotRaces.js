@@ -12,6 +12,8 @@ import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
 import CustomOfficeModal from './CustomOfficeModal';
 import { useRouter } from 'next/navigation';
+import H4 from '@shared/typography/H4';
+import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 
 const fetchRaces = async (zip) => {
   const api = gpApi.ballotData.races;
@@ -29,23 +31,46 @@ export default function BallotRaces(props) {
   } = props;
   const [zip, setZip] = useState(campaign.details.zip);
   const [races, setRaces] = useState(false);
-  const [filteredRaces, setFilteredRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [level, setLevel] = useState('');
+  const [yearFilter, setYearFilter] = useState(null)
   const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [electionYears, setElectionYears] = useState([])
+  const [collapsedYears, setCollapsedYears] = useState({})
+  const raceCountStart = 0
+  const numOfRaces = electionYears?.reduce(
+    (raceCount, year) => {
+      const nextRaceCount = raceCount + (
+        (races && races[year]?.length) || 0
+      )
+      return nextRaceCount
+    }, raceCountStart
+  )
   const router = useRouter();
 
   useEffect(() => {
     loadRaces();
   }, []);
 
-  const loadRaces = async () => {
+  useEffect(() => {
+    setCollapsedYears(electionYears.reduce(
+      (aggregate, year) => {
+        const nextAggregate = {
+          ...aggregate,
+          [year]: false
+        }
+        return nextAggregate
+      }, {}
+    ))
+  }, [electionYears])
+
+  const loadRaces = async (zip) => {
     setLoading(true);
-    const initRaces = await fetchRaces(campaign.details.zip);
-    setRaces(initRaces.races);
-    setFilteredRaces(initRaces.races);
+    const initRaces = await fetchRaces(zip || campaign.details.zip);
+    setElectionYears(Object.keys(initRaces).sort())
+    setRaces(initRaces);
     setLoading(false);
   };
 
@@ -59,57 +84,62 @@ export default function BallotRaces(props) {
     }
   };
 
+  const clearState = () => {
+    setSelected(false);
+    setInputValue('');
+    setLevel('')
+    setYearFilter(null)
+  }
+
   const handleZipChange = async (newZip) => {
     if (newZip !== zip) {
-      setLoading(true);
-      const newRaces = await fetchRaces(newZip);
-      setRaces(newRaces.races);
-      setFilteredRaces(newRaces.races);
-      setZip(newZip);
-      setSelected(false);
-      setLoading(false);
-      setFilters('');
-      const updatedCampaign = {
+      setZip(newZip)
+      clearState()
+      await loadRaces(newZip)
+      await updateCampaign({
         ...campaign,
         details: {
           ...campaign.details,
           zip: newZip,
         },
-      };
-      await updateCampaign(updatedCampaign);
-    }
-  };
-
-  const filterRaces = (value, updatedLevel) => {
-    if (!value && updatedLevel === '') {
-      setFilteredRaces(races);
-      return;
-    }
-    if (races && typeof races.filter === 'function') {
-      const filtered = races.filter((option) => {
-        let positionLevel = option.position.level;
-        if (positionLevel === 'CITY') {
-          positionLevel = 'LOCAL';
-        }
-
-        if (value && (!updatedLevel || updatedLevel === '')) {
-          return option.position.name
-            .toLowerCase()
-            .includes(value.toLowerCase());
-        }
-        if (value && updatedLevel && updatedLevel !== '') {
-          return (
-            option.position.name.toLowerCase().includes(value.toLowerCase()) &&
-            positionLevel === updatedLevel.toUpperCase()
-          );
-        }
-
-        return positionLevel === updatedLevel.toUpperCase();
       });
-      setFilteredRaces(filtered);
     }
   };
 
+  const filterRace = (race) => {
+    let positionLevel = race.position.level;
+
+    // TODO: move this kind of data-rewite closer to "source of truth", preferably
+    //  whatever entry point the data is being ingested into our database
+    if (positionLevel === 'CITY') {
+      positionLevel = 'LOCAL';
+    }
+    const raceYear = (new Date(race.election.electionDay)).getFullYear()
+
+    const isTextFiltered = inputValue ?
+      race.position.name
+      .toLowerCase()
+      .includes(inputValue.toLowerCase()) : true
+
+    const isLevelFiltered = level ?
+      level && positionLevel === level.toUpperCase() :true
+
+    const isYearFiltered = yearFilter ?
+      parseInt(yearFilter) === raceYear : true
+
+    return isTextFiltered && isLevelFiltered && isYearFiltered
+  }
+
+  const areFiltersEmpty = !level && !inputValue && !yearFilter
+  const filtered = areFiltersEmpty ?
+    races :
+    electionYears.reduce(
+      (racesGroupedByYear, year) => ({
+          ...racesGroupedByYear,
+          [year]: races[year]?.filter(filterRace)
+        }),
+      {}
+    )
   const showCustomModal = () => {
     setShowModal(true);
   };
@@ -137,44 +167,54 @@ export default function BallotRaces(props) {
       <ZipChanger
         zip={zip}
         updateZipCallback={handleZipChange}
-        count={races?.length || 0}
+        count={numOfRaces || 0}
       />
       <Sticky top={56} innerZ={10}>
         <div className="bg-white pt-4 pb-2">
-          <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12 md:col-span-8 pt-1">
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-12 lg:col-span-6 pt-1">
               <TextField
                 label="Search for offices"
                 value={inputValue}
                 fullWidth
-                onChange={(e) => {
-                  setInputValue(e.target.value);
-                  filterRaces(e.target.value, level);
-                }}
+                onChange={(e) => setInputValue(e.target.value)}
               />
             </div>
-            <div className="hidden md:block md:col-span-4">
-              <div>
-                <Select
-                  native
-                  required
-                  variant="outlined"
-                  fullWidth
-                  value={level}
-                  onChange={(e) => {
-                    setLevel(e.target.value);
-                    filterRaces(inputValue, e.target.value);
-                  }}
-                  sx={{ padding: '2px' }}
-                >
-                  <option value="">Election Level</option>
-                  {['local', 'county', 'state', 'federal'].map((value) => (
-                    <option value={value} key={value}>
-                      {value} office
-                    </option>
-                  ))}
-                </Select>
-              </div>
+            <div className="col-span-12 lg:col-span-4">
+              <Select
+                className="py-[2px]"
+                native
+                required
+                variant="outlined"
+                fullWidth
+                value={level}
+                onChange={(e) => setLevel(e.target.value)}
+              >
+                <option value="">Election Level</option>
+                {['local', 'county', 'state', 'federal'].map((value) => (
+                  <option value={value} key={value}>
+                    {value} office
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="col-span-12 lg:col-span-2">
+              <Select
+                className="py-[2px]"
+                native
+                required
+                variant="outlined"
+                fullWidth
+                value={yearFilter}
+                onChange={(e) => setYearFilter(e.target.value)}
+              >
+                <option value="">Year</option>
+                {electionYears.map((value) => (
+                  <option value={value} key={value}>
+                    {value}
+                  </option>
+                ))}
+              </Select>
             </div>
           </div>
         </div>
@@ -188,19 +228,41 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {filteredRaces &&
-            filteredRaces.map((race, index) => (
-              <RaceCard
-                key={index}
-                race={race}
-                selected={race?.position?.id === selected.position?.id}
-                selectCallback={handleSelect}
-                inputValue={inputValue}
-              />
-            ))}
+          {
+            filtered && electionYears?.map(
+              electionYear => (
+                !yearFilter ||
+                (yearFilter && electionYear === yearFilter)
+              ) && <div key={electionYear}>
+                <H4
+                  className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
+                  onClick={() => setCollapsedYears({
+                    ...collapsedYears,
+                    [electionYear]: !collapsedYears[electionYear],
+                  })}>
+                  {electionYear}{
+                    collapsedYears[electionYear] ?
+                      <FaChevronRight className="inline-block ml-1" /> :
+                      <FaChevronDown className="inline-block ml-1" />
+                  }
+                </H4>
+                {
+                  !collapsedYears[electionYear] && filtered[electionYear].map(
+                    (race, index) => <RaceCard
+                      key={index}
+                      race={race}
+                      selected={race?.position?.id === selected.position?.id}
+                      selectCallback={handleSelect}
+                      inputValue={inputValue}
+                    />
+                  )
+                }
+              </div>
+            )
+          }
           {!loading && (
             <div
-              className="px-4 py-4 cursor-pointer rounded-md transition-colors hover:bg-slate-100"
+              className="px-4 py-4 cursor-pointer rounded-md transition-colors hover:bg-slate-100 text-center"
               onClick={showCustomModal}
             >
               I can&apos;t see my position
