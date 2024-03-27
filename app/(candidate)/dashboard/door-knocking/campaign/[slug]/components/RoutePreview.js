@@ -39,7 +39,7 @@ function RoutePreview(props) {
     return null;
   const { status, data } = route;
   const { optimizedAddresses } = data;
-  if (optimizedAddresses?.length === 0) {
+  if (!optimizedAddresses || optimizedAddresses.length === 0) {
     return null;
   }
   const res = route.data?.response?.routes[0];
