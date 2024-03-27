@@ -39,10 +39,14 @@ export default function BallotRaces(props) {
   const [showModal, setShowModal] = useState(false);
   const [electionYears, setElectionYears] = useState([])
   const [collapsedYears, setCollapsedYears] = useState({})
+  const raceCountStart = 0
   const numOfRaces = electionYears?.reduce(
-    (n, year) => n + (
-      (races && races[year]?.length) || 0
-    ), 0
+    (raceCount, year) => {
+      const nextRaceCount = raceCount + (
+        (races && races[year]?.length) || 0
+      )
+      return nextRaceCount
+    }, raceCountStart
   )
   const router = useRouter();
 
@@ -52,11 +56,12 @@ export default function BallotRaces(props) {
 
   useEffect(() => {
     setCollapsedYears(electionYears.reduce(
-      (agg, yr) => {
-        return {
-          ...agg,
-          [yr]: false
+      (aggregate, year) => {
+        const nextAggregate = {
+          ...aggregate,
+          [year]: false
         }
+        return nextAggregate
       }, {}
     ))
   }, [electionYears])
@@ -111,23 +116,22 @@ export default function BallotRaces(props) {
     }
     const raceYear = (new Date(race.election.electionDay)).getFullYear()
 
-    const textFiltered = inputValue ?
+    const isTextFiltered = inputValue ?
       race.position.name
       .toLowerCase()
       .includes(inputValue.toLowerCase()) : true
 
-    const levelFiltered = level ?
+    const isLevelFiltered = level ?
       level && positionLevel === level.toUpperCase() :true
 
-    const yearFiltered = yearFilter ?
+    const isYearFiltered = yearFilter ?
       parseInt(yearFilter) === raceYear : true
 
-    return textFiltered && levelFiltered && yearFiltered
+    return isTextFiltered && isLevelFiltered && isYearFiltered
   }
 
-  const filtersEmpty = !level && !inputValue && !yearFilter
-
-  const filtered = filtersEmpty ?
+  const areFiltersEmpty = !level && !inputValue && !yearFilter
+  const filtered = areFiltersEmpty ?
     races :
     electionYears.reduce(
       (racesGroupedByYear, year) => ({
