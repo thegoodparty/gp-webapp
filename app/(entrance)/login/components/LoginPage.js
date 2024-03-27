@@ -53,8 +53,7 @@ export default function LoginPage() {
   const snackbarState = useHookstate(globalSnackbarState);
 
   const enableSubmit = () =>
-    isValidEmail(state.email) &&
-    isValidPassword(state.password)
+    isValidEmail(state.email) && isValidPassword(state.password);
 
   const handleSubmit = async () => {
     if (enableSubmit()) {

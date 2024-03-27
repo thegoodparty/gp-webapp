@@ -93,8 +93,7 @@ export default function EmailForm({
               id="submit-email"
               type="submit"
             >
-              <PrimaryButton
-                onClick={submitForm} >{label}</PrimaryButton>
+              <PrimaryButton onClick={submitForm}>{label}</PrimaryButton>
             </div>
 
             {!!showError && (

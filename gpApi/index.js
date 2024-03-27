@@ -224,6 +224,13 @@ const gpApi = {
           withAuth: true,
         },
       },
+      voter: {
+        find: {
+          url: `${base}voter`,
+          method: 'GET',
+          withAuth: true,
+        },
+      },
     },
 
     candidatePosition: {
