@@ -23,8 +23,6 @@ export default function CandidateInfo(props) {
   });
   sortedIssues.sort((a, b) => a.order - b.order);
 
-  console.log('sortedIssues', sortedIssues);
-
   return (
     <section>
       <div className="p-4 rounded-lg bg-white mb-4">
