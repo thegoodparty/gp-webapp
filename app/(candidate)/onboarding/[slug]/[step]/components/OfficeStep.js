@@ -106,8 +106,8 @@ export default function OfficeStep(props) {
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
-      <div className="flex items-center flex-col text-center py-12">
-        <H1>What office are you interested in?</H1>
+      <div className="flex items-center flex-col py-12">
+        <H1 className="text-center">What office are you interested in?</H1>
 
         <div className="w-full max-w-2xl mt-10">
           <BallotRaces

@@ -24,6 +24,9 @@ export default function Modal({
   open,
   closeCallback,
   children,
+  // TODO: Choose ONE way to style modals, that does so responsively.
+  //  Not 3 ("boxStyle", "style", and now "boxClassName").
+  boxClassName = '',
   boxStyle = {},
   preventBackdropClose = false,
 }) {
@@ -36,7 +39,7 @@ export default function Modal({
   return (
     <MuiModal open={open} onClose={handleClose}>
       <div className="bg-blue-400">
-        <Box sx={style} style={boxStyle}>
+        <Box className={boxClassName} sx={style} style={boxStyle}>
           <div
             className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
             onClick={closeCallback}
