@@ -86,7 +86,7 @@ export default function AdminCandidatesPage(props) {
         waitingForP2v = 'Not Needed';
       }
 
-      let runningForOffice = 'no';
+      let runningForOffice = 'Exploring';
       if (data?.details?.knowRun && data.details.knowRun === 'yes') {
         runningForOffice = 'yes';
       } else if (
