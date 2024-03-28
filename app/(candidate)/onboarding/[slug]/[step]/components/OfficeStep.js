@@ -119,11 +119,13 @@ export default function OfficeStep(props) {
           />
         </div>
         <div className={`${step ? 'fixed bottom-0 w-full bg-white py-4' : ''}`}>
-          <div onClick={handleSave}>
-            <PrimaryButton disabled={!canSubmit()} type="submit">
-              {step ? 'Next' : 'Save'}
-            </PrimaryButton>
-          </div>
+          <PrimaryButton
+            className={{ 'mx-auto': true, 'block': true }}
+            disabled={!canSubmit()}
+            type="submit"
+            onClick={handleSave}>
+            {step ? 'Next' : 'Save'}
+          </PrimaryButton>
         </div>
       </div>
     </form>
