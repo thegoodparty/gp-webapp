@@ -16,6 +16,12 @@ import { MdVisibilityOff } from 'react-icons/md';
 import { BsFiletypeCsv } from 'react-icons/bs';
 import { formatToPhone } from 'helpers/numberHelper';
 import { dateColumnSort } from 'helpers/dateColumnSort';
+import {
+  IS_VERIFIED_OPTIONS_REVERSED
+} from '../../victory-path/[slug]/components/is-verified-options.constant';
+import {
+  CANDIDATE_TIERS_REVERSED,
+} from '../../victory-path/[slug]/components/candidate-tiers.constant';
 
 function mapStatus(status, isActive) {
   if (!status) {
@@ -73,7 +79,7 @@ export default function AdminCandidatesPage(props) {
   campaigns?.map((campaignObj) => {
     const { data } = campaignObj;
     const campaign = mapCampaignToCandidate(data);
-    const { user, isPro, isVerified, didWin } = campaignObj;
+    const { user, isPro, isVerified, didWin, tier } = campaignObj;
     const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
     let waitingForP2v =
@@ -95,17 +101,6 @@ export default function AdminCandidatesPage(props) {
       data.details.runForOffice === 'yes'
     ) {
       runningForOffice = 'Yes';
-    }
-
-    let isVerifiedDisplay;
-    if (!isVerified) {
-      if (isVerified === null) {
-        isVerifiedDisplay = 'Review';
-      } else {
-        isVerifiedDisplay = 'No';
-      }
-    } else {
-      isVerifiedDisplay = 'Yes';
     }
 
     const fields = {
@@ -140,7 +135,8 @@ export default function AdminCandidatesPage(props) {
       pledged: campaign?.pledged && campaign.pledged === true ? 'Yes' : 'No',
       knowRun: runningForOffice,
       isPro: isPro ? 'Yes' : 'No',
-      isVerified: isVerifiedDisplay,
+      isVerified: IS_VERIFIED_OPTIONS_REVERSED[isVerified],
+      tier: CANDIDATE_TIERS_REVERSED[tier],
       didWin: didWin ? 'Yes' : 'No'
     };
     inputData.push(fields);
@@ -205,6 +201,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Is Verified?',
       accessor: 'isVerified',
+    },
+    {
+      Header: 'Tier',
+      accessor: 'tier',
     },
     {
       Header: 'Did Win?',
