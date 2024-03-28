@@ -174,7 +174,7 @@ export default function BallotRaces(props) {
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-6 pt-1">
               <TextField
-                label="Search for offices"
+                label="Search"
                 value={inputValue}
                 fullWidth
                 onChange={(e) => setInputValue(e.target.value)}
