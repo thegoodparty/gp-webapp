@@ -64,6 +64,9 @@ export default function AdminCandidatesPage(props) {
       'waitingForP2v',
       'pledged',
       'knowRun',
+      'isPro',
+      'isVerified',
+      'didWin'
     ],
   ];
 
@@ -86,7 +89,7 @@ export default function AdminCandidatesPage(props) {
         waitingForP2v = 'Not Needed';
       }
 
-      let runningForOffice = 'no';
+      let runningForOffice = 'Exploring';
       if (data?.details?.knowRun && data.details.knowRun === 'yes') {
         runningForOffice = 'yes';
       } else if (
@@ -189,6 +192,18 @@ export default function AdminCandidatesPage(props) {
       accessor: 'knowRun',
     },
     {
+      Header: 'Is Pro?',
+      accessor: 'isPro',
+    },
+    {
+      Header: 'Is Verified?',
+      accessor: 'isVerified',
+    },
+    {
+      Header: 'Did Win?',
+      accessor: 'didWin',
+    },
+    {
       Header: 'Path to Victory',
       accessor: 'victoryPath',
       Cell: ({ row }) => {
@@ -228,18 +243,6 @@ export default function AdminCandidatesPage(props) {
           </a>
         );
       },
-    },
-    {
-      Header: 'Is Pro?',
-      accessor: 'isPro',
-    },
-    {
-      Header: 'Is Verified?',
-      accessor: 'isVerified',
-    },
-    {
-      Header: 'Did Win?',
-      accessor: 'didWin',
     },
     {
       Header: 'Door Knocked',

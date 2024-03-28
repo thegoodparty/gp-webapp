@@ -39,6 +39,9 @@ function RoutePreview(props) {
     return null;
   const { status, data } = route;
   const { optimizedAddresses } = data;
+  if (!optimizedAddresses || optimizedAddresses.length === 0) {
+    return null;
+  }
   const res = route.data?.response?.routes[0];
   const { bounds, summary, overview_polyline } = res || {};
 

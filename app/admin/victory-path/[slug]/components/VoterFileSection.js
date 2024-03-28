@@ -68,7 +68,10 @@ export default function VoterFileSection(props) {
     campaign.pathToVictory?.electionLocation
   ) {
     status = 'hasElectionType';
-    if (campaign.hasVoterFile) {
+    if (campaign.hasVoterFile === 'processing') {
+      status = 'processingVoterFile';
+    }
+    if (campaign.hasVoterFile === 'completed') {
       status = 'hasVoterFile';
     }
   }
@@ -132,6 +135,12 @@ export default function VoterFileSection(props) {
           <Body1 className="mt-4">
             Note: this might take a few minutes to complete.
           </Body1>
+        </div>
+      )}
+      {status === 'processing' && (
+        <div>
+          The voter file is being purchased. This might take a few minutes.
+          Please refresh the page to update the status
         </div>
       )}
       {status === 'hasVoterFile' && (
