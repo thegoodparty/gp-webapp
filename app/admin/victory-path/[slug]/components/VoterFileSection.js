@@ -49,7 +49,7 @@ export default function VoterFileSection(props) {
         };
       });
       await revalidatePage('/admin/victory-path/[slug]');
-      window.location.reload();
+      // window.location.reload();
     } else {
       snackbarState.set(() => {
         return {
@@ -68,12 +68,12 @@ export default function VoterFileSection(props) {
     campaign.pathToVictory?.electionLocation
   ) {
     status = 'hasElectionType';
-    if (campaign.hasVoterFile === 'processing') {
-      status = 'processingVoterFile';
-    }
-    if (campaign.hasVoterFile === 'completed') {
-      status = 'hasVoterFile';
-    }
+  }
+  if (campaign.hasVoterFile === 'processing') {
+    status = 'processingVoterFile';
+  }
+  if (campaign.hasVoterFile === 'completed') {
+    status = 'hasVoterFile';
   }
 
   const handleRerun = async () => {
