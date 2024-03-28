@@ -4,9 +4,17 @@ import gpFetch from 'gpApi/gpFetch';
 import H3 from '@shared/typography/H3';
 import Checkbox from '@shared/inputs/Checkbox';
 import { useState } from 'react';
-import { IsVerifiedSelect } from './IsVerifiedSelect';
+import { CandidateFieldSelect } from './CandidateFieldSelect';
+import { CANDIDATE_TIERS } from './candidate-tiers.constant';
+import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant';
 
-async function updateAdminFields(slug, isVerified, isPro, didWin) {
+async function updateAdminFields(
+  slug,
+  isVerified,
+  isPro,
+  didWin,
+  tier
+) {
   try {
     const api = gpApi.campaign.adminUpdate;
     const payload = {
@@ -14,6 +22,7 @@ async function updateAdminFields(slug, isVerified, isPro, didWin) {
       isVerified,
       isPro,
       didWin,
+      tier
     };
     return await gpFetch(api, payload);
   } catch (e) {
@@ -24,6 +33,7 @@ async function updateAdminFields(slug, isVerified, isPro, didWin) {
 
 const fields = [
   { key: 'isVerified', label: 'Is Verified?' },
+  { key: 'tier', label: 'Tier' },
   { key: 'isPro', label: 'Is Pro Account?' },
   { key: 'didWin', label: 'Did win election?' },
 ];
@@ -32,6 +42,7 @@ export default function ProFieldsSection(props) {
   const { campaignObj } = props;
   const [state, setState] = useState({
     isVerified: campaignObj.isVerified,
+    tier: campaignObj.tier,
     isPro: campaignObj.isPro,
     didWin: campaignObj.didWin,
   });
@@ -44,6 +55,7 @@ export default function ProFieldsSection(props) {
       newState.isVerified,
       newState.isPro,
       newState.didWin,
+      newState.tier,
     );
   };
 
@@ -55,12 +67,18 @@ export default function ProFieldsSection(props) {
       {fields.map(
         (field) => <div key={field.key} className="flex items-center">
           {
-            field.key === 'isVerified' ?
-              <IsVerifiedSelect
+            ['isVerified', 'tier'].includes(field.key) ?
+              <CandidateFieldSelect
                 value={state[field.key]}
                 onChange={
                   (e) => handleChange(field.key, e.target.value)
-                } /> :
+                }
+                valueMapping={
+                  field.key === 'isVerified' ?
+                    IS_VERIFIED_OPTIONS :
+                    CANDIDATE_TIERS
+                }
+              /> :
               <Checkbox
                 value={state[field.key]}
                 defaultChecked={campaignObj[field.key]}
