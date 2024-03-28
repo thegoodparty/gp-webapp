@@ -3,7 +3,6 @@ import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import Overline from '@shared/typography/Overline';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { Fragment } from 'react';
 
 export default function CandidateInfo(props) {
   const campaign = props.voter.campaign;
@@ -15,12 +14,16 @@ export default function CandidateInfo(props) {
   const { positions } = campaign;
 
   const sortedIssues = [];
-  positions?.forEach((position) => {
-    sortedIssues.push({ ...position, type: 'position' });
-  });
-  customIssues?.forEach((issue) => {
-    sortedIssues.push({ ...issue, type: 'custom' });
-  });
+  if (positions) {
+    positions?.forEach((position) => {
+      sortedIssues.push({ ...position, type: 'position' });
+    });
+  }
+  if (customIssues) {
+    customIssues?.forEach((issue) => {
+      sortedIssues.push({ ...issue, type: 'custom' });
+    });
+  }
   sortedIssues.sort((a, b) => a.order - b.order);
 
   return (

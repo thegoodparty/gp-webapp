@@ -75,7 +75,11 @@ export default function DashboardMenu({
     deleteUserCookies();
     window.location.replace('/');
   };
-  if (user?.isAdmin && pages.length === 8 && campaign?.hasVoterFile) {
+  if (
+    user?.isAdmin &&
+    pages.length === 8 &&
+    campaign?.hasVoterFile === 'completed'
+  ) {
     pages[4].link = '/dashboard/voter-records';
     pages[4].id = 'vote-records-dashboard';
 
