@@ -6,7 +6,6 @@ import { FaChevronLeft } from 'react-icons/fa';
 export default function TitleSection(props) {
   const { voter } = props;
   const router = useRouter();
-  console.log('voter', voter);
 
   return (
     <section className="pb-3 pt-4  px-2 bg-white flex justify-between">
