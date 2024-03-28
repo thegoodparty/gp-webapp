@@ -23,7 +23,7 @@ async function fetchVoter(id) {
 
 const meta = pageMetaData({
   title: 'Volunteer Route - address | GOOD PARTY',
-  description: 'Volunteer Route- address',
+  description: 'Volunteer Route- address.',
   slug: '/volunteer-dashboard/door-knocking/route',
 });
 export const metadata = meta;

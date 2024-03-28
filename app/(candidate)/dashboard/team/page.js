@@ -52,6 +52,7 @@ export default async function Page({ params, searchParams }) {
     volunteers,
     invitations,
     user,
+    campaign,
   };
 
   return <CampaignTeamPage {...childProps} />;
