@@ -26,7 +26,7 @@ export default function CandidateInfo(props) {
   }
   sortedIssues.sort((a, b) => a.order - b.order);
 
-  const candidateName = `${firstName || details.firstNam || ''} ${
+  const candidateName = `${firstName || details.firstName || ''} ${
     lastName || details.lastName || ''
   }`;
 
