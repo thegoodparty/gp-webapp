@@ -6,13 +6,14 @@ import TabsSection from './TabsSection';
 export default function VolunteerAddressPage(props) {
   return (
     <VolunteerDashboardLayout {...props}>
-      <div className=" bg-white">
+      {/* <div className=" bg-white">
         <TitleSection {...props} />
         <VoterInfo {...props} />
       </div>
       <div className="p-4">
         <TabsSection {...props} />
-      </div>
+      </div> */}
+      hi
     </VolunteerDashboardLayout>
   );
 }
