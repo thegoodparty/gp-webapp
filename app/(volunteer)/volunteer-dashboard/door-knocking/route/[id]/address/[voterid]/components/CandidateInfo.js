@@ -26,11 +26,15 @@ export default function CandidateInfo(props) {
   }
   sortedIssues.sort((a, b) => a.order - b.order);
 
+  const candidateName = `${firstName || details.firstNam || ''} ${
+    lastName || details.lastName || ''
+  }`;
+
   return (
     <section>
       <div className="p-4 rounded-lg bg-white mb-4">
         <Overline>CANDIDATE</Overline>
-        <H2 className="mt-2">{`${firstName} ${lastName}`}</H2>
+        <H2 className="mt-2">{candidateName}</H2>
       </div>
       <div className="p-4 rounded-lg bg-white mb-4">
         <Overline>ELECTION DATE</Overline>
