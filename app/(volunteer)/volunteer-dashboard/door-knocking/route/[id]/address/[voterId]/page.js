@@ -29,20 +29,21 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
-  const campaigns = await volunteerAccess();
-  const { id, voterId } = params;
+  return <div>page</div>;
+  // const campaigns = await volunteerAccess();
+  // const { id, voterId } = params;
 
-  const { voter } = await fetchVoter(voterId);
-  if (!voter) {
-    return notFound();
-  }
+  // const { voter } = await fetchVoter(voterId);
+  // if (!voter) {
+  //   return notFound();
+  // }
 
-  // const { route } = await fetchRoute(id);
-  const childProps = {
-    pathname: '/volunteer-dashboard/door-knocking',
-    // route,
-    voter,
-  };
+  // // const { route } = await fetchRoute(id);
+  // const childProps = {
+  //   pathname: '/volunteer-dashboard/door-knocking',
+  //   // route,
+  //   voter,
+  // };
 
-  return <VolunteerAddressPage {...childProps} />;
+  // return <VolunteerAddressPage {...childProps} />;
 }
