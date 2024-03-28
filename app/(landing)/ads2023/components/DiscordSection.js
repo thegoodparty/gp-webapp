@@ -39,7 +39,7 @@ export default function DiscordSection() {
           <Image alt="" src={user5} width={64} height={64} className="" />
         </div>
         <a
-          href="https://discord.gg/goodparty"
+          href="https://discord.gg/invite/goodparty"
           target="_blank"
           rel="noopener noreferrer nofollow"
           className="mt-12 inline-block"

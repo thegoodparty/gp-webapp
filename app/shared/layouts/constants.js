@@ -40,7 +40,7 @@ export const FOOTER_COLUMNS = [
       { label: 'Book a Demo', link: '/get-a-demo' },
       { label: 'Political Definitions', link: '/political-terms' },
       { label: 'Declare Independence', link: '/declare' },
-      { label: 'Discord Community', link: 'https://discord.gg/goodparty' },
+      { label: 'Discord Community', link: 'https://discord.gg/invite/goodparty' },
       { label: 'Pricing', link: '/pricing' },
     ],
   },
@@ -73,7 +73,7 @@ export const SOCIAL_LINKS = [
   },
   {
     label: 'Discord',
-    link: 'https://discord.gg/goodparty',
+    link: 'https://discord.gg/invite/goodparty',
     isExternal: true,
     icon: <FaDiscord />,
   },
