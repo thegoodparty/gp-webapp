@@ -3,7 +3,6 @@
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
-import { useMemo } from 'react';
 import Table from '@shared/utils/Table';
 import Link from 'next/link';
 import { CSVLink } from 'react-csv';
@@ -71,80 +70,88 @@ export default function AdminCandidatesPage(props) {
   ];
 
   const inputData = [];
-  if (campaigns) {
-    campaigns.map((campaignObj) => {
-      const { data } = campaignObj;
-      const campaign = mapCampaignToCandidate(data);
-      const { user, isPro, isVerified, didWin } = campaignObj;
-      const { currentStep, reportedVoterGoals, aiContent } = data || {};
+  campaigns?.map((campaignObj) => {
+    const { data } = campaignObj;
+    const campaign = mapCampaignToCandidate(data);
+    const { user, isPro, isVerified, didWin } = campaignObj;
+    const { currentStep, reportedVoterGoals, aiContent } = data || {};
 
-      let waitingForP2v =
-        !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'yes' : 'no';
+    let waitingForP2v =
+      !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'Yes' : 'No';
 
-      if (!data?.details?.pledged) {
-        waitingForP2v = 'n/a';
+    if (!data?.details?.pledged) {
+      waitingForP2v = 'n/a';
+    }
+
+    if (data.p2vNotNeeded) {
+      waitingForP2v = 'Not Needed';
+    }
+
+    let runningForOffice = 'Exploring';
+    if (data?.details?.knowRun && data.details.knowRun === 'yes') {
+      runningForOffice = 'Yes';
+    } else if (
+      data?.details?.runForOffice &&
+      data.details.runForOffice === 'yes'
+    ) {
+      runningForOffice = 'Yes';
+    }
+
+    let isVerifiedDisplay;
+    if (!isVerified) {
+      if (isVerified === null) {
+        isVerifiedDisplay = 'Review';
+      } else {
+        isVerifiedDisplay = 'No';
       }
+    } else {
+      isVerifiedDisplay = 'Yes';
+    }
 
-      if (data.p2vNotNeeded) {
-        waitingForP2v = 'Not Needed';
-      }
+    const fields = {
+      id: campaignObj.id,
+      isActive: campaignObj.isActive ? 'Yes' : 'No',
+      slug: campaign.slug,
+      firstName: user?.firstName ? user.firstName : user?.name || 'n/a',
+      lastName: user?.lastName ? user.lastName : 'n/a',
+      userName: `${user?.firstName} ${user?.lastName}`,
+      launched: mapStatus(campaign.launchStatus),
+      lastVisited: campaign.lastVisited,
+      party: partyResolver(campaign.party),
+      office:
+        campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
+      officeTermLength: campaign.officeTermLength,
+      city: campaign.city,
+      district: campaign.district || 'n/a',
+      state: campaign.state ? campaign.state.toUpperCase() : '?',
+      createdAt: new Date(campaignObj.createdAt),
+      updatedAt: new Date(campaignObj.updatedAt),
+      email: user?.email || 'n/a',
+      phone: user?.phone || 'n/a',
+      currentStep,
+      shortVersion: campaign.filedStatement,
+      campaignCommittee: campaign.campaignCommittee,
+      electionDate: campaign.electionDate,
+      doorKnocking: reportedVoterGoals?.doorKnocking || 0,
+      calls: reportedVoterGoals?.calls || 0,
+      digital: reportedVoterGoals?.digital || 0,
+      aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
+      waitingForP2v,
+      pledged: campaign?.pledged && campaign.pledged === true ? 'Yes' : 'No',
+      knowRun: runningForOffice,
+      isPro: isPro ? 'Yes' : 'No',
+      isVerified: isVerifiedDisplay,
+      didWin: didWin ? 'Yes' : 'No'
+    };
+    inputData.push(fields);
+    let csvFields = fields;
+    csvFields.lastVisited = dateUsHelper(fields.lastVisited);
+    csvFields.createdAt = dateUsHelper(fields.createdAt);
+    csvFields.updatedAt = dateUsHelper(fields.updatedAt);
+    csvData.push(Object.values(csvFields));
+  });
 
-      let runningForOffice = 'Exploring';
-      if (data?.details?.knowRun && data.details.knowRun === 'yes') {
-        runningForOffice = 'yes';
-      } else if (
-        data?.details?.runForOffice &&
-        data.details.runForOffice === 'yes'
-      ) {
-        runningForOffice = 'yes';
-      }
-
-      const fields = {
-        id: campaignObj.id,
-        isActive: campaignObj.isActive ? 'yes' : 'no',
-        slug: campaign.slug,
-        firstName: user?.firstName ? user.firstName : user?.name || 'n/a',
-        lastName: user?.lastName ? user.lastName : 'n/a',
-        userName: `${user?.firstName} ${user?.lastName}`,
-        launched: mapStatus(campaign.launchStatus),
-        lastVisited: campaign.lastVisited,
-        party: partyResolver(campaign.party),
-        office:
-          campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
-        officeTermLength: campaign.officeTermLength,
-        city: campaign.city,
-        district: campaign.district || 'n/a',
-        state: campaign.state ? campaign.state.toUpperCase() : '?',
-        createdAt: new Date(campaignObj.createdAt),
-        updatedAt: new Date(campaignObj.updatedAt),
-        email: user?.email || 'n/a',
-        phone: user?.phone || 'n/a',
-        currentStep,
-        shortVersion: campaign.filedStatement,
-        campaignCommittee: campaign.campaignCommittee,
-        electionDate: campaign.electionDate,
-        doorKnocking: reportedVoterGoals?.doorKnocking || 0,
-        calls: reportedVoterGoals?.calls || 0,
-        digital: reportedVoterGoals?.digital || 0,
-        aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
-        waitingForP2v,
-        pledged: campaign?.pledged && campaign.pledged === true ? 'yes' : 'no',
-        knowRun: runningForOffice,
-        isPro: isPro ? 'yes' : 'no',
-        isVerified: isVerified ? 'yes' : 'no',
-        didWin: didWin ? 'yes' : 'no',
-      };
-      inputData.push(fields);
-      let csvFields = fields;
-      csvFields.lastVisited = dateUsHelper(fields.lastVisited);
-      csvFields.createdAt = dateUsHelper(fields.createdAt);
-      csvFields.updatedAt = dateUsHelper(fields.updatedAt);
-      csvData.push(Object.values(csvFields));
-    });
-  }
-  const data = useMemo(() => inputData);
-
-  const columns = useMemo(() => [
+  const columns = [
     {
       Header: 'Actions',
       collapse: true,
@@ -375,7 +382,7 @@ export default function AdminCandidatesPage(props) {
       Header: 'Pledged',
       accessor: 'pledged',
     },
-  ]);
+  ];
 
   return (
     <AdminWrapper {...props}>
@@ -408,7 +415,7 @@ export default function AdminCandidatesPage(props) {
             </PrimaryButton>
           </CSVLink>
         </div>
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={inputData} />
       </PortalPanel>
     </AdminWrapper>
   );

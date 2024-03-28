@@ -1,11 +1,10 @@
 'use client';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-
 import H3 from '@shared/typography/H3';
 import Checkbox from '@shared/inputs/Checkbox';
 import { useState } from 'react';
+import { IsVerifiedSelect } from './IsVerifiedSelect';
 
 async function updateAdminFields(slug, isVerified, isPro, didWin) {
   try {
@@ -48,20 +47,30 @@ export default function ProFieldsSection(props) {
     );
   };
 
-  console.log('campaignObj', campaignObj);
+
+
   return (
     <div className="bg-slate-50 rounded border border-slate-300 p-4 my-12">
       <H3>Additional Fields</H3>
-      {fields.map((field) => (
-        <div key={field.key} className="flex items-center">
-          <Checkbox
-            value={state[field.key]}
-            defaultChecked={campaignObj[field.key]}
-            onChange={(e) => handleChange(field.key, e.target.checked)}
-          />
+      {fields.map(
+        (field) => <div key={field.key} className="flex items-center">
+          {
+            field.key === 'isVerified' ?
+              <IsVerifiedSelect
+                value={state[field.key]}
+                onChange={
+                  (e) => handleChange(field.key, e.target.value)
+                } /> :
+              <Checkbox
+                value={state[field.key]}
+                defaultChecked={campaignObj[field.key]}
+                onChange={(e) => handleChange(field.key, e.target.checked)}
+              />
+          }
           <div className="ml-2">{field.label}</div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
+

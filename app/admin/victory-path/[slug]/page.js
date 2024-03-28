@@ -27,12 +27,6 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-// const fetchOnboardings = async () => {
-//   const api = gpApi.campaign.onboarding.list;
-//   const token = getServerToken();
-//   return await gpFetch(api, false, false, token);
-// };
-
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;

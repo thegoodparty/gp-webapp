@@ -1,10 +1,8 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { useEffect, useState } from 'react';
-import { Select } from '@mui/material';
+import { useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
@@ -18,9 +16,6 @@ import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Checkbox from '@shared/inputs/Checkbox';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SuccessButton from '@shared/buttons/SuccessButton';
-import Body1 from '@shared/typography/Body1';
 import VoterFileSection from './VoterFileSection';
 import ProFieldsSection from './ProFieldsSection';
 
@@ -241,25 +236,6 @@ export default function AdminVictoryPathPage(props) {
               {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
             </strong>
           </H4>
-          {/* {selected.user && (
-            <div className="p-4 border border-gray-500 rounded-md mb-5 max-w-xl">
-              <h2 className="mb-6 text-xl font-black">User</h2>
-              <div className="pb-2 border-b border-gray-300 mb-2">
-                id: <strong>{selected.user.id}</strong>
-              </div>
-              <div className="pb-2 border-b border-gray-300 mb-2">
-                Name: <strong>{selected.user.name}</strong>
-              </div>
-              <div className="pb-2 border-b border-gray-300 mb-2">
-                Email:{' '}
-                <strong>
-                  <a href={`mailto:${selected.user.email}`}>
-                    {selected.user.email}
-                  </a>
-                </strong>
-              </div>
-            </div>
-          )} */}
           {sections.map((section) => (
             <div className="mb-12" key={section.title}>
               <h2 className="font-black text-2xl mb-8">{section.title}</h2>
