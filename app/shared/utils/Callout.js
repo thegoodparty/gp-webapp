@@ -31,7 +31,7 @@ export default function Callout() {
               </span>
               <Link
                 id="nav-join-discord"
-                href="https://discord.gg/goodparty"
+                href="https://discord.gg/invite/goodparty"
                 target="_blank"
                 aria-label="Join our Discord community - meet like-minded independents and get involved!"
               >

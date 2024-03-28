@@ -66,7 +66,7 @@ export const COMMUNITY_LINKS = [
   },
   {
     label: 'Discord',
-    href: 'https://discord.gg/goodparty',
+    href: 'https://discord.gg/invite/goodparty',
     icon: <FaDiscord />,
     id: 'nav-discord',
     external: true,
