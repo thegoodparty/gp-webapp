@@ -1,7 +1,7 @@
 import VolunteerDashboardLayout from 'app/(volunteer)/volunteer-dashboard/shared/VolunteerDashboardLayout';
-import TitleSection from './TitleSection';
-import VoterInfo from './VoterInfo';
-import TabsSection from './TabsSection';
+// import TitleSection from './TitleSection';
+// import VoterInfo from './VoterInfo';
+// import TabsSection from './TabsSection';
 
 export default function VolunteerAddressPage(props) {
   return (

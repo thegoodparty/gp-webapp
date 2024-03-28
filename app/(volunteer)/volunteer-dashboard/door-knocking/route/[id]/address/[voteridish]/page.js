@@ -1,25 +1,25 @@
 import pageMetaData from 'helpers/metadataHelper';
-import gpApi from 'gpApi';
-import { getServerToken } from 'helpers/userServerHelper';
-import gpFetch from 'gpApi/gpFetch';
-import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/volunteerAccess';
-import VolunteerAddressPage from './components/VolunteerAddressPage';
-import { notFound } from 'next/navigation';
+// import gpApi from 'gpApi';
+// import { getServerToken } from 'helpers/userServerHelper';
+// import gpFetch from 'gpApi/gpFetch';
+// import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/volunteerAccess';
+// import VolunteerAddressPage from './components/VolunteerAddressPage';
+// import { notFound } from 'next/navigation';
 
-async function fetchVoter(id) {
-  try {
-    const api = gpApi.campaign.campaignVolunteer.voter.find;
-    const token = getServerToken();
-    const payload = {
-      id,
-    };
+// async function fetchVoter(id) {
+//   try {
+//     const api = gpApi.campaign.campaignVolunteer.voter.find;
+//     const token = getServerToken();
+//     const payload = {
+//       id,
+//     };
 
-    return await gpFetch(api, payload, false, token);
-  } catch (e) {
-    console.log('error at fetchInvitations', e);
-    return {};
-  }
-}
+//     return await gpFetch(api, payload, false, token);
+//   } catch (e) {
+//     console.log('error at fetchInvitations', e);
+//     return {};
+//   }
+// }
 
 const meta = pageMetaData({
   title: 'Volunteer Route - address | GOOD PARTY',
