@@ -14,7 +14,9 @@ export default function Footer() {
   // const currentUrl = _headers.get('x-url');
   const pathname = usePathname();
   const isOnboardingPath = pathname?.startsWith('/onboarding');
-  const isDashboardPath = pathname?.startsWith('/dashboard');
+  const isDashboardPath =
+    pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/volunteer-dashboard');
   const isProfilePath = pathname?.startsWith('/profile');
   if (isOnboardingPath || isDashboardPath || isProfilePath) {
     return null;

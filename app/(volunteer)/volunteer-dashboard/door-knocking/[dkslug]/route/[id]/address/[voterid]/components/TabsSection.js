@@ -2,6 +2,7 @@
 import Tabs from '@shared/utils/Tabs';
 import { useState } from 'react';
 import CandidateInfo from './CandidateInfo';
+import Surveys from './Surveys';
 
 export default function TabsSection(props) {
   const [tab, setTab] = useState(0);
@@ -11,7 +12,7 @@ export default function TabsSection(props) {
   ];
 
   const panels = [
-    <div key="issues-tab">Issues</div>,
+    <Surveys {...props} key="issues-tab" />,
     <CandidateInfo {...props} key="info-tab" />,
   ];
   const changeTabCallback = (index) => {

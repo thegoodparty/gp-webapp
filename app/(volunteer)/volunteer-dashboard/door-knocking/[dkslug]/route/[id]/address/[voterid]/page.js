@@ -6,12 +6,13 @@ import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/voluntee
 import VolunteerAddressPage from './components/VolunteerAddressPage';
 import { notFound } from 'next/navigation';
 
-async function fetchVoter(id) {
+async function fetchVoter(id, dkSlug) {
   try {
     const api = gpApi.campaign.campaignVolunteer.voter.find;
     const token = getServerToken();
     const payload = {
       id,
+      dkSlug,
     };
 
     return await gpFetch(api, payload, false, token);
@@ -30,9 +31,9 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const campaigns = await volunteerAccess();
-  const { id, voterid } = params;
+  const { id, voterid, dkslug } = params;
 
-  const { voter } = await fetchVoter(voterid);
+  const { voter } = await fetchVoter(voterid, dkslug);
   if (!voter) {
     return notFound();
   }
@@ -42,6 +43,8 @@ export default async function Page({ params, searchParams }) {
     pathname: '/volunteer-dashboard/door-knocking',
     // route,
     voter,
+    dkSlug: dkslug,
+    routeId: id,
   };
 
   return <VolunteerAddressPage {...childProps} />;

@@ -6,12 +6,8 @@ import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function CandidateInfo(props) {
   const campaign = props.voter.campaign;
-  const campaignData = campaign?.data;
-  if (!campaignData) return null;
-  const { firstName, lastName, details, customIssues } = campaignData;
-  const { electionDate } = details;
-
-  const { positions } = campaign;
+  const { firstName, lastName, electionDate, customIssues, positions } =
+    campaign;
 
   const sortedIssues = [];
   if (positions) {

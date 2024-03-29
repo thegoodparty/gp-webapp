@@ -25,7 +25,7 @@ export default function VolunteerRoutes(props) {
                   <div className="ml-2 text-sm">{route.type}</div>
                 </div>
                 <Link
-                  href={`/volunteer-dashboard/door-knocking/route/${route.id}`}
+                  href={`/volunteer-dashboard/door-knocking/${route.dkCampaignSlug}/route/${route.id}`}
                 >
                   <PrimaryButton variant="outlined" fullWidth>
                     View Route
@@ -49,7 +49,7 @@ export default function VolunteerRoutes(props) {
                   <div className="ml-2 text-sm">{route.type}</div>
                 </div>
                 <Link
-                  href={`/volunteer-dashboard/door-knocking/route/${route.id}`}
+                  href={`/volunteer-dashboard/door-knocking/${route.dkCampaignSlug}/route/${route.id}`}
                 >
                   <PrimaryButton variant="outlined" fullWidth>
                     View Route

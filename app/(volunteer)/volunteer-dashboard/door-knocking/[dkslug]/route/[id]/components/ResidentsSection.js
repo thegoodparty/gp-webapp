@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { MdOutlineCheck } from 'react-icons/md';
 
 export default function ResidentsSection(props) {
-  const { route } = props;
+  const { route, dkSlug } = props;
   const addresses = route.data?.optimizedAddresses || [];
   const user = getServerUser();
-  const claimed = route.volunteer === user.id;
+  const claimed = route.claimedByUser;
 
   return (
     <div className="mt-6">
@@ -14,7 +14,7 @@ export default function ResidentsSection(props) {
         <Link
           href={
             claimed
-              ? `/volunteer-dashboard/door-knocking/route/${route.id}/address/${address.voterId}`
+              ? `/volunteer-dashboard/door-knocking/${dkSlug}/route/${route.id}/address/${address.voterId}`
               : '#'
           }
           key={address.voterId}
