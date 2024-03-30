@@ -1,16 +1,11 @@
+'use client';
 import { deleteUserCookies } from 'helpers/cookieHelper';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
-import {
-  RiBook2Line,
-  RiTeamLine,
-  RiUserHeartLine,
-  RiDoorOpenLine,
-} from 'react-icons/ri';
-import { TbBrain } from 'react-icons/tb';
+import { RiTeamLine, RiDoorOpenLine } from 'react-icons/ri';
 
 let pages = [
   {
@@ -48,12 +43,18 @@ let pages = [
 ];
 export default function VolunteerDashboardMenu({
   pathname,
-  toggleCallback,
+  toggleCallback = () => {},
   mobileMode,
+  closeCallback = () => {},
 }) {
   const handleLogOut = () => {
     deleteUserCookies();
     window.location.replace('/');
+  };
+
+  const handleClick = () => {
+    toggleCallback();
+    closeCallback();
   };
 
   return (
@@ -66,7 +67,7 @@ export default function VolunteerDashboardMenu({
           <Link
             href={page.link}
             className="no-underline"
-            onClick={toggleCallback}
+            onClick={handleClick}
             id={page.id}
           >
             <div
