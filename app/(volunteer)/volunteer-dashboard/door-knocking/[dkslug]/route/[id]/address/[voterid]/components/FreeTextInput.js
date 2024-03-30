@@ -1,6 +1,7 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
+import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 import { FaCirclePlus } from 'react-icons/fa6';
 
@@ -17,14 +18,49 @@ export default function FreeTextInput({
 
   const handleSave = () => {
     if (onChange) {
+      setShowInput(false);
       onChange(surveyKey, value);
     }
   };
 
   return (
     <>
-      {showInput ? (
-        <div>
+      {value ? (
+        <>
+          <div className="py-2 px-4 text-sm  rounded-lg border border-slate-300 bg-yellow-50">
+            {value}
+          </div>
+          <div
+            className="mt-2 text-sm underline cursor-pointer"
+            onClick={() => {
+              setShowInput(true);
+            }}
+          >
+            Change
+          </div>
+        </>
+      ) : (
+        <PrimaryButton
+          fullWidth
+          variant="outlined"
+          onClick={() => {
+            setShowInput(true);
+          }}
+          size="medium"
+        >
+          <div className="flex items-center">
+            <FaCirclePlus />
+            <div className="ml-2">Add</div>
+          </div>
+        </PrimaryButton>
+      )}
+      <Modal
+        open={showInput}
+        closeCallback={() => {
+          setShowInput(false);
+        }}
+      >
+        <div className=" min-w-[80vw]">
           <TextField
             autoFocus
             fullWidth
@@ -47,20 +83,7 @@ export default function FreeTextInput({
             </PrimaryButton>
           </div>
         </div>
-      ) : (
-        <PrimaryButton
-          fullWidth
-          variant="outlined"
-          onClick={() => {
-            setShowInput(true);
-          }}
-        >
-          <div className="flex items-center">
-            <FaCirclePlus />
-            <div className="ml-2">Add</div>
-          </div>
-        </PrimaryButton>
-      )}
+      </Modal>
     </>
   );
 }

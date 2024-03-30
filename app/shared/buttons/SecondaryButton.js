@@ -27,6 +27,8 @@ export default function SecondaryButton({
 
   if (variant === 'contained') {
     baseClass['bg-slate-300'] = true;
+    baseClass['border-2'] = true;
+    baseClass['border-slate-300'] = true;
     baseClass['text-primary'] = true;
     baseClass['hover:bg-lime-400'] = true;
     baseClass['active:bg-lime-400'] = true;

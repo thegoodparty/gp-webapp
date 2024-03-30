@@ -1,5 +1,6 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { useState } from 'react';
 
 export default function YesNoInput({ surveyKey, initialValue, onChange }) {
@@ -14,26 +15,28 @@ export default function YesNoInput({ surveyKey, initialValue, onChange }) {
   return (
     <div className="grid grid-cols-12 gap-4">
       <div className=" col-span-6">
-        <PrimaryButton
+        <SecondaryButton
           fullWidth
+          size="medium"
           variant={`${value === 'yes' ? 'contained' : 'outlined'}`}
           onClick={() => {
             handleChange('yes');
           }}
         >
           Yes
-        </PrimaryButton>
+        </SecondaryButton>
       </div>
       <div className=" col-span-6">
-        <PrimaryButton
+        <SecondaryButton
           fullWidth
+          size="medium"
           variant={`${value === 'no' ? 'contained' : 'outlined'}`}
           onClick={() => {
             handleChange('no');
           }}
         >
           No
-        </PrimaryButton>
+        </SecondaryButton>
       </div>
     </div>
   );
