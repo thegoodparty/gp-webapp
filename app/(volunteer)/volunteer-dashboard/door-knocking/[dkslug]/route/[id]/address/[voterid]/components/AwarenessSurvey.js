@@ -4,7 +4,7 @@ import FreeTextInput from './FreeTextInput';
 import MultiOptionsInput from './MultiOptionsInput';
 
 export default function AwarenessSurvey(props) {
-  const { voter, handleSave } = props;
+  const { voter, handleSave, survey } = props;
   const { campaign } = voter;
   if (!campaign) return null;
   const { firstName, lastName, office } = campaign;
@@ -35,16 +35,25 @@ export default function AwarenessSurvey(props) {
           <div key={question.key} className="p-4 bg-white rounded-lg mb-4">
             <H6 className="text-center mb-4">{question.title}</H6>
             {question.type === 'bool' ? (
-              <YesNoInput onChange={handleSave} surveyKey={question.key} />
+              <YesNoInput
+                onChange={handleSave}
+                surveyKey={question.key}
+                initialValue={survey ? survey[question.key] : false}
+              />
             ) : null}
             {question.type === 'freeText' ? (
-              <FreeTextInput onChange={handleSave} surveyKey={question.key} />
+              <FreeTextInput
+                onChange={handleSave}
+                surveyKey={question.key}
+                initialValue={survey ? survey[question.key] : false}
+              />
             ) : null}
             {question.type === 'select' ? (
               <MultiOptionsInput
                 options={question.options}
                 onChange={handleSave}
                 surveyKey={question.key}
+                initialValue={survey ? survey[question.key] : false}
               />
             ) : null}
           </div>

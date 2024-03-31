@@ -1,34 +1,52 @@
-import { getServerUser } from 'helpers/userServerHelper';
+import Tag from '@shared/utils/Tag';
 import Link from 'next/link';
 import { MdOutlineCheck } from 'react-icons/md';
+import { TbProgressCheck } from 'react-icons/tb';
 
 export default function ResidentsSection(props) {
   const { route, dkSlug } = props;
   const addresses = route.data?.optimizedAddresses || [];
-  const user = getServerUser();
   const claimed = route.claimedByUser;
+
+  const Wrapper = ({ children, address }) => {
+    if (address.status === 'completed') {
+      return <div>{children}</div>;
+    }
+    if (claimed) {
+      return (
+        <Link
+          href={`/volunteer-dashboard/door-knocking/${dkSlug}/route/${route.id}/address/${address.voterId}`}
+        >
+          {children}
+        </Link>
+      );
+    }
+    return <div>{children}</div>;
+  };
 
   return (
     <div className="mt-6">
       {addresses.map((address) => (
-        <Link
-          href={
-            claimed
-              ? `/volunteer-dashboard/door-knocking/${dkSlug}/route/${route.id}/address/${address.voterId}`
-              : '#'
-          }
-          key={address.voterId}
-        >
-          <div className=" p-4 rounded-lg border bg-white  mb-4 border-slate-300 flex items-center justify-between">
-            <div>{address.address}</div>
+        <Wrapper address={address} key={address.voterId}>
+          {console.log('status', address.status)}
+          <div className=" p-4 rounded-lg border bg-white  mb-4 border-slate-300">
+            <div className="mb-2">{address.address}</div>
             {address.status === 'completed' ? (
-              <div className="bg-green-50 text-green-700  p-2 rounded flex items-center font-medium">
-                <MdOutlineCheck />
-                <div className="ml-1 text-xs ">COMPLETED</div>
-              </div>
+              <Tag
+                className="bg-green-50 text-green-700"
+                icon={<MdOutlineCheck />}
+                label="COMPLETED"
+              />
+            ) : null}
+            {address.status === 'in-progress' ? (
+              <Tag
+                className="bg-orange-50 text-orange-700"
+                icon={<TbProgressCheck />}
+                label="IN PROGRESS"
+              />
             ) : null}
           </div>
-        </Link>
+        </Wrapper>
       ))}
     </div>
   );

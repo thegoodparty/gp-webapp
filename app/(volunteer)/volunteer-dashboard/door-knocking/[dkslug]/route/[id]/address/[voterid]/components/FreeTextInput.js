@@ -11,7 +11,7 @@ export default function FreeTextInput({
   onChange,
 }) {
   const [showInput, setShowInput] = useState(false);
-  const [value, setValue] = useState(initialValue);
+  const [value, setValue] = useState(initialValue || '');
   const handleChange = (newValue) => {
     setValue(newValue);
   };

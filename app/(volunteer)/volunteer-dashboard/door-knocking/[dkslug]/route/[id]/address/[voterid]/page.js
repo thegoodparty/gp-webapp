@@ -18,7 +18,23 @@ async function fetchVoter(id, dkSlug) {
     return await gpFetch(api, payload, false, token);
   } catch (e) {
     console.log('error at fetchInvitations', e);
-    return {};
+    return false;
+  }
+}
+
+async function fetchSurvey(routeId, voterId) {
+  try {
+    const api = gpApi.doorKnocking.survey.find;
+    const token = getServerToken();
+    const payload = {
+      routeId,
+      voterId,
+    };
+
+    return await gpFetch(api, payload, false, token);
+  } catch (e) {
+    console.log('error at fetchInvitations', e);
+    return false;
   }
 }
 
@@ -37,6 +53,7 @@ export default async function Page({ params, searchParams }) {
   if (!voter) {
     return notFound();
   }
+  const { survey } = await fetchSurvey(id, voterid);
 
   // const { route } = await fetchRoute(id);
   const childProps = {
@@ -45,6 +62,7 @@ export default async function Page({ params, searchParams }) {
     voter,
     dkSlug: dkslug,
     routeId: id,
+    survey,
   };
 
   return <VolunteerAddressPage {...childProps} />;

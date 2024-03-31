@@ -25,11 +25,10 @@ async function saveSurvey(data, routeId, voterId) {
 }
 
 export default function Surveys(props) {
-  const { voter, routeId } = props;
+  const { voter, routeId, survey } = props;
   const { type } = voter.dkCampaign;
   const [surveyData, setSurveyData] = useState({});
   const snackbarState = useHookstate(globalSnackbarState);
-
   const handleSave = async (key, value) => {
     snackbarState.set(() => {
       return {

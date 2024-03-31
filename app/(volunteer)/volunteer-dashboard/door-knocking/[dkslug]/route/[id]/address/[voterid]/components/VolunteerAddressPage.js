@@ -2,6 +2,7 @@ import TitleSection from './TitleSection';
 import VoterInfo from './VoterInfo';
 import TabsSection from './TabsSection';
 import VolunteerDashboardLayout from 'app/(volunteer)/volunteer-dashboard/shared/VolunteerDashboardLayout';
+import MarkDoneFlow from './MarkDoneFlow';
 
 export default function VolunteerAddressPage(props) {
   return (
@@ -13,6 +14,7 @@ export default function VolunteerAddressPage(props) {
       <div className="p-4">
         <TabsSection {...props} />
       </div>
+      <MarkDoneFlow {...props} />
     </VolunteerDashboardLayout>
   );
 }
