@@ -1,5 +1,5 @@
 'use client';
-import { Drawer } from '@mui/material';
+import { Drawer, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 async function setDone(routeId, voterId, data) {
   try {
-    const api = gpApi.doorKnocking.survey.complete;
+    const api = gpApi.doorKnocking.survey.skip;
 
     const payload = {
       routeId,
@@ -32,21 +32,21 @@ const options = [
   'Locked interest',
 ];
 
-export default function MarkDoneFlow(props) {
+export default function SkipFlow(props) {
   const { routeId, voter, dkSlug } = props;
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [selected, setSelected] = useState(false);
+  const [homeStatus, setHomeStatus] = useState(null);
   const [note, setNote] = useState('');
   const router = useRouter();
 
   const canSave = () => {
-    return (selected || note !== '') && !processing;
+    return homeStatus !== null && !processing;
   };
 
   const handleSave = async () => {
     setProcessing(true);
-    const data = { resolution: selected, note };
+    const data = { atHome: homeStatus, skipNote: note };
     const { nextVoter, isRouteCompleted } = await setDone(
       routeId,
       voter.id,
@@ -66,16 +66,15 @@ export default function MarkDoneFlow(props) {
   };
   return (
     <>
-      <div className="p-4">
-        <PrimaryButton
-          fullWidth
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          Mark as done
-        </PrimaryButton>
-      </div>
+      <PrimaryButton
+        fullWidth
+        variant="outlined"
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Skip
+      </PrimaryButton>
       <div>
         <Drawer
           anchor="bottom"
@@ -86,20 +85,18 @@ export default function MarkDoneFlow(props) {
           }}
         >
           <div className="p-4 rounded-t-lg bg-white">
-            <H5 className="text-center pb-4">How was your visit?</H5>
-
-            {options.map((op) => (
-              <div key={op} className="mt-4">
-                <SecondaryButton
-                  fullWidth
-                  size="medium"
-                  variant={selected === op ? 'contained' : 'outlined'}
-                  onClick={() => setSelected(op)}
-                >
-                  {op}
-                </SecondaryButton>
-              </div>
-            ))}
+            <H5 className="text-center pb-6">
+              Why are you skipping this household?
+            </H5>
+            Was the voter home?
+            <RadioGroup
+              row
+              value={homeStatus}
+              onChange={(e) => setHomeStatus(e.target.value)}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
             <div className="my-8">
               <TextField
                 autoFocus
@@ -115,7 +112,7 @@ export default function MarkDoneFlow(props) {
               />
             </div>
             <PrimaryButton fullWidth disabled={!canSave()} onClick={handleSave}>
-              Complete Household
+              Skip Household
             </PrimaryButton>
           </div>
         </Drawer>

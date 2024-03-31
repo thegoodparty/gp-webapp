@@ -694,6 +694,11 @@ const gpApi = {
         method: 'PUT',
         withAuth: true,
       },
+      skip: {
+        url: `${base}campaign/door-knocking/skip-survey`,
+        method: 'PUT',
+        withAuth: true,
+      },
     },
   },
   voterData: {
