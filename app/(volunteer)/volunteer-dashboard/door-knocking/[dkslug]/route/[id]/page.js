@@ -4,6 +4,7 @@ import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
 import VolunteerRoutePage from './components/VolunteerRoutePage';
 import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/volunteerAccess';
+import { notFound } from 'next/navigation';
 
 async function fetchRoute(id, dkSlug) {
   try {
@@ -33,6 +34,9 @@ export default async function Page({ params, searchParams }) {
   const { id, dkslug } = params;
 
   const { route } = await fetchRoute(id, dkslug);
+  if (!route) {
+    notFound();
+  }
   const childProps = {
     pathname: '/volunteer-dashboard/door-knocking',
     route,
