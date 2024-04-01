@@ -1,5 +1,4 @@
 'use client';
-
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { candidateRoute, partyResolver } from 'helpers/candidateHelper';
@@ -22,6 +21,18 @@ import {
 import {
   CANDIDATE_TIERS_REVERSED,
 } from '../../victory-path/[slug]/components/candidate-tiers.constant';
+
+const getDateCellContents = (origDate) => {
+  let date;
+  if (origDate) {
+    date = dateUsHelper(origDate);
+    if (date === undefined || date === 'Invalid Date') {
+      const now = new Date();
+      date = dateUsHelper(now);
+    }
+  }
+  return date;
+}
 
 function mapStatus(status, isActive) {
   if (!status) {
@@ -71,6 +82,7 @@ export default function AdminCandidatesPage(props) {
       'knowRun',
       'isPro',
       'isVerified',
+      'dateVerified',
       'tier',
       'didWin'
     ],
@@ -137,6 +149,9 @@ export default function AdminCandidatesPage(props) {
       knowRun: runningForOffice,
       isPro: isPro ? 'Yes' : 'No',
       isVerified: IS_VERIFIED_OPTIONS_REVERSED[isVerified],
+      dateVerified: campaignObj.dateVerified === null ?
+        'N/A' :
+        new Date(campaignObj.dateVerified),
       tier: CANDIDATE_TIERS_REVERSED[tier],
       didWin: didWin ? 'Yes' : 'No'
     };
@@ -202,6 +217,11 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Is Verified?',
       accessor: 'isVerified',
+    },
+    {
+      Header: 'Verified Date',
+      accessor: 'dateVerified',
+      Cell: ({row}) => getDateCellContents(row?.original?.dateVerified),
     },
     {
       Header: 'Tier',
@@ -306,17 +326,7 @@ export default function AdminCandidatesPage(props) {
         return data.createdAt ? new Date(data.createdAt) : new Date();
       },
       sortType: 'datetime',
-      Cell: ({ row }) => {
-        let createdAt;
-        if (row.original.createdAt) {
-          createdAt = dateUsHelper(row.original.createdAt);
-          if (createdAt === undefined || createdAt === 'Invalid Date') {
-            const now = new Date();
-            createdAt = dateUsHelper(now);
-          }
-        }
-        return createdAt;
-      },
+      Cell: ({row}) => getDateCellContents(row?.original?.createdAt),
     },
     {
       Header: 'Last Modified',
@@ -324,17 +334,7 @@ export default function AdminCandidatesPage(props) {
         return data.updatedAt ? new Date(data.updatedAt) : new Date();
       },
       sortType: 'datetime',
-      Cell: ({ row }) => {
-        let updatedAt;
-        if (row.original.updatedAt) {
-          updatedAt = dateUsHelper(row.original.updatedAt);
-          if (updatedAt === undefined || updatedAt === 'Invalid Date') {
-            const now = new Date();
-            updatedAt = dateUsHelper(now);
-          }
-        }
-        return updatedAt;
-      },
+      Cell: ({row}) =>  getDateCellContents(row?.original?.updatedAt),
     },
     {
       Header: 'Party',
