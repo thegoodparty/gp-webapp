@@ -9,21 +9,10 @@ import { CANDIDATE_TIERS } from './candidate-tiers.constant';
 import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant';
 
 async function updateAdminFields(
-  slug,
-  isVerified,
-  isPro,
-  didWin,
-  tier
+  payload
 ) {
   try {
     const api = gpApi.campaign.adminUpdate;
-    const payload = {
-      slug,
-      isVerified,
-      isPro,
-      didWin,
-      tier
-    };
     return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
@@ -51,11 +40,10 @@ export default function ProFieldsSection(props) {
     const newState = { ...state, [key]: value };
     setState(newState);
     await updateAdminFields(
-      campaignObj.slug,
-      newState.isVerified,
-      newState.isPro,
-      newState.didWin,
-      newState.tier,
+      {
+        slug: campaignObj.slug,
+        [key]: value
+      }
     );
   };
 
