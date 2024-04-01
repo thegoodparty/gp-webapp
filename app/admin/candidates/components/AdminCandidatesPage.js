@@ -71,6 +71,7 @@ export default function AdminCandidatesPage(props) {
       'knowRun',
       'isPro',
       'isVerified',
+      'tier',
       'didWin'
     ],
   ];
