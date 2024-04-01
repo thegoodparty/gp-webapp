@@ -3,11 +3,16 @@ import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
 import RoutePreview from '../../../components/RoutePreview';
 import StatisticsCard from 'app/(candidate)/dashboard/door-knocking/shared/StatisticsCard';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function RouteStatisticsSection({ route, dkCampaign }) {
   const totalDoors = route.data?.optimizedAddresses?.length;
   const knockedDoors = 0;
   const remainingDoors = totalDoors - knockedDoors;
+
+  const res = route.data?.response?.routes[0];
+  const { summary } = res;
+  const { endDate, startDate } = dkCampaign;
 
   const cards = [
     { label: 'Total Doors', value: totalDoors },
@@ -17,13 +22,12 @@ export default function RouteStatisticsSection({ route, dkCampaign }) {
   ];
   console.log('route', route);
   return (
-    <div className="grid grid-cols-12 gap-4 mt-6">
+    <div className="grid grid-cols-12 gap-4">
       <div className=" col-span-12 md:col-span-9">
         <Paper style={{ height: '100%' }}>
-          <H2>{route.name} Statistics</H2>
+          <H2>{summary} Route Statistics</H2>
           <Body2 className="mb-8">
-            Secondary copy lorem ipsum dolor sit amet, consectetur adipiscing
-            elit.
+            {dateUsHelper(startDate)} - {dateUsHelper(endDate)}.
           </Body2>
           <div className="grid grid-cols-12 gap-4">
             {cards.map((card) => (

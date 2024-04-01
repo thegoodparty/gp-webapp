@@ -1,6 +1,8 @@
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
+import Tag from '@shared/utils/Tag';
+import AddressStatusTag from 'app/(volunteer)/volunteer-dashboard/door-knocking/[dkslug]/route/[id]/components/AddressStatusTag';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { MdOutlineCheck } from 'react-icons/md';
 
@@ -19,12 +21,7 @@ export default function ResidentsSection({ dkCampaign, route }) {
               key={address.voterId}
             >
               <div>{address.address}</div>
-              {address.status === 'completed' ? (
-                <div className="bg-green-50 text-green-700  p-2 rounded flex items-center font-medium">
-                  <MdOutlineCheck />
-                  <div className="ml-1 text-xs ">COMPLETED</div>
-                </div>
-              ) : null}
+              <AddressStatusTag address={address} />
             </div>
           ))}
         </div>
