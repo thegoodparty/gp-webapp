@@ -29,15 +29,27 @@ export default function DashboardOrContinue({
           )}
         </>
       ) : (
-        <Link
-          href={`/onboarding/${slug}/${step || 1}`}
-          onClick={closeAll}
-          id="nav-continue-onboarding"
-        >
-          <WarningButton size="medium">
-            Continue<span className="hidden lg:inline"> Onboarding</span>
-          </WarningButton>
-        </Link>
+        <>
+          {status === 'volunteer' ? (
+            <Link
+              href="/volunteer-dashboard"
+              onClick={closeAll}
+              id="nav-volunteer-dashboard"
+            >
+              <PrimaryButton size="medium">Dashboard</PrimaryButton>
+            </Link>
+          ) : (
+            <Link
+              href={`/onboarding/${slug}/${step || 1}`}
+              onClick={closeAll}
+              id="nav-continue-onboarding"
+            >
+              <WarningButton size="medium">
+                Continue<span className="hidden lg:inline"> Onboarding</span>
+              </WarningButton>
+            </Link>
+          )}
+        </>
       )}
     </div>
   );

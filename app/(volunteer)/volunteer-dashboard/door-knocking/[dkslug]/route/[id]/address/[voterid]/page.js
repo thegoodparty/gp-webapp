@@ -6,18 +6,35 @@ import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/voluntee
 import VolunteerAddressPage from './components/VolunteerAddressPage';
 import { notFound } from 'next/navigation';
 
-async function fetchVoter(id) {
+async function fetchVoter(id, dkSlug) {
   try {
     const api = gpApi.campaign.campaignVolunteer.voter.find;
     const token = getServerToken();
     const payload = {
       id,
+      dkSlug,
     };
 
     return await gpFetch(api, payload, false, token);
   } catch (e) {
     console.log('error at fetchInvitations', e);
-    return {};
+    return false;
+  }
+}
+
+async function fetchSurvey(routeId, voterId) {
+  try {
+    const api = gpApi.doorKnocking.survey.find;
+    const token = getServerToken();
+    const payload = {
+      routeId,
+      voterId,
+    };
+
+    return await gpFetch(api, payload, false, token);
+  } catch (e) {
+    console.log('error at fetchInvitations', e);
+    return false;
   }
 }
 
@@ -30,18 +47,22 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const campaigns = await volunteerAccess();
-  const { id, voterid } = params;
+  const { id, voterid, dkslug } = params;
 
-  const { voter } = await fetchVoter(voterid);
+  const { voter } = await fetchVoter(voterid, dkslug);
   if (!voter) {
     return notFound();
   }
+  const { survey } = await fetchSurvey(id, voterid);
 
   // const { route } = await fetchRoute(id);
   const childProps = {
     pathname: '/volunteer-dashboard/door-knocking',
     // route,
     voter,
+    dkSlug: dkslug,
+    routeId: id,
+    survey,
   };
 
   return <VolunteerAddressPage {...childProps} />;

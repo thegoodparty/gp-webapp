@@ -678,6 +678,28 @@ const gpApi = {
         withAuth: true,
       },
     },
+    survey: {
+      create: {
+        url: `${base}campaign/door-knocking/survey`,
+        method: 'POST',
+        withAuth: true,
+      },
+      find: {
+        url: `${base}campaign/door-knocking/survey`,
+        method: 'GET',
+        withAuth: true,
+      },
+      complete: {
+        url: `${base}campaign/door-knocking/complete-survey`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      skip: {
+        url: `${base}campaign/door-knocking/skip-survey`,
+        method: 'PUT',
+        withAuth: true,
+      },
+    },
   },
   voterData: {
     purchaseVoterFile: {

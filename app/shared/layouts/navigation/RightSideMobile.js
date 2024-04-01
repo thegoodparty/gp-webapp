@@ -95,7 +95,11 @@ export default function RightSideMobile() {
           ) : (
             <>
               {user && isVolunteerDashboardPath ? (
-                <VolunteerDashboardMobile user={user} pathname={pathname} />
+                <VolunteerDashboardMobile
+                  user={user}
+                  pathname={pathname}
+                  closeCallback={closeMenu}
+                />
               ) : (
                 <div
                   className={`w-[270px] bg-primary text-white h-screen overflow-auto px-4 pt-24 ${

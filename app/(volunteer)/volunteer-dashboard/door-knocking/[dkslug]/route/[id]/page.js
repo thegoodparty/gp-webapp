@@ -5,12 +5,13 @@ import gpFetch from 'gpApi/gpFetch';
 import VolunteerRoutePage from './components/VolunteerRoutePage';
 import volunteerAccess from 'app/(volunteer)/volunteer-dashboard/shared/volunteerAccess';
 
-async function fetchRoute(id) {
+async function fetchRoute(id, dkSlug) {
   try {
     const api = gpApi.campaign.campaignVolunteer.routes.find;
     const token = getServerToken();
     const payload = {
       id,
+      dkSlug,
     };
 
     return await gpFetch(api, payload, false, token);
@@ -29,12 +30,13 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const campaigns = await volunteerAccess();
-  const { id } = params;
+  const { id, dkslug } = params;
 
-  const { route } = await fetchRoute(id);
+  const { route } = await fetchRoute(id, dkslug);
   const childProps = {
     pathname: '/volunteer-dashboard/door-knocking',
     route,
+    dkSlug: dkslug,
   };
 
   return <VolunteerRoutePage {...childProps} />;

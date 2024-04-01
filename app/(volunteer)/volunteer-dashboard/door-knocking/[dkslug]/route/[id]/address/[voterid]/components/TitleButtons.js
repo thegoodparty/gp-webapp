@@ -3,6 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H5 from '@shared/typography/H5';
 import { useRouter } from 'next/navigation';
 import { FaCar, FaChevronLeft } from 'react-icons/fa';
+import SkipFlow from './SkipFlow';
 
 export default function TitleButtons(props) {
   const { voter } = props;
@@ -22,9 +23,7 @@ export default function TitleButtons(props) {
         </PrimaryButton>
       </div>
       <div className=" col-span-4 ">
-        <PrimaryButton fullWidth variant="outlined">
-          Skip
-        </PrimaryButton>
+        <SkipFlow {...props} />
       </div>
     </div>
   );

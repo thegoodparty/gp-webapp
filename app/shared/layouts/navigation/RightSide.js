@@ -38,7 +38,9 @@ export default function RightSide() {
   }, []);
 
   const pathname = usePathname();
-  const isDashboardPath = pathname?.startsWith('/dashboard');
+  const isDashboardPath =
+    pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/volunteer-dashboard');
   const isOnboardingPath = pathname?.startsWith('/onboarding');
 
   const updateStatus = async () => {
