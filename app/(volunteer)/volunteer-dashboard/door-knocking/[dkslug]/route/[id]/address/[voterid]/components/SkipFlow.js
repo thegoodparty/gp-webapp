@@ -99,7 +99,6 @@ export default function SkipFlow(props) {
             </RadioGroup>
             <div className="my-8">
               <TextField
-                autoFocus
                 fullWidth
                 label="Add Note"
                 multiline

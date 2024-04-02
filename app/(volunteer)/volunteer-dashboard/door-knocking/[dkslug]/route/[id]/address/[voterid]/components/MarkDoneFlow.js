@@ -102,7 +102,6 @@ export default function MarkDoneFlow(props) {
             ))}
             <div className="my-8">
               <TextField
-                autoFocus
                 fullWidth
                 label="Add Note"
                 multiline
