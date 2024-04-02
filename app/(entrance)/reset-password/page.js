@@ -16,7 +16,9 @@ export default async function Page({ searchParams }) {
     redirect('/profile');
   }
 
-  const { email, token } = searchParams;
+  const { email: encodedEmail, token } = searchParams;
+  const email = decodeURIComponent(encodedEmail);
+
   if (!email || !token) {
     redirect('/forgot-password');
   }

@@ -29,11 +29,18 @@ const fields = [
 
 export default function ProFieldsSection(props) {
   const { campaignObj } = props;
+  const {
+    isVerified,
+    tier,
+    isPro,
+    didWin,
+    slug
+  } = campaignObj;
   const [state, setState] = useState({
-    isVerified: campaignObj.isVerified,
-    tier: campaignObj.tier,
-    isPro: campaignObj.isPro,
-    didWin: campaignObj.didWin,
+    isVerified,
+    tier,
+    isPro,
+    didWin
   });
 
   const handleChange = async (key, value) => {
@@ -41,13 +48,11 @@ export default function ProFieldsSection(props) {
     setState(newState);
     await updateAdminFields(
       {
-        slug: campaignObj.slug,
+        slug,
         [key]: value
       }
     );
   };
-
-
 
   return (
     <div className="bg-slate-50 rounded border border-slate-300 p-4 my-12">
