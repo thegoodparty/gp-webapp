@@ -9,7 +9,7 @@ export default function VolunteerRoutePage(props) {
   return (
     <VolunteerDashboardLayout {...props}>
       <div className="p-4 bg-white">
-        <TitleSection route={route} />
+        <TitleSection {...props} />
         <RoutePreview route={route} noCard />
         <ClaimButton {...props} />
       </div>
