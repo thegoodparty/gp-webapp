@@ -30,6 +30,11 @@ export default function PersuasionSurvey(props) {
       type: 'select',
       options: ['Strong yes', 'Likely', 'Undecided', 'Unlikely', 'Strong no'],
     },
+    {
+      key: 'political views',
+      title: 'What are your political views?',
+      type: 'freeText',
+    },
     { key: 'canFollow', title: 'Can we follow up with you?', type: 'bool' },
   ];
 
