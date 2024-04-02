@@ -4,6 +4,7 @@ import { MdOutlineCheck } from 'react-icons/md';
 import { TbProgressCheck } from 'react-icons/tb';
 
 export default function AddressStatusTag({ address }) {
+  console.log('address', address);
   return (
     <>
       {address.status === 'completed' ? (

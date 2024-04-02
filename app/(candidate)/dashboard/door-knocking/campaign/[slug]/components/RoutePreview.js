@@ -1,5 +1,6 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H3 from '@shared/typography/H3';
+import Tag from '@shared/utils/Tag';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -62,28 +63,32 @@ function RoutePreview(props) {
       />
       <H3 className="mb-2 mt-4">{summary}</H3>
       {status === 'not-claimed' && (
-        <div className="bg-[#E5DCFF] p-2 rounded inline-flex items-center font-medium">
-          <MdOutlineDoNotDisturbAlt className=" opacity-60" />
-          <div className="ml-1 text-xs opacity-60">UNCLAIMED ROUTE</div>
-        </div>
+        <Tag
+          className="bg-[#E5DCFF] text-primary"
+          icon={<MdOutlineDoNotDisturbAlt className=" opacity-60" />}
+          label="UNCLAIMED ROUTE"
+        />
       )}
       {status === 'claimed' && (
-        <div className="bg-green-50 text-amber-900 p-2 rounded inline-flex items-center font-medium">
-          <FaHandSparkles />
-          <div className="ml-1 text-xs">CLAIMED ROUTE</div>
-        </div>
+        <Tag
+          className="bg-green-50 text-amber-900"
+          icon={<FaHandSparkles />}
+          label="CLAIMED ROUTE"
+        />
       )}
-      {status === 'in progress' && (
-        <div className="bg-cyan-100 text-cyan-800  p-2 rounded inline-flex items-center font-medium">
-          <TbProgressCheck />
-          <div className="ml-1 text-xs ">ROUTE IN PROGRESS</div>
-        </div>
+      {status === 'in-progress' && (
+        <Tag
+          className="bg-cyan-100 text-cyan-800"
+          icon={<TbProgressCheck />}
+          label="ROUTE IN PROGRESS"
+        />
       )}
       {status === 'completed' && (
-        <div className="bg-teal-50 text-green-700  p-2 rounded inline-flex items-center font-medium">
-          <MdOutlineCheck />
-          <div className="ml-1 text-xs ">ROUTE COMPLETED</div>
-        </div>
+        <Tag
+          className="bg-teal-50 text-green-700"
+          icon={<MdOutlineCheck />}
+          label="ROUTE COMPLETED"
+        />
       )}
       <div className="mt-2">
         <div className="bg-slate-50 text-indigo-600  p-2 rounded inline-flex items-center font-medium">
