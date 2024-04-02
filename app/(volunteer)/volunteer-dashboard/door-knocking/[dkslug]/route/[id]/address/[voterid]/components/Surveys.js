@@ -7,6 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import PersuasionSurvey from './PersuasionSurvey';
 
 async function saveSurvey(data, routeId, voterId) {
   try {
@@ -63,6 +64,10 @@ export default function Surveys(props) {
       {type === 'Candidate Awareness' ? (
         <AwarenessSurvey {...props} handleSave={handleSave} />
       ) : null}
+      {type === 'Voter Issues/Candidate Issue Awareness' ? (
+        <PersuasionSurvey {...props} handleSave={handleSave} />
+      ) : null}
+      {type}
     </div>
   );
 }
