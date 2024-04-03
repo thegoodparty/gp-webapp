@@ -25,13 +25,6 @@ async function setDone(routeId, voterId, data) {
   }
 }
 
-const options = [
-  'Refused to Engage',
-  'Engaging',
-  'Informative',
-  'Locked interest',
-];
-
 export default function SkipFlow(props) {
   const { routeId, voter, dkSlug } = props;
   const [open, setOpen] = useState(false);

@@ -11,7 +11,6 @@ import greedLogo from '/public/images/parties-logos/green-logo.png';
 import demLogo from '/public/images/parties-logos/democratic-logo.png';
 import repLogo from '/public/images/parties-logos/republican-logo.png';
 import Image from 'next/image';
-import TextField from '@shared/inputs/TextField';
 
 const parties = [
   {
