@@ -2,6 +2,7 @@ import H6 from '@shared/typography/H6';
 import YesNoInput from './YesNoInput';
 import FreeTextInput from './FreeTextInput';
 import MultiOptionsInput from './MultiOptionsInput';
+import PartySelect from './PartySelect';
 
 export default function PersuasionSurvey(props) {
   const { voter, handleSave, survey } = props;
@@ -33,7 +34,7 @@ export default function PersuasionSurvey(props) {
     {
       key: 'political views',
       title: 'What are your political views?',
-      type: 'freeText',
+      type: 'partySelect',
     },
     { key: 'canFollow', title: 'Can we follow up with you?', type: 'bool' },
   ];
@@ -61,6 +62,13 @@ export default function PersuasionSurvey(props) {
             {question.type === 'select' ? (
               <MultiOptionsInput
                 options={question.options}
+                onChange={handleSave}
+                surveyKey={question.key}
+                initialValue={survey ? survey[question.key] : false}
+              />
+            ) : null}
+            {question.type === 'partySelect' ? (
+              <PartySelect
                 onChange={handleSave}
                 surveyKey={question.key}
                 initialValue={survey ? survey[question.key] : false}

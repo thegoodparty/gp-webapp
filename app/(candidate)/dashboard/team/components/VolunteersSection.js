@@ -4,17 +4,24 @@ import Paper from '@shared/utils/Paper';
 import { formatToPhone } from 'helpers/numberHelper';
 import { Fragment } from 'react';
 import Volunteer from './Volunteer';
+import InviteButton from './InviteButton';
 
 export default function VolunteersSection(props) {
-  const { volunteers } = props;
+  const { volunteers, reloadInvitationsCallback } = props;
   if (!volunteers || volunteers.length === 0) {
     return null;
   }
   return (
     <section className="mt-6">
       <Paper>
-        <H2 className="mb-2">Campaign Team</H2>
-        <Body2>Manage all your team members in one place. </Body2>
+        <div className="flex justify-between items-center">
+          <div>
+            <H2 className="mb-2">Campaign Team</H2>
+
+            <Body2>Manage all your team members in one place. </Body2>
+          </div>
+          <InviteButton reloadInvitationsCallback={reloadInvitationsCallback} />
+        </div>
 
         <div className="grid grid-cols-12 gap-4 mt-8">
           {volunteers.map((volunteer) => (

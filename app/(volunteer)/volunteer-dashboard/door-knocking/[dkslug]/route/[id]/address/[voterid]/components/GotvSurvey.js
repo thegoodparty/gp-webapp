@@ -24,6 +24,12 @@ export default function GotvSurvey(props) {
       title: 'Do you need a ride to the polling station?',
       type: 'bool',
     },
+    {
+      key: 'voteLikelihood',
+      title: 'How likely are you to vote for us?',
+      type: 'select',
+      options: ['Strong yes', 'Likely', 'Undecided', 'Unlikely', 'Strong no'],
+    },
   ];
   return (
     <div>
