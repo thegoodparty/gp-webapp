@@ -3,6 +3,10 @@ import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
 import RoutePreview from '../../../components/RoutePreview';
 import StatisticsCard from 'app/(candidate)/dashboard/door-knocking/shared/StatisticsCard';
+import hourglassImg from 'public/images/door-knocking/hourglass.png';
+import Image from 'next/image';
+import H3 from '@shared/typography/H3';
+import Body1 from '@shared/typography/Body1';
 
 function formatNumber(n) {
   // Check if the number is not equal to its integer part
@@ -41,26 +45,44 @@ export default function RouteStatisticsSection({ route, dkCampaign }) {
     { label: 'Likely Voters', value: `${likelyVoters}%` },
     { label: 'Refusal Rate', value: `${refusalRate}%` },
   ];
-  console.log('route', route);
+
   return (
     <div className="grid grid-cols-12 gap-4">
-      <div className=" col-span-12 md:col-span-3">
-        <Paper style={{ padding: '16px' }}>
+      <div className=" col-span-12  md:col-span-4  xl:col-span-3 h-full">
+        <Paper style={{ padding: '16px', height: '100%' }}>
           <RoutePreview route={route} dkCampaign={dkCampaign} noCard />
         </Paper>
       </div>
-      <div className=" col-span-12 md:col-span-9">
+      <div className=" col-span-12 md:col-span-8 xl:col-span-9">
         <Paper style={{ height: '100%' }}>
           <H2>{summary} Route Statistics</H2>
           <Body2 className="mb-8">
             Use this data to help track your route progress.
           </Body2>
           <div className="grid grid-cols-12 gap-4">
-            {cards.map((card) => (
-              <div className=" col-span-12 md:col-span-6" key={card.label}>
-                <StatisticsCard {...card} />
+            {knockedDoors === 0 ? (
+              <div className="col-span-12 h-full flex flex-col items-center justify-center">
+                <Image
+                  src={hourglassImg}
+                  alt="hourglass"
+                  width={80}
+                  height={80}
+                />
+                <H3 className="mt-8 text-center mb-2">Waiting for data.</H3>
+                <Body1>
+                  Start your door knocking campaign to begin tracking your
+                  progress.
+                </Body1>
               </div>
-            ))}
+            ) : (
+              <>
+                {cards.map((card) => (
+                  <div className=" col-span-12 md:col-span-6" key={card.label}>
+                    <StatisticsCard {...card} />
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </Paper>
       </div>
