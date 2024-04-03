@@ -116,6 +116,15 @@ export default function AdminCandidatesPage(props) {
       runningForOffice = 'Yes';
     }
 
+    let didWinDisplay;
+    if (didWin === null) {
+      didWinDisplay = 'N/A';
+    } else if (didWin) {
+      didWinDisplay = 'Yes';
+    } else {
+      didWinDisplay = 'No';
+    }
+
     const fields = {
       id: campaignObj.id,
       isActive: campaignObj.isActive ? 'Yes' : 'No',
@@ -153,7 +162,7 @@ export default function AdminCandidatesPage(props) {
         'N/A' :
         new Date(campaignObj.dateVerified),
       tier: CANDIDATE_TIERS_REVERSED[tier],
-      didWin: didWin ? 'Yes' : 'No'
+      didWin: didWinDisplay
     };
     inputData.push(fields);
     let csvFields = fields;
