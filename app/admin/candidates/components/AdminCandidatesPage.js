@@ -21,6 +21,7 @@ import {
 import {
   CANDIDATE_TIERS_REVERSED,
 } from '../../victory-path/[slug]/components/candidate-tiers.constant';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 
 const getDateCellContents = (origDate) => {
   let date;
@@ -77,6 +78,7 @@ export default function AdminCandidatesPage(props) {
       'currentStep',
       'shortVersion',
       'campaignCommittee',
+      'website',
       'electionDate',
       'doorKnocking',
       'calls',
@@ -99,7 +101,7 @@ export default function AdminCandidatesPage(props) {
     const campaign = mapCampaignToCandidate(data);
     const { user, isPro, isVerified, didWin, tier } = campaignObj;
     const { currentStep, reportedVoterGoals, aiContent, details } = data || {};
-    const { zip, level, ballotLevel } = details || {};
+    const { zip, level, website, ballotLevel } = details || {};
 
     let waitingForP2v =
       !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'Yes' : 'No';
@@ -157,6 +159,7 @@ export default function AdminCandidatesPage(props) {
       currentStep,
       shortVersion: campaign.filedStatement,
       campaignCommittee: campaign.campaignCommittee,
+      website: website || '',
       electionDate: campaign.electionDate,
       doorKnocking: reportedVoterGoals?.doorKnocking || 0,
       calls: reportedVoterGoals?.calls || 0,
@@ -410,7 +413,25 @@ export default function AdminCandidatesPage(props) {
       accessor: 'campaignCommittee',
     },
     {
-      Header: 'Pledged',
+      Header: 'Website',
+      accessor: 'website',
+      Cell: ({ row }) => {
+        if (!row.original.website) {
+          return '';
+        }
+        return (
+          <a
+            href={row.original.website}
+            className="underline"
+            target="_blank"
+          >
+            Campaign Website <FaExternalLinkAlt />
+          </a>
+        );
+      }
+    },
+    {
+      Header: 'Pledged WTF',
       accessor: 'pledged',
     },
   ];
