@@ -96,11 +96,9 @@ export default function DetailsSection(props) {
               <CircularProgress size={16} />
             </div>
           </PrimaryButton>
-        ) : (
-          <div onClick={handleSave}>
-            <PrimaryButton disabled={!canSave()}>Save</PrimaryButton>
-          </div>
-        )}
+        ) : <PrimaryButton
+          onClick={handleSave}
+          disabled={!canSave()}>Save</PrimaryButton>}
       </div>
     </section>
   );
