@@ -49,6 +49,8 @@ function mapStatus(status, isActive) {
 
 export default function AdminCandidatesPage(props) {
   const { campaigns } = props;
+  // TODO: Build this array of keys w/ an Object.keys() of the `fields` object below
+  //  so that we can just manage these keys/fields in one place instead of two.
   const csvData = [
     [
       'id',
@@ -62,6 +64,8 @@ export default function AdminCandidatesPage(props) {
       'party',
       'office',
       'officeTermLength',
+      'level',
+      'ballotLevel',
       'city',
       'zip',
       'district',
@@ -95,7 +99,7 @@ export default function AdminCandidatesPage(props) {
     const campaign = mapCampaignToCandidate(data);
     const { user, isPro, isVerified, didWin, tier } = campaignObj;
     const { currentStep, reportedVoterGoals, aiContent, details } = data || {};
-    const { zip } = details || {};
+    const { zip, level, ballotLevel } = details || {};
 
     let waitingForP2v =
       !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'Yes' : 'No';
@@ -140,6 +144,8 @@ export default function AdminCandidatesPage(props) {
       office:
         campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
       officeTermLength: campaign.officeTermLength,
+      level,
+      ballotLevel,
       city: campaign.city,
       zip: zip || '',
       district: campaign.district || 'n/a',
@@ -355,6 +361,14 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Office',
       accessor: 'office',
+    },
+    {
+      Header: 'BR Office Level',
+      accessor: 'ballotLevel',
+    },
+    {
+      Header: 'Enriched Office Level',
+      accessor: 'level',
     },
     {
       Header: 'Election Date',
