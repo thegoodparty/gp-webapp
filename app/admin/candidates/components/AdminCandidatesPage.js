@@ -416,7 +416,6 @@ export default function AdminCandidatesPage(props) {
       Header: 'Website',
       accessor: 'website',
       Cell: ({ row }) => {
-        console.log(`row.original =>`, row.original)
         if (!row.original.website) {
           return '';
         }
