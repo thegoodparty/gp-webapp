@@ -63,6 +63,7 @@ export default function AdminCandidatesPage(props) {
       'office',
       'officeTermLength',
       'city',
+      'zip',
       'district',
       'state',
       'createdAt',
@@ -93,7 +94,8 @@ export default function AdminCandidatesPage(props) {
     const { data } = campaignObj;
     const campaign = mapCampaignToCandidate(data);
     const { user, isPro, isVerified, didWin, tier } = campaignObj;
-    const { currentStep, reportedVoterGoals, aiContent } = data || {};
+    const { currentStep, reportedVoterGoals, aiContent, details } = data || {};
+    const { zip } = details || {};
 
     let waitingForP2v =
       !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'Yes' : 'No';
@@ -130,6 +132,7 @@ export default function AdminCandidatesPage(props) {
         campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
       officeTermLength: campaign.officeTermLength,
       city: campaign.city,
+      zip: zip || '',
       district: campaign.district || 'n/a',
       state: campaign.state ? campaign.state.toUpperCase() : '?',
       createdAt: new Date(campaignObj.createdAt),
@@ -365,6 +368,10 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'District',
       accessor: 'district',
+    },
+    {
+      Header: 'Zip',
+      accessor: 'zip',
     },
     {
       Header: 'City',
