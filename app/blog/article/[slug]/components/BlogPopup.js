@@ -23,43 +23,38 @@ export default function BlogPopup() {
     }
   }, []);
 
-  const WrapperElement = (props) => <Modal {...props}>
-    <div className=" w-[90vw] max-w-[420px] mx-auto">
-      {props.children}
-    </div>
-  </Modal>
-
   return (
-    <WrapperElement
+    <Modal
       open={showModal}
       closeCallback={() => {
         setShowModal(false);
         setCookie('blogPopup', 'closed', 1);
-      }}
-    >
-      <Image
-        src="/images/heart-hologram.svg"
-        alt="GoodParty"
-        width={46}
-        height={46}
-      />
+      }}>
+      <div className=" w-[90vw] max-w-[420px] mx-auto">
+        <Image
+          src="/images/heart-hologram.svg"
+          alt="GoodParty"
+          width={46}
+          height={46}
+        />
 
-      <h2 className="text-2xl font-black my-1">
-        Stay up to date with Good Party
-      </h2>
+        <h2 className="text-2xl font-black my-1">
+          Stay up to date with Good Party
+        </h2>
 
-      <SignupForm
-        formId="5d84452a-01df-422b-9734-580148677d2c"
-        pageName={`blog-article`}
-        label="Get involved"
-        labelId="blog-form"
-        horizontal={false}
-        phoneField={false}
-        onSuccessCallback={() => {
-          setShowModal(false);
-          setCookie('blogPopup', 'closed', 1);
-        }}
-      />
-    </WrapperElement>
+        <SignupForm
+          formId="5d84452a-01df-422b-9734-580148677d2c"
+          pageName={`blog-article`}
+          label="Get involved"
+          labelId="blog-form"
+          horizontal={false}
+          phoneField={false}
+          onSuccessCallback={() => {
+            setShowModal(false);
+            setCookie('blogPopup', 'closed', 1);
+          }}
+        />
+      </div>
+    </Modal>
   );
 }
