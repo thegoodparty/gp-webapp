@@ -41,7 +41,7 @@ export default function TeamSection(props) {
         />
       ) : null}
       {volunteers && volunteers.length > 0 ? (
-        <VolunteersSection volunteers={volunteers} />
+        <VolunteersSection {...props} />
       ) : null}
     </section>
   );

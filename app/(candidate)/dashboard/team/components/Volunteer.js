@@ -5,8 +5,8 @@ export default function Volunteer(props) {
   const { volunteer } = props;
   const { firstName, lastName, email, phone } = volunteer;
   return (
-    <div className="col-span-6 md:col-span-6 lg:col-span-4">
-      <div className="p-2 md:p-6 border border-slate-300 rounded-lg flex justify-between">
+    <div className="col-span-6 md:col-span-6 lg:col-span-4 h-full">
+      <div className="p-2 md:p-6 border border-slate-300 rounded-lg flex justify-between  h-full">
         <div>
           <div>
             <H5>

@@ -7,10 +7,12 @@ import Volunteer from './Volunteer';
 import InviteButton from './InviteButton';
 
 export default function VolunteersSection(props) {
-  const { volunteers, reloadInvitationsCallback } = props;
+  const { volunteers, reloadInvitationsCallback, invitations } = props;
   if (!volunteers || volunteers.length === 0) {
     return null;
   }
+
+  const hideButton = invitations && invitations.length > 0;
   return (
     <section className="mt-6">
       <Paper>
@@ -20,17 +22,16 @@ export default function VolunteersSection(props) {
 
             <Body2>Manage all your team members in one place. </Body2>
           </div>
-          <InviteButton reloadInvitationsCallback={reloadInvitationsCallback} />
+          {!hideButton && (
+            <InviteButton
+              reloadInvitationsCallback={reloadInvitationsCallback}
+            />
+          )}
         </div>
 
         <div className="grid grid-cols-12 gap-4 mt-8">
           {volunteers.map((volunteer) => (
-            <div
-              className="col-span-6 md:col-span-6 lg:col-span-4"
-              key={volunteer.id}
-            >
-              <Volunteer volunteer={volunteer} />
-            </div>
+            <Volunteer volunteer={volunteer} key={volunteer.id} />
           ))}
         </div>
       </Paper>
