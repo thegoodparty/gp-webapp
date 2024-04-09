@@ -58,6 +58,7 @@ export default function Tabs({
               sx={{
                 '&.MuiButtonBase-root': { padding: 0 },
               }}
+              component="div"
               label={
                 <SecondaryButton variant="text" size={size}>
                   <span
