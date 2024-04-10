@@ -31,7 +31,7 @@ export default async function Page({ params, searchParams }) {
   return <ResourcesPage {...childProps} />;
 }
 
-function mapArticlesBySlug(content) {
+function mapArticlesBySlug(content = []) {
   let bySlug = {};
   content.forEach((article) => {
     bySlug[article.slug] = article;

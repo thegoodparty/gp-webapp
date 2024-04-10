@@ -20,11 +20,6 @@ const sections = [
     title: 'Build a Campaign Team',
     fields: [
       {
-        type: 'blog',
-        slug: 'best-practices-for-crafting-a-winning-message',
-      },
-
-      {
         type: 'file',
         title: 'Endorsement Checklist',
         description:
@@ -116,7 +111,6 @@ const sections = [
     ],
   },
 ];
-
 export default function ResourcesPage(props) {
   return (
     <DashboardLayout {...props}>
@@ -135,7 +129,7 @@ export default function ResourcesPage(props) {
             <div className="mt-2 grid grid-cols-12 gap-3 items-stretch">
               {section.fields.map((field) => (
                 <div
-                  key={field.title}
+                  key={field.title || field.slug}
                   className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-full"
                 >
                   <ResourceWrapper resource={field} {...props} />
@@ -146,5 +140,5 @@ export default function ResourcesPage(props) {
         ))}
       </div>
     </DashboardLayout>
-  );
-}
+  )
+};

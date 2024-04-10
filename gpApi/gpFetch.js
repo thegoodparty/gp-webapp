@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from '/helpers/cookieHelper';
+import { getCookie } from '/helpers/cookieHelper';
 
 async function gpFetch(
   endpoint,
@@ -40,10 +40,7 @@ async function gpFetch(
 export default gpFetch;
 
 function headersOptions(body, method = 'GET', token) {
-  const headers = {
-    // 'Content-Type': 'application/json',
-    // 'Access-Control-Allow-Origin': '*',
-  };
+  const headers = {};
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
@@ -71,7 +68,11 @@ async function fetchCall(url, options = {}, revalidate, nonJSON) {
     return res;
   }
   try {
-    let jsonRes = res.json();
+    // TODO: We should consider returning the response as is and handle the error at the caller level.
+    //  There's no way for the caller to determine how to react to error response states w/ this current pattern.
+    const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
+    const jsonRes = isSuccessfulResponseStatus ?
+        await res.json() : res;
     return jsonRes;
   } catch (e) {
     return false;
