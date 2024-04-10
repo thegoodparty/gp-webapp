@@ -13,7 +13,7 @@ export default function DkCampaignPage(props) {
   return (
     <DashboardLayout {...props}>
       <div className="bg-gray-50 border border-slate-300 p-3 md:py-6 md:px-8 rounded-xl">
-        <StatisticsSection dkCampaign={dkCampaign} routes={routes} />
+        <StatisticsSection {...props} />
         <RoutesSection dkCampaign={dkCampaign} routes={routes} />
       </div>
     </DashboardLayout>

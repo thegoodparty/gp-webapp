@@ -32,7 +32,7 @@ export default async function Page({ params, searchParams }) {
   const { slug } = params;
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
-  const { dkCampaign, routes } = await fetchDkCampaign(slug);
+  const { dkCampaign, routes, totals } = await fetchDkCampaign(slug);
   const { campaign } = await fetchUserCampaign();
 
   const childProps = {
@@ -40,6 +40,7 @@ export default async function Page({ params, searchParams }) {
     dkCampaign,
     routes,
     campaign,
+    totals,
   };
   return <DkCampaignPage {...childProps} />;
 }

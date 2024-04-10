@@ -40,20 +40,18 @@ function CircularProgressChart({
         style={{
           height: '150px',
           width: '150px',
-          transform: 'scaleX(1) rotate(90deg)',
+          transform: 'scaleX(1) rotate(-90deg)',
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart width={200} height={150}>
+          <PieChart width={150} height={150}>
             <Pie
               data={data}
               dataKey="value"
               cx="50%"
               cy="50%"
-              innerRadius={90}
-              outerRadius={115}
-              startAngle={50}
-              endAngle={310}
+              innerRadius={70}
+              outerRadius={90}
               fill={color || '#000'}
               labelLine={false}
               // label={renderCustomizedLabel}

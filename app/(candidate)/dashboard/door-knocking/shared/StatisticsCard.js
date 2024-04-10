@@ -2,7 +2,7 @@ import Body2 from '@shared/typography/Body2';
 
 export default function StatisticsCard({ value, label }) {
   return (
-    <div className="bg-gray-50 border border-slate-300 rounded-xl p-4">
+    <div className="bg-gray-50 border border-slate-300 rounded-xl p-4 h-full">
       <h3 className="mb-2  text-center text-4xl xl:text-5xl font-medium">
         {value}
       </h3>
