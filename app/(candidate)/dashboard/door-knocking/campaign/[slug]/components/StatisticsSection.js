@@ -16,6 +16,16 @@ export default function StatisticsSection(props) {
     }
   });
 
+  const likelyVotersPerc =
+    totals?.completed !== 0
+      ? ((totals?.likelyVoters * 100) / totals?.completed).toFixed(2)
+      : 0;
+
+  const refusalRate =
+    totals?.completed !== 0
+      ? ((totals.refusal * 100) / totals.completed).toFixed(2)
+      : 0;
+
   const fields = [
     {
       key: 'totalKnockedOn',
@@ -32,10 +42,7 @@ export default function StatisticsSection(props) {
     {
       key: 'likelyVoters',
       label: 'Likely Voters',
-      value:
-        totals?.completed !== 0
-          ? `${(totals?.likelyVoters * 100) / totals?.completed}%`
-          : 0,
+      value: totals?.completed !== 0 ? `${likelyVotersPerc}%` : 0,
       col: 4,
     },
     {
@@ -47,10 +54,7 @@ export default function StatisticsSection(props) {
     {
       key: 'refusalRate',
       label: 'Refusal Rate',
-      value:
-        totals?.completed !== 0
-          ? `${(totals.refusal * 100) / totals.completed}%`
-          : 0,
+      value: totals?.completed !== 0 ? `${refusalRate}%` : 0,
       col: 6,
     },
   ];

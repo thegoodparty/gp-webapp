@@ -53,9 +53,7 @@ export default function MarkDoneFlow(props) {
       data,
     );
     if (isRouteCompleted) {
-      router.push(
-        `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}`,
-      );
+      window.location.href = `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}`;
     } else if (nextVoter) {
       router.push(
         `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}/address/${nextVoter}`,

@@ -8,8 +8,6 @@ import RoutesSection from './RoutesSection';
 
 export default function DkCampaignPage(props) {
   const { dkCampaign, routes } = props;
-  console.log('dkCampaign', dkCampaign);
-  console.log('routes', routes);
   return (
     <DashboardLayout {...props}>
       <div className="bg-gray-50 border border-slate-300 p-3 md:py-6 md:px-8 rounded-xl">
