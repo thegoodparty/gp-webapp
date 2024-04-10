@@ -127,17 +127,18 @@ export default function ResourcesPage(props) {
           <div key={section.title}>
             <H5 className="mt-9 mb-3">{section.title}</H5>
             <div className="mt-2 grid grid-cols-12 gap-3 items-stretch">
-              {section.fields.map((field) => <div
+              {section.fields.map((field) => (
+                <div
                   key={field.title || field.slug}
                   className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-full"
                 >
                   <ResourceWrapper resource={field} {...props} />
                 </div>
-              )}
+              ))}
             </div>
           </div>
         ))}
       </div>
     </DashboardLayout>
-  );
-}
+  )
+};

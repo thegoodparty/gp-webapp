@@ -72,7 +72,7 @@ async function fetchCall(url, options = {}, revalidate, nonJSON) {
     //  There's no way for the caller to determine how to react to error response states w/ this current pattern.
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
     const jsonRes = isSuccessfulResponseStatus ?
-        res.json() : res;
+        await res.json() : res;
     return jsonRes;
   } catch (e) {
     return false;
