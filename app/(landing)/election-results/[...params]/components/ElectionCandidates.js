@@ -1,12 +1,10 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import styles from './Election.module.scss';
 import Image from 'next/image';
 import InfoButton from '@shared/buttons/InfoButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import ElectionCandidate from './ElectionCandidate';
-import dynamic from 'next/dynamic';
 
 export default function ElectionCandidates(props) {
   const { content, city } = props;
@@ -46,7 +44,7 @@ export default function ElectionCandidates(props) {
           </div>
 
           <div
-            className={`font-sfpro text-center mt-2  text-[18px] leading-6  ${styles.hyperlink}`}
+            className={`font-sfpro text-center mt-2  text-[18px] leading-6  `}
           >
             <CmsContentWrapper className="max-w-md">
               {contentfulHelper(candidatesSubTitle)}
