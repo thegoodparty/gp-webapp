@@ -45,7 +45,7 @@ export default function ProFieldsSection(props) {
   };
 
   return (
-    <div className="bg-indigo-200 rounded border border-slate-300 p-4 my-12">
+    <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
       <H3>Additional Fields</H3>
       {fields.map((field) => (
         <div key={field.key} className="flex items-center">

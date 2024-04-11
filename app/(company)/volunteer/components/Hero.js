@@ -30,7 +30,7 @@ export default function Hero() {
         </div>
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#94A3B8_55%)] h-[calc(100vw*0.09)] w-full md:-mt-40" />
-      <div className="h-20 md:h-40 bg-indigo-200"></div>
+      <div className="h-20 md:h-40 bg-indigo-50"></div>
     </>
   );
 }

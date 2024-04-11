@@ -15,7 +15,7 @@ export default function LoadingAI() {
         />
       </div>
       <div className="max-w-lg mx-auto">
-        <LinearProgress className="h-2 mt-4 mb-2 bg-black rounded [&>.MuiLinearProgress-bar]:bg-indigo-2000" />
+        <LinearProgress className="h-2 mt-4 mb-2 bg-black rounded [&>.MuiLinearProgress-bar]:bg-indigo-500" />
       </div>
       <br />
       <br />

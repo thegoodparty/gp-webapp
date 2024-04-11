@@ -15,7 +15,7 @@ export default function ElectionVolunteer(props) {
   return (
     <>
       <MaxWidth>
-        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-indigo-200">
+        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-indigo-50">
           <div className="col-span-12 lg:col-span-7 lg:pl-20 max-w-2xl p-10">
             <button className="bg-[#F54966] bg-opacity-20 text-red-500 py-2 px-6 no-underline rounded-full font-normal  btn-primary">
               Volunteer
@@ -46,7 +46,7 @@ export default function ElectionVolunteer(props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-indigo-200 items-center md:mb-20">
+        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-indigo-50 items-center md:mb-20">
           <div className="col-span-12 lg:col-span-7 relative w-full h-full lg:pt-10 lg:pl-20 max-w-2xl p-10 items-center">
             <div className="flex flex-row justify-center">
               <Image src={meetingImg} alt="" className="rounded-xl" />

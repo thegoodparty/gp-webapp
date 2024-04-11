@@ -241,7 +241,7 @@ export default function CampaignPlanSection({
           {loading ? (
             <LoadingAI />
           ) : (
-            <div className="border border-slate-500 bg-indigo-200 rounded-xl">
+            <div className="border border-slate-500 bg-indigo-50 rounded-xl">
               {plan ? (
                 <>
                   <PlanVersion

@@ -29,7 +29,7 @@ export default function ElectionCandidates(props) {
       className={`${
         theme === 'dark'
           ? 'bg-primary-dark text-slate-50 pb-40 pt-20 '
-          : 'bg-indigo-200 text-primary pt-4'
+          : 'bg-indigo-50 text-primary pt-4'
       } h-auto `}
       id="candidate-section"
     >

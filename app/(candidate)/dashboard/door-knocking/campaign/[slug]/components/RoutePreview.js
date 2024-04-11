@@ -91,7 +91,7 @@ function RoutePreview(props) {
         />
       )}
       <div className="mt-2">
-        <div className="bg-indigo-200 text-indigo-600  p-2 rounded inline-flex items-center font-medium">
+        <div className="bg-indigo-50 text-indigo-600  p-2 rounded inline-flex items-center font-medium">
           <MdDoorFront />
           <div className="ml-1 text-xs ">
             {optimizedAddresses?.length || 0} DOORS

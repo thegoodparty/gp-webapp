@@ -13,7 +13,7 @@ export default function ElectionsCountyPage(props) {
   const stateName = shortToLongState[state.toUpperCase()];
 
   return (
-    <div className="bg-indigo-200 pb-20">
+    <div className="bg-indigo-50 pb-20">
       <Hero {...props} color1="#897AF1" color2="#C985F2" level="city" />
       <MaxWidth>
         <RacesSection races={races} />

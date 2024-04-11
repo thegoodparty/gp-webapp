@@ -104,7 +104,7 @@ export default function VoterFileSection(props) {
 
   console.log('campaign', campaign);
   return (
-    <div className="bg-indigo-200 rounded border border-slate-300 p-4 my-12">
+    <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
       <H3>Voter File (pro account)</H3>
       {status === 'noElectionType' && (
         <div>

@@ -8,7 +8,7 @@ import WhatIsCampaign from './WhatIsCampaign';
 
 export default function RunForOfficePage({ articles }) {
   return (
-    <div className="bg-indigo-200">
+    <div className="bg-indigo-50">
       <Hero />
       <div className="bg-[linear-gradient(172deg,_#F9FAFB_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full" />
       <WhatIsCampaign />

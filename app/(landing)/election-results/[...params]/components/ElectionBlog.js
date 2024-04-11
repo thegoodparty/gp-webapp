@@ -17,7 +17,7 @@ export default function Blog(props) {
     : 'w-full lg:w-[300px] h-[300px]';
   let blogMaxWidth = blogCTA ? 'lg:max-w-[200px]' : 'lg:max-w-[300px]';
 
-  let blogBgColor = blogDark ? 'bg-primary-dark' : 'bg-indigo-200';
+  let blogBgColor = blogDark ? 'bg-primary-dark' : 'bg-indigo-50';
   let blogFontTitle = blogDark ? 'text-slate-50' : 'text-indigo-800';
   let blogFontSubtitle = blogDark ? 'text-slate-200' : 'text-indigo-800';
 

@@ -16,7 +16,7 @@ export default function ElectionsCountyPage(props) {
     return `/elections/${city.slug}`;
   };
   return (
-    <div className="bg-indigo-200 pb-20">
+    <div className="bg-indigo-50 pb-20">
       <Hero {...props} color1="#2AC8E2" color2="#6a9de2" level="county" />
       <MaxWidth>
         <RacesSection races={races} />

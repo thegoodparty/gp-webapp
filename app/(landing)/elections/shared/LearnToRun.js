@@ -36,7 +36,7 @@ export default function LearnToRun({ stateName }) {
     <div className="relative pt-20 md:pt-48">
       <div className="absolute bg-primary-dark top-0 h-1/2 w-full left-0"></div>
       <div className="max-w-screen-xl mx-auto relative z-10">
-        <section className=" px-4 py-10 md:p-20 md:rounded-xl relative bg-indigo-200 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        <section className=" px-4 py-10 md:p-20 md:rounded-xl relative bg-indigo-50 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <div className="relative z-10">
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-12 md:col-span-6">

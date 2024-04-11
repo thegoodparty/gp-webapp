@@ -6,7 +6,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 export default function Hero() {
   return (
     <MaxWidth>
-      <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-20 bg-indigo-200 items-stretch">
+      <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-20 bg-indigo-50 items-stretch">
         <div className="col-span-12 lg:col-span-7 lg:pl-20 max-w-2xl p-10">
           <div className="absolute -mt-[100px] mr-3">
             <Image

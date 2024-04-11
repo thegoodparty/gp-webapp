@@ -48,7 +48,7 @@ const points = [
 
 export default function WhatWillDo() {
   return (
-    <section className="bg-indigo-200">
+    <section className="bg-indigo-50">
       <MaxWidth>
         <h2 className="text-3xl md:text-5xl font-semibold md:text-center pt-20 md:pt-40 pb-9 md:pb-20">
           What will I do?

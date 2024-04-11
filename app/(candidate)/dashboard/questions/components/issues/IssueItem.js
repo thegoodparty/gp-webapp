@@ -123,7 +123,7 @@ export default function IssueItem({
         <div
           key={topIssue.id}
           className={`flex justify-between items-center  p-4 rounded-lg mt-2 cursor-pointer transition-colors hover:bg-purple-50 ${
-            selectedIssue ? 'bg-purple-100' : 'bg-indigo-200'
+            selectedIssue ? 'bg-purple-100' : 'bg-indigo-50'
           }`}
           onClick={() => {
             handleSelectIssue(topIssue);

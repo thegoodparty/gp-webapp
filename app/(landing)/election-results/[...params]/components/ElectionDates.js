@@ -17,7 +17,7 @@ export default function ElectionDates(props) {
                 <span className="ml-2">Upcoming elections and dates</span>
               </div>
               <div className="flex flex-col w-full h-auto mt-5">
-                <hr className="bg-indigo-200 border-[1px]"></hr>
+                <hr className="bg-indigo-50 border-[1px]"></hr>
               </div>
               <div className="flex w-full h-auto mt-5 text-slate-50 text-lg items-center">
                 7/10

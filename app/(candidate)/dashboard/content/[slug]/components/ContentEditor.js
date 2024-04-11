@@ -229,7 +229,7 @@ export default function ContentEditor({
 
   return (
     <div>
-      <div className="flex w-full h-auto p-5 items-center justify-items-center bg-indigo-200">
+      <div className="flex w-full h-auto p-5 items-center justify-items-center bg-indigo-50">
         <div className="flex justify-start">
           {/* desktop back button */}
           <Link href="/dashboard/content">

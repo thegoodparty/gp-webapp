@@ -26,7 +26,7 @@ const points = [
 export default function GetDemoPage() {
   return (
     <div className="grid grid-cols-12 min-h-screen">
-      <div className="col-span-12 md:col-span-6 bg-indigo-200 h-full flex justify-end">
+      <div className="col-span-12 md:col-span-6 bg-indigo-50 h-full flex justify-end">
         <div className="max-w-[640px] md:w-[50vw] pr-4 lg:pr-20 pl-4 xl:pl-0 pb-12">
           <h1 className="mt-16 lg:mt-24 font-semibold text-4xl ">
             Get a demo of Good Party&apos;s free tools for independent and 3rd

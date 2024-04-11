@@ -27,7 +27,7 @@ const people = [
 
 export default function Community() {
   return (
-    <section className="bg-indigo-200">
+    <section className="bg-indigo-50">
       <MaxWidth>
         <h2 className="text-4xl font-semibold text-center pb-10">
           Community highlights

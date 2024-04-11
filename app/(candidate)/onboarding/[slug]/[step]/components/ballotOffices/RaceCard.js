@@ -60,7 +60,7 @@ export default function RaceCard({
 
   return (
     <div
-      className="flex px-4 py-4 bg-indigo-200 rounded-md mb-2 items-center justify-between cursor-pointer transition-colors hover:bg-slate-200"
+      className="flex px-4 py-4 bg-indigo-50 rounded-md mb-2 items-center justify-between cursor-pointer transition-colors hover:bg-slate-200"
       onClick={() => selectCallback(race)}
     >
       <div className="flex items-center">

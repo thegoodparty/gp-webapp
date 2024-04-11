@@ -42,7 +42,7 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
     <div className="lg:hidden">
       <Hamburger toggled={open} toggle={toggleCallback} size={20} />
       {open && (
-        <div className="fixed top-14 left-0 w-screen h-[calc(100vh-56px)] bg-indigo-200 p-2 overflow-x-hidden overflow-y-auto">
+        <div className="fixed top-14 left-0 w-screen h-[calc(100vh-56px)] bg-indigo-50 p-2 overflow-x-hidden overflow-y-auto">
           <DashboardMenu
             pathname={pathname}
             toggleCallback={toggleCallback}

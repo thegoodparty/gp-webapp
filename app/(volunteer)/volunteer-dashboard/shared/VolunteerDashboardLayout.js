@@ -8,7 +8,7 @@ export default function VolunteerDashboardLayout({ children, pathname }) {
       <UserSnapScript />
       <FullStoryScript />
 
-      <div className="flex min-h-[calc(100vh-56px)] bg-indigo-200">
+      <div className="flex min-h-[calc(100vh-56px)] bg-indigo-50">
         <div className="hidden lg:block">
           <VolunteerDashboardMenu pathname={pathname} />
         </div>
