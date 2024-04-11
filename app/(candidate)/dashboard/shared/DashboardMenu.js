@@ -105,8 +105,8 @@ export default function DashboardMenu({
             id={page.id}
           >
             <div
-              className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 ${
-                pathname === page.link && 'text-slate-50 bg-indigo-700'
+              className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark ${
+                pathname === page.link && 'text-slate-50 bg-primary-dark'
               }`}
             >
               {page.icon}
@@ -119,14 +119,14 @@ export default function DashboardMenu({
         <div className="mt-4 border-t border-indigo-400 pt-4">
           <Link href="/profile" className="no-underline" id="nav-dash-settings">
             <div
-              className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 `}
+              className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark `}
             >
               <div className="ml-2">Settings</div>
             </div>
           </Link>
 
           <div
-            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-indigo-700 cursor-pointer "
+            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark cursor-pointer "
             onClick={handleLogOut}
           >
             <div className="ml-2">Logout</div>

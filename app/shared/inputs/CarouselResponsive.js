@@ -17,7 +17,7 @@ export default class Carousel extends Component {
       arrows: false,
     };
     return (
-      <div className="m-0 w-[450px] md:w-[700px] lg:w-[900px] h-full bg-indigo-700 rounded-2xl text-white">
+      <div className="m-0 w-[450px] md:w-[700px] lg:w-[900px] h-full bg-primary-dark rounded-2xl text-white">
         <Slider {...settings}>
           {this.props.sections.map((section, index) => (
             <div key={section.name}>

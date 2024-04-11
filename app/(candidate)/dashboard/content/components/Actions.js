@@ -108,7 +108,7 @@ export default function Actions(props) {
                   setShowMenu(false);
                 }}
               >
-                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaPencilAlt className="text-[14px]" />
                     <div className="ml-3 font-sfpro text-[17px]">Rename</div>
@@ -123,7 +123,7 @@ export default function Actions(props) {
                     setShowMenu(false);
                   }}
                 >
-                  <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                  <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
                     <div className="whitespace-nowrap text-lg flex items-center w-full">
                       <FaGlobe className="text-[14px]" />
                       <div className="ml-3 font-sfpro text-[17px]">
@@ -140,7 +140,7 @@ export default function Actions(props) {
                   setShowMenu(false);
                 }}
               >
-                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaCopy className="text-[14px]" />
                     <div className="ml-3 font-sfpro text-[17px]">Duplicate</div>
@@ -156,7 +156,7 @@ export default function Actions(props) {
                   setShowMenu(false);
                 }}
               >
-                <span className="text-red-400 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                <span className="text-red-400 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaTrashAlt className="text-[14px]" />
                     <div className="ml-3 font-sfpro text-[17px]">Delete</div>

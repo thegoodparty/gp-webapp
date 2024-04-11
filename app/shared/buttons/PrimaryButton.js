@@ -43,15 +43,15 @@ export default function PrimaryButton({
   if (variant === 'contained') {
     baseClass['bg-primary'] = true;
     baseClass['text-slate-50'] = true;
-    baseClass['hover:text-lime-500'] = true;
-    baseClass['active:text-lime-500'] = true;
+    baseClass['hover:text-scondary-light'] = true;
+    baseClass['active:text-scondary-light'] = true;
   } else if (variant === 'outlined') {
     baseClass['bg-white'] = true;
     baseClass['text-primary'] = true;
     baseClass['border-2'] = true;
     baseClass['border-primary'] = true;
-    baseClass['hover:text-lime-500'] = true;
-    baseClass['active:text-lime-500'] = true;
+    baseClass['hover:text-scondary-light'] = true;
+    baseClass['active:text-scondary-light'] = true;
     baseClass['hover:bg-primary'] = true;
     baseClass['active:bg-primary'] = true;
   } else if (variant === 'text') {
@@ -66,8 +66,8 @@ export default function PrimaryButton({
     baseClass['bg-gray-600'] = true;
     baseClass['text-gray-300'] = true;
     baseClass['hover:text-gray-300'] = true;
-    baseClass['hover:text-lime-500'] = false;
-    baseClass['active:text-lime-500'] = false;
+    baseClass['hover:text-scondary-light'] = false;
+    baseClass['active:text-scondary-light'] = false;
     baseClass['bg-white'] = false;
     baseClass['bg-primary'] = false;
     if (variant === 'outlined') {
@@ -78,8 +78,8 @@ export default function PrimaryButton({
       baseClass['text-primary'] = false;
       baseClass['text-gray-300'] = false;
       baseClass['text-gray-500'] = true;
-      baseClass['hover:text-lime-500'] = false;
-      baseClass['active:text-lime-500'] = false;
+      baseClass['hover:text-scondary-light'] = false;
+      baseClass['active:text-scondary-light'] = false;
       baseClass['hover:bg-primary'] = false;
       baseClass['active:bg-primary'] = false;
     } else if (variant === 'text') {

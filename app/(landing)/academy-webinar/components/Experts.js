@@ -32,7 +32,7 @@ export default function Experts() {
                 className="col-span-12 md:col-span-6 h-full"
                 key={expert.name}
               >
-                <div className="rounded-xl overflow-hidden relative bg-indigo-700 mx-8 h-full">
+                <div className="rounded-xl overflow-hidden relative bg-primary-dark mx-8 h-full">
                   <Image
                     src={expert.img}
                     alt={expert.name}

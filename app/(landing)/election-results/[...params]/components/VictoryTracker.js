@@ -71,7 +71,7 @@ function VictoryTracker({ candidate, color, reportedVoterGoals }) {
       {finalVotes && (
         <div className="my-3 flex justify-center">
           {isWon ? (
-            <div className=" bg-lime-500 text-primary py-2 px-4 rounded-full">
+            <div className=" bg-scondary-light text-primary py-2 px-4 rounded-full">
               Winner with {numberFormatter(finalVotes)} votes{' '}
               <span role="img" aria-label="Party">
                 🎉️

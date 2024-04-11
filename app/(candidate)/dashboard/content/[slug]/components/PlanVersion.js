@@ -47,7 +47,7 @@ export default function PlanVersion({
                 updatePlanCallback(latestVersion);
               }}
             >
-              <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+              <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
                 <div className="whitespace-nowrap text-lg flex items-center w-full">
                   <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
                     Latest Version
@@ -64,7 +64,7 @@ export default function PlanVersion({
                   updatePlanCallback(version);
                 }}
               >
-                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-indigo-700 w-full rounded-xl p-3">
+                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
                       {dateWithTime(version.date)}{' '}

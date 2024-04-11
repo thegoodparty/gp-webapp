@@ -38,7 +38,7 @@ export default function Notifications({
       className="no-underline"
       onClick={closeNotificationCallback}
     >
-      <div className="py-3 px-5 border-t border-indigo-700 flex justify-between items-center transition-colors hover:bg-indigo-700">
+      <div className="py-3 px-5 border-t border-primary-dark flex justify-between items-center transition-colors hover:bg-primary-dark">
         <div className="flex">
           <div>{TypeIcon(type)}</div>
           <div className="px-3">

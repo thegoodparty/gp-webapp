@@ -29,10 +29,10 @@ export default function FactsSection() {
               </div>
               <div className="text-[32px] font-semibold">
                 <span className="text-gray-200">Americans want</span>&nbsp;
-                <span className="text-lime-500">more</span>&nbsp;
+                <span className="text-scondary-light">more</span>&nbsp;
               </div>
               <div className="text-[32px] font-semibold">
-                <span className="text-lime-500">choices</span>&nbsp;
+                <span className="text-scondary-light">choices</span>&nbsp;
                 <span className="text-gray-200">in politics</span>
               </div>
             </div>

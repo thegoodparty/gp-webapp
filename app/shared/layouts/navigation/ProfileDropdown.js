@@ -137,7 +137,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               >
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-indigo-700  rounded flex items-center justify-between"
+                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark  rounded flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     {link.icon}
@@ -151,7 +151,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               <Link href="/admin" className="no-underline font-normal">
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark hover:text-white rounded flex items-center"
                 >
                   <HiOutlineStar />
                   <div className="ml-3">Admin</div>
@@ -161,7 +161,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             {impersonating && (
               <div
                 data-cy="header-link"
-                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-indigo-700 hover:text-white rounded flex items-center"
+                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark hover:text-white rounded flex items-center"
                 onClick={() => {
                   deleteCookie('impersonateToken');
                   deleteCookie('impersonateUser');
@@ -174,7 +174,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             )}
             <div
               data-cy="header-link"
-              className="py-3 whitespace-nowrap text-base px-4 hover:bg-indigo-700  rounded flex items-center justify-between"
+              className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark  rounded flex items-center justify-between"
               onClick={handleLogOut}
             >
               <div className="flex items-center">

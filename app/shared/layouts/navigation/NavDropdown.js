@@ -42,7 +42,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
               >
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-indigo-700  rounded flex items-center justify-between"
+                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark  rounded flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     {link.icon}
