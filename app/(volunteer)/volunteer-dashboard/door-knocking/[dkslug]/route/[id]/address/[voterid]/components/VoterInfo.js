@@ -38,19 +38,19 @@ export default function VoterInfo(props) {
       <H2 className="mb-4">{name}</H2>
       <div className="flex items-center mb-4">
         {gender && (
-          <div className="text-xs font-medium text-indigo-300 flex items-center bg-indigo-50 rounded py-1 px-2 mr-2">
+          <div className="text-xs font-medium text-gray-600 flex items-center bg-indigo-50 rounded py-1 px-2 mr-2">
             <MdOutlineFemale />
             <div className="ml-1">{gender}</div>
           </div>
         )}
         {age && age !== '' && (
-          <div className="text-xs font-medium text-indigo-300 flex items-center bg-indigo-50 rounded py-1 px-2 mr-2">
+          <div className="text-xs font-medium text-gray-600 flex items-center bg-indigo-50 rounded py-1 px-2 mr-2">
             <FaRegSmile />
             <div className="ml-1">{age} YEARS</div>
           </div>
         )}
         {party && party !== '' && (
-          <div className="text-xs font-medium text-indigo-300 flex items-center bg-indigo-50 rounded py-1 px-2 mr-2 uppercase">
+          <div className="text-xs font-medium text-gray-600 flex items-center bg-indigo-50 rounded py-1 px-2 mr-2 uppercase">
             <IoPersonSharp />
             <div className="ml-1">{party}</div>
           </div>

@@ -43,9 +43,9 @@ export default function Notifications({
           <div>{TypeIcon(type)}</div>
           <div className="px-3">
             <H6 className="text-slate-100">{title}</H6>
-            <Caption className="text-indigo-300">{subTitle}</Caption>
+            <Caption className="text-gray-600">{subTitle}</Caption>
             <Subtitle2
-              className={`mt-6 ${isRead ? 'text-indigo-300' : 'text-red-200'}`}
+              className={`mt-6 ${isRead ? 'text-gray-600' : 'text-red-200'}`}
             >
               Due {dateUsHelper(dueDate)}
             </Subtitle2>

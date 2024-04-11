@@ -72,7 +72,7 @@ export default function DetailsSection(props) {
   return (
     <section>
       <H3>My Details</H3>
-      <Body1 className="text-indigo-300 mt-2 border-b border-gray-600 pb-6 mb-12">
+      <Body1 className="text-gray-600 mt-2 border-b border-gray-600 pb-6 mb-12">
         Update your details so our AI can give you even more personalized tips
         and suggestions.
       </Body1>
@@ -96,9 +96,11 @@ export default function DetailsSection(props) {
               <CircularProgress size={16} />
             </div>
           </PrimaryButton>
-        ) : <PrimaryButton
-          onClick={handleSave}
-          disabled={!canSave()}>Save</PrimaryButton>}
+        ) : (
+          <PrimaryButton onClick={handleSave} disabled={!canSave()}>
+            Save
+          </PrimaryButton>
+        )}
       </div>
     </section>
   );

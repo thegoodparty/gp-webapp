@@ -72,7 +72,7 @@ export default function PartySelect({ surveyKey, initialValue, onChange }) {
                   />
                   <div
                     className={` group-hover:text-primary transition-colors text-center text-sm ${
-                      party.name === value ? 'text-primary' : 'text-indigo-300'
+                      party.name === value ? 'text-primary' : 'text-gray-600'
                     }`}
                   >
                     {party.label || party.name}
@@ -93,7 +93,7 @@ export default function PartySelect({ surveyKey, initialValue, onChange }) {
               >
                 <div
                   className={` group-hover:text-primary transition-colors text-center text-sm ${
-                    value === 'other' ? 'text-primary' : 'text-indigo-300'
+                    value === 'other' ? 'text-primary' : 'text-gray-600'
                   }`}
                 >
                   Other/Unknown

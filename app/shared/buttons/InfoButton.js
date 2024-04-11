@@ -39,7 +39,7 @@ export default function InfoButton({
     baseClass['hover:text-slate-50'] = true;
     baseClass['active:text-slate-50'] = true;
   } else if (variant === 'text') {
-    baseClass['text-indigo-300'] = true;
+    baseClass['text-gray-600'] = true;
     baseClass['hover:bg-indigo-50'] = true;
     baseClass['active:bg-indigo-50'] = true;
     baseClass['hover:text-primary'] = true;
@@ -71,7 +71,7 @@ export default function InfoButton({
     } else if (variant === 'text') {
       baseClass['text-gray-500'] = true;
 
-      baseClass['text-indigo-300'] = false;
+      baseClass['text-gray-600'] = false;
       baseClass['hover:bg-indigo-50'] = false;
       baseClass['active:bg-indigo-50'] = false;
       baseClass['hover:text-primary'] = false;

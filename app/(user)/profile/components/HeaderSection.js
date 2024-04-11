@@ -7,7 +7,7 @@ export default function HeaderSection() {
     <div className="flex justify-between pb-6 border-b border-slate-300">
       <div>
         <H3>Settings</H3>
-        <Body1 className="text-indigo-300">
+        <Body1 className="text-gray-600">
           Select your notification preferences
         </Body1>
       </div>

@@ -237,7 +237,7 @@ export default function PartyStep(props) {
                     className={` group-hover:text-primary transition-colors ${
                       party.name === state.party
                         ? 'text-primary'
-                        : 'text-indigo-300'
+                        : 'text-gray-600'
                     }`}
                   >
                     {party.label || party.name}

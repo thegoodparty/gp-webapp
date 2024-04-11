@@ -73,7 +73,7 @@ export default function FunFactSection(props) {
   return (
     <section className="border-t pt-6 border-gray-600">
       <H3>Fun Fact About Yourself</H3>
-      <Body1 className="text-indigo-300 mt-2  pb-6 mb-12">
+      <Body1 className="text-gray-600 mt-2  pb-6 mb-12">
         What&apos;s something fun or interesting about you- unrelated to
         politics- that you think people in your community would like to know?
         This will help humanize your campaign.
