@@ -8,7 +8,7 @@ import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal';
 
 export default function VolunteerSection() {
   return (
-    <section className="bg-scondary-light pt-12 text-primary">
+    <section className="bg-secondary-light pt-12 text-primary">
       <MaxWidth>
         <h2 className="text-center font-semibold text-6xl">
           Volunteer and help indie<div className="hidden lg:block"></div>{' '}

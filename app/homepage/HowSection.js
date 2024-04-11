@@ -24,7 +24,7 @@ export default function HowSection() {
         </h3>
         <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-3">
           <div className="col-span-12 md:col-span-1 lg:col-span-2 justify-self-start md:justify-self-end items-start h-full">
-            <div className="flex text-xl mt-2 w-[88px] h-[88px] bg-scondary-light items-center justify-center rounded-[20px]">
+            <div className="flex text-xl mt-2 w-[88px] h-[88px] bg-secondary-light items-center justify-center rounded-[20px]">
               <span className="font-sfpro font-medium text-indigo-800 text-center text-[40px]">
                 1
               </span>

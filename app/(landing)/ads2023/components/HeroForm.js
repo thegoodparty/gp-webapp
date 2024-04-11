@@ -103,7 +103,7 @@ export default function HeroForm() {
     }
   };
   return (
-    <div className="pt-5 pb-9 px-7 bg-scondary-light rounded-3xl relative z-20">
+    <div className="pt-5 pb-9 px-7 bg-secondary-light rounded-3xl relative z-20">
       <h2 className="font-outfit text-5xl font-medium mb-10">
         Join our community
       </h2>

@@ -24,8 +24,8 @@ export default function WarningButton({
   if (variant === 'contained') {
     baseClass['bg-lime-400'] = true;
     baseClass['text-primary'] = true;
-    baseClass['hover:bg-scondary-light'] = true;
-    baseClass['active:bg-scondary-light'] = true;
+    baseClass['hover:bg-secondary-light'] = true;
+    baseClass['active:bg-secondary-light'] = true;
   } else if (variant === 'outlined') {
     baseClass['text-yellow-700'] = true;
     baseClass['border-2'] = true;
@@ -50,8 +50,8 @@ export default function WarningButton({
 
       baseClass['bg-lime-400'] = false;
       baseClass['text-primary'] = false;
-      baseClass['hover:bg-scondary-light'] = false;
-      baseClass['active:bg-scondary-light'] = false;
+      baseClass['hover:bg-secondary-light'] = false;
+      baseClass['active:bg-secondary-light'] = false;
     } else if (variant === 'outlined') {
       baseClass['bg-white'] = true;
       baseClass['text-gray-500'] = true;
