@@ -5,7 +5,7 @@ import CTA from './CTA';
 
 export default function Dissatisfaction() {
   return (
-    <section className="bg-slate-400">
+    <section className="bg-indigo-200">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-6">
           <div className=" col-span-12 md:col-span-6">

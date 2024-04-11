@@ -22,7 +22,7 @@ export default function InfoButton({
   }
 
   if (variant === 'contained') {
-    baseClass['bg-slate-400'] = true;
+    baseClass['bg-indigo-200'] = true;
     baseClass['text-indigo-900'] = true;
     baseClass['hover:bg-slate-500'] = true;
     baseClass['active:bg-slate-500'] = true;
@@ -40,8 +40,8 @@ export default function InfoButton({
     baseClass['active:text-slate-50'] = true;
   } else if (variant === 'text') {
     baseClass['text-indigo-300'] = true;
-    baseClass['hover:bg-slate-400'] = true;
-    baseClass['active:bg-slate-400'] = true;
+    baseClass['hover:bg-indigo-200'] = true;
+    baseClass['active:bg-indigo-200'] = true;
     baseClass['hover:text-primary'] = true;
     baseClass['active:text-primary'] = true;
   }
@@ -52,7 +52,7 @@ export default function InfoButton({
       baseClass['bg-slate-200'] = true;
       baseClass['text-gray-700'] = true;
 
-      baseClass['bg-slate-400'] = false;
+      baseClass['bg-indigo-200'] = false;
       baseClass['text-indigo-900'] = false;
       baseClass['hover:bg-slate-500'] = false;
       baseClass['active:bg-slate-500'] = false;
@@ -72,8 +72,8 @@ export default function InfoButton({
       baseClass['text-gray-500'] = true;
 
       baseClass['text-indigo-300'] = false;
-      baseClass['hover:bg-slate-400'] = false;
-      baseClass['active:bg-slate-400'] = false;
+      baseClass['hover:bg-indigo-200'] = false;
+      baseClass['active:bg-indigo-200'] = false;
       baseClass['hover:text-primary'] = false;
       baseClass['active:text-primary'] = false;
     }

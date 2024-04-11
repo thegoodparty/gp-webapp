@@ -7,7 +7,7 @@ const cards = [
   {
     id: '1',
     title: 'What makes a candidate Good Party Certified?',
-    bgColor: 'bg-yellow-500',
+    bgColor: 'bg-secondary-light',
     content: (
       <>
         We&apos;re <strong>not a political party</strong>, but are seeking to

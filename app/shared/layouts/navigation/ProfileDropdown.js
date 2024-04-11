@@ -100,7 +100,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
       <div>
         <div
           className={`flex items-center  rounded-full px-2 py-1 ${
-            impersonating ? 'bg-orange-400' : 'bg-slate-400'
+            impersonating ? 'bg-orange-400' : 'bg-indigo-200'
           }`}
         >
           <div className="">

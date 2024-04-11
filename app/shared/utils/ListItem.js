@@ -30,7 +30,7 @@ export default function ListItem({
         />
       </div>
       {open && (
-        <div className="ml-7 mt-4 bg-slate-400 rounded-xl p-4 lg:py-5 lg:px-6">
+        <div className="ml-7 mt-4 bg-indigo-200 rounded-xl p-4 lg:py-5 lg:px-6">
           {children}
         </div>
       )}

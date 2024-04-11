@@ -85,7 +85,7 @@ export default function FromCommunity() {
           </div>
         </div>
       </div>
-      <div className="hidden md:block bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#F9FAFB_55%)] h-[calc(100vw*0.09)] w-full -mt-64" />
+      <div className="hidden md:block bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#F1FBA3_55%)] h-[calc(100vw*0.09)] w-full -mt-64" />
       <div className="hidden md:block h-64 bg-slate-50"></div>
     </section>
   );

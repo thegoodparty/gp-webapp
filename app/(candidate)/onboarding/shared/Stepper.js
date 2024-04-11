@@ -20,13 +20,13 @@ export default function Stepper(props) {
                 className={`h-3 w-3 rounded-full ${
                   step > i + 1 && 'bg-black'
                 } ${step === i + 1 && 'bg-purple-400'} ${
-                  step < i + 1 && 'bg-slate-400'
+                  step < i + 1 && 'bg-indigo-200'
                 }`}
               ></div>
             </div>
           </Link>
           {i < totalSteps - 1 && (
-            <div className="h-[2px] bg-slate-400 w-8  lg:w-[72px] mx-2" />
+            <div className="h-[2px] bg-indigo-200 w-8  lg:w-[72px] mx-2" />
           )}
         </Fragment>
       ))}

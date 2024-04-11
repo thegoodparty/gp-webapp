@@ -48,7 +48,7 @@ const points = [
 
 export default function WhatWillDo() {
   return (
-    <section className="bg-slate-400">
+    <section className="bg-indigo-200">
       <MaxWidth>
         <h2 className="text-3xl md:text-5xl font-semibold md:text-center pt-20 md:pt-40 pb-9 md:pb-20">
           What will I do?
@@ -109,7 +109,7 @@ export default function WhatWillDo() {
           </div>
         </div>
       </MaxWidth>
-      <div className="bg-[linear-gradient(176deg,_#94A3B8_54.5%,_#F9FAFB_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_#94A3B8_54.5%,_#F1FBA3_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
   );
 }
