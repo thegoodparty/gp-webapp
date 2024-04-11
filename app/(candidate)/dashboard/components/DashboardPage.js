@@ -65,7 +65,7 @@ export default function DashboardPage(props) {
     setUpdateHistory(res.updateHistory);
   };
 
-  const { electionDate } = goals;
+  const { electionDate } = goals || {};
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const weeksUntil = weeksTill(electionDate);
