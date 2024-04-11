@@ -31,7 +31,7 @@ export default function Breadcrumbs({ links }) {
                 <div className="flex items-center">
                   <a
                     href={link.href}
-                    className="inline-flex items-center text-xs cur lg:text-base text-indigo-400 hover:text-indigo-800 hover:underline"
+                    className="inline-flex items-center text-xs cur lg:text-base text-primary-light hover:text-primary hover:underline"
                   >
                     <div className="text-xs lg:text-base">{link.label}</div>
                   </a>
@@ -42,7 +42,7 @@ export default function Breadcrumbs({ links }) {
             </li>
           ))}
           <li>
-            <div className="text-xs lg:text-base text-indigo-800">
+            <div className="text-xs lg:text-base text-primary-dark">
               {links[links.length - 1].label}
             </div>
           </li>

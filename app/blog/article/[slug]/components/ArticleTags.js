@@ -11,7 +11,7 @@ export default function ArticleTags({ tags }) {
       <H3 className="my-3">Tags</H3>
       {tags.map((tag) => (
         <Link href={`/blog/tag/${tag.slug}`} key={tag.slug}>
-          <div className="bg-yellow  mb-3 px-3 py-2 text-sm rounded-full mr-2 inline-block font-medium cursor-pointer transition-shadow hover:shadow-md">
+          <div className="bg-secondary-light  mb-3 px-3 py-2 text-sm rounded-full mr-2 inline-block font-medium cursor-pointer transition-shadow hover:shadow-md">
             {tag.name}
           </div>
         </Link>

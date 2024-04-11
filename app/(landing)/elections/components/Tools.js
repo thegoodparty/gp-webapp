@@ -10,7 +10,7 @@ export default function Tools({ negativeMargin = true }) {
     <section>
       <div className="max-w-screen-xl mx-auto">
         <div
-          className={`bg-[#F7FAFD] md:rounded-3xl p-12 ${
+          className={`bg-indigo-200 md:rounded-3xl p-12 ${
             negativeMargin ? 'md:-mt-[100px] lg:-mt-[150px]' : ''
           } `}
         >
