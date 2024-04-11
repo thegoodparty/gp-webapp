@@ -109,7 +109,7 @@ export default function WhatWillDo() {
           </div>
         </div>
       </MaxWidth>
-      <div className="bg-[linear-gradient(176deg,_#D0DBE8_54.5%,_#EEF3F7_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_#94A3B8_54.5%,_#F9FAFB_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
   );
 }

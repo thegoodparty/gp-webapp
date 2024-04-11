@@ -55,7 +55,7 @@ export default function NotificationsDropdown({ open, toggleCallback, user }) {
             onClick={toggleCallback}
           />
           <div
-            className="fixed md:absolute z-50 top-20 md:top-14  w-[90vw] left-[5vw] md:left-auto md:right-0 md:max-w-[460px] bg-primary text-gray-800 rounded-xl  shadow-md transition h-[calc(100vh-92px)] cursor-default overflow-y-auto"
+            className="fixed md:absolute z-50 top-20 md:top-14  w-[90vw] left-[5vw] md:left-auto md:right-0 md:max-w-[460px] bg-primary text-gray-300 rounded-xl  shadow-md transition h-[calc(100vh-92px)] cursor-default overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <NotificationsPanel

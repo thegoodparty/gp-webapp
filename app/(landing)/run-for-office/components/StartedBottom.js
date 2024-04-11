@@ -6,7 +6,7 @@ import WhiteButton from './WhiteButton';
 export default function StartedBottom() {
   return (
     <>
-      <div className="bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#D8ED50_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(172deg,_#F9FAFB_54.5%,_#D8ED50_55%)] h-[calc(100vw*.17)] w-full" />
       <section className="bg-[#D8ED50] flex flex-col items-center pt-12 pb-12 lg:pb-24">
         <Image
           src="/images/logo-hologram-white.svg"

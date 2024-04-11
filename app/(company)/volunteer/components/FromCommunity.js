@@ -29,7 +29,7 @@ const cards = [
 export default function FromCommunity() {
   return (
     <section className="bg-[#F7FAFD] md:bg-primary md:pt-20">
-      <div className="md:hidden bg-[linear-gradient(176deg,_#161F31_54.5%,_#F7FAFD_55%)] h-[calc(100vw*0.09)] w-full md:-mt-64" />
+      <div className="md:hidden bg-[linear-gradient(176deg,_#242D3D_54.5%,_#F7FAFD_55%)] h-[calc(100vw*0.09)] w-full md:-mt-64" />
       <div className="max-w-screen-xl mx-auto ">
         <div className="bg-[#F7FAFD] relative pt-14 pb-20 px-12 md:rounded-3xl shadow-lg">
           <div className="grid grid-cols-12 gap-6">
@@ -85,7 +85,7 @@ export default function FromCommunity() {
           </div>
         </div>
       </div>
-      <div className="hidden md:block bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#EEF3F7_55%)] h-[calc(100vw*0.09)] w-full -mt-64" />
+      <div className="hidden md:block bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#F9FAFB_55%)] h-[calc(100vw*0.09)] w-full -mt-64" />
       <div className="hidden md:block h-64 bg-slate-50"></div>
     </section>
   );

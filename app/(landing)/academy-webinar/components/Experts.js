@@ -41,7 +41,7 @@ export default function Experts() {
                   <div className="p-10">
                     <h3 className="text-5xl">{expert.name}</h3>
                     <h4 className="text-3xl mt-6">{expert.role}</h4>
-                    <Body1 className="mt-8 text-slate-700 text-left">
+                    <Body1 className="mt-8 text-slate-200 text-left">
                       {expert.desc}
                     </Body1>
                   </div>
@@ -51,7 +51,7 @@ export default function Experts() {
           </div>
         </MaxWidth>
       </div>
-      <div className="bg-[linear-gradient(176deg,_#161F31_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_#242D3D_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
     </>
   );
 }

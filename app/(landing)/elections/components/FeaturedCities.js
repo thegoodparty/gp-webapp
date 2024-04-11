@@ -111,13 +111,13 @@ export default function FeaturedCities() {
                   key={city.name}
                   className="col-span-12 md:col-span-4 text-center mb-10"
                 >
-                  <h3 className="text-slate-700 font-medium text-2xl md:text-3xl mb-2 md:mb-6">
+                  <h3 className="text-slate-200 font-medium text-2xl md:text-3xl mb-2 md:mb-6">
                     {city.name}
                   </h3>
                   <div className=" text-blue-600 text-4xl md:text-7xl font-extrabold">
                     #{city.openElections}
                   </div>
-                  <div className="text-slate-700 md:text-lg mt-1 md:mt-2">
+                  <div className="text-slate-200 md:text-lg mt-1 md:mt-2">
                     open elections
                   </div>
                   <div className="mt-6 md:mt-10">

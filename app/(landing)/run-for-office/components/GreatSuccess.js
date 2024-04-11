@@ -20,12 +20,12 @@ export default function GreatSuccess() {
                 />
               </div>
               <div className=" col-span-12 lg:col-span-9">
-                <div className="p-5 lg:p-12 text-slate-600 text-2xl h-full flex items-center">
+                <div className="p-5 lg:p-12 text-slate-200 text-2xl h-full flex items-center">
                   <div>
                     Running with Good Party means so many great things. It means
                     we are going to turn out more voters and turn around our
                     country in a way that is people-centered.
-                    <div className="mt-6 text-slate-600 text-xl">
+                    <div className="mt-6 text-slate-200 text-xl">
                       Terry Vo, Winner
                     </div>
                     <div className="text-lime-400 text-xl mt-1">

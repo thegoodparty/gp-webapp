@@ -4,7 +4,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 
 export default function FactsSection() {
   return (
-    <section className="bg-[#161F31] h-auto pt-20 pb-40">
+    <section className="bg-[#242D3D] h-auto pt-20 pb-40">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-12 lg:col-span-6 pb-5">
@@ -28,12 +28,12 @@ export default function FactsSection() {
                 <span className="text-[80px] font-semibold">4</span>
               </div>
               <div className="text-[32px] font-semibold">
-                <span className="text-gray-900">Americans want</span>&nbsp;
+                <span className="text-gray-200">Americans want</span>&nbsp;
                 <span className="text-lime-500">more</span>&nbsp;
               </div>
               <div className="text-[32px] font-semibold">
                 <span className="text-lime-500">choices</span>&nbsp;
-                <span className="text-gray-900">in politics</span>
+                <span className="text-gray-200">in politics</span>
               </div>
             </div>
           </div>
@@ -55,12 +55,12 @@ export default function FactsSection() {
                 52%
               </div>
               <div className="text-[32px] font-semibold">
-                <span className="text-gray-900">of</span>&nbsp;
+                <span className="text-gray-200">of</span>&nbsp;
                 <span className="text-[#847AFF]">Gen Z</span>&nbsp;
-                <span className="text-gray-900">and Millennials</span>&nbsp;
+                <span className="text-gray-200">and Millennials</span>&nbsp;
               </div>
               <div className="text-[32px] font-semibold">
-                <span className="text-gray-900">identify as an</span>&nbsp;
+                <span className="text-gray-200">identify as an</span>&nbsp;
                 <span className="text-[#847AFF]">independent</span>&nbsp;
               </div>
             </div>
@@ -79,10 +79,10 @@ export default function FactsSection() {
               />
             </div>
             <div className="text-[32px] font-semibold text-center w-full">
-              <div className="text-gray-900">
+              <div className="text-gray-200">
                 Good Party is a movement bringing together
               </div>
-              <div className="text-gray-900">
+              <div className="text-gray-200">
                 <span className="text-red-400">voters</span>&nbsp;and
                 exciting&nbsp;
                 <span className="text-red-400">

@@ -19,7 +19,7 @@ export default function Blog(props) {
 
   let blogBgColor = blogDark ? 'bg-indigo-800' : 'bg-slate-50';
   let blogFontTitle = blogDark ? 'text-slate-50' : 'text-indigo-800';
-  let blogFontSubtitle = blogDark ? 'text-slate-700' : 'text-indigo-800';
+  let blogFontSubtitle = blogDark ? 'text-slate-200' : 'text-indigo-800';
 
   return (
     <section className={`${blogBgColor} h-auto pb-20`}>

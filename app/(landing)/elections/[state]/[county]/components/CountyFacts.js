@@ -62,7 +62,7 @@ export default function CountyFacts({ county }) {
               </div>
               <div className="mt-4 text-center">
                 <div className="text-2xl font-semibold">{field.label}</div>
-                <div className="text-lg text-slate-700 mt-2 mb-10">
+                <div className="text-lg text-slate-200 mt-2 mb-10">
                   {field.isMoney ? '$' : ''}
                   {field.isNumber ? numberFormatter(field.value) : field.value}
                   {field.isPercent ? '%' : ''}

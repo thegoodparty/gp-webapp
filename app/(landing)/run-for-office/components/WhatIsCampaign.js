@@ -47,7 +47,7 @@ export default function WhatIsCampaign() {
                     <div className="text-3xl lg:text-5xl font-bold">
                       {point.large}
                     </div>
-                    <div className="text-lg text-slate-900 mt-2">
+                    <div className="text-lg text-slate-200 mt-2">
                       {point.small}
                     </div>
                   </div>

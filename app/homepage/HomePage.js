@@ -12,13 +12,13 @@ export default function HomePage(props) {
 
       <Hero />
 
-      <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#161F31_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(-172deg,_#F9FAFB_54.5%,_#242D3D_55%)] h-[calc(100vw*.17)] w-full" />
       <FactsSection />
-      <div className="bg-[linear-gradient(-172deg,_#161F31_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(-172deg,_#242D3D_54.5%,_#F9FAFB_55%)] h-[calc(100vw*.17)] w-full" />
       <HowSection />
-      <div className="bg-[linear-gradient(-172deg,_#EEF3F7_54.5%,_#161F31_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(-172deg,_#F9FAFB_54.5%,_#242D3D_55%)] h-[calc(100vw*.17)] w-full" />
       <ToolsSection />
-      <div className="bg-[linear-gradient(-172deg,_#161F31_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="bg-[linear-gradient(-172deg,_#242D3D_54.5%,_#F9FAFB_55%)] h-[calc(100vw*.17)] w-full" />
 
       <Cta />
     </div>

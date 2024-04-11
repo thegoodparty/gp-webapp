@@ -58,7 +58,7 @@ export default function VolunteerDashboardMenu({
   };
 
   return (
-    <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-800">
+    <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-300">
       {pages.map((page) => (
         <Fragment key={page.label}>
           {page.section && (

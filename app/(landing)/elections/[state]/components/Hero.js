@@ -85,7 +85,7 @@ export default function Hero({
               </div>
             </div>
           </MaxWidth>
-          <div className="-mt-20  lg:-mt-40 bg-[linear-gradient(172deg,_rgba(0,0,0,0)_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
+          <div className="-mt-20  lg:-mt-40 bg-[linear-gradient(172deg,_rgba(0,0,0,0)_54.5%,_#F9FAFB_55%)] h-[calc(100vw*.17)] w-full" />
         </div>
       </div>
       <div className="pb-5">

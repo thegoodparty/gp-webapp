@@ -37,7 +37,7 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
         fullWidth
         variant="outlined"
         PaperComponent={({ children }) => (
-          <Paper style={{ background: '#161F31' }}>{children}</Paper>
+          <Paper style={{ background: '#242D3D' }}>{children}</Paper>
         )}
         popupIcon={<RiSearch2Line className="mr-2" />}
         inputValue={inputValue}
@@ -48,7 +48,7 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
             <div className="bg-primary p-2">
               <H5 className="text-indigo-300">{params.group}</H5>
             </div>
-            <div className="bg-primary p-2 text-gray-800">
+            <div className="bg-primary p-2 text-gray-300">
               {params.children}
             </div>
           </div>

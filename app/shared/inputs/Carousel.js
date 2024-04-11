@@ -30,10 +30,10 @@ export default function Carousel(props) {
                 <p className="mt-3 text-[15px] md:text-[24px] lg:text-[28px] leading-6 lg:leading-10 font-normal text-slate-300 text-end w-full pr-5 md:pr-20">
                   - {sections[index].name}
                 </p>
-                <p className="text-[12px] md:text-[20px] lg:text-[24px] leading-6 lg:leading-10 font-normal text-slate-500 text-end w-full pr-5 md:pr-20">
+                <p className="text-[12px] md:text-[20px] lg:text-[24px] leading-6 lg:leading-10 font-normal text-slate-200 text-end w-full pr-5 md:pr-20">
                   {sections[index].title}
                 </p>
-                <p className="text-[12px] md:text-[20px] lg:text-[24px] leading-6 lg:leading-10 font-normal text-slate-700 pb-2 text-end w-full pr-5 md:pr-20">
+                <p className="text-[12px] md:text-[20px] lg:text-[24px] leading-6 lg:leading-10 font-normal text-slate-200 pb-2 text-end w-full pr-5 md:pr-20">
                   {sections[index].subtitle}
                 </p>
               </div>
