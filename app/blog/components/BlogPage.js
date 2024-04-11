@@ -34,7 +34,7 @@ export default function BlogPage({
                 >
                   <button
                     className={`${
-                      index <= 3 ? colors[index] : 'bg-indigo-800'
+                      index <= 3 ? colors[index] : 'bg-primary-dark'
                     } py-2 px-4 mb-3 mt-10 text-sm font-bold text-white cursor-pointer rounded-full`}
                   >
                     {section.fields.title}

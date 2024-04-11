@@ -59,7 +59,7 @@ export default function BlogWrapper({
                 >
                   <BaseButtonClient
                     className={`${
-                      index <= 4 ? colors[index] : 'bg-indigo-800'
+                      index <= 4 ? colors[index] : 'bg-primary-dark'
                     } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
                   >
                     {section.fields.title}

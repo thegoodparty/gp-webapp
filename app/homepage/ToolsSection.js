@@ -35,7 +35,7 @@ const sections = [
 
 export default function ToolsSection() {
   return (
-    <section className="bg-indigo-800 pb-20">
+    <section className="bg-primary-dark pb-20">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3 relative pb-14 lg:pb-0 -pt-[50px] items-stretch">
           <div className="col-span-12 lg:col-span-6 justify-self-center lg:justify-self-end lg:pr-10 mt-10 p-10 lg:-mt-[75px]">
