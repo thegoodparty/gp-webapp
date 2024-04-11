@@ -55,7 +55,7 @@ const icons = [
 export default function WhyAcademy({ content }) {
   return (
     <>
-      <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#242D3D_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />
       <div className="bg-primary-dark text-white text-center pt-12">
         <MaxWidth>
           <MarketingH2>Why Good Party Academy</MarketingH2>
