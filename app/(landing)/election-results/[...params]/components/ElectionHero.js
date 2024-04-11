@@ -131,9 +131,9 @@ export default function ElectionHero(props) {
       </MaxWidth>
 
       {city === 'nashville' ? (
-        <div className="bg-[linear-gradient(-172deg,_#F1FBA3_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
+        <div className="bg-[linear-gradient(-172deg,_#F9FAFB_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
       ) : (
-        <div className="bg-[linear-gradient(172deg,_#F1FBA3_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
+        <div className="bg-[linear-gradient(172deg,_#F9FAFB_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full -mt-[calc(100vw*.17)]" />
       )}
     </>
   );

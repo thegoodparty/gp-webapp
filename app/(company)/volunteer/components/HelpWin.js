@@ -7,7 +7,7 @@ import winImg from 'public/images/landing-pages/win.png';
 export default function HelpWin() {
   return (
     <>
-      <div className="bg-[linear-gradient(176deg,_#F1FBA3_54.5%,_#EFF265_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_#F9FAFB_54.5%,_#EFF265_55%)] h-[calc(100vw*0.09)] w-full" />
       <section className="bg-secondary-light py-12">
         <MaxWidth>
           <h2 className="lg:w-1/2 lg:mx-auto text-3xl md:text-6xl font-semibold text-center mb-20">
