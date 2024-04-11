@@ -14,7 +14,7 @@ export default function ElectionsPage() {
     return `/elections/${state.abbreviation.toLowerCase()}`;
   };
   return (
-    <div className="bg-slate-50 pb-14">
+    <div className="bg-indigo-200 pb-14">
       <Hero />
       <div
         className={`bg-[linear-gradient(172deg,_#F1FBA3_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full`}

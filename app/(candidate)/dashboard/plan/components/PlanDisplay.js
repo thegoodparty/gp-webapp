@@ -55,7 +55,7 @@ export default function PlanDisplay({
               ) : (
                 <div dangerouslySetInnerHTML={{ __html: plan }} />
               )}
-              <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-slate-500 cursor-pointer hidden-for-print">
+              <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-indigo-2000 cursor-pointer hidden-for-print">
                 <FaPencilAlt />
               </div>
             </div>

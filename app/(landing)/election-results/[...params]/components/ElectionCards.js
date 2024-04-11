@@ -50,7 +50,7 @@ const cards = [
 
 export default function ElectionCards(props) {
   return (
-    <div className="bg-slate-50 py-16">
+    <div className="bg-indigo-200 py-16">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-7 md:items-stretch">
           {cards.map((card) => (

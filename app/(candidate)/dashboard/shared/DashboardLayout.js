@@ -15,7 +15,7 @@ export default function DashboardLayout({
       <UserSnapScript />
       <FullStoryScript />
 
-      <div className="flex min-h-[calc(100vh-56px)] bg-slate-50 p-2">
+      <div className="flex min-h-[calc(100vh-56px)] bg-indigo-200 p-2">
         <div className="hidden lg:block">
           <DashboardMenu
             pathname={pathname}

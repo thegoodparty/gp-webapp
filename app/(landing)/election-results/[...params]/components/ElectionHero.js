@@ -29,7 +29,7 @@ export default function ElectionHero(props) {
   return (
     <>
       <MaxWidth>
-        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-slate-50 items-stretch">
+        <div className="grid grid-cols-12 gap-3 md:justify-items-center pt-10 bg-indigo-200 items-stretch">
           <div className="col-span-12 lg:col-span-6 max-w-2xl pt-10 pl-5">
             {heroTitle?.length <= 45 ? (
               <h1 className="text-4xl md:text-6xl font-semibold">

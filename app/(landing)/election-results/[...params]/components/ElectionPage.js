@@ -41,7 +41,7 @@ export default function ElectionPage(props) {
   };
 
   return (
-    <div className="bg-slate-50">
+    <div className="bg-indigo-200">
       {(city === 'durham' || city === 'nc') && <Hero {...props} />}
       <Candidates {...props} />
 

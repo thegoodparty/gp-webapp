@@ -18,7 +18,7 @@ export default function HowSection() {
           alt="Good Party"
         />
       </div>
-      <div className="bg-slate-50">
+      <div className="bg-indigo-200">
         <h3 className="text-[28px] md:text-[56px] font-semibold text-center pb-5 md:pb-20 pt-40 md:pt-20">
           How Good Party works
         </h3>

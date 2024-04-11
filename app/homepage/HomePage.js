@@ -7,7 +7,7 @@ import Callout from '@shared/utils/Callout';
 
 export default function HomePage(props) {
   return (
-    <div className="bg-slate-50">
+    <div className="bg-indigo-200">
       <Callout />
 
       <Hero />

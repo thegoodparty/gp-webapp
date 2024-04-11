@@ -11,7 +11,7 @@ export default function SocialPanel(props) {
         label="Build a Campaign Website"
         icon="/images/dashboard/website-icon.svg"
       >
-        <div className="bg-slate-50 rounded-xl py-5 px-7">
+        <div className="bg-indigo-200 rounded-xl py-5 px-7">
           <H3>Build a Campaign Website</H3>
           <Body2 className="mt-2 mb-6">
             Your online presence is an important part of your campaign strategy.

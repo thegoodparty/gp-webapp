@@ -32,7 +32,7 @@ export default function PositionPage(props) {
   race.loc = loc;
 
   return (
-    <div className="bg-slate-50">
+    <div className="bg-indigo-200">
       <MaxWidth>
         {/* <Breadcrumbs links={breadcrumbsLinks} /> */}
         <Hero {...race} />

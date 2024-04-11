@@ -8,9 +8,7 @@ import { CandidateFieldSelect } from './CandidateFieldSelect';
 import { CANDIDATE_TIERS } from './candidate-tiers.constant';
 import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant';
 
-async function updateAdminFields(
-  payload
-) {
+async function updateAdminFields(payload) {
   try {
     const api = gpApi.campaign.adminUpdate;
     return await gpFetch(api, payload);
@@ -29,59 +27,48 @@ const fields = [
 
 export default function ProFieldsSection(props) {
   const { campaignObj } = props;
-  const {
-    isVerified,
-    tier,
-    isPro,
-    didWin,
-    slug
-  } = campaignObj;
+  const { isVerified, tier, isPro, didWin, slug } = campaignObj;
   const [state, setState] = useState({
     isVerified,
     tier,
     isPro,
-    didWin
+    didWin,
   });
 
   const handleChange = async (key, value) => {
     const newState = { ...state, [key]: value };
     setState(newState);
-    await updateAdminFields(
-      {
-        slug,
-        [key]: value
-      }
-    );
+    await updateAdminFields({
+      slug,
+      [key]: value,
+    });
   };
 
   return (
-    <div className="bg-slate-50 rounded border border-slate-300 p-4 my-12">
+    <div className="bg-indigo-200 rounded border border-slate-300 p-4 my-12">
       <H3>Additional Fields</H3>
-      {fields.map(
-        (field) => <div key={field.key} className="flex items-center">
-          {
-            ['isVerified', 'tier'].includes(field.key) ?
-              <CandidateFieldSelect
-                value={state[field.key]}
-                onChange={
-                  (e) => handleChange(field.key, e.target.value)
-                }
-                valueMapping={
-                  field.key === 'isVerified' ?
-                    IS_VERIFIED_OPTIONS :
-                    CANDIDATE_TIERS
-                }
-              /> :
-              <Checkbox
-                value={state[field.key]}
-                defaultChecked={campaignObj[field.key]}
-                onChange={(e) => handleChange(field.key, e.target.checked)}
-              />
-          }
+      {fields.map((field) => (
+        <div key={field.key} className="flex items-center">
+          {['isVerified', 'tier'].includes(field.key) ? (
+            <CandidateFieldSelect
+              value={state[field.key]}
+              onChange={(e) => handleChange(field.key, e.target.value)}
+              valueMapping={
+                field.key === 'isVerified'
+                  ? IS_VERIFIED_OPTIONS
+                  : CANDIDATE_TIERS
+              }
+            />
+          ) : (
+            <Checkbox
+              value={state[field.key]}
+              defaultChecked={campaignObj[field.key]}
+              onChange={(e) => handleChange(field.key, e.target.checked)}
+            />
+          )}
           <div className="ml-2">{field.label}</div>
         </div>
-      )}
+      ))}
     </div>
   );
 }
-

@@ -107,7 +107,7 @@ export default function DkCampaignPreview(props) {
           <div className="bg-green-50 text-green-800 uppercase  p-2 rounded inline-flex items-center font-medium mr-2 text-xs">
             {campaignStatus}
           </div>
-          <div className="bg-slate-50 text-indigo-600  p-2 rounded inline-flex items-center font-medium text-xs">
+          <div className="bg-indigo-200 text-indigo-600  p-2 rounded inline-flex items-center font-medium text-xs">
             <MdOutlineDirectionsWalk />
             <div className="ml-1  ">{routesCount || 0} ROUTES</div>
           </div>

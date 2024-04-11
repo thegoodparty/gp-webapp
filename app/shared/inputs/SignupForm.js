@@ -55,7 +55,7 @@ export default function SignupForm({
           fullWidth
           value={firstName}
           placeholder="Jane"
-          className="rounded-lg w-full bg-slate-50 border border-indigo-200 text-black"
+          className="rounded-lg w-full bg-indigo-200 border border-indigo-200 text-black"
         />
       ),
       required: true,
@@ -73,7 +73,7 @@ export default function SignupForm({
           }}
           value={lastName}
           placeholder="Doe"
-          className="rounded-lg w-full bg-slate-50 border border-indigo-200 text-black"
+          className="rounded-lg w-full bg-indigo-200 border border-indigo-200 text-black"
         />
       ),
       required: true,
@@ -90,7 +90,7 @@ export default function SignupForm({
           value={email}
           placeholder="jane.doe@email.com"
           useLabel={false}
-          className="rounded-lg w-full bg-slate-50 border border-indigo-200 text-black"
+          className="rounded-lg w-full bg-indigo-200 border border-indigo-200 text-black"
         />
       ),
       required: true,
@@ -108,7 +108,7 @@ export default function SignupForm({
           }}
           useLabel={false}
           placeholder="(123) 456-7890"
-          className="rounded-lg w-full bg-slate-50 border border-indigo-200 text-black"
+          className="rounded-lg w-full bg-indigo-200 border border-indigo-200 text-black"
           hideIcon
           shrink
         />
