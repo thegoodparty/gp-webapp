@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { AnimatedEllipsis } from '@shared/utils/AnimatedEllipsis';
 
 export default function HubSpotForm({
   formId,
@@ -52,7 +53,7 @@ export default function HubSpotForm({
   }, []);
 
   return <>
-    { !formReady && <div>Loading...</div>}
+    { !formReady && <div>Loading<AnimatedEllipsis /></div>}
     <div id="hubspotForm" className={formReady ? '' : 'hidden'}></div>
   </>
 }
