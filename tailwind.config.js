@@ -16,8 +16,75 @@ module.exports = {
         sfpro: 'var(--sfpro-font)',
       },
       colors: {
-        primary: '#161F31',
-        darkPurple: '#250018',
+        primary: {
+          DEFAULT: '#242D3D',
+          dark: '#0D1528',
+          main: '#242D3D',
+          light: '#484E55',
+          background: '#F7FAFB',
+          contrast: '#FFFFFF',
+        },
+        secondary: {
+          DEFAULT: '#DFF265',
+          dark: '#A6B649',
+          main: '#DFF265',
+          light: '#F1FBA3',
+          background: '#FEFFF2',
+          contrast: '#000000',
+        },
+
+        tertiary: {
+          DEFAULT: '#6E37FF',
+          dark: '#3D1BB7',
+          main: '#6E37FF',
+          light: '#AE86FF',
+          background: '#F8F3FF',
+          contrast: '#FFFFFF',
+        },
+
+        neutral: {
+          DEFAULT: '#B9C3CC',
+          dark: '#484E55',
+          main: '#B9C3CC',
+          light: '#F7FAFB',
+          contrast: '#000000',
+        },
+
+        error: {
+          DEFAULT: '#E00C30',
+          dark: '#93081F',
+          main: '#E00C30',
+          light: '#F56C6A',
+          background: '#FFE8E8',
+          contrast: '#FFFFFF',
+        },
+
+        success: {
+          DEFAULT: '#30A541',
+          dark: '#0F5F31',
+          main: '#30A541',
+          light: '#86E382',
+          background: '#EEFFE9',
+          contrast: '#FFFFFF',
+        },
+
+        info: {
+          DEFAULT: '#1B6AFC',
+          dark: '#0D3CB5',
+          main: '#1B6AFC',
+          light: '#75AFFE',
+          background: '#E3F1FF',
+          contrast: '#FFFFFF',
+        },
+
+        warning: {
+          DEFAULT: '#FF9800',
+          dark: '#CA7204',
+          main: '#FF9800',
+          light: '#F9CA67',
+          background: '#FFF5D5',
+          contrast: '#000000',
+        },
 
         gray: {
           DEFAULT: '#7F7F7F',

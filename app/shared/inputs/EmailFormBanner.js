@@ -58,7 +58,7 @@ export default function EmailFormBanner({ pageName, formId }) {
               onClick={submitForm}
               type="submit"
               value="→"
-              className="bg-darkPurple absolute rounded-full right-2 top-2 p-3 text-white  font-bold cursor-pointer"
+              className="bg-purple-800 absolute rounded-full right-2 top-2 p-3 text-white  font-bold cursor-pointer"
             >
               <FaArrowRight />
             </div>

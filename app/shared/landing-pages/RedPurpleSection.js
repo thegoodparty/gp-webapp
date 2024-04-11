@@ -8,7 +8,7 @@ import EmailFormBanner from '@shared/inputs/EmailFormBanner';
 export default function RedPurpleSection({ children, withPadding }) {
   return (
     <section
-      className={`bg-darkPurple text-white pt-16 px-6 lg:py-16 flex flex-col items-center justify-center mt-8 rounded-xl relative overflow-hidden ${
+      className={`bg-purple-800 text-white pt-16 px-6 lg:py-16 flex flex-col items-center justify-center mt-8 rounded-xl relative overflow-hidden ${
         withPadding ? ' pb-80' : 'pb-16'
       }`}
     >
