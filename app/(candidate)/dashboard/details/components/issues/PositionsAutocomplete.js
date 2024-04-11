@@ -45,10 +45,10 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
         renderInput={(params) => <TextField {...params} label="Add Issue" />}
         renderGroup={(params) => (
           <div>
-            <div className="bg-primary p-2">
+            <div className="bg-primary-dark p-2">
               <H5 className="text-indigo-300">{params.group}</H5>
             </div>
-            <div className="bg-primary p-2 text-gray-300">
+            <div className="bg-primary-dark p-2 text-gray-300">
               {params.children}
             </div>
           </div>

@@ -58,7 +58,7 @@ export default function VolunteerDashboardMenu({
   };
 
   return (
-    <div className="w-full lg:w-60 p-2 bg-primary h-full rounded-2xl text-gray-300">
+    <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {pages.map((page) => (
         <Fragment key={page.label}>
           {page.section && (
@@ -71,8 +71,8 @@ export default function VolunteerDashboardMenu({
             id={page.id}
           >
             <div
-              className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark ${
-                pathname === page.link && 'text-slate-50 bg-primary-dark'
+              className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark ${
+                pathname === page.link && 'text-slate-50 bg-primary-dark-dark'
               }`}
             >
               {page.icon}
@@ -85,14 +85,14 @@ export default function VolunteerDashboardMenu({
         <div className="mt-4 border-t border-indigo-400 pt-4">
           <Link href="/profile" className="no-underline" id="nav-dash-settings">
             <div
-              className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark `}
+              className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark `}
             >
               <div className="ml-2">Settings</div>
             </div>
           </Link>
 
           <div
-            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark cursor-pointer "
+            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer "
             onClick={handleLogOut}
           >
             <div className="ml-2">Logout</div>

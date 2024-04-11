@@ -28,7 +28,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
             onClick={toggleCallback}
           />
           <div
-            className={`absolute z-50 top-11 left-0 min-w-[270px] bg-primary text-white rounded-xl  shadow-md transition  ${
+            className={`absolute z-50 top-11 left-0 min-w-[270px] bg-primary-dark text-white rounded-xl  shadow-md transition  ${
               open ? 'p-3 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
             }`}
           >
@@ -42,7 +42,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
               >
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark  rounded flex items-center justify-between"
+                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     {link.icon}

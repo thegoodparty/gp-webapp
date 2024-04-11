@@ -22,7 +22,7 @@ export default function CookiesSnackbar() {
     setShowBanner(false);
   };
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-primary text-white p-4 text-center">
+    <div className="fixed bottom-0 left-0 right-0 bg-primary-dark text-white p-4 text-center">
       We use cookies to personalize content, analyze traffic, and provide you
       with a better user experience. By continuing to browse this site, you
       consent to the use of cookies.

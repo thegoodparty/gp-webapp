@@ -6,7 +6,7 @@ export default function GreatSuccess() {
   return (
     <section>
       <div className="relative">
-        <div className="absolute top-0 w-full h-1/2 bg-primary"></div>
+        <div className="absolute top-0 w-full h-1/2 bg-primary-dark"></div>
         <div className="relative z-10">
           <MaxWidth>
             <div className="grid grid-cols-12 bg-[#2A2E33] rounded-lg">

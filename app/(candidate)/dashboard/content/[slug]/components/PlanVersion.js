@@ -39,7 +39,7 @@ export default function PlanVersion({
             }}
           />
 
-          <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary text-gray-300 rounded-xl shadow-md transition">
+          <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary-dark text-gray-300 rounded-xl shadow-md transition">
             <Button
               key="latest"
               onClick={() => {
@@ -47,7 +47,7 @@ export default function PlanVersion({
                 updatePlanCallback(latestVersion);
               }}
             >
-              <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
+              <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                 <div className="whitespace-nowrap text-lg flex items-center w-full">
                   <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
                     Latest Version
@@ -64,7 +64,7 @@ export default function PlanVersion({
                   updatePlanCallback(version);
                 }}
               >
-                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
+                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <div className="ml-3 font-sfpro text-slate-50 text-[17px]">
                       {dateWithTime(version.date)}{' '}

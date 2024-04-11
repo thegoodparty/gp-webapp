@@ -100,7 +100,7 @@ export default function FeaturedCities() {
             />
           </div>
         </MaxWidth>
-        <div className="bg-primary text-gray-50 -mt-[104px] md:-mt-[194px] pt-36 md:pt-40">
+        <div className="bg-primary-dark text-gray-50 -mt-[104px] md:-mt-[194px] pt-36 md:pt-40">
           <MaxWidth>
             <h2 className="text-3xl md:text-5xl font-semibold mb-10 md:mb-20">
               Featured cities

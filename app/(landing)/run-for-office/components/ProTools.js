@@ -63,7 +63,7 @@ export default function ProTools() {
           </div>
         </MaxWidth>
       </div>
-      <div className="absolute h-1/2 w-full bg-primary bottom-0 left-0 hidden lg:block"></div>
+      <div className="absolute h-1/2 w-full bg-primary-dark bottom-0 left-0 hidden lg:block"></div>
     </section>
   );
 }

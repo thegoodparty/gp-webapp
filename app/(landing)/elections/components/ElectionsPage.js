@@ -20,7 +20,7 @@ export default function ElectionsPage() {
         className={`bg-[linear-gradient(172deg,_#F9FAFB_54.5%,_#242D3D_55%)] h-[calc(100vw*.17)] w-full`}
       />
       <FeaturedCities />
-      <div className="bg-primary -mt-12 pt-24 md:pt-32 md:pb-12">
+      <div className="bg-primary-dark -mt-12 pt-24 md:pt-32 md:pb-12">
         <div className="max-w-screen-xl mx-auto">
           <LinksSection
             entities={states}

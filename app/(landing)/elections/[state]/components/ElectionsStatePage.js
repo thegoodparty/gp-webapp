@@ -20,7 +20,7 @@ export default function ElectionsStatePage(props) {
       <MaxWidth>
         <RacesSection races={races} />
       </MaxWidth>
-      <div className="bg-primary pt-1 pb-20 mt-10">
+      <div className="bg-primary-dark pt-1 pb-20 mt-10">
         <div className="max-w-screen-xl mx-auto mt-20">
           <LinksSection
             entities={childEntity}

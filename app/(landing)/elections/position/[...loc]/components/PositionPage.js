@@ -41,7 +41,7 @@ export default function PositionPage(props) {
 
       <CtaBanner race={race} />
       <PositionFaqs race={race} />
-      <div className="bg-primary  md:pb-24">
+      <div className="bg-primary-dark  md:pb-24">
         <Tools negativeMargin={false} />
         <div className="max-w-screen-xl mx-auto md:mt-24">
           <LinksSection

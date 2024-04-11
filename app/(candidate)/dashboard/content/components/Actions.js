@@ -101,14 +101,14 @@ export default function Actions(props) {
               }}
             />
 
-            <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary text-gray-300 rounded-xl shadow-md transition">
+            <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary-dark text-gray-300 rounded-xl shadow-md transition">
               <Button
                 onClick={() => {
                   setShowRename(true);
                   setShowMenu(false);
                 }}
               >
-                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
+                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaPencilAlt className="text-[14px]" />
                     <div className="ml-3 font-sfpro text-[17px]">Rename</div>
@@ -123,7 +123,7 @@ export default function Actions(props) {
                     setShowMenu(false);
                   }}
                 >
-                  <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
+                  <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                     <div className="whitespace-nowrap text-lg flex items-center w-full">
                       <FaGlobe className="text-[14px]" />
                       <div className="ml-3 font-sfpro text-[17px]">
@@ -140,7 +140,7 @@ export default function Actions(props) {
                   setShowMenu(false);
                 }}
               >
-                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
+                <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaCopy className="text-[14px]" />
                     <div className="ml-3 font-sfpro text-[17px]">Duplicate</div>
@@ -156,7 +156,7 @@ export default function Actions(props) {
                   setShowMenu(false);
                 }}
               >
-                <span className="text-red-400 no-underline font-normal normal-case hover:bg-primary-dark w-full rounded-xl p-3">
+                <span className="text-red-400 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
                   <div className="whitespace-nowrap text-lg flex items-center w-full">
                     <FaTrashAlt className="text-[14px]" />
                     <div className="ml-3 font-sfpro text-[17px]">Delete</div>

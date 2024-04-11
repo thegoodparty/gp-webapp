@@ -28,7 +28,7 @@ export default function ElectionCandidates(props) {
     <section
       className={`${
         theme === 'dark'
-          ? 'bg-primary text-slate-50 pb-40 pt-20 '
+          ? 'bg-primary-dark text-slate-50 pb-40 pt-20 '
           : 'bg-slate-50 text-primary pt-4'
       } h-auto `}
       id="candidate-section"

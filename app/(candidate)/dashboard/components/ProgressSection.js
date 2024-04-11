@@ -131,7 +131,7 @@ export default function ProgressSection(props) {
                       accumulated[`week${12 - index}`][row.key] ? (
                         <div
                           className={`absolute w-full h-full left-0 top-0 ${
-                            row.onTrack ? 'bg-primary' : 'bg-red-400'
+                            row.onTrack ? 'bg-primary-dark' : 'bg-red-400'
                           }`}
                         ></div>
                       ) : (
@@ -139,7 +139,7 @@ export default function ProgressSection(props) {
                           {calculateReminder(12 - index, row.key) > 0 ? (
                             <div
                               className={`absolute h-full left-0 top-0 ${
-                                row.onTrack ? 'bg-primary' : 'bg-red-400'
+                                row.onTrack ? 'bg-primary-dark' : 'bg-red-400'
                               } rounded-r-full`}
                               style={{
                                 width: `${

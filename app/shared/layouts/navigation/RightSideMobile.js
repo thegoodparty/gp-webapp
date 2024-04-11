@@ -102,7 +102,7 @@ export default function RightSideMobile() {
                 />
               ) : (
                 <div
-                  className={`w-[270px] bg-primary text-white h-screen overflow-auto px-4 pt-24 ${
+                  className={`w-[270px] bg-primary-dark text-white h-screen overflow-auto px-4 pt-24 ${
                     user ? 'pb-36' : 'pb-60'
                   } relative`}
                 >
@@ -130,7 +130,7 @@ export default function RightSideMobile() {
                         >
                           <div
                             data-cy="header-link"
-                            className="py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark  rounded flex items-center justify-between"
+                            className="py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
                           >
                             <div className="flex items-center">
                               {link.icon}
@@ -149,7 +149,7 @@ export default function RightSideMobile() {
                   >
                     <div className="h-12 bg-[linear-gradient(0deg,rgba(19,22,26,1)_10%,rgba(19,22,26,0.7)_90%)]"></div>
                     <div
-                      className={`p-6 h-48  bg-primary ${
+                      className={`p-6 h-48  bg-primary-dark ${
                         user ? 'h-24' : 'h-48'
                       }`}
                     >

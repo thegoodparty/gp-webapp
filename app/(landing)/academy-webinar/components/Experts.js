@@ -23,7 +23,7 @@ const experts = [
 export default function Experts() {
   return (
     <>
-      <div className="bg-primary text-white text-center pt-20 lg:pt-44">
+      <div className="bg-primary-dark text-white text-center pt-20 lg:pt-44">
         <MaxWidth>
           <MarketingH2>Our campaigning experts</MarketingH2>
           <div className="pt-24 grid grid-cols-12 gap-5 lg:gap-12">
@@ -32,7 +32,7 @@ export default function Experts() {
                 className="col-span-12 md:col-span-6 h-full"
                 key={expert.name}
               >
-                <div className="rounded-xl overflow-hidden relative bg-primary-dark mx-8 h-full">
+                <div className="rounded-xl overflow-hidden relative bg-primary-dark-dark mx-8 h-full">
                   <Image
                     src={expert.img}
                     alt={expert.name}

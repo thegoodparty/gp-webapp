@@ -34,8 +34,8 @@ export default function InfoButton({
 
     baseClass['hover:border-primary'] = true;
     baseClass['active:border-primary'] = true;
-    baseClass['hover:bg-primary'] = true;
-    baseClass['active:bg-primary'] = true;
+    baseClass['hover:bg-primary-dark'] = true;
+    baseClass['active:bg-primary-dark'] = true;
     baseClass['hover:text-slate-50'] = true;
     baseClass['active:text-slate-50'] = true;
   } else if (variant === 'text') {
@@ -64,8 +64,8 @@ export default function InfoButton({
       baseClass['border-slate-900'] = false;
       baseClass['hover:border-primary'] = false;
       baseClass['active:border-primary'] = false;
-      baseClass['hover:bg-primary'] = false;
-      baseClass['active:bg-primary'] = false;
+      baseClass['hover:bg-primary-dark'] = false;
+      baseClass['active:bg-primary-dark'] = false;
       baseClass['hover:text-slate-50'] = false;
       baseClass['active:text-slate-50'] = false;
     } else if (variant === 'text') {

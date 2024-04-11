@@ -11,7 +11,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 
 export default function DiscordSection() {
   return (
-    <section className="bg-primary pt-12 text-white">
+    <section className="bg-primary-dark pt-12 text-white">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-8 items-center">
           <div className="col-span-12 md:col-span-6">

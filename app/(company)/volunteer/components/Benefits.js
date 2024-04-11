@@ -31,7 +31,7 @@ const points = [
 
 export default function Benefits() {
   return (
-    <section className="bg-primary text-gray-50">
+    <section className="bg-primary-dark text-gray-50">
       <MaxWidth>
         <h2 className="text-3xl md:text-5xl font-semibold md:text-center pt-16 pb-16 md:pb-20">
           Benefits of volunteering

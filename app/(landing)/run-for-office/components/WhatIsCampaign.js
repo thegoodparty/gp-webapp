@@ -13,7 +13,7 @@ const points = [
 
 export default function WhatIsCampaign() {
   return (
-    <section className="bg-primary text-white py-20">
+    <section className="bg-primary-dark text-white py-20">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-4 items-center">
           <div className="col-span-12 lg:col-span-6">

@@ -41,7 +41,7 @@ export default function PrimaryButton({
     'transition-colors': true,
   };
   if (variant === 'contained') {
-    baseClass['bg-primary'] = true;
+    baseClass['bg-primary-dark'] = true;
     baseClass['text-slate-50'] = true;
     baseClass['hover:text-scondary-light'] = true;
     baseClass['active:text-scondary-light'] = true;
@@ -52,13 +52,13 @@ export default function PrimaryButton({
     baseClass['border-primary'] = true;
     baseClass['hover:text-scondary-light'] = true;
     baseClass['active:text-scondary-light'] = true;
-    baseClass['hover:bg-primary'] = true;
-    baseClass['active:bg-primary'] = true;
+    baseClass['hover:bg-primary-dark'] = true;
+    baseClass['active:bg-primary-dark'] = true;
   } else if (variant === 'text') {
     baseClass['text-primary'] = true;
     baseClass['hover:text-slate-50'] = true;
-    baseClass['hover:bg-primary'] = true;
-    baseClass['active:bg-primary'] = true;
+    baseClass['hover:bg-primary-dark'] = true;
+    baseClass['active:bg-primary-dark'] = true;
   }
   setSize(baseClass, size, variant);
   if (disabled) {
@@ -69,7 +69,7 @@ export default function PrimaryButton({
     baseClass['hover:text-scondary-light'] = false;
     baseClass['active:text-scondary-light'] = false;
     baseClass['bg-white'] = false;
-    baseClass['bg-primary'] = false;
+    baseClass['bg-primary-dark'] = false;
     if (variant === 'outlined') {
       baseClass['border-primary'] = false;
       baseClass['border-gray-200'] = true;
@@ -80,16 +80,16 @@ export default function PrimaryButton({
       baseClass['text-gray-500'] = true;
       baseClass['hover:text-scondary-light'] = false;
       baseClass['active:text-scondary-light'] = false;
-      baseClass['hover:bg-primary'] = false;
-      baseClass['active:bg-primary'] = false;
+      baseClass['hover:bg-primary-dark'] = false;
+      baseClass['active:bg-primary-dark'] = false;
     } else if (variant === 'text') {
       baseClass['bg-gray-600'] = false;
       baseClass['bg-white'] = true;
       baseClass['text-primary'] = false;
       baseClass['text-gray-500'] = true;
       baseClass['hover:text-slate-50'] = false;
-      baseClass['hover:bg-primary'] = false;
-      baseClass['active:bg-primary'] = false;
+      baseClass['hover:bg-primary-dark'] = false;
+      baseClass['active:bg-primary-dark'] = false;
     }
   }
 

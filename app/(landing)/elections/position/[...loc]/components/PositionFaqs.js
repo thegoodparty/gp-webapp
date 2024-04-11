@@ -68,7 +68,7 @@ export default function PositionFaqs({ race }) {
     },
   ];
   return (
-    <section className="py-12 bg-primary text-white">
+    <section className="py-12 bg-primary-dark text-white">
       <MaxWidth>
         <h2 className=" text-center text-5xl mb-12">FAQ</h2>
         {faqs.map((faq) => (

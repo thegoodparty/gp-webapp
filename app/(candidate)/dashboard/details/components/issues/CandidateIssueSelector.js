@@ -70,7 +70,7 @@ export default function CandidateIssueSelector({
       <div>
         <div>
           {state.position ? (
-            <div className="rounded-full bg-primary py-2 px-3 text-slate-50 items-center inline-flex">
+            <div className="rounded-full bg-primary-dark py-2 px-3 text-slate-50 items-center inline-flex">
               <Body1>{state.position.name}</Body1>
               <IoMdClose
                 className="ml-2 cursor-pointer"

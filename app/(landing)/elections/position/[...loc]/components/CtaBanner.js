@@ -6,7 +6,7 @@ export default function CtaBanner({ race }) {
   const { normalizedPositionName } = race;
   return (
     <section className="py-12 relative">
-      <div className="absolute h-1/2 w-full top-1/2 bg-primary"></div>
+      <div className="absolute h-1/2 w-full top-1/2 bg-primary-dark"></div>
       <div className="max-w-screen-xl mx-auto">
         <div className=" bg-[#F7FCFF] p-12 grid grid-cols-12 gap-6 items-center rounded-3xl relative z-10">
           <div className=" col-span-12 md:col-span-3 lg:col-span-2">

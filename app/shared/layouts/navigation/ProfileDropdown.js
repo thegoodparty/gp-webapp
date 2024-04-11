@@ -123,7 +123,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             onClick={toggleCallback}
           />
           <div
-            className={`absolute z-50 top-11 right-0 min-w-[270px] bg-primary text-white rounded-xl  shadow-md transition  ${
+            className={`absolute z-50 top-11 right-0 min-w-[270px] bg-primary-dark text-white rounded-xl  shadow-md transition  ${
               open ? 'p-3 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
             }`}
           >
@@ -137,7 +137,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               >
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark  rounded flex items-center justify-between"
+                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     {link.icon}
@@ -151,7 +151,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               <Link href="/admin" className="no-underline font-normal">
                 <div
                   data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark hover:text-white rounded flex items-center"
+                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
                 >
                   <HiOutlineStar />
                   <div className="ml-3">Admin</div>
@@ -161,7 +161,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             {impersonating && (
               <div
                 data-cy="header-link"
-                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark hover:text-white rounded flex items-center"
+                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
                 onClick={() => {
                   deleteCookie('impersonateToken');
                   deleteCookie('impersonateUser');
@@ -174,7 +174,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             )}
             <div
               data-cy="header-link"
-              className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark  rounded flex items-center justify-between"
+              className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
               onClick={handleLogOut}
             >
               <div className="flex items-center">

@@ -7,7 +7,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 
 export default function JoinDiscord() {
   return (
-    <section className="bg-primary text-gray-50 py-20">
+    <section className="bg-primary-dark text-gray-50 py-20">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-6 md:gap-10">
           <div className="col-span-12 md:col-span-6">

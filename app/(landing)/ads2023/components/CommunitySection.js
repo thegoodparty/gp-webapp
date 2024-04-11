@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function CommunitySection() {
   return (
-    <section className="bg-primary pt-12 text-white">
+    <section className="bg-primary-dark pt-12 text-white">
       <MaxWidth>
         <h2 className="text-center font-semibold text-6xl">
           Ready to serve your community?
