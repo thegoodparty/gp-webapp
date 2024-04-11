@@ -17,7 +17,7 @@ export default function ElectionsPage() {
     <div className="bg-slate-50 pb-14">
       <Hero />
       <div
-        className={`bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#13161A_55%)] h-[calc(100vw*.17)] w-full`}
+        className={`bg-[linear-gradient(172deg,_#EEF3F7_54.5%,_#161F31_55%)] h-[calc(100vw*.17)] w-full`}
       />
       <FeaturedCities />
       <div className="bg-primary -mt-12 pt-24 md:pt-32 md:pb-12">
@@ -29,7 +29,7 @@ export default function ElectionsPage() {
           />
         </div>
       </div>
-      <div className="hidden md:block bg-[linear-gradient(172deg,_#13161A_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
+      <div className="hidden md:block bg-[linear-gradient(172deg,_#161F31_54.5%,_#EEF3F7_55%)] h-[calc(100vw*.17)] w-full" />
       <Tools />
       <div className="mt-14">
         <GraduateSpotlight

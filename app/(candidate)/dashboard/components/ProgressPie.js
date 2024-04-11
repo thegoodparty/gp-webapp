@@ -7,7 +7,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 // import styles from './GoalsChart.module.scss';
 
-const COLORS = ['#DEE1E9', '#13161A'];
+const COLORS = ['#DEE1E9', '#161F31'];
 const COLORS_OVER = ['#44F1A7', '#0EB66F'];
 
 export default function ProgressPie({ total, progress }) {

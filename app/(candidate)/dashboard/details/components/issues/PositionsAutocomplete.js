@@ -37,7 +37,7 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
         fullWidth
         variant="outlined"
         PaperComponent={({ children }) => (
-          <Paper style={{ background: '#13161A' }}>{children}</Paper>
+          <Paper style={{ background: '#161F31' }}>{children}</Paper>
         )}
         popupIcon={<RiSearch2Line className="mr-2" />}
         inputValue={inputValue}

@@ -51,7 +51,7 @@ export default function Community() {
           ))}
         </div>
       </MaxWidth>
-      <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#13161A_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#161F31_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
   );
 }

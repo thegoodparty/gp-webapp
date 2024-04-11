@@ -4,7 +4,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 
 export default function FactsSection() {
   return (
-    <section className="bg-[#13161A] h-auto pt-20 pb-40">
+    <section className="bg-[#161F31] h-auto pt-20 pb-40">
       <MaxWidth>
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-12 lg:col-span-6 pb-5">

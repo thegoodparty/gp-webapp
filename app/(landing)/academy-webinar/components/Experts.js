@@ -51,7 +51,7 @@ export default function Experts() {
           </div>
         </MaxWidth>
       </div>
-      <div className="bg-[linear-gradient(176deg,_#13161A_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
+      <div className="bg-[linear-gradient(176deg,_#161F31_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
     </>
   );
 }
