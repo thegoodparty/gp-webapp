@@ -1,23 +1,22 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import MarketingH1 from '@shared/typography/MarketingH1';
-import Subtitle1 from '@shared/typography/Subtitle1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Image from 'next/image';
 import webinarImg from 'public/images/landing-pages/webinar-hero.png';
-import Link from 'next/link';
+import {
+  AcademyModalSignUpButton
+} from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
-export default function Hero({ content }) {
-  return (
-    <MaxWidth>
+const Hero = ({ content }) => <MaxWidth>
       <div className="grid grid-cols-12 gap-6 mt-20">
         <div className="col-span-12 md:col-span-6">
           <MarketingH1>
             Good Party Academy - Learn how to run for office
           </MarketingH1>
           <div className="my-8 text-xl">{content.heroDesc}</div>
-          <Link href="/academy-intro" id="hero-cta">
-            <PrimaryButton>Sign up for free</PrimaryButton>
-          </Link>
+          <AcademyModalSignUpButton>
+            <PrimaryButton id="hero-cta">Sign up for free</PrimaryButton>
+          </AcademyModalSignUpButton>
         </div>
         <div className="col-span-12 md:col-span-6 relative min-h-[300px] mt-12 md:mt-0">
           <Image
@@ -31,5 +30,4 @@ export default function Hero({ content }) {
         </div>
       </div>
     </MaxWidth>
-  );
-}
+export default Hero;

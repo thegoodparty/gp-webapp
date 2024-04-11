@@ -6,6 +6,9 @@ import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import {
+  AcademyModalSignUpButton
+} from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const graduates = [
   {
@@ -37,9 +40,9 @@ export default function GraduateSpotlight({ title, cta }) {
   const ctaButton = cta ? (
     cta
   ) : (
-    <Link href="/academy-intro" id="spotlight-cta">
-      <PrimaryButton>Sign up for free</PrimaryButton>
-    </Link>
+      <AcademyModalSignUpButton>
+        <PrimaryButton id="spotlight-cta">Sign up for free</PrimaryButton>
+      </AcademyModalSignUpButton>
   );
   return (
     <section className="my-20">

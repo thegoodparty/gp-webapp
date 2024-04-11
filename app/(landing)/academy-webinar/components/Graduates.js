@@ -1,6 +1,5 @@
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
-
 import VictoriaImg from 'public/images/landing-pages/victoria.png';
 import BreannaImg from 'public/images/landing-pages/breanna.png';
 import CarlosImg from 'public/images/landing-pages/carlos.png';
@@ -8,7 +7,9 @@ import MapImg from 'public/images/landing-pages/map.png';
 import Body1 from '@shared/typography/Body1';
 import { BiSolidQuoteAltRight } from 'react-icons/bi';
 import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
+import {
+  AcademyModalSignUpButton
+} from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const graduates = [
   {
@@ -100,9 +101,9 @@ export default function Graduates({ content }) {
                 meet people from all over the political spectrum passionate
                 about building community power!
               </Body1>
-              <Link href="/academy-intro" id="graduate-cta">
-                <WarningButton>Sign up</WarningButton>
-              </Link>
+              <AcademyModalSignUpButton>
+                <WarningButton id="graduate-cta">Sign Up For Free</WarningButton>
+              </AcademyModalSignUpButton>
             </div>
             <div className="col-span-12 md:col-span-6">
               <Image src={MapImg} height={548} width={490} alt="map" />
