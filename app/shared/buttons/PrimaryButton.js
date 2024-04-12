@@ -1,3 +1,4 @@
+'use client'
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 
@@ -34,6 +35,7 @@ export default function PrimaryButton({
   ariaLabel,
   ...restProps
 }) {
+  const { onClick } = restProps;
   let baseClass = {
     'rounded-lg': true,
     'font-medium': true,

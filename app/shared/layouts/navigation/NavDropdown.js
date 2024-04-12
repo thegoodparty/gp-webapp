@@ -1,5 +1,4 @@
 'use client';
-
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaChevronDown, FaExternalLinkAlt } from 'react-icons/fa';

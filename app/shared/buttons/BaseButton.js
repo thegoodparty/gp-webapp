@@ -1,3 +1,4 @@
+'use client'
 const BaseButton = ({ children, style, className = '', ...props }) => {
   return (
     <button
