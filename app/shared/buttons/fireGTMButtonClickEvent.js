@@ -3,5 +3,4 @@ export const fireGTMButtonClickEvent = (target) => {
     event: 'buttonClick',
     formId: target.id,
   });
-  console.log(`window.dataLayer =>`, window?.dataLayer)
 };
