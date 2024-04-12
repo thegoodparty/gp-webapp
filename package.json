@@ -13,6 +13,7 @@
     "build-local": "NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:1337  next build",
     "build": "next build",
     "start": "next build && next start",
+    "start-local": "npm run build-local && next start -p 4000",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
