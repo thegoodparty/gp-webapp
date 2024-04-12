@@ -47,6 +47,7 @@ module.exports = {
           dark: '#484E55',
           main: '#B9C3CC',
           light: '#F7FAFB',
+          background: '#F7FAFB',
           contrast: '#000000',
         },
 
