@@ -27,7 +27,7 @@ export default function ForSection() {
           can help! Get access to free campaign tools and our team&apos;s
           expertise to start or level-up your candidacy.
         </div>
-        <Link href="/run-for-office">
+        <Link id="about-for-candidtates" href="/run-for-office">
           <PurpleButton>
             <div className="leading-relaxed">GET STARTED</div>
           </PurpleButton>
@@ -57,6 +57,7 @@ export default function ForSection() {
           formId="5d84452a-01df-422b-9734-580148677d2c"
           pageName="About Page"
           labelId="subscribe-form-about"
+          submitButtonId="about-for-voters"
         />
       </div>
     </section>

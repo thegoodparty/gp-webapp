@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
+import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
 
 export default function WarningButton({
   children,
@@ -12,6 +13,7 @@ export default function WarningButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  onClick,
   ...restProps
 }) {
   let baseClass = {
@@ -86,6 +88,7 @@ export default function WarningButton({
       style={style}
       disabled={disabled}
       {...restProps}
+      onClick={buttonOnClickHandler(onClick)}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

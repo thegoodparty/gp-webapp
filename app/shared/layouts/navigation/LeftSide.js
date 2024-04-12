@@ -131,21 +131,21 @@ export default function LeftSide() {
         toggleCallback={toggleRun}
         links={RUN_LINKS}
         label="For Candidates"
-        id="nav-run-dropdown"
+        id="nav-candidates"
       />
       <NavDropdown
         open={communityOpen}
         toggleCallback={toggleCommunity}
         links={COMMUNITY_LINKS}
         label="For Voters"
-        id="nav-community-dropdown"
+        id="nav-voters"
       />
       <NavDropdown
         open={resourcesOpen}
         toggleCallback={toggleResources}
         links={RESOURCES_LINKS}
         label="Resources"
-        id="nav-resources-dropdown"
+        id="nav-resources"
       />
       <Link href="/about" id="nav-mission" className="ml-6">
         <PrimaryButton variant="text" size="medium">

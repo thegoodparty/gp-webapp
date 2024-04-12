@@ -26,7 +26,7 @@ export default function KeyFeatures() {
                     trained on dozens of carefully honed templates from press
                     releases to endorsement pitches.
                   </div>
-                  <GetStartedCTA />
+                  <GetStartedCTA id="tools-winning-content" />
                 </div>
                 <Image src={contentImg} alt="content" className="mt-10" />
               </div>
@@ -49,7 +49,7 @@ export default function KeyFeatures() {
                   AI Data Analyst to transform voter data into a winning
                   canvassing plan and turnout strategy.
                 </div>
-                <GetStartedCTA />
+                <GetStartedCTA id="tools-data-campaign"/>
               </div>
             </div>
             <div className="col-span-12 lg:col-span-6">
@@ -62,7 +62,7 @@ export default function KeyFeatures() {
                   Get 1:1 support and advice from our campaign experts, whether
                   you&apos;re running for town council or congress.
                 </div>
-                <GetStartedCTA />
+                <GetStartedCTA id="tools-access-experts"/>
               </div>
             </div>
             <div className="col-span-12 lg:col-span-6">
@@ -78,7 +78,7 @@ export default function KeyFeatures() {
                     Tap into our movement of 1,000+ remote volunteers eager to
                     help power your path to victory.
                   </div>
-                  <GetStartedCTA />
+                  <GetStartedCTA id="tools-volunteer-network" />
                 </div>
                 <div className="bg-white rounded-2xl p-5 lg:p-14  h-full shadow-lg mt-4">
                   <h3 className="text-2xl lg:text-3xl font-semibold">
@@ -88,7 +88,7 @@ export default function KeyFeatures() {
                     A carefully curated library of the most proven resources to
                     help you become a viable candidate.
                   </div>
-                  <GetStartedCTA />
+                  <GetStartedCTA id="tools-resource-library" />
                 </div>
               </div>
             </div>

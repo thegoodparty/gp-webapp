@@ -55,7 +55,7 @@ export default function Footer() {
                       {link.label}
                     </a>
                   ) : link.label == 'Volunteer' ? (
-                    <Link href={link.link} data-cy="footer-link">
+                    <Link id="footer-org-volunteer" href={link.link} data-cy="footer-link">
                       <PrimaryButton
                         size="medium"
                         style={{ backgroundColor: '#642EFF' }}
@@ -104,7 +104,7 @@ export default function Footer() {
               the rules, so good independent candidates can run and win!
               <br />
               <br />
-              <Link href="/login" data-cy="footer-join-us-link">
+              <Link id="footer-join-us" href="/login" data-cy="footer-join-us-link">
                 Join us!
               </Link>
             </div>

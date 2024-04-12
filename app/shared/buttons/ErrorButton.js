@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
+import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
 
 export default function ErrorButton({
   children,
@@ -12,6 +13,7 @@ export default function ErrorButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  onClick,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -82,6 +84,7 @@ export default function ErrorButton({
       className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
+      onClick={buttonOnClickHandler(onClick)}
     >
       {loading ? <ButtonLoading /> : null}
       {children}
