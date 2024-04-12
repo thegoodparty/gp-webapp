@@ -11,6 +11,7 @@ export default function WarningButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  ...restProps
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -83,6 +84,7 @@ export default function WarningButton({
       className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
+      {...restProps}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

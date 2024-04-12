@@ -1,5 +1,3 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import H1 from '@shared/typography/H1';
 import { states } from 'helpers/statesHelper';
 import Link from 'next/link';
 import Hero from './Hero';

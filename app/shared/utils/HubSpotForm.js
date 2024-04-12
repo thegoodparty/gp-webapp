@@ -1,16 +1,18 @@
 'use client';
-
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AnimatedEllipsis } from '@shared/utils/AnimatedEllipsis';
 
 export default function HubSpotForm({
   formId,
   calendarRedirect = true,
   gtmName = '',
+  renderFormDelay = 0
 }) {
+  const [formReady, setFormReady] = useState(false);
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://js.hsforms.net/forms/v2.js';
-    script.async = true;
+    script.async = false;
 
     document.body.appendChild(script);
     script.addEventListener('load', () => {
@@ -36,10 +38,22 @@ export default function HubSpotForm({
                 'https://meetings.hubspot.com/jared-alper/good-party-academy-meeting';
             }
           },
+          onFormReady: () => {
+            if (renderFormDelay) {
+              return setTimeout(
+                () => setFormReady(true),
+                renderFormDelay,
+              );
+            }
+            setFormReady(true)
+          }
         });
       }
     });
   }, []);
 
-  return <div id="hubspotForm">Loading...</div>;
+  return <>
+    { !formReady && <div>Loading<AnimatedEllipsis /></div>}
+    <div id="hubspotForm" className={formReady ? '' : 'hidden'}></div>
+  </>
 }
