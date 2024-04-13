@@ -40,7 +40,7 @@ export async function fetchUpdateHistory() {
 
 export default function DashboardPage(props) {
   const { campaign } = props;
-  const { pathToVictory, goals, reportedVoterGoals } = campaign;
+  const { pathToVictory, goals, reportedVoterGoals, details } = campaign;
   const [updateHistory, setUpdateHistory] = useState([]);
 
   const [state, setState] = useState({
@@ -65,13 +65,21 @@ export default function DashboardPage(props) {
     setUpdateHistory(res.updateHistory);
   };
 
-  const { electionDate } = goals || {};
+  const electionDate = details?.electionDate || goals?.electionDate;
+  const { primaryElectionDate } = details || {};
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
-  const weeksUntil = weeksTill(electionDate);
+  // if primaryElectionDate passed, use electionDate
+  const now = new Date();
+  let resolvedDate = electionDate;
+  if (primaryElectionDate && new Date(primaryElectionDate) > now) {
+    resolvedDate = primaryElectionDate;
+  }
+
+  const weeksUntil = weeksTill(resolvedDate);
   // const weeksUntil = { weeks: -1, days: 6 };
 
-  const dateRange = weekRangeFromDate(electionDate, weeksUntil.weeks);
+  const dateRange = weekRangeFromDate(resolvedDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
   const deleteHistoryCallBack = async () => {
@@ -124,7 +132,7 @@ export default function DashboardPage(props) {
       <div className="max-w-[940px] mx-auto">
         {contactGoals ? (
           <>
-            {weeksUntil.weeks < 0 ? (
+            {weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate ? (
               <ElectionOver />
             ) : (
               <>

@@ -159,8 +159,6 @@ export default function BallotRaces(props) {
     }
   };
 
-  console.log('races', races);
-
   return (
     <section className="mb-10">
       <ZipChanger
