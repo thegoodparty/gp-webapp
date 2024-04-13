@@ -59,6 +59,7 @@ export default function OfficeStep(props) {
         ballotLevel: position?.level,
         primaryElectionDate: election?.primaryElectionDate,
         electionDate: election?.electionDay,
+        partisanType: position.partisanType,
         primaryElectionId: election?.primaryElectionId,
         hasPrimary: position?.hasPrimary,
       };
