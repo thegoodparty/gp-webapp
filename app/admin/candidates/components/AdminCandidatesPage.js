@@ -15,12 +15,8 @@ import { MdVisibilityOff } from 'react-icons/md';
 import { BsFiletypeCsv } from 'react-icons/bs';
 import { formatToPhone } from 'helpers/numberHelper';
 import { dateColumnSort } from 'helpers/dateColumnSort';
-import {
-  IS_VERIFIED_OPTIONS_REVERSED
-} from '../../victory-path/[slug]/components/is-verified-options.constant';
-import {
-  CANDIDATE_TIERS_REVERSED,
-} from '../../victory-path/[slug]/components/candidate-tiers.constant';
+import { IS_VERIFIED_OPTIONS_REVERSED } from '../../victory-path/[slug]/components/is-verified-options.constant';
+import { CANDIDATE_TIERS_REVERSED } from '../../victory-path/[slug]/components/candidate-tiers.constant';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
 const getDateCellContents = (origDate) => {
@@ -33,7 +29,7 @@ const getDateCellContents = (origDate) => {
     }
   }
   return date;
-}
+};
 
 function mapStatus(status, isActive) {
   if (!status) {
@@ -79,6 +75,7 @@ export default function AdminCandidatesPage(props) {
       'shortVersion',
       'campaignCommittee',
       'website',
+      'primaryElectionDate',
       'electionDate',
       'doorKnocking',
       'calls',
@@ -91,7 +88,7 @@ export default function AdminCandidatesPage(props) {
       'isVerified',
       'dateVerified',
       'tier',
-      'didWin'
+      'didWin',
     ],
   ];
 
@@ -160,6 +157,7 @@ export default function AdminCandidatesPage(props) {
       shortVersion: campaign.filedStatement,
       campaignCommittee: campaign.campaignCommittee,
       website: website || '',
+      primaryElectionDate: campaign.primaryElectionDate,
       electionDate: campaign.electionDate,
       doorKnocking: reportedVoterGoals?.doorKnocking || 0,
       calls: reportedVoterGoals?.calls || 0,
@@ -170,11 +168,12 @@ export default function AdminCandidatesPage(props) {
       knowRun: runningForOffice,
       isPro: isPro ? 'Yes' : 'No',
       isVerified: IS_VERIFIED_OPTIONS_REVERSED[isVerified],
-      dateVerified: campaignObj.dateVerified === null ?
-        'N/A' :
-        new Date(campaignObj.dateVerified),
+      dateVerified:
+        campaignObj.dateVerified === null
+          ? 'N/A'
+          : new Date(campaignObj.dateVerified),
       tier: CANDIDATE_TIERS_REVERSED[tier],
-      didWin: didWinDisplay
+      didWin: didWinDisplay,
     };
     inputData.push(fields);
     let csvFields = fields;
@@ -242,7 +241,7 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Verified Date',
       accessor: 'dateVerified',
-      Cell: ({row}) => getDateCellContents(row?.original?.dateVerified),
+      Cell: ({ row }) => getDateCellContents(row?.original?.dateVerified),
     },
     {
       Header: 'Tier',
@@ -347,7 +346,7 @@ export default function AdminCandidatesPage(props) {
         return data.createdAt ? new Date(data.createdAt) : new Date();
       },
       sortType: 'datetime',
-      Cell: ({row}) => getDateCellContents(row?.original?.createdAt),
+      Cell: ({ row }) => getDateCellContents(row?.original?.createdAt),
     },
     {
       Header: 'Last Modified',
@@ -355,7 +354,7 @@ export default function AdminCandidatesPage(props) {
         return data.updatedAt ? new Date(data.updatedAt) : new Date();
       },
       sortType: 'datetime',
-      Cell: ({row}) =>  getDateCellContents(row?.original?.updatedAt),
+      Cell: ({ row }) => getDateCellContents(row?.original?.updatedAt),
     },
     {
       Header: 'Party',
@@ -372,6 +371,22 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Enriched Office Level',
       accessor: 'level',
+    },
+    {
+      Header: 'Primary Date',
+      accessor: (data) =>
+        data.primaryElectionDate
+          ? new Date(data.primaryElectionDate)
+          : new Date('1970-01-01'),
+      sortDescFirst: true,
+      sortType: (rowA, rowB) =>
+        dateColumnSort(
+          rowA.original.primaryElectionDate,
+          rowB.original.primaryElectionDate,
+        ),
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.primaryElectionDate);
+      },
     },
     {
       Header: 'Election Date',
@@ -420,15 +435,11 @@ export default function AdminCandidatesPage(props) {
           return '';
         }
         return (
-          <a
-            href={row.original.website}
-            className="underline"
-            target="_blank"
-          >
+          <a href={row.original.website} className="underline" target="_blank">
             Campaign Website <FaExternalLinkAlt />
           </a>
         );
-      }
+      },
     },
     {
       Header: 'Pledged WTF',

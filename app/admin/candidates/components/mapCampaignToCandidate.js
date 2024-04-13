@@ -42,6 +42,7 @@ export default function mapCampaignToCandidate(campaign) {
     campaignCommittee,
     pledged,
     knowRun,
+    primaryElectionDate,
   } = details || {};
   const { slogan, aboutMe, why } = campaignPlan || {};
 
@@ -84,6 +85,7 @@ export default function mapCampaignToCandidate(campaign) {
     lastVisited,
     filedStatement,
     campaignCommittee,
+    primaryElectionDate,
     electionDate,
     pledged,
     knowRun,

@@ -33,21 +33,17 @@ export default function BallotRaces(props) {
   const [races, setRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [level, setLevel] = useState('');
-  const [yearFilter, setYearFilter] = useState(null)
+  const [yearFilter, setYearFilter] = useState(null);
   const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [electionYears, setElectionYears] = useState([])
-  const [collapsedYears, setCollapsedYears] = useState({})
-  const raceCountStart = 0
-  const numOfRaces = electionYears?.reduce(
-    (raceCount, year) => {
-      const nextRaceCount = raceCount + (
-        (races && races[year]?.length) || 0
-      )
-      return nextRaceCount
-    }, raceCountStart
-  )
+  const [electionYears, setElectionYears] = useState([]);
+  const [collapsedYears, setCollapsedYears] = useState({});
+  const raceCountStart = 0;
+  const numOfRaces = electionYears?.reduce((raceCount, year) => {
+    const nextRaceCount = raceCount + ((races && races[year]?.length) || 0);
+    return nextRaceCount;
+  }, raceCountStart);
   const router = useRouter();
 
   useEffect(() => {
@@ -55,21 +51,21 @@ export default function BallotRaces(props) {
   }, []);
 
   useEffect(() => {
-    setCollapsedYears(electionYears.reduce(
-      (aggregate, year) => {
+    setCollapsedYears(
+      electionYears.reduce((aggregate, year) => {
         const nextAggregate = {
           ...aggregate,
-          [year]: false
-        }
-        return nextAggregate
-      }, {}
-    ))
-  }, [electionYears])
+          [year]: false,
+        };
+        return nextAggregate;
+      }, {}),
+    );
+  }, [electionYears]);
 
   const loadRaces = async (zip) => {
     setLoading(true);
     const initRaces = await fetchRaces(zip || campaign.details.zip);
-    setElectionYears(Object.keys(initRaces).sort())
+    setElectionYears(Object.keys(initRaces).sort());
     setRaces(initRaces);
     setLoading(false);
   };
@@ -87,15 +83,15 @@ export default function BallotRaces(props) {
   const clearState = () => {
     setSelected(false);
     setInputValue('');
-    setLevel('')
-    setYearFilter(null)
-  }
+    setLevel('');
+    setYearFilter(null);
+  };
 
   const handleZipChange = async (newZip) => {
     if (newZip !== zip) {
-      setZip(newZip)
-      clearState()
-      await loadRaces(newZip)
+      setZip(newZip);
+      clearState();
+      await loadRaces(newZip);
       await updateCampaign({
         ...campaign,
         details: {
@@ -114,32 +110,33 @@ export default function BallotRaces(props) {
     if (positionLevel === 'CITY') {
       positionLevel = 'LOCAL';
     }
-    const raceYear = (new Date(race.election.electionDay)).getFullYear()
+    const raceYear = new Date(race.election.electionDay).getFullYear();
 
-    const isTextFiltered = inputValue ?
-      race.position.name
-      .toLowerCase()
-      .includes(inputValue.toLowerCase()) : true
+    const isTextFiltered = inputValue
+      ? race.position.name.toLowerCase().includes(inputValue.toLowerCase())
+      : true;
 
-    const isLevelFiltered = level ?
-      level && positionLevel === level.toUpperCase() :true
+    const isLevelFiltered = level
+      ? level && positionLevel === level.toUpperCase()
+      : true;
 
-    const isYearFiltered = yearFilter ?
-      parseInt(yearFilter) === raceYear : true
+    const isYearFiltered = yearFilter
+      ? parseInt(yearFilter) === raceYear
+      : true;
 
-    return isTextFiltered && isLevelFiltered && isYearFiltered
-  }
+    return isTextFiltered && isLevelFiltered && isYearFiltered;
+  };
 
-  const areFiltersEmpty = !level && !inputValue && !yearFilter
-  const filtered = areFiltersEmpty ?
-    races :
-    electionYears.reduce(
-      (racesGroupedByYear, year) => ({
+  const areFiltersEmpty = !level && !inputValue && !yearFilter;
+  const filtered = areFiltersEmpty
+    ? races
+    : electionYears.reduce(
+        (racesGroupedByYear, year) => ({
           ...racesGroupedByYear,
-          [year]: races[year]?.filter(filterRace)
+          [year]: races[year]?.filter(filterRace),
         }),
-      {}
-    )
+        {},
+      );
   const showCustomModal = () => {
     setShowModal(true);
   };
@@ -161,6 +158,8 @@ export default function BallotRaces(props) {
       }
     }
   };
+
+  console.log('races', races);
 
   return (
     <section className="mb-10">
@@ -228,38 +227,43 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {
-            filtered && electionYears?.map(
-              electionYear => (
-                !yearFilter ||
-                (yearFilter && electionYear === yearFilter)
-              ) && <div key={electionYear}>
-                <H4
-                  className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
-                  onClick={() => setCollapsedYears({
-                    ...collapsedYears,
-                    [electionYear]: !collapsedYears[electionYear],
-                  })}>
-                  {electionYear}{
-                    collapsedYears[electionYear] ?
-                      <FaChevronRight className="inline-block ml-1" /> :
-                      <FaChevronDown className="inline-block ml-1" />
-                  }
-                </H4>
-                {
-                  !collapsedYears[electionYear] && filtered[electionYear].map(
-                    (race, index) => <RaceCard
-                      key={index}
-                      race={race}
-                      selected={race?.position?.id === selected.position?.id}
-                      selectCallback={handleSelect}
-                      inputValue={inputValue}
-                    />
-                  )
-                }
-              </div>
-            )
-          }
+          {filtered &&
+            electionYears?.map(
+              (electionYear) =>
+                (!yearFilter ||
+                  (yearFilter && electionYear === yearFilter)) && (
+                  <div key={electionYear}>
+                    <H4
+                      className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
+                      onClick={() =>
+                        setCollapsedYears({
+                          ...collapsedYears,
+                          [electionYear]: !collapsedYears[electionYear],
+                        })
+                      }
+                    >
+                      {electionYear}
+                      {collapsedYears[electionYear] ? (
+                        <FaChevronRight className="inline-block ml-1" />
+                      ) : (
+                        <FaChevronDown className="inline-block ml-1" />
+                      )}
+                    </H4>
+                    {!collapsedYears[electionYear] &&
+                      filtered[electionYear].map((race, index) => (
+                        <RaceCard
+                          key={index}
+                          race={race}
+                          selected={
+                            race?.position?.id === selected.position?.id
+                          }
+                          selectCallback={handleSelect}
+                          inputValue={inputValue}
+                        />
+                      ))}
+                  </div>
+                ),
+            )}
           {!loading && (
             <div
               className="px-4 py-4 cursor-pointer rounded-md transition-colors hover:bg-slate-100 text-center"

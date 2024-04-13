@@ -57,13 +57,17 @@ export default function OfficeStep(props) {
         otherOffice: position?.name,
         officeTermLength: calcTerm(position),
         ballotLevel: position?.level,
+        primaryElectionDate: election?.primaryElectionDate,
+        electionDate: election?.electionDay,
+        primaryElectionId: election?.primaryElectionId,
+        hasPrimary: position?.hasPrimary,
       };
       if (!updated.goals) {
         updated.goals = {};
       }
       updated.goals = {
         ...updated.goals,
-        electionDate: election?.electionDay,
+        electionDate: election?.electionDay, // deprecated
       };
       if (!step) {
         // delete p2vStatus so the backend will recalculate it
@@ -120,10 +124,11 @@ export default function OfficeStep(props) {
         </div>
         <div className={`${step ? 'fixed bottom-0 w-full bg-white py-4' : ''}`}>
           <PrimaryButton
-            className={{ 'mx-auto': true, 'block': true }}
+            className={{ 'mx-auto': true, block: true }}
             disabled={!canSubmit()}
             type="submit"
-            onClick={handleSave}>
+            onClick={handleSave}
+          >
             {step ? 'Next' : 'Save'}
           </PrimaryButton>
         </div>
