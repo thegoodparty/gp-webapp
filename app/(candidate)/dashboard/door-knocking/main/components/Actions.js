@@ -5,6 +5,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import AlertDialog from '@shared/utils/AlertDialog';
+import ManageCampaign from './ManageCampaign';
 
 async function deleteDkCampaign(slug) {
   try {
@@ -45,7 +46,7 @@ export default function Actions({ campaign }) {
           />
 
           <div className="absolute bg-white py-3 rounded-xl shadow-lg z-10 right-6 top-1">
-            {/* <div className="p-4  whitespace-nowrap">Archive Campaign</div> */}
+            <ManageCampaign campaign={campaign} />
             <div
               className="p-4 whitespace-nowrap "
               onClick={() => {
