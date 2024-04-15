@@ -75,8 +75,9 @@ const fields = [
 ];
 
 export default function ManageCampaign(props) {
-  const { campaign } = props;
+  const { campaign, campaignDates } = props;
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
 
   const [saving, setSaving] = useState(false);
   const [state, setState] = useState({
@@ -94,26 +95,33 @@ export default function ManageCampaign(props) {
     }
     for (let key in state) {
       if (state[key] === '') {
+        setError('Please fill out all fields');
         return false;
       }
     }
     try {
       if (new Date(state.startDate) >= new Date(state.endDate)) {
+        setError('Start date must be before end date');
         return false;
       }
     } catch (e) {
       return false;
     }
-    if (state.minHousesPerRoute < 1 || state.maxHousesPerRoute > 100) {
-      return false;
-    }
-    if (state.minHousesPerRoute > state.maxHousesPerRoute) {
-      return false;
+    for (let i = 0; i < campaignDates.length; i++) {
+      if (
+        campaignDates[i].slug !== campaign.slug &&
+        new Date(state.endDate) >= new Date(campaignDates[i].start) &&
+        new Date(state.endDate) <= new Date(campaignDates[i].end)
+      ) {
+        setError('Only one campaign can be active at a time');
+        return false;
+      }
     }
     return true;
   };
 
   const onChangeField = (key, value) => {
+    setError('');
     setState({
       ...state,
       [key]: value,
@@ -171,7 +179,8 @@ export default function ManageCampaign(props) {
               />
             ))}
           </div>
-          <div className="mt-16 flex justify-end">
+          <div className="mt-10 mb-4 text-error">{error || ' '}</div>
+          <div className="flex justify-end">
             <div
               onClick={() => {
                 setShowModal(false);
@@ -181,9 +190,7 @@ export default function ManageCampaign(props) {
               <PrimaryButton variant="outlined">Cancel</PrimaryButton>
             </div>
             <div onClick={handleSave}>
-              <PrimaryButton disabled={!canSave()}>
-                Save &amp; Continue
-              </PrimaryButton>
+              <PrimaryButton>Save &amp; Continue</PrimaryButton>
             </div>
           </div>
         </div>

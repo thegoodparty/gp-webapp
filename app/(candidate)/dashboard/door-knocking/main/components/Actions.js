@@ -20,7 +20,7 @@ async function deleteDkCampaign(slug) {
   }
 }
 
-export default function Actions({ campaign }) {
+export default function Actions({ campaign, campaignDates }) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const handleDelete = async () => {
@@ -46,7 +46,7 @@ export default function Actions({ campaign }) {
           />
 
           <div className="absolute bg-white py-3 rounded-xl shadow-lg z-10 right-6 top-1">
-            <ManageCampaign campaign={campaign} />
+            <ManageCampaign campaign={campaign} campaignDates={campaignDates} />
             <div
               className="p-4 whitespace-nowrap "
               onClick={() => {

@@ -81,10 +81,11 @@ const fields = [
 ];
 
 export default function AddCampaign(props) {
-  const { buttonLabel } = props;
+  const { buttonLabel, campaignDates } = props;
   const [showModal, setShowModal] = useState(false);
 
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [state, setState] = useState({
     campaignName: '',
     campaignType: '',
@@ -100,21 +101,45 @@ export default function AddCampaign(props) {
     }
     for (let key in state) {
       if (state[key] === '') {
+        setError('Please fill out all fields');
         return false;
       }
     }
     try {
       if (new Date(state.startDate) >= new Date(state.endDate)) {
+        setError('Start date must be before end date');
         return false;
       }
     } catch (e) {
       return false;
     }
     if (state.minHousesPerRoute < 1 || state.maxHousesPerRoute > 100) {
+      setError('Minimum houses per route must be between 1 and 100');
       return false;
     }
     if (state.minHousesPerRoute > state.maxHousesPerRoute) {
+      setError(
+        'Minimum houses per route must be less than maximum houses per route',
+      );
       return false;
+    }
+    for (let i = 0; i < campaignDates.length; i++) {
+      // campaign start date can't be between existing campaign start and end date
+      if (
+        new Date(state.startDate) >= new Date(campaignDates[i].start) &&
+        new Date(state.startDate) <= new Date(campaignDates[i].end)
+      ) {
+        setError('Only one campaign can be active at a time');
+        return false;
+      }
+      // campaign end date can't be between existing campaign start and end date
+      if (
+        new Date(state.endDate) >= new Date(campaignDates[i].start) &&
+        new Date(state.endDate) <= new Date(campaignDates[i].end)
+      ) {
+        setError('Only one campaign can be active at a time');
+        return false;
+      }
     }
     return true;
   };
@@ -124,6 +149,7 @@ export default function AddCampaign(props) {
       ...state,
       [key]: value,
     });
+    setError('');
   };
 
   const handleSave = async () => {
@@ -185,7 +211,8 @@ export default function AddCampaign(props) {
               />
             ))}
           </div>
-          <div className="mt-16 flex justify-end">
+          <div className="mt-10 mb-4 text-error">{error || ' '}</div>
+          <div className="flex justify-end">
             <div
               onClick={() => {
                 setShowModal(false);
@@ -195,9 +222,7 @@ export default function AddCampaign(props) {
               <PrimaryButton variant="outlined">Cancel</PrimaryButton>
             </div>
             <div onClick={handleSave}>
-              <PrimaryButton disabled={!canSave()}>
-                Save &amp; Continue
-              </PrimaryButton>
+              <PrimaryButton>Save &amp; Continue</PrimaryButton>
             </div>
           </div>
         </div>

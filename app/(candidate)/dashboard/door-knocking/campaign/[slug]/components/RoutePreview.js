@@ -54,14 +54,17 @@ function RoutePreview(props) {
         noCard ? '' : 'p-4 rounded-md  border border-slate-300 h-full'
       }`}
     >
-      <Image
-        src={mapImageUrl}
-        alt="map"
-        width={380}
-        height={250}
-        className="w-full h-auto"
-      />
-      <H3 className="mb-2 mt-4">{summary}</H3>
+      <div className="relative">
+        <Image
+          src={mapImageUrl}
+          alt="map"
+          width={380}
+          height={250}
+          className="w-full h-auto"
+        />
+        <div className="absolute w-full left-0 bottom-0 h-7 bg-white"></div>
+      </div>
+      <H3 className="mb-2">{summary}</H3>
       {status === 'not-claimed' && (
         <Tag
           className="bg-[#E5DCFF] text-primary"

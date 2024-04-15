@@ -16,6 +16,7 @@ import { MdOutlineDirectionsWalk } from 'react-icons/md';
 import { Primary } from '@storybook/blocks';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Actions from './Actions';
+import Tag from '@shared/utils/Tag';
 
 async function deleteDkCampaign(slug) {
   try {
@@ -30,8 +31,26 @@ async function deleteDkCampaign(slug) {
   }
 }
 
+// if a campaign status is complete or archived, reutrn that status.
+// else use the start and end date to determine if the campaign is active, upcoming  or passed
+function calcCampaignState(campaign) {
+  if (campaign.status === 'complete' || campaign.status === 'archived') {
+    return campaign.status;
+  }
+  const startDate = new Date(campaign.startDate);
+  const endDate = new Date(campaign.endDate);
+  const currentDate = new Date();
+  if (currentDate < startDate) {
+    return 'upcoming';
+  } else if (currentDate > endDate) {
+    return 'passed';
+  } else {
+    return 'active';
+  }
+}
+
 export default function DkCampaignPreview(props) {
-  const { campaign, updateCampaignsCallback } = props;
+  const { campaign, updateCampaignsCallback, campaignDates } = props;
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
   const handleDelete = async () => {
@@ -64,7 +83,7 @@ export default function DkCampaignPreview(props) {
   if (hasRoutes && bounds) {
     mapImageUrl = boundsToImage(bounds);
   }
-  const campaignStatus = status || 'active';
+  const campaignStatus = calcCampaignState(campaign);
   return (
     <>
       <Link
@@ -74,7 +93,7 @@ export default function DkCampaignPreview(props) {
       >
         <div className=" bg-white border transition-colors border-slate-300 p-4 rounded-md  hover:border-primary cursor-pointer relative">
           {hasRoutes ? (
-            <div>
+            <div className="relative">
               <Image
                 src={mapImageUrl}
                 alt="map"
@@ -82,21 +101,22 @@ export default function DkCampaignPreview(props) {
                 height={250}
                 className="w-full h-auto"
               />
+              <div className="absolute w-full left-0 bottom-0 h-7 bg-white"></div>
             </div>
           ) : (
-            <div className="h-[250px]  bg-gray-100 flex items-center justify-center">
+            <div className="h-[250px]  bg-gray-100 flex items-center justify-center mb-4">
               <CircularProgress />
             </div>
           )}
           <div className="flex items-center justify-between">
-            <H2 className="mt-4">{campaign.name}</H2>
+            <H2>{campaign.name}</H2>
             <div
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
               }}
             >
-              <Actions campaign={campaign} />
+              <Actions campaign={campaign} campaignDates={campaignDates} />
             </div>
           </div>
           <Subtitle1 className="mb-2">{type}</Subtitle1>
@@ -104,13 +124,32 @@ export default function DkCampaignPreview(props) {
             {dateUsHelper(campaign.startDate)} -{' '}
             {dateUsHelper(campaign.endDate)}
           </Subtitle2>
-          <div className="bg-green-50 text-green-800 uppercase  p-2 rounded inline-flex items-center font-medium mr-2 text-xs">
-            {campaignStatus}
-          </div>
-          <div className="bg-indigo-50 text-indigo-600  p-2 rounded inline-flex items-center font-medium text-xs">
-            <MdOutlineDirectionsWalk />
-            <div className="ml-1  ">{routesCount || 0} ROUTES</div>
-          </div>
+          <Tag
+            label={campaignStatus}
+            className={`uppercase ${
+              campaignStatus === 'active'
+                ? 'bg-green-100 text-green-800  mr-2'
+                : ''
+            } ${
+              campaignStatus === 'passed' || campaignStatus === 'upcoming'
+                ? 'bg-gray-100 text-gray-800  mr-2'
+                : ''
+            } ${
+              campaignStatus === 'archived' ? 'bg-primary text-white  mr-2' : ''
+            }  ${
+              campaignStatus === 'archived' ? 'bg-primary text-white  mr-2' : ''
+            } ${
+              campaignStatus === 'complete'
+                ? 'bg-purple-100 text-purple-800'
+                : ''
+            }`}
+          />
+          <Tag
+            icon={<MdOutlineDirectionsWalk size={12} />}
+            label={`${routesCount || 0} ROUTES`}
+            className="bg-indigo-100 text-indigo-600"
+          />
+
           {hasRoutes ? (
             <Link
               className="mt-4 block"
