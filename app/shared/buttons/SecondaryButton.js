@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
+import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
 
 export default function SecondaryButton({
   children,
@@ -13,6 +14,7 @@ export default function SecondaryButton({
   loading = false,
   fullWidth = false,
   ariaLabel,
+  onClick,
   ...restProps
 }) {
   let baseClass = {
@@ -94,6 +96,7 @@ export default function SecondaryButton({
       disabled={disabled}
       aria-label={ariaLabel}
       {...restProps}
+      onClick={buttonOnClickHandler(onClick)}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

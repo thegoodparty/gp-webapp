@@ -18,6 +18,9 @@ import {
 } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
+import {
+  fireGTMButtonClickEvent
+} from '@shared/buttons/fireGTMButtonClickEvent';
 
 export const globalUserState = hookstate(false);
 
@@ -36,9 +39,10 @@ const links = [
   // },
 ];
 
-const handleLogOut = () => {
+const handleLogOut = (e) => {
   deleteUserCookies();
   window.location.replace('/');
+  fireGTMButtonClickEvent(e.currentTarget)
 };
 
 function ProfileDropdown({ open, toggleCallback, user }) {
@@ -175,11 +179,10 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             <div
               data-cy="header-link"
               className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
-              onClick={handleLogOut}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />
-                <div className="ml-3">Logout</div>
+                <div id="nav-log-out" className="ml-3" onClick={handleLogOut}>Logout</div>
               </div>
             </div>
           </div>

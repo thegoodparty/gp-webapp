@@ -11,6 +11,9 @@ import {
   RiDoorOpenLine,
 } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
+import {
+  fireGTMButtonClickEvent
+} from '@shared/buttons/fireGTMButtonClickEvent';
 
 let pages = [
   {
@@ -71,9 +74,10 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  const handleLogOut = () => {
+  const handleLogOut = (e) => {
     deleteUserCookies();
     window.location.replace('/');
+    fireGTMButtonClickEvent(e.currentTarget)
   };
   if (
     user?.isAdmin &&
@@ -127,9 +131,11 @@ export default function DashboardMenu({
 
           <div
             className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer "
-            onClick={handleLogOut}
           >
-            <div className="ml-2">Logout</div>
+            <div
+              id="nav-log-out"
+              onClick={handleLogOut}
+              className="ml-2">Logout</div>
           </div>
         </div>
       )}

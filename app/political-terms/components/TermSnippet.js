@@ -1,7 +1,7 @@
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import { slugify } from 'helpers/articleHelper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import Link from 'next/link';
+import { TermTitleLink } from './TermTitleLink';
 
 export const termLink = (term) => termLinkByTitle(term?.title);
 
@@ -18,9 +18,7 @@ export default function TermSnippet({ item, last }) {
     >
       <h2 className="mb-1 lg:mb-0 lg:basis-1/3">
         <strong>
-          <Link id={`terms-${slugify(title, true)}`} href={termLink(item)}>
-            {title}{' '}
-          </Link>
+          <TermTitleLink title={title} />
         </strong>
       </h2>
       <div

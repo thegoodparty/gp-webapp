@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
+import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
 
 export default function InfoButton({
   children,
@@ -12,6 +13,7 @@ export default function InfoButton({
   disabled = false,
   loading = false,
   fullWidth,
+  onClick,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -90,6 +92,7 @@ export default function InfoButton({
       className={clsx({ ...baseClass, ...className })}
       style={style}
       disabled={disabled}
+      onClick={buttonOnClickHandler(onClick)}
     >
       {loading ? <ButtonLoading /> : null}
       {children}
