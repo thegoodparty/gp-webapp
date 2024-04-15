@@ -1,5 +1,5 @@
-export const fireGTMButtonClickEvent = (target) => {
-  window.dataLayer?.push({
+export const fireGTMButtonClickEvent = (target = {}) => {
+  target?.id && window.dataLayer?.push({
     event: 'buttonClick',
     formId: target.id,
   });
