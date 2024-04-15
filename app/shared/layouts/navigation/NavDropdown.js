@@ -8,10 +8,12 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
   return (
     <div
       className="ml-6 relative cursor-pointer "
-      onClick={toggleCallback}
-      id={id}
     >
-      <PrimaryButton variant="text" size="medium">
+      <PrimaryButton
+        id={id}
+        onClick={toggleCallback}
+        variant="text"
+        size="medium">
         <div className="flex items-center">
           <div className="font-medium text-base">{label}</div>
           <FaChevronDown

@@ -37,6 +37,7 @@ export default function Banner({ banner, idIndex = '1' }) {
               <div className="mt-6 inline-block">
                 {isExternalLink ? (
                   <a
+                    id="glossary-learn-more"
                     href={buttonLink}
                     target="_blank"
                     rel="noopener noreferrer nofollow"
@@ -46,7 +47,9 @@ export default function Banner({ banner, idIndex = '1' }) {
                     </BlackButton>
                   </a>
                 ) : (
-                  <Link href={buttonLink}>
+                  <Link
+                    id="glossary-learn-more"
+                    href={buttonLink}>
                     <BlackButton>
                       <strong>{buttonLabel}</strong>
                     </BlackButton>

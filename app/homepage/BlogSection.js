@@ -13,7 +13,7 @@ export default function BlogSection() {
           Check out our blog for articles about running for office, Good
           Party&apos;s work, and more.
           <div className="text-center">
-            <Link href="/blog" className="text-lg mt-11 block">
+            <Link id="about-party-blog" href="/blog" className="text-lg mt-11 block">
               <PurpleButton
                 id="blog-read-more"
                 style={{ backgroundColor: 'white', color: '#46002E' }}

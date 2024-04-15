@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
+import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
 
 export default function SuccessButton({
   children,
@@ -12,6 +13,7 @@ export default function SuccessButton({
   disabled = false,
   loading = false,
   fullWidth = false,
+  onClick,
   ...restProps
 }) {
   let baseClass = {
@@ -83,6 +85,7 @@ export default function SuccessButton({
       style={style}
       disabled={disabled}
       {...restProps}
+      onClick={buttonOnClickHandler(onClick)}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

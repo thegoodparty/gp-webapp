@@ -1,6 +1,7 @@
-'use client'
+'use client';
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
+import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
 
 export function setSize(baseClass, size, variant) {
   if (size === 'large') {
@@ -33,9 +34,9 @@ export default function PrimaryButton({
   fullWidth = false,
   type = 'button',
   ariaLabel,
+  onClick,
   ...restProps
 }) {
-  const { onClick } = restProps;
   let baseClass = {
     'rounded-lg': true,
     'font-medium': true,
@@ -104,6 +105,8 @@ export default function PrimaryButton({
     baseClass['items-center'] = true;
   }
 
+
+
   return (
     <button
       className={clsx({ ...baseClass, ...className })}
@@ -112,6 +115,7 @@ export default function PrimaryButton({
       type={type}
       aria-label={ariaLabel}
       {...restProps}
+      onClick={buttonOnClickHandler(onClick)}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

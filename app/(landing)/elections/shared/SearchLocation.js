@@ -10,6 +10,9 @@ import { states } from 'helpers/statesHelper';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import {
+  fireGTMButtonClickEvent
+} from '@shared/buttons/fireGTMButtonClickEvent';
 
 const fetchState = async (state) => {
   const api = gpApi.race.byState;
@@ -29,6 +32,8 @@ const fetchCounty = async (state, county) => {
 
   return await gpFetch(api, payload, 3600);
 };
+
+const nameCompare = ({name: aName}, {name: bName} ) => aName.localeCompare(bName)
 
 export default function SearchLocation({ withHeader = false, initialState }) {
   const [state, setState] = useState({
@@ -87,12 +92,16 @@ export default function SearchLocation({ withHeader = false, initialState }) {
       <div className="grid grid-cols-12 gap-4 location-selects">
         <div className="col-span-12 md:col-span-3">
           <Select
+            id="election-select-state"
             native
             value={state.state}
             fullWidth
             label=" state "
             variant="outlined"
-            onChange={(e) => onChangeState(e.target.value)}
+            onChange={(e) => {
+              fireGTMButtonClickEvent(e.currentTarget)
+              return onChangeState(e.target.value);
+            }}
             sx={{ backgroundColor: 'white' }}
             startAdornment={
               // Placing the icon as startAdornment
@@ -118,6 +127,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
 
         <div className="col-span-12 md:col-span-3">
           <Select
+            id="election-select-county"
             native
             value={state.county}
             fullWidth
@@ -125,7 +135,10 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             sx={{ backgroundColor: 'white' }}
             label=" "
             disabled={state.state === '' || state.countyOptions.length === 0}
-            onChange={(e) => onChangeCounty(e.target.value)}
+            onChange={(e) => {
+              fireGTMButtonClickEvent(e.currentTarget)
+              return onChangeCounty(e.target.value);
+            }}
             startAdornment={
               // Placing the icon as startAdornment
               <InputAdornment position="start">
@@ -146,16 +159,19 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             <option value="">All Counties</option>
 
             {state.countyOptions &&
-              state.countyOptions.map((op) => (
-                <option value={op.name} key={op.id}>
-                  {op.name}
-                </option>
-              ))}
+              state.countyOptions
+                .sort(nameCompare)
+                .map((op) => (
+                  <option value={op.name} key={op.id}>
+                    {op.name}
+                  </option>
+                ))}
           </Select>
         </div>
 
         <div className="col-span-12 md:col-span-3">
           <Select
+            id="election-select-city"
             native
             value={state.municipality}
             fullWidth
@@ -163,7 +179,10 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             sx={{ backgroundColor: 'white' }}
             label=" "
             disabled={state.county === '' || state.munOptions.length === 0}
-            onChange={(e) => onChangeMun(e.target.value)}
+            onChange={(e) => {
+              fireGTMButtonClickEvent(e.currentTarget)
+              return onChangeMun(e.target.value);
+            }}
             startAdornment={
               // Placing the icon as startAdornment
               <InputAdornment position="start">
@@ -184,18 +203,22 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             <option value="">All Municipalities</option>
 
             {state.munOptions &&
-              state.munOptions.map((op) => (
-                <option value={op.name} key={op.id}>
-                  {op.name}
-                </option>
-              ))}
+              state.munOptions
+                .sort(nameCompare)
+                .map((op) => (
+                  <option value={op.name} key={op.id}>
+                    {op.name}
+                  </option>
+                ))}
           </Select>
         </div>
         <div className="col-span-12 md:col-span-3">
-          <div onClick={handleSubmit} id="location-search-go">
+          <div id="location-search-go">
             <SuccessButton
+              id="election-click-go"
               style={{ padding: '12px 20px', marginTop: '4px' }}
               disabled={state.state === ''}
+              onClick={handleSubmit}
             >
               Go
             </SuccessButton>

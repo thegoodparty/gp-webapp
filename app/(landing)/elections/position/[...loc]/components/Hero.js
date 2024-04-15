@@ -84,7 +84,7 @@ export default function Hero({
                 alt="GOOD PARTY"
               />
             </div>
-            <Link href="/run-for-office">
+            <Link id="election-position-run" href="/run-for-office">
               <div className="md:mt-2 justify-end flex items-center text-blue-500 ml-2 mt-3">
                 <div className="mr-2">Get free tools to run and win</div>
                 <FaArrowRightLong />

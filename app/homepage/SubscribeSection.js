@@ -20,6 +20,7 @@ export default function SubscribeSection({ pageName = 'Home Page' }) {
             formId="5d84452a-01df-422b-9734-580148677d2c"
             pageName={pageName}
             labelId="subscribe-form"
+            submitButtonId="about-party-newsletter"
           />
         </div>
       </MaxWidth>
