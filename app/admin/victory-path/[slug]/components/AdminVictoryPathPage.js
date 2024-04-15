@@ -235,6 +235,10 @@ export default function AdminVictoryPathPage(props) {
             <strong>
               {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
             </strong>
+            . Primary Election Date:{' '}
+            <strong>
+              {dateUsHelper(campaign?.details?.primaryElectionDate) || 'N/A'}
+            </strong>
           </H4>
           {sections.map((section) => (
             <div className="mb-12" key={section.title}>

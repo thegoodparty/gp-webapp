@@ -656,6 +656,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    update: {
+      url: `${base}campaign/door-knocking`,
+      method: 'PUT',
+      withAuth: true,
+    },
     list: {
       url: `${base}campaign/door-knockings`,
       method: 'GET',

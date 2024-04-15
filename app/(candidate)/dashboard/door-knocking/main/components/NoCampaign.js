@@ -23,7 +23,7 @@ export default function NoCampaign() {
           It looks like you don&apos;t have a door knocking campaign set up yet.
         </Body1>
         <div className="mt-6">
-          <AddCampaign buttonLabel="Get Started" />
+          <AddCampaign buttonLabel="Get Started" dkCampaigns={[]} />
         </div>
       </Paper>
     </div>

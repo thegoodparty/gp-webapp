@@ -14,7 +14,6 @@ export default function RenderInputField({
   value,
   onChangeCallback,
   error,
-  positions,
 }) {
   return (
     <div
@@ -45,6 +44,7 @@ export default function RenderInputField({
           }}
           inputProps={field.maxLength ? { maxLength: field.maxLength } : {}}
           helperText={field.helperText}
+          disabled={field.disabled}
         />
       )}
       {field.type === 'email' && (
@@ -52,6 +52,7 @@ export default function RenderInputField({
           value={value}
           onChangeCallback={(e) => onChangeCallback(field.key, e.target.value)}
           shrink
+          disabled={field.disabled}
         />
       )}
       {field.type === 'phone' && (
@@ -63,6 +64,7 @@ export default function RenderInputField({
           }}
           hideIcon
           shrink
+          disabled={field.disabled}
         />
       )}
 
@@ -83,6 +85,7 @@ export default function RenderInputField({
             value={value || null}
             onChange={(e) => onChangeCallback(field.key, e.target.value)}
             error={error}
+            disabled={field.disabled}
           >
             <FormControlLabel
               value="yes"
@@ -116,6 +119,7 @@ export default function RenderInputField({
             InputLabelProps={{
               shrink: true,
             }}
+            disabled={field.disabled}
           >
             <option value="">Select</option>
             {field.options.map((op) => (
@@ -135,6 +139,7 @@ export default function RenderInputField({
             <Checkbox
               value={value}
               onChange={(e) => onChangeCallback(field.key, e.target.checked)}
+              disabled={field.disabled}
             />
             <div className="ml-1 pt-1">{field.label}</div>
           </div>

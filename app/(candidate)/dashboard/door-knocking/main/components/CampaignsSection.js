@@ -30,6 +30,7 @@ export default function CampaignsSection(props) {
             campaign={campaign}
             key={campaign.slug}
             updateCampaignsCallback={updateCampaignsCallback}
+            campaignDates={props.campaignDates}
           />
         ))}
     </section>

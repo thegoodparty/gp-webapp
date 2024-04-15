@@ -4,6 +4,8 @@ import { toTitleCase } from 'helpers/stringHelper';
 import { GrRadial, GrRadialSelected } from 'react-icons/gr';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
+import Body2 from '@shared/typography/Body2';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function RaceCard({
   race,
@@ -12,11 +14,12 @@ export default function RaceCard({
   selectCallback,
   inputValue,
 }) {
-  const { position } = race;
+  const { position, election } = race;
   if (!position) {
     return null;
   }
   const { name, level } = position;
+  const { electionDay, primaryElectionDate } = election;
 
   let titleLevel = toTitleCase(level);
   if (titleLevel === 'City') {
@@ -69,7 +72,19 @@ export default function RaceCard({
         ) : (
           <GrRadial className="min-w-[16px]" />
         )}
-        <Body1 className="ml-2 text-left">{renderOption(name)}</Body1>
+        <div className="ml-3 text-left">
+          <Body1>{renderOption(name)}</Body1>
+          <Body2>
+            Election Date: {dateUsHelper(electionDay)}{' '}
+            {primaryElectionDate ? (
+              <span className="ml-2">
+                | Primary Election Date: {dateUsHelper(primaryElectionDate)}
+              </span>
+            ) : (
+              ''
+            )}
+          </Body2>
+        </div>
       </div>
       <div
         className={`${pillColor} px-3 py-1 text-sm rounded-full whitespace-nowrap ml-2`}

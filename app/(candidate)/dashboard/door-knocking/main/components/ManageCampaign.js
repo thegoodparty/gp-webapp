@@ -8,24 +8,14 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 
-async function createDkCampaign(
-  name,
-  type,
-  minHousesPerRoute,
-  maxHousesPerRoute,
-  startDate,
-  endDate,
-) {
+async function updateDkCampaign(name, endDate, slug) {
   try {
-    const api = gpApi.doorKnocking.create;
+    const api = gpApi.doorKnocking.update;
 
     const payload = {
       name,
-      type,
-      minHousesPerRoute,
-      maxHousesPerRoute,
-      startDate,
       endDate,
+      slug,
     };
     return await gpFetch(api, payload);
   } catch (e) {
@@ -50,6 +40,7 @@ const fields = [
       'Candidate Awareness',
       'Voter Issues/Candidate Issue Awareness',
     ],
+    disabled: true,
   },
   {
     key: 'minHousesPerRoute',
@@ -57,6 +48,7 @@ const fields = [
     type: 'number',
     placeholder: '10 houses',
     cols: 6,
+    disabled: true,
   },
   {
     key: 'maxHousesPerRoute',
@@ -64,6 +56,7 @@ const fields = [
     type: 'number',
     placeholder: '30 houses',
     cols: 6,
+    disabled: true,
   },
 
   {
@@ -71,6 +64,7 @@ const fields = [
     label: 'Start Date',
     type: 'date',
     cols: 6,
+    disabled: true,
   },
   {
     key: 'endDate',
@@ -80,19 +74,19 @@ const fields = [
   },
 ];
 
-export default function AddCampaign(props) {
-  const { buttonLabel, campaignDates } = props;
+export default function ManageCampaign(props) {
+  const { campaign, campaignDates } = props;
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
 
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
   const [state, setState] = useState({
-    campaignName: '',
-    campaignType: '',
-    minHousesPerRoute: '',
-    maxHousesPerRoute: '',
-    startDate: '',
-    endDate: '',
+    campaignName: campaign.name || '',
+    campaignType: campaign.type || '',
+    minHousesPerRoute: campaign.minHousesPerRoute || '',
+    maxHousesPerRoute: campaign.maxHousesPerRoute || '',
+    startDate: campaign.startDate || '',
+    endDate: campaign.endDate || '',
   });
 
   const canSave = () => {
@@ -113,27 +107,9 @@ export default function AddCampaign(props) {
     } catch (e) {
       return false;
     }
-    if (state.minHousesPerRoute < 1 || state.maxHousesPerRoute > 100) {
-      setError('Minimum houses per route must be between 1 and 100');
-      return false;
-    }
-    if (state.minHousesPerRoute > state.maxHousesPerRoute) {
-      setError(
-        'Minimum houses per route must be less than maximum houses per route',
-      );
-      return false;
-    }
     for (let i = 0; i < campaignDates.length; i++) {
-      // campaign start date can't be between existing campaign start and end date
       if (
-        new Date(state.startDate) >= new Date(campaignDates[i].start) &&
-        new Date(state.startDate) <= new Date(campaignDates[i].end)
-      ) {
-        setError('Only one campaign can be active at a time');
-        return false;
-      }
-      // campaign end date can't be between existing campaign start and end date
-      if (
+        campaignDates[i].slug !== campaign.slug &&
         new Date(state.endDate) >= new Date(campaignDates[i].start) &&
         new Date(state.endDate) <= new Date(campaignDates[i].end)
       ) {
@@ -145,11 +121,11 @@ export default function AddCampaign(props) {
   };
 
   const onChangeField = (key, value) => {
+    setError('');
     setState({
       ...state,
       [key]: value,
     });
-    setError('');
   };
 
   const handleSave = async () => {
@@ -157,38 +133,31 @@ export default function AddCampaign(props) {
       return;
     }
     setSaving(true);
-    const {
+    const { campaignName, endDate } = state;
+    const { slug } = await updateDkCampaign(
       campaignName,
-      campaignType,
-      minHousesPerRoute,
-      maxHousesPerRoute,
-      startDate,
       endDate,
-    } = state;
-    const { slug } = await createDkCampaign(
-      campaignName,
-      campaignType,
-      minHousesPerRoute,
-      maxHousesPerRoute,
-      startDate,
-      endDate,
+      campaign.slug,
     );
 
     if (slug) {
-      // router.push(`/dashboard/door-knocking/campaign/${slug}`);
       window.location.reload();
     }
     setSaving(false);
   };
+
+  console.log('campaign', campaign);
   return (
     <>
-      <PrimaryButton
+      <div
+        className="p-4  whitespace-nowrap"
         onClick={() => {
           setShowModal(true);
         }}
       >
-        {buttonLabel}
-      </PrimaryButton>
+        Manage Campaign
+      </div>
+
       <Modal
         open={showModal}
         closeCallback={() => {
@@ -196,10 +165,9 @@ export default function AddCampaign(props) {
         }}
       >
         <div className="w-[90vw] max-w-xl">
-          <H2>Create Door Knocking Campaign</H2>
-          <Body1 className="mt-6">
-            We use AI to create routes for your district. <br />
-            Update the information below to curate how your routes are formed.
+          <H2>Manage {campaign.name} Campaign</H2>
+          <Body1 className="mt-1 mb-3">
+            Update your door knocking campaign information.
           </Body1>
           <div className="grid grid-cols-12 gap-4 mt-6">
             {fields.map((field) => (
