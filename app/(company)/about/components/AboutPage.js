@@ -7,16 +7,14 @@ import WhoWhySection from './WhoWhySection';
 import Callout from '@shared/utils/Callout';
 
 export default function RunForOfficePage() {
-  return (
-    <div>
-      <Callout />
-      <Hero />
-      <MaxWidth>
-        <ForSection />
-        <WhoWhySection />
-        <BlogSection />
-      </MaxWidth>
-      <SubscribeSection pageName="About Page" />
-    </div>
-  );
+  return <>
+    <Callout />
+    <Hero />
+    <MaxWidth>
+      <ForSection />
+      <WhoWhySection />
+      <BlogSection />
+    </MaxWidth>
+    <SubscribeSection pageName="About Page" />
+  </>
 }
