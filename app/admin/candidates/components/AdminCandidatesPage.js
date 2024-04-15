@@ -164,7 +164,8 @@ export default function AdminCandidatesPage(props) {
       digital: reportedVoterGoals?.digital || 0,
       aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
       waitingForP2v,
-      pledged: campaign?.pledged && campaign.pledged === true ? 'Yes' : 'No',
+      pledged:
+        data.details?.pledged && data.details.pledged === true ? 'Yes' : 'No',
       knowRun: runningForOffice,
       isPro: isPro ? 'Yes' : 'No',
       isVerified: IS_VERIFIED_OPTIONS_REVERSED[isVerified],
@@ -442,7 +443,7 @@ export default function AdminCandidatesPage(props) {
       },
     },
     {
-      Header: 'Pledged WTF',
+      Header: 'Pledged',
       accessor: 'pledged',
     },
   ];
