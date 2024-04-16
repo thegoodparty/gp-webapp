@@ -1,4 +1,4 @@
-import Tag from '@shared/utils/Tag';
+import Chip from '@shared/utils/Chip';
 import Link from 'next/link';
 import { GiJumpAcross } from 'react-icons/gi';
 import { MdOutlineCheck } from 'react-icons/md';

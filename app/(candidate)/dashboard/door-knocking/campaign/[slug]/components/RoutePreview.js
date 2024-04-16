@@ -1,6 +1,6 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H3 from '@shared/typography/H3';
-import Tag from '@shared/utils/Tag';
+import Chip from '@shared/utils/Chip';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -66,28 +66,28 @@ function RoutePreview(props) {
       </div>
       <H3 className="mb-2">{summary}</H3>
       {status === 'not-claimed' && (
-        <Tag
+        <Chip
           className="bg-[#E5DCFF] text-primary"
           icon={<MdOutlineDoNotDisturbAlt className=" opacity-60" />}
           label="UNCLAIMED ROUTE"
         />
       )}
       {status === 'claimed' && (
-        <Tag
+        <Chip
           className="bg-green-50 text-amber-900"
           icon={<FaHandSparkles />}
           label="CLAIMED ROUTE"
         />
       )}
       {status === 'in-progress' && (
-        <Tag
+        <Chip
           className="bg-cyan-100 text-cyan-800"
           icon={<TbProgressCheck />}
           label="ROUTE IN PROGRESS"
         />
       )}
       {status === 'completed' && (
-        <Tag
+        <Chip
           className="bg-teal-50 text-green-700"
           icon={<MdOutlineCheck />}
           label="ROUTE COMPLETED"
