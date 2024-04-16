@@ -123,23 +123,27 @@ export default function AddCampaign(props) {
       );
       return false;
     }
-    if (campaignDates && campaignDates.length > 0) {
+    if (campaignDates) {
       for (let i = 0; i < campaignDates.length; i++) {
         // campaign start date can't be between existing campaign start and end date
-        if (
-          new Date(state.startDate) >= new Date(campaignDates[i].start) &&
-          new Date(state.startDate) <= new Date(campaignDates[i].end)
-        ) {
-          setError('Only one campaign can be active at a time');
-          return false;
-        }
-        // campaign end date can't be between existing campaign start and end date
-        if (
-          new Date(state.endDate) >= new Date(campaignDates[i].start) &&
-          new Date(state.endDate) <= new Date(campaignDates[i].end)
-        ) {
-          setError('Only one campaign can be active at a time');
-          return false;
+        try {
+          if (
+            new Date(state.startDate) >= new Date(campaignDates[i].start) &&
+            new Date(state.startDate) <= new Date(campaignDates[i].end)
+          ) {
+            setError('Only one campaign can be active at a time');
+            return false;
+          }
+          // campaign end date can't be between existing campaign start and end date
+          if (
+            new Date(state.endDate) >= new Date(campaignDates[i].start) &&
+            new Date(state.endDate) <= new Date(campaignDates[i].end)
+          ) {
+            setError('Only one campaign can be active at a time');
+            return false;
+          }
+        } catch (e) {
+          continue;
         }
       }
     }
