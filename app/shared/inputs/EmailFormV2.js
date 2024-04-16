@@ -103,7 +103,7 @@ const EmailFormV2 = ({
               type="submit"
             >
               <SecondaryButton
-                className={{ 'bg-secondary': true, 'border-none': true }}
+                className="bg-secondary border-none"
                 onClick={submitForm}>{label}</SecondaryButton>
             </div>
 

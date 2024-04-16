@@ -1,16 +1,5 @@
 import Image from 'next/image';
-import { FiInfo } from 'react-icons/fi';
-import { AiTwotoneTool } from 'react-icons/ai';
-import { FaUserAlt } from 'react-icons/fa';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import EmailFormV2 from '@shared/inputs/EmailFormV2';
-
-
-const points = [
-  { text: 'On-demand, expert advice', icon: <FiInfo /> },
-  { text: 'Free, automated tools', icon: <AiTwotoneTool /> },
-  { text: 'Campaign management', icon: <FaUserAlt /> },
-];
 
 const Hero = () => <section className="relative
   p-4

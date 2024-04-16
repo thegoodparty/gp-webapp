@@ -5,16 +5,15 @@ import ForSection from './ForSection';
 import Hero from './Hero';
 import WhoWhySection from './WhoWhySection';
 import Callout from '@shared/utils/Callout';
+import PeopleShouldSection from './PeopleShouldSection';
+import NotPoliticalSection from './NotPoliticalSection';
 
 export default function RunForOfficePage() {
   return <>
     <Callout />
     <Hero />
-    <MaxWidth>
-      <ForSection />
-      <WhoWhySection />
-      <BlogSection />
-    </MaxWidth>
+    <PeopleShouldSection />
+    <NotPoliticalSection />
     <SubscribeSection pageName="About Page" />
   </>
 }
