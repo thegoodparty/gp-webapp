@@ -7,9 +7,13 @@ export default {
   tags: ['autodocs'],
   argTypes: {
     label: { control: 'text' },
-    className: { control: 'text' },
+    className: {
+      control: 'text',
+      description: 'This component needs a class for the bg and text color.',
+    },
     icon: {
       options: ['None', 'Beer', 'Coffee'],
+      description: 'Optional. Expecting a component.',
       mapping: {
         None: null,
         Beer: <FaBeer />,
@@ -33,7 +37,6 @@ export const Default = Template.bind({});
 Default.args = {
   label: 'Default Chip',
   className: 'bg-green-100 text-green-800',
-  description: 'Needs a class for bg and text color.',
 };
 
 export const WithIcon = Template.bind({});
