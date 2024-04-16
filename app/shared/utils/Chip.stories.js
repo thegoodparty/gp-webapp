@@ -1,7 +1,7 @@
-import TagComponent from './Tag';
+import TagComponent from './Chip';
 
 export default {
-  title: 'Utils/Tag',
+  title: 'Utils/Chip',
   component: TagComponent,
   tags: ['autodocs'],
 };

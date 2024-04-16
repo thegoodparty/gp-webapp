@@ -16,7 +16,7 @@ import { MdOutlineDirectionsWalk } from 'react-icons/md';
 import { Primary } from '@storybook/blocks';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Actions from './Actions';
-import Tag from '@shared/utils/Tag';
+import Chip from '@shared/utils/Chip';
 
 async function deleteDkCampaign(slug) {
   try {
@@ -124,7 +124,7 @@ export default function DkCampaignPreview(props) {
             {dateUsHelper(campaign.startDate)} -{' '}
             {dateUsHelper(campaign.endDate)}
           </Subtitle2>
-          <Tag
+          <Chip
             label={campaignStatus}
             className={`uppercase ${
               campaignStatus === 'active'
@@ -144,7 +144,7 @@ export default function DkCampaignPreview(props) {
                 : ''
             }`}
           />
-          <Tag
+          <Chip
             icon={<MdOutlineDirectionsWalk size={12} />}
             label={`${routesCount || 0} ROUTES`}
             className="bg-indigo-100 text-indigo-600"

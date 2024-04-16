@@ -8,12 +8,13 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 
-async function updateDkCampaign(name, endDate, slug) {
+async function updateDkCampaign(name, startDate, endDate, slug) {
   try {
     const api = gpApi.doorKnocking.update;
 
     const payload = {
       name,
+      startDate,
       endDate,
       slug,
     };
@@ -88,6 +89,9 @@ export default function ManageCampaign(props) {
     startDate: campaign.startDate || '',
     endDate: campaign.endDate || '',
   });
+  if (new Date(campaign.startDate) > new Date()) {
+    fields[4].disabled = false;
+  }
 
   const canSave = () => {
     if (saving) {
@@ -133,9 +137,10 @@ export default function ManageCampaign(props) {
       return;
     }
     setSaving(true);
-    const { campaignName, endDate } = state;
+    const { campaignName, endDate, startDate } = state;
     const { slug } = await updateDkCampaign(
       campaignName,
+      startDate,
       endDate,
       campaign.slug,
     );
