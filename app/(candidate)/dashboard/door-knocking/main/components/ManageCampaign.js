@@ -44,14 +44,6 @@ const fields = [
     disabled: true,
   },
   {
-    key: 'minHousesPerRoute',
-    label: 'Minimum Houses Per Route',
-    type: 'number',
-    placeholder: '10 houses',
-    cols: 6,
-    disabled: true,
-  },
-  {
     key: 'maxHousesPerRoute',
     label: 'Maximum Houses Per Route (max - 100)',
     type: 'number',
@@ -84,7 +76,6 @@ export default function ManageCampaign(props) {
   const [state, setState] = useState({
     campaignName: campaign.name || '',
     campaignType: campaign.type || '',
-    minHousesPerRoute: campaign.minHousesPerRoute || '',
     maxHousesPerRoute: campaign.maxHousesPerRoute || '',
     startDate: campaign.startDate || '',
     endDate: campaign.endDate || '',
