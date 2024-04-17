@@ -661,6 +661,11 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
+    archive: {
+      url: `${base}campaign/door-knocking/archive`,
+      method: 'PUT',
+      withAuth: true,
+    },
     list: {
       url: `${base}campaign/door-knockings`,
       method: 'GET',

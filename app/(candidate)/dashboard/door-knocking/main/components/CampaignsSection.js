@@ -23,16 +23,18 @@ export default function CampaignsSection(props) {
     setDkCampaigns(dkCampaigns);
   };
   return (
-    <section className="mt-6 grid grid-cols-12 gap-4">
-      {dkCampaigns &&
-        dkCampaigns.map((campaign) => (
-          <DkCampaignPreview
-            campaign={campaign}
-            key={campaign.slug}
-            updateCampaignsCallback={updateCampaignsCallback}
-            campaignDates={props.campaignDates}
-          />
-        ))}
-    </section>
+    <div>
+      <section className="mt-6 grid grid-cols-12 gap-4">
+        {dkCampaigns &&
+          dkCampaigns.map((campaign) => (
+            <DkCampaignPreview
+              campaign={campaign}
+              key={campaign.slug}
+              updateCampaignsCallback={updateCampaignsCallback}
+              campaignDates={props.campaignDates}
+            />
+          ))}
+      </section>
+    </div>
   );
 }

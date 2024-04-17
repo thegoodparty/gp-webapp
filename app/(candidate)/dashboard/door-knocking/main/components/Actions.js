@@ -20,11 +20,29 @@ async function deleteDkCampaign(slug) {
   }
 }
 
+async function archiveDkCampaign(slug) {
+  try {
+    const api = gpApi.doorKnocking.archive;
+    const payload = {
+      slug,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 export default function Actions({ campaign, campaignDates }) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
+    window.location.reload();
+  };
+
+  const handleArchive = async () => {
+    await archiveDkCampaign(campaign.slug);
     window.location.reload();
   };
 
@@ -46,9 +64,23 @@ export default function Actions({ campaign, campaignDates }) {
           />
 
           <div className="absolute bg-white py-3 rounded-xl shadow-lg z-10 right-6 top-1">
-            <ManageCampaign campaign={campaign} campaignDates={campaignDates} />
+            {campaign.status !== 'archived' && (
+              <>
+                <ManageCampaign
+                  campaign={campaign}
+                  campaignDates={campaignDates}
+                />
+
+                <div
+                  className="p-4 whitespace-nowrap  border-b border-slate-300"
+                  onClick={handleArchive}
+                >
+                  Archive Campaign
+                </div>
+              </>
+            )}
             <div
-              className="p-4 whitespace-nowrap "
+              className="p-4 whitespace-nowrap"
               onClick={() => {
                 setShowDeleteWarning(true);
               }}

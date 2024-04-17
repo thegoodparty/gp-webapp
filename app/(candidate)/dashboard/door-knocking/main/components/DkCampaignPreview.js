@@ -1,11 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { FaTrash } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
 import { boundsToImage } from '../../campaign/[slug]/components/RoutePreview';
 import Image from 'next/image';
@@ -13,23 +9,9 @@ import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { MdOutlineDirectionsWalk } from 'react-icons/md';
-import { Primary } from '@storybook/blocks';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Actions from './Actions';
 import Chip from '@shared/utils/Chip';
-
-async function deleteDkCampaign(slug) {
-  try {
-    const api = gpApi.doorKnocking.delete;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
 
 // if a campaign status is complete or archived, reutrn that status.
 // else use the start and end date to determine if the campaign is active, upcoming  or passed
@@ -51,12 +33,8 @@ function calcCampaignState(campaign) {
 
 export default function DkCampaignPreview(props) {
   const { campaign, updateCampaignsCallback, campaignDates } = props;
-  const [showDeleteWarning, setShowDeleteWarning] = useState(false);
 
-  const handleDelete = async () => {
-    await deleteDkCampaign(campaign.slug);
-    await props.updateCampaignsCallback();
-  };
+  console.log('campaign', campaign);
 
   const { hasRoutes, bounds, type, routesCount, status } = campaign || {};
 
@@ -162,15 +140,6 @@ export default function DkCampaignPreview(props) {
           ) : null}
         </div>
       </Link>
-      <AlertDialog
-        open={showDeleteWarning}
-        handleClose={() => {
-          setShowDeleteWarning(false);
-        }}
-        title={'Delete Campaign'}
-        description={`Are you sure you want to duplicate this campaign?`}
-        handleProceed={handleDelete}
-      />
     </>
   );
 }

@@ -11,11 +11,13 @@ import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
 const calcCampaignsDates = (dkCampaigns) => {
   const dates = [];
   dkCampaigns.forEach((campaign) => {
-    dates.push({
-      slug: campaign.slug,
-      start: campaign.startDate,
-      end: campaign.endDate,
-    });
+    if (campaign.status !== 'archived' && campaign.status !== 'completed') {
+      dates.push({
+        slug: campaign.slug,
+        start: campaign.startDate,
+        end: campaign.endDate,
+      });
+    }
   });
   return dates;
 };
