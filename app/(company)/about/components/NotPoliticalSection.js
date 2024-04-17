@@ -10,6 +10,11 @@ const PartyLogo = ({ logoFileName, name }) => <Image
   src={logoFileName}
 />
 
+const LearnAboutOurTeamButton = props => <Link href="/team" {...props}>
+  <PrimaryButton className="w-full md:w-auto">Learn about our
+    team</PrimaryButton>
+</Link>
+
 const PARTIES = [
   { name: 'Forward Party', logoFileName: 'fwd-logo.png' },
   { name: 'Alliance Party', logoFileName: 'alliance-logo.png' },
@@ -69,10 +74,5 @@ const NotPoliticalSection = () => <section className="relative
     </div>
   </div>
 </section>
-
-const LearnAboutOurTeamButton = props => <Link href="/team" {...props}>
-  <PrimaryButton className="w-full md:w-auto">Learn about our
-    team</PrimaryButton>
-</Link>
 
 export default NotPoliticalSection;

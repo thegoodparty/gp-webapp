@@ -7,6 +7,7 @@ import WhoWhySection from './WhoWhySection';
 import Callout from '@shared/utils/Callout';
 import PeopleShouldSection from './PeopleShouldSection';
 import NotPoliticalSection from './NotPoliticalSection';
+import HopeSection from './HopeSection';
 
 export default function RunForOfficePage() {
   return <>
@@ -14,6 +15,7 @@ export default function RunForOfficePage() {
     <Hero />
     <PeopleShouldSection />
     <NotPoliticalSection />
+    <HopeSection />
     <SubscribeSection pageName="About Page" />
   </>
 }
