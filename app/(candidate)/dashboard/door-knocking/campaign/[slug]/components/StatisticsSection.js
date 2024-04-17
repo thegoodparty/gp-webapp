@@ -3,6 +3,7 @@ import H2 from '@shared/typography/H2';
 import CircularProgressChart from './CircularProgressChart';
 import StatisticsCard from '../../../shared/StatisticsCard';
 import { kFormatter } from 'helpers/numberHelper';
+import CampaignStatusChip from '../../../main/components/CampaignStatusChip';
 
 export default function StatisticsSection(props) {
   const { dkCampaign, routes, totals } = props;
@@ -65,11 +66,12 @@ export default function StatisticsSection(props) {
       <div className="flex justify-between items-start">
         <div>
           <H2>{name} Statistics</H2>
-          <Body2 className="mt-2">
+          <Body2 className="my-2">
             Use this data to help track your campaigns progress.
             <br />
             Campaign Type: <span className="font-semibold">{type}</span>
           </Body2>
+          <CampaignStatusChip campaign={dkCampaign} />
         </div>
       </div>
       <div className="grid grid-cols-12 gap-3 mt-12">

@@ -12,24 +12,7 @@ import { MdOutlineDirectionsWalk } from 'react-icons/md';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Actions from './Actions';
 import Chip from '@shared/utils/Chip';
-
-// if a campaign status is complete or archived, reutrn that status.
-// else use the start and end date to determine if the campaign is active, upcoming  or passed
-function calcCampaignState(campaign) {
-  if (campaign.status === 'complete' || campaign.status === 'archived') {
-    return campaign.status;
-  }
-  const startDate = new Date(campaign.startDate);
-  const endDate = new Date(campaign.endDate);
-  const currentDate = new Date();
-  if (currentDate < startDate) {
-    return 'upcoming';
-  } else if (currentDate > endDate) {
-    return 'passed';
-  } else {
-    return 'active';
-  }
-}
+import CampaignStatusChip from './CampaignStatusChip';
 
 export default function DkCampaignPreview(props) {
   const { campaign, updateCampaignsCallback, campaignDates } = props;
@@ -61,7 +44,6 @@ export default function DkCampaignPreview(props) {
   if (hasRoutes && bounds) {
     mapImageUrl = boundsToImage(bounds);
   }
-  const campaignStatus = calcCampaignState(campaign);
   return (
     <>
       <Link
@@ -77,7 +59,9 @@ export default function DkCampaignPreview(props) {
                 alt="map"
                 width={380}
                 height={250}
-                className="w-full h-auto"
+                className={`w-full h-auto ${
+                  campaign.status === 'archived' ? 'opacity-30' : ''
+                }`}
               />
               <div className="absolute w-full left-0 bottom-0 h-7 bg-white"></div>
             </div>
@@ -102,26 +86,7 @@ export default function DkCampaignPreview(props) {
             {dateUsHelper(campaign.startDate)} -{' '}
             {dateUsHelper(campaign.endDate)}
           </Subtitle2>
-          <Chip
-            label={campaignStatus}
-            className={`uppercase ${
-              campaignStatus === 'active'
-                ? 'bg-green-100 text-green-800  mr-2'
-                : ''
-            } ${
-              campaignStatus === 'passed' || campaignStatus === 'upcoming'
-                ? 'bg-gray-100 text-gray-800  mr-2'
-                : ''
-            } ${
-              campaignStatus === 'archived' ? 'bg-primary text-white  mr-2' : ''
-            }  ${
-              campaignStatus === 'archived' ? 'bg-primary text-white  mr-2' : ''
-            } ${
-              campaignStatus === 'complete'
-                ? 'bg-purple-100 text-purple-800'
-                : ''
-            }`}
-          />
+          <CampaignStatusChip campaign={campaign} />
           <Chip
             icon={<MdOutlineDirectionsWalk size={12} />}
             label={`${routesCount || 0} ROUTES`}
