@@ -68,7 +68,7 @@ const fields = [
 ];
 
 export default function ManageCampaign(props) {
-  const { campaign, campaignDates } = props;
+  const { campaign, campaignDates, updateCampaignsCallback } = props;
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
 
@@ -137,12 +137,12 @@ export default function ManageCampaign(props) {
     );
 
     if (slug) {
-      window.location.reload();
+      updateCampaignsCallback();
+      setShowModal(false);
     }
     setSaving(false);
   };
 
-  console.log('campaign', campaign);
   return (
     <>
       <div

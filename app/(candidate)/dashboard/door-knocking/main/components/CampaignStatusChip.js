@@ -3,7 +3,7 @@ import Chip from '@shared/utils/Chip';
 // if a campaign status is complete or archived, return that status.
 // else use the start and end date to determine if the campaign is active, upcoming  or passed
 
-function calcCampaignStatus(campaign) {
+export function calcCampaignStatus(campaign) {
   if (campaign.status === 'complete' || campaign.status === 'archived') {
     return campaign.status;
   }

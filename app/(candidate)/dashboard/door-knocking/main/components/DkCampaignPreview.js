@@ -78,7 +78,11 @@ export default function DkCampaignPreview(props) {
                 e.preventDefault();
               }}
             >
-              <Actions campaign={campaign} campaignDates={campaignDates} />
+              <Actions
+                campaign={campaign}
+                campaignDates={campaignDates}
+                updateCampaignsCallback={updateCampaignsCallback}
+              />
             </div>
           </div>
           <Subtitle1 className="mb-2">{type}</Subtitle1>

@@ -33,17 +33,21 @@ async function archiveDkCampaign(slug) {
   }
 }
 
-export default function Actions({ campaign, campaignDates }) {
+export default function Actions({
+  campaign,
+  campaignDates,
+  updateCampaignsCallback,
+}) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
-    window.location.reload();
+    updateCampaignsCallback();
   };
 
   const handleArchive = async () => {
     await archiveDkCampaign(campaign.slug);
-    window.location.reload();
+    updateCampaignsCallback();
   };
 
   return (
@@ -69,6 +73,7 @@ export default function Actions({ campaign, campaignDates }) {
                 <ManageCampaign
                   campaign={campaign}
                   campaignDates={campaignDates}
+                  updateCampaignsCallback={updateCampaignsCallback}
                 />
 
                 <div
