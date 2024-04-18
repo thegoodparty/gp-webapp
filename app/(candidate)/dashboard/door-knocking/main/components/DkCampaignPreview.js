@@ -17,8 +17,6 @@ import CampaignStatusChip from './CampaignStatusChip';
 export default function DkCampaignPreview(props) {
   const { campaign, updateCampaignsCallback, campaignDates } = props;
 
-  console.log('campaign', campaign);
-
   const { hasRoutes, bounds, type, routesCount, status } = campaign || {};
 
   useEffect(() => {
@@ -26,7 +24,6 @@ export default function DkCampaignPreview(props) {
 
     if (campaign && !campaign.hasRoutes) {
       timeoutId = setTimeout(() => {
-        console.log('callback');
         updateCampaignsCallback();
       }, 2000);
     }

@@ -47,8 +47,6 @@ export default function CampaignsSection(props) {
     setDkCampaigns(filterByStatus(status));
   };
 
-  console.log('dkCampaigns', dkCampaigns);
-
   return (
     <div>
       <div className="flex justify-between items-center">
