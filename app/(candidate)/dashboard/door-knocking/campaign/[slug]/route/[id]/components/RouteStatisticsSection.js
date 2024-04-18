@@ -7,6 +7,7 @@ import hourglassImg from 'public/images/door-knocking/hourglass.png';
 import Image from 'next/image';
 import H3 from '@shared/typography/H3';
 import Body1 from '@shared/typography/Body1';
+import ClaimButton from 'app/(volunteer)/volunteer-dashboard/door-knocking/[dkslug]/route/[id]/components/ClaimButton';
 
 function formatNumber(n) {
   // Check if the number is not equal to its integer part
@@ -51,6 +52,9 @@ export default function RouteStatisticsSection({ route, dkCampaign }) {
       <div className=" col-span-12  md:col-span-4  xl:col-span-3 h-full">
         <Paper style={{ padding: '16px', height: '100%' }}>
           <RoutePreview route={route} dkCampaign={dkCampaign} noCard />
+          <div>
+            <ClaimButton route={route} />
+          </div>
         </Paper>
       </div>
       <div className=" col-span-12 md:col-span-8 xl:col-span-9">
