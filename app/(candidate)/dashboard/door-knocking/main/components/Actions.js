@@ -44,11 +44,13 @@ export default function Actions({
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
     updateCampaignsCallback();
+    setShowDeleteWarning();
   };
 
   const handleArchive = async () => {
     await archiveDkCampaign(campaign.slug);
     updateCampaignsCallback();
+    setShowArchiveWarning();
   };
 
   return (
