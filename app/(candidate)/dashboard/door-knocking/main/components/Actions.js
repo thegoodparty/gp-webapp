@@ -40,6 +40,7 @@ export default function Actions({
 }) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+  const [showArchiveWarning, setShowArchiveWarning] = useState(false);
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
     updateCampaignsCallback();
@@ -78,7 +79,9 @@ export default function Actions({
 
                 <div
                   className="p-4 whitespace-nowrap  border-b border-slate-300"
-                  onClick={handleArchive}
+                  onClick={() => {
+                    setShowArchiveWarning(true);
+                  }}
                 >
                   Archive Campaign
                 </div>
@@ -103,6 +106,15 @@ export default function Actions({
         title={`Are you sure you want to delete ${campaign.name}`}
         description="Deleting your campaign will permanently erase all associated data. Once deleted, campaigns cannot be recovered or retrieved."
         handleProceed={handleDelete}
+      />
+      <AlertDialog
+        open={showArchiveWarning}
+        handleClose={() => {
+          setShowArchiveWarning(false);
+        }}
+        title={`Are you sure you want to archive ${campaign.name}`}
+        description="Archiving this campaign will store all associated data for future reference, while discontinuing further usage. Once archived, campaigns cannot be reactivated."
+        handleProceed={handleArchive}
       />
     </div>
   );
