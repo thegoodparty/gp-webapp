@@ -36,17 +36,9 @@ export const BuildWithUsGridItems = () => <>
     alt="Build With Us Person 1" />
   {
     BUILD_WITH_US_CARDS.map(
-      ({
-        header,
-        blurb,
-        href,
-        linkText,
-      }, key) => <BuildWithUsCard
-        key={key}
-        header={header}
-        blurb={blurb}
-        href={href}
-        linkText={linkText} />,
+      (card, key) => <BuildWithUsCard
+        {...card}
+        key={key} />,
     )
   }
   <BuildWithUsImage
