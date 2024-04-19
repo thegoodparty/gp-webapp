@@ -1,7 +1,5 @@
 'use client';
 
-import H1 from '@shared/typography/H1';
-import H3 from '@shared/typography/H3';
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
 import StatisticsSection from './StatisticsSection';
 import RoutesSection from './RoutesSection';

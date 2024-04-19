@@ -3,19 +3,22 @@ import ClaimButton from './ClaimButton';
 import ResidentsSection from './ResidentsSection';
 import VolunteerDashboardLayout from 'app/(volunteer)/volunteer-dashboard/shared/VolunteerDashboardLayout';
 import TitleSection from './TitleSection';
+import MobileOnlyWrapper from 'app/(volunteer)/volunteer-dashboard/door-knocking/components/MobileOnlyWrapper';
 
 export default function VolunteerRoutePage(props) {
   const { route } = props;
   return (
     <VolunteerDashboardLayout {...props}>
-      <div className="p-4 bg-white">
-        <TitleSection {...props} />
-        <RoutePreview route={route} noCard />
-        <ClaimButton {...props} />
-      </div>
-      <div className="p-4">
-        <ResidentsSection {...props} />
-      </div>
+      <MobileOnlyWrapper>
+        <div className="p-4 bg-white">
+          <TitleSection {...props} />
+          <RoutePreview route={route} noCard />
+          <ClaimButton {...props} />
+        </div>
+        <div className="p-4">
+          <ResidentsSection {...props} />
+        </div>
+      </MobileOnlyWrapper>
     </VolunteerDashboardLayout>
   );
 }

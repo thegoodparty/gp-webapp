@@ -48,7 +48,6 @@ export default function OfficeSection(props) {
   const [state, setState] = useState(initialState);
   const [showModal, setShowModal] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
-  console.log('campaign', campaign);
 
   useEffect(() => {
     if (campaign?.details && campaign?.goals) {

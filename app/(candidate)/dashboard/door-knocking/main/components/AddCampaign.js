@@ -11,7 +11,6 @@ import { useState } from 'react';
 async function createDkCampaign(
   name,
   type,
-  minHousesPerRoute,
   maxHousesPerRoute,
   startDate,
   endDate,
@@ -22,7 +21,6 @@ async function createDkCampaign(
     const payload = {
       name,
       type,
-      minHousesPerRoute,
       maxHousesPerRoute,
       startDate,
       endDate,
@@ -52,15 +50,8 @@ const fields = [
     ],
   },
   {
-    key: 'minHousesPerRoute',
-    label: 'Minimum Houses Per Route',
-    type: 'number',
-    placeholder: '10 houses',
-    cols: 6,
-  },
-  {
     key: 'maxHousesPerRoute',
-    label: 'Maximum Houses Per Route (max - 100)',
+    label: 'Maximum Houses Per Route (10 to 100)',
     type: 'number',
     placeholder: '30 houses',
     cols: 6,
@@ -89,7 +80,6 @@ export default function AddCampaign(props) {
   const [state, setState] = useState({
     campaignName: '',
     campaignType: '',
-    minHousesPerRoute: '',
     maxHousesPerRoute: '',
     startDate: '',
     endDate: '',
@@ -113,32 +103,33 @@ export default function AddCampaign(props) {
     } catch (e) {
       return false;
     }
-    if (state.minHousesPerRoute < 1 || state.maxHousesPerRoute > 100) {
-      setError('Minimum houses per route must be between 1 and 100');
+    if (state.maxHousesPerRoute < 10 || state.maxHousesPerRoute > 100) {
+      setError('Miximum houses per route must be between 10 and 100');
       return false;
     }
-    if (state.minHousesPerRoute > state.maxHousesPerRoute) {
-      setError(
-        'Minimum houses per route must be less than maximum houses per route',
-      );
-      return false;
-    }
-    for (let i = 0; i < campaignDates.length; i++) {
-      // campaign start date can't be between existing campaign start and end date
-      if (
-        new Date(state.startDate) >= new Date(campaignDates[i].start) &&
-        new Date(state.startDate) <= new Date(campaignDates[i].end)
-      ) {
-        setError('Only one campaign can be active at a time');
-        return false;
-      }
-      // campaign end date can't be between existing campaign start and end date
-      if (
-        new Date(state.endDate) >= new Date(campaignDates[i].start) &&
-        new Date(state.endDate) <= new Date(campaignDates[i].end)
-      ) {
-        setError('Only one campaign can be active at a time');
-        return false;
+
+    if (campaignDates) {
+      for (let i = 0; i < campaignDates.length; i++) {
+        // campaign start date can't be between existing campaign start and end date
+        try {
+          if (
+            new Date(state.startDate) >= new Date(campaignDates[i].start) &&
+            new Date(state.startDate) <= new Date(campaignDates[i].end)
+          ) {
+            setError('Only one campaign can be active at a time');
+            return false;
+          }
+          // campaign end date can't be between existing campaign start and end date
+          if (
+            new Date(state.endDate) >= new Date(campaignDates[i].start) &&
+            new Date(state.endDate) <= new Date(campaignDates[i].end)
+          ) {
+            setError('Only one campaign can be active at a time');
+            return false;
+          }
+        } catch (e) {
+          continue;
+        }
       }
     }
     return true;
@@ -160,7 +151,6 @@ export default function AddCampaign(props) {
     const {
       campaignName,
       campaignType,
-      minHousesPerRoute,
       maxHousesPerRoute,
       startDate,
       endDate,
@@ -168,7 +158,6 @@ export default function AddCampaign(props) {
     const { slug } = await createDkCampaign(
       campaignName,
       campaignType,
-      minHousesPerRoute,
       maxHousesPerRoute,
       startDate,
       endDate,

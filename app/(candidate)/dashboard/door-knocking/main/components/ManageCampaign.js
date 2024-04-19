@@ -8,12 +8,13 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 
-async function updateDkCampaign(name, endDate, slug) {
+async function updateDkCampaign(name, startDate, endDate, slug) {
   try {
     const api = gpApi.doorKnocking.update;
 
     const payload = {
       name,
+      startDate,
       endDate,
       slug,
     };
@@ -43,14 +44,6 @@ const fields = [
     disabled: true,
   },
   {
-    key: 'minHousesPerRoute',
-    label: 'Minimum Houses Per Route',
-    type: 'number',
-    placeholder: '10 houses',
-    cols: 6,
-    disabled: true,
-  },
-  {
     key: 'maxHousesPerRoute',
     label: 'Maximum Houses Per Route (max - 100)',
     type: 'number',
@@ -75,7 +68,7 @@ const fields = [
 ];
 
 export default function ManageCampaign(props) {
-  const { campaign, campaignDates } = props;
+  const { campaign, campaignDates, updateCampaignsCallback } = props;
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
 
@@ -83,11 +76,13 @@ export default function ManageCampaign(props) {
   const [state, setState] = useState({
     campaignName: campaign.name || '',
     campaignType: campaign.type || '',
-    minHousesPerRoute: campaign.minHousesPerRoute || '',
     maxHousesPerRoute: campaign.maxHousesPerRoute || '',
     startDate: campaign.startDate || '',
     endDate: campaign.endDate || '',
   });
+  if (new Date(campaign.startDate) > new Date()) {
+    fields[4].disabled = false;
+  }
 
   const canSave = () => {
     if (saving) {
@@ -133,20 +128,21 @@ export default function ManageCampaign(props) {
       return;
     }
     setSaving(true);
-    const { campaignName, endDate } = state;
+    const { campaignName, endDate, startDate } = state;
     const { slug } = await updateDkCampaign(
       campaignName,
+      startDate,
       endDate,
       campaign.slug,
     );
 
     if (slug) {
-      window.location.reload();
+      updateCampaignsCallback();
+      setShowModal(false);
     }
     setSaving(false);
   };
 
-  console.log('campaign', campaign);
   return (
     <>
       <div

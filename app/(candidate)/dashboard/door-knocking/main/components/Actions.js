@@ -20,12 +20,37 @@ async function deleteDkCampaign(slug) {
   }
 }
 
-export default function Actions({ campaign, campaignDates }) {
+async function archiveDkCampaign(slug) {
+  try {
+    const api = gpApi.doorKnocking.archive;
+    const payload = {
+      slug,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
+export default function Actions({
+  campaign,
+  campaignDates,
+  updateCampaignsCallback,
+}) {
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+  const [showArchiveWarning, setShowArchiveWarning] = useState(false);
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
-    window.location.reload();
+    updateCampaignsCallback();
+    setShowDeleteWarning();
+  };
+
+  const handleArchive = async () => {
+    await archiveDkCampaign(campaign.slug);
+    updateCampaignsCallback();
+    setShowArchiveWarning();
   };
 
   return (
@@ -46,9 +71,26 @@ export default function Actions({ campaign, campaignDates }) {
           />
 
           <div className="absolute bg-white py-3 rounded-xl shadow-lg z-10 right-6 top-1">
-            <ManageCampaign campaign={campaign} campaignDates={campaignDates} />
+            {campaign.status !== 'archived' && (
+              <>
+                <ManageCampaign
+                  campaign={campaign}
+                  campaignDates={campaignDates}
+                  updateCampaignsCallback={updateCampaignsCallback}
+                />
+
+                <div
+                  className="p-4 whitespace-nowrap  border-b border-slate-300"
+                  onClick={() => {
+                    setShowArchiveWarning(true);
+                  }}
+                >
+                  Archive Campaign
+                </div>
+              </>
+            )}
             <div
-              className="p-4 whitespace-nowrap "
+              className="p-4 whitespace-nowrap"
               onClick={() => {
                 setShowDeleteWarning(true);
               }}
@@ -66,6 +108,15 @@ export default function Actions({ campaign, campaignDates }) {
         title={`Are you sure you want to delete ${campaign.name}`}
         description="Deleting your campaign will permanently erase all associated data. Once deleted, campaigns cannot be recovered or retrieved."
         handleProceed={handleDelete}
+      />
+      <AlertDialog
+        open={showArchiveWarning}
+        handleClose={() => {
+          setShowArchiveWarning(false);
+        }}
+        title={`Are you sure you want to archive ${campaign.name}`}
+        description="Archiving this campaign will store all associated data for future reference, while discontinuing further usage. Once archived, campaigns cannot be reactivated."
+        handleProceed={handleArchive}
       />
     </div>
   );
