@@ -1,22 +1,17 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import BlogSection from 'app/homepage/BlogSection';
-import SubscribeSection from 'app/homepage/SubscribeSection';
-import ForSection from './ForSection';
-import Hero from './Hero';
-import WhoWhySection from './WhoWhySection';
+import AboutHero from './AboutHero';
 import Callout from '@shared/utils/Callout';
+import PeopleShouldSection from './PeopleShouldSection';
+import NotPoliticalSection from './NotPoliticalSection';
+import HopeSection from './HopeSection';
+import BuildWithUsSection from './BuildWithUsSection';
 
 export default function RunForOfficePage() {
-  return (
-    <div>
-      <Callout />
-      <Hero />
-      <MaxWidth>
-        <ForSection />
-        <WhoWhySection />
-        <BlogSection />
-      </MaxWidth>
-      <SubscribeSection pageName="About Page" />
-    </div>
-  );
+  return <>
+    <Callout />
+    <AboutHero />
+    <PeopleShouldSection />
+    <NotPoliticalSection />
+    <HopeSection />
+    <BuildWithUsSection />
+  </>
 }

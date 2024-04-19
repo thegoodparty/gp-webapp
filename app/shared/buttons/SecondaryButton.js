@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
+import { compileButtonClassName } from '@shared/buttons/compileButtonClassName';
 
 export default function SecondaryButton({
   children,
@@ -91,7 +92,7 @@ export default function SecondaryButton({
 
   return (
     <button
-      className={clsx({ ...baseClass, ...className })}
+      className={compileButtonClassName(baseClass, className)}
       style={style}
       disabled={disabled}
       aria-label={ariaLabel}

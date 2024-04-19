@@ -1,7 +1,7 @@
 'use client';
-import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
+import { compileButtonClassName } from '@shared/buttons/compileButtonClassName';
 
 export function setSize(baseClass, size, variant) {
   if (size === 'large') {
@@ -105,11 +105,9 @@ export default function PrimaryButton({
     baseClass['items-center'] = true;
   }
 
-
-
   return (
     <button
-      className={clsx({ ...baseClass, ...className })}
+      className={compileButtonClassName(baseClass, className)}
       style={style}
       disabled={disabled}
       type={type}
