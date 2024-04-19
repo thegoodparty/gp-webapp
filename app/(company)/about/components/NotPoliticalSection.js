@@ -28,7 +28,7 @@ const IncludedPartiesList = () => <div className="bg-white
   p-6
   rounded-2xl">
   <h2 className="text-xl leading-7">Included in our movement</h2>
-  <hr className="border-4 border-tertiary-main w-12 mt-2 mb-8" />
+  <hr className="border-2 border-tertiary-main w-12 mt-2 mb-8" />
   {
     PARTIES.map(
       ({
@@ -49,12 +49,14 @@ const IncludedPartiesList = () => <div className="bg-white
 
 const NotPoliticalSection = () => <section className="relative
   px-4
+  mb-12
   md:px-24
+  md:mb-24
   xl:px-0
   xl:mx-auto">
   <div
     className="max-w-screen-xl mx-auto bg-secondary-light p-6 md:p-16 rounded-3xl xl:grid grid-cols-12 gap-16">
-    <div className="col-span-7">
+    <div className="col-span-7 relative">
       <h2
         className="text-2xl md:text-6xl font-medium leading-8 mb-4 md:leading-snug">We’re
         not<br/>a political party.</h2>
@@ -66,7 +68,7 @@ const NotPoliticalSection = () => <section className="relative
         million of us without a political home to reject big money in politics and
         support candidates pledging to serve their community, not big money
         interests.</p>
-      <LearnAboutOurTeamButton className="hidden mt-auto xl:block" />
+      <LearnAboutOurTeamButton className="hidden absolute bottom-0 xl:block" />
     </div>
     <div className="col-span-5">
       <IncludedPartiesList />

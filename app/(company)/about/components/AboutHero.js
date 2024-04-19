@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import EmailFormV2 from '@shared/inputs/EmailFormV2';
 
-const Hero = () => <section className="relative
+const AboutHero = () => <section className="relative
   p-4
   md:p-8
   xl:px-0
@@ -47,4 +47,4 @@ const Hero = () => <section className="relative
     </div>
 </section>
 
-export default Hero;
+export default AboutHero;

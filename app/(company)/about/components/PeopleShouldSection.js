@@ -26,13 +26,13 @@ const PeopleShouldSection = () => <section className="relative
           <section className="md:grid grid-cols-10 mb-12 md:mb-24">
             <div className="col-span-2">
               <h1 className="text-tertiary-main text-6xl leading-snug">12%</h1>
-              <hr className="border-4 border-tractor-main w-12 my-1.5" />
+              <hr className="border-2 border-tertiary-main w-12 my-1.5" />
               <p className="font-sfpro leading-normal">of Americans approve of
                 Congress</p>
             </div>
             <div className="col-span-3 col-start-4">
               <h1 className="text-tertiary-main text-6xl leading-snug">355M</h1>
-              <hr className="border-4 border-tertiary-main w-12 my-1.5" />
+              <hr className="border-2 border-tertiary-main w-12 my-1.5" />
               <p className="font-sfpro leading-normal">voters either vote for the
                 lesser of two evils or don’t vote at all</p>
             </div>
