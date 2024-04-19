@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import EmailFormV2 from '@shared/inputs/EmailFormV2';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 const AboutHero = () => <section className="relative
   p-4
@@ -8,7 +9,7 @@ const AboutHero = () => <section className="relative
   xl:py-24
   xl:mx-auto
   bg-primary-dark">
-    <div className="max-w-screen-xl mx-auto">
+    <MaxWidth>
       <div className="text-white
         font-medium
         grid
@@ -47,7 +48,7 @@ const AboutHero = () => <section className="relative
             priority />
         </div>
       </div>
-    </div>
+    </MaxWidth>
 </section>
 
 export default AboutHero;
