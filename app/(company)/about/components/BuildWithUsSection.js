@@ -27,7 +27,7 @@ const BuildWithUsSection = () => <section className="relative
     </div>
     <div className="xl:hidden">
       <BuildWithUsHeaderAndBlurb />
-      <div className="md:grid md:grid-cols-3 md:gap-4">
+      <div className="grid col-span-12 md:grid-cols-3 md:gap-4">
         <BuildWithUsGridItems />
       </div>
     </div>

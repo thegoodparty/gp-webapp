@@ -31,7 +31,7 @@ const BuildWithUsImage = ({ src, alt, className }) => <Image
 
 export const BuildWithUsGridItems = () => <>
   <BuildWithUsImage
-    className="md:col-start-2 xl:col-start-3"
+    className="col-start-1 md:col-start-2 xl:col-start-3"
     src="/images/landing-pages/build-with-us-1.png"
     alt="Build With Us Person 1" />
   {
