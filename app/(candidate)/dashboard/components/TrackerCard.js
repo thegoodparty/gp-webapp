@@ -1,6 +1,4 @@
 import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
 import H4 from '@shared/typography/H4';
 import ProgressPie from './ProgressPie';
 import { useState } from 'react';
