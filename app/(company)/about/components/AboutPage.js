@@ -6,12 +6,14 @@ import HopeSection from './HopeSection';
 import BuildWithUsSection from './BuildWithUsSection';
 
 export default function RunForOfficePage() {
-  return <>
-    <Callout />
-    <AboutHero />
-    <PeopleShouldSection />
-    <NotPoliticalSection />
-    <HopeSection />
-    <BuildWithUsSection />
-  </>
+  return (
+    <>
+      <Callout />
+      <AboutHero />
+      <PeopleShouldSection />
+      <NotPoliticalSection />
+      <HopeSection />
+      <BuildWithUsSection />
+    </>
+  );
 }
