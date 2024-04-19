@@ -2,6 +2,7 @@ import { MdArrowForward } from 'react-icons/md';
 import { HopeHeader } from './HopeHeader';
 import { HopeStat } from './HopeStat';
 import { HopeChange } from './HopeChange';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 const HOPE_STATS = [
   { percentage: 49, blurb: <>of Americans with<br />neither party</> },
@@ -50,7 +51,7 @@ const HopeSection = () => <section className="relative
   md:py-24
   xl:px-0
   xl:mx-auto">
-  <div className="max-w-screen-xl mx-auto">
+  <MaxWidth>
     <HopeHeader className="mb-4">Hope with a<br
       className="md:hidden" /> credible plan</HopeHeader>
     <p className="text-gray-600 text-xl leading-snug mb-8">Why we’re focusing on
@@ -79,7 +80,7 @@ const HopeSection = () => <section className="relative
         )
       }
     </div>
-  </div>
+  </MaxWidth>
 </section>
 
 export default HopeSection;
