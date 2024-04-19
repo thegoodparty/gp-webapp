@@ -60,9 +60,9 @@ const HopeSection = () => <section className="relative
     <div className="md:grid md:grid-cols-3 md:gap-x-4 md:gap-y-16">
       {
         HOPE_STATS.map(
-          ({ percentage, blurb }, key) => <HopeStat key={key}
-            percentage={percentage}
-            blurb={blurb} />
+          (stat, key) => <HopeStat
+            {...stat}
+            key={key} />
         )
       }
     </div>
