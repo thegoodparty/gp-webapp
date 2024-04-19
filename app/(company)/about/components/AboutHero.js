@@ -18,7 +18,8 @@ const AboutHero = () => <section className="relative
             src="/images/logo-hologram-white.svg"
             width={81}
             height={66.12}
-            alt="GoodParty Logo" />
+            alt="GoodParty Logo"
+            priority />
           <h1 className="text-5xl md:text-8xl leading-tight my-8">The Good Party
             Mission</h1>
           <h2 className="text-2xl md:text-4xl leading-tight mb-8 md:mb-16">
@@ -36,12 +37,14 @@ const AboutHero = () => <section className="relative
             className="w-full hidden md:block"
             width={832}
             height={681}
-            src="/images/landing-pages/about-hero.png" alt="about-hero" />
+            src="/images/landing-pages/about-hero.png" alt="about-hero"
+            priority />
           <Image
             className="w-full md:hidden"
             width={288}
             height={252}
-            src="/images/landing-pages/about-hero-sm.png" alt="about-hero" />
+            src="/images/landing-pages/about-hero-sm.png" alt="about-hero"
+            priority />
         </div>
       </div>
     </div>
