@@ -11,9 +11,9 @@ const AboutHero = () => <section className="relative
     <div className="max-w-screen-xl mx-auto">
       <div className="text-white
         font-medium
-        xl:grid
-        xl:grid-cols-12">
-        <div className="mb-8 md:mb-16 xl:mb-0 xl:col-start-1 xl:col-span-6">
+        grid
+        grid-cols-12">
+        <div className="col-span-12 mb-8 md:mb-16 xl:mb-0 xl:col-span-6">
           <Image
             src="/images/logo-hologram-white.svg"
             width={81}
@@ -31,7 +31,7 @@ const AboutHero = () => <section className="relative
             label="Join the movement"
           />
         </div>
-        <div className="xl:col-start-8 xl:col-span-5">
+        <div className="col-span-12 xl:col-start-8 xl:col-span-5">
           <Image
             className="w-full hidden md:block"
             width={832}
