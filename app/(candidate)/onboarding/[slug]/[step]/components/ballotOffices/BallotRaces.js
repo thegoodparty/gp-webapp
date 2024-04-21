@@ -6,7 +6,7 @@ import ZipChanger from './ZipChanger';
 import { CircularProgress, Select } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
@@ -92,13 +92,7 @@ export default function BallotRaces(props) {
       setZip(newZip);
       clearState();
       await loadRaces(newZip);
-      await updateCampaignOld({
-        ...campaign,
-        details: {
-          ...campaign.details,
-          zip: newZip,
-        },
-      });
+      await updateCampaign(['details.zip'], [newZip]);
     }
   };
 
@@ -149,10 +143,23 @@ export default function BallotRaces(props) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
         : step;
-      await updateCampaignOld(updated);
+      const keys = [
+        'data.currentStep',
+        'details.otherOffice',
+        'details.positionId',
+        'details.electionId',
+      ];
+      const values = [updated.currentStep, '', null, null];
+      await updateCampaign(keys, values);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     } else {
-      await updateCampaignOld(updated);
+      const keys = [
+        'details.otherOffice',
+        'details.positionId',
+        'details.electionId',
+      ];
+      const values = ['', null, null];
+      await updateCampaign(keys, values);
       if (updateCallback) {
         updateCallback();
       }

@@ -1,12 +1,8 @@
 'use client';
 import { Fragment, useState } from 'react';
-import {
-  onboardingStep,
-  updateCampaignOld,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { onboardingStep } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import Checkbox from '@shared/inputs/Checkbox';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import gpApi from 'gpApi';
@@ -93,8 +89,6 @@ export default function PledgeStep({ campaign, pledge, step }) {
   const openChat = () => {
     window.HubSpotConversations?.widget?.open();
   };
-
-  console.log('campaign', campaign);
 
   return (
     <div>
