@@ -11,6 +11,7 @@ export async function updateCampaignOld(
   subSectionKey,
 ) {
   try {
+    alert('updateCampaignOld');
     const api = gpApi.campaign.onboarding.update;
     const payload = {
       campaign: {
@@ -29,6 +30,7 @@ export async function updateCampaignOld(
 
 export async function getCampaignOld() {
   try {
+    alert('updateCampaignOld');
     const api = gpApi.campaign.onboarding.findByUser;
     return await gpFetch(api);
   } catch (e) {

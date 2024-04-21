@@ -154,6 +154,12 @@ const gpApi = {
       withAuth: true,
     },
 
+    launch: {
+      url: `${base}campaign/launch`,
+      method: 'POST',
+      withAuth: true,
+    },
+
     adminUpdate: {
       url: `${base}campaign-admin`,
       method: 'PUT',

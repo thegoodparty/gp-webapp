@@ -4,6 +4,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
+  updateCampaign,
   updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
@@ -162,24 +163,24 @@ export default function PartyStep(props) {
   };
 
   const handleSave = async () => {
-    // const isInvalid = invalidOtherParty();
-    // console.log('isInvalid', isInvalid, state.otherParty);
-    // return;
     if (invalidOtherParty()) {
       setShowInvalidModal(true);
       onChangeField('otherParty', '');
       return;
     }
     if (canSubmit) {
-      const updated = {
-        ...campaign,
-        currentStep: onboardingStep(campaign, step),
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
-      await updateCampaignOld(updated);
+      const currentStep = onboardingStep(campaign, step);
+      const keys = ['data.currentStep'];
+      const values = [currentStep];
+      if (otherParty === '') {
+        keys.push('details.party');
+        values.push(state.party);
+      } else {
+        keys.push('details.otherParty');
+        values.push(state.otherParty);
+      }
+
+      await updateCampaign(keys, values);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };

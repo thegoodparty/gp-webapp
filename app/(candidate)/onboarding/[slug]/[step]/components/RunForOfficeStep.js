@@ -9,7 +9,6 @@ import H3 from '@shared/typography/H3';
 import {
   onboardingStep,
   updateCampaign,
-  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -63,8 +62,6 @@ export default function RunForOfficeStep(props) {
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };
-
-  console.log('campaign', campaign);
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
