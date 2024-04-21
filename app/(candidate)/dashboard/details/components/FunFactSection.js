@@ -5,7 +5,7 @@ import Body1 from '@shared/typography/Body1';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 
 const fields = [
@@ -58,7 +58,7 @@ export default function FunFactSection(props) {
         },
       };
 
-      await updateCampaign(newCampaign);
+      await updateCampaignOld(newCampaign);
       setSaving(false);
     }
   };

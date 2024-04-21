@@ -3,8 +3,8 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import { useState } from 'react';
 import Occupation from './Occupation';
 import {
-  updateCampaign,
-  getCampaign,
+  updateCampaignOld,
+  getCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
@@ -103,18 +103,18 @@ export default function QuestionsPage(props) {
   };
 
   const handleSave = async (updated) => {
-    await updateCampaign(updated);
-    const res = await getCampaign();
+    await updateCampaignOld(updated);
+    const res = await getCampaignOld();
     setCampaign(res.campaign);
   };
 
   const handleComplete = async (type = false) => {
-    const res = await getCampaign();
+    const res = await getCampaignOld();
     setCampaign(res.campaign);
     if (type === 'issues') {
       const { candidatePositions } = await loadCandidatePosition(campaign.slug);
       onChangeField('candidatePositions', candidatePositions);
-      const res = await getCampaign();
+      const res = await getCampaignOld();
       setCampaign(res.campaign);
     }
   };
@@ -127,7 +127,7 @@ export default function QuestionsPage(props) {
 
   const updatePositionsCallback = async () => {
     const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-    const res = await getCampaign();
+    const res = await getCampaignOld();
 
     onChangeField('candidatePositions', candidatePositions);
     setCampaign(res.campaign);

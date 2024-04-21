@@ -7,7 +7,7 @@ import TextField from '@shared/inputs/TextField';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Modal from '@shared/utils/Modal';
 import OfficeStep from 'app/(candidate)/onboarding/[slug]/[step]/components/OfficeStep';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { getCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const fields = [
   {
@@ -73,7 +73,7 @@ export default function OfficeSection(props) {
   };
 
   const handleUpdate = async () => {
-    const res = await getCampaign();
+    const res = await getCampaignOld();
     setCampaign(res.campaign);
     setShowModal(false);
   };

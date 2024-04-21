@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -40,7 +40,7 @@ export default function ZipStep(props) {
           ...state,
         },
       };
-      await updateCampaign(updated);
+      await updateCampaignOld(updated);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };

@@ -3,7 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
@@ -74,7 +74,7 @@ export default function OfficeStep(props) {
         // delete p2vStatus so the backend will recalculate it
         delete updated.p2vStatus;
       }
-      await updateCampaign(updated);
+      await updateCampaignOld(updated);
 
       if (step) {
         updated.currentStep = onboardingStep(campaign, step);

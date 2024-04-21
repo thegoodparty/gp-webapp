@@ -5,7 +5,7 @@ import { useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
@@ -167,7 +167,7 @@ export default function AdminVictoryPathPage(props) {
       if (!campaign.pathToVictory) {
         await sendVictoryMail(updated.slug);
       }
-      await updateCampaign(updated, false, true);
+      await updateCampaignOld(updated, false, true);
 
       snackbarState.set(() => {
         return {
@@ -201,7 +201,7 @@ export default function AdminVictoryPathPage(props) {
       ...campaign,
       p2vNotNeeded: e.target.checked,
     };
-    await updateCampaign(updated);
+    await updateCampaignOld(updated);
   };
   return (
     <AdminWrapper {...props}>

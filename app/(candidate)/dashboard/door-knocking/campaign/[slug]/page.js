@@ -1,4 +1,4 @@
-import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
+import { fetchUserCampaignOld } from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../../../shared/candidateAccess';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
@@ -33,7 +33,7 @@ export default async function Page({ params, searchParams }) {
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
   const { dkCampaign, routes, totals } = await fetchDkCampaign(slug);
-  const { campaign } = await fetchUserCampaign();
+  const { campaign } = await fetchUserCampaignOld();
 
   const childProps = {
     user,

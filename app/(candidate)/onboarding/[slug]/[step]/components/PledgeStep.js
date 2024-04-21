@@ -2,7 +2,7 @@
 import { Fragment, useState } from 'react';
 import {
   onboardingStep,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
@@ -75,7 +75,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
     updated.details.pledged =
       state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
     updated.currentStep = onboardingStep(campaign, step);
-    await updateCampaign(updated);
+    await updateCampaignOld(updated);
     await launchCampaign();
     window.location.href = '/dashboard/plan';
   };

@@ -6,7 +6,7 @@ import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 import { flatStates } from 'helpers/statesHelper';
 
@@ -98,7 +98,7 @@ export default function CampaignSection(props) {
           };
         }
       });
-      await updateCampaign(newCampaign);
+      await updateCampaignOld(newCampaign);
       setSaving(false);
     }
   };

@@ -6,7 +6,7 @@ import ZipChanger from './ZipChanger';
 import { CircularProgress, Select } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
@@ -92,7 +92,7 @@ export default function BallotRaces(props) {
       setZip(newZip);
       clearState();
       await loadRaces(newZip);
-      await updateCampaign({
+      await updateCampaignOld({
         ...campaign,
         details: {
           ...campaign.details,
@@ -149,10 +149,10 @@ export default function BallotRaces(props) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
         : step;
-      await updateCampaign(updated);
+      await updateCampaignOld(updated);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     } else {
-      await updateCampaign(updated);
+      await updateCampaignOld(updated);
       if (updateCallback) {
         updateCallback();
       }

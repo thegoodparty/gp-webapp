@@ -7,7 +7,7 @@ import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
 import { useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
 import H3 from '@shared/typography/H3';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { fetchUserCampaignClient } from '/helpers/campaignHelper';
 import ElectionOver from './ElectionOver';
 import MapSection from './MapSection';
@@ -49,6 +49,7 @@ export default function DashboardPage(props) {
     digital: reportedVoterGoals?.digital || 0,
   });
 
+  console.log('campaign', campaign);
   useEffect(() => {
     if (campaign) {
       setState({
@@ -102,7 +103,7 @@ export default function DashboardPage(props) {
       [key]: value,
     };
     setState(newState);
-    await updateCampaign({
+    await updateCampaignOld({
       ...campaign,
       reportedVoterGoals: newState,
     });

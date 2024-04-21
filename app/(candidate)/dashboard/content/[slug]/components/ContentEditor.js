@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
@@ -113,7 +113,7 @@ export default function ContentEditor({
     };
 
     // updated[subSectionKey][key] = plan;
-    await updateCampaign(updated, key, false, 'aiContent');
+    await updateCampaignOld(updated, key, false, 'aiContent');
     // await updateVersionsCallback();
     setSaved('Saved');
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);

@@ -15,7 +15,7 @@ export const metadata = meta;
 
 export default async function Page({ params }) {
   const { slug, step } = params;
-  const campaign = await getCampaign(params);
+  const campaign = await getCampaign(params, true);
 
   const totalSteps = 6;
 

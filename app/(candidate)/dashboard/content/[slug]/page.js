@@ -1,4 +1,4 @@
-import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
+import { fetchUserCampaignOld } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';
@@ -23,7 +23,7 @@ export default async function Page({ params }) {
     .content;
   const prompts = parsePrompts(promptsRaw);
 
-  const { campaign } = await fetchUserCampaign();
+  const { campaign } = await fetchUserCampaignOld();
 
   const childProps = {
     slug,

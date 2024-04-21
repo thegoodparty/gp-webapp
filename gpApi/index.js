@@ -138,6 +138,22 @@ const gpApi = {
   },
 
   campaign: {
+    create: {
+      url: `${base}campaign`,
+      method: 'POST',
+      withAuth: true,
+    },
+    update: {
+      url: `${base}campaign`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    get: {
+      url: `${base}campaign`,
+      method: 'GET',
+      withAuth: true,
+    },
+
     adminUpdate: {
       url: `${base}campaign-admin`,
       method: 'PUT',

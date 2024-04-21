@@ -1,4 +1,4 @@
-import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
+import { fetchUserCampaignOld } from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import CampaignPlanPage from './components/CampaignPlanPage';
@@ -16,7 +16,7 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const { campaign } = await fetchUserCampaign();
+  const { campaign } = await fetchUserCampaignOld();
   // const { candidateSlug } = campaign;
   // const { candidate } = await fetchCandidate(candidateSlug);
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);

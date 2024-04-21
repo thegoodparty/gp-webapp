@@ -14,7 +14,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import TogglePanel from '@shared/utils/TogglePanel';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -162,7 +162,7 @@ export default function CampaignPlanSection({
     updated[subSectionKey][key] = plan;
     setIsEdited(false);
     setEditMode(false);
-    await updateCampaign(updated, key, false, subSectionKey);
+    await updateCampaignOld(updated, key, false, subSectionKey);
     await updateVersionsCallback();
     // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };

@@ -9,7 +9,7 @@ import TextField from '@shared/inputs/TextField';
 import { MdCheckBox } from 'react-icons/md';
 import H4 from '@shared/typography/H4';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { getCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
@@ -34,7 +34,7 @@ export default function IssuesSection(props) {
   const completeCallback = async () => {
     const res = await loadCandidatePosition(props.campaign.slug);
     setCandidatePositions(res.candidatePositions);
-    const res2 = await getCampaign();
+    const res2 = await getCampaignOld();
 
     setEditMode(false);
     setCampaign(res2.campaign);
