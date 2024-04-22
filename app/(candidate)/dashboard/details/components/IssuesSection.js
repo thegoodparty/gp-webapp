@@ -24,12 +24,12 @@ export default function IssuesSection(props) {
     candidatePositions?.forEach((position) => {
       sortedIssues.push({ ...position, type: 'position' });
     });
-    campaign?.details.customIssues?.forEach((issue) => {
+    campaign?.details?.customIssues?.forEach((issue) => {
       sortedIssues.push({ ...issue, type: 'custom' });
     });
     sortedIssues.sort((a, b) => a.order - b.order);
     setCombinedIssues(sortedIssues);
-  }, [candidatePositions, campaign.details.customIssues]);
+  }, [candidatePositions, campaign.details?.customIssues]);
 
   const completeCallback = async () => {
     const res = await loadCandidatePosition(props.campaign.slug);
