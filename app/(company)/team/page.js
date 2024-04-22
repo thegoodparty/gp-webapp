@@ -1,10 +1,12 @@
 import React, { Suspense } from 'react';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Hero from './components/Hero';
-import Team from './components/Team';
 import Volunteers from './components/Volunteers';
 import Interns from './components/Interns';
 import pageMetaData from 'helpers/metadataHelper';
+import gpApi from '../../../gpApi';
+import gpFetch from '../../../gpApi/gpFetch';
+import TeamSection from './components/TeamSection';
 
 const meta = pageMetaData({
   title: 'Team | GOOD PARTY',
@@ -14,12 +16,24 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default function Page() {
+async function fetchTeamMembers() {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'goodPartyTeamMembers',
+  };
+  return await gpFetch(api, payload, 3600);
+}
+
+const TeamPage = async () => {
+  const {content: teamMembers} = await fetchTeamMembers();
+
+  console.log(`SERVER teamMembers =>`, teamMembers)
+
   return (
     <MaxWidth>
       <Hero />
       <Suspense>
-        <Team />
+        <TeamSection teamMembers={teamMembers} title="Good Party Team" />
       </Suspense>
       <Suspense>
         <Interns />
@@ -30,3 +44,5 @@ export default function Page() {
     </MaxWidth>
   );
 }
+
+export default TeamPage;
