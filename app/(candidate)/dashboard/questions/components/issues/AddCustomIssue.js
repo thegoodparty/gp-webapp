@@ -2,7 +2,10 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  updateCampaign,
+  updateCampaignOld,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { FaCirclePlus } from 'react-icons/fa6';
@@ -12,10 +15,10 @@ export default function AddCustomIssue(props) {
   const findExisting = () => {
     let existingIssue;
     let index = -1;
-    if (campaign.customIssues) {
-      for (let i = 0; i < campaign.customIssues.length; i++) {
-        if (campaign.customIssues[i].order === order) {
-          existingIssue = campaign.customIssues[i];
+    if (campaign.details.customIssues) {
+      for (let i = 0; i < campaign.details.customIssues.length; i++) {
+        if (campaign.details.customIssues[i].order === order) {
+          existingIssue = campaign.details.customIssues[i];
           selectIssueCallback('custom');
           index = i;
           break;
@@ -52,28 +55,24 @@ export default function AddCustomIssue(props) {
     if (!canSave()) {
       return;
     }
-    const updated = {
-      ...campaign,
-    };
-    if (!campaign.customIssues) {
-      updated.customIssues = [];
-    }
+    const customIssues = campaign.details.customIssues || [];
+
     let { index } = findExisting();
     if (index !== -1) {
-      updated.customIssues[index] = {
+      customIssues[index] = {
         title,
         position,
         order,
       };
     } else {
-      updated.customIssues.push({
+      customIssues.push({
         title,
         position,
         order,
       });
     }
-    await updateCampaignOld(updated);
-    await saveCallback(updated);
+    await updateCampaign(['details.customIssues'], [customIssues]);
+    await saveCallback(customIssues);
   };
 
   return (
@@ -88,7 +87,7 @@ export default function AddCustomIssue(props) {
         </div>
       )}
       <div
-        className="p-4 rounded-lg mt-2 bg-slate-700 font-semibold flex items-center cursor-pointer"
+        className="p-4 rounded-lg mt-2 bg-slate-700  text-white font-semibold flex items-center cursor-pointer"
         onClick={handleSelectCustom}
       >
         <FaCirclePlus />

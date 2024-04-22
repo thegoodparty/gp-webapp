@@ -7,19 +7,11 @@ export default function Occupation({
   value,
   onChangeCallback,
   saveCallback,
-  campaign,
   campaignKey,
 }) {
   const handleSave = () => {
     if (!canSave()) return;
-    const updated = {
-      ...campaign,
-      details: {
-        ...campaign.details,
-        [campaignKey]: value,
-      },
-    };
-    saveCallback(updated);
+    saveCallback([`details.${campaignKey}`], [value]);
   };
   const canSave = () => {
     return value !== '';

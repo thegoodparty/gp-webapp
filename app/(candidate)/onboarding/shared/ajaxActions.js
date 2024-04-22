@@ -12,6 +12,7 @@ export async function updateCampaignOld(
 ) {
   try {
     alert('updateCampaignOld');
+    return;
     const api = gpApi.campaign.onboarding.update;
     const payload = {
       campaign: {
@@ -31,6 +32,7 @@ export async function updateCampaignOld(
 export async function getCampaignOld() {
   try {
     alert('updateCampaignOld');
+    return;
     const api = gpApi.campaign.onboarding.findByUser;
     return await gpFetch(api);
   } catch (e) {

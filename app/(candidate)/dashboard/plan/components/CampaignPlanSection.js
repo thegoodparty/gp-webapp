@@ -38,15 +38,15 @@ let aiTotalCount = 0;
 
 function canGenerate(campaign, key, candidatePositions) {
   const questions = flows[key];
-  const { customIssues } = campaign;
   if (!campaign.details) {
     return false;
   }
+  const { customIssues } = campaign.details;
+
   const issuesCount =
     (customIssues?.length || 0) + candidatePositions?.length || 0;
-  const { occupation, funFact, pastExperience, website } =
+  const { occupation, funFact, pastExperience, website, runningAgainst } =
     campaign.details || {};
-  const { runningAgainst } = campaign.goals || {};
   /*
 'occupation',
     'funFact',

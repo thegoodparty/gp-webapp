@@ -47,7 +47,7 @@ export default function IssuesSelector(props) {
     } else {
       const combinedIssuedCount =
         (candidatePositions?.length || 0) +
-        (campaign?.customIssues?.length || 0);
+        (campaign?.details?.customIssues?.length || 0);
       await updatePositionsCallback();
       if (combinedIssuedCount > 2) {
         await completeCallback('issues');

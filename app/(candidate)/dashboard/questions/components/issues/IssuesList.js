@@ -1,6 +1,5 @@
 'use client';
 
-import { FaChevronRight } from 'react-icons/fa6';
 import IssueItem from './IssueItem';
 import { Fragment, useEffect, useState } from 'react';
 import gpApi from 'gpApi';
@@ -8,6 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import AddCustomIssue from './AddCustomIssue';
 import TextField from '@shared/inputs/TextField';
 import { Autocomplete } from '@mui/material';
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export async function saveCandidatePosition({
   description,
@@ -102,14 +102,14 @@ export default function IssuesList(props) {
     nextCallback();
   };
 
-  const handleSaveCustom = async (updatedCampaign) => {
+  const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
     let savedPosition = findSavedPosition(order);
     if (savedPosition) {
       await deleteCandidatePosition(savedPosition.id);
     }
-
-    setCampaign(updatedCampaign);
+    const { campaign } = await getCampaign();
+    setCampaign(campaign);
 
     nextCallback();
   };

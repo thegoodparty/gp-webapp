@@ -172,7 +172,7 @@ export default function PartyStep(props) {
       const currentStep = onboardingStep(campaign, step);
       const keys = ['data.currentStep'];
       const values = [currentStep];
-      if (otherParty === '') {
+      if (state.otherParty === '') {
         keys.push('details.party');
         values.push(state.party);
       } else {

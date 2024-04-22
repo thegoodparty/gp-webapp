@@ -6,14 +6,17 @@ import Link from 'next/link';
 export function calcAnswers(campaign, candidatePositions) {
   const totalQuestions = 6;
   let answeredQuestions = 0;
-  const { customIssues } = campaign;
+  const {
+    customIssues,
+    occupation,
+    funFact,
+    pastExperience,
+    website,
+    runningAgainst,
+  } = campaign.details || {};
   const issuesCount =
     (customIssues?.length || 0) + candidatePositions?.length || 0;
   if (campaign.details) {
-    const { occupation, funFact, pastExperience, website } =
-      campaign.details || {};
-
-    const { runningAgainst } = campaign.goals || {};
     if (occupation) {
       answeredQuestions++;
     }
