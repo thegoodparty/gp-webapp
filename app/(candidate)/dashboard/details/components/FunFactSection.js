@@ -5,7 +5,7 @@ import Body1 from '@shared/typography/Body1';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 
 const fields = [
@@ -50,15 +50,7 @@ export default function FunFactSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      const newCampaign = {
-        ...campaign,
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
-
-      await updateCampaignOld(newCampaign);
+      await updateCampaign(['details.funFact'], [state.funFact]);
       setSaving(false);
     }
   };

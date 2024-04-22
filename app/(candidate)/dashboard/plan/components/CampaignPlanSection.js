@@ -2,13 +2,11 @@
 import { useEffect, useState } from 'react';
 import LoadingAI from './LoadingAI';
 import CircularProgress from '@mui/material/CircularProgress';
-import dynamic from 'next/dynamic';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import TogglePanel from '@shared/utils/TogglePanel';
 import PlanDisplay from './PlanDisplay';
@@ -209,9 +207,10 @@ export default function CampaignPlanSection({
     updated[subSectionKey][key] = plan;
     setIsEdited(false);
     setEditMode(false);
-    await updateCampaignOld(updated, key, false, subSectionKey);
+
+    // TODO: TOMER change this to a new api call.
+    // await updateCampaignOld(updated, key, false, subSectionKey);
     await updateVersionsCallback();
-    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {

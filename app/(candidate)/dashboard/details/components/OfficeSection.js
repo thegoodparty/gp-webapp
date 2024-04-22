@@ -7,7 +7,7 @@ import TextField from '@shared/inputs/TextField';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Modal from '@shared/utils/Modal';
 import OfficeStep from 'app/(candidate)/onboarding/[slug]/[step]/components/OfficeStep';
-import { getCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const fields = [
   {
@@ -26,7 +26,6 @@ const fields = [
     key: 'electionDate',
     label: 'Date of Election',
     type: 'date',
-    campaignObj: 'goals',
   },
   {
     key: 'primaryElectionDate',
@@ -50,14 +49,10 @@ export default function OfficeSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
 
   useEffect(() => {
-    if (campaign?.details && campaign?.goals) {
+    if (campaign?.details) {
       const newState = {};
       fields.forEach((field) => {
-        if (field.campaignObj === 'goals') {
-          newState[field.key] = campaign.goals[field.key] || '';
-        } else {
-          newState[field.key] = campaign.details[field.key] || '';
-        }
+        newState[field.key] = campaign.details[field.key] || '';
       });
       newState.office =
         campaign.details?.otherOffice || campaign.details?.office || '';
@@ -73,7 +68,7 @@ export default function OfficeSection(props) {
   };
 
   const handleUpdate = async () => {
-    const res = await getCampaignOld();
+    const res = await getCampaign();
     setCampaign(res.campaign);
     setShowModal(false);
   };

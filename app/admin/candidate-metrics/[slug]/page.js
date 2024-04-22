@@ -4,7 +4,6 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { getServerToken } from 'helpers/userServerHelper';
 import AdminVictoryPathPage from './components/CandidateMetricsPage';
 import pageMetaData from 'helpers/metadataHelper';
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchCampaignBySlug } from 'app/admin/victory-path/[slug]/page';
 // import { fetchCampaign } from 'app/candidate/[slug]/review/page';
 

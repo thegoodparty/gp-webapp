@@ -1,11 +1,10 @@
-import { fetchUserCampaignOld } from 'app/(candidate)/onboarding/shared/getCampaign';
+import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../../shared/candidateAccess';
 import DoorKnockingMainPage from './components/DoorKnockingMainPage';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { redirect } from 'next/navigation';
 
 async function fetchDkCampaigns() {
   try {
@@ -29,7 +28,7 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const { campaign } = await fetchUserCampaignOld();
+  const { campaign } = await fetchUserCampaign();
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const { dkCampaigns } = await fetchDkCampaigns();

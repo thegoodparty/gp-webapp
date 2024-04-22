@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
@@ -112,11 +111,9 @@ export default function ContentEditor({
       content: plan,
     };
 
-    // updated[subSectionKey][key] = plan;
-    await updateCampaignOld(updated, key, false, 'aiContent');
-    // await updateVersionsCallback();
+    // TODO: TOMER change this to a new api call
+    // await updateCampaignOld(updated, key, false, 'aiContent');
     setSaved('Saved');
-    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {

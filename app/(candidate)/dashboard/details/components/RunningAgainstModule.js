@@ -18,7 +18,6 @@ const partyOptions = [
 
 export default function RunningAgainstModule({
   campaign,
-  subSectionKey = 'goals',
   handleSave,
   smallButton = false,
 }) {
@@ -36,8 +35,8 @@ export default function RunningAgainstModule({
     newParty: '',
   };
   const shortVersion = campaign?.details?.filedStatement == 'yes';
-  if (campaign?.[subSectionKey]?.runningAgainst) {
-    initialState.runningAgainst = campaign[subSectionKey].runningAgainst;
+  if (campaign?.details?.runningAgainst) {
+    initialState.runningAgainst = campaign.details.runningAgainst;
   }
 
   const [state, setState] = useState(initialState);

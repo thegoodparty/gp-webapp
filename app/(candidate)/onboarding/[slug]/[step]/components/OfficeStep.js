@@ -4,7 +4,6 @@ import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
   updateCampaign,
-  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';

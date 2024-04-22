@@ -25,14 +25,10 @@ export async function fetchUserCampaign() {
   }
 }
 
-export default async function getCampaign(params, newVersion = false) {
+export default async function getCampaign(params) {
   const { slug } = params;
-  let campaign;
-  if (newVersion) {
-    ({ campaign } = await fetchUserCampaign());
-  } else {
-    ({ campaign } = await fetchUserCampaignOld());
-  }
+  const { campaign } = await fetchUserCampaign();
+
   if (campaign?.slug !== slug) {
     redirect('/run-for-office');
   }

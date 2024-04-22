@@ -4,43 +4,6 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie } from 'helpers/cookieHelper';
 
-export async function updateCampaignOld(
-  campaign,
-  versionKey,
-  updateCandidate,
-  subSectionKey,
-) {
-  try {
-    alert('updateCampaignOld');
-    return;
-    const api = gpApi.campaign.onboarding.update;
-    const payload = {
-      campaign: {
-        ...campaign,
-      },
-      versionKey,
-      updateCandidate,
-      subSectionKey,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
-
-export async function getCampaignOld() {
-  try {
-    alert('updateCampaignOld');
-    return;
-    const api = gpApi.campaign.onboarding.findByUser;
-    return await gpFetch(api);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
-
 export async function updateCampaign(keys, values) {
   try {
     const api = gpApi.campaign.update;
