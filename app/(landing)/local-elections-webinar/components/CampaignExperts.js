@@ -32,13 +32,17 @@ const EXPERTS = [
 
 const CampaignExperts = () => (
   <div className="bg-primary-dark text-white text-center py-8 px-20 align-center">
-    <h3 className="text-3xl font-semibold mb-12">
-      Our campaigning <br />
+    <h3 className="text-3xl font-semibold mb-12 md:text-6xl">
+      Our campaigning <br className="md:hidden" />
       experts
     </h3>
-    {
-      EXPERTS.map((expert, key) => <ExpertCard key={key} {...expert} />)
-    }
+    <div className="grid grid-cols-3 gap-12 md:gap-16">
+      {EXPERTS.map((expert, key) => (
+        <div key={key} className="col-span-3 md:col-span-1">
+          <ExpertCard {...expert} />
+        </div>
+      ))}
+    </div>
   </div>
 );
 

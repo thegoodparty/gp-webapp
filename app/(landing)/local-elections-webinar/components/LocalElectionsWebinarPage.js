@@ -16,7 +16,10 @@ export const LocalElectionsWebinarPage = () => (
     <LocalElectionsHero />
     <IsNowYourTime />
     <SlantSection
-      colors={[...DEFAULT_SLANT_SECTION_COLORS.slice(0, 2), theme.extend.colors.secondary.main]}
+      colors={[
+        ...DEFAULT_SLANT_SECTION_COLORS.slice(0, 2),
+        theme.extend.colors.secondary.main,
+      ]}
     >
       <CampaignExperts />
     </SlantSection>

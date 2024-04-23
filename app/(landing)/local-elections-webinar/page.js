@@ -10,6 +10,6 @@ const meta = pageMetaData({
 
 export const metadata = meta;
 
-const Page = () => <LocalElectionsWebinarPage />
+const Page = () => <LocalElectionsWebinarPage />;
 
-export default Page
+export default Page;
