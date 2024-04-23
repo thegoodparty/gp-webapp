@@ -1,0 +1,45 @@
+import { ExpertCard } from './ExpertCard';
+
+const EXPERTS = [
+  {
+    name: 'Jared Alper',
+    role: 'Good Party: Politics',
+    desc: 'Jared is a political strategist who has managed or served in senior strategic roles on over a dozen campaigns for US Senate, US House, state legislative and local offices across the United States.',
+    img: {
+      src: '/images/landing-pages/academy-jared.png',
+      alt: 'Jared Alper',
+    },
+  },
+  {
+    name: 'Rob Booth',
+    role: 'Good Party: Mobilization',
+    desc: "Rob has nearly 20 years of experience running and winning over 150 electoral, legislative, and ballot campaigns. He has organized everything from local races to presidential campaigns, helped pioneer deep-canvassing during the marriage equality movement, and helped build RepresentUs' volunteer network from the ground up. Rob also led several successful ballot measure efforts as the National Field Director at RepresentUs.",
+    img: {
+      src: '/images/landing-pages/academy-rob.png',
+      alt: 'Rob Booth',
+    },
+  },
+  {
+    name: 'Rich Horner',
+    role: 'FWD: Political Strategist',
+    desc: 'Rich Horner, political strategist and educator, taught at USCB, Canisius, Buffalo State, UB (2017-2023), covering Congress, parties, campaigns, behavior. President of Nexus Point Strategies since 2017, former Political Director for NY State Democratic Committee (2011-2016).',
+    img: {
+      src: '/images/landing-pages/academy-rich.png',
+      alt: 'Rich Horner',
+    },
+  },
+];
+
+const CampaignExperts = () => (
+  <div className="bg-primary-dark text-white text-center py-8 px-20 align-center">
+    <h3 className="text-3xl font-semibold mb-12">
+      Our campaigning <br />
+      experts
+    </h3>
+    {
+      EXPERTS.map((expert, key) => <ExpertCard key={key} {...expert} />)
+    }
+  </div>
+);
+
+export default CampaignExperts;
