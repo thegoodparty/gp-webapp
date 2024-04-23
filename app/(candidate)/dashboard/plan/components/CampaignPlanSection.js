@@ -15,11 +15,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { flows } from '../../questions/components/QuestionsPage';
 
-async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+async function generateAI(key, regenerate, chat, editMode) {
   try {
     const api = gpApi.campaign.onboarding.ai.create;
     return await gpFetch(api, {
-      subSectionKey,
       key,
       regenerate,
       chat,
@@ -82,7 +81,6 @@ export default function CampaignPlanSection({
   campaign,
   versions = {},
   updateVersionsCallback,
-  subSectionKey = 'campaignPlan',
   candidatePositions,
   expandSection,
 }) {
@@ -96,16 +94,16 @@ export default function CampaignPlanSection({
   const [isFailed, setIsFailed] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const campaignPlan = campaign[subSectionKey];
+  const aiContent = campaign.aiContent;
   const { key } = section;
 
   useEffect(() => {
-    if (campaignPlan && campaignPlan[key]) {
-      setPlan(campaignPlan[key]);
+    if (aiContent && aiContent[key]) {
+      setPlan(aiContent[key]);
       setLoading(false);
       setIsTyped(true);
     }
-  }, [campaignPlan]);
+  }, [aiContent]);
 
   // useEffect(() => {
   //   if (expandSection) {
@@ -131,7 +129,6 @@ export default function CampaignPlanSection({
       return;
     }
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       key,
       regenerate,
       chat,
@@ -153,16 +150,6 @@ export default function CampaignPlanSection({
       setPlan(chatResponse);
       setLoading(false);
     }
-  };
-
-  // const { plan, loading, isFailed, isTyped } = useAiPlan(
-  //   campaign,
-  //   'campaignPlan',
-  //   section.key,
-  // );
-
-  const toggleSelect = () => {
-    setOpen(!open);
   };
 
   const setEdit = () => {
@@ -200,11 +187,11 @@ export default function CampaignPlanSection({
     });
 
     const updated = campaign;
-    if (!updated[subSectionKey]) {
-      updated[subSectionKey] = {};
+    if (!updated.aiContent) {
+      updated.aiContent = {};
     }
 
-    updated[subSectionKey][key] = plan;
+    updated.aiContent[key] = plan;
     setIsEdited(false);
     setEditMode(false);
 
@@ -247,7 +234,7 @@ export default function CampaignPlanSection({
                     campaign={campaign}
                     versions={versions ? versions[key] : {}}
                     updatePlanCallback={updatePlanCallback}
-                    latestVersion={campaignPlan ? campaignPlan[key] : false}
+                    latestVersion={aiContent ? aiContent[key] : false}
                   />
                   <PlanDisplay
                     plan={plan}
