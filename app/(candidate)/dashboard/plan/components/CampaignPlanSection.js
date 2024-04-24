@@ -14,10 +14,11 @@ import PlanActions from './PlanActions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { flows } from '../../questions/components/QuestionsPage';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function generateAI(key, regenerate, chat, editMode) {
   try {
-    const api = gpApi.campaign.onboarding.ai.create;
+    const api = gpApi.campaign.ai.create;
     return await gpFetch(api, {
       key,
       regenerate,
@@ -158,7 +159,11 @@ export default function CampaignPlanSection({
   };
 
   const handleEdit = async (editedPlan) => {
-    setPlan(editedPlan);
+    const updated = {
+      ...plan,
+      content: editedPlan,
+    };
+    setPlan(updated);
   };
 
   const handleRegenerate = async (improveQuery) => {
@@ -195,8 +200,7 @@ export default function CampaignPlanSection({
     setIsEdited(false);
     setEditMode(false);
 
-    // TODO: TOMER change this to a new api call.
-    // await updateCampaignOld(updated, key, false, subSectionKey);
+    await updateCampaign([`aiContent.${key}`], [plan]);
     await updateVersionsCallback();
   };
 

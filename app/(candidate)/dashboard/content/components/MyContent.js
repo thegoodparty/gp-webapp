@@ -223,18 +223,10 @@ export default function MyContent(props) {
     }
   }, [campaignPlan, section]);
 
-  async function generateAI(
-    subSectionKey,
-    key,
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
-  ) {
+  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.onboarding.ai.create;
+      const api = gpApi.campaign.ai.create;
       return await gpFetch(api, {
-        subSectionKey,
         key,
         regenerate,
         chat,
@@ -258,7 +250,6 @@ export default function MyContent(props) {
     const resolvedInitialValues =
       (inputValues && Object.keys(inputValues) > 0) || initialValues;
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       section,
       regenerate,
       resolvedChat,
@@ -293,6 +284,7 @@ export default function MyContent(props) {
   };
 
   console.log('campaign', campaign);
+  console.log('data', data);
 
   return (
     <div>

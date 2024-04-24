@@ -286,6 +286,29 @@ const gpApi = {
       },
     },
 
+    ai: {
+      create: {
+        url: `${base}campaign/ai`,
+        method: 'POST',
+        withAuth: true,
+      },
+      edit: {
+        url: `${base}campaign/ai`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      rename: {
+        url: `${base}campaign/ai/rename`,
+        method: 'POST',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/ai`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
     endorsement: {
       create: {
         url: `${base}campaign/endorsement`,
@@ -370,33 +393,7 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      ai: {
-        create: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'POST',
-          withAuth: true,
-        },
-        fastCreate: {
-          url: `${base}campaign/onboarding/fast-ai`,
-          method: 'POST',
-          withAuth: true,
-        },
-        edit: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'PUT',
-          withAuth: true,
-        },
-        rename: {
-          url: `${base}campaign/onboarding/ai/rename`,
-          method: 'POST',
-          withAuth: true,
-        },
-        delete: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'DELETE',
-          withAuth: true,
-        },
-      },
+
       planVersions: {
         url: `${base}campaign/onboarding/planVersion`,
         method: 'GET',

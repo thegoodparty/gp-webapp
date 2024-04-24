@@ -121,18 +121,10 @@ export default function ContentEditor({
     setInitialInputValues(version.inputValues);
   };
 
-  async function generateAI(
-    subSectionKey,
-    key,
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
-  ) {
+  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.onboarding.ai.create;
+      const api = gpApi.campaign.ai.create;
       return await gpFetch(api, {
-        subSectionKey,
         key,
         regenerate,
         chat,
@@ -165,7 +157,6 @@ export default function ContentEditor({
     }
 
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       key,
       regenerate,
       chat,

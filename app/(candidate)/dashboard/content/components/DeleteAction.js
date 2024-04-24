@@ -13,7 +13,7 @@ async function deleteContent(key) {
   const subSectionKey = 'aiContent';
   console.log('deleting key', key);
   try {
-    const api = gpApi.campaign.onboarding.ai.delete;
+    const api = gpApi.campaign.ai.delete;
     const payload = {
       key,
       subSectionKey,
