@@ -2,23 +2,16 @@
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
-import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { FaTrashAlt } from 'react-icons/fa';
-import { Button } from '@mui/material';
 
 async function deleteContent(key) {
-  const subSectionKey = 'aiContent';
-  console.log('deleting key', key);
   try {
     const api = gpApi.campaign.ai.delete;
     const payload = {
       key,
-      subSectionKey,
     };
-    const deleteResp = await gpFetch(api, payload);
+    await gpFetch(api, payload);
     return true;
   } catch (e) {
     console.log('error', e);
@@ -35,7 +28,7 @@ export default function DeleteAction({
 
   const handleDelete = async (documentKey) => {
     const deleteResp = await deleteContent(documentKey);
-    if (deleteResp === true) {
+    if (deleteResp) {
       snackbarState.set(() => {
         return {
           isOpen: true,
