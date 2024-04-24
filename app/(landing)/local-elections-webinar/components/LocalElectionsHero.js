@@ -23,6 +23,7 @@ const LocalElectionsHero = () => {
             alt="Map with bubbles"
             width={741}
             height={572}
+            priority
           />
           <p className="font-normal mb-4 lg:text-lg">
             Join Good Party and the Forward Party to hear how it's easier than
@@ -69,6 +70,7 @@ const LocalElectionsHero = () => {
             alt="Map with bubbles"
             width={741}
             height={572}
+            priority
           />
         </div>
       </div>
