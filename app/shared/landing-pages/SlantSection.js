@@ -4,17 +4,21 @@ export const DEFAULT_SLANT_SECTION_COLORS = ['rgba(0,0,0,0)', theme.extend.color
 export const SlantSection = ({
   colors = DEFAULT_SLANT_SECTION_COLORS,
   children,
+  reverseDirection = false,
 }) => {
   if (colors.length !== 3) {
     throw new Error('SlantSection must be implemented w/ exactly 3 colors');
   }
+  const direction = reverseDirection ?-176 : 176;
   return <section>
     <div
-      className={`bg-[linear-gradient(176deg,_${colors[0]}_54.5%,_${colors[1]}_55%)] h-[calc(100vw*0.09)] w-full`}
+      className={`h-[calc(100vw*0.09)] w-full`}
+      style={{background: `linear-gradient(${direction}deg, ${colors[0]} 54.5%, ${colors[1]} 55%)`}}
     />
     {children}
     <div
-      className={`bg-[linear-gradient(176deg,_${colors[1]}_54.5%,_${colors[2]}_55%)] h-[calc(100vw*0.09)] w-full`}
+      className={`h-[calc(100vw*0.09)] w-full`}
+      style={{background: `linear-gradient(${direction}deg, ${colors[1]} 54.5%, ${colors[2]} 55%)`}}
     />
   </section>;
 };
