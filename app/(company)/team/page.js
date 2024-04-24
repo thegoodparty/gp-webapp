@@ -1,12 +1,13 @@
 import React, { Suspense } from 'react';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Hero from './components/Hero';
-import Volunteers from './components/Volunteers';
-import Interns from './components/Interns';
+import TeamHero from 'app/(company)/team/components/TeamHero';
 import pageMetaData from 'helpers/metadataHelper';
 import gpApi from '../../../gpApi';
 import gpFetch from '../../../gpApi/gpFetch';
 import TeamSection from './components/TeamSection';
+import OurImpact from 'app/(company)/team/components/OurImpact';
+import Funding from 'app/(company)/team/components/Funding';
+import LeadingTheMovement
+  from 'app/(company)/team/components/LeadingTheMovement';
 
 const meta = pageMetaData({
   title: 'Team | GOOD PARTY',
@@ -30,18 +31,15 @@ const TeamPage = async () => {
   console.log(`SERVER teamMembers =>`, teamMembers)
 
   return (
-    <MaxWidth>
-      <Hero />
+    <>
+      <TeamHero />
+      <OurImpact />
+      <Funding />
+      <LeadingTheMovement />
       <Suspense>
-        <TeamSection teamMembers={teamMembers} title="Good Party Team" />
+        <TeamSection teamMembers={teamMembers} />
       </Suspense>
-      <Suspense>
-        <Interns />
-      </Suspense>
-      <Suspense>
-        <Volunteers />
-      </Suspense>
-    </MaxWidth>
+    </>
   );
 }
 
