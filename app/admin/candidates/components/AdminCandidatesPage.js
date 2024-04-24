@@ -46,6 +46,7 @@ function mapStatus(status, isActive) {
 
 export default function AdminCandidatesPage(props) {
   const { campaigns } = props;
+  console.log('campaigns', campaigns);
   // TODO: Build this array of keys w/ an Object.keys() of the `fields` object below
   //  so that we can just manage these keys/fields in one place instead of two.
   const csvData = [
@@ -93,17 +94,18 @@ export default function AdminCandidatesPage(props) {
   ];
 
   const inputData = [];
-  campaigns?.map((campaignObj) => {
-    const { data } = campaignObj;
-    const campaign = mapCampaignToCandidate(data);
-    const { user, isPro, isVerified, didWin, tier } = campaignObj;
-    const { currentStep, reportedVoterGoals, aiContent, details } = data || {};
-    const { zip, level, website, ballotLevel } = details || {};
+  campaigns?.map((campaign) => {
+    const { data, user, isPro, isVerified, didWin, tier, aiContent, details } =
+      campaign;
+    // const campaign = mapCampaignToCandidate(data);
+    const { currentStep, reportedVoterGoals } = data || {};
+    const { zip, level, website, ballotLevel, office, otherOffice } =
+      details || {};
 
     let waitingForP2v =
       !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'Yes' : 'No';
 
-    if (!data?.details?.pledged) {
+    if (!details?.pledged) {
       waitingForP2v = 'n/a';
     }
 
@@ -112,12 +114,9 @@ export default function AdminCandidatesPage(props) {
     }
 
     let runningForOffice = 'Exploring';
-    if (data?.details?.knowRun && data.details.knowRun === 'yes') {
+    if (details?.knowRun && details.knowRun === 'yes') {
       runningForOffice = 'Yes';
-    } else if (
-      data?.details?.runForOffice &&
-      data.details.runForOffice === 'yes'
-    ) {
+    } else if (details?.runForOffice && details.runForOffice === 'yes') {
       runningForOffice = 'Yes';
     }
 
@@ -131,48 +130,46 @@ export default function AdminCandidatesPage(props) {
     }
 
     const fields = {
-      id: campaignObj.id,
-      isActive: campaignObj.isActive ? 'Yes' : 'No',
+      id: campaign.id,
+      isActive: campaign.isActive ? 'Yes' : 'No',
       slug: campaign.slug,
       firstName: user?.firstName ? user.firstName : user?.name || 'n/a',
       lastName: user?.lastName ? user.lastName : 'n/a',
       userName: `${user?.firstName} ${user?.lastName}`,
-      launched: mapStatus(campaign.launchStatus),
-      lastVisited: campaign.lastVisited,
-      party: partyResolver(campaign.party),
-      office:
-        campaign.office === 'Other' ? campaign.otherOffice : campaign.office,
-      officeTermLength: campaign.officeTermLength,
+      launched: mapStatus(details?.launchStatus),
+      lastVisited: details?.lastVisited,
+      party: partyResolver(details?.party),
+      office: office === 'Other' ? otherOffice : office,
+      officeTermLength: details?.officeTermLength,
       level,
       ballotLevel,
-      city: campaign.city,
+      city: details?.city,
       zip: zip || '',
-      district: campaign.district || 'n/a',
-      state: campaign.state ? campaign.state.toUpperCase() : '?',
-      createdAt: new Date(campaignObj.createdAt),
-      updatedAt: new Date(campaignObj.updatedAt),
+      district: details?.district || 'n/a',
+      state: details?.state ? details?.state.toUpperCase() : '?',
+      createdAt: new Date(campaign.createdAt),
+      updatedAt: new Date(campaign.updatedAt),
       email: user?.email || 'n/a',
       phone: user?.phone || 'n/a',
       currentStep,
-      shortVersion: campaign.filedStatement,
-      campaignCommittee: campaign.campaignCommittee,
+      shortVersion: details?.filedStatement,
+      campaignCommittee: details?.campaignCommittee,
       website: website || '',
-      primaryElectionDate: campaign.primaryElectionDate,
-      electionDate: campaign.electionDate,
+      primaryElectionDate: details?.primaryElectionDate,
+      electionDate: details?.electionDate,
       doorKnocking: reportedVoterGoals?.doorKnocking || 0,
       calls: reportedVoterGoals?.calls || 0,
       digital: reportedVoterGoals?.digital || 0,
       aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
       waitingForP2v,
-      pledged:
-        data.details?.pledged && data.details.pledged === true ? 'Yes' : 'No',
+      pledged: details?.pledged && details.pledged === true ? 'Yes' : 'No',
       knowRun: runningForOffice,
       isPro: isPro ? 'Yes' : 'No',
       isVerified: IS_VERIFIED_OPTIONS_REVERSED[isVerified],
       dateVerified:
-        campaignObj.dateVerified === null
+        campaign.dateVerified === null
           ? 'N/A'
-          : new Date(campaignObj.dateVerified),
+          : new Date(campaign.dateVerified),
       tier: CANDIDATE_TIERS_REVERSED[tier],
       didWin: didWinDisplay,
     };
@@ -196,19 +193,6 @@ export default function AdminCandidatesPage(props) {
     {
       Header: 'Profile',
       accessor: 'slug',
-      Cell: ({ row }) => {
-        const route = candidateRoute(row.original);
-        return (
-          <a
-            href={route}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="underline"
-          >
-            {row.original.slug}
-          </a>
-        );
-      },
     },
     // todo - remove later
     {

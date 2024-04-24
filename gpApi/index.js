@@ -154,9 +154,23 @@ const gpApi = {
       withAuth: true,
     },
 
+    list: {
+      //admin
+      url: `${base}campaigns`,
+      method: 'GET',
+      withAuth: true,
+    },
+
     launch: {
       url: `${base}campaign/launch`,
       method: 'POST',
+      withAuth: true,
+    },
+
+    findBySlug: {
+      //admin
+      url: `${base}campaign/by-slug`,
+      method: 'GET',
       withAuth: true,
     },
 
@@ -364,12 +378,7 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      findBySlug: {
-        //admin
-        url: `${base}campaign/onboarding/by-slug`,
-        method: 'GET',
-        withAuth: true,
-      },
+
       launchRequest: {
         url: `${base}campaign/onboarding/launch-request`,
         method: 'POST',
@@ -385,12 +394,6 @@ const gpApi = {
         // admin
         url: `${base}campaign/onboarding/launch`,
         method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        //admin
-        url: `${base}campaign/onboardings`,
-        method: 'GET',
         withAuth: true,
       },
 
