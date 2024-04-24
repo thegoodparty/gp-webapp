@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import {
+  AcademyModalSignUpButton
+} from 'app/(landing)/academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const LocalElectionsHero = () => {
   return (

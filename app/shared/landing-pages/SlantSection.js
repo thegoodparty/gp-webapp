@@ -1,4 +1,4 @@
-import { theme } from '../../../tailwind.config';
+import { theme } from 'tailwind.config';
 
 export const DEFAULT_SLANT_SECTION_COLORS = ['rgba(0,0,0,0)', theme.extend.colors.primary.dark, 'rgba(0,0,0,0)'];
 export const SlantSection = ({

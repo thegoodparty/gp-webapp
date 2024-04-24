@@ -8,7 +8,7 @@ import {
   DEFAULT_SLANT_SECTION_COLORS,
   SlantSection,
 } from '@shared/landing-pages/SlantSection';
-import { theme } from '../../../../tailwind.config';
+import { theme } from 'tailwind.config';
 
 export const LocalElectionsWebinarPage = () => (
   <AcademySignUpModalProvider>
