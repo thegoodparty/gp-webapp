@@ -6,6 +6,12 @@ import GraduateSpotlight from './GraduateSpotlight';
 import Hero from './Hero';
 import Hero2 from './Hero2';
 import WhyAcademy from './WhyAcademy';
+import {
+  AcademySignUpModalProvider
+} from '../../academy/components/AcademySignUpModal/AcademySignUpModalProvider';
+import {
+  AcademySignUpModal
+} from '../../academy/components/AcademySignUpModal/AcademySignUpModal';
 
 const content = {
   heroDesc:
@@ -18,7 +24,8 @@ const content = {
 
 export default function WebinarPage() {
   return (
-    <>
+    <AcademySignUpModalProvider>
+      <AcademySignUpModal />
       <Hero content={content} />
       <Hero2 content={content} />
       <WhyAcademy content={content} />
@@ -27,6 +34,6 @@ export default function WebinarPage() {
       <Dates content={content} />
       <Graduates content={content} />
       <GraduateSpotlight content={content} />
-    </>
+    </AcademySignUpModalProvider>
   );
 }
