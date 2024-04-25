@@ -2,7 +2,7 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { FaCirclePlus } from 'react-icons/fa6';
@@ -68,7 +68,7 @@ export default function AddCustomIssue(props) {
         order,
       });
     }
-    await updateCampaign(['details.customIssues'], [customIssues]);
+    await updateCampaignOld(['details.customIssues'], [customIssues]);
     await saveCallback(customIssues);
   };
 

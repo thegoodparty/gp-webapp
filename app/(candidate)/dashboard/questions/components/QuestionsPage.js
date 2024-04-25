@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Occupation from './Occupation';
 import {
   getCampaign,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
@@ -103,7 +103,7 @@ export default function QuestionsPage(props) {
   };
 
   const handleSave = async (keys, values) => {
-    const res = await updateCampaign(keys, values);
+    const res = await updateCampaignOld(keys, values);
     // const res = await getCampaign();
     setCampaign(res.campaign);
   };

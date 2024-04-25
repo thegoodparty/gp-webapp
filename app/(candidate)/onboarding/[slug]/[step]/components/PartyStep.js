@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -179,7 +179,7 @@ export default function PartyStep(props) {
         values.push(state.otherParty);
       }
 
-      await updateCampaign(keys, values);
+      await updateCampaignOld(keys, values);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };

@@ -108,10 +108,8 @@ export default function ContentEditor({
       inputValues: existingInputs,
       content: plan,
     };
-    const keys = [`aiContent.${key}`];
-    const values = [newVal];
 
-    await updateCampaign(keys, values);
+    await updateCampaign([{ [`aiContent.${key}`]: newVal }]);
     setSaved('Saved');
   };
 

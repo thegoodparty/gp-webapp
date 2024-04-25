@@ -13,7 +13,7 @@ import { FaCheck, FaChild } from 'react-icons/fa';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
 import InfoButton from '@shared/buttons/InfoButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function launchCampaign() {
   try {
@@ -70,7 +70,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
     const keys = ['details.pledged', 'data.currentStep'];
     const values = [pledged, currentStep];
 
-    await updateCampaign(keys, values);
+    await updateCampaignOld(keys, values);
     const res = await launchCampaign();
     if (res) {
       window.location.href = '/dashboard/plan';

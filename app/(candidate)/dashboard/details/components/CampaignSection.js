@@ -4,7 +4,10 @@ import H3 from '@shared/typography/H3';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  updateCampaign,
+  updateCampaignOld,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 
 const fields = [
@@ -81,7 +84,9 @@ export default function CampaignSection(props) {
         keys.push(`details.${field.key}`);
         values.push(state[field.key]);
       });
-      await updateCampaign(keys, values);
+      await updateCampaignOld(keys, values);
+      await updateCampaign();
+
       setSaving(false);
     }
   };

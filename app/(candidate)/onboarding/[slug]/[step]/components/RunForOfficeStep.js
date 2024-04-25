@@ -8,7 +8,7 @@ import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
 import {
   onboardingStep,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -57,7 +57,7 @@ export default function RunForOfficeStep(props) {
         state.noCommittee,
         currentStep,
       ];
-      await updateCampaign(keys, values);
+      await updateCampaignOld(keys, values);
 
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }

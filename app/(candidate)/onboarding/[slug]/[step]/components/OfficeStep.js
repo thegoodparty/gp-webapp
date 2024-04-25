@@ -3,7 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaign,
+  updateCampaignOld,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
@@ -94,7 +94,7 @@ export default function OfficeStep(props) {
       state.ballotOffice.election?.primaryElectionId,
       state.ballotOffice.position?.hasPrimary,
     ];
-    await updateCampaign(keys, values);
+    await updateCampaignOld(keys, values);
 
     if (!step) {
       await runP2V();

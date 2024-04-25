@@ -7,8 +7,25 @@ import {
   onboardingStep,
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+async function updateUser(phone) {
+  try {
+    const api = gpApi.user.updateUser;
+    const payload = {
+      phone,
+    };
+
+    const response = await gpFetch(api, payload);
+    const { user } = response;
+    setUserCookie(user);
+  } catch (error) {
+    console.log('Error updating user', error);
+  }
+}
 
 export default function PhoneStep(props) {
   const { campaign, step } = props;
@@ -27,10 +44,11 @@ export default function PhoneStep(props) {
   const handleSave = async () => {
     if (!state.error) {
       const currentStep = onboardingStep(campaign, step);
-      await updateCampaign(
-        ['details.phone', 'data.currentStep'],
-        [state.phone, currentStep],
-      );
+
+      await updateCampaign([
+        { 'details.phone': state.phone, 'data.currentStep': currentStep },
+      ]);
+      await updateUser(state.phone);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };
