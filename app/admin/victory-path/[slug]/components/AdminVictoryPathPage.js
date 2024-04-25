@@ -128,13 +128,16 @@ sections.forEach((section) => {
 
 export default function AdminVictoryPathPage(props) {
   const { campaign } = props;
+  const campaignData = campaign.data;
 
   const [state, setState] = useState({
     ...initialState,
-    ...campaign.pathToVictory,
+    ...campaignData.pathToVictory,
   });
-  console.log('campaign.p2vNotNeeded', campaign.p2vNotNeeded);
-  const [notNeeded, setNotNeeded] = useState(campaign.p2vNotNeeded || false);
+  console.log('campaign.p2vNotNeeded', campaignData.p2vNotNeeded);
+  const [notNeeded, setNotNeeded] = useState(
+    campaignData.p2vNotNeeded || false,
+  );
   const snackbarState = useHookstate(globalSnackbarState);
 
   const onChangeField = (key, value) => {
@@ -158,16 +161,19 @@ export default function AdminVictoryPathPage(props) {
       };
     });
     const updated = {
-      ...campaign,
+      ...campaignData,
       pathToVictory: state,
       p2vStatus: 'Complete',
     };
     try {
       // only send mail the first time we update pathToVictory
-      if (!campaign.pathToVictory) {
+      if (!campaignData.pathToVictory) {
         await sendVictoryMail(updated.slug);
       }
-      await updateCampaign(updated, false, true);
+      await updateCampaign(
+        ['pathToVictory'],
+        [{ ...state, p2vStatus: 'Complete' }],
+      );
 
       snackbarState.set(() => {
         return {
@@ -191,33 +197,36 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const office =
-    campaign?.details?.office === 'Other'
-      ? `${campaign?.details?.otherOffice} (Other)`
-      : campaign?.details?.office;
+    campaignData?.details?.office === 'Other'
+      ? `${campaignData?.details?.otherOffice} (Other)`
+      : campaignData?.details?.office;
 
   const handleNotNeeded = async (e) => {
     setNotNeeded(e.target.checked);
     const updated = {
-      ...campaign,
+      ...campaignData,
       p2vNotNeeded: e.target.checked,
     };
-    await updateCampaign(updated);
+    await updateCampaign(
+      ['pathToVictory'],
+      [{ p2vNotNeeded: e.target.checked }],
+    );
   };
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
         <div className="mt-8">
           <H2>
-            Slug: <strong>{campaign?.slug}</strong>
+            Slug: <strong>{campaignData?.slug}</strong>
             <br />
             Name:{' '}
             <strong>
-              {campaign?.details?.firstName || ''}{' '}
-              {campaign?.details?.lastName || ''}
+              {campaignData?.details?.firstName || ''}{' '}
+              {campaignData?.details?.lastName || ''}
             </strong>
             .
           </H2>
-          {!notNeeded && <VoterFileSection campaign={campaign} />}
+          {!notNeeded && <VoterFileSection campaign={campaignData} />}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}
@@ -229,15 +238,17 @@ export default function AdminVictoryPathPage(props) {
           <ProFieldsSection {...props} />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
-            <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}
-            <strong>{campaign?.details?.district || 'N/A'}</strong>.{' '}
-            <strong>{campaign?.details?.city || 'N/A'}</strong>. ElectionDate:{' '}
+            <strong>{campaignData?.details?.state || 'N/A'}</strong>. District:{' '}
+            <strong>{campaignData?.details?.district || 'N/A'}</strong>.{' '}
+            <strong>{campaignData?.details?.city || 'N/A'}</strong>.
+            ElectionDate:{' '}
             <strong>
-              {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
+              {dateUsHelper(campaignData?.goals?.electionDate) || 'N/A'}
             </strong>
             . Primary Election Date:{' '}
             <strong>
-              {dateUsHelper(campaign?.details?.primaryElectionDate) || 'N/A'}
+              {dateUsHelper(campaignData?.details?.primaryElectionDate) ||
+                'N/A'}
             </strong>
           </H4>
           {sections.map((section) => (

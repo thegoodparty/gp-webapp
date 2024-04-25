@@ -8,7 +8,7 @@ import pageMetaData from 'helpers/metadataHelper';
 export async function fetchCampaignBySlug(slug) {
   // admin only
   try {
-    const api = gpApi.campaign.onboarding.findBySlug;
+    const api = gpApi.campaign.findBySlug;
     const payload = {
       slug,
     };
@@ -30,13 +30,12 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign, campaignObj } = await fetchCampaignBySlug(slug);
+  const { campaign } = await fetchCampaignBySlug(slug);
 
   const childProps = {
     pathname: '/admin/candidates',
     title: 'Path to Victory',
     campaign,
-    campaignObj,
   };
   return <AdminVictoryPathPage {...childProps} />;
 }

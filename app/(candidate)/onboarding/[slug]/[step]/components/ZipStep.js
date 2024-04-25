@@ -31,22 +31,20 @@ export default function ZipStep(props) {
   };
 
   const handleSave = async () => {
-    if (canSubmit) {
-      const updated = {
-        ...campaign,
-        currentStep: onboardingStep(campaign, step),
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
-      await updateCampaign(updated);
-      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+    if (!canSubmit()) {
+      return;
     }
+    const currentStep = onboardingStep(campaign, step);
+    const keys = ['details.zip', 'data.currentStep'];
+    const values = [state.zip, currentStep];
+
+    await updateCampaign(keys, values);
+    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };
 
   const knowsRun = campaign?.details?.runForOffice === 'yes';
 
+  console.log('campaign zip', campaign);
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">

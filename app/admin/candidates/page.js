@@ -13,7 +13,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export const fetchCampaigns = async () => {
-  const api = gpApi.campaign.onboarding.list;
+  const api = gpApi.campaign.list;
   const token = getServerToken();
   return await gpFetch(api, false, false, token);
 };

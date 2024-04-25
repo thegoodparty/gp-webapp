@@ -14,11 +14,9 @@ import H2 from '@shared/typography/H2';
 import H6 from '@shared/typography/H6';
 
 async function renameContent(key, name) {
-  const subSectionKey = 'aiContent';
   try {
-    const api = gpApi.campaign.onboarding.ai.rename;
+    const api = gpApi.campaign.ai.rename;
     const payload = {
-      subSectionKey,
       key,
       name,
     };

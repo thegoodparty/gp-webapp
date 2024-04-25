@@ -1,7 +1,7 @@
 'use client';
 import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu';
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Hamburger from 'hamburger-react';
-import { fetchUserCampaignClient } from 'helpers/campaignHelper';
 import { useEffect, useState } from 'react';
 
 function disableScroll() {
@@ -33,7 +33,7 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
   }, []);
 
   const getSlug = async () => {
-    const res = await fetchUserCampaignClient();
+    const res = await getCampaign();
     const { candidateSlug } = res.campaign || {};
     setSlug(candidateSlug);
     setCampaign(res.campaign);

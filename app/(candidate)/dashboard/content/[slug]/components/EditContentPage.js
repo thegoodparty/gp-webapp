@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import ContentEditor from './ContentEditor';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
-// import { fetchUserCampaignClient } from 'helpers/campaignHelper';
 import { kebabToCamel } from 'helpers/stringHelper';
 import LoadingContent from './LoadingContent';
 

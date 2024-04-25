@@ -138,6 +138,42 @@ const gpApi = {
   },
 
   campaign: {
+    create: {
+      url: `${base}campaign`,
+      method: 'POST',
+      withAuth: true,
+    },
+    update: {
+      url: `${base}campaign`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    get: {
+      url: `${base}campaign`,
+      method: 'GET',
+      withAuth: true,
+    },
+
+    list: {
+      //admin
+      url: `${base}campaigns`,
+      method: 'GET',
+      withAuth: true,
+    },
+
+    launch: {
+      url: `${base}campaign/launch`,
+      method: 'POST',
+      withAuth: true,
+    },
+
+    findBySlug: {
+      //admin
+      url: `${base}campaign/by-slug`,
+      method: 'GET',
+      withAuth: true,
+    },
+
     adminUpdate: {
       url: `${base}campaign-admin`,
       method: 'PUT',
@@ -264,6 +300,29 @@ const gpApi = {
       },
     },
 
+    ai: {
+      create: {
+        url: `${base}campaign/ai`,
+        method: 'POST',
+        withAuth: true,
+      },
+      edit: {
+        url: `${base}campaign/ai`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      rename: {
+        url: `${base}campaign/ai/rename`,
+        method: 'POST',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/ai`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
     endorsement: {
       create: {
         url: `${base}campaign/endorsement`,
@@ -319,12 +378,7 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      findBySlug: {
-        //admin
-        url: `${base}campaign/onboarding/by-slug`,
-        method: 'GET',
-        withAuth: true,
-      },
+
       launchRequest: {
         url: `${base}campaign/onboarding/launch-request`,
         method: 'POST',
@@ -342,39 +396,7 @@ const gpApi = {
         method: 'POST',
         withAuth: true,
       },
-      list: {
-        //admin
-        url: `${base}campaign/onboardings`,
-        method: 'GET',
-        withAuth: true,
-      },
-      ai: {
-        create: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'POST',
-          withAuth: true,
-        },
-        fastCreate: {
-          url: `${base}campaign/onboarding/fast-ai`,
-          method: 'POST',
-          withAuth: true,
-        },
-        edit: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'PUT',
-          withAuth: true,
-        },
-        rename: {
-          url: `${base}campaign/onboarding/ai/rename`,
-          method: 'POST',
-          withAuth: true,
-        },
-        delete: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'DELETE',
-          withAuth: true,
-        },
-      },
+
       planVersions: {
         url: `${base}campaign/onboarding/planVersion`,
         method: 'GET',

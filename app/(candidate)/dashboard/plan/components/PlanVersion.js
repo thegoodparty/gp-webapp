@@ -17,7 +17,7 @@ export default function PlanVersion({
     if (version === '') {
       updatePlanCallback(latestVersion);
     } else {
-      updatePlanCallback(version);
+      updatePlanCallback({ content: version });
     }
   };
   return (

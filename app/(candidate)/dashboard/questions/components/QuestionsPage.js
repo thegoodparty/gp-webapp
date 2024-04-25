@@ -3,8 +3,8 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import { useState } from 'react';
 import Occupation from './Occupation';
 import {
-  updateCampaign,
   getCampaign,
+  updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
@@ -75,7 +75,7 @@ export default function QuestionsPage(props) {
   let nextStep = 0;
   const combinedIssuedCount =
     (state.candidatePositions?.length || 0) +
-    (campaign?.customIssues?.length || 0);
+    (campaign?.details?.customIssues?.length || 0);
 
   for (let i = 0; i < flow.length; i++) {
     nextStep = i;
@@ -84,7 +84,7 @@ export default function QuestionsPage(props) {
         break;
       }
     } else if (flow[i] === 'runningAgainst') {
-      if (!campaign?.goals?.runningAgainst) {
+      if (!campaign?.details?.runningAgainst) {
         break;
       }
     } else if (!campaign?.details || !campaign.details[flow[i]]) {
@@ -102,9 +102,9 @@ export default function QuestionsPage(props) {
     });
   };
 
-  const handleSave = async (updated) => {
-    await updateCampaign(updated);
-    const res = await getCampaign();
+  const handleSave = async (keys, values) => {
+    const res = await updateCampaign(keys, values);
+    // const res = await getCampaign();
     setCampaign(res.campaign);
   };
 
@@ -132,7 +132,6 @@ export default function QuestionsPage(props) {
     onChangeField('candidatePositions', candidatePositions);
     setCampaign(res.campaign);
   };
-
   return (
     <MaxWidth>
       <div className="min-h-[calc(100vh-56px)] py-20 w-full">

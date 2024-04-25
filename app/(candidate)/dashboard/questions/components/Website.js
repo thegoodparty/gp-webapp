@@ -8,33 +8,19 @@ export default function Website({
   value,
   onChangeCallback,
   saveCallback,
-  campaign,
   campaignKey,
 }) {
   const handleSave = () => {
     if (!canSave()) return;
-    const updated = {
-      ...campaign,
-      details: {
-        ...campaign.details,
-        [campaignKey]: value,
-      },
-    };
-    saveCallback(updated);
+
+    saveCallback([`details.${campaignKey}`], [value]);
   };
   const canSave = () => {
     return isValidUrl(value);
   };
 
   const handleSkip = () => {
-    const updated = {
-      ...campaign,
-      details: {
-        ...campaign.details,
-        [campaignKey]: 'skipped',
-      },
-    };
-    saveCallback(updated);
+    saveCallback([`details.${campaignKey}`], ['skipped']);
   };
   return (
     <div className="max-w-xl m-auto">

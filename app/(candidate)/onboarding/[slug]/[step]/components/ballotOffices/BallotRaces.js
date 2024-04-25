@@ -92,13 +92,7 @@ export default function BallotRaces(props) {
       setZip(newZip);
       clearState();
       await loadRaces(newZip);
-      await updateCampaign({
-        ...campaign,
-        details: {
-          ...campaign.details,
-          zip: newZip,
-        },
-      });
+      await updateCampaign(['details.zip'], [newZip]);
     }
   };
 
@@ -149,10 +143,23 @@ export default function BallotRaces(props) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
         : step;
-      await updateCampaign(updated);
+      const keys = [
+        'data.currentStep',
+        'details.otherOffice',
+        'details.positionId',
+        'details.electionId',
+      ];
+      const values = [updated.currentStep, '', null, null];
+      await updateCampaign(keys, values);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     } else {
-      await updateCampaign(updated);
+      const keys = [
+        'details.otherOffice',
+        'details.positionId',
+        'details.electionId',
+      ];
+      const values = ['', null, null];
+      await updateCampaign(keys, values);
       if (updateCallback) {
         updateCallback();
       }

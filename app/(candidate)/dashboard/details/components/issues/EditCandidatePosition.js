@@ -72,8 +72,7 @@ export default function EditCandidatePosition({
   };
 
   const handleDeleteCustom = async () => {
-    let entity = isStaged && campaign ? campaign : candidate;
-    let customIssues = entity.customIssues || [];
+    let customIssues = campaign.details.customIssues || [];
     let index;
     for (let i = 0; i < customIssues.length; i++) {
       if (
@@ -87,7 +86,7 @@ export default function EditCandidatePosition({
     if (typeof index !== 'undefined') {
       customIssues.splice(index, 1);
       await saveCallback({
-        ...entity,
+        ...campaign,
         customIssues,
       });
       await revalidateCandidates();

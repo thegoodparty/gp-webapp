@@ -162,24 +162,24 @@ export default function PartyStep(props) {
   };
 
   const handleSave = async () => {
-    // const isInvalid = invalidOtherParty();
-    // console.log('isInvalid', isInvalid, state.otherParty);
-    // return;
     if (invalidOtherParty()) {
       setShowInvalidModal(true);
       onChangeField('otherParty', '');
       return;
     }
     if (canSubmit) {
-      const updated = {
-        ...campaign,
-        currentStep: onboardingStep(campaign, step),
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
-      await updateCampaign(updated);
+      const currentStep = onboardingStep(campaign, step);
+      const keys = ['data.currentStep'];
+      const values = [currentStep];
+      if (state.otherParty === '') {
+        keys.push('details.party');
+        values.push(state.party);
+      } else {
+        keys.push('details.otherParty');
+        values.push(state.otherParty);
+      }
+
+      await updateCampaign(keys, values);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };

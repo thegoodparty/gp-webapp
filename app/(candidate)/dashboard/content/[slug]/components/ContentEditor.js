@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
@@ -112,11 +111,9 @@ export default function ContentEditor({
       content: plan,
     };
 
-    // updated[subSectionKey][key] = plan;
-    await updateCampaign(updated, key, false, 'aiContent');
-    // await updateVersionsCallback();
+    // TODO: TOMER change this to a new api call
+    // await updateCampaignOld(updated, key, false, 'aiContent');
     setSaved('Saved');
-    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
@@ -124,18 +121,10 @@ export default function ContentEditor({
     setInitialInputValues(version.inputValues);
   };
 
-  async function generateAI(
-    subSectionKey,
-    key,
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
-  ) {
+  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.onboarding.ai.create;
+      const api = gpApi.campaign.ai.create;
       return await gpFetch(api, {
-        subSectionKey,
         key,
         regenerate,
         chat,
@@ -168,7 +157,6 @@ export default function ContentEditor({
     }
 
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       key,
       regenerate,
       chat,

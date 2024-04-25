@@ -5,7 +5,6 @@ import DoorKnockingMainPage from './components/DoorKnockingMainPage';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { redirect } from 'next/navigation';
 
 async function fetchDkCampaigns() {
   try {
