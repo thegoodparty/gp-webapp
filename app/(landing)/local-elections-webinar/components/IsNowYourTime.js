@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 const IsNowYourTime = () => (
-  <section className="grid grid-cols-12 md:gap-16 px-8 py-9">
+  <MaxWidth>
+  <section className="grid grid-cols-12 md:gap-16 px-8 py-9 lg:px-20 xl:px-4">
     <div className="col-span-12 md:col-span-6">
       <Image
         className="w-12 h-12 ml-auto mr-8 md:w-24 md:h-24 md:mr-20"
@@ -41,6 +43,7 @@ const IsNowYourTime = () => (
       />
     </div>
   </section>
+  </MaxWidth>
 );
 
 export default IsNowYourTime;
