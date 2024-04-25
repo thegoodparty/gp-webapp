@@ -19,16 +19,23 @@ export const metadata = meta;
 
 async function fetchTeamMembers() {
   const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'goodPartyTeamMembers',
-  };
-  return await gpFetch(api, payload, 3600);
+  const [{content: teamMembers}, {content: teamMilestones}] = await Promise.all([
+    gpFetch(
+      api,
+      {
+        key: 'goodPartyTeamMembers',
+      }, 3600),
+    gpFetch(
+      api,
+      {
+        key: 'teamMilestones',
+      }, 3600)
+  ]);
+  return {teamMembers, teamMilestones}
 }
 
 const TeamPage = async () => {
-  const {content: teamMembers} = await fetchTeamMembers();
-
-  console.log(`SERVER teamMembers =>`, teamMembers)
+  const {teamMembers, teamMilestones} = await fetchTeamMembers();
 
   return (
     <>
@@ -37,10 +44,26 @@ const TeamPage = async () => {
       <Funding />
       <LeadingTheMovement />
       <Suspense>
-        <TeamSection teamMembers={teamMembers} />
+        <TeamSection
+          teamMembers={teamMembers} />
       </Suspense>
+      <TeamMilestones teamMilestones={teamMilestones} />
     </>
   );
 }
+
+const TeamMilestones = ({
+  teamMilestones
+}) => <section>
+
+  {
+    teamMilestones.map((milestone, index) => {
+      return <div key={index}>
+        <h3>{milestone.month} {milestone.year}</h3>
+        <p>{milestone.blurb}</p>
+      </div>
+    })
+  }
+</section>
 
 export default TeamPage;

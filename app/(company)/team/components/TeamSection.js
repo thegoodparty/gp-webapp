@@ -7,7 +7,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
 export default function TeamSection(props) {
-  const { teamMembers } = props;
+  const { teamMembers, teamMilestones } = props;
   const [selected, setSelected] = useState({});
   const [flipAll, setFlipAll] = useState(false);
 
