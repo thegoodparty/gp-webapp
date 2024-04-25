@@ -740,7 +740,7 @@ const gpApi = {
       withAuth: true,
     },
     pathToVictory: {
-      url: `${base}voter-data/path-to-victory`, //admin
+      url: `${base}voter-data/path-to-victory`,
       method: 'POST',
       withAuth: true,
     },

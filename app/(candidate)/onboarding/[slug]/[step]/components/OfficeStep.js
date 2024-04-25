@@ -8,6 +8,18 @@ import {
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
 import { useState } from 'react';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function runP2V() {
+  try {
+    const api = gpApi.voterData.pathToVictory;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
 
 export default function OfficeStep(props) {
   const { campaign, step, updateCallback } = props;
@@ -84,13 +96,9 @@ export default function OfficeStep(props) {
     ];
     await updateCampaign(keys, values);
 
-    // TODO: need to recalculate p2vStatus in a different call
-    /*
     if (!step) {
-      // delete p2vStatus so the backend will recalculate it
-      delete updated.p2vStatus;
+      await runP2V();
     }
-    */
 
     if (step) {
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
