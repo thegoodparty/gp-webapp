@@ -11,9 +11,7 @@ import {
   RiDoorOpenLine,
 } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
-import {
-  fireGTMButtonClickEvent
-} from '@shared/buttons/fireGTMButtonClickEvent';
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
 
 let pages = [
   {
@@ -77,12 +75,12 @@ export default function DashboardMenu({
   const handleLogOut = (e) => {
     deleteUserCookies();
     window.location.replace('/');
-    fireGTMButtonClickEvent(e.currentTarget)
+    fireGTMButtonClickEvent(e.currentTarget);
   };
   if (
     user?.isAdmin &&
     pages.length === 8 &&
-    campaign?.hasVoterFile === 'completed'
+    campaign?.data?.hasVoterFile === 'completed'
   ) {
     pages[4].link = '/dashboard/voter-records';
     pages[4].id = 'vote-records-dashboard';
@@ -129,13 +127,10 @@ export default function DashboardMenu({
             </div>
           </Link>
 
-          <div
-            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer "
-          >
-            <div
-              id="nav-log-out"
-              onClick={handleLogOut}
-              className="ml-2">Logout</div>
+          <div className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer ">
+            <div id="nav-log-out" onClick={handleLogOut} className="ml-2">
+              Logout
+            </div>
           </div>
         </div>
       )}
