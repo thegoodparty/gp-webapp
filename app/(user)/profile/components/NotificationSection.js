@@ -73,8 +73,6 @@ export default function NotificationSection() {
     updateUserCallback(updatedState);
   };
 
-  console.log('state', state);
-
   return (
     <section className="py-4 border-b border-slate-300 flex">
       <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">

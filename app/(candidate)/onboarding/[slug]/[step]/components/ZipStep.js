@@ -11,6 +11,23 @@ import { useState } from 'react';
 import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 
 import TextField from '@shared/inputs/TextField';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function updateUser(zip) {
+  try {
+    const api = gpApi.user.updateUser;
+    const payload = {
+      zip,
+    };
+
+    const response = await gpFetch(api, payload);
+    const { user } = response;
+    setUserCookie(user);
+  } catch (error) {
+    console.log('Error updating user', error);
+  }
+}
 
 export default function ZipStep(props) {
   const { campaign, step } = props;
@@ -31,22 +48,21 @@ export default function ZipStep(props) {
   };
 
   const handleSave = async () => {
-    if (canSubmit) {
-      const updated = {
-        ...campaign,
-        currentStep: onboardingStep(campaign, step),
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
-      await updateCampaign(updated);
-      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+    if (!canSubmit()) {
+      return;
     }
+    const currentStep = onboardingStep(campaign, step);
+    const keys = ['details.zip', 'data.currentStep'];
+    const values = [state.zip, currentStep];
+
+    await updateCampaign(keys, values);
+    updateUser(state.zip);
+    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };
 
   const knowsRun = campaign?.details?.runForOffice === 'yes';
 
+  console.log('campaign zip', campaign);
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">

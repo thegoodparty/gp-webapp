@@ -39,7 +39,10 @@ export default function IssuesList({
   previewMode,
   candidate,
 }) {
-  let positions = combinePositions(candidatePositions, candidate.customIssues);
+  let positions = combinePositions(
+    candidatePositions,
+    candidate.details.customIssues,
+  );
 
   if (previewMode) {
     positions = positions.slice(0, 3);

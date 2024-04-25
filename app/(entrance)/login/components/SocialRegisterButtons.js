@@ -79,7 +79,10 @@ export default function SocialRegisterButtons() {
       setUserCookie(user);
       setCookie('token', token);
       userState.set(() => user);
-      if (newUser && user.firstName !== '') {
+
+      const returnUrl = getCookie('returnUrl');
+
+      if (newUser && user.firstName !== '' && returnUrl !== 'profile') {
         await createCampaign();
         return;
       }
@@ -87,7 +90,6 @@ export default function SocialRegisterButtons() {
         window.location.href = '/set-name';
         return;
       }
-      const returnUrl = getCookie('returnUrl');
       if (returnUrl) {
         deleteCookie('returnUrl');
         window.location.href = returnUrl;

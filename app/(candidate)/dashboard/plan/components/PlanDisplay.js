@@ -34,7 +34,10 @@ export default function PlanDisplay({
       ) : (
         <>
           {editMode ? (
-            <RichEditor initialText={plan} onChangeCallback={handleEdit} />
+            <RichEditor
+              initialText={plan?.content}
+              onChangeCallback={handleEdit}
+            />
           ) : (
             <div className="relative pb-10 cursor-text" onClick={setEdit}>
               {!isTyped ? (
@@ -44,7 +47,7 @@ export default function PlanDisplay({
                   }}
                   onInit={(typewriter) => {
                     typewriter
-                      .typeString(plan)
+                      .typeString(plan?.content)
                       .callFunction(() => {
                         setIsTyped(true);
                       })
@@ -53,7 +56,7 @@ export default function PlanDisplay({
                   }}
                 />
               ) : (
-                <div dangerouslySetInnerHTML={{ __html: plan }} />
+                <div dangerouslySetInnerHTML={{ __html: plan?.content }} />
               )}
               <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-indigo-500 cursor-pointer hidden-for-print">
                 <FaPencilAlt />

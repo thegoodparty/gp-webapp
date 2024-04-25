@@ -1,14 +1,11 @@
 'use client';
 
 import H3 from '@shared/typography/H3';
-import Body1 from '@shared/typography/Body1';
-import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
-import { flatStates } from 'helpers/statesHelper';
 
 const fields = [
   {
@@ -57,14 +54,10 @@ export default function CampaignSection(props) {
   const [saving, setSaving] = useState(false);
   const { campaign } = props;
   useEffect(() => {
-    if (campaign?.details && campaign?.goals) {
+    if (campaign?.details) {
       const newState = {};
       fields.forEach((field) => {
-        if (field.campaignObj === 'goals') {
-          newState[field.key] = campaign.goals[field.key] || '';
-        } else {
-          newState[field.key] = campaign.details[field.key] || '';
-        }
+        newState[field.key] = campaign.details[field.key] || '';
       });
       setState(newState);
     }
@@ -82,23 +75,13 @@ export default function CampaignSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      const newCampaign = {
-        ...campaign,
-      };
+      let keys = [];
+      let values = [];
       fields.forEach((field) => {
-        if (field.campaignObj === 'goals') {
-          newCampaign.goals = {
-            ...newCampaign.goals,
-            [field.key]: state[field.key],
-          };
-        } else {
-          newCampaign.details = {
-            ...newCampaign.details,
-            [field.key]: state[field.key],
-          };
-        }
+        keys.push(`details.${field.key}`);
+        values.push(state[field.key]);
       });
-      await updateCampaign(newCampaign);
+      await updateCampaign(keys, values);
       setSaving(false);
     }
   };

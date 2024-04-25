@@ -26,15 +26,11 @@ export default function PhoneStep(props) {
 
   const handleSave = async () => {
     if (!state.error) {
-      const updated = {
-        ...campaign,
-        currentStep: onboardingStep(campaign, step),
-        details: {
-          ...campaign.details,
-          phone: state.phone,
-        },
-      };
-      await updateCampaign(updated, false, true, false);
+      const currentStep = onboardingStep(campaign, step);
+      await updateCampaign(
+        ['details.phone', 'data.currentStep'],
+        [state.phone, currentStep],
+      );
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };

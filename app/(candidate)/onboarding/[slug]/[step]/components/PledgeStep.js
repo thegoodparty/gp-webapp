@@ -1,12 +1,8 @@
 'use client';
 import { Fragment, useState } from 'react';
-import {
-  onboardingStep,
-  updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { onboardingStep } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import Checkbox from '@shared/inputs/Checkbox';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import gpApi from 'gpApi';
@@ -17,17 +13,15 @@ import { FaCheck, FaChild } from 'react-icons/fa';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
 import InfoButton from '@shared/buttons/InfoButton';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function launchCampaign() {
   try {
-    const api = gpApi.campaign.onboarding.launch;
-    // const payload = {
-    //   slug,
-    // };
+    const api = gpApi.campaign.launch;
     return await gpFetch(api);
   } catch (e) {
     console.log('error at launchCampaign', e);
-    return {};
+    return false;
   }
 }
 
@@ -70,14 +64,17 @@ export default function PledgeStep({ campaign, pledge, step }) {
       return;
     }
     setLoading(true);
-    const updated = campaign;
-
-    updated.details.pledged =
+    const currentStep = onboardingStep(campaign, step);
+    const pledged =
       state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
-    updated.currentStep = onboardingStep(campaign, step);
-    await updateCampaign(updated);
-    await launchCampaign();
-    window.location.href = '/dashboard/plan';
+    const keys = ['details.pledged', 'data.currentStep'];
+    const values = [pledged, currentStep];
+
+    await updateCampaign(keys, values);
+    const res = await launchCampaign();
+    if (res) {
+      window.location.href = '/dashboard/plan';
+    }
   };
 
   const onChangeField = (key, value) => {

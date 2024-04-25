@@ -8,6 +8,18 @@ import {
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
 import { useState } from 'react';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function runP2V() {
+  try {
+    const api = gpApi.voterData.pathToVictory;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
 
 export default function OfficeStep(props) {
   const { campaign, step, updateCallback } = props;
@@ -44,45 +56,55 @@ export default function OfficeStep(props) {
   };
 
   const handleSave = async () => {
-    if (canSubmit()) {
-      const updated = campaign;
-      const { position, election, id } = state.ballotOffice;
-      updated.details = {
-        ...campaign.details,
-        positionId: position?.id,
-        electionId: election?.id,
-        raceId: id,
-        state: election?.state,
-        office: 'Other',
-        otherOffice: position?.name,
-        officeTermLength: calcTerm(position),
-        ballotLevel: position?.level,
-        primaryElectionDate: election?.primaryElectionDate,
-        electionDate: election?.electionDay,
-        partisanType: position.partisanType,
-        primaryElectionId: election?.primaryElectionId,
-        hasPrimary: position?.hasPrimary,
-      };
-      if (!updated.goals) {
-        updated.goals = {};
-      }
-      updated.goals = {
-        ...updated.goals,
-        electionDate: election?.electionDay, // deprecated
-      };
-      if (!step) {
-        // delete p2vStatus so the backend will recalculate it
-        delete updated.p2vStatus;
-      }
-      await updateCampaign(updated);
+    if (!canSubmit()) {
+      return;
+    }
+    const { position, election, id } = state.ballotOffice;
 
-      if (step) {
-        updated.currentStep = onboardingStep(campaign, step);
-        router.push(`/onboarding/${campaign.slug}/${step + 1}`);
-      }
-      if (updateCallback) {
-        await updateCallback();
-      }
+    const currentStep = onboardingStep(campaign, step);
+    const keys = [
+      'data.currentStep',
+      'details.positionId',
+      'details.electionId',
+      'details.raceId',
+      'details.state',
+      'details.office',
+      'details.otherOffice',
+      'details.officeTermLength',
+      'details.ballotLevel',
+      'details.primaryElectionDate',
+      'details.electionDate',
+      'details.partisanType',
+      'details.primaryElectionId',
+      'details.hasPrimary',
+    ];
+    const values = [
+      currentStep,
+      state.ballotOffice.position?.id,
+      state.ballotOffice.election?.id,
+      state.ballotOffice.id,
+      state.ballotOffice.election?.state,
+      'Other',
+      state.ballotOffice.position?.name,
+      calcTerm(state.ballotOffice.position),
+      state.ballotOffice.position?.level,
+      state.ballotOffice.election?.primaryElectionDate,
+      state.ballotOffice.election?.electionDay,
+      state.ballotOffice.position?.partisanType,
+      state.ballotOffice.election?.primaryElectionId,
+      state.ballotOffice.position?.hasPrimary,
+    ];
+    await updateCampaign(keys, values);
+
+    if (!step) {
+      await runP2V();
+    }
+
+    if (step) {
+      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+    }
+    if (updateCallback) {
+      await updateCallback();
     }
   };
 

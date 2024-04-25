@@ -23,7 +23,6 @@ const fields = [
 
 export default function PastExperience({
   value,
-  onChangeCallback,
   saveCallback,
   campaign,
   campaignKey,
@@ -42,14 +41,7 @@ export default function PastExperience({
   };
   const handleSave = () => {
     if (!canSave()) return;
-    const updated = {
-      ...campaign,
-      details: {
-        ...campaign.details,
-        [campaignKey]: state,
-      },
-    };
-    saveCallback(updated);
+    saveCallback([`details.${campaignKey}`], [state]);
   };
 
   const canSave = () => {

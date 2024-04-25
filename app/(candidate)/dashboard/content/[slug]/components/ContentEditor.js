@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
@@ -18,6 +17,7 @@ import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { fetchInputFields } from '../../components/NewContentFlow';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -46,7 +46,7 @@ export default function ContentEditor({
   const [showModal, setShowModal] = useState(false);
   const [showTranslate, setShowTranslate] = useState(false);
 
-  const campaignPlan = campaign[subSectionKey];
+  const campaignPlan = campaign.aiContent;
   const key = section;
 
   useEffect(() => {
@@ -92,31 +92,27 @@ export default function ContentEditor({
   const handleSave = async () => {
     setSaved('Saving...');
 
-    const updated = campaign;
     let existingName;
     let existingInputs = {};
-    if (!updated[subSectionKey]) {
-      updated[subSectionKey] = {};
-    } else if (updated[subSectionKey][key]) {
-      existingName = updated[subSectionKey][key].name;
-      existingInputs = updated[subSectionKey][key].inputValues;
-      console.log('existingInputs', existingInputs);
+    if (campaign.aiContent && campaign.aiContent[key]) {
+      existingName = campaign.aiContent[key].name;
+      existingInputs = campaign.aiContent[key].inputValues;
     }
 
     let now = new Date();
     let updatedAt = now.toISOString().split('T')[0];
-    updated[subSectionKey][key] = {
+
+    const newVal = {
       name: existingName ? existingName : key,
       updatedAt: updatedAt,
       inputValues: existingInputs,
       content: plan,
     };
+    const keys = [`aiContent.${key}`];
+    const values = [newVal];
 
-    // updated[subSectionKey][key] = plan;
-    await updateCampaign(updated, key, false, 'aiContent');
-    // await updateVersionsCallback();
+    await updateCampaign(keys, values);
     setSaved('Saved');
-    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
@@ -124,18 +120,10 @@ export default function ContentEditor({
     setInitialInputValues(version.inputValues);
   };
 
-  async function generateAI(
-    subSectionKey,
-    key,
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
-  ) {
+  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.onboarding.ai.create;
+      const api = gpApi.campaign.ai.create;
       return await gpFetch(api, {
-        subSectionKey,
         key,
         regenerate,
         chat,
@@ -168,7 +156,6 @@ export default function ContentEditor({
     }
 
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       key,
       regenerate,
       chat,

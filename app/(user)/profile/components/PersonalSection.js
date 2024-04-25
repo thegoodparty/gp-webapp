@@ -24,7 +24,6 @@ async function refreshUser() {
     const api = gpApi.user.refresh;
 
     const { user } = await gpFetch(api);
-    console.log('returned', user);
     return user;
   } catch (error) {
     console.log('Error updating user', error);

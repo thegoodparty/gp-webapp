@@ -6,9 +6,10 @@ import ProgressSection from './ProgressSection';
 import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
 import { useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
-import H3 from '@shared/typography/H3';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { fetchUserCampaignClient } from '/helpers/campaignHelper';
+import {
+  getCampaign,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import ElectionOver from './ElectionOver';
 import MapSection from './MapSection';
 import UpdateHistorySection from './UpdateHistorySection';
@@ -83,7 +84,7 @@ export default function DashboardPage(props) {
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
   const deleteHistoryCallBack = async () => {
-    const resp = await fetchUserCampaignClient();
+    const resp = await getCampaign();
     if (resp && resp?.campaign) {
       const campaignObj = resp.campaign;
       setState({
@@ -102,10 +103,8 @@ export default function DashboardPage(props) {
       [key]: value,
     };
     setState(newState);
-    await updateCampaign({
-      ...campaign,
-      reportedVoterGoals: newState,
-    });
+
+    await updateCampaign(['data.reportedVoterGoals'], [newState]);
 
     await createUpdateHistory({
       type: key,
