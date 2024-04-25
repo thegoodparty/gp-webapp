@@ -11,6 +11,23 @@ import { useState } from 'react';
 import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 
 import TextField from '@shared/inputs/TextField';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function updateUser(zip) {
+  try {
+    const api = gpApi.user.updateUser;
+    const payload = {
+      zip,
+    };
+
+    const response = await gpFetch(api, payload);
+    const { user } = response;
+    setUserCookie(user);
+  } catch (error) {
+    console.log('Error updating user', error);
+  }
+}
 
 export default function ZipStep(props) {
   const { campaign, step } = props;
@@ -39,6 +56,7 @@ export default function ZipStep(props) {
     const values = [state.zip, currentStep];
 
     await updateCampaign(keys, values);
+    updateUser(state.zip);
     router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };
 
