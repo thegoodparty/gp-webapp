@@ -28,7 +28,7 @@ const LocalElectionsHero = () => {
             priority
           />
           <p className="font-normal mb-4 lg:text-lg">
-            Join Good Party and the Forward Party to hear how it's easier than
+            Join Good Party and the Forward Party to hear how it&apos;s easier than
             you think to run for local office in 2024. You can be the type of
             leader your community needs.
           </p>

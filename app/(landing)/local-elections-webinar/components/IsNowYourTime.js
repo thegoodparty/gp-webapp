@@ -21,7 +21,7 @@ const IsNowYourTime = () => (
       <ul className="text-lg mb-20">
         <li>What office should I run for?</li>
         <li>What are the requirements?</li>
-        <li>What's the "why" of my candidacy?</li>
+        <li>What&apos;s the &quot;why&quot; of my candidacy?</li>
         <li>How do I talk to people and get votes?</li>
         <li>How do I organize volunteers?</li>
       </ul>
