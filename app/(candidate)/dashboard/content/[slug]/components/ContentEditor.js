@@ -17,6 +17,7 @@ import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { fetchInputFields } from '../../components/NewContentFlow';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -45,7 +46,7 @@ export default function ContentEditor({
   const [showModal, setShowModal] = useState(false);
   const [showTranslate, setShowTranslate] = useState(false);
 
-  const campaignPlan = campaign[subSectionKey];
+  const campaignPlan = campaign.aiContent;
   const key = section;
 
   useEffect(() => {
@@ -91,28 +92,26 @@ export default function ContentEditor({
   const handleSave = async () => {
     setSaved('Saving...');
 
-    const updated = campaign;
     let existingName;
     let existingInputs = {};
-    if (!updated[subSectionKey]) {
-      updated[subSectionKey] = {};
-    } else if (updated[subSectionKey][key]) {
-      existingName = updated[subSectionKey][key].name;
-      existingInputs = updated[subSectionKey][key].inputValues;
-      console.log('existingInputs', existingInputs);
+    if (campaign.aiContent && campaign.aiContent[key]) {
+      existingName = campaign.aiContent[key].name;
+      existingInputs = campaign.aiContent[key].inputValues;
     }
 
     let now = new Date();
     let updatedAt = now.toISOString().split('T')[0];
-    updated[subSectionKey][key] = {
+
+    const newVal = {
       name: existingName ? existingName : key,
       updatedAt: updatedAt,
       inputValues: existingInputs,
       content: plan,
     };
+    const keys = [`aiContent.${key}`];
+    const values = [newVal];
 
-    // TODO: TOMER change this to a new api call
-    // await updateCampaignOld(updated, key, false, 'aiContent');
+    await updateCampaign(keys, values);
     setSaved('Saved');
   };
 
