@@ -55,7 +55,7 @@ const LocalElectionsHero = () => {
             <span className="mx-2 font-thin align-middle lg:text-3xl">+</span>
             <Image
               className="inline h-6 w-6 mr-2 text-sm align-middle lg:w-10 lg:h-10"
-              src="/images/parties-logos/fwd-logo-transparent.png"
+              src="/images/parties-logos/fwd-vector-logo.svg"
               height={40}
               width={40}
               alt="FWD Party Logo"
