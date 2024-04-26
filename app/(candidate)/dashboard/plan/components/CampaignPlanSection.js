@@ -200,7 +200,7 @@ export default function CampaignPlanSection({
     setIsEdited(false);
     setEditMode(false);
 
-    await updateCampaign({ key: `aiContent.${key}`, value: plan });
+    await updateCampaign([{ key: `aiContent.${key}`, value: plan }]);
     await updateVersionsCallback();
   };
 

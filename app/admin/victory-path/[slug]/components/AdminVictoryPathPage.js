@@ -171,10 +171,12 @@ export default function AdminVictoryPathPage(props) {
         await sendVictoryMail(updated.slug);
       }
 
-      await updateCampaign({
-        key: 'pathToVictory',
-        value: { ...state, p2vStatus: 'Complete' },
-      });
+      await updateCampaign([
+        {
+          key: 'pathToVictory',
+          value: { ...state, p2vStatus: 'Complete' },
+        },
+      ]);
 
       snackbarState.set(() => {
         return {
@@ -205,10 +207,12 @@ export default function AdminVictoryPathPage(props) {
   const handleNotNeeded = async (e) => {
     setNotNeeded(e.target.checked);
 
-    await updateCampaign({
-      key: 'pathToVictory',
-      value: { ...state, p2vNotNeeded: e.target.checked },
-    });
+    await updateCampaign([
+      {
+        key: 'pathToVictory',
+        value: { ...state, p2vNotNeeded: e.target.checked },
+      },
+    ]);
   };
   return (
     <AdminWrapper {...props}>

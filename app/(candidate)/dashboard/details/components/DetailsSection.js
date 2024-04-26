@@ -49,7 +49,7 @@ export default function DetailsSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      await updateCampaign({ key: 'details.zip', value: state.zip });
+      await updateCampaign([{ key: 'details.zip', value: state.zip }]);
 
       setSaving(false);
     }

@@ -51,7 +51,7 @@ export default function FunFactSection(props) {
     if (canSave()) {
       setSaving(true);
 
-      await updateCampaign({ key: 'details.funFact', value: state.funFact });
+      await updateCampaign([{ key: 'details.funFact', value: state.funFact }]);
       setSaving(false);
     }
   };

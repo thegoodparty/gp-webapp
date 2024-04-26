@@ -68,7 +68,9 @@ export default function AddCustomIssue(props) {
         order,
       });
     }
-    await updateCampaign({ key: 'details.customIssues', value: customIssues });
+    await updateCampaign([
+      { key: 'details.customIssues', value: customIssues },
+    ]);
     await saveCallback(customIssues);
   };
 

@@ -60,10 +60,12 @@ export default function WhySection(props) {
     if (canSave()) {
       setSaving(true);
 
-      await updateCampaign({
-        key: 'details.pastExperience',
-        value: state.pastExperience,
-      });
+      await updateCampaign([
+        {
+          key: 'details.pastExperience',
+          value: state.pastExperience,
+        },
+      ]);
       setSaving(false);
     }
   };

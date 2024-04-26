@@ -16,7 +16,9 @@ export default function RunningAgainstSection(props) {
       });
     }
 
-    await updateCampaign({ key: 'details.runningAgainst', value: newAgainst });
+    await updateCampaign([
+      { key: 'details.runningAgainst', value: newAgainst },
+    ]);
     if (nextCallback) {
       nextCallback();
     } else {
