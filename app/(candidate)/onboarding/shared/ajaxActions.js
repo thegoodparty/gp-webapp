@@ -6,6 +6,9 @@ import { deleteCookie } from 'helpers/cookieHelper';
 
 export async function updateCampaign(attr) {
   try {
+    if (!Array.isArray(attr) && typeof attr === 'object') {
+      attr = [attr];
+    }
     const api = gpApi.campaign.update;
     const payload = {
       attr,

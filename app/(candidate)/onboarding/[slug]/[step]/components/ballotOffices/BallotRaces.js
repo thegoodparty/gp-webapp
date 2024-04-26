@@ -47,7 +47,7 @@ export default function BallotRaces(props) {
   const router = useRouter();
 
   useEffect(() => {
-    loadRaces();
+    loadRaces(campaign.details.zip);
   }, []);
 
   useEffect(() => {
@@ -63,12 +63,18 @@ export default function BallotRaces(props) {
   }, [electionYears]);
 
   const loadRaces = async (zip) => {
-    setLoading(true);
-    const initRaces = await fetchRaces(zip || campaign.details.zip);
-    setElectionYears(Object.keys(initRaces).sort());
-    setRaces(initRaces);
-    setLoading(false);
+    if (zip) {
+      setLoading(true);
+      const initRaces = await fetchRaces(zip || campaign.details.zip);
+      setElectionYears(Object.keys(initRaces).sort());
+      setRaces(initRaces);
+      setLoading(false);
+    }
   };
+
+  if (!zip) {
+    return <div>No valid zip</div>;
+  }
 
   const handleSelect = (race) => {
     if (race?.position?.id === selected?.position?.id) {
