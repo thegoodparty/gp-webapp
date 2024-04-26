@@ -6,7 +6,7 @@ import Image from 'next/image';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
-export default function TeamSection(props) {
+export default function TeamMembersSection(props) {
   const { teamMembers, teamMilestones } = props;
   const [selected, setSelected] = useState({});
   const [flipAll, setFlipAll] = useState(false);
@@ -29,14 +29,14 @@ export default function TeamSection(props) {
 
   return (
     <section className="bg-primary-background">
-      <div className="px-4 py-8">
+      <div className="px-4 py-8 lg:p-24">
         <h2
-          className="text-4xl font-medium leading-tight mb-4"
+          className="text-4xl font-medium leading-tight mb-4 lg:text-6xl leading-snug"
           data-cy="volunteer-section-title"
         >
           Meet the team
         </h2>
-        <p className="font-sfpro mb-8">
+        <p className="font-sfpro mb-8 lg:text-2xl lg:leading-snug text-gray-600 font-medium">
           Our full-time team is building the tools and infrastructure powering
           the movement. We come from a diverse range of backgrounds and
           political persuasions, all united by the mission to make people matter
@@ -55,19 +55,23 @@ export default function TeamSection(props) {
           selected={selected}
           handleSelected={handleSelected}
         />
-        <div className="border-2 bg-white p-8 rounded-3xl">
-          <Image
-            className="mb-4"
-            src="/images/logo-hologram-white.svg"
-            width={48}
-            height={60}
-            alt="GoodParty Logo"
-            priority
-          />
-          <h3 className="text-2xl mb-1">Interested in joining our team?</h3>
-          <p className="font-sfpro mb-8">We’re always looking for new talent ready to create change.</p>
-          <Link href="/work-with-us">
-            <PrimaryButton>View open positions</PrimaryButton>
+        <div className="border-2 bg-white p-8 rounded-3xl grid grid-cols-10 gap-4 items-center">
+          <div className="col-span-12 lg:col-span-1 h-[48px] w-[60px] lg:h-auto lg:w-auto">
+            <Image
+              className="mb-4 lg:my-auto w-full"
+              src="/images/logo-hologram-white.svg"
+              width={60}
+              height={48}
+              alt="GoodParty Logo"
+              priority
+            />
+          </div>
+          <div className="col-span-12 lg:col-span-5">
+            <h3 className="text-2xl mb-1">Interested in joining our team?</h3>
+            <p className="font-sfpro mb-8 lg:mb-auto">We’re always looking for new talent ready to create change.</p>
+          </div>
+          <Link className="col-span-12 lg:col-span-4" href="/work-with-us">
+            <PrimaryButton className="w-full">View open positions</PrimaryButton>
           </Link>
         </div>
       </div>

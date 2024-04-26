@@ -29,7 +29,14 @@ const LEADING_ACTIVITIES = [
     href: '/work-with-us',
   },
 ];
-export const LeadingActivityCards = () => LEADING_ACTIVITIES
-.map(
-  (activity, key) => <LeadingActivityCard {...activity} key={key} />,
+export const LeadingActivityCards = () => (
+  <div className="grid grid-cols-3 gap-4">
+    {LEADING_ACTIVITIES.map((activity, key) => {
+      return (
+        <div className="col-span-3 lg:col-span-1" key={key}>
+          <LeadingActivityCard {...activity} />
+        </div>
+      );
+    })}
+  </div>
 );

@@ -3,11 +3,14 @@ import TeamHero from 'app/(company)/team/components/TeamHero';
 import pageMetaData from 'helpers/metadataHelper';
 import gpApi from '../../../gpApi';
 import gpFetch from '../../../gpApi/gpFetch';
-import TeamSection from './components/TeamSection';
+import TeamMembersSection from 'app/(company)/team/components/TeamMembersSection';
 import OurImpact from 'app/(company)/team/components/OurImpact';
 import Funding from 'app/(company)/team/components/Funding';
-import LeadingTheMovement
-  from 'app/(company)/team/components/LeadingTheMovement';
+import LeadingTheMovement from 'app/(company)/team/components/LeadingTheMovement';
+import { TeamMilestones } from 'app/(company)/team/components/TeamMilestones';
+import MoreQuestions from 'app/(company)/team/components/MoreQuestions';
+import { theme } from 'tailwind.config';
+import { SlantSection } from '@shared/landing-pages/SlantSection';
 
 const meta = pageMetaData({
   title: 'Team | GOOD PARTY',
@@ -36,7 +39,6 @@ async function fetchTeamMembers() {
 
 const TeamPage = async () => {
   const {teamMembers, teamMilestones} = await fetchTeamMembers();
-
   return (
     <>
       <TeamHero />
@@ -44,26 +46,17 @@ const TeamPage = async () => {
       <Funding />
       <LeadingTheMovement />
       <Suspense>
-        <TeamSection
+        <TeamMembersSection
           teamMembers={teamMembers} />
       </Suspense>
-      <TeamMilestones teamMilestones={teamMilestones} />
+      <SlantSection
+        colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
+        <TeamMilestones
+          teamMilestones={[...teamMilestones, ...teamMilestones, ...teamMilestones]} />
+      </SlantSection>
+      <MoreQuestions />
     </>
   );
 }
-
-const TeamMilestones = ({
-  teamMilestones
-}) => <section>
-
-  {
-    teamMilestones.map((milestone, index) => {
-      return <div key={index}>
-        <h3>{milestone.month} {milestone.year}</h3>
-        <p>{milestone.blurb}</p>
-      </div>
-    })
-  }
-</section>
 
 export default TeamPage;
