@@ -347,22 +347,6 @@ const gpApi = {
     },
 
     onboarding: {
-      create: {
-        url: `${base}campaign/onboarding`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaign/onboarding`,
-        method: 'PUT',
-        withAuth: true,
-      },
-
-      delete: {
-        url: `${base}campaign/onboarding`,
-        method: 'DELETE',
-        withAuth: true,
-      },
       adminDelete: {
         url: `${base}campaign`,
         method: 'DELETE',
@@ -371,29 +355,6 @@ const gpApi = {
       adminUpdate: {
         url: `${base}campaign-admin`,
         method: 'PUT',
-        withAuth: true,
-      },
-      findByUser: {
-        url: `${base}campaign/onboarding/by-user`,
-        method: 'GET',
-        withAuth: true,
-      },
-
-      launchRequest: {
-        url: `${base}campaign/onboarding/launch-request`,
-        method: 'POST',
-        withAuth: true,
-      },
-      cancelLaunchRequest: {
-        // admin
-        url: `${base}campaign/onboarding/launch-request`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      launch: {
-        // admin
-        url: `${base}campaign/onboarding/launch`,
-        method: 'POST',
         withAuth: true,
       },
 
