@@ -6,8 +6,14 @@ import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function CandidateInfo(props) {
   const campaign = props.voter.campaign;
-  const { firstName, lastName, electionDate, customIssues, positions } =
-    campaign;
+  const {
+    firstName,
+    lastName,
+    electionDate,
+    customIssues,
+    positions,
+    details,
+  } = campaign;
 
   const sortedIssues = [];
   if (positions) {
@@ -22,8 +28,8 @@ export default function CandidateInfo(props) {
   }
   sortedIssues.sort((a, b) => a.order - b.order);
 
-  const candidateName = `${firstName || details.firstName || ''} ${
-    lastName || details.lastName || ''
+  const candidateName = `${firstName || details?.firstName || ''} ${
+    lastName || details?.lastName || ''
   }`;
 
   return (
