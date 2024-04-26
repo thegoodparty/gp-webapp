@@ -22,23 +22,28 @@ export const metadata = meta;
 
 async function fetchTeamMembers() {
   const api = gpApi.content.contentByKey;
-  const [{content: teamMembers}, {content: teamMilestones}] = await Promise.all([
-    gpFetch(
-      api,
-      {
-        key: 'goodPartyTeamMembers',
-      }, 3600),
-    gpFetch(
-      api,
-      {
-        key: 'teamMilestones',
-      }, 3600)
-  ]);
-  return {teamMembers, teamMilestones}
+  const [{ content: teamMembers }, { content: teamMilestones }] =
+    await Promise.all([
+      gpFetch(
+        api,
+        {
+          key: 'goodPartyTeamMembers',
+        },
+        3600,
+      ),
+      gpFetch(
+        api,
+        {
+          key: 'teamMilestones',
+        },
+        3600,
+      ),
+    ]);
+  return { teamMembers, teamMilestones };
 }
 
 const TeamPage = async () => {
-  const {teamMembers, teamMilestones} = await fetchTeamMembers();
+  const { teamMembers, teamMilestones } = await fetchTeamMembers();
   return (
     <>
       <TeamHero />
@@ -46,17 +51,14 @@ const TeamPage = async () => {
       <Funding />
       <LeadingTheMovement />
       <Suspense>
-        <TeamMembersSection
-          teamMembers={teamMembers} />
+        <TeamMembersSection teamMembers={teamMembers} />
       </Suspense>
-      <SlantSection
-        colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
-        <TeamMilestones
-          teamMilestones={[...teamMilestones, ...teamMilestones, ...teamMilestones]} />
+      <SlantSection colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
+        <TeamMilestones teamMilestones={teamMilestones} />
       </SlantSection>
       <MoreQuestions />
     </>
   );
-}
+};
 
 export default TeamPage;
