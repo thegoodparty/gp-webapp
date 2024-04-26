@@ -1,10 +1,16 @@
 import React, { Suspense } from 'react';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Hero from './components/Hero';
-import Team from './components/Team';
-import Volunteers from './components/Volunteers';
-import Interns from './components/Interns';
+import TeamHero from 'app/(company)/team/components/TeamHero';
 import pageMetaData from 'helpers/metadataHelper';
+import gpApi from '../../../gpApi';
+import gpFetch from '../../../gpApi/gpFetch';
+import TeamMembersSection from 'app/(company)/team/components/TeamMembersSection';
+import OurImpact from 'app/(company)/team/components/OurImpact';
+import Funding from 'app/(company)/team/components/Funding';
+import LeadingTheMovement from 'app/(company)/team/components/LeadingTheMovement';
+import { TeamMilestones } from 'app/(company)/team/components/TeamMilestones';
+import MoreQuestions from 'app/(company)/team/components/MoreQuestions';
+import { theme } from 'tailwind.config';
+import { SlantSection } from '@shared/landing-pages/SlantSection';
 
 const meta = pageMetaData({
   title: 'Team | GOOD PARTY',
@@ -14,19 +20,43 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default function Page() {
+async function fetchTeamMembers() {
+  const api = gpApi.content.contentByKey;
+  const [{content: teamMembers}, {content: teamMilestones}] = await Promise.all([
+    gpFetch(
+      api,
+      {
+        key: 'goodPartyTeamMembers',
+      }, 3600),
+    gpFetch(
+      api,
+      {
+        key: 'teamMilestones',
+      }, 3600)
+  ]);
+  return {teamMembers, teamMilestones}
+}
+
+const TeamPage = async () => {
+  const {teamMembers, teamMilestones} = await fetchTeamMembers();
   return (
-    <MaxWidth>
-      <Hero />
+    <>
+      <TeamHero />
+      <OurImpact />
+      <Funding />
+      <LeadingTheMovement />
       <Suspense>
-        <Team />
+        <TeamMembersSection
+          teamMembers={teamMembers} />
       </Suspense>
-      <Suspense>
-        <Interns />
-      </Suspense>
-      <Suspense>
-        <Volunteers />
-      </Suspense>
-    </MaxWidth>
+      <SlantSection
+        colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
+        <TeamMilestones
+          teamMilestones={[...teamMilestones, ...teamMilestones, ...teamMilestones]} />
+      </SlantSection>
+      <MoreQuestions />
+    </>
   );
 }
+
+export default TeamPage;
