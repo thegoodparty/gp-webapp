@@ -64,14 +64,14 @@ export default function MyContent(props) {
     setSection(key);
   };
 
-  let inputData = [];
+  let data = [];
   if (sections) {
     Object.keys(sections).forEach((key) => {
       const section = sections[key];
-      if (excludedKeys.includes(key)) {
+      if (excludedKeys.includes(key) || !section.name) {
         return;
       }
-      inputData.push({
+      data.push({
         name: section.name,
         updatedAt: new Date(section.updatedAt),
         slug: camelToKebab(key),
@@ -80,7 +80,7 @@ export default function MyContent(props) {
     });
   }
 
-  const data = useMemo(() => inputData);
+  console.log('data', data);
 
   const columns = useMemo(() => [
     {
