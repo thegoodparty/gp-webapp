@@ -80,7 +80,7 @@ export default function NotificationSection() {
       </div>
       <div className="flex-1">
         <H4>Emails &amp; Notification</H4>
-        <Body2 className="text-indigo-200 mb-6">
+        <Body2 className="text-indigo-600 mb-6">
           Update your email and notification preferences here
         </Body2>
         {fields.map((field) => (

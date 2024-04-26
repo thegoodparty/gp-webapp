@@ -38,7 +38,7 @@ function DeleteSection() {
       </div>
       <div className="flex-1">
         <H3>Danger Zone - Delete your account</H3>
-        <Body2 className="text-indigo-200 mb-6">
+        <Body2 className="text-indigo-600 mb-6">
           Remove all your information from our site
         </Body2>
         <div onClick={() => setShowConfirmDelete(true)}>
