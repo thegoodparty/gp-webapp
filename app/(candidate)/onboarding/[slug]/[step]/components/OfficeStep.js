@@ -3,7 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaignOld,
+  updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
@@ -62,39 +62,42 @@ export default function OfficeStep(props) {
     const { position, election, id } = state.ballotOffice;
 
     const currentStep = onboardingStep(campaign, step);
-    const keys = [
-      'data.currentStep',
-      'details.positionId',
-      'details.electionId',
-      'details.raceId',
-      'details.state',
-      'details.office',
-      'details.otherOffice',
-      'details.officeTermLength',
-      'details.ballotLevel',
-      'details.primaryElectionDate',
-      'details.electionDate',
-      'details.partisanType',
-      'details.primaryElectionId',
-      'details.hasPrimary',
+    const attr = [
+      { key: 'data.currentStep', value: currentStep },
+      { key: 'details.positionId', value: state.ballotOffice.position?.id },
+      { key: 'details.electionId', value: state.ballotOffice.election?.id },
+      { key: 'details.raceId', value: state.ballotOffice.id },
+      { key: 'details.state', value: state.ballotOffice.election?.state },
+      { key: 'details.office', value: 'Other' },
+      { key: 'details.otherOffice', value: state.ballotOffice.position?.name },
+      {
+        key: 'details.officeTermLength',
+        value: calcTerm(state.ballotOffice.position),
+      },
+      { key: 'details.ballotLevel', value: state.ballotOffice.position?.level },
+      {
+        key: 'details.primaryElectionDate',
+        value: state.ballotOffice.election?.primaryElectionDate,
+      },
+      {
+        key: 'details.electionDate',
+        value: state.ballotOffice.election?.electionDay,
+      },
+      {
+        key: 'details.partisanType',
+        value: state.ballotOffice.position?.partisanType,
+      },
+      {
+        key: 'details.primaryElectionId',
+        value: state.ballotOffice.election?.primaryElectionId,
+      },
+      {
+        key: 'details.hasPrimary',
+        value: state.ballotOffice.position?.hasPrimary,
+      },
     ];
-    const values = [
-      currentStep,
-      state.ballotOffice.position?.id,
-      state.ballotOffice.election?.id,
-      state.ballotOffice.id,
-      state.ballotOffice.election?.state,
-      'Other',
-      state.ballotOffice.position?.name,
-      calcTerm(state.ballotOffice.position),
-      state.ballotOffice.position?.level,
-      state.ballotOffice.election?.primaryElectionDate,
-      state.ballotOffice.election?.electionDay,
-      state.ballotOffice.position?.partisanType,
-      state.ballotOffice.election?.primaryElectionId,
-      state.ballotOffice.position?.hasPrimary,
-    ];
-    await updateCampaignOld(keys, values);
+
+    await updateCampaign(attr);
 
     if (!step) {
       await runP2V();

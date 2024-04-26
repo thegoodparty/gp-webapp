@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaignOld,
+  updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -52,10 +52,12 @@ export default function ZipStep(props) {
       return;
     }
     const currentStep = onboardingStep(campaign, step);
-    const keys = ['details.zip', 'data.currentStep'];
-    const values = [state.zip, currentStep];
+    const attr = [
+      { key: 'details.zip', value: state.zip },
+      { key: 'data.currentStep', value: currentStep },
+    ];
 
-    await updateCampaignOld(keys, values);
+    await updateCampaign(attr);
     updateUser(state.zip);
     router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };

@@ -46,7 +46,8 @@ export default function PhoneStep(props) {
       const currentStep = onboardingStep(campaign, step);
 
       await updateCampaign([
-        { 'details.phone': state.phone, 'data.currentStep': currentStep },
+        { key: 'details.phone', value: state.phone },
+        { key: 'data.currentStep', value: currentStep },
       ]);
       await updateUser(state.phone);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);

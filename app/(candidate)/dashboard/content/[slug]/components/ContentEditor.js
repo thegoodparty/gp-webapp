@@ -109,7 +109,7 @@ export default function ContentEditor({
       content: plan,
     };
 
-    await updateCampaign([{ [`aiContent.${key}`]: newVal }]);
+    await updateCampaign([{ key: `aiContent.${key}`, value: newVal }]);
     setSaved('Saved');
   };
 

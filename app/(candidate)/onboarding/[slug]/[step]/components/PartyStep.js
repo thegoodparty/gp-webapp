@@ -4,7 +4,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
-  updateCampaignOld,
+  updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -169,17 +169,14 @@ export default function PartyStep(props) {
     }
     if (canSubmit) {
       const currentStep = onboardingStep(campaign, step);
-      const keys = ['data.currentStep'];
-      const values = [currentStep];
+      const attr = [{ key: 'data.currentStep', value: currentStep }];
       if (state.otherParty === '') {
-        keys.push('details.party');
-        values.push(state.party);
+        attr.push({ key: 'details.party', value: state.party });
       } else {
-        keys.push('details.otherParty');
-        values.push(state.otherParty);
+        attr.push({ key: 'details.otherParty', value: state.otherParty });
       }
 
-      await updateCampaignOld(keys, values);
+      await updateCampaign(attr);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };

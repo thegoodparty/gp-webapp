@@ -6,7 +6,7 @@ import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 
 const fields = [
@@ -49,8 +49,8 @@ export default function DetailsSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
+      await updateCampaign({ key: 'details.zip', value: state.zip });
 
-      await updateCampaignOld(['details.zip'], [state.zip]);
       setSaving(false);
     }
   };

@@ -14,7 +14,7 @@ import PlanActions from './PlanActions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { flows } from '../../questions/components/QuestionsPage';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function generateAI(key, regenerate, chat, editMode) {
   try {
@@ -200,7 +200,7 @@ export default function CampaignPlanSection({
     setIsEdited(false);
     setEditMode(false);
 
-    await updateCampaignOld([`aiContent.${key}`], [plan]);
+    await updateCampaign({ key: `aiContent.${key}`, value: plan });
     await updateVersionsCallback();
   };
 

@@ -6,7 +6,7 @@ import ZipChanger from './ZipChanger';
 import { CircularProgress, Select } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
@@ -92,7 +92,7 @@ export default function BallotRaces(props) {
       setZip(newZip);
       clearState();
       await loadRaces(newZip);
-      await updateCampaignOld(['details.zip'], [newZip]);
+      await updateCampaign([{ key: 'details.zip', value: newZip }]);
     }
   };
 
@@ -143,23 +143,22 @@ export default function BallotRaces(props) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
         : step;
-      const keys = [
-        'data.currentStep',
-        'details.otherOffice',
-        'details.positionId',
-        'details.electionId',
+
+      const attr = [
+        { key: 'data.currentStep', value: updated.currentStep },
+        { key: 'details.otherOffice', value: '' },
+        { key: 'details.positionId', value: null },
+        { key: 'details.electionId', value: null },
       ];
-      const values = [updated.currentStep, '', null, null];
-      await updateCampaignOld(keys, values);
+      await updateCampaign(attr);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     } else {
-      const keys = [
-        'details.otherOffice',
-        'details.positionId',
-        'details.electionId',
+      const attr = [
+        { key: 'details.otherOffice', value: '' },
+        { key: 'details.positionId', value: null },
+        { key: 'details.electionId', value: null },
       ];
-      const values = ['', null, null];
-      await updateCampaignOld(keys, values);
+      await updateCampaign(attr);
       if (updateCallback) {
         updateCallback();
       }

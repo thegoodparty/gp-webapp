@@ -8,7 +8,7 @@ import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
 import {
   onboardingStep,
-  updateCampaignOld,
+  updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -45,19 +45,14 @@ export default function RunForOfficeStep(props) {
   const handleSave = async () => {
     if (canSubmit) {
       const currentStep = onboardingStep(campaign, step);
-      const keys = [
-        'details.runForOffice',
-        'details.campaignCommittee',
-        'details.noCommittee',
-        'data.currentStep',
+
+      const attr = [
+        { key: 'data.currentStep', value: currentStep },
+        { key: 'details.runForOffice', value: state.runForOffice },
+        { key: 'details.campaignCommittee', value: state.campaignCommittee },
+        { key: 'details.noCommittee', value: state.noCommittee },
       ];
-      const values = [
-        state.runForOffice,
-        state.campaignCommittee,
-        state.noCommittee,
-        currentStep,
-      ];
-      await updateCampaignOld(keys, values);
+      await updateCampaign(attr);
 
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }

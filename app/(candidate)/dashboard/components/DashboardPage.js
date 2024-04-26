@@ -104,7 +104,7 @@ export default function DashboardPage(props) {
     };
     setState(newState);
 
-    await updateCampaign([{ 'data.reportedVoterGoals': newState }]);
+    await updateCampaign([{ key: 'data.reportedVoterGoals', value: newState }]);
 
     await createUpdateHistory({
       type: key,

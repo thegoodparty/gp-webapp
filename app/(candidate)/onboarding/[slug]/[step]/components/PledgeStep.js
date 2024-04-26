@@ -1,6 +1,9 @@
 'use client';
 import { Fragment, useState } from 'react';
-import { onboardingStep } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  onboardingStep,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 import H1 from '@shared/typography/H1';
@@ -13,7 +16,6 @@ import { FaCheck, FaChild } from 'react-icons/fa';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
 import InfoButton from '@shared/buttons/InfoButton';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function launchCampaign() {
   try {
@@ -67,10 +69,12 @@ export default function PledgeStep({ campaign, pledge, step }) {
     const currentStep = onboardingStep(campaign, step);
     const pledged =
       state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
-    const keys = ['details.pledged', 'data.currentStep'];
-    const values = [pledged, currentStep];
+    const attr = [
+      { key: 'data.currentStep', value: currentStep },
+      { key: 'details.pledged', value: pledged },
+    ];
 
-    await updateCampaignOld(keys, values);
+    await updateCampaign(attr);
     const res = await launchCampaign();
     if (res) {
       window.location.href = '/dashboard/plan';

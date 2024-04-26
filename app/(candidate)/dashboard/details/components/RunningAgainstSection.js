@@ -2,7 +2,7 @@
 
 import H3 from '@shared/typography/H3';
 import RunningAgainstModule from './RunningAgainstModule';
-import { updateCampaignOld } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function RunningAgainstSection(props) {
   const { campaign, nextCallback, header } = props;
@@ -16,7 +16,7 @@ export default function RunningAgainstSection(props) {
       });
     }
 
-    await updateCampaignOld(['details.runningAgainst'], [newAgainst]);
+    await updateCampaign({ key: 'details.runningAgainst', value: newAgainst });
     if (nextCallback) {
       nextCallback();
     } else {

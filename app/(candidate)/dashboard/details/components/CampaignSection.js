@@ -4,10 +4,7 @@ import H3 from '@shared/typography/H3';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import {
-  updateCampaign,
-  updateCampaignOld,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 
 const fields = [
@@ -78,14 +75,10 @@ export default function CampaignSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      let keys = [];
-      let values = [];
-      fields.forEach((field) => {
-        keys.push(`details.${field.key}`);
-        values.push(state[field.key]);
+      const attr = fields.map((field) => {
+        return { key: `details.${field.key}`, value: state[field.key] };
       });
-      await updateCampaignOld(keys, values);
-      await updateCampaign();
+      await updateCampaign(attr);
 
       setSaving(false);
     }
