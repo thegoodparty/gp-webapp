@@ -437,7 +437,7 @@ const gpApi = {
   //
   user: {
     updateUser: {
-      url: `${base}user/update-user`,
+      url: `${base}user`,
       method: 'PUT',
       withAuth: true,
     },
