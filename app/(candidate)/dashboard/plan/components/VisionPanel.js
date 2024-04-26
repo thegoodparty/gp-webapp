@@ -1,4 +1,3 @@
-'use client';
 import CampaignPlanSection from './CampaignPlanSection';
 
 const sections = [
@@ -23,7 +22,7 @@ export default function VisionPanel(props) {
   const { campaign, versions, updateVersionsCallback, candidatePositions } =
     props;
 
-  if (campaign.pathToVictory) {
+  if (campaign.pathToVictory && sections.length === 3) {
     sections.push({
       key: 'pathToVictory',
       title: 'Voter Report',
