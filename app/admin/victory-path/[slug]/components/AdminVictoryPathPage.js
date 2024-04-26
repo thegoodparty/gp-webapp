@@ -134,9 +134,8 @@ export default function AdminVictoryPathPage(props) {
     ...initialState,
     ...pathToVictory,
   });
-  console.log('campaign.p2vNotNeeded', pathToVictory.p2vNotNeeded);
   const [notNeeded, setNotNeeded] = useState(
-    pathToVictory.p2vNotNeeded || false,
+    pathToVictory?.p2vNotNeeded || false,
   );
   const snackbarState = useHookstate(globalSnackbarState);
 
