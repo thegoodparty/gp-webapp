@@ -99,9 +99,7 @@ export default function OfficeStep(props) {
 
     await updateCampaign(attr);
 
-    if (!step) {
-      await runP2V();
-    }
+    await runP2V();
 
     if (step) {
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
