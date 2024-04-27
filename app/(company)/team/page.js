@@ -13,36 +13,30 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-async function fetchTeamMembers() {
-  try {
-    const api = gpApi.content.contentByKey;
-    const payload = {
-      key: 'goodPartyTeamMembers',
-    };
-    return await gpFetch(api, payload, 3600);
-  } catch (e) {
-    return false;
-  }
-}
-
-async function fetchMilestones() {
-  try {
-    const api = gpApi.content.contentByKey;
-    const payload = {
-      key: 'teamMilestones',
-    };
-    return await gpFetch(api, payload, 3600);
-  } catch (e) {
-    return false;
-  }
+async function fetchTeamMembersAndMilestones() {
+  const api = gpApi.content.contentByKey;
+  const [{ content: teamMembers }, { content: teamMilestones }] =
+    await Promise.all([
+      gpFetch(
+        api,
+        {
+          key: 'goodPartyTeamMembers',
+        },
+        3600,
+      ),
+      gpFetch(
+        api,
+        {
+          key: 'teamMilestones',
+        },
+        3600,
+      ),
+    ]);
+  return { teamMembers, teamMilestones };
 }
 
 const Page = async () => {
-  const res1 = await fetchTeamMembers();
-  const teamMembers = res1.content;
-
-  const res2 = await fetchMilestones();
-  const teamMilestones = res2.content;
+  const { teamMembers, teamMilestones } = await fetchTeamMembersAndMilestones();
   const childProps = { teamMembers, teamMilestones };
   return <TeamPage {...childProps} />;
 };
