@@ -44,7 +44,9 @@ export default function DkCampaignPreview(props) {
   return (
     <>
       <Link
-        href={`/dashboard/door-knocking/campaign/${campaign.slug}`}
+        href={
+          hasRoutes ? `/dashboard/door-knocking/campaign/${campaign.slug}` : '#'
+        }
         key={campaign.slug}
         className="col-span-12 md:col-span-6 lg:col-span-4 no-underline"
       >
