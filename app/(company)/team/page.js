@@ -19,7 +19,7 @@ async function fetchTeamMembers() {
     const payload = {
       key: 'goodPartyTeamMembers',
     };
-    await gpFetch(api, payload, 3600);
+    return await gpFetch(api, payload, 3600);
   } catch (e) {
     return false;
   }
@@ -31,7 +31,7 @@ async function fetchMilestones() {
     const payload = {
       key: 'teamMilestones',
     };
-    await gpFetch(api, payload, 3600);
+    return await gpFetch(api, payload, 3600);
   } catch (e) {
     return false;
   }
@@ -39,10 +39,10 @@ async function fetchMilestones() {
 
 const Page = async () => {
   const res1 = await fetchTeamMembers();
-  const { teamMembers } = res1;
+  const teamMembers = res1.content;
 
   const res2 = await fetchMilestones();
-  const { teamMilestones } = res2;
+  const teamMilestones = res2.content;
   const childProps = { teamMembers, teamMilestones };
   return <TeamPage {...childProps} />;
 };

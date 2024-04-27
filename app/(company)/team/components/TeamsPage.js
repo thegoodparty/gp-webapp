@@ -10,6 +10,13 @@ import { theme } from 'tailwind.config';
 import { SlantSection } from '@shared/landing-pages/SlantSection';
 
 export default function TeamPage({ teamMembers, teamMilestones }) {
+  const childProps = [];
+  console.log('teamMilestones', teamMilestones);
+  if (teamMilestones) {
+    childProps.push(...teamMilestones);
+    childProps.push(...teamMilestones);
+    childProps.push(...teamMilestones);
+  }
   return (
     <>
       <TeamHero />
@@ -20,13 +27,7 @@ export default function TeamPage({ teamMembers, teamMilestones }) {
         <TeamMembersSection teamMembers={teamMembers} />
       </Suspense>
       <SlantSection colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
-        <TeamMilestones
-          teamMilestones={[
-            ...teamMilestones,
-            ...teamMilestones,
-            ...teamMilestones,
-          ]}
-        />
+        <TeamMilestones teamMilestones={childProps} />
       </SlantSection>
       <MoreQuestions />
     </>
