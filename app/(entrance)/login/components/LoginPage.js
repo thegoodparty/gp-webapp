@@ -115,7 +115,7 @@ export default function LoginPage() {
         <div className={`flex items-center justify-center ${styles.wrapper}`}>
           <div className="grid py-6 max-w-lg w-[75vw]">
             <div className="text-center mb-8 pt-8">
-              <H1>Sign in or sign up below</H1>
+              <H1>Access free campaign tools</H1>
             </div>
 
             <form
