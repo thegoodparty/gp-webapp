@@ -1,16 +1,21 @@
 import {
+  FaDiscord,
+  FaFacebook,
+  FaInstagram,
   FaTiktok,
   FaTwitter,
-  FaInstagram,
-  FaFacebook,
-  FaDiscord,
 } from 'react-icons/fa';
 
 export const FOOTER_COLUMNS = [
   {
     title: 'Our Org',
     links: [
-      { label: 'Volunteer', link: '/volunteer' },
+      {
+        label: 'Volunteer',
+        link: '/volunteer',
+        id: 'footer-org-volunteer',
+        buttonStyle: { backgroundColor: '#642EFF' },
+      },
       { label: 'About Us', link: '/about', id: 'footer-org-about-us' },
       { label: 'Our Team', link: '/team', id: 'footer-org-our-team' },
       { label: 'Careers', link: '/work-with-us', id: 'footer-org-careers' },
@@ -35,14 +40,47 @@ export const FOOTER_COLUMNS = [
   {
     title: 'Campaigns',
     links: [
-      { label: 'Run for office', link: '/run-for-office', id: 'footer-campaign-run' },
-      { label: 'Explore offices', link: '/elections', id: 'footer-campaign-office' },
-      { label: 'Good Party Academy', link: '/academy', id: 'footer-campaign-academy' },
-      { label: 'Book an Info Session', link: '/info-session', id: 'footer-campaign-info' },
+      {
+        label: 'Run for office',
+        link: '/run-for-office',
+        id: 'footer-campaign-run',
+        buttonStyle: {
+          backgroundColor: '#E4F47D',
+          color: 'black',
+        },
+      },
+      {
+        label: 'Explore offices',
+        link: '/elections',
+        id: 'footer-campaign-office',
+      },
+      {
+        label: 'Good Party Academy',
+        link: '/academy',
+        id: 'footer-campaign-academy',
+      },
+      {
+        label: 'Book an Info Session',
+        link: '/info-session',
+        id: 'footer-campaign-info',
+      },
       { label: 'Book a Demo', link: '/get-a-demo', id: 'footer-campaign-demo' },
-      { label: 'Political Definitions', link: '/political-terms', id: 'footer-campaign-glossary' },
-      { label: 'Declare Independence', link: '/declare', id: 'footer-campaign-declare' },
-      { label: 'Discord Community', link: 'https://discord.gg/invite/goodparty', id: 'footer-campaign-discord', isExternal: true },
+      {
+        label: 'Political Definitions',
+        link: '/political-terms',
+        id: 'footer-campaign-glossary',
+      },
+      {
+        label: 'Declare Independence',
+        link: '/declare',
+        id: 'footer-campaign-declare',
+      },
+      {
+        label: 'Discord Community',
+        link: 'https://discord.gg/invite/goodparty',
+        id: 'footer-campaign-discord',
+        isExternal: true,
+      },
       { label: 'Pricing', link: '/pricing', id: 'footer-campaign-pricing' },
     ],
   },

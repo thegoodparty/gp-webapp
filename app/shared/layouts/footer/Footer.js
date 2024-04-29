@@ -1,17 +1,16 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FOOTER_COLUMNS, SOCIAL_LINKS } from './constants';
-import MaxWidth from './MaxWidth';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-// import { headers } from 'next/dist/client/components/headers';
+import { FOOTER_COLUMNS, SOCIAL_LINKS } from 'app/shared/layouts/constants';
+import MaxWidth from 'app/shared/layouts/MaxWidth';
 import { usePathname } from 'next/navigation';
+import { FooterButtonLink } from '@shared/layouts/footer/components/FooterButtonLink';
+import { FooterExternalLink } from '@shared/layouts/footer/components/FooterExternalLink';
+import { FooterLinkWrapper } from '@shared/layouts/footer/components/FooterLinkWrapper';
 
 const year = new Date().getFullYear();
 
 export default function Footer() {
-  // const _headers = headers();
-  // const currentUrl = _headers.get('x-url');
   const pathname = usePathname();
   const isOnboardingPath = pathname?.startsWith('/onboarding');
   const isDashboardPath =
@@ -21,6 +20,7 @@ export default function Footer() {
   if (isOnboardingPath || isDashboardPath || isProfilePath) {
     return null;
   }
+
   return (
     <footer className="bg-primary-dark px-8 py-6 border-solid border-t border-zinc-200 pt-10">
       <MaxWidth>
@@ -37,46 +37,15 @@ export default function Footer() {
               >
                 {column.title}
               </div>
-              {column.links.map((link) => (
-                <div
-                  key={link.label}
-                  data-cy="footer-link-wrapper"
-                  className="font-[15px] text-slate-50 text-md mb-5"
-                >
+              {column.links.map((link, linkKey) => (
+                <FooterLinkWrapper link={link} key={linkKey}>
                   {link.isExternal ? (
-                    <a
-                      href={link.link}
-                      className="pl-3"
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      title={link.label}
-                      data-cy="footer-link"
-                    >
-                      {link.label}
-                    </a>
-                  ) : link.label == 'Volunteer' ? (
-                    <Link id="footer-org-volunteer" href={link.link} data-cy="footer-link">
-                      <PrimaryButton
-                        size="medium"
-                        style={{ backgroundColor: '#642EFF' }}
-                      >
-                        {link.label}
-                      </PrimaryButton>
-                    </Link>
-                  ) : link.label == 'Run for office' ? (
-                    <Link href={link.link} data-cy="footer-link">
-                      <PrimaryButton
-                        size="medium"
-                        style={{
-                          backgroundColor: '#E4F47D',
-                          color: 'black',
-                        }}
-                      >
-                        {link.label}
-                      </PrimaryButton>
-                    </Link>
+                    <FooterExternalLink {...link} />
+                  ) : link.buttonStyle ? (
+                    <FooterButtonLink {...link} />
                   ) : (
                     <Link
+                      id={link.id}
                       className="pl-3"
                       href={link.link}
                       data-cy="footer-link"
@@ -84,7 +53,7 @@ export default function Footer() {
                       {link.label}
                     </Link>
                   )}
-                </div>
+                </FooterLinkWrapper>
               ))}
             </div>
           ))}
@@ -104,7 +73,11 @@ export default function Footer() {
               the rules, so good independent candidates can run and win!
               <br />
               <br />
-              <Link id="footer-join-us" href="/login" data-cy="footer-join-us-link">
+              <Link
+                id="footer-join-us"
+                href="/login"
+                data-cy="footer-join-us-link"
+              >
                 Join us!
               </Link>
             </div>

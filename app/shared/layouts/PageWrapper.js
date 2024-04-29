@@ -1,6 +1,6 @@
 import Snackbar from '@shared/utils/Snackbar';
 import { Suspense } from 'react';
-import Footer from './Footer';
+import Footer from 'app/shared/layouts/footer/Footer';
 import JsonLdSchema from './JsonLdSchema';
 import Nav from './navigation/Nav';
 import { Cookie } from 'next/font/google';
