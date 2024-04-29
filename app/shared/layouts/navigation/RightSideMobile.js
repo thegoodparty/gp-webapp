@@ -2,7 +2,6 @@
 import Hamburger from 'hamburger-react';
 import { useEffect, useState } from 'react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import { COMMUNITY_LINKS, RESOURCES_LINKS, RUN_LINKS } from './LeftSide';
 import Caption from '@shared/typography/Caption';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
@@ -14,6 +13,11 @@ import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
 import NotificationsDropdown from './notifications/NotificationsDropdown';
 import VolunteerDashboardMobile from '../VolunteerDashboardMobile';
+import {
+  COMMUNITY_LINKS,
+  RESOURCES_LINKS,
+  RUN_LINKS,
+} from '@shared/layouts/navigation/NavigationProvider';
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
