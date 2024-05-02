@@ -17,18 +17,17 @@ export default function IssuesSection(props) {
     props.candidatePositions,
   );
   const [combinedIssues, setCombinedIssues] = useState([]);
-  const [editMode, setEditMode] = useState(false);
-  const [startTab, setStartTab] = useState(0);
+  const [editIssuePosition, setEditIssuePosition] = useState(false);
+
   useEffect(() => {
-    const sortedIssues = [];
+    const combined = [];
     candidatePositions?.forEach((position) => {
-      sortedIssues.push({ ...position, type: 'position' });
+      combined.push({ ...position, type: 'position' });
     });
     campaign?.details?.customIssues?.forEach((issue) => {
-      sortedIssues.push({ ...issue, type: 'custom' });
+      combined.push({ ...issue, type: 'custom' });
     });
-    sortedIssues.sort((a, b) => a.order - b.order);
-    setCombinedIssues(sortedIssues);
+    setCombinedIssues(combined);
   }, [candidatePositions, campaign.details?.customIssues]);
 
   const completeCallback = async () => {
@@ -36,26 +35,20 @@ export default function IssuesSection(props) {
     setCandidatePositions(res.candidatePositions);
     const res2 = await getCampaign();
 
-    setEditMode(false);
+    setEditIssuePosition(false);
     setCampaign(res2.campaign);
-  };
-
-  const setEdit = (index) => {
-    setEditMode(true);
-    setStartTab(index);
   };
 
   return (
     <section className="border-t pt-6 border-gray-600">
       <H3>Your Top Issues</H3>
-      {editMode ? (
+      {editIssuePosition ? (
         <IssuesSelector
           {...props}
-          standaloneMode
           completeCallback={completeCallback}
           candidatePositions={candidatePositions}
           updatePositionsCallback={completeCallback}
-          startTab={startTab}
+          editIssuePosition={editIssuePosition}
         />
       ) : (
         <>
@@ -100,7 +93,7 @@ export default function IssuesSection(props) {
                 <div className="flex justify-end mt-8">
                   <div
                     onClick={() => {
-                      setEdit(index);
+                      setEditIssuePosition(issue);
                     }}
                   >
                     <PrimaryButton size="medium">Edit</PrimaryButton>

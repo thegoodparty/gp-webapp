@@ -1,38 +1,45 @@
 'use client';
-
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { FaCirclePlus } from 'react-icons/fa6';
 
 export default function AddCustomIssue(props) {
-  const { selectIssueCallback, saveCallback, campaign, order } = props;
-  const findExisting = () => {
-    let existingIssue;
-    let index = -1;
-    if (campaign.details.customIssues) {
-      for (let i = 0; i < campaign.details.customIssues.length; i++) {
-        if (campaign.details.customIssues[i].order === order) {
-          existingIssue = campaign.details.customIssues[i];
-          selectIssueCallback('custom');
-          index = i;
-          break;
-        }
-      }
-      return { existingIssue, index };
-    }
-    return { index };
+  const {
+    selectIssueCallback,
+    saveCallback,
+    campaign,
+    // order,
+    editIssuePosition,
+  } = props;
+  // const [existingIssue, setExistingIssue] = useState(false);
+
+  const findExistingIndex = () => {
+    const { customIssues } = campaign?.details || {};
+    const index = customIssues.findIndex(
+      (customIssue) =>
+        customIssue.title === editIssuePosition?.title &&
+        customIssue.position === editIssuePosition?.position,
+    );
+    const existingIssue = customIssues && customIssues[index];
+    index !== -1 && selectIssueCallback('custom');
+    return index;
   };
-  let { existingIssue } = findExisting() || {};
+
+  const [existingIndex] = useState(findExistingIndex());
+
+  console.log(`existingIndex =>`, existingIndex);
 
   const [selectCustom, setSelectCustom] = useState(
-    existingIssue ? 'custom' : false,
+    editIssuePosition ? 'custom' : false,
   );
-  const [title, setTitle] = useState(existingIssue ? existingIssue.title : '');
+  const [title, setTitle] = useState(
+    editIssuePosition ? editIssuePosition.title : '',
+  );
   const [position, setPosition] = useState(
-    existingIssue ? existingIssue.position : '',
+    editIssuePosition ? editIssuePosition.position : '',
   );
 
   const handleSelectCustom = () => {
@@ -54,26 +61,25 @@ export default function AddCustomIssue(props) {
     }
     const customIssues = campaign.details.customIssues || [];
 
-    let { index } = findExisting();
-    if (index !== -1) {
-      customIssues[index] = {
+    if (existingIndex !== -1) {
+      customIssues[existingIndex] = {
         title,
         position,
-        order,
       };
     } else {
       customIssues.push({
         title,
         position,
-        order,
       });
     }
+    console.log(`save existingIndex =>`, existingIndex);
+    console.log(`save customIssues =>`, customIssues);
     await updateCampaign([
       { key: 'details.customIssues', value: customIssues },
     ]);
     await saveCallback(customIssues);
   };
-
+  console.log(`selectCustom =>`, selectCustom);
   return (
     <>
       {selectCustom && (

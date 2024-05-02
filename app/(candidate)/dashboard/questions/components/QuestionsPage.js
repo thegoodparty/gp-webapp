@@ -57,24 +57,19 @@ export const flows = {
 export default function QuestionsPage(props) {
   const { generate, candidatePositions } = props;
   const [campaign, setCampaign] = useState(props.campaign);
-  const [state, setState] = useState({
+  const [answers, setAnswers] = useState({
     occupation: '',
     funFact: '',
     pastExperience: '',
     issues: '',
     website: '',
     candidatePositions,
-    // runningAgainst: '',
   });
-  //   if (campaign.details) {
-  //     const { occupation, funFact, pastExperience, issues, website, runningAgainst } =
-  //       campaign.details;
-  //   }
 
   const flow = flows[generate];
   let nextStep = 0;
   const combinedIssuedCount =
-    (state.candidatePositions?.length || 0) +
+    (answers.candidatePositions?.length || 0) +
     (campaign?.details?.customIssues?.length || 0);
 
   for (let i = 0; i < flow.length; i++) {
@@ -96,8 +91,8 @@ export default function QuestionsPage(props) {
   }
 
   const onChangeField = (key, value) => {
-    setState({
-      ...state,
+    setAnswers({
+      ...answers,
       [key]: value,
     });
   };
@@ -107,7 +102,6 @@ export default function QuestionsPage(props) {
       return { key: keys[0], value: values[i] };
     });
     const res = await updateCampaign(attr);
-    // const res = await getCampaign();
     setCampaign(res.campaign);
   };
 
@@ -140,7 +134,7 @@ export default function QuestionsPage(props) {
       <div className="min-h-[calc(100vh-56px)] py-20 w-full">
         {campaign && nextKey === 'occupation' && (
           <Occupation
-            value={state.occupation}
+            value={answers.occupation}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
@@ -149,7 +143,7 @@ export default function QuestionsPage(props) {
         )}
         {campaign && nextKey === 'funFact' && (
           <FunFact
-            value={state.funFact}
+            value={answers.funFact}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
@@ -158,7 +152,7 @@ export default function QuestionsPage(props) {
         )}
         {campaign && nextKey === 'pastExperience' && (
           <PastExperience
-            value={state.pastExperience}
+            value={answers.pastExperience}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
@@ -171,6 +165,7 @@ export default function QuestionsPage(props) {
             campaign={campaign}
             completeCallback={handleComplete}
             updatePositionsCallback={updatePositionsCallback}
+            candidatePositions={answers.candidatePositions}
           />
         )}
 
@@ -196,7 +191,7 @@ export default function QuestionsPage(props) {
         )}
         {campaign && nextKey === 'website' && (
           <Website
-            value={state.website}
+            value={answers.website}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
