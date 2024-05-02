@@ -40,9 +40,9 @@ const AboutHero = () => (
             label="Join the movement"
           />
         </div>
-        <div className="col-span-12 xl:col-start-8 xl:col-span-5">
+        <div className="col-span-12 xl:col-start-8 xl:col-span-5 flex justify-center">
           <Image
-            className="w-full hidden md:block"
+            className="w-full hidden md:block object-contain"
             width={832}
             height={681}
             src="/images/landing-pages/about-hero.png"
