@@ -2,20 +2,13 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { FaCirclePlus } from 'react-icons/fa6';
 
 export default function AddCustomIssue(props) {
-  const {
-    selectIssueCallback,
-    saveCallback,
-    campaign,
-    // order,
-    editIssuePosition,
-  } = props;
-  // const [existingIssue, setExistingIssue] = useState(false);
-
+  const { selectIssueCallback, saveCallback, campaign, editIssuePosition } =
+    props;
   const findExistingIndex = () => {
     const { customIssues } = campaign?.details || {};
     const index = customIssues.findIndex(
@@ -23,14 +16,11 @@ export default function AddCustomIssue(props) {
         customIssue.title === editIssuePosition?.title &&
         customIssue.position === editIssuePosition?.position,
     );
-    const existingIssue = customIssues && customIssues[index];
     index !== -1 && selectIssueCallback('custom');
     return index;
   };
 
   const [existingIndex] = useState(findExistingIndex());
-
-  console.log(`existingIndex =>`, existingIndex);
 
   const [selectCustom, setSelectCustom] = useState(
     editIssuePosition ? 'custom' : false,
@@ -49,12 +39,13 @@ export default function AddCustomIssue(props) {
 
   const handleAnotherIssue = () => {
     setSelectCustom(false);
-    selectIssueCallback(false);
+    selectIssueCallback(editIssuePosition ? editIssuePosition : false);
   };
 
   const canSave = () => {
     return selectCustom && title !== '' && position !== '';
   };
+
   const handleSave = async () => {
     if (!canSave()) {
       return;
@@ -72,8 +63,6 @@ export default function AddCustomIssue(props) {
         position,
       });
     }
-    console.log(`save existingIndex =>`, existingIndex);
-    console.log(`save customIssues =>`, customIssues);
     await updateCampaign([
       { key: 'details.customIssues', value: customIssues },
     ]);
@@ -130,7 +119,9 @@ export default function AddCustomIssue(props) {
             />
           </div>
           <div className="mt-10 flex justify-center" onClick={handleSave}>
-            <PrimaryButton disabled={!canSave()}>Next</PrimaryButton>
+            <PrimaryButton disabled={!canSave()}>
+              {editIssuePosition ? 'Save' : 'Next'}
+            </PrimaryButton>
           </div>
         </>
       )}

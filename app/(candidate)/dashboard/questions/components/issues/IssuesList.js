@@ -69,7 +69,6 @@ export default function IssuesList(props) {
   }, [candidatePositions, editIssuePosition]);
 
   const selectIssueCallback = (issue) => {
-    console.log(`issue =>`, issue);
     setSelectedIssue(issue);
     if (!issue) {
       setSavedCandidatePosition(false);
@@ -99,7 +98,7 @@ export default function IssuesList(props) {
 
   const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
-    if (editIssuePosition) {
+    if (editIssuePosition?.id) {
       await deleteCandidatePosition(editIssuePosition.id);
     }
     const { campaign } = await getCampaign();
