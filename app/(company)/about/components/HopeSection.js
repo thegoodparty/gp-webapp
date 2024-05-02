@@ -59,7 +59,7 @@ const HOPE_CHANGES = [
     header: 'Local results',
     blurb:
       'By building up independent, people-powered, and anti-corruptions around the country, we’re building the bench of quality candidates ready to serve the people in higher office.',
-    href: '/voter',
+    href: '/elections',
     buttonText: 'For voters',
   },
 ];
