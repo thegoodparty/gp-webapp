@@ -15,7 +15,7 @@ export const dateUsHelper = (orgDate) => {
     }).format(pstDate);
   } catch (err) {
     console.log('error', err);
-    return orgDate;
+    return '';
   }
 };
 
@@ -33,7 +33,7 @@ export const dateNumericHelper = (orgDate) => {
       day: 'numeric',
     }).format(pstDate);
   } catch (err) {
-    console.log('error', err);
+    console.log('error at dateNumericHelper', err);
     return orgDate;
   }
 };
