@@ -1,13 +1,15 @@
 'use client';
-import IssueItem from './IssueItem';
-import { Fragment, useEffect, useState } from 'react';
+import IssueItemEditor from 'app/(candidate)/dashboard/questions/components/issues/IssueItemEditor';
+import { useEffect, useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import AddCustomIssue from './AddCustomIssue';
-import TextField from '@shared/inputs/TextField';
-import { Autocomplete } from '@mui/material';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { theme } from 'tailwind.config';
+import { findExistingCustomIssueIndex } from './findExistingCustomIssueIndex';
+import { deleteCustomIssue } from './customIssuesUtils';
+import { IssuesSearch } from './IssuesSearch';
+import { IssuesSelectList } from './IssuesSelectList';
+import { AddNewIssueTrigger } from './AddNewIssueTrigger';
 
 export async function saveCandidatePosition({
   description,
@@ -45,48 +47,64 @@ async function deleteCandidatePosition(id) {
   }
 }
 
-export default function IssuesList(props) {
-  const { nextCallback, candidatePositions, editIssuePosition } = props;
-  const [campaign, setCampaign] = useState(props.campaign);
-  const [topIssues, setTopIssues] = useState(props.topIssues || []);
-  const [inputValue, setInputValue] = useState('');
-  const [value, setValue] = useState(null);
-  const [selectedIssue, setSelectedIssue] = useState(false);
-  const [savedCandidatePosition, setSavedCandidatePosition] = useState(false);
+export default function IssuesList({
+  nextCallback,
+  candidatePositions,
+  editIssuePosition,
+  campaign: incomingCampaign,
+  topIssues,
+  setEditIssuePosition,
+}) {
+  const [campaign, setCampaign] = useState(incomingCampaign);
+  const [issues, setIssues] = useState(topIssues || []);
+  const [selectedIssue, setSelectedIssue] = useState(null);
   const editingCustomIssue =
     editIssuePosition && editIssuePosition.type === 'custom';
+  const showSelectList = !selectedIssue;
 
   useEffect(() => {
-    setCampaign(props.campaign);
-  }, [props.campaign]);
-
-  useEffect(() => {
-    console.log(`effect editIssuePosition =>`, editIssuePosition);
     if (editIssuePosition) {
-      setSavedCandidatePosition(editIssuePosition);
-      setSelectedIssue(editIssuePosition.topIssue);
+      // setSavedCandidatePosition(editIssuePosition);
+      setSelectedIssue(
+        editIssuePosition.type === 'custom'
+          ? 'custom'
+          : editIssuePosition.topIssue,
+      );
     }
-  }, [candidatePositions, editIssuePosition]);
+  }, [editIssuePosition]);
 
   const selectIssueCallback = (issue) => {
     setSelectedIssue(issue);
-    if (!issue) {
-      setSavedCandidatePosition(false);
+    if (!issue && !editIssuePosition) {
     }
   };
 
-  const saveCallback = async (position, issue, candidatePosition) => {
-    console.log(`candidatePositions =>`, candidatePositions);
-    console.log(`{position, issue, candidatePosition} =>`, {
-      position,
-      issue,
-      candidatePosition,
+  const updateCustomIssuesState = (customIssues) =>
+    setCampaign({
+      ...campaign,
+      details: {
+        ...campaign.details,
+        customIssues,
+      },
     });
 
+  const saveCallback = async (position, issue, candidatePosition) => {
     // if candidate position already exists in this order, delete it
-    console.log(`editIssuePosition =>`, editIssuePosition);
-    editIssuePosition && (await deleteCandidatePosition(editIssuePosition.id));
+    editIssuePosition?.id &&
+      (await deleteCandidatePosition(editIssuePosition.id));
 
+    if (editIssuePosition?.type === 'custom') {
+      const existingIndex = findExistingCustomIssueIndex(
+        campaign,
+        editIssuePosition,
+      );
+      const currentCustomIssues = campaign.details.customIssues || [];
+      const updatedCustomIssues =
+        existingIndex !== -1
+          ? await deleteCustomIssue(existingIndex, currentCustomIssues)
+          : currentCustomIssues;
+      updateCustomIssuesState(updatedCustomIssues);
+    }
     await saveCandidatePosition({
       description: candidatePosition,
       campaignSlug: campaign.slug,
@@ -109,81 +127,59 @@ export default function IssuesList(props) {
 
   const filterIssues = (value) => {
     if (value === '') {
-      setTopIssues(props.topIssues);
-    } else if (topIssues && typeof topIssues.filter === 'function') {
-      const filtered = topIssues.filter((option) =>
+      setIssues(topIssues);
+    } else if (issues && typeof issues.filter === 'function') {
+      const filtered = issues.filter((option) =>
         option.name.toLowerCase().includes(value.toLowerCase()),
       );
-      setTopIssues(filtered);
+      setIssues(filtered);
     }
   };
 
-  const filterOptions = (options, { inputValue }) => {
-    if (options && typeof options.filter === 'function') {
-      return options.filter((option) => {
-        return option.name.toLowerCase().includes(inputValue.toLowerCase());
-      });
-    }
-  };
-  console.log(`selectedIssue =>`, selectedIssue);
-  console.log(`editIssuePosition =>`, editIssuePosition);
   return (
     <div className=" max-w-3xl mx-auto">
       {!editingCustomIssue && !selectedIssue && (
-        <div className="bg-white pt-4 pb-2">
-          <Autocomplete
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
+        <div className="pt-4 pb-2">
+          <IssuesSearch
+            {...{
+              issues: issues,
+              onInputChange: filterIssues,
             }}
-            inputValue={inputValue}
-            onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
-              filterIssues(newInputValue);
-            }}
-            className="office-autocomplete"
-            sx={{
-              '& fieldset': {
-                border: `2px solid ${theme.extend.colors.indigo[300]}`,
-                borderRadius: '8px',
-              },
-            }}
-            options={topIssues || []}
-            clearOnBlur={false}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Search for climate change, economic equality…"
-              />
-            )}
-            getOptionLabel={(option) => option.name}
-            filterOptions={filterOptions}
           />
         </div>
       )}
-      {!editingCustomIssue &&
-        topIssues.map((topIssue) => (
-          <Fragment key={topIssue.id}>
-            {!selectedIssue || selectedIssue.id === topIssue.id ? (
-              <IssueItem
-                topIssue={topIssue}
-                selectIssueCallback={selectIssueCallback}
-                saveCallback={saveCallback}
-                candidatePositions={candidatePositions}
-                initialSaved={savedCandidatePosition}
-                saveButton={Boolean(editIssuePosition)}
-              />
-            ) : null}
-          </Fragment>
-        ))}
-      {(selectedIssue === 'custom' || !selectedIssue) && (
-        <AddCustomIssue
-          campaign={campaign}
-          selectIssueCallback={selectIssueCallback}
-          saveCallback={handleSaveCustom}
-          editIssuePosition={editIssuePosition}
-        />
+
+      {showSelectList && (
+        <>
+          <IssuesSelectList
+            issues={issues}
+            handleSelectIssue={selectIssueCallback}
+          />
+          <AddNewIssueTrigger onClick={() => setSelectedIssue('custom')} />
+        </>
       )}
+
+      {selectedIssue &&
+        (selectedIssue === 'custom' ? (
+          <AddCustomIssue
+            campaign={campaign}
+            selectIssueCallback={selectIssueCallback}
+            saveCallback={handleSaveCustom}
+            editIssuePosition={editIssuePosition}
+            setEditIssuePosition={setEditIssuePosition}
+          />
+        ) : (
+          <IssueItemEditor
+            issue={issues.find(
+              ({ id: issueId }) => issueId === selectedIssue.id,
+            )}
+            selectIssueCallback={selectIssueCallback}
+            saveCallback={saveCallback}
+            candidatePositions={candidatePositions}
+            editIssuePosition={editIssuePosition}
+            setEditIssuePosition={setEditIssuePosition}
+          />
+        ))}
     </div>
   );
 }

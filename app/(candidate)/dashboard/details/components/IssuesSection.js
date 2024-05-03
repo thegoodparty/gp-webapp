@@ -49,14 +49,16 @@ export default function IssuesSection(props) {
           candidatePositions={candidatePositions}
           updatePositionsCallback={completeCallback}
           editIssuePosition={editIssuePosition}
+          setEditIssuePosition={setEditIssuePosition}
         />
       ) : (
         <>
           {combinedIssues.map((issue, index) => (
             <div key={issue.id || index} className="mt-8">
               <H4>Issue {index + 1}</H4>
-              <div className=" opacity-50 border border-primary rounded-lg p-8  mt-1">
+              <div className="border border-primary rounded-lg p-8  mt-1">
                 <TextField
+                  disabled
                   fullWidth
                   value={issue.title || issue.topIssue?.name}
                   label="Issue"
@@ -64,40 +66,38 @@ export default function IssuesSection(props) {
                     shrink: true,
                   }}
                 />
-                <div className="">
-                  <div className="">
-                    {issue.type === 'position' ? (
-                      <>
-                        <div className="p-4 flex mb-4">
-                          <MdCheckBox className="mt-1 mr-2" />
-                          {issue.position?.name}
-                        </div>
-                        <TextField
-                          fullWidth
-                          value={issue.description}
-                          label="Position"
-                          multiline
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </>
-                    ) : (
-                      <div className="p-4 flex">
-                        <MdCheckBox className="mt-1 mr-2" />
-                        <div>{issue.position}</div>
-                      </div>
-                    )}
+                {issue.type === 'position' ? (
+                  <>
+                    <div className="opacity-40 p-4 flex mb-4">
+                      <MdCheckBox className="mt-1 mr-2" />
+                      {issue.position?.name}
+                    </div>
+                    <TextField
+                      disabled
+                      fullWidth
+                      value={issue.description}
+                      label="Position"
+                      multiline
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </>
+                ) : (
+                  <div className="opacity-40 p-4 flex">
+                    <MdCheckBox className="mt-1 mr-2" />
+                    <div>{issue.position}</div>
                   </div>
-                </div>
+                )}
                 <div className="flex justify-end mt-8">
-                  <div
+                  <PrimaryButton
+                    size="medium"
                     onClick={() => {
                       setEditIssuePosition(issue);
                     }}
                   >
-                    <PrimaryButton size="medium">Edit</PrimaryButton>
-                  </div>
+                    Edit
+                  </PrimaryButton>
                 </div>
               </div>
             </div>

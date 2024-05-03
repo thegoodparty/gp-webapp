@@ -2,7 +2,7 @@
 import IssuesList from './IssuesList';
 export default function IssuesSelector(props) {
   const {
-    completeCallback,
+    completeCallback = (v) => {},
     updatePositionsCallback = async () => {},
     candidatePositions,
     campaign,
