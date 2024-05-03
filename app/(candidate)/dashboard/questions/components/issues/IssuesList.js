@@ -64,7 +64,6 @@ export default function IssuesList({
 
   useEffect(() => {
     if (editIssuePosition) {
-      // setSavedCandidatePosition(editIssuePosition);
       setSelectedIssue(
         editIssuePosition.type === 'custom'
           ? 'custom'
