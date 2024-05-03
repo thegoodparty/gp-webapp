@@ -5,12 +5,9 @@ export const IssuePosition = ({
   selected = false,
   handleSelectPosition = (v) => {},
   disabled = false,
-}) => {
-  console.log(`position =>`, position);
-  console.log(`disabled =>`, disabled);
-  return (
-    <div
-      className={`
+}) => (
+  <div
+    className={`
         flex 
         items-center 
         p-4 
@@ -25,16 +22,15 @@ export const IssuePosition = ({
         ${selected && !disabled ? 'bg-tertiary-background' : ''}
         ${disabled ? 'text-neutral' : ''}
       `}
-      onClick={() => {
-        !disabled && handleSelectPosition(position);
-      }}
-    >
-      {selected ? (
-        <ImCheckboxChecked className="mr-2" />
-      ) : (
-        <ImCheckboxUnchecked className="mr-2" />
-      )}
-      {position.name}
-    </div>
-  );
-};
+    onClick={() => {
+      !disabled && handleSelectPosition(position);
+    }}
+  >
+    {selected ? (
+      <ImCheckboxChecked className="mr-2" />
+    ) : (
+      <ImCheckboxUnchecked className="mr-2" />
+    )}
+    {position.name} {disabled ? '(Previously Selected)' : ''}
+  </div>
+);
