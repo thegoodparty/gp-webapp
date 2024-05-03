@@ -166,7 +166,7 @@ export default function MyContent(props) {
       let sectionsObj = campaignObj[subSectionKey] || {};
 
       let jobsProcessing = false;
-      const statusObj = campaignObj.campaignPlanStatus || {};
+      const statusObj = campaignObj[subSectionKey].generationStatus || {};
 
       for (const statusKey in statusObj) {
         if (statusObj[statusKey]['status'] === 'processing') {
@@ -185,7 +185,6 @@ export default function MyContent(props) {
       setLoading(false);
 
       if (jobsProcessing) {
-        aiCount++;
         aiTotalCount++;
 
         debounce(getUserCampaign, undefined, 10000);
