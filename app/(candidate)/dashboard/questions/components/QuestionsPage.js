@@ -16,6 +16,7 @@ import Website from './Website';
 import Done from './Done';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
 
 export async function loadCandidatePosition(slug) {
   try {
@@ -55,7 +56,7 @@ export const flows = {
   mobilizing: ['occupation', 'funFact', 'pastExperience', 'issues'],
 };
 export default function QuestionsPage(props) {
-  const { generate, candidatePositions } = props;
+  const { generate, candidatePositions: initCandidatePositions } = props;
   const [campaign, setCampaign] = useState(props.campaign);
   const [answers, setAnswers] = useState({
     occupation: '',
@@ -63,7 +64,7 @@ export default function QuestionsPage(props) {
     pastExperience: '',
     issues: '',
     website: '',
-    candidatePositions,
+    candidatePositions: initCandidatePositions,
   });
 
   const flow = flows[generate];
@@ -122,13 +123,13 @@ export default function QuestionsPage(props) {
     nextKey = 'done';
   }
 
-  const updatePositionsCallback = async () => {
-    const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-    const res = await getCampaign();
+  const updatePositionsCallback = async (freshCandidatePositions) => {
+    const { campaign } = await getCampaign();
 
-    onChangeField('candidatePositions', candidatePositions);
-    setCampaign(res.campaign);
+    onChangeField('candidatePositions', freshCandidatePositions);
+    setCampaign(campaign);
   };
+
   return (
     <MaxWidth>
       <div className="min-h-[calc(100vh-56px)] py-20 w-full">
@@ -160,13 +161,17 @@ export default function QuestionsPage(props) {
           />
         )}
         {campaign && nextKey === 'issues' && (
-          <AddIssues
-            {...props}
-            campaign={campaign}
-            completeCallback={handleComplete}
-            updatePositionsCallback={updatePositionsCallback}
-            candidatePositions={answers.candidatePositions}
-          />
+          <CandidatePositionsProvider
+            candidatePositions={initCandidatePositions}
+          >
+            <AddIssues
+              {...props}
+              campaign={campaign}
+              completeCallback={handleComplete}
+              updatePositionsCallback={updatePositionsCallback}
+              candidatePositions={answers.candidatePositions}
+            />
+          </CandidatePositionsProvider>
         )}
 
         {campaign && nextKey === 'runningAgainst' && (

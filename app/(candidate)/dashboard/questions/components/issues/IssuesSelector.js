@@ -1,13 +1,22 @@
 'use client';
 import IssuesList from './IssuesList';
+import { useCandidatePositions } from 'app/(candidate)/dashboard/questions/components/issues/useCandidatePositions';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/questions/components/QuestionsPage';
+
 export default function IssuesSelector(props) {
   const {
     completeCallback = (v) => {},
-    updatePositionsCallback = async () => {},
-    candidatePositions,
+    updatePositionsCallback = async (v) => {},
     campaign,
     editIssuePosition,
   } = props;
+  const [candidatePositions, setCandidatePositions] = useCandidatePositions();
+
+  const updateCandidatePositions = async () => {
+    const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+    setCandidatePositions(candidatePositions);
+    return candidatePositions;
+  };
 
   const combinedIssuedCount =
     (candidatePositions?.length || 0) +
@@ -15,10 +24,8 @@ export default function IssuesSelector(props) {
   const issueNum = combinedIssuedCount + 1;
 
   const nextCallback = async () => {
-    if (combinedIssuedCount < 3) {
-      updatePositionsCallback();
-    } else {
-      await updatePositionsCallback();
+    await updatePositionsCallback(await updateCandidatePositions());
+    if (completeCallback >= 3) {
       await completeCallback('issues');
     }
   };

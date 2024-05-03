@@ -1,7 +1,5 @@
 'use client';
-
 import H3 from '@shared/typography/H3';
-
 import IssuesSelector from '../../questions/components/issues/IssuesSelector';
 import { loadCandidatePosition } from '../../questions/components/QuestionsPage';
 import { useEffect, useState } from 'react';
@@ -10,12 +8,11 @@ import { MdCheckBox } from 'react-icons/md';
 import H4 from '@shared/typography/H4';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { useCandidatePositions } from 'app/(candidate)/dashboard/questions/components/issues/useCandidatePositions';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
-  const [candidatePositions, setCandidatePositions] = useState(
-    props.candidatePositions,
-  );
+  const [candidatePositions, setCandidatePositions] = useCandidatePositions();
   const [combinedIssues, setCombinedIssues] = useState([]);
   const [editIssuePosition, setEditIssuePosition] = useState(false);
 
