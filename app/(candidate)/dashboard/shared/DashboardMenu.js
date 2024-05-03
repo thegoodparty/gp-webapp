@@ -77,20 +77,23 @@ export default function DashboardMenu({
     window.location.replace('/');
     fireGTMButtonClickEvent(e.currentTarget);
   };
+  console.log('campaign pro', campaign);
   if (
-    user?.isAdmin &&
+    (user?.isAdmin || campaign?.isPro) &&
     pages.length === 8 &&
     campaign?.data?.hasVoterFile === 'completed'
   ) {
     pages[4].link = '/dashboard/voter-records';
     pages[4].id = 'vote-records-dashboard';
 
-    pages.splice(5, 0, {
-      label: 'Door Knocking',
-      icon: <RiDoorOpenLine />,
-      link: '/dashboard/door-knocking/main',
-      id: 'door-knocking-dashboard',
-    });
+    if (user?.isAdmin) {
+      pages.splice(5, 0, {
+        label: 'Door Knocking',
+        icon: <RiDoorOpenLine />,
+        link: '/dashboard/door-knocking/main',
+        id: 'door-knocking-dashboard',
+      });
+    }
   }
 
   return (

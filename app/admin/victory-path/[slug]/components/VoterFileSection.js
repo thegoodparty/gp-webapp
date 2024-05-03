@@ -69,12 +69,13 @@ export default function VoterFileSection(props) {
   ) {
     status = 'hasElectionType';
   }
-  if (campaign.hasVoterFile === 'processing') {
+  if (campaign.data?.hasVoterFile === 'processing') {
     status = 'processingVoterFile';
   }
-  if (campaign.hasVoterFile === 'completed') {
+  if (campaign.data?.hasVoterFile === 'completed') {
     status = 'hasVoterFile';
   }
+  console.log('campaign', campaign, status);
 
   const handleRerun = async () => {
     if (processing) return;
