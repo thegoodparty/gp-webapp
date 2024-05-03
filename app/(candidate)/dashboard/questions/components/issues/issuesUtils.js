@@ -25,3 +25,11 @@ export const deleteCustomIssue = async (index, customIssues = []) => {
   await updateCampaign([{ key: 'details.customIssues', value: customIssues }]);
   return customIssues;
 };
+
+export const filterIssues = (value = '', issues) => {
+  return Array.isArray(issues)
+    ? issues.filter(({ name = '' } = {}) =>
+        name.toLowerCase().includes(value.toLowerCase()),
+      )
+    : issues;
+};

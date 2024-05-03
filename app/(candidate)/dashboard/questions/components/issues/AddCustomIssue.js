@@ -3,7 +3,7 @@ import TextField from '@shared/inputs/TextField';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { findExistingCustomIssueIndex } from './findExistingCustomIssueIndex';
-import { writeCampaignCustomIssue } from './customIssuesUtils';
+import { writeCampaignCustomIssue } from 'app/(candidate)/dashboard/questions/components/issues/issuesUtils';
 import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons';
 
 export default function AddCustomIssue({

@@ -6,7 +6,10 @@ import gpFetch from 'gpApi/gpFetch';
 import AddCustomIssue from './AddCustomIssue';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { findExistingCustomIssueIndex } from './findExistingCustomIssueIndex';
-import { deleteCustomIssue } from './customIssuesUtils';
+import {
+  deleteCustomIssue,
+  filterIssues,
+} from 'app/(candidate)/dashboard/questions/components/issues/issuesUtils';
 import { IssuesSearch } from './IssuesSearch';
 import { IssuesSelectList } from './IssuesSelectList';
 import { AddNewIssueTrigger } from './AddNewIssueTrigger';
@@ -24,7 +27,7 @@ export async function saveCandidatePosition({
       campaignSlug,
       positionId,
       topIssueId,
-      // TODO: remove this once the Sails "input" value for `order` is removed or made optional
+      // TODO: remove order once the Sails "input" value for `order` is removed or made optional
       order: 0,
     };
     return await gpFetch(api, payload);
@@ -56,7 +59,7 @@ export default function IssuesList({
   setEditIssuePosition,
 }) {
   const [campaign, setCampaign] = useState(incomingCampaign);
-  const [issues, setIssues] = useState(topIssues || []);
+  const [filterValue, setFilterValue] = useState('');
   const [selectedIssue, setSelectedIssue] = useState(null);
   const editingCustomIssue =
     editIssuePosition && editIssuePosition.type === 'custom';
@@ -124,16 +127,7 @@ export default function IssuesList({
     nextCallback();
   };
 
-  const filterIssues = (value) => {
-    if (value === '') {
-      setIssues(topIssues);
-    } else if (issues && typeof issues.filter === 'function') {
-      const filtered = issues.filter((option) =>
-        option.name.toLowerCase().includes(value.toLowerCase()),
-      );
-      setIssues(filtered);
-    }
-  };
+  const filteredIssues = filterIssues(filterValue, topIssues);
 
   return (
     <div className=" max-w-3xl mx-auto">
@@ -141,8 +135,8 @@ export default function IssuesList({
         <div className="pt-4 pb-2">
           <IssuesSearch
             {...{
-              issues: issues,
-              onInputChange: filterIssues,
+              issues: filteredIssues,
+              onInputChange: setFilterValue,
             }}
           />
         </div>
@@ -151,7 +145,7 @@ export default function IssuesList({
       {showSelectList && (
         <>
           <IssuesSelectList
-            issues={issues}
+            issues={filteredIssues}
             handleSelectIssue={selectIssueCallback}
           />
           <AddNewIssueTrigger onClick={() => setSelectedIssue('custom')} />
@@ -169,7 +163,7 @@ export default function IssuesList({
           />
         ) : (
           <IssueItemEditor
-            issue={issues.find(
+            issue={filteredIssues.find(
               ({ id: issueId }) => issueId === selectedIssue.id,
             )}
             selectIssueCallback={selectIssueCallback}
