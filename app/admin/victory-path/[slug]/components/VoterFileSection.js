@@ -137,7 +137,7 @@ export default function VoterFileSection(props) {
           </Body1>
         </div>
       )}
-      {status === 'processing' && (
+      {status === 'processingVoterFile' && (
         <div>
           The voter file is being purchased. This might take a few minutes.
           Please refresh the page to update the status
