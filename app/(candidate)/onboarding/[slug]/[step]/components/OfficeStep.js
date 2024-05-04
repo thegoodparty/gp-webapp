@@ -61,9 +61,7 @@ export default function OfficeStep(props) {
     }
     const { position, election, id } = state.ballotOffice;
 
-    const currentStep = onboardingStep(campaign, step);
     const attr = [
-      { key: 'data.currentStep', value: currentStep },
       { key: 'details.positionId', value: state.ballotOffice.position?.id },
       { key: 'details.electionId', value: state.ballotOffice.election?.id },
       { key: 'details.raceId', value: state.ballotOffice.id },
@@ -96,6 +94,10 @@ export default function OfficeStep(props) {
         value: state.ballotOffice.position?.hasPrimary,
       },
     ];
+    if (step) {
+      const currentStep = onboardingStep(campaign, step);
+      attr.push({ key: 'data.currentStep', value: currentStep });
+    }
 
     await updateCampaign(attr);
 
