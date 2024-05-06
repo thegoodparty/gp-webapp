@@ -433,7 +433,7 @@ export default function AdminCandidatesTable(props) {
   return (
     <>
       <div className="text-right">
-        <Link href="/admin/add-candidate">
+        {/* <Link href="/admin/add-candidate">
           <PrimaryButton size="medium">
             <div className="font-black flex items-center">
               <IoIosPersonAdd size={24} />{' '}
@@ -448,7 +448,7 @@ export default function AdminCandidatesTable(props) {
               <div className="ml-1">All candidates</div>
             </div>
           </WarningButton>
-        </Link>
+        </Link> */}
         <CSVLink
           data={csvData}
           filename={`candidates-${dateUsHelper(new Date())}.csv`}
