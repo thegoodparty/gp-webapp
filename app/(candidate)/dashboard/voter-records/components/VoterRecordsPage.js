@@ -11,6 +11,8 @@ import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import Checkbox from '@shared/inputs/Checkbox';
 import { useState } from 'react';
+import H4 from '@shared/typography/H4';
+import H2 from '@shared/typography/H2';
 
 async function fetchVoterFile() {
   try {
@@ -21,6 +23,79 @@ async function fetchVoterFile() {
     return false;
   }
 }
+
+const content = [
+  {
+    title: 'General Compliance',
+    description:
+      'The Data User certifies to use any voter file data provided by Good Party LLC in accordance with all applicable federal, state, and local laws, including statutory, regulatory, and common law governing the use of voter file data in the relevant jurisdictions.',
+  },
+  {
+    title: 'Specific Uses',
+    description:
+      'The Data User certifies that the use of voter data is strictly limited to supporting political campaigns and public affairs advocacy.',
+  },
+  {
+    title: 'Awareness and Conformity',
+    description:
+      'The Data User represents and warrants that they are fully informed of all applicable laws and will use the data in conformity with these laws.',
+  },
+  {
+    title: 'Legal Restrictions Awareness',
+    description:
+      'The Data User is solely responsible for informing themselves of and complying with all legal restrictions governing the use of registered voter data.',
+  },
+  {
+    title: 'Telephone Consumer Protection',
+    description:
+      'The Data User acknowledges awareness of special rules governing the use of cell phone numbers as per the Telephone Consumer Protection Act, enforced by the Federal Communications Commission.',
+  },
+  {
+    title: 'Prohibited Uses',
+    description:
+      'The Data User ensures that no data supplied by Good Party LLC will be used for any purposes that are immoral or illegal.',
+  },
+  {
+    title: 'No Warranty',
+    description:
+      'Good Party LLC disclaims all express or implied warranties regarding the accuracy, reliability, utility, or completeness of the voter file data, which is provided on an "AS IS" basis.',
+  },
+  {
+    title: 'Disclaimer of Implied Warranties',
+    description:
+      'All implied warranties, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement of proprietary rights, are expressly disclaimed.',
+  },
+  {
+    title: 'Data Currency',
+    description:
+      'The Data User is cautioned that voter file data can quickly become out-of-date and must assume all responsibility for the use of such data.',
+  },
+  {
+    title: 'Indemnification',
+    description:
+      'The Data User shall defend, indemnify, and hold harmless Good Party LLC and its affiliates, directors, officers, employees, and agents from all claims, expenses, attorneys fees, and court costs arising from the use of the voter file data.',
+  },
+  {
+    title: 'Ownership',
+    description:
+      'The data downloaded is the exclusive property of L2 INC., with Good Party LLC acting as a licensee.',
+  },
+  {
+    title: 'License Grant',
+    description:
+      "The Data User is granted a limited, non-exclusive license to use the data downloaded from L2's platform for the allowable purposes specified.",
+  },
+  {
+    title: 'Compliance with Privacy Requests',
+    description:
+      "The Data User acknowledges that legal privacy requirements may compel Good Party LLC to remove identifying information from its records and to share such deletion requests with the Data User. The Data User agrees to comply promptly with the removal of relevant records from their licensed copy of Good Party's data as mandated under this agreement.",
+  },
+  {
+    title: 'Termination',
+    description:
+      'We reserve the right to terminate your access to the voter file data at any time, with or without notice, if you fail to comply with these terms and conditions.',
+  },
+];
 
 export default function VoterRecordsPage(props) {
   const [checked, setChecked] = useState(false);
@@ -45,68 +120,15 @@ export default function VoterRecordsPage(props) {
     <DashboardLayout {...props}>
       <H1>Voter Records</H1>
       <Paper className=" mt-6 md:py-12 md:px-6">
+        <H2 className="mb-4">Voter File Data Use Agreement</H2>
         <Body1>
-          To download your voter records, please click the button below. This
-          might take a minute.
-        </Body1>
-
-        <H3 className="mt-8">Voter File Data Use Agreement</H3>
-        <Body1>
-          <br />
-          By downloading voter file data from our website, you
-          (&quot;Candidate&quot; or &quot;Authorized User&quot;) agree to the
-          following terms and conditions:
-          <br />
-          <br />
-          <strong>Permitted Use:</strong> <br />
-          You are permitted to use the voter file data solely for political
-          campaign purposes, including but not limited to, voter outreach, voter
-          registration, and get-out-the-vote efforts. You may not use the data
-          for any commercial or non-political purposes.
-          <br />
-          <br />
-          <strong>Data Protection:</strong> <br />
-          You agree to protect the voter file data from unauthorized access,
-          disclosure, or use. You will implement appropriate security measures
-          to prevent the data from being lost, stolen, or compromised.
-          <br />
-          <br />
-          <strong>Data Sharing:</strong> <br />
-          You may not share the voter file data with any third party, except as
-          necessary to fulfill your political campaign purposes. You may not
-          sell, rent, or otherwise disclose the data to any third party.
-          <br />
-          <br />
-          <strong>Opt-Out:</strong> <br />
-          You will respect the privacy rights of individuals who opt-out of
-          receiving communications from you. You will provide a clear and easy
-          way for individuals to opt-out of future communications.
-          <br />
-          <br />
-          <strong>Security:</strong> <br />
-          You will ensure that any sensitive information, such as credit card
-          data, is encrypted and transmitted securely.
-          <br />
-          <br />
-          <strong>Compliance:</strong> <br />
-          You will comply with all applicable laws and regulations, including
-          but not limited to, data protection laws, campaign finance laws, and
-          election laws.
-          <br />
-          <br />
-          <strong>Indemnification:</strong> <br />
-          You agree to indemnify and hold harmless our website, its affiliates,
-          and its licensors from any claims, damages, or expenses arising from
-          your use of the voter file data.
-          <br />
-          <br />
-          <strong>Termination:</strong> <br />
-          We reserve the right to terminate your access to the voter file data
-          at any time, with or without notice, if you fail to comply with these
-          terms and conditions.
-          <br />
-          <br />
-          <div className="flex items-center">
+          {content.map((item, index) => (
+            <div key={index} className="mt-4">
+              <H4>{item.title}</H4>
+              <Body2>{item.description}</Body2>
+            </div>
+          ))}
+          <div className="flex items-center mt-12">
             <Checkbox
               value={checked}
               onChange={(e) => setChecked(e.target.checked)}
