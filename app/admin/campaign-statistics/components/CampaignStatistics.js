@@ -12,7 +12,10 @@ export default function CampaignStatistics(props) {
       <Tabs
         centered
         tabLabels={['Visual', 'Table']}
-        tabPanels={[<div>Visual</div>, <AdminCandidatesTable {...props} />]}
+        tabPanels={[
+          <div key="visual">Visual</div>,
+          <AdminCandidatesTable {...props} key="table" />,
+        ]}
         activeTab={tab}
         changeCallback={(index) => setTab(index)}
       />
