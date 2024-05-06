@@ -39,7 +39,7 @@ function JobPage({ job }) {
   };
   const panels = [
     <div key="1">
-      {job && (
+      {job && job?.descriptionHtml && DOMPurify && (
         <>
           <div className="bg-white rounded-lg shadow-lg p-6 [&_p]:mb-3">
             <div
