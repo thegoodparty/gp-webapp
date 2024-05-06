@@ -69,12 +69,13 @@ export default function VoterFileSection(props) {
   ) {
     status = 'hasElectionType';
   }
-  if (campaign.hasVoterFile === 'processing') {
+  if (campaign.data?.hasVoterFile === 'processing') {
     status = 'processingVoterFile';
   }
-  if (campaign.hasVoterFile === 'completed') {
+  if (campaign.data?.hasVoterFile === 'completed') {
     status = 'hasVoterFile';
   }
+  console.log('campaign', campaign, status);
 
   const handleRerun = async () => {
     if (processing) return;
@@ -107,7 +108,7 @@ export default function VoterFileSection(props) {
       <H3>Voter File (pro account)</H3>
       {status === 'noElectionType' && (
         <div>
-          {campaign.p2vStatus === 'Waiting' ? (
+          {campaign.pathToVictory?.p2vStatus === 'Waiting' ? (
             <div className="my-4">Path To Victory is processing...</div>
           ) : (
             <div className="my-4">
@@ -136,7 +137,7 @@ export default function VoterFileSection(props) {
           </Body1>
         </div>
       )}
-      {status === 'processing' && (
+      {status === 'processingVoterFile' && (
         <div>
           The voter file is being purchased. This might take a few minutes.
           Please refresh the page to update the status
