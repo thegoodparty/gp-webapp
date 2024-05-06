@@ -14,22 +14,8 @@ import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import Website from './Website';
 import Done from './Done';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
-
-export async function loadCandidatePosition(slug) {
-  try {
-    const api = gpApi.campaign.candidatePosition.find;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at loadCandidatePosition', e);
-    return false;
-  }
-}
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 export const flows = {
   all: [

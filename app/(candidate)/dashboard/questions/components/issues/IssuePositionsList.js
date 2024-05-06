@@ -1,5 +1,5 @@
 import { IssuePosition } from 'app/(candidate)/dashboard/questions/components/issues/IssuePosition';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/questions/components/issues/useCandidatePositions';
+import { useCandidatePositions } from 'app/(candidate)/dashboard/details/components/issues/useCandidatePositions';
 
 const issueAlreadySelected = (position = {}, candidatePositions = []) =>
   Boolean(
@@ -15,7 +15,7 @@ export const IssuePositionsList = ({
   handleSelectPosition = (v) => {},
 }) => {
   const [candidatePositions] = useCandidatePositions();
-  console.log(`candidatePositions =>`, candidatePositions);
+
   return positions.map((position = {}) => {
     const selected = selectedPosition?.id === position.id;
     return (
