@@ -3,9 +3,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import H2 from '@shared/typography/H2';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
+import { revalidateCandidates } from 'helpers/cacheHelper';
 import { useState } from 'react';
 import CandidateIssueSelector from './CandidateIssueSelector';
 import EditCandidatePosition from './EditCandidatePosition';
@@ -13,56 +11,10 @@ import { combinePositions } from './IssuesList';
 import { Draggable } from 'react-drag-reorder';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import SuggestedIssues from './SuggestedIssues';
-
-export async function saveCandidatePosition({
-  description,
-  campaignSlug,
-  positionId,
-  topIssueId,
-  order,
-}) {
-  try {
-    const api = gpApi.campaign.candidatePosition.create;
-    const payload = {
-      description,
-      campaignSlug,
-      positionId,
-      topIssueId,
-      order,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
-
-export async function loadCandidatePosition(slug) {
-  try {
-    const api = gpApi.campaign.candidatePosition.find;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at loadCandidatePosition', e);
-    return false;
-  }
-}
-
-async function updateCandidatePosition(id, order) {
-  try {
-    const api = gpApi.campaign.candidatePosition.update;
-    const payload = {
-      id,
-      order,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
+import {
+  loadCandidatePosition,
+  saveCandidatePosition,
+} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 export default function EditIssues(props) {
   const {

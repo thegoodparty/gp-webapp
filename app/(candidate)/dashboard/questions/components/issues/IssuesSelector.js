@@ -1,7 +1,7 @@
 'use client';
 import IssuesList from './IssuesList';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/questions/components/issues/useCandidatePositions';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/questions/components/QuestionsPage';
+import { useCandidatePositions } from 'app/(candidate)/dashboard/details/components/issues/useCandidatePositions';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 export default function IssuesSelector(props) {
   const {
