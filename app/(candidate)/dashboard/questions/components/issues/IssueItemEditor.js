@@ -19,7 +19,7 @@ export default function IssueItemEditor({
   const saveAllowed = candidatePosition !== '' && selectedPosition;
 
   useEffect(() => {
-    if (editIssuePosition) {
+    if (editIssuePosition?.topIssue?.id === issue.id) {
       setSelectedPosition(editIssuePosition.position);
       setCandidatePosition(editIssuePosition.description);
     }

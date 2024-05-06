@@ -77,7 +77,7 @@ export default function DashboardMenu({
     window.location.replace('/');
     fireGTMButtonClickEvent(e.currentTarget);
   };
-  console.log('campaign pro', campaign);
+
   if (
     (user?.isAdmin || campaign?.isPro) &&
     pages.length === 8 &&

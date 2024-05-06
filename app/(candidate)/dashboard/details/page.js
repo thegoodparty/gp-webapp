@@ -3,7 +3,10 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import DetailsPage from './components/DetailsPage';
 import { getServerUser } from 'helpers/userServerHelper';
-import { fetchIssues, loadCandidatePosition } from '../questions/page';
+import {
+  fetchIssues,
+  loadCandidatePosition,
+} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
   title: 'My Details | GOOD PARTY',

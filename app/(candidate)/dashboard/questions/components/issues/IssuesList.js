@@ -1,51 +1,17 @@
 'use client';
 import IssueItemEditor from 'app/(candidate)/dashboard/questions/components/issues/IssueItemEditor';
 import { useEffect, useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import AddCustomIssue from './AddCustomIssue';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { findExistingCustomIssueIndex } from './findExistingCustomIssueIndex';
-import { deleteCustomIssue } from './customIssuesUtils';
+import {
+  deleteCandidatePosition,
+  filterIssues,
+  handleDeleteCustomIssue,
+  saveCandidatePosition,
+} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 import { IssuesSearch } from './IssuesSearch';
 import { IssuesSelectList } from './IssuesSelectList';
 import { AddNewIssueTrigger } from './AddNewIssueTrigger';
-
-export async function saveCandidatePosition({
-  description,
-  campaignSlug,
-  positionId,
-  topIssueId,
-}) {
-  try {
-    const api = gpApi.campaign.candidatePosition.create;
-    const payload = {
-      description,
-      campaignSlug,
-      positionId,
-      topIssueId,
-      // TODO: remove this once the Sails "input" value for `order` is removed or made optional
-      order: 0,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
-
-async function deleteCandidatePosition(id) {
-  try {
-    const api = gpApi.campaign.candidatePosition.delete;
-    const payload = {
-      id,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
 
 export default function IssuesList({
   nextCallback,
@@ -56,7 +22,7 @@ export default function IssuesList({
   setEditIssuePosition,
 }) {
   const [campaign, setCampaign] = useState(incomingCampaign);
-  const [issues, setIssues] = useState(topIssues || []);
+  const [filterValue, setFilterValue] = useState('');
   const [selectedIssue, setSelectedIssue] = useState(null);
   const editingCustomIssue =
     editIssuePosition && editIssuePosition.type === 'custom';
@@ -93,16 +59,7 @@ export default function IssuesList({
       (await deleteCandidatePosition(editIssuePosition.id));
 
     if (editIssuePosition?.type === 'custom') {
-      const existingIndex = findExistingCustomIssueIndex(
-        campaign,
-        editIssuePosition,
-      );
-      const currentCustomIssues = campaign.details.customIssues || [];
-      const updatedCustomIssues =
-        existingIndex !== -1
-          ? await deleteCustomIssue(existingIndex, currentCustomIssues)
-          : currentCustomIssues;
-      updateCustomIssuesState(updatedCustomIssues);
+      updateCustomIssuesState(await handleDeleteCustomIssue(editIssuePosition));
     }
     await saveCandidatePosition({
       description: candidatePosition,
@@ -124,16 +81,7 @@ export default function IssuesList({
     nextCallback();
   };
 
-  const filterIssues = (value) => {
-    if (value === '') {
-      setIssues(topIssues);
-    } else if (issues && typeof issues.filter === 'function') {
-      const filtered = issues.filter((option) =>
-        option.name.toLowerCase().includes(value.toLowerCase()),
-      );
-      setIssues(filtered);
-    }
-  };
+  const filteredIssues = filterIssues(filterValue, topIssues);
 
   return (
     <div className=" max-w-3xl mx-auto">
@@ -141,8 +89,8 @@ export default function IssuesList({
         <div className="pt-4 pb-2">
           <IssuesSearch
             {...{
-              issues: issues,
-              onInputChange: filterIssues,
+              issues: filteredIssues,
+              onInputChange: setFilterValue,
             }}
           />
         </div>
@@ -151,7 +99,7 @@ export default function IssuesList({
       {showSelectList && (
         <>
           <IssuesSelectList
-            issues={issues}
+            issues={filteredIssues}
             handleSelectIssue={selectIssueCallback}
           />
           <AddNewIssueTrigger onClick={() => setSelectedIssue('custom')} />
@@ -169,7 +117,7 @@ export default function IssuesList({
           />
         ) : (
           <IssueItemEditor
-            issue={issues.find(
+            issue={filteredIssues.find(
               ({ id: issueId }) => issueId === selectedIssue.id,
             )}
             selectIssueCallback={selectIssueCallback}
