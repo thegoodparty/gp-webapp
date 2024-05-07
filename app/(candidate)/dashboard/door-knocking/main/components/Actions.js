@@ -43,14 +43,14 @@ export default function Actions({
   const [showArchiveWarning, setShowArchiveWarning] = useState(false);
   const handleDelete = async () => {
     await deleteDkCampaign(campaign.slug);
-    updateCampaignsCallback();
-    setShowDeleteWarning();
+    window.location.reload();
   };
 
   const handleArchive = async () => {
     await archiveDkCampaign(campaign.slug);
     updateCampaignsCallback();
     setShowArchiveWarning();
+    window.location.reload();
   };
 
   return (
