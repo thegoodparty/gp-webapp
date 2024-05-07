@@ -6,21 +6,22 @@ import IssuesSection from './IssuesSection';
 import OfficeSection from './OfficeSection';
 import RunningAgainstSection from './RunningAgainstSection';
 import WhySection from './WhySection';
-
-const sections = [];
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
 
 export default function DetailsPage(props) {
   return (
     <DashboardLayout {...props}>
-      <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl px-6 py-5">
-        <DetailsSection {...props} />
-        <CampaignSection {...props} />
-        <OfficeSection {...props} />
-        <RunningAgainstSection {...props} />
-        <WhySection {...props} />
-        <FunFactSection {...props} />
-        <IssuesSection {...props} />
-      </div>
+      <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
+        <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl px-6 py-5">
+          <DetailsSection {...props} />
+          <CampaignSection {...props} />
+          <OfficeSection {...props} />
+          <RunningAgainstSection {...props} />
+          <WhySection {...props} />
+          <FunFactSection {...props} />
+          <IssuesSection {...props} />
+        </div>
+      </CandidatePositionsProvider>
     </DashboardLayout>
   );
 }
