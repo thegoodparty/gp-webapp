@@ -29,6 +29,10 @@ export const leftMenuItems = [
     label: 'Misc Actions',
     link: '/admin/misc-actions',
   },
+  {
+    label: 'P2V Stats',
+    link: '/admin/p2v-stats',
+  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {

@@ -555,6 +555,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    p2vStats: {
+      url: `${base}admin/p2v-stats`,
+      method: 'GET',
+      withAuth: true,
+    },
   },
   uploadImage: {
     url: `${base}application/upload-image`,
