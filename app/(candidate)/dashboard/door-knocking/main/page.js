@@ -20,7 +20,7 @@ async function fetchDkCampaigns() {
 
 const meta = pageMetaData({
   title: 'Door Knocking | GOOD PARTY',
-  description: 'Door Knocking',
+  description: 'Door Knocking.',
   slug: '/dashboard/door-knocking/main',
 });
 export const metadata = meta;

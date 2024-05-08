@@ -51,9 +51,9 @@ const fields = [
   },
   {
     key: 'maxHousesPerRoute',
-    label: 'Maximum Houses Per Route (10 to 100)',
+    label: 'Maximum Houses Per Route (10 to 25)',
     type: 'number',
-    placeholder: '30 houses',
+    placeholder: '20 houses',
     cols: 6,
   },
 
@@ -103,8 +103,8 @@ export default function AddCampaign(props) {
     } catch (e) {
       return false;
     }
-    if (state.maxHousesPerRoute < 10 || state.maxHousesPerRoute > 100) {
-      setError('Miximum houses per route must be between 10 and 100');
+    if (state.maxHousesPerRoute < 10 || state.maxHousesPerRoute > 25) {
+      setError('Maximum houses per route must be between 10 and 25');
       return false;
     }
 
