@@ -166,8 +166,7 @@ export default function MyContent(props) {
       let sectionsObj = campaignObj[subSectionKey] || {};
 
       let jobsProcessing = false;
-      const statusObj = campaignObj[subSectionKey].generationStatus || {};
-
+      const statusObj = campaignObj[subSectionKey]?.generationStatus || {};
       for (const statusKey in statusObj) {
         if (statusObj[statusKey]['status'] === 'processing') {
           jobsProcessing = true;
@@ -180,36 +179,42 @@ export default function MyContent(props) {
           sectionsObj[statusKey]['status'] = 'processing';
         }
       }
-
       setSections(sectionsObj);
       setLoading(false);
 
       if (jobsProcessing) {
-        aiTotalCount++;
-
-        debounce(getUserCampaign, undefined, 10000);
-
-        if (aiTotalCount >= 100) {
-          //fail
-          snackbarState.set(() => {
-            return {
-              isOpen: true,
-              message:
-                'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
-              isError: true,
-            };
-          });
-          setLoading(false);
-          setIsFailed(true);
-          return;
-        }
+        handleJobProcessing();
       }
     }
   }
 
+  const handleJobProcessing = () => {
+    aiTotalCount++;
+    debounce(getUserCampaign, undefined, 10000);
+
+    if (aiTotalCount >= 100) {
+      //fail
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message:
+            'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
+          isError: true,
+        };
+      });
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+  };
+
   useEffect(() => {
-    getUserCampaign();
+    initCampaign();
   }, []);
+
+  const initCampaign = async () => {
+    await getUserCampaign();
+  };
 
   useEffect(() => {
     if (
@@ -269,6 +274,7 @@ export default function MyContent(props) {
     } else {
       setJobStarting(false);
       setLoading(false);
+      console.log('getUserCampaign', loading);
       setInitialChat(false);
       //fail
       snackbarState.set(() => {
@@ -284,6 +290,7 @@ export default function MyContent(props) {
 
   console.log('campaign', campaign);
   console.log('data', data);
+  console.log('loading', loading);
 
   return (
     <div>
