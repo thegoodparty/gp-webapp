@@ -8,20 +8,13 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 
-async function createDkCampaign(
-  name,
-  type,
-  maxHousesPerRoute,
-  startDate,
-  endDate,
-) {
+async function createDkCampaign(name, type, startDate, endDate) {
   try {
     const api = gpApi.doorKnocking.create;
 
     const payload = {
       name,
       type,
-      maxHousesPerRoute,
       startDate,
       endDate,
     };
@@ -49,13 +42,6 @@ const fields = [
       'Voter Issues/Candidate Issue Awareness',
     ],
   },
-  {
-    key: 'maxHousesPerRoute',
-    label: 'Maximum Houses Per Route (10 to 25)',
-    type: 'number',
-    placeholder: '20 houses',
-    cols: 6,
-  },
 
   {
     key: 'startDate',
@@ -80,7 +66,6 @@ export default function AddCampaign(props) {
   const [state, setState] = useState({
     campaignName: '',
     campaignType: '',
-    maxHousesPerRoute: '',
     startDate: '',
     endDate: '',
   });
@@ -101,10 +86,6 @@ export default function AddCampaign(props) {
         return false;
       }
     } catch (e) {
-      return false;
-    }
-    if (state.maxHousesPerRoute < 10 || state.maxHousesPerRoute > 25) {
-      setError('Maximum houses per route must be between 10 and 25');
       return false;
     }
 
@@ -148,17 +129,10 @@ export default function AddCampaign(props) {
       return;
     }
     setSaving(true);
-    const {
-      campaignName,
-      campaignType,
-      maxHousesPerRoute,
-      startDate,
-      endDate,
-    } = state;
+    const { campaignName, campaignType, startDate, endDate } = state;
     const { slug } = await createDkCampaign(
       campaignName,
       campaignType,
-      maxHousesPerRoute,
       startDate,
       endDate,
     );
@@ -210,9 +184,9 @@ export default function AddCampaign(props) {
             >
               <PrimaryButton variant="outlined">Cancel</PrimaryButton>
             </div>
-            <div onClick={handleSave}>
-              <PrimaryButton>Save &amp; Continue</PrimaryButton>
-            </div>
+            <PrimaryButton onClick={handleSave} disabled={saving}>
+              Save &amp; Continue
+            </PrimaryButton>
           </div>
         </div>
       </Modal>

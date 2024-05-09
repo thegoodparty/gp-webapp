@@ -3,9 +3,9 @@ import Lottie from 'react-lottie';
 const defaultOptions = {
   loop: false,
   autoplay: true,
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice',
-  },
+  // rendererSettings: {
+  //   preserveAspectRatio: 'xMidYMid slice',
+  // },
   width: 150,
   height: 150,
 };
