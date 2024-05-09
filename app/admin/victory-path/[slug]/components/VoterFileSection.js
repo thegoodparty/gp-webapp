@@ -126,11 +126,9 @@ export default function VoterFileSection(props) {
       {status === 'hasElectionType' && (
         <div>
           <div className="flex items-center mt-4">
-            <div onClick={handlePurchase}>
-              <SuccessButton disabled={processing}>
-                Purchase Voter File
-              </SuccessButton>
-            </div>
+            <SuccessButton disabled={processing} onClick={handlePurchase}>
+              Purchase Voter File
+            </SuccessButton>
           </div>
           <Body1 className="mt-4">
             Note: this might take a few minutes to complete.
@@ -141,6 +139,12 @@ export default function VoterFileSection(props) {
         <div>
           The voter file is being purchased. This might take a few minutes.
           Please refresh the page to update the status
+          <div className="my-4">
+            <SuccessButton disabled={processing} onClick={handlePurchase}>
+              Re-Purchase Voter File (in case of error. check #bot-dev slack
+              channel.)
+            </SuccessButton>
+          </div>
         </div>
       )}
       {status === 'hasVoterFile' && (
