@@ -80,8 +80,6 @@ export default function MyContent(props) {
     });
   }
 
-  console.log('data', data);
-
   const columns = useMemo(() => [
     {
       Header: 'Name',
@@ -274,7 +272,6 @@ export default function MyContent(props) {
     } else {
       setJobStarting(false);
       setLoading(false);
-      console.log('getUserCampaign', loading);
       setInitialChat(false);
       //fail
       snackbarState.set(() => {
@@ -287,10 +284,6 @@ export default function MyContent(props) {
       });
     }
   };
-
-  console.log('campaign', campaign);
-  console.log('data', data);
-  console.log('loading', loading);
 
   return (
     <div>

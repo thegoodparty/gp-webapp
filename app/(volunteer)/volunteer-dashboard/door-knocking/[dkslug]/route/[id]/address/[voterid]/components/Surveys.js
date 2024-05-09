@@ -32,25 +32,10 @@ export default function Surveys(props) {
   const [surveyData, setSurveyData] = useState({});
   const snackbarState = useHookstate(globalSnackbarState);
   const handleSave = async (key, value) => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
     const data = { ...surveyData, [key]: value };
     setSurveyData(data);
     const res = await saveSurvey(data, routeId, voter.id);
-    if (res) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Saved',
-          isError: false,
-        };
-      });
-    } else {
+    if (!res) {
       snackbarState.set(() => {
         return {
           isOpen: true,
