@@ -1,5 +1,6 @@
 'use client';
 import { Drawer } from '@mui/material';
+import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
@@ -46,21 +47,23 @@ export default function MarkDoneFlow(props) {
 
   const handleSave = async () => {
     setProcessing(true);
-    const data = { resolution: selected, note };
-    const { nextVoter, isRouteCompleted } = await setDone(
-      routeId,
-      voter.id,
-      data,
-    );
-    if (isRouteCompleted) {
-      window.location.href = `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}`;
-    } else if (nextVoter) {
-      router.push(
-        `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}/address/${nextVoter}`,
+    setTimeout(async () => {
+      const data = { resolution: selected, note };
+      const { nextVoter, isRouteCompleted } = await setDone(
+        routeId,
+        voter.id,
+        data,
       );
-    } else {
-      setProcessing(false);
-    }
+      if (isRouteCompleted) {
+        window.location.href = `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}`;
+      } else if (nextVoter) {
+        router.push(
+          `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}/address/${nextVoter}`,
+        );
+      } else {
+        setProcessing(false);
+      }
+    }, 1000);
   };
   return (
     <>
@@ -116,6 +119,13 @@ export default function MarkDoneFlow(props) {
             </PrimaryButton>
           </div>
         </Drawer>
+        {processing ? (
+          <div className="fixed top-0 left-0 w-screen h-screen z-[1201] flex items-center justify-center bg-black bg-opacity-25">
+            <div className="w-64 h-64">
+              <CheckmarkAnimation />
+            </div>
+          </div>
+        ) : null}
       </div>
     </>
   );

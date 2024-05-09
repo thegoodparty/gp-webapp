@@ -1,5 +1,6 @@
 'use client';
 import { Drawer, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
@@ -39,23 +40,25 @@ export default function SkipFlow(props) {
 
   const handleSave = async () => {
     setProcessing(true);
-    const data = { atHome: homeStatus, skipNote: note };
-    const { nextVoter, isRouteCompleted } = await setDone(
-      routeId,
-      voter.id,
-      data,
-    );
-    if (isRouteCompleted) {
-      router.push(
-        `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}`,
+    setTimeout(async () => {
+      const data = { atHome: homeStatus, skipNote: note };
+      const { nextVoter, isRouteCompleted } = await setDone(
+        routeId,
+        voter.id,
+        data,
       );
-    } else if (nextVoter) {
-      router.push(
-        `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}/address/${nextVoter}`,
-      );
-    } else {
-      setProcessing(false);
-    }
+      if (isRouteCompleted) {
+        router.push(
+          `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}`,
+        );
+      } else if (nextVoter) {
+        router.push(
+          `/volunteer-dashboard/door-knocking/${dkSlug}/route/${routeId}/address/${nextVoter}`,
+        );
+      } else {
+        setProcessing(false);
+      }
+    }, 1000);
   };
   return (
     <>
@@ -108,6 +111,13 @@ export default function SkipFlow(props) {
             </PrimaryButton>
           </div>
         </Drawer>
+        {processing ? (
+          <div className="fixed top-0 left-0 w-screen h-screen z-[1201] flex items-center justify-center bg-black bg-opacity-25">
+            <div className="w-64 h-64">
+              <CheckmarkAnimation />
+            </div>
+          </div>
+        ) : null}
       </div>
     </>
   );
