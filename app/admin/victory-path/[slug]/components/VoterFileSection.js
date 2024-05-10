@@ -10,16 +10,9 @@ import H3 from '@shared/typography/H3';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
 import { useState } from 'react';
+import PurchaseVoterFile from './PurchaseVoterFile';
+import RerunP2V from './ReRunP2V';
 
-async function purchaseVoterFile(slug) {
-  try {
-    const api = gpApi.voterData.purchaseVoterFile;
-    return await gpFetch(api, { slug });
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
 async function rerunP2V(slug) {
   try {
     const api = gpApi.voterData.pathToVictory;
@@ -36,32 +29,6 @@ export default function VoterFileSection(props) {
 
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const handlePurchase = async () => {
-    if (processing) return;
-    setProcessing(true);
-    const response = await purchaseVoterFile(campaign.slug);
-    if (response) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Voter file purchased',
-          isError: false,
-        };
-      });
-      await revalidatePage('/admin/victory-path/[slug]');
-      // window.location.reload();
-    } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error purchasing voter file',
-          isError: true,
-        };
-      });
-      setProcessing(false);
-    }
-  };
-
   let status = 'noElectionType';
   if (
     campaign.pathToVictory?.electionType &&
@@ -75,7 +42,6 @@ export default function VoterFileSection(props) {
   if (campaign.data?.hasVoterFile === 'completed') {
     status = 'hasVoterFile';
   }
-  console.log('campaign', campaign, status);
 
   const handleRerun = async () => {
     if (processing) return;
@@ -116,20 +82,12 @@ export default function VoterFileSection(props) {
               victory didn&apos;t save that column)
             </div>
           )}
-          <div className="my-4" onClick={handleRerun}>
-            <SuccessButton disabled={processing}>
-              Rerun Path to Victory
-            </SuccessButton>
-          </div>
+          <RerunP2V campaign={campaign} />
         </div>
       )}
-      {status === 'hasElectionType' && (
+      {status === 'hasElectionType' && campaign.isPro && (
         <div>
-          <div className="flex items-center mt-4">
-            <SuccessButton disabled={processing} onClick={handlePurchase}>
-              Purchase Voter File
-            </SuccessButton>
-          </div>
+          <PurchaseVoterFile campaign={campaign} />
           <Body1 className="mt-4">
             Note: this might take a few minutes to complete.
           </Body1>
@@ -139,12 +97,7 @@ export default function VoterFileSection(props) {
         <div>
           The voter file is being purchased. This might take a few minutes.
           Please refresh the page to update the status
-          <div className="my-4">
-            <SuccessButton disabled={processing} onClick={handlePurchase}>
-              Re-Purchase Voter File (in case of error. check #bot-dev slack
-              channel.)
-            </SuccessButton>
-          </div>
+          <PurchaseVoterFile campaign={campaign} />
         </div>
       )}
       {status === 'hasVoterFile' && (

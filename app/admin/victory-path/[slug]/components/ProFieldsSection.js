@@ -26,7 +26,7 @@ const fields = [
 ];
 
 export default function ProFieldsSection(props) {
-  const { campaign } = props;
+  const { campaign, refreshCampaignCallback } = props;
   const { isVerified, tier, isPro, didWin, slug } = campaign;
   const [state, setState] = useState({
     isVerified,
@@ -42,6 +42,7 @@ export default function ProFieldsSection(props) {
       slug,
       [key]: value,
     });
+    await refreshCampaignCallback();
   };
 
   return (
