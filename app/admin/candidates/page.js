@@ -12,6 +12,7 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
+export const maxDuration = 60;
 export const fetchCampaigns = async () => {
   const api = gpApi.campaign.list;
   const token = getServerToken();
