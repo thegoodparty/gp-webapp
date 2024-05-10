@@ -73,8 +73,6 @@ export default function NotificationSection() {
     updateUserCallback(updatedState);
   };
 
-  console.log('state', state);
-
   return (
     <section className="py-4 border-b border-slate-300 flex">
       <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
@@ -82,7 +80,7 @@ export default function NotificationSection() {
       </div>
       <div className="flex-1">
         <H4>Emails &amp; Notification</H4>
-        <Body2 className="text-indigo-200 mb-6">
+        <Body2 className="text-indigo-600 mb-6">
           Update your email and notification preferences here
         </Body2>
         {fields.map((field) => (

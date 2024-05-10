@@ -3,8 +3,8 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import { useState } from 'react';
 import Occupation from './Occupation';
 import {
-  updateCampaign,
   getCampaign,
+  updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
@@ -14,21 +14,8 @@ import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import Website from './Website';
 import Done from './Done';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-
-export async function loadCandidatePosition(slug) {
-  try {
-    const api = gpApi.campaign.candidatePosition.find;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at loadCandidatePosition', e);
-    return false;
-  }
-}
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 export const flows = {
   all: [
@@ -55,27 +42,22 @@ export const flows = {
   mobilizing: ['occupation', 'funFact', 'pastExperience', 'issues'],
 };
 export default function QuestionsPage(props) {
-  const { generate, candidatePositions } = props;
+  const { generate, candidatePositions: initCandidatePositions } = props;
   const [campaign, setCampaign] = useState(props.campaign);
-  const [state, setState] = useState({
+  const [answers, setAnswers] = useState({
     occupation: '',
     funFact: '',
     pastExperience: '',
     issues: '',
     website: '',
-    candidatePositions,
-    // runningAgainst: '',
+    candidatePositions: initCandidatePositions,
   });
-  //   if (campaign.details) {
-  //     const { occupation, funFact, pastExperience, issues, website, runningAgainst } =
-  //       campaign.details;
-  //   }
 
   const flow = flows[generate];
   let nextStep = 0;
   const combinedIssuedCount =
-    (state.candidatePositions?.length || 0) +
-    (campaign?.customIssues?.length || 0);
+    (answers.candidatePositions?.length || 0) +
+    (campaign?.details?.customIssues?.length || 0);
 
   for (let i = 0; i < flow.length; i++) {
     nextStep = i;
@@ -84,7 +66,7 @@ export default function QuestionsPage(props) {
         break;
       }
     } else if (flow[i] === 'runningAgainst') {
-      if (!campaign?.goals?.runningAgainst) {
+      if (!campaign?.details?.runningAgainst) {
         break;
       }
     } else if (!campaign?.details || !campaign.details[flow[i]]) {
@@ -96,15 +78,17 @@ export default function QuestionsPage(props) {
   }
 
   const onChangeField = (key, value) => {
-    setState({
-      ...state,
+    setAnswers({
+      ...answers,
       [key]: value,
     });
   };
 
-  const handleSave = async (updated) => {
-    await updateCampaign(updated);
-    const res = await getCampaign();
+  const handleSave = async (keys, values) => {
+    const attr = keys.map((key, i) => {
+      return { key: keys[0], value: values[i] };
+    });
+    const res = await updateCampaign(attr);
     setCampaign(res.campaign);
   };
 
@@ -125,12 +109,11 @@ export default function QuestionsPage(props) {
     nextKey = 'done';
   }
 
-  const updatePositionsCallback = async () => {
-    const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-    const res = await getCampaign();
+  const updatePositionsCallback = async (freshCandidatePositions) => {
+    const { campaign } = await getCampaign();
 
-    onChangeField('candidatePositions', candidatePositions);
-    setCampaign(res.campaign);
+    onChangeField('candidatePositions', freshCandidatePositions);
+    setCampaign(campaign);
   };
 
   return (
@@ -138,7 +121,7 @@ export default function QuestionsPage(props) {
       <div className="min-h-[calc(100vh-56px)] py-20 w-full">
         {campaign && nextKey === 'occupation' && (
           <Occupation
-            value={state.occupation}
+            value={answers.occupation}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
@@ -147,7 +130,7 @@ export default function QuestionsPage(props) {
         )}
         {campaign && nextKey === 'funFact' && (
           <FunFact
-            value={state.funFact}
+            value={answers.funFact}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
@@ -156,7 +139,7 @@ export default function QuestionsPage(props) {
         )}
         {campaign && nextKey === 'pastExperience' && (
           <PastExperience
-            value={state.pastExperience}
+            value={answers.pastExperience}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}
@@ -164,12 +147,17 @@ export default function QuestionsPage(props) {
           />
         )}
         {campaign && nextKey === 'issues' && (
-          <AddIssues
-            {...props}
-            campaign={campaign}
-            completeCallback={handleComplete}
-            updatePositionsCallback={updatePositionsCallback}
-          />
+          <CandidatePositionsProvider
+            candidatePositions={initCandidatePositions}
+          >
+            <AddIssues
+              {...props}
+              campaign={campaign}
+              completeCallback={handleComplete}
+              updatePositionsCallback={updatePositionsCallback}
+              candidatePositions={answers.candidatePositions}
+            />
+          </CandidatePositionsProvider>
         )}
 
         {campaign && nextKey === 'runningAgainst' && (
@@ -194,7 +182,7 @@ export default function QuestionsPage(props) {
         )}
         {campaign && nextKey === 'website' && (
           <Website
-            value={state.website}
+            value={answers.website}
             onChangeCallback={onChangeField}
             saveCallback={handleSave}
             campaign={campaign}

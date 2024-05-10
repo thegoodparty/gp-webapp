@@ -1,30 +1,24 @@
 'use client';
 
 import H3 from '@shared/typography/H3';
-import Body1 from '@shared/typography/Body1';
 import RunningAgainstModule from './RunningAgainstModule';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 export default function RunningAgainstSection(props) {
   const { campaign, nextCallback, header } = props;
-  const handleSave = async (newCampaign) => {
-    const updated = campaign;
-    if (!updated.goals) {
-      updated.goals = {};
-    }
-
-    let newAgainst = [...newCampaign.runningAgainst];
-    if (newCampaign.newName && newCampaign.newDesc) {
+  const handleSave = async (againstState) => {
+    let newAgainst = [...againstState.runningAgainst];
+    if (againstState.newName && againstState.newDesc) {
       newAgainst.push({
-        name: newCampaign.newName,
-        description: newCampaign.newDesc,
-        party: newCampaign.newParty,
+        name: againstState.newName,
+        description: againstState.newDesc,
+        party: againstState.newParty,
       });
     }
 
-    updated.goals.runningAgainst = newAgainst;
-
-    await updateCampaign(updated);
+    await updateCampaign([
+      { key: 'details.runningAgainst', value: newAgainst },
+    ]);
     if (nextCallback) {
       nextCallback();
     } else {

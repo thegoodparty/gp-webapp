@@ -1,18 +1,11 @@
 'use client';
 
-import { Select } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import H2 from '@shared/typography/H2';
-import H6 from '@shared/typography/H6';
-import Modal from '@shared/utils/Modal';
-import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import {
-  camelToSentence,
-  camelToKebab,
-  kebabToCamel,
-} from 'helpers/stringHelper';
+  fetchCampaignVersions,
+  getCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
+import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
+import { camelToSentence, camelToKebab } from 'helpers/stringHelper';
 import { useState, useEffect } from 'react';
 import Table from '@shared/utils/Table';
 import Actions from './Actions';
@@ -22,17 +15,23 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
 import { IoDocumentText } from 'react-icons/io5';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
-import { fetchUserCampaignClient } from '/helpers/campaignHelper';
 import NewContentFlow from './NewContentFlow';
 
 const subSectionKey = 'aiContent';
-let aiCount = 0;
 let aiTotalCount = 0;
+const excludedKeys = [
+  'why',
+  'aboutMe',
+  'slogan',
+  'policyPlatform',
+  'communicationsStrategy',
+  'messageBox',
+  'mobilizing',
+];
 
 export default function MyContent(props) {
   const [loading, setLoading] = useState(true);
@@ -65,11 +64,14 @@ export default function MyContent(props) {
     setSection(key);
   };
 
-  let inputData = [];
+  let data = [];
   if (sections) {
     Object.keys(sections).forEach((key) => {
       const section = sections[key];
-      inputData.push({
+      if (excludedKeys.includes(key) || !section.name) {
+        return;
+      }
+      data.push({
         name: section.name,
         updatedAt: new Date(section.updatedAt),
         slug: camelToKebab(key),
@@ -77,8 +79,6 @@ export default function MyContent(props) {
       });
     });
   }
-
-  const data = useMemo(() => inputData);
 
   const columns = useMemo(() => [
     {
@@ -155,7 +155,7 @@ export default function MyContent(props) {
   ]);
 
   async function getUserCampaign() {
-    const campaignResponse = await fetchUserCampaignClient();
+    const campaignResponse = await getCampaign();
     const campaignObj = campaignResponse.campaign;
     if (campaignObj) {
       setCampaign(campaignObj);
@@ -164,8 +164,7 @@ export default function MyContent(props) {
       let sectionsObj = campaignObj[subSectionKey] || {};
 
       let jobsProcessing = false;
-      const statusObj = campaignObj.campaignPlanStatus || {};
-
+      const statusObj = campaignObj[subSectionKey]?.generationStatus || {};
       for (const statusKey in statusObj) {
         if (statusObj[statusKey]['status'] === 'processing') {
           jobsProcessing = true;
@@ -178,37 +177,42 @@ export default function MyContent(props) {
           sectionsObj[statusKey]['status'] = 'processing';
         }
       }
-
       setSections(sectionsObj);
       setLoading(false);
 
       if (jobsProcessing) {
-        aiCount++;
-        aiTotalCount++;
-
-        debounce(getUserCampaign, undefined, 10000);
-
-        if (aiTotalCount >= 100) {
-          //fail
-          snackbarState.set(() => {
-            return {
-              isOpen: true,
-              message:
-                'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
-              isError: true,
-            };
-          });
-          setLoading(false);
-          setIsFailed(true);
-          return;
-        }
+        handleJobProcessing();
       }
     }
   }
 
+  const handleJobProcessing = () => {
+    aiTotalCount++;
+    debounce(getUserCampaign, undefined, 10000);
+
+    if (aiTotalCount >= 100) {
+      //fail
+      snackbarState.set(() => {
+        return {
+          isOpen: true,
+          message:
+            'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
+          isError: true,
+        };
+      });
+      setLoading(false);
+      setIsFailed(true);
+      return;
+    }
+  };
+
   useEffect(() => {
-    getUserCampaign();
+    initCampaign();
   }, []);
+
+  const initCampaign = async () => {
+    await getUserCampaign();
+  };
 
   useEffect(() => {
     if (
@@ -221,18 +225,10 @@ export default function MyContent(props) {
     }
   }, [campaignPlan, section]);
 
-  async function generateAI(
-    subSectionKey,
-    key,
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
-  ) {
+  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.onboarding.ai.create;
+      const api = gpApi.campaign.ai.create;
       return await gpFetch(api, {
-        subSectionKey,
         key,
         regenerate,
         chat,
@@ -256,7 +252,6 @@ export default function MyContent(props) {
     const resolvedInitialValues =
       (inputValues && Object.keys(inputValues) > 0) || initialValues;
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       section,
       regenerate,
       resolvedChat,

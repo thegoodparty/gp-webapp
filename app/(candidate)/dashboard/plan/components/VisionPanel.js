@@ -1,4 +1,3 @@
-'use client';
 import CampaignPlanSection from './CampaignPlanSection';
 
 const sections = [
@@ -13,11 +12,6 @@ const sections = [
     icon: '/images/dashboard/positioning-icon.svg',
   },
 
-  // {
-  //   key: 'pathToVictory',
-  //   title: 'Voter Report',
-  //   icon: '/images/dashboard/voter-icon.svg',
-  // },
   {
     key: 'mobilizing',
     title: 'Mobilizing Voters & Volunteers',
@@ -27,25 +21,8 @@ const sections = [
 export default function VisionPanel(props) {
   const { campaign, versions, updateVersionsCallback, candidatePositions } =
     props;
-  const sections = [
-    {
-      key: 'communicationsStrategy',
-      title: 'Communication Strategy',
-      icon: '/images/dashboard/strategy-icon.svg',
-    },
-    {
-      key: 'messageBox',
-      title: 'Campaign Positioning',
-      icon: '/images/dashboard/positioning-icon.svg',
-    },
 
-    {
-      key: 'mobilizing',
-      title: 'Mobilizing Voters & Volunteers',
-      icon: '/images/dashboard/mobilizing-icon.svg',
-    },
-  ];
-  if (campaign.pathToVictory) {
+  if (campaign.pathToVictory && sections.length === 3) {
     sections.push({
       key: 'pathToVictory',
       title: 'Voter Report',

@@ -1,28 +1,28 @@
 import Snackbar from '@shared/utils/Snackbar';
 import { Suspense } from 'react';
-import Footer from './Footer';
+import Footer from 'app/shared/layouts/footer/Footer';
 import JsonLdSchema from './JsonLdSchema';
 import Nav from './navigation/Nav';
-import { Cookie } from 'next/font/google';
 import CookiesSnackbar from './CookiesSnackbar';
+import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvider';
 
 export default function PageWrapper({ children, hideFooter }) {
   return (
-    <div className="overflow-x-hidden">
-      <JsonLdSchema />
-      <Nav />
-      {children}
-      {!hideFooter && (
+    <NavigationProvider>
+      <div className="overflow-x-hidden">
+        <JsonLdSchema />
+        <Nav />
+        {children}
+        {!hideFooter && (
+          <Suspense>
+            <Footer />
+          </Suspense>
+        )}
+        <Snackbar />
         <Suspense>
-          <Footer />
+          <CookiesSnackbar />
         </Suspense>
-      )}
-      {/* <Suspense> */}
-      <Snackbar />
-      <Suspense>
-        <CookiesSnackbar />
-      </Suspense>
-      {/* </Suspense> */}
-    </div>
+      </div>
+    </NavigationProvider>
   );
 }

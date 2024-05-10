@@ -6,37 +6,14 @@ import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';
 import H2 from '@shared/typography/H2';
 import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { revalidateCandidates } from 'helpers/cacheHelper';
 import { useState } from 'react';
-
-export async function deleteCandidatePosition(id) {
-  try {
-    const api = gpApi.campaign.candidatePosition.delete;
-    const payload = {
-      id,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
-
-export async function updateCandidatePosition(id, description) {
-  try {
-    const api = gpApi.campaign.candidatePosition.update;
-    const payload = {
-      id,
-      description,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
+import {
+  deleteCandidatePosition,
+  updateCandidatePosition,
+} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 export default function EditCandidatePosition({
   candidatePosition,
@@ -50,6 +27,7 @@ export default function EditCandidatePosition({
   const [edit, setEdit] = useState(false);
   const [description, setDescription] = useState(candidatePosition.description);
   const [showAlert, setShowAlert] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
 
   const handleDelete = async () => {
     if (candidatePosition.isCustom) {
@@ -72,8 +50,7 @@ export default function EditCandidatePosition({
   };
 
   const handleDeleteCustom = async () => {
-    let entity = isStaged && campaign ? campaign : candidate;
-    let customIssues = entity.customIssues || [];
+    let customIssues = campaign.details.customIssues || [];
     let index;
     for (let i = 0; i < customIssues.length; i++) {
       if (
@@ -87,7 +64,7 @@ export default function EditCandidatePosition({
     if (typeof index !== 'undefined') {
       customIssues.splice(index, 1);
       await saveCallback({
-        ...entity,
+        ...campaign,
         customIssues,
       });
       await revalidateCandidates();

@@ -128,13 +128,15 @@ sections.forEach((section) => {
 
 export default function AdminVictoryPathPage(props) {
   const { campaign } = props;
+  const { pathToVictory, details } = campaign;
 
   const [state, setState] = useState({
     ...initialState,
-    ...campaign.pathToVictory,
+    ...pathToVictory,
   });
-  console.log('campaign.p2vNotNeeded', campaign.p2vNotNeeded);
-  const [notNeeded, setNotNeeded] = useState(campaign.p2vNotNeeded || false);
+  const [notNeeded, setNotNeeded] = useState(
+    pathToVictory?.p2vNotNeeded || false,
+  );
   const snackbarState = useHookstate(globalSnackbarState);
 
   const onChangeField = (key, value) => {
@@ -158,16 +160,22 @@ export default function AdminVictoryPathPage(props) {
       };
     });
     const updated = {
-      ...campaign,
-      pathToVictory: state,
+      ...pathToVictory,
+      ...state,
       p2vStatus: 'Complete',
     };
     try {
       // only send mail the first time we update pathToVictory
-      if (!campaign.pathToVictory) {
+      if (!pathToVictory) {
         await sendVictoryMail(updated.slug);
       }
-      await updateCampaign(updated, false, true);
+
+      await updateCampaign([
+        {
+          key: 'pathToVictory',
+          value: { ...state, p2vStatus: 'Complete' },
+        },
+      ]);
 
       snackbarState.set(() => {
         return {
@@ -191,17 +199,19 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const office =
-    campaign?.details?.office === 'Other'
-      ? `${campaign?.details?.otherOffice} (Other)`
-      : campaign?.details?.office;
+    details?.office === 'Other'
+      ? `${details?.otherOffice} (Other)`
+      : details?.office;
 
   const handleNotNeeded = async (e) => {
     setNotNeeded(e.target.checked);
-    const updated = {
-      ...campaign,
-      p2vNotNeeded: e.target.checked,
-    };
-    await updateCampaign(updated);
+
+    await updateCampaign([
+      {
+        key: 'pathToVictory',
+        value: { ...state, p2vNotNeeded: e.target.checked },
+      },
+    ]);
   };
   return (
     <AdminWrapper {...props}>
@@ -212,8 +222,7 @@ export default function AdminVictoryPathPage(props) {
             <br />
             Name:{' '}
             <strong>
-              {campaign?.details?.firstName || ''}{' '}
-              {campaign?.details?.lastName || ''}
+              {details?.firstName || ''} {details?.lastName || ''}
             </strong>
             .
           </H2>
@@ -229,15 +238,13 @@ export default function AdminVictoryPathPage(props) {
           <ProFieldsSection {...props} />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
-            <strong>{campaign?.details?.state || 'N/A'}</strong>. District:{' '}
-            <strong>{campaign?.details?.district || 'N/A'}</strong>.{' '}
-            <strong>{campaign?.details?.city || 'N/A'}</strong>. ElectionDate:{' '}
+            <strong>{details?.state || 'N/A'}</strong>. District:{' '}
+            <strong>{details?.district || 'N/A'}</strong>.{' '}
+            <strong>{details?.city || 'N/A'}</strong>. ElectionDate:{' '}
+            <strong>{dateUsHelper(details?.electionDate) || 'N/A'}</strong>.
+            Primary Election Date:{' '}
             <strong>
-              {dateUsHelper(campaign?.goals?.electionDate) || 'N/A'}
-            </strong>
-            . Primary Election Date:{' '}
-            <strong>
-              {dateUsHelper(campaign?.details?.primaryElectionDate) || 'N/A'}
+              {dateUsHelper(details?.primaryElectionDate) || 'N/A'}
             </strong>
           </H4>
           {sections.map((section) => (

@@ -1,0 +1,11 @@
+.carousel-container {
+  .slick-slider {
+    position: relative;
+  }
+
+  button.slick-arrow {
+    &:before {
+      content: none;
+    }
+  }
+}

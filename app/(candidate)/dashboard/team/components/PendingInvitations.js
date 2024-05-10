@@ -1,9 +1,6 @@
 import Paper from '@shared/utils/Paper';
 import InviteButton from './InviteButton';
 import H2 from '@shared/typography/H2';
-import { Fragment } from 'react';
-import { FaTrash } from 'react-icons/fa';
-import { dateUsHelper } from 'helpers/dateHelper';
 import Invitation from './Invitation';
 
 export default function PendingInvitations(props) {

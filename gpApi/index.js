@@ -138,6 +138,42 @@ const gpApi = {
   },
 
   campaign: {
+    create: {
+      url: `${base}campaign`,
+      method: 'POST',
+      withAuth: true,
+    },
+    update: {
+      url: `${base}campaign`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    get: {
+      url: `${base}campaign`,
+      method: 'GET',
+      withAuth: true,
+    },
+
+    list: {
+      //admin
+      url: `${base}campaigns`,
+      method: 'GET',
+      withAuth: true,
+    },
+
+    launch: {
+      url: `${base}campaign/launch`,
+      method: 'POST',
+      withAuth: true,
+    },
+
+    findBySlug: {
+      //admin
+      url: `${base}campaign/by-slug`,
+      method: 'GET',
+      withAuth: true,
+    },
+
     adminUpdate: {
       url: `${base}campaign-admin`,
       method: 'PUT',
@@ -264,6 +300,29 @@ const gpApi = {
       },
     },
 
+    ai: {
+      create: {
+        url: `${base}campaign/ai`,
+        method: 'POST',
+        withAuth: true,
+      },
+      edit: {
+        url: `${base}campaign/ai`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      rename: {
+        url: `${base}campaign/ai/rename`,
+        method: 'POST',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/ai`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
     endorsement: {
       create: {
         url: `${base}campaign/endorsement`,
@@ -288,22 +347,6 @@ const gpApi = {
     },
 
     onboarding: {
-      create: {
-        url: `${base}campaign/onboarding`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaign/onboarding`,
-        method: 'PUT',
-        withAuth: true,
-      },
-
-      delete: {
-        url: `${base}campaign/onboarding`,
-        method: 'DELETE',
-        withAuth: true,
-      },
       adminDelete: {
         url: `${base}campaign`,
         method: 'DELETE',
@@ -314,67 +357,7 @@ const gpApi = {
         method: 'PUT',
         withAuth: true,
       },
-      findByUser: {
-        url: `${base}campaign/onboarding/by-user`,
-        method: 'GET',
-        withAuth: true,
-      },
-      findBySlug: {
-        //admin
-        url: `${base}campaign/onboarding/by-slug`,
-        method: 'GET',
-        withAuth: true,
-      },
-      launchRequest: {
-        url: `${base}campaign/onboarding/launch-request`,
-        method: 'POST',
-        withAuth: true,
-      },
-      cancelLaunchRequest: {
-        // admin
-        url: `${base}campaign/onboarding/launch-request`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      launch: {
-        // admin
-        url: `${base}campaign/onboarding/launch`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        //admin
-        url: `${base}campaign/onboardings`,
-        method: 'GET',
-        withAuth: true,
-      },
-      ai: {
-        create: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'POST',
-          withAuth: true,
-        },
-        fastCreate: {
-          url: `${base}campaign/onboarding/fast-ai`,
-          method: 'POST',
-          withAuth: true,
-        },
-        edit: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'PUT',
-          withAuth: true,
-        },
-        rename: {
-          url: `${base}campaign/onboarding/ai/rename`,
-          method: 'POST',
-          withAuth: true,
-        },
-        delete: {
-          url: `${base}campaign/onboarding/ai`,
-          method: 'DELETE',
-          withAuth: true,
-        },
-      },
+
       planVersions: {
         url: `${base}campaign/onboarding/planVersion`,
         method: 'GET',
@@ -415,7 +398,7 @@ const gpApi = {
   //
   user: {
     updateUser: {
-      url: `${base}user/update-user`,
+      url: `${base}user`,
       method: 'PUT',
       withAuth: true,
     },
@@ -572,6 +555,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    p2vStats: {
+      url: `${base}admin/p2v-stats`,
+      method: 'GET',
+      withAuth: true,
+    },
   },
   uploadImage: {
     url: `${base}application/upload-image`,
@@ -718,7 +706,7 @@ const gpApi = {
       withAuth: true,
     },
     pathToVictory: {
-      url: `${base}voter-data/path-to-victory`, //admin
+      url: `${base}voter-data/path-to-victory`,
       method: 'POST',
       withAuth: true,
     },

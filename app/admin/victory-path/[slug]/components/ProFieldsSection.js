@@ -26,8 +26,8 @@ const fields = [
 ];
 
 export default function ProFieldsSection(props) {
-  const { campaignObj } = props;
-  const { isVerified, tier, isPro, didWin, slug } = campaignObj;
+  const { campaign } = props;
+  const { isVerified, tier, isPro, didWin, slug } = campaign;
   const [state, setState] = useState({
     isVerified,
     tier,
@@ -62,7 +62,7 @@ export default function ProFieldsSection(props) {
           ) : (
             <Checkbox
               value={state[field.key]}
-              defaultChecked={campaignObj[field.key]}
+              defaultChecked={campaign[field.key]}
               onChange={(e) => handleChange(field.key, e.target.checked)}
             />
           )}

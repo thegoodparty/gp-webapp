@@ -59,15 +59,13 @@ export default function WhySection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      const newCampaign = {
-        ...campaign,
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
 
-      await updateCampaign(newCampaign);
+      await updateCampaign([
+        {
+          key: 'details.pastExperience',
+          value: state.pastExperience,
+        },
+      ]);
       setSaving(false);
     }
   };

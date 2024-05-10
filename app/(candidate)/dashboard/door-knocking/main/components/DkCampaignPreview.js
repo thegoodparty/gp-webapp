@@ -13,6 +13,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Actions from './Actions';
 import Chip from '@shared/utils/Chip';
 import CampaignStatusChip from './CampaignStatusChip';
+import LoadingMapAnimation from '@shared/animations/LoadingMapAnimation';
 
 export default function DkCampaignPreview(props) {
   const { campaign, updateCampaignsCallback, campaignDates } = props;
@@ -44,7 +45,9 @@ export default function DkCampaignPreview(props) {
   return (
     <>
       <Link
-        href={`/dashboard/door-knocking/campaign/${campaign.slug}`}
+        href={
+          hasRoutes ? `/dashboard/door-knocking/campaign/${campaign.slug}` : '#'
+        }
         key={campaign.slug}
         className="col-span-12 md:col-span-6 lg:col-span-4 no-underline"
       >
@@ -63,8 +66,9 @@ export default function DkCampaignPreview(props) {
               <div className="absolute w-full left-0 bottom-0 h-7 bg-white"></div>
             </div>
           ) : (
-            <div className="h-[250px]  bg-gray-100 flex items-center justify-center mb-4">
-              <CircularProgress />
+            <div className="h-[250px]  bg-gray-100 flex flex-col items-center justify-center mb-4 py-4">
+              <LoadingMapAnimation />
+              <div>Generating Routes...</div>
             </div>
           )}
           <div className="flex items-center justify-between">

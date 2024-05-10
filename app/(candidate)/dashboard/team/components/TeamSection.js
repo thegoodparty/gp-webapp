@@ -24,8 +24,8 @@ export default function TeamSection(props) {
   const [invitations, setInvitations] = useState(props.invitations || []);
 
   const reloadInvitationsCallback = async () => {
-    const { invitations } = await fetchInvitations();
-    setInvitations(invitations);
+    const res = await fetchInvitations();
+    setInvitations(res.invitations);
   };
 
   return (
@@ -37,11 +37,15 @@ export default function TeamSection(props) {
       {invitations && invitations.length > 0 ? (
         <PendingInvitations
           reloadInvitationsCallback={reloadInvitationsCallback}
-          {...props}
+          invitations={invitations}
         />
       ) : null}
       {volunteers && volunteers.length > 0 ? (
-        <VolunteersSection {...props} />
+        <VolunteersSection
+          volunteers={volunteers}
+          invitations={invitations}
+          reloadInvitationsCallback={reloadInvitationsCallback}
+        />
       ) : null}
     </section>
   );

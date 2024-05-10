@@ -18,7 +18,7 @@ export default async function Page({ params, searchParams }) {
   const { campaign } = await fetchUserCampaign();
 
   const childProps = {
-    pathname: '/dashboard/funding',
+    pathname: '/dashboard/voter-records',
     user,
     campaign,
   };

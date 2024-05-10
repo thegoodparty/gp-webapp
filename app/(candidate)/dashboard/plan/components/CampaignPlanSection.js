@@ -2,13 +2,11 @@
 import { useEffect, useState } from 'react';
 import LoadingAI from './LoadingAI';
 import CircularProgress from '@mui/material/CircularProgress';
-import dynamic from 'next/dynamic';
 
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import PlanVersion from './PlanVersion';
 import TogglePanel from '@shared/utils/TogglePanel';
 import PlanDisplay from './PlanDisplay';
@@ -16,12 +14,12 @@ import PlanActions from './PlanActions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { flows } from '../../questions/components/QuestionsPage';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
-async function generateAI(subSectionKey, key, regenerate, chat, editMode) {
+async function generateAI(key, regenerate, chat, editMode) {
   try {
-    const api = gpApi.campaign.onboarding.ai.create;
+    const api = gpApi.campaign.ai.create;
     return await gpFetch(api, {
-      subSectionKey,
       key,
       regenerate,
       chat,
@@ -38,15 +36,15 @@ let aiTotalCount = 0;
 
 function canGenerate(campaign, key, candidatePositions) {
   const questions = flows[key];
-  const { customIssues } = campaign;
   if (!campaign.details) {
     return false;
   }
+  const { customIssues } = campaign.details;
+
   const issuesCount =
     (customIssues?.length || 0) + candidatePositions?.length || 0;
-  const { occupation, funFact, pastExperience, website } =
+  const { occupation, funFact, pastExperience, website, runningAgainst } =
     campaign.details || {};
-  const { runningAgainst } = campaign.goals || {};
   /*
 'occupation',
     'funFact',
@@ -84,7 +82,6 @@ export default function CampaignPlanSection({
   campaign,
   versions = {},
   updateVersionsCallback,
-  subSectionKey = 'campaignPlan',
   candidatePositions,
   expandSection,
 }) {
@@ -98,16 +95,16 @@ export default function CampaignPlanSection({
   const [isFailed, setIsFailed] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const campaignPlan = campaign[subSectionKey];
+  const aiContent = campaign.aiContent;
   const { key } = section;
 
   useEffect(() => {
-    if (campaignPlan && campaignPlan[key]) {
-      setPlan(campaignPlan[key]);
+    if (aiContent && aiContent[key]) {
+      setPlan(aiContent[key]);
       setLoading(false);
       setIsTyped(true);
     }
-  }, [campaignPlan]);
+  }, [aiContent]);
 
   // useEffect(() => {
   //   if (expandSection) {
@@ -133,7 +130,6 @@ export default function CampaignPlanSection({
       return;
     }
     const { chatResponse, status } = await generateAI(
-      subSectionKey,
       key,
       regenerate,
       chat,
@@ -157,23 +153,17 @@ export default function CampaignPlanSection({
     }
   };
 
-  // const { plan, loading, isFailed, isTyped } = useAiPlan(
-  //   campaign,
-  //   'campaignPlan',
-  //   section.key,
-  // );
-
-  const toggleSelect = () => {
-    setOpen(!open);
-  };
-
   const setEdit = () => {
     setIsEdited(true);
     setEditMode(true);
   };
 
   const handleEdit = async (editedPlan) => {
-    setPlan(editedPlan);
+    const updated = {
+      ...plan,
+      content: editedPlan,
+    };
+    setPlan(updated);
   };
 
   const handleRegenerate = async (improveQuery) => {
@@ -202,16 +192,16 @@ export default function CampaignPlanSection({
     });
 
     const updated = campaign;
-    if (!updated[subSectionKey]) {
-      updated[subSectionKey] = {};
+    if (!updated.aiContent) {
+      updated.aiContent = {};
     }
 
-    updated[subSectionKey][key] = plan;
+    updated.aiContent[key] = plan;
     setIsEdited(false);
     setEditMode(false);
-    await updateCampaign(updated, key, false, subSectionKey);
+
+    await updateCampaign([{ key: `aiContent.${key}`, value: plan }]);
     await updateVersionsCallback();
-    // router.push(`/onboarding/${campaign.slug}/dashboard/1`);
   };
 
   const updatePlanCallback = (version) => {
@@ -248,7 +238,7 @@ export default function CampaignPlanSection({
                     campaign={campaign}
                     versions={versions ? versions[key] : {}}
                     updatePlanCallback={updatePlanCallback}
-                    latestVersion={campaignPlan ? campaignPlan[key] : false}
+                    latestVersion={aiContent ? aiContent[key] : false}
                   />
                   <PlanDisplay
                     plan={plan}

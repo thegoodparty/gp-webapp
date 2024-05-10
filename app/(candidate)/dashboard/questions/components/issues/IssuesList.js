@@ -1,185 +1,132 @@
 'use client';
-
-import { FaChevronRight } from 'react-icons/fa6';
-import IssueItem from './IssueItem';
-import { Fragment, useEffect, useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import IssueItemEditor from 'app/(candidate)/dashboard/questions/components/issues/IssueItemEditor';
+import { useEffect, useState } from 'react';
 import AddCustomIssue from './AddCustomIssue';
-import TextField from '@shared/inputs/TextField';
-import { Autocomplete } from '@mui/material';
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  deleteCandidatePosition,
+  filterIssues,
+  handleDeleteCustomIssue,
+  saveCandidatePosition,
+} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { IssuesSearch } from './IssuesSearch';
+import { IssuesSelectList } from './IssuesSelectList';
+import { AddNewIssueTrigger } from './AddNewIssueTrigger';
 
-export async function saveCandidatePosition({
-  description,
-  campaignSlug,
-  positionId,
-  topIssueId,
-  order,
+export default function IssuesList({
+  nextCallback,
+  candidatePositions,
+  editIssuePosition,
+  campaign: incomingCampaign,
+  topIssues,
+  setEditIssuePosition,
 }) {
-  try {
-    const api = gpApi.campaign.candidatePosition.create;
-    const payload = {
-      description,
-      campaignSlug,
-      positionId,
-      topIssueId,
-      order,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
-
-async function deleteCandidatePosition(id) {
-  try {
-    const api = gpApi.campaign.candidatePosition.delete;
-    const payload = {
-      id,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error at saveCandidatePosition', e);
-    return false;
-  }
-}
-
-export default function IssuesList(props) {
-  const { nextCallback, candidatePositions, order, saveButton } = props;
-  const [campaign, setCampaign] = useState(props.campaign);
-  const [topIssues, setTopIssues] = useState(props.topIssues || []);
-  const [inputValue, setInputValue] = useState('');
-  const [value, setValue] = useState(null);
-
-  const [selectedIssue, setSelectedIssue] = useState(false);
-  const [savedCandidatePosition, setSavedCandidatePosition] = useState(false);
+  const [campaign, setCampaign] = useState(incomingCampaign);
+  const [filterValue, setFilterValue] = useState('');
+  const [selectedIssue, setSelectedIssue] = useState(null);
+  const editingCustomIssue =
+    editIssuePosition && editIssuePosition.type === 'custom';
+  const showSelectList = !selectedIssue;
 
   useEffect(() => {
-    setCampaign(props.campaign);
-  }, [props.campaign]);
-
-  useEffect(() => {
-    let savedPosition = findSavedPosition(order);
-    if (savedPosition) {
-      setSavedCandidatePosition(savedPosition);
-      setSelectedIssue(savedPosition.topIssue);
+    if (editIssuePosition) {
+      setSelectedIssue(
+        editIssuePosition.type === 'custom'
+          ? 'custom'
+          : editIssuePosition.topIssue,
+      );
     }
-  }, [order, candidatePositions]);
-
-  const findSavedPosition = (order) => {
-    let savedPosition = false;
-    for (let i = 0; i < candidatePositions.length; i++) {
-      if (candidatePositions[i].order === order) {
-        savedPosition = candidatePositions[i];
-        break;
-      }
-    }
-    return savedPosition;
-  };
+  }, [editIssuePosition]);
 
   const selectIssueCallback = (issue) => {
     setSelectedIssue(issue);
-    if (!issue) {
-      setSavedCandidatePosition(false);
+    if (!issue && !editIssuePosition) {
     }
   };
 
+  const updateCustomIssuesState = (customIssues) =>
+    setCampaign({
+      ...campaign,
+      details: {
+        ...campaign.details,
+        customIssues,
+      },
+    });
+
   const saveCallback = async (position, issue, candidatePosition) => {
     // if candidate position already exists in this order, delete it
-    let savedPosition = findSavedPosition(order);
-    if (savedPosition) {
-      await deleteCandidatePosition(savedPosition.id);
-    }
+    editIssuePosition?.id &&
+      (await deleteCandidatePosition(editIssuePosition.id));
 
+    if (editIssuePosition?.type === 'custom') {
+      updateCustomIssuesState(await handleDeleteCustomIssue(editIssuePosition));
+    }
     await saveCandidatePosition({
       description: candidatePosition,
       campaignSlug: campaign.slug,
       positionId: position.id,
       topIssueId: issue.id,
-      order,
     });
     nextCallback();
   };
 
-  const handleSaveCustom = async (updatedCampaign) => {
+  const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
-    let savedPosition = findSavedPosition(order);
-    if (savedPosition) {
-      await deleteCandidatePosition(savedPosition.id);
+    if (editIssuePosition?.id) {
+      await deleteCandidatePosition(editIssuePosition.id);
     }
-
-    setCampaign(updatedCampaign);
+    const { campaign } = await getCampaign();
+    setCampaign(campaign);
 
     nextCallback();
   };
 
-  const filterIssues = (value) => {
-    if (value === '') {
-      setTopIssues(props.topIssues);
-    } else if (topIssues && typeof topIssues.filter === 'function') {
-      const filtered = topIssues.filter((option) =>
-        option.name.toLowerCase().includes(value.toLowerCase()),
-      );
-      setTopIssues(filtered);
-    }
-  };
-
-  const filterOptions = (options, { inputValue }) => {
-    if (options && typeof options.filter === 'function') {
-      return options.filter((option) => {
-        return option.name.toLowerCase().includes(inputValue.toLowerCase());
-      });
-    }
-  };
+  const filteredIssues = filterIssues(filterValue, topIssues);
 
   return (
     <div className=" max-w-3xl mx-auto">
-      {!selectedIssue && (
-        <div className="bg-white pt-4 pb-2">
-          <Autocomplete
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
+      {!editingCustomIssue && !selectedIssue && (
+        <div className="pt-4 pb-2">
+          <IssuesSearch
+            {...{
+              issues: filteredIssues,
+              onInputChange: setFilterValue,
             }}
-            inputValue={inputValue}
-            onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
-              filterIssues(newInputValue);
-            }}
-            className="office-autocomplete"
-            options={topIssues || []}
-            clearOnBlur={false}
-            renderInput={(params) => (
-              <TextField {...params} label="Search for Issues" />
-            )}
-            getOptionLabel={(option) => option.name}
-            filterOptions={filterOptions}
           />
         </div>
       )}
-      {topIssues.map((topIssue, index) => (
-        <Fragment key={topIssue.id}>
-          {!selectedIssue || selectedIssue.id === topIssue.id ? (
-            <IssueItem
-              topIssue={topIssue}
-              selectIssueCallback={selectIssueCallback}
-              saveCallback={saveCallback}
-              candidatePositions={candidatePositions}
-              initialSaved={savedCandidatePosition}
-              saveButton={saveButton}
-            />
-          ) : null}
-        </Fragment>
-      ))}
-      {(selectedIssue === 'custom' || !selectedIssue) && (
-        <AddCustomIssue
-          campaign={campaign}
-          order={order}
-          selectIssueCallback={selectIssueCallback}
-          saveCallback={handleSaveCustom}
-        />
+
+      {showSelectList && (
+        <>
+          <IssuesSelectList
+            issues={filteredIssues}
+            handleSelectIssue={selectIssueCallback}
+          />
+          <AddNewIssueTrigger onClick={() => setSelectedIssue('custom')} />
+        </>
       )}
+
+      {selectedIssue &&
+        (selectedIssue === 'custom' ? (
+          <AddCustomIssue
+            campaign={campaign}
+            selectIssueCallback={selectIssueCallback}
+            saveCallback={handleSaveCustom}
+            editIssuePosition={editIssuePosition}
+            setEditIssuePosition={setEditIssuePosition}
+          />
+        ) : (
+          <IssueItemEditor
+            issue={filteredIssues.find(
+              ({ id: issueId }) => issueId === selectedIssue.id,
+            )}
+            selectIssueCallback={selectIssueCallback}
+            saveCallback={saveCallback}
+            candidatePositions={candidatePositions}
+            editIssuePosition={editIssuePosition}
+            setEditIssuePosition={setEditIssuePosition}
+          />
+        ))}
     </div>
   );
 }

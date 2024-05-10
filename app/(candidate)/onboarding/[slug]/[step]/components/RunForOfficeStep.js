@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 
 export default function RunForOfficeStep(props) {
   const { campaign, step } = props;
-  const [tooltipOpen, setTooltipOpen] = useState(false)
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const router = useRouter();
   const [state, setState] = useState({
     runForOffice: campaign?.details?.runForOffice || null,
@@ -44,15 +44,16 @@ export default function RunForOfficeStep(props) {
 
   const handleSave = async () => {
     if (canSubmit) {
-      const updated = {
-        ...campaign,
-        currentStep: onboardingStep(campaign, step),
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
-      await updateCampaign(updated);
+      const currentStep = onboardingStep(campaign, step);
+
+      const attr = [
+        { key: 'data.currentStep', value: currentStep },
+        { key: 'details.runForOffice', value: state.runForOffice },
+        { key: 'details.campaignCommittee', value: state.campaignCommittee },
+        { key: 'details.noCommittee', value: state.noCommittee },
+      ];
+      await updateCampaign(attr);
+
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     }
   };
@@ -80,11 +81,9 @@ export default function RunForOfficeStep(props) {
           {state.runForOffice === 'yes' && (
             <div className="mt-10">
               <div className="flex justify-center items-center mb-6">
-                <H3>
-                  What&apos;s the name of your committee?
-                </H3>
+                <H3>What&apos;s the name of your committee?</H3>
                 <Tooltip
-                  title="This is the official name you&apos;ve registered or will register your campaign under with the relevant electoral authorities. It&apos;s how your campaign is recognized for legal, financial, and reporting purposes. Commonly, it includes the candidate&apos;s name, office sought, and may include terms like &apos;Committee&apos;, &apos;Friends of&apos;, or &apos;Elect&apos;. For example, &apos;Friends of Jane Doe for Mayor&apos;. If you haven&apos;t registered yet, enter a provisional name you plan to use."
+                  title="This is the official name you've registered or will register your campaign under with the relevant electoral authorities. It's how your campaign is recognized for legal, financial, and reporting purposes. Commonly, it includes the candidate's name, office sought, and may include terms like 'Committee', 'Friends of', or 'Elect'. For example, 'Friends of Jane Doe for Mayor'. If you haven't registered yet, enter a provisional name you plan to use."
                   open={tooltipOpen}
                   onClick={() => setTooltipOpen(!tooltipOpen)}
                   onClose={() => setTooltipOpen(false)}

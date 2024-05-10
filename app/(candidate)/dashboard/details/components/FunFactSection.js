@@ -50,15 +50,8 @@ export default function FunFactSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
-      const newCampaign = {
-        ...campaign,
-        details: {
-          ...campaign.details,
-          ...state,
-        },
-      };
 
-      await updateCampaign(newCampaign);
+      await updateCampaign([{ key: 'details.funFact', value: state.funFact }]);
       setSaving(false);
     }
   };

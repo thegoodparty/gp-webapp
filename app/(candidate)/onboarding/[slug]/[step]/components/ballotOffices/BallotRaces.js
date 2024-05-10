@@ -47,7 +47,7 @@ export default function BallotRaces(props) {
   const router = useRouter();
 
   useEffect(() => {
-    loadRaces();
+    loadRaces(campaign.details.zip);
   }, []);
 
   useEffect(() => {
@@ -63,12 +63,18 @@ export default function BallotRaces(props) {
   }, [electionYears]);
 
   const loadRaces = async (zip) => {
-    setLoading(true);
-    const initRaces = await fetchRaces(zip || campaign.details.zip);
-    setElectionYears(Object.keys(initRaces).sort());
-    setRaces(initRaces);
-    setLoading(false);
+    if (zip) {
+      setLoading(true);
+      const initRaces = await fetchRaces(zip || campaign.details.zip);
+      setElectionYears(Object.keys(initRaces).sort());
+      setRaces(initRaces);
+      setLoading(false);
+    }
   };
+
+  if (!zip) {
+    return <div>No valid zip</div>;
+  }
 
   const handleSelect = (race) => {
     if (race?.position?.id === selected?.position?.id) {
@@ -92,13 +98,7 @@ export default function BallotRaces(props) {
       setZip(newZip);
       clearState();
       await loadRaces(newZip);
-      await updateCampaign({
-        ...campaign,
-        details: {
-          ...campaign.details,
-          zip: newZip,
-        },
-      });
+      await updateCampaign([{ key: 'details.zip', value: newZip }]);
     }
   };
 
@@ -149,10 +149,22 @@ export default function BallotRaces(props) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
         : step;
-      await updateCampaign(updated);
+
+      const attr = [
+        { key: 'data.currentStep', value: updated.currentStep },
+        { key: 'details.otherOffice', value: '' },
+        { key: 'details.positionId', value: null },
+        { key: 'details.electionId', value: null },
+      ];
+      await updateCampaign(attr);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
     } else {
-      await updateCampaign(updated);
+      const attr = [
+        { key: 'details.otherOffice', value: '' },
+        { key: 'details.positionId', value: null },
+        { key: 'details.electionId', value: null },
+      ];
+      await updateCampaign(attr);
       if (updateCallback) {
         updateCallback();
       }

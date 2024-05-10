@@ -1,8 +1,10 @@
 'use client';
 
+import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { useState } from 'react';
 
 async function claimRoute(id) {
   try {
@@ -35,10 +37,14 @@ async function unclaimRoute(id) {
 export default function ClaimButton(props) {
   const { route } = props;
   const claimed = route.claimedByUser;
+  const [loading, setLoading] = useState(false);
 
   const handleClaim = async () => {
+    setLoading(true);
     await claimRoute(route.id);
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const handleUnclaim = async () => {
@@ -57,6 +63,13 @@ export default function ClaimButton(props) {
           Claim Route
         </PrimaryButton>
       )}
+      {loading ? (
+        <div className="fixed top-0 left-0 w-screen h-screen z-[1201] flex items-center justify-center bg-black bg-opacity-25">
+          <div className="w-64 h-64">
+            <CheckmarkAnimation />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

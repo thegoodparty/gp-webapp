@@ -1,135 +1,105 @@
 'use client';
-
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useState } from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
-import { FaCirclePlus } from 'react-icons/fa6';
+import {
+  findExistingCustomIssueIndex,
+  writeCampaignCustomIssue,
+} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons';
 
-export default function AddCustomIssue(props) {
-  const { selectIssueCallback, saveCallback, campaign, order } = props;
-  const findExisting = () => {
-    let existingIssue;
-    let index = -1;
-    if (campaign.customIssues) {
-      for (let i = 0; i < campaign.customIssues.length; i++) {
-        if (campaign.customIssues[i].order === order) {
-          existingIssue = campaign.customIssues[i];
-          selectIssueCallback('custom');
-          index = i;
-          break;
-        }
-      }
-      return { existingIssue, index };
-    }
-    return { index };
-  };
-  let { existingIssue } = findExisting() || {};
+export default function AddCustomIssue({
+  selectIssueCallback,
+  saveCallback,
+  campaign,
+  editIssuePosition,
+  setEditIssuePosition,
+}) {
+  const editingCustomIssue = editIssuePosition?.type === 'custom';
 
-  const [selectCustom, setSelectCustom] = useState(
-    existingIssue ? 'custom' : false,
+  const [existingIndex] = useState(
+    findExistingCustomIssueIndex(
+      campaign,
+      editIssuePosition,
+      selectIssueCallback,
+    ),
   );
-  const [title, setTitle] = useState(existingIssue ? existingIssue.title : '');
+
+  const [title, setTitle] = useState(
+    editingCustomIssue ? editIssuePosition.title : '',
+  );
   const [position, setPosition] = useState(
-    existingIssue ? existingIssue.position : '',
+    editingCustomIssue ? editIssuePosition.position : '',
   );
-
-  const handleSelectCustom = () => {
-    setSelectCustom(true);
-    selectIssueCallback('custom');
-  };
+  const saveAllowed = title !== '' && position !== '';
 
   const handleAnotherIssue = () => {
-    setSelectCustom(false);
     selectIssueCallback(false);
   };
 
-  const canSave = () => {
-    return selectCustom && title !== '' && position !== '';
-  };
   const handleSave = async () => {
-    if (!canSave()) {
+    if (!saveAllowed) {
       return;
     }
-    const updated = {
-      ...campaign,
-    };
-    if (!campaign.customIssues) {
-      updated.customIssues = [];
-    }
-    let { index } = findExisting();
-    if (index !== -1) {
-      updated.customIssues[index] = {
-        title,
-        position,
-        order,
-      };
-    } else {
-      updated.customIssues.push({
-        title,
-        position,
-        order,
-      });
-    }
-    await updateCampaign(updated);
-    await saveCallback(updated);
+    const updatedCustomIssues = await writeCampaignCustomIssue(
+      existingIndex,
+      title,
+      position,
+      campaign.details.customIssues || [],
+    );
+    await saveCallback(updatedCustomIssues);
   };
+
+  const onCancel = () => setEditIssuePosition(null);
 
   return (
     <>
-      {selectCustom && (
-        <div
-          className="flex my-2 items-center font-medium text-sm cursor-pointer"
-          onClick={handleAnotherIssue}
-        >
-          <FaChevronLeft />
-          <div className="ml-2 ">Choose another issue</div>
-        </div>
-      )}
       <div
-        className="p-4 rounded-lg mt-2 bg-slate-700 font-semibold flex items-center cursor-pointer"
-        onClick={handleSelectCustom}
+        className="flex my-2 items-center font-medium text-sm cursor-pointer"
+        onClick={handleAnotherIssue}
       >
-        <FaCirclePlus />
-        <div className="ml-2">Add a new issue…</div>
+        <FaChevronLeft />
+        <div className="ml-2 ">Choose another issue</div>
       </div>
-      {selectCustom && (
-        <>
-          <div className="mt-10">
-            <TextField
-              label="Name of issue"
-              fullWidth
-              value={title}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            />
-          </div>
-          <div className="mt-10">
-            <TextField
-              label="Position on issue"
-              placeholder="Write 1 or 2 sentences about your position on this issue..."
-              fullWidth
-              value={position}
-              multiline
-              rows={6}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => {
-                setPosition(e.target.value);
-              }}
-            />
-          </div>
-          <div className="mt-10 flex justify-center" onClick={handleSave}>
-            <PrimaryButton disabled={!canSave()}>Next</PrimaryButton>
-          </div>
-        </>
-      )}
+      <>
+        <div className="mt-10">
+          <TextField
+            label="Name of issue"
+            fullWidth
+            value={title}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+        </div>
+        <div className="mt-10">
+          <TextField
+            label="Position on issue"
+            placeholder="Write 1 or 2 sentences about your position on this issue..."
+            fullWidth
+            value={position}
+            multiline
+            rows={6}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => {
+              setPosition(e.target.value);
+            }}
+          />
+        </div>
+        <div className="mt-10 flex justify-center">
+          <IssueEditorButtons
+            disableSave={!saveAllowed}
+            editIssuePosition={editIssuePosition}
+            onSave={handleSave}
+            onCancel={onCancel}
+          />
+        </div>
+      </>
     </>
   );
 }

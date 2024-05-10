@@ -1,22 +1,7 @@
 import { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import DeleteAction from './DeleteAction';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import ImpersonateAction from '/app/admin/shared/ImpersonateAction';
-
-async function handleCancelRequest(slug) {
-  try {
-    const api = gpApi.campaign.onboarding.cancelLaunchRequest;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
 
 export default function Actions({ id, email }) {
   const [showMenu, setShowMenu] = useState(false);

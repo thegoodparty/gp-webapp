@@ -7,6 +7,9 @@ import { RxTarget } from 'react-icons/rx';
 
 export default function VolunteerRoutes(props) {
   const { unclaimedRoutes, claimedRoutes } = props;
+  const noRoutes =
+    (!unclaimedRoutes || unclaimedRoutes.length === 0) &&
+    (!claimedRoutes || claimedRoutes.length === 0);
   return (
     <section className="lg:hidden">
       <div className="p-2">
@@ -58,6 +61,9 @@ export default function VolunteerRoutes(props) {
               </div>
             ))}
           </>
+        )}
+        {noRoutes && (
+          <H2 className="my-4">There are no active campaigns at the moment.</H2>
         )}
       </div>
     </section>

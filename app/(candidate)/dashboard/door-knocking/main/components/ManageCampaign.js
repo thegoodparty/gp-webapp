@@ -43,14 +43,6 @@ const fields = [
     ],
     disabled: true,
   },
-  {
-    key: 'maxHousesPerRoute',
-    label: 'Maximum Houses Per Route (max - 100)',
-    type: 'number',
-    placeholder: '30 houses',
-    cols: 6,
-    disabled: true,
-  },
 
   {
     key: 'startDate',
@@ -76,12 +68,11 @@ export default function ManageCampaign(props) {
   const [state, setState] = useState({
     campaignName: campaign.name || '',
     campaignType: campaign.type || '',
-    maxHousesPerRoute: campaign.maxHousesPerRoute || '',
     startDate: campaign.startDate || '',
     endDate: campaign.endDate || '',
   });
   if (new Date(campaign.startDate) > new Date()) {
-    fields[4].disabled = false;
+    fields[3].disabled = false;
   }
 
   const canSave = () => {
