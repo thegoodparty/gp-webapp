@@ -11,7 +11,7 @@ import SuccessButton from '@shared/buttons/SuccessButton';
 import Body1 from '@shared/typography/Body1';
 import { useState } from 'react';
 import PurchaseVoterFile from './PurchaseVoterFile';
-import RerunP2V from './ReRunP2V';
+import RerunP2V from './RerunP2V';
 
 async function rerunP2V(slug) {
   try {
