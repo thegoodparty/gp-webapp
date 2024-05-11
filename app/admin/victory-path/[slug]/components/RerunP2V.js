@@ -19,7 +19,7 @@ async function rerunP2V(slug) {
 }
 
 export default function RerunP2V(props) {
-  const { campaign } = props;
+  const { campaign, refreshCampaignCallback } = props;
   const [processing, setProcessing] = useState(false);
 
   const snackbarState = useHookstate(globalSnackbarState);
@@ -37,7 +37,7 @@ export default function RerunP2V(props) {
         };
       });
       await revalidatePage('/admin/victory-path/[slug]');
-      window.location.reload();
+      refreshCampaignCallback();
     } else {
       snackbarState.set(() => {
         return {

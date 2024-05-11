@@ -234,7 +234,12 @@ export default function AdminVictoryPathPage(props) {
             </strong>
             .
           </H2>
-          {!notNeeded && <VoterFileSection campaign={campaign} />}
+          {!notNeeded && (
+            <VoterFileSection
+              campaign={campaign}
+              refreshCampaignCallback={refreshCampaign}
+            />
+          )}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}

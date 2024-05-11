@@ -66,7 +66,7 @@ const filtersOptions = {
 };
 
 export default function PurchaseVoterFile(props) {
-  const { campaign } = props;
+  const { campaign, refreshCampaignCallback } = props;
   const [processing, setProcessing] = useState(false);
   const [count, setCount] = useState(false);
   const [filters, setFilters] = useState({});
@@ -88,6 +88,7 @@ export default function PurchaseVoterFile(props) {
       });
       await revalidatePage('/admin/victory-path/[slug]');
       setProcessing(false);
+      refreshCampaignCallback();
     } else {
       snackbarState.set(() => {
         return {

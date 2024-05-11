@@ -9,6 +9,7 @@ import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import PersuasionSurvey from './PersuasionSurvey';
 import GotvSurvey from './GotvSurvey';
+import EducationSurvey from './EducationSurvey';
 
 async function saveSurvey(data, routeId, voterId) {
   try {
@@ -55,6 +56,9 @@ export default function Surveys(props) {
       ) : null}
       {type === 'Get Out The Vote' ? (
         <GotvSurvey {...props} handleSave={handleSave} />
+      ) : null}
+      {type === 'Education Canvas' ? (
+        <EducationSurvey {...props} handleSave={handleSave} />
       ) : null}
     </div>
   );
