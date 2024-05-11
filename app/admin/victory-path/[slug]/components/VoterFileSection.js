@@ -93,7 +93,7 @@ export default function VoterFileSection(props) {
           </Body1>
         </div>
       )}
-      {status === 'processingVoterFile' && (
+      {status === 'processingVoterFile' && campaign.isPro && (
         <div>
           The voter file is being purchased. This might take a few minutes.
           Please refresh the page to update the status

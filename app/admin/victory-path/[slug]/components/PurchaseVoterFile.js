@@ -9,38 +9,75 @@ import SuccessButton from '@shared/buttons/SuccessButton';
 import { useState } from 'react';
 import WarningButton from '@shared/buttons/WarningButton';
 import VoteAnimation from '@shared/animations/VoteAnimation';
+import H3 from '@shared/typography/H3';
+import H4 from '@shared/typography/H4';
+import Checkbox from '@shared/inputs/Checkbox';
+import H5 from '@shared/typography/H5';
 
-async function purchaseFile(slug) {
+async function purchaseFile(slug, filters) {
   try {
     const api = gpApi.voterData.purchaseVoterFile;
-    return await gpFetch(api, { slug });
+    const payload = { slug, filters };
+    return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
     return false;
   }
 }
 
-async function countFile(slug) {
+async function countFile(slug, filters) {
   try {
     const api = gpApi.voterData.count;
-    return await gpFetch(api, { slug });
+    const payload = { slug, filters };
+    return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
     return false;
   }
 }
+
+const filtersOptions = {
+  performance: [
+    'Not Eligible',
+    '0%',
+    '12%',
+    '14%',
+    '16%',
+    '20%',
+    '25%',
+    '28%',
+    '33%',
+    '37%',
+    '40%',
+    '42%',
+    '50%',
+    '57%',
+    '60%',
+    '62%',
+    '66%',
+    '71%',
+    '75%',
+    '80%',
+    '83%',
+    '85%',
+    '87%',
+    '100%',
+  ],
+};
 
 export default function PurchaseVoterFile(props) {
   const { campaign } = props;
   const [processing, setProcessing] = useState(false);
   const [count, setCount] = useState(false);
+  const [filters, setFilters] = useState({});
 
   const snackbarState = useHookstate(globalSnackbarState);
 
   const handlePurchase = async () => {
     if (processing) return;
     setProcessing(true);
-    const response = await purchaseFile(campaign.slug);
+    const queryFilters = flatFilters();
+    const response = await purchaseFile(campaign.slug, queryFilters);
     if (response) {
       snackbarState.set(() => {
         return {
@@ -66,7 +103,8 @@ export default function PurchaseVoterFile(props) {
   const handleCount = async () => {
     if (processing) return;
     setProcessing(true);
-    const response = await countFile(campaign.slug);
+    const queryFilters = flatFilters();
+    const response = await countFile(campaign.slug, queryFilters);
     if (response) {
       snackbarState.set(() => {
         return {
@@ -91,8 +129,45 @@ export default function PurchaseVoterFile(props) {
     }
   };
 
+  const flatFilters = () => {
+    const keys = Object.keys(filters);
+    if (keys.length === 0) return false;
+    return {
+      VotingPerformanceEvenYearGeneral: keys,
+    };
+  };
+
+  const handleFilter = (key, value) => {
+    if (value) {
+      setFilters({ ...filters, [key]: true });
+    } else {
+      delete filters[key];
+      setFilters(filters);
+    }
+  };
+
   return (
     <>
+      <div>
+        <H4 className="mt-5">Filters</H4>
+        <div className="border rounded border-slate-300 p-4 my-3">
+          <H5>Performance In Even Year Generals</H5>
+          <div className="grid grid-cols-12 gap-4">
+            {filtersOptions.performance.map((filter) => (
+              <div
+                key={filter}
+                className="col-span-6 md:col-span-4 lg:col-span-3"
+              >
+                <Checkbox
+                  value={filter}
+                  onChange={(e) => handleFilter(filter, e.target.checked)}
+                />{' '}
+                {filter}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
       {count !== false ? (
         <div className="my-4 border border-slate-300 rounded p-3">
           <div className="text-lg">

@@ -717,7 +717,7 @@ const gpApi = {
     },
     count: {
       url: `${base}voter-data/voter-file/count`, //admin
-      method: 'GET',
+      method: 'PUT',
       withAuth: true,
     },
   },
