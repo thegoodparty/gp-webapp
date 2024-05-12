@@ -40,6 +40,7 @@ const fields = [
       'Get Out The Vote',
       'Candidate Awareness',
       'Voter Issues/Candidate Issue Awareness',
+      'Education Canvas',
     ],
   },
 

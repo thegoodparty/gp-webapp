@@ -72,7 +72,7 @@ export default function ManageCampaign(props) {
     endDate: campaign.endDate || '',
   });
   if (new Date(campaign.startDate) > new Date()) {
-    fields[4].disabled = false;
+    fields[3].disabled = false;
   }
 
   const canSave = () => {

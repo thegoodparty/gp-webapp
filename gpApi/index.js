@@ -715,6 +715,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    count: {
+      url: `${base}voter-data/voter-file/count`, //admin
+      method: 'PUT',
+      withAuth: true,
+    },
   },
 };
 

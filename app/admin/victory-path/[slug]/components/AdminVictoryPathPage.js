@@ -5,7 +5,10 @@ import { useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  getCampaign,
+  updateCampaign,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
@@ -127,7 +130,7 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  const { campaign } = props;
+  const [campaign, setCampaign] = useState(props.campaign);
   const { pathToVictory, details } = campaign;
 
   const [state, setState] = useState({
@@ -149,6 +152,11 @@ export default function AdminVictoryPathPage(props) {
       [key]: value,
       winNumber,
     });
+  };
+
+  const refreshCampaign = async () => {
+    const { campaign } = await getCampaign();
+    setCampaign(campaign);
   };
 
   const save = async () => {
@@ -226,7 +234,12 @@ export default function AdminVictoryPathPage(props) {
             </strong>
             .
           </H2>
-          {!notNeeded && <VoterFileSection campaign={campaign} />}
+          {!notNeeded && (
+            <VoterFileSection
+              campaign={campaign}
+              refreshCampaignCallback={refreshCampaign}
+            />
+          )}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}
@@ -235,7 +248,10 @@ export default function AdminVictoryPathPage(props) {
             />
             <div>Mark campaign as not needing Path to Victory</div>
           </H3>{' '}
-          <ProFieldsSection {...props} />
+          <ProFieldsSection
+            {...props}
+            refreshCampaignCallback={refreshCampaign}
+          />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. District:{' '}
