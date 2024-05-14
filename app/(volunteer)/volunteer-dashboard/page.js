@@ -11,7 +11,7 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const campaigns = await volunteerAccess();
-  const childProps = { pathname: '/volunteer-dashboard' };
+  const childProps = { pathname: '/volunteer-dashboard', campaigns };
 
   return <VolunteerDashboardPage {...childProps} />;
 }
