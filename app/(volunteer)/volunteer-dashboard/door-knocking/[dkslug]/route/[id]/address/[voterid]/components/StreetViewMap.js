@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
   GoogleMap,
   useLoadScript,
@@ -9,15 +9,18 @@ import {
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
 const StreetViewMap = ({ voter }) => {
-  const location = {
-    lat: voter.lat ? parseFloat(voter.lat) : 0,
-    lng: voter.lng ? parseFloat(voter.lng) : 0,
-    address: `${voter.address}, ${voter.city} ${voter.state},${voter.zip}`,
-  };
+  const location = useMemo(() => {
+    return {
+      lat: voter.lat ? parseFloat(voter.lat) : 0,
+      lng: voter.lng ? parseFloat(voter.lng) : 0,
+      address: `${voter.address}, ${voter.city} ${voter.state},${voter.zip}`,
+    };
+  }, [voter]);
   console.log('location', location);
   console.log('voter', voter);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: apiKey,
+    libraries: ['geometry'],
   });
 
   const mapRef = useRef(null);
@@ -29,7 +32,7 @@ const StreetViewMap = ({ voter }) => {
         streetViewRef.current,
         {
           position: { lat: location.lat, lng: location.lng },
-          pov: { heading: 100, pitch: 0 },
+          pov: { heading: 0, pitch: 0 },
           zoom: 1,
         },
       );
@@ -38,6 +41,19 @@ const StreetViewMap = ({ voter }) => {
         position: { lat: location.lat, lng: location.lng },
         map: panorama,
         title: location.address,
+      });
+
+      // Calculate heading from the panorama position to the marker position
+      const pov = panorama.getPov();
+      const markerPosition = marker.getPosition();
+      const heading = window.google.maps.geometry.spherical.computeHeading(
+        panorama.getPosition(),
+        markerPosition,
+      );
+
+      panorama.setPov({
+        heading: heading,
+        pitch: pov.pitch,
       });
     }
   }, [isLoaded, location]);
