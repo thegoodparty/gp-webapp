@@ -114,13 +114,13 @@ function PasswordSection() {
 
   return (
     <section className="py-4 border-b border-slate-300 flex">
-      <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
+      <div className="shrink-0 pr-3 text-indigo-600 pt-[6px]">
         <TfiLock />
       </div>
       <div className="flex-1">
         <form noValidate onSubmit={(e) => e.preventDefault()}>
           <H4>Password</H4>
-          <Body2 className="text-indigo-200 mb-6">
+          <Body2 className="text-indigo-600 mb-6">
             {user?.hasPassword ? 'Change' : 'Create'} your password
           </Body2>
           <div className="grid grid-cols-12 gap-3">

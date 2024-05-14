@@ -14,8 +14,6 @@ export default function DashboardOrContinue({
 
   let dashboardLink = '/dashboard';
 
-  console.log('campaignStatus', campaignStatus);
-
   return (
     <div className="ml-4">
       {status === 'candidate' ? (
