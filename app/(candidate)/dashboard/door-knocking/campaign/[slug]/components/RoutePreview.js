@@ -22,7 +22,7 @@ export function boundsToImage(bounds, overview_polyline) {
   const center = `${centerCords.lat},${centerCords.lng}`;
   const zoom = 14; // Example zoom level, adjust as needed
   const size = '380x250'; // Map image size in pixels (width x height)
-  const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'; // Make sure to use your actual API key
+  const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
   const path = overview_polyline
     ? `color:#4B3BFF|weight:2|enc:${overview_polyline.points}`
     : false;
