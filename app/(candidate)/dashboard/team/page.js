@@ -40,7 +40,6 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
   const { campaign } = await fetchUserCampaign();
-  console.log('got this user campaign', campaign);
   const { candidateSlug } = campaign;
   const { volunteers } = await loadVolunteers();
   const { invitations } = await loadInvitations();

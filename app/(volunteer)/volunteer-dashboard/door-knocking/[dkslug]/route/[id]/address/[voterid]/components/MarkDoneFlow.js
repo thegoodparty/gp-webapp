@@ -27,10 +27,11 @@ async function setDone(routeId, voterId, data) {
 }
 
 const options = [
-  'Refused to Engage',
-  'Engaging',
-  'Informative',
-  'Locked interest',
+  '5 - Enthusiastic Supporter',
+  '4 - Somewhat Interested',
+  '3 - Neutral',
+  '2 - Skeptical',
+  '1 - Not Interested',
 ];
 
 export default function MarkDoneFlow(props) {
