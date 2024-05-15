@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   GoogleMap,
   useLoadScript,
@@ -25,36 +25,58 @@ const StreetViewMap = ({ voter }) => {
 
   const mapRef = useRef(null);
   const streetViewRef = useRef(null);
+  const [hasStreetView, setHasStreetView] = useState(true);
 
   useEffect(() => {
-    if (isLoaded && streetViewRef.current) {
-      const panorama = new window.google.maps.StreetViewPanorama(
-        streetViewRef.current,
-        {
-          position: { lat: location.lat, lng: location.lng },
-          pov: { heading: 0, pitch: 0 },
-          zoom: 1,
+    if (isLoaded) {
+      const streetViewService = new window.google.maps.StreetViewService();
+      const streetViewCheck = new window.google.maps.LatLng(
+        location.lat,
+        location.lng,
+      );
+
+      streetViewService.getPanorama(
+        { location: streetViewCheck, radius: 50 },
+        (data, status) => {
+          if (status === 'OK') {
+            setHasStreetView(true);
+            if (streetViewRef.current) {
+              const panorama = new window.google.maps.StreetViewPanorama(
+                streetViewRef.current,
+                {
+                  position: { lat: location.lat, lng: location.lng },
+                  pov: { heading: 0, pitch: 0 },
+                  zoom: 1,
+                },
+              );
+
+              const marker = new window.google.maps.Marker({
+                position: { lat: location.lat, lng: location.lng },
+                title: location.address,
+              });
+
+              // Attach the marker to the panorama
+              marker.setMap(panorama);
+
+              // Calculate heading from the panorama position to the marker position
+              const pov = panorama.getPov();
+              const markerPosition = marker.getPosition();
+              const heading =
+                window.google.maps.geometry.spherical.computeHeading(
+                  panorama.getPosition(),
+                  markerPosition,
+                );
+
+              panorama.setPov({
+                heading: heading,
+                pitch: pov.pitch,
+              });
+            }
+          } else {
+            setHasStreetView(false);
+          }
         },
       );
-
-      const marker = new window.google.maps.Marker({
-        position: { lat: location.lat, lng: location.lng },
-        map: panorama,
-        title: location.address,
-      });
-
-      // Calculate heading from the panorama position to the marker position
-      const pov = panorama.getPov();
-      const markerPosition = marker.getPosition();
-      const heading = window.google.maps.geometry.spherical.computeHeading(
-        panorama.getPosition(),
-        markerPosition,
-      );
-
-      panorama.setPov({
-        heading: heading,
-        pitch: pov.pitch,
-      });
     }
   }, [isLoaded, location]);
 
@@ -65,10 +87,12 @@ const StreetViewMap = ({ voter }) => {
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading Maps</div>;
 
-  return (
+  return hasStreetView ? (
     <div className=" h-64 w-full" ref={mapRef}>
       <div className="h-full" ref={streetViewRef}></div>
     </div>
+  ) : (
+    <></>
   );
 };
 
