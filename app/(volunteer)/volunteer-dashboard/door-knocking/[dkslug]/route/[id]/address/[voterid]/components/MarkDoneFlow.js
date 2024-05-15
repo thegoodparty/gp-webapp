@@ -97,6 +97,7 @@ export default function MarkDoneFlow(props) {
                   size="medium"
                   variant={selected === op ? 'contained' : 'outlined'}
                   onClick={() => setSelected(op)}
+                  className="text-left"
                 >
                   {op}
                 </SecondaryButton>

@@ -11,6 +11,7 @@ import {
   MdOutlineDoNotDisturbAlt,
 } from 'react-icons/md';
 import { TbProgressCheck } from 'react-icons/tb';
+import StaticToDynamicMap from './StaticToDynamicMap';
 
 export function boundsToImage(bounds, overview_polyline) {
   if (!bounds) return false;
@@ -31,11 +32,15 @@ export function boundsToImage(bounds, overview_polyline) {
   if (path) {
     mapImageUrl += `&path=${encodeURIComponent(path)}`;
   }
-  return mapImageUrl;
+  return {
+    mapImageUrl,
+    center: { lat: centerCords.lat, lng: centerCords.lng },
+  };
 }
 
 function RoutePreview(props) {
-  const { route, dkCampaign, noCard } = props;
+  const { route, dkCampaign, noCard, dkSlug, allowDynamic } = props;
+
   if (!route.data?.response?.routes && route.data?.response?.routes[0])
     return null;
   const { status, data } = route;
@@ -46,7 +51,7 @@ function RoutePreview(props) {
   const res = route.data?.response?.routes[0];
   const { bounds, summary, overview_polyline } = res || {};
 
-  const mapImageUrl = boundsToImage(bounds, overview_polyline);
+  const { mapImageUrl, center } = boundsToImage(bounds, overview_polyline);
 
   return (
     <div
@@ -54,16 +59,13 @@ function RoutePreview(props) {
         noCard ? '' : 'p-4 rounded-md  border border-slate-300 h-full'
       }`}
     >
-      <div className="relative">
-        <Image
-          src={mapImageUrl}
-          alt="map"
-          width={380}
-          height={250}
-          className="w-full h-auto"
-        />
-        <div className="absolute w-full left-0 bottom-0 h-7 bg-white"></div>
-      </div>
+      <StaticToDynamicMap
+        mapImageUrl={mapImageUrl}
+        route={route}
+        center={center}
+        slug={dkSlug}
+        allowDynamic={allowDynamic}
+      />
       <H3 className="mb-2">{summary}</H3>
       {status === 'not-claimed' && (
         <Chip

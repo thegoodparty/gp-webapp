@@ -6,13 +6,12 @@ import TitleSection from './TitleSection';
 import MobileOnlyWrapper from 'app/(volunteer)/volunteer-dashboard/door-knocking/components/MobileOnlyWrapper';
 
 export default function VolunteerRoutePage(props) {
-  const { route } = props;
   return (
     <VolunteerDashboardLayout {...props}>
       <MobileOnlyWrapper>
         <div className="p-4 bg-white">
           <TitleSection {...props} />
-          <RoutePreview route={route} noCard />
+          <RoutePreview {...props} noCard allowDynamic />
           <ClaimButton {...props} />
         </div>
         <div className="p-4">

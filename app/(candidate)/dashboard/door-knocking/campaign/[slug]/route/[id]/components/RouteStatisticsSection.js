@@ -51,7 +51,12 @@ export default function RouteStatisticsSection({ route, dkCampaign }) {
     <div className="grid grid-cols-12 gap-4">
       <div className=" col-span-12  md:col-span-4  xl:col-span-3 h-full">
         <Paper style={{ padding: '16px', height: '100%' }}>
-          <RoutePreview route={route} dkCampaign={dkCampaign} noCard />
+          <RoutePreview
+            route={route}
+            dkCampaign={dkCampaign}
+            noCard
+            noDynamicMap
+          />
           <div>
             <ClaimButton route={route} />
           </div>

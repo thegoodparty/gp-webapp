@@ -1,10 +1,6 @@
 'use client';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  GoogleMap,
-  useLoadScript,
-  StreetViewPanorama,
-} from '@react-google-maps/api';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { useLoadScript } from '@react-google-maps/api';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
@@ -16,8 +12,6 @@ const StreetViewMap = ({ voter }) => {
       address: `${voter.address}, ${voter.city} ${voter.state},${voter.zip}`,
     };
   }, [voter]);
-  console.log('location', location);
-  console.log('voter', voter);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: apiKey,
     libraries: ['geometry'],
@@ -96,4 +90,4 @@ const StreetViewMap = ({ voter }) => {
   );
 };
 
-export default StreetViewMap;
+export default memo(StreetViewMap);

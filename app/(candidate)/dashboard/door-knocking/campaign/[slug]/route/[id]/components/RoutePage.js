@@ -5,6 +5,7 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs';
 
 export default function RoutePage(props) {
   const { route, dkCampaign } = props;
+  console.log('dkCampaign', dkCampaign);
   const res = route.data?.response?.routes[0];
   const { summary } = res;
   const breadcrumbsLinks = [
