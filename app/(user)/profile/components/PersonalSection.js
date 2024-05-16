@@ -175,12 +175,12 @@ function PersonalSection() {
 
   return (
     <section className="py-4 border-b border-slate-300 flex">
-      <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
+      <div className="shrink-0 pr-3 text-indigo-600 pt-[6px]">
         <FiSettings />
       </div>
       <div className="flex-1">
         <H4>General</H4>
-        <Body2 className="text-indigo-200 mb-6">
+        <Body2 className="text-indigo-600 mb-6">
           Update your general information here
         </Body2>
         <form noValidate onSubmit={(e) => e.preventDefault()}>

@@ -4,6 +4,8 @@ import CircularProgressChart from './CircularProgressChart';
 import StatisticsCard from '../../../shared/StatisticsCard';
 import { kFormatter } from 'helpers/numberHelper';
 import CampaignStatusChip from '../../../main/components/CampaignStatusChip';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import DownloadResults from './DownloadResults';
 
 export default function StatisticsSection(props) {
   const { dkCampaign, routes, totals } = props;
@@ -73,6 +75,7 @@ export default function StatisticsSection(props) {
           </Body2>
           <CampaignStatusChip campaign={dkCampaign} />
         </div>
+        <DownloadResults dkCampaign={dkCampaign} />
       </div>
       <div className="grid grid-cols-12 gap-3 mt-12">
         <div className="col-span-12 lg:col-span-4 xl:col-span-3 h-full">

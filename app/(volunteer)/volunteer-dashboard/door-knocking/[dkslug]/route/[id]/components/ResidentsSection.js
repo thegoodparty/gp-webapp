@@ -30,7 +30,6 @@ export default function ResidentsSection(props) {
     <div className="mt-6">
       {addresses.map((address) => (
         <Wrapper address={address} key={address.voterId}>
-          {console.log('status', address.status)}
           <div className=" p-4 rounded-lg border bg-white  mb-4 border-slate-300">
             <div className="mb-2">{address.address}</div>
             <AddressStatusTag address={address} />

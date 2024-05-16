@@ -36,8 +36,6 @@ export default async function Page({ params, searchParams }) {
   const { dkCampaign, route } = await fetchDkRoute(slug, id);
   const { campaign } = await fetchUserCampaign();
 
-  console.log('route', route);
-
   const childProps = {
     user,
     dkCampaign,

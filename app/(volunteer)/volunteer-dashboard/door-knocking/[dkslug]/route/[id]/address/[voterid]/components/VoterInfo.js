@@ -4,7 +4,7 @@ import { IoPersonSharp } from 'react-icons/io5';
 import { MdOutlineFemale } from 'react-icons/md';
 import TitleButtons from './TitleButtons';
 
-const voterName = (voter) => {
+export const voterName = (voter) => {
   if (!voter || !voter.data) return '';
   const {
     Voters_FirstName,

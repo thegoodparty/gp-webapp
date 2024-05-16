@@ -32,7 +32,7 @@ export default function PersuasionSurvey(props) {
       options: ['Strong yes', 'Likely', 'Undecided', 'Unlikely', 'Strong no'],
     },
     {
-      key: 'political views',
+      key: 'politicalViews',
       title: 'What are your political views?',
       type: 'partySelect',
     },

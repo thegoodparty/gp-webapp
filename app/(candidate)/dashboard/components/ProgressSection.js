@@ -80,7 +80,7 @@ export default function ProgressSection(props) {
           )}
         </div>
         <div className="grid grid-cols-12 mt-4 lg:mt-6">
-          <div className=" col-span-1 text-[11px] text-indigo-200 font-sfpro hidden lg:block">
+          <div className=" col-span-1 text-[11px] text-slate-700 font-sfpro hidden lg:block">
             Weeks left
           </div>
           <div className=" col-span-11  hidden lg:block">
@@ -88,7 +88,7 @@ export default function ProgressSection(props) {
               {[...Array(12).keys()].map((index) => (
                 <div
                   key={index}
-                  className="col-span-1 relative text-[11px] text-indigo-200 font-sfpro"
+                  className="col-span-1 relative text-[11px] text-slate-700 font-sfpro"
                 >
                   {weeks === 12 - index || (weeks === 0 && index === 11) ? (
                     <>

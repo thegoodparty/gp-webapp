@@ -31,8 +31,8 @@ export default function ResidentsSection({ dkCampaign, route }) {
   return (
     <div className="mt-6">
       <Paper>
-        <H2>{name} Residents</H2>
-        <Body2 className="mb-6">something here.</Body2>
+        <H2 className="mb-6">{name} Residents</H2>
+        {/* <Body2 className="mb-6">something here.</Body2> */}
         <div className="grid grid-cols-12 gap-4">
           {addresses.map((address) => (
             <div
