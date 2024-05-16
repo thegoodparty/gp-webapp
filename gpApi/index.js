@@ -697,6 +697,11 @@ const gpApi = {
         method: 'PUT',
         withAuth: true,
       },
+      download: {
+        url: `${base}campaign/door-knocking/download`,
+        method: 'GET',
+        withAuth: true,
+      },
     },
   },
   voterData: {

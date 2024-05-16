@@ -40,7 +40,7 @@ export default function DkCampaignPreview(props) {
 
   let mapImageUrl = '';
   if (hasRoutes && bounds) {
-    mapImageUrl = boundsToImage(bounds);
+    ({ mapImageUrl } = boundsToImage(bounds));
   }
   return (
     <>
