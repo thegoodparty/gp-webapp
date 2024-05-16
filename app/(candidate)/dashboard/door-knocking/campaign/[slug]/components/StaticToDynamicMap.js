@@ -32,7 +32,9 @@ const StaticToDynamicMap = ({
   return (
     <div
       className={` ${
-        dynamicMode ? 'h-[calc(100vh-220px)] mb-12' : 'h-[316px]'
+        dynamicMode
+          ? 'h-[calc(100vh-220px)] mb-12'
+          : 'h-[316px] overflow-hidden'
       }`}
     >
       {dynamicMode ? (
