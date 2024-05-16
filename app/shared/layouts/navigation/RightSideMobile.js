@@ -182,6 +182,27 @@ export default function RightSideMobile() {
                               )}
                             </>
                           )}
+                          {status === 'volunteer' && (
+                            <>
+                              <Link
+                                href="volunteer-dashboard"
+                                id="mobile-nav-vol-dashboard"
+                                onClick={closeMenu}
+                              >
+                                <PurpleButton
+                                  fullWidth
+                                  style={{
+                                    backgroundColor: '#642EFF',
+                                    color: '#FFF',
+                                    borderRadius: '8px',
+                                    width: '100%',
+                                  }}
+                                >
+                                  Dashboard
+                                </PurpleButton>
+                              </Link>
+                            </>
+                          )}
                           {status === 'onboarding' && (
                             <Link
                               href={`/onboarding/${slug}/${step || 1}`}
