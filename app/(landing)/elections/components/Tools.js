@@ -18,7 +18,7 @@ export default function Tools({ negativeMargin = true }) {
             src="/images/black-logo.svg"
             width={350}
             height={40}
-            alt="GOOD PARTY"
+            alt="GoodParty.org"
           />
           <div className="grid grid-cols-12 gap-4 md:gap-8  mt-10">
             <div className="col-span-12 md:col-span-6">
@@ -27,7 +27,7 @@ export default function Tools({ negativeMargin = true }) {
               </h2>
               <Body1 className="mt-8 mb-8 md:mb-14 leading-relaxed">
                 Get free AI-powered tools to accelerate your campaign strategy.
-                Good Party&apos;s AI Campaign Manager lets you track your
+                GoodParty.org&apos;s AI Campaign Manager lets you track your
                 progress toward key voter outreach goals, instantly generate
                 custom campaign materials, and get access to a nationwide
                 network of grassroots volunteers. Get a free demo today to see
@@ -49,7 +49,7 @@ export default function Tools({ negativeMargin = true }) {
               <div className="w-2/3 ">
                 <Image
                   src={helpImg}
-                  alt="Good Party AI can help you"
+                  alt="GoodParty.org AI can help you"
                   className="mt-12 md:mt-0"
                 />
               </div>
@@ -57,7 +57,7 @@ export default function Tools({ negativeMargin = true }) {
 
             <div className="col-span-12 md:col-span-6 mt-14">
               <h3 className="text-2xl md:text-3xl font-medium">
-                Good Party AI can help you
+                GoodParty.org AI can help you
               </h3>
               <Body1 className="mt-8 mb-8 md:mb-14 leading-relaxed text-xl">
                 <ul>

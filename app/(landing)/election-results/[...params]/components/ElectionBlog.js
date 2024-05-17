@@ -32,7 +32,7 @@ export default function Blog(props) {
                   Want to get involved?
                 </span>
                 <span className="text-4xl font-semibold text-left py-5">
-                  Good Party community
+                  GoodParty.org community
                 </span>
                 <span
                   className={`${blogFontSubtitle} text-xl font-normal text-left py-5`}

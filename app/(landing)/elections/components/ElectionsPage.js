@@ -38,13 +38,15 @@ export default function ElectionsPage() {
               </h2>
               <h3 className="mt-5 md:mt-8 text-xl md:text-3xl md:w-2/3">
                 How real people are learning how to run for office and win with
-                our free course, Good Party Academy
+                our free course, GoodParty.org Academy
               </h3>
             </div>
           }
           cta={
             <Link href="/academy">
-              <PrimaryButton>Learn more about Good Party Academy</PrimaryButton>
+              <PrimaryButton>
+                Learn more about GoodParty.org Academy
+              </PrimaryButton>
             </Link>
           }
         />

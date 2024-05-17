@@ -72,7 +72,7 @@ export default function SocialRegisterButtons() {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: `Welcome ${newUser ? '' : 'back'} to Good Party!`,
+          message: `Welcome ${newUser ? '' : 'back'} to GoodParty.org!`,
           isError: false,
         };
       });

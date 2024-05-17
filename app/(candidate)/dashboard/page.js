@@ -5,7 +5,7 @@ import candidateAccess from './shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
-  title: 'Campaign Dashboard | GOOD PARTY',
+  title: 'Campaign Dashboard | GoodParty.org',
   description: 'Campaign Dashboard',
   slug: '/dashboard',
 });

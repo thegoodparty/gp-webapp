@@ -6,7 +6,7 @@ import ResourcesPage from './components/ResourcesPage';
 import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
-  title: 'Campaign Resources | GOOD PARTY',
+  title: 'Campaign Resources | GoodParty.org',
   description: 'Campaign Resources',
   slug: '/dashboard/resources',
 });

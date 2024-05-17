@@ -26,9 +26,13 @@ export default function ContentPage(props) {
               data-cy="logo"
               width={18}
               height={14}
-              alt="GOOD PARTY"
+              alt="GoodParty.org"
               priority
-            /><span>AI can help you create high quality personalized content for your campaign in seconds.</span>
+            />
+            <span>
+              AI can help you create high quality personalized content for your
+              campaign in seconds.
+            </span>
           </div>
         }
         image="/images/dashboard/content.svg"

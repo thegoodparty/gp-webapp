@@ -81,7 +81,7 @@ export default function Hero({
                 src="/images/black-logo.svg"
                 width={208}
                 height={40}
-                alt="GOOD PARTY"
+                alt="GoodParty.org"
               />
             </div>
             <Link id="election-position-run" href="/run-for-office">

@@ -17,7 +17,7 @@ export default function Nav() {
                   data-cy="logo"
                   width={30}
                   height={24}
-                  alt="GOOD PARTY"
+                  alt="GoodParty.org"
                   priority
                 />
               </Link>

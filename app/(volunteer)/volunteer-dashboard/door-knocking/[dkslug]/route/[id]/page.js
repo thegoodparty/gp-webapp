@@ -23,7 +23,7 @@ async function fetchRoute(id, dkSlug) {
 }
 
 const meta = pageMetaData({
-  title: 'Volunteer Route | GOOD PARTY',
+  title: 'Volunteer Route | GoodParty.org',
   description: 'Volunteer Route',
   slug: '/volunteer-dashboard/door-knocking/route',
 });

@@ -6,7 +6,7 @@ export default function JsonLdSchema() {
       item={{
         '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: 'Good Party',
+        name: 'GoodParty.org',
         legalName: 'Good Party LLC',
         url: 'https://goodparty.org',
         logo: 'https://goodparty.org/images/black-logo.svg',

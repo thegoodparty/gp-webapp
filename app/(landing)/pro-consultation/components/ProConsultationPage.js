@@ -19,7 +19,7 @@ const points = [
   {
     title: 'Premium Support + Next Steps',
     subTitle:
-      "How we'll give you 1-on-1 support throughout your campaign, payment details, and getting started with Good Party Pro.",
+      "How we'll give you 1-on-1 support throughout your campaign, payment details, and getting started with GoodParty.org Pro.",
   },
 ];
 
@@ -29,7 +29,7 @@ export default function ProConsultationPage() {
       <div className="col-span-12 md:col-span-6 bg-indigo-50 h-full flex justify-end">
         <div className="max-w-[640px] md:w-[50vw] pr-4 lg:pr-20 pl-4 xl:pl-0 pb-12">
           <h1 className="mt-16 lg:mt-24 font-semibold text-4xl ">
-            Learn more about Good Party Pro
+            Learn more about GoodParty.org Pro
           </h1>
           <Image
             src={peopleImg}

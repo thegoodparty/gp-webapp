@@ -96,9 +96,9 @@ export default function PledgeStep({ campaign, pledge, step }) {
 
   return (
     <div>
-      <H1 className="py-10 text-center">Good Party User Agreement</H1>
+      <H1 className="py-10 text-center">GoodParty.org User Agreement</H1>
       <Body1 className="text-center mb-10">
-        I order to use Good Party tools you must Accept each part of our user
+        I order to use GoodParty.org tools you must Accept each part of our user
         agreement confirming that you will run an Independent, People Powered,
         Anti-corruption campaign that adheres to our terms of service.
       </Body1>
@@ -129,12 +129,12 @@ export default function PledgeStep({ campaign, pledge, step }) {
                     >
                       minimum standard of civility
                     </a>{' '}
-                    and acknowledge that Good Party maintains the right to
-                    withdraw its Good Party Certified endorsement and remove me
-                    from the site if I actively engage in such conduct.
+                    and acknowledge that GoodParty.org maintains the right to
+                    withdraw its GoodParty.org Certified endorsement and remove
+                    me from the site if I actively engage in such conduct.
                   </li>
                   <li>
-                    I agree to the Good Party{' '}
+                    I agree to the GoodParty.org{' '}
                     <a className="underline" href="/privacy" target="_blank">
                       privacy policy
                     </a>{' '}
@@ -148,10 +148,10 @@ export default function PledgeStep({ campaign, pledge, step }) {
                     </a>
                   </li>
                   <li>
-                    I acknowledge Good Party maintains the right to remove users
-                    from the platform and withdraw its Good Party certification
-                    and endorsement if users engage in conduct that violates
-                    these terms of service.
+                    I acknowledge GoodParty.org maintains the right to remove
+                    users from the platform and withdraw its GoodParty.org
+                    certification and endorsement if users engage in conduct
+                    that violates these terms of service.
                   </li>
                 </ul>
               )}

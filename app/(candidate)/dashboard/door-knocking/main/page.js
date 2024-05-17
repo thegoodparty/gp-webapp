@@ -19,7 +19,7 @@ async function fetchDkCampaigns() {
 }
 
 const meta = pageMetaData({
-  title: 'Door Knocking | GOOD PARTY',
+  title: 'Door Knocking | GoodParty.org',
   description: 'Door Knocking.',
   slug: '/dashboard/door-knocking/main',
 });

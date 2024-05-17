@@ -19,9 +19,9 @@ function Hero() {
         </span>
       </h1>
       <div className={styles.content}>
-        Good Party is <strong>not a political party</strong>. We build tools to
-        change the rules, and are mobilizing a movement of people to disrupt the
-        corrupt two-party system.
+        GoodParty.org is <strong>not a political party</strong>. We build tools
+        to change the rules, and are mobilizing a movement of people to disrupt
+        the corrupt two-party system.
         <br />
         <br />
         Our team is 100% remote, with diverse backgrounds and political beliefs.

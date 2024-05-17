@@ -9,7 +9,7 @@ import EditContentPage from './components/EditContentPage';
 // key = camel case
 
 const meta = pageMetaData({
-  title: 'Campaign Content | GOOD PARTY',
+  title: 'Campaign Content | GoodParty.org',
   description: 'Campaign Content',
   //   slug: '/dashboard/content',
 });

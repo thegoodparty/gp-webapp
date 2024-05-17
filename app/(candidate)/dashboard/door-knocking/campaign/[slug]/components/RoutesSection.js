@@ -62,7 +62,7 @@ export default function RoutesSection(props) {
             We generate 10 routes at a time.
           </Body1>
           <Body2 className="text-cyan-900 mt-1">
-            Good Party purchases route data so you don&apos;t have to. Route
+            GoodParty.org purchases route data so you don&apos;t have to. Route
             information is provided in increments to limit our upfront spending.
           </Body2>
         </div>

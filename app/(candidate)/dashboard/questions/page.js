@@ -8,7 +8,7 @@ import {
 } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
-  title: 'Additional Questions | GOOD PARTY',
+  title: 'Additional Questions | GoodParty.org',
   description: 'Additional Questions',
   slug: '/dashboard/questions',
 });

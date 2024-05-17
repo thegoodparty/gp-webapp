@@ -5,7 +5,7 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs';
 
 export default function FaqsArticlePage({ article }) {
   const breadcrumbsLinks = [
-    { href: '/', label: 'Good Party' },
+    { href: '/', label: 'GoodParty.org' },
     {
       href: '/faqs',
       label: 'Frequently asked questions',

@@ -28,7 +28,7 @@ const content = [
   {
     title: 'General Compliance',
     description:
-      'The Data User certifies to use any voter file data provided by Good Party LLC in accordance with all applicable federal, state, and local laws, including statutory, regulatory, and common law governing the use of voter file data in the relevant jurisdictions.',
+      'The Data User certifies to use any voter file data provided by GoodParty.org LLC in accordance with all applicable federal, state, and local laws, including statutory, regulatory, and common law governing the use of voter file data in the relevant jurisdictions.',
   },
   {
     title: 'Specific Uses',
@@ -53,12 +53,12 @@ const content = [
   {
     title: 'Prohibited Uses',
     description:
-      'The Data User ensures that no data supplied by Good Party LLC will be used for any purposes that are immoral or illegal.',
+      'The Data User ensures that no data supplied by GoodParty.org LLC will be used for any purposes that are immoral or illegal.',
   },
   {
     title: 'No Warranty',
     description:
-      'Good Party LLC disclaims all express or implied warranties regarding the accuracy, reliability, utility, or completeness of the voter file data, which is provided on an "AS IS" basis.',
+      'GoodParty.org LLC disclaims all express or implied warranties regarding the accuracy, reliability, utility, or completeness of the voter file data, which is provided on an "AS IS" basis.',
   },
   {
     title: 'Disclaimer of Implied Warranties',
@@ -73,12 +73,12 @@ const content = [
   {
     title: 'Indemnification',
     description:
-      'The Data User shall defend, indemnify, and hold harmless Good Party LLC and its affiliates, directors, officers, employees, and agents from all claims, expenses, attorneys fees, and court costs arising from the use of the voter file data.',
+      'The Data User shall defend, indemnify, and hold harmless GoodParty.org LLC and its affiliates, directors, officers, employees, and agents from all claims, expenses, attorneys fees, and court costs arising from the use of the voter file data.',
   },
   {
     title: 'Ownership',
     description:
-      'The data downloaded is the exclusive property of L2 INC., with Good Party LLC acting as a licensee.',
+      'The data downloaded is the exclusive property of L2 INC., with GoodParty.org LLC acting as a licensee.',
   },
   {
     title: 'License Grant',
@@ -88,7 +88,7 @@ const content = [
   {
     title: 'Compliance with Privacy Requests',
     description:
-      "The Data User acknowledges that legal privacy requirements may compel Good Party LLC to remove identifying information from its records and to share such deletion requests with the Data User. The Data User agrees to comply promptly with the removal of relevant records from their licensed copy of Good Party's data as mandated under this agreement.",
+      "The Data User acknowledges that legal privacy requirements may compel GoodParty.org LLC to remove identifying information from its records and to share such deletion requests with the Data User. The Data User agrees to comply promptly with the removal of relevant records from their licensed copy of GoodParty.org's data as mandated under this agreement.",
   },
   {
     title: 'Termination',

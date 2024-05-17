@@ -14,13 +14,13 @@ const cards = [
   },
   {
     content:
-      "One really easy way [to help] is to go to Good Party's [website]. That's a great way to reach out to the community and be supportive that way.",
+      "One really easy way [to help] is to go to GoodParty.org's [website]. That's a great way to reach out to the community and be supportive that way.",
     name: 'Lisa Williams, Tennessee',
     image: lisaImg,
   },
   {
     content:
-      'I really identify with the movement Good Party is catalyzing and I really want to be a part of making a change and fighting for more access for voters.',
+      'I really identify with the movement GoodParty.org is catalyzing and I really want to be a part of making a change and fighting for more access for voters.',
     name: 'Desyiah L., Colorado',
     image: desyiahImg,
   },
@@ -41,7 +41,7 @@ export default function FromCommunity() {
                 height={250}
               />
               <h2 className=" text-6xl font-semibold mt-6 mb-12">
-                From Good Party&apos;s community
+                From GoodParty.org&apos;s community
               </h2>
               <CTA id="from community" />
             </div>

@@ -1,9 +1,9 @@
-<img src="https://assets.goodparty.org/share.jpg" alt="Good Party" align="center" />
+<img src="https://assets.goodparty.org/share.jpg" alt="GoodParty.org" align="center" />
 
 <br />
 <br />
 <div align="center">
-  <h1>Good Party Webapp</h1>
+  <h1>GoodParty.org Webapp</h1>
 </div>
 <div align="center"><strong>Website:</strong> <a href="https://goodparty.org">https://goodparty.org</a></div>
 

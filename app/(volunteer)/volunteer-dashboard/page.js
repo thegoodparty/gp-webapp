@@ -3,7 +3,7 @@ import VolunteerDashboardPage from './dashboardComponents/VolunteerDashboardPage
 import volunteerAccess from './shared/volunteerAccess';
 
 const meta = pageMetaData({
-  title: 'Volunteer Dashboard | GOOD PARTY',
+  title: 'Volunteer Dashboard | GoodParty.org',
   description: 'Volunteer Dashboard',
   slug: '/volunteer-dashboard',
 });

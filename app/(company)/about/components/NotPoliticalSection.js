@@ -27,7 +27,7 @@ const NotPoliticalSection = () => (
           <br />a political party.
         </h2>
         <p className="font-sfpro text-gray-600 font-normal leading-6 mb-6 md:mb-16">
-          Good Party is not a political party. We provide the structure,
+          GoodParty.org is not a political party. We provide the structure,
           grassroots support, and tools to make it possible to run a winning
           campaign without the baggage and habits of the two major parties.
           We’re organizing the 135 million of us without a political home to

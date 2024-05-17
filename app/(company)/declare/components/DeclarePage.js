@@ -8,7 +8,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
     {
       key: 't1',
       content:
-        'When in the course of human events it becomes necessary for people to have a Good Party, we need to ditch the two-party system. We hold these truths to be self-evident, that the political duopoly sucks, and that we truly deserve real Independent choices on the ballot. That we are endowed with certain unalienable rights to political representatives who are Honest, Independent, and People-Powered.',
+        'When in the course of human events it becomes necessary for people to have a GoodParty.org, we need to ditch the two-party system. We hold these truths to be self-evident, that the political duopoly sucks, and that we truly deserve real Independent choices on the ballot. That we are endowed with certain unalienable rights to political representatives who are Honest, Independent, and People-Powered.',
       type: 'normal',
     },
     {
@@ -64,7 +64,7 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
                 className="mr-3"
                 priority
               />
-              <H1>GOOD PARTY Declaration of Independence</H1>
+              <H1>GoodParty.org Declaration of Independence</H1>
             </div>
             <div className="flex flex-col justify-center md:items-center">
               {content.map((line) => (

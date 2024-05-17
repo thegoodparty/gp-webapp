@@ -47,7 +47,7 @@ const Hero = () => {
               <div className="lg:hidden">
                 <SocialSection />
               </div>
-              Good Party is <strong>not a political party</strong>, we are a
+              GoodParty.org is <strong>not a political party</strong>, we are a
               platform for voters to find results-driven, independent and third
               party candidates from across the political spectrum.
             </div>

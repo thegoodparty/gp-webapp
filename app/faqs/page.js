@@ -4,8 +4,8 @@ import FaqsPage from './components/FaqsPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'FAQs | GOOD PARTY',
-  description: 'Frequently Asked Questions about GOOD PARTY.',
+  title: 'FAQs | GoodParty.org',
+  description: 'Frequently Asked Questions about GoodParty.org.',
   slug: '/faqs',
 });
 export const metadata = meta;

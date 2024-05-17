@@ -8,19 +8,19 @@ const people = [
   {
     title: 'Discord superstar',
     name: 'Sal Davis',
-    desc: "Sal Davis, from Atlanta, stands out in Good Party's Discord server as a founding member who actively recruits other to the community and meaningfully contributes to group discussions. Previously skeptical of politics, she leverages Good Party's community to take positive civic actions, embodying the community's hopeful spirit and commitment to democracy reform.",
+    desc: "Sal Davis, from Atlanta, stands out in GoodParty.org's Discord server as a founding member who actively recruits other to the community and meaningfully contributes to group discussions. Previously skeptical of politics, she leverages GoodParty.org's community to take positive civic actions, embodying the community's hopeful spirit and commitment to democracy reform.",
     image: salImg,
   },
   {
     title: 'Victory showcase',
     name: 'Terry Vo',
-    desc: "Terry won Nashville's three way District 17 Metro Council race with 53.78% votes, backed by Good Party's resources and volunteers. An advocate for community-driven change, Vo stresses the need for diverse leadership: \"If you don't see yourself leading, take that seat.\"",
+    desc: "Terry won Nashville's three way District 17 Metro Council race with 53.78% votes, backed by GoodParty.org's resources and volunteers. An advocate for community-driven change, Vo stresses the need for diverse leadership: \"If you don't see yourself leading, take that seat.\"",
     image: victoriaImg,
   },
   {
     title: 'Volunteer Highlight:',
     name: 'Kieryn McCann',
-    desc: "From McPherson, Kansas, Kieryn significantly impacted over 313 Nashville voters through phone, text, and social media outreach. Inspired by finding Good Party on TikTok, Kieran is now running for office, exemplifying Good Party's civic values.",
+    desc: "From McPherson, Kansas, Kieryn significantly impacted over 313 Nashville voters through phone, text, and social media outreach. Inspired by finding GoodParty.org on TikTok, Kieran is now running for office, exemplifying GoodParty.org's civic values.",
     image: kierynImg,
   },
 ];

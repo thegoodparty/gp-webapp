@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
-  title: 'Campaign Plan | GOOD PARTY',
+  title: 'Campaign Plan | GoodParty.org',
   description: 'Campaign Plan',
   slug: '/dashboard/plan',
 });

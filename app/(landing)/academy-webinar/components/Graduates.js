@@ -7,9 +7,7 @@ import MapImg from 'public/images/landing-pages/map.png';
 import Body1 from '@shared/typography/Body1';
 import { BiSolidQuoteAltRight } from 'react-icons/bi';
 import WarningButton from '@shared/buttons/WarningButton';
-import {
-  AcademyModalSignUpButton
-} from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const graduates = [
   {
@@ -20,7 +18,7 @@ const graduates = [
   {
     name: 'Breanna - Startup Founder, TN',
     img: BreannaImg,
-    desc: "Good Party Academy is a good place to go if you've been thinking about running for office, you're curious about it, or if you want to be supportive of those that will run outside the two-party system. It's a great place to start and win.",
+    desc: "GoodParty.org Academy is a good place to go if you've been thinking about running for office, you're curious about it, or if you want to be supportive of those that will run outside the two-party system. It's a great place to start and win.",
   },
   {
     name: 'Carlos - Regulatory Writer, TN',
@@ -95,14 +93,16 @@ export default function Graduates({ content }) {
               />
               <MarketingH2 className="my-12">Join our community</MarketingH2>
               <Body1 className="mb-12">
-                Good Party is open to everyone from all walks of life. The
+                GoodParty.org is open to everyone from all walks of life. The
                 program is built for people eager to serve their community
                 independent of partisanship and special interests. Join up to
                 meet people from all over the political spectrum passionate
                 about building community power!
               </Body1>
               <AcademyModalSignUpButton>
-                <WarningButton id="graduate-cta">Sign Up For Free</WarningButton>
+                <WarningButton id="graduate-cta">
+                  Sign Up For Free
+                </WarningButton>
               </AcademyModalSignUpButton>
             </div>
             <div className="col-span-12 md:col-span-6">

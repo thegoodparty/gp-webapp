@@ -4,7 +4,7 @@ export default function TeamHero() {
   return (
     <section className="bg-secondary-light px-4 py-8 font-medium lg:p-24 lg:text-center">
       <h1 className="text-5xl leading-tight lg:text-8xl lg:leading-tight">
-        Who is Good Party?
+        Who is GoodParty.org?
       </h1>
       <p className="text-2xl mb-3 lg:text-4xl lg:leading-tight">
         We are a team of organizers, technologists, creators, and citizens with

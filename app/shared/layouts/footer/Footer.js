@@ -63,7 +63,7 @@ export default function Footer() {
               data-cy="logo"
               width={175}
               height={32}
-              alt="GOOD PARTY"
+              alt="GoodParty.org"
             />
             <div
               className="font-sfpro font-normal text-slate-200 text-[16px] leading-[24px] mt-4 max-w-lg"
@@ -90,7 +90,7 @@ export default function Footer() {
               className="font-sfpro text-start lg:text-left text-slate-200"
               data-cy="footer-copyright"
             >
-              Copyright &copy; {year} Good Party. All rights reserved. &nbsp;
+              Copyright &copy; {year} GoodParty.org. All rights reserved. &nbsp;
               <Link
                 href="/privacy"
                 data-cy="footer-privacy-link"

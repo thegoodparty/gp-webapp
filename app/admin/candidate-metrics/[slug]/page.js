@@ -22,7 +22,7 @@ async function fetchAdminUpdateHistory(slug) {
 }
 
 const meta = pageMetaData({
-  title: 'Candidate Metrics | GOOD PARTY',
+  title: 'Candidate Metrics | GoodParty.org',
   description: 'Admin Candidate Metrics',
   slug: '/admin/candidate-metrics',
 });

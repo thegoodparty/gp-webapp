@@ -55,7 +55,7 @@ export const FOOTER_COLUMNS = [
         id: 'footer-campaign-office',
       },
       {
-        label: 'Good Party Academy',
+        label: 'GoodParty.org Academy',
         link: '/academy',
         id: 'footer-campaign-academy',
       },

@@ -10,7 +10,7 @@ const sections = [
   {
     name: 'Peter H. - Independent',
     title: 'Social Impact Consultant',
-    subtitle: 'Good Party Academy Graduate',
+    subtitle: 'GoodParty.org Academy Graduate',
     description:
       "My takeaway was “I could probably shake that many hands!” it's within reach, I could represent my community, my neighborhood. It's not a moonshot.",
     img: '/images/homepage/peter.jpg',
@@ -18,15 +18,15 @@ const sections = [
   {
     name: 'Chaz M. - Independent',
     title: 'Firefighter',
-    subtitle: 'Good Party Academy Graduate',
+    subtitle: 'GoodParty.org Academy Graduate',
     description:
-      "With where Good Party's AI is today, you could [run for office] today… my aha moment was how powerful the software is. And it's free!",
+      "With where GoodParty.org's AI is today, you could [run for office] today… my aha moment was how powerful the software is. And it's free!",
     img: '/images/homepage/chaz.jpg',
   },
   {
     title: 'Former candidate for Maine House ',
     name: 'Anne G. - Independent',
-    subtitle: 'Good Party Certified',
+    subtitle: 'GoodParty.org Certified',
     description:
       'As an Indie candidate without a party organization it meant a lot to me to have someone working hard to help me reach younger voters.',
     img: '/images/homepage/anne.jpg',
@@ -104,7 +104,7 @@ export default function ToolsSection() {
                 width="90"
                 height="90"
                 className="ml-12"
-                alt="Good Party"
+                alt="GoodParty.org"
               />
             </div>
           </div>

@@ -16,9 +16,9 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Work with us | GOOD PARTY',
+  title: 'Work with us | GoodParty.org',
   description:
-    'Good Party is building amazing, open-source social tools that empower the creative community to mobilize digital natives and have millions of people vote differently.',
+    'GoodParty.org is building amazing, open-source social tools that empower the creative community to mobilize digital natives and have millions of people vote differently.',
   slug: '/work-with-us',
 });
 export const metadata = meta;

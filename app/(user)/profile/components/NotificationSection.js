@@ -41,7 +41,7 @@ const fields = [
   {
     key: 'marketingEmails',
     label: 'Marketing Emails',
-    subTitle: 'Get marketing emails from Good Party',
+    subTitle: 'Get marketing emails from GoodParty.org',
   },
   {
     key: 'textNotification',

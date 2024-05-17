@@ -38,7 +38,7 @@ const fields = [
   {
     key: 'sms_opt_in_out',
     label:
-      'I would like to receive text messages about Good Party, opportunities to get involved, and appointment reminders. You will receive no more than 1 message per day and can unsubscribe at any time.',
+      'I would like to receive text messages about GoodParty.org, opportunities to get involved, and appointment reminders. You will receive no more than 1 message per day and can unsubscribe at any time.',
     type: 'checkbox',
     columns: 12,
   },

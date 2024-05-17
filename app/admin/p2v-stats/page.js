@@ -3,7 +3,7 @@ import P2VStatsPage from './components/P2VStatsPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'P2V Stats | GOOD PARTY',
+  title: 'P2V Stats | GoodParty.org',
   description: 'P2V Stats',
   slug: '/admin/p2v-stats',
 });

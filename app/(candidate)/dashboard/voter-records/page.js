@@ -5,7 +5,7 @@ import VoterRecordsPage from './components/VoterRecordsPage';
 import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
-  title: 'Voter Records | GOOD PARTY',
+  title: 'Voter Records | GoodParty.org',
   description: 'Voter Records',
   slug: '/dashboard/voter-records',
 });

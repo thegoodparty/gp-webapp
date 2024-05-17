@@ -134,9 +134,9 @@ export default function TempScript(props) {
         <br />
         Thanks for your time! Here are some stickers. This is the symbol we are
         using to signal that people are over the two-party system. It has our
-        website and a QR code for more about Good Party and the ways we support
-        independent candidates. I am going to leave you enough to share a few
-        with friends if you like what you see! Have a wonderful day!
+        website and a QR code for more about GoodParty.org and the ways we
+        support independent candidates. I am going to leave you enough to share
+        a few with friends if you like what you see! Have a wonderful day!
         <br />
         <br />
         <strong>Note for Team:</strong>

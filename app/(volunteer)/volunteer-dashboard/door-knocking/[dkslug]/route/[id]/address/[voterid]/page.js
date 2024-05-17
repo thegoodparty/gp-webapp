@@ -39,7 +39,7 @@ async function fetchSurvey(routeId, voterId) {
 }
 
 const meta = pageMetaData({
-  title: 'Volunteer Route - address | GOOD PARTY',
+  title: 'Volunteer Route - address | GoodParty.org',
   description: 'Volunteer Route- address.',
   slug: '/volunteer-dashboard/door-knocking/route',
 });

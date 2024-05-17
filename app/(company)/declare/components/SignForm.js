@@ -91,7 +91,7 @@ export default function SignatureForm({
                 height={25}
                 className="mr-3"
               />
-              <p className="text-xl font-bold">GOOD PARTY</p>
+              <p className="text-xl font-bold">GoodParty.org</p>
             </div>
           </div>
           <div>

@@ -23,14 +23,14 @@ const Funding = () => (
     />
     <div className="px-4 py-8 lg:p-24 lg:max-w-[812px]">
       <h3 className="text-4xl leading-tight mb-4 lg:text-6xl">
-        The funding behind Good Party
+        The funding behind GoodParty.org
       </h3>
       <p className="text-xl mb-8 text-gray-600 mb-8 lg:text-2xl  font-medium">
-        Good Party is a Public Benefit Company receiving its seed funding from
-        our founder, Farhad Mohit, a serial entrepreneur and full-time volunteer
-        for the movement. We’re neither affiliated with nor funded by any
-        outside political party, special interest group, Super PAC, non-profit,
-        NGO, or advocacy group.
+        GoodParty.org is a Public Benefit Company receiving its seed funding
+        from our founder, Farhad Mohit, a serial entrepreneur and full-time
+        volunteer for the movement. We’re neither affiliated with nor funded by
+        any outside political party, special interest group, Super PAC,
+        non-profit, NGO, or advocacy group.
       </p>
       <Link href="/about">
         <SecondaryButton

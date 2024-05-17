@@ -7,7 +7,7 @@ import CalendarIframe from './CalendarIframe';
 
 const points = [
   {
-    title: 'You + Good Party',
+    title: 'You + GoodParty.org',
     subTitle:
       "We'll tell you more about our mission and the plan behind the scenes. We'll learn about your background, skills, and available time.",
   },
@@ -42,7 +42,7 @@ export default function InfoSessionPage() {
             <span role="img" aria-label="Handshake">
               🤝
             </span>{' '}
-            Good Party
+            GoodParty.org
           </h2>
           <div className="px-5">
             {points.map((point) => (

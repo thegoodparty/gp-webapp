@@ -9,7 +9,7 @@ import { getServerUser } from 'helpers/userServerHelper';
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
-  title: 'Campaign Content | GOOD PARTY',
+  title: 'Campaign Content | GoodParty.org',
   description: 'Campaign Content',
   slug: '/dashboard/content',
 });

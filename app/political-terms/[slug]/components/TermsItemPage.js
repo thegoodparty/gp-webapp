@@ -10,7 +10,7 @@ import Banner from '/app/blog/article/[slug]/components/Banner';
 export default function TermsItemPage({ item, items, activeLetter }) {
   const letter = activeLetter;
   const breadcrumbsLinks = [
-    { href: '/', label: 'Good Party' },
+    { href: '/', label: 'GoodParty.org' },
 
     {
       href: '/political-terms',

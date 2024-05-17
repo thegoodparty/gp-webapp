@@ -16,7 +16,7 @@ const MoreQuestions = () => (
         priority
       />
       <h2 className="text-center text-4xl font-medium leading-tight mb-12">
-        More questions about Good Party?
+        More questions about GoodParty.org?
       </h2>
       <div className="grid grid-cols-2 gap-4">
         <Link className="col-span-2 md:col-span-1" href="/faqs">

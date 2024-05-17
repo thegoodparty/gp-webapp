@@ -18,9 +18,9 @@ export default function AvatarWithTracker(props) {
           }
         >
           <div className="max-w-md">
-            This meter offers Good Party&apos;s latest projections of the number
-            of likely votes a candidate would get if the elections was held
-            today, and how many votes needed to win on election day. We
+            This meter offers GoodParty.org&apos;s latest projections of the
+            number of likely votes a candidate would get if the elections was
+            held today, and how many votes needed to win on election day. We
             continuously update our projections using a range of data sources
             including polling, market signals and previous election data.
           </div>

@@ -7,7 +7,7 @@ import CalendarIframe from './CalendarIframe';
 
 const points = [
   {
-    title: 'You + Good Party',
+    title: 'You + GoodParty.org',
     subTitle:
       "We'll learn about what you're running or thinking about running for and tell you about our mission.",
   },
@@ -29,8 +29,8 @@ export default function GetDemoPage() {
       <div className="col-span-12 md:col-span-6 bg-indigo-50 h-full flex justify-end">
         <div className="max-w-[640px] md:w-[50vw] pr-4 lg:pr-20 pl-4 xl:pl-0 pb-12">
           <h1 className="mt-16 lg:mt-24 font-semibold text-4xl ">
-            Get a demo of Good Party&apos;s free tools for independent and 3rd
-            party candidates
+            Get a demo of GoodParty.org&apos;s free tools for independent and
+            3rd party candidates
           </h1>
           <Image
             src={peopleImg}

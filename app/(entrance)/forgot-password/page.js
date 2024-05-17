@@ -4,8 +4,8 @@ import ForgotPasswordPage from './components/ForgotPasswordPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Forgot Password | GOOD PARTY',
-  description: 'Password retrieval for Good Party.',
+  title: 'Forgot Password | GoodParty.org',
+  description: 'Password retrieval for GoodParty.org.',
   slug: '/forgot-password',
 });
 export const metadata = meta;

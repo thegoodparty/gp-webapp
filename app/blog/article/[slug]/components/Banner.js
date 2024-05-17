@@ -26,7 +26,7 @@ export default function Banner({ banner, idIndex = '1' }) {
         src="/images/black-logo.svg"
         width={131}
         height={15}
-        alt="GOOD PARTY"
+        alt="GoodParty.org"
       />
       <div className="grid grid-cols-12 gap3 lg:items-stretch">
         <div className="col-span-12 lg:col-span-6">
@@ -47,9 +47,7 @@ export default function Banner({ banner, idIndex = '1' }) {
                     </BlackButton>
                   </a>
                 ) : (
-                  <Link
-                    id="glossary-learn-more"
-                    href={buttonLink}>
+                  <Link id="glossary-learn-more" href={buttonLink}>
                     <BlackButton>
                       <strong>{buttonLabel}</strong>
                     </BlackButton>

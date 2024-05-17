@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
   const sectionTitle = sections[sectionIndex]?.fields?.title || '';
 
   const meta = pageMetaData({
-    title: `${sectionTitle} | Good Party Blog`,
+    title: `${sectionTitle} | GoodParty.org Blog`,
     description: `Good Part Blog ${sectionTitle} Section`,
     slug: `/blog/section/${slug}`,
   });

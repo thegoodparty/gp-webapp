@@ -21,7 +21,7 @@ async function fetchDkCampaign(slug) {
 }
 
 const meta = pageMetaData({
-  title: 'Door Knocking Campaign | GOOD PARTY',
+  title: 'Door Knocking Campaign | GoodParty.org',
   description: 'Door Knocking Campaign',
   slug: '/dashboard/door-knocking/campaign/[slug]',
 });

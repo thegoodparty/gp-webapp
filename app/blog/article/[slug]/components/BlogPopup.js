@@ -29,7 +29,8 @@ export default function BlogPopup() {
       closeCallback={() => {
         setShowModal(false);
         setCookie('blogPopup', 'closed', 1);
-      }}>
+      }}
+    >
       <div className=" w-[90vw] max-w-[420px] mx-auto">
         <Image
           src="/images/heart-hologram.svg"
@@ -39,7 +40,7 @@ export default function BlogPopup() {
         />
 
         <h2 className="text-2xl font-black my-1">
-          Stay up to date with Good Party
+          Stay up to date with GoodParty.org
         </h2>
 
         <SignupForm

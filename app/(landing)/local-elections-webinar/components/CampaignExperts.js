@@ -3,7 +3,7 @@ import { ExpertCard } from './ExpertCard';
 const EXPERTS = [
   {
     name: 'Jared Alper',
-    role: 'Good Party: Politics',
+    role: 'GoodParty.org: Politics',
     desc: 'Jared is a political strategist who has managed or served in senior strategic roles on over a dozen campaigns for US Senate, US House, state legislative and local offices across the United States.',
     img: {
       src: '/images/landing-pages/academy-jared.png',
@@ -12,7 +12,7 @@ const EXPERTS = [
   },
   {
     name: 'Rob Booth',
-    role: 'Good Party: Mobilization',
+    role: 'GoodParty.org: Mobilization',
     desc: "Rob has nearly 20 years of experience running and winning over 150 electoral, legislative, and ballot campaigns. He has organized everything from local races to presidential campaigns, helped pioneer deep-canvassing during the marriage equality movement, and helped build RepresentUs' volunteer network from the ground up. Rob also led several successful ballot measure efforts as the National Field Director at RepresentUs.",
     img: {
       src: '/images/landing-pages/academy-rob.png',

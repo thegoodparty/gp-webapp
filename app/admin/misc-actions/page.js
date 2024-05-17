@@ -6,7 +6,7 @@ import MiscActionsPage from './components/MiscActionsPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Misc Actions | GOOD PARTY',
+  title: 'Misc Actions | GoodParty.org',
   description: 'Misc Actions',
   slug: '/admin/misc-actions',
 });

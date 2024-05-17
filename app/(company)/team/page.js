@@ -6,9 +6,9 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
 const meta = pageMetaData({
-  title: 'Team | GOOD PARTY',
+  title: 'Team | GoodParty.org',
   description:
-    "Good Party's core team are the people working full-time, part-time, or as dedicated volunteer contributors on our mission of making people matter more than money in our democracy.",
+    "GoodParty.org's core team are the people working full-time, part-time, or as dedicated volunteer contributors on our mission of making people matter more than money in our democracy.",
   slug: '/team',
 });
 export const metadata = meta;

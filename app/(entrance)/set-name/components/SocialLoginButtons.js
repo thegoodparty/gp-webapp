@@ -76,7 +76,7 @@ export default function SocialLoginButtons() {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Welcome back to Good Party!',
+          message: 'Welcome back to GoodParty.org!',
           isError: false,
         };
       });

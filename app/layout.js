@@ -57,7 +57,8 @@ const sfPro = localFont({
 export const metadata = {
   applicationName: 'GoodParty',
   metadataBase: new URL(appBase),
-  title: 'GOOD PARTY | Free tools to change the rules and disrupt the corrupt.',
+  title:
+    'GoodParty.org | Free tools to change the rules and disrupt the corrupt.',
   description:
     "Not a political party, we're building tools to change the rules, empowering creatives to mobilize community & disrupt the corrupt two-party system. Join us!",
 };
@@ -69,7 +70,7 @@ export default function RootLayout({ children }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta property="og:site_name" content="Good Party" />
+        <meta property="og:site_name" content="GoodParty.org" />
         <meta property="og:type" content="website" />
 
         <meta property="twitter:card" content="summary_large_image" />

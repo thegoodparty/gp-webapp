@@ -13,9 +13,9 @@ export async function fetchGlossaryByLetter() {
 }
 
 const meta = pageMetaData({
-  title: 'Political Terms & Definitions | Good Party',
+  title: 'Political Terms & Definitions | GoodParty.org',
   description:
-    'Political terms and definitions, elevate your political game with our easy to use political database at Good Party',
+    'Political terms and definitions, elevate your political game with our easy to use political database at GoodParty.org',
   slug: '/political-terms',
 });
 export const metadata = meta;

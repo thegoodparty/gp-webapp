@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
   const { content } = await fetchArticle(slug);
 
   const meta = pageMetaData({
-    title: `${content.title} | Good Party`,
+    title: `${content.title} | GoodParty.org`,
     description: content.summary,
     image: content.mainImage && `https:${content.mainImage.url}`,
     slug: `/blog/article/${slug}`,

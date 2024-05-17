@@ -8,7 +8,7 @@ const LEADING_ACTIVITIES = [
     icon: <LuPartyPopper />,
     title: 'Candidates',
     description:
-      'Good Party supports candidates in all 50 states from across the ideological spectrum. All agree to three criteria: They are neither Democrats nor Republicans, they are funded by grassroots donations, and have anti-corruption reform as a pillar of their platform.',
+      'GoodParty.org supports candidates in all 50 states from across the ideological spectrum. All agree to three criteria: They are neither Democrats nor Republicans, they are funded by grassroots donations, and have anti-corruption reform as a pillar of their platform.',
     linkText: 'Learn more about our campaign tools',
     href: '/run-for-office',
   },
@@ -22,7 +22,7 @@ const LEADING_ACTIVITIES = [
   },
   {
     icon: <RiTeamLine />,
-    title: 'Good Party Team',
+    title: 'GoodParty.org Team',
     description:
       'Building the tools and infrastructure powering the movement is our full-time team. We come from a diverse range of backgrounds and political persuasions, all united by the mission to make people matter more than money in our democracy.',
     linkText: 'Join our team',

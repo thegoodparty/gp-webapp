@@ -14,7 +14,7 @@ export default function Hero() {
               width="135"
               height="135"
               className="ml-12"
-              alt="Good Party"
+              alt="GoodParty.org"
             />
           </div>
           <h1 className="text-6xl md:text-[92px] font-semibold">

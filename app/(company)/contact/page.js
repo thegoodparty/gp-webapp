@@ -4,7 +4,7 @@ import HubSpotForm from '../../shared/utils/HubSpotForm';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Contact | GOOD PARTY',
+  title: 'Contact | GoodParty.org',
   description: 'Have questions or want to get involved? Contact us.',
   slug: '/contact',
 });

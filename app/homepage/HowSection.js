@@ -15,12 +15,12 @@ export default function HowSection() {
           width="123"
           height="264"
           className="ml-12"
-          alt="Good Party"
+          alt="GoodParty.org"
         />
       </div>
       <div className="bg-indigo-50">
         <h3 className="text-[28px] md:text-[56px] font-semibold text-center pb-5 md:pb-20 pt-40 md:pt-20">
-          How Good Party works
+          How GoodParty.org works
         </h3>
         <div className="grid grid-cols-12 gap-3 relative items-start lg:pb-0 mb-5 p-3">
           <div className="col-span-12 md:col-span-1 lg:col-span-2 justify-self-start md:justify-self-end items-start h-full">
@@ -69,7 +69,7 @@ export default function HowSection() {
                 width="90"
                 height="90"
                 className="ml-12"
-                alt="Good Party"
+                alt="GoodParty.org"
               />
             </div>
             <div className="w-auto ml-0 flex relative items-start">

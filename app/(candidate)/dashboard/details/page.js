@@ -9,7 +9,7 @@ import {
 } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
-  title: 'My Details | GOOD PARTY',
+  title: 'My Details | GoodParty.org',
   description: 'My details',
   slug: '/dashboard/details',
 });

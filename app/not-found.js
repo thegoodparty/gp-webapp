@@ -28,7 +28,7 @@ export default function NotFound() {
             <br />
             <br />
             It seems the page has decided to join one of the two major parties,
-            and therefore is no longer meet the standards of Good Party.
+            and therefore is no longer meet the standards of GoodParty.org.
           </Body1>
           <a href="/">
             <PrimaryButton>Back to our homepage</PrimaryButton>

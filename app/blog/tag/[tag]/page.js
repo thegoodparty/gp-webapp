@@ -26,7 +26,7 @@ export async function generateMetadata({ params }) {
   const { tagName } = await fetchArticlesByTag(tag);
 
   const meta = pageMetaData({
-    title: `${tagName} | Good Party Blog`,
+    title: `${tagName} | GoodParty.org Blog`,
     description: `Good Part Blog ${tagName} tag`,
     slug: `/blog/tag/${tag}`,
   });

@@ -7,7 +7,7 @@ import OnboardingPage from './components/OnboardingPage';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 
 const meta = pageMetaData({
-  title: 'Candidate Onboarding | GOOD PARTY',
+  title: 'Candidate Onboarding | GoodParty.org',
   description: 'Candidate Onboarding.',
   slug: '/onboarding',
 });

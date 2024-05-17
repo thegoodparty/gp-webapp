@@ -4,8 +4,8 @@ import ResetPasswordPage from './components/ResetPasswordPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Password Reset | GOOD PARTY',
-  description: 'Password reset for Good Party.',
+  title: 'Password Reset | GoodParty.org',
+  description: 'Password reset for GoodParty.org.',
   slug: '/reset-password',
 });
 export const metadata = meta;

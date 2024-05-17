@@ -36,7 +36,7 @@ const HOPE_CHANGES = [
     },
     header: 'Viable candidates',
     blurb:
-      'Good Party recruits, trains, and equips candidates with free and low-cost tools that currently only independently wealthy or partisan candidates have access to. This empowers real people to run efficient, effective, and, above all, viable campaigns.',
+      'GoodParty.org recruits, trains, and equips candidates with free and low-cost tools that currently only independently wealthy or partisan candidates have access to. This empowers real people to run efficient, effective, and, above all, viable campaigns.',
     href: '/run-for-office',
     buttonText: 'For candidates',
   },

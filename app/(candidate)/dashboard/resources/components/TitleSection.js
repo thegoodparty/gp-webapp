@@ -8,7 +8,7 @@ export default function TitleSection() {
       <div>
         <H1>Campaign Team</H1>
         <Body1 className="mt-3">
-          Good Party AI can help you create high quality content for your
+          GoodParty.org AI can help you create high quality content for your
           campaign
         </Body1>
       </div>

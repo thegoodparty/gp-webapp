@@ -27,16 +27,16 @@ export async function generateMetadata({ params }) {
   let meta;
   if (slug.length === 1) {
     meta = pageMetaData({
-      title: `Political Terms - ${slug.toUpperCase()} | GOOD PARTY`,
+      title: `Political Terms - ${slug.toUpperCase()} | GoodParty.org`,
       description:
-        'Political terms and definitions, elevate your political game with our easy to use political database at Good Party',
+        'Political terms and definitions, elevate your political game with our easy to use political database at GoodParty.org',
       slug: `/political-terms/${slug}`,
     });
   } else {
     const title = content?.title;
     meta = pageMetaData({
-      title: `${title} Meaning & Definition | Good Party`,
-      description: `${title} meaning and definition. Find 100's of terms related to the US political system at Good Party!`,
+      title: `${title} Meaning & Definition | GoodParty.org`,
+      description: `${title} meaning and definition. Find 100's of terms related to the US political system at GoodParty.org!`,
       slug: `/political-terms/${slug}`,
     });
   }

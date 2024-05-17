@@ -50,8 +50,8 @@ export default function LearnToRun({ stateName }) {
                   Learn how to run for office in {stateName}
                 </MarketingH2>
                 <Body1>
-                  Good Party Academy is your crash course for learning what it
-                  takes to run for office, from getting out the vote to
+                  GoodParty.org Academy is your crash course for learning what
+                  it takes to run for office, from getting out the vote to
                   navigating the world of campaign finance.
                 </Body1>
                 <Link
@@ -59,7 +59,9 @@ export default function LearnToRun({ stateName }) {
                   className="mt-10 block"
                   id="signup-for-academy"
                 >
-                  <WarningButton>Sign up for Good Party Academy</WarningButton>
+                  <WarningButton>
+                    Sign up for GoodParty.org Academy
+                  </WarningButton>
                 </Link>
               </div>
               <div className="col-span-12 md:col-span-6">

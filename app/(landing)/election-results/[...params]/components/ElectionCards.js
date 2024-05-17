@@ -6,14 +6,14 @@ import ElectionCard from './ElectionCard';
 const cards = [
   {
     id: '1',
-    title: 'What makes a candidate Good Party Certified?',
+    title: 'What makes a candidate GoodParty.org Certified?',
     bgColor: 'bg-secondary-light',
     content: (
       <>
         We&apos;re <strong>not a political party</strong>, but are seeking to
         replace the corrupt and ineffective two-party system with{' '}
         <strong>people-powered, independent candidates</strong>. Candidates earn
-        the Good Party Certified label when they take our pledge, in which
+        the GoodParty.org Certified label when they take our pledge, in which
         candidates agree to not run as Republicans or Democrats, raise a
         majority of their funding from real people instead of corporate
         lobbyists, and propose real solutions in the interest of their
@@ -32,8 +32,8 @@ const cards = [
     bgColor: 'bg-lime-600',
     content: (
       <>
-        Good Party is focused on helping candidates in North Carolina because it
-        is{' '}
+        GoodParty.org is focused on helping candidates in North Carolina because
+        it is{' '}
         <strong>
           one of the most independent states in the country. 36% of voters in
           the state identify with neither major political party, and 46% of

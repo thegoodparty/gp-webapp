@@ -5,8 +5,8 @@ import pageMetaData from 'helpers/metadataHelper';
 import VwoScript from '@shared/scripts/VwoScript';
 
 const meta = pageMetaData({
-  title: 'Blog | GOOD PARTY',
-  description: 'Good Party Blog',
+  title: 'Blog | GoodParty.org',
+  description: 'GoodParty.org Blog',
   slug: '/blog',
 });
 export const metadata = meta;

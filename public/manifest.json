@@ -62,8 +62,8 @@
       "purpose": "any maskable"
     }
   ],
-  "name": "GOOD PARTY",
-  "short_name": "GOOD PARTY",
+  "name": "GoodParty.org",
+  "short_name": "GoodParty.org",
   "orientation": "portrait",
   "display": "standalone",
   "start_url": "https://dev.goodparty.org/",

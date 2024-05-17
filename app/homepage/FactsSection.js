@@ -80,7 +80,7 @@ export default function FactsSection() {
             </div>
             <div className="text-[32px] font-semibold text-center w-full">
               <div className="text-gray-200">
-                Good Party is a movement bringing together
+                GoodParty.org is a movement bringing together
               </div>
               <div className="text-gray-200">
                 <span className="text-red-400">voters</span>&nbsp;and

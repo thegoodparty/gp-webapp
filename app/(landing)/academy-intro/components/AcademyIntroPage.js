@@ -7,7 +7,7 @@ import CalendarIframe from './CalendarIframe';
 
 const points = [
   {
-    title: 'You + Good Party',
+    title: 'You + GoodParty.org',
     subTitle:
       "We'll discuss your background, what you're interested in running for, and our organization's mission.",
   },
@@ -29,7 +29,8 @@ export default function AcademyIntroPage() {
       <div className="col-span-12 md:col-span-6 bg-indigo-50 h-full flex justify-end">
         <div className="max-w-[640px] md:w-[50vw] pr-4 lg:pr-20 pl-4 xl:pl-0 pb-12">
           <h1 className="mt-16 lg:mt-24 font-semibold text-4xl ">
-            Meet our team to learn about Good Party Academy and secure your spot
+            Meet our team to learn about GoodParty.org Academy and secure your
+            spot
           </h1>
           <Image
             src={jarobImg}

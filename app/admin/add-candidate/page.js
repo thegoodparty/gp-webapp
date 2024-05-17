@@ -3,7 +3,7 @@ import AddCandidatePage from './components/AddCandidatePage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Admin Candidates | GOOD PARTY',
+  title: 'Admin Candidates | GoodParty.org',
   description: 'Admin Candidates Dashboard.',
   slug: '/admin/candidates',
 });

@@ -22,8 +22,8 @@ export async function generateMetadata({ params }) {
   const { content } = await fetchArticle(id);
 
   const meta = pageMetaData({
-    title: `${content?.title} | FAQs | GOOD PARTY`,
-    description: 'Frequently Asked Questions about GOOD PARTY.',
+    title: `${content?.title} | FAQs | GoodParty.org`,
+    description: 'Frequently Asked Questions about GoodParty.org.',
     slug: `/faqs/${title}/${id}`,
   });
   return meta;

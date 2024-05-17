@@ -21,7 +21,7 @@ async function fetchRoutes(slug) {
 }
 
 const meta = pageMetaData({
-  title: 'Door Knocking | GOOD PARTY',
+  title: 'Door Knocking | GoodParty.org',
   description: 'Volunteer Door Knocking',
   slug: '/volunteer-dashboard/door-knocking',
 });

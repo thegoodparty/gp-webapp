@@ -6,9 +6,9 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
 const meta = pageMetaData({
-  title: 'AI Campaign Manager Product Tour | GOOD PARTY',
+  title: 'AI Campaign Manager Product Tour | GoodParty.org',
   description:
-    "Take a walkthrough of Good Party's flagship product, AI Campaign Manager. Learn how it helps campaigns refine their strategy, track progress, and create content to run efficient and successful campaigns.",
+    "Take a walkthrough of GoodParty.org's flagship product, AI Campaign Manager. Learn how it helps campaigns refine their strategy, track progress, and create content to run efficient and successful campaigns.",
   slug: '/product-tour',
 });
 export const metadata = meta;

@@ -6,7 +6,7 @@ import AiContentPage from './components/AiContentPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'AI Content | GOOD PARTY',
+  title: 'AI Content | GoodParty.org',
   description: 'AI Content.',
   slug: '/admin/ai-content',
 });

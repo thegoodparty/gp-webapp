@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import {
-  AcademyModalSignUpButton
-} from 'app/(landing)/academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import { AcademyModalSignUpButton } from 'app/(landing)/academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const LocalElectionsHero = () => {
   return (
@@ -28,9 +26,9 @@ const LocalElectionsHero = () => {
             priority
           />
           <p className="font-normal mb-4 lg:text-lg">
-            Join Good Party and the Forward Party to hear how it&apos;s easier than
-            you think to run for local office in 2024. You can be the type of
-            leader your community needs.
+            Join GoodParty.org and the Forward Party to hear how it&apos;s
+            easier than you think to run for local office in 2024. You can be
+            the type of leader your community needs.
           </p>
           <AcademyModalSignUpButton>
             <PrimaryButton
@@ -47,10 +45,10 @@ const LocalElectionsHero = () => {
               src="/images/heart-hologram.svg"
               height={40}
               width={40}
-              alt="Good Party Logo"
+              alt="GoodParty.org Logo"
             />
             <span className="uppercase font-bold align-middle lg:text-2xl">
-              Good Party
+              GoodParty.org
             </span>
             <span className="mx-2 font-thin align-middle lg:text-3xl">+</span>
             <Image

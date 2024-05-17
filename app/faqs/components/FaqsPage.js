@@ -3,7 +3,7 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Categories from './Categories';
 
 const breadcrumbsLinks = [
-  { href: '/', label: 'Good Party' },
+  { href: '/', label: 'GoodParty.org' },
   {
     label: 'Frequently asked questions',
   },

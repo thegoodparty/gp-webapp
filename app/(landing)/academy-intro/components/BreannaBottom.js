@@ -38,7 +38,7 @@ export default function BreannaBottom() {
         />
         <div className="ml-3">
           <div className="font-sfpro leading-relaxed">
-            Good Party Academy is a good place to go if you&apos;ve been
+            GoodParty.org Academy is a good place to go if you&apos;ve been
             thinking about running for office. It&apos;s a great place to start
             and win.
           </div>

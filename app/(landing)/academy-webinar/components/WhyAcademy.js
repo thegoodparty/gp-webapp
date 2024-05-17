@@ -3,9 +3,7 @@ import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
 import WarningButton from '@shared/buttons/WarningButton';
-import {
-  AcademyModalSignUpButton
-} from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const icons = [
   {
@@ -60,7 +58,7 @@ export default function WhyAcademy({ content }) {
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />
       <div className="bg-primary-dark text-white text-center pt-12">
         <MaxWidth>
-          <MarketingH2>Why Good Party Academy</MarketingH2>
+          <MarketingH2>Why GoodParty.org Academy</MarketingH2>
           <div className="pt-24 grid grid-cols-12 gap-3 lg:gap-10 ">
             {icons.map((icon) => (
               <div
@@ -75,7 +73,9 @@ export default function WhyAcademy({ content }) {
           </div>
           <div className="mt-16 md:mt-20 flex  justify-center">
             <AcademyModalSignUpButton>
-              <WarningButton id="why-academy-cta">Sign Up For Free</WarningButton>
+              <WarningButton id="why-academy-cta">
+                Sign Up For Free
+              </WarningButton>
             </AcademyModalSignUpButton>
           </div>
         </MaxWidth>

@@ -31,7 +31,7 @@ export default function CampaignPlanPage(props) {
     <DashboardLayout {...props}>
       <TitleSection
         title="AI Campaign Plan"
-        subtitle="Your personalized plan powered by Good Party GPT and our team of campaign experts"
+        subtitle="Your personalized plan powered by GoodParty.org GPT and our team of campaign experts"
         image="/images/dashboard/plan.svg"
         imgWidth={132}
         imgHeight={120}

@@ -19,7 +19,7 @@ async function fetchInvitations() {
 
 const meta = pageMetaData({
   title: 'Profile Settings',
-  description: 'Profile settings for Good Party.',
+  description: 'Profile settings for GoodParty.org.',
 });
 export const metadata = meta;
 

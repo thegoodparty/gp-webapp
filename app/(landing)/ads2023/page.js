@@ -2,9 +2,9 @@ import pageMetaData from 'helpers/metadataHelper';
 import AdsPage from './components/AdsPage';
 
 const meta = pageMetaData({
-  title: 'Good Party ADS 2023',
+  title: 'GoodParty.org ADS 2023',
   description:
-    'Join the community at Good Party to volunteer, connect on Discord, or run for office with our support.',
+    'Join the community at GoodParty.org to volunteer, connect on Discord, or run for office with our support.',
   slug: '/ads2023',
 });
 

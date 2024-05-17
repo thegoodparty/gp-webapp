@@ -22,7 +22,7 @@ async function fetchDkRoute(slug, id) {
 }
 
 const meta = pageMetaData({
-  title: 'Door Knocking Route | GOOD PARTY',
+  title: 'Door Knocking Route | GoodParty.org',
   description: 'Door Knocking Route',
   slug: '/dashboard/door-knocking/campaign/[slug]/route',
 });

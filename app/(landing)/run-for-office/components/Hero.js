@@ -18,7 +18,7 @@ export default function Hero() {
               Free tools and tactics for your campaign
             </h1>
             <H3>
-              Good Party helps people-powered candidates run viable campaigns
+              GoodParty.org helps people-powered candidates run viable campaigns
               with free tech, data, and insights.
             </H3>
             <div className="mt-10 flex">

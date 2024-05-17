@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   const { job } = await fetchJob(slug);
 
   const meta = pageMetaData({
-    title: `${job.title} | Good Party Jobs`,
+    title: `${job.title} | GoodParty.org Jobs`,
     description: job.descriptionPlain.slice(0, 150) + '...',
     slug: `/work-with-us/${slug}`,
   });

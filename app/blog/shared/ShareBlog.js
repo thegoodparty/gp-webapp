@@ -17,7 +17,7 @@ export default function ShareBlog() {
   const textMessageBody = `${url} ${'\n %0a'} ${'\n %0a'}${messageNoUrl}`;
 
   const emailSubject = 'Check this out';
-  const emailBody = `${messageNoUrl}%0D%0A%0D%0A${encodedUrl}%0D%0A%0D%0A GOOD PARTY%0D%0AFree software for free elections`;
+  const emailBody = `${messageNoUrl}%0D%0A%0D%0A${encodedUrl}%0D%0A%0D%0A GoodParty.org%0D%0AFree software for free elections`;
 
   let hash = '#GoodParty';
   const hashQueryTwitter = hash ? `&hashtags=${hash}` : '';

@@ -18,7 +18,7 @@ async function SocialSection() {
             src="/images/heart.svg"
             width="42"
             height="34"
-            alt="Good Party"
+            alt="GoodParty.org"
             data-cy="heart-icon"
             priority
           />

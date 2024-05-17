@@ -10,7 +10,7 @@ const points1 = [
   'Path to Victory report',
   'Consultation with a campaign manager',
   'Discord community',
-  'Good Party Academy',
+  'GoodParty.org Academy',
 ];
 
 const points2 = [

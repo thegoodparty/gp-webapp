@@ -5,7 +5,7 @@ import CampaignFundingPage from './components/CampaignFundingPage';
 import { getServerUser } from 'helpers/userServerHelper';
 
 const meta = pageMetaData({
-  title: 'Campaign Funding | GOOD PARTY',
+  title: 'Campaign Funding | GoodParty.org',
   description: 'Campaign Funding',
   slug: '/dashboard/funding',
 });

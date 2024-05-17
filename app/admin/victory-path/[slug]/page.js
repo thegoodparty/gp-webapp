@@ -21,7 +21,7 @@ export async function fetchCampaignBySlug(slug) {
 }
 
 const meta = pageMetaData({
-  title: 'Admin Path to Victory | GOOD PARTY',
+  title: 'Admin Path to Victory | GoodParty.org',
   description: 'Admin Path to Victory.',
   slug: '/admin/victory-path',
 });

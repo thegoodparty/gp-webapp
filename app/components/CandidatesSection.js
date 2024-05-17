@@ -19,7 +19,7 @@ async function CandidatesSection() {
       >
         Find{' '}
         <FaqLink articleId="5zIbKVU0wCIAszTOyogGAB">
-          Good Party Certified
+          GoodParty.org Certified
         </FaqLink>{' '}
         candidates who pledge to be{' '}
         <strong>Independent, People Powered and Anti-Corruption</strong>

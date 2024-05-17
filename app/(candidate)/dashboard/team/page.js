@@ -30,7 +30,7 @@ async function loadInvitations() {
 }
 
 const meta = pageMetaData({
-  title: 'Campaign Team | GOOD PARTY',
+  title: 'Campaign Team | GoodParty.org',
   description: 'Campaign Team',
   slug: '/dashboard/team',
 });

@@ -6,20 +6,18 @@ import Image from 'next/image';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import {
-  AcademyModalSignUpButton
-} from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
 
 const graduates = [
   {
     name: 'Carlos Rousselin',
-    desc: 'Carlos Rousselin, a pharmaceutical scientist from Nashville, Tennessee, began wondering whether he should run for local office after learning about Good Party Academy.',
+    desc: 'Carlos Rousselin, a pharmaceutical scientist from Nashville, Tennessee, began wondering whether he should run for local office after learning about GoodParty.org Academy.',
     img: CarlosImg,
     link: '/blog/article/gpa-grad-carlos-rousselin',
   },
   {
     name: 'Breanna Stott',
-    desc: 'After discovering GPA on Instagram, Stott connected with the vision of Good Party — working to make people matter more than money in our democracy.',
+    desc: 'After discovering GPA on Instagram, Stott connected with the vision of GoodParty.org — working to make people matter more than money in our democracy.',
     img: BreannaImg,
     link: '/blog/article/gpa-grad-breanna-stott',
   },
@@ -40,9 +38,9 @@ export default function GraduateSpotlight({ title, cta }) {
   const ctaButton = cta ? (
     cta
   ) : (
-      <AcademyModalSignUpButton>
-        <PrimaryButton id="spotlight-cta">Sign up for free</PrimaryButton>
-      </AcademyModalSignUpButton>
+    <AcademyModalSignUpButton>
+      <PrimaryButton id="spotlight-cta">Sign up for free</PrimaryButton>
+    </AcademyModalSignUpButton>
   );
   return (
     <section className="my-20">

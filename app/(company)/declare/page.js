@@ -25,9 +25,9 @@ async function fetchSignatures() {
 }
 
 const meta = pageMetaData({
-  title: 'Declaration of Independence | GOOD PARTY',
+  title: 'Declaration of Independence | GoodParty.org',
   description:
-    'Help us make history by signing the GOOD PARTY Declaration of Independence.',
+    'Help us make history by signing the GoodParty.org Declaration of Independence.',
   slug: '/declare',
   image: 'https://assets.goodparty.org/signature.png',
 });

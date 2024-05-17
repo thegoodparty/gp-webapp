@@ -6,7 +6,7 @@ import AdminTopIssuesPage from './components/AdminTopIssuesPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
-  title: 'Top Issues | GOOD PARTY',
+  title: 'Top Issues | GoodParty.org',
   description: 'Admin Top Issues Dashboard.',
   slug: '/admin/top-issues',
 });

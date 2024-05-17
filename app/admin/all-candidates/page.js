@@ -6,7 +6,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import AdminAllCandidatesPage from './components/AdminAllCandidatesPage';
 
 const meta = pageMetaData({
-  title: 'All Candidates | GOOD PARTY',
+  title: 'All Candidates | GoodParty.org',
   description: 'Admin all Candidates',
   slug: '/admin/candidates',
 });

@@ -21,10 +21,10 @@ export default function TermsHomePage(props) {
               Terms Glossary
             </h1>
             <div className="text-lg">
-              Good Party&apos;s Terms Glossary is a list of definitions of words
-              from the political and elections world. These terms are from an
-              independent&apos;s perspective with an eye toward reform. If you
-              have a suggestion for a new definition, send it to{' '}
+              GoodParty.org&apos;s Terms Glossary is a list of definitions of
+              words from the political and elections world. These terms are from
+              an independent&apos;s perspective with an eye toward reform. If
+              you have a suggestion for a new definition, send it to{' '}
               <a
                 href="mailto:ask@goodparty.org"
                 rel="noopener noreferrer nofollow"

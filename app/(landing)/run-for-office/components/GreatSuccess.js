@@ -22,9 +22,9 @@ export default function GreatSuccess() {
               <div className=" col-span-12 lg:col-span-9">
                 <div className="p-5 lg:p-12 text-slate-200 text-2xl h-full flex items-center">
                   <div>
-                    Running with Good Party means so many great things. It means
-                    we are going to turn out more voters and turn around our
-                    country in a way that is people-centered.
+                    Running with GoodParty.org means so many great things. It
+                    means we are going to turn out more voters and turn around
+                    our country in a way that is people-centered.
                     <div className="mt-6 text-slate-200 text-xl">
                       Terry Vo, Winner
                     </div>
@@ -44,7 +44,7 @@ export default function GreatSuccess() {
             Success stories
           </h2>
           <h3 className="text-xl lg:px-12 font-normal mt-5 mb-5 lg:mb-16 text-center">
-            Read about winners who used Good Party&apos;s tools
+            Read about winners who used GoodParty.org&apos;s tools
           </h3>
           <Graduates />
         </MaxWidth>

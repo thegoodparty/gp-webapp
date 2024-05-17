@@ -36,7 +36,7 @@ const LoadingAnimation = ({ label, fullPage = true, title }) => (
       <div>
         <Image
           src="/images/black-logo.svg"
-          alt="Good Party"
+          alt="GoodParty.org"
           data-cy="logo"
           width={174}
           height={20}
