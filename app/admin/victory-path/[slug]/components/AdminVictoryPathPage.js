@@ -147,9 +147,14 @@ export default function AdminVictoryPathPage(props) {
     if (key === 'projectedTurnout') {
       winNumber = Math.round(value * 0.51);
     }
+    let val = value;
+    if (keys[key] === 'number') {
+      val = parseInt(value);
+    }
+
     setState({
       ...state,
-      [key]: value,
+      [key]: val,
       winNumber,
     });
   };
@@ -177,13 +182,25 @@ export default function AdminVictoryPathPage(props) {
       if (!pathToVictory) {
         await sendVictoryMail(updated.slug);
       }
+      console.log('state', state);
+      console.log('pathToVictory', pathToVictory);
+      // send only the keys that changed
+      const keysToUpdate = keys.filter(
+        (key) => state[key] !== pathToVictory[key],
+      );
 
-      await updateCampaign([
-        {
-          key: 'pathToVictory',
-          value: { ...state, p2vStatus: 'Complete' },
-        },
-      ]);
+      console.log('keysToUpdate', keysToUpdate);
+      const attr = keysToUpdate.map((key) => {
+        return {
+          key: `pathToVictory.${key}`,
+          value: state[key],
+        };
+      });
+      attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
+
+      console.log('attr', attr);
+
+      await updateCampaign(attr);
 
       snackbarState.set(() => {
         return {
