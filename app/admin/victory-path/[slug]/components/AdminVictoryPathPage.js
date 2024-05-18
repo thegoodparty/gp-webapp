@@ -182,14 +182,11 @@ export default function AdminVictoryPathPage(props) {
       if (!pathToVictory) {
         await sendVictoryMail(updated.slug);
       }
-      console.log('state', state);
-      console.log('pathToVictory', pathToVictory);
       // send only the keys that changed
       const keysToUpdate = keys.filter(
         (key) => state[key] !== pathToVictory[key],
       );
 
-      console.log('keysToUpdate', keysToUpdate);
       const attr = keysToUpdate.map((key) => {
         return {
           key: `pathToVictory.${key}`,
@@ -197,8 +194,6 @@ export default function AdminVictoryPathPage(props) {
         };
       });
       attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
-
-      console.log('attr', attr);
 
       await updateCampaign(attr);
 
