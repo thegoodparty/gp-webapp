@@ -133,13 +133,10 @@ export default function AdminVictoryPathPage(props) {
   const [campaign, setCampaign] = useState(props.campaign);
   const { pathToVictory, details } = campaign;
 
-  console.log('campaign', campaign);
-
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
   });
-  console.log('state', state);
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
   );
@@ -198,7 +195,7 @@ export default function AdminVictoryPathPage(props) {
       });
       attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
 
-      await updateCampaign(attr);
+      await updateCampaign(attr, campaign.slug);
 
       snackbarState.set(() => {
         return {

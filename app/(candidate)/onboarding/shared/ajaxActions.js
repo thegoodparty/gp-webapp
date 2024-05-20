@@ -4,7 +4,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie } from 'helpers/cookieHelper';
 
-export async function updateCampaign(attr) {
+export async function updateCampaign(attr, slug) {
   try {
     if (!Array.isArray(attr) && typeof attr === 'object') {
       attr = [attr];
@@ -12,6 +12,7 @@ export async function updateCampaign(attr) {
     const api = gpApi.campaign.update;
     const payload = {
       attr,
+      slug, // admin only
     };
     return await gpFetch(api, payload);
   } catch (e) {
