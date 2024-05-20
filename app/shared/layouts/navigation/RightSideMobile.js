@@ -168,7 +168,6 @@ export default function RightSideMobile() {
                                   onClick={closeMenu}
                                 >
                                   <PurpleButton
-                                    fullWidth
                                     style={{
                                       backgroundColor: '#642EFF',
                                       color: '#FFF',

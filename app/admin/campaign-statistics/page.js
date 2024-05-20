@@ -5,12 +5,30 @@ import gpApi from 'gpApi';
 import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
 
+const stripEmptyFilters = (filters) =>
+  Object.keys(filters).reduce((acc, key) => {
+    return {
+      ...acc,
+      ...(filters[key] !== undefined && filters[key] !== ''
+        ? { [key]: filters[key] }
+        : {}),
+    };
+  }, {});
+
 const fetchCampaigns = async (filters) => {
+  const searchParams = new URLSearchParams(filters);
   const api = gpApi.campaign.list;
   const token = getServerToken();
-  const payload = { ...filters };
-  console.log('payload', payload);
-  return await gpFetch(api, payload, false, token);
+
+  return await gpFetch(
+    {
+      ...api,
+      url: `${api.url}?${searchParams.toString()}`,
+    },
+    false,
+    false,
+    token,
+  );
 };
 
 const meta = pageMetaData({
@@ -24,6 +42,8 @@ export default async function Page({ searchParams }) {
   adminAccessOnly();
 
   const {
+    state,
+    slug,
     level,
     primaryElectionDateStart,
     primaryElectionDateEnd,
@@ -33,6 +53,8 @@ export default async function Page({ searchParams }) {
   } = searchParams || {};
 
   const initialParams = {
+    state,
+    slug,
     level,
     primaryElectionDateStart,
     primaryElectionDateEnd,
@@ -40,20 +62,18 @@ export default async function Page({ searchParams }) {
     generalElectionDateEnd,
     campaignStatus,
   };
-  const isEmptyParams = Object.values(initialParams).every(
-    (val) => typeof val === 'undefined' || val === '',
+  console.log(`initialParams =>`, initialParams);
+  const paramsAreEmpty = Object.values(initialParams).every(
+    (val) => val === undefined || val === '',
   );
   let campaigns = [];
-  if (!isEmptyParams) {
-    ({ campaigns } = await fetchCampaigns(initialParams));
+  if (!paramsAreEmpty) {
+    ({ campaigns } = await fetchCampaigns(stripEmptyFilters(initialParams)));
   }
-  console.log('campaigns', campaigns);
 
   const childProps = {
     pathname: '/admin/campaign-statistics',
     title: 'Campaign Statistics',
-    initialParams,
-    isEmptyParams,
     campaigns,
   };
 

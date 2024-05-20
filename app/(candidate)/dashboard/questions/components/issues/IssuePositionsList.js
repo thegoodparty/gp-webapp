@@ -5,7 +5,7 @@ const issueAlreadySelected = (position = {}, candidatePositions = []) =>
   Boolean(
     candidatePositions.find(
       ({ position: candidatePosition = {} } = {}) =>
-        candidatePosition.id === position.id,
+        candidatePosition?.id === position?.id,
     ),
   );
 

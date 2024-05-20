@@ -3,13 +3,9 @@ import { partyResolver } from 'helpers/candidateHelper';
 import Table from '@shared/utils/Table';
 import Link from 'next/link';
 import { CSVLink } from 'react-csv';
-import { IoIosPersonAdd } from 'react-icons/io';
-import mapCampaignToCandidate from './mapCampaignToCandidate';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import WarningButton from '@shared/buttons/WarningButton';
-import { MdVisibilityOff } from 'react-icons/md';
 import { BsFiletypeCsv } from 'react-icons/bs';
 import { formatToPhone } from 'helpers/numberHelper';
 import { dateColumnSort } from 'helpers/dateColumnSort';
@@ -42,9 +38,7 @@ function mapStatus(status, isActive) {
   return 'No';
 }
 
-export default function AdminCandidatesTable(props) {
-  const { campaigns } = props;
-  console.log('campaigns table', campaigns);
+export default function AdminCandidatesTable({ campaigns }) {
   // TODO: Build this array of keys w/ an Object.keys() of the `fields` object below
   //  so that we can just manage these keys/fields in one place instead of two.
   const csvData = [
@@ -433,26 +427,7 @@ export default function AdminCandidatesTable(props) {
   return (
     <>
       <div className="text-right">
-        {/* <Link href="/admin/add-candidate">
-          <PrimaryButton size="medium">
-            <div className="font-black flex items-center">
-              <IoIosPersonAdd size={24} />{' '}
-              <div className="ml-1"> Add a candidate</div>
-            </div>
-          </PrimaryButton>
-        </Link>
-        <Link href="/admin/all-candidates" className="mx-3">
-          <WarningButton size="medium">
-            <div className="font-black flex items-center">
-              <MdVisibilityOff size={24} />{' '}
-              <div className="ml-1">All candidates</div>
-            </div>
-          </WarningButton>
-        </Link> */}
-        <CSVLink
-          data={csvData}
-          filename={`candidates-${dateUsHelper(new Date())}.csv`}
-        >
+        <CSVLink data={csvData} filename={`candidates.csv`}>
           <PrimaryButton size="medium">
             <div className="font-black flex items-center">
               <BsFiletypeCsv size={24} />

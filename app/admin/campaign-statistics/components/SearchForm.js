@@ -2,10 +2,22 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import RenderInputField from '@shared/inputs/RenderInputField';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import { flatStates } from 'helpers/statesHelper';
 
 const formFields = [
+  {
+    key: 'state',
+    label: 'State',
+    type: 'select',
+    options: flatStates,
+  },
+  {
+    key: 'slug',
+    label: 'Campaign Slug',
+    type: 'text',
+  },
   {
     key: 'level',
     label: 'Race Level',
@@ -40,80 +52,72 @@ const formFields = [
   },
 ];
 
-const urlWithQuery = (baseUrl, query) => {
-  let url = `${baseUrl}?`;
-  for (const key in query) {
-    if ({}.hasOwnProperty.call(query, key)) {
-      url += `${key}=${query[key]}&`;
-    }
+const URLSearchParamsToObject = (params) => {
+  const obj = {};
+  for (const [key, value] of params) {
+    obj[key] = Object.hasOwn(obj, key)
+      ? Array.isArray(obj[key])
+        ? [...obj[key], value]
+        : [obj[key], value]
+      : value;
   }
-  url = url.slice(0, -1);
-  return url;
+  return obj;
 };
 
-export default function SearchForm({ initialParams = {} }) {
-  console.log('initialParams', initialParams);
+export default function SearchForm({ show = true }) {
   const router = useRouter();
-  const [state, setState] = useState({
-    level: initialParams.level || '',
-    primaryElectionDateStart: initialParams.primaryElectionDateStart || '',
-    primaryElectionDateEnd: initialParams.primaryElectionDateEnd || '',
-    generalElectionDateStart: initialParams.generalElectionDateStart || '',
-    generalElectionDateEnd: initialParams.generalElectionDateEnd || '',
-    campaignStatus: initialParams.campaignStatus || '',
-  });
+  const [formState, setFormState] = useState(
+    URLSearchParamsToObject(useSearchParams()),
+  );
 
   const onChangeField = (key, val) => {
-    console.log('key', key, 'val', val);
-    setState({
-      ...state,
+    setFormState({
+      ...formState,
       [key]: val,
     });
   };
 
-  const canSubmit = () => {
-    try {
-      if (
-        state.primaryElectionDateStart !== '' &&
-        state.primaryElectionDateEnd !== '' &&
-        new Date(state.primaryElectionDateStart) <
-          new Date(state.primaryElectionDateEnd)
-      ) {
-        return false;
-      }
-      if (
-        state.generalElectionDateStart !== '' &&
-        state.generalElectionDateEnd !== '' &&
-        new Date(state.generalElectionDateStart) <
-          new Date(state.generalElectionDateEnd)
-      ) {
-        return false;
-      }
-    } catch (e) {}
-    // return false if all fields are empty string
-    if (Object.values(state).every((val) => val === '')) {
-      return false;
-    }
-    return true;
-  };
+  const {
+    primaryElectionDateStart,
+    primaryElectionDateEnd,
+    generalElectionDateStart,
+    generalElectionDateEnd,
+    state,
+  } = formState;
+  const invalidPrimaryDates =
+    primaryElectionDateStart !== '' &&
+    primaryElectionDateEnd !== '' &&
+    new Date(primaryElectionDateStart) > new Date(primaryElectionDateEnd);
+  const invalidGeneralDates =
+    generalElectionDateStart !== '' &&
+    generalElectionDateEnd !== '' &&
+    new Date(generalElectionDateStart) > new Date(generalElectionDateEnd);
+  const formValid = !(
+    invalidPrimaryDates ||
+    invalidGeneralDates ||
+    Object.values(formState).every((val) => val === '' || val === undefined)
+  );
 
   const handleSubmit = () => {
-    // on submit add values that are not empty to the query param
-    const queryParams = {};
-    Object.keys(state).forEach((key) => {
-      if (state[key] !== '') {
-        queryParams[key] = state[key];
+    const searchParams = new URLSearchParams();
+
+    Object.keys(formState).forEach((key) => {
+      if (formState[key] !== undefined && formState[key] !== '') {
+        searchParams.append(key, formState[key]);
       }
     });
 
-    console.log('queryParams', queryParams);
-    const url = urlWithQuery('/admin/campaign-statistics', queryParams);
-
-    router.push(url);
+    router.push(`?${searchParams.toString()}`);
   };
 
   return (
-    <form noValidate onSubmit={(e) => e.preventDefault()}>
+    <form
+      className={`mb-4 overflow-hidden transform transition-all ${
+        show ? 'max-h-screen' : 'max-h-0'
+      }`}
+      noValidate
+      onSubmit={(e) => e.preventDefault()}
+    >
       <div className="grid grid-cols-12 gap-4 mt-6">
         {formFields.map((field) => (
           <div
@@ -124,14 +128,14 @@ export default function SearchForm({ initialParams = {} }) {
           >
             <RenderInputField
               field={field}
-              value={state[field.key]}
+              value={formState[field.key]}
               onChangeCallback={onChangeField}
             />
           </div>
         ))}
       </div>
       <div className="flex justify-end">
-        <PrimaryButton disabled={!canSubmit()} onClick={handleSubmit}>
+        <PrimaryButton disabled={!formValid} onClick={handleSubmit}>
           Search
         </PrimaryButton>
       </div>
