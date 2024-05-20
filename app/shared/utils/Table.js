@@ -156,6 +156,7 @@ export default function Table({
                       className: column.collapse ? 'collapseCell' : '',
                     }),
                   );
+                  // TODO: Abstract out <th> into TableHeader component
                   return (
                     <th key={`${index}_${i}_${key}`} {...headerProps}>
                       <div
@@ -189,6 +190,7 @@ export default function Table({
           {page.map((row, i) => {
             prepareRow(row);
             const { key: rowKey, ...rowProps } = row.getRowProps();
+            // TODO: Abstract <tr> into TableRow component
             return (
               <tr key={`tr_${i}_${rowKey}`} {...rowProps}>
                 {row.cells.map((cell, j) => {
