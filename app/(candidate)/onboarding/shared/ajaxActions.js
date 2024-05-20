@@ -16,7 +16,7 @@ export async function updateCampaign(attr, slug) {
     };
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error', e);
+    console.log('error.', e);
     return false;
   }
 }
