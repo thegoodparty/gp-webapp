@@ -184,7 +184,7 @@ export default function AdminVictoryPathPage(props) {
       }
       // send only the keys that changed
       const keysToUpdate = keys.filter(
-        (key) => state[key] !== pathToVictory[key],
+        (key) => state[key] != pathToVictory[key],
       );
 
       const attr = keysToUpdate.map((key) => {
