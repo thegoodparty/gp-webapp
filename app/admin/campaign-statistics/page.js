@@ -1,0 +1,81 @@
+import { adminAccessOnly } from 'helpers/permissionHelper';
+import pageMetaData from 'helpers/metadataHelper';
+import CampaignStatisticsPage from './components/CampaignStatisticsPage';
+import gpApi from 'gpApi';
+import { getServerToken } from 'helpers/userServerHelper';
+import gpFetch from 'gpApi/gpFetch';
+
+const stripEmptyFilters = (filters) =>
+  Object.keys(filters).reduce((acc, key) => {
+    return {
+      ...acc,
+      ...(filters[key] !== undefined && filters[key] !== ''
+        ? { [key]: filters[key] }
+        : {}),
+    };
+  }, {});
+
+const fetchCampaigns = async (filters) => {
+  const searchParams = new URLSearchParams(filters);
+  const api = gpApi.campaign.list;
+  const token = getServerToken();
+
+  return await gpFetch(
+    {
+      ...api,
+      url: `${api.url}?${searchParams.toString()}`,
+    },
+    false,
+    false,
+    token,
+  );
+};
+
+const meta = pageMetaData({
+  title: 'Campaign Statistics | GOOD PARTY',
+  description: 'Admin Campaign Statistics.',
+  slug: '/admin/campaign-statistics',
+});
+export const metadata = meta;
+
+export default async function Page({ searchParams }) {
+  adminAccessOnly();
+
+  const {
+    state,
+    slug,
+    level,
+    primaryElectionDateStart,
+    primaryElectionDateEnd,
+    generalElectionDateStart,
+    generalElectionDateEnd,
+    campaignStatus,
+  } = searchParams || {};
+
+  const initialParams = {
+    state,
+    slug,
+    level,
+    primaryElectionDateStart,
+    primaryElectionDateEnd,
+    generalElectionDateStart,
+    generalElectionDateEnd,
+    campaignStatus,
+  };
+  console.log(`initialParams =>`, initialParams);
+  const paramsAreEmpty = Object.values(initialParams).every(
+    (val) => val === undefined || val === '',
+  );
+  let campaigns = [];
+  if (!paramsAreEmpty) {
+    ({ campaigns } = await fetchCampaigns(stripEmptyFilters(initialParams)));
+  }
+
+  const childProps = {
+    pathname: '/admin/campaign-statistics',
+    title: 'Campaign Statistics',
+    campaigns,
+  };
+
+  return <CampaignStatisticsPage {...childProps} />;
+}

@@ -62,36 +62,36 @@ export default function OfficeStep(props) {
     const { position, election, id } = state.ballotOffice;
 
     const attr = [
-      { key: 'details.positionId', value: state.ballotOffice.position?.id },
-      { key: 'details.electionId', value: state.ballotOffice.election?.id },
-      { key: 'details.raceId', value: state.ballotOffice.id },
-      { key: 'details.state', value: state.ballotOffice.election?.state },
+      { key: 'details.positionId', value: position?.id },
+      { key: 'details.electionId', value: election?.id },
+      { key: 'details.raceId', value: id },
+      { key: 'details.state', value: election?.state },
       { key: 'details.office', value: 'Other' },
-      { key: 'details.otherOffice', value: state.ballotOffice.position?.name },
+      { key: 'details.otherOffice', value: position?.name },
       {
         key: 'details.officeTermLength',
-        value: calcTerm(state.ballotOffice.position),
+        value: calcTerm(position),
       },
-      { key: 'details.ballotLevel', value: state.ballotOffice.position?.level },
+      { key: 'details.ballotLevel', value: position?.level },
       {
         key: 'details.primaryElectionDate',
-        value: state.ballotOffice.election?.primaryElectionDate,
+        value: election?.primaryElectionDate,
       },
       {
         key: 'details.electionDate',
-        value: state.ballotOffice.election?.electionDay,
+        value: election?.electionDay,
       },
       {
         key: 'details.partisanType',
-        value: state.ballotOffice.position?.partisanType,
+        value: position?.partisanType,
       },
       {
         key: 'details.primaryElectionId',
-        value: state.ballotOffice.election?.primaryElectionId,
+        value: election?.primaryElectionId,
       },
       {
         key: 'details.hasPrimary',
-        value: state.ballotOffice.position?.hasPrimary,
+        value: position?.hasPrimary,
       },
     ];
     if (step) {
