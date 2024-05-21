@@ -145,60 +145,60 @@ export default function Table({
         className="font-sfpro text-lg text-indigo-800 font-normal shrink-0"
       >
         <thead>
-          {headerGroups.map((headerGroup, index) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              {headerGroup.headers.map((column, i) => (
-                <th
-                  key={`${index}_${i}`}
-                  // className="flex flex-row w-full"
-                  {...column.getHeaderProps(
+          {headerGroups.map((headerGroup, index) => {
+            const { key: headerGroupKey, ...headerGroupProps } =
+              headerGroup.getHeaderGroupProps();
+            return (
+              <tr key={`${index}_${headerGroupKey}`} {...headerGroupProps}>
+                {headerGroup.headers.map((column, i) => {
+                  const { key, ...headerProps } = column.getHeaderProps(
                     column.getSortByToggleProps({
                       className: column.collapse ? 'collapseCell' : '',
                     }),
-                  )}
-                >
-                  <div
-                    className={`flex flex-row items-center ${
-                      index === 0 && 'pl-2'
-                    }`}
-                  >
-                    {column.render('Header')}
-                    {/* Add a sort direction indicator */}
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
-                      ) : (
-                        <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
-                      )
-                    ) : (
-                      ''
-                    )}
-                  </div>
-                  {column.canFilter && filterColumns
-                    ? column.render('Filter')
-                    : null}
-                </th>
-              ))}
-            </tr>
-          ))}
+                  );
+                  // TODO: Abstract out <th> into TableHeader component
+                  return (
+                    <th key={`${index}_${i}_${key}`} {...headerProps}>
+                      <div
+                        className={`flex flex-row items-center ${
+                          index === 0 && 'pl-2'
+                        }`}
+                      >
+                        {column.render('Header')}
+                        {/* Add a sort direction indicator */}
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
+                          ) : (
+                            <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
+                          )
+                        ) : (
+                          ''
+                        )}
+                      </div>
+                      {column.canFilter && filterColumns
+                        ? column.render('Filter')
+                        : null}
+                    </th>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row);
+            const { key: rowKey, ...rowProps } = row.getRowProps();
+            // TODO: Abstract <tr> into TableRow component
             return (
-              <tr
-                {...row.getRowProps()}
-                // className={i % 2 !== 0 && styles.odd}
-                key={`tr_${i}`}
-              >
+              <tr key={`tr_${i}_${rowKey}`} {...rowProps}>
                 {row.cells.map((cell, j) => {
+                  const { key: cellKey, ...cellProps } = cell.getCellProps({
+                    className: cell.column.collapse ? 'collapseCell' : '',
+                  });
                   return (
-                    <td
-                      key={`td_${i}_${j}`}
-                      {...cell.getCellProps({
-                        className: cell.column.collapse ? 'collapseCell' : '',
-                      })}
-                    >
+                    <td key={`td_${i}_${j}_${cellKey}`} {...cellProps}>
                       {cell.render('Cell')}
                     </td>
                   );
