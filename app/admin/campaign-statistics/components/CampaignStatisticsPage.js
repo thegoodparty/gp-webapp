@@ -7,10 +7,16 @@ import SearchForm from './SearchForm';
 import AdminCandidatesTable from 'app/admin/candidates/components/AdminCandidatesTable';
 import { FiChevronRight } from 'react-icons/fi';
 import { useState } from 'react';
+import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
+import { useSearchParams } from 'next/navigation';
+import H4 from '@shared/typography/H4';
 
 const CampaignStatisticsPage = (props) => {
   const { campaigns } = props;
   const [showForm, setShowForm] = useState(true);
+  const searchParamsAreEmpty = !Object.keys(
+    URLSearchParamsToObject(useSearchParams()),
+  ).length;
 
   return (
     <AdminWrapper {...props}>
@@ -27,7 +33,21 @@ const CampaignStatisticsPage = (props) => {
           />
         </H2>
         <SearchForm show={showForm} />
-        {Boolean(campaigns?.length) && <AdminCandidatesTable {...props} />}
+        {Boolean(campaigns?.length) ? (
+          <AdminCandidatesTable {...props} />
+        ) : (
+          <H4 className="text-center">
+            {searchParamsAreEmpty ? (
+              <span>Please perform a search...</span>
+            ) : (
+              <span>
+                Your search returned 0 records.
+                <br />
+                Please refine your search and try again.
+              </span>
+            )}
+          </H4>
+        )}
       </PortalPanel>
     </AdminWrapper>
   );

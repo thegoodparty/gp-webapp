@@ -5,6 +5,7 @@ import RenderInputField from '@shared/inputs/RenderInputField';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { flatStates } from 'helpers/statesHelper';
+import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
 
 const formFields = [
   {
@@ -51,18 +52,6 @@ const formFields = [
     type: 'date',
   },
 ];
-
-const URLSearchParamsToObject = (params) => {
-  const obj = {};
-  for (const [key, value] of params) {
-    obj[key] = Object.hasOwn(obj, key)
-      ? Array.isArray(obj[key])
-        ? [...obj[key], value]
-        : [obj[key], value]
-      : value;
-  }
-  return obj;
-};
 
 export default function SearchForm({ show = true }) {
   const router = useRouter();
