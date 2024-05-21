@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, InputAdornment } from '@mui/material';
 import { theme } from 'tailwind.config';
 import TextField from '@shared/inputs/TextField';
+import IconButton from '@mui/material/IconButton';
+import { CloseIcon } from 'next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon';
 
 const filterOptions = (options, { inputValue }) => {
   if (options && typeof options.filter === 'function') {
@@ -36,11 +38,28 @@ export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
         },
       }}
       options={issues || []}
+      disableClearable
       clearOnBlur={false}
       renderInput={(params) => (
         <TextField
           {...params}
           label="Search for climate change, economic equality…"
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <InputAdornment position="end">
+                {inputValue && (
+                  <IconButton
+                    onClick={(e) => handleInputChange(e, '')}
+                    size="small"
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                )}
+                {params.InputProps.endAdornment}
+              </InputAdornment>
+            ),
+          }}
         />
       )}
       getOptionLabel={({ name }) => name}
