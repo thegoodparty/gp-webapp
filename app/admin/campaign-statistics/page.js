@@ -50,6 +50,7 @@ export default async function Page({ searchParams }) {
     generalElectionDateStart,
     generalElectionDateEnd,
     campaignStatus,
+    firehose,
   } = searchParams || {};
 
   const initialParams = {
@@ -61,13 +62,13 @@ export default async function Page({ searchParams }) {
     generalElectionDateStart,
     generalElectionDateEnd,
     campaignStatus,
+    firehose,
   };
-  console.log(`initialParams =>`, initialParams);
   const paramsAreEmpty = Object.values(initialParams).every(
     (val) => val === undefined || val === '',
   );
   let campaigns = [];
-  if (!paramsAreEmpty) {
+  if (!paramsAreEmpty || Boolean(firehose)) {
     ({ campaigns } = await fetchCampaigns(stripEmptyFilters(initialParams)));
   }
 
