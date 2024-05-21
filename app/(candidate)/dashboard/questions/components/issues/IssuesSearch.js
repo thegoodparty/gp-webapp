@@ -3,7 +3,7 @@ import { Autocomplete, InputAdornment } from '@mui/material';
 import { theme } from 'tailwind.config';
 import TextField from '@shared/inputs/TextField';
 import IconButton from '@mui/material/IconButton';
-import { CloseIcon } from 'next/dist/client/components/react-dev-overlay/internal/icons/CloseIcon';
+import { IoCloseSharp } from 'react-icons/io5';
 
 const filterOptions = (options, { inputValue }) => {
   if (options && typeof options.filter === 'function') {
@@ -53,7 +53,7 @@ export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
                     onClick={(e) => handleInputChange(e, '')}
                     size="small"
                   >
-                    <CloseIcon />
+                    <IoCloseSharp />
                   </IconButton>
                 )}
                 {params.InputProps.endAdornment}
