@@ -29,7 +29,7 @@ export default function JoinDiscord() {
               className="mb-10"
             />
             <a
-              href="https://join.goodparty.org/discord-signup"
+              href="https://discord.gg/goodparty"
               id="cta-discord"
               target="_blank"
               rel="noopener noreferrer nofollow"
