@@ -9,27 +9,20 @@ import MoreQuestions from 'app/(company)/team/components/MoreQuestions';
 import { theme } from 'tailwind.config';
 import { SlantSection } from '@shared/landing-pages/SlantSection';
 
-export default function TeamPage({ teamMembers, teamMilestones }) {
-  const childProps = [];
-  console.log('teamMilestones', teamMilestones);
-  if (teamMilestones) {
-    childProps.push(...teamMilestones);
-    childProps.push(...teamMilestones);
-    childProps.push(...teamMilestones);
-  }
-  return (
-    <>
-      <TeamHero />
-      <OurImpact />
-      <Funding />
-      <LeadingTheMovement />
-      <Suspense>
-        <TeamMembersSection teamMembers={teamMembers} />
-      </Suspense>
-      <SlantSection colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
-        <TeamMilestones teamMilestones={childProps} />
-      </SlantSection>
-      <MoreQuestions />
-    </>
-  );
-}
+const TeamPage = ({ teamMembers, teamMilestones }) => (
+  <>
+    <TeamHero />
+    <OurImpact />
+    <Funding />
+    <LeadingTheMovement />
+    <Suspense>
+      <TeamMembersSection teamMembers={teamMembers} />
+    </Suspense>
+    <SlantSection colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
+      <TeamMilestones teamMilestones={teamMilestones} />
+    </SlantSection>
+    <MoreQuestions />
+  </>
+);
+
+export default TeamPage;
