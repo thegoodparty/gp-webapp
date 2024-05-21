@@ -88,6 +88,10 @@ export default function LoginPage() {
             window.location.href = '/dashboard';
             return;
           }
+          if (status?.status === 'volunteer') {
+            window.location.href = '/volunteer-dashboard';
+            return;
+          }
           window.location.href = '/';
         }
       } else {
