@@ -5,6 +5,7 @@ import RenderInputField from '@shared/inputs/RenderInputField';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { flatStates } from 'helpers/statesHelper';
+import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
 
 const formFields = [
   {
@@ -52,18 +53,6 @@ const formFields = [
   },
 ];
 
-const URLSearchParamsToObject = (params) => {
-  const obj = {};
-  for (const [key, value] of params) {
-    obj[key] = Object.hasOwn(obj, key)
-      ? Array.isArray(obj[key])
-        ? [...obj[key], value]
-        : [obj[key], value]
-      : value;
-  }
-  return obj;
-};
-
 export default function SearchForm({ show = true }) {
   const router = useRouter();
   const [formState, setFormState] = useState(
@@ -92,13 +81,16 @@ export default function SearchForm({ show = true }) {
     generalElectionDateStart !== '' &&
     generalElectionDateEnd !== '' &&
     new Date(generalElectionDateStart) > new Date(generalElectionDateEnd);
-  const formValid = !(
-    invalidPrimaryDates ||
-    invalidGeneralDates ||
-    Object.values(formState).every((val) => val === '' || val === undefined)
+  const invalidState = state && !flatStates.includes(state);
+  const noFiltersSet = Object.values(formState).every(
+    (val) => val === '' || val === undefined,
   );
+  const formValid =
+    !(invalidPrimaryDates || invalidGeneralDates || invalidState) ||
+    noFiltersSet;
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const searchParams = new URLSearchParams();
 
     Object.keys(formState).forEach((key) => {
@@ -107,7 +99,9 @@ export default function SearchForm({ show = true }) {
       }
     });
 
-    router.push(`?${searchParams.toString()}`);
+    router.push(
+      noFiltersSet ? `?firehose=true` : `?${searchParams.toString()}`,
+    );
   };
 
   return (
@@ -116,7 +110,7 @@ export default function SearchForm({ show = true }) {
         show ? 'max-h-screen' : 'max-h-0'
       }`}
       noValidate
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={handleSubmit}
     >
       <div className="grid grid-cols-12 gap-4 mt-6">
         {formFields.map((field) => (
@@ -135,7 +129,7 @@ export default function SearchForm({ show = true }) {
         ))}
       </div>
       <div className="flex justify-end">
-        <PrimaryButton disabled={!formValid} onClick={handleSubmit}>
+        <PrimaryButton type="submit" disabled={!formValid}>
           Search
         </PrimaryButton>
       </div>

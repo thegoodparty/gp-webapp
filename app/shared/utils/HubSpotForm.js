@@ -4,9 +4,8 @@ import { AnimatedEllipsis } from '@shared/utils/AnimatedEllipsis';
 
 export default function HubSpotForm({
   formId,
-  calendarRedirect = true,
   gtmName = '',
-  renderFormDelay = 0
+  renderFormDelay = 0,
 }) {
   const [formReady, setFormReady] = useState(false);
   useEffect(() => {
@@ -32,28 +31,27 @@ export default function HubSpotForm({
             } else {
               console.log('no data layer');
             }
-
-            if (calendarRedirect) {
-              window.location.href =
-                'https://meetings.hubspot.com/jared-alper/good-party-academy-meeting';
-            }
           },
           onFormReady: () => {
             if (renderFormDelay) {
-              return setTimeout(
-                () => setFormReady(true),
-                renderFormDelay,
-              );
+              return setTimeout(() => setFormReady(true), renderFormDelay);
             }
-            setFormReady(true)
-          }
+            setFormReady(true);
+          },
         });
       }
     });
   }, []);
 
-  return <>
-    { !formReady && <div>Loading<AnimatedEllipsis /></div>}
-    <div id="hubspotForm" className={formReady ? '' : 'hidden'}></div>
-  </>
+  return (
+    <>
+      {!formReady && (
+        <div>
+          Loading
+          <AnimatedEllipsis />
+        </div>
+      )}
+      <div id="hubspotForm" className={formReady ? '' : 'hidden'}></div>
+    </>
+  );
 }
