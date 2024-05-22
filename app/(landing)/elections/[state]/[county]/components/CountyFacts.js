@@ -5,7 +5,7 @@ import { TbHomeShare } from 'react-icons/tb';
 import { numberFormatter } from 'helpers/numberHelper';
 
 export default function CountyFacts({ county }) {
-  console.log('county', county);
+  if (!county) return null;
   const {
     city_largest,
     population,
