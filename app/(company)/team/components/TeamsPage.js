@@ -18,9 +18,7 @@ const TeamPage = ({ teamMembers, teamMilestones }) => (
       <Funding />
       <LeadingTheMovement />
     </MaxWidth>
-    <Suspense>
-      <TeamMembersSection teamMembers={teamMembers} />
-    </Suspense>
+    <TeamMembersSection teamMembers={teamMembers} />
     <SlantSection colors={[false, theme.extend.colors.mint['50'], '#ffffff']}>
       <TeamMilestones teamMilestones={teamMilestones} />
     </SlantSection>

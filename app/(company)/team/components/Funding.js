@@ -4,7 +4,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 
 const Funding = () => (
   <section className="font-medium">
-    <div className="md:grid md:grid-cols-4 lg:grid-cols-2 lg:gap-4">
+    <div className="md:grid md:grid-cols-4 lg:grid-cols-2 lg:gap-6">
       <Image
         className="object-cover
           object-top
@@ -26,7 +26,7 @@ const Funding = () => (
         priority
       />
       <div
-        className="px-4
+        className="
         py-8
         md:col-span-3
         lg:py-24
