@@ -8,13 +8,16 @@ import { TeamMilestones } from 'app/(company)/team/components/TeamMilestones';
 import MoreQuestions from 'app/(company)/team/components/MoreQuestions';
 import { theme } from 'tailwind.config';
 import { SlantSection } from '@shared/landing-pages/SlantSection';
+import MaxWidth from '@shared/layouts/MaxWidth';
 
 const TeamPage = ({ teamMembers, teamMilestones }) => (
   <>
     <TeamHero />
     <OurImpact />
-    <Funding />
-    <LeadingTheMovement />
+    <MaxWidth>
+      <Funding />
+      <LeadingTheMovement />
+    </MaxWidth>
     <Suspense>
       <TeamMembersSection teamMembers={teamMembers} />
     </Suspense>
