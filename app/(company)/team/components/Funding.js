@@ -4,46 +4,64 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 
 const Funding = () => (
   <section className="font-medium">
-    <Image
-      className="object-cover
-          h-[361px]
+    <div className="md:grid md:grid-cols-4 lg:grid-cols-2 lg:gap-6">
+      <Image
+        className="object-cover
+          object-top
+          h-[215px]
           w-full
-          rounded-b-full
+          rounded-[32px]
           mb-4
-          lg:w-[610px]
-          lg:h-[460px]
-          lg:rounded-bl-none
-          lg:rounded-tr-full
-          lg:mt-24"
-      src="/images/landing-pages/team-hero.png"
-      alt="Team Hero"
-      width={607}
-      height={456}
-      priority
-    />
-    <div className="px-4 py-8 lg:p-24 lg:max-w-[812px]">
-      <h3 className="text-4xl leading-tight mb-4 lg:text-6xl">
-        The funding behind GoodParty.org
-      </h3>
-      <p className="text-xl mb-8 text-gray-600 mb-8 lg:text-2xl  font-medium">
-        GoodParty.org is a Public Benefit Company receiving its seed funding
-        from our founder, Farhad Mohit, a serial entrepreneur and full-time
-        volunteer for the movement. We’re neither affiliated with nor funded by
-        any outside political party, special interest group, Super PAC,
-        non-profit, NGO, or advocacy group.
-      </p>
-      <Link href="/about">
-        <SecondaryButton
-          className="bg-tertiary-main
+          mt-8
+          md:col-span-3
+          md:h-auto
+          md:object-cover
+          md:max-h-[454px]
+          md:mt-24
+          lg:col-span-1"
+        src="/images/landing-pages/team-hero.png"
+        alt="Team Hero"
+        width={607}
+        height={456}
+        priority
+      />
+      <div
+        className="
+        py-8
+        md:col-span-3
+        lg:py-24
+        lg:max-w-[812px]
+        lg:col-span-1"
+      >
+        <h3
+          className="text-4xl
+          leading-tight
+          mb-4
+          md:text-6xl
+          md:leading-snug"
+        >
+          The funding behind GoodParty.org
+        </h3>
+        <p className="text-xl mb-8 text-gray-600 mb-8 lg:text-2xl  font-medium">
+          GoodParty.org is a Public Benefit Company receiving its seed funding
+          from our founder, Farhad Mohit, a serial entrepreneur and full-time
+          volunteer for the movement. We’re neither affiliated with nor funded
+          by any outside political party, special interest group, Super PAC,
+          non-profit, NGO, or advocacy group.
+        </p>
+        <Link href="/about">
+          <SecondaryButton
+            className="bg-tertiary-main
             hover:bg-tertiary-dark
             border-none
             text-tertiary-contrast
             w-full
-            lg:w-auto"
-        >
-          Learn about our mission
-        </SecondaryButton>
-      </Link>
+            md:w-auto"
+          >
+            Learn about our mission
+          </SecondaryButton>
+        </Link>
+      </div>
     </div>
   </section>
 );

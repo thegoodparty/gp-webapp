@@ -23,8 +23,8 @@ export default async function volunteerAccess() {
     redirect('/login');
   }
   const { campaigns } = await fetchCampaignVolunteered();
-  if (!campaigns || campaigns.length === 0) {
-    redirect('/');
-  }
+  // if (!campaigns || campaigns.length === 0) {
+  //   redirect('/');
+  // }
   return campaigns;
 }
