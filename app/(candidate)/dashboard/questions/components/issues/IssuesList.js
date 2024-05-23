@@ -40,8 +40,7 @@ export default function IssuesList({
 
   const selectIssueCallback = (issue) => {
     setSelectedIssue(issue);
-    if (!issue && !editIssuePosition) {
-    }
+    setFilterValue('');
   };
 
   const updateCustomIssuesState = (customIssues) =>
