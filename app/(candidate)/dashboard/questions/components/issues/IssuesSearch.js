@@ -18,6 +18,9 @@ export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (event, newInputValue) => {
+    // TODO: We REALLY need to figure out why we're updating THREE different states here.
+    //  seems like a bad code smell.
+    !newInputValue && setValue(null);
     setInputValue(newInputValue);
     onInputChange(newInputValue);
   };
