@@ -1,4 +1,5 @@
 'use client';
+import React, { useMemo, useEffect } from 'react';
 import {
   useTable,
   useSortBy,
@@ -8,10 +9,8 @@ import {
   useAsyncDebounce,
 } from 'react-table';
 import styles from './Table.module.scss';
-import { FaArrowUp } from 'react-icons/fa';
-import { FaArrowDown } from 'react-icons/fa';
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { matchSorter } from 'match-sorter';
-import { useMemo, useEffect } from 'react';
 
 function GlobalFilter({
   preGlobalFilteredRows,
@@ -23,6 +22,7 @@ function GlobalFilter({
   const onChange = useAsyncDebounce((value) => {
     setGlobalFilter(value || undefined);
   }, 200);
+
   return (
     <span>
       Search:{' '}
@@ -33,15 +33,12 @@ function GlobalFilter({
           onChange(e.target.value);
         }}
         placeholder={`${count} records...`}
-        style={{
-          fontSize: '1.1rem',
-          border: '0',
-        }}
+        style={{ fontSize: '1.1rem', border: '0' }}
       />
     </span>
   );
 }
-// Define a default UI for filtering
+
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
 }) {
@@ -56,10 +53,11 @@ function DefaultColumnFilter({
     />
   );
 }
+
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 }
-// Let the table remove the filter if the string is empty
+
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 export default function Table({
@@ -69,12 +67,9 @@ export default function Table({
   pagination = true,
   initialSortById = '',
 }) {
-  let filterTypes = useMemo(
+  const filterTypes = useMemo(
     () => ({
-      // Add a new fuzzyTextFilterFn filter type.
       fuzzyText: filterColumns ? fuzzyTextFilterFn : undefined,
-      // Or, override the default text filter to use
-      // "startWith"
       text: (rows, id, filterValue) => {
         return rows.filter((row) => {
           const rowValue = row.values[id];
@@ -86,23 +81,29 @@ export default function Table({
         });
       },
     }),
-    [],
-  );
-  let defaultColumn = useMemo(
-    () => ({
-      // Let's set up our default Filter UI
-      Filter: filterColumns ? DefaultColumnFilter : undefined,
-    }),
-    [],
+    [filterColumns],
   );
 
-  // Use the state and functions returned from useTable to build your UI
-  let {
+  const defaultColumn = useMemo(
+    () => ({
+      Filter: filterColumns ? DefaultColumnFilter : undefined,
+    }),
+    [filterColumns],
+  );
+
+  const initialState = useMemo(
+    () => ({
+      pageIndex: 0,
+      sortBy: initialSortById ? [{ id: initialSortById, desc: true }] : [],
+    }),
+    [initialSortById],
+  );
+
+  const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    // for pagination below
     page,
     canPreviousPage,
     canNextPage,
@@ -117,11 +118,7 @@ export default function Table({
     {
       columns,
       data,
-      initialState: {
-        pageIndex: 0,
-        sortBy:
-          initialSortById != '' ? [{ id: initialSortById, desc: true }] : [],
-      },
+      initialState,
       defaultColumn,
       filterTypes,
     },
@@ -132,12 +129,11 @@ export default function Table({
   );
 
   useEffect(() => {
-    if (pagination === false) {
+    if (!pagination) {
       setPageSize(10000);
     }
-  }, [setPageSize]);
+  }, [pagination, setPageSize]);
 
-  // Render the UI for your table
   return (
     <div className={styles.wrapper}>
       <table
@@ -145,64 +141,45 @@ export default function Table({
         className="font-sfpro text-lg text-indigo-800 font-normal shrink-0"
       >
         <thead>
-          {headerGroups.map((headerGroup, index) => {
-            const { key: headerGroupKey, ...headerGroupProps } =
-              headerGroup.getHeaderGroupProps();
-            return (
-              <tr key={`${index}_${headerGroupKey}`} {...headerGroupProps}>
-                {headerGroup.headers.map((column, i) => {
-                  const { key, ...headerProps } = column.getHeaderProps(
-                    column.getSortByToggleProps({
-                      className: column.collapse ? 'collapseCell' : '',
-                    }),
-                  );
-                  // TODO: Abstract out <th> into TableHeader component
-                  return (
-                    <th key={`${index}_${i}_${key}`} {...headerProps}>
-                      <div
-                        className={`flex flex-row items-center ${
-                          index === 0 && 'pl-2'
-                        }`}
-                      >
-                        {column.render('Header')}
-                        {/* Add a sort direction indicator */}
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
-                          ) : (
-                            <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
-                          )
-                        ) : (
-                          ''
-                        )}
-                      </div>
-                      {column.canFilter && filterColumns
-                        ? column.render('Filter')
-                        : null}
-                    </th>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {headerGroups.map((headerGroup, index) => (
+            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, i) => (
+                <th
+                  key={i}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                >
+                  <div
+                    className={`flex flex-row items-center ${
+                      index === 0 && 'pl-2'
+                    }`}
+                  >
+                    {column.render('Header')}
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
+                      ) : (
+                        <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
+                      )
+                    ) : null}
+                  </div>
+                  {column.canFilter && filterColumns
+                    ? column.render('Filter')
+                    : null}
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
             prepareRow(row);
-            const { key: rowKey, ...rowProps } = row.getRowProps();
-            // TODO: Abstract <tr> into TableRow component
             return (
-              <tr key={`tr_${i}_${rowKey}`} {...rowProps}>
-                {row.cells.map((cell, j) => {
-                  const { key: cellKey, ...cellProps } = cell.getCellProps({
-                    className: cell.column.collapse ? 'collapseCell' : '',
-                  });
-                  return (
-                    <td key={`td_${i}_${j}_${cellKey}`} {...cellProps}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
+              <tr key={i} {...row.getRowProps()}>
+                {row.cells.map((cell, j) => (
+                  <td key={j} {...cell.getCellProps()}>
+                    {cell.render('Cell')}
+                  </td>
+                ))}
               </tr>
             );
           })}
@@ -216,7 +193,7 @@ export default function Table({
             disabled={!canPreviousPage}
           >
             {'<<'}
-          </button>{' '}
+          </button>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
             onClick={() => previousPage()}
@@ -229,7 +206,7 @@ export default function Table({
               Page{' '}
               <strong>
                 {pageIndex + 1} of {pageOptions.length}
-              </strong>{' '}
+              </strong>
             </span>
             <span>
               | Go to page:{' '}
@@ -247,13 +224,11 @@ export default function Table({
           <select
             className="border px-2 py-1 mx-1"
             value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-            }}
+            onChange={(e) => setPageSize(Number(e.target.value))}
           >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
+            {[10, 20, 30, 40, 50].map((size) => (
+              <option key={size} value={size}>
+                Show {size}
               </option>
             ))}
           </select>
@@ -263,14 +238,14 @@ export default function Table({
             disabled={!canNextPage}
           >
             {'>'}
-          </button>{' '}
+          </button>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
             onClick={() => gotoPage(pageCount - 1)}
             disabled={!canNextPage}
           >
             {'>>'}
-          </button>{' '}
+          </button>
         </div>
       )}
     </div>

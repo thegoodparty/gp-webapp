@@ -78,6 +78,7 @@ export default function MyContent(props) {
         documentKey: key,
       });
     });
+    data.sort((a, b) => b.updatedAt - a.updatedAt);
   }
 
   const columns = useMemo(() => [
