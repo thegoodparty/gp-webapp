@@ -87,15 +87,30 @@ export default function AdminCandidatesTable({ campaigns }) {
 
   const inputData = [];
   campaigns?.map((campaign) => {
-    const { data, user, isPro, isVerified, didWin, tier, aiContent, details } =
-      campaign;
+    const {
+      data,
+      user,
+      isPro,
+      isVerified,
+      didWin,
+      tier,
+      aiContent,
+      details,
+      pathToVictory,
+    } = campaign;
+
+    console.log('pathToVictory', pathToVictory);
+    console.log('user', user);
+    console.log('campaign', campaign);
     // const campaign = mapCampaignToCandidate(data);
     const { currentStep, reportedVoterGoals } = data || {};
     const { zip, level, website, ballotLevel, office, otherOffice } =
       details || {};
 
     let waitingForP2v =
-      !data?.p2vStatus || data?.p2vStatus === 'Waiting' ? 'Yes' : 'No';
+      !pathToVictory?.p2vStatus || pathToVictory?.p2vStatus === 'Waiting'
+        ? 'Yes'
+        : 'No';
 
     if (!details?.pledged) {
       waitingForP2v = 'n/a';
