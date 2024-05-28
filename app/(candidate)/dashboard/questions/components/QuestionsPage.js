@@ -16,6 +16,7 @@ import Website from './Website';
 import Done from './Done';
 import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export const flows = {
   all: [
@@ -118,6 +119,7 @@ export default function QuestionsPage(props) {
 
   return (
     <MaxWidth>
+      <FullStoryScript />
       <div className="min-h-[calc(100vh-56px)] py-20 w-full">
         {campaign && nextKey === 'occupation' && (
           <Occupation

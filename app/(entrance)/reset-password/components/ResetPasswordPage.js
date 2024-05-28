@@ -10,6 +10,7 @@ import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { passwordRegex } from 'helpers/userHelper';
 import { useRouter } from 'next/navigation';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 async function resetPassword(email, password, token) {
   try {
@@ -69,6 +70,7 @@ export default function ResetPasswordPage({ email, token }) {
 
   return (
     <MaxWidth>
+      <FullStoryScript />
       <div className={`flex items-center justify-center ${styles.wrapper}`}>
         <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
