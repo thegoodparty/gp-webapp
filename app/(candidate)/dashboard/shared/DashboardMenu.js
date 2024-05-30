@@ -78,11 +78,7 @@ export default function DashboardMenu({
     fireGTMButtonClickEvent(e.currentTarget);
   };
 
-  if (
-    (user?.isAdmin || campaign?.isPro) &&
-    pages.length === 8 &&
-    campaign?.data?.hasVoterFile === 'completed'
-  ) {
+  if ((user?.isAdmin || campaign?.isPro) && pages.length === 8) {
     pages[4].link = '/dashboard/voter-records';
     pages[4].id = 'vote-records-dashboard';
 
