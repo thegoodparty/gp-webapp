@@ -5,11 +5,12 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Paper from '@shared/utils/Paper';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
 import { FaDownload } from 'react-icons/fa';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -84,8 +85,22 @@ async function fetchVoterFile(type) {
   }
 }
 
+async function wakeUp() {
+  try {
+    const api = gpApi.voterData.wakeUp;
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 export default function VoterRecordsPage(props) {
+  useEffect(() => {
+    wakeUp();
+  }, []);
   const handleDownload = async (type) => {
+    trackEvent('Download Voter File attempt', { type });
     const response = await fetchVoterFile(type);
     if (response) {
       // Read the response as Blob
@@ -100,6 +115,12 @@ export default function VoterRecordsPage(props) {
 
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
+      trackEvent('Download Voter File Success', { type });
+    } else {
+      trackEvent('Download Voter File Failure', {
+        type,
+        slug: props.campaign.slug,
+      });
     }
   };
   return (
@@ -154,7 +175,7 @@ export default function VoterRecordsPage(props) {
                 }`}
               >
                 <FaDownload
-                  className="mr-3"
+                  className="mr-3 cursor-pointer"
                   onClick={() => {
                     handleDownload(file.key);
                   }}

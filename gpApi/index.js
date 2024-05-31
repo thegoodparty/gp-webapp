@@ -705,26 +705,31 @@ const gpApi = {
     },
   },
   voterData: {
-    purchaseVoterFile: {
-      url: `${base}voter-data/voter-file`, //admin
-      method: 'POST',
-      withAuth: true,
-    },
+    // purchaseVoterFile: {
+    //   url: `${base}voter-data/voter-file`, //admin
+    //   method: 'POST',
+    //   withAuth: true,
+    // },
     pathToVictory: {
       url: `${base}voter-data/path-to-victory`,
       method: 'POST',
       withAuth: true,
     },
     getVoterFile: {
-      url: `${base}voter-data/voter-file`, //admin
+      url: `${base}voter-data/voter-file`,
       method: 'GET',
       withAuth: true,
     },
-    count: {
-      url: `${base}voter-data/voter-file/count`, //admin
-      method: 'PUT',
+    wakeUp: {
+      url: `${base}voter-data/voter-file/wake-up`,
+      method: 'GET',
       withAuth: true,
     },
+    // count: {
+    //   url: `${base}voter-data/voter-file/count`, //admin
+    //   method: 'PUT',
+    //   withAuth: true,
+    // },
   },
 };
 
