@@ -5,12 +5,13 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Paper from '@shared/utils/Paper';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
 import { FaDownload } from 'react-icons/fa';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import Chip from '@shared/utils/Chip';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -21,9 +22,11 @@ const defaultFiles = [
       'Full voter file',
       'Full voter file',
       'All',
-      <PrimaryButton size="small" key="all">
-        ALL AVAILABLE VOTERS
-      </PrimaryButton>,
+      <Chip
+        key="all"
+        className="bg-gray-700 text-white"
+        label="ALL AVAILABLE VOTERS"
+      />,
     ],
   },
   {
@@ -32,9 +35,11 @@ const defaultFiles = [
       'Door Knocking',
       'Door Knocking (Default)',
       'All',
-      <PrimaryButton size="small" key="all">
-        ALL AVAILABLE ADDRESSES
-      </PrimaryButton>,
+      <Chip
+        key="all"
+        className="bg-gray-700 text-white"
+        label="ALL AVAILABLE ADDRESSES"
+      />,
     ],
   },
   {
@@ -43,9 +48,11 @@ const defaultFiles = [
       'SMS Texting',
       'SMS Texting (Default)',
       'All',
-      <PrimaryButton size="small" key="all">
-        ALL AVAILABLE PHONES
-      </PrimaryButton>,
+      <Chip
+        key="all"
+        className="bg-gray-700 text-white"
+        label="ALL AVAILABLE PHONES"
+      />,
     ],
   },
   {
@@ -54,9 +61,11 @@ const defaultFiles = [
       'Direct Mail',
       'Direct Mail (Default)',
       'All',
-      <PrimaryButton size="small" key="all">
-        ALL AVAILABLE ADDRESSES
-      </PrimaryButton>,
+      <Chip
+        key="all"
+        className="bg-gray-700 text-white"
+        label="ALL AVAILABLE ADDRESSES"
+      />,
     ],
   },
   {
@@ -65,9 +74,11 @@ const defaultFiles = [
       'Telemarketing',
       'Telemarketing (Default)',
       'All',
-      <PrimaryButton size="small" key="all">
-        ALL AVAILABLE LANDLINES
-      </PrimaryButton>,
+      <Chip
+        key="all"
+        className="bg-gray-700 text-white"
+        label="ALL AVAILABLE LANDLINES"
+      />,
     ],
   },
 ];
@@ -96,10 +107,17 @@ async function wakeUp() {
 }
 
 export default function VoterRecordsPage(props) {
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     wakeUp();
   }, []);
+
   const handleDownload = async (type) => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     trackEvent('Download Voter File attempt', { type });
     const response = await fetchVoterFile(type);
     if (response) {
@@ -122,6 +140,7 @@ export default function VoterRecordsPage(props) {
         slug: props.campaign.slug,
       });
     }
+    setLoading(false);
   };
   return (
     <DashboardLayout {...props}>
@@ -137,14 +156,18 @@ export default function VoterRecordsPage(props) {
             <PrimaryButton>Create custom voter file</PrimaryButton>
           </div> */}
         </div>
-        <div className="mt-8 grid grid-cols-9 border-x border-x-gray-200 ">
+        <div className="mt-8 grid grid-cols-8 border-x border-x-gray-200 ">
           {tableHeaders.map((header, index) => (
             <div
               className={` bg-primary text-white p-4 ${
                 index === 0 ? 'rounded-tl-lg' : ''
               } ${
                 index === tableHeaders.length - 1
-                  ? 'rounded-tr-lg text-right col-span-1'
+                  ? 'rounded-tr-lg text-right'
+                  : ''
+              } ${
+                index === tableHeaders.length - 1 || index === 2
+                  ? 'col-span-1'
                   : 'col-span-2'
               }`}
               key={index}
@@ -160,7 +183,7 @@ export default function VoterRecordsPage(props) {
                   className={`p-4 border-b border-b-gray-200 ${
                     index % 2 !== 0 ? ' bg-indigo-50' : ''
                   } ${
-                    index2 === tableHeaders.length - 1
+                    index2 === tableHeaders.length - 1 || index2 === 2
                       ? 'col-span-1'
                       : 'col-span-2'
                   }`}
@@ -175,7 +198,9 @@ export default function VoterRecordsPage(props) {
                 }`}
               >
                 <FaDownload
-                  className="mr-3 cursor-pointer"
+                  className={`mr-3 cursor-pointer ${
+                    loading ? 'opacity-25' : ''
+                  }`}
                   onClick={() => {
                     handleDownload(file.key);
                   }}
