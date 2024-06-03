@@ -6,10 +6,6 @@ export const leftMenuItems = [
     link: '/admin',
   },
   {
-    label: 'Candidates',
-    link: '/admin/candidates',
-  },
-  {
     label: 'Campaign Statistics',
     link: '/admin/campaign-statistics',
   },
