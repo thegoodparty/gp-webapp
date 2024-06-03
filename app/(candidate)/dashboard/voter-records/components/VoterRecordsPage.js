@@ -12,6 +12,7 @@ import Overline from '@shared/typography/Overline';
 import { FaDownload } from 'react-icons/fa';
 import { trackEvent } from 'helpers/fullStoryHelper';
 import Chip from '@shared/utils/Chip';
+import CustomVoterFile from './CustomVoterFile';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -152,9 +153,7 @@ export default function VoterRecordsPage(props) {
               A collection of voter data spreadsheets, tailored to your needs.
             </Body2>
           </div>
-          {/* <div className="col-span-12 md:col-span-6 md:flex md:justify-end md:items-center">
-            <PrimaryButton>Create custom voter file</PrimaryButton>
-          </div> */}
+          <CustomVoterFile {...props} />
         </div>
         <div className="mt-8 grid grid-cols-8 border-x border-x-gray-200 ">
           {tableHeaders.map((header, index) => (
