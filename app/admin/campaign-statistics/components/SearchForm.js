@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { flatStates } from 'helpers/statesHelper';
 import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
+import Body2 from '@shared/typography/Body2';
 
 const formFields = [
   {
@@ -129,9 +130,14 @@ export default function SearchForm({ show = true }) {
         ))}
       </div>
       <div className="flex justify-end">
-        <PrimaryButton type="submit" disabled={!formValid}>
-          Search
-        </PrimaryButton>
+        <div className="text-right">
+          <PrimaryButton type="submit" disabled={!formValid}>
+            Search
+          </PrimaryButton>
+          <Body2 className="mt-2">
+            If you search without any filters, all campaigns will be returned.
+          </Body2>
+        </div>
       </div>
     </form>
   );
