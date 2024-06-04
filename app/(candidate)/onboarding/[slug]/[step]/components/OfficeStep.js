@@ -59,7 +59,7 @@ export default function OfficeStep(props) {
     if (!canSubmit()) {
       return;
     }
-    const { position, election, id } = state.ballotOffice;
+    const { position, election, id, filingPeriods } = state.ballotOffice;
 
     const attr = [
       { key: 'details.positionId', value: position?.id },
@@ -92,6 +92,20 @@ export default function OfficeStep(props) {
       {
         key: 'details.hasPrimary',
         value: position?.hasPrimary,
+      },
+      {
+        key: 'details.filingPeriodsStart',
+        value:
+          filingPeriods && filingPeriods.length > 0
+            ? filingPeriods[0].startOn
+            : undefined,
+      },
+      {
+        key: 'details.filingPeriodsEnd',
+        value:
+          filingPeriods && filingPeriods.length > 0
+            ? filingPeriods[0].endOn
+            : undefined,
       },
     ];
     if (step) {

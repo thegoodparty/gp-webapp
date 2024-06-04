@@ -82,6 +82,8 @@ export default function AdminCandidatesTable({ campaigns }) {
       'dateVerified',
       'tier',
       'didWin',
+      'filingPeriodsStart',
+      'filingPeriodsEnd',
     ],
   ];
 
@@ -102,8 +104,18 @@ export default function AdminCandidatesTable({ campaigns }) {
     console.log('campaign', campaign);
     // const campaign = mapCampaignToCandidate(data);
     const { currentStep, reportedVoterGoals } = data || {};
-    const { zip, level, website, ballotLevel, office, otherOffice } =
-      details || {};
+    const {
+      zip,
+      level,
+      website,
+      ballotLevel,
+      office,
+      otherOffice,
+      filingPeriodsStart,
+      filingPeriodsEnd,
+      primaryElectionDate,
+      campaignCommittee,
+    } = details || {};
 
     let waitingForP2v =
       !pathToVictory?.p2vStatus || pathToVictory?.p2vStatus === 'Waiting'
@@ -158,9 +170,9 @@ export default function AdminCandidatesTable({ campaigns }) {
       phone: user?.phone || 'n/a',
       currentStep,
       shortVersion: details?.filedStatement,
-      campaignCommittee: details?.campaignCommittee,
+      campaignCommittee,
       website: website || '',
-      primaryElectionDate: details?.primaryElectionDate,
+      primaryElectionDate: primaryElectionDate,
       electionDate: details?.electionDate,
       doorKnocking: reportedVoterGoals?.doorKnocking || 0,
       calls: reportedVoterGoals?.calls || 0,
@@ -177,6 +189,8 @@ export default function AdminCandidatesTable({ campaigns }) {
           : new Date(campaign.dateVerified),
       tier: CANDIDATE_TIERS_REVERSED[tier],
       didWin: didWinDisplay,
+      filingPeriodsStart: filingPeriodsStart,
+      filingPeriodsEnd: filingPeriodsEnd,
     };
     inputData.push(fields);
     let csvFields = fields;
@@ -282,6 +296,7 @@ export default function AdminCandidatesTable({ campaigns }) {
         );
       },
     },
+
     {
       Header: 'Door Knocked',
       accessor: 'doorKnocking',
@@ -390,6 +405,38 @@ export default function AdminCandidatesTable({ campaigns }) {
         dateColumnSort(rowA.original.electionDate, rowB.original.electionDate),
       Cell: ({ row }) => {
         return dateUsHelper(row.original.electionDate);
+      },
+    },
+    {
+      Header: 'Filing Period Start',
+      accessor: (data) =>
+        data.electionDate
+          ? new Date(data.filingPeriodsStart)
+          : new Date('1970-01-01'),
+      sortDescFirst: true,
+      sortType: (rowA, rowB) =>
+        dateColumnSort(
+          rowA.original.filingPeriodsStart,
+          rowB.original.filingPeriodsStart,
+        ),
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.filingPeriodsStart);
+      },
+    },
+    {
+      Header: 'Filing Period End',
+      accessor: (data) =>
+        data.electionDate
+          ? new Date(data.filingPeriodsEnd)
+          : new Date('1970-01-01'),
+      sortDescFirst: true,
+      sortType: (rowA, rowB) =>
+        dateColumnSort(
+          rowA.original.filingPeriodsEnd,
+          rowB.original.filingPeriodsEnd,
+        ),
+      Cell: ({ row }) => {
+        return dateUsHelper(row.original.filingPeriodsEnd);
       },
     },
     {
