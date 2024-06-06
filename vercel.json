@@ -1,7 +1,8 @@
 {
   "functions": {
-    "app/admin/**/*.js": {
-      "maxDuration": 120
+    "app/admin/campaign-statistics/page.js": {
+      "maxDuration": 120,
+      "memory": 3000
     }
   }
 }
