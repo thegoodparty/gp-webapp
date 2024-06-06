@@ -16,19 +16,15 @@ const stripEmptyFilters = (filters) =>
   }, {});
 
 const fetchCampaigns = async (filters) => {
-  const searchParams = new URLSearchParams(filters);
-  const api = gpApi.campaign.list;
-  const token = getServerToken();
+  try {
+    const api = gpApi.campaign.list;
+    const token = getServerToken();
 
-  return await gpFetch(
-    {
-      ...api,
-      url: `${api.url}?${searchParams.toString()}`,
-    },
-    false,
-    false,
-    token,
-  );
+    return await gpFetch(api, filters, false, token, false);
+  } catch (e) {
+    console.log('error', e);
+    return { campaigns: [] };
+  }
 };
 
 const meta = pageMetaData({
@@ -69,7 +65,7 @@ export default async function Page({ searchParams }) {
   );
   let campaigns = [];
   if (!paramsAreEmpty || Boolean(firehose)) {
-    ({ campaigns } = await fetchCampaigns(stripEmptyFilters(initialParams)));
+    campaigns = await fetchCampaigns(stripEmptyFilters(initialParams));
   }
 
   const childProps = {
