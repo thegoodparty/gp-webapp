@@ -4,5 +4,15 @@
       "maxDuration": 120,
       "memory": 3000
     }
-  }
+  },
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "storybook-static/**/*",
+      "use": "@vercel/static"
+    }
+  ],
 }
