@@ -66,7 +66,7 @@ export default async function Page({ searchParams }) {
     (val) => val === undefined || val === '',
   );
   let campaigns = [];
-  if (!paramsAreEmpty || Boolean(firehose)) {
+  if (!paramsAreEmpty && !Boolean(firehose)) {
     campaigns = await fetchCampaigns(stripEmptyFilters(initialParams));
   }
 
@@ -74,6 +74,7 @@ export default async function Page({ searchParams }) {
     pathname: '/admin/campaign-statistics',
     title: 'Campaign Statistics',
     campaigns,
+    fireHose: !paramsAreEmpty || Boolean(firehose),
   };
 
   return <CampaignStatisticsPage {...childProps} />;

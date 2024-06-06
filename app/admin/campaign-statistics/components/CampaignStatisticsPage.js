@@ -6,17 +6,46 @@ import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import SearchForm from './SearchForm';
 import AdminCandidatesTable from 'app/admin/candidates/components/AdminCandidatesTable';
 import { FiChevronRight } from 'react-icons/fi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
 import { useSearchParams } from 'next/navigation';
 import H4 from '@shared/typography/H4';
+import gpFetch from 'gpApi/gpFetch';
+import gpApi from 'gpApi';
+import { CircularProgress } from '@mui/material';
+
+const fetchCampaigns = async () => {
+  try {
+    const api = gpApi.campaign.list;
+
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error', e);
+    return { campaigns: [] };
+  }
+};
 
 const CampaignStatisticsPage = (props) => {
-  const { campaigns } = props;
+  const { fireHose } = props;
+  const [campaigns, setCampaigns] = useState(props.campaigns);
   const [showForm, setShowForm] = useState(true);
+  const [loading, setLoading] = useState(false);
   const searchParamsAreEmpty = !Object.keys(
     URLSearchParamsToObject(useSearchParams()),
   ).length;
+
+  useEffect(() => {
+    if (fireHose && campaigns?.length === 0) {
+      loadCampaigns();
+    }
+  }, [fireHose, campaigns]);
+
+  const loadCampaigns = async () => {
+    setLoading(true);
+    const res = await fetchCampaigns();
+    setCampaigns(res.campaigns);
+    setLoading(false);
+  };
 
   return (
     <AdminWrapper {...props}>
@@ -34,17 +63,26 @@ const CampaignStatisticsPage = (props) => {
         </H2>
         <SearchForm show={showForm} />
         {Boolean(campaigns?.length) ? (
-          <AdminCandidatesTable {...props} />
+          <AdminCandidatesTable campaigns={campaigns} />
         ) : (
           <H4 className="text-center">
-            {searchParamsAreEmpty ? (
-              <span>Please perform a search...</span>
+            {loading ? (
+              <div>
+                Loading <br />
+                <CircularProgress size={20} />
+              </div>
             ) : (
-              <span>
-                Your search returned 0 records.
-                <br />
-                Please refine your search and try again.
-              </span>
+              <>
+                {searchParamsAreEmpty ? (
+                  <span>Please perform a search...</span>
+                ) : (
+                  <span>
+                    Your search returned 0 records.
+                    <br />
+                    Please refine your search and try again.
+                  </span>
+                )}
+              </>
             )}
           </H4>
         )}
