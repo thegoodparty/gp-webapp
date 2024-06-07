@@ -142,7 +142,7 @@ export default function BallotRaces(props) {
   };
 
   const saveCustomOffice = async (updated) => {
-    updated.details.otherOffice = '';
+    console.log('updated saveCustomOffice', updated);
     updated.details.positionId = null;
     updated.details.electionId = null;
     if (step) {
@@ -155,6 +155,15 @@ export default function BallotRaces(props) {
         { key: 'details.otherOffice', value: '' },
         { key: 'details.positionId', value: null },
         { key: 'details.electionId', value: null },
+        { key: 'details.office', value: updated.details.office },
+        { key: 'details.city', value: updated.details.city },
+        { key: 'details.district', value: updated.details.district },
+        { key: 'details.electionDate', value: updated.details.electionDate },
+        {
+          key: 'details.officeTermLength',
+          value: updated.details.officeTermLength,
+        },
+        { key: 'details.state', value: updated.details.state },
       ];
       await updateCampaign(attr);
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);
@@ -163,6 +172,15 @@ export default function BallotRaces(props) {
         { key: 'details.otherOffice', value: '' },
         { key: 'details.positionId', value: null },
         { key: 'details.electionId', value: null },
+        { key: 'details.office', value: updated.details.office },
+        { key: 'details.city', value: updated.details.city },
+        { key: 'details.district', value: updated.details.district },
+        { key: 'details.electionDate', value: updated.details.electionDate },
+        {
+          key: 'details.officeTermLength',
+          value: updated.details.officeTermLength,
+        },
+        { key: 'details.state', value: updated.details.state },
       ];
       await updateCampaign(attr);
       if (updateCallback) {

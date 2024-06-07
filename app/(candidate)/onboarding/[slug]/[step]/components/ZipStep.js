@@ -13,6 +13,7 @@ import { validateZip } from 'app/(entrance)/login/components/LoginPage';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { setUserCookie } from 'helpers/cookieHelper';
 
 async function updateUser(zip) {
   try {
