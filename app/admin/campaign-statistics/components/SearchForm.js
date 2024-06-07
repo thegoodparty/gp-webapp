@@ -101,7 +101,9 @@ export default function SearchForm({ show = true }) {
     });
 
     router.push(
-      noFiltersSet ? `?firehose=true` : `?${searchParams.toString()}`,
+      noFiltersSet
+        ? `?firehose=true`
+        : `?${searchParams.toString().replace('firehose=true&', '')}`,
     );
   };
 

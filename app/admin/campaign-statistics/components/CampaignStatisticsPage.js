@@ -34,11 +34,17 @@ const CampaignStatisticsPage = (props) => {
     URLSearchParamsToObject(useSearchParams()),
   ).length;
 
+  console.log('fireHose', fireHose);
+  console.log('props.campaigns', props.campaigns);
+  console.log('campaigns', campaigns);
+
   useEffect(() => {
-    if (fireHose && campaigns?.length === 0) {
+    if (fireHose) {
       loadCampaigns();
+    } else {
+      setCampaigns(props.campaigns);
     }
-  }, [fireHose, campaigns]);
+  }, [fireHose, props.campaigns]);
 
   const loadCampaigns = async () => {
     setLoading(true);
@@ -62,7 +68,7 @@ const CampaignStatisticsPage = (props) => {
           />
         </H2>
         <SearchForm show={showForm} />
-        {Boolean(campaigns?.length) ? (
+        {campaigns?.length > 0 ? (
           <AdminCandidatesTable campaigns={campaigns} />
         ) : (
           <H4 className="text-center">
