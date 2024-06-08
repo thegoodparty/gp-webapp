@@ -43,11 +43,11 @@ export default async function middleware(req) {
 
   // match /candidate/firstName-lastName old candidate url
   // /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/
-  const pattern = /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/;
-  const match = pathname.match(pattern);
-  if (match) {
-    return NextResponse.redirect(`${req.nextUrl.origin}`, { status: 301 });
-  }
+  // const pattern = /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/;
+  // const match = pathname.match(pattern);
+  // if (match) {
+  //   return NextResponse.redirect(`${req.nextUrl.origin}`, { status: 301 });
+  // }
 
   if (pathname === pathname.toLowerCase()) {
     return NextResponse.next();
