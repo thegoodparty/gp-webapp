@@ -1,4 +1,5 @@
 import P2vCard from './P2vCard';
+import TargetCard from './TargetCard';
 
 export default function ContentSection(props) {
   return (
@@ -6,7 +7,9 @@ export default function ContentSection(props) {
       <div className=" col-span-12 md:col-span-6">
         <P2vCard {...props} />
       </div>
-      <div className=" col-span-12 md:col-span-6">2</div>
+      <div className=" col-span-12 md:col-span-6">
+        <TargetCard {...props} />
+      </div>
     </div>
   );
 }

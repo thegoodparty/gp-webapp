@@ -3,16 +3,17 @@ import Body2 from '@shared/typography/Body2';
 import { numberFormatter } from 'helpers/numberHelper';
 import TealButton from './TealButton';
 import { FaArrowRight } from 'react-icons/fa';
+import CTA from './CTA';
 
 export default function P2vCard(props) {
   const { candidate } = props;
-  const { voteCount, office, city, state } = candidate;
+  const { votesNeeded, office, city, state } = candidate;
   return (
     <div className="border border-gray-700 p-6 rounded-2xl">
       <h2 className=" font-medium text-4xl mb-8">
         Discover a clear path to victory with{' '}
         <span className="text-secondary-light">
-          {numberFormatter(voteCount)} votes.
+          {numberFormatter(votesNeeded)} votes.
         </span>
       </h2>
       <div className="bg-[#222430] rounded-2xl relative w-full h-3">
@@ -26,7 +27,7 @@ export default function P2vCard(props) {
         </Body2>
         <Body2 className="text-right">
           {' '}
-          {numberFormatter(voteCount)}* Votes
+          {numberFormatter(votesNeeded)}* Votes
           <br />
           Needed to Win
         </Body2>
@@ -34,7 +35,7 @@ export default function P2vCard(props) {
       <Body1 className="my-8">
         GoodParty.org projects that this candidate needs{' '}
         <span className="text-secondary-light">
-          {numberFormatter(voteCount)}*
+          {numberFormatter(votesNeeded)}*
         </span>{' '}
         votes needed to win for{' '}
         <span className="text-secondary-light">{office}</span> of{' '}
@@ -42,12 +43,14 @@ export default function P2vCard(props) {
           {city}, {state}.
         </span>
       </Body1>
-      <TealButton style={{ display: 'inline-block' }}>
-        <div className="flex items-center justify-center  ">
-          <div className="mr-1">Learn How</div>
-          <FaArrowRight />
-        </div>
-      </TealButton>
+      <CTA>
+        <TealButton style={{ display: 'inline-block' }}>
+          <div className="flex items-center justify-center  ">
+            <div className="mr-1">Learn How</div>
+            <FaArrowRight />
+          </div>
+        </TealButton>
+      </CTA>
     </div>
   );
 }

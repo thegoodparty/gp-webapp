@@ -26,7 +26,11 @@ export default async function Page({ params }) {
     party: 'Independent',
     city: 'Manchester',
     state: 'State',
-    voteCount: 5402,
+    votesNeeded: 5402,
+    votersCount: 25321,
+    independents: 8414,
+    republicans: 9623,
+    democrats: 7685,
   };
   const childProps = { candidate };
   return <CandidatePage {...childProps} />;

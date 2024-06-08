@@ -13,6 +13,7 @@ import { IoPersonSharp } from 'react-icons/io5';
 import { MdEmail, MdStars } from 'react-icons/md';
 import TealButton from './TealButton';
 import StickyCard from './StickyCard';
+import CTA from './CTA';
 
 export default function CandidateCard(props) {
   const { candidate } = props;
@@ -70,12 +71,14 @@ export default function CandidateCard(props) {
         <div className="p-3 text-center rounded border border-gray-300 font-medium cursor-pointer transition-colors hover:bg-white hover:text-primary mb-4">
           Learn More About {firstName} {lastName}
         </div>
-        <TealButton>
-          <div className="flex items-center justify-center  ">
-            <div className="mr-1">Claim this profile</div>
-            <FaArrowRight />
-          </div>
-        </TealButton>
+        <CTA>
+          <TealButton>
+            <div className="flex items-center justify-center  ">
+              <div className="mr-1">Claim this profile</div>
+              <FaArrowRight />
+            </div>
+          </TealButton>
+        </CTA>
       </div>
     </StickyCard>
   );
