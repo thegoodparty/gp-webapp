@@ -26,6 +26,7 @@ export default async function Page({ params }) {
     party: 'Independent',
     city: 'Manchester',
     state: 'State',
+    voteCount: 5402,
   };
   const childProps = { candidate };
   return <CandidatePage {...childProps} />;

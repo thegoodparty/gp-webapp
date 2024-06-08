@@ -1,6 +1,7 @@
 import HelpBanner from './HelpBanner';
 import HeroImg from './HeroImg';
 import CandidateCard from './CandidateCard';
+import ContentSection from './ContentSection';
 
 export default function CandidatePage(props) {
   return (
@@ -12,8 +13,14 @@ export default function CandidatePage(props) {
           <div className="col-span-12 lg:col-span-3">
             <CandidateCard {...props} />
           </div>
-          <div className="col-span-12 lg:col-span-9">2</div>
+          <div className="col-span-12 lg:col-span-9">
+            <div>
+              <ContentSection {...props} />
+            </div>
+          </div>
         </div>
+        <div id="candidate-footer" className="mb-4"></div>
+        <div>&nbsp;</div>
       </div>
     </div>
   );
