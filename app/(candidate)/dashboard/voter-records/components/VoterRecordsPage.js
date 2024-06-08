@@ -13,82 +13,17 @@ import { FaDownload } from 'react-icons/fa';
 import { trackEvent } from 'helpers/fullStoryHelper';
 import Chip from '@shared/utils/Chip';
 import CustomVoterFile from './CustomVoterFile';
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
-const defaultFiles = [
-  {
-    key: 'full',
-    fields: [
-      'Full voter file',
-      'Full voter file',
-      'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE VOTERS"
-      />,
-    ],
-  },
-  {
-    key: 'doorKnocking',
-    fields: [
-      'Door Knocking',
-      'Door Knocking (Default)',
-      'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE ADDRESSES"
-      />,
-    ],
-  },
-  {
-    key: 'sms',
-    fields: [
-      'SMS Texting',
-      'SMS Texting (Default)',
-      'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE PHONES"
-      />,
-    ],
-  },
-  {
-    key: 'directMail',
-    fields: [
-      'Direct Mail',
-      'Direct Mail (Default)',
-      'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE ADDRESSES"
-      />,
-    ],
-  },
-  {
-    key: 'telemarketing',
-    fields: [
-      'Telemarketing',
-      'Telemarketing (Default)',
-      'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE LANDLINES"
-      />,
-    ],
-  },
-];
-
-async function fetchVoterFile(type) {
+async function fetchVoterFile(type, customFilters) {
   try {
     const api = gpApi.voterData.getVoterFile;
+    console.log('customFilters', JSON.stringify(customFilters));
     const payload = {
       type,
+      customFilters: customFilters ? JSON.stringify(customFilters) : undefined,
     };
     return await gpFetch(api, payload, false, false, false, true);
   } catch (e) {
@@ -109,18 +44,96 @@ async function wakeUp() {
 
 export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
+  const [campaign, setCampaign] = useState(props.campaign);
+  console.log('campaign', campaign);
+
+  const defaultFiles = [
+    {
+      key: 'full',
+      fields: [
+        'Full voter file',
+        'Full voter file',
+        'All',
+        <Chip
+          key="all"
+          className="bg-gray-700 text-white"
+          label="ALL AVAILABLE VOTERS"
+        />,
+      ],
+    },
+    {
+      key: 'doorKnocking',
+      fields: [
+        'Door Knocking',
+        'Door Knocking (Default)',
+        'All',
+        <Chip
+          key="all"
+          className="bg-gray-700 text-white"
+          label="ALL AVAILABLE ADDRESSES"
+        />,
+      ],
+    },
+    {
+      key: 'sms',
+      fields: [
+        'SMS Texting',
+        'SMS Texting (Default)',
+        'All',
+        <Chip
+          key="all"
+          className="bg-gray-700 text-white"
+          label="ALL AVAILABLE PHONES"
+        />,
+      ],
+    },
+    {
+      key: 'directMail',
+      fields: [
+        'Direct Mail',
+        'Direct Mail (Default)',
+        'All',
+        <Chip
+          key="all"
+          className="bg-gray-700 text-white"
+          label="ALL AVAILABLE ADDRESSES"
+        />,
+      ],
+    },
+    {
+      key: 'telemarketing',
+      fields: [
+        'Telemarketing',
+        'Telemarketing (Default)',
+        'All',
+        <Chip
+          key="all"
+          className="bg-gray-700 text-white"
+          label="ALL AVAILABLE LANDLINES"
+        />,
+      ],
+    },
+  ];
 
   useEffect(() => {
     wakeUp();
   }, []);
 
-  const handleDownload = async (type) => {
+  const handleDownload = async (type, isCustom) => {
     if (loading) {
       return;
     }
     setLoading(true);
-    trackEvent('Download Voter File attempt', { type });
-    const response = await fetchVoterFile(type);
+    let response;
+    if (isCustom) {
+      trackEvent('Download Voter File attempt', { type: 'custom' });
+      const customFilters = campaign.data.customVoterFiles[type];
+      response = await fetchVoterFile('custom', customFilters);
+    } else {
+      response = await fetchVoterFile(type);
+      trackEvent('Download Voter File attempt', { type });
+    }
+
     if (response) {
       // Read the response as Blob
       const blob = await response.blob();
@@ -143,6 +156,34 @@ export default function VoterRecordsPage(props) {
     }
     setLoading(false);
   };
+
+  const reloadCampaign = async () => {
+    const res = await getCampaign();
+    setCampaign(res.campaign);
+  };
+
+  if (
+    campaign.data?.customVoterFiles &&
+    campaign.data?.customVoterFiles.length > 0 &&
+    defaultFiles.length === 5
+  ) {
+    campaign.data?.customVoterFiles.forEach((file, i) => {
+      defaultFiles.push({
+        key: i,
+        isCustom: true,
+        fields: [
+          file.name,
+          file.channel,
+          file.purpose || '',
+          <Chip
+            key="custom"
+            className="bg-orange-700 text-white"
+            label="CUSTOM VOTER FILE"
+          />,
+        ],
+      });
+    });
+  }
   return (
     <DashboardLayout {...props}>
       <Paper className="md:p-6">
@@ -153,7 +194,7 @@ export default function VoterRecordsPage(props) {
               A collection of voter data spreadsheets, tailored to your needs.
             </Body2>
           </div>
-          <CustomVoterFile {...props} />
+          <CustomVoterFile {...props} reloadCampaignCallback={reloadCampaign} />
         </div>
         <div className="mt-8 grid grid-cols-8 border-x border-x-gray-200 ">
           {tableHeaders.map((header, index) => (
@@ -201,7 +242,7 @@ export default function VoterRecordsPage(props) {
                     loading ? 'opacity-25' : ''
                   }`}
                   onClick={() => {
-                    handleDownload(file.key);
+                    handleDownload(file.key, file.isCustom);
                   }}
                 />
               </div>

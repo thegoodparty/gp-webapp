@@ -1,24 +1,16 @@
-import {
-  Checkbox,
-  Divider,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  OutlinedInput,
-  Select,
-} from '@mui/material';
+import { InputLabel, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
-import Overline from '@shared/typography/Overline';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
+import CustomVoterAudience from './CustomVoterAudience';
 
 const fields = [
   {
     id: 'channel',
-    label: 'Channel',
+    label: 'Channel *',
     options: ['Direct Mail', 'Door Knocking', 'SMS Texting', 'Telemarketing'],
   },
   {
@@ -28,38 +20,13 @@ const fields = [
   },
 ];
 
-const audienceOptions = [
-  'All',
-  // 'DIVIDER',
-  'Super Voters (75% +)',
-  'Likely Voters (50%-75%)',
-  'Unreliable Voters (25%-50%)',
-  'Unlikely Voters (0%-25%)',
-  'First Time Voters',
-  // 'DIVIDER',
-  'Male',
-  'Female',
-  'Unknown',
-  // 'DIVIDER',
-  '18-25',
-  '25-35',
-  '35-50',
-  '50+',
-  // 'DIVIDER',
-  'Democrat',
-  'Independent / Non-Partisan',
-  'Republican',
-];
-
-export default function CustomVoterFile({ campaign }) {
-  const [open, setOpen] = useState(true);
-  const { office, otherOffice } = campaign?.details;
-  const resolvedOffice = office === 'Other' ? otherOffice : office;
+export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
+  const [open, setOpen] = useState(false);
+  const [showAudience, setShowAudience] = useState(false);
 
   const [state, setState] = useState({
     channel: '',
     purpose: '',
-    audience: [],
   });
 
   const handleChange = (key, value) => {
@@ -69,19 +36,20 @@ export default function CustomVoterFile({ campaign }) {
     });
   };
 
-  const handleChangeAudience = (event) => {
-    console.log('e', event);
-    const {
-      target: { value },
-    } = event;
+  const canSave = () => {
+    return state.channel !== '';
+  };
+
+  const customCreatedCallback = async () => {
+    await reloadCampaignCallback();
+    setOpen(false);
+    setShowAudience(false);
     setState({
-      ...state,
-      // On autofill we get a stringified value.
-      audience: value,
+      channel: '',
+      purpose: '',
     });
   };
 
-  console.log('state', state);
   return (
     <div className="col-span-12 md:col-span-6 md:flex md:justify-end md:items-center">
       <PrimaryButton
@@ -92,67 +60,68 @@ export default function CustomVoterFile({ campaign }) {
         Create custom voter file
       </PrimaryButton>
       <Modal closeCallback={() => setOpen(false)} open={open}>
-        <div className="w-[90vw] max-w-xl p-2 md:p-8">
-          <div className=" text-center">
-            <H1 className="mb-4">Voter File Assistant</H1>
-            <Body2>
-              Make your selections to get your custom election data for:
-              <br />
-              <strong>{resolvedOffice}</strong>
-            </Body2>
-            <Overline className=" text-error my-4">
-              All fields are required
-            </Overline>
-          </div>
-          <div className="mt-8 grid grid-cols-12 gap-4">
-            {fields.map((field) => (
-              <div key={field.id} className="col-span-12 md:col-span-6">
-                <InputLabel id={field.id}>{field.label}</InputLabel>
-                <Select
-                  fullWidth
-                  labelId={field.id}
-                  value={state[field.id]}
-                  label={field.label}
-                  onChange={(e) => {
-                    handleChange(field.id, e.target.value);
+        {!showAudience ? (
+          <div className="w-[90vw] max-w-xl p-2 md:p-8">
+            <div>
+              <div className=" text-center">
+                <H1 className="mb-4">Voter File Assistant</H1>
+                <Body2>How would you like to use this voter file?</Body2>
+              </div>
+              <div className="mt-8 grid grid-cols-12 gap-4">
+                {fields.map((field) => (
+                  <div key={field.id} className="col-span-12">
+                    <InputLabel id={field.id}>{field.label}</InputLabel>
+                    <Select
+                      fullWidth
+                      placeholder="Select a purpose"
+                      labelId={field.id}
+                      value={state[field.id]}
+                      label={field.label}
+                      displayEmpty
+                      required
+                      onChange={(e) => {
+                        handleChange(field.id, e.target.value);
+                      }}
+                    >
+                      <MenuItem value="">Select</MenuItem>
+                      {field.options.map((option) => (
+                        <MenuItem value={option} key={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
+                ))}
+              </div>
+              <div className="text-sm text-gray-400 text-center mt-1">
+                When you select a purpose, GoodParty.org recommends filters for
+                you.
+              </div>
+              <div className="flex justify-between mt-12">
+                <SecondaryButton onClick={() => setOpen(false)}>
+                  Cancel
+                </SecondaryButton>
+                <PrimaryButton
+                  disabled={!canSave()}
+                  onClick={() => {
+                    setShowAudience(true);
                   }}
                 >
-                  {field.options.map((option) => (
-                    <MenuItem value={option} key={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  Next
+                </PrimaryButton>
               </div>
-            ))}
-            <div className="col-span-12">
-              <InputLabel id="audience">Audience</InputLabel>
-              <Select
-                fullWidth
-                multiple
-                labelId="audience"
-                value={state.audience}
-                label="Audience"
-                input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(', ')}
-                onChange={handleChangeAudience}
-              >
-                {audienceOptions.map((option, index) => (
-                  // <div key={index}>
-                  //   {option === 'DIVIDER' ? (
-                  //     <Divider />
-                  //   ) : (
-                  <MenuItem value={option} key={option}>
-                    <Checkbox checked={state.audience.indexOf(option) > -1} />
-                    <ListItemText primary={option} />
-                  </MenuItem>
-                  // )}
-                  // </div>
-                ))}
-              </Select>
             </div>
           </div>
-        </div>
+        ) : (
+          <CustomVoterAudience
+            campaign={campaign}
+            backCallback={() => {
+              setShowAudience(false);
+            }}
+            prevStepValues={state}
+            customCreatedCallback={customCreatedCallback}
+          />
+        )}
       </Modal>
     </div>
   );
