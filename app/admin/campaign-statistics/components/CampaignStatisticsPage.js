@@ -34,8 +34,6 @@ const CampaignStatisticsPage = (props) => {
     URLSearchParamsToObject(useSearchParams()),
   ).length;
 
-  console.log('fireHose', fireHose);
-  console.log('props.campaigns', props.campaigns);
   console.log('campaigns', campaigns);
 
   useEffect(() => {

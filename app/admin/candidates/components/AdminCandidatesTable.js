@@ -101,7 +101,6 @@ export default function AdminCandidatesTable({ campaigns }) {
       pathToVictory,
     } = campaign;
 
-    console.log('campaign', campaign);
     // const campaign = mapCampaignToCandidate(data);
     const { currentStep, reportedVoterGoals } = data || {};
     const {

@@ -45,7 +45,6 @@ async function wakeUp() {
 export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
-  console.log('campaign', campaign);
 
   const defaultFiles = [
     {

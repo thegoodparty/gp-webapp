@@ -65,7 +65,6 @@ export default function ZipStep(props) {
 
   const knowsRun = campaign?.details?.runForOffice === 'yes';
 
-  console.log('campaign zip', campaign);
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">

@@ -10,7 +10,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export default function VolunteerDashboardPage(props) {
   const { campaigns } = props;
-  console.log('campaigns', campaigns);
   return (
     <VolunteerDashboardLayout {...props}>
       <Paper className=" mt-6 md:py-12 md:px-6 flex flex-col items-center">
