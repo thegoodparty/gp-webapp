@@ -13,11 +13,11 @@ import OfficePage from './components/OfficePage';
 // }
 
 export default async function Page({ params }) {
-  // console.log('params', params);
-  // const { nameOffice } = params;
-  // const [name, office] = nameOffice;
-  // console.log('name', name);
-  // console.log('office', office);
+  console.log('params', params);
+  const { nameOffice } = params;
+  const [name, office] = nameOffice;
+  console.log('name', name);
+  console.log('office', office);
 
   const candidate = {
     firstName: 'John',
