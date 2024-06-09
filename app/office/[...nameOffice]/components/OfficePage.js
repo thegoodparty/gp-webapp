@@ -1,5 +1,5 @@
 // import HelpBanner from './HelpBanner';
-import HeroImg from './HeroImg';
+// import HeroImg from './HeroImg';
 import CandidateCard from './CandidateCard';
 import ContentSection from './ContentSection';
 
