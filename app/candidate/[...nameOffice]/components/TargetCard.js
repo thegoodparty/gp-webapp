@@ -5,11 +5,11 @@ import TealButton from './TealButton';
 import { FaArrowRight } from 'react-icons/fa';
 import Overline from '@shared/typography/Overline';
 import CTA from './CTA';
+import MarketingH4 from '@shared/typography/MarketingH4';
 
 export default function TargetCard(props) {
   const { candidate } = props;
   const {
-    votesNeeded,
     office,
     city,
     state,
@@ -19,14 +19,14 @@ export default function TargetCard(props) {
     democrats,
   } = candidate;
   return (
-    <div className="border border-gray-700 p-6 rounded-2xl">
-      <h2 className=" font-medium text-4xl mb-8">
+    <div className="border border-gray-700 p-6 rounded-2xl h-full">
+      <MarketingH4 className="mb-8">
         Target all{' '}
         <span className="text-secondary-light">
           {numberFormatter(votersCount)} voters
         </span>{' '}
         for this race.
-      </h2>
+      </MarketingH4>
       <div className="grid grid-cols-12 gap-4 ">
         <div className="col-span-12 md:col-span-4">
           <div className=" text-4xl font-medium mb-2">

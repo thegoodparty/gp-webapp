@@ -4,18 +4,19 @@ import { numberFormatter } from 'helpers/numberHelper';
 import TealButton from './TealButton';
 import { FaArrowRight } from 'react-icons/fa';
 import CTA from './CTA';
+import MarketingH4 from '@shared/typography/MarketingH4';
 
 export default function P2vCard(props) {
   const { candidate } = props;
   const { votesNeeded, office, city, state } = candidate;
   return (
-    <div className="border border-gray-700 p-6 rounded-2xl">
-      <h2 className=" font-medium text-4xl mb-8">
+    <div className="border border-gray-700 p-6 rounded-2xl h-full">
+      <MarketingH4 className="mb-8">
         Discover a clear path to victory with{' '}
         <span className="text-secondary-light">
           {numberFormatter(votesNeeded)} votes.
         </span>
-      </h2>
+      </MarketingH4>
       <div className="bg-[#222430] rounded-2xl relative w-full h-3">
         <div className="absolute left-0 top-0 w-1/3 h-full rounded-2xl  bg-gradient-to-r from-[#008080] to-[#717DE5] "></div>
       </div>
