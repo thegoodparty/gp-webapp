@@ -1,7 +1,7 @@
 // import HelpBanner from './HelpBanner';
 // import HeroImg from './HeroImg';
-import CandidateCard from './CandidateCard';
-import ContentSection from './ContentSection';
+// import CandidateCard from './CandidateCard';
+// import ContentSection from './ContentSection';
 
 export default function OfficePage(props) {
   return (
@@ -11,12 +11,10 @@ export default function OfficePage(props) {
       <div className="max-w-[1440px] mx-auto px-4 xl:p-0 mt-4">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 lg:col-span-3">
-            <CandidateCard {...props} />
+            {/* <CandidateCard {...props} /> */}1
           </div>
           <div className="col-span-12 lg:col-span-9">
-            <div>
-              <ContentSection {...props} />
-            </div>
+            <div>{/* <ContentSection {...props} /> */}2</div>
           </div>
         </div>
         <div id="candidate-footer" className="mb-4"></div>
