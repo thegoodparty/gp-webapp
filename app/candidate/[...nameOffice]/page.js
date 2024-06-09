@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
     title: `Candidate Page | GoodParty.org`,
     description: 'todo',
     // image: content.mainImage && `https:${content.mainImage.url}`,
-    slug: `/candidate/${nameOffice[0]}`,
+    // slug: `/candidate/${nameOffice[0]}`,
   });
   return meta;
 }
