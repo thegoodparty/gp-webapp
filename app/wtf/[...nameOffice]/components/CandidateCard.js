@@ -1,8 +1,10 @@
+'use client';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import H5 from '@shared/typography/H5';
 import Overline from '@shared/typography/Overline';
 import { FaGlobeAmericas, FaInstagram, FaMapMarkerAlt } from 'react-icons/fa';
+import Sticky from 'react-stickynode';
 import {
   FaArrowRight,
   FaFacebookF,
@@ -25,7 +27,11 @@ export default function CandidateCard(props) {
   }
 
   return (
-    <StickyCard>
+    <Sticky
+      top={72}
+      bottomBoundary="#candidate-footer"
+      // enabled={winWidth > 1024}
+    >
       <div className=" bg-primary-dark p-6 rounded-2xl border border-gray-700">
         <div className="flex justify-between">
           <div className="bg-primary inline-block border border-white rounded-2xl p-4">
@@ -80,6 +86,6 @@ export default function CandidateCard(props) {
         </TealButton>
         {/* </CTA> */}
       </div>
-    </StickyCard>
+    </Sticky>
   );
 }

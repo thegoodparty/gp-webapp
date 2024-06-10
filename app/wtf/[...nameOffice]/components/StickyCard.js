@@ -13,7 +13,7 @@ export default function StickyCard({ children }) {
     <Sticky
       top={72}
       bottomBoundary="#candidate-footer"
-      enabled={winWidth > 1024}
+      // enabled={winWidth > 1024}
     >
       {children}
     </Sticky>
