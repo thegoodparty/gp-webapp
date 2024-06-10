@@ -11,7 +11,7 @@ export default function OfficePage(props) {
       <div className="max-w-[1440px] mx-auto px-4 xl:p-0 mt-4">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-12 lg:col-span-3">
-            <CandidateCard {...props} />1
+            <CandidateCard {...props} />
           </div>
           <div className="col-span-12 lg:col-span-9">
             {/* <ContentSection {...props} /> */}
