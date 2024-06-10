@@ -1,23 +1,22 @@
-// import pageMetaData from 'helpers/metadataHelper';
+import pageMetaData from 'helpers/metadataHelper';
 import OfficePage from './components/OfficePage';
 
-// export async function generateMetadata({ params }) {
-//   const { nameOffice } = params;
-//   const meta = pageMetaData({
-//     title: `Candidate Page | GoodParty.org`,
-//     description: 'todo',
-//     // image: content.mainImage && `https:${content.mainImage.url}`,
-//     // slug: `/candidate/${nameOffice[0]}`,
-//   });
-//   return meta;
-// }
+export async function generateMetadata({ params }) {
+  const { name, office } = params;
+  const meta = pageMetaData({
+    title: `Candidate Page | GoodParty.org`,
+    description: 'todo',
+    // image: content.mainImage && `https:${content.mainImage.url}`,
+    slug: `/candidate/${name}/${office}`,
+  });
+  return meta;
+}
 
 export default async function Page({ params }) {
-  // console.log('params', params);
-  // const { nameOffice } = params;
-  // const [name, office] = nameOffice;
-  // console.log('name', name);
-  // console.log('office', office);
+  console.log('params', params);
+  const { name, office } = params;
+  console.log('name', name);
+  console.log('office', office);
 
   const candidate = {
     firstName: 'John',
