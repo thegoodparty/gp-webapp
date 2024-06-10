@@ -14,7 +14,7 @@ import {
 import { IoPersonSharp } from 'react-icons/io5';
 import { MdEmail, MdStars } from 'react-icons/md';
 import TealButton from './TealButton';
-import StickyCard from './StickyCard';
+// import StickyCard from './StickyCard';
 // import CTA from './CTA';
 
 export default function CandidateCard(props) {
