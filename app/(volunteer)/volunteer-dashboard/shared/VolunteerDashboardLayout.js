@@ -1,12 +1,10 @@
 import UserSnapScript from '@shared/scripts/UserSnapScript';
-import FullStoryScript from '@shared/scripts/FullStoryScript';
 import VolunteerDashboardMenu from './VolunteerDashboardMenu';
 
 export default function VolunteerDashboardLayout({ children, pathname }) {
   return (
     <>
       <UserSnapScript />
-      <FullStoryScript />
 
       <div className="flex min-h-[calc(100vh-84px)] bg-indigo-50 lg:mt-4 lg:px-4">
         <div className="hidden lg:block">

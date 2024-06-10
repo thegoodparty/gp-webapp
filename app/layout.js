@@ -7,6 +7,7 @@ import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
 import { appBase, isProd } from 'gpApi';
 import VwoScript from '@shared/scripts/VwoScript';
+import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
 
@@ -90,6 +91,7 @@ export default function RootLayout({ children }) {
 
         <link rel="manifest" href="/manifest.json" />
         <VwoScript />
+        <FullStoryScript />
       </head>
       <body>
         <PageWrapper>{children}</PageWrapper>

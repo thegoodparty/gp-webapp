@@ -10,7 +10,6 @@ import TextField from '@shared/inputs/TextField';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 async function updateUser(updatedFields) {
   try {
@@ -74,7 +73,6 @@ export default function SetNamePage() {
 
   return (
     <MaxWidth>
-      <FullStoryScript />
       <div className="flex justify-center min-h-[calc(100vh-56px)]">
         <div className="grid py-6 max-w-lg w-[75vw]">
           <div className="text-center mb-8 pt-8">
