@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import img from '/public/images/candidate/candidate-hero.jpg';
+import img from '/public/images/candidate/candidate-hero-color.jpg';
 
 export default function HeroImg() {
   return (
