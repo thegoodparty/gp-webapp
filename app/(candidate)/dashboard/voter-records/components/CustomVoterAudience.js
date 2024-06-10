@@ -8,7 +8,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { trackEvent } from 'helpers/fullStoryHelper';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const fields = [
   {
@@ -51,14 +51,73 @@ const fields = [
   },
 ];
 
+/*
+ if prevStepValues.purpose is selected preSelect these filters
+ GOTV = 25% - 75%, + First Time Voters, Independent, Default All Ages + Genders
+Persuasion = 50% - 100%, + First Time Voters, Independent, Default All Ages + Genders
+Voter ID = 0 - 100%, Independent, Default All Ages + Genders
+*/
+const purposeToFilters = {
+  GOTV: {
+    audience_likelyVoters: true,
+    audience_unreliableVoters: true,
+    audience_firstTimeVoters: true,
+    party_independent: true,
+    age_18_25: true,
+    age_25_35: true,
+    age_35_50: true,
+  },
+  Persuasion: {
+    audience_likelyVoters: true,
+    audience_superVoters: true,
+    audience_firstTimeVoters: true,
+    party_independent: true,
+    age_18_25: true,
+    age_25_35: true,
+    age_35_50: true,
+  },
+  'Voter ID': {
+    audience_superVoters: true,
+    audience_likelyVoters: true,
+    audience_unreliableVoters: true,
+    audience_unlikelyVoters: true,
+    audience_firstTimeVoters: true,
+    party_independent: true,
+    age_18_25: true,
+    age_25_35: true,
+    age_35_50: true,
+  },
+};
+
 export default function CustomVoterAudience({
   campaign,
   backCallback,
   customCreatedCallback,
   prevStepValues,
 }) {
-  const [state, setState] = useState({});
+  // set initial state to all false
+  const [state, setState] = useState({
+    audience_superVoters: false,
+    audience_likelyVoters: false,
+    audience_unreliableVoters: false,
+    audience_unlikelyVoters: false,
+    audience_firstTimeVoters: false,
+    party_independent: false,
+    party_democrat: false,
+    party_republican: false,
+    age_18_25: false,
+    age_25_35: false,
+    age_35_50: false,
+  });
   const [loading, setLoading] = useState(false);
+
+  const { purpose } = prevStepValues;
+
+  useEffect(() => {
+    if (purpose) {
+      setState(purposeToFilters[purpose]);
+    }
+  }, [purpose]);
 
   const handleChangeAudience = (option, e) => {
     const val = e.target.checked;
@@ -93,7 +152,6 @@ export default function CustomVoterAudience({
     }
 
     voterFiles.push(newFile);
-    console.log('voterFiles', voterFiles);
     await updateCampaign([
       {
         key: 'data.customVoterFiles',
@@ -129,6 +187,7 @@ export default function CustomVoterAudience({
                   onChange={(e) => {
                     handleChangeAudience(option.key, e);
                   }}
+                  value={state[option.key]}
                   checked={state[option.key]}
                   color="secondary"
                 />

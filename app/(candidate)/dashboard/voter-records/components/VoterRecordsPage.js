@@ -14,6 +14,7 @@ import { trackEvent } from 'helpers/fullStoryHelper';
 import Chip from '@shared/utils/Chip';
 import CustomVoterFile from './CustomVoterFile';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -46,9 +47,11 @@ export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
 
+  const date = dateUsHelper(new Date());
   const defaultFiles = [
     {
       key: 'full',
+      name: `Full Voter File - ${date}`,
       fields: [
         'Full voter file',
         'Full voter file',
@@ -62,6 +65,7 @@ export default function VoterRecordsPage(props) {
     },
     {
       key: 'doorKnocking',
+      name: `Door Knocking - ${date}`,
       fields: [
         'Door Knocking',
         'Door Knocking (Default)',
@@ -75,6 +79,7 @@ export default function VoterRecordsPage(props) {
     },
     {
       key: 'sms',
+      name: `SMS Texting - ${date}`,
       fields: [
         'SMS Texting',
         'SMS Texting (Default)',
@@ -88,6 +93,7 @@ export default function VoterRecordsPage(props) {
     },
     {
       key: 'directMail',
+      name: `Direct Mail - ${date}`,
       fields: [
         'Direct Mail',
         'Direct Mail (Default)',
@@ -101,6 +107,7 @@ export default function VoterRecordsPage(props) {
     },
     {
       key: 'telemarketing',
+      name: `Telemarketing - ${date}`,
       fields: [
         'Telemarketing',
         'Telemarketing (Default)',
@@ -118,7 +125,7 @@ export default function VoterRecordsPage(props) {
     wakeUp();
   }, []);
 
-  const handleDownload = async (type, isCustom) => {
+  const handleDownload = async (type, isCustom, name) => {
     if (loading) {
       return;
     }
@@ -140,7 +147,7 @@ export default function VoterRecordsPage(props) {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'voter-records.csv');
+      link.setAttribute('download', `${name}.csv`);
       document.body.appendChild(link);
       link.click();
 
@@ -170,6 +177,7 @@ export default function VoterRecordsPage(props) {
       defaultFiles.push({
         key: i,
         isCustom: true,
+        name: file.name,
         fields: [
           file.name,
           file.channel,
@@ -241,7 +249,7 @@ export default function VoterRecordsPage(props) {
                     loading ? 'opacity-25' : ''
                   }`}
                   onClick={() => {
-                    handleDownload(file.key, file.isCustom);
+                    handleDownload(file.key, file.isCustom, file.name);
                   }}
                 />
               </div>

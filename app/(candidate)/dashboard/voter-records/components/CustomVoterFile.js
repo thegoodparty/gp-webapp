@@ -50,6 +50,15 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
     });
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    setShowAudience(false);
+    setState({
+      channel: '',
+      purpose: '',
+    });
+  };
+
   return (
     <div className="col-span-12 md:col-span-6 md:flex md:justify-end md:items-center">
       <PrimaryButton
@@ -59,7 +68,7 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
       >
         Create custom voter file
       </PrimaryButton>
-      <Modal closeCallback={() => setOpen(false)} open={open}>
+      <Modal closeCallback={handleClose} open={open}>
         {!showAudience ? (
           <div className="w-[90vw] max-w-xl p-2 md:p-8">
             <div>
@@ -98,9 +107,7 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
                 you.
               </div>
               <div className="flex justify-between mt-12">
-                <SecondaryButton onClick={() => setOpen(false)}>
-                  Cancel
-                </SecondaryButton>
+                <SecondaryButton onClick={handleClose}>Cancel</SecondaryButton>
                 <PrimaryButton
                   disabled={!canSave()}
                   onClick={() => {
