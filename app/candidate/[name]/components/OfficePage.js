@@ -1,7 +1,7 @@
 import HelpBanner from './HelpBanner';
 import HeroImg from './HeroImg';
 import CandidateCard from './CandidateCard';
-// import ContentSection from './ContentSection';
+import ContentSection from './ContentSection';
 
 export default function OfficePage(props) {
   return (
@@ -14,7 +14,7 @@ export default function OfficePage(props) {
             <CandidateCard {...props} />
           </div>
           <div className="col-span-12 lg:col-span-9">
-            {/* <ContentSection {...props} /> */}
+            <ContentSection {...props} />
           </div>
         </div>
         <div id="candidate-footer" className="mb-4"></div>
