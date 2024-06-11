@@ -21,7 +21,7 @@ let pages = [
     id: 'campaign-tracker-dashboard',
   },
   {
-    label: 'Voter Records',
+    label: 'Upgrade to Pro',
     icon: <GiProgression />,
     link: '/pro-consultation',
     id: 'vote-records-dashboard',
@@ -82,6 +82,7 @@ export default function DashboardMenu({
   if ((user?.isAdmin || campaign?.isPro) && pages.length === 8) {
     pages[1].link = '/dashboard/voter-records';
     pages[1].id = 'vote-records-dashboard';
+    pages[1].label = 'Voter Records';
 
     if (user?.isAdmin) {
       pages.splice(5, 0, {
