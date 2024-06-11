@@ -20,6 +20,10 @@ const redirects = {
   '/pricing': '/run-for-office#pricing-section',
 };
 
+const absoluteRedirects = {
+  '/iva': 'https://lp.goodparty.org/iva',
+};
+
 // const blockedIPs = ['142.198.200.33'];
 
 export default async function middleware(req) {
@@ -37,6 +41,13 @@ export default async function middleware(req) {
   if (redirects[pathname]) {
     return NextResponse.redirect(
       `${req.nextUrl.origin}${redirects[pathname]}${req.nextUrl.search || ''}`,
+      { status: 301 },
+    );
+  }
+
+  if (absoluteRedirects[pathname]) {
+    return NextResponse.redirect(
+      `${absoluteRedirects[pathname]}${req.nextUrl.search || ''}`,
       { status: 301 },
     );
   }
