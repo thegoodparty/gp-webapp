@@ -21,6 +21,12 @@ const formFields = [
     type: 'text',
   },
   {
+    key: 'email',
+    label: 'User Email',
+    type: 'text',
+    helperText: 'Partial match is accepted',
+  },
+  {
     key: 'level',
     label: 'Race Level',
     type: 'select',

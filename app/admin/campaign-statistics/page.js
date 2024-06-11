@@ -42,6 +42,7 @@ export default async function Page({ searchParams }) {
   const {
     state,
     slug,
+    email,
     level,
     primaryElectionDateStart,
     primaryElectionDateEnd,
@@ -54,6 +55,7 @@ export default async function Page({ searchParams }) {
   const initialParams = {
     state,
     slug,
+    email,
     level,
     primaryElectionDateStart,
     primaryElectionDateEnd,
