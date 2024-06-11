@@ -37,7 +37,7 @@ export default function FreeToolsCard() {
         ))}
       </div>
 
-      <CTA>
+      <CTA id="free-tool-card-cta">
         <TealButton style={{ display: 'inline-block' }}>
           <div className="flex items-center justify-center  ">
             <div className="mr-1">Get Data</div>

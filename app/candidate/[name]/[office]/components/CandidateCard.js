@@ -71,7 +71,7 @@ export default function CandidateCard(props) {
         <div className="p-3 text-center rounded border border-gray-300 font-medium cursor-pointer transition-colors hover:bg-white hover:text-primary mb-4">
           Learn More About {firstName} {lastName}
         </div>
-        <CTA>
+        <CTA id="candidate-card-cta">
           <TealButton>
             <div className="flex items-center justify-center  ">
               <div className="mr-1">Claim this profile</div>

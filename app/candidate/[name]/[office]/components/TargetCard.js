@@ -60,7 +60,7 @@ export default function TargetCard(props) {
           {city}, {state}.
         </span>
       </Body1>
-      <CTA>
+      <CTA id="targe-card-cta">
         <TealButton style={{ display: 'inline-block' }}>
           <div className="flex items-center justify-center  ">
             <div className="mr-1">Get Data</div>

@@ -2,7 +2,7 @@
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { deleteCookie } from 'helpers/cookieHelper';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 
 export async function updateCampaign(attr, slug) {
   try {
@@ -56,6 +56,15 @@ export async function createCampaign() {
     if (slug) {
       deleteCookie('afterAction');
       deleteCookie('returnUrl');
+
+      // claim profile from candidate page. save it to the new campaign
+      const claimProfile = getCookie('claimProfile');
+      if (claimProfile) {
+        await updateCampaign([
+          { key: 'data.claimProfile', value: claimProfile },
+        ]);
+        deleteCookie('claimProfile');
+      }
       window.location.href = `/onboarding/${slug}/1`;
     }
   } catch (e) {

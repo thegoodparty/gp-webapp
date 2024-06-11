@@ -44,7 +44,7 @@ export default function P2vCard(props) {
           {city}, {state}.
         </span>
       </Body1>
-      <CTA>
+      <CTA id="p2v-card-cta">
         <TealButton style={{ display: 'inline-block' }}>
           <div className="flex items-center justify-center  ">
             <div className="mr-1">Learn How</div>
