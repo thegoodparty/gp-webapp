@@ -24,7 +24,7 @@ let pages = [
     label: 'Upgrade to Pro',
     icon: <GiProgression />,
     link: '/pro-consultation',
-    id: 'vote-records-dashboard',
+    id: 'upgrade-pro-dashboard',
   },
   {
     label: 'AI Campaign Plan',
