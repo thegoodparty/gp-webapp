@@ -24,8 +24,13 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export const fetchJobs = async () => {
-  const api = gpApi.jobs.list;
-  return await gpFetch(api, false, 3600);
+  try {
+    const api = gpApi.jobs.list;
+    return await gpFetch(api, false, 3600);
+  } catch (e) {
+    console.log('error fetching jobs', e);
+    return [];
+  }
 };
 
 async function CareersWrapper() {
@@ -39,9 +44,6 @@ async function CareersWrapper() {
     <>
       <MaxWidth>
         <Hero />
-      </MaxWidth>
-      <MaxWidth>
-        {/* <LeverCareers /> */}
         <AshbyCareers {...childProps} />
         <Suspense fallback={`Loading...`}>
           <Values />
