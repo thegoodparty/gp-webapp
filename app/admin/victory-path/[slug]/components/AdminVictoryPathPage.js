@@ -239,12 +239,6 @@ export default function AdminVictoryPathPage(props) {
         <div className="mt-8">
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
-            <br />
-            Name:{' '}
-            <strong>
-              {details?.firstName || ''} {details?.lastName || ''}
-            </strong>
-            .
           </H2>
           {!notNeeded && (
             <VoterFileSection

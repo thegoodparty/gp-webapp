@@ -19,6 +19,7 @@ import Image from 'next/image';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
 import InfoButton from '@shared/buttons/InfoButton';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 const parties = [
   {
@@ -165,6 +166,9 @@ export default function PartyStep(props) {
     if (invalidOtherParty()) {
       setShowInvalidModal(true);
       onChangeField('otherParty', '');
+      trackEvent('Invalid Party', {
+        party: state.party,
+      });
       return;
     }
     if (canSubmit) {

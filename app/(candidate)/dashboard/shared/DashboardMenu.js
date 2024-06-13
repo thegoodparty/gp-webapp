@@ -21,6 +21,12 @@ let pages = [
     id: 'campaign-tracker-dashboard',
   },
   {
+    label: 'Upgrade to Pro',
+    icon: <GiProgression />,
+    link: '/pro-consultation',
+    id: 'upgrade-pro-dashboard',
+  },
+  {
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
     link: '/dashboard/plan',
@@ -38,12 +44,7 @@ let pages = [
     link: '/dashboard/details',
     id: 'details-dashboard',
   },
-  {
-    label: 'Voter Records',
-    icon: <GiProgression />,
-    link: '/pro-consultation',
-    id: 'vote-records-dashboard',
-  },
+
   {
     label: 'Campaign Team',
     icon: <RiTeamLine />,
@@ -78,13 +79,10 @@ export default function DashboardMenu({
     fireGTMButtonClickEvent(e.currentTarget);
   };
 
-  if (
-    (user?.isAdmin || campaign?.isPro) &&
-    pages.length === 8 &&
-    campaign?.data?.hasVoterFile === 'completed'
-  ) {
-    pages[4].link = '/dashboard/voter-records';
-    pages[4].id = 'vote-records-dashboard';
+  if ((user?.isAdmin || campaign?.isPro) && pages.length === 8) {
+    pages[1].link = '/dashboard/voter-records';
+    pages[1].id = 'vote-records-dashboard';
+    pages[1].label = 'Voter Records';
 
     if (user?.isAdmin) {
       pages.splice(5, 0, {

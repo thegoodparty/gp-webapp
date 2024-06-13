@@ -57,7 +57,7 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
     district: campaign.details?.district || '',
     city: campaign.details?.city || '',
     ballotOffice: campaign.details?.ballotOffice || false,
-    electionDate: campaign.goals?.electionDate || '',
+    electionDate: campaign.details?.electionDate || '',
   });
 
   const canSave = () => {
@@ -88,12 +88,9 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
       positionId: null,
       electionId: null,
       ballotOffice: null,
-    };
-    updated.goals = {
-      ...campaign.goals,
       electionDate: state.electionDate,
     };
-
+    console.log('updated', updated);
     nextCallback(updated);
   };
 
@@ -101,7 +98,9 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
     <div className="max-w-[640px] mx-auto w-[80vw]">
       <H2 className="text-center">Office Details</H2>
       <Body1 className="my-8">
-        Please Note: Make sure your office was not in the list. Manual entry of your office details requires our team&apos;s review, which can delay full access to features. Wait times vary based on demand.
+        Please Note: Make sure your office was not in the list. Manual entry of
+        your office details requires our team&apos;s review, which can delay
+        full access to features. Wait times vary based on demand.
       </Body1>
       {fields.map((field) => (
         <RenderInputField

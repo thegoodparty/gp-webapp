@@ -8,22 +8,22 @@ export default function LisaBottom() {
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-4 text-center">
           <div className="text-4xl text-purple-200 font-extrabold mb-2">
-            200+
+            500+
           </div>
           <div className="text-sm font-sfpro">
             candidates supported with our product nationwide
           </div>
         </div>
         <div className="col-span-4 text-center">
-          <div className="text-4xl text-red-500 font-extrabold mb-2">50+</div>
+          <div className="text-4xl text-red-500 font-extrabold mb-2">100+</div>
           <div className="text-sm font-sfpro">
             years of campaigning experience at all levels of government
           </div>
         </div>
         <div className="col-span-4 text-center">
-          <div className="text-4xl text-blue-500 font-extrabold mb-2">$0</div>
+          <div className="text-4xl text-blue-500 font-extrabold mb-2">$10</div>
           <div className="text-sm font-sfpro">
-            free access to tools that level the playing field for independents
+            cost to access powerful and affordable features with Pro
           </div>
         </div>
       </div>

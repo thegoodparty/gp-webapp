@@ -33,7 +33,7 @@ const cards = [
   {
     title: 'We Party',
     front: 'Together with a purpose',
-    back: 'Fun and joy is what makes life worth living. We celebrate each other, take pride in ourselves and what we are building, and commit to spreading a GoodParty.org every which way possible.',
+    back: 'Fun and joy is what makes life worth living. We celebrate each other, take pride in ourselves and what we are building, and commit to spreading GoodParty.org every which way possible.',
     color: '#F8593F',
   },
 ];

@@ -8,7 +8,6 @@ import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
-import FullStoryScript from '@shared/scripts/FullStoryScript';
 import { updateUser } from 'helpers/userHelper';
 
 export default function SetNamePage() {
@@ -58,7 +57,6 @@ export default function SetNamePage() {
 
   return (
     <MaxWidth>
-      <FullStoryScript />
       <div className="flex justify-center min-h-[calc(100vh-56px)]">
         <div className="grid py-6 max-w-lg w-[75vw]">
           <div className="text-center mb-8 pt-8">

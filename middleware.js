@@ -20,6 +20,10 @@ const redirects = {
   '/pricing': '/run-for-office#pricing-section',
 };
 
+const absoluteRedirects = {
+  '/iva': 'https://lp.goodparty.org/iva',
+};
+
 // const blockedIPs = ['142.198.200.33'];
 
 export default async function middleware(req) {
@@ -41,13 +45,20 @@ export default async function middleware(req) {
     );
   }
 
+  if (absoluteRedirects[pathname]) {
+    return NextResponse.redirect(
+      `${absoluteRedirects[pathname]}${req.nextUrl.search || ''}`,
+      { status: 301 },
+    );
+  }
+
   // match /candidate/firstName-lastName old candidate url
   // /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/
-  const pattern = /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/;
-  const match = pathname.match(pattern);
-  if (match) {
-    return NextResponse.redirect(`${req.nextUrl.origin}`, { status: 301 });
-  }
+  // const pattern = /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/;
+  // const match = pathname.match(pattern);
+  // if (match) {
+  //   return NextResponse.redirect(`${req.nextUrl.origin}`, { status: 301 });
+  // }
 
   if (pathname === pathname.toLowerCase()) {
     return NextResponse.next();

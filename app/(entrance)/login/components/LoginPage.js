@@ -22,7 +22,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { fetchCampaignStatus } from '@shared/layouts/navigation/RightSide';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
-import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 export const validateZip = (zip) => {
   // let zipInt = parseInt(zip);
@@ -116,7 +115,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <FullStoryScript />
       <MaxWidth>
         <div className={`flex items-center justify-center ${styles.wrapper}`}>
           <div className="grid py-6 max-w-lg w-[75vw]">

@@ -186,7 +186,7 @@ export default function SignupForm({
               );
             })}
 
-            <div className="col-span-12 lg:col-span-2 w-full">
+            <div className="col-span-12 w-full">
               <div
                 onClick={submitForm}
                 className="mt-10 lg:ml-5 whitespace-nowrap"

@@ -18,9 +18,7 @@ import {
 } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
-import {
-  fireGTMButtonClickEvent
-} from '@shared/buttons/fireGTMButtonClickEvent';
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
 
 export const globalUserState = hookstate(false);
 
@@ -42,7 +40,7 @@ const links = [
 const handleLogOut = (e) => {
   deleteUserCookies();
   window.location.replace('/');
-  fireGTMButtonClickEvent(e.currentTarget)
+  fireGTMButtonClickEvent(e.currentTarget);
 };
 
 function ProfileDropdown({ open, toggleCallback, user }) {
@@ -85,7 +83,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
     }
     if (userI && userI.email) {
       const domain = userI.email.split('@')[1];
-      if (domain === 'goodparty.org') {
+      if (domain === 'goodparty.org' || userI.isAdmin) {
         FS.shutdown();
       } else {
         FS.identify(userI.id, {
@@ -182,7 +180,9 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />
-                <div id="nav-log-out" className="ml-3" onClick={handleLogOut}>Logout</div>
+                <div id="nav-log-out" className="ml-3" onClick={handleLogOut}>
+                  Logout
+                </div>
               </div>
             </div>
           </div>

@@ -33,6 +33,9 @@ export async function generateMetadata({ params }) {
       slug: `/political-terms/${slug}`,
     });
   } else {
+    if (!content) {
+      notFound();
+    }
     const title = content?.title;
     meta = pageMetaData({
       title: `${title} Meaning & Definition | GoodParty.org`,

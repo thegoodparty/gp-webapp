@@ -1,17 +1,14 @@
 'use client';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient.js';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
-import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
-import { setCookie, setUserCookie } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
 import Link from 'next/link.js';
 import { useState } from 'react';
 import styles from '../../login/components/LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import FullStoryScript from '@shared/scripts/FullStoryScript';
 
 async function retrievePassword(email) {
   try {
@@ -68,7 +65,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <MaxWidth>
-      <FullStoryScript />
       <div className={`flex items-center justify-center ${styles.wrapper}`}>
         <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
