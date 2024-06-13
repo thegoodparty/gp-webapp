@@ -23,7 +23,7 @@ const points = [
   },
 ];
 
-export default function ProMeetingPage() {
+export default function UpgradeToProPage() {
   return (
     <div className="grid grid-cols-12 min-h-screen">
       <div className="col-span-12 md:col-span-6 bg-indigo-50 h-full flex justify-end">

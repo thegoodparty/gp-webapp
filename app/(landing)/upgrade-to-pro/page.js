@@ -1,4 +1,4 @@
-import ProMeetingPage from './components/ProMeetingPage';
+import UpgradeToProPage from './components/ProMeetingPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
@@ -11,5 +11,5 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  return <ProMeetingPage />;
+  return <UpgradeToProPage />;
 }
