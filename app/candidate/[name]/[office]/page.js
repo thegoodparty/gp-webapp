@@ -1,5 +1,5 @@
 import pageMetaData from 'helpers/metadataHelper';
-import OfficePage from './components/OfficePage';
+import CandidatePage from './components/CandidatePage';
 
 export async function generateMetadata({ params }) {
   const { name, office } = params;
@@ -64,5 +64,5 @@ export default async function Page({ params }) {
     ],
   };
   const childProps = { candidate };
-  return <OfficePage {...childProps} />;
+  return <CandidatePage {...childProps} />;
 }
