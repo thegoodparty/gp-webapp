@@ -1,6 +1,5 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
@@ -9,25 +8,8 @@ import {
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { validateZip } from 'app/(entrance)/login/components/LoginPage';
-
 import TextField from '@shared/inputs/TextField';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-
-async function updateUser(zip) {
-  try {
-    const api = gpApi.user.updateUser;
-    const payload = {
-      zip,
-    };
-
-    const response = await gpFetch(api, payload);
-    const { user } = response;
-    setUserCookie(user);
-  } catch (error) {
-    console.log('Error updating user', error);
-  }
-}
+import { updateUser } from 'helpers/userHelper';
 
 export default function ZipStep(props) {
   const { campaign, step } = props;
@@ -58,7 +40,7 @@ export default function ZipStep(props) {
     ];
 
     await updateCampaign(attr);
-    updateUser(state.zip);
+    await updateUser({ zip: state.zip });
     router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };
 

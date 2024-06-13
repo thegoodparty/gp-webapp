@@ -5,6 +5,7 @@ import PersonalSection from './PersonalSection';
 import DeleteSection from './DeleteSection';
 import InvitationSection from './InvitationSection';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
+import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection';
 
 export default function ProfilePage(props) {
   return (
@@ -14,6 +15,7 @@ export default function ProfilePage(props) {
         <HeaderSection />
         <InvitationSection {...props} />
         <PersonalSection />
+        <AccountSettingsSection {...props} />
         <PasswordSection />
         <NotificationSection />
         <DeleteSection />

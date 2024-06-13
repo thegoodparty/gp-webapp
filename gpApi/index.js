@@ -4,19 +4,15 @@ export let appBase = process.env.NEXT_PUBLIC_APP_BASE;
 if (!apiBase && typeof window !== 'undefined') {
   // client side
   if (window.location.host === 'localhost:4000') {
-    apiBase === 'http://localhost:1337';
     appBase = 'http://localhost:4000';
   }
   if (window.location.host === 'dev.goodparty.org') {
-    apiBase === 'https://api-dev.goodparty.org';
     appBase = 'https://dev.goodparty.org';
   }
   if (window.location.host === 'qa.goodparty.org') {
-    apiBase === 'https://api-qa.goodparty.org';
     appBase = 'https://qa.goodparty.org';
   }
   if (window.location.host === 'goodparty.org') {
-    apiBase === 'https://api.goodparty.org';
     appBase = 'https://goodparty.org';
   }
 }
@@ -363,6 +359,17 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+    },
+    einCheck: {
+      url: `${base}campaign/ein-check`,
+      method: 'GET',
+      withAuth: true,
+      returnFullResponse: true,
+    },
+    einSupportingDocumentUpload: {
+      url: `${base}campaign/ein-support-document`,
+      method: 'POST',
+      withAuth: true,
     },
   },
 
@@ -723,6 +730,33 @@ const gpApi = {
     count: {
       url: `${base}voter-data/voter-file/count`, //admin
       method: 'PUT',
+      withAuth: true,
+    },
+  },
+  payments: {
+    createCheckoutSession: {
+      url: `${base}payments/purchase/checkout-session`,
+      method: 'POST',
+      withAuth: true,
+    },
+    updateCheckoutSession: {
+      url: `${base}payments/purchase/checkout-session`,
+      method: 'PATCH',
+      withAuth: true,
+    },
+    deleteCheckoutSession: {
+      url: `${base}payments/purchase/checkout-session`,
+      method: 'DELETE',
+      withAuth: true,
+    },
+    createPortalSession: {
+      url: `${base}payments/purchase/portal-session`,
+      method: 'POST',
+      withAuth: true,
+    },
+    getPortalSessionRedirectUrl: {
+      url: `${base}payments/purchase/portal-session`,
+      method: 'GET',
       withAuth: true,
     },
   },

@@ -1,8 +1,8 @@
-'use client'
-import clsx from 'clsx';
+'use client';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
+import { compileButtonClassName } from '@shared/buttons/compileButtonClassName';
 
 export default function InfoButton({
   children,
@@ -14,10 +14,12 @@ export default function InfoButton({
   loading = false,
   fullWidth,
   onClick,
+  ...restProps
 }) {
   let baseClass = {
     'rounded-lg': true,
     'font-medium': true,
+    '[&>svg]:inline': true,
     'transition-colors': true,
   };
   if (fullWidth) {
@@ -89,10 +91,11 @@ export default function InfoButton({
 
   return (
     <button
-      className={clsx({ ...baseClass, ...className })}
+      className={compileButtonClassName(baseClass, className)}
       style={style}
       disabled={disabled}
       onClick={buttonOnClickHandler(onClick)}
+      {...restProps}
     >
       {loading ? <ButtonLoading /> : null}
       {children}
