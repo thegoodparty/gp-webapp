@@ -4,6 +4,7 @@ import peopleImg from 'public/images/landing-pages/info-people.png';
 import starImg from 'public/images/landing-pages/star.png';
 import { Suspense } from 'react';
 import CalendarIframe from './CalendarIframe';
+import HubSpotForm from '@shared/utils/HubSpotForm';
 
 const points = [
   {
@@ -69,7 +70,7 @@ export default function UpgradeToProPage() {
       </div>
       <div className="col-span-12 md:col-span-6  h-full bg-[linear-gradient(142deg,_#8436F8_15.75%,_#8EAFE0_52.68%,_#90EEBF_88.1%)]">
         <div className="max-w-[640px] md:w-[50vw] pr-4 pl-4 xl:pr-0 flex items-center justify-center h-full">
-          <CalendarIframe />
+          <HubSpotForm formId="8a5360e3-4be8-407f-bbfd-a744480a5e6a" />
         </div>
       </div>
       <div className="col-span-12 md:hidden">
