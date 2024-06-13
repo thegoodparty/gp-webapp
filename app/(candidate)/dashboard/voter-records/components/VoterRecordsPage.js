@@ -15,6 +15,7 @@ import Chip from '@shared/utils/Chip';
 import CustomVoterFile from './CustomVoterFile';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { dateUsHelper } from 'helpers/dateHelper';
+import { CircularProgress } from '@mui/material';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -201,9 +202,13 @@ export default function VoterRecordsPage(props) {
               A collection of voter data spreadsheets, tailored to your needs.
             </Body2>
           </div>
-          <CustomVoterFile {...props} reloadCampaignCallback={reloadCampaign} />
+          <CustomVoterFile
+            {...props}
+            reloadCampaignCallback={reloadCampaign}
+            campaign={campaign}
+          />
         </div>
-        <div className="mt-8 grid grid-cols-8 border-x border-x-gray-200 ">
+        <div className="mt-8 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 border-x border-x-gray-200 ">
           {tableHeaders.map((header, index) => (
             <div
               className={` bg-primary text-white p-4 ${
@@ -216,6 +221,10 @@ export default function VoterRecordsPage(props) {
                 index === tableHeaders.length - 1 || index === 2
                   ? 'col-span-1'
                   : 'col-span-2'
+              } ${header === 'AUDIENCE' ? 'hidden lg:block' : ''}
+              
+              ${header === 'PURPOSE' ? 'hidden md:block' : ''} ${
+                header === 'CHANNEL' ? 'hidden sm:block' : ''
               }`}
               key={index}
             >
@@ -233,7 +242,11 @@ export default function VoterRecordsPage(props) {
                     index2 === tableHeaders.length - 1 || index2 === 2
                       ? 'col-span-1'
                       : 'col-span-2'
-                  }`}
+                  }
+                  
+                  ${index2 === 3 ? 'hidden lg:block' : ''} ${
+                    index2 === 2 ? 'hidden md:block' : ''
+                  }${index2 === 1 ? 'hidden sm:block' : ''}`}
                 >
                   {field}
                 </div>
@@ -244,14 +257,18 @@ export default function VoterRecordsPage(props) {
                   index % 2 !== 0 ? ' bg-indigo-50' : ''
                 }`}
               >
-                <FaDownload
-                  className={`mr-3 cursor-pointer ${
-                    loading ? 'opacity-25' : ''
-                  }`}
-                  onClick={() => {
-                    handleDownload(file.key, file.isCustom, file.name);
-                  }}
-                />
+                {loading ? (
+                  <div className="mr-3 cursor-not-allowed">
+                    <CircularProgress size={20} />
+                  </div>
+                ) : (
+                  <FaDownload
+                    className="mr-3 cursor-pointer"
+                    onClick={() => {
+                      handleDownload(file.key, file.isCustom, file.name);
+                    }}
+                  />
+                )}
               </div>
             </Fragment>
           ))}
