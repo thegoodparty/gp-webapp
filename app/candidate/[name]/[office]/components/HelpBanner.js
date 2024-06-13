@@ -1,4 +1,5 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import CTA from './CTA';
 
 export default function HelpBanner({ candidate }) {
   const { firstName, office, city, state } = candidate;
@@ -11,7 +12,9 @@ export default function HelpBanner({ candidate }) {
         </span>
       </div>
       <div>
-        <PrimaryButton>Learn More</PrimaryButton>
+        <CTA id="hero-learn-more">
+          <PrimaryButton>Learn More</PrimaryButton>
+        </CTA>
       </div>
     </div>
   );
