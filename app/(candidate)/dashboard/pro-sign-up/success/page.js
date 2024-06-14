@@ -14,8 +14,6 @@ export const metadata = meta;
 export default async function Page({
   searchParams: { session_id: checkoutSessionId },
 }) {
-  console.log(`checkoutSessionId =>`, checkoutSessionId);
-
   if (!checkoutSessionId) {
     throw new Error('No session_id provided');
   }

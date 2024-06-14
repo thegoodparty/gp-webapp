@@ -15,7 +15,7 @@ export default async function Page() {
   await candidateAccess();
 
   const { campaign } = await fetchUserCampaign();
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = getServerUser();
 
   const childProps = {
     campaign,
