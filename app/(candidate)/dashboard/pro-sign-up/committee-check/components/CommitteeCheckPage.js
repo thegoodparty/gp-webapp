@@ -52,9 +52,9 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     const doEinCheck = async () => {
       const numericalEIN = Number(einInputValue.replace(/[^0-9.]/g, ''));
       try {
-        const result = await gpFetch({
-          ...gpApi.campaign.einCheck,
-          url: `${gpApi.campaign.einCheck.url}?name=${einInputValue}&ein=${numericalEIN}`,
+        const result = await gpFetch(gpApi.campaign.einCheck, {
+          name: einInputValue,
+          ein: numericalEIN,
         });
         const { valid } = await result.json();
         setValidatedEin(valid);

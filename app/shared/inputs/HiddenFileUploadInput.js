@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 
 const HiddenFileUploadInputRender = ({ onChange, ...restProps }, ref) => {

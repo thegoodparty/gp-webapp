@@ -1,3 +1,4 @@
+'use client';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import Link from 'next/link';

@@ -1,3 +1,4 @@
+'use client';
 import TextField from '@shared/inputs/TextField';
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon';
 import React from 'react';
@@ -29,11 +30,12 @@ export const EinCheckInput = ({
       setValidated(null);
     }
 
+    const maybeAddDash =
+      newVal.length === 2 && value.length === 1 ? `${newVal}-` : newVal;
+
     return newVal !== '' && !EIN_PATTERN_PARTIAL.test(newVal)
       ? onChange(value)
-      : onChange(
-          newVal.length === 2 && value.length === 1 ? `${newVal}-` : newVal,
-        );
+      : onChange(maybeAddDash);
   };
 
   return (
