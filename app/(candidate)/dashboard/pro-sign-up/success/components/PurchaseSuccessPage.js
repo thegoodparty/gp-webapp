@@ -6,6 +6,7 @@ import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/Focus
 import Link from 'next/link';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Image from 'next/image';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 const PurchaseSuccessPage = () => {
   return (
@@ -30,11 +31,22 @@ const PurchaseSuccessPage = () => {
         <br />
         We look forward to helping you on your journey to run and win in office!
       </Body2>
-      <Link className="block self-start w-full md:w-auto" href="/dashboard">
-        <SecondaryButton className="w-full">
-          Go Back to Dashboard
-        </SecondaryButton>
-      </Link>
+      <div className="w-full flex flex-col justify-center md:flex-row md:justify-between">
+        <Link
+          className="block self-start mb-4 w-full md:w-auto md:mb-0"
+          href="/dashboard"
+        >
+          <SecondaryButton className="w-full">
+            Go Back to Dashboard
+          </SecondaryButton>
+        </Link>
+        <Link
+          className="block self-start w-full md:w-auto"
+          href="/dashboard/voter-records"
+        >
+          <PrimaryButton className="w-full">Go to Voter File</PrimaryButton>
+        </Link>
+      </div>
     </FocusedExperienceWrapper>
   );
 };
