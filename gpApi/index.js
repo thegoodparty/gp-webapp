@@ -86,48 +86,6 @@ const gpApi = {
       method: 'GET',
     },
   },
-  candidate: {
-    list: {
-      url: `${base}candidates`,
-      method: 'GET',
-    },
-    listOld: {
-      url: `${base}new-candidates`,
-      method: 'GET',
-    },
-    findOld: {
-      url: `${base}new-candidate`,
-      method: 'GET',
-    },
-    find: {
-      url: `${base}candidate`,
-      method: 'GET',
-    },
-    update: {
-      url: `${base}candidate`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    updateOld: {
-      url: `${base}new-candidate`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    trackVisit: {
-      url: `${base}visit`,
-      method: 'POST',
-    },
-    create: {
-      url: `${base}new-candidate`,
-      method: 'POST',
-      withAuth: true,
-    },
-    canEdit: {
-      url: `${base}candidate/can-edit`,
-      method: 'GET',
-      withAuth: true,
-    },
-  },
 
   campaign: {
     create: {
