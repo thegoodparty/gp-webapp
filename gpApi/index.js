@@ -27,14 +27,6 @@ export const isProd = apiBase === 'https://api.goodparty.org';
 
 const gpApi = {
   homepage: {
-    followers: {
-      url: `${base}listening/followers-count`,
-      method: 'GET',
-    },
-    homepageCandidates: {
-      url: `${base}homepage-candidates`,
-      method: 'GET',
-    },
     subscribeEmail: {
       url: `${base}subscribe/email`,
       method: 'GET',
