@@ -22,6 +22,19 @@ import Checkbox from '@shared/inputs/Checkbox';
 import VoterFileSection from './VoterFileSection';
 import ProFieldsSection from './ProFieldsSection';
 
+async function fetchCampaignBySlug(slug) {
+  try {
+    const api = gpApi.campaign.findBySlug;
+    const payload = {
+      slug,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
+
 export async function sendVictoryMail(slug) {
   try {
     const api = gpApi.admin.victoryMail;
@@ -160,7 +173,8 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const refreshCampaign = async () => {
-    const { campaign } = await getCampaign();
+    const { campaign } = await fetchCampaignBySlug(campaign.slug);
+
     setCampaign(campaign);
   };
 
