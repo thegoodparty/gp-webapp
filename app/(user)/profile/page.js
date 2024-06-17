@@ -30,7 +30,6 @@ export default async function Page() {
   }
   const token = getServerToken();
   const { campaign } = await fetchUserCampaign();
-  console.log(`campaign =>`, campaign);
 
   const { invitations } = await fetchInvitations(token);
   const childProps = {
