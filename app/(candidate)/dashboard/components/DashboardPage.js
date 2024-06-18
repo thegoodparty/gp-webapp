@@ -18,6 +18,7 @@ import gpFetch from 'gpApi/gpFetch';
 import TrackerTutorial from './TrackerTutorial';
 import { getCookie } from 'helpers/cookieHelper';
 import EmptyState from './EmptyState';
+import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAlert';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -41,7 +42,7 @@ export async function fetchUpdateHistory() {
 
 export default function DashboardPage(props) {
   const { campaign } = props;
-  const { pathToVictory, goals, reportedVoterGoals, details } = campaign;
+  const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
   const [updateHistory, setUpdateHistory] = useState([]);
 
   const [state, setState] = useState({
@@ -135,6 +136,7 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
+                {!isPro && <ProSignUpAlert />}
                 <TitleSection
                   title="Campaign Tracker"
                   subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."

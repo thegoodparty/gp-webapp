@@ -1,5 +1,4 @@
 'use client';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import { useState } from 'react';
 import Occupation from './Occupation';
 import {
@@ -16,6 +15,7 @@ import Website from './Website';
 import Done from './Done';
 import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 
 export const flows = {
   all: [
@@ -117,80 +117,76 @@ export default function QuestionsPage(props) {
   };
 
   return (
-    <MaxWidth>
-      <div className="min-h-[calc(100vh-56px)] py-20 w-full">
-        {campaign && nextKey === 'occupation' && (
-          <Occupation
-            value={answers.occupation}
-            onChangeCallback={onChangeField}
-            saveCallback={handleSave}
+    <FocusedExperienceWrapper>
+      {campaign && nextKey === 'occupation' && (
+        <Occupation
+          value={answers.occupation}
+          onChangeCallback={onChangeField}
+          saveCallback={handleSave}
+          campaign={campaign}
+          campaignKey={nextKey}
+        />
+      )}
+      {campaign && nextKey === 'funFact' && (
+        <FunFact
+          value={answers.funFact}
+          onChangeCallback={onChangeField}
+          saveCallback={handleSave}
+          campaign={campaign}
+          campaignKey={nextKey}
+        />
+      )}
+      {campaign && nextKey === 'pastExperience' && (
+        <PastExperience
+          value={answers.pastExperience}
+          onChangeCallback={onChangeField}
+          saveCallback={handleSave}
+          campaign={campaign}
+          campaignKey={nextKey}
+        />
+      )}
+      {campaign && nextKey === 'issues' && (
+        <CandidatePositionsProvider candidatePositions={initCandidatePositions}>
+          <AddIssues
+            {...props}
             campaign={campaign}
-            campaignKey={nextKey}
+            completeCallback={handleComplete}
+            updatePositionsCallback={updatePositionsCallback}
+            candidatePositions={answers.candidatePositions}
           />
-        )}
-        {campaign && nextKey === 'funFact' && (
-          <FunFact
-            value={answers.funFact}
-            onChangeCallback={onChangeField}
-            saveCallback={handleSave}
-            campaign={campaign}
-            campaignKey={nextKey}
-          />
-        )}
-        {campaign && nextKey === 'pastExperience' && (
-          <PastExperience
-            value={answers.pastExperience}
-            onChangeCallback={onChangeField}
-            saveCallback={handleSave}
-            campaign={campaign}
-            campaignKey={nextKey}
-          />
-        )}
-        {campaign && nextKey === 'issues' && (
-          <CandidatePositionsProvider
-            candidatePositions={initCandidatePositions}
-          >
-            <AddIssues
-              {...props}
-              campaign={campaign}
-              completeCallback={handleComplete}
-              updatePositionsCallback={updatePositionsCallback}
-              candidatePositions={answers.candidatePositions}
-            />
-          </CandidatePositionsProvider>
-        )}
+        </CandidatePositionsProvider>
+      )}
 
-        {campaign && nextKey === 'runningAgainst' && (
-          <div className="max-w-xl m-auto">
-            <RunningAgainstSection
-              campaign={campaign}
-              nextCallback={handleComplete}
-              header={
-                <>
-                  <H1 className="mb-10 text-center">
-                    Who are you running against
-                  </H1>
-                  <Body1 className="my-8 text-center">
-                    List the names or describe who you will be running against.
-                    We&apos;ll use this information to generate a messaging
-                    strategy. If you don&apos;t know, Google it.
-                  </Body1>
-                </>
-              }
-            />
-          </div>
-        )}
-        {campaign && nextKey === 'website' && (
-          <Website
-            value={answers.website}
-            onChangeCallback={onChangeField}
-            saveCallback={handleSave}
+      {campaign && nextKey === 'runningAgainst' && (
+        <div className="max-w-xl m-auto">
+          <RunningAgainstSection
             campaign={campaign}
-            campaignKey={nextKey}
+            nextCallback={handleComplete}
+            header={
+              <>
+                <H1 className="mb-10 text-center">
+                  Who are you running against
+                </H1>
+                <Body1 className="my-8 text-center">
+                  List the names or describe who you will be running against.
+                  We&apos;ll use this information to generate a messaging
+                  strategy. If you don&apos;t know, Google it.
+                </Body1>
+              </>
+            }
           />
-        )}
-        {nextKey === 'done' && <Done />}
-      </div>
-    </MaxWidth>
+        </div>
+      )}
+      {campaign && nextKey === 'website' && (
+        <Website
+          value={answers.website}
+          onChangeCallback={onChangeField}
+          saveCallback={handleSave}
+          campaign={campaign}
+          campaignKey={nextKey}
+        />
+      )}
+      {nextKey === 'done' && <Done />}
+    </FocusedExperienceWrapper>
   );
 }

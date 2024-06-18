@@ -4,11 +4,11 @@ import pageMetaData from 'helpers/metadataHelper';
 import ProfilePage from './components/ProfilePage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 
-async function fetchInvitations() {
+async function fetchInvitations(token) {
   try {
     const api = gpApi.campaign.volunteerInvitation.listByUser;
-    const token = getServerToken();
 
     return await gpFetch(api, false, false, token);
   } catch (e) {
@@ -28,8 +28,15 @@ export default async function Page() {
   if (!user) {
     redirect('/login');
   }
+  const token = getServerToken();
+  const { campaign } = await fetchUserCampaign();
 
-  const { invitations } = await fetchInvitations();
-  const childProps = { invitations, user };
+  const { invitations } = await fetchInvitations(token);
+  const childProps = {
+    invitations,
+    user,
+    isPro: campaign?.isPro,
+  };
+
   return <ProfilePage {...childProps} />;
 }

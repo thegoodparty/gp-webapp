@@ -40,7 +40,7 @@ export default function PrimaryButton({
   let baseClass = {
     'rounded-lg': true,
     'font-medium': true,
-
+    '[&>svg]:inline': true,
     'transition-colors': true,
   };
   if (variant === 'contained') {
