@@ -177,10 +177,11 @@ function ProfileDropdown({ open, toggleCallback, user }) {
             <div
               data-cy="header-link"
               className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
+              onClick={handleLogOut}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />
-                <div id="nav-log-out" className="ml-3" onClick={handleLogOut}>
+                <div id="nav-log-out" className="ml-3">
                   Logout
                 </div>
               </div>
