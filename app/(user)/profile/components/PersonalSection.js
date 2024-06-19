@@ -4,8 +4,7 @@
  * PersonalSection
  *
  */
-
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -18,6 +17,7 @@ import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FiSettings } from 'react-icons/fi';
+import { updateUser } from 'helpers/userHelper';
 
 async function refreshUser() {
   try {
@@ -32,15 +32,7 @@ async function refreshUser() {
 
 async function updateUserCallback(updatedFields, userState) {
   try {
-    const api = gpApi.user.updateUser;
-    const payload = {
-      ...updatedFields,
-    };
-
-    const response = await gpFetch(api, payload, 3600);
-    const { user } = response;
-    userState.set(() => user);
-    setUserCookie(user);
+    userState.set(await updateUser(updatedFields));
   } catch (error) {
     console.log('Error updating user', error);
   }
@@ -116,15 +108,6 @@ function PersonalSection() {
     const updated = await refreshUser();
     userState.set(() => updated);
     setUserCookie(updated);
-    // if (!state.email) {
-    //   if (user) {
-    //     const updatedState = {};
-    //     USER_SETTING_FIELDS.forEach((field) => {
-    //       updatedState[field.key] = updated[field.key] || field.initialValue;
-    //     });
-    //     setState(updatedState);
-    //   }
-    // }
   };
 
   const onChangeField = (key, val) => {

@@ -3,45 +3,17 @@
 import H3 from '@shared/typography/H3';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import TextField from '@shared/inputs/TextField';
-import { dateUsHelper } from 'helpers/dateHelper';
-import Modal from '@shared/utils/Modal';
-import OfficeStep from 'app/(candidate)/onboarding/[slug]/[step]/components/OfficeStep';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-
-const fields = [
-  {
-    key: 'office',
-    label: 'Office',
-    type: 'text',
-  },
-
-  {
-    key: 'state',
-    label: 'State',
-    type: 'text',
-  },
-
-  {
-    key: 'electionDate',
-    label: 'Date of Election',
-    type: 'date',
-  },
-  {
-    key: 'primaryElectionDate',
-    label: 'Date of Primary Election',
-    type: 'date',
-  },
-  {
-    key: 'officeTermLength',
-    label: 'Term Length',
-    type: 'text',
-  },
-];
+import {
+  campaignOfficeFields,
+  OFFICE_INPUT_FIELDS,
+} from 'helpers/campaignOfficeFields';
+import { CampaignOfficeInputFields } from 'app/(candidate)/dashboard/shared/CampaignOfficeInputFields';
+import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
 
 export default function OfficeSection(props) {
   const initialState = {};
-  fields.forEach((field) => {
+  OFFICE_INPUT_FIELDS.forEach((field) => {
     initialState[field.key] = '';
   });
   const [state, setState] = useState(initialState);
@@ -50,16 +22,7 @@ export default function OfficeSection(props) {
 
   useEffect(() => {
     if (campaign?.details) {
-      const newState = {};
-      fields.forEach((field) => {
-        newState[field.key] = campaign.details[field.key] || '';
-      });
-      newState.office =
-        campaign.details?.otherOffice || campaign.details?.office || '';
-      if (newState.office === 'Other') {
-        newState.office = campaign.details?.otherOffice;
-      }
-      setState(newState);
+      setState(campaignOfficeFields(campaign?.details));
     }
   }, [campaign]);
 
@@ -78,38 +41,17 @@ export default function OfficeSection(props) {
       <H3 className="pb-6">Office Details</H3>
 
       <div className="grid grid-cols-12 gap-3">
-        {fields.map((field) => (
-          <div key={field.key} className="col-span-12 md:col-span-6">
-            <div className="mb-4">
-              <TextField
-                field={field}
-                label={field.label}
-                value={
-                  field.type === 'date'
-                    ? dateUsHelper(state[field.key])
-                    : state[field.key]
-                }
-                disabled
-                fullWidth
-              />
-            </div>
-          </div>
-        ))}
+        <CampaignOfficeInputFields values={state} />
       </div>
       <div className="flex justify-end mb-6 mt-2">
-        <div onClick={handleEdit}>
-          <PrimaryButton>Edit Office Details</PrimaryButton>
-        </div>
+        <PrimaryButton onClick={handleEdit}>Edit Office Details</PrimaryButton>
       </div>
-      <Modal
-        open={showModal}
-        closeCallback={() => {
-          setShowModal(false);
-        }}
-        boxClassName="w-[95vw] lg:w-[60vw]"
-      >
-        <OfficeStep campaign={campaign} updateCallback={handleUpdate} />
-      </Modal>
+      <CampaignOfficeSelectionModal
+        campaign={campaign}
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSelect={handleUpdate}
+      />
     </section>
   );
 }

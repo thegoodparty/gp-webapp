@@ -23,7 +23,7 @@ let pages = [
   {
     label: 'Upgrade to Pro',
     icon: <GiProgression />,
-    link: '/pro-consultation',
+    link: '/upgrade-to-pro',
     id: 'upgrade-pro-dashboard',
   },
   {
@@ -128,8 +128,11 @@ export default function DashboardMenu({
             </div>
           </Link>
 
-          <div className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer ">
-            <div id="nav-log-out" onClick={handleLogOut} className="ml-2">
+          <div
+            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer"
+            onClick={handleLogOut}
+          >
+            <div id="nav-log-out" className="ml-2">
               Logout
             </div>
           </div>

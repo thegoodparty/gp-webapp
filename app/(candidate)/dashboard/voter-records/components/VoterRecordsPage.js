@@ -126,11 +126,11 @@ export default function VoterRecordsPage(props) {
     wakeUp();
   }, []);
 
-  const handleDownload = async (type, isCustom, name) => {
+  const handleDownload = async (type, isCustom, name, index) => {
     if (loading) {
       return;
     }
-    setLoading(true);
+    setLoading(`index-${index}`);
     let response;
     if (isCustom) {
       trackEvent('Download Voter File attempt', { type: 'custom' });
@@ -257,15 +257,17 @@ export default function VoterRecordsPage(props) {
                   index % 2 !== 0 ? ' bg-indigo-50' : ''
                 }`}
               >
-                {loading ? (
+                {loading === `index-${index}` ? (
                   <div className="mr-3 cursor-not-allowed">
                     <CircularProgress size={20} />
                   </div>
                 ) : (
                   <FaDownload
-                    className="mr-3 cursor-pointer"
+                    className={`mr-3 cursor-pointer ${
+                      loading ? 'opacity-50' : ''
+                    }`}
                     onClick={() => {
-                      handleDownload(file.key, file.isCustom, file.name);
+                      handleDownload(file.key, file.isCustom, file.name, index);
                     }}
                   />
                 )}
