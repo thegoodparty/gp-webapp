@@ -7,6 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import { useState } from 'react';
+import { useCampaign } from '@shared/hooks/useCampaign';
 
 async function rerunP2V(slug) {
   try {
@@ -18,8 +19,8 @@ async function rerunP2V(slug) {
   }
 }
 
-export default function RerunP2V(props) {
-  const { campaign, refreshCampaignCallback } = props;
+export default function RerunP2V() {
+  const [campaign, _, refreshCampaign] = useCampaign();
   const [processing, setProcessing] = useState(false);
 
   const snackbarState = useHookstate(globalSnackbarState);
@@ -37,7 +38,7 @@ export default function RerunP2V(props) {
         };
       });
       await revalidatePage('/admin/victory-path/[slug]');
-      refreshCampaignCallback();
+      refreshCampaign();
     } else {
       snackbarState.set(() => {
         return {

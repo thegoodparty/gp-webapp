@@ -5,35 +5,21 @@ import { useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import {
-  getCampaign,
-  updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
+import { revalidatePage } from 'helpers/cacheHelper';
 import H3 from '@shared/typography/H3';
 import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Checkbox from '@shared/inputs/Checkbox';
 import VoterFileSection from './VoterFileSection';
-import ProFieldsSection from './ProFieldsSection';
-
-async function fetchCampaignBySlug(slug) {
-  try {
-    const api = gpApi.campaign.findBySlug;
-    const payload = {
-      slug,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
+import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection';
+import { useCampaign } from '@shared/hooks/useCampaign';
+import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -143,7 +129,7 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  const [campaign, setCampaign] = useState(props.campaign);
+  const [campaign] = useCampaign();
   const { pathToVictory, details } = campaign;
 
   const [state, setState] = useState({
@@ -170,12 +156,6 @@ export default function AdminVictoryPathPage(props) {
       [key]: val,
       winNumber,
     });
-  };
-
-  const refreshCampaign = async () => {
-    const { campaign } = await fetchCampaignBySlug(campaign.slug);
-
-    setCampaign(campaign);
   };
 
   const save = async () => {
@@ -218,7 +198,6 @@ export default function AdminVictoryPathPage(props) {
           isError: false,
         };
       });
-      await revalidateCandidates();
       await revalidatePage('/admin/victory-path/[slug]');
       window.location.reload();
     } catch (e) {
@@ -254,12 +233,7 @@ export default function AdminVictoryPathPage(props) {
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
           </H2>
-          {!notNeeded && (
-            <VoterFileSection
-              campaign={campaign}
-              refreshCampaignCallback={refreshCampaign}
-            />
-          )}
+          {!notNeeded && <VoterFileSection />}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}
@@ -268,10 +242,8 @@ export default function AdminVictoryPathPage(props) {
             />
             <div>Mark campaign as not needing Path to Victory</div>
           </H3>{' '}
-          <ProFieldsSection
-            {...props}
-            refreshCampaignCallback={refreshCampaign}
-          />
+          <AdditionalFieldsSection />
+          <P2VProSection />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. District:{' '}
