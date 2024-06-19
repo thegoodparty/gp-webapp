@@ -129,7 +129,7 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  const [campaign] = useCampaign();
+  const [campaign, _, refreshCampaign] = useCampaign();
   const { pathToVictory, details } = campaign;
 
   const [state, setState] = useState({
@@ -219,13 +219,18 @@ export default function AdminVictoryPathPage(props) {
   const handleNotNeeded = async (e) => {
     setNotNeeded(e.target.checked);
 
-    await updateCampaign([
-      {
-        key: 'pathToVictory',
-        value: { ...state, p2vNotNeeded: e.target.checked },
-      },
-    ]);
+    await updateCampaign(
+      [
+        {
+          key: 'pathToVictory.p2vNotNeeded',
+          value: e.target.checked,
+        },
+      ],
+      campaign.slug,
+    );
+    await refreshCampaign();
   };
+
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">

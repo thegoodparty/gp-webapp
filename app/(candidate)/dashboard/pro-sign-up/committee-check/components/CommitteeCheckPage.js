@@ -6,19 +6,18 @@ import Link from 'next/link';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon';
-import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
 import {
   EIN_PATTERN_FULL,
   EinCheckInput,
 } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput';
-import { CircularProgress } from '@mui/material';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
+import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -40,10 +39,10 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   );
   const [loadingEinCheck, setLoadingEinCheck] = useState(false);
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
-  const [loadingFileUpload, setLoadingFileUpload] = useState(false);
+  // const [loadingFileUpload, setLoadingFileUpload] = useState(false);
   const [validatedEin, setValidatedEin] = useState(null);
-  const fileInputRef = useRef(null);
-  const [fileInfo, setFileInfo] = useState(null);
+  // const fileInputRef = useRef(null);
+  // const [fileInfo, setFileInfo] = useState(null);
 
   useEffect(() => {
     const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
@@ -92,29 +91,29 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     doCampaignUpdate();
   };
 
-  const onFileBrowseClick = (e) => {
-    fileInputRef.current.click();
-  };
-
-  const handleFileChoose = async (fileData, file) => {
-    setLoadingFileUpload(true);
-    setFileInfo(file);
-    const formData = new FormData();
-    formData.append('document', file);
-    try {
-      await gpFetch(
-        gpApi.campaign.einSupportingDocumentUpload,
-        formData,
-        null,
-        null,
-        true,
-      );
-    } catch (e) {
-      console.error('Error uploading file', e);
-    } finally {
-      setLoadingFileUpload(false);
-    }
-  };
+  // const onFileBrowseClick = (e) => {
+  //   fileInputRef.current.click();
+  // };
+  //
+  // const handleFileChoose = async (fileData, file) => {
+  //   setLoadingFileUpload(true);
+  //   setFileInfo(file);
+  //   const formData = new FormData();
+  //   formData.append('document', file);
+  //   try {
+  //     await gpFetch(
+  //       gpApi.campaign.einSupportingDocumentUpload,
+  //       formData,
+  //       null,
+  //       null,
+  //       true,
+  //     );
+  //   } catch (e) {
+  //     console.error('Error uploading file', e);
+  //   } finally {
+  //     setLoadingFileUpload(false);
+  //   }
+  // };
 
   return (
     <FocusedExperienceWrapper>
@@ -163,38 +162,8 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
               .
             </Body2>
           )}
-          <div className="grid grid-cols-10 gap-4">
-            <TextField
-              className="cursor-pointer col-span-10 md:col-span-7"
-              value={fileInfo?.name}
-              onClick={onFileBrowseClick}
-              placeholder="Upload supporting documentation"
-              disabled={loadingFileUpload}
-            />
 
-            <PrimaryButton
-              component="label"
-              className="flex items-center justify-center col-span-10 md:col-span-3"
-              role={undefined}
-              variant="outlined"
-              onClick={onFileBrowseClick}
-              disabled={loadingFileUpload}
-              fullWidth
-            >
-              <span>Browse</span>
-              {loadingFileUpload && (
-                <CircularProgress
-                  className="text-primary-light ml-2"
-                  size={16}
-                />
-              )}
-              <HiddenFileUploadInput
-                ref={fileInputRef}
-                onChange={handleFileChoose}
-                accept=".pdf"
-              />
-            </PrimaryButton>
-          </div>
+          <CommitteeSupportingFilesUpload />
 
           <section className="flex flex-col justify-between mt-8 md:flex-row">
             <Link className="block mb-4 md:mb-0" href="/dashboard/pro-sign-up">
