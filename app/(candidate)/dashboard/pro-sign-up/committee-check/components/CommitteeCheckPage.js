@@ -39,10 +39,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   );
   const [loadingEinCheck, setLoadingEinCheck] = useState(false);
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
-  // const [loadingFileUpload, setLoadingFileUpload] = useState(false);
   const [validatedEin, setValidatedEin] = useState(null);
-  // const fileInputRef = useRef(null);
-  // const [fileInfo, setFileInfo] = useState(null);
 
   useEffect(() => {
     const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
@@ -90,30 +87,6 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
 
     doCampaignUpdate();
   };
-
-  // const onFileBrowseClick = (e) => {
-  //   fileInputRef.current.click();
-  // };
-  //
-  // const handleFileChoose = async (fileData, file) => {
-  //   setLoadingFileUpload(true);
-  //   setFileInfo(file);
-  //   const formData = new FormData();
-  //   formData.append('document', file);
-  //   try {
-  //     await gpFetch(
-  //       gpApi.campaign.einSupportingDocumentUpload,
-  //       formData,
-  //       null,
-  //       null,
-  //       true,
-  //     );
-  //   } catch (e) {
-  //     console.error('Error uploading file', e);
-  //   } finally {
-  //     setLoadingFileUpload(false);
-  //   }
-  // };
 
   return (
     <FocusedExperienceWrapper>

@@ -6,7 +6,6 @@ import AdminVictoryPathPage from './components/CandidateMetricsPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 import { fetchCampaignBySlugServerOnly } from 'helpers/fetchCampaignBySlugServerOnly';
-// import { fetchCampaign } from 'app/candidate/[slug]/review/page';
 
 async function fetchAdminUpdateHistory(slug) {
   try {
