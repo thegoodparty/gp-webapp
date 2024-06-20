@@ -5,22 +5,21 @@ import { useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
-import {
-  getCampaign,
-  updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
+import { revalidatePage } from 'helpers/cacheHelper';
 import H3 from '@shared/typography/H3';
 import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Checkbox from '@shared/inputs/Checkbox';
 import VoterFileSection from './VoterFileSection';
-import ProFieldsSection from './ProFieldsSection';
+import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection';
+import { useCampaign } from '@shared/hooks/useCampaign';
+import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -130,7 +129,7 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  const [campaign, setCampaign] = useState(props.campaign);
+  const [campaign, _, refreshCampaign] = useCampaign();
   const { pathToVictory, details } = campaign;
 
   const [state, setState] = useState({
@@ -159,11 +158,6 @@ export default function AdminVictoryPathPage(props) {
     });
   };
 
-  const refreshCampaign = async () => {
-    const { campaign } = await getCampaign();
-    setCampaign(campaign);
-  };
-
   const save = async () => {
     snackbarState.set(() => {
       return {
@@ -180,7 +174,7 @@ export default function AdminVictoryPathPage(props) {
     try {
       // only send mail the first time we update pathToVictory
       if (!pathToVictory) {
-        await sendVictoryMail(updated.slug);
+        await sendVictoryMail(campaign.slug);
       }
       // send only the keys that changed
       const keysToUpdate = keys.filter(
@@ -204,7 +198,6 @@ export default function AdminVictoryPathPage(props) {
           isError: false,
         };
       });
-      await revalidateCandidates();
       await revalidatePage('/admin/victory-path/[slug]');
       window.location.reload();
     } catch (e) {
@@ -219,20 +212,23 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const office =
-    details?.office === 'Other'
-      ? `${details?.otherOffice} (Other)`
-      : details?.office;
+    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office;
 
   const handleNotNeeded = async (e) => {
     setNotNeeded(e.target.checked);
 
-    await updateCampaign([
-      {
-        key: 'pathToVictory',
-        value: { ...state, p2vNotNeeded: e.target.checked },
-      },
-    ]);
+    await updateCampaign(
+      [
+        {
+          key: 'pathToVictory.p2vNotNeeded',
+          value: e.target.checked,
+        },
+      ],
+      campaign.slug,
+    );
+    await refreshCampaign();
   };
+
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
@@ -240,12 +236,7 @@ export default function AdminVictoryPathPage(props) {
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
           </H2>
-          {!notNeeded && (
-            <VoterFileSection
-              campaign={campaign}
-              refreshCampaignCallback={refreshCampaign}
-            />
-          )}
+          {!notNeeded && <VoterFileSection />}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}
@@ -254,10 +245,8 @@ export default function AdminVictoryPathPage(props) {
             />
             <div>Mark campaign as not needing Path to Victory</div>
           </H3>{' '}
-          <ProFieldsSection
-            {...props}
-            refreshCampaignCallback={refreshCampaign}
-          />
+          <AdditionalFieldsSection />
+          <P2VProSection />
           <H4 className="my-8">
             Office: <strong>{office || 'N/A'}</strong>. State:{' '}
             <strong>{details?.state || 'N/A'}</strong>. District:{' '}

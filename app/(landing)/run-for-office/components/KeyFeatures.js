@@ -49,7 +49,7 @@ export default function KeyFeatures() {
                   AI Data Analyst to transform voter data into a winning
                   canvassing plan and turnout strategy.
                 </div>
-                <GetStartedCTA id="tools-data-campaign"/>
+                <GetStartedCTA id="tools-data-campaign" />
               </div>
             </div>
             <div className="col-span-12 lg:col-span-6">
@@ -62,7 +62,7 @@ export default function KeyFeatures() {
                   Get 1:1 support and advice from our campaign experts, whether
                   you&apos;re running for town council or congress.
                 </div>
-                <GetStartedCTA id="tools-access-experts"/>
+                <GetStartedCTA id="tools-access-experts" />
               </div>
             </div>
             <div className="col-span-12 lg:col-span-6">

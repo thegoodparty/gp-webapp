@@ -22,7 +22,7 @@ export default function EmailForm({
   pageName,
   label = 'Get Started',
   labelId,
-  submitButtonId
+  submitButtonId,
 }) {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
@@ -95,7 +95,10 @@ export default function EmailForm({
             >
               <PrimaryButton
                 id={submitButtonId || 'submit-email'}
-                onClick={submitForm}>{label}</PrimaryButton>
+                onClick={submitForm}
+              >
+                {label}
+              </PrimaryButton>
             </div>
 
             {!!showError && (

@@ -1,6 +1,5 @@
 .wrapper {
-    :global(svg:not(:root)) {
-      overflow: visible;
-    }
+  :global(svg:not(:root)) {
+    overflow: visible;
   }
-  
+}

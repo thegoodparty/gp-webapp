@@ -5,3 +5,10 @@ internals/scripts/
 package-lock.json
 yarn.lock
 package.json
+.elasticbeanstalk/
+.git/
+.github/
+.next/
+.storybook/
+.vscode/
+public/

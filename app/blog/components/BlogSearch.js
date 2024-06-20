@@ -4,9 +4,7 @@ import { Autocomplete, TextField, InputAdornment } from '@mui/material';
 import { FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import styles from './BlogSearch.module.scss';
-import {
-  fireGTMButtonClickEvent
-} from '@shared/buttons/fireGTMButtonClickEvent';
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
 
 export default function BlogSearch(props) {
   const { blogItems } = props;
@@ -35,8 +33,8 @@ export default function BlogSearch(props) {
           )}
           onChange={(event, item) => {
             fireGTMButtonClickEvent({
-              id: 'blog-search'
-            })
+              id: 'blog-search',
+            });
             if (item != undefined && item != '') {
               router.push('/blog/article/' + item.slug);
             }

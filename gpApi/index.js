@@ -23,14 +23,6 @@ export const isProd = apiBase === 'https://api.goodparty.org';
 
 const gpApi = {
   homepage: {
-    followers: {
-      url: `${base}listening/followers-count`,
-      method: 'GET',
-    },
-    homepageCandidates: {
-      url: `${base}homepage-candidates`,
-      method: 'GET',
-    },
     subscribeEmail: {
       url: `${base}subscribe/email`,
       method: 'GET',
@@ -88,48 +80,6 @@ const gpApi = {
     articlesByTag: {
       url: `${base}content/blog-articles-by-tag`,
       method: 'GET',
-    },
-  },
-  candidate: {
-    list: {
-      url: `${base}candidates`,
-      method: 'GET',
-    },
-    listOld: {
-      url: `${base}new-candidates`,
-      method: 'GET',
-    },
-    findOld: {
-      url: `${base}new-candidate`,
-      method: 'GET',
-    },
-    find: {
-      url: `${base}candidate`,
-      method: 'GET',
-    },
-    update: {
-      url: `${base}candidate`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    updateOld: {
-      url: `${base}new-candidate`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    trackVisit: {
-      url: `${base}visit`,
-      method: 'POST',
-    },
-    create: {
-      url: `${base}new-candidate`,
-      method: 'POST',
-      withAuth: true,
-    },
-    canEdit: {
-      url: `${base}candidate/can-edit`,
-      method: 'GET',
-      withAuth: true,
     },
   },
 
@@ -315,29 +265,6 @@ const gpApi = {
       delete: {
         url: `${base}campaign/ai`,
         method: 'DELETE',
-        withAuth: true,
-      },
-    },
-
-    endorsement: {
-      create: {
-        url: `${base}campaign/endorsement`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaign/endorsements`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/endorsement`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaign/endorsement`,
-        method: 'PUT',
         withAuth: true,
       },
     },

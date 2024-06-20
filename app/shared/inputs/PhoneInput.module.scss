@@ -2,16 +2,16 @@
 @import '/styles/scss/breakpoints';
 
 .input {
-    margin-bottom: 18px;
+  margin-bottom: 18px;
 
-    .MuiInputBase-input {
-        line-height: 22px;
-        font-size: 16px;
-        letter-spacing: 0.1px;
-        background-color: white;
-        @include md {
-            font-size: 20px;
-            line-height: 26px;
-        }
+  .MuiInputBase-input {
+    line-height: 22px;
+    font-size: 16px;
+    letter-spacing: 0.1px;
+    background-color: white;
+    @include md {
+      font-size: 20px;
+      line-height: 26px;
     }
+  }
 }

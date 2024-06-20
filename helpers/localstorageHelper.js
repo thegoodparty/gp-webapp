@@ -28,10 +28,8 @@ export const setItem = (key, value) => {
   window.localStorage.setItem(key, item);
 };
 
-
 export const setApplicationStorage = (value) => {
   setItem('application', value);
 };
 
 export const getApplicationStorage = () => getItem('application');
-

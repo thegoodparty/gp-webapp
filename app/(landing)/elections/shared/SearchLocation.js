@@ -10,9 +10,7 @@ import { states } from 'helpers/statesHelper';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import {
-  fireGTMButtonClickEvent
-} from '@shared/buttons/fireGTMButtonClickEvent';
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
 
 const fetchState = async (state) => {
   const api = gpApi.race.byState;
@@ -33,7 +31,8 @@ const fetchCounty = async (state, county) => {
   return await gpFetch(api, payload, 3600);
 };
 
-const nameCompare = ({name: aName}, {name: bName} ) => aName.localeCompare(bName)
+const nameCompare = ({ name: aName }, { name: bName }) =>
+  aName.localeCompare(bName);
 
 export default function SearchLocation({ withHeader = false, initialState }) {
   const [state, setState] = useState({
@@ -99,7 +98,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             label=" state "
             variant="outlined"
             onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget)
+              fireGTMButtonClickEvent(e.currentTarget);
               return onChangeState(e.target.value);
             }}
             sx={{ backgroundColor: 'white' }}
@@ -136,7 +135,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             label=" "
             disabled={state.state === '' || state.countyOptions.length === 0}
             onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget)
+              fireGTMButtonClickEvent(e.currentTarget);
               return onChangeCounty(e.target.value);
             }}
             startAdornment={
@@ -159,13 +158,11 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             <option value="">All Counties</option>
 
             {state.countyOptions &&
-              state.countyOptions
-                .sort(nameCompare)
-                .map((op) => (
-                  <option value={op.name} key={op.id}>
-                    {op.name}
-                  </option>
-                ))}
+              state.countyOptions.sort(nameCompare).map((op) => (
+                <option value={op.name} key={op.id}>
+                  {op.name}
+                </option>
+              ))}
           </Select>
         </div>
 
@@ -180,7 +177,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             label=" "
             disabled={state.county === '' || state.munOptions.length === 0}
             onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget)
+              fireGTMButtonClickEvent(e.currentTarget);
               return onChangeMun(e.target.value);
             }}
             startAdornment={
@@ -203,13 +200,11 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             <option value="">All Municipalities</option>
 
             {state.munOptions &&
-              state.munOptions
-                .sort(nameCompare)
-                .map((op) => (
-                  <option value={op.name} key={op.id}>
-                    {op.name}
-                  </option>
-                ))}
+              state.munOptions.sort(nameCompare).map((op) => (
+                <option value={op.name} key={op.id}>
+                  {op.name}
+                </option>
+              ))}
           </Select>
         </div>
         <div className="col-span-12 md:col-span-3">

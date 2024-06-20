@@ -1,24 +1,8 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
-import { getServerToken } from 'helpers/userServerHelper';
 import AdminVictoryPathPage from './components/AdminVictoryPathPage';
 import pageMetaData from 'helpers/metadataHelper';
-
-export async function fetchCampaignBySlug(slug) {
-  // admin only
-  try {
-    const api = gpApi.campaign.findBySlug;
-    const payload = {
-      slug,
-    };
-    const token = getServerToken();
-    return await gpFetch(api, payload, false, token);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
+import { fetchCampaignBySlugAdminOnly } from 'app/admin/shared/fetchCampaignBySlugAdminOnly';
+import { AdminCampaignProvider } from '@shared/hooks/AdminCampaignProvider';
 
 const meta = pageMetaData({
   title: 'Admin Path to Victory | GoodParty.org',
@@ -30,12 +14,16 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaignBySlug(slug);
+  const { campaign } = await fetchCampaignBySlugAdminOnly(slug);
 
   const childProps = {
     pathname: '/admin/candidates',
     title: 'Path to Victory',
     campaign,
   };
-  return <AdminVictoryPathPage {...childProps} />;
+  return (
+    <AdminCampaignProvider campaign={campaign}>
+      <AdminVictoryPathPage {...childProps} />
+    </AdminCampaignProvider>
+  );
 }
