@@ -233,9 +233,7 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const office =
-    details?.office === 'Other'
-      ? `${details?.otherOffice} (Other)`
-      : details?.office;
+    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office;
 
   const handleNotNeeded = async (e) => {
     setNotNeeded(e.target.checked);
