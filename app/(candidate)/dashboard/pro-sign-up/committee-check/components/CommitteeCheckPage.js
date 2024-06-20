@@ -130,7 +130,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             election data.
           </Body2>
           <TextField
-            className="mb-4"
+            className="!mb-4"
             label="Name Of Campaign Committee"
             value={campaignCommittee}
             disabled={loadingEinCheck}
