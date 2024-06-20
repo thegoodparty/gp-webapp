@@ -5,7 +5,7 @@ import gpApi from 'gpApi';
 
 export const CampaignContext = createContext([{}, () => {}]);
 
-export const CampaignProvider = ({ children, campaign: initCampaign }) => {
+export const AdminCampaignProvider = ({ children, campaign: initCampaign }) => {
   const [campaign, setCampaign] = useState(initCampaign);
   const refreshCampaign = async () => {
     const { campaign: refreshedCampaign } = await gpFetch(

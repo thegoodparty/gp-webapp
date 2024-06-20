@@ -1,6 +1,6 @@
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { useState } from 'react';
-import { updateCampaignAdminOnly } from 'helpers/updateCampaignAdminOnly';
+import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly';
 import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection';
 import Checkbox from '@shared/inputs/Checkbox';
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
@@ -43,16 +43,12 @@ export const P2VProSection = () => {
   return (
     <P2VSection title="Pro Plan Information">
       <div className="flex items-center mb-2">
-        <Checkbox
-          value={isPro}
-          defaultChecked={campaign.isPro}
-          onChange={onChangeIsPro}
-        />
+        <Checkbox checked={isPro} onChange={onChangeIsPro} />
         <div className="ml-2">Is Pro</div>
       </div>
       <div className="mb-2">
         <span className="font-bold">Campaign Committee:</span>{' '}
-        {campaign.details?.campaignCommittee}
+        {details.campaignCommittee}
       </div>
       <div className="mb-2">
         <span className="font-bold">EIN:</span> {details.einNumber}

@@ -6,7 +6,7 @@ import { CANDIDATE_TIERS } from './candidate-tiers.constant';
 import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant';
 import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection';
 import { useCampaign } from '@shared/hooks/useCampaign';
-import { updateCampaignAdminOnly } from 'helpers/updateCampaignAdminOnly';
+import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly';
 
 const fields = [
   { key: 'isVerified', label: 'Is Verified?' },

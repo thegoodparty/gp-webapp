@@ -1,8 +1,8 @@
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import AdminVictoryPathPage from './components/AdminVictoryPathPage';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchCampaignBySlugServerOnly } from 'helpers/fetchCampaignBySlugServerOnly';
-import { CampaignProvider } from '@shared/hooks/CampaignProvider';
+import { fetchCampaignBySlugAdminOnly } from 'app/admin/shared/fetchCampaignBySlugAdminOnly';
+import { AdminCampaignProvider } from '@shared/hooks/AdminCampaignProvider';
 
 const meta = pageMetaData({
   title: 'Admin Path to Victory | GoodParty.org',
@@ -14,7 +14,7 @@ export const metadata = meta;
 export default async function Page({ params }) {
   adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaignBySlugServerOnly(slug);
+  const { campaign } = await fetchCampaignBySlugAdminOnly(slug);
 
   const childProps = {
     pathname: '/admin/candidates',
@@ -22,8 +22,8 @@ export default async function Page({ params }) {
     campaign,
   };
   return (
-    <CampaignProvider campaign={campaign}>
+    <AdminCampaignProvider campaign={campaign}>
       <AdminVictoryPathPage {...childProps} />
-    </CampaignProvider>
+    </AdminCampaignProvider>
   );
 }
