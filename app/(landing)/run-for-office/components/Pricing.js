@@ -72,7 +72,7 @@ export default function Pricing() {
               </div>
               <div>
                 <div className="mt-14 mb-8 text-4xl font-light">$10/month</div>
-                <Link id="pro-candidtate" href="/pro-consultation">
+                <Link id="pro-candidtate" href="/get-a-demo">
                   <PrimaryButton fullWidth>Get Started</PrimaryButton>
                 </Link>
               </div>
