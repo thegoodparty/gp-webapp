@@ -15,7 +15,6 @@
     "start": "next build && next start",
     "start-local": "npm run build-local && next start -p 4000",
     "lint": "next lint",
-    "format": "prettier --write .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

@@ -3,7 +3,6 @@ import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
 
 export async function fetchCampaignBySlugAdminOnly(slug) {
-  // admin only
   try {
     const api = gpApi.campaign.findBySlug;
     const payload = {
