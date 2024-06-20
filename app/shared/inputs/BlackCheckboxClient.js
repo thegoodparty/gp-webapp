@@ -1,12 +1,8 @@
 'use client';
 import React from 'react';
-import styles from './BlackCheckbox.module.scss'
+import styles from './BlackCheckbox.module.scss';
 
-function BlackCheckboxClient({
-  value = false,
-  disabled = false,
-  ...props
-}) {
+function BlackCheckboxClient({ value = false, disabled = false, ...props }) {
   return (
     <input
       type="checkbox"

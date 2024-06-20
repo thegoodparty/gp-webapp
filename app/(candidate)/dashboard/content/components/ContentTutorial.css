@@ -1,11 +1,10 @@
-
-.introjs-tooltipReferenceLayer .introjs-tooltip{
+.introjs-tooltipReferenceLayer .introjs-tooltip {
   max-width: 540px;
 }
 
 .introjs-button.introjs-nextbutton {
-  background-color: #242D3D;
-  color: #FFF;
+  background-color: #242d3d;
+  color: #fff;
   padding: 8px 24px;
   border: none;
   text-shadow: none;

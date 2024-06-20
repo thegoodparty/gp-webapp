@@ -42,7 +42,7 @@ export default function PositionDetails({ race, positions }) {
     eligibilityRequirements,
   } = race;
   const term = frequency.match(/\d+/g);
-  const cleanPositions = processAndSort(positions)
+  const cleanPositions = processAndSort(positions);
   return (
     <section className="grid grid-cols-12 gap-4 mt-6 md:mt-12">
       <div className="col-span-12 md:col-span-6 text-lg md:text-2xl font-medium">

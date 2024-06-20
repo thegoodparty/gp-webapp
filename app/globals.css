@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 * {
   line-height: 1.3;
   outline: none;
@@ -43,7 +42,6 @@ a.no-underline:hover {
 
 .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
   border-color: #d32f2f !important;
-
 }
 
 strong {
@@ -81,7 +79,8 @@ div.MuiAutocomplete-root:not(.office-autocomplete) div.MuiOutlinedInput-root {
   border-radius: 40px;
 }
 
-div.MuiAutocomplete-root:not(.office-autocomplete) div.MuiOutlinedInput-root.Mui-focused {
+div.MuiAutocomplete-root:not(.office-autocomplete)
+  div.MuiOutlinedInput-root.Mui-focused {
   /* Search bar when focused */
   border-radius: 20px 20px 0px 0px !important;
 }
@@ -107,7 +106,6 @@ div.MuiAutocomplete-popper div {
     width: 0;
   }
 }
-
 
 @media all {
   .print-page-break {

@@ -1,13 +1,9 @@
 import Sessions from 'app/(landing)/academy-webinar/Sessions';
 import Experts from 'app/(landing)/academy-webinar/components/Experts';
-import GraduateSpotlight
-  from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
+import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
 import Graduates from 'app/(landing)/academy-webinar/components/Graduates';
 import { AcademySignUpModalProvider } from './AcademySignUpModal/AcademySignUpModalProvider';
-import {
-  AcademySignUpModal,
-
-} from './AcademySignUpModal/AcademySignUpModal';
+import { AcademySignUpModal } from './AcademySignUpModal/AcademySignUpModal';
 import Hero from 'app/(landing)/academy-webinar/components/Hero';
 import Hero2 from 'app/(landing)/academy-webinar/components/Hero2';
 import WhyAcademy from 'app/(landing)/academy-webinar/components/WhyAcademy';

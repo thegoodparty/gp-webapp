@@ -17,12 +17,7 @@ export async function subscribeEmail(payload) {
   }
 }
 
-const EmailFormV2 = ({
-  formId,
-  pageName,
-  label = 'Get Started',
-  labelId,
-}) => {
+const EmailFormV2 = ({ formId, pageName, label = 'Get Started', labelId }) => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -57,11 +52,7 @@ const EmailFormV2 = ({
     }
   };
   return (
-    <form
-      noValidate
-      onSubmit={(e) => e.preventDefault()}
-      id={labelId}
-    >
+    <form noValidate onSubmit={(e) => e.preventDefault()} id={labelId}>
       {success ? (
         <div
           className={`bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center`}
@@ -104,7 +95,10 @@ const EmailFormV2 = ({
             >
               <SecondaryButton
                 className="bg-secondary-main border-none"
-                onClick={submitForm}>{label}</SecondaryButton>
+                onClick={submitForm}
+              >
+                {label}
+              </SecondaryButton>
             </div>
 
             {!!showError && (
@@ -117,6 +111,6 @@ const EmailFormV2 = ({
       )}
     </form>
   );
-}
+};
 
-export default EmailFormV2
+export default EmailFormV2;

@@ -6,4 +6,4 @@ export const IS_VERIFIED_OPTIONS = {
   No: false,
 };
 
-export const IS_VERIFIED_OPTIONS_REVERSED = reverseObject(IS_VERIFIED_OPTIONS)
+export const IS_VERIFIED_OPTIONS_REVERSED = reverseObject(IS_VERIFIED_OPTIONS);

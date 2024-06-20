@@ -26,5 +26,4 @@ const BlackOutlinedButton = ({
   );
 };
 
-
 export default BlackOutlinedButton;

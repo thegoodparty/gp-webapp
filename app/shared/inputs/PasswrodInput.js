@@ -4,9 +4,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import TextField from './TextField';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import {
-  isValidPassword
-} from './IsValidPassword';
+import { isValidPassword } from './IsValidPassword';
 
 export default function PasswordInput({
   onChangeCallback,
