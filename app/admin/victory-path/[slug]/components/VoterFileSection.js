@@ -1,7 +1,8 @@
 import RerunP2V from './RerunP2V';
+import { useCampaign } from '@shared/hooks/useCampaign';
 
-export default function VoterFileSection(props) {
-  const { campaign } = props;
+export default function VoterFileSection() {
+  const [campaign] = useCampaign();
 
   if (
     campaign.pathToVictory?.electionType &&
@@ -21,7 +22,7 @@ export default function VoterFileSection(props) {
             victory didn&apos;t save that column)
           </div>
         )}
-        <RerunP2V {...props} />
+        <RerunP2V />
       </div>
     </div>
   );

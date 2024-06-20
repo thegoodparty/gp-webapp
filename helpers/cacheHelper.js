@@ -1,6 +1,5 @@
 import { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { candidateRoute } from './candidateHelper';
 
 export const revalidatePage = async (path) => {
   const api = {

@@ -7,7 +7,7 @@ import materialTheme from '@shared/materialTheme';
 const Checkbox = (props) => {
   return (
     <ThemeProvider theme={materialTheme}>
-      <MuiCheckbox {...props} variant="outlined" />
+      <MuiCheckbox variant="outlined" {...props} />
     </ThemeProvider>
   );
 };
