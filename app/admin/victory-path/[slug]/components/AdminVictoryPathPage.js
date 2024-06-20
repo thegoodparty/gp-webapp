@@ -194,7 +194,7 @@ export default function AdminVictoryPathPage(props) {
     try {
       // only send mail the first time we update pathToVictory
       if (!pathToVictory) {
-        await sendVictoryMail(updated.slug);
+        await sendVictoryMail(campaign.slug);
       }
       // send only the keys that changed
       const keysToUpdate = keys.filter(
