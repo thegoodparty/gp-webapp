@@ -2,7 +2,10 @@
 import H3 from '@shared/typography/H3';
 import Notification from './Notification';
 
-export default function NotificationsList({ notifications, closeNotificationCallback }) {
+export default function NotificationsList({
+  notifications,
+  closeNotificationCallback,
+}) {
   return (
     <div className="">
       {notifications.map((notification) => (

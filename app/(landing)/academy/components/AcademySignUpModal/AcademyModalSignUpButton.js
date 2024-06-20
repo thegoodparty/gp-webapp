@@ -8,7 +8,7 @@ export const AcademyModalSignUpButton = ({ children, ...restProps }) => {
     return Children.map(children, (child) => {
       return cloneElement(child, {
         onClick: openModal,
-        ...restProps
+        ...restProps,
       });
     });
   };

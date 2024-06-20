@@ -140,5 +140,5 @@ export default function ResourcesPage(props) {
         ))}
       </div>
     </DashboardLayout>
-  )
-};
+  );
+}

@@ -6,9 +6,8 @@ import TopIssuesList from './TopIssuesList';
 import { TopIssuesProvider } from './UseTopIssuesContext';
 import { TopIssueCreator } from './TopIssueCreator';
 
-const AdminTopIssuesPage = ({
-  topIssues: initTopIssues = [], ...rest
-}) => <TopIssuesProvider initTopIssues={initTopIssues}>
+const AdminTopIssuesPage = ({ topIssues: initTopIssues = [], ...rest }) => (
+  <TopIssuesProvider initTopIssues={initTopIssues}>
     <AdminWrapper {...rest}>
       <PortalPanel color="#2CCDB0">
         <TopIssueCreator />
@@ -19,5 +18,6 @@ const AdminTopIssuesPage = ({
       </PortalPanel>
     </AdminWrapper>
   </TopIssuesProvider>
+);
 
-export default AdminTopIssuesPage
+export default AdminTopIssuesPage;

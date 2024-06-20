@@ -14,13 +14,11 @@ import { SvgIconImage } from './SvgIconImage';
 const insertItemInArray = (arr, item, placement) => [
   ...arr.slice(0, placement),
   item,
-  ...arr.slice(placement + 1)
-]
+  ...arr.slice(placement + 1),
+];
 
-export const TopIssueDisplay = ({
-  issue
-}) => {
-  const [topIssues, setTopIssues] = useTopIssues()
+export const TopIssueDisplay = ({ issue }) => {
+  const [topIssues, setTopIssues] = useTopIssues();
   const [editTopIssueId, setEditTopIssueId] = useState(null);
   const [editTopIssueName, setEditTopIssueName] = useState(null);
   const [editTopIssueIcon, setEditTopIssueIcon] = useState(null);
@@ -31,18 +29,18 @@ export const TopIssueDisplay = ({
     setEditTopIssueIcon(null);
   };
 
-  return editTopIssueId === issue.id ?
+  return editTopIssueId === issue.id ? (
     <>
       <SVGIconChooser
         svgData={editTopIssueIcon}
-        setSvgData={data => setEditTopIssueIcon(data)}
+        setSvgData={(data) => setEditTopIssueIcon(data)}
       />
       <TextField
-        className='mx-2'
+        className="mx-2"
         fullWidth={true}
         primary={true}
-        size='small'
-        label='Top Issue Name'
+        size="small"
+        label="Top Issue Name"
         value={editTopIssueName}
         onChange={(e) => setEditTopIssueName(e.target.value)}
       />
@@ -58,11 +56,13 @@ export const TopIssueDisplay = ({
               icon: editTopIssueIcon,
             };
             await updateTopIssue(updateIssue);
-            setTopIssues(insertItemInArray(
-              topIssues,
-              updateIssue,
-              topIssues.findIndex(({ id }) => id === issue.id)
-            ));
+            setTopIssues(
+              insertItemInArray(
+                topIssues,
+                updateIssue,
+                topIssues.findIndex(({ id }) => id === issue.id),
+              ),
+            );
             handleClearIssueEdit();
           }}
           className={{ 'mr-2': true }}
@@ -83,14 +83,13 @@ export const TopIssueDisplay = ({
           </div>
         </SecondaryButton>
       </div>
-    </> :
+    </>
+  ) : (
     <>
-      {issue.icon &&
-        <SvgIconImage src={issue.icon} />
-      }
+      {issue.icon && <SvgIconImage src={issue.icon} />}
       <strong>&nbsp; {issue.name}</strong>
       <IconButton
-        size='small'
+        size="small"
         onClick={() => {
           setEditTopIssueId(issue.id);
           setEditTopIssueName(issue.name);
@@ -99,5 +98,6 @@ export const TopIssueDisplay = ({
       >
         <FaEdit />
       </IconButton>
-    </>;
+    </>
+  );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './BlackCheckbox.module.scss'
+import styles from './BlackCheckbox.module.scss';
 
 function BlackCheckbox({
   value = false,

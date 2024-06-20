@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
