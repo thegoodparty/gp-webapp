@@ -70,7 +70,6 @@ export default async function middleware(req) {
       { status: 301 },
     );
   }
-  console.log('dbRedirects[pathname]', dbRedirects[pathname]);
   if (dbRedirects && dbRedirects[pathname]) {
     return NextResponse.redirect(
       `${dbRedirects[pathname]}${req.nextUrl.search || ''}`,
