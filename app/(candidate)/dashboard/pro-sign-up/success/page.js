@@ -3,6 +3,9 @@ import PurchaseSuccessPage from 'app/(candidate)/dashboard/pro-sign-up/success/c
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+const ENABLE_PRO_FLOW = process.env.NEXT_PUBLIC_PRO_FLOW;
 
 const meta = pageMetaData({
   title: 'Pro Sign Up - Purchase Success | GoodParty.org',
@@ -14,6 +17,11 @@ export const metadata = meta;
 export default async function Page({
   searchParams: { session_id: checkoutSessionId },
 }) {
+  if (!ENABLE_PRO_FLOW) {
+    redirect('/dashboard');
+    return null;
+  }
+
   if (!checkoutSessionId) {
     throw new Error('No session_id provided');
   }

@@ -6,6 +6,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 
+const ENABLE_PRO_FLOW = process.env.NEXT_PUBLIC_PRO_FLOW;
+
 async function fetchInvitations(token) {
   try {
     const api = gpApi.campaign.volunteerInvitation.listByUser;
@@ -36,6 +38,7 @@ export default async function Page() {
     invitations,
     user,
     isPro: campaign?.isPro,
+    enableProFlow: ENABLE_PRO_FLOW,
   };
 
   return <ProfilePage {...childProps} />;
