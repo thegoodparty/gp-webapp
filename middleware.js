@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
-// import gpApi from 'gpApi';
-// import gpFetch from 'gpApi/gpFetch';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 
-// export const fetchRedirects = async () => {
-//   const api = gpApi.content.contentByKey;
-//   const payload = {
-//     key: 'redirects',
-//   };
-//   return await gpFetch(api, payload, 3600);
-// };
+export const fetchRedirects = async () => {
+  const api = gpApi.content.contentByKey;
+  const payload = {
+    key: 'redirects',
+  };
+  return await gpFetch(api, payload, 3600);
+};
+
+let dbRedirects;
+let dbFetchTime;
 
 const redirects = {
   '/elections/senate/me': '/',
@@ -27,7 +30,23 @@ const absoluteRedirects = {
 // const blockedIPs = ['142.198.200.33'];
 
 export default async function middleware(req) {
-  // const { content } = await fetchRedirects();
+  // only call dbRedirect if it is not defined or once an hour
+  if (!dbRedirects) {
+    if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
+      dbFetchTime = Date.now();
+      const res = await fetchRedirects();
+      dbRedirects = res.content;
+      // dbRedirects is an array of object like this: { pathname: 'aa', redirectUrl: 'https://www.google.com' }
+      // we need to convert it to an object
+      if (dbRedirects) {
+        dbRedirects = dbRedirects.reduce((acc, item) => {
+          acc[`/${item.pathname}`] = item.redirectUrl;
+          return acc;
+        }, {});
+      }
+    }
+  }
+
   // const forwarded = req.headers.get('x-forwarded-for');
   // const ip = forwarded ? forwarded.split(',')[0] : req.ip;
   // if (blockedIPs.includes(ip)) {
@@ -51,14 +70,13 @@ export default async function middleware(req) {
       { status: 301 },
     );
   }
-
-  // match /candidate/firstName-lastName old candidate url
-  // /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/
-  // const pattern = /\/candidate\/([a-zA-Z]+)-([a-zA-Z]+)/;
-  // const match = pathname.match(pattern);
-  // if (match) {
-  //   return NextResponse.redirect(`${req.nextUrl.origin}`, { status: 301 });
-  // }
+  console.log('dbRedirects[pathname]', dbRedirects[pathname]);
+  if (dbRedirects && dbRedirects[pathname]) {
+    return NextResponse.redirect(
+      `${dbRedirects[pathname]}${req.nextUrl.search || ''}`,
+      { status: 301 },
+    );
+  }
 
   if (pathname === pathname.toLowerCase()) {
     return NextResponse.next();
