@@ -41,7 +41,7 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
-  const { campaign } = props;
+  const { campaign, enableProFlow } = props;
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
   const [updateHistory, setUpdateHistory] = useState([]);
 
@@ -136,7 +136,7 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
-                {!isPro && <ProSignUpAlert />}
+                {enableProFlow && !isPro && <ProSignUpAlert />}
                 <TitleSection
                   title="Campaign Tracker"
                   subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."

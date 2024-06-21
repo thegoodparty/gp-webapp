@@ -4,6 +4,8 @@ import DashboardPage from './components/DashboardPage';
 import candidateAccess from './shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
 
+const ENABLE_PRO_FLOW = process.env.NEXT_PUBLIC_PRO_FLOW;
+
 const meta = pageMetaData({
   title: 'Campaign Dashboard | GoodParty.org',
   description: 'Campaign Dashboard',
@@ -22,6 +24,7 @@ export default async function Page({ params, searchParams }) {
     candidateSlug,
     campaign,
     user,
+    enableProFlow: ENABLE_PRO_FLOW,
   };
   return <DashboardPage {...childProps} />;
 }
