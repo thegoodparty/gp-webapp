@@ -39,6 +39,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
                 key={link.id}
                 className="no-underline font-medium"
                 rel={`${link.external ? 'noopener noreferrer nofollow' : ''}`}
+                target={`${link.external ? '_blank' : ''}`}
               >
                 <div
                   data-cy="header-link"
