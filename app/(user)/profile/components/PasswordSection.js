@@ -30,9 +30,7 @@ async function changePasswordCallback(password, oldPassword) {
       newPassword: password,
       oldPassword,
     };
-    const response = await gpFetch(api, payload, 3600);
-    const { user } = response;
-    setUserCookie(user);
+    await gpFetch(api, payload, 3600);
     // yield put(snackbarActions.showSnakbarAction('Your new password is saved'));
     // const random = parseInt(Math.random() * 1000 + '', 10);
     // yield put(push(`?save=${random}`)); // force a refresh
