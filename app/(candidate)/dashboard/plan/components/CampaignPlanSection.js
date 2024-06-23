@@ -18,7 +18,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function generateAI(key, regenerate, chat, editMode) {
   try {
-    const api = gpApi.campaign.ai.create;
+    const api = gpApi.campaign?.ai.create;
     return await gpFetch(api, {
       key,
       regenerate,
@@ -36,15 +36,15 @@ let aiTotalCount = 0;
 
 function canGenerate(campaign, key, candidatePositions) {
   const questions = flows[key];
-  if (!campaign.details) {
+  if (!campaign?.details) {
     return false;
   }
-  const { customIssues } = campaign.details;
+  const { customIssues } = campaign?.details;
 
   const issuesCount =
     (customIssues?.length || 0) + candidatePositions?.length || 0;
   const { occupation, funFact, pastExperience, website, runningAgainst } =
-    campaign.details || {};
+    campaign?.details || {};
   /*
 'occupation',
     'funFact',
@@ -95,7 +95,7 @@ export default function CampaignPlanSection({
   const [isFailed, setIsFailed] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
-  const aiContent = campaign.aiContent;
+  const aiContent = campaign?.aiContent;
   const { key } = section;
 
   useEffect(() => {

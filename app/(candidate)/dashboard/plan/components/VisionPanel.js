@@ -22,7 +22,7 @@ export default function VisionPanel(props) {
   const { campaign, versions, updateVersionsCallback, candidatePositions } =
     props;
 
-  if (campaign.pathToVictory && sections.length === 3) {
+  if (campaign?.pathToVictory && sections.length === 3) {
     sections.push({
       key: 'pathToVictory',
       title: 'Voter Report',

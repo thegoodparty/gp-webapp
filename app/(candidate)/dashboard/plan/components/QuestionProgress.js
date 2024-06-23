@@ -13,10 +13,10 @@ export function calcAnswers(campaign, candidatePositions) {
     pastExperience,
     website,
     runningAgainst,
-  } = campaign.details || {};
+  } = campaign?.details || {};
   const issuesCount =
     (customIssues?.length || 0) + candidatePositions?.length || 0;
-  if (campaign.details) {
+  if (campaign?.details) {
     if (occupation) {
       answeredQuestions++;
     }
