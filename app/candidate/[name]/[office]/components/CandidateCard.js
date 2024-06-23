@@ -14,10 +14,12 @@ import { MdEmail, MdStars } from 'react-icons/md';
 import TealButton from './TealButton';
 import StickyCard from './StickyCard';
 import CTA from './CTA';
+import Image from 'next/image';
 
 export default function CandidateCard(props) {
   const { candidate } = props;
-  const { firstName, lastName, party, office, city, state } = candidate;
+  const { firstName, lastName, party, office, city, state, claimed, image } =
+    candidate;
 
   let partyName = '';
   if (party === 'Independent') {
@@ -30,12 +32,25 @@ export default function CandidateCard(props) {
       <StickyCard>
         <div className="mb-4 lg:w-[400px] bg-primary-dark p-6 rounded-2xl border border-gray-700">
           <div className="flex justify-between">
-            <div className="bg-primary inline-block border border-white rounded-2xl p-4">
-              <IoPersonSharp size={60} />
-            </div>
+            {image ? (
+              <div className="bg-primary inline-block border border-white rounded-2xl relative w-28 h-28">
+                <Image
+                  src={image}
+                  fill
+                  alt={`${firstName} ${lastName}`}
+                  priority
+                  unoptimized
+                  className="rounded-2xl w-28 h-28 object-cover object-center"
+                />
+              </div>
+            ) : (
+              <div className="bg-primary inline-block border border-white rounded-2xl p-4">
+                <IoPersonSharp size={60} />
+              </div>
+            )}
             <div>
               <div className="bg-secondary-light text-black py-2 px-4 rounded">
-                <Overline>UNCLAIMED</Overline>
+                <Overline>{claimed ? 'CLAIMED' : 'UNCLAIMED'}</Overline>
               </div>
             </div>
           </div>

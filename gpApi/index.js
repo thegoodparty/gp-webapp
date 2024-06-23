@@ -692,6 +692,12 @@ const gpApi = {
       withAuth: true,
     },
   },
+  candidate: {
+    find: {
+      url: `${base}candidate`,
+      method: 'GET',
+    },
+  },
 };
 
 export default gpApi;

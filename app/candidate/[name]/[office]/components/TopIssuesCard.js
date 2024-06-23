@@ -17,8 +17,8 @@ export default function TopIssuesCard(props) {
       {topIssues.map((item, index) => (
         <DescriptionLabel
           key={index}
-          title={`Issue ${index + 1}`}
-          description={item}
+          title={`Issue ${index + 1} - ${item.issue}`}
+          description={item.stance}
         />
       ))}
     </section>
