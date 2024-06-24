@@ -28,10 +28,10 @@ export default async function Page({
 
   try {
     const nextCookies = cookies();
-    const tempToken = nextCookies.get('temp-token');
+    const tempToken = nextCookies.get('token');
 
     if (!tempToken) {
-      throw new Error('No temp-token found');
+      throw new Error('No token found');
     }
 
     const result = await gpFetch(
