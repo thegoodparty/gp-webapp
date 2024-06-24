@@ -13,20 +13,6 @@ export const fetchRedirects = async () => {
 let dbRedirects;
 let dbFetchTime;
 
-const redirects = {
-  '/elections/senate/me': '/',
-  '/candidates': '/elections-results/nashville',
-  '/nashville': '/elections-results/nashville',
-  '/northcarolina': '/elections-results/nc',
-  '/nc': '/elections-results/nc',
-  '/run': '/run-for-office',
-  '/pricing': '/run-for-office#pricing-section',
-};
-
-const absoluteRedirects = {
-  '/iva': 'https://lp.goodparty.org/iva',
-};
-
 // const blockedIPs = ['142.198.200.33'];
 
 export default async function middleware(req) {
@@ -36,14 +22,6 @@ export default async function middleware(req) {
       dbFetchTime = Date.now();
       const res = await fetchRedirects();
       dbRedirects = res.content;
-      // dbRedirects is an array of object like this: { pathname: 'aa', redirectUrl: 'https://www.google.com' }
-      // we need to convert it to an object
-      if (dbRedirects) {
-        dbRedirects = dbRedirects.reduce((acc, item) => {
-          acc[`/${item.pathname}`] = item.redirectUrl;
-          return acc;
-        }, {});
-      }
     }
   }
 
@@ -57,22 +35,15 @@ export default async function middleware(req) {
   // }
   const { pathname } = req.nextUrl;
 
-  if (redirects[pathname]) {
-    return NextResponse.redirect(
-      `${req.nextUrl.origin}${redirects[pathname]}${req.nextUrl.search || ''}`,
-      { status: 301 },
-    );
-  }
-
-  if (absoluteRedirects[pathname]) {
-    return NextResponse.redirect(
-      `${absoluteRedirects[pathname]}${req.nextUrl.search || ''}`,
-      { status: 301 },
-    );
-  }
   if (dbRedirects && dbRedirects[pathname]) {
+    const url = dbRedirects[pathname];
+    if (url.startsWith('http')) {
+      return NextResponse.redirect(`${url}${req.nextUrl.search || ''}`, {
+        status: 301,
+      });
+    }
     return NextResponse.redirect(
-      `${dbRedirects[pathname]}${req.nextUrl.search || ''}`,
+      `${req.nextUrl.origin}${url}${req.nextUrl.search || ''}`,
       { status: 301 },
     );
   }
