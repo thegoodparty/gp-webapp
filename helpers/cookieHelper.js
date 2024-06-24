@@ -71,9 +71,9 @@ export const getUserCookie = (withParse = false) => {
 
   const user = getCookie('user');
   if (user && withParse) {
-    return JSON.parse(user);
+    return JSON.parse(decodeURIComponent(user));
   }
-  return user;
+  return decodeURIComponent(user);
 };
 
 export const setSignupRedirectCookie = (route, options = {}) => {
