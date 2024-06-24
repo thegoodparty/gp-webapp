@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 
 export const getServerToken = () => {
   const nextCookies = cookies();
+  console.log('nextCookies', nextCookies);
   const cookie = nextCookies.get('token');
   const impersonateCookie = nextCookies.get('impersonateToken');
   if (impersonateCookie?.value) {

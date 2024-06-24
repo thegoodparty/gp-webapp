@@ -4,7 +4,7 @@ async function gpFetch(
   endpoint,
   data,
   revalidate,
-  token,
+  token, // should only be used for server-side calls
   isFormData = false,
   nonJSON = false,
 ) {
@@ -33,7 +33,12 @@ async function gpFetch(
   //   }
   // }
 
-  const requestOptions = headersOptions(body, endpoint.method); //, autoToken);
+  let autoToken;
+  if (withAuth) {
+    autoToken = token;
+  }
+
+  const requestOptions = headersOptions(body, endpoint.method, autoToken); //, autoToken);
 
   return await fetchCall(
     url,
