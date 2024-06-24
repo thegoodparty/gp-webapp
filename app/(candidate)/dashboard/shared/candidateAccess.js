@@ -18,8 +18,10 @@ export default async function candidateAccess() {
   // don't remove this call. It prevents the build process to try to cache this page which should be dynamic
   // https://nextjs.org/docs/messages/dynamic-server-error
   const token = getServerToken();
+  console.log('token', token);
   const campaignStatus = await fetchCampaignStatus();
-  if (!campaignStatus || campaignStatus.status !== 'candidate') {
-    redirect('/');
-  }
+  console.log('campaignStatus', campaignStatus);
+  // if (!campaignStatus || campaignStatus.status !== 'candidate') {
+  //   redirect('/');
+  // }
 }
