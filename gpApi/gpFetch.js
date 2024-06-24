@@ -33,7 +33,7 @@ async function gpFetch(
     }
   }
 
-  const requestOptions = headersOptions(body, endpoint.method, autoToken);
+  const requestOptions = headersOptions(body, endpoint.method); //, autoToken);
 
   return await fetchCall(
     url,
@@ -56,6 +56,7 @@ function headersOptions(body, method = 'GET', token) {
   return {
     headers,
     method,
+    credentials: 'include',
     mode: 'cors',
     body,
   };
