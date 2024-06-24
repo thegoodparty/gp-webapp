@@ -61,7 +61,7 @@ export default function LoginPage() {
 
       if (user && token) {
         setUserCookie(user);
-        setCookie('token', token);
+        // setCookie('token', token);
         userState.set(() => user);
         if (newUser) {
           const afterAction = getCookie('afterAction');

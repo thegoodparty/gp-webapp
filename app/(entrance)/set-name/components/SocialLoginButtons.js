@@ -23,7 +23,7 @@ async function login(payload) {
     const { user, token } = await gpFetch(api, payload);
     if (user && token) {
       setUserCookie(user);
-      setCookie('token', token);
+      // setCookie('token', token);
     }
     return user;
   } catch (e) {

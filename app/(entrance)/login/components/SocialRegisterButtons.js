@@ -77,7 +77,7 @@ export default function SocialRegisterButtons() {
         };
       });
       setUserCookie(user);
-      setCookie('token', token);
+      // setCookie('token', token);
       userState.set(() => user);
 
       const returnUrl = getCookie('returnUrl');
