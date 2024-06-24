@@ -22,7 +22,7 @@ export async function updateUser(updateFields) {
 
     const response = await gpFetch(api, updateFields);
     const { user } = response;
-    setUserCookie(user);
+    // setUserCookie(user);
     return user;
   } catch (error) {
     console.log('Error updating user', error);

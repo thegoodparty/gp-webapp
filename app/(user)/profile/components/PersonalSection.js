@@ -107,7 +107,7 @@ function PersonalSection() {
   const updateUser = async () => {
     const updated = await refreshUser();
     userState.set(() => updated);
-    setUserCookie(updated);
+    // setUserCookie(updated);
   };
 
   const onChangeField = (key, val) => {

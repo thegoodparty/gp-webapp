@@ -22,7 +22,7 @@ async function login(payload) {
     const api = gpApi.entrance.socialLogin;
     const { user, token } = await gpFetch(api, payload);
     if (user && token) {
-      setUserCookie(user);
+      // setUserCookie(user);
       // setCookie('token', token);
     }
     return user;

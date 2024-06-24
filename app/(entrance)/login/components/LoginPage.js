@@ -60,7 +60,7 @@ export default function LoginPage() {
       const { user, token, newUser } = await login(state.email, state.password);
 
       if (user && token) {
-        setUserCookie(user);
+        // setUserCookie(user);
         // setCookie('token', token);
         userState.set(() => user);
         if (newUser) {

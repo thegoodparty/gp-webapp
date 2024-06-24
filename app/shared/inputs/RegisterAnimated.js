@@ -37,7 +37,7 @@ export async function register(payload) {
     }
     const { user, token } = res;
     if (user && token) {
-      setUserCookie(user);
+      // setUserCookie(user);
       // setCookie('token', token);
     }
 

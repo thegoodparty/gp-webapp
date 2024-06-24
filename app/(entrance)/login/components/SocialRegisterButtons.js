@@ -76,7 +76,7 @@ export default function SocialRegisterButtons() {
           isError: false,
         };
       });
-      setUserCookie(user);
+      // setUserCookie(user);
       // setCookie('token', token);
       userState.set(() => user);
 

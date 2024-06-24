@@ -24,9 +24,9 @@ async function fileSelectCallback(image, uploadCallback, isUserImage) {
   const res = await gpFetch(api, formData, 3600, false, true);
   if (res.success && res.data.files.length > 0) {
     uploadCallback(`${res.data.baseurl}${res.data.files[0]}`);
-    if (isUserImage) {
-      setUserCookie(res.updatedUser);
-    }
+    // if (isUserImage) {
+    //   setUserCookie(res.updatedUser);
+    // }
   } else {
     uploadCallback(false);
   }
