@@ -6,7 +6,7 @@ import Link from 'next/link';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
@@ -40,6 +40,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   const [loadingEinCheck, setLoadingEinCheck] = useState(false);
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
   const [validatedEin, setValidatedEin] = useState(null);
+  const [uploadedFilename, setUploadedFilename] = useState('');
 
   useEffect(() => {
     const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
@@ -87,6 +88,12 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
 
     doCampaignUpdate();
   };
+
+  const onUploadSuccess = ({ uploadedFilename } = {}) =>
+    uploadedFilename && setUploadedFilename(uploadedFilename);
+
+  const nextDisabled =
+    !(validatedEin && uploadedFilename) || loadingCampaignUpdate;
 
   return (
     <FocusedExperienceWrapper>
@@ -136,16 +143,13 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             </Body2>
           )}
 
-          <CommitteeSupportingFilesUpload />
+          <CommitteeSupportingFilesUpload onUploadSuccess={onUploadSuccess} />
 
           <section className="flex flex-col justify-between mt-8 md:flex-row">
             <Link className="block mb-4 md:mb-0" href="/dashboard/pro-sign-up">
               <SecondaryButton className="w-full">Back</SecondaryButton>
             </Link>
-            <PrimaryButton
-              onClick={handleNextClick}
-              disabled={!validatedEin || loadingCampaignUpdate}
-            >
+            <PrimaryButton onClick={handleNextClick} disabled={nextDisabled}>
               Next
             </PrimaryButton>
           </section>
