@@ -25,12 +25,13 @@ async function fetchLogout() {
 export async function GET() {
   const cookieStore = cookies();
 
+  const resp = await fetchLogout();
+  console.log('resp', resp);
+
   // clear all cookies set by client.
   cookieStore.getAll().forEach((cookie) => {
     cookieStore.delete(cookie.name);
   });
 
-  await fetchLogout();
-
-  redirect('/');
+  // redirect('/');
 }
