@@ -1,4 +1,3 @@
-'use client';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
 import { cookies } from 'next/headers';
