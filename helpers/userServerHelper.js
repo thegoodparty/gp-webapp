@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 export const getServerToken = () => {
   const nextCookies = cookies();
   // console.log('nextCookies', nextCookies);
-  const tokenCookieName = 'token';
+  let tokenCookieName = 'token';
   if (process.env.NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
     tokenCookieName = 'token_prod';
   } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
@@ -11,7 +11,7 @@ export const getServerToken = () => {
   } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://qa.goodparty.org') {
     tokenCookieName = 'token_qa';
   }
-  const cookie = nextCookies.get('token');
+  const cookie = nextCookies.get(tokenCookieName);
   const impersonateCookie = nextCookies.get('impersonateToken');
   if (impersonateCookie?.value) {
     return impersonateCookie.value;
@@ -22,7 +22,7 @@ export const getServerToken = () => {
 };
 
 export const getServerUser = () => {
-  const userCookieName = 'user';
+  let userCookieName = 'user';
   if (process.env.NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
     userCookieName = 'user_prod';
   } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
