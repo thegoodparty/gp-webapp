@@ -39,8 +39,8 @@ const links = [
 
 const handleLogOut = (e) => {
   deleteUserCookies();
-  window.location.replace('/');
   fireGTMButtonClickEvent(e.currentTarget);
+  window.location.replace('/logout');
 };
 
 function ProfileDropdown({ open, toggleCallback, user }) {

@@ -33,8 +33,8 @@ export const deleteCookies = () => {
 };
 
 export const deleteUserCookies = () => {
-  deleteCookie('user');
-  deleteCookie('token');
+  // deleteCookie('user'); // now deleted by api server.
+  // deleteCookie('token'); // now deleted by api server.
   deleteCookie('impersonateUser');
   deleteCookie('signupRedirect');
 };

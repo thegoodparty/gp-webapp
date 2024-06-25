@@ -331,11 +331,6 @@ const gpApi = {
   // USER
   //
   user: {
-    logout: {
-      url: `${base}user/logout`,
-      method: 'GET',
-      withAuth: true,
-    },
     updateUser: {
       url: `${base}user`,
       method: 'PUT',
@@ -343,6 +338,11 @@ const gpApi = {
     },
     refresh: {
       url: `${base}user/refresh`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    logout: {
+      url: `${base}user/logout`,
       method: 'PUT',
       withAuth: true,
     },
