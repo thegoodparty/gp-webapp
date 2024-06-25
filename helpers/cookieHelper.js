@@ -70,11 +70,11 @@ export const getUserCookie = (withParse = false) => {
   }
 
   let userCookieName = 'user';
-  if (NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
+  if (process.env.NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
     userCookieName = 'user_prod';
-  } else if (NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
+  } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
     userCookieName = 'user_dev';
-  } else if (NEXT_PUBLIC_APP_BASE === 'https://qa.goodparty.org') {
+  } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://qa.goodparty.org') {
     userCookieName = 'user_qa';
   }
 
