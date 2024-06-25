@@ -82,7 +82,11 @@ export const getUserCookie = (withParse = false) => {
   if (user && withParse) {
     return JSON.parse(decodeURIComponent(user));
   }
-  return decodeURIComponent(user);
+  if (user) {
+    return decodeURIComponent(user);
+  } else {
+    return false;
+  }
 };
 
 export const setSignupRedirectCookie = (route, options = {}) => {
