@@ -32,8 +32,8 @@ export default function RightSide() {
   useEffect(() => {
     const cookieUser = getUserCookie(true);
     console.log('cookieUser', cookieUser);
-    setUser(cookieUser);
-    if (cookieUser) {
+    if (cookieUser && cookieUser?.id) {
+      setUser(cookieUser);
       updateStatus();
     }
   }, []);

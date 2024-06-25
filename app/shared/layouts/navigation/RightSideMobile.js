@@ -34,8 +34,8 @@ export default function RightSideMobile() {
 
   useEffect(() => {
     const cookieUser = getUserCookie(true);
-    setUser(cookieUser);
-    if (cookieUser) {
+    if (cookieUser && cookieUser?.id) {
+      setUser(cookieUser);
       updateStatus();
     }
   }, []);
