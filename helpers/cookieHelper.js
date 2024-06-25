@@ -69,7 +69,16 @@ export const getUserCookie = (withParse = false) => {
     }
   }
 
-  const user = getCookie('user');
+  let userCookieName = 'user';
+  if (NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
+    userCookieName = 'user_prod';
+  } else if (NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
+    userCookieName = 'user_dev';
+  } else if (NEXT_PUBLIC_APP_BASE === 'https://qa.goodparty.org') {
+    userCookieName = 'user_qa';
+  }
+
+  const user = getCookie(userCookieName);
   if (user && withParse) {
     return JSON.parse(decodeURIComponent(user));
   }
