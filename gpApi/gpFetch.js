@@ -35,10 +35,10 @@ async function gpFetch(
 
   let autoToken;
   if (withAuth) {
-    autoToken = token;
+    autoToken = getCookie('impersonateToken') || token;
   }
 
-  const requestOptions = headersOptions(body, endpoint.method, autoToken); //, autoToken);
+  const requestOptions = headersOptions(body, endpoint.method, autoToken);
 
   return await fetchCall(
     url,
