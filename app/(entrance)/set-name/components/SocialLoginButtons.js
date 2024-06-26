@@ -96,7 +96,7 @@ export default function SocialLoginButtons() {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Error login in',
+          message: 'Error [loginType] in',
           isError: true,
         };
       });

@@ -1,4 +1,4 @@
-import { getCookie } from '/helpers/cookieHelper';
+import { getCookie } from 'helpers/cookieHelper';
 
 async function gpFetch(
   endpoint,
@@ -24,14 +24,6 @@ async function gpFetch(
   if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
     body = JSON.stringify(data);
   }
-
-  // let autoToken;
-  // if (withAuth) {
-  //   autoToken = getCookie('impersonateToken') || token || getCookie('token');
-  //   if (!autoToken) {
-  //     throw new Error({ message: 'missing token' });
-  //   }
-  // }
 
   let autoToken;
   if (withAuth) {

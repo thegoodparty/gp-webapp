@@ -6,25 +6,16 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { MdOpenInNew } from 'react-icons/md';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { getCookie, setCookie } from 'cookies-next';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Image from 'next/image';
 
 const PurchaseRedirectPage = ({ campaign }) => {
-  const strictToken = getCookie('token');
-
   const handleClick = async (e) => {
     e.preventDefault();
     try {
       const { redirectUrl } =
         (await gpFetch(gpApi.payments.createCheckoutSession)) || {};
       if (redirectUrl) {
-        const timeIn30Minutes = new Date(new Date().getTime() + 30 * 60 * 1000);
-        setCookie('temp-token', strictToken, {
-          path: '/',
-          sameSite: 'lax',
-          expires: timeIn30Minutes,
-        });
         window.location.href = redirectUrl;
       } else {
         throw new Error('No redirect url found');

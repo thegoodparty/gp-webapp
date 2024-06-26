@@ -45,7 +45,7 @@ export default async function sitemap() {
     '/about',
     '/run-for-office',
     '/team',
-    '/login',
+    '/[loginType]',
     '/register',
     '/faqs',
     '/privacy',

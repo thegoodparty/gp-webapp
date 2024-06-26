@@ -21,7 +21,6 @@ const fetchCampaigns = async (filters) => {
   try {
     const api = gpApi.campaign.list;
     const token = getServerToken();
-
     return await gpFetch(api, filters, false, token, false);
   } catch (e) {
     console.log('error', e);
