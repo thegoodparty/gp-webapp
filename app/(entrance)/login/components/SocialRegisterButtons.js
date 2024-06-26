@@ -1,21 +1,13 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import {
-  deleteCookie,
-  getCookie,
-  setCookie,
-  setUserCookie,
-} from 'helpers/cookieHelper';
+import { deleteCookie, getCookie, setUserCookie } from 'helpers/cookieHelper';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { useRouter } from 'next/navigation';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
-// import TwitterButton from 'app/(entrance)/login/components/TwitterButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-// import FacebookRegisterButton from './FacebookRegisterButton';
 
 async function register(payload) {
   try {
@@ -30,7 +22,6 @@ async function register(payload) {
 export default function SocialRegisterButtons() {
   const snackbarState = useHookstate(globalSnackbarState);
   const userState = useHookstate(globalUserState);
-  const router = useRouter();
 
   const socialRegisterCallback = async (socialUser) => {
     const profile = socialUser._profile;
@@ -66,7 +57,7 @@ export default function SocialRegisterButtons() {
       email,
       socialToken: idToken,
     };
-    const { user, token, newUser } = await register(payload);
+    const { user, newUser } = await register(payload);
     console.log('user', user);
     if (user) {
       snackbarState.set(() => {
@@ -76,8 +67,7 @@ export default function SocialRegisterButtons() {
           isError: false,
         };
       });
-      // setUserCookie(user);
-      // setCookie('token', token);
+      setUserCookie(user);
       userState.set(() => user);
 
       const returnUrl = getCookie('returnUrl');

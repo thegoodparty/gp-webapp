@@ -1,3 +1,6 @@
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
 export const getCookie = (name) => {
   if (typeof window === 'undefined') {
     return false;
@@ -18,7 +21,9 @@ export const setCookie = (name, value, days = 120) => {
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     expires = `; expires=${date.toUTCString()}; SameSite=Strict`;
   }
-  document.cookie = `${name}=${encodeURI(value) || ''}${expires}; path=/`;
+  document.cookie = `${name}=${
+    encodeURI(value) || ''
+  }${expires}; path=/; SameSite=Lax`;
 };
 
 export const deleteCookies = () => {
@@ -33,8 +38,7 @@ export const deleteCookies = () => {
 };
 
 export const deleteUserCookies = () => {
-  // deleteCookie('user'); // now deleted by api server.
-  // deleteCookie('token'); // now deleted by api server.
+  deleteCookie('user'); // now deleted by api server.
   deleteCookie('impersonateUser');
   deleteCookie('signupRedirect');
 };

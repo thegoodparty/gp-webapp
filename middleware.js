@@ -1,64 +1,38 @@
 import { NextResponse } from 'next/server';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-
-export const fetchRedirects = async () => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'redirects',
-  };
-  return await gpFetch(api, payload, 3600);
-};
-
-let dbRedirects;
-let dbFetchTime;
-
-// const blockedIPs = ['142.198.200.33'];
+import { getRedirects } from 'helpers/getRedirects';
+import { handlePathRedirect } from 'helpers/handlePathRedirect';
+import { handlePathCapitalizationRedirect } from 'helpers/handlePathCapitalizationRedirect';
+import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
 
 export default async function middleware(req) {
-  // only call dbRedirect if it is not defined or once an hour
-  if (!dbRedirects) {
-    if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
-      dbFetchTime = Date.now();
-      const res = await fetchRedirects();
-      dbRedirects = res.content;
-    }
-  }
-
-  // const forwarded = req.headers.get('x-forwarded-for');
-  // const ip = forwarded ? forwarded.split(',')[0] : req.ip;
-  // if (blockedIPs.includes(ip)) {
-  //   return NextResponse.redirect(
-  //     `https://www.youtube.com/watch?v=dQw4w9WgXcQ`,
-  //     { status: 301 },
-  //   );
-  // }
+  const redirectPaths = await getRedirects();
   const { pathname } = req.nextUrl;
 
-  if (dbRedirects && dbRedirects[pathname]) {
-    const url = dbRedirects[pathname];
-    if (url.startsWith('http')) {
-      return NextResponse.redirect(`${url}${req.nextUrl.search || ''}`, {
-        status: 301,
-      });
-    }
-    return NextResponse.redirect(
-      `${req.nextUrl.origin}${url}${req.nextUrl.search || ''}`,
-      { status: 301 },
-    );
+  const apiRewriteRequest =
+    pathname.startsWith('/api/v1') &&
+    !pathname.includes('login') &&
+    !pathname.includes('logout');
+
+  if (apiRewriteRequest) {
+    return await handleApiRequestRewrite(req);
   }
 
-  if (pathname === pathname.toLowerCase()) {
-    return NextResponse.next();
+  if (redirectPaths && redirectPaths[pathname]) {
+    return handlePathRedirect(req, redirectPaths);
   }
 
-  return NextResponse.redirect(
-    `${req.nextUrl.origin + pathname.toLowerCase()}`,
-    { status: 301 },
-  );
+  if (pathname !== pathname.toLowerCase()) {
+    return handlePathCapitalizationRedirect(req);
+  }
 
-  // if we ever want to have images or static assets with capital letters we need this:
-  // export const config = {
-  //   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
-  // }
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: '/:path*', // This ensures the middleware will run BEFORE file-path routing
+};
+
+// if we ever want to have images or static assets with capital letters we need this:
+// export const config = {
+//   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
+// }

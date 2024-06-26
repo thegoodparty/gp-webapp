@@ -1,23 +1,7 @@
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
 export let appBase = process.env.NEXT_PUBLIC_APP_BASE;
 
-if (!apiBase && typeof window !== 'undefined') {
-  // client side
-  if (window.location.host === 'localhost:4000') {
-    appBase = 'http://localhost:4000';
-  }
-  if (window.location.host === 'dev.goodparty.org') {
-    appBase = 'https://dev.goodparty.org';
-  }
-  if (window.location.host === 'qa.goodparty.org') {
-    appBase = 'https://qa.goodparty.org';
-  }
-  if (window.location.host === 'goodparty.org') {
-    appBase = 'https://goodparty.org';
-  }
-}
-
-const base = `${apiBase}/api/v1/`;
+const base = `${appBase}/api/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
@@ -342,8 +326,8 @@ const gpApi = {
       withAuth: true,
     },
     logout: {
-      url: `${base}user/logout`,
-      method: 'PUT',
+      url: `${base}entrance/logout`,
+      method: 'DELETE',
       withAuth: true,
     },
     changePassword: {

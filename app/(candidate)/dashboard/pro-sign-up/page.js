@@ -4,7 +4,10 @@ import candidateAccess from '../shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
 import ProSignUpPage from 'app/(candidate)/dashboard/pro-sign-up/components/ProSignUpPage';
 import { redirect } from 'next/navigation';
-
+console.log(
+  `process.env.NEXT_PUBLIC_PRO_FLOW =>`,
+  process.env.NEXT_PUBLIC_PRO_FLOW,
+);
 const ENABLE_PRO_FLOW = process.env.NEXT_PUBLIC_PRO_FLOW;
 
 const meta = pageMetaData({
