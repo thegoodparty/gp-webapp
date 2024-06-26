@@ -1,10 +1,21 @@
+console.log(
+  `process.env.NEXT_PUBLIC_API_BASE =>`,
+  process.env.NEXT_PUBLIC_API_BASE,
+);
+console.log(
+  `process.env.NEXT_PUBLIC_APP_BASE =>`,
+  process.env.NEXT_PUBLIC_APP_BASE,
+);
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
-console.log(`process.env.CI =>`, process.env.CI);
-export let appBase = process.env.CI
+// CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
+console.log(`process.env.CI =>`, Boolean(process.env.CI));
+export let appBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
 const base = `${appBase}/api/v1/`;
+
+console.log(`base =>`, base);
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
