@@ -72,12 +72,6 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  // const handleLogOut = (e) => {
-  //   deleteUserCookies();
-  //   window.location.replace('/');
-  //   fireGTMButtonClickEvent(e.currentTarget);
-  // };
-
   if ((user?.isAdmin || campaign?.isPro) && pages.length === 8) {
     pages[1].link = '/dashboard/voter-records';
     pages[1].id = 'vote-records-dashboard';
