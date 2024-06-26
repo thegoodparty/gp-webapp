@@ -4,7 +4,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlogPage from 'app/blog/components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchArticlesBySections, fetchArticlesTitles } from 'app/blog/page';
+import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;

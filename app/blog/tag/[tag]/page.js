@@ -4,12 +4,10 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import BlogPage from 'app/blog/components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
-import {
-  fetchArticlesBySections,
-  fetchArticlesTitles,
-  fetchSections,
-} from 'app/blog/page';
 import BlogArticleTagPage from './components/BlogArticleTagPage';
+import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import { fetchSections } from 'app/blog/shared/fetchSections';
 
 const fetchArticlesByTag = async (tag) => {
   const api = gpApi.content.articlesByTag;

@@ -1,7 +1,7 @@
-import { fetchArticlesBySections } from 'app/blog/page';
 import gpApi, { appBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import RSS from 'rss';
+import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 
 export default async function feed(req, res) {
   try {
