@@ -1,5 +1,8 @@
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
-export let appBase = process.env.NEXT_PUBLIC_APP_BASE;
+console.log(`process.env.CI =>`, process.env.CI);
+export let appBase = process.env.CI
+  ? process.env.NEXT_PUBLIC_API_BASE
+  : process.env.NEXT_PUBLIC_APP_BASE;
 
 const base = `${appBase}/api/v1/`;
 
