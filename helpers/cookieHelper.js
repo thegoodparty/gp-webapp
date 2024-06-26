@@ -74,13 +74,13 @@ export const getUserCookie = (withParse = false) => {
   }
 
   let userCookieName = 'user';
-  if (process.env.NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
-    userCookieName = 'user_prod';
-  } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
-    userCookieName = 'user_dev';
-  } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://qa.goodparty.org') {
-    userCookieName = 'user_qa';
-  }
+  // if (process.env.NEXT_PUBLIC_APP_BASE === 'https://goodparty.org') {
+  //   userCookieName = 'user_prod';
+  // } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://dev.goodparty.org') {
+  //   userCookieName = 'user_dev';
+  // } else if (process.env.NEXT_PUBLIC_APP_BASE === 'https://qa.goodparty.org') {
+  //   userCookieName = 'user_qa';
+  // }
 
   const user = getCookie(userCookieName);
   if (user && withParse) {
