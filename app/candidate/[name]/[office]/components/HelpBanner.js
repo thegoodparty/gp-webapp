@@ -1,9 +1,7 @@
-'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CTA from './CTA';
 
 export default function HelpBanner({ candidate }) {
-  console.log('candidate', candidate);
   const { firstName, office, city, state } = candidate;
   return (
     <div className="flex justify-between py-2 px-6 items-center bg-primary-dark">
