@@ -171,7 +171,7 @@ export default function CampaignPlanSection({
     let chat = [];
     if (improveQuery !== '') {
       chat = [
-        { role: 'system', content: plan },
+        { role: 'system', content: plan.content },
         { role: 'user', content: improveQuery },
       ];
     }
