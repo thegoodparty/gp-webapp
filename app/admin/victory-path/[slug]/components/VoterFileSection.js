@@ -1,8 +1,8 @@
 import RerunP2V from './RerunP2V';
-import { useCampaign } from '@shared/hooks/useCampaign';
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 
 export default function VoterFileSection() {
-  const [campaign] = useCampaign();
+  const [campaign] = useAdminCampaign();
 
   if (
     campaign.pathToVictory?.electionType &&

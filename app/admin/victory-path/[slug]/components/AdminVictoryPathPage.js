@@ -18,7 +18,7 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import Checkbox from '@shared/inputs/Checkbox';
 import VoterFileSection from './VoterFileSection';
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection';
-import { useCampaign } from '@shared/hooks/useCampaign';
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
 
 export async function sendVictoryMail(slug) {
@@ -129,7 +129,7 @@ sections.forEach((section) => {
 });
 
 export default function AdminVictoryPathPage(props) {
-  const [campaign, _, refreshCampaign] = useCampaign();
+  const [campaign, _, refreshCampaign] = useAdminCampaign();
   const { pathToVictory, details } = campaign;
 
   const [state, setState] = useState({

@@ -1,4 +1,4 @@
-import { useCampaign } from '@shared/hooks/useCampaign';
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { useState } from 'react';
 import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly';
 import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection';
@@ -13,7 +13,7 @@ const supportingDocsRootUrl =
   'https://ein-supporting-documents.s3.us-west-2.amazonaws.com/';
 
 export const P2VProSection = () => {
-  const [campaign = {}, _, refreshCampaign] = useCampaign();
+  const [campaign = {}, _, refreshCampaign] = useAdminCampaign();
   const { slug = '', details = {} } = campaign;
   const [isPro, setIsPro] = useState(campaign.isPro || false);
 

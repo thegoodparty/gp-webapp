@@ -3,7 +3,7 @@ import { createContext, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 
-export const CampaignContext = createContext([{}, () => {}]);
+export const AdminCampaignContext = createContext([{}, () => {}]);
 
 export const AdminCampaignProvider = ({ children, campaign: initCampaign }) => {
   const [campaign, setCampaign] = useState(initCampaign);
@@ -18,8 +18,10 @@ export const AdminCampaignProvider = ({ children, campaign: initCampaign }) => {
   };
 
   return (
-    <CampaignContext.Provider value={[campaign, setCampaign, refreshCampaign]}>
+    <AdminCampaignContext.Provider
+      value={[campaign, setCampaign, refreshCampaign]}
+    >
       {children}
-    </CampaignContext.Provider>
+    </AdminCampaignContext.Provider>
   );
 };

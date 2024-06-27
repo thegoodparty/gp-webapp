@@ -1,4 +1,3 @@
-// import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';

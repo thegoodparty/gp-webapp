@@ -19,8 +19,8 @@ import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { fetchCampaignStatus } from '@shared/layouts/navigation/RightSide';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
+import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;

@@ -7,7 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import { useState } from 'react';
-import { useCampaign } from '@shared/hooks/useCampaign';
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 
 async function rerunP2V(slug) {
   try {
@@ -20,7 +20,7 @@ async function rerunP2V(slug) {
 }
 
 export default function RerunP2V() {
-  const [campaign, _, refreshCampaign] = useCampaign();
+  const [campaign, _, refreshCampaign] = useAdminCampaign();
   const [processing, setProcessing] = useState(false);
 
   const snackbarState = useHookstate(globalSnackbarState);
