@@ -26,7 +26,7 @@ export async function generateMetadata({ params, searchParams }) {
   );
   const { firstName, lastName, about, image_url } = candidate || {};
   const meta = pageMetaData({
-    title: `${firstName} ${lastName} | GoodParty.org`,
+    title: `${firstName} ${lastName} for ${candidate?.office} | GoodParty.org`,
     description: about,
     image: image_url || false,
     slug: `/candidate/${name}/${office}`,
