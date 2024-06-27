@@ -31,7 +31,11 @@ export default function AboutCard(props) {
       <MarketingH4>
         {firstName} {lastName}
       </MarketingH4>
-      <Body1 className="mt-3 mb-8">{about}</Body1>
+      {about && (
+        <Body1 className="mt-3 mb-8">
+          <div dangerouslySetInnerHTML={{ __html: about }} />
+        </Body1>
+      )}
       {descLabels.map((item) => (
         <DescriptionLabel
           key={item.title}
