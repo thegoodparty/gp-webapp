@@ -15,11 +15,42 @@ import TealButton from './TealButton';
 import StickyCard from './StickyCard';
 import CTA from './CTA';
 import Image from 'next/image';
+import { AiOutlineLinkedin } from 'react-icons/ai';
+
+function mapSocialIcon(type) {
+  //<MdEmail size={20} />
+  switch (type) {
+    case 'website':
+      return <FaGlobeAmericas size={20} />;
+    case 'twitter':
+      return <FaXTwitter size={20} />;
+    case 'facebook':
+      return <FaFacebookF size={20} />;
+    case 'instagram':
+      return <FaInstagram size={20} />;
+    case 'tiktok':
+      return <FaTiktok size={20} />;
+    case 'linkedin':
+      return <AiOutlineLinkedin size={20} />;
+    default:
+      return <FaGlobeAmericas size={20} />;
+  }
+}
 
 export default function CandidateCard(props) {
   const { candidate } = props;
-  const { firstName, lastName, party, office, city, state, claimed, image } =
-    candidate;
+  const {
+    firstName,
+    lastName,
+    party,
+    office,
+    city,
+    state,
+    claimed,
+    image,
+    socialUrls,
+    email,
+  } = candidate;
 
   let partyName = '';
   if (party === 'Independent') {
@@ -66,28 +97,35 @@ export default function CandidateCard(props) {
             <IoPersonSharp className="text-secondary-light" size={20} />
             <H5 className="ml-2">Running for {office}</H5>
           </div>
-          <div className="flex mb-3 items-center">
+          <div className="flex mb-3 items-center mb-8">
             <FaMapMarkerAlt className="text-secondary-light" size={20} />
             <H5 className="ml-2">
-              {city}, {state}
+              {city ? `${city}, ` : ''}
+              {state}
             </H5>
           </div>
-          <Body1 className="mt-7 mb-8">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium.
-          </Body1>
-
-          <div className=" flex justify-between items-center opacity-50 mb-8">
-            <MdEmail size={20} />
-            <FaGlobeAmericas size={20} />
-            <FaXTwitter size={20} />
-            <FaFacebookF size={20} />
-            <FaInstagram size={20} />
-            <FaTiktok size={20} />
-          </div>
-          <div className="p-3 text-center rounded border border-gray-300 font-medium cursor-pointer transition-colors hover:bg-white hover:text-primary mb-4">
+          {((socialUrls && socialUrls.length > 0) || email) && (
+            <div className=" flex justify-between items-center opacity-50 mb-8">
+              {email && (
+                <a href={`mailto:${email}`} rel="noopener noreferrer nofollow">
+                  <MdEmail size={20} />
+                </a>
+              )}
+              {socialUrls &&
+                socialUrls.map((url) => (
+                  <a
+                    href={url.url}
+                    rel="noopener noreferrer nofollow"
+                    key={url.url}
+                  >
+                    {mapSocialIcon(url.type)}
+                  </a>
+                ))}
+            </div>
+          )}
+          {/* <div className="p-3 text-center rounded border border-gray-300 font-medium cursor-pointer transition-colors hover:bg-white hover:text-primary mb-4">
             Learn More About {firstName} {lastName}
-          </div>
+          </div> */}
           <CTA id="candidate-card-cta">
             <TealButton>
               <div className="flex items-center justify-center  ">

@@ -16,12 +16,19 @@ export const fetchCandidate = async (name, office, bustCache) => {
   return await gpFetch(api, payload, 0);
 };
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
+  const { bustCache } = searchParams;
   const { name, office } = params;
+  const { candidate } = await fetchCandidate(
+    name,
+    office,
+    bustCache === 'true',
+  );
+  const { firstName, lastName, about, image_url } = candidate || {};
   const meta = pageMetaData({
-    title: `Candidate Page | GoodParty.org`,
-    description: 'todo',
-    // image: content.mainImage && `https:${content.mainImage.url}`,
+    title: `${firstName} ${lastName} | GoodParty.org`,
+    description: about,
+    image: image_url || false,
     slug: `/candidate/${name}/${office}`,
   });
   return meta;
