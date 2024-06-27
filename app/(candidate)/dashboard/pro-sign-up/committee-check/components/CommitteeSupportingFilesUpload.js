@@ -45,9 +45,9 @@ export const CommitteeSupportingFilesUpload = ({
     <div className="grid grid-cols-10 gap-6 align-center">
       <TextField
         className="cursor-pointer col-span-10 md:col-span-7"
-        value={fileInfo?.name}
+        value={fileInfo?.name || ''}
         onClick={onFileBrowseClick}
-        placeholder="Upload supporting documentation"
+        label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
         helperText="File size less that 3mb"
       />
