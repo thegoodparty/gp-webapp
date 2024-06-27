@@ -5,7 +5,7 @@ import { CandidateFieldSelect } from './CandidateFieldSelect';
 import { CANDIDATE_TIERS } from './candidate-tiers.constant';
 import { IS_VERIFIED_OPTIONS } from './is-verified-options.constant';
 import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection';
-import { useCampaign } from '@shared/hooks/useCampaign';
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly';
 
 const fields = [
@@ -15,7 +15,7 @@ const fields = [
 ];
 
 export default function AdditionalFieldsSection() {
-  const [campaign, _, refreshCampaign] = useCampaign();
+  const [campaign, _, refreshCampaign] = useAdminCampaign();
   const { isVerified, tier, didWin, slug } = campaign;
   const [state, setState] = useState({
     isVerified,
