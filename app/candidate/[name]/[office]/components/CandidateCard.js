@@ -105,9 +105,19 @@ export default function CandidateCard(props) {
             </H5>
           </div>
           {((socialUrls && socialUrls.length > 0) || email) && (
-            <div className=" flex justify-between items-center opacity-50 mb-8">
+            <div
+              className={`flex items-center opacity-50 mb-8 ${
+                socialUrls.length > 3 ? 'justify-between' : ''
+              }`}
+            >
               {email && (
-                <a href={`mailto:${email}`} rel="noopener noreferrer nofollow">
+                <a
+                  href={`mailto:${email}`}
+                  rel="noopener noreferrer nofollow"
+                  className={`inline-block ${
+                    socialUrls.length > 3 ? '' : 'mr-6'
+                  }`}
+                >
                   <MdEmail size={20} />
                 </a>
               )}
@@ -117,6 +127,9 @@ export default function CandidateCard(props) {
                     href={url.url}
                     rel="noopener noreferrer nofollow"
                     key={url.url}
+                    className={`inline-block ${
+                      socialUrls.length > 3 ? '' : 'mr-6'
+                    }`}
                   >
                     {mapSocialIcon(url.type)}
                   </a>
