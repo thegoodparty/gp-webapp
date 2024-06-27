@@ -24,11 +24,11 @@ export async function generateMetadata({ params, searchParams }) {
     office,
     bustCache === 'true',
   );
-  const { firstName, lastName, about, image_url } = candidate || {};
+  const { firstName, lastName, about, image } = candidate || {};
   const meta = pageMetaData({
     title: `${firstName} ${lastName} for ${candidate?.office} | GoodParty.org`,
     description: about,
-    image: image_url || false,
+    image,
     slug: `/candidate/${name}/${office}`,
   });
   return meta;
