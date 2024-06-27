@@ -17,7 +17,7 @@ export default async function Page({ params, searchParams }) {
 
   const { campaign } = await fetchUserCampaign();
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = getServerUser();
 
   const childProps = {
     pathname: '/dashboard/upgrade-to-pro',

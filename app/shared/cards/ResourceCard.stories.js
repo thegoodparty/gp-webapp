@@ -12,7 +12,7 @@ export default {
   argTypes: {
     description: {
       control: 'text',
-      description: 'ProPricingCard Description',
+      description: 'Card Description',
       table: {
         type: {
           summary: 'string',
