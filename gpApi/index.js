@@ -1,21 +1,14 @@
-console.log(
-  `process.env.NEXT_PUBLIC_API_BASE =>`,
-  process.env.NEXT_PUBLIC_API_BASE,
-);
-console.log(
-  `process.env.NEXT_PUBLIC_APP_BASE =>`,
-  process.env.NEXT_PUBLIC_APP_BASE,
-);
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
+
 // CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
-console.log(`process.env.CI =>`, Boolean(process.env.CI));
+//   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
+//   the Next.js app is currently being built and cannot be talked to, so build requests for static content
+//   data should be directed to the API base, not the Next.js application proxy.
 export let appBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
 const base = `${appBase}/api/v1/`;
-
-console.log(`base =>`, base);
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 

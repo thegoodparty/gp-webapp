@@ -5,7 +5,12 @@ const TOKEN_CONFIG = {
 };
 
 export const setTokenCookie = (resp, token) => {
-  resp.cookies.set('token', token, TOKEN_CONFIG);
+  const expires = new Date();
+  expires.setTime(expires.getTime() + 120 * 24 * 60 * 60 * 1000);
+  resp.cookies.set('token', token, {
+    ...TOKEN_CONFIG,
+    expires,
+  });
   return resp;
 };
 
