@@ -7,7 +7,7 @@ import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import H5 from '@shared/typography/H5';
 import Modal from '@shared/utils/Modal';
-import { setCookie } from 'helpers/cookieHelper';
+import { getUserCookie, setCookie } from 'helpers/cookieHelper';
 import { trackEvent } from 'helpers/fullStoryHelper';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -20,9 +20,8 @@ import {
 const options = [
   {
     id: 'claim',
-    label: 'Claim this profile',
-    description:
-      'Get verified to edit your profile and engage potential voters.',
+    label: 'Access Voter Data & Tools',
+    description: 'Get voter outreach tools and custom data for your campaign.',
   },
   {
     id: 'help',
@@ -61,7 +60,12 @@ export default function CTA({ children, id }) {
       case 'claim':
         const path = pathname.replace('/candidate/', '');
         setCookie('claimProfile', path);
-        router.push('/login');
+        const user = getUserCookie();
+        if (user) {
+          router.push('/dashboard');
+        } else {
+          router.push('/login');
+        }
         break;
       case 'help':
         router.push('/info-session');

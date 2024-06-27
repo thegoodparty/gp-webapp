@@ -79,11 +79,6 @@ export default function CandidateCard(props) {
                 <IoPersonSharp size={60} />
               </div>
             )}
-            <div>
-              <div className="bg-secondary-light text-black py-2 px-4 rounded">
-                <Overline>{claimed ? 'CLAIMED' : 'UNCLAIMED'}</Overline>
-              </div>
-            </div>
           </div>
           <Overline className="my-4">{partyName}</Overline>
           <H1 className="mb-4">
@@ -142,7 +137,7 @@ export default function CandidateCard(props) {
           <CTA id="candidate-card-cta">
             <TealButton>
               <div className="flex items-center justify-center  ">
-                <div className="mr-1">Claim this profile</div>
+                <div className="mr-1">Access Voter Data &amp; Tools</div>
                 <FaArrowRight />
               </div>
             </TealButton>
