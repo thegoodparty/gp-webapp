@@ -42,25 +42,26 @@ export const CommitteeSupportingFilesUpload = ({
   };
 
   return (
-    <div className="grid grid-cols-10 gap-4">
+    <div className="grid grid-cols-10 gap-6 align-center">
       <TextField
         className="cursor-pointer col-span-10 md:col-span-7"
         value={fileInfo?.name}
         onClick={onFileBrowseClick}
         placeholder="Upload supporting documentation"
         disabled={loadingFileUpload}
+        helperText="File size less that 3mb"
       />
 
       <PrimaryButton
         component="label"
-        className="flex items-center justify-center col-span-10 md:col-span-3"
+        className="flex items-center justify-center h-[56px] col-span-10 md:col-span-3 md:mt-[5px] md:h-[51px]"
         role={undefined}
         variant="outlined"
         onClick={onFileBrowseClick}
         disabled={loadingFileUpload}
         fullWidth
       >
-        <span>Browse</span>
+        <span>Upload</span>
         {loadingFileUpload && (
           <CircularProgress className="text-primary-light ml-2" size={16} />
         )}

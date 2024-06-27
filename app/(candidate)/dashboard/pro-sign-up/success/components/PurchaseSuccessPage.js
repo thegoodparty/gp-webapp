@@ -24,7 +24,7 @@ const PurchaseSuccessPage = () => {
       <Body2 className="text-center mb-8">
         As a reminder you will be billed monthly for your subscription, until
         your election date, but can cancel or reactivate anytime in your{' '}
-        <Link className="underline" href="/profile">
+        <Link className="text-info-main underline" href="/profile">
           settings
         </Link>
         .<br />
