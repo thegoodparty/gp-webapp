@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function RacesSection({ races }) {
   if (!races || races.length === 0) {
-    return <section>No races to show for this location</section>;
+    return <section>No elections to show for this location</section>;
   }
   return (
     <section>
