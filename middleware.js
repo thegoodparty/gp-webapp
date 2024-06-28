@@ -16,9 +16,9 @@ let dbFetchTime;
 // const blockedIPs = ['142.198.200.33'];
 
 export default async function middleware(req) {
-  // only call dbRedirect if it is not defined or once an hour
+  // only call dbRedirect if it is not defined or once every 10 hour
   if (!dbRedirects) {
-    if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
+    if (!dbFetchTime || Date.now() - dbFetchTime > 10 * 3600000) {
       dbFetchTime = Date.now();
       const res = await fetchRedirects();
       dbRedirects = res.content;
