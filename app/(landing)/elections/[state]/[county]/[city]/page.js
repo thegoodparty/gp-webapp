@@ -43,10 +43,6 @@ export default async function Page({ params }) {
     notFound();
   }
 
-  if (races.length === 0) {
-    redirect(`/elections/${state}/${county}`);
-  }
-
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',

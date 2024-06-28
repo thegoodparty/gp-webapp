@@ -85,10 +85,6 @@ export default async function Page({ params }) {
     params.county,
   );
 
-  if (races?.length === 0) {
-    redirect(`/elections/${state}`);
-  }
-
   const childProps = {
     state,
     childEntities: municipalities,

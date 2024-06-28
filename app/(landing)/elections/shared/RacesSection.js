@@ -4,6 +4,9 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
 export default function RacesSection({ races }) {
+  if (!races || races.length === 0) {
+    return <section>No races to show for this location</section>;
+  }
   return (
     <section>
       <div className="grid-cols-12 gap-3 hidden md:grid mb-2 px-5">
