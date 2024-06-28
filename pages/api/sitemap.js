@@ -12,6 +12,14 @@ export default function sitemap(req, res) {
       `sitemaps/state/${state.toLocaleLowerCase()}/sitemap/${index}.xml`,
     );
   });
+
+  // candidates
+  // flatStates.forEach((state, index) => {
+  //   sitemaps.push(
+  //     `sitemaps/candidates/${state.toLocaleLowerCase()}/sitemap/${index}.xml`,
+  //   );
+  // });
+
   let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
   <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     `;

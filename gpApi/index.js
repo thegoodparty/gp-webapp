@@ -697,6 +697,10 @@ const gpApi = {
       url: `${base}candidate`,
       method: 'GET',
     },
+    list: {
+      url: `${base}candidates`,
+      method: 'GET',
+    },
   },
 };
 
