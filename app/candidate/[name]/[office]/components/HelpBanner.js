@@ -8,7 +8,7 @@ export default function HelpBanner({ candidate }) {
       <div>
         Help Will <span className="text-secondary">{firstName}</span> win for{' '}
         <span className="text-secondary">
-          {office} {city}, {state}
+          {office} {city || ''}, {state}
         </span>
       </div>
       <div>

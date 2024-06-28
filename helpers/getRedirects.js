@@ -15,7 +15,7 @@ const fetchRedirects = async () => {
 export const getRedirects = async () => {
   if (!dbRedirects) {
     // only call dbRedirect if it is not defined or once an hour
-    if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
+    if (!dbFetchTime || Date.now() - dbFetchTime > 10 * 3600000) {
       dbFetchTime = Date.now();
       const res = await fetchRedirects();
       dbRedirects = res.content;
