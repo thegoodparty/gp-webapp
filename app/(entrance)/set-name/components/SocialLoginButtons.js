@@ -22,8 +22,8 @@ async function login(payload) {
     const api = gpApi.entrance.socialLogin;
     const { user, token } = await gpFetch(api, payload);
     if (user && token) {
-      setUserCookie(user);
-      setCookie('token', token);
+      // setUserCookie(user);
+      // setCookie('token', token);
     }
     return user;
   } catch (e) {
@@ -96,7 +96,7 @@ export default function SocialLoginButtons() {
       snackbarState.set(() => {
         return {
           isOpen: true,
-          message: 'Error login in',
+          message: 'Error [loginType] in',
           isError: true,
         };
       });

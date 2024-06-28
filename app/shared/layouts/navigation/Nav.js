@@ -1,8 +1,7 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
+import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
 
 export default function Nav() {
   return (
@@ -11,16 +10,7 @@ export default function Nav() {
         <div className="relative bg-indigo-50 lg:block border-solid border-b border-zinc-200 px-5 lg:px-8 z-50 h-14">
           <div className="flex justify-between items-center h-14">
             <div className="flex items-center">
-              <Link href="/" id="nav-logo">
-                <Image
-                  src="/images/heart-hologram.svg"
-                  data-cy="logo"
-                  width={30}
-                  height={24}
-                  alt="GoodParty.org"
-                  priority
-                />
-              </Link>
+              <HeaderLogo />
               <LeftSide />
             </div>
             <RightSide />

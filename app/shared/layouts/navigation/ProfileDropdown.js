@@ -11,14 +11,10 @@ import {
 import { hookstate, useHookstate } from '@hookstate/core';
 import { memo, useEffect, useState } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
-import {
-  deleteCookie,
-  getCookie,
-  deleteUserCookies,
-} from 'helpers/cookieHelper';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
-import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
+import { handleLogOut } from '@shared/user/handleLogOut';
 
 export const globalUserState = hookstate(false);
 
@@ -36,12 +32,6 @@ const links = [
   //   icon: <RiLogoutBoxFill />,
   // },
 ];
-
-const handleLogOut = (e) => {
-  deleteUserCookies();
-  window.location.replace('/');
-  fireGTMButtonClickEvent(e.currentTarget);
-};
 
 function ProfileDropdown({ open, toggleCallback, user }) {
   const [impersonating, setImpersonating] = useState(false);

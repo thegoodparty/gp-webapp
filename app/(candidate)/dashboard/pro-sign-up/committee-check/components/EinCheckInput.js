@@ -25,6 +25,7 @@ export const EinCheckInput = ({
 }) => {
   const handleOnChange = async (e) => {
     const newVal = e.currentTarget.value;
+    console.log(`newVal =>`, newVal);
 
     if (validated !== null) {
       setValidated(null);
@@ -40,9 +41,8 @@ export const EinCheckInput = ({
 
   return (
     <TextField
-      className="mb-0"
+      className="mb-3"
       label="EIN Number"
-      helperText="Please enter EIN in format 12-3456789"
       maxLength={10}
       disabled={loading}
       value={value}

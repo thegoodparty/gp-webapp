@@ -2,10 +2,10 @@ import { notFound } from 'next/navigation';
 
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { fetchSections } from 'app/blog/page';
 import ArticleSchema from './ArticleSchema';
 import BlogArticle from './components/BlogArticle';
 import pageMetaData from 'helpers/metadataHelper';
+import { fetchSections } from 'app/blog/shared/fetchSections';
 
 export const fetchArticle = async (slug) => {
   const api = gpApi.content.contentByKey;
@@ -38,6 +38,7 @@ export default async function Page({ params }) {
   }
 
   const { content } = await fetchArticle(slug);
+
   if (!content) {
     notFound();
   }
@@ -58,15 +59,16 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = { ...gpApi.content.contentByKey };
-//   api.url += `?key=blogArticles`;
+export async function generateStaticParams() {
+  const api = gpApi.content.contentByKey;
 
-//   const { content } = await gpFetch(api, false);
+  const { content } = await gpFetch(api, {
+    key: 'blogArticles',
+  });
 
-//   return content.map((article) => {
-//     return {
-//       slug: article.slug,
-//     };
-//   });
-// }
+  return content.map((article) => {
+    return {
+      slug: article.slug,
+    };
+  });
+}

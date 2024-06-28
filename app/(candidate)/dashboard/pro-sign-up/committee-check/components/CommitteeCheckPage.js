@@ -145,7 +145,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
 
           <CommitteeSupportingFilesUpload onUploadSuccess={onUploadSuccess} />
 
-          <section className="flex flex-col justify-between mt-8 md:flex-row">
+          <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
             <Link className="block mb-4 md:mb-0" href="/dashboard/pro-sign-up">
               <SecondaryButton className="w-full">Back</SecondaryButton>
             </Link>

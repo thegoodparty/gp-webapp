@@ -1,23 +1,14 @@
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
-export let appBase = process.env.NEXT_PUBLIC_APP_BASE;
 
-if (!apiBase && typeof window !== 'undefined') {
-  // client side
-  if (window.location.host === 'localhost:4000') {
-    appBase = 'http://localhost:4000';
-  }
-  if (window.location.host === 'dev.goodparty.org') {
-    appBase = 'https://dev.goodparty.org';
-  }
-  if (window.location.host === 'qa.goodparty.org') {
-    appBase = 'https://qa.goodparty.org';
-  }
-  if (window.location.host === 'goodparty.org') {
-    appBase = 'https://goodparty.org';
-  }
-}
+// CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
+//   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
+//   the Next.js app is currently being built and cannot be talked to, so build requests for static content
+//   data should be directed to the API base, not the Next.js application proxy.
+export let appBase = Boolean(process.env.CI)
+  ? process.env.NEXT_PUBLIC_API_BASE
+  : process.env.NEXT_PUBLIC_APP_BASE;
 
-const base = `${apiBase}/api/v1/`;
+const base = `${appBase}/api/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
@@ -339,6 +330,11 @@ const gpApi = {
     refresh: {
       url: `${base}user/refresh`,
       method: 'PUT',
+      withAuth: true,
+    },
+    logout: {
+      url: `${base}entrance/logout`,
+      method: 'DELETE',
       withAuth: true,
     },
     changePassword: {

@@ -18,7 +18,9 @@ export const setCookie = (name, value, days = 120) => {
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
     expires = `; expires=${date.toUTCString()}; SameSite=Strict`;
   }
-  document.cookie = `${name}=${encodeURI(value) || ''}${expires}; path=/`;
+  document.cookie = `${name}=${
+    encodeURI(value) || ''
+  }${expires}; path=/; SameSite=Lax`;
 };
 
 export const deleteCookies = () => {
@@ -33,8 +35,7 @@ export const deleteCookies = () => {
 };
 
 export const deleteUserCookies = () => {
-  deleteCookie('user');
-  deleteCookie('token');
+  deleteCookie('user'); // now deleted by api server.
   deleteCookie('impersonateUser');
   deleteCookie('signupRedirect');
 };
@@ -69,29 +70,15 @@ export const getUserCookie = (withParse = false) => {
     }
   }
 
-  const user = getCookie('user');
+  let userCookieName = 'user';
+
+  const user = getCookie(userCookieName);
   if (user && withParse) {
-    return JSON.parse(user);
+    return JSON.parse(decodeURIComponent(user));
   }
-  return user;
-};
-
-export const setSignupRedirectCookie = (route, options = {}) => {
-  const cookie = {
-    route,
-    options,
-  };
-  setCookie('signupRedirect', JSON.stringify(cookie));
-};
-
-export const getSignupRedirectCookie = () => {
-  const cookie = getCookie('signupRedirect');
-  if (cookie) {
-    return JSON.parse(cookie);
+  if (user) {
+    return decodeURIComponent(user);
+  } else {
+    return false;
   }
-  return false;
-};
-
-export const deleteSignupRedirectCookie = () => {
-  deleteCookie('signupRedirect');
 };

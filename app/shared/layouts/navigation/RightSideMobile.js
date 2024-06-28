@@ -1,13 +1,11 @@
 'use client';
 import Hamburger from 'hamburger-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Caption from '@shared/typography/Caption';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import PurpleButton from '@shared/buttons/PurpleButton';
-import { fetchCampaignStatus } from './RightSide';
-import { getUserCookie } from 'helpers/cookieHelper';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
@@ -18,6 +16,8 @@ import {
   RESOURCES_LINKS,
   RUN_LINKS,
 } from '@shared/layouts/navigation/NavigationProvider';
+import { useUser } from '@shared/hooks/useUser';
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
@@ -28,28 +28,13 @@ const sections = [
 
 export default function RightSideMobile() {
   const [isOpen, setOpen] = useState(false);
-  const [user, setUser] = useState(false);
-  const [campaignStatus, setCampaignStatus] = useState(false);
+  const [user] = useUser();
+  const [campaignStatus, setCampaignStatus] = useCampaignStatus();
+  const { status, step, slug } = campaignStatus || {};
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-
-  useEffect(() => {
-    const cookieUser = getUserCookie(true);
-    setUser(cookieUser);
-    if (cookieUser) {
-      updateStatus();
-    }
-  }, []);
-
   const pathname = usePathname();
   const isDashboardPath = pathname?.startsWith('/dashboard');
   const isVolunteerDashboardPath = pathname?.startsWith('/volunteer-dashboard');
-
-  const updateStatus = async () => {
-    const status = await fetchCampaignStatus();
-    setCampaignStatus(status);
-  };
-
-  const { status, step, slug } = campaignStatus || {};
 
   let dashboardLink = '/dashboard';
 
@@ -58,7 +43,6 @@ export default function RightSideMobile() {
   };
 
   const toggleNotifications = () => {
-    // closeAll();
     if (notificationsOpen) {
       document.body.style.overflow = 'visible';
     } else {

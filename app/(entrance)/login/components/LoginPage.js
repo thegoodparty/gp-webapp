@@ -6,7 +6,6 @@ import gpApi from 'gpApi/index.js';
 import {
   deleteCookie,
   getCookie,
-  setCookie,
   setUserCookie,
 } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
@@ -20,11 +19,10 @@ import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { fetchCampaignStatus } from '@shared/layouts/navigation/RightSide';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
+import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 
 export const validateZip = (zip) => {
-  // let zipInt = parseInt(zip);
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
   return validZip.test(zip);
 };
@@ -57,11 +55,10 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, token, newUser } = await login(state.email, state.password);
+      const { user, newUser } = await login(state.email, state.password);
 
-      if (user && token) {
+      if (user) {
         setUserCookie(user);
-        setCookie('token', token);
         userState.set(() => user);
         if (newUser) {
           const afterAction = getCookie('afterAction');
@@ -83,7 +80,9 @@ export default function LoginPage() {
             window.location.href = returnUrl;
             return;
           }
+
           const status = await fetchCampaignStatus();
+
           if (status?.status === 'candidate') {
             window.location.href = '/dashboard';
             return;

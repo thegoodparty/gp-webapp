@@ -22,14 +22,15 @@ const PurchaseSuccessPage = () => {
         You are now subscribed to GoodParty.org Pro!
       </H1>
       <Body2 className="text-center mb-8">
+        Our team is working to pull your path to victory numbers and your voter
+        file data. This will take less than 2 business days.
+        <br />
+        <br />
         As a reminder you will be billed monthly for your subscription, until
         your election date, but can cancel or reactivate anytime in your{' '}
-        <Link className="underline" href="/profile">
+        <Link className="text-info-main underline" href="/profile">
           settings
         </Link>
-        .<br />
-        <br />
-        We look forward to helping you on your journey to run and win in office!
       </Body2>
       <div className="w-full flex flex-col justify-center md:flex-row md:justify-between">
         <Link

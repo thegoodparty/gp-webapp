@@ -34,7 +34,6 @@ export default function PositionPage(props) {
   return (
     <div className="bg-indigo-100">
       <MaxWidth>
-        {/* <Breadcrumbs links={breadcrumbsLinks} /> */}
         <Hero {...race} />
         <PositionDetails race={race} positions={positions} />
       </MaxWidth>

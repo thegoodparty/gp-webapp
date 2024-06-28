@@ -2,8 +2,8 @@ import pageMetaData from 'helpers/metadataHelper';
 import PurchaseSuccessPage from 'app/(candidate)/dashboard/pro-sign-up/success/components/PurchaseSuccessPage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getServerToken } from 'helpers/userServerHelper';
 
 const ENABLE_PRO_FLOW = process.env.NEXT_PUBLIC_PRO_FLOW;
 
@@ -27,21 +27,10 @@ export default async function Page({
   }
 
   try {
-    const nextCookies = cookies();
-    const tempToken = nextCookies.get('temp-token');
+    const token = getServerToken();
 
-    if (!tempToken) {
-      throw new Error('No temp-token found');
-    }
+    const { user } = await gpFetch(gpApi.user.refresh, null, null, token);
 
-    const result = await gpFetch(
-      gpApi.user.refresh,
-      null,
-      null,
-      tempToken.value,
-    );
-
-    const { user } = result;
     if (!user) {
       throw new Error('Could not retrieve user');
     }
@@ -55,7 +44,7 @@ export default async function Page({
         },
         null,
         null,
-        tempToken.value,
+        token,
       );
     }
 
@@ -63,7 +52,7 @@ export default async function Page({
       gpApi.payments.createPortalSession,
       null,
       null,
-      tempToken.value,
+      token,
     );
 
     const { redirectUrl: portalRedirectUrl } = portalResult || {};

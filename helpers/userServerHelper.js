@@ -1,25 +1,21 @@
 import { cookies } from 'next/headers';
 
-export const getServerToken = () => {
+const determineImpersonateCookieOrNot = (cookieName, impersonateCookieName) => {
   const nextCookies = cookies();
-  const cookie = nextCookies.get('token');
-  const impersonateCookie = nextCookies.get('impersonateToken');
+  const cookie = nextCookies.get(cookieName);
+  const impersonateCookie = nextCookies.get(impersonateCookieName);
   if (impersonateCookie?.value) {
-    return impersonateCookie.value;
+    return decodeURIComponent(impersonateCookie.value);
   } else if (cookie?.value) {
-    return cookie.value;
+    return decodeURIComponent(cookie.value);
   }
   return false;
 };
 
+export const getServerToken = () =>
+  determineImpersonateCookieOrNot('token', 'impersonateToken');
+
 export const getServerUser = () => {
-  const nextCookies = cookies();
-  const cookie = nextCookies.get('user');
-  const impersonateCookie = nextCookies.get('impersonateUser');
-  if (impersonateCookie?.value) {
-    return JSON.parse(impersonateCookie.value);
-  } else if (cookie?.value) {
-    return JSON.parse(cookie.value);
-  }
-  return false;
+  const userJSON = determineImpersonateCookieOrNot('user', 'impersonateUser');
+  return userJSON ? JSON.parse(userJSON) : null;
 };

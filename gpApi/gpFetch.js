@@ -1,10 +1,10 @@
-import { getCookie } from '/helpers/cookieHelper';
+import { getCookie } from 'helpers/cookieHelper';
 
 async function gpFetch(
   endpoint,
   data,
   revalidate,
-  token,
+  token, // should only be used for server-side calls
   isFormData = false,
   nonJSON = false,
 ) {
@@ -27,10 +27,7 @@ async function gpFetch(
 
   let autoToken;
   if (withAuth) {
-    autoToken = getCookie('impersonateToken') || token || getCookie('token');
-    if (!autoToken) {
-      throw new Error({ message: 'missing token' });
-    }
+    autoToken = getCookie('impersonateToken') || token;
   }
 
   const requestOptions = headersOptions(body, endpoint.method, autoToken);
@@ -56,6 +53,7 @@ function headersOptions(body, method = 'GET', token) {
   return {
     headers,
     method,
+    credentials: 'include',
     mode: 'cors',
     body,
   };

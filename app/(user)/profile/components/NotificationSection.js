@@ -26,7 +26,7 @@ async function updateUserCallback(updatedMeta) {
 
     const response = await gpFetch(api, payload);
     const { user } = response;
-    setUserCookie(user);
+    // setUserCookie(user);
   } catch (error) {
     console.log('Error updating user', error);
   }

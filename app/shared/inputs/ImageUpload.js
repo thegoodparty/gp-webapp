@@ -20,7 +20,7 @@ const fileSelect = async (image, isUserImage) => {
   const res = await gpFetch(api, formData, false, false, true);
   if (res.success && res.data.files.length > 0) {
     if (isUserImage) {
-      setUserCookie(res.updatedUser);
+      // setUserCookie(res.updatedUser);
     }
     return `${res.data.baseurl}${res.data.files[0]}`;
   } else {

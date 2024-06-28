@@ -35,13 +35,9 @@ export const AccountSettingsSection = ({ isPro, enableProFlow }) => {
                 )}
               </div>
               <span className="font-normal">
-                Need help? Contact us at{' '}
-                <Link
-                  className="underline"
-                  href="mailto:email@goodparty.com"
-                  target="_blank"
-                >
-                  email@goodparty.com
+                Need help? Please{' '}
+                <Link className="underline" href="/contact">
+                  Contact us
                 </Link>
               </span>
             </div>

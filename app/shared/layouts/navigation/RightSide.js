@@ -1,9 +1,6 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { getUserCookie } from 'helpers/cookieHelper';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import TopDashboardMenu from './TopDashboardMenu';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -11,42 +8,20 @@ import NotificationsDropdown from './notifications/NotificationsDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import DashboardOrContinue from './DashboardOrContinue';
 import InfoButton from '@shared/buttons/InfoButton';
-
-export async function fetchCampaignStatus() {
-  try {
-    const api = gpApi.user.campaignStatus;
-    return await gpFetch(api, false, 10);
-  } catch (e) {
-    return { status: false };
-  }
-}
+import { useUser } from '@shared/hooks/useUser';
 
 export default function RightSide() {
-  const [user, setUser] = useState(false);
+  const [user] = useUser();
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [campaignStatus, setCampaignStatus] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
-
-  useEffect(() => {
-    const cookieUser = getUserCookie(true);
-    setUser(cookieUser);
-    if (cookieUser) {
-      updateStatus();
-    }
-  }, []);
 
   const pathname = usePathname();
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
   const isOnboardingPath = pathname?.startsWith('/onboarding');
-
-  const updateStatus = async () => {
-    const status = await fetchCampaignStatus();
-    setCampaignStatus(status);
-  };
 
   const toggleNotifications = () => {
     closeAll();
@@ -99,7 +74,6 @@ export default function RightSide() {
             user={user}
           />
           <DashboardOrContinue
-            campaignStatus={campaignStatus}
             isDashboardPath={isDashboardPath}
             closeAll={closeAll}
           />

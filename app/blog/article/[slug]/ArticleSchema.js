@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
 import { JsonLd } from 'react-schemaorg';
-
 import { cmsToPlainText } from '/helpers/contentfulHelper';
 
 export default function ArticleSchema({ article }) {

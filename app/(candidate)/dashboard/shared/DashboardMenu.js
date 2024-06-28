@@ -1,4 +1,3 @@
-import { deleteUserCookies } from 'helpers/cookieHelper';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
@@ -11,7 +10,7 @@ import {
   RiDoorOpenLine,
 } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
-import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
+import { handleLogOut } from '@shared/user/handleLogOut';
 
 let pages = [
   {
@@ -23,7 +22,7 @@ let pages = [
   {
     label: 'Upgrade to Pro',
     icon: <GiProgression />,
-    link: '/upgrade-to-pro',
+    link: '/dashboard/upgrade-to-pro',
     id: 'upgrade-pro-dashboard',
   },
   {
@@ -73,12 +72,6 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  const handleLogOut = (e) => {
-    deleteUserCookies();
-    window.location.replace('/');
-    fireGTMButtonClickEvent(e.currentTarget);
-  };
-
   if ((user?.isAdmin || campaign?.isPro) && pages.length === 8) {
     pages[1].link = '/dashboard/voter-records';
     pages[1].id = 'vote-records-dashboard';

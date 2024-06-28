@@ -6,33 +6,31 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { MdOpenInNew } from 'react-icons/md';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { getCookie, setCookie } from 'cookies-next';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Image from 'next/image';
+import { useEffect } from 'react';
+
+const doRedirect = async () => {
+  try {
+    const { redirectUrl } =
+      (await gpFetch(gpApi.payments.createCheckoutSession)) || {};
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    } else {
+      throw new Error('No redirect url found');
+    }
+  } catch (e) {
+    console.error('error when creating checkout session.', e);
+  }
+};
 
 const PurchaseRedirectPage = ({ campaign }) => {
-  const strictToken = getCookie('token');
-
-  const handleClick = async (e) => {
-    e.preventDefault();
-    try {
-      const { redirectUrl } =
-        (await gpFetch(gpApi.payments.createCheckoutSession)) || {};
-      if (redirectUrl) {
-        const timeIn30Minutes = new Date(new Date().getTime() + 30 * 60 * 1000);
-        setCookie('temp-token', strictToken, {
-          path: '/',
-          sameSite: 'lax',
-          expires: timeIn30Minutes,
-        });
-        window.location.href = redirectUrl;
-      } else {
-        throw new Error('No redirect url found');
-      }
-    } catch (e) {
-      console.error('error when creating checkout session.', e);
-    }
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      doRedirect();
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <FocusedExperienceWrapper>
@@ -54,14 +52,9 @@ const PurchaseRedirectPage = ({ campaign }) => {
           <Body2 className="mb-8">
             Once finished, you will be brought back to Good Party.
           </Body2>
-          <PrimaryButton
-            className="flex items-center justify-center mx-auto w-full md:w-auto"
-            type="submit"
-            onClick={handleClick}
-          >
-            Continue
-            <MdOpenInNew className="ml-2" />
-          </PrimaryButton>
+          <p className="text-sm font-semibold mb-6">
+            Redirecting in 10 seconds...
+          </p>
         </div>
       )}
     </FocusedExperienceWrapper>
