@@ -22,7 +22,7 @@ let pages = [
   {
     label: 'Upgrade to Pro',
     icon: <GiProgression />,
-    link: '/upgrade-to-pro',
+    link: '/dashboard/upgrade-to-pro',
     id: 'upgrade-pro-dashboard',
   },
   {
