@@ -8,30 +8,33 @@ import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvide
 import { UserProvider } from '@shared/user/UserProvider';
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider';
 import { CampaignProvider } from '@shared/user/CampaignProvider';
+import { InsecureCookieClearer } from '@shared/layouts/InsecureCookieClearer';
 
 export default function PageWrapper({ children, hideFooter }) {
   return (
-    <UserProvider>
-      <CampaignProvider>
-        <CampaignStatusProvider>
-          <NavigationProvider>
-            <div className="overflow-x-hidden">
-              <JsonLdSchema />
-              <Nav />
-              {children}
-              {!hideFooter && (
+    <InsecureCookieClearer>
+      <UserProvider>
+        <CampaignProvider>
+          <CampaignStatusProvider>
+            <NavigationProvider>
+              <div className="overflow-x-hidden">
+                <JsonLdSchema />
+                <Nav />
+                {children}
+                {!hideFooter && (
+                  <Suspense>
+                    <Footer />
+                  </Suspense>
+                )}
+                <Snackbar />
                 <Suspense>
-                  <Footer />
+                  <CookiesSnackbar />
                 </Suspense>
-              )}
-              <Snackbar />
-              <Suspense>
-                <CookiesSnackbar />
-              </Suspense>
-            </div>
-          </NavigationProvider>
-        </CampaignStatusProvider>
-      </CampaignProvider>
-    </UserProvider>
+              </div>
+            </NavigationProvider>
+          </CampaignStatusProvider>
+        </CampaignProvider>
+      </UserProvider>
+    </InsecureCookieClearer>
   );
 }
