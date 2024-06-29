@@ -9,6 +9,7 @@ import ProfileDropdown from './ProfileDropdown';
 import DashboardOrContinue from './DashboardOrContinue';
 import InfoButton from '@shared/buttons/InfoButton';
 import { useUser } from '@shared/hooks/useUser';
+import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 
 export default function RightSide() {
   const [user] = useUser();
@@ -63,6 +64,7 @@ export default function RightSide() {
     <div className="hidden lg:flex justify-end items-center">
       {user ? (
         <>
+          <ExitToDashboardButton />
           <NotificationsDropdown
             open={notificationsOpen}
             toggleCallback={toggleNotifications}
