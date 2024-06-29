@@ -18,6 +18,7 @@ import {
 } from '@shared/layouts/navigation/NavigationProvider';
 import { useUser } from '@shared/hooks/useUser';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
+import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
@@ -60,13 +61,16 @@ export default function RightSideMobile() {
           }`}
         >
           {!isOpen && user && (
-            <div>
-              <NotificationsDropdown
-                open={notificationsOpen}
-                toggleCallback={toggleNotifications}
-                user={user}
-              />
-            </div>
+            <>
+              <ExitToDashboardButton />
+              <div>
+                <NotificationsDropdown
+                  open={notificationsOpen}
+                  toggleCallback={toggleNotifications}
+                  user={user}
+                />
+              </div>
+            </>
           )}
           <Hamburger toggled={isOpen} toggle={setOpen} size={24} rounded />
         </div>
