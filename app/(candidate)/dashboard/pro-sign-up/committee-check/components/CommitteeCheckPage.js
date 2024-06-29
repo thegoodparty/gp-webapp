@@ -42,32 +42,36 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   const [validatedEin, setValidatedEin] = useState(null);
   const [uploadedFilename, setUploadedFilename] = useState('');
 
-  useEffect(() => {
-    const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
-    const inputsValid = campaignCommittee && validEINFormat;
+  const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
+  const inputsValid = campaignCommittee && validEINFormat;
 
-    const doEinCheck = async () => {
-      const numericalEIN = Number(einInputValue.replace(/[^0-9.]/g, ''));
-      try {
-        const result = await gpFetch(gpApi.campaign.einCheck, {
-          name: einInputValue,
-          ein: numericalEIN,
-        });
-        const { valid } = await result.json();
-        setValidatedEin(valid);
-      } catch (e) {
-        console.error('Request to check EIN failed.');
-        throw e;
-      } finally {
-        setLoadingEinCheck(false);
-      }
-    };
-
-    if (inputsValid && !loadingEinCheck) {
-      setLoadingEinCheck(true);
-      doEinCheck(einInputValue, einInputValue);
+  const doEinCheck = async () => {
+    if (!inputsValid || loadingEinCheck) {
+      return;
     }
-  }, [campaignCommittee, einInputValue]);
+    setLoadingEinCheck(true);
+    const numericalEIN = Number(einInputValue.replace(/[^0-9.]/g, ''));
+    try {
+      const result = await gpFetch(gpApi.campaign.einCheck, {
+        name: einInputValue,
+        ein: numericalEIN,
+      });
+      const { valid } = await result.json();
+      setValidatedEin(valid);
+    } catch (e) {
+      console.error('Request to check EIN failed.');
+      throw e;
+    } finally {
+      setLoadingEinCheck(false);
+    }
+  };
+
+  useEffect(() => {
+    doEinCheck(einInputValue, einInputValue);
+  }, [einInputValue]);
+
+  const onCampaignCommitteeBlur = () =>
+    doEinCheck(einInputValue, einInputValue);
 
   const handleNextClick = async () => {
     const doCampaignUpdate = async () => {
@@ -114,6 +118,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             value={campaignCommittee}
             disabled={loadingEinCheck}
             onChange={(e) => setCampaignCommittee(e.target.value)}
+            onBlur={onCampaignCommitteeBlur}
             InputProps={{
               endAdornment: (
                 <AsyncValidationIcon
