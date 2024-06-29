@@ -2,13 +2,11 @@
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { MdOpenInNew } from 'react-icons/md';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const doRedirect = async () => {
   try {
@@ -25,12 +23,15 @@ const doRedirect = async () => {
 };
 
 const PurchaseRedirectPage = ({ campaign }) => {
+  const [countdown, setCountdown] = useState(10);
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      doRedirect();
-    }, 10000);
+    if (countdown === 0) {
+      return doRedirect();
+    }
+    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [countdown]);
 
   return (
     <FocusedExperienceWrapper>
@@ -53,7 +54,7 @@ const PurchaseRedirectPage = ({ campaign }) => {
             Once finished, you will be brought back to Good Party.
           </Body2>
           <p className="text-sm font-semibold mb-6">
-            Redirecting in 10 seconds...
+            Redirecting in {countdown} seconds...
           </p>
         </div>
       )}
