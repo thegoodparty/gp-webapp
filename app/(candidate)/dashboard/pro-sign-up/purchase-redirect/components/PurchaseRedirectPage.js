@@ -47,8 +47,8 @@ const PurchaseRedirectPage = ({ campaign }) => {
             alt="clap"
           />
           <H1 className="mb-4">
-            You are about to be redirected to Stripe to confirm you payment
-            details.
+            You&apos;re about to be redirected to Stripe to confirm your payment
+            details
           </H1>
           <Body2 className="mb-8">
             Once finished, you will be brought back to Good Party.
