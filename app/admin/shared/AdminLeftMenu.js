@@ -25,13 +25,14 @@ export const leftMenuItems = [
     label: 'AI Content',
     link: '/admin/ai-content',
   },
-  {
-    label: 'Misc Actions',
-    link: '/admin/misc-actions',
-  },
+
   {
     label: 'P2V Stats',
     link: '/admin/p2v-stats',
+  },
+  {
+    label: 'Pro users w/o voter file',
+    link: '/admin/pro-no-voter-file',
   },
 ];
 

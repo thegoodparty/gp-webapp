@@ -384,6 +384,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    proNoVoterFile: {
+      url: `${base}admin/campaign/pro-no-voter-file`,
+      method: 'GET',
+      withAuth: true,
+    },
 
     enhanceCandidates: {
       url: `${base}admin/candidate-enhance`,
