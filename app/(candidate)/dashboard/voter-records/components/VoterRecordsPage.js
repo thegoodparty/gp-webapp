@@ -286,7 +286,7 @@ export default function VoterRecordsPage(props) {
             </div>
           </>
         ) : (
-          <CantDownload />
+          <CantDownload {...props} />
         )}
       </Paper>
     </DashboardLayout>
