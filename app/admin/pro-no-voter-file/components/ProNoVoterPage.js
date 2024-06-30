@@ -11,7 +11,7 @@ export default function ProNoVoterPage(props) {
         <H1>Pro Users without L2 Data</H1>
         <H3 className="mt-3">
           These users upgraded to pro, but we are not able to match their office
-          with L2 data
+          with L2 data.
         </H3>
 
         <AdminCandidatesTable {...props} />
