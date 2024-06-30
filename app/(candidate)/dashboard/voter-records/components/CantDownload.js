@@ -2,10 +2,10 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
-import Paper from '@shared/utils/Paper';
 import { RiFolderForbidLine } from 'react-icons/ri';
+import TrackCantDownload from './trackCantDownload';
 
-export default function CantDownload() {
+export default function CantDownload(props) {
   return (
     <div className="py-20 w-full">
       <div className="max-w-screen-md mx-auto">
@@ -32,6 +32,7 @@ export default function CantDownload() {
           </div>
         </div>
       </div>
+      <TrackCantDownload {...props} />
     </div>
   );
 }
