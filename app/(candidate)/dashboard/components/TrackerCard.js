@@ -9,13 +9,22 @@ import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CardProgressPill from './CardProgressPill';
 import { revalidateCandidates } from 'helpers/cacheHelper';
+import Link from 'next/link';
 
 export default function TrackerCard(props) {
   const [showModal, setShowModal] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const { card, updateCountCallback, reportedVoterGoals, weeksUntil } = props;
+  const {
+    card,
+    updateCountCallback,
+    reportedVoterGoals,
+    weeksUntil,
+    campaign,
+  } = props;
   const { key, title, subTitle, progress, total, icon } = card;
+
+  const { isPro } = campaign;
 
   const [value, setValue] = useState(0);
 
@@ -51,16 +60,25 @@ export default function TrackerCard(props) {
         weeksUntil={weeksUntil}
       />
       <ProgressPie total={total} progress={progress} />
-      <div
+
+      <PrimaryButton
+        fullWidth
+        variant="outlined"
+        size="medium"
         className="mt-7"
         onClick={() => {
           setShowModal(true);
         }}
       >
-        <SecondaryButton fullWidth size="medium">
-          Add
-        </SecondaryButton>
-      </div>
+        Add
+      </PrimaryButton>
+      <Link
+        href={isPro ? '/dashboard/voter-records' : '/dashboard/upgrade-to-pro'}
+      >
+        <PrimaryButton fullWidth className="mt-4">
+          Get Voter Data
+        </PrimaryButton>
+      </Link>
       {showModal ? (
         <Modal closeCallback={() => setShowModal(false)} open>
           <div className="lg:min-w-[740px]">

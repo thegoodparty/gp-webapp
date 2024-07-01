@@ -6,11 +6,9 @@ import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-async function fetchCanDownload() {
+export async function fetchCanDownload() {
   try {
     const api = gpApi.voterData.canDownload;
-    console.log('api', api);
-
     const token = getServerToken();
     return await gpFetch(api, false, false, token);
   } catch (e) {
