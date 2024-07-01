@@ -42,7 +42,7 @@ export const CommitteeSupportingFilesUpload = ({
   };
 
   return (
-    <div className="grid grid-cols-10 gap-6 align-center">
+    <div className="grid grid-cols-10 gap-6 align-center mt-4">
       <TextField
         className="cursor-pointer col-span-10 md:col-span-7"
         value={fileInfo?.name || ''}
