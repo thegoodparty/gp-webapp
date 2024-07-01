@@ -49,7 +49,7 @@ export const CommitteeSupportingFilesUpload = ({
         onClick={onFileBrowseClick}
         label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
-        helperText="File size less that 3mb"
+        helperText="File size less than 3MB"
       />
 
       <PrimaryButton
