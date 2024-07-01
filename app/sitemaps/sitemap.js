@@ -1,7 +1,9 @@
 import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
-import gpApi, { appBase } from 'gpApi';
+import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute } from '../../helpers/articleHelper';
+
+const appBase = process.env.NEXT_PUBLIC_APP_BASE;
 
 export const fetchFAQs = async () => {
   const api = gpApi.content.contentByKey;

@@ -5,9 +5,11 @@ on production the path is https://www.getelected.com/sitemaps/state/ca/sitemap/4
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 */
 
-import gpApi, { appBase } from 'gpApi';
+import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { flatStates } from 'helpers/statesHelper';
+
+const appBase = process.env.NEXT_PUBLIC_APP_BASE;
 
 const fetchState = async (state) => {
   const api = gpApi.race.allStates;
