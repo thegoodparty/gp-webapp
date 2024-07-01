@@ -81,7 +81,11 @@ export const FOOTER_COLUMNS = [
         id: 'footer-campaign-discord',
         isExternal: true,
       },
-      { label: 'Pricing', link: '/pricing', id: 'footer-campaign-pricing' },
+      {
+        label: 'Pricing',
+        link: '/run-for-office#pricing-section',
+        id: 'footer-campaign-pricing',
+      },
     ],
   },
 ];
