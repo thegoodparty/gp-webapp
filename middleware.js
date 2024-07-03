@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getRedirects } from 'helpers/getRedirects';
 import { handlePathRedirect } from 'helpers/handlePathRedirect';
-import { handlePathCapitalizationRedirect } from 'helpers/handlePathCapitalizationRedirect';
+// import { handlePathCapitalizationRedirect } from 'helpers/handlePathCapitalizationRedirect';
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
 
 export default async function middleware(req) {
@@ -21,9 +21,9 @@ export default async function middleware(req) {
     return handlePathRedirect(req, redirectPaths);
   }
 
-  if (pathname !== pathname.toLowerCase()) {
-    return handlePathCapitalizationRedirect(req);
-  }
+  // if (pathname !== pathname.toLowerCase()) {
+  //   return handlePathCapitalizationRedirect(req);
+  // }
 
   return NextResponse.next();
 }
