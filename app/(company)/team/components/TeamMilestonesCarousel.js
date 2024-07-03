@@ -108,12 +108,17 @@ const settings = {
     },
   ],
 };
-export const TeamMilestonesCarousel = ({ teamMilestones }) => (
-  <div className="carousel-container relative">
-    <Slider {...settings}>
-      {teamMilestones.sort(sortMilestones).map((milestone, key) => (
-        <TeamMilestoneCard {...milestone} key={key} />
-      ))}
-    </Slider>
-  </div>
-);
+export const TeamMilestonesCarousel = ({ teamMilestones }) => {
+  if (!teamMilestones) {
+    return null;
+  }
+  return (
+    <div className="carousel-container relative">
+      <Slider {...settings}>
+        {teamMilestones.sort(sortMilestones).map((milestone, key) => (
+          <TeamMilestoneCard {...milestone} key={key} />
+        ))}
+      </Slider>
+    </div>
+  );
+};
