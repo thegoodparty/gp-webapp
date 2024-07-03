@@ -117,7 +117,8 @@ export default function AdminCandidatesTable({ campaigns }) {
     } = details || {};
 
     let waitingForP2v =
-      !pathToVictory?.p2vStatus || pathToVictory?.p2vStatus === 'Waiting'
+      !pathToVictory?.data?.p2vStatus ||
+      pathToVictory?.data?.p2vStatus === 'Waiting'
         ? 'Yes'
         : 'No';
 
@@ -125,7 +126,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       waitingForP2v = 'n/a';
     }
 
-    if (data.p2vNotNeeded) {
+    if (data.p2vNotNeeded || pathToVictory?.data?.p2vNotNeeded) {
       waitingForP2v = 'Not Needed';
     }
 

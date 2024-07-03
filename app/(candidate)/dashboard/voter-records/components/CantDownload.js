@@ -21,7 +21,7 @@ export default function CantDownload(props) {
               This is usually due to a manual office selection.
             </Body1>
             <Body2 className="mb-4">
-              Please contact us to manually generate your voter file.
+              Please contact us to generate your voter file.
             </Body2>
             <a
               href="mailto:politics@goodparty.org"

@@ -1,6 +1,6 @@
-import { appBase } from 'gpApi';
-
 import { flatStates } from 'helpers/statesHelper';
+
+const appBase = process.env.NEXT_PUBLIC_APP_BASE;
 
 let yourDate = new Date();
 const currentDate = yourDate.toISOString().split('T')[0];
