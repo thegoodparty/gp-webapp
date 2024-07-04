@@ -26,7 +26,6 @@ const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 async function fetchVoterFile(type, customFilters) {
   try {
     const api = gpApi.voterData.getVoterFile;
-    console.log('customFilters', JSON.stringify(customFilters));
     const payload = {
       type,
       customFilters: customFilters ? JSON.stringify(customFilters) : undefined,

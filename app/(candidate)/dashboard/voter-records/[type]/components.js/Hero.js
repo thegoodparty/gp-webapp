@@ -5,16 +5,46 @@ import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Overline from '@shared/typography/Overline';
 import MarketingH2 from '@shared/typography/MarketingH2';
-
-const fileByKey = {};
-VoterFileTypes.forEach((file) => {
-  fileByKey[file.key.toLowerCase()] = file;
-});
+import RecordCount from './RecordCount';
+import Chip from '@shared/utils/Chip';
+import slugify from 'slugify';
 
 export default function Hero(props) {
-  const { type } = props;
+  const { type, campaign } = props;
+
+  if (
+    campaign.data?.customVoterFiles &&
+    campaign.data?.customVoterFiles.length > 0 &&
+    VoterFileTypes.length === 5
+  ) {
+    campaign.data?.customVoterFiles.forEach((file, i) => {
+      VoterFileTypes.push({
+        key: `custom-${slugify(file.name)}`,
+        index: i,
+        isCustom: true,
+        name: file.name,
+        fields: [
+          file.channel,
+          file.name,
+          file.purpose || '',
+          <Chip
+            key="custom"
+            className="bg-orange-700 text-white"
+            label="CUSTOM VOTER FILE"
+          />,
+        ],
+      });
+    });
+  }
+  const fileByKey = {};
+  VoterFileTypes.forEach((file) => {
+    fileByKey[file.key.toLowerCase()] = file;
+  });
+
+  console.log('fileByKey', fileByKey);
+
   const file = fileByKey[type];
-  const { name, fields } = file;
+  const { name, fields, isCustom, index } = file || {};
 
   return (
     <Paper className="mt-4">
@@ -33,7 +63,7 @@ export default function Hero(props) {
         <div className=" col-span-12 md:col-span-6">
           <Paper>
             <Overline className="mb-2"># of Records</Overline>
-            <MarketingH2>12,345</MarketingH2>
+            <RecordCount {...props} isCustom={isCustom} index={index} />
           </Paper>
         </div>
       </div>
