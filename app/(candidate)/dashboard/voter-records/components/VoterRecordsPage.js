@@ -186,8 +186,9 @@ export default function VoterRecordsPage(props) {
                           file.isCustom
                             ? `/dashboard/voter-records/custom-${slugify(
                                 file.name,
+                                true,
                               )}`
-                            : `/dashboard/voter-records/${file.key}`
+                            : `/dashboard/voter-records/${file.key.toLowerCase()}`
                         }
                       >
                         {field}
