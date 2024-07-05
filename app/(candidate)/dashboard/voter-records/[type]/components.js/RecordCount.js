@@ -15,7 +15,7 @@ async function countVoterFile(type, customFilters) {
       type,
       customFilters: customFilters ? JSON.stringify(customFilters) : undefined,
     };
-    return await gpFetch(api, payload);
+    return await gpFetch(api, payload, 3600);
   } catch (e) {
     console.log('error', e);
     return false;
