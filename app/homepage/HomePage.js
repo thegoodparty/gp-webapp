@@ -3,12 +3,12 @@ import FactsSection from './FactsSection';
 import HowSection from './HowSection';
 import ToolsSection from './ToolsSection';
 import Cta from './Cta';
-import Callout4thJuly from './Callout4thJuly';
+import Callout from '@shared/utils/Callout';
 
 export default function HomePage(props) {
   return (
     <div className="bg-indigo-50">
-      <Callout4thJuly />
+      <Callout />
 
       <Hero />
 
