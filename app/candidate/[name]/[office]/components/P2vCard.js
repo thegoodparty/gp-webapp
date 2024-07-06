@@ -8,14 +8,17 @@ import MarketingH4 from '@shared/typography/MarketingH4';
 
 export default function P2vCard(props) {
   const { candidate } = props;
-  const { votesNeeded, office, city, state } = candidate;
+  const { office, city, state } = candidate;
+  const { p2vData } = candidate;
+  const { projectedTurnout } = p2vData;
+
   return (
     <div className="border border-gray-700 p-6 rounded-2xl h-full flex flex-col justify-between">
       <div>
         <MarketingH4 className="mb-8">
           Discover a clear path to victory with{' '}
           <span className="text-secondary-light">
-            {numberFormatter(votesNeeded)} votes.
+            {numberFormatter(projectedTurnout)} votes.
           </span>
         </MarketingH4>
         <div className="bg-[#222430] rounded-2xl relative w-full h-3">
@@ -29,7 +32,7 @@ export default function P2vCard(props) {
           </Body2>
           <Body2 className="text-right">
             {' '}
-            {numberFormatter(votesNeeded)}* Votes
+            {numberFormatter(projectedTurnout)}* Votes
             <br />
             Needed to Win
           </Body2>
@@ -37,7 +40,7 @@ export default function P2vCard(props) {
         <Body1 className="my-8">
           GoodParty.org projects that this candidate needs{' '}
           <span className="text-secondary-light">
-            {numberFormatter(votesNeeded)}*
+            {numberFormatter(projectedTurnout)}*
           </span>{' '}
           votes needed to win for{' '}
           <span className="text-secondary-light">{office}</span> of{' '}
