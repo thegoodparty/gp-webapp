@@ -7,8 +7,9 @@ import { useState } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
+import ScheduleFlowStep3 from './ScheduleFlowStep3';
 
-export default function ScheduleFlow({ type }) {
+export default function ScheduleFlow(props) {
   const [open, setOpen] = useState(true);
   const [state, setState] = useState({
     step: 1,
@@ -45,6 +46,7 @@ export default function ScheduleFlow({ type }) {
     nextCallback: handleNext,
     backCallback: handleBack,
   };
+
   return (
     <>
       <div
@@ -58,9 +60,8 @@ export default function ScheduleFlow({ type }) {
         {state.step === 1 && (
           <ScheduleFlowStep1 value={state.budget} {...childProps} />
         )}
-        {state.step === 2 && (
-          <ScheduleFlowStep2 value={state.budget} {...childProps} />
-        )}
+        {state.step === 2 && <ScheduleFlowStep2 {...childProps} />}
+        {state.step === 3 && <ScheduleFlowStep3 {...childProps} {...props} />}
       </Modal>
     </>
   );

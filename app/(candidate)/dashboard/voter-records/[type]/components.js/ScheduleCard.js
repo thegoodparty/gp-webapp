@@ -5,7 +5,7 @@ import Paper from '@shared/utils/Paper';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlow from './ScheduleFlow';
 
-export default function ScheduleCard({ type }) {
+export default function ScheduleCard(props) {
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
@@ -17,7 +17,7 @@ export default function ScheduleCard({ type }) {
           leave voicemails for one and a half cents.
         </Body2>
       </div>
-      <ScheduleFlow type={type} />
+      <ScheduleFlow {...props} />
     </Paper>
   );
 }
