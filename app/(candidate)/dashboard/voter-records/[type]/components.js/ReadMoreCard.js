@@ -6,27 +6,23 @@ import Paper from '@shared/utils/Paper';
 import Link from 'next/link';
 import { IoArrowForward } from 'react-icons/io5';
 
-function LinkWrapper({ children, card }) {
-  if (card.link) {
-    return <Link href={card.link}>{children}</Link>;
-  }
-  return <>{children}</>;
-}
-
-export default function ActionCard({ card, type }) {
+export default function ReadMoreCard({ type }) {
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
-        <H3>{card.title}</H3>
-        <Overline className="text-gray-600 mb-4">{card.category}</Overline>
-        <Body2>{card.description}</Body2>
+        <H3>Read more on our blog</H3>
+        <Overline className="text-gray-600 mb-4">Learning</Overline>
+        <Body2>
+          Want to learn more about phone banking? GoodParty.org has a collection
+          of curated content just for you.
+        </Body2>
       </div>
-      <LinkWrapper card={card}>
+      <Link href={type === 'sms' ? '/blog/tag/smsmms-messaging' : '#'}>
         <div className="mt-4 flex items-center justify-end">
-          <div className="mr-2">{card.cta}</div>
+          <div className="mr-2">Read More</div>
           <IoArrowForward />
         </div>
-      </LinkWrapper>
+      </Link>
     </Paper>
   );
 }

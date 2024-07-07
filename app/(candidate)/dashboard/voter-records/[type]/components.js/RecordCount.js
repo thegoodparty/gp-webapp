@@ -7,8 +7,12 @@ import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { numberFormatter } from 'helpers/numberHelper';
+import H2 from '@shared/typography/H2';
 
-async function countVoterFile(type, customFilters) {
+let attempts = 0;
+const MAX_ATTEMPTS = 3;
+
+export async function countVoterFile(type, customFilters) {
   try {
     const api = gpApi.voterData.count;
     const payload = {
@@ -41,20 +45,19 @@ export default function RecordCount(props) {
   const handleCount = async () => {
     let response;
     if (isCustom) {
-      let cleanType = type.replace('custom-', '');
       const customFilters = campaign.data.customVoterFiles[index];
-      console.log('customFilters', customFilters);
-      console.log(
-        'campaign.data.customVoterFiles',
-        campaign.data.customVoterFiles,
-      );
       response = await countVoterFile('custom', customFilters);
     } else {
       response = await countVoterFile(type);
     }
     if (!response) {
-      setError(true);
-      setLoading(false);
+      attempts++;
+      if (attempts < MAX_ATTEMPTS) {
+        handleCount();
+      } else {
+        setError(true);
+        setLoading(false);
+      }
     } else {
       setCount(response.count);
       setLoading(false);
@@ -70,7 +73,7 @@ export default function RecordCount(props) {
   if (error) {
     return (
       <div className="mt-4">
-        <MarketingH2>There was an error counting the records</MarketingH2>
+        <H2>Error counting records</H2>
       </div>
     );
   }

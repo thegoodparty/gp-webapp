@@ -4,7 +4,6 @@ import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Overline from '@shared/typography/Overline';
-import MarketingH2 from '@shared/typography/MarketingH2';
 import RecordCount from './RecordCount';
 import Chip from '@shared/utils/Chip';
 import slugify from 'slugify';
