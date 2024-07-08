@@ -28,26 +28,6 @@ export default async function Page({
 
   try {
     const token = getServerToken();
-
-    const { user } = await gpFetch(gpApi.user.refresh, null, null, token);
-
-    if (!user) {
-      throw new Error('Could not retrieve user');
-    }
-    const { customerId } = JSON.parse(user.metaData || '{}');
-
-    if (!customerId) {
-      await gpFetch(
-        {
-          ...gpApi.payments.updateCheckoutSession,
-          url: `${gpApi.payments.updateCheckoutSession.url}/${checkoutSessionId}`,
-        },
-        null,
-        null,
-        token,
-      );
-    }
-
     const portalResult = await gpFetch(
       gpApi.payments.createPortalSession,
       null,
