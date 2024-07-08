@@ -660,6 +660,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    schedule: {
+      url: `${base}voter-data/voter-file/schedule`,
+      method: 'POST',
+      withAuth: true,
+    },
     canDownload: {
       url: `${base}voter-data/voter-file/can-download`,
       method: 'GET',

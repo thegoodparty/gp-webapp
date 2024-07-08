@@ -1,15 +1,33 @@
 'use client';
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import H1 from '@shared/typography/H1';
+
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
 import ScheduleFlowStep3 from './ScheduleFlowStep3';
+import ScheduleFlowStep4 from './ScheduleFlowStep4';
+import ScheduleFlowStep5 from './ScheduleFlowStep5';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+export async function scheduleCampaign(state) {
+  try {
+    const api = gpApi.voterData.schedule;
+    const payload = {
+      ...state,
+      date: state.schedule?.date,
+      message: state.schedule?.message,
+    };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
 
 export default function ScheduleFlow(props) {
+  console.log('cam', props.campaign);
   const [open, setOpen] = useState(true);
   const [state, setState] = useState({
     step: 1,
@@ -25,6 +43,7 @@ export default function ScheduleFlow(props) {
 
   const handleClose = () => {
     setOpen(false);
+    handleReset();
   };
   const handleNext = () => {
     setState({
@@ -40,11 +59,24 @@ export default function ScheduleFlow(props) {
     });
   };
 
+  const handleReset = () => {
+    setState({
+      step: 1,
+      budget: 0,
+    });
+  };
+
+  const handleSubmit = async () => {
+    await scheduleCampaign(state);
+  };
+
   const childProps = {
     onChangeCallback: handleChange,
     closeCallback: handleClose,
     nextCallback: handleNext,
     backCallback: handleBack,
+    submitCallback: handleSubmit,
+    resetCallback: handleReset,
   };
 
   return (
@@ -62,6 +94,8 @@ export default function ScheduleFlow(props) {
         )}
         {state.step === 2 && <ScheduleFlowStep2 {...childProps} />}
         {state.step === 3 && <ScheduleFlowStep3 {...childProps} {...props} />}
+        {state.step === 4 && <ScheduleFlowStep4 {...childProps} {...props} />}
+        {state.step === 5 && <ScheduleFlowStep5 {...childProps} {...props} />}
       </Modal>
     </>
   );

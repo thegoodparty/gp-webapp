@@ -21,10 +21,9 @@ const defaultScripts = [
 ];
 
 export default function ScheduleFlowStep3({
-  value,
   onChangeCallback,
   nextCallback,
-  closeCallback,
+  backCallback,
   campaign,
 }) {
   const [options, setOptions] = useState([]);
@@ -84,7 +83,7 @@ export default function ScheduleFlowStep3({
 
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-6">
-            <SecondaryButton onClick={closeCallback}>Cancel</SecondaryButton>
+            <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
           </div>
           <div className="col-span-6 text-right mt-6">
             <PrimaryButton onClick={nextCallback} disabled={!selectedScript}>

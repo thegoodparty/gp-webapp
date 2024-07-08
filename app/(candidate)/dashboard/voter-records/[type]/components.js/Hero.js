@@ -9,7 +9,7 @@ import Chip from '@shared/utils/Chip';
 import slugify from 'slugify';
 
 export default function Hero(props) {
-  const { type, campaign } = props;
+  const { type, campaign, fileName } = props;
 
   if (
     campaign.data?.customVoterFiles &&
@@ -40,16 +40,14 @@ export default function Hero(props) {
     fileByKey[file.key.toLowerCase()] = file;
   });
 
-  console.log('fileByKey', fileByKey);
-
   const file = fileByKey[type];
-  const { name, fields, isCustom, index } = file || {};
+  const { isCustom, index } = file || {};
 
   return (
     <Paper className="mt-4">
       <div className="md:flex justify-between">
         <div>
-          <H2>{fields[1]}</H2>
+          <H2>{fileName}</H2>
           <Body2 className="mt-2">
             Key data associated with this voter file.
           </Body2>
