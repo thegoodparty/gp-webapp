@@ -177,8 +177,8 @@ export default function AdminVictoryPathPage(props) {
         await sendVictoryMail(campaign.slug);
       }
       // send only the keys that changed
-      const keysToUpdate = keys.filter(
-        (key) => state[key] != pathToVictory[key],
+      const keysToUpdate = keys.filter((key) =>
+        state[key] != pathToVictory ? pathToVictory[key] : false,
       );
 
       const attr = keysToUpdate.map((key) => {
@@ -201,6 +201,7 @@ export default function AdminVictoryPathPage(props) {
       await revalidatePage('/admin/victory-path/[slug]');
       window.location.reload();
     } catch (e) {
+      console.log('error in p2v save', e);
       snackbarState.set(() => {
         return {
           isOpen: true,
