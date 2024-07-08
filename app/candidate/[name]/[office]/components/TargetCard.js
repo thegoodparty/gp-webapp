@@ -9,29 +9,25 @@ import MarketingH4 from '@shared/typography/MarketingH4';
 
 export default function TargetCard(props) {
   const { candidate } = props;
-  const {
-    office,
-    city,
-    state,
-    votersCount,
-    independents,
-    republicans,
-    democrats,
-  } = candidate;
+  const { p2vData } = candidate;
+
+  const { office, city, state } = candidate;
+
+  const { republicans, democrats, indies, totalRegisteredVoters } = p2vData;
   return (
     <div className="border border-gray-700 p-6 rounded-2xl h-full  flex flex-col justify-between">
       <div>
         <MarketingH4 className="mb-8">
           Target all{' '}
           <span className="text-secondary-light">
-            {numberFormatter(votersCount)} voters
+            {numberFormatter(totalRegisteredVoters)} voters
           </span>{' '}
           for this race.
         </MarketingH4>
         <div className="grid grid-cols-12 gap-4 ">
           <div className="col-span-12 md:col-span-4">
             <div className=" text-4xl font-medium mb-2">
-              {numberFormatter(independents)}
+              {numberFormatter(indies)}
             </div>
             <Overline>INDEPENDENTS</Overline>
           </div>
@@ -53,7 +49,7 @@ export default function TargetCard(props) {
         <Body1 className="my-8">
           GoodParty.org has{' '}
           <span className="text-secondary-light">
-            {numberFormatter(votersCount)}
+            {numberFormatter(totalRegisteredVoters)}
           </span>{' '}
           voter records and contact info for{' '}
           <span className="text-secondary-light">{office}</span> of{' '}
