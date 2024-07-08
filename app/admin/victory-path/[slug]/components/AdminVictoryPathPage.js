@@ -177,9 +177,12 @@ export default function AdminVictoryPathPage(props) {
         await sendVictoryMail(campaign.slug);
       }
       // send only the keys that changed
-      const keysToUpdate = keys.filter((key) =>
-        state[key] != pathToVictory ? pathToVictory[key] : false,
-      );
+      let keysToUpdate = [];
+      if (pathToVictory) {
+        keysToUpdate = keys.filter((key) => state[key] != pathToVictory[key]);
+      } else {
+        keysToUpdate = keys;
+      }
 
       const attr = keysToUpdate.map((key) => {
         return {
