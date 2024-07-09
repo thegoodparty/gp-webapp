@@ -12,6 +12,10 @@ export default async function middleware(req) {
   // const redirectPaths = await getRedirects();
   if (!dbRedirects) {
     if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
+      console.log(
+        'fetching redirects ====================== dbFetchTime',
+        dbFetchTime,
+      );
       dbFetchTime = Date.now();
       const res = await fetchRedirects();
       dbRedirects = res.content;
