@@ -9,14 +9,34 @@ let dbRedirects;
 let dbFetchTime;
 
 export default async function middleware(req) {
-  const redirectPaths = await getRedirects();
-  const { pathname } = req.nextUrl;
-
-  console.log('Middleware executed:', { pathname, redirectPaths });
-  if (redirectPaths && redirectPaths[pathname]) {
-    console.log('Redirecting to:', redirectPaths[pathname]);
-    return handlePathRedirect(req, redirectPaths);
+  // const redirectPaths = await getRedirects();
+  if (!dbRedirects) {
+    if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
+      dbFetchTime = Date.now();
+      const res = await fetchRedirects();
+      dbRedirects = res.content;
+    }
   }
+  console.log('dbRedirects', dbRedirects);
+  const { pathname } = req.nextUrl;
+  if (dbRedirects && dbRedirects[pathname]) {
+    const url = dbRedirects[pathname];
+    if (url.startsWith('http')) {
+      return NextResponse.redirect(`${url}${req.nextUrl.search || ''}`, {
+        status: 301,
+      });
+    }
+    return NextResponse.redirect(
+      `${req.nextUrl.origin}${url}${req.nextUrl.search || ''}`,
+      { status: 301 },
+    );
+  }
+
+  // console.log('Middleware executed:', { pathname, redirectPaths });
+  // if (redirectPaths && redirectPaths[pathname]) {
+  //   console.log('Redirecting to:', redirectPaths[pathname]);
+  //   return handlePathRedirect(req, redirectPaths);
+  // }
 
   const apiRewriteRequest =
     pathname.startsWith('/api/v1') &&
