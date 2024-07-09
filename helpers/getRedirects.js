@@ -13,6 +13,7 @@ const fetchRedirects = async () => {
     };
     const res = await gpFetch(api, payload, 3600);
     console.log('fetchRedirects', res);
+    return res;
   } catch (e) {
     console.log('fetchRedirects error', e);
     return { content: {} };
