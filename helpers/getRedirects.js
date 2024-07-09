@@ -22,14 +22,18 @@ export const getRedirects = async () => {
   if (!dbRedirects) {
     console.log('getRedirects2');
     // only call dbRedirect if it is not defined or once an hour
+    const res = await fetchRedirects();
+    dbRedirects = res.content;
+    console.log('getRedirects3', dbRedirects);
+  } else {
     if (!dbFetchTime || Date.now() - dbFetchTime > 10 * 3600000) {
       dbFetchTime = Date.now();
-      console.log('getRedirects3');
+      console.log('getRedirects4');
       const res = await fetchRedirects();
-      console.log('getRedirects4', res);
+      console.log('getRedirects5', res);
       dbRedirects = res.content;
     }
   }
-  console.log('getRedirects5', dbRedirects);
+  console.log('getRedirects6', dbRedirects);
   return dbRedirects;
 };
