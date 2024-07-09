@@ -3,6 +3,7 @@ import { handlePathRedirect } from 'helpers/handlePathRedirect';
 // import { handlePathCapitalizationRedirect } from 'helpers/handlePathCapitalizationRedirect';
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
 import gpFetch from 'gpApi/gpFetch';
+import { apiBase } from 'gpApi';
 
 let dbRedirects;
 let dbFetchTime;
