@@ -8,19 +8,29 @@ import { apiBase } from 'gpApi';
 let dbRedirects;
 let dbFetchTime;
 
+fetchRedirects()
+  .then((res) => {
+    dbRedirects = res.content;
+    dbFetchTime = Date.now();
+    console.log('fetchRedirects result', res);
+  })
+  .catch((e) => {
+    console.error('error fetch', e);
+  });
+
 export default async function middleware(req) {
   // const redirectPaths = await getRedirects();
-  if (!dbRedirects) {
-    if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
-      console.log(
-        'fetching redirects ====================== dbFetchTime',
-        dbFetchTime,
-      );
-      dbFetchTime = Date.now();
-      const res = await fetchRedirects();
-      dbRedirects = res.content;
-    }
-  }
+  // if (!dbRedirects) {
+  //   if (!dbFetchTime || Date.now() - dbFetchTime > 3600000) {
+  //     console.log(
+  //       'fetching redirects ====================== dbFetchTime',
+  //       dbFetchTime,
+  //     );
+  //     dbFetchTime = Date.now();
+  //     const res = await fetchRedirects();
+  //     dbRedirects = res.content;
+  //   }
+  // }
   console.log('dbRedirects', dbRedirects);
   const { pathname } = req.nextUrl;
   if (dbRedirects && dbRedirects[pathname]) {
