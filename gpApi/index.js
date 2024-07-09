@@ -692,11 +692,6 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
-    getPortalSessionRedirectUrl: {
-      url: `${base}payments/purchase/portal-session`,
-      method: 'GET',
-      withAuth: true,
-    },
   },
   candidate: {
     find: {

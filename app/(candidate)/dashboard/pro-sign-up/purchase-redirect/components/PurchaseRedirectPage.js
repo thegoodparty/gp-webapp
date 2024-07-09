@@ -7,6 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { updateUser } from 'helpers/userHelper';
 
 const REDIRECT_COUNTDOWN_SECONDS = 10;
 
@@ -14,6 +15,7 @@ const doRedirect = async () => {
   try {
     const { redirectUrl } =
       (await gpFetch(gpApi.payments.createCheckoutSession, null, false)) || {};
+    await updateUser();
     if (redirectUrl) {
       window.location.href = redirectUrl;
     } else {
