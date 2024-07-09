@@ -20,6 +20,7 @@ import CantDownload from './CantDownload';
 import Link from 'next/link';
 import { slugify } from 'helpers/articleHelper';
 import voterFileTypes from './VoterFileTypes';
+import { getUserCookie } from 'helpers/cookieHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -50,6 +51,8 @@ async function wakeUp() {
 export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
+
+  const user = getUserCookie(true);
 
   useEffect(() => {
     wakeUp();
@@ -180,18 +183,22 @@ export default function VoterRecordsPage(props) {
                         index2 === 2 ? 'hidden md:block' : ''
                       }${index2 === 1 ? 'hidden sm:block' : ''}`}
                     >
-                      <Link
-                        href={
-                          file.isCustom
-                            ? `/dashboard/voter-records/custom-${slugify(
-                                file.name,
-                                true,
-                              )}`
-                            : `/dashboard/voter-records/${file.key.toLowerCase()}`
-                        }
-                      >
-                        {field}
-                      </Link>
+                      {user.isAdmin ? (
+                        <Link
+                          href={
+                            file.isCustom
+                              ? `/dashboard/voter-records/custom-${slugify(
+                                  file.name,
+                                  true,
+                                )}`
+                              : `/dashboard/voter-records/${file.key.toLowerCase()}`
+                          }
+                        >
+                          {field}
+                        </Link>
+                      ) : (
+                        field
+                      )}
                     </div>
                   ))}
 
