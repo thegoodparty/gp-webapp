@@ -76,6 +76,7 @@ async function fetchCall(
     res = await fetch(url, { ...options, cache: 'no-store' });
   }
   if (nonJSON || returnFullResponse) {
+    console.log('nonJSON || returnFullResponse', res);
     return res;
   }
   try {
@@ -83,6 +84,8 @@ async function fetchCall(
     //  There's no way for the caller to determine how to react to error response states w/ this current pattern.
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299;
     const jsonRes = isSuccessfulResponseStatus ? await res.json() : res;
+    console.log('isSuccessfulResponseStatus', isSuccessfulResponseStatus);
+    console.log('jsonRes', jsonRes);
     return jsonRes;
   } catch (e) {
     console.log('error in fetchCall catch', e);
