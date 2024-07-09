@@ -7,7 +7,7 @@ let dbFetchTime;
 const fetchRedirects = async () => {
   try {
     const api = {
-      url: `${apiBase}/content/content-by-key`,
+      url: `${apiBase}/api/v1/content/content-by-key`,
       method: 'GET',
     };
 
