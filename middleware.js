@@ -12,7 +12,7 @@ export default async function middleware(req) {
   const redirectPaths = await getRedirects();
   const { pathname } = req.nextUrl;
 
-  console.log('redirectPaths', redirectPaths);
+  console.log('Middleware executed:', { pathname, redirectPaths });
   if (redirectPaths && redirectPaths[pathname]) {
     console.log('Redirecting to:', redirectPaths[pathname]);
     return handlePathRedirect(req, redirectPaths);
@@ -35,33 +35,35 @@ export default async function middleware(req) {
 }
 
 export const config = {
-  matcher: '/:path*', // This ensures the middleware will run BEFORE file-path routing
+  matcher: '/:path*',
 };
-
-// if we ever want to have images or static assets with capital letters we need this:
-// export const config = {
-//   matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)'],
-// }
 
 const getRedirects = async () => {
   console.log('getRedirects');
   if (!dbRedirects) {
-    console.log('getRedirects2');
-    // only call dbRedirect if it is not defined or once an hour
+    console.log('getRedirects2: Fetching redirects for the first time');
     const res = await fetchRedirects();
-    dbRedirects = res.content;
-    dbFetchTime = Date.now();
-    console.log('getRedirects3', res);
+    if (res && res.content) {
+      dbRedirects = res.content;
+      dbFetchTime = Date.now();
+      console.log('getRedirects3: Redirects fetched successfully', res);
+    } else {
+      console.error('getRedirects3: Failed to fetch redirects', res);
+    }
   } else {
     if (!dbFetchTime || Date.now() - dbFetchTime > 10 * 3600000) {
+      console.log('getRedirects4: Cache expired, fetching new redirects');
       dbFetchTime = Date.now();
-      console.log('getRedirects4');
       const res = await fetchRedirects();
-      console.log('getRedirects5', res);
-      dbRedirects = res.content;
+      if (res && res.content) {
+        dbRedirects = res.content;
+        console.log('getRedirects5: Redirects refreshed successfully', res);
+      } else {
+        console.error('getRedirects5: Failed to refresh redirects', res);
+      }
     }
   }
-  console.log('getRedirects6', dbRedirects);
+  console.log('getRedirects6: Returning redirects', dbRedirects);
   return dbRedirects;
 };
 
@@ -77,10 +79,10 @@ const fetchRedirects = async () => {
       key: 'redirects',
     };
     const res = await gpFetch(api, payload, 3600);
-    console.log('fetchRedirects', res);
+    console.log('fetchRedirects result', res);
     return res;
   } catch (e) {
-    console.log('fetchRedirects error', e);
+    console.error('fetchRedirects error', e);
     return { content: {} };
   }
 };
