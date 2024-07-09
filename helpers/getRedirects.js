@@ -1,4 +1,4 @@
-import gpApi from 'gpApi';
+import gpApi, { apiBase } from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
 let dbRedirects;
@@ -6,7 +6,11 @@ let dbFetchTime;
 
 const fetchRedirects = async () => {
   try {
-    const api = gpApi.content.contentByKey;
+    const api = {
+      url: `${apiBase}/content/content-by-key`,
+      method: 'GET',
+    };
+
     console.log('fetchRedirects api', api);
     const payload = {
       key: 'redirects',
