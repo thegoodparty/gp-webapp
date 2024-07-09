@@ -70,6 +70,7 @@ async function fetchCall(
     delete options.body;
   }
   let res;
+  console.log('url', url);
   if (revalidate) {
     res = await fetch(url, { ...options, next: { revalidate } });
   } else {
@@ -83,6 +84,8 @@ async function fetchCall(
     // TODO: We should consider returning the response as is and handle the error at the caller level.
     //  There's no way for the caller to determine how to react to error response states w/ this current pattern.
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299;
+    console.log('res.status', res.status);
+    console.log('res', res);
     const jsonRes = isSuccessfulResponseStatus ? await res.json() : res;
     console.log('isSuccessfulResponseStatus', isSuccessfulResponseStatus);
     console.log('jsonRes', jsonRes);
