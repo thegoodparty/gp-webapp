@@ -12,6 +12,8 @@ export default function ScheduleFlowStep2({
   onChangeCallback,
   nextCallback,
   backCallback,
+  type,
+  withVoicemail,
 }) {
   const [state, setState] = useState({});
   const [count, setCount] = useState(0);
@@ -29,21 +31,30 @@ export default function ScheduleFlowStep2({
   const canContinue = () => {
     return count !== 0 && Object.values(state).some((value) => value);
   };
+  let isTel = type === 'telemarketing';
+  let price = 0.03;
+  if (type === 'telemarketing') {
+    price = 0.04;
+    if (withVoicemail) {
+      price = 0.55;
+    }
+  }
   return (
     <div className="p-4 w-[90vw] max-w-4xl">
       <div className="text-center">
-        <H1>Who would you like to text?</H1>
+        <H1>Who would you like to {isTel ? 'call' : 'text'}?</H1>
         <Body1 className="mt-4 mb-4">
           Select from the filters below to begin calculating your costs.
         </Body1>
         <div className="bg-neutral-background p-4 text-xs font-medium text-gray-600 uppercase">
           Your selection(s) Total{' '}
           <span className="font-bold text-black">
-            {numberFormatter(count)} Records
+            {numberFormatter(count)} Records{' '}
+            {withVoicemail ? '+ voicemails' : ''}
           </span>
           . AN Estimated cost of{' '}
           <span className="font-bold text-black">
-            ${(numberFormatter(count) * 0.03).toFixed(2)}
+            ${(numberFormatter(count) * price).toFixed(2)}
           </span>
         </div>
         <div className="text-left">

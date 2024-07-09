@@ -28,7 +28,7 @@ export async function countVoterFile(type, customFilters) {
 
 const fileByKey = {};
 VoterFileTypes.forEach((file) => {
-  fileByKey[file.key.toLowerCase()] = file;
+  fileByKey[file?.key?.toLowerCase()] = file;
 });
 
 export default function RecordCount(props) {

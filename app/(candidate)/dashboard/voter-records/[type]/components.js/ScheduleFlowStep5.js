@@ -12,19 +12,19 @@ export default function ScheduleFlowStep5({ resetCallback }) {
     <div className="p-4 w-[90vw] max-w-xl">
       <div className="text-center">
         <H1>Request Submitted</H1>
-        <Body1 className="mt-4 mb-8">
+        <Body1 className="mt-4 mb-2">
           A confirmation has been sent to{' '}
           <span className="font-bold">{user.email}</span>.<br />
           We will be reaching out to you shortly to pay your invoice and
           schedule your campaign.
         </Body1>
 
-        <div className="mt-8">
+        <div className="max-w-xs m-auto">
           <CheckmarkAnimation />
         </div>
 
-        <div className="mt-4 grid grid-cols-12 gap-4">
-          <div className="col-span-6 text-left mt-6">
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-6 text-left mt-3">
             <Link href="/dashboard">
               <PrimaryButton
                 variant="outlined"
@@ -35,7 +35,7 @@ export default function ScheduleFlowStep5({ resetCallback }) {
               </PrimaryButton>
             </Link>
           </div>
-          <div className="col-span-6 text-right mt-6">
+          <div className="col-span-6 text-right mt-3">
             <Link href="/dashboard/voter-records" fullWidth>
               <PrimaryButton fullWidth onClick={resetCallback}>
                 Return to Voter File

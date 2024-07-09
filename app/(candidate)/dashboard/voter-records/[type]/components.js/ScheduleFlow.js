@@ -27,11 +27,11 @@ export async function scheduleCampaign(state) {
 }
 
 export default function ScheduleFlow(props) {
-  console.log('cam', props.campaign);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     step: 1,
     budget: 0,
+    voicemail: undefined,
   });
 
   const handleChange = (key, value) => {
@@ -90,9 +90,20 @@ export default function ScheduleFlow(props) {
       </div>
       <Modal open={open} closeCallback={() => setOpen(false)}>
         {state.step === 1 && (
-          <ScheduleFlowStep1 value={state.budget} {...childProps} />
+          <ScheduleFlowStep1
+            value={state.budget}
+            voicemailValue={state.voicemail}
+            {...childProps}
+            {...props}
+          />
         )}
-        {state.step === 2 && <ScheduleFlowStep2 {...childProps} />}
+        {state.step === 2 && (
+          <ScheduleFlowStep2
+            {...childProps}
+            {...props}
+            withVoicemail={!!state.voicemail}
+          />
+        )}
         {state.step === 3 && <ScheduleFlowStep3 {...childProps} {...props} />}
         {state.step === 4 && <ScheduleFlowStep4 {...childProps} {...props} />}
         {state.step === 5 && <ScheduleFlowStep5 {...childProps} {...props} />}

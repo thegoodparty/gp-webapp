@@ -12,6 +12,7 @@ export default function ScheduleFlowStep4({
   backCallback,
   submitCallback,
   fileName,
+  type,
 }) {
   const [state, setState] = useState({
     date: '',
@@ -33,7 +34,7 @@ export default function ScheduleFlowStep4({
     nextCallback();
     submitCallback();
   };
-
+  const isTel = type === 'telemarketing';
   return (
     <div className="p-4 w-[90vw] max-w-xl">
       <div className="text-center">
@@ -43,9 +44,10 @@ export default function ScheduleFlowStep4({
           <span className="text-tertiary">{fileName}</span>
         </H1>
         <Body1 className="mt-4 mb-8">
-          Use the from below to schedule your texting campaign with our politics
-          team. Please note that we require a minimum of 72 hours prior to the
-          send date to coordinate a text campaign.
+          Use the from below to schedule your{' '}
+          {isTel ? 'phone banking' : 'texting'} campaign with our politics team.
+          Please note that we require a minimum of 72 hours prior to the send
+          date to coordinate your campaign.
         </Body1>
 
         <div className="mt-4">
