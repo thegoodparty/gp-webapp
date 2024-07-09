@@ -85,6 +85,7 @@ async function fetchCall(
     const jsonRes = isSuccessfulResponseStatus ? await res.json() : res;
     return jsonRes;
   } catch (e) {
+    console.log('error in fetchCall catch', e);
     return false;
   }
 }

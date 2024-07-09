@@ -7,10 +7,12 @@ let dbFetchTime;
 const fetchRedirects = async () => {
   try {
     const api = gpApi.content.contentByKey;
+    console.log('fetchRedirects api', api);
     const payload = {
       key: 'redirects',
     };
-    return await gpFetch(api, payload, 3600);
+    const res = await gpFetch(api, payload, 3600);
+    console.log('fetchRedirects', res);
   } catch (e) {
     console.log('fetchRedirects error', e);
     return { content: {} };
@@ -25,7 +27,7 @@ export const getRedirects = async () => {
     const res = await fetchRedirects();
     dbRedirects = res.content;
     dbFetchTime = Date.now();
-    console.log('getRedirects3', dbRedirects);
+    console.log('getRedirects3', res);
   } else {
     if (!dbFetchTime || Date.now() - dbFetchTime > 10 * 3600000) {
       dbFetchTime = Date.now();
