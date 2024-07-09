@@ -17,7 +17,6 @@ const dbRedirects = {
   '/run': '/run-for-office',
   '/elections/senate/me': '/',
 };
-let dbFetchTime;
 
 export default async function middleware(req) {
   // const redirectPaths = await getRedirects();
@@ -33,8 +32,8 @@ export default async function middleware(req) {
   //   }
   // }
   const { pathname } = req.nextUrl;
-  if (dbRedirects && dbRedirects.length === 1 && dbRedirects[0][pathname]) {
-    const url = dbRedirects[0][pathname];
+  if (dbRedirects && dbRedirects[pathname]) {
+    const url = dbRedirects[pathname];
     if (url.startsWith('http')) {
       return NextResponse.redirect(`${url}${req.nextUrl.search || ''}`, {
         status: 301,
