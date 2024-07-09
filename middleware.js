@@ -8,6 +8,12 @@ export default async function middleware(req) {
   const redirectPaths = await getRedirects();
   const { pathname } = req.nextUrl;
 
+  console.log('redirectPaths', redirectPaths);
+  if (redirectPaths && redirectPaths[pathname]) {
+    console.log('Redirecting to:', redirectPaths[pathname]);
+    return handlePathRedirect(req, redirectPaths);
+  }
+
   const apiRewriteRequest =
     pathname.startsWith('/api/v1') &&
     !pathname.includes('login') &&
@@ -15,11 +21,6 @@ export default async function middleware(req) {
 
   if (apiRewriteRequest) {
     return await handleApiRequestRewrite(req);
-  }
-  console.log('redirectPaths', redirectPaths);
-  if (redirectPaths && redirectPaths[pathname]) {
-    console.log('Redirecting to:', redirectPaths[pathname]);
-    return handlePathRedirect(req, redirectPaths);
   }
 
   // if (pathname !== pathname.toLowerCase()) {
