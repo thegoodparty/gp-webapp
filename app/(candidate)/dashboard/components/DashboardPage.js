@@ -19,6 +19,8 @@ import TrackerTutorial from './TrackerTutorial';
 import { getCookie } from 'helpers/cookieHelper';
 import EmptyState from './EmptyState';
 import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAlert';
+import { CompleteProSignUpAlert } from 'app/(candidate)/dashboard/components/CompleteProSignUpAlert';
+import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/components/PendingProSignUpAlert';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -41,9 +43,21 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
-  const { campaign, enableProFlow } = props;
+  const { campaign, userMetaData, enableProFlow } = props;
+  const { checkoutSessionId, customerId } = userMetaData || {};
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
+  const { primaryElectionDate, subscriptionId } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
+
+  const hasntEnteredProFlow =
+    !checkoutSessionId && !customerId && !subscriptionId;
+  const startedProCheckout =
+    checkoutSessionId && !customerId && !subscriptionId;
+  const subscriptionPending = customerId && !subscriptionId;
+
+  const showProSignUpAlert = hasntEnteredProFlow;
+  const showCompleteProSignUpAlert = startedProCheckout;
+  const showSubscriptionPendingAlert = subscriptionPending;
 
   const [state, setState] = useState({
     doorKnocking: reportedVoterGoals?.doorKnocking || 0,
@@ -68,7 +82,6 @@ export default function DashboardPage(props) {
   };
 
   const electionDate = details?.electionDate || goals?.electionDate;
-  const { primaryElectionDate } = details || {};
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   // if primaryElectionDate passed, use electionDate
@@ -136,7 +149,15 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
-                {enableProFlow && !isPro && <ProSignUpAlert />}
+                {enableProFlow && !isPro && (
+                  <>
+                    {showProSignUpAlert && <ProSignUpAlert />}
+                    {showCompleteProSignUpAlert && <CompleteProSignUpAlert />}
+                    {showSubscriptionPendingAlert && (
+                      <PendingProSubscriptionAlert />
+                    )}
+                  </>
+                )}
                 <TitleSection
                   title="Campaign Tracker"
                   subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."
