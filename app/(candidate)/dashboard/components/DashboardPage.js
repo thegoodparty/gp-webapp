@@ -21,6 +21,7 @@ import EmptyState from './EmptyState';
 import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAlert';
 import { CompleteProSignUpAlert } from 'app/(candidate)/dashboard/components/CompleteProSignUpAlert';
 import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/components/PendingProSignUpAlert';
+import { updateUser } from 'helpers/userHelper';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -43,8 +44,10 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
-  const { campaign, userMetaData, enableProFlow } = props;
-  const { checkoutSessionId, customerId } = userMetaData || {};
+  const { campaign, enableProFlow } = props;
+  const [user, setUser] = useState({});
+  const { metaData: userMetaData } = user || {};
+  const { checkoutSessionId, customerId } = JSON.parse(userMetaData || '{}');
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
   const { primaryElectionDate, subscriptionId } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
@@ -53,7 +56,8 @@ export default function DashboardPage(props) {
     !checkoutSessionId && !customerId && !subscriptionId;
   const startedProCheckout =
     checkoutSessionId && !customerId && !subscriptionId;
-  const subscriptionPending = customerId && !subscriptionId;
+  const subscriptionPending =
+    !checkoutSessionId && customerId && !subscriptionId;
 
   const showProSignUpAlert = hasntEnteredProFlow;
   const showCompleteProSignUpAlert = startedProCheckout;
@@ -65,6 +69,19 @@ export default function DashboardPage(props) {
     digital: reportedVoterGoals?.digital || 0,
   });
 
+  const loadHistory = async () => {
+    const res = await fetchUpdateHistory();
+    setUpdateHistory(res.updateHistory);
+  };
+
+  // TODO: we're only having to do this, because we're caching the user object in the cookie and
+  //  accessing it from there, instead of the source of truth, the DB.
+  //  What we should be doing is fetching the user object from the server on each route change,
+  //  and then we won't have to do this.
+  const updateUserCookie = async () => {
+    setUser((await updateUser()) || {});
+  };
+
   useEffect(() => {
     if (campaign) {
       setState({
@@ -73,13 +90,9 @@ export default function DashboardPage(props) {
         digital: reportedVoterGoals?.digital || 0,
       });
       loadHistory();
+      updateUserCookie();
     }
   }, [campaign]);
-
-  const loadHistory = async () => {
-    const res = await fetchUpdateHistory();
-    setUpdateHistory(res.updateHistory);
-  };
 
   const electionDate = details?.electionDate || goals?.electionDate;
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
@@ -92,7 +105,6 @@ export default function DashboardPage(props) {
   }
 
   const weeksUntil = weeksTill(resolvedDate);
-  // const weeksUntil = { weeks: -1, days: 6 };
 
   const dateRange = weekRangeFromDate(resolvedDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal);
