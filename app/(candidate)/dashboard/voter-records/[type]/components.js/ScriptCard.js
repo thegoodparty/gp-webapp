@@ -3,9 +3,10 @@ import H2 from '@shared/typography/H2';
 import H3 from '@shared/typography/H3';
 import Overline from '@shared/typography/Overline';
 import Paper from '@shared/utils/Paper';
+import Link from 'next/link';
 import { IoArrowForward } from 'react-icons/io5';
 
-export default function ScriptCard({  type }) {
+export default function ScriptCard({ type }) {
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
@@ -17,10 +18,12 @@ export default function ScriptCard({  type }) {
           campaign.
         </Body2>
       </div>
-      <div className="mt-4 flex items-center justify-end">
-        <div className="mr-2">Write Script</div>
-        <IoArrowForward />
-      </div>
+      <Link href="/dashboard/content?showModal=true">
+        <div className="mt-4 flex items-center justify-end">
+          <div className="mr-2">Write Script</div>
+          <IoArrowForward />
+        </div>
+      </Link>
     </Paper>
   );
 }
