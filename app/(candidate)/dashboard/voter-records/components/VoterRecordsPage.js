@@ -1,7 +1,6 @@
 'use client';
 
 import DashboardLayout from '../../shared/DashboardLayout';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Paper from '@shared/utils/Paper';
@@ -20,7 +19,6 @@ import CantDownload from './CantDownload';
 import Link from 'next/link';
 import { slugify } from 'helpers/articleHelper';
 import voterFileTypes from './VoterFileTypes';
-import { getUserCookie } from 'helpers/cookieHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -51,8 +49,6 @@ async function wakeUp() {
 export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
-
-  const user = getUserCookie(true);
 
   useEffect(() => {
     wakeUp();
@@ -183,22 +179,18 @@ export default function VoterRecordsPage(props) {
                         index2 === 2 ? 'hidden md:block' : ''
                       }${index2 === 1 ? 'hidden sm:block' : ''}`}
                     >
-                      {user.isAdmin ? (
-                        <Link
-                          href={
-                            file.isCustom
-                              ? `/dashboard/voter-records/custom-${slugify(
-                                  file.name,
-                                  true,
-                                )}`
-                              : `/dashboard/voter-records/${file.key.toLowerCase()}`
-                          }
-                        >
-                          {field}
-                        </Link>
-                      ) : (
-                        field
-                      )}
+                      <Link
+                        href={
+                          file.isCustom
+                            ? `/dashboard/voter-records/custom-${slugify(
+                                file.name,
+                                true,
+                              )}`
+                            : `/dashboard/voter-records/${file.key.toLowerCase()}`
+                        }
+                      >
+                        {field}
+                      </Link>
                     </div>
                   ))}
 
