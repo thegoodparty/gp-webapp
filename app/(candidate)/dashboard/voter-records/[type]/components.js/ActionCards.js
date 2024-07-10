@@ -11,7 +11,7 @@ function cardsByType(type, props) {
       <ReadMoreCard {...props} key="card3" />,
     ];
   }
-  if (type === 'directmail') {
+  if (type === 'directmail' || type === 'doorknocking') {
     cards = [
       <ScriptCard {...props} key="card1" />,
       <ReadMoreCard {...props} key="card3" />,
