@@ -660,16 +660,21 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    schedule: {
+      url: `${base}voter-data/voter-file/schedule`,
+      method: 'POST',
+      withAuth: true,
+    },
     canDownload: {
       url: `${base}voter-data/voter-file/can-download`,
       method: 'GET',
       withAuth: true,
     },
-    // count: {
-    //   url: `${base}voter-data/voter-file/count`, //admin
-    //   method: 'PUT',
-    //   withAuth: true,
-    // },
+    count: {
+      url: `${base}voter-data/voter-file/count`,
+      method: 'PUT',
+      withAuth: true,
+    },
   },
   payments: {
     createCheckoutSession: {
