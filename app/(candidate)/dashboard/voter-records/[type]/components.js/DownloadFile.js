@@ -8,8 +8,6 @@ export default function DownloadFile(props) {
   const [loading, setLoading] = useState(false);
   const { type, campaign, fileName, isCustom } = props;
 
-  console.log('props', props);
-
   const handleDownload = async () => {
     if (loading) {
       return;
