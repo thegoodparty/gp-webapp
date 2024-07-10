@@ -16,6 +16,9 @@ export default function ReadMoreCard({ type }) {
   if (type === 'directmail') {
     link = '/blog/tag/direct-mail';
   }
+  if (type === 'doorknocking') {
+    link = '/blog/tag/door-to-door-canvassing';
+  }
 
   console.log('link', link);
   console.log('type', type);
