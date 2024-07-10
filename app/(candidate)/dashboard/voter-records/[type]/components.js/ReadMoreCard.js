@@ -1,5 +1,4 @@
 import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
 import H3 from '@shared/typography/H3';
 import Overline from '@shared/typography/Overline';
 import Paper from '@shared/utils/Paper';
@@ -7,6 +6,19 @@ import Link from 'next/link';
 import { IoArrowForward } from 'react-icons/io5';
 
 export default function ReadMoreCard({ type }) {
+  let link = '#';
+  if (type === 'sms') {
+    link = '/blog/tag/smsmms-messaging';
+  }
+  if (type === 'telemarketing') {
+    link = '/blog/tag/phone-banking';
+  }
+  if (type === 'directmail') {
+    link = '/blog/tag/direct-mail';
+  }
+
+  console.log('link', link);
+  console.log('type', type);
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
@@ -17,7 +29,7 @@ export default function ReadMoreCard({ type }) {
           of curated content just for you.
         </Body2>
       </div>
-      <Link href={type === 'sms' ? '/blog/tag/smsmms-messaging' : '#'}>
+      <Link href={link}>
         <div className="mt-4 flex items-center justify-end">
           <div className="mr-2">Read More</div>
           <IoArrowForward />

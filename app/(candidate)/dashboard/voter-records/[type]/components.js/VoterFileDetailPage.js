@@ -5,6 +5,7 @@ import VideoSection from './VideoSection';
 import Paper from '@shared/utils/Paper';
 import ActionCards from './ActionCards';
 import VoterFileTypes from '../../components/VoterFileTypes';
+import VendorCards from './VendorCards';
 
 export default function VoterFileDetailPage(props) {
   const { type } = props;
@@ -21,10 +22,11 @@ export default function VoterFileDetailPage(props) {
     <DashboardLayout {...props}>
       <BackToAllFiles />
       <Hero {...props} fileName={fileName} />
-      <Paper className="mt-4">
+      <Paper className="my-4">
         <VideoSection {...props} />
         <ActionCards {...props} fileName={fileName} />
       </Paper>
+      <VendorCards {...props} type={type} />
     </DashboardLayout>
   );
 }
