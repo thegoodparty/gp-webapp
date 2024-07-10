@@ -20,8 +20,6 @@ export default function ReadMoreCard({ type }) {
     link = '/blog/tag/door-to-door-canvassing';
   }
 
-  console.log('link', link);
-  console.log('type', type);
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
