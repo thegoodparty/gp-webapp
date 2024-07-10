@@ -1,14 +1,24 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import TitleSection from '../../shared/TitleSection';
 import ContentTutorial from './ContentTutorial';
 import MyContent from './MyContent';
 import { getCookie } from 'helpers/cookieHelper';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 export default function ContentPage(props) {
   const [forceOpenModal, setForceOpenModal] = useState(false);
+  // check the query for showModal and then force modal
+  const searchParams = useSearchParams();
+  const modalParam = searchParams.get('showModal');
+  useEffect(() => {
+    if (modalParam) {
+      setForceOpenModal(true);
+    }
+  }, [modalParam]);
+
   const newContentCallback = () => {
     setForceOpenModal(true);
   };

@@ -17,13 +17,16 @@ import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { CircularProgress } from '@mui/material';
 import CantDownload from './CantDownload';
+import Link from 'next/link';
+import { slugify } from 'helpers/articleHelper';
+import voterFileTypes from './VoterFileTypes';
+import { getUserCookie } from 'helpers/cookieHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
 async function fetchVoterFile(type, customFilters) {
   try {
     const api = gpApi.voterData.getVoterFile;
-    console.log('customFilters', JSON.stringify(customFilters));
     const payload = {
       type,
       customFilters: customFilters ? JSON.stringify(customFilters) : undefined,
@@ -49,79 +52,7 @@ export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
 
-  const date = dateUsHelper(new Date());
-  const defaultFiles = [
-    {
-      key: 'full',
-      name: `Full Voter File - ${date}`,
-      fields: [
-        'Full voter file',
-        'Full voter file',
-        'All',
-        <Chip
-          key="all"
-          className="bg-gray-700 text-white"
-          label="ALL AVAILABLE VOTERS"
-        />,
-      ],
-    },
-    {
-      key: 'doorKnocking',
-      name: `Door Knocking - ${date}`,
-      fields: [
-        'Door Knocking',
-        'Door Knocking (Default)',
-        'All',
-        <Chip
-          key="all"
-          className="bg-gray-700 text-white"
-          label="ALL AVAILABLE ADDRESSES"
-        />,
-      ],
-    },
-    {
-      key: 'sms',
-      name: `SMS Texting - ${date}`,
-      fields: [
-        'SMS Texting',
-        'SMS Texting (Default)',
-        'All',
-        <Chip
-          key="all"
-          className="bg-gray-700 text-white"
-          label="ALL AVAILABLE PHONES"
-        />,
-      ],
-    },
-    {
-      key: 'directMail',
-      name: `Direct Mail - ${date}`,
-      fields: [
-        'Direct Mail',
-        'Direct Mail (Default)',
-        'All',
-        <Chip
-          key="all"
-          className="bg-gray-700 text-white"
-          label="ALL AVAILABLE ADDRESSES"
-        />,
-      ],
-    },
-    {
-      key: 'telemarketing',
-      name: `Telemarketing - ${date}`,
-      fields: [
-        'Telemarketing',
-        'Telemarketing (Default)',
-        'All',
-        <Chip
-          key="all"
-          className="bg-gray-700 text-white"
-          label="ALL AVAILABLE LANDLINES"
-        />,
-      ],
-    },
-  ];
+  const user = getUserCookie(true);
 
   useEffect(() => {
     wakeUp();
@@ -173,10 +104,10 @@ export default function VoterRecordsPage(props) {
   if (
     campaign.data?.customVoterFiles &&
     campaign.data?.customVoterFiles.length > 0 &&
-    defaultFiles.length === 5
+    voterFileTypes.length === 5
   ) {
     campaign.data?.customVoterFiles.forEach((file, i) => {
-      defaultFiles.push({
+      voterFileTypes.push({
         key: i,
         isCustom: true,
         name: file.name,
@@ -235,7 +166,7 @@ export default function VoterRecordsPage(props) {
                   <Overline>{header}</Overline>
                 </div>
               ))}
-              {defaultFiles.map((file, index) => (
+              {voterFileTypes.map((file, index) => (
                 <Fragment key={file.key}>
                   {file.fields.map((field, index2) => (
                     <div
@@ -252,7 +183,22 @@ export default function VoterRecordsPage(props) {
                         index2 === 2 ? 'hidden md:block' : ''
                       }${index2 === 1 ? 'hidden sm:block' : ''}`}
                     >
-                      {field}
+                      {user.isAdmin ? (
+                        <Link
+                          href={
+                            file.isCustom
+                              ? `/dashboard/voter-records/custom-${slugify(
+                                  file.name,
+                                  true,
+                                )}`
+                              : `/dashboard/voter-records/${file.key.toLowerCase()}`
+                          }
+                        >
+                          {field}
+                        </Link>
+                      ) : (
+                        field
+                      )}
                     </div>
                   ))}
 
