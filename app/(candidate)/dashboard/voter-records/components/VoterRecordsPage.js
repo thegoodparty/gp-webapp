@@ -22,7 +22,7 @@ import voterFileTypes from './VoterFileTypes';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
-async function fetchVoterFile(type, customFilters) {
+export async function fetchVoterFile(type, customFilters) {
   try {
     const api = gpApi.voterData.getVoterFile;
     const payload = {

@@ -24,11 +24,14 @@ export default async function Page({ params, searchParams }) {
     redirect('/dashboard');
   }
 
+  const isCustom = type.startsWith('custom-');
+
   const childProps = {
     pathname: '/dashboard/voter-records',
     user,
     campaign,
     type,
+    isCustom,
   };
 
   return <VoterFileDetailPage {...childProps} />;

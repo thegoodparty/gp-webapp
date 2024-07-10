@@ -57,7 +57,7 @@ function vendorsByType(type) {
 }
 
 export default function VendorCards(props) {
-  const { type } = props;
+  const { type, isCustom } = props;
 
   const vendors = vendorsByType(type);
 

@@ -38,8 +38,10 @@ function readMoreLink(type) {
 }
 
 export default function LearnAction(props) {
-  const { type } = props;
-  if (type.startsWith('custom-')) return null;
+  const { type, isCustom } = props;
+  if (isCustom) {
+    return null;
+  }
   const readLink = readMoreLink(type);
   cards[2].link = readLink;
   return (

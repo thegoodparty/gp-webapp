@@ -7,6 +7,7 @@ import Overline from '@shared/typography/Overline';
 import RecordCount from './RecordCount';
 import Chip from '@shared/utils/Chip';
 import slugify from 'slugify';
+import DownloadFile from './DownloadFile';
 
 export default function Hero(props) {
   const { type, campaign, fileName } = props;
@@ -52,12 +53,10 @@ export default function Hero(props) {
             Key data associated with this voter file.
           </Body2>
         </div>
-        <div className="mt-3 md:mt-0">
-          <PrimaryButton>Download CSV</PrimaryButton>
-        </div>
+        <DownloadFile {...props} />
       </div>
       <div className="mt-6 grid grid-cols-12 gap-4">
-        <div className=" col-span-12 md:col-span-6">
+        <div className=" col-span-12">
           <Paper>
             <Overline className="mb-2"># of Records</Overline>
             <RecordCount {...props} isCustom={isCustom} index={index} />

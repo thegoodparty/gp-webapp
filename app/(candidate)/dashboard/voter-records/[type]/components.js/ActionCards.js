@@ -45,8 +45,10 @@ function vendorsByType(type) {
 }
 
 export default function ActionCards(props) {
-  const { type } = props;
-  if (type.startsWith('custom-')) return null;
+  const { type, isCustom } = props;
+  if (isCustom) {
+    return null;
+  }
 
   const cards = cardsByType(type, props);
   const vendors = vendorsByType(type);
