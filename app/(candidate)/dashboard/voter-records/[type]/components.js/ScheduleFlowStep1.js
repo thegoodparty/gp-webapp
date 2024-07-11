@@ -28,7 +28,7 @@ export default function ScheduleFlowStep1({
     }
   }
   return (
-    <div className="p-4 w-[90vw] max-w-xl">
+    <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
         <H1>What is your budget?</H1>
         <Body1 className="mt-4 mb-8">
