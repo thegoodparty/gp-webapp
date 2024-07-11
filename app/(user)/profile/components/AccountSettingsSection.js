@@ -7,7 +7,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import { PaymentPortalButton } from '@shared/PaymentPortalButton';
 import H6 from '@shared/typography/H6';
 
-export const AccountSettingsSection = ({ isPro, enableProFlow }) => {
+export const AccountSettingsSection = ({ isPro }) => {
   const plan = isPro ? 'Pro plan' : 'Free plan';
   return (
     <section className="py-4 border-b border-slate-300 flex">
@@ -28,7 +28,7 @@ export const AccountSettingsSection = ({ isPro, enableProFlow }) => {
             <div className="left-side">
               <div className="font-medium mb-4">
                 Good Party - {plan}{' '}
-                {enableProFlow && !isPro && (
+                {!isPro && (
                   <Link className="underline" href="/dashboard/pro-sign-up">
                     Sign Up Today!
                   </Link>

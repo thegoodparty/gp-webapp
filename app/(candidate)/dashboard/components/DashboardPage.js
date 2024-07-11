@@ -44,7 +44,7 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
-  const { campaign, enableProFlow } = props;
+  const { campaign } = props;
   const [user, setUser] = useState({});
   const { metaData: userMetaData } = user || {};
   const { checkoutSessionId, customerId } = JSON.parse(userMetaData || '{}');
@@ -57,9 +57,9 @@ export default function DashboardPage(props) {
   const startedProCheckout =
     checkoutSessionId && !customerId && !subscriptionId;
   const subscriptionPending =
-    !checkoutSessionId && customerId && !subscriptionId;
+    checkoutSessionId && customerId && !subscriptionId;
 
-  const showProSignUpAlert = hasntEnteredProFlow;
+  const showProSignUpAlert = hasntEnteredProFlow || !isPro;
   const showCompleteProSignUpAlert = startedProCheckout;
   const showSubscriptionPendingAlert = subscriptionPending;
 
@@ -97,7 +97,6 @@ export default function DashboardPage(props) {
   const electionDate = details?.electionDate || goals?.electionDate;
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
-  // if primaryElectionDate passed, use electionDate
   const now = new Date();
   let resolvedDate = electionDate;
   if (primaryElectionDate && new Date(primaryElectionDate) > now) {
@@ -161,7 +160,7 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
-                {enableProFlow && !isPro && (
+                {!isPro && (
                   <>
                     {showProSignUpAlert && <ProSignUpAlert />}
                     {showCompleteProSignUpAlert && <CompleteProSignUpAlert />}
