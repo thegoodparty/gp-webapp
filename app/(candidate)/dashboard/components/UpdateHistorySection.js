@@ -98,7 +98,7 @@ export default function UpdateHistorySection(props) {
     },
   ]);
   return (
-    <section className="mt-12 mb-6">
+    <section className="mt-12 mb-6 max-w-[90vw] overflow-x-auto">
       <H3>Update history</H3>
 
       <Table
