@@ -3,8 +3,6 @@ import { fetchUserCampaign } from '../onboarding/shared/getCampaign';
 import DashboardPage from './components/DashboardPage';
 import candidateAccess from './shared/candidateAccess';
 
-const ENABLE_PRO_FLOW = process.env.NEXT_PUBLIC_PRO_FLOW;
-
 const meta = pageMetaData({
   title: 'Campaign Dashboard | GoodParty.org',
   description: 'Campaign Dashboard',
@@ -12,7 +10,7 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page({ params, searchParams }) {
+export default async function Page() {
   await candidateAccess();
   const { campaign } = await fetchUserCampaign();
   const { candidateSlug } = campaign;
@@ -21,7 +19,6 @@ export default async function Page({ params, searchParams }) {
     pathname: '/dashboard',
     candidateSlug,
     campaign,
-    enableProFlow: ENABLE_PRO_FLOW,
   };
   return <DashboardPage {...childProps} />;
 }
