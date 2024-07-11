@@ -9,8 +9,6 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { updateUser } from 'helpers/userHelper';
 
-const REDIRECT_COUNTDOWN_SECONDS = 10;
-
 const doRedirect = async () => {
   try {
     const { redirectUrl } =
@@ -26,8 +24,8 @@ const doRedirect = async () => {
   }
 };
 
-const PurchaseRedirectPage = ({ campaign }) => {
-  const [countdown, setCountdown] = useState(REDIRECT_COUNTDOWN_SECONDS);
+const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
+  const [countdown, setCountdown] = useState(redirectDelaySecs);
 
   useEffect(() => {
     if (countdown === 0) {
