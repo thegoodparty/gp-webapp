@@ -8,7 +8,7 @@ const defaultFileTypes = [
     name: `Voter File - ${date}`,
     fields: [
       'Voter file (All Fields)',
-      'Voter file (All Fields)',
+      'Voter file',
       'All',
       <Chip
         key="all"
@@ -21,8 +21,8 @@ const defaultFileTypes = [
     key: 'doorKnocking',
     name: `Door Knocking - ${date}`,
     fields: [
-      'Door Knocking',
       'Door Knocking (Default)',
+      'Door Knocking',
       'All',
       <Chip
         key="all"
@@ -35,8 +35,8 @@ const defaultFileTypes = [
     key: 'sms',
     name: `SMS Texting - ${date}`,
     fields: [
-      'Texting',
       'Texting (Default)',
+      'Texting',
       'All',
       <Chip
         key="all"
@@ -49,8 +49,8 @@ const defaultFileTypes = [
     key: 'directMail',
     name: `Direct Mail - ${date}`,
     fields: [
-      'Direct Mail',
       'Direct Mail (Default)',
+      'Direct Mail',
       'All',
       <Chip
         key="all"
@@ -63,8 +63,8 @@ const defaultFileTypes = [
     key: 'telemarketing',
     name: `Telemarketing - ${date}`,
     fields: [
-      'Phone Banking',
       'Phone Banking (Default)',
+      'Phone Banking',
       'All',
       <Chip
         key="all"
