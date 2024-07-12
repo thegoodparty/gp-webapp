@@ -7,6 +7,8 @@ import ActionCards from './ActionCards';
 import VoterFileTypes from '../../components/VoterFileTypes';
 import VendorCards from './VendorCards';
 import { slugify } from 'helpers/articleHelper';
+import H2 from '@shared/typography/H2';
+import Body2 from '@shared/typography/Body2';
 
 export default function VoterFileDetailPage(props) {
   const { type, campaign, isCustom } = props;
@@ -39,9 +41,13 @@ export default function VoterFileDetailPage(props) {
     <DashboardLayout {...props}>
       <BackToAllFiles />
       <Hero {...props} fileName={fileName} />
-      {(!isCustom || type === 'full') && (
+      {!isCustom && type !== 'full' && (
         <>
           <Paper className="my-4">
+            <H2>Learn &amp; Take Action</H2>
+            <Body2 className="mt-1 mb-4 text-gray-600">
+              Review the content below to get the most out of this voter file
+            </Body2>
             {/* <VideoSection {...props} /> */}
             <ActionCards {...props} fileName={fileName} />
           </Paper>

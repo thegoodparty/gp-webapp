@@ -46,10 +46,6 @@ export default function LearnAction(props) {
   cards[2].link = readLink;
   return (
     <>
-      <H2>Learn &amp; Take Action</H2>
-      <Body2 className="mt-1 mb-4 text-gray-600">
-        Review the content below to get the most out of this voter file
-      </Body2>
       <div className=" bg-neutral-background border border-slate-300 h-[420px] rounded-2xl flex justify-center items-center">
         <FaCirclePlay size={120} className="text-neutral" />
       </div>
