@@ -22,6 +22,7 @@ function vendorsByType(type) {
         subTitle: 'High-Impact Direct Mail Campaigns',
         description:
           'Our political direct mail templates are field tested and professionally designed to have a profound impact on voters, and propel your campaign to victory.',
+        label: 'Progressive-Leaning',
       },
     ];
   }
@@ -50,6 +51,7 @@ function vendorsByType(type) {
         subTitle: 'Expanding Advocacy',
         description:
           "Whether you're running for local office, organizing a community initiative, running a membership organization, or targeting donors, Universe has the outreach tools you need - all linked to a single, easy-to-search supporter database",
+        label: 'Progressive-Leaning',
       },
     ];
   }
