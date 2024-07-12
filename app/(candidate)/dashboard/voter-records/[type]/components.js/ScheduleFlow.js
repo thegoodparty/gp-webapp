@@ -30,7 +30,7 @@ export default function ScheduleFlow(props) {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     step: 1,
-    budget: 0,
+    budget: false,
     voicemail: undefined,
   });
 

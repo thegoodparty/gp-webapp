@@ -39,6 +39,8 @@ export default function ScheduleFlowStep2({
       price = 0.55;
     }
   }
+
+  console.log('res', count * price, numberFormatter(count * price));
   return (
     <div className="p-4 w-[80vw] max-w-4xl">
       <div className="text-center">
@@ -54,7 +56,7 @@ export default function ScheduleFlowStep2({
           </span>
           . AN Estimated cost of{' '}
           <span className="font-bold text-black">
-            ${(numberFormatter(count) * price).toFixed(2)}
+            ${(count * price).toFixed(2)}
           </span>
         </div>
         <div className="text-left">
