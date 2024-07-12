@@ -30,7 +30,7 @@ export default function ScheduleFlowStep3({
   const [options, setOptions] = useState([]);
   useEffect(() => {
     if (campaign) {
-      let nonDefaultScripts = campaign.aiContent;
+      let nonDefaultScripts = campaign.aiContent || {};
       // filter default scripts nonDefaultScripts is an object
       defaultScripts.forEach((script) => {
         delete nonDefaultScripts[script];
