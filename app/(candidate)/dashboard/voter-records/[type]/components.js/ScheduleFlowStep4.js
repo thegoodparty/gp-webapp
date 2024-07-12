@@ -37,7 +37,7 @@ export default function ScheduleFlowStep4({
   const isTel = type === 'telemarketing';
   const today = new Date();
   const futureDate = new Date(today);
-  futureDate.setDate(today.getDate() + 2);
+  futureDate.setDate(today.getDate() + 3);
   const minDate = futureDate.toISOString().split('T')[0];
   return (
     <div className="p-4 w-[80vw] max-w-xl">
