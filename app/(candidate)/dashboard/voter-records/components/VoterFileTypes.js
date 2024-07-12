@@ -5,10 +5,10 @@ const date = dateUsHelper(new Date());
 const defaultFileTypes = [
   {
     key: 'full',
-    name: `Full Voter File - ${date}`,
+    name: `Voter File - ${date}`,
     fields: [
-      'Full voter file',
-      'Full voter file',
+      'Voter file (All Fields)',
+      'Voter file (All Fields)',
       'All',
       <Chip
         key="all"
@@ -35,8 +35,8 @@ const defaultFileTypes = [
     key: 'sms',
     name: `SMS Texting - ${date}`,
     fields: [
-      'SMS Texting',
-      'SMS Texting (Default)',
+      'Texting',
+      'Texting (Default)',
       'All',
       <Chip
         key="all"
@@ -63,8 +63,8 @@ const defaultFileTypes = [
     key: 'telemarketing',
     name: `Telemarketing - ${date}`,
     fields: [
-      'Telemarketing',
-      'Telemarketing (Default)',
+      'Phone Banking',
+      'Phone Banking (Default)',
       'All',
       <Chip
         key="all"

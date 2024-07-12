@@ -15,6 +15,7 @@ export default function ScheduleFlowStep2({
   type,
   withVoicemail,
   audience,
+  isCustom,
 }) {
   const [count, setCount] = useState(0);
 
@@ -24,7 +25,9 @@ export default function ScheduleFlowStep2({
     const selectedAudience = Object.keys(newState).filter(
       (key) => newState[key],
     );
-    const res = await countVoterFile('custom', { filters: selectedAudience });
+    const res = await countVoterFile(isCustom ? 'custom' : type, {
+      filters: selectedAudience,
+    });
     setCount(res?.count);
   };
 
