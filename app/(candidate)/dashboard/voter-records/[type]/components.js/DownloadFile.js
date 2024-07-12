@@ -48,7 +48,7 @@ export default function DownloadFile(props) {
 
   return (
     <div className="mt-3 md:mt-0">
-      <PrimaryButton disabled={loading} onClick={handleDownload}>
+      <PrimaryButton disabled={loading} onClick={handleDownload} fullWidth>
         Download CSV
       </PrimaryButton>
     </div>
