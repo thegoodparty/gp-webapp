@@ -33,7 +33,7 @@ export default function VoterFileDetailPage(props) {
 
   const file = fileByKey[type];
   const { fields } = file || {};
-  const fileName = isCustom ? fields[1] : file?.name;
+  const fileName = fields[1];
 
   return (
     <DashboardLayout {...props}>
