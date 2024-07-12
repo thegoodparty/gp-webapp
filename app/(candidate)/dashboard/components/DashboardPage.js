@@ -19,6 +19,9 @@ import TrackerTutorial from './TrackerTutorial';
 import { getCookie } from 'helpers/cookieHelper';
 import EmptyState from './EmptyState';
 import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAlert';
+import { CompleteProSignUpAlert } from 'app/(candidate)/dashboard/components/CompleteProSignUpAlert';
+import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/components/PendingProSignUpAlert';
+import { updateUser } from 'helpers/userHelper';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -41,15 +44,43 @@ export async function fetchUpdateHistory() {
 }
 
 export default function DashboardPage(props) {
-  const { campaign, enableProFlow } = props;
+  const { campaign } = props;
+  const [user, setUser] = useState({});
+  const { metaData: userMetaData } = user || {};
+  const { checkoutSessionId, customerId } = JSON.parse(userMetaData || '{}');
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
+  const { primaryElectionDate, subscriptionId } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
+
+  const hasntEnteredProFlow =
+    !checkoutSessionId && !customerId && !subscriptionId;
+  const startedProCheckout =
+    checkoutSessionId && !customerId && !subscriptionId;
+  const subscriptionPending =
+    checkoutSessionId && customerId && !subscriptionId;
+
+  const showProSignUpAlert = hasntEnteredProFlow || !isPro;
+  const showCompleteProSignUpAlert = startedProCheckout;
+  const showSubscriptionPendingAlert = subscriptionPending;
 
   const [state, setState] = useState({
     doorKnocking: reportedVoterGoals?.doorKnocking || 0,
     calls: reportedVoterGoals?.calls || 0,
     digital: reportedVoterGoals?.digital || 0,
   });
+
+  const loadHistory = async () => {
+    const res = await fetchUpdateHistory();
+    setUpdateHistory(res.updateHistory);
+  };
+
+  // TODO: we're only having to do this, because we're caching the user object in the cookie and
+  //  accessing it from there, instead of the source of truth, the DB.
+  //  What we should be doing is fetching the user object from the server on each route change,
+  //  and then we won't have to do this.
+  const updateUserCookie = async () => {
+    setUser((await updateUser()) || {});
+  };
 
   useEffect(() => {
     if (campaign) {
@@ -59,19 +90,13 @@ export default function DashboardPage(props) {
         digital: reportedVoterGoals?.digital || 0,
       });
       loadHistory();
+      updateUserCookie();
     }
   }, [campaign]);
 
-  const loadHistory = async () => {
-    const res = await fetchUpdateHistory();
-    setUpdateHistory(res.updateHistory);
-  };
-
   const electionDate = details?.electionDate || goals?.electionDate;
-  const { primaryElectionDate } = details || {};
   const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
-  // if primaryElectionDate passed, use electionDate
   const now = new Date();
   let resolvedDate = electionDate;
   if (primaryElectionDate && new Date(primaryElectionDate) > now) {
@@ -79,7 +104,6 @@ export default function DashboardPage(props) {
   }
 
   const weeksUntil = weeksTill(resolvedDate);
-  // const weeksUntil = { weeks: -1, days: 6 };
 
   const dateRange = weekRangeFromDate(resolvedDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal);
@@ -136,7 +160,15 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
-                {enableProFlow && !isPro && <ProSignUpAlert />}
+                {!isPro && (
+                  <>
+                    {showProSignUpAlert && <ProSignUpAlert />}
+                    {showCompleteProSignUpAlert && <CompleteProSignUpAlert />}
+                    {showSubscriptionPendingAlert && (
+                      <PendingProSubscriptionAlert />
+                    )}
+                  </>
+                )}
                 <TitleSection
                   title="Campaign Tracker"
                   subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."

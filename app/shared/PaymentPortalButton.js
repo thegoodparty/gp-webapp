@@ -21,9 +21,7 @@ export const PaymentPortalButton = ({
   const onClick = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const portalResult = await gpFetch(
-      gpApi.payments.getPortalSessionRedirectUrl,
-    );
+    const portalResult = await gpFetch(gpApi.payments.createPortalSession);
     const { redirectUrl: portalRedirectUrl } = portalResult || {};
     if (!portalRedirectUrl) {
       throw new Error('No portal redirect url found');

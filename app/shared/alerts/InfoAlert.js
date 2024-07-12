@@ -15,6 +15,7 @@ export const InfoAlert = ({ children, className = '', ...restProps }) => (
       [&>div.MuiAlert-icon]:mr-4
       [&>div.MuiAlert-icon]:block
       [&>div.MuiAlert-icon]:h-fit
+      [&>div.MuiAlert-message]:flex-grow
       ${className}
     `}
     severity="info"

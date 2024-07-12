@@ -7,11 +7,13 @@ import gpFetch from 'gpApi/gpFetch';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { updateUser } from 'helpers/userHelper';
 
 const doRedirect = async () => {
   try {
     const { redirectUrl } =
-      (await gpFetch(gpApi.payments.createCheckoutSession)) || {};
+      (await gpFetch(gpApi.payments.createCheckoutSession, null, false)) || {};
+    await updateUser();
     if (redirectUrl) {
       window.location.href = redirectUrl;
     } else {
@@ -22,15 +24,15 @@ const doRedirect = async () => {
   }
 };
 
-const PurchaseRedirectPage = ({ campaign }) => {
-  const [countdown, setCountdown] = useState(10);
+const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
+  const [countdown, setCountdown] = useState(redirectDelaySecs);
 
   useEffect(() => {
     if (countdown === 0) {
-      return doRedirect();
+      doRedirect();
+    } else {
+      setTimeout(() => setCountdown(countdown - 1), 1000);
     }
-    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-    return () => clearTimeout(timer);
   }, [countdown]);
 
   return (
