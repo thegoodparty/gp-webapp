@@ -31,7 +31,7 @@ export const numberNth = (number) => {
   return `${num}th`;
 };
 
-export const numberFormatter = (num) => {
+export const numberFormatter = (num, fixed = 0) => {
   if (isNaN(num)) {
     return 0;
   }
@@ -40,7 +40,7 @@ export const numberFormatter = (num) => {
     num = parseFloat(num);
   }
   return `${num
-    .toFixed(0)
+    .toFixed(fixed)
     .replace(/./g, (c, i, a) =>
       i && c !== '.' && (a.length - i) % 3 === 0 ? `,${c}` : c,
     )}`;

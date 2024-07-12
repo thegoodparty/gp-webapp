@@ -55,7 +55,7 @@ export default function ScheduleFlowStep2({
           </span>
           . AN Estimated cost of{' '}
           <span className="font-bold text-black">
-            ${(count * price).toFixed(2)}
+            ${numberFormatter(count * price, 2)}
           </span>
         </div>
         <div className="text-left">
