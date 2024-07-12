@@ -39,7 +39,7 @@ export default function VoterFileDetailPage(props) {
     <DashboardLayout {...props}>
       <BackToAllFiles />
       <Hero {...props} fileName={fileName} />
-      {!isCustom && (
+      {(!isCustom || type === 'full') && (
         <>
           <Paper className="my-4">
             {/* <VideoSection {...props} /> */}
