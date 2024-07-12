@@ -14,13 +14,13 @@ export default function ScheduleFlowStep2({
   backCallback,
   type,
   withVoicemail,
+  audience,
 }) {
-  const [state, setState] = useState({});
   const [count, setCount] = useState(0);
 
   const handleChangeAudience = async (newState) => {
     onChangeCallback('audience', newState);
-    setState(newState);
+    // setState(newState);
     const selectedAudience = Object.keys(newState).filter(
       (key) => newState[key],
     );
@@ -29,7 +29,7 @@ export default function ScheduleFlowStep2({
   };
 
   const canContinue = () => {
-    return count !== 0 && Object.values(state).some((value) => value);
+    return count !== 0 && Object.values(audience).some((value) => value);
   };
   let isTel = type === 'telemarketing';
   let price = 0.03;
@@ -40,7 +40,6 @@ export default function ScheduleFlowStep2({
     }
   }
 
-  console.log('res', count * price, numberFormatter(count * price));
   return (
     <div className="p-4 w-[80vw] max-w-4xl">
       <div className="text-center">

@@ -32,6 +32,8 @@ export default function ScheduleFlow(props) {
     step: 1,
     budget: false,
     voicemail: undefined,
+    audience: {},
+    script: false,
   });
 
   const handleChange = (key, value) => {
@@ -63,6 +65,8 @@ export default function ScheduleFlow(props) {
     setState({
       step: 1,
       budget: 0,
+      audience: {},
+      script: false,
     });
   };
 
@@ -102,9 +106,12 @@ export default function ScheduleFlow(props) {
             {...childProps}
             {...props}
             withVoicemail={!!state.voicemail}
+            audience={state.audience}
           />
         )}
-        {state.step === 3 && <ScheduleFlowStep3 {...childProps} {...props} />}
+        {state.step === 3 && (
+          <ScheduleFlowStep3 {...childProps} {...props} script={state.script} />
+        )}
         {state.step === 4 && <ScheduleFlowStep4 {...childProps} {...props} />}
         {state.step === 5 && <ScheduleFlowStep5 {...childProps} {...props} />}
       </Modal>

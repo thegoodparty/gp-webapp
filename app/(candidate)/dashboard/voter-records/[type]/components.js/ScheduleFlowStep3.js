@@ -25,9 +25,9 @@ export default function ScheduleFlowStep3({
   nextCallback,
   backCallback,
   campaign,
+  script,
 }) {
   const [options, setOptions] = useState([]);
-  const [selectedScript, setSelectedScript] = useState(false);
   useEffect(() => {
     if (campaign) {
       let nonDefaultScripts = campaign.aiContent;
@@ -44,7 +44,6 @@ export default function ScheduleFlowStep3({
   }, [campaign]);
 
   const handleSelect = (key) => {
-    setSelectedScript(key);
     onChangeCallback('script', key);
   };
 
@@ -64,7 +63,8 @@ export default function ScheduleFlowStep3({
         <div className="mt-6 text-left">
           <Select
             native
-            value={selectedScript?.name}
+            value={script?.key}
+            defaultValue={script?.key}
             fullWidth
             required
             variant="outlined"
@@ -86,7 +86,7 @@ export default function ScheduleFlowStep3({
             <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
           </div>
           <div className="col-span-6 text-right mt-6">
-            <PrimaryButton onClick={nextCallback} disabled={!selectedScript}>
+            <PrimaryButton onClick={nextCallback} disabled={!script}>
               Next
             </PrimaryButton>
           </div>
