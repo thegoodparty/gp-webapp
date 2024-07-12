@@ -18,7 +18,13 @@ export default function VendorCard({
     <Paper className="h-full flex flex-col justify-between">
       <div>
         <div className="flex justify-between items-start">
-          <Image src={logo} alt={name} width={64} height={64} />
+          <Image
+            src={logo}
+            alt={name}
+            width={64}
+            height={64}
+            className="rounded-lg"
+          />
           {label && (
             <Chip className="bg-primary text-white uppercase" label={label} />
           )}
@@ -27,12 +33,12 @@ export default function VendorCard({
         <Body2 className="text-gray-600 mt-1">{subTitle}</Body2>
         <Body2 className="mt-4">{description}</Body2>
       </div>
-      <Link href={url}>
+      <a href={url} target="_blank" rel="noopener noreferrer nofollow">
         <div className="mt-4 flex items-center justify-end">
           <div className="mr-2">Read More</div>
           <IoArrowForward />
         </div>
-      </Link>
+      </a>
     </Paper>
   );
 }
