@@ -19,7 +19,9 @@ export default function VendorCard({
       <div>
         <div className="flex justify-between items-start">
           <Image src={logo} alt={name} width={64} height={64} />
-          {label && <Chip className="bg-primary text-white" label={label} />}
+          {label && (
+            <Chip className="bg-primary text-white uppercase" label={label} />
+          )}
         </div>
         <H3 className="mt-4">{name}</H3>
         <Body2 className="text-gray-600 mt-1">{subTitle}</Body2>
