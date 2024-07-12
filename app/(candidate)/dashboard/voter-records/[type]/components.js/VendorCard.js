@@ -17,7 +17,7 @@ export default function VendorCard({
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between">
           <Image src={logo} alt={name} width={64} height={64} />
           {label && <Chip className="bg-primary text-white" label={label} />}
         </div>
