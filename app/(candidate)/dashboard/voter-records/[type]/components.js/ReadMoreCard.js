@@ -7,17 +7,22 @@ import { IoArrowForward } from 'react-icons/io5';
 
 export default function ReadMoreCard({ type }) {
   let link = '#';
+  let typeText = '';
   if (type === 'sms') {
+    typeText = 'texting';
     link = '/blog/tag/smsmms-messaging';
   }
   if (type === 'telemarketing') {
     link = '/blog/tag/phone-banking';
+    typeText = 'phone banking';
   }
   if (type === 'directmail') {
     link = '/blog/tag/direct-mail';
+    typeText = 'direct mail';
   }
   if (type === 'doorknocking') {
     link = '/blog/tag/door-to-door-canvassing';
+    typeText = 'door knocking';
   }
 
   return (
@@ -26,8 +31,8 @@ export default function ReadMoreCard({ type }) {
         <H3>Read more on our blog</H3>
         <Overline className="text-gray-600 mb-4">Learning</Overline>
         <Body2>
-          Want to learn more about phone banking? GoodParty.org has a collection
-          of curated content just for you.
+          Want to learn more about {typeText} campaigns? GoodParty.org has a
+          collection of curated content just for you.
         </Body2>
       </div>
       <Link href={link}>

@@ -7,15 +7,25 @@ import Link from 'next/link';
 import { IoArrowForward } from 'react-icons/io5';
 
 export default function ScriptCard({ type }) {
+  let typeText = '';
+  if (type === 'sms') {
+    typeText = 'text';
+  }
+  if (type === 'telemarketing') {
+    typeText = 'phone banking';
+  }
+
+  if (type === 'doorknocking') {
+    typeText = 'door-knocking';
+  }
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
         <H3>Create a script</H3>
         <Overline className="text-gray-600 mb-4">Tools</Overline>
         <Body2>
-          Use GoodParty.org&apos;s content builder to write a phone banking
-          script. When you are done, you can attach that script to this
-          campaign.
+          Use GoodParty.org&apos;s content builder to write a {typeText} script.
+          When you are done, you can attach that script to this campaign.
         </Body2>
       </div>
       <Link href="/dashboard/content?showModal=true">

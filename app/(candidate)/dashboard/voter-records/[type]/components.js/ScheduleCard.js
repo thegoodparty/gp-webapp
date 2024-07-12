@@ -6,15 +6,26 @@ import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlow from './ScheduleFlow';
 
 export default function ScheduleCard(props) {
+  const { type } = props;
+  let typeText = '';
+  if (type === 'sms') {
+    typeText = 'text';
+  }
+  if (type === 'telemarketing') {
+    typeText = 'phone banking';
+  }
+
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
         <H3>Schedule a campaign</H3>
         <Overline className="text-gray-600 mb-4">Resources</Overline>
         <Body2>
-          Connect with our Politics team to schedule a phone banking campaign.
-          Attach your script and pay just $.04 per outbound call. Automatically
-          leave voicemails for one and a half cents.
+          Connect with our Politics team to schedule a {typeText} campaign.
+          Attach your script and pay just{' '}
+          {type === 'sms'
+            ? '$.03 per text or less. Replies are free.'
+            : '$.04 per outbound call. Automatically leave voicemails for one and a half cents.'}
         </Body2>
       </div>
       <ScheduleFlow {...props} />

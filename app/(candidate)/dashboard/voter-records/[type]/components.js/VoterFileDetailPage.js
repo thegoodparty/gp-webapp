@@ -42,7 +42,7 @@ export default function VoterFileDetailPage(props) {
       {!isCustom && (
         <>
           <Paper className="my-4">
-            <VideoSection {...props} />
+            {/* <VideoSection {...props} /> */}
             <ActionCards {...props} fileName={fileName} />
           </Paper>
           <VendorCards {...props} type={type} />
