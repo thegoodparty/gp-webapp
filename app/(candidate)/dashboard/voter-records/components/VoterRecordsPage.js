@@ -188,6 +188,11 @@ export default function VoterRecordsPage(props) {
                               )}`
                             : `/dashboard/voter-records/${file.key.toLowerCase()}`
                         }
+                        className={`${
+                          index2 === 0
+                            ? 'text-info underline hover:text-info-dark'
+                            : ''
+                        }`}
                       >
                         {field}
                       </Link>
