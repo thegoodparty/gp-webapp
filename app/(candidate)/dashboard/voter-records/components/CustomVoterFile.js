@@ -66,7 +66,7 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
           setOpen(true);
         }}
       >
-        Create custom voter file
+        Create a custom voter file
       </PrimaryButton>
       <Modal closeCallback={handleClose} open={open}>
         {!showAudience ? (

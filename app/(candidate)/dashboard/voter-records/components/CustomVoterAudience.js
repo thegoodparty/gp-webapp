@@ -95,7 +95,7 @@ export default function CustomVoterAudience({
       },
     ]);
     trackEvent('Custom Voter file created', { newFile });
-    customCreatedCallback();
+    await customCreatedCallback();
     setState({});
     setLoading(false);
   };

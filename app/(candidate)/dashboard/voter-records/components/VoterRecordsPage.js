@@ -49,10 +49,45 @@ async function wakeUp() {
 export default function VoterRecordsPage(props) {
   const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
+  const addCustomVoterFiles = () => {
+    if (
+      campaign.data?.customVoterFiles &&
+      campaign.data?.customVoterFiles.length > 0
+    ) {
+      let updatedFiles = [...voterFileTypes];
+
+      campaign.data?.customVoterFiles.forEach((file, i) => {
+        updatedFiles.push({
+          key: i,
+          isCustom: true,
+          name: file.name,
+          fields: [
+            file.name,
+            file.channel,
+            file.purpose || '',
+            <Chip
+              key="custom"
+              className="bg-orange-700 text-white"
+              label="CUSTOM VOTER FILE"
+            />,
+          ],
+        });
+      });
+      return updatedFiles;
+    }
+    return voterFileTypes;
+  };
+  const withCustom = addCustomVoterFiles();
+  const [voterFiles, setVoterFiles] = useState(withCustom);
 
   useEffect(() => {
     wakeUp();
   }, []);
+
+  useEffect(() => {
+    const updatedFiles = addCustomVoterFiles();
+    setVoterFiles(updatedFiles);
+  }, [campaign]);
 
   const handleDownload = async (type, isCustom, name, index) => {
     if (loading) {
@@ -97,29 +132,6 @@ export default function VoterRecordsPage(props) {
     setCampaign(res.campaign);
   };
 
-  if (
-    campaign.data?.customVoterFiles &&
-    campaign.data?.customVoterFiles.length > 0 &&
-    voterFileTypes.length === 5
-  ) {
-    campaign.data?.customVoterFiles.forEach((file, i) => {
-      voterFileTypes.push({
-        key: i,
-        isCustom: true,
-        name: file.name,
-        fields: [
-          file.name,
-          file.channel,
-          file.purpose || '',
-          <Chip
-            key="custom"
-            className="bg-orange-700 text-white"
-            label="CUSTOM VOTER FILE"
-          />,
-        ],
-      });
-    });
-  }
   return (
     <DashboardLayout {...props}>
       <Paper className="md:p-6">
@@ -162,7 +174,7 @@ export default function VoterRecordsPage(props) {
                   <Overline>{header}</Overline>
                 </div>
               ))}
-              {voterFileTypes.map((file, index) => (
+              {voterFiles.map((file, index) => (
                 <Fragment key={file.key}>
                   {file.fields.map((field, index2) => (
                     <div
