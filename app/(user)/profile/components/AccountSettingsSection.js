@@ -19,7 +19,7 @@ export const AccountSettingsSection = ({ isPro }) => {
         <Body2 className="text-indigo-600 mb-6">
           See information regarding your current plan.
         </Body2>
-        <H6>CurrentPlan</H6>
+        <H6>Current Plan</H6>
         <Body2 className="text-indigo-600 mb-4">
           Manage and change your plan.
         </Body2>
