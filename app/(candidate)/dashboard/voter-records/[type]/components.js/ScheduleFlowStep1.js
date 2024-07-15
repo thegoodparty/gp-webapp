@@ -24,7 +24,7 @@ export default function ScheduleFlowStep1({
   if (type === 'telemarketing') {
     price = 0.04;
     if (voicemailValue) {
-      price = 0.55;
+      price = 0.055;
     }
   }
   return (
