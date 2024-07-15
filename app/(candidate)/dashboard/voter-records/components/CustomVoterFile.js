@@ -11,7 +11,7 @@ const fields = [
   {
     id: 'channel',
     label: 'Channel *',
-    options: ['Direct Mail', 'Door Knocking', 'SMS Texting', 'Telemarketing'],
+    options: ['Direct Mail', 'Door Knocking', 'Texting', 'Phone Banking'],
   },
   {
     id: 'purpose',
