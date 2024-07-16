@@ -23,7 +23,7 @@ export default function VendorCard({
             alt={name}
             width={64}
             height={64}
-            className="rounded-lg"
+            className="rounded-2xl"
           />
           {label && (
             <Chip className="bg-primary text-white uppercase" label={label} />
