@@ -60,17 +60,18 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
   };
 
   return (
-    <div className="col-span-12 md:col-span-6 md:flex md:justify-end md:items-center">
+    <>
       <PrimaryButton
         onClick={() => {
           setOpen(true);
         }}
+        className="w-full md:w-auto"
       >
         Create a custom voter file
       </PrimaryButton>
       <Modal closeCallback={handleClose} open={open}>
         {!showAudience ? (
-          <div className="w-[90vw] max-w-xl p-2 md:p-8">
+          <div className="w-[80vw] max-w-xl p-2 md:p-8">
             <div>
               <div className=" text-center">
                 <H1 className="mb-4">Voter File Assistant</H1>
@@ -130,6 +131,6 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
           />
         )}
       </Modal>
-    </div>
+    </>
   );
 }
