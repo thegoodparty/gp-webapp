@@ -8,8 +8,10 @@ import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyPr
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { updateUser } from 'helpers/userHelper';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
-const doRedirect = async () => {
+const doRedirect = async (currentTimeoutId) => {
+  clearTimeout(currentTimeoutId);
   try {
     const { redirectUrl } =
       (await gpFetch(gpApi.payments.createCheckoutSession, null, false)) || {};
@@ -26,12 +28,14 @@ const doRedirect = async () => {
 
 const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
   const [countdown, setCountdown] = useState(redirectDelaySecs);
+  const [currentTimeoutId, setCurrentTimeoutId] = useState(null);
 
   useEffect(() => {
     if (countdown === 0) {
-      doRedirect();
+      doRedirect(currentTimeoutId);
     } else {
-      setTimeout(() => setCountdown(countdown - 1), 1000);
+      clearTimeout(currentTimeoutId);
+      setCurrentTimeoutId(setTimeout(() => setCountdown(countdown - 1), 1000));
     }
   }, [countdown]);
 
@@ -58,6 +62,12 @@ const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
           <p className="text-sm font-semibold mb-6">
             Redirecting in {countdown} seconds...
           </p>
+          <PrimaryButton
+            className="w-full md:w-auto"
+            onClick={() => doRedirect(currentTimeoutId)}
+          >
+            Go to Stripe
+          </PrimaryButton>
         </div>
       )}
     </FocusedExperienceWrapper>
