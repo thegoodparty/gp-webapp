@@ -2,18 +2,15 @@
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 import H1 from '@shared/typography/H1';
-import { MdFlag, MdPeople, MdPerson, MdTask } from 'react-icons/md';
+import { MdFlag, MdPeople, MdPerson } from 'react-icons/md';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Body1 from '@shared/typography/Body1';
-import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar';
-import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody';
-import { ErrorAlert } from '@shared/alerts/ErrorAlert';
-import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Link from 'next/link';
 import { TermAndTerminationText } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText';
+import { ServiceAgreementSignatureSection } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection';
 
 const ACKNOWLEDGEMENTS = [
   {
@@ -32,55 +29,6 @@ const ACKNOWLEDGEMENTS = [
     body: 'By signing and agreeing to this Services Agreement, the Data User, certifies that he/she will use any voter file data made accessible to him/her by Good Party LLC, in conformance with all federal, state and local laws whether statutory, regulatory or common law governing use of voter file data in the state or states from which those data are drawn. Data User certifies that voter data use is limited to support for political campaigns and public affairs advocacy. The Data User represents and warrants that he/she has informed himself/herself of all such applicable laws and will use the data provided only in conformity therewith. Data User shall be solely responsible for informing themself of the legal restrictions governing the user of registered voter data and shall abide by all such restrictions. The Data User further acknowledges his/her awareness of special rules for the use of cell phone numbers as governed by the Telephone Consumer Protection Act promulgated by the Federal Communications Commission. Data User represents and warrants that no data supplied by Good Party LLC will be used for immoral or illegal purposes. Good Party LLC provides no warranty, express or implied, as to the accuracy, reliability, utility or completeness of such information. The voter file data is provided on an "AS IS" basis. All warranties of any kind, express or implied, including but not limited to the IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, freedom from contamination by computer viruses and non-infringement of proprietary rights ARE DISCLAIMED. Data User should be aware that voter file data can quickly become out-of-date. Data User assumes all responsibility and risk for his/her use of the voter file data provided herein. The Data User shall defend, indemnify, and hold harmless, Good Party LLC and its affiliates and their respective directors, officers, employees, and agents from and against all claims and expenses, including attorneys\' fees and court costs, arising out of the any use by Data User of the voter file data supplied herein. The data downloaded from this platform is the exclusive property of L2 INC. Good Party LLC is a licensee. Data User has been granted a limited non-exclusive license to utilize the data downloaded from L2\'s platform for the allowable purposes. Data User acknowledges that legal privacy requirements may result in individuals requesting that Good Party LLC remove identifying information from its records and share that deletion request with Data User. Good Party LLC will comply with all such requests and Data User agrees to comply with removal of relevant records from its licensed copy of Good Party’s data as provided under this agreement.',
   },
 ];
-
-const ServiceAgreementSignatureSection = ({
-  show,
-  signature,
-  onChange = () => {},
-  disableScrollTo = false,
-}) => {
-  const [scrolledTo, setScrolledTo] = useState(disableScrollTo);
-  const titleBarRef = useRef(null);
-
-  useEffect(() => {
-    if (show && !scrolledTo && titleBarRef.current) {
-      titleBarRef.current.scrollIntoView({ behavior: 'smooth' });
-      setScrolledTo(true);
-    }
-  }, [show]);
-  return (
-    <>
-      <AcknowledgementTitleBar
-        {...{
-          title: 'Sign',
-          emoticon: <MdTask className="mr-2" />,
-          ref: titleBarRef,
-        }}
-      />
-      <AcknowledgementQuestionBody show={show} className="mb-12">
-        <ErrorAlert className="mb-6">
-          By signing you agree to the above and understand that providing false
-          information will result in termination of your Pro subscription,
-          forfeiture of any fees paid, and potential legal action for fraud.
-        </ErrorAlert>
-        <TextField
-          value={signature}
-          onChange={onChange}
-          className="w-full"
-          InputLabelProps={{ shrink: true }}
-          label={
-            <span>
-              <span className="text-black">Signature</span>
-              <span className="!text-gray-400 mx-1">*</span>
-              <span className="!text-gray-400">Required</span>
-            </span>
-          }
-          placeholder="Jane Doe"
-        />
-      </AcknowledgementQuestionBody>
-    </>
-  );
-};
 
 export const ServiceAgreementPage = ({ campaign }) => {
   const [signature, setSignature] = useState('');
