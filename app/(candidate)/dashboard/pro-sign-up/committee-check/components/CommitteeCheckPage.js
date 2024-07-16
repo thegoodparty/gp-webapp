@@ -86,7 +86,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
           value: validatedEin,
         },
       ]);
-      router.push('/dashboard/pro-sign-up/purchase-redirect');
+      router.push('/dashboard/pro-sign-up/service-agreement');
       setLoadingCampaignUpdate(false);
     };
 
