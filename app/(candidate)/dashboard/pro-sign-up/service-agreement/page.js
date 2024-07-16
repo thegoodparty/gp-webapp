@@ -1,7 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import { getServerUser } from 'helpers/userServerHelper';
 import { ServiceAgreementPage } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementPage';
 
 const meta = pageMetaData({
@@ -15,11 +14,9 @@ const Page = async ({ params }) => {
   await candidateAccess();
 
   const { campaign } = await fetchUserCampaign();
-  const user = getServerUser();
 
   const childProps = {
     campaign,
-    user,
   };
 
   return <ServiceAgreementPage {...childProps} />;
