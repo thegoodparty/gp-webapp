@@ -665,6 +665,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    helpMessage: {
+      url: `${base}voter-data/voter-file/help-message`,
+      method: 'POST',
+      withAuth: true,
+    },
     canDownload: {
       url: `${base}voter-data/voter-file/can-download`,
       method: 'GET',
