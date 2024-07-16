@@ -19,6 +19,7 @@ import CantDownload from './CantDownload';
 import Link from 'next/link';
 import { slugify } from 'helpers/articleHelper';
 import voterFileTypes from './VoterFileTypes';
+import NeedHelp from './NeedHelp';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
 
@@ -145,11 +146,14 @@ export default function VoterRecordsPage(props) {
                   needs.
                 </Body2>
               </div>
-              <CustomVoterFile
-                {...props}
-                reloadCampaignCallback={reloadCampaign}
-                campaign={campaign}
-              />
+              <div className="col-span-12 md:col-span-6 md:flex md:justify-end md:items-center">
+                <NeedHelp />
+                <CustomVoterFile
+                  {...props}
+                  reloadCampaignCallback={reloadCampaign}
+                  campaign={campaign}
+                />
+              </div>
             </div>
             <div className="mt-8 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 border-x border-x-gray-200 ">
               {tableHeaders.map((header, index) => (
