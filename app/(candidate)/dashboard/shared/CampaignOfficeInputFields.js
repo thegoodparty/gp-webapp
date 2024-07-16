@@ -7,7 +7,9 @@ export const CampaignOfficeInputFields = ({
   gridLayout = true,
   fieldWrapClassName = '',
 }) =>
-  OFFICE_INPUT_FIELDS.map((field) => (
+  OFFICE_INPUT_FIELDS.filter(
+    ({ key }) => key !== 'primaryElectionDate' || values[key],
+  ).map((field) => (
     <div
       key={field.key}
       className={
