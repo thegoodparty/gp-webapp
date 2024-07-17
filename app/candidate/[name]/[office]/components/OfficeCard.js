@@ -21,7 +21,7 @@ export default function OfficeCard(props) {
       <div className="flex mt-2 mb-8 items-center">
         <FaMapMarkerAlt className="text-secondary-light mr-2" size={20} />
         <H5>
-          {city}, {state}
+          {city ? `${city}, ` : ''} {state}
         </H5>
       </div>
       {descLabels.map((item) => (
