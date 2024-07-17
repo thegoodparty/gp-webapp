@@ -1,4 +1,5 @@
 import { InputLabel, Link, MenuItem, Select } from '@mui/material';
+import { InputLabel, Link, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
@@ -78,14 +79,14 @@ export default function NeedHelp() {
             <form noValidate onSubmit={(e) => e.preventDefault()}>
               <div className=" text-center">
                 <H1 className="mb-4">Voter File Help</H1>
-                {/* <Body2 className="mb-4">
+                <Body2 className="mb-4">
                   Are you interested in creating a specific audience for your
                   voter file?
                   <br />
                   <Link href="/blog">
                     Learn what GoodParty.org can help you create.
                   </Link>
-                </Body2> */}
+                </Body2>
               </div>
               <InputLabel id="type">Voter File Type *</InputLabel>
               <InputLabel id="type">Voter File Type *</InputLabel>
@@ -125,6 +126,7 @@ export default function NeedHelp() {
                   rows={6}
                   placeholder="Tell us a bit about who you are trying to reach. Example: veterans ages 50-60"
                   label="Message"
+                  required
                   required
                   InputLabelProps={{
                     shrink: true,
