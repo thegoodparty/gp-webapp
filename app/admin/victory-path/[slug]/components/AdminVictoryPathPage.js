@@ -143,6 +143,11 @@ const sections = [
         label: 'Projected Turnout number',
         type: 'number',
       },
+      {
+        key: 'projectedTurnout',
+        label: 'Projected Turnout number',
+        type: 'number',
+      },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
       { key: 'voterContactGoal', label: 'Voter Contact Goal', type: 'number' },
     ],
@@ -157,7 +162,14 @@ const sections = [
       {
         key: 'averageTurnout',
         label: 'Average turnout number from past 3 races',
+        label: 'Average turnout number from past 3 races',
         type: 'number',
+      },
+      {
+        key: 'averageTurnoutPercent',
+        label: 'Average Turnout Percent',
+        type: 'number',
+        formula: true,
       },
       {
         key: 'averageTurnoutPercent',
@@ -282,9 +294,19 @@ export default function AdminVictoryPathPage(props) {
   }, [state.winNumber, state.averageTurnoutPercent]);
 
   const onChangeField = (key, value) => {
+    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
+    let averageTurnoutPercent = Math.round(
+      (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
+    );
     if (key === 'projectedTurnout') {
       winNumber = Math.round(value * 0.51);
     }
+    if (key === 'averageTurnout') {
+      averageTurnoutPercent = Math.round(
+        (value / state.totalRegisteredVoters) * 100,
+      );
+    }
+
     if (key === 'averageTurnout') {
       averageTurnoutPercent = Math.round(
         (value / state.totalRegisteredVoters) * 100,
@@ -300,6 +322,7 @@ export default function AdminVictoryPathPage(props) {
       ...state,
       [key]: val,
       winNumber,
+      averageTurnoutPercent,
       averageTurnoutPercent,
     });
   };
