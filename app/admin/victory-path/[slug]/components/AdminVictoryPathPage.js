@@ -315,6 +315,12 @@ export default function AdminVictoryPathPage(props) {
       );
     }
 
+    if (key === 'averageTurnout') {
+      averageTurnoutPercent = Math.round(
+        (value / state.totalRegisteredVoters) * 100,
+      );
+    }
+
     let val = value;
     if (keys[key] === 'number') {
       val = parseInt(value);
