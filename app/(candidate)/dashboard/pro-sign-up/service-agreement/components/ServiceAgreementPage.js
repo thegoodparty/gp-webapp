@@ -2,18 +2,15 @@
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 import H1 from '@shared/typography/H1';
-import { MdFlag, MdPeople, MdPerson, MdTask } from 'react-icons/md';
+import { MdFlag, MdPeople, MdPerson } from 'react-icons/md';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
 import { useState } from 'react';
 import Body1 from '@shared/typography/Body1';
-import { AcknowledgementTitleBar } from '@shared/acknowledgements/AcknowledgementTitleBar';
-import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody';
-import { ErrorAlert } from '@shared/alerts/ErrorAlert';
-import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Link from 'next/link';
 import { TermAndTerminationText } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText';
+import { ServiceAgreementSignatureSection } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection';
 
 const ACKNOWLEDGEMENTS = [
   {
@@ -71,7 +68,7 @@ export const ServiceAgreementPage = ({ campaign }) => {
           </Body1>
           {acknowledgements.map((ack, index) => (
             <AcknowledgementQuestion
-              key={ack}
+              key={index}
               title={ack.title}
               body={ack.body}
               show={index === 0 || acknowledgements[index - 1].accepted}
@@ -79,36 +76,16 @@ export const ServiceAgreementPage = ({ campaign }) => {
               buttonTexts={['I Accept', 'Accept']}
               onAcknowledge={onAcknowledge(index)}
               emoticon={ack.emoticon}
+              disableScrollTo={!Boolean(index)}
             />
           ))}
-          <AcknowledgementTitleBar
+          <ServiceAgreementSignatureSection
             {...{
-              title: 'Sign',
-              emoticon: <MdTask className="mr-2" />,
+              show: allAccepted,
+              signature,
+              onChange: (e) => setSignature(e.currentTarget.value),
             }}
           />
-          <AcknowledgementQuestionBody show={allAccepted} className="mb-12">
-            <ErrorAlert className="mb-6">
-              By signing you agree to the above and understand that providing
-              false information will result in termination of your Pro
-              subscription, forfeiture of any fees paid, and potential legal
-              action for fraud.
-            </ErrorAlert>
-            <TextField
-              value={signature}
-              onChange={(e) => setSignature(e.currentTarget.value)}
-              className="w-full"
-              InputLabelProps={{ shrink: true }}
-              label={
-                <span>
-                  <span className="text-black">Signature</span>
-                  <span className="!text-gray-400 mx-1">*</span>
-                  <span className="!text-gray-400">Required</span>
-                </span>
-              }
-              placeholder="Jane Doe"
-            />
-          </AcknowledgementQuestionBody>
           <div className="flex flex-col justify-between md:flex-row">
             <Link href="/dashboard/pro-sign-up/committee-check">
               <SecondaryButton className="w-full mb-4 md:mb-0 md:w-auto">
