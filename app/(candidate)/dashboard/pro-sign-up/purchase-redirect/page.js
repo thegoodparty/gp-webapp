@@ -3,7 +3,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess';
 import PurchaseRedirectPage from 'app/(candidate)/dashboard/pro-sign-up/purchase-redirect/components/PurchaseRedirectPage';
 
-const REDIRECT_COUNTDOWN_SECONDS = process.env.PAYMENT_REDIRECT_DELAY || 10;
+const REDIRECT_COUNTDOWN_SECONDS = process.env.PAYMENT_REDIRECT_DELAY || 5;
 
 const meta = pageMetaData({
   title: 'Pro Sign Up - Purchase Redirect | GoodParty.org',
