@@ -45,7 +45,7 @@ const CampaignStatisticsPage = (props) => {
   const loadCampaigns = async () => {
     setLoading(true);
     const res = await fetchCampaigns();
-    setCampaigns(res);
+    setCampaigns(res.campaigns);
     setLoading(false);
   };
 
