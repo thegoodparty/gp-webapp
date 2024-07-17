@@ -134,7 +134,7 @@ export default function NeedHelp() {
                   disabled={!canSave()}
                   onClick={handleSubmit}
                 >
-                  Next
+                  Submit
                 </PrimaryButton>
               </div>
             </form>
