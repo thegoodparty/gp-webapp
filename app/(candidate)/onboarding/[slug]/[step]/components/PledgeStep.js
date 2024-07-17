@@ -133,6 +133,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
             },
             buttonTexts: ['I Agree', 'Agreed'],
             emoticon: emoticons[index],
+            disableScrollTo: !Boolean(index),
           }}
         />
       ))}
