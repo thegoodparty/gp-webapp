@@ -15,6 +15,10 @@ module.exports = {
         outfit: 'var(--outfit-font)',
         sfpro: 'var(--sfpro-font)',
       },
+      listStyleType: {
+        alpha: 'lower-alpha',
+        'upper-alpha': 'upper-alpha',
+      },
       colors: {
         ...defaultTheme.colors,
         primary: {
