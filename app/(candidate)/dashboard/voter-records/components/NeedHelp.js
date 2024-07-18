@@ -81,14 +81,14 @@ export default function NeedHelp() {
             <form noValidate onSubmit={(e) => e.preventDefault()}>
               <div className=" text-center">
                 <H1 className="mb-4">Voter File Help</H1>
-                <Body2 className="mb-4">
+                {/* <Body2 className="mb-4">
                   Are you interested in creating a specific audience for your
                   voter file?
                   <br />
                   <Link href="/blog">
                     Learn what GoodParty.org can help you create.
                   </Link>
-                </Body2>
+                </Body2> */}
               </div>
               <InputLabel id="type">Voter File Type *</InputLabel>
               <InputLabel id="type">Voter File Type *</InputLabel>
