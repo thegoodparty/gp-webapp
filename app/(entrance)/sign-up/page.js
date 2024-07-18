@@ -1,13 +1,13 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import LoginPage from './components/LoginPage';
+import SignUpPage from './components/SignUpPage';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateAccess';
 
 const meta = pageMetaData({
-  title: 'Login',
-  description: 'Login to GoodParty.org.',
-  slug: '/login',
+  title: 'Sign up up to GoodParty.org',
+  description: 'Sign up to GoodParty.org.',
+  slug: '/sign-up',
 });
 export const metadata = meta;
 
@@ -23,5 +23,5 @@ export default async function Page() {
       redirect('/profile');
     }
   }
-  return <LoginPage />;
+  return <SignUpPage />;
 }

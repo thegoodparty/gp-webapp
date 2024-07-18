@@ -89,9 +89,9 @@ export default function RightSide() {
         </>
       ) : (
         <>
-          <Link href="/login" id="nav-sign-in" className="mr-6">
+          <Link href="/sign-up" id="nav-sign-up" className="mr-6">
             <PrimaryButton variant="text" size="medium">
-              <div className="font-medium text-base">Sign in</div>
+              <div className="font-medium text-base">Sign up</div>
             </PrimaryButton>
           </Link>
           <Link href="/run-for-office" id="nav-get-tools">
