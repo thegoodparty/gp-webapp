@@ -267,11 +267,21 @@ export default function AdminVictoryPathPage(props) {
   );
   const snackbarState = useHookstate(globalSnackbarState);
 
+  useEffect(() => {
+    if (!state.winNumber || !state.averageTurnoutPercent) {
+      let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
+      let averageTurnoutPercent = Math.round(
+        (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
+      );
+      setState({
+        ...state,
+        winNumber,
+        averageTurnoutPercent,
+      });
+    }
+  }, [state.winNumber, state.averageTurnoutPercent]);
+
   const onChangeField = (key, value) => {
-    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
-    let averageTurnoutPercent = Math.round(
-      (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
-    );
     if (key === 'projectedTurnout') {
       winNumber = Math.round(value * 0.51);
     }
@@ -413,7 +423,6 @@ export default function AdminVictoryPathPage(props) {
                       <div>
                         <TextField
                           label={field.label}
-                          fullWidth
                           disabled
                           value={state[field.key]}
                         />
@@ -429,14 +438,12 @@ export default function AdminVictoryPathPage(props) {
                           renderInput={(params) => (
                             <TextField
                               {...params}
-                              native
                               label={field.label}
-                              fullWidth
                               required
                               variant="outlined"
                               InputProps={{
                                 ...params.InputProps,
-                                style: { borderRadius: 0 },
+                                style: { borderRadius: '4px' },
                               }}
                             />
                           )}
@@ -454,14 +461,12 @@ export default function AdminVictoryPathPage(props) {
                           renderInput={(params) => (
                             <TextField
                               {...params}
-                              native
                               label={field.label}
-                              fullWidth
                               required
                               variant="outlined"
                               InputProps={{
                                 ...params.InputProps,
-                                style: { borderRadius: 0 },
+                                style: { borderRadius: '4px' },
                               }}
                             />
                           )}
