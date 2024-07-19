@@ -294,10 +294,6 @@ export default function AdminVictoryPathPage(props) {
   }, [state.winNumber, state.averageTurnoutPercent]);
 
   const onChangeField = (key, value) => {
-    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
-    let averageTurnoutPercent = Math.round(
-      (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
-    );
     if (key === 'projectedTurnout') {
       winNumber = Math.round(value * 0.51);
     }
