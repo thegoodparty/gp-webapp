@@ -645,6 +645,11 @@ const gpApi = {
     //   method: 'POST',
     //   withAuth: true,
     // },
+    locations: {
+      url: `${base}voter-data/locations`,
+      method: 'GET',
+      withAuth: true,
+    },
     pathToVictory: {
       url: `${base}voter-data/path-to-victory`,
       method: 'POST',
