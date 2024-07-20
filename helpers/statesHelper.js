@@ -21,6 +21,7 @@ export const flatStates = [
   'MA',
   'MD',
   'ME',
+  'MI',
   'MN',
   'MO',
   'MS',
