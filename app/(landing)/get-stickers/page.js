@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import GetStickersPage from './components/GetStickersPage';
 
 const meta = pageMetaData({
-  title: 'Get your FREE stickers for free',
+  title: 'Get your FREE stickers',
   description:
     "It's time to show that the MAJORITY of us are INDEPENDENTS. Get your FREE GoodParty.org Stickers to #BrightenAmerica",
 
