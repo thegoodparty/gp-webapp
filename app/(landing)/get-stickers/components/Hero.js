@@ -2,6 +2,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import { Anton } from 'next/font/google';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const anoton = Anton({ weight: '400', subsets: ['latin'] });
 
@@ -44,7 +45,9 @@ export default function Hero() {
           </div>
           <div>to #BrightenAmerica</div>
         </h2>
-        <PrimaryButton className="mt-8">Send Me Stickers!</PrimaryButton>
+        <Link href="/get-stickers#get-stickers">
+          <PrimaryButton className="mt-8">Send Me Stickers!</PrimaryButton>
+        </Link>
       </div>
     </MaxWidth>
   );
