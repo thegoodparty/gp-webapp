@@ -3,7 +3,7 @@ import HubSpotForm from '@shared/utils/HubSpotForm';
 
 export default function FormSection() {
   return (
-    <section className="my-8">
+    <section className="my-8" id="get-stickers">
       <MaxWidth>
         <h3 className="text-2xl md:text-3xl text-center font-medium mb-8">
           Get Your Stickers!

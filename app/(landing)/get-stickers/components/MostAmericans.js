@@ -1,6 +1,8 @@
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Body1 from '@shared/typography/Body1';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function MostAmericans() {
   return (
@@ -74,6 +76,13 @@ export default function MostAmericans() {
                 Give these stickers to friends! Post using #BrightenAmerica
               </Body1>
             </div>
+          </div>
+          <div className="text-center md:w-56 mx-auto">
+            <Link href="/get-stickers#get-stickers">
+              <PrimaryButton className="mt-8" fullWidth>
+                Send Me Stickers!
+              </PrimaryButton>
+            </Link>
           </div>
         </MaxWidth>
       </section>
