@@ -1,5 +1,4 @@
-import { InputLabel, Link, MenuItem, Select } from '@mui/material';
-import { InputLabel, Link, MenuItem, Select } from '@mui/material';
+import { InputLabel, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
@@ -126,7 +125,6 @@ export default function NeedHelp() {
                   rows={6}
                   placeholder="Tell us a bit about who you are trying to reach. Example: veterans ages 50-60"
                   label="Message"
-                  required
                   required
                   InputLabelProps={{
                     shrink: true,
