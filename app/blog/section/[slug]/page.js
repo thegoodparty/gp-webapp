@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 
   const { content } = await gpFetch(api, payload);
 
-  return content.map((section) => {
+  return content?.map((section) => {
     return {
       slug: section?.fields?.slug,
     };

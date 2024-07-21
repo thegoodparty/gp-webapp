@@ -66,7 +66,7 @@ export async function generateStaticParams() {
     key: 'blogArticles',
   });
 
-  return content.map((article) => {
+  return content?.map((article) => {
     return {
       slug: article.slug,
     };
