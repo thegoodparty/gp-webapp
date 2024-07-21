@@ -12,7 +12,6 @@ import gpFetch from 'gpApi/gpFetch';
 import { IoDocumentText } from 'react-icons/io5';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaChild } from 'react-icons/fa';
-import { FaChild } from 'react-icons/fa';
 import Body1 from '@shared/typography/Body1';
 import InfoButton from '@shared/buttons/InfoButton';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
@@ -28,14 +27,6 @@ async function launchCampaign() {
     return false;
   }
 }
-
-const steps = ['1', '2', '3', '4'];
-const emoticons = [
-  <FaChild key="1" className="mr-2" />,
-  <FaPeopleGroup key="2" className="mr-2" />,
-  <FaFlagUsa key="3" className="mr-2" />,
-  <IoDocumentText key="4" className="mr-2" />,
-];
 
 const steps = ['1', '2', '3', '4'];
 const emoticons = [
@@ -69,10 +60,6 @@ export default function PledgeStep({ campaign, pledge, step }) {
   if (!pledge) {
     return null;
   }
-
-  const pledgeContents = steps.map((step) =>
-    contentfulHelper(pledge[`content${step}`]),
-  );
 
   const pledgeContents = steps.map((step) =>
     contentfulHelper(pledge[`content${step}`]),
