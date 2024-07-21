@@ -1,4 +1,5 @@
 import { InputLabel, Link, MenuItem, Select } from '@mui/material';
+import { InputLabel, Link, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
@@ -90,6 +91,7 @@ export default function NeedHelp() {
                 </Body2> */}
               </div>
               <InputLabel id="type">Voter File Type *</InputLabel>
+              <InputLabel id="type">Voter File Type *</InputLabel>
               <Select
                 fullWidth
                 labelId="type"
@@ -106,6 +108,14 @@ export default function NeedHelp() {
                   return selected;
                 }}
               >
+                renderValue=
+                {(selected) => {
+                  if (selected.length === 0) {
+                    return <div>Select</div>;
+                  }
+                  return selected;
+                }}
+                >
                 {types.map((option) => (
                   <MenuItem value={option} key={option}>
                     {option}
@@ -119,6 +129,7 @@ export default function NeedHelp() {
                   rows={6}
                   placeholder="Tell us a bit about who you are trying to reach. Example: veterans ages 50-60"
                   label="Message"
+                  required
                   required
                   InputLabelProps={{
                     shrink: true,
