@@ -252,6 +252,7 @@ export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
   const { pathToVictory, details } = campaign;
   const [locations, setLocations] = useState([]);
+  const [loadingLocations, setLoadingLocations] = useState(false);
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
@@ -260,9 +261,11 @@ export default function AdminVictoryPathPage(props) {
   async function getVoterLocations(electionType, state) {
     try {
       const api = gpApi.voterData.locations;
+      setLoadingLocations(true);
       const locationResp = await gpFetch(api, { electionType, state });
       const items = locationResp?.locations || [];
       setLocations(items);
+      setLoadingLocations(false);
     } catch (e) {
       console.log('error', e);
       return false;
@@ -271,7 +274,14 @@ export default function AdminVictoryPathPage(props) {
 
   useEffect(() => {
     console.log(`getting voter locations for ${state.electionType}`);
-    getVoterLocations(state.electionType, campaign.details.state);
+    if (
+      state.electionType &&
+      campaign.details.state &&
+      state.electionType !== '' &&
+      campaign.details.state !== ''
+    ) {
+      getVoterLocations(state.electionType, campaign.details.state);
+    }
   }, [state.electionType, campaign.details.state]);
 
   const [notNeeded, setNotNeeded] = useState(
@@ -294,14 +304,10 @@ export default function AdminVictoryPathPage(props) {
   }, [state.winNumber, state.averageTurnoutPercent]);
 
   const onChangeField = (key, value) => {
-    if (key === 'projectedTurnout') {
-      winNumber = Math.round(value * 0.51);
-    }
-    if (key === 'averageTurnout') {
-      averageTurnoutPercent = Math.round(
-        (value / state.totalRegisteredVoters) * 100,
-      );
-    }
+    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
+    let averageTurnoutPercent = Math.round(
+      (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
+    );
 
     if (key === 'averageTurnout') {
       averageTurnoutPercent = Math.round(
@@ -471,25 +477,32 @@ export default function AdminVictoryPathPage(props) {
                     ) : field.key === 'electionLocation' &&
                       locations.length > 0 ? (
                       <div>
-                        <Autocomplete
-                          options={locations}
-                          value={state[field.key]}
-                          onChange={(e, value) => {
-                            onChangeField(field.key, value);
-                          }}
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label={field.label}
-                              required
-                              variant="outlined"
-                              InputProps={{
-                                ...params.InputProps,
-                                style: { borderRadius: '4px' },
-                              }}
-                            />
-                          )}
-                        />
+                        {loadingLocations ? (
+                          <div role="status" class="animate-pulse w-full">
+                            <div class="h-10 bg-gray-200 rounded-[4px] dark:bg-gray-700 w-full"></div>
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        ) : (
+                          <Autocomplete
+                            options={locations}
+                            value={state[field.key]}
+                            onChange={(e, value) => {
+                              onChangeField(field.key, value);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={field.label}
+                                required
+                                variant="outlined"
+                                InputProps={{
+                                  ...params.InputProps,
+                                  style: { borderRadius: '4px' },
+                                }}
+                              />
+                            )}
+                          />
+                        )}
                       </div>
                     ) : (
                       <RenderInputField
