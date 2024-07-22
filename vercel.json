@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/v1/campaign/election-events",
-      "schedule": "0 11 * * *"
+      "schedule": "0 16 * * *"
     }
   ]
 }
