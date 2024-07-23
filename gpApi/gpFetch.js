@@ -14,7 +14,7 @@ async function gpFetch(
     url = `${url}?`;
     for (const key in data) {
       if ({}.hasOwnProperty.call(data, key)) {
-        url += `${key}=${data[key]}&`;
+        url += `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}&`;
       }
     }
     url = url.slice(0, -1);
