@@ -10,12 +10,13 @@ import {
   FaXTwitter,
 } from 'react-icons/fa6';
 import { IoPersonSharp } from 'react-icons/io5';
-import { MdEmail, MdStars } from 'react-icons/md';
+import { MdEmail, MdStars, MdVolunteerActivism } from 'react-icons/md';
 import TealButton from './TealButton';
 import StickyCard from './StickyCard';
 import CTA from './CTA';
 import Image from 'next/image';
 import { AiOutlineLinkedin } from 'react-icons/ai';
+import Body2 from '@shared/typography/Body2';
 
 function mapSocialIcon(type) {
   //<MdEmail size={20} />
@@ -144,6 +145,13 @@ export default function CandidateCard(props) {
               </div>
             </TealButton>
           </CTA>
+          <div className="mt-8 flex border border-white p-2 rounded-lg">
+            <MdVolunteerActivism size={30} />
+            <Body2 className="ml-2">
+              <strong>GoodParty.org</strong> helps non-partisan and independent
+              candidates win their elections.
+            </Body2>
+          </div>
         </div>
       </StickyCard>
     </div>
