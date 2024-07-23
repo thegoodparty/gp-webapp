@@ -237,15 +237,19 @@ export default function BallotRaces(props) {
                       )}
                     </H4>
                     {!collapsedYears[electionYear] &&
-                      filtered[electionYear].map((race, index) => (
-                        <RaceCard
-                          key={index}
-                          race={race}
-                          selected={race?.id === selected.id}
-                          selectCallback={handleSelect}
-                          inputValue={inputValue}
-                        />
-                      ))}
+                      filtered[electionYear]
+                        .sort((a, b) =>
+                          a.position.name.localeCompare(b.position.name),
+                        )
+                        .map((race, index) => (
+                          <RaceCard
+                            key={index}
+                            race={race}
+                            selected={race?.id === selected.id}
+                            selectCallback={handleSelect}
+                            inputValue={inputValue}
+                          />
+                        ))}
                   </div>
                 ),
             )}
