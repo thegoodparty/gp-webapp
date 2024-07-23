@@ -52,6 +52,8 @@ export default function CandidateCard(props) {
     email,
   } = candidate;
 
+  console.log('socialUrls', socialUrls);
+
   let partyName = '';
   if (party === 'Independent') {
     partyName = 'Non-Partisan Candidate';
@@ -99,38 +101,38 @@ export default function CandidateCard(props) {
               {state}
             </H5>
           </div>
-          {((socialUrls && socialUrls.length > 0) || email) && (
-            <div
-              className={`flex items-center opacity-50 mb-8 ${
-                socialUrls.length > 3 ? 'justify-between' : ''
-              }`}
-            >
-              {email && (
-                <a
-                  href={`mailto:${email}`}
-                  rel="noopener noreferrer nofollow"
-                  className={`inline-block ${
-                    socialUrls.length > 3 ? '' : 'mr-6'
-                  }`}
-                >
-                  <MdEmail size={20} />
-                </a>
-              )}
-              {socialUrls &&
-                socialUrls.map((url) => (
-                  <a
-                    href={url.url}
-                    rel="noopener noreferrer nofollow"
-                    key={url.url}
-                    className={`inline-block ${
-                      socialUrls.length > 3 ? '' : 'mr-6'
-                    }`}
-                  >
-                    {mapSocialIcon(url.type)}
-                  </a>
-                ))}
-            </div>
-          )}
+          <div className="grid grid-cols-12 gap-4 mb-8">
+            {((socialUrls && socialUrls.length > 0) || email) && (
+              <>
+                {email && (
+                  <div className="col-span-6">
+                    <a
+                      href={`mailto:${email}`}
+                      rel="noopener noreferrer nofollow"
+                      className={`inline-block ${
+                        socialUrls.length > 3 ? '' : 'mr-6'
+                      }`}
+                    >
+                      <MdEmail size={20} /> Email
+                    </a>
+                  </div>
+                )}
+                {socialUrls &&
+                  socialUrls.map((url) => (
+                    <div className="col-span-6" key={url.url}>
+                      <a
+                        href={url.url}
+                        rel="noopener noreferrer nofollow"
+                        className="flex items-center"
+                      >
+                        <span>{mapSocialIcon(url.type)}</span>
+                        <span className="inline-block ml-2">{url.type}</span>
+                      </a>
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
           {/* <div className="p-3 text-center rounded border border-gray-300 font-medium cursor-pointer transition-colors hover:bg-white hover:text-primary mb-4">
             Learn More About {firstName} {lastName}
           </div> */}
