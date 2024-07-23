@@ -11,8 +11,7 @@ export const fetchCandidate = async (name, office, bustCache) => {
     office,
     bustCache,
   };
-  // return await gpFetch(api, payload, 3600); // TODO: change back to 3600
-  return await gpFetch(api, payload, 0);
+  return await gpFetch(api, payload, 3600);
 };
 
 export async function generateMetadata({ params, searchParams }) {

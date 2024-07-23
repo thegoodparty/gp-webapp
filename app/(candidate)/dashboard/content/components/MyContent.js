@@ -42,16 +42,9 @@ export default function MyContent(props) {
   const [campaign, setCampaign] = useState(undefined);
   const [campaignPlan, setCampaignPlan] = useState(undefined);
   const [jobStarting, setJobStarting] = useState(false);
-  const versions = useVersions();
-  const [updatedVersions, setUpdatedVersions] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
 
   let tableVersion = true;
-
-  const updateVersionsCallback = async () => {
-    const { versions } = await fetchCampaignVersions();
-    setUpdatedVersions(versions);
-  };
 
   const onSelectPrompt = (key, additionalPrompts, inputValues) => {
     setJobStarting(true);
