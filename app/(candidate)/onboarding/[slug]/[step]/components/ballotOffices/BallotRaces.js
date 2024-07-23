@@ -197,13 +197,11 @@ export default function BallotRaces(props) {
       />
       <Sticky top={56} innerZ={10}>
         <OfficeSelectionFilters
-          {...{
-            electionYears,
-            onChange: ({ inputValue, level, yearFilter }) => {
-              setInputValue(inputValue);
-              setLevel(level);
-              setYearFilter(yearFilter);
-            },
+          electionYears={electionYears}
+          onChange={({ inputValue, level, yearFilter }) => {
+            setInputValue(inputValue);
+            setLevel(level);
+            setYearFilter(yearFilter);
           }}
         />
       </Sticky>
