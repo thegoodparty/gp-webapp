@@ -3,17 +3,17 @@ import RaceCard from './RaceCard';
 import Sticky from 'react-stickynode';
 import { useEffect, useState } from 'react';
 import ZipChanger from './ZipChanger';
-import { CircularProgress, Select } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
-import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
 import CustomOfficeModal from './CustomOfficeModal';
 import { useRouter } from 'next/navigation';
 import H4 from '@shared/typography/H4';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { OfficeSelectionFilters } from 'app/(candidate)/onboarding/[slug]/[step]/components/ballotOffices/OfficeSelectionFilters';
 
 const fetchRaces = async (zip) => {
   const api = gpApi.ballotData.races;
@@ -77,7 +77,7 @@ export default function BallotRaces(props) {
   }
 
   const handleSelect = (race) => {
-    if (race?.position?.id === selected?.position?.id) {
+    if (race?.id === selected?.id) {
       setSelected(false);
       selectedOfficeCallback(false);
     } else {
@@ -105,7 +105,7 @@ export default function BallotRaces(props) {
   const filterRace = (race) => {
     let positionLevel = race.position.level;
 
-    // TODO: move this kind of data-rewite closer to "source of truth", preferably
+    // TODO: move this kind of data-rewrite closer to "source of truth", preferably
     //  whatever entry point the data is being ingested into our database
     if (positionLevel === 'CITY') {
       positionLevel = 'LOCAL';
@@ -142,7 +142,6 @@ export default function BallotRaces(props) {
   };
 
   const saveCustomOffice = async (updated) => {
-    console.log('updated saveCustomOffice', updated);
     updated.details.positionId = null;
     updated.details.electionId = null;
     if (step) {
@@ -197,54 +196,14 @@ export default function BallotRaces(props) {
         count={numOfRaces || 0}
       />
       <Sticky top={56} innerZ={10}>
-        <div className="bg-white pt-4 pb-2">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 lg:col-span-6 pt-1">
-              <TextField
-                label="Search"
-                value={inputValue}
-                fullWidth
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-            </div>
-            <div className="col-span-12 lg:col-span-4">
-              <Select
-                className="py-[2px]"
-                native
-                required
-                variant="outlined"
-                fullWidth
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
-              >
-                <option value="">Election Level</option>
-                {['local', 'county', 'state', 'federal'].map((value) => (
-                  <option value={value} key={value}>
-                    {value} office
-                  </option>
-                ))}
-              </Select>
-            </div>
-            <div className="col-span-12 lg:col-span-2">
-              <Select
-                className="py-[2px]"
-                native
-                required
-                variant="outlined"
-                fullWidth
-                value={yearFilter}
-                onChange={(e) => setYearFilter(e.target.value)}
-              >
-                <option value="">Year</option>
-                {electionYears.map((value) => (
-                  <option value={value} key={value}>
-                    {value}
-                  </option>
-                ))}
-              </Select>
-            </div>
-          </div>
-        </div>
+        <OfficeSelectionFilters
+          electionYears={electionYears}
+          onChange={({ inputValue, level, yearFilter }) => {
+            setInputValue(inputValue);
+            setLevel(level);
+            setYearFilter(yearFilter);
+          }}
+        />
       </Sticky>
       {loading ? (
         <div className="mt-6 text-center">
@@ -282,9 +241,7 @@ export default function BallotRaces(props) {
                         <RaceCard
                           key={index}
                           race={race}
-                          selected={
-                            race?.position?.id === selected.position?.id
-                          }
+                          selected={race?.id === selected.id}
                           selectCallback={handleSelect}
                           inputValue={inputValue}
                         />
