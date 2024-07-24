@@ -127,7 +127,9 @@ export default function CandidateCard(props) {
                         className="flex items-center"
                       >
                         <span>{mapSocialIcon(url.type)}</span>
-                        <span className="inline-block ml-2">{url.type}</span>
+                        <span className="inline-block ml-2">
+                          {url.type === 'government' ? 'website' : url.type}
+                        </span>
                       </a>
                     </div>
                   ))}
