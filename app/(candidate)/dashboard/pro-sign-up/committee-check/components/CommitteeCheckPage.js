@@ -47,7 +47,6 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   const [uploadedFilename, setUploadedFilename] = useState(
     filenameBits[1] || filenameBits[0] || '',
   );
-  console.log(`uploadedFilename =>`, uploadedFilename);
 
   const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
   const inputsValid = campaignCommittee && validEINFormat;
