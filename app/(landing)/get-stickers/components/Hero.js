@@ -45,9 +45,23 @@ export default function Hero() {
           </div>
           <div>to #BrightenAmerica</div>
         </h2>
-        <Link href="/get-stickers#get-stickers">
-          <PrimaryButton className="mt-8">Send Me Stickers!</PrimaryButton>
-        </Link>
+        <div className="grid grid-cols-12 gap-4 mt-8">
+          <div className="col-span-12 md:col-span-4">
+            <Link href="/get-stickers#get-stickers">
+              <PrimaryButton className="mt-8">Send Me Stickers!</PrimaryButton>
+            </Link>
+          </div>
+          <div className="col-span-12 md:col-span-4">
+            <Link href="/run-for-office">
+              <PrimaryButton className="mt-8">Run for Office</PrimaryButton>
+            </Link>
+          </div>
+          <div className="col-span-12 md:col-span-4">
+            <Link href="/">
+              <PrimaryButton className="mt-8">Learn More</PrimaryButton>
+            </Link>
+          </div>
+        </div>
       </div>
     </MaxWidth>
   );
