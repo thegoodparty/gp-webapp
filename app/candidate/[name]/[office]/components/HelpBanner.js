@@ -9,7 +9,7 @@ export default function HelpBanner({ candidate }) {
   const { firstName, lastName, office, city, state } = candidate;
   return (
     <>
-      <div className="fixed z-[1400] top-0 w-screen md:flex justify-between py-4 px-6 items-center bg-primary-dark">
+      <div className="fixed z-[1400] top-0 w-screen md:flex justify-between py-2 px-6 items-center bg-primary-dark">
         <div className="flex items-center justify-center md:justify-start">
           <Link href="/">
             <Image
@@ -27,11 +27,12 @@ export default function HelpBanner({ candidate }) {
         </div>
         <div className="mt-4 md:mt-0">
           <CTA id="hero-learn-more">
-            <InfoButton fullWidth>Get Data</InfoButton>
+            <InfoButton fullWidth size="medium">
+              Get Data
+            </InfoButton>
           </CTA>
         </div>
       </div>
-      <div className="h-7 relative">&nbsp;</div>
     </>
   );
 }
