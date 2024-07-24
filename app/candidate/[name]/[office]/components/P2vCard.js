@@ -61,7 +61,7 @@ export default function P2vCard(props) {
             </>
           ) : (
             <>
-              GoodParty.org will projects the number of votes needed to win{' '}
+              GoodParty.org will project the number of votes needed to win{' '}
               <span className="text-secondary-light">{office}</span> of{' '}
               <span className="text-secondary-light">
                 {city}, {state}.
