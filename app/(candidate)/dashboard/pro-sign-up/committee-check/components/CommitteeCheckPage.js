@@ -40,7 +40,14 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   const [loadingEinCheck, setLoadingEinCheck] = useState(false);
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
   const [validatedEin, setValidatedEin] = useState(null);
-  const [uploadedFilename, setUploadedFilename] = useState('');
+
+  // We need to do this to determine if file was uploaded in the root bucket, or in a subfolder
+  const filenameBits =
+    campaign?.details?.einSupportingDocument?.split('/') || [];
+  const [uploadedFilename, setUploadedFilename] = useState(
+    filenameBits[1] || filenameBits[0] || '',
+  );
+  console.log(`uploadedFilename =>`, uploadedFilename);
 
   const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
   const inputsValid = campaignCommittee && validEINFormat;
@@ -148,7 +155,10 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             </Body2>
           )}
 
-          <CommitteeSupportingFilesUpload onUploadSuccess={onUploadSuccess} />
+          <CommitteeSupportingFilesUpload
+            inputValue={uploadedFilename}
+            onUploadSuccess={onUploadSuccess}
+          />
 
           <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
             <Link className="block mb-4 md:mb-0" href="/dashboard/pro-sign-up">

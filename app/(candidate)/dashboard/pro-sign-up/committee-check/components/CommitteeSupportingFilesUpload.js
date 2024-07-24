@@ -8,6 +8,7 @@ import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
 
 export const CommitteeSupportingFilesUpload = ({
   campaign = {},
+  inputValue = '',
   onUploadSuccess = () => {},
 }) => {
   const { id: campaignId } = campaign;
@@ -45,7 +46,7 @@ export const CommitteeSupportingFilesUpload = ({
     <div className="grid grid-cols-10 gap-6 align-center mt-4">
       <TextField
         className="cursor-pointer col-span-10 md:col-span-7"
-        value={fileInfo?.name || ''}
+        value={fileInfo?.name || inputValue || ''}
         onClick={onFileBrowseClick}
         label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
