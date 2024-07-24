@@ -11,16 +11,13 @@ export default function ContentSection(props) {
   const { p2vData } = candidate;
   return (
     <div className="grid grid-cols-12 gap-4 mb-4">
+      <div className="col-span-12 md:col-span-6">
+        <P2vCard {...props} />
+      </div>
       {p2vData ? (
-        <>
-          <div className="col-span-12 md:col-span-6">
-            <P2vCard {...props} />
-          </div>
-
-          <div className="col-span-12 md:col-span-6">
-            <TargetCard {...props} />
-          </div>
-        </>
+        <div className="col-span-12 md:col-span-6">
+          <TargetCard {...props} />
+        </div>
       ) : null}
       <div className="col-span-12">
         <FreeToolsCard />
