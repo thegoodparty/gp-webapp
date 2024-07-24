@@ -95,7 +95,7 @@ export default function CandidateCard(props) {
             <IoPersonSharp className="text-secondary-light" size={20} />
             <H5 className="ml-2">Running for {office}</H5>
           </div>
-          <div className="flex mb-3 items-center mb-8">
+          <div className="flex  items-center mb-8">
             <FaMapMarkerAlt className="text-secondary-light" size={20} />
             <H5 className="ml-2">
               {city ? `${city}, ` : ''}

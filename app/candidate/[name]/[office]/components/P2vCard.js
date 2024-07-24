@@ -32,7 +32,7 @@ export default function P2vCard(props) {
           </Body2>
           <Body2 className="text-right">
             {' '}
-            {numberFormatter(projectedTurnout)}* Votes
+            {numberFormatter(projectedTurnout)} Votes
             <br />
             Needed to Win
           </Body2>
@@ -40,7 +40,7 @@ export default function P2vCard(props) {
         <Body1 className="my-8">
           GoodParty.org projects that this candidate needs{' '}
           <span className="text-secondary-light">
-            {numberFormatter(projectedTurnout)}*
+            {numberFormatter(projectedTurnout)}
           </span>{' '}
           votes needed to win for{' '}
           <span className="text-secondary-light">{office}</span> of{' '}
