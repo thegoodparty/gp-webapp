@@ -16,10 +16,16 @@ export default function P2vCard(props) {
     <div className="border border-gray-700 p-6 rounded-2xl h-full flex flex-col justify-between">
       <div>
         <MarketingH4 className="mb-8">
-          Discover a clear path to victory with{' '}
-          <span className="text-secondary-light">
-            {numberFormatter(projectedTurnout)} votes.
-          </span>
+          Discover a clear path to victory
+          {projectedTurnout && projectedTurnout !== 0 ? (
+            <>
+              {' '}
+              with{' '}
+              <span className="text-secondary-light">
+                {numberFormatter(projectedTurnout)} votes.
+              </span>
+            </>
+          ) : null}
         </MarketingH4>
         <div className="bg-[#222430] rounded-2xl relative w-full h-3">
           <div className="absolute left-0 top-0 w-1/3 h-full rounded-2xl  bg-gradient-to-r from-[#008080] to-[#717DE5] "></div>
@@ -32,21 +38,36 @@ export default function P2vCard(props) {
           </Body2>
           <Body2 className="text-right">
             {' '}
-            {numberFormatter(projectedTurnout)} Votes
+            {projectedTurnout && projectedTurnout !== 0
+              ? numberFormatter(projectedTurnout)
+              : null}{' '}
+            Votes
             <br />
             Needed to Win
           </Body2>
         </div>
         <Body1 className="my-8">
-          GoodParty.org projects that this candidate needs{' '}
-          <span className="text-secondary-light">
-            {numberFormatter(projectedTurnout)}
-          </span>{' '}
-          votes needed to win for{' '}
-          <span className="text-secondary-light">{office}</span> of{' '}
-          <span className="text-secondary-light">
-            {city}, {state}.
-          </span>
+          {projectedTurnout && projectedTurnout !== 0 ? (
+            <>
+              GoodParty.org projects that this candidate needs{' '}
+              <span className="text-secondary-light">
+                {numberFormatter(projectedTurnout)}
+              </span>{' '}
+              votes needed to win for{' '}
+              <span className="text-secondary-light">{office}</span> of{' '}
+              <span className="text-secondary-light">
+                {city}, {state}.
+              </span>
+            </>
+          ) : (
+            <>
+              GoodParty.org will projects the number of votes needed to win{' '}
+              <span className="text-secondary-light">{office}</span> of{' '}
+              <span className="text-secondary-light">
+                {city}, {state}.
+              </span>
+            </>
+          )}
         </Body1>
       </div>
       <CTA id="p2v-card-cta">
