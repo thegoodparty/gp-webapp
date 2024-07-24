@@ -25,9 +25,7 @@ export default function P2vCard(props) {
                 {numberFormatter(projectedTurnout)} votes.
               </span>
             </>
-          ) : (
-            '.'
-          )}
+          ) : null}
         </MarketingH4>
         <div className="bg-[#222430] rounded-2xl relative w-full h-3">
           <div className="absolute left-0 top-0 w-1/3 h-full rounded-2xl  bg-gradient-to-r from-[#008080] to-[#717DE5] "></div>
@@ -40,6 +38,10 @@ export default function P2vCard(props) {
           </Body2>
           <Body2 className="text-right">
             {' '}
+            {projectedTurnout && projectedTurnout !== 0
+              ? numberFormatter(projectedTurnout)
+              : null}{' '}
+            Votes
             {projectedTurnout && projectedTurnout !== 0
               ? numberFormatter(projectedTurnout)
               : null}{' '}
@@ -63,7 +65,7 @@ export default function P2vCard(props) {
             </>
           ) : (
             <>
-              GoodParty.org will project the number of votes needed to win{' '}
+              GoodParty.org will projects the number of votes needed to win{' '}
               <span className="text-secondary-light">{office}</span> of{' '}
               <span className="text-secondary-light">
                 {city}, {state}.
