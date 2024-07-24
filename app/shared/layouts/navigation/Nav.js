@@ -2,8 +2,17 @@ import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
+import { headers } from 'next/headers';
 
 export default function Nav() {
+  const headersList = headers();
+  const referer = headersList.get('referer');
+  console.log('referer', referer);
+  const url = new URL(referer);
+  const pathname = url.pathname || '';
+  if (pathname.startsWith('/candidate/')) {
+    return null;
+  }
   return (
     <>
       <div className="fixed w-screen h-14 z-50">
