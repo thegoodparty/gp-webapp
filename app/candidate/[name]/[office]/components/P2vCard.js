@@ -10,7 +10,7 @@ export default function P2vCard(props) {
   const { candidate } = props;
   const { office, city, state } = candidate;
   const { p2vData } = candidate;
-  const { projectedTurnout } = p2vData;
+  const { projectedTurnout } = p2vData || {};
 
   return (
     <div className="border border-gray-700 p-6 rounded-2xl h-full flex flex-col justify-between">
@@ -25,7 +25,9 @@ export default function P2vCard(props) {
                 {numberFormatter(projectedTurnout)} votes.
               </span>
             </>
-          ) : null}
+          ) : (
+            '.'
+          )}
         </MarketingH4>
         <div className="bg-[#222430] rounded-2xl relative w-full h-3">
           <div className="absolute left-0 top-0 w-1/3 h-full rounded-2xl  bg-gradient-to-r from-[#008080] to-[#717DE5] "></div>
