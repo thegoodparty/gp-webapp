@@ -1,6 +1,6 @@
 /*
 note: on local (dev) enviroment the path is http://localhost:4000/sitemaps/candidates/ca/sitemap.xml/4
-on production the path is https://www.getelected.com/sitemaps/candidates/ca/sitemap/4.xml
+on production the path is https://www.goodparty.org/sitemaps/candidates/ca/sitemap/4.xml
 
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 */
@@ -42,7 +42,6 @@ export default async function sitemap({ id }) {
     // state url
 
     candidates.forEach((slug) => {
-      console.log('slug', slug);
       urls.push(`/candidate/${slug}`);
     });
 

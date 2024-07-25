@@ -10,12 +10,13 @@ import {
   FaXTwitter,
 } from 'react-icons/fa6';
 import { IoPersonSharp } from 'react-icons/io5';
-import { MdEmail, MdStars } from 'react-icons/md';
+import { MdEmail, MdStars, MdVolunteerActivism } from 'react-icons/md';
 import TealButton from './TealButton';
 import StickyCard from './StickyCard';
 import CTA from './CTA';
 import Image from 'next/image';
 import { AiOutlineLinkedin } from 'react-icons/ai';
+import Body2 from '@shared/typography/Body2';
 
 function mapSocialIcon(type) {
   //<MdEmail size={20} />
@@ -51,6 +52,8 @@ export default function CandidateCard(props) {
     socialUrls,
     email,
   } = candidate;
+
+  console.log('socialUrls', socialUrls);
 
   let partyName = '';
   if (party === 'Independent') {
@@ -92,45 +95,47 @@ export default function CandidateCard(props) {
             <IoPersonSharp className="text-secondary-light" size={20} />
             <H5 className="ml-2">Running for {office}</H5>
           </div>
-          <div className="flex mb-3 items-center mb-8">
+          <div className="flex  items-center mb-8">
             <FaMapMarkerAlt className="text-secondary-light" size={20} />
             <H5 className="ml-2">
               {city ? `${city}, ` : ''}
               {state}
             </H5>
           </div>
-          {((socialUrls && socialUrls.length > 0) || email) && (
-            <div
-              className={`flex items-center opacity-50 mb-8 ${
-                socialUrls.length > 3 ? 'justify-between' : ''
-              }`}
-            >
-              {email && (
-                <a
-                  href={`mailto:${email}`}
-                  rel="noopener noreferrer nofollow"
-                  className={`inline-block ${
-                    socialUrls.length > 3 ? '' : 'mr-6'
-                  }`}
-                >
-                  <MdEmail size={20} />
-                </a>
-              )}
-              {socialUrls &&
-                socialUrls.map((url) => (
-                  <a
-                    href={url.url}
-                    rel="noopener noreferrer nofollow"
-                    key={url.url}
-                    className={`inline-block ${
-                      socialUrls.length > 3 ? '' : 'mr-6'
-                    }`}
-                  >
-                    {mapSocialIcon(url.type)}
-                  </a>
-                ))}
-            </div>
-          )}
+          <div className="grid grid-cols-12 gap-4 mb-8">
+            {((socialUrls && socialUrls.length > 0) || email) && (
+              <>
+                {email && (
+                  <div className="col-span-6">
+                    <a
+                      href={`mailto:${email}`}
+                      rel="noopener noreferrer nofollow"
+                      className={`inline-block ${
+                        socialUrls.length > 3 ? '' : 'mr-6'
+                      }`}
+                    >
+                      <MdEmail size={20} /> Email
+                    </a>
+                  </div>
+                )}
+                {socialUrls &&
+                  socialUrls.map((url) => (
+                    <div className="col-span-6" key={url.url}>
+                      <a
+                        href={url.url}
+                        rel="noopener noreferrer nofollow"
+                        className="flex items-center"
+                      >
+                        <span>{mapSocialIcon(url.type)}</span>
+                        <span className="inline-block ml-2">
+                          {url.type === 'government' ? 'website' : url.type}
+                        </span>
+                      </a>
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
           {/* <div className="p-3 text-center rounded border border-gray-300 font-medium cursor-pointer transition-colors hover:bg-white hover:text-primary mb-4">
             Learn More About {firstName} {lastName}
           </div> */}
@@ -142,6 +147,13 @@ export default function CandidateCard(props) {
               </div>
             </TealButton>
           </CTA>
+          <div className="mt-8 flex border border-white p-2 rounded-lg">
+            <MdVolunteerActivism size={30} />
+            <Body2 className="ml-2">
+              <strong>GoodParty.org</strong> helps non-partisan and independent
+              candidates win their elections.
+            </Body2>
+          </div>
         </div>
       </StickyCard>
     </div>
