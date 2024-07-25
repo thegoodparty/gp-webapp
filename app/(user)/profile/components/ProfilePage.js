@@ -14,7 +14,7 @@ export default function ProfilePage(props) {
         <InvitationSection {...props} />
         <PersonalSection />
         <AccountSettingsSection {...props} />
-        <PasswordSection />
+        <PasswordSection {...props} />
         <NotificationSection />
         <DeleteSection />
       </div>
