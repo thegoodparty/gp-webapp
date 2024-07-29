@@ -61,7 +61,7 @@ export default function CandidateCard(props) {
   }
 
   return (
-    <div className="mb-4 lg:w-[400px]  -mt-16  lg:mr-4">
+    <div className="mb-4 lg:w-[400px] lg:mr-4 pt-12 md:pt-0">
       <div className="lg:w-[400px]">&nbsp;</div>
       <StickyCard>
         <div className="mb-4 lg:w-[400px] bg-primary-dark p-6 rounded-2xl border border-gray-700">
