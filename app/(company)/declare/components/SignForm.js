@@ -40,9 +40,9 @@ export default function SignatureForm({
   const submitForm = async () => {
     if (canSubmit()) {
       const success = await subscribeEmail({
-        email: encodeURIComponent(email),
-        firstName: encodeURIComponent(firstName),
-        lastName: encodeURIComponent(lastName),
+        email,
+        firstName,
+        lastName,
         uri: window.location.href,
         formId,
         pageName,
