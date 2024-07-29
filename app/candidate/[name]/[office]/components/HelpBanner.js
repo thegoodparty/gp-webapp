@@ -20,8 +20,8 @@ export default function HelpBanner({ candidate }) {
             />
           </Link>
           <div className="ml-2">
-            Are you {firstName} {lastName}? Get data for {office} {city || ''},{' '}
-            {state}
+            Are you {firstName} {lastName}? Get data for{' '}
+            {office ? `${office}, ` : ''} {city ? `${city}, ` : ''} {state}
           </div>
         </div>
         <div className="mt-4 md:mt-0">
