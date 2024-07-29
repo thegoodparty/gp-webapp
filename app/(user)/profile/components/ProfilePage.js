@@ -12,7 +12,7 @@ export default function ProfilePage(props) {
       <div className="max-w-4xl mx-auto bg-gray-50 py-5 px-6 rounded-xl">
         <HeaderSection />
         <InvitationSection {...props} />
-        <PersonalSection />
+        <PersonalSection {...props} />
         <AccountSettingsSection {...props} />
         <PasswordSection {...props} />
         <NotificationSection />
