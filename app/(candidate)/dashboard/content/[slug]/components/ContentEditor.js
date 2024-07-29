@@ -78,7 +78,6 @@ export default function ContentEditor({
 
   const handleEdit = async (editedPlan, debounceTime = 5000) => {
     setPlan(editedPlan);
-    // add this back to turn autoSave back on.
     if (campaignPlan[key].content != plan) {
       debounce(handleTypingComplete, undefined, debounceTime);
     }
@@ -100,11 +99,11 @@ export default function ContentEditor({
     }
 
     let now = new Date();
-    let updatedAt = now.toISOString().split('T')[0];
+    let updatedAt = now.valueOf();
 
     const newVal = {
       name: existingName ? existingName : key,
-      updatedAt: updatedAt,
+      updatedAt,
       inputValues: existingInputs,
       content: plan,
     };
