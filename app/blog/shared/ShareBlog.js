@@ -12,7 +12,6 @@ export default function ShareBlog() {
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';
   const encodedUrl = encodeURIComponent(url);
-  const encodedMessageBody = `${messageNoUrl} \n\n ${encodedUrl}`;
 
   const textMessageBody = `${url} ${'\n %0a'} ${'\n %0a'}${messageNoUrl}`;
 
