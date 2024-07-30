@@ -3,7 +3,6 @@ import CTA from './CTA';
 import Image from 'next/image';
 import InfoButton from '@shared/buttons/InfoButton';
 import Link from 'next/link';
-import Link from 'next/link';
 
 export default function HelpBanner({ candidate }) {
   const { firstName, lastName, office, city, state } = candidate;
