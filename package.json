@@ -16,7 +16,6 @@
     "start-local": "NODE_ENV=production NEXT_PUBLIC_APP_BASE=http://localhost:4000 NEXT_PUBLIC_API_BASE=http://localhost:1337 next start -p 4000",
     "lint": "next lint",
     "format": "prettier -c .",
-    "format-fix": "prettier --write .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
