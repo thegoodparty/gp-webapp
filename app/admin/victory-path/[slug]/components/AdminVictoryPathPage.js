@@ -329,6 +329,28 @@ export default function AdminVictoryPathPage(props) {
     });
   };
 
+  const onChangeLocation = async (key, value) => {
+    setState({
+      ...state,
+      [key]: value,
+    });
+    let attr = [];
+    attr.push({ key: 'pathToVictory.electionLocation', value });
+    attr.push({
+      key: 'pathToVictory.electionType',
+      value: state['electionType'],
+    });
+    await updateCampaign(attr, campaign.slug);
+
+    snackbarState.set(() => {
+      return {
+        isOpen: true,
+        message: 'Saved Election Location.',
+        isError: false,
+      };
+    });
+  };
+
   const save = async () => {
     snackbarState.set(() => {
       return {
@@ -355,7 +377,7 @@ export default function AdminVictoryPathPage(props) {
         keysToUpdate = keys;
       }
 
-      const attr = keysToUpdate.map((key) => {
+      let attr = keysToUpdate.map((key) => {
         return {
           key: `pathToVictory.${key}`,
           value: state[key],
@@ -487,7 +509,7 @@ export default function AdminVictoryPathPage(props) {
                               options={locations}
                               value={state[field.key]}
                               onChange={(e, value) => {
-                                onChangeField(field.key, value);
+                                onChangeLocation(field.key, value);
                               }}
                               renderInput={(params) => (
                                 <TextField
