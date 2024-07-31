@@ -18,6 +18,10 @@ export default function ScriptCard({ type }) {
   if (type === 'doorknocking') {
     typeText = 'door-knocking';
   }
+
+  if (type === 'digitalads') {
+    typeText = 'digital advertising';
+  }
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>
