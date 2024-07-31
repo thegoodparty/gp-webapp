@@ -26,10 +26,10 @@ const gpApi = {
     },
   },
   entrance: {
-    // register: {
-    //   url: `${base}entrance/register`,
-    //   method: 'POST',
-    // },
+    register: {
+      url: `${base}entrance/register`,
+      method: 'POST',
+    },
     login: {
       url: `${base}entrance/login`,
       method: 'PUT',

@@ -91,7 +91,7 @@ function PhoneInput({
       variant="outlined"
       error={!validPhone && displayValue !== ''}
       required={required}
-      placeholder={useLabel === false ? placeholder : ''}
+      placeholder={placeholder || ''}
       InputProps={
         !hideIcon
           ? {

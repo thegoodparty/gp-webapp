@@ -1,5 +1,5 @@
 'use client';
-import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
+import { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
@@ -9,12 +9,10 @@ import {
   setUserCookie,
 } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
-import Link from 'next/link.js';
-import { Fragment, Suspense, useState } from 'react';
+import { Fragment, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
-import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
@@ -23,6 +21,9 @@ import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import Paper from '@shared/utils/Paper';
 import Body2 from '@shared/typography/Body2';
 import RenderInputField from '@shared/inputs/RenderInputField';
+import Overline from '@shared/typography/Overline';
+import SuccessButton from '@shared/buttons/SuccessButton';
+import Link from 'next/link';
 
 const fields = [
   { key: 'firstName', label: 'First Name', type: 'text', placeholder: 'Jane' },
@@ -56,14 +57,22 @@ export const validateZip = (zip) => {
   return validZip.test(zip);
 };
 
-async function login(email, password) {
+async function register(firstName, lastName, email, phone, zip, password) {
   try {
-    const api = gpApi.entrance.login;
+    const api = gpApi.entrance.register;
     const payload = {
+      firstName,
+      lastName,
       email,
+      phone,
+      zip,
       password,
     };
-    return await gpFetch(api, payload);
+    const res = await gpFetch(api, payload);
+    if (res.status === 409) {
+      return { exists: true };
+    }
+    return res;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -88,57 +97,47 @@ export default function SignUpPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, newUser } = await login(state.email, state.password);
+      const { user, exists } = await register(
+        state.firstName,
+        state.lastName,
+        state.email,
+        state.phone,
+        state.zip,
+        state.password,
+      );
+
+      console.log('exists', exists);
 
       if (user) {
         setUserCookie(user);
         userState.set(() => user);
-        if (newUser) {
-          const afterAction = getCookie('afterAction');
-          if (
-            (user.firstName && user.firstName !== '') ||
-            afterAction === 'createCampaign'
-          ) {
-            await createCampaign();
-            return;
-          }
-          if (user.firstName === '' || !user.firstName) {
-            window.location.href = '/set-name';
-            return;
-          }
-        } else {
-          const returnUrl = getCookie('returnUrl');
-          if (returnUrl) {
-            deleteCookie('returnUrl');
-            window.location.href = returnUrl;
-            return;
-          }
-
-          const status = await fetchCampaignStatus();
-
-          if (status?.status === 'candidate') {
-            window.location.href = '/dashboard';
-            return;
-          }
-          if (status?.status === 'volunteer') {
-            window.location.href = '/volunteer-dashboard';
-            return;
-          }
-          window.location.href = '/';
-        }
+        window.location.href = '/account-type';
+        return;
       } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'The email or password are wrong.',
-            isError: true,
-          };
-        });
+        if (exists) {
+          snackbarState.set(() => {
+            return {
+              isOpen: true,
+              message: `An account with this email (${state.email}) already exists`,
+              isError: true,
+            };
+          });
+        } else {
+          snackbarState.set(() => {
+            return {
+              isOpen: true,
+              message: 'Error creating account',
+              isError: true,
+            };
+          });
+        }
       }
     }
   };
 
-  const onChangeField = (value, key) => {
+  const onChangeField = (key, value) => {
+    console.log('value', value);
+    console.log('key', key);
     setState({
       ...state,
       [key]: value,
@@ -172,9 +171,7 @@ export default function SignUpPage() {
                     <Fragment key={field.key}>
                       <RenderInputField
                         field={field}
-                        onChangeCallback={(value) =>
-                          onChangeField(value, field.key)
-                        }
+                        onChangeCallback={onChangeField}
                         value={state[field.key]}
                       />
                     </Fragment>
@@ -182,10 +179,11 @@ export default function SignUpPage() {
                   <div className="col-span-12 mt-2">
                     <PasswordInput
                       label="Password"
-                      onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
+                      onChangeCallback={(pwd) => onChangeField('password', pwd)}
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      placeholder="Please don't use your dog name"
                     />
                   </div>
                 </div>
@@ -200,10 +198,12 @@ export default function SignUpPage() {
                   </PrimaryButton>
                 </div>
               </form>
-
-              <Suspense>
-                <SocialRegisterButtons />
-              </Suspense>
+              <div className="mt-8 p-6 border border-gray-300 rounded-lg text-center">
+                <Overline className="mb-6">Already have an account?</Overline>
+                <Link href="/login">
+                  <SuccessButton>Login</SuccessButton>
+                </Link>
+              </div>
             </Paper>
           </div>
         </div>
