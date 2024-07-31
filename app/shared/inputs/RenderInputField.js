@@ -53,6 +53,7 @@ export default function RenderInputField({
           onChangeCallback={(e) => onChangeCallback(field.key, e.target.value)}
           shrink
           disabled={field.disabled}
+          placeholder={field.placeholder || ''}
         />
       )}
       {field.type === 'phone' && (
@@ -65,6 +66,7 @@ export default function RenderInputField({
           hideIcon
           shrink
           disabled={field.disabled}
+          placeholder={field.placeholder || ''}
         />
       )}
 

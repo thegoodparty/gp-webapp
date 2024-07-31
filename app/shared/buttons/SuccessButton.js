@@ -27,7 +27,7 @@ export default function SuccessButton({
   }
   if (variant === 'contained') {
     baseClass['bg-green-400'] = true;
-    baseClass['text-indigo-900'] = true;
+    baseClass['text-white'] = true;
     baseClass['hover:bg-green-300'] = true;
     baseClass['active:bg-green-300'] = true;
   } else if (variant === 'outlined') {
