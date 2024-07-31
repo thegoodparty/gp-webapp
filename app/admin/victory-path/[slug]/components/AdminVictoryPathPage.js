@@ -411,7 +411,6 @@ export default function AdminVictoryPathPage(props) {
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
           </H2>
-          {!notNeeded && <VoterFileSection />}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}
@@ -483,25 +482,28 @@ export default function AdminVictoryPathPage(props) {
                             <span class="sr-only">Loading...</span>
                           </div>
                         ) : (
-                          <Autocomplete
-                            options={locations}
-                            value={state[field.key]}
-                            onChange={(e, value) => {
-                              onChangeField(field.key, value);
-                            }}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                label={field.label}
-                                required
-                                variant="outlined"
-                                InputProps={{
-                                  ...params.InputProps,
-                                  style: { borderRadius: '4px' },
-                                }}
-                              />
-                            )}
-                          />
+                          <>
+                            <Autocomplete
+                              options={locations}
+                              value={state[field.key]}
+                              onChange={(e, value) => {
+                                onChangeField(field.key, value);
+                              }}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label={field.label}
+                                  required
+                                  variant="outlined"
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    style: { borderRadius: '4px' },
+                                  }}
+                                />
+                              )}
+                            />
+                            {!notNeeded && <VoterFileSection />}
+                          </>
                         )}
                       </div>
                     ) : (
