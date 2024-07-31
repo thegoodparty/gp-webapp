@@ -12,7 +12,6 @@ import { useHookstate } from '@hookstate/core';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import PhoneInput from '@shared/inputs/PhoneInput';
-import { setUserCookie } from 'helpers/cookieHelper';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -81,9 +80,9 @@ export const USER_SETTING_FIELDS = [
   },
 ];
 
-function PersonalSection() {
+function PersonalSection({ user }) {
   const userState = useHookstate(globalUserState);
-  const user = userState.get('user');
+  const [saving, setSaving] = useState(false);
 
   const updatedState = {};
   if (user) {
@@ -107,7 +106,6 @@ function PersonalSection() {
   const updateUser = async () => {
     const updated = await refreshUser();
     userState.set(() => updated);
-    // setUserCookie(updated);
   };
 
   const onChangeField = (key, val) => {
@@ -126,34 +124,24 @@ function PersonalSection() {
     setIsPhoneValid(true);
   };
 
-  const canSave = () => {
-    if (state.phone !== '' && !isPhoneValid) {
-      return false;
-    }
-    // required field
-    if (state.name === '' || state.zip === '') {
-      return false;
-    }
-    // one required
-    if (state.email === '' && state.phone === '') {
-      return false;
-    }
-    if (state.email !== '' && !isValidEmail(state.email)) {
-      return false;
-    }
-    if (state.zip !== '' && state.zip.length !== 5) {
-      return false;
-    }
-    return true;
-  };
+  // TODO: This should only be true if the user has made changes
+  const canSave = !(
+    (state.phone !== '' && !isPhoneValid) ||
+    state.name === '' ||
+    state.zip === '' ||
+    (state.email === '' && state.phone === '') ||
+    (state.email !== '' && !isValidEmail(state.email)) ||
+    (state.zip !== '' && state.zip.length !== 5)
+  );
 
-  const submit = () => {
+  const submit = async () => {
     const fields = { ...state };
     if (fields.phone) {
       fields.phone = fields.phone.replace(/\D+/g, '');
     }
-
-    updateUserCallback(fields, userState);
+    setSaving(true);
+    await updateUserCallback(fields, userState);
+    setSaving(false);
   };
 
   return (
@@ -200,7 +188,8 @@ function PersonalSection() {
             <div className="col-span-12 lg:col-span-6 flex justify-end items-end pb-4">
               <div onClick={submit}>
                 <PrimaryButton
-                  disabled={!canSave()}
+                  disabled={!canSave}
+                  loading={saving}
                   type="submit"
                   size="medium"
                 >

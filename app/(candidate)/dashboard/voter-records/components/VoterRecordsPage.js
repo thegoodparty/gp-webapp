@@ -13,7 +13,6 @@ import { trackEvent } from 'helpers/fullStoryHelper';
 import Chip from '@shared/utils/Chip';
 import CustomVoterFile from './CustomVoterFile';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { dateUsHelper } from 'helpers/dateHelper';
 import { CircularProgress } from '@mui/material';
 import CantDownload from './CantDownload';
 import Link from 'next/link';

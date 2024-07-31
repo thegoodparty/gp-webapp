@@ -1,11 +1,9 @@
-import { InputLabel, Link, MenuItem, Select } from '@mui/material';
+import { InputLabel, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
-import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
-import { m } from 'framer-motion';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
@@ -90,6 +88,7 @@ export default function NeedHelp() {
                 </Body2> */}
               </div>
               <InputLabel id="type">Voter File Type *</InputLabel>
+              <InputLabel id="type">Voter File Type *</InputLabel>
               <Select
                 fullWidth
                 labelId="type"
@@ -106,6 +105,13 @@ export default function NeedHelp() {
                   return selected;
                 }}
               >
+                renderValue=
+                {(selected) => {
+                  if (selected.length === 0) {
+                    return <div>Select</div>;
+                  }
+                  return selected;
+                }}
                 {types.map((option) => (
                   <MenuItem value={option} key={option}>
                     {option}

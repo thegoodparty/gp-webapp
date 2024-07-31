@@ -1,5 +1,5 @@
 'use client';
-import { Fragment, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   onboardingStep,
   updateCampaign,
@@ -16,6 +16,7 @@ import Body1 from '@shared/typography/Body1';
 import InfoButton from '@shared/buttons/InfoButton';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
 import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements';
+import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
 
 async function launchCampaign() {
   try {
@@ -54,6 +55,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
   }
   const [state, setState] = useState(initialState);
   const [loading, setLoading] = useState(false);
+  const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations();
 
   if (!pledge) {
     return null;
@@ -141,9 +143,11 @@ export default function PledgeStep({ campaign, pledge, step }) {
         <Body1>I understand I am legally bound to this user agreement. </Body1>
       </div>
       <div className="flex justify-center mb-10">
-        <div onClick={openChat} className="mr-4">
-          <InfoButton>Ask a question</InfoButton>
-        </div>
+        {hubSpotWidgetLoaded && (
+          <div onClick={openChat} className="mr-4">
+            <InfoButton>Ask a question</InfoButton>
+          </div>
+        )}
         <div onClick={handleSave}>
           <PrimaryButton disabled={!canSave()} loading={loading}>
             Submit

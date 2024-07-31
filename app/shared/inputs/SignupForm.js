@@ -120,10 +120,10 @@ export default function SignupForm({
   const submitForm = async () => {
     if (canSubmit()) {
       const success = await subscribeEmail({
-        email: encodeURIComponent(email),
-        firstName: encodeURIComponent(firstName),
-        lastName: encodeURIComponent(lastName),
-        phone: encodeURIComponent(phone),
+        email,
+        firstName,
+        lastName,
+        phone,
         uri: window.location.href,
         formId,
         pageName,

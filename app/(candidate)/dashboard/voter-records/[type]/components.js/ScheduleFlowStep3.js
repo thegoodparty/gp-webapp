@@ -39,7 +39,7 @@ export default function ScheduleFlowStep3({
       for (const [key, value] of Object.entries(nonDefaultScripts)) {
         arr.push({ key, ...value });
       }
-      setOptions(arr);
+      setOptions(arr.sort((a, b) => b.updatedAt - a.updatedAt));
     }
   }, [campaign]);
 

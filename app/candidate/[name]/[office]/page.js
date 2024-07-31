@@ -3,6 +3,7 @@ import CandidatePage from './components/CandidatePage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { notFound } from 'next/navigation';
+import CandidateSchema from './components/CandidateSchema';
 
 export const fetchCandidate = async (name, office, bustCache) => {
   const api = gpApi.candidate.find;
@@ -11,8 +12,7 @@ export const fetchCandidate = async (name, office, bustCache) => {
     office,
     bustCache,
   };
-  // return await gpFetch(api, payload, 3600); // TODO: change back to 3600
-  return await gpFetch(api, payload, 0);
+  return await gpFetch(api, payload, 3600);
 };
 
 export async function generateMetadata({ params, searchParams }) {
@@ -91,5 +91,10 @@ export default async function Page({ params, searchParams }) {
   //   ],
   // };
   const childProps = { candidate };
-  return <CandidatePage {...childProps} />;
+  return (
+    <>
+      <CandidatePage {...childProps} />
+      <CandidateSchema {...childProps} slug={`candidate/${name}/${office}`} />
+    </>
+  );
 }

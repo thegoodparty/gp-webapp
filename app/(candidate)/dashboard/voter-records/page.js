@@ -30,7 +30,6 @@ export default async function Page({ params, searchParams }) {
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
   const { campaign } = await fetchUserCampaign();
   const canDownload = await fetchCanDownload();
-  console.log('canDownload', canDownload);
 
   const childProps = {
     pathname: '/dashboard/voter-records',

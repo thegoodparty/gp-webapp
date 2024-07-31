@@ -15,7 +15,7 @@ export default function EmailFormBanner({ pageName, formId }) {
   const submitForm = async () => {
     if (canSubmit()) {
       const success = await subscribeEmail({
-        email: encodeURIComponent(email),
+        email,
         uri: window.location.href,
         formId,
         pageName,

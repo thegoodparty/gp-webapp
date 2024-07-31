@@ -1,13 +1,15 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
+import { Select } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
@@ -31,13 +33,114 @@ export async function sendVictoryMail(slug) {
   }
 }
 
+// todo: This could be populated dynamically by state using ElectionType model.
+// Which would further reduce choices by state but we'd also need to
+// append certain federal and state choices to the list.
+const electionTypeChoices = [
+  'US_Congressional_District',
+  'State_Senate_District',
+  'State_House_District',
+  'State_Legislative_District',
+  'County',
+  'Precinct',
+  'County_Legislative_District',
+  'City',
+  'City_Council_Commissioner_District',
+  'County_Commissioner_District',
+  'County_Supervisorial_District',
+  'City_Mayoral_District',
+  'Town_District',
+  'Town_Council',
+  'Village',
+  'Township',
+  'Borough',
+  'Hamlet_Community_Area',
+  'City_Ward',
+  'Town_Ward',
+  'Township_Ward',
+  'Village_Ward',
+  'Borough_Ward',
+  'Board_of_Education_District',
+  'Board_of_Education_SubDistrict',
+  'City_School_District',
+  'College_Board_District',
+  'Community_College_Commissioner_District',
+  'Community_College_SubDistrict',
+  'County_Board_of_Education_District',
+  'County_Board_of_Education_SubDistrict',
+  'County_Community_College_District',
+  'County_Superintendent_of_Schools_District',
+  'County_Unified_School_District',
+  'District_Attorney',
+  'Education_Commission_District',
+  'Educational_Service_District',
+  'Election_Commissioner_District',
+  'Elementary_School_District',
+  'Elementary_School_SubDistrict',
+  'Exempted_Village_School_District',
+  'High_School_District',
+  'High_School_SubDistrict',
+  'Judicial_Appellate_District',
+  'Judicial_Circuit_Court_District',
+  'Judicial_County_Board_of_Review_District',
+  'Judicial_County_Court_District',
+  'Judicial_District',
+  'Judicial_District_Court_District',
+  'Judicial_Family_Court_District',
+  'Judicial_Jury_District',
+  'Judicial_Juvenile_Court_District',
+  'Judicial_Magistrate_Division',
+  'Judicial_Sub_Circuit_District',
+  'Judicial_Superior_Court_District',
+  'Judicial_Supreme_Court_District',
+  'Middle_School_District',
+  'Municipal_Court_District',
+  'Proposed_City_Commissioner_District',
+  'Proposed_Elementary_School_District',
+  'Proposed_Unified_School_District',
+  'Regional_Office_of_Education_District',
+  'School_Board_District',
+  'School_District',
+  'School_District_Vocational',
+  'School_Facilities_Improvement_District',
+  'School_Subdistrict',
+  'Service_Area_District',
+  'Superintendent_of_Schools_District',
+  'Unified_School_District',
+  'Unified_School_SubDistrict',
+];
+
 const sections = [
+  {
+    title: 'Voter File Settings',
+    fields: [
+      {
+        key: 'electionType',
+        label: 'Election Type',
+        type: 'text',
+        options: electionTypeChoices,
+        autocomplete: false,
+      },
+      {
+        key: 'electionLocation',
+        label: 'Election Location',
+        type: 'text',
+        options: electionTypeChoices,
+        autocomplete: true,
+      },
+    ],
+  },
   {
     title: 'Vote Goal',
     fields: [
       {
         key: 'totalRegisteredVoters',
         label: 'Total Registered Voters',
+        type: 'number',
+      },
+      {
+        key: 'projectedTurnout',
+        label: 'Projected Turnout number',
         type: 'number',
       },
       {
@@ -59,7 +162,14 @@ const sections = [
       {
         key: 'averageTurnout',
         label: 'Average turnout number from past 3 races',
+        label: 'Average turnout number from past 3 races',
         type: 'number',
+      },
+      {
+        key: 'averageTurnoutPercent',
+        label: 'Average Turnout Percent',
+        type: 'number',
+        formula: true,
       },
       {
         key: 'averageTurnoutPercent',
@@ -141,24 +251,64 @@ sections.forEach((section) => {
 export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
   const { pathToVictory, details } = campaign;
-
+  const [locations, setLocations] = useState([]);
+  const [loadingLocations, setLoadingLocations] = useState(false);
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
   });
+
+  async function getVoterLocations(electionType, state) {
+    try {
+      const api = gpApi.voterData.locations;
+      setLoadingLocations(true);
+      const locationResp = await gpFetch(api, { electionType, state });
+      const items = locationResp?.locations || [];
+      setLocations(items);
+      setLoadingLocations(false);
+    } catch (e) {
+      console.log('error', e);
+      return false;
+    }
+  }
+
+  useEffect(() => {
+    console.log(`getting voter locations for ${state.electionType}`);
+    if (
+      state.electionType &&
+      campaign.details.state &&
+      state.electionType !== '' &&
+      campaign.details.state !== ''
+    ) {
+      getVoterLocations(state.electionType, campaign.details.state);
+    }
+  }, [state.electionType, campaign.details.state]);
+
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
   );
   const snackbarState = useHookstate(globalSnackbarState);
+
+  useEffect(() => {
+    if (!state.winNumber || !state.averageTurnoutPercent) {
+      let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
+      let averageTurnoutPercent = Math.round(
+        (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
+      );
+      setState({
+        ...state,
+        winNumber,
+        averageTurnoutPercent,
+      });
+    }
+  }, [state.winNumber, state.averageTurnoutPercent]);
 
   const onChangeField = (key, value) => {
     let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
     let averageTurnoutPercent = Math.round(
       (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
     );
-    if (key === 'projectedTurnout') {
-      winNumber = Math.round(value * 0.51);
-    }
+
     if (key === 'averageTurnout') {
       averageTurnoutPercent = Math.round(
         (value / state.totalRegisteredVoters) * 100,
@@ -174,6 +324,7 @@ export default function AdminVictoryPathPage(props) {
       ...state,
       [key]: val,
       winNumber,
+      averageTurnoutPercent,
       averageTurnoutPercent,
     });
   };
@@ -260,7 +411,6 @@ export default function AdminVictoryPathPage(props) {
           <H2>
             Slug: <strong>{campaign?.slug}</strong>
           </H2>
-          {!notNeeded && <VoterFileSection />}
           <H3 className="mt-12 mb-6 flex items-center">
             <Checkbox
               value={notNeeded}
@@ -297,10 +447,64 @@ export default function AdminVictoryPathPage(props) {
                       <div>
                         <TextField
                           label={field.label}
-                          fullWidth
                           disabled
                           value={state[field.key]}
                         />
+                      </div>
+                    ) : field.key === 'electionType' ? (
+                      <div>
+                        <Autocomplete
+                          options={field.options}
+                          value={state[field.key]}
+                          onChange={(e, value) => {
+                            onChangeField(field.key, value);
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={field.label}
+                              required
+                              variant="outlined"
+                              InputProps={{
+                                ...params.InputProps,
+                                style: { borderRadius: '4px' },
+                              }}
+                            />
+                          )}
+                        />
+                      </div>
+                    ) : field.key === 'electionLocation' &&
+                      locations.length > 0 ? (
+                      <div>
+                        {loadingLocations ? (
+                          <div role="status" class="animate-pulse w-full">
+                            <div class="h-10 bg-gray-200 rounded-[4px] dark:bg-gray-700 w-full"></div>
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <Autocomplete
+                              options={locations}
+                              value={state[field.key]}
+                              onChange={(e, value) => {
+                                onChangeField(field.key, value);
+                              }}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label={field.label}
+                                  required
+                                  variant="outlined"
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    style: { borderRadius: '4px' },
+                                  }}
+                                />
+                              )}
+                            />
+                            {!notNeeded && <VoterFileSection />}
+                          </>
+                        )}
                       </div>
                     ) : (
                       <RenderInputField
