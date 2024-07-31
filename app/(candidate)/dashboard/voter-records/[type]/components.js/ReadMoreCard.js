@@ -25,6 +25,11 @@ export default function ReadMoreCard({ type }) {
     typeText = 'door knocking';
   }
 
+  if (type === 'digitalads') {
+    link = '/blog/tag/social-media';
+    typeText = 'digital advertising';
+  }
+
   return (
     <Paper className="h-full flex flex-col justify-between">
       <div>

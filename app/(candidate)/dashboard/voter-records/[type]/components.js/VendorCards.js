@@ -55,11 +55,40 @@ function vendorsByType(type) {
       },
     ];
   }
+
+  if (type === 'digitalads') {
+    vendors = [
+      {
+        logo: '/images/voterfile/choozle-logo.svg',
+        name: 'Choozie',
+        url: 'https://choozle.com/',
+        subTitle: 'Digital Advertising Software Platform',
+        description:
+          'Quickly manage and optimize multiple advertisers and programmatic ad campaigns, no matter your campaign goals.',
+      },
+      {
+        logo: '/images/voterfile/basis-logo.svg',
+        name: 'Basis',
+        url: 'https://basis.com/',
+        subTitle: 'Digital Advertising Platform',
+        description:
+          'Basis Platform integrates and automates the digital advertising process. It unites teams, integrates disparate systems and tools, automates workflows, reconciles billing, and streamlines campaigns from end-to-end.',
+      },
+      {
+        logo: '/images/voterfile/stackadapt-logo.svg',
+        name: 'StackAdapt',
+        url: 'https://www.stackadapt.com/industry-solutions/political',
+        subTitle: 'Your Political Advertising Solution',
+        description:
+          "Speed of campaign planning and execution makes all the difference in a political advertising campaign. With StackAdapt's multi-channel programmatic platform, you can reach voters across all of their channels and devices, capturing their attention when and where they're consuming content.",
+      },
+    ];
+  }
   return vendors;
 }
 
 export default function VendorCards(props) {
-  const { type, isCustom } = props;
+  const { type } = props;
 
   const vendors = vendorsByType(type);
 
