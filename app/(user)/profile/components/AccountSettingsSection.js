@@ -6,8 +6,9 @@ import Link from 'next/link';
 import { MdOpenInNew } from 'react-icons/md';
 import { PaymentPortalButton } from '@shared/PaymentPortalButton';
 import H6 from '@shared/typography/H6';
+import { SubscriptionPendingCancellationAlert } from 'app/(user)/profile/components/SubscriptionPendingCancellationAlert';
 
-export const AccountSettingsSection = ({ isPro }) => {
+export const AccountSettingsSection = ({ isPro, subscriptionCancelAt }) => {
   const plan = isPro ? 'Pro plan' : 'Free plan';
   return (
     <section className="py-4 border-b border-slate-300 flex">
@@ -23,6 +24,11 @@ export const AccountSettingsSection = ({ isPro }) => {
         <Body2 className="text-indigo-600 mb-4">
           Manage and change your plan.
         </Body2>
+        {isPro && subscriptionCancelAt && (
+          <SubscriptionPendingCancellationAlert
+            subscriptionCancelAt={subscriptionCancelAt}
+          />
+        )}
         <div className="rounded-lg border border-indigo-200 p-6">
           <div className="flex justify-between">
             <div className="left-side">
