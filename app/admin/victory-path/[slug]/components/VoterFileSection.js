@@ -4,22 +4,18 @@ import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 export default function VoterFileSection() {
   const [campaign] = useAdminCampaign();
 
-  if (
-    campaign.pathToVictory?.electionType &&
-    campaign.pathToVictory?.electionLocation
-  ) {
-    return null;
-  }
-
   return (
     <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
       <div>
         {campaign.pathToVictory?.p2vStatus === 'Waiting' ? (
-          <div className="my-4">Path To Victory is processing...</div>
+          <div className="my-4">
+            Path To Victory is processing... Please wait a few minutes and
+            refresh the page.
+          </div>
         ) : (
           <div className="my-4">
-            This campaign does not have a L2 election column. (Older path to
-            victory didn&apos;t save that column)
+            If you change the Election Type or Election Location you will need
+            to rerun the Path To Victory.
           </div>
         )}
         <RerunP2V />

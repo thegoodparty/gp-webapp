@@ -60,6 +60,20 @@ const defaultFileTypes = [
     ],
   },
   {
+    key: 'digitalAds',
+    name: `Digital Advertising - ${date}`,
+    fields: [
+      'Digital Advertising (Default)',
+      'Facebook',
+      'All',
+      <Chip
+        key="all"
+        className="bg-gray-700 text-white"
+        label="ALL AVAILABLE SOCIAL"
+      />,
+    ],
+  },
+  {
     key: 'telemarketing',
     name: `Telemarketing - ${date}`,
     fields: [

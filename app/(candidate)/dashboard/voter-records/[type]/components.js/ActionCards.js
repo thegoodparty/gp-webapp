@@ -11,37 +11,17 @@ function cardsByType(type, props) {
       <ReadMoreCard {...props} key="card3" />,
     ];
   }
-  if (type === 'directmail' || type === 'doorknocking') {
+  if (
+    type === 'directmail' ||
+    type === 'doorknocking' ||
+    type === 'digitalads'
+  ) {
     cards = [
       <ScriptCard {...props} key="card1" />,
       <ReadMoreCard {...props} key="card3" />,
     ];
   }
   return cards;
-}
-
-function vendorsByType(type) {
-  let vendors;
-  if (type === 'directmail') {
-    vendors = [
-      {
-        logo: '/images/voterfile/mailing-logo.svg',
-        name: 'Mailing.com',
-        url: 'https://www.mailing.com/',
-        subTitle: 'Turnkey Direct Mail Services at Scale',
-        description:
-          'Seamlessly execute your direct mail marketing campaigns and create exceptional print-based brand experiences.',
-      },
-      {
-        logo: '/images/voterfile/speakeasy-logo.svg',
-        name: 'SpeakEasy Political',
-        url: 'https://www.speakeasypolitical.com/',
-        subTitle: 'High-Impact Direct Mail Campaigns',
-        description:
-          'Our political direct mail templates are field tested and professionally designed to have a profound impact on voters, and propel your campaign to victory.',
-      },
-    ];
-  }
 }
 
 export default function ActionCards(props) {
@@ -51,7 +31,6 @@ export default function ActionCards(props) {
   }
 
   const cards = cardsByType(type, props);
-  const vendors = vendorsByType(type);
 
   return (
     <div className="mt-4 grid grid-cols-12 gap-4">
