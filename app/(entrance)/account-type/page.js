@@ -1,6 +1,7 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
+import AccountTypePage from './components/AccountTypePage';
 
 const meta = pageMetaData({
   title: 'Select account type',
@@ -14,5 +15,6 @@ export default async function Page() {
   if (!user) {
     redirect('/login');
   }
-  return <div>select account type</div>;
+
+  return <AccountTypePage />;
 }

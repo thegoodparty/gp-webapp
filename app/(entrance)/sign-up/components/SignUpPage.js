@@ -147,7 +147,7 @@ export default function SignUpPage() {
   return (
     <div className="bg-indigo-100">
       <MaxWidth>
-        <div className={`flex items-center justify-center`}>
+        <div className="flex items-center justify-center">
           <div className="grid py-6 max-w-2xl w-[75vw]">
             <Paper className="p-5 md:p-8 lg:p-12">
               <div className="text-center mb-8 pt-8">

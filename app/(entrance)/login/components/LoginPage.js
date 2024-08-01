@@ -55,44 +55,30 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, newUser } = await login(state.email, state.password);
+      const { user } = await login(state.email, state.password);
 
       if (user) {
         setUserCookie(user);
         userState.set(() => user);
-        if (newUser) {
-          const afterAction = getCookie('afterAction');
-          if (
-            (user.firstName && user.firstName !== '') ||
-            afterAction === 'createCampaign'
-          ) {
-            await createCampaign();
-            return;
-          }
-          if (user.firstName === '' || !user.firstName) {
-            window.location.href = '/set-name';
-            return;
-          }
-        } else {
-          const returnUrl = getCookie('returnUrl');
-          if (returnUrl) {
-            deleteCookie('returnUrl');
-            window.location.href = returnUrl;
-            return;
-          }
 
-          const status = await fetchCampaignStatus();
-
-          if (status?.status === 'candidate') {
-            window.location.href = '/dashboard';
-            return;
-          }
-          if (status?.status === 'volunteer') {
-            window.location.href = '/volunteer-dashboard';
-            return;
-          }
-          window.location.href = '/';
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          window.location.href = returnUrl;
+          return;
         }
+
+        const status = await fetchCampaignStatus();
+
+        if (status?.status === 'candidate') {
+          window.location.href = '/dashboard';
+          return;
+        }
+        if (status?.status === 'volunteer') {
+          window.location.href = '/volunteer-dashboard';
+          return;
+        }
+        window.location.href = '/';
       } else {
         snackbarState.set(() => {
           return {
