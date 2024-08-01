@@ -22,7 +22,7 @@ async function fetchTeamMembersAndMilestones() {
         {
           key: 'goodPartyTeamMembers',
         },
-        // 3600,
+        3600,
       ),
       gpFetch(
         api,
