@@ -6,7 +6,6 @@ const invalidDateFormat = (date) =>
 const isInvalidDateObject = (date) => typeof date === 'object' && isNaN(date);
 
 export const dateUsHelper = (orgDate) => {
-  console.log(`orgDate =>`, orgDate);
   if (invalidDateFormat(orgDate)) {
     return orgDate;
   } else if (isInvalidDateObject(orgDate)) {

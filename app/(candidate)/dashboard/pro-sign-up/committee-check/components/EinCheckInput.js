@@ -25,7 +25,6 @@ export const EinCheckInput = ({
 }) => {
   const handleOnChange = async (e) => {
     const newVal = e.currentTarget.value;
-    console.log(`newVal =>`, newVal);
 
     if (validated !== null) {
       setValidated(null);

@@ -22,6 +22,7 @@ import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAl
 import { CompleteProSignUpAlert } from 'app/(candidate)/dashboard/components/CompleteProSignUpAlert';
 import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/components/PendingProSignUpAlert';
 import { updateUser } from 'helpers/userHelper';
+import { useUser } from '@shared/hooks/useUser';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -45,7 +46,7 @@ export async function fetchUpdateHistory() {
 
 export default function DashboardPage(props) {
   const { campaign } = props;
-  const [user, setUser] = useState({});
+  const [user, setUser] = useUser();
   const { metaData: userMetaData } = user || {};
   const { checkoutSessionId, customerId } = JSON.parse(userMetaData || '{}');
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
