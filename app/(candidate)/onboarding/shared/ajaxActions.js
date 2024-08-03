@@ -71,3 +71,13 @@ export async function createCampaign() {
     return false;
   }
 }
+
+export async function updateUserMeta(meta) {
+  try {
+    const api = gpApi.user.updateMeta;
+    return await gpFetch(api, { meta });
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}

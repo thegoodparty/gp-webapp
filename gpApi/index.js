@@ -327,6 +327,11 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
+    updateMeta: {
+      url: `${base}user-meta`,
+      method: 'PUT',
+      withAuth: true,
+    },
     refresh: {
       url: `${base}user/refresh`,
       method: 'PUT',

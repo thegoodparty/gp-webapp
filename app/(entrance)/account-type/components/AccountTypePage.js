@@ -6,7 +6,10 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import Paper from '@shared/utils/Paper';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  createCampaign,
+  updateUserMeta,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -25,6 +28,7 @@ export default function AccountTypePage() {
     if (selected === 'running') {
       await createCampaign();
     } else if (selected === 'browsing') {
+      await updateUserMeta({ accountType: 'browsing' });
       router.push('/browsing');
     }
   };
