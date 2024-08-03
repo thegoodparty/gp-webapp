@@ -6,7 +6,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import Paper from '@shared/utils/Paper';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { updateUserMeta } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -36,11 +36,8 @@ export default function BrowsingPage() {
   const router = useRouter();
 
   const handleNext = async () => {
-    if (selected === 'running') {
-      await createCampaign();
-    } else if (selected === 'browsing') {
-      router.push('/browsing');
-    }
+    await updateUserMeta({ whyBrowsing: selected });
+    router.push('/browsing-final');
   };
   return (
     <div className="bg-indigo-100">
