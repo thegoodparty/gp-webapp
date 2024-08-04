@@ -1,6 +1,7 @@
 'use client';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
+import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import RadioList from '@shared/inputs/RadioList';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Body2 from '@shared/typography/Body2';
@@ -33,38 +34,30 @@ export default function AccountTypePage() {
     }
   };
   return (
-    <div className="bg-indigo-100">
-      <MaxWidth>
-        <div className="flex items-center justify-center">
-          <div className="grid py-6 max-w-2xl w-[75vw]">
-            <Paper className="p-5 md:p-8 lg:p-12">
-              <div className="text-center mb-8 pt-8">
-                <H1>Which best describes you?</H1>
-                <Body2 className="mt-3">
-                  This helps us determine your account type. <br />
-                  (Don&apos;t worry, you can change this later.)
-                </Body2>
-              </div>
-              <RadioList
-                options={options}
-                selected={selected}
-                selectCallback={setSelected}
-              />
+    <CardPageWrapper>
+      <div className="text-center mb-8 pt-8">
+        <H1>Which best describes you?</H1>
+        <Body2 className="mt-3">
+          This helps us determine your account type. <br />
+          (Don&apos;t worry, you can change this later.)
+        </Body2>
+      </div>
+      <RadioList
+        options={options}
+        selected={selected}
+        selectCallback={setSelected}
+      />
 
-              <div className="flex items-center justify-between mt-12">
-                <Link href="/">
-                  <SecondaryButton>
-                    <div className="min-w-[120px]">Cancel</div>
-                  </SecondaryButton>
-                </Link>
-                <PrimaryButton onClick={handleNext}>
-                  <div className="min-w-[120px]">Next</div>
-                </PrimaryButton>
-              </div>
-            </Paper>
-          </div>
-        </div>
-      </MaxWidth>
-    </div>
+      <div className="flex items-center justify-between mt-12">
+        <Link href="/">
+          <SecondaryButton>
+            <div className="min-w-[120px]">Cancel</div>
+          </SecondaryButton>
+        </Link>
+        <PrimaryButton onClick={handleNext}>
+          <div className="min-w-[120px]">Next</div>
+        </PrimaryButton>
+      </div>
+    </CardPageWrapper>
   );
 }

@@ -160,7 +160,7 @@ export default function OfficeStep(props) {
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
-      <div className="flex items-center flex-col py-12">
+      <div className="flex items-center flex-col pt-12">
         <H1 className="text-center">What office are you interested in?</H1>
 
         <div className="w-full max-w-2xl mt-10">
@@ -172,9 +172,9 @@ export default function OfficeStep(props) {
             step={step}
           />
         </div>
-        <div className={`${step ? 'fixed bottom-0 w-full bg-white py-4' : ''}`}>
+        <div className={`${step ? 'flex justify-end w-full' : ''}`}>
           <PrimaryButton
-            className={{ 'mx-auto': true, block: true }}
+            className={{ block: true }}
             disabled={!canSubmit()}
             type="submit"
             onClick={handleSave}

@@ -20,6 +20,7 @@ import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
 import InfoButton from '@shared/buttons/InfoButton';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import RadioList from '@shared/inputs/RadioList';
 
 const parties = [
   {
@@ -34,6 +35,15 @@ const parties = [
   { name: 'Reform Party', logo: reformLogo },
   { name: 'Democratic Party', logo: demLogo },
   { name: 'Republican Party', logo: repLogo },
+];
+
+const options = [
+  { key: 'democrat', label: 'Democrat' },
+  { key: 'republican', label: 'Republican' },
+  { key: 'independent', label: 'Independent' },
+  { key: 'libertarian', label: 'Libertarian' },
+  { key: 'green', label: 'Green Party' },
+  { key: 'nonpartisan', label: 'Nonpartisan' },
 ];
 
 const invalidOptions = [
@@ -149,10 +159,18 @@ export default function PartyStep(props) {
   const [showInvalidModal, setShowInvalidModal] = useState(false);
 
   const onChangeField = (key, value) => {
-    setState({
-      ...state,
-      [key]: value,
-    });
+    if (key === 'otherParty' && value !== '') {
+      setState({
+        ...state,
+        otherParty: value,
+        party: '',
+      });
+    } else {
+      setState({
+        ...state,
+        [key]: value,
+      });
+    }
   };
 
   const canSubmit = () => {
@@ -185,18 +203,10 @@ export default function PartyStep(props) {
     }
   };
 
-  const handleSelectParty = (partyName) => {
-    if (state.party === partyName) {
-      onChangeField('party', '');
-    } else {
-      onChangeField('party', partyName);
-    }
-  };
-
   const invalidOtherParty = () => {
     return (
-      state.party === 'Republican Party' ||
-      state.party === 'Democratic Party' ||
+      state.party === 'republican' ||
+      state.party === 'democrat' ||
       (state.otherParty !== '' &&
         invalidOptions.includes(state.otherParty.toLowerCase()))
     );
@@ -205,51 +215,23 @@ export default function PartyStep(props) {
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col text-center py-12">
-        <H1>What&apos;s your campaign&apos;s political affiliation?</H1>
+        <H1>How will your campaign appear on the ballot?</H1>
         <Body1 className="mt-8 mb-10">
-          We only support candidates outside of the Two Party system.
+          This is your campaign&apos;s affiliation, not how you lean politically
+          or how you are registered to vote. We only support candidates running
+          in nonpartisan races or candidates running as independent or
+          third-party in a partisan election.
         </Body1>
         <div className="w-full max-w-md">
-          <div className="grid grid-cols-12 gap-4">
-            {parties.map((party) => (
-              <div
-                key={party.name}
-                className={`col-span-12 ${party.wide ? '' : 'lg:col-span-6'}`}
-              >
-                <div
-                  className={`border-2  rounded-lg p-6 flex flex-col items-center h-full group cursor-pointer hover:border-black transition-colors ${
-                    party.name === state.party
-                      ? 'border-black'
-                      : 'border-slate-200'
-                  }`}
-                  onClick={() => {
-                    handleSelectParty(party.name);
-                  }}
-                >
-                  <Image
-                    alt={party.name}
-                    src={party.logo}
-                    className={`mb-4 h-12  transition-all group-hover:grayscale-0 ${
-                      party.name === state.party ? 'grayscale-0' : 'grayscale'
-                    }`}
-                    height={48}
-                  />
-                  <div
-                    className={` group-hover:text-primary transition-colors ${
-                      party.name === state.party
-                        ? 'text-primary'
-                        : 'text-gray-600'
-                    }`}
-                  >
-                    {party.label || party.name}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <RadioList
+            options={options}
+            selected={state.party}
+            selectCallback={(selected) => onChangeField('party', selected)}
+          />
+
           <div className="mt-10">
             <TextField
-              label="Other Party"
+              label="Other"
               fullWidth
               value={state.otherParty}
               onChange={(e) => onChangeField('otherParty', e.target.value)}
