@@ -21,7 +21,10 @@ export default function RightSide() {
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
-  const isOnboardingPath = pathname?.startsWith('/onboarding');
+  const isOnboardingPath =
+    pathname?.startsWith('/onboarding') ||
+    pathname?.startsWith('/browsing') ||
+    pathname === '/account-type';
 
   const toggleProfile = () => {
     closeAll();

@@ -17,16 +17,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
 import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements';
 import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
-
-async function launchCampaign() {
-  try {
-    const api = gpApi.campaign.launch;
-    return await gpFetch(api);
-  } catch (e) {
-    console.log('error at launchCampaign', e);
-    return false;
-  }
-}
+import { useRouter } from 'next/navigation';
 
 const steps = ['1', '2', '3', '4'];
 const emoticons = [
@@ -56,6 +47,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
   const [state, setState] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations();
+  const router = useRouter();
 
   if (!pledge) {
     return null;
@@ -89,10 +81,11 @@ export default function PledgeStep({ campaign, pledge, step }) {
     ];
 
     await updateCampaign(attr);
-    const res = await launchCampaign();
-    if (res) {
-      window.location.href = '/dashboard/plan';
-    }
+    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+    // const res = await launchCampaign();
+    // if (res) {
+    //   window.location.href = '/dashboard/plan';
+    // }
   };
 
   const onChangeField = (key, value) => {

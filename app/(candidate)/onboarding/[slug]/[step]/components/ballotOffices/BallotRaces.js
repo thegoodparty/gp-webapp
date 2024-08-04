@@ -29,7 +29,7 @@ export default function BallotRaces(props) {
     step,
     updateCallback,
   } = props;
-  const [zip, setZip] = useState(campaign.details.zip);
+  const [zip, setZip] = useState(campaign.details?.zip);
   const [races, setRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [level, setLevel] = useState('');
@@ -47,7 +47,7 @@ export default function BallotRaces(props) {
   const router = useRouter();
 
   useEffect(() => {
-    loadRaces(campaign.details.zip);
+    loadRaces(campaign.details?.zip);
   }, []);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ export default function BallotRaces(props) {
   };
 
   return (
-    <section className="mb-10">
+    <section className="mb-2">
       <ZipChanger
         zip={zip}
         updateZipCallback={handleZipChange}

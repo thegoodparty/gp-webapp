@@ -17,7 +17,7 @@ export default async function Page({ params }) {
   const { slug, step } = params;
   const campaign = await getCampaign(params);
 
-  const totalSteps = 6;
+  const totalSteps = 4;
 
   let stepInt = step ? parseInt(step, 10) : 1;
   if (Number.isNaN(stepInt) || stepInt < 1 || stepInt > totalSteps) {
@@ -25,7 +25,7 @@ export default async function Page({ params }) {
   }
 
   let pledge;
-  if (stepInt === 6) {
+  if (stepInt === 3) {
     const res = await fetchContentByKey('pledge');
     pledge = res.content;
   }
