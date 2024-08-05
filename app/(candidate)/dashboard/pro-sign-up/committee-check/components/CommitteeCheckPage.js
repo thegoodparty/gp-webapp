@@ -101,6 +101,10 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
 
   const onUploadSuccess = ({ uploadedFilename } = {}) =>
     uploadedFilename && setUploadedFilename(uploadedFilename);
+  const onUploadError = (e) => {
+    console.error('Error uploading file', e);
+    setUploadedFilename('');
+  };
 
   const nextDisabled =
     !(validatedEin && uploadedFilename) || loadingCampaignUpdate;
@@ -157,6 +161,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
           <CommitteeSupportingFilesUpload
             inputValue={uploadedFilename}
             onUploadSuccess={onUploadSuccess}
+            onUploadError={onUploadError}
           />
 
           <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
