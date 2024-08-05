@@ -53,7 +53,7 @@ export const setUserCookie = (value) => {
     return;
   }
   const val = typeof value === 'string' ? value : JSON.stringify(value);
-  setCookie('user', val);
+  setCookie(getCookie('impersonateUser') ? 'impersonateUser' : 'user', val);
 };
 
 export const getUserCookie = (withParse = false) => {

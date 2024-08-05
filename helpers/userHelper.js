@@ -10,7 +10,6 @@ export const getInitials = (user) => {
   if (!firstName) {
     return false;
   }
-  const initialsArr = name.split(' ');
   return `${firstName.charAt(0)}${lastName.charAt(0)}`;
 };
 

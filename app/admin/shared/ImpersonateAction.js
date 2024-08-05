@@ -1,20 +1,18 @@
 'use client';
-import { setCookie } from 'helpers/cookieHelper';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
 
 export default function ImpersonateAction({
   email,
   isCandidate,
   launched: launchStatus,
-  slug,
 }) {
   const snackbarState = useHookstate(globalSnackbarState);
+  const { impersonate } = useImpersonateUser();
 
-  const impersonateUser = async () => {
+  const handleImpersonateUser = async () => {
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -23,7 +21,7 @@ export default function ImpersonateAction({
       };
     });
 
-    const impersonateResp = await handleImpersonateUser(email);
+    const impersonateResp = await impersonate(email);
     if (impersonateResp) {
       if (isCandidate && launchStatus === 'Live') {
         window.location.href = `/dashboard`;
@@ -42,28 +40,10 @@ export default function ImpersonateAction({
   };
 
   return (
-    <div className="my-3" onClick={impersonateUser}>
-      <PrimaryButton size="small" fullWidth>
+    <div className="my-3">
+      <PrimaryButton onClick={handleImpersonateUser} size="small" fullWidth>
         <span className="whitespace-nowrap">Impersonate</span>
       </PrimaryButton>
     </div>
   );
-}
-
-async function handleImpersonateUser(email) {
-  try {
-    const api = gpApi.admin.impersonateUser;
-    const payload = {
-      email,
-    };
-    const resp = await gpFetch(api, payload);
-    if (resp?.token && resp?.user) {
-      setCookie('impersonateToken', resp.token);
-      setCookie('impersonateUser', JSON.stringify(resp.user));
-      return true;
-    }
-  } catch (e) {
-    console.log('error', e);
-  }
-  return false;
 }

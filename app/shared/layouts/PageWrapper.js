@@ -9,31 +9,34 @@ import { UserProvider } from '@shared/user/UserProvider';
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider';
 import { CampaignProvider } from '@shared/user/CampaignProvider';
 import { InsecureCookieClearer } from '@shared/layouts/InsecureCookieClearer';
+import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider';
 
 export default function PageWrapper({ children, hideFooter }) {
   return (
     <InsecureCookieClearer>
       <UserProvider>
-        <CampaignProvider>
-          <CampaignStatusProvider>
-            <NavigationProvider>
-              <div className="overflow-x-hidden">
-                <JsonLdSchema />
-                <Nav />
-                {children}
-                {!hideFooter && (
+        <ImpersonateUserProvider>
+          <CampaignProvider>
+            <CampaignStatusProvider>
+              <NavigationProvider>
+                <div className="overflow-x-hidden">
+                  <JsonLdSchema />
+                  <Nav />
+                  {children}
+                  {!hideFooter && (
+                    <Suspense>
+                      <Footer />
+                    </Suspense>
+                  )}
+                  <Snackbar />
                   <Suspense>
-                    <Footer />
+                    <CookiesSnackbar />
                   </Suspense>
-                )}
-                <Snackbar />
-                <Suspense>
-                  <CookiesSnackbar />
-                </Suspense>
-              </div>
-            </NavigationProvider>
-          </CampaignStatusProvider>
-        </CampaignProvider>
+                </div>
+              </NavigationProvider>
+            </CampaignStatusProvider>
+          </CampaignProvider>
+        </ImpersonateUserProvider>
       </UserProvider>
     </InsecureCookieClearer>
   );

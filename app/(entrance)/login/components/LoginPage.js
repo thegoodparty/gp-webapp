@@ -14,13 +14,13 @@ import { Suspense, useState } from 'react';
 import styles from './LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
+import { useUser } from '@shared/hooks/useUser';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -47,7 +47,8 @@ export default function LoginPage() {
     password: '',
   });
 
-  const userState = useHookstate(globalUserState);
+  const [_, setUser] = useUser();
+
   const snackbarState = useHookstate(globalSnackbarState);
 
   const enableSubmit = () =>
@@ -59,7 +60,7 @@ export default function LoginPage() {
 
       if (user) {
         setUserCookie(user);
-        userState.set(() => user);
+        setUser(user);
         if (newUser) {
           const afterAction = getCookie('afterAction');
           if (
