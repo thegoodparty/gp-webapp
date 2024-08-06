@@ -3,14 +3,12 @@ import { FullContentPage } from '@shared/FullContentPage';
 import { fetchContent } from 'helpers/fetchContent';
 
 const meta = pageMetaData({
-  title: 'Privacy Policy | GoodParty.org',
-  description:
-    'This Privacy Policy explains how GoodParty.org collects, uses, and disclose information that you may provide while visiting our website',
-  slug: '/privacy',
+  title: 'Terms of Service | GoodParty.org',
+  slug: '/terms-of-service',
 });
 export const metadata = meta;
 
 export default async function Page() {
-  const { content } = await fetchContent('privacyPage');
+  const { content } = await fetchContent('termsAndConditions');
   return <FullContentPage content={content} />;
 }
