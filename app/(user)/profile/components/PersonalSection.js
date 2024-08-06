@@ -16,6 +16,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FiSettings } from 'react-icons/fi';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function refreshUser() {
   try {
@@ -104,6 +105,13 @@ function PersonalSection({ user }) {
   async function updateUserCallback(updatedFields) {
     try {
       setUserState(await updateUser(updatedFields));
+      updatedFields.zip &&
+        (await updateCampaign([
+          {
+            key: 'details.zip',
+            value: updatedFields.zip,
+          },
+        ]));
     } catch (error) {
       console.log('Error updating user', error);
     }

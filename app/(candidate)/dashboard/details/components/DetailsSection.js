@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
+import { updateUser } from 'helpers/userHelper';
 
 const fields = [
   {
@@ -50,7 +51,9 @@ export default function DetailsSection(props) {
     if (canSave()) {
       setSaving(true);
       await updateCampaign([{ key: 'details.zip', value: state.zip }]);
-
+      await updateUser({
+        zip: state.zip,
+      });
       setSaving(false);
     }
   };
