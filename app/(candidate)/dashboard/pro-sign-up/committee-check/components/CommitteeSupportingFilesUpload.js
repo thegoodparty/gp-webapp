@@ -6,21 +6,36 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { CircularProgress } from '@mui/material';
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
 
+const FILE_LIMIT_MB = 10;
+
 export const CommitteeSupportingFilesUpload = ({
   campaign = {},
   inputValue = '',
   onUploadSuccess = () => {},
+  onUploadError = (e) => {},
 }) => {
   const { id: campaignId } = campaign;
   const fileInputRef = useRef(null);
   const [fileInfo, setFileInfo] = useState(null);
   const [loadingFileUpload, setLoadingFileUpload] = useState(false);
+  const [errorMessge, setErrorMessage] = useState('');
 
-  const onFileBrowseClick = (e) => {
+  const onFileBrowseClick = () => {
     fileInputRef.current.click();
   };
 
   const handleFileChoose = async (fileData, file) => {
+    setErrorMessage(``);
+    const fileSizeMb = file?.size / 1e6;
+    if (fileSizeMb > FILE_LIMIT_MB) {
+      setErrorMessage(
+        `File size of ${fileSizeMb.toFixed(
+          2,
+        )}MB is larger than ${FILE_LIMIT_MB}MB limit`,
+      );
+      onUploadError(new Error('File size too large'));
+      return;
+    }
     setLoadingFileUpload(true);
     setFileInfo(file);
     const formData = new FormData();
@@ -45,12 +60,13 @@ export const CommitteeSupportingFilesUpload = ({
   return (
     <div className="grid grid-cols-10 gap-6 align-center mt-4">
       <TextField
+        error={Boolean(errorMessge)}
         className="cursor-pointer col-span-10 md:col-span-7"
         value={fileInfo?.name || inputValue || ''}
         onClick={onFileBrowseClick}
         label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
-        helperText="File size less than 3MB"
+        helperText={errorMessge || `File size less than ${FILE_LIMIT_MB}MB`}
       />
 
       <PrimaryButton

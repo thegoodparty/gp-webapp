@@ -99,9 +99,10 @@ export default function AdminCandidatesTable({ campaigns }) {
       aiContent,
       details,
       pathToVictory,
+      createdAt,
+      updatedAt,
     } = campaign;
 
-    // const campaign = mapCampaignToCandidate(data);
     const { currentStep, reportedVoterGoals } = data || {};
     const {
       zip,
@@ -115,6 +116,8 @@ export default function AdminCandidatesTable({ campaigns }) {
       primaryElectionDate,
       campaignCommittee,
     } = details || {};
+
+    const lastVisited = user?.lastVisited;
 
     let waitingForP2v =
       !pathToVictory?.data?.p2vStatus ||
@@ -154,7 +157,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       lastName: user?.lastName ? user.lastName : 'n/a',
       userName: `${user?.firstName} ${user?.lastName}`,
       launched: mapStatus(details?.launchStatus),
-      lastVisited: details?.lastVisited,
+      lastVisited,
       party: partyResolver(details?.party),
       office: office === 'Other' ? otherOffice : office,
       officeTermLength: details?.officeTermLength,
@@ -164,8 +167,8 @@ export default function AdminCandidatesTable({ campaigns }) {
       zip: zip || '',
       district: details?.district || 'n/a',
       state: details?.state ? details?.state.toUpperCase() : '?',
-      createdAt: new Date(campaign.createdAt),
-      updatedAt: new Date(campaign.updatedAt),
+      createdAt: new Date(createdAt),
+      updatedAt: new Date(updatedAt),
       email: user?.email || 'n/a',
       phone: user?.phone || 'n/a',
       currentStep,

@@ -18,19 +18,20 @@ export const LegalStatements = () => (
       <a className="underline" href="/privacy" target="_blank">
         privacy policy
       </a>{' '}
-      and{' '}
-      <a
-        className="underline"
-        href="/faqs/terms-of-service/2rnff8oqgd3ogf9y1cvnxg"
-        target="_blank"
-      >
-        terms of service
-      </a>
     </li>
     <li>
       I acknowledge GoodParty.org maintains the right to remove users from the
       platform and withdraw its GoodParty.org certification and endorsement if
       users engage in conduct that violates these terms of service.
+    </li>
+    <li>
+      <a
+        className="underline cursor-pointer"
+        href="/terms-of-service"
+        target="_blank"
+      >
+        Terms of Service
+      </a>
     </li>
   </ul>
 );

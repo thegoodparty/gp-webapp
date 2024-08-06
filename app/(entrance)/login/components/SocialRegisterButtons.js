@@ -4,10 +4,10 @@ import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getCookie, setUserCookie } from 'helpers/cookieHelper';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { useUser } from '@shared/hooks/useUser';
 
 async function register(payload) {
   try {
@@ -21,7 +21,7 @@ async function register(payload) {
 
 export default function SocialRegisterButtons() {
   const snackbarState = useHookstate(globalSnackbarState);
-  const userState = useHookstate(globalUserState);
+  const [_, setUser] = useUser();
 
   const socialRegisterCallback = async (socialUser) => {
     const profile = socialUser._profile;
@@ -58,7 +58,7 @@ export default function SocialRegisterButtons() {
       socialToken: idToken,
     };
     const { user, newUser } = await register(payload);
-    console.log('user', user);
+
     if (user) {
       snackbarState.set(() => {
         return {
@@ -67,8 +67,7 @@ export default function SocialRegisterButtons() {
           isError: false,
         };
       });
-      setUserCookie(user);
-      userState.set(() => user);
+      setUser(user);
 
       const returnUrl = getCookie('returnUrl');
 
@@ -85,7 +84,6 @@ export default function SocialRegisterButtons() {
         window.location.href = returnUrl;
         return;
       }
-      console.log('redirecting to home');
 
       window.location.href = '/';
     } else {
@@ -113,12 +111,6 @@ export default function SocialRegisterButtons() {
       <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
         <GoogleRegisterButton loginSuccessCallback={socialRegisterCallback} />
       </GoogleOAuthProvider>
-
-      {/* <FacebookRegisterButton loginSuccessCallback={socialRegisterCallback} /> */}
-
-      {/* <div data-cy="twitter-register" className="mt-6">
-        <TwitterButton />
-      </div> */}
     </>
   );
 }

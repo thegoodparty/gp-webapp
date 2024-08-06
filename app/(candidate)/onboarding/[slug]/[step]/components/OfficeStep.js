@@ -107,6 +107,16 @@ export default function OfficeStep(props) {
             ? filingPeriods[0].endOn
             : undefined,
       },
+      // reset the electionType and electionLocation
+      // so it can run a full p2v.
+      {
+        key: 'pathToVictory.electionType',
+        value: undefined,
+      },
+      {
+        key: 'pathToVictory.electionLocation',
+        value: undefined,
+      },
     ];
     if (step) {
       const currentStep = onboardingStep(campaign, step);

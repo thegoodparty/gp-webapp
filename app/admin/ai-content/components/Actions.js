@@ -28,7 +28,6 @@ export default function Actions({ launched, slug, email }) {
             <ImpersonateAction
               email={email}
               isCandidate={true}
-              slug={slug}
               launched={launched}
             />
 

@@ -97,6 +97,14 @@ export default function Footer() {
                 className="font-normal text-slate-200"
               >
                 Privacy Policy.
+              </Link>{' '}
+              &nbsp;
+              <Link
+                href="/terms-of-service"
+                data-cy="footer-terms-of-service-link"
+                className="font-normal text-slate-200"
+              >
+                Terms of Service.
               </Link>
             </div>
           </div>
