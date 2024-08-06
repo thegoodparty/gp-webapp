@@ -14,16 +14,6 @@ const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
 const sfPro = localFont({
   subsets: ['latin'],
   src: [
-    // {
-    //   path: '../public/fonts/SFProDisplay-Thin.woff2',
-    //   weight: '100',
-    //   style: 'normal',
-    // },
-    // {
-    //   path: '../public/fonts/SFProDisplay-Ultralight.woff2',
-    //   weight: '200',
-    //   style: 'normal',
-    // },
     {
       path: '../public/fonts/SFProDisplay-Light.woff2',
       weight: '300',
@@ -44,11 +34,6 @@ const sfPro = localFont({
       weight: '600',
       style: 'normal',
     },
-    // {
-    //   path: '../public/fonts/SFProDisplay-Bold.woff2',
-    //   weight: '700',
-    //   style: 'normal',
-    // },
   ],
   formatHint: 'woff2',
   variable: '--sfpro-font',

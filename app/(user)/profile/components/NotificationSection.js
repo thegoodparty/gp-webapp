@@ -8,29 +8,12 @@
 import { useState, useEffect } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
-import { getUserCookie, setUserCookie } from 'helpers/cookieHelper';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import { TbMailPlus } from 'react-icons/tb';
 import H5 from '@shared/typography/H5';
 import { Switch } from '@mui/material';
-
-async function updateUserCallback(updatedMeta) {
-  try {
-    const api = gpApi.notification.updatePreferences;
-    const payload = {
-      metaData: JSON.stringify(updatedMeta),
-    };
-
-    const response = await gpFetch(api, payload);
-    const { user } = response;
-    // setUserCookie(user);
-  } catch (error) {
-    console.log('Error updating user', error);
-  }
-}
+import { useUser } from '@shared/hooks/useUser';
 
 const fields = [
   {
@@ -51,7 +34,7 @@ const fields = [
 ];
 
 export default function NotificationSection() {
-  const user = getUserCookie(true);
+  const [user, setUser] = useUser();
   const [state, setState] = useState({});
   const [initialUpdate, setInitialUpdate] = useState(false);
 
@@ -62,6 +45,21 @@ export default function NotificationSection() {
       setInitialUpdate(true);
     }
   }, [user]);
+
+  async function updateUserCallback(updatedMeta) {
+    try {
+      const api = gpApi.notification.updatePreferences;
+      const payload = {
+        metaData: JSON.stringify(updatedMeta),
+      };
+
+      const response = await gpFetch(api, payload);
+      const { user } = response;
+      setUser(user);
+    } catch (error) {
+      console.log('Error updating user', error);
+    }
+  }
 
   const handleChange = (key, event) => {
     const updatedState = {

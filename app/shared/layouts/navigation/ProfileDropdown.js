@@ -8,15 +8,13 @@ import {
   FaToolbox,
   FaUserCircle,
 } from 'react-icons/fa';
-import { hookstate, useHookstate } from '@hookstate/core';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
-import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { getCookie } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
 import { handleLogOut } from '@shared/user/handleLogOut';
-
-export const globalUserState = hookstate(false);
+import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
 
 const links = [
   {
@@ -25,29 +23,20 @@ const links = [
     href: '/profile',
     icon: <FaToolbox />,
   },
-  // {
-  //   id: 'nav-logout',
-  //   label: 'Logout',
-  //   href: '/logout',
-  //   icon: <RiLogoutBoxFill />,
-  // },
 ];
 
 function ProfileDropdown({ open, toggleCallback, user }) {
-  const [impersonating, setImpersonating] = useState(false);
-  const userState = useHookstate(globalUserState);
+  const {
+    clear: clearImpersonation,
+    token: impersonateToken,
+    user: impersonateUser,
+  } = useImpersonateUser();
+  const impersonating = impersonateToken && impersonateUser;
 
   useEffect(() => {
     if (user) {
-      userState.set(() => user);
       hubspotIntegration(user);
       fullstoryIndentity(user);
-      const cookie = getCookie('impersonateToken');
-      if (cookie) {
-        setImpersonating(true);
-      } else {
-        setImpersonating(false);
-      }
     }
   }, [user]);
 
@@ -155,8 +144,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
                 data-cy="header-link"
                 className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
                 onClick={() => {
-                  deleteCookie('impersonateToken');
-                  deleteCookie('impersonateUser');
+                  clearImpersonation();
                   window.location.href = '/admin';
                 }}
               >

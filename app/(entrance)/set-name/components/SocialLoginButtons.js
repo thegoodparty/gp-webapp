@@ -1,30 +1,21 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import {
-  deleteCookie,
-  getCookie,
-  setCookie,
-  setUserCookie,
-} from 'helpers/cookieHelper';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import TwitterButton from './TwitterButton';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleLoginButton from './GoogleLoginButton';
 import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { useUser } from '@shared/hooks/useUser';
 
 async function login(payload) {
   try {
     const api = gpApi.entrance.socialLogin;
     const { user, token } = await gpFetch(api, payload);
-    if (user && token) {
-      // setUserCookie(user);
-      // setCookie('token', token);
-    }
     return user;
   } catch (e) {
     console.log('error', e);
@@ -34,7 +25,7 @@ async function login(payload) {
 
 export default function SocialLoginButtons() {
   const snackbarState = useHookstate(globalSnackbarState);
-  const userState = useHookstate(globalUserState);
+  const [_, setUser] = useUser();
   const router = useRouter();
 
   const socialLoginCallback = async (socialUser) => {
@@ -72,7 +63,7 @@ export default function SocialLoginButtons() {
 
     const user = await login(payload);
     if (user) {
-      userState.set(() => user);
+      setUser(user);
       snackbarState.set(() => {
         return {
           isOpen: true,
@@ -80,7 +71,6 @@ export default function SocialLoginButtons() {
           isError: false,
         };
       });
-      // const afterAction = getCookie('afterAction');
       if (afterAction === 'createCampaign') {
         await createCampaign(router);
       }
@@ -102,7 +92,6 @@ export default function SocialLoginButtons() {
       });
     }
   };
-  const socialLoginFailureCallback = () => {};
 
   return (
     <>

@@ -8,15 +8,13 @@
 import React, { useEffect, useState } from 'react';
 import UserAvatar from '@shared/user/UserAvatar';
 import ImageUpload from '@shared/utils/ImageUpload';
-import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { getUserCookie } from 'helpers/cookieHelper';
-import { useRouter } from 'next/navigation';
 import Body2 from '@shared/typography/Body2';
+import { useUser } from '@shared/hooks/useUser';
 
 function ImageSection() {
-  const userState = useHookstate(globalUserState);
-  const user = userState.get();
+  const [user, setUser] = useUser();
+
   const [uploadedImage, setUploadedImage] = useState(false);
 
   let updatedUser = uploadedImage ? { avatar: uploadedImage } : user;
@@ -24,7 +22,7 @@ function ImageSection() {
   useEffect(() => {
     if (uploadedImage) {
       const updated = getUserCookie(true);
-      userState.set(() => updated);
+      setUser(updated);
     }
   }, [uploadedImage]);
   return (
