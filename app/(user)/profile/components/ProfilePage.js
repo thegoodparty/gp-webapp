@@ -6,19 +6,25 @@ import DeleteSection from './DeleteSection';
 import InvitationSection from './InvitationSection';
 import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
+import MaxWidth from '@shared/layouts/MaxWidth';
+import Paper from '@shared/utils/Paper';
 
 export default function ProfilePage(props) {
   return (
-    <CardPageWrapper>
-      <div className="max-w-4xl mx-auto bg-gray-50 py-5 px-6 rounded-xl">
-        <HeaderSection />
+    <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
+      <div className="max-w-screen-md mx-auto px-4 pt-4 xl:p-0 xl:pt-4">
+        <Paper>
+          <HeaderSection />
+        </Paper>
+
         <InvitationSection {...props} />
+
         <PersonalSection {...props} />
         <AccountSettingsSection {...props} />
         <PasswordSection {...props} />
         <NotificationSection />
         <DeleteSection />
       </div>
-    </CardPageWrapper>
+    </div>
   );
 }
