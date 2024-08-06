@@ -5,10 +5,11 @@ import PersonalSection from './PersonalSection';
 import DeleteSection from './DeleteSection';
 import InvitationSection from './InvitationSection';
 import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection';
+import CardPageWrapper from '@shared/cards/CardPageWrapper';
 
 export default function ProfilePage(props) {
   return (
-    <div className="bg-indigo-50 py-6">
+    <CardPageWrapper>
       <div className="max-w-4xl mx-auto bg-gray-50 py-5 px-6 rounded-xl">
         <HeaderSection />
         <InvitationSection {...props} />
@@ -18,6 +19,6 @@ export default function ProfilePage(props) {
         <NotificationSection />
         <DeleteSection />
       </div>
-    </div>
+    </CardPageWrapper>
   );
 }
