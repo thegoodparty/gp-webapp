@@ -16,6 +16,8 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FiSettings } from 'react-icons/fi';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
+import Paper from '@shared/utils/Paper';
+import H2 from '@shared/typography/H2';
 
 async function refreshUser() {
   try {
@@ -47,8 +49,10 @@ export const USER_SETTING_FIELDS = [
     key: 'email',
     label: 'Email',
     initialValue: '',
-    maxLength: 20,
+    maxLength: 30,
     type: 'email',
+    cols: 12,
+    required: true,
   },
   {
     key: 'phone',
@@ -56,6 +60,7 @@ export const USER_SETTING_FIELDS = [
     initialValue: '',
     maxLength: 12,
     type: 'phone',
+    required: true,
   },
   {
     key: 'zip',
@@ -63,12 +68,6 @@ export const USER_SETTING_FIELDS = [
     initialValue: '',
     maxLength: 5,
     required: true,
-  },
-  {
-    key: 'displayName',
-    label: 'Display Name',
-    initialValue: '',
-    maxLength: 16,
   },
 ];
 
@@ -146,62 +145,64 @@ function PersonalSection({ user }) {
   };
 
   return (
-    <section className="py-4 border-b border-slate-300 flex">
-      <div className="shrink-0 pr-3 text-indigo-600 pt-[6px]">
-        <FiSettings />
-      </div>
-      <div className="flex-1">
-        <H4>General</H4>
-        <Body2 className="text-indigo-600 mb-6">
-          Update your general information here
-        </Body2>
-        <form noValidate onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-12 gap-3">
-            {USER_SETTING_FIELDS.map((field) => (
-              <div key={field.key} className="col-span-12 lg:col-span-6">
-                {field.type === 'phone' ? (
-                  <div>
-                    <PhoneInput
-                      value={state[field.key]}
-                      onChangeCallback={(phone, isValid) => {
-                        onChangeField(field.key, phone);
-                        setIsPhoneValid(isValid);
-                      }}
-                      hideIcon
-                      shrink
-                    />
-                  </div>
-                ) : (
-                  <TextField
-                    key={field.label}
+    <Paper className="mt-4">
+      <H2>Personal Information</H2>
+      <Body2 className="text-gray-600 mb-6">
+        Update your personal information.
+      </Body2>
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <div className="grid grid-cols-12 gap-3">
+          {USER_SETTING_FIELDS.map((field) => (
+            <div
+              key={field.key}
+              className={`col-span-12 ${
+                field.cols === 12 ? '' : 'lg:col-span-6'
+              }`}
+            >
+              {field.type === 'phone' ? (
+                <div>
+                  <PhoneInput
                     value={state[field.key]}
-                    fullWidth
-                    variant="outlined"
+                    onChangeCallback={(phone, isValid) => {
+                      onChangeField(field.key, phone);
+                      setIsPhoneValid(isValid);
+                    }}
+                    hideIcon
+                    shrink
+                    required
                     label={field.label}
-                    onChange={(e) => onChangeField(field.key, e.target.value)}
-                    required={field.required}
-                    style={{ marginBottom: '16px' }}
-                    InputLabelProps={{ shrink: true }}
                   />
-                )}
-              </div>
-            ))}
-            <div className="col-span-12 lg:col-span-6 flex justify-end items-end pb-4">
-              <div onClick={submit}>
-                <PrimaryButton
-                  disabled={!canSave}
-                  loading={saving}
-                  type="submit"
-                  size="medium"
-                >
-                  Save
-                </PrimaryButton>
-              </div>
+                </div>
+              ) : (
+                <TextField
+                  key={field.label}
+                  value={state[field.key]}
+                  fullWidth
+                  variant="outlined"
+                  label={field.label}
+                  onChange={(e) => onChangeField(field.key, e.target.value)}
+                  required={field.required}
+                  style={{ marginBottom: '16px' }}
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
+            </div>
+          ))}
+          <div className="col-span-12 lg:col-span-6 flex justify-end items-end pb-4">
+            <div onClick={submit}>
+              <PrimaryButton
+                disabled={!canSave}
+                loading={saving}
+                type="submit"
+                size="medium"
+              >
+                Save
+              </PrimaryButton>
             </div>
           </div>
-        </form>
-      </div>
-    </section>
+        </div>
+      </form>
+    </Paper>
   );
 }
 
