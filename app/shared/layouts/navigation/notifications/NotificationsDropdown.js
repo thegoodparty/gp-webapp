@@ -17,7 +17,8 @@ export async function updateNotifications() {
   }
 }
 
-export default function NotificationsDropdown({ open, toggleCallback, user }) {
+export default function NotificationsDropdown({ user }) {
+  const [open, setOpen] = useState(false);
   const notifications = useNotifications();
   const [showDot, setShowDot] = useState(false);
   useEffect(() => {
@@ -29,6 +30,12 @@ export default function NotificationsDropdown({ open, toggleCallback, user }) {
   if (!user) {
     return null;
   }
+
+  const toggleCallback = () => {
+    document.body.style.overflow = open ? 'visible' : 'hidden';
+    setOpen(!open);
+  };
+
   const handleClick = async () => {
     if (open) {
       setShowDot(false);

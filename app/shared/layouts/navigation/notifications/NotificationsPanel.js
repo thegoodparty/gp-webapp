@@ -11,7 +11,12 @@ export default function NotificationsPanel({
     <div className="">
       <div className="flex justify-between items-center text-slate-100 py-5 px-6">
         <H2>Notifications</H2>
-        <Link href="/profile">
+        <Link
+          href="/profile"
+          onClick={() => {
+            closeNotificationCallback();
+          }}
+        >
           <FiSettings />
         </Link>
       </div>
