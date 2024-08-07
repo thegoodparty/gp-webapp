@@ -18,6 +18,7 @@ import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
 import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
+import ImageSection from './ImageSection';
 
 async function refreshUser() {
   try {
@@ -154,9 +155,10 @@ function PersonalSection({ user }) {
   return (
     <Paper className="mt-4">
       <H2>Personal Information</H2>
-      <Body2 className="text-gray-600 mb-6">
+      <Body2 className="text-gray-600 mb-8">
         Update your personal information.
       </Body2>
+      <ImageSection />
       <form noValidate onSubmit={(e) => e.preventDefault()}>
         <div className="grid grid-cols-12 gap-3">
           {USER_SETTING_FIELDS.map((field) => (
@@ -195,18 +197,16 @@ function PersonalSection({ user }) {
               )}
             </div>
           ))}
-          <div className="col-span-12 lg:col-span-6 flex justify-end items-end pb-4">
-            <div onClick={submit}>
-              <PrimaryButton
-                disabled={!canSave}
-                loading={saving}
-                type="submit"
-                size="medium"
-              >
-                Save
-              </PrimaryButton>
-            </div>
-          </div>
+        </div>
+        <div className="mt-4">
+          <PrimaryButton
+            disabled={!canSave}
+            loading={saving}
+            type="submit"
+            onClick={submit}
+          >
+            Save Changes
+          </PrimaryButton>
         </div>
       </form>
     </Paper>

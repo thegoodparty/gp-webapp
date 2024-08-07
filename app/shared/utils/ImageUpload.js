@@ -11,6 +11,7 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { setUserCookie } from 'helpers/cookieHelper';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function fileSelectCallback(image, uploadCallback, isUserImage) {
   let api;
