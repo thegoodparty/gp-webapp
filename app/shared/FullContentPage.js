@@ -3,7 +3,7 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
 
-export const FullContentPage = ({ content }) => (
+export const FullContentPage = ({ content = {} }) => (
   <MaxWidth>
     <h1
       className="mt-6 text-center text-3xl lg:text-4xl font-black"
