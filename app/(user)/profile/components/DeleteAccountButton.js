@@ -14,6 +14,7 @@ import H3 from '@shared/typography/H3';
 import { RiDeleteBin7Line } from 'react-icons/ri';
 import Body2 from '@shared/typography/Body2';
 import ErrorButton from '@shared/buttons/ErrorButton';
+import { FaTrash } from 'react-icons/fa';
 
 async function deleteAccountCallback() {
   try {
@@ -28,33 +29,29 @@ async function deleteAccountCallback() {
     // );
   }
 }
-function DeleteSection() {
+function DeleteAccountButton() {
   // const { deleteAccountCallback } = useContext(ProfileSettingsPageContext);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   return (
-    <section className="py-4 flex">
-      <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
-        <RiDeleteBin7Line />
+    <div>
+      <div onClick={() => setShowConfirmDelete(true)}>
+        <ErrorButton variant="outlined">
+          <div className="flex items-center">
+            <FaTrash />
+            <div className="ml-2">Delete Account</div>
+          </div>
+        </ErrorButton>
       </div>
-      <div className="flex-1">
-        <H3>Danger Zone - Delete your account</H3>
-        <Body2 className="text-indigo-600 mb-6">
-          Remove all your information from our site
-        </Body2>
-        <div onClick={() => setShowConfirmDelete(true)}>
-          <ErrorButton>Delete Account</ErrorButton>
-        </div>
-        <AlertDialog
-          open={showConfirmDelete}
-          handleClose={() => setShowConfirmDelete(false)}
-          title="Delete Account"
-          ariaLabel="Delete Account"
-          description="Are you sure you want to delete your account? This cannot be undone."
-          handleProceed={deleteAccountCallback}
-        />
-      </div>
-    </section>
+      <AlertDialog
+        open={showConfirmDelete}
+        handleClose={() => setShowConfirmDelete(false)}
+        title="Delete Account"
+        ariaLabel="Delete Account"
+        description="Are you sure you want to delete your account? This cannot be undone."
+        handleProceed={deleteAccountCallback}
+      />
+    </div>
   );
 }
 
-export default DeleteSection;
+export default DeleteAccountButton;
