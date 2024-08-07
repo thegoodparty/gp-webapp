@@ -52,7 +52,8 @@ export default function OfficeStep(props) {
     if (!position) return undefined;
     if (!position.electionFrequencies) return undefined;
     if (!position.electionFrequencies.length === 0) return undefined;
-    return `${position.electionFrequencies[0].frequency} years`;
+    if (!position.electionFrequencies[0]) return undefined;
+    return `${position.electionFrequencies[0]?.frequency} years`;
   };
 
   const handleSave = async () => {
