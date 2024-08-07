@@ -6,7 +6,7 @@ import { memo } from 'react';
 
 function NavDropdown({ open, toggleCallback, links, label = '', id }) {
   return (
-    <div className="ml-6 relative cursor-pointer ">
+    <div className="lg:ml-3 xl:ml-6 relative cursor-pointer ">
       <PrimaryButton
         id={id}
         onClick={toggleCallback}
@@ -28,7 +28,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
             onClick={toggleCallback}
           />
           <div
-            className={`absolute z-50 top-11 left-0 min-w-[270px] bg-primary-dark text-white rounded-xl  shadow-md transition  ${
+            className={`absolute z-50 top-11 left-0 min-w-[270px] bg-primary-dark text-white rounded-xl shadow-md transition  ${
               open ? 'p-3 overflow-hidden' : 'p-0 opacity-0 overflow-visible'
             }`}
           >
