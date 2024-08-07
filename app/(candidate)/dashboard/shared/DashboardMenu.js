@@ -12,7 +12,7 @@ import {
 import { TbBrain } from 'react-icons/tb';
 import { handleLogOut } from '@shared/user/handleLogOut';
 
-let pages = [
+const DEFAULT_MENU_ITEMS = [
   {
     label: 'Campaign Tracker',
     icon: <AiOutlineFlag />,
@@ -65,6 +65,31 @@ let pages = [
     id: 'resources-library',
   },
 ];
+
+const VOTER_RECORDS_MENU_ITEM = {
+  id: 'voter-records-dashboard',
+  label: 'Voter Records',
+  link: '/dashboard/voter-records',
+};
+
+const DOOR_KNOCKING_MENU_ITEM = {
+  label: 'Door Knocking',
+  icon: <RiDoorOpenLine />,
+  link: '/dashboard/door-knocking/main',
+  id: 'door-knocking-dashboard',
+};
+
+const getDashboardMenuItems = (campaign, user) => {
+  const menuItems = [...DEFAULT_MENU_ITEMS];
+  if (campaign?.isPro) {
+    menuItems[1] = VOTER_RECORDS_MENU_ITEM;
+  }
+  if (user?.isAdmin) {
+    menuItems.splice(5, 0, DOOR_KNOCKING_MENU_ITEM);
+  }
+  return menuItems;
+};
+
 export default function DashboardMenu({
   pathname,
   toggleCallback,
@@ -72,24 +97,11 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  if ((user?.isAdmin || campaign?.isPro) && pages.length === 8) {
-    pages[1].link = '/dashboard/voter-records';
-    pages[1].id = 'vote-records-dashboard';
-    pages[1].label = 'Voter Records';
-
-    if (user?.isAdmin) {
-      pages.splice(5, 0, {
-        label: 'Door Knocking',
-        icon: <RiDoorOpenLine />,
-        link: '/dashboard/door-knocking/main',
-        id: 'door-knocking-dashboard',
-      });
-    }
-  }
+  const menuItems = getDashboardMenuItems(campaign, user);
 
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
-      {pages.map((page) => (
+      {menuItems.map((page) => (
         <Fragment key={page.label}>
           {page.section && (
             <div className="font-medium text-sm mt-4 px-3">{page.section}</div>
