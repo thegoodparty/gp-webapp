@@ -87,3 +87,8 @@ export function weekRangeFromDate(dateStr, weeks) {
 
   return `${dateUsHelper(weekStart)} - ${dateUsHelper(weekEnd)}`;
 }
+
+export const dateUSClientLocaleHelper = (utcTimeSecs) =>
+  new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'long',
+  }).format(new Date(utcTimeSecs * 1000));

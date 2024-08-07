@@ -8,8 +8,6 @@ import { useEffect, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { useHookstate } from '@hookstate/core';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import H4 from '@shared/typography/H4';
@@ -17,6 +15,8 @@ import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FiSettings } from 'react-icons/fi';
 import { updateUser } from 'helpers/userHelper';
+import { useUser } from '@shared/hooks/useUser';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function refreshUser() {
   try {
@@ -29,13 +29,6 @@ async function refreshUser() {
   }
 }
 
-async function updateUserCallback(updatedFields, userState) {
-  try {
-    userState.set(await updateUser(updatedFields));
-  } catch (error) {
-    console.log('Error updating user', error);
-  }
-}
 export const USER_SETTING_FIELDS = [
   {
     key: 'firstName',
@@ -80,8 +73,9 @@ export const USER_SETTING_FIELDS = [
   },
 ];
 
+// TODO: stop prop-drilling down the user object. Use the useUser hook instead
 function PersonalSection({ user }) {
-  const userState = useHookstate(globalUserState);
+  const [_, setUserState] = useUser();
   const [saving, setSaving] = useState(false);
 
   const updatedState = {};
@@ -94,7 +88,7 @@ function PersonalSection({ user }) {
   const [isPhoneValid, setIsPhoneValid] = useState(true);
 
   useEffect(() => {
-    updateUser();
+    refetchUser();
   }, []);
 
   useEffect(() => {
@@ -103,10 +97,25 @@ function PersonalSection({ user }) {
     }
   }, [user]);
 
-  const updateUser = async () => {
+  const refetchUser = async () => {
     const updated = await refreshUser();
-    userState.set(() => updated);
+    setUserState(updated);
   };
+
+  async function updateUserCallback(updatedFields) {
+    try {
+      setUserState(await updateUser(updatedFields));
+      updatedFields.zip &&
+        (await updateCampaign([
+          {
+            key: 'details.zip',
+            value: updatedFields.zip,
+          },
+        ]));
+    } catch (error) {
+      console.log('Error updating user', error);
+    }
+  }
 
   const onChangeField = (key, val) => {
     setState({
@@ -140,7 +149,7 @@ function PersonalSection({ user }) {
       fields.phone = fields.phone.replace(/\D+/g, '');
     }
     setSaving(true);
-    await updateUserCallback(fields, userState);
+    await updateUserCallback(fields);
     setSaving(false);
   };
 

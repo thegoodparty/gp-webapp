@@ -52,7 +52,8 @@ export default function OfficeStep(props) {
     if (!position) return undefined;
     if (!position.electionFrequencies) return undefined;
     if (!position.electionFrequencies.length === 0) return undefined;
-    return `${position.electionFrequencies[0].frequency} years`;
+    if (!position.electionFrequencies[0]) return undefined;
+    return `${position.electionFrequencies[0]?.frequency} years`;
   };
 
   const handleSave = async () => {
@@ -106,6 +107,16 @@ export default function OfficeStep(props) {
           filingPeriods && filingPeriods.length > 0
             ? filingPeriods[0].endOn
             : undefined,
+      },
+      // reset the electionType and electionLocation
+      // so it can run a full p2v.
+      {
+        key: 'pathToVictory.electionType',
+        value: undefined,
+      },
+      {
+        key: 'pathToVictory.electionLocation',
+        value: undefined,
       },
     ];
     if (step) {

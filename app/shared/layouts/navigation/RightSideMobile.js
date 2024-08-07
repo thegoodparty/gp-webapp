@@ -32,7 +32,6 @@ export default function RightSideMobile() {
   const [user] = useUser();
   const [campaignStatus, setCampaignStatus] = useCampaignStatus();
   const { status, step, slug } = campaignStatus || {};
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const pathname = usePathname();
   const isDashboardPath = pathname?.startsWith('/dashboard');
   const isVolunteerDashboardPath = pathname?.startsWith('/volunteer-dashboard');
@@ -41,15 +40,6 @@ export default function RightSideMobile() {
 
   const closeMenu = () => {
     setOpen(false);
-  };
-
-  const toggleNotifications = () => {
-    if (notificationsOpen) {
-      document.body.style.overflow = 'visible';
-    } else {
-      document.body.style.overflow = 'hidden';
-    }
-    setNotificationsOpen(!notificationsOpen);
   };
 
   return (
@@ -64,11 +54,7 @@ export default function RightSideMobile() {
             <>
               <ExitToDashboardButton />
               <div>
-                <NotificationsDropdown
-                  open={notificationsOpen}
-                  toggleCallback={toggleNotifications}
-                  user={user}
-                />
+                <NotificationsDropdown user={user} />
               </div>
             </>
           )}

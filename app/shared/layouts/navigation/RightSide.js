@@ -14,7 +14,6 @@ import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboar
 export default function RightSide() {
   const [user] = useUser();
 
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
 
@@ -23,14 +22,6 @@ export default function RightSide() {
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
   const isOnboardingPath = pathname?.startsWith('/onboarding');
-
-  const toggleNotifications = () => {
-    closeAll();
-    if (!notificationsOpen) {
-      document.body.style.overflow = 'hidden';
-    }
-    setNotificationsOpen(!notificationsOpen);
-  };
 
   const toggleProfile = () => {
     closeAll();
@@ -43,7 +34,6 @@ export default function RightSide() {
   };
 
   const closeAll = () => {
-    setNotificationsOpen(false);
     setProfileOpen(false);
     document.body.style.overflow = 'visible';
   };
@@ -65,11 +55,7 @@ export default function RightSide() {
       {user ? (
         <>
           <ExitToDashboardButton />
-          <NotificationsDropdown
-            open={notificationsOpen}
-            toggleCallback={toggleNotifications}
-            user={user}
-          />
+          <NotificationsDropdown user={user} />
           <ProfileDropdown
             open={profileOpen}
             toggleCallback={toggleProfile}
