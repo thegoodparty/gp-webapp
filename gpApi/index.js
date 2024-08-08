@@ -80,6 +80,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    createDemoCampaign: {
+      url: `${base}campaign/demo`,
+      method: 'POST',
+      withAuth: true,
+    },
     update: {
       url: `${base}campaign`,
       method: 'PUT',
@@ -645,11 +650,6 @@ const gpApi = {
     },
   },
   voterData: {
-    // purchaseVoterFile: {
-    //   url: `${base}voter-data/voter-file`, //admin
-    //   method: 'POST',
-    //   withAuth: true,
-    // },
     locations: {
       url: `${base}voter-data/locations`,
       method: 'GET',

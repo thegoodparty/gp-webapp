@@ -3,13 +3,13 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import RadioList from '@shared/inputs/RadioList';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
-import Paper from '@shared/utils/Paper';
-import { updateUserMeta } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import {
+  createDemoCampaign,
+  updateUserMeta,
+} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const options = [
@@ -25,13 +25,12 @@ const options = [
 
 export default function BrowsingFinalPage() {
   const [selected, setSelected] = useState(false);
-  const router = useRouter();
 
   const handleNext = async () => {
-    // TODO: Matthew - start here
-    // await updateUserMeta({ whyBrowsing: selected });
-    // router.push('/browsing-final');
+    await updateUserMeta({ demoPersona: selected });
+    await createDemoCampaign();
   };
+
   return (
     <CardPageWrapper>
       <div className="text-center mb-8 pt-8">
@@ -52,9 +51,11 @@ export default function BrowsingFinalPage() {
             <div className="min-w-[120px]">Back</div>
           </SecondaryButton>
         </Link>
-        <PrimaryButton onClick={handleNext}>
-          <div className="min-w-[120px]">Next</div>
-        </PrimaryButton>
+        <Link disabled={!selected} href="/browsing-welcome">
+          <PrimaryButton disabled={!selected} onClick={handleNext}>
+            <div className="min-w-[120px]">Next</div>
+          </PrimaryButton>
+        </Link>
       </div>
     </CardPageWrapper>
   );
