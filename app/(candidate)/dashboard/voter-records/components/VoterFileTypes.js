@@ -75,7 +75,7 @@ const defaultFileTypes = [
   },
   {
     key: 'telemarketing',
-    name: `Telemarketing - ${date}`,
+    name: `Phone Banking - ${date}`,
     fields: [
       'Phone Banking (Default)',
       'Phone Banking',
