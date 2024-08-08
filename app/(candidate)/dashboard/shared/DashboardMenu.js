@@ -70,6 +70,7 @@ const VOTER_RECORDS_MENU_ITEM = {
   id: 'voter-records-dashboard',
   label: 'Voter Records',
   link: '/dashboard/voter-records',
+  icon: <GiProgression />,
 };
 
 const DOOR_KNOCKING_MENU_ITEM = {
