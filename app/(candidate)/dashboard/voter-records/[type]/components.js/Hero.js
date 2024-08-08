@@ -11,11 +11,10 @@ import DownloadFile from './DownloadFile';
 
 export default function Hero(props) {
   const { type, campaign, fileName } = props;
-
   if (
     campaign.data?.customVoterFiles &&
     campaign.data?.customVoterFiles.length > 0 &&
-    VoterFileTypes.length === 5
+    VoterFileTypes.length === 6
   ) {
     campaign.data?.customVoterFiles.forEach((file, i) => {
       VoterFileTypes.push({
@@ -42,7 +41,10 @@ export default function Hero(props) {
   });
 
   const file = fileByKey[type];
+  console.log('file', file);
   const { isCustom, index } = file || {};
+
+  console.log('isCustom', isCustom);
 
   return (
     <Paper className="mt-4">
