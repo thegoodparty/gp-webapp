@@ -49,6 +49,19 @@ export function onboardingStep(campaign, step) {
   return `onboarding-${nextStep}`;
 }
 
+export async function createDemoCampaign() {
+  try {
+    const api = gpApi.campaign.createDemoCampaign;
+    const { slug } = await gpFetch(api);
+    if (slug) {
+      deleteCookie('afterAction');
+      deleteCookie('returnUrl');
+    }
+  } catch (e) {
+    return false;
+  }
+}
+
 export async function createCampaign() {
   try {
     const api = gpApi.campaign.create;
