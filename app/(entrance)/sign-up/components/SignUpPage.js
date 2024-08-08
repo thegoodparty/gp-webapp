@@ -3,11 +3,7 @@ import { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
-import {
-  deleteCookie,
-  getCookie,
-  setUserCookie,
-} from 'helpers/cookieHelper.js';
+import { setUserCookie } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
 import { Fragment, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
@@ -15,9 +11,7 @@ import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
-import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import Paper from '@shared/utils/Paper';
 import Body2 from '@shared/typography/Body2';
 import RenderInputField from '@shared/inputs/RenderInputField';

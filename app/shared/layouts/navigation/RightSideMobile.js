@@ -19,6 +19,7 @@ import {
 import { useUser } from '@shared/hooks/useUser';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
+import SuccessButton from '@shared/buttons/SuccessButton';
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
@@ -120,17 +121,8 @@ export default function RightSideMobile() {
                       ))}
                     </div>
                   ))}
-                  <div
-                    className={`fixed right-0 bottom-0 w-[270px] ${
-                      user ? 'h-36' : 'h-60'
-                    }`}
-                  >
-                    <div className="h-12 bg-[linear-gradient(0deg,rgba(19,22,26,1)_10%,rgba(19,22,26,0.7)_90%)]"></div>
-                    <div
-                      className={`p-6 h-48  bg-primary-dark ${
-                        user ? 'h-24' : 'h-48'
-                      }`}
-                    >
+                  <div className={`fixed right-0 bottom-0 w-[270px] h-auto`}>
+                    <div className={`p-6 bg-primary-dark h-auto`}>
                       {user ? (
                         <>
                           {status === 'candidate' && (
@@ -199,9 +191,14 @@ export default function RightSideMobile() {
                       ) : (
                         <>
                           <Link href="/login" onClick={closeMenu}>
-                            <div className="w-full text-white py-4 text-center font-medium">
+                            <div className="w-full text-white pb-4 text-center font-medium">
                               Login
                             </div>
+                          </Link>
+                          <Link href="/sign-up" onClick={closeMenu}>
+                            <SuccessButton className="w-full text-white py-4 text-center font-medium">
+                              Sign Up
+                            </SuccessButton>
                           </Link>
                           <Link
                             href="/run-for-office"

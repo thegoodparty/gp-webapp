@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
+import { compileButtonClassName } from '@shared/buttons/compileButtonClassName';
 
 export default function SuccessButton({
   children,
@@ -81,7 +82,7 @@ export default function SuccessButton({
 
   return (
     <button
-      className={clsx({ ...baseClass, ...className })}
+      className={compileButtonClassName(baseClass, className)}
       style={style}
       disabled={disabled}
       {...restProps}
