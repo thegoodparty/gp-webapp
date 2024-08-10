@@ -54,6 +54,7 @@ export default function RenderInputField({
           shrink
           disabled={field.disabled}
           placeholder={field.placeholder || ''}
+          required={field.required}
         />
       )}
       {field.type === 'phone' && (

@@ -3,7 +3,6 @@ import { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
-import { setUserCookie } from 'helpers/cookieHelper.js';
 import { useHookstate } from '@hookstate/core';
 import { Fragment, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
@@ -18,15 +17,29 @@ import RenderInputField from '@shared/inputs/RenderInputField';
 import Overline from '@shared/typography/Overline';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Link from 'next/link';
+import { useUser } from '@shared/hooks/useUser';
 
 const fields = [
-  { key: 'firstName', label: 'First Name', type: 'text', placeholder: 'Jane' },
-  { key: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Doe' },
+  {
+    key: 'firstName',
+    label: 'First Name',
+    type: 'text',
+    placeholder: 'Jane',
+    required: true,
+  },
+  {
+    key: 'lastName',
+    label: 'Last Name',
+    type: 'text',
+    placeholder: 'Doe',
+    required: true,
+  },
   {
     key: 'email',
     label: 'Email',
     type: 'email',
     placeholder: 'hellow@email.com',
+    required: true,
   },
   {
     key: 'phone',
@@ -35,6 +48,7 @@ const fields = [
     placeholder: '(123) 456-6789',
     cols: 6,
     noBottomMargin: true,
+    required: true,
   },
   {
     key: 'zip',
@@ -43,6 +57,7 @@ const fields = [
     placeholder: '12345',
     cols: 6,
     noBottomMargin: true,
+    required: true,
   },
 ];
 
@@ -54,6 +69,9 @@ export const validateZip = (zip) => {
 async function register(firstName, lastName, email, phone, zip, password) {
   try {
     const api = gpApi.entrance.register;
+    console.log('api', api);
+    console.log('gpApi', gpApi.entrance);
+
     const payload = {
       firstName,
       lastName,
@@ -62,6 +80,7 @@ async function register(firstName, lastName, email, phone, zip, password) {
       zip,
       password,
     };
+    console.log('api', api);
     const res = await gpFetch(api, payload);
     if (res.status === 409) {
       return { exists: true };
@@ -83,8 +102,8 @@ export default function SignUpPage() {
     password: '',
   });
 
-  const userState = useHookstate(globalUserState);
   const snackbarState = useHookstate(globalSnackbarState);
+  const [_, setUser] = useUser();
 
   const enableSubmit = () =>
     isValidEmail(state.email) && isValidPassword(state.password);
@@ -103,8 +122,7 @@ export default function SignUpPage() {
       console.log('exists', exists);
 
       if (user) {
-        setUserCookie(user);
-        userState.set(() => user);
+        setUser(user);
         window.location.href = '/account-type';
         return;
       } else {
