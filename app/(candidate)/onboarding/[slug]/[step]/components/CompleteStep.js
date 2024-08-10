@@ -68,7 +68,7 @@ export default function CompleteStep() {
         get started!
       </Body1>
       <PrimaryButton onClick={handleSave} fullWidth>
-        View Dashboard
+        {loading ? 'Launching...' : 'View Dashboard'}
       </PrimaryButton>
     </div>
   );

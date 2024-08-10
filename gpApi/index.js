@@ -333,8 +333,13 @@ const gpApi = {
       withAuth: true,
     },
     updateMeta: {
-      url: `${base}user-meta`,
+      url: `${base}user/meta`,
       method: 'PUT',
+      withAuth: true,
+    },
+    getMeta: {
+      url: `${base}user/meta`,
+      method: 'GET',
       withAuth: true,
     },
     refresh: {

@@ -1,7 +1,20 @@
-import { getServerUser } from 'helpers/userServerHelper';
+import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
 import BrowsingPage from './components/BrowsingPage';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function fetchUserMeta() {
+  try {
+    const api = gpApi.user.getMeta;
+    const token = getServerToken();
+    return await gpFetch(api, false, false, token);
+  } catch (e) {
+    console.log('error at fetchUserMeta', e);
+    return {};
+  }
+}
 
 const meta = pageMetaData({
   title: 'explore GoodParty.org',
@@ -17,5 +30,12 @@ export default async function Page() {
     redirect('/login');
   }
 
-  return <BrowsingPage />;
+  const { metaData } = await fetchUserMeta();
+  console.log('metaData', metaData);
+
+  const childProps = {
+    metaData,
+  };
+
+  return <BrowsingPage {...childProps} />;
 }

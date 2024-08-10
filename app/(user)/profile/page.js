@@ -30,7 +30,7 @@ export default async function Page() {
   }
   const token = getServerToken();
   const { campaign } = await fetchUserCampaign();
-  const { subscriptionCancelAt } = campaign?.details;
+  const { subscriptionCancelAt } = campaign?.details || {};
 
   const { invitations } = await fetchInvitations(token);
   const childProps = {

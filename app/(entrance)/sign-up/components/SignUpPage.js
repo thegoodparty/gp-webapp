@@ -18,6 +18,7 @@ import Overline from '@shared/typography/Overline';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import Link from 'next/link';
 import { useUser } from '@shared/hooks/useUser';
+import Body1 from '@shared/typography/Body1';
 
 const fields = [
   {
@@ -168,6 +169,12 @@ export default function SignUpPage() {
                   Join the movement of candidates who refuse to accept the
                   status quo and are committed to breaking free from of the
                   two-party system.{' '}
+                </Body2>
+                <Body2 className="mt-3">
+                  Already have an account?{' '}
+                  <Link href="/login" className="underline">
+                    Login
+                  </Link>
                 </Body2>
               </div>
 
