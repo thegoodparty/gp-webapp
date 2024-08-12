@@ -62,7 +62,7 @@ export default function ContentEditor({
 
   const loadInputFields = async () => {
     const keyNoDigits = key.replace(/\d+$/, '');
-    const { content } = await fetchInputFields(keyNoDigits);
+    const content = await fetchInputFields(keyNoDigits);
     if (content) {
       setInputFields(content);
     } else {
