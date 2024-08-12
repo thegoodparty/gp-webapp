@@ -14,10 +14,11 @@ const MAX_ATTEMPTS = 3;
 
 export async function countVoterFile(type, customFilters) {
   try {
-    const api = gpApi.voterData.count;
+    const api = gpApi.voterData.getVoterFile;
     const payload = {
       type,
       customFilters: customFilters ? JSON.stringify(customFilters) : undefined,
+      countOnly: true,
     };
     return await gpFetch(api, payload, 3600);
   } catch (e) {
