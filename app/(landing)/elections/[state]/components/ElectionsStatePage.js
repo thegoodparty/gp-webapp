@@ -25,7 +25,7 @@ export default function ElectionsStatePage(props) {
           <LinksSection
             entities={childEntity}
             linkFunc={countyLink}
-            title={`Explore 2024 county elections in ${stateName}`}
+            title={`Explore county elections in ${stateName}`}
           />
         </div>
       </div>
