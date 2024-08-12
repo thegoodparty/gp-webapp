@@ -42,10 +42,6 @@ export default function P2vCard(props) {
               ? numberFormatter(projectedTurnout)
               : null}{' '}
             Votes
-            {projectedTurnout && projectedTurnout !== 0
-              ? numberFormatter(projectedTurnout)
-              : null}{' '}
-            Votes
             <br />
             Needed to Win
           </Body2>
