@@ -46,7 +46,7 @@ export default function PositionPage(props) {
           <LinksSection
             entities={otherRaces}
             linkFunc={positionLink}
-            title={`Explore all 2024 ${loc} city elections`}
+            title={`Explore all ${loc} city elections`}
           />
         </div>
       </div>
