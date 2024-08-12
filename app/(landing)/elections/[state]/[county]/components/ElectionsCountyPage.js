@@ -25,7 +25,7 @@ export default function ElectionsCountyPage(props) {
         <LinksSection
           entities={childEntities}
           linkFunc={cityLink}
-          title={`Explore 2024 city elections in ${
+          title={`Explore city elections in ${
             county?.county_full ? county.county_full : 'county'
           }`}
         />
