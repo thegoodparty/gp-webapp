@@ -150,6 +150,7 @@ export default function CampaignPlanSection({
       aiCount = 0;
       setPlan(chatResponse);
       setLoading(false);
+      updateVersionsCallback();
     }
   };
 
