@@ -59,10 +59,10 @@ export default function Footer() {
           ))}
           <div className="col-span-12 lg:col-span-3 text-start pt-10 md:pt-0">
             <Image
-              src="/images/white-logo.svg"
+              src="https://assets.goodparty.org/gp-org-logo-white.png"
               data-cy="logo"
-              width={175}
-              height={32}
+              width={222}
+              height={52}
               alt="GoodParty.org"
             />
             <div
