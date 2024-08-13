@@ -198,6 +198,7 @@ export default function SignUpPage() {
                   <div className="col-span-12 mt-2">
                     <PasswordInput
                       label="Password"
+                      value={state.password}
                       onChangeCallback={(pwd) => onChangeField('password', pwd)}
                       InputLabelProps={{
                         shrink: true,

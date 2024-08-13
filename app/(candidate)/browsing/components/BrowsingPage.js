@@ -34,8 +34,6 @@ export default function BrowsingPage({ metaData }) {
   const [selected, setSelected] = useState('considering');
   const router = useRouter();
 
-  console.log('metaData', metaData);
-
   useEffect(() => {
     if (metaData?.whyBrowsing) {
       setSelected(metaData.whyBrowsing);
