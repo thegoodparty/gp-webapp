@@ -1,11 +1,13 @@
 'use client';
 import { createContext, useEffect, useState } from 'react';
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
+import { useCampaign } from '@shared/hooks/useCampaign';
 
 export const CampaignStatusContext = createContext([null, () => {}]);
 
 export const CampaignStatusProvider = ({ children }) => {
   const [campaignStatus, setCampaignStatus] = useState(null);
+  const [campaign] = useCampaign();
 
   useEffect(() => {
     const getStatus = async () => {
@@ -15,7 +17,7 @@ export const CampaignStatusProvider = ({ children }) => {
     };
 
     getStatus();
-  }, []);
+  }, [campaign]);
 
   return (
     <CampaignStatusContext.Provider value={[campaignStatus, setCampaignStatus]}>

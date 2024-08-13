@@ -15,8 +15,9 @@ export default function PasswordInput({
   className = '',
   InputLabelProps = {},
   placeholder = '',
+  value = '',
 }) {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(value);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
   const handleClickShowPassword = () => {

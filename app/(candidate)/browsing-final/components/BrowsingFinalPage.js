@@ -11,6 +11,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useCampaign } from '@shared/hooks/useCampaign';
 
 const options = [
   {
@@ -25,10 +26,12 @@ const options = [
 
 export default function BrowsingFinalPage() {
   const [selected, setSelected] = useState(false);
+  const [_, _2, refreshCampaign] = useCampaign();
 
   const handleNext = async () => {
     await updateUserMeta({ demoPersona: selected });
     await createDemoCampaign();
+    await refreshCampaign();
   };
 
   return (
