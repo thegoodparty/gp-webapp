@@ -4,7 +4,6 @@
  * DeleteSection
  *
  */
-
 import React, { useState } from 'react';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { deleteCookies } from 'helpers/cookieHelper';
@@ -23,6 +22,7 @@ async function deleteAccountCallback() {
     console.log('Error deleting account', error);
   }
 }
+
 function DeleteAccountButton() {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   return (
