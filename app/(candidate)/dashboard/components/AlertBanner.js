@@ -37,8 +37,8 @@ const SeverityButton = ({
       flex
       items-center
       text-info-contrast
-      bg-info
-      hover:bg-info-dark
+      bg-info-dark
+      hover:bg-info
       w-full
       justify-center
       lg:justify-normal
@@ -71,7 +71,7 @@ export const AlertBanner = ({
     <div className="flex flex-col flex-grow lg:justify-between lg:flex-row">
       <div className="p-2 mr-2 lg:max-w-[73%]">
         <H4 className="mb-2">{title}</H4>
-        <Body2 className="mb-4">{message}</Body2>
+        <Body2>{message}</Body2>
       </div>
       {actionHref ? (
         <Link
