@@ -156,7 +156,7 @@ export default function DashboardPage(props) {
 
   return (
     <DashboardLayout {...childProps}>
-      <div>
+      <div className="max-w-[940px] mx-auto">
         {contactGoals ? (
           <>
             {weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate ? (

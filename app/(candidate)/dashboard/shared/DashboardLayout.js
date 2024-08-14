@@ -28,7 +28,7 @@ export default function DashboardLayout({
             campaign={campaign}
           />
         </div>
-        <main className="max-w-[940px] mx-auto px-6 lg:pl-0 lg:pr-6 lg:ml-8 flex-1">
+        <main className="lg:ml-8 flex-1">
           {demoPersona && <DemoAccountWarningAlert />}
           {children}
         </main>
