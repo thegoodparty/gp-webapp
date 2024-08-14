@@ -1,19 +1,28 @@
 'use client';
-import { FiSettings } from 'react-icons/fi';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import Link from 'next/link';
-import { MdOpenInNew } from 'react-icons/md';
-import { PaymentPortalButton } from '@shared/PaymentPortalButton';
-import H6 from '@shared/typography/H6';
 import { SubscriptionPendingCancellationAlert } from 'app/(user)/profile/components/SubscriptionPendingCancellationAlert';
 import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
 import H5 from '@shared/typography/H5';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { useCampaign } from '@shared/hooks/useCampaign';
+import { useUser } from '@shared/hooks/useUser';
+import { AccountSettingsButton } from 'app/(user)/profile/components/AccountSettingsButton';
 
-export const AccountSettingsSection = ({ isPro, subscriptionCancelAt }) => {
-  const plan = isPro ? 'Pro plan' : 'Free plan';
+export const AccountSettingsSection = () => {
+  const [user = {}] = useUser();
+  const userMetaData = JSON.parse(user?.metaData || '{}');
+  const { demoPersona } = userMetaData;
+  const [campaign] = useCampaign();
+  const { isPro, details = {} } = campaign || {};
+  const { subscriptionCancelAt } = details;
+  const plan = isPro
+    ? 'Candidate PRO'
+    : demoPersona
+    ? 'Demo'
+    : 'Candidate FREE';
+
   return (
     <Paper className="mt-4">
       <H2>Account Settings</H2>
@@ -31,26 +40,15 @@ export const AccountSettingsSection = ({ isPro, subscriptionCancelAt }) => {
       <Paper>
         <div className="flex justify-between">
           <div>
-            <H5> Good Party - {plan} </H5>
-            <Body2 className="mt-4">
-              Need help? Please{' '}
-              <Link className="underline" href="/contact">
-                Contact us
+            <H5> GoodParty.org - {plan} </H5>
+            <Body2 className="mt-2 text-gray-600">
+              Need help?
+              <Link className="ml-1 underline text-info-main" href="/contact">
+                Send us an email.
               </Link>
             </Body2>
           </div>
-          {!isPro ? (
-            <div>
-              <Link className="underline" href="/dashboard/pro-sign-up">
-                <PrimaryButton>Upgrade Plan</PrimaryButton>
-              </Link>
-            </div>
-          ) : (
-            <PaymentPortalButton>
-              Manage Subscription
-              <MdOpenInNew className="ml-2" />
-            </PaymentPortalButton>
-          )}
+          <AccountSettingsButton isPro={isPro} isDemo={Boolean(demoPersona)} />
         </div>
       </Paper>
     </Paper>
