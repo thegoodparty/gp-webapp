@@ -15,14 +15,13 @@ import MapSection from './MapSection';
 import UpdateHistorySection from './UpdateHistorySection';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import TrackerTutorial from './TrackerTutorial';
-import { getCookie } from 'helpers/cookieHelper';
 import EmptyState from './EmptyState';
 import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAlert';
 import { CompleteProSignUpAlert } from 'app/(candidate)/dashboard/components/CompleteProSignUpAlert';
 import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/components/PendingProSignUpAlert';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
+import AlertSection from './AlertSection';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -47,24 +46,10 @@ export async function fetchUpdateHistory() {
 export default function DashboardPage(props) {
   const { campaign } = props;
   const [user, setUser] = useUser();
-  const { metaData: userMetaData } = user || {};
-  const { checkoutSessionId, customerId, demoPersona } = JSON.parse(
-    userMetaData || '{}',
-  );
+
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
-  const { primaryElectionDate, subscriptionId } = details || {};
+  const { primaryElectionDate } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
-
-  const hasntEnteredProFlow =
-    !checkoutSessionId && !customerId && !subscriptionId;
-  const startedProCheckout =
-    checkoutSessionId && !customerId && !subscriptionId;
-  const subscriptionPending =
-    checkoutSessionId && customerId && !subscriptionId;
-
-  const showProSignUpAlert = hasntEnteredProFlow || !isPro;
-  const showCompleteProSignUpAlert = startedProCheckout;
-  const showSubscriptionPendingAlert = subscriptionPending;
 
   const [state, setState] = useState({
     doorKnocking: reportedVoterGoals?.doorKnocking || 0,
@@ -152,26 +137,18 @@ export default function DashboardPage(props) {
     pathToVictory,
     deleteHistoryCallBack,
   };
-  const cookie = getCookie('tutorial-tracker');
 
   return (
     <DashboardLayout {...childProps}>
-      <div className="max-w-[940px] mx-auto">
+      <div>
         {contactGoals ? (
           <>
             {weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate ? (
               <ElectionOver />
             ) : (
               <>
-                {!isPro && !demoPersona && (
-                  <>
-                    {showProSignUpAlert && <ProSignUpAlert />}
-                    {showCompleteProSignUpAlert && <CompleteProSignUpAlert />}
-                    {showSubscriptionPendingAlert && (
-                      <PendingProSubscriptionAlert />
-                    )}
-                  </>
-                )}
+                <AlertSection campaign={campaign} />
+
                 <TitleSection
                   title="Campaign Tracker"
                   subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."
@@ -182,7 +159,6 @@ export default function DashboardPage(props) {
                 {voterMap ? <MapSection map={voterMap} /> : null}
                 <ProgressSection {...childProps} />
                 <UpdateHistorySection {...childProps} />
-                {!cookie && <TrackerTutorial />}
               </>
             )}
           </>

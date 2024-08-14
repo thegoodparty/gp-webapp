@@ -6,7 +6,7 @@ import { FaLock } from 'react-icons/fa';
 
 export default function EmptyState() {
   return (
-    <div className="relative h-[calc(100vh-60px)]">
+    <div className="relative h-[calc(100vh-60px)]max-w-[940px] mx-auto">
       <Image
         src={emptyImg}
         alt="Empty Dashboard"
