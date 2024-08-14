@@ -16,13 +16,11 @@ import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import { useUser } from '@shared/hooks/useUser';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
-import Body1 from '@shared/typography/Body1';
 import Overline from '@shared/typography/Overline';
 import SuccessButton from '@shared/buttons/SuccessButton';
 
@@ -111,8 +109,8 @@ export default function LoginPage() {
             <H1>Access free campaign tools</H1>
             <Body2 className="mt-3">
               Don&apos;t have an account?{' '}
-              <Link href="/sign-up" className="underline">
-                Sign up
+              <Link href="/sign-up" className="underline text-info">
+                Create an account
               </Link>
             </Body2>
           </div>
@@ -129,6 +127,8 @@ export default function LoginPage() {
               <EmailInput
                 onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
                 value={state.email}
+                shrink
+                placeholder="hello@email.com"
               />
             </div>
 
@@ -136,11 +136,15 @@ export default function LoginPage() {
               <PasswordInput
                 label="Password"
                 onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                placeholder="please don't use your dogs name"
               />
             </div>
             <div className="flex justify-center mt-12" onClick={handleSubmit}>
-              <PrimaryButton disabled={!enableSubmit()} type="submit">
-                <strong>Continue with email</strong>
+              <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth>
+                <strong>Login</strong>
               </PrimaryButton>
             </div>
           </form>
@@ -156,7 +160,7 @@ export default function LoginPage() {
           <div className="mt-8 p-6 border border-gray-300 rounded-lg text-center">
             <Overline className="mb-6">Don&apos;t have an account?</Overline>
             <Link href="/sign-up">
-              <SuccessButton>Sign Up</SuccessButton>
+              <SuccessButton>Create an account</SuccessButton>
             </Link>
           </div>
         </div>
