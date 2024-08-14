@@ -3,7 +3,7 @@ import { MdError } from 'react-icons/md';
 
 export const ErrorAlert = ({ children, className = '', ...restProps }) => (
   <StyledAlert
-    level="error"
+    severity="error"
     icon={<MdError />}
     className={className}
     {...restProps}

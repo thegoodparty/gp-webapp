@@ -4,15 +4,11 @@
  * DeleteSection
  *
  */
-
 import React, { useState } from 'react';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { deleteCookies } from 'helpers/cookieHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import H3 from '@shared/typography/H3';
-import { RiDeleteBin7Line } from 'react-icons/ri';
-import Body2 from '@shared/typography/Body2';
 import ErrorButton from '@shared/buttons/ErrorButton';
 import { FaTrash } from 'react-icons/fa';
 
@@ -24,13 +20,10 @@ async function deleteAccountCallback() {
     window.location.href = '/';
   } catch (error) {
     console.log('Error deleting account', error);
-    // yield put(
-    //   snackbarActions.showSnakbarAction('Error deleting account', 'error'),
-    // );
   }
 }
+
 function DeleteAccountButton() {
-  // const { deleteAccountCallback } = useContext(ProfileSettingsPageContext);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   return (
     <div>

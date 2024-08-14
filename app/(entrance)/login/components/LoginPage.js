@@ -64,7 +64,7 @@ export default function LoginPage() {
 
       if (user) {
         setUserCookie(user);
-        userState.set(() => user);
+        setUser(user);
 
         const returnUrl = getCookie('returnUrl');
         if (returnUrl) {

@@ -3,16 +3,16 @@ import { AlertIcon } from '@shared/alerts/AlertIcon';
 
 export const StyledAlert = ({
   children,
-  level,
+  severity,
   className = '',
   ...restProps
 }) => (
   <Alert
     className={`
-      text-${level}-dark 
-      border-${level}-dark 
+      text-${severity}-dark 
+      border-${severity}-dark 
       rounded-lg 
-      bg-${level}-background
+      bg-${severity}-background
       p-2
       [&>div.MuiAlert-message]:p-0
       [&>div.MuiAlert-icon]:py-2
@@ -23,8 +23,13 @@ export const StyledAlert = ({
       [&>div.MuiAlert-message]:flex-grow
       ${className}
     `}
-    severity={level}
-    icon={<AlertIcon level={level} className={`text-${level}-dark h-6 w-6`} />}
+    severity={severity}
+    icon={
+      <AlertIcon
+        severity={severity}
+        className={`text-${severity}-dark h-6 w-6`}
+      />
+    }
     {...restProps}
   >
     {children}

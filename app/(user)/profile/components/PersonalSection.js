@@ -10,15 +10,14 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import PhoneInput from '@shared/inputs/PhoneInput';
-import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { FiSettings } from 'react-icons/fi';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
 import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
 import ImageSection from './ImageSection';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function refreshUser() {
   try {
