@@ -9,6 +9,9 @@ import { useState } from 'react';
 import styles from '../../login/components/LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
+import CardPageWrapper from '@shared/cards/CardPageWrapper';
+import H1 from '@shared/typography/H1';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function retrievePassword(email) {
   try {
@@ -64,16 +67,11 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <MaxWidth>
-      <div className={`flex items-center justify-center ${styles.wrapper}`}>
-        <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
+    <CardPageWrapper>
+      <div className={`flex items-center justify-center`}>
+        <div className="max-w-2xl grid" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
-            <h1
-              data-cy="register-title"
-              className="text-2xl lg:text-4xl font-black"
-            >
-              Forgot Password?
-            </h1>
+            <H1 data-cy="register-title">Forgot Password?</H1>
           </div>
 
           {state.forgotSent ? (
@@ -97,14 +95,14 @@ export default function ForgotPasswordPage() {
               <br />
               <br />
 
-              <BlackButtonClient
-                style={{ width: '100%' }}
+              <PrimaryButton
+                fullWidth
                 disabled={!enableSubmit()}
                 onClick={handleSubmit}
                 type="submit"
               >
-                <strong>Send Recovery Email</strong>
-              </BlackButtonClient>
+                Send Recovery Email
+              </PrimaryButton>
             </form>
           )}
           <br />
@@ -115,6 +113,6 @@ export default function ForgotPasswordPage() {
           </Link>
         </div>
       </div>
-    </MaxWidth>
+    </CardPageWrapper>
   );
 }

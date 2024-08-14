@@ -10,6 +10,9 @@ import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { passwordRegex } from 'helpers/userHelper';
 import { useRouter } from 'next/navigation';
+import CardPageWrapper from '@shared/cards/CardPageWrapper';
+import H1 from '@shared/typography/H1';
+import { isValidEmail } from '@shared/inputs/EmailInput';
 
 async function resetPassword(email, password, token) {
   try {
@@ -32,6 +35,9 @@ export default function ResetPasswordPage({ email, token }) {
   });
   const snackbarState = useHookstate(globalSnackbarState);
   const router = useRouter();
+  if (!isValidEmail(email)) {
+    router.push('/login');
+  }
 
   const enableSubmit = () =>
     state.password !== '' && state.password.match(passwordRegex);
@@ -68,16 +74,11 @@ export default function ResetPasswordPage({ email, token }) {
   };
 
   return (
-    <MaxWidth>
-      <div className={`flex items-center justify-center ${styles.wrapper}`}>
+    <CardPageWrapper>
+      <div className={`flex items-center justify-center `}>
         <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
-            <h1
-              data-cy="register-title"
-              className="text-2xl lg:text-4xl font-black"
-            >
-              Enter a new password for {email}
-            </h1>
+            <H1>Enter a new password for {email}</H1>
           </div>
 
           <form
@@ -107,6 +108,6 @@ export default function ResetPasswordPage({ email, token }) {
           </form>
         </div>
       </div>
-    </MaxWidth>
+    </CardPageWrapper>
   );
 }
