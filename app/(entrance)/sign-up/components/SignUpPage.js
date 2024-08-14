@@ -149,8 +149,6 @@ export default function SignUpPage() {
   };
 
   const onChangeField = (key, value) => {
-    console.log('value', value);
-    console.log('key', key);
     setState({
       ...state,
       [key]: value,

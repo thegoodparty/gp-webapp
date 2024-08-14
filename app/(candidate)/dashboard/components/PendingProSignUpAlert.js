@@ -1,7 +1,7 @@
-import { DashboardAlertBanner } from 'app/(candidate)/dashboard/components/DashboardAlertBanner';
+import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner';
 
 export const PendingProSubscriptionAlert = () => (
-  <DashboardAlertBanner
+  <AlertBanner
     {...{
       title: 'Subscription Pending',
       message:

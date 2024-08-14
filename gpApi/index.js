@@ -85,6 +85,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    deleteDemoCampaign: {
+      url: `${base}campaign/demo`,
+      method: 'DELETE',
+      withAuth: true,
+    },
     update: {
       url: `${base}campaign`,
       method: 'PUT',
@@ -232,10 +237,6 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      // find: {
-      //   url: `${base}candidate-position`,
-      //   method: 'GET',
-      // },
       find: {
         url: `${base}campaign-position`,
         method: 'GET',

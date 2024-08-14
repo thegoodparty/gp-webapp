@@ -37,7 +37,7 @@ export default function DetailsPage(props) {
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
-        <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl p-4 md:p-16">
+        <div className="bg-gray-50 rounded-xl p-4 md:p-16">
           <H1 className="text-center mb-9">
             Upgrade to Pro for just $10 a month!
           </H1>
