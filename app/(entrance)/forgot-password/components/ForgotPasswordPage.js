@@ -1,12 +1,9 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient.js';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
 import { useHookstate } from '@hookstate/core';
 import Link from 'next/link.js';
 import { useState } from 'react';
-import styles from '../../login/components/LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';

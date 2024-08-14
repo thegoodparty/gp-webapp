@@ -1,11 +1,8 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
 import { useHookstate } from '@hookstate/core';
 import { useState } from 'react';
-import styles from '../../login/components/LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { passwordRegex } from 'helpers/userHelper';
@@ -13,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import H1 from '@shared/typography/H1';
 import { isValidEmail } from '@shared/inputs/EmailInput';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function resetPassword(email, password, token) {
   try {
@@ -97,14 +95,14 @@ export default function ResetPasswordPage({ email, token }) {
             <br />
             <br />
 
-            <BlackButtonClient
-              style={{ width: '100%' }}
+            <PrimaryButton
+              fullWidth
               disabled={!enableSubmit()}
               onClick={handleSubmit}
               type="submit"
             >
-              <strong>CHANGE PASSWORD</strong>
-            </BlackButtonClient>
+              CHANGE PASSWORD
+            </PrimaryButton>
           </form>
         </div>
       </div>
