@@ -1,34 +1,39 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { PaymentPortalButton } from '@shared/PaymentPortalButton';
+import { MdOpenInNew } from 'react-icons/md';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { DemoAccountDeleteDialog } from '@shared/utils/DemoAccountDeleteDialog';
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
+import Link from 'next/link';
 
-export const DemoAccountWarningAlert = () => {
+export const AccountSettingsButton = ({ isPro, isDemo }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
-
-  const handleDemoAlertButtonOnClick = () => {
-    setShowModal(true);
-  };
-
-  return (
+  return isPro ? (
+    <PaymentPortalButton>
+      Manage Subscription
+      <MdOpenInNew className="ml-2" />
+    </PaymentPortalButton>
+  ) : isDemo ? (
     <>
-      <AlertBanner
-        title="Demo Account Notice"
-        message="Updates made in your demo account are not stored. Upgrade now to prevent data loss."
-        actionOnClick={handleDemoAlertButtonOnClick}
-        actionText="Upgrade"
-        severity="warning"
-      />
+      <PrimaryButton onClick={() => setShowModal(true)}>
+        Change Plan
+      </PrimaryButton>
       <DemoAccountDeleteDialog
         open={showModal}
         handleClose={() => setShowModal(false)}
         handleProceed={handleDemoAccountDeletion(snackbarState, router)}
       />
     </>
+  ) : (
+    <div>
+      <Link className="underline" href="/dashboard/pro-sign-up">
+        <PrimaryButton>Upgrade Plan</PrimaryButton>
+      </Link>
+    </div>
   );
 };
