@@ -12,7 +12,7 @@ export default function DetailsPage(props) {
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
-        <div className="bg-gray-50 rounded-xl py-5">
+        <div className="max-w-[940px] mx-auto bg-gray-50 rounded-xl px-6 py-5">
           <DetailsSection {...props} />
           <CampaignSection {...props} />
           <OfficeSection {...props} />
