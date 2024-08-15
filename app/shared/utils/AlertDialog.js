@@ -1,12 +1,11 @@
 'use client';
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
-import WarningIcon from '@mui/icons-material/Warning';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import BlackOutlinedButton from '@shared/buttons/BlackOutlinedButton';
-import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
 import ErrorButton from '@shared/buttons/ErrorButton';
-import H2 from '@shared/typography/H2';
+import H1 from '@shared/typography/H1';
+import Body2 from '@shared/typography/Body2';
+import SecondaryButton from '@shared/buttons/SecondaryButton';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 function AlertDialog({
   handleClose,
@@ -16,7 +15,16 @@ function AlertDialog({
   description,
   ariaLabel,
   redButton = true,
+  cancelLabel = 'Cancel',
+  proceedLabel = 'Proceed',
+  onCancel,
 }) {
+  const handleCancel = () => {
+    if (onCancel && typeof onCancel === 'function') {
+      return onCancel();
+    }
+    handleClose();
+  };
   return (
     <Dialog
       onClose={handleClose}
@@ -24,37 +32,37 @@ function AlertDialog({
       open={open}
       PaperProps={{ sx: { borderRadius: '20px' } }}
     >
-      <div className="p-8">
+      <div className="p-16">
         <div
           className="text-3xl flex items-center font-black"
           id="alert-dialog-title"
         >
-          <H2 className="pb-5 mb-5 border-b border-slate-500 text-center w-full">
-            {title}
-          </H2>
+          <H1 className="mb-4 text-center w-full">{title}</H1>
         </div>
-        <div className="text-lg my-8 mx-0" id="alert-dialog-description">
+        <Body2 className="mx-0 mb-8 text-center" id="alert-dialog-description">
           {description}
-        </div>
+        </Body2>
         <div className="flex items-center justify-center">
-          <BlackOutlinedButtonClient
-            className="outlined"
-            onClick={handleClose}
-            style={{ marginRight: '26px' }}
+          <SecondaryButton
+            className="mr-4"
+            size="medium"
+            onClick={handleCancel}
           >
-            <div className="py-0 px-6 text-sm font-black">Cancel</div>
-          </BlackOutlinedButtonClient>
+            {cancelLabel}
+          </SecondaryButton>
 
           {redButton ? (
             <div onClick={handleProceed}>
               <ErrorButton>
-                <div className="py-0 px-6 text-sm font-black ">Proceed</div>
+                <div className="py-0 px-6 text-sm font-black ">
+                  {proceedLabel}
+                </div>
               </ErrorButton>
             </div>
           ) : (
-            <BlackButtonClient onClick={handleProceed}>
-              <div className="py-0 px-6 text-sm font-black ">Proceed</div>
-            </BlackButtonClient>
+            <PrimaryButton size="medium" onClick={handleProceed}>
+              {proceedLabel}
+            </PrimaryButton>
           )}
         </div>
       </div>
