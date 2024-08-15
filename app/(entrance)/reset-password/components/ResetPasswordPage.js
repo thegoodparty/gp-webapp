@@ -1,15 +1,16 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
 import { useHookstate } from '@hookstate/core';
 import { useState } from 'react';
-import styles from '../../login/components/LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { passwordRegex } from 'helpers/userHelper';
 import { useRouter } from 'next/navigation';
+import CardPageWrapper from '@shared/cards/CardPageWrapper';
+import H1 from '@shared/typography/H1';
+import { isValidEmail } from '@shared/inputs/EmailInput';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function resetPassword(email, password, token) {
   try {
@@ -32,6 +33,9 @@ export default function ResetPasswordPage({ email, token }) {
   });
   const snackbarState = useHookstate(globalSnackbarState);
   const router = useRouter();
+  if (!isValidEmail(email)) {
+    router.push('/login');
+  }
 
   const enableSubmit = () =>
     state.password !== '' && state.password.match(passwordRegex);
@@ -68,16 +72,11 @@ export default function ResetPasswordPage({ email, token }) {
   };
 
   return (
-    <MaxWidth>
-      <div className={`flex items-center justify-center ${styles.wrapper}`}>
+    <CardPageWrapper>
+      <div className={`flex items-center justify-center `}>
         <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
           <div className="text-center mb-8 pt-8">
-            <h1
-              data-cy="register-title"
-              className="text-2xl lg:text-4xl font-black"
-            >
-              Enter a new password for {email}
-            </h1>
+            <H1>Enter a new password for {email}</H1>
           </div>
 
           <form
@@ -96,17 +95,17 @@ export default function ResetPasswordPage({ email, token }) {
             <br />
             <br />
 
-            <BlackButtonClient
-              style={{ width: '100%' }}
+            <PrimaryButton
+              fullWidth
               disabled={!enableSubmit()}
               onClick={handleSubmit}
               type="submit"
             >
-              <strong>CHANGE PASSWORD</strong>
-            </BlackButtonClient>
+              CHANGE PASSWORD
+            </PrimaryButton>
           </form>
         </div>
       </div>
-    </MaxWidth>
+    </CardPageWrapper>
   );
 }

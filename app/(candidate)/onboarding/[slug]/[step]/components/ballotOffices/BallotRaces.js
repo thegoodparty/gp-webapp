@@ -66,6 +66,9 @@ export default function BallotRaces(props) {
     if (zip) {
       setLoading(true);
       const initRaces = await fetchRaces(zip || campaign.details.zip);
+      if (!initRaces) {
+        throw new Error(`Couldn't fetch races for zip ${zip}`);
+      }
       setElectionYears(Object.keys(initRaces).sort());
       setRaces(initRaces);
       setLoading(false);

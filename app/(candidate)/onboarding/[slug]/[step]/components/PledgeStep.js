@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   onboardingStep,
   updateCampaign,
@@ -7,8 +7,6 @@ import {
 import contentfulHelper from 'helpers/contentfulHelper';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { IoDocumentText } from 'react-icons/io5';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaChild } from 'react-icons/fa';
@@ -82,10 +80,6 @@ export default function PledgeStep({ campaign, pledge, step }) {
 
     await updateCampaign(attr);
     router.push(`/onboarding/${campaign.slug}/${step + 1}`);
-    // const res = await launchCampaign();
-    // if (res) {
-    //   window.location.href = '/dashboard/plan';
-    // }
   };
 
   const onChangeField = (key, value) => {
