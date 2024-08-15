@@ -48,7 +48,9 @@ export default function DashboardPage(props) {
   const { campaign } = props;
   const [user, setUser] = useUser();
   const { metaData: userMetaData } = user || {};
-  const { checkoutSessionId, customerId } = JSON.parse(userMetaData || '{}');
+  const { checkoutSessionId, customerId, demoPersona } = JSON.parse(
+    userMetaData || '{}',
+  );
   const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
   const { primaryElectionDate, subscriptionId } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
@@ -161,7 +163,7 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
-                {!isPro && (
+                {!isPro && !demoPersona && (
                   <>
                     {showProSignUpAlert && <ProSignUpAlert />}
                     {showCompleteProSignUpAlert && <CompleteProSignUpAlert />}

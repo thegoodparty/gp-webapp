@@ -11,16 +11,18 @@ import {
 import { useHookstate } from '@hookstate/core';
 import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
-import styles from './LoginPage.module.scss';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import { useUser } from '@shared/hooks/useUser';
+import CardPageWrapper from '@shared/cards/CardPageWrapper';
+import Body2 from '@shared/typography/Body2';
+import Overline from '@shared/typography/Overline';
+import SuccessButton from '@shared/buttons/SuccessButton';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -56,44 +58,30 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, newUser } = await login(state.email, state.password);
+      const { user } = await login(state.email, state.password);
 
       if (user) {
         setUserCookie(user);
         setUser(user);
-        if (newUser) {
-          const afterAction = getCookie('afterAction');
-          if (
-            (user.firstName && user.firstName !== '') ||
-            afterAction === 'createCampaign'
-          ) {
-            await createCampaign();
-            return;
-          }
-          if (user.firstName === '' || !user.firstName) {
-            window.location.href = '/set-name';
-            return;
-          }
-        } else {
-          const returnUrl = getCookie('returnUrl');
-          if (returnUrl) {
-            deleteCookie('returnUrl');
-            window.location.href = returnUrl;
-            return;
-          }
 
-          const status = await fetchCampaignStatus();
-
-          if (status?.status === 'candidate') {
-            window.location.href = '/dashboard';
-            return;
-          }
-          if (status?.status === 'volunteer') {
-            window.location.href = '/volunteer-dashboard';
-            return;
-          }
-          window.location.href = '/';
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          window.location.href = returnUrl;
+          return;
         }
+
+        const status = await fetchCampaignStatus();
+
+        if (status?.status === 'candidate') {
+          window.location.href = '/dashboard';
+          return;
+        }
+        if (status?.status === 'volunteer') {
+          window.location.href = '/volunteer-dashboard';
+          return;
+        }
+        window.location.href = '/';
       } else {
         snackbarState.set(() => {
           return {
@@ -114,55 +102,69 @@ export default function LoginPage() {
   };
 
   return (
-    <>
-      <MaxWidth>
-        <div className={`flex items-center justify-center ${styles.wrapper}`}>
-          <div className="grid py-6 max-w-lg w-[75vw]">
-            <div className="text-center mb-8 pt-8">
-              <H1>Access free campaign tools</H1>
-            </div>
-
-            <form
-              noValidate
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              data-cy="email-form"
-              id="register-page-form"
-            >
-              <div className="flex mt-5">
-                <EmailInput
-                  onChangeCallback={(e) =>
-                    onChangeField(e.target.value, 'email')
-                  }
-                  value={state.email}
-                />
-              </div>
-
-              <div className="flex mt-5">
-                <PasswordInput
-                  label="Password"
-                  onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
-                />
-              </div>
-              <div className="flex justify-center mt-12" onClick={handleSubmit}>
-                <PrimaryButton disabled={!enableSubmit()} type="submit">
-                  <strong>Continue with email</strong>
-                </PrimaryButton>
-              </div>
-            </form>
-            <div className="mt-5 text-center">
-              <Link href="/forgot-password" className="text-sm underline">
-                Forgot your password?
+    <CardPageWrapper>
+      <div className={`flex items-center justify-center `}>
+        <div className="grid max-w-lg w-[75vw]">
+          <div className="text-center mb-8">
+            <H1>Access free campaign tools</H1>
+            <Body2 className="mt-3">
+              Don&apos;t have an account?{' '}
+              <Link href="/sign-up" className="underline text-info">
+                Create an account
               </Link>
+            </Body2>
+          </div>
+
+          <form
+            noValidate
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            data-cy="email-form"
+            id="register-page-form"
+          >
+            <div className="flex mt-5">
+              <EmailInput
+                onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
+                value={state.email}
+                shrink
+                placeholder="hello@email.com"
+              />
             </div>
 
-            <Suspense>
-              <SocialRegisterButtons />
-            </Suspense>
+            <div className="flex mt-5">
+              <PasswordInput
+                label="Password"
+                onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                placeholder="please don't use your dogs name"
+              />
+            </div>
+            <div className="flex justify-center mt-12" onClick={handleSubmit}>
+              <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth>
+                <strong>Login</strong>
+              </PrimaryButton>
+            </div>
+          </form>
+          <div className="mt-5 text-center">
+            <Link href="/forgot-password" className="text-sm underline">
+              Forgot your password?
+            </Link>
+          </div>
+
+          <Suspense>
+            <SocialRegisterButtons />
+          </Suspense>
+          <div className="mt-8 p-6 border border-gray-300 rounded-lg text-center">
+            <Overline className="mb-6">Don&apos;t have an account?</Overline>
+            <Link href="/sign-up">
+              <SuccessButton>Create an account</SuccessButton>
+            </Link>
           </div>
         </div>
-      </MaxWidth>
-    </>
+      </div>
+    </CardPageWrapper>
   );
 }

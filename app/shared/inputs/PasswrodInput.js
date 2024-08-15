@@ -14,8 +14,10 @@ export default function PasswordInput({
   autoFocus = false,
   className = '',
   InputLabelProps = {},
+  placeholder = '',
+  value = '',
 }) {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(value);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(false);
   const handleClickShowPassword = () => {
@@ -50,6 +52,7 @@ export default function PasswordInput({
       helperText={helperText}
       name="password"
       onChange={onChangePassword}
+      placeholder={placeholder}
       data-cy="password"
       variant={variant}
       autoFocus={autoFocus}

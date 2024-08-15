@@ -7,7 +7,17 @@ export default function DashboardOrContinue({ isDashboardPath, closeAll }) {
   const [campaignStatus] = useCampaignStatus();
   const { status, slug, step } = campaignStatus || {};
   if (!status) {
-    return null;
+    return (
+      <Link
+        href={`/${step || 'account-type'}`}
+        onClick={closeAll}
+        id="nav-continue-setup"
+      >
+        <WarningButton size="medium">
+          Continue<span className="hidden lg:inline"> Setup</span>
+        </WarningButton>
+      </Link>
+    );
   }
 
   let dashboardLink = '/dashboard';

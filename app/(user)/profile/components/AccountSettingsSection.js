@@ -1,61 +1,56 @@
 'use client';
-import { FiSettings } from 'react-icons/fi';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import Link from 'next/link';
-import { MdOpenInNew } from 'react-icons/md';
-import { PaymentPortalButton } from '@shared/PaymentPortalButton';
-import H6 from '@shared/typography/H6';
 import { SubscriptionPendingCancellationAlert } from 'app/(user)/profile/components/SubscriptionPendingCancellationAlert';
+import Paper from '@shared/utils/Paper';
+import H2 from '@shared/typography/H2';
+import H5 from '@shared/typography/H5';
+import { useCampaign } from '@shared/hooks/useCampaign';
+import { useUser } from '@shared/hooks/useUser';
+import { AccountSettingsButton } from 'app/(user)/profile/components/AccountSettingsButton';
 
-export const AccountSettingsSection = ({ isPro, subscriptionCancelAt }) => {
-  const plan = isPro ? 'Pro plan' : 'Free plan';
+export const AccountSettingsSection = () => {
+  const [user = {}] = useUser();
+  const userMetaData = JSON.parse(user?.metaData || '{}');
+  const { demoPersona } = userMetaData;
+  const [campaign] = useCampaign();
+  const { isPro, details = {} } = campaign || {};
+  const { subscriptionCancelAt } = details;
+  const plan = isPro
+    ? 'Candidate PRO'
+    : demoPersona
+    ? 'Demo'
+    : 'Candidate FREE';
+
   return (
-    <section className="py-4 border-b border-slate-300 flex">
-      <div className="shrink-0 pr-3 text-indigo-600 pt-[6px]">
-        <FiSettings />
-      </div>
-      <div className="flex-1">
-        <H4>Account Settings</H4>
-        <Body2 className="text-indigo-600 mb-6">
-          See information regarding your current plan.
-        </Body2>
-        <H6>Current Plan</H6>
-        <Body2 className="text-indigo-600 mb-4">
-          Manage and change your plan.
-        </Body2>
-        {isPro && subscriptionCancelAt && (
-          <SubscriptionPendingCancellationAlert
-            subscriptionCancelAt={subscriptionCancelAt}
-          />
-        )}
-        <div className="rounded-lg border border-indigo-200 p-6">
-          <div className="flex justify-between">
-            <div className="left-side">
-              <div className="font-medium mb-4">
-                Good Party - {plan}{' '}
-                {!isPro && (
-                  <Link className="underline" href="/dashboard/pro-sign-up">
-                    Sign Up Today!
-                  </Link>
-                )}
-              </div>
-              <span className="font-normal">
-                Need help? Please{' '}
-                <Link className="underline" href="/contact">
-                  Contact us
-                </Link>
-              </span>
-            </div>
-            {isPro && (
-              <PaymentPortalButton>
-                Manage Subscription
-                <MdOpenInNew className="ml-2" />
-              </PaymentPortalButton>
-            )}
+    <Paper className="mt-4">
+      <H2>Account Settings</H2>
+      <Body2 className="text-gray-600 mb-8">
+        See information regarding your current plan.
+      </Body2>
+
+      <H4>Current Plan</H4>
+      <Body2 className="text-gray-600 mb-4">Manage and change your plan.</Body2>
+      {isPro && subscriptionCancelAt && (
+        <SubscriptionPendingCancellationAlert
+          subscriptionCancelAt={subscriptionCancelAt}
+        />
+      )}
+      <Paper>
+        <div className="flex justify-between">
+          <div>
+            <H5> GoodParty.org - {plan} </H5>
+            <Body2 className="mt-2 text-gray-600">
+              Need help?
+              <Link className="ml-1 underline text-info-main" href="/contact">
+                Send us an email.
+              </Link>
+            </Body2>
           </div>
+          <AccountSettingsButton isPro={isPro} isDemo={Boolean(demoPersona)} />
         </div>
-      </div>
-    </section>
+      </Paper>
+    </Paper>
   );
 };

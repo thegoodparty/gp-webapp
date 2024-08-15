@@ -7,7 +7,7 @@ import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateA
 const meta = pageMetaData({
   title: 'Login',
   description: 'Login to GoodParty.org.',
-  slug: '/[loginType]',
+  slug: '/login',
 });
 export const metadata = meta;
 

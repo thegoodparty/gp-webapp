@@ -1,5 +1,6 @@
 import React from 'react';
 import { getInitials } from '/helpers/userHelper';
+import { MdPerson } from 'react-icons/md';
 
 function UserAvatar({ user, size = 'small' }) {
   if (!user) {
@@ -12,7 +13,7 @@ function UserAvatar({ user, size = 'small' }) {
     sizeClass = 'h-6 w-6';
   }
   return (
-    <div className={`rounded-full ${sizeClass}`}>
+    <div className={`${sizeClass}`}>
       {user.avatar ? (
         <div
           className={`cursor-pointer rounded-full bg-cover bg-center ${sizeClass}`}
@@ -20,9 +21,9 @@ function UserAvatar({ user, size = 'small' }) {
         ></div>
       ) : (
         <div
-          className={`cursor-pointer rounded-full flex items-center justify-center font-bold bg-black text-white uppercase text-sm ${sizeClass}`}
+          className={`cursor-pointer  flex items-center justify-center font-bold  text-gray-500 uppercase text-6xl ${sizeClass}`}
         >
-          {getInitials(user)}
+          <MdPerson />
         </div>
       )}
     </div>
