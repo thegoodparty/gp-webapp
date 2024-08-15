@@ -13,6 +13,7 @@ export const AccountSettingsButton = ({ isPro, isDemo }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
+
   return isPro ? (
     <PaymentPortalButton>
       Manage Subscription

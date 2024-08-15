@@ -4,8 +4,8 @@ import pageMetaData from 'helpers/metadataHelper';
 import BrowsingFinalPage from './components/BrowsingFinalPage';
 
 const meta = pageMetaData({
-  title: 'One final question',
-  description: "Please select who you'd like to portray on your demo account:",
+  title: 'How would you like to demo GoodParty.org?',
+  description: 'Please select which office you’d like to browse',
   slug: '/browsing-final',
 });
 export const metadata = meta;
