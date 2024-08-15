@@ -1,3 +1,4 @@
+'use client';
 import DashboardLayout from '../../shared/DashboardLayout';
 import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
 import H1 from '@shared/typography/H1';
@@ -6,6 +7,13 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { MdOutlineArrowForward } from 'react-icons/md';
 import { ProPricingCard } from 'app/(candidate)/dashboard/upgrade-to-pro/components/ProPricingCard';
 import Link from 'next/link';
+import { useUser } from '@shared/hooks/useUser';
+import AlertDialog from '@shared/utils/AlertDialog';
+import { useState } from 'react';
+import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useRouter } from 'next/navigation';
 
 const CARD_FREE = {
   backgroundClass: 'lime-400',
@@ -34,6 +42,25 @@ const CARD_PRO = {
 };
 
 export default function DetailsPage(props) {
+  const [user] = useUser();
+  const router = useRouter();
+  const { metaData: userMetaData } = user || {};
+  const { demoPersona } = JSON.parse(userMetaData || '{}');
+  const [showDialog, setShowDialog] = useState(false);
+  const snackbarState = useHookstate(globalSnackbarState);
+
+  const handleLinkOnClick = (e) => {
+    if (demoPersona) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+  const handleJoinProOnClick = () => {
+    if (demoPersona) {
+      setShowDialog(true);
+    }
+  };
+
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
@@ -52,11 +79,24 @@ export default function DetailsPage(props) {
             is reinvested into making it possible for more people across the
             country to run, win and serve.
           </Body2>
-          <Link href="/dashboard/pro-sign-up">
-            <PrimaryButton className="flex items-center justify-center mx-auto mb-16 w-full md:w-auto">
+          <Link onClick={handleLinkOnClick} href="/dashboard/pro-sign-up">
+            <PrimaryButton
+              onClick={handleJoinProOnClick}
+              className="flex items-center justify-center mx-auto mb-16 w-full md:w-auto"
+            >
               <span>Join Pro Today</span>
               <MdOutlineArrowForward className="text-2xl ml-2" />
             </PrimaryButton>
+            <AlertDialog
+              open={showDialog}
+              handleClose={() => setShowDialog(false)}
+              title="End Demo & Upgrade?"
+              ariaLabel="End Demo & Upgrade"
+              description="You are currently on a demo account.
+To upgrade, you must first create a candidate account."
+              handleProceed={handleDemoAccountDeletion(snackbarState, router)}
+              redButton={false}
+            />
           </Link>
           <div className="grid md:grid-cols-2 md:gap-4 md:px-24">
             <ProPricingCard {...CARD_FREE} />

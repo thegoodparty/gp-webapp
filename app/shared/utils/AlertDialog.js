@@ -1,9 +1,7 @@
 'use client';
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
-import WarningIcon from '@mui/icons-material/Warning';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import BlackOutlinedButton from '@shared/buttons/BlackOutlinedButton';
 import BlackOutlinedButtonClient from '@shared/buttons/BlackOutlinedButtonClient';
 import ErrorButton from '@shared/buttons/ErrorButton';
 import H2 from '@shared/typography/H2';
