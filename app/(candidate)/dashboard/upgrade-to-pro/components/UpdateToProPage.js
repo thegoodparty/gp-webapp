@@ -61,6 +61,10 @@ export default function DetailsPage(props) {
     }
   };
 
+  const handleDialogClose = () => {
+    setShowDialog(false);
+  };
+
   return (
     <DashboardLayout {...props}>
       <CandidatePositionsProvider candidatePositions={props.candidatePositions}>
@@ -92,12 +96,20 @@ export default function DetailsPage(props) {
             </PrimaryButton>
             <AlertDialog
               open={showDialog}
-              handleClose={() => setShowDialog(false)}
+              handleProceed={handleDialogClose}
+              handleClose={handleDialogClose}
               title="End Demo & Upgrade?"
               ariaLabel="End Demo & Upgrade"
-              description="You are currently on a demo account.
-To upgrade, you must first create a candidate account."
-              handleProceed={handleDemoAccountDeletion(snackbarState, router)}
+              description={
+                <>
+                  You are currently on a demo account.
+                  <br />
+                  To upgrade, you must first create a candidate account.
+                </>
+              }
+              onCancel={handleDemoAccountDeletion(snackbarState, router)}
+              cancelLabel="Create Account"
+              proceedLabel="Continue Demo"
               redButton={false}
             />
           </Link>
