@@ -10,7 +10,7 @@ export function CurrentPhase(props) {
   const phaseDesc =
     'During this voter contact phase your main objective is to target voters who are likely to be swayed by you campaign messaging.';
   return (
-    <div className="hidden md:flex justify-between bg-primary-background mt-4 p-4 rounded-lg border border-primary">
+    <div className="hidden md:flex justify-between bg-primary-background mt-4 p-4 rounded-lg border border-primary mb-4">
       <div className="flex">
         <BsFillPersonCheckFill size={20} className="mt-1" />
         <div className="ml-4">
