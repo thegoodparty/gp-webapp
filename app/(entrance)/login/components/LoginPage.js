@@ -105,8 +105,8 @@ export default function LoginPage() {
     <CardPageWrapper>
       <div className={`flex items-center justify-center `}>
         <div className="grid max-w-lg w-[75vw]">
-          <div className="text-center mb-8">
-            <H1>Access free campaign tools</H1>
+          <div className="text-center mb-4">
+            <H1>Login to GoodParty.org</H1>
             <Body2 className="mt-3">
               Don&apos;t have an account?{' '}
               <Link href="/sign-up" className="underline text-info">
@@ -144,7 +144,7 @@ export default function LoginPage() {
             </div>
             <div className="flex justify-center mt-12" onClick={handleSubmit}>
               <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth>
-                <strong>Login</strong>
+                Login
               </PrimaryButton>
             </div>
           </form>
@@ -157,12 +157,6 @@ export default function LoginPage() {
           <Suspense>
             <SocialRegisterButtons />
           </Suspense>
-          <div className="mt-8 p-6 border border-gray-300 rounded-lg text-center">
-            <Overline className="mb-6">Don&apos;t have an account?</Overline>
-            <Link href="/sign-up">
-              <SuccessButton>Create an account</SuccessButton>
-            </Link>
-          </div>
         </div>
       </div>
     </CardPageWrapper>
