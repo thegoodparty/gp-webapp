@@ -22,6 +22,7 @@ import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/component
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
 import AlertSection from './AlertSection';
+import { P2vSection } from './p2v/P2vSection';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -148,6 +149,7 @@ export default function DashboardPage(props) {
             ) : (
               <>
                 <AlertSection campaign={campaign} />
+                <P2vSection {...childProps} />
 
                 <TitleSection
                   title="Campaign Tracker"
