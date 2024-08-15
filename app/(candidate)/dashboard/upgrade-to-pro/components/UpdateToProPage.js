@@ -79,7 +79,10 @@ export default function DetailsPage(props) {
             is reinvested into making it possible for more people across the
             country to run, win and serve.
           </Body2>
-          <Link onClick={handleLinkOnClick} href="/dashboard/pro-sign-up">
+          <Link
+            onClick={handleLinkOnClick}
+            href={demoPersona ? '#' : '/dashboard/pro-sign-up'}
+          >
             <PrimaryButton
               onClick={handleJoinProOnClick}
               className="flex items-center justify-center mx-auto mb-16 w-full md:w-auto"
