@@ -15,12 +15,22 @@ import { useCampaign } from '@shared/hooks/useCampaign';
 
 const options = [
   {
-    key: 'matthew',
-    label: 'Matthew McConaughey',
+    key: 'matthew-mcconaughey',
+    label: (
+      <>
+        <span className="font-bold">Demo a Local Office</span> (Eg. Mayor of
+        Austin Texas)
+      </>
+    ),
   },
   {
-    key: 'taylor',
-    label: 'Taylor Swift',
+    key: 'taylor-swift',
+    label: (
+      <>
+        <span className="font-bold">Demo a Federal Office</span> (Eg. Senator of
+        Tennessee)
+      </>
+    ),
   },
 ];
 
@@ -37,9 +47,9 @@ export default function BrowsingFinalPage() {
   return (
     <CardPageWrapper>
       <div className="text-center mb-8 pt-8">
-        <H1>One final question...</H1>
+        <H1>How would you like to demo GoodParty.org?</H1>
         <Body2 className="mt-3">
-          Please select who you&apos;d like to portray on your demo account:
+          Please select which office you’d like to browse:
         </Body2>
       </div>
       <RadioList
