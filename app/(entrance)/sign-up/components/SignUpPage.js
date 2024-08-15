@@ -170,8 +170,8 @@ export default function SignUpPage() {
                 </Body2>
                 <Body2 className="mt-3">
                   Already have an account?{' '}
-                  <Link href="/login" className="underline">
-                    Login
+                  <Link href="/login" className="underline text-info-main">
+                    Login here.
                   </Link>
                 </Body2>
               </div>
@@ -216,12 +216,6 @@ export default function SignUpPage() {
                   </PrimaryButton>
                 </div>
               </form>
-              <div className="mt-8 p-6 border border-gray-300 rounded-lg text-center">
-                <Overline className="mb-6">Already have an account?</Overline>
-                <Link href="/login">
-                  <SuccessButton>Login</SuccessButton>
-                </Link>
-              </div>
             </Paper>
           </div>
         </div>
