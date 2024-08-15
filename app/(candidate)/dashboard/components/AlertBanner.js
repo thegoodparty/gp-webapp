@@ -21,7 +21,7 @@ export const AlertBanner = ({
   >
     <div className="flex flex-col flex-grow lg:justify-between lg:flex-row">
       <div className="p-2 mr-2 lg:max-w-[73%]">
-        <H4 className="mb-2">{title}</H4>
+        {title && <H4 className="mb-2">{title}</H4>}
         <Body2>{message}</Body2>
       </div>
       {actionHref ? (
