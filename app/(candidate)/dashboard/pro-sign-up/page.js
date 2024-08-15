@@ -3,6 +3,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
 import ProSignUpPage from 'app/(candidate)/dashboard/pro-sign-up/components/ProSignUpPage';
+import { restrictDemoAccess } from 'app/(candidate)/dashboard/shared/restrictDemoAccess';
 
 const meta = pageMetaData({
   title: 'Pro Sign Up | GoodParty.org',
@@ -13,6 +14,7 @@ export const metadata = meta;
 
 export default async function Page() {
   await candidateAccess();
+  restrictDemoAccess();
 
   const { campaign } = await fetchUserCampaign();
   const user = getServerUser();

@@ -2,6 +2,7 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from 'app/(candidate)/dashboard/shared/candidateAccess';
 import PurchaseRedirectPage from 'app/(candidate)/dashboard/pro-sign-up/purchase-redirect/components/PurchaseRedirectPage';
+import { restrictDemoAccess } from 'app/(candidate)/dashboard/shared/restrictDemoAccess';
 
 const REDIRECT_COUNTDOWN_SECONDS = process.env.PAYMENT_REDIRECT_DELAY || 5;
 
@@ -14,6 +15,7 @@ export const metadata = meta;
 
 export default async function Page() {
   await candidateAccess();
+  restrictDemoAccess();
 
   const { campaign } = await fetchUserCampaign();
 
