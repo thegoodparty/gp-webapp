@@ -33,6 +33,7 @@ export default async function middleware(req) {
     pathname.startsWith('/api/v1') &&
     !pathname.includes('login') &&
     !pathname.includes('register') &&
+    !pathname.includes('social-login') &&
     !pathname.includes('logout');
 
   if (apiRewriteRequest) {
