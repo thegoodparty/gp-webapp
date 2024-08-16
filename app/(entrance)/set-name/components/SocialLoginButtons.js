@@ -72,9 +72,6 @@ export default function SocialLoginButtons() {
           isError: false,
         };
       });
-      if (afterAction === 'createCampaign') {
-        await createCampaign(router);
-      }
       const returnCookie = getCookie('returnUrl');
       if (returnCookie) {
         deleteCookie('returnUrl');
