@@ -8,8 +8,16 @@ import { AnimatedBar } from './AnimatedBar';
 import { P2vModal } from './P2vModal';
 
 export function ContactedBarSection(props) {
-  const needed = 13125;
-  const contacted = 5000;
+  const { pathToVictory, reportedVoterGoals } = props;
+  const { voterContactGoal, voteGoal } = pathToVictory || {};
+  let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
+
+  const needed = parseInt(resolvedContactGoal, 10);
+  const contacted =
+    (reportedVoterGoals?.calls || 0) +
+    (reportedVoterGoals?.doorKnocking || 0) +
+    (reportedVoterGoals?.digital || 0);
+
   const percent = (contacted / needed) * 100;
   let bgColor = 'bg-black';
   let textColor = 'text-black';
