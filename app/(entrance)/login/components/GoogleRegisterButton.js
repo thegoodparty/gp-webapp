@@ -50,7 +50,7 @@ const GoogleRegisterButton = ({ loginSuccessCallback }) => {
         }}
         data-cy={`google-social-login`}
       >
-        <div className="text-xs lg:text-sm bg-white text-black relative px-1 w-full flex items-center justify-center">
+        <div className="text-xs lg:text-sm bg-white text-black relative px-4 w-full flex items-center justify-center">
           <div className="lg:text-lg mr-2">
             <FcGoogle />
           </div>
