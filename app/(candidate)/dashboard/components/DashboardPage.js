@@ -51,7 +51,9 @@ export default function DashboardPage(props) {
   const { checkoutSessionId, customerId, demoPersona } = JSON.parse(
     userMetaData || '{}',
   );
-  const { pathToVictory, goals, reportedVoterGoals, details, isPro } = campaign;
+  const { pathToVictory, goals, reportedVoterGoals, details, isPro, data } =
+    campaign;
+  const { reportedVoterGoals } = data || {};
   const { primaryElectionDate, subscriptionId } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
 
@@ -116,9 +118,9 @@ export default function DashboardPage(props) {
     if (resp && resp?.campaign) {
       const campaignObj = resp.campaign;
       setState({
-        doorKnocking: campaignObj?.reportedVoterGoals?.doorKnocking || 0,
-        calls: campaignObj?.reportedVoterGoals?.calls || 0,
-        digital: campaignObj?.reportedVoterGoals?.digital || 0,
+        doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
+        calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
+        digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
       });
     }
 
