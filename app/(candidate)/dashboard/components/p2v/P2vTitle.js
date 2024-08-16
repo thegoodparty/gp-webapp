@@ -1,6 +1,7 @@
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
+import { P2vModal } from './P2vModal';
 
 export function P2vTitle(props) {
   return (
@@ -13,9 +14,13 @@ export function P2vTitle(props) {
         </Body2>
       </div>
       <div className="mt-4 lg:mt-0">
-        <SecondaryButton fullWidth variant="outlined">
-          Understanding Path to Victory
-        </SecondaryButton>
+        <P2vModal
+          triggerElement={
+            <SecondaryButton fullWidth variant="outlined">
+              Understanding Path to Victory
+            </SecondaryButton>
+          }
+        />
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 'use client';
 import DashboardLayout from '../shared/DashboardLayout';
-import TitleSection from '../shared/TitleSection';
 import ThisWeekSection from './ThisWeekSection';
 import ProgressSection from './ProgressSection';
 import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
@@ -16,9 +15,6 @@ import UpdateHistorySection from './UpdateHistorySection';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
-import { ProSignUpAlert } from 'app/(candidate)/dashboard/components/ProSignUpAlert';
-import { CompleteProSignUpAlert } from 'app/(candidate)/dashboard/components/CompleteProSignUpAlert';
-import { PendingProSubscriptionAlert } from 'app/(candidate)/dashboard/components/PendingProSignUpAlert';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
 import AlertSection from './AlertSection';
@@ -151,12 +147,6 @@ export default function DashboardPage(props) {
                 <AlertSection campaign={campaign} />
                 <P2vSection {...childProps} />
 
-                <TitleSection
-                  title="Campaign Tracker"
-                  subtitle="Leveraging the data from your unique voter outreach figures, we've crafted a 12-week strategic blueprint tailored to optimize your campaign's success."
-                  imgWidth={128}
-                  imgHeight={120}
-                />
                 <ThisWeekSection {...childProps} />
                 {voterMap ? <MapSection map={voterMap} /> : null}
                 <ProgressSection {...childProps} />

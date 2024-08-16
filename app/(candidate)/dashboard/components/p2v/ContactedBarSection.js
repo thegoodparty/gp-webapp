@@ -2,10 +2,10 @@ import Body1 from '@shared/typography/Body1';
 import H2 from '@shared/typography/H2';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import { AlertBanner } from '../AlertBanner';
-import { MdChevronRight, MdInfo } from 'react-icons/md';
 import { numberFormatter } from 'helpers/numberHelper';
 import { BsInfoCircle } from 'react-icons/bs';
 import { AnimatedBar } from './AnimatedBar';
+import { P2vModal } from './P2vModal';
 
 export function ContactedBarSection(props) {
   const needed = 13125;
@@ -56,7 +56,7 @@ export function ContactedBarSection(props) {
         <Body1>
           <strong>Needed:</strong> {numberFormatter(needed)} voter contact
         </Body1>
-        <BsInfoCircle className="ml-2" />
+        <P2vModal triggerElement={<BsInfoCircle className="ml-2" />} />
       </div>
     </div>
   );

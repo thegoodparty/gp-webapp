@@ -20,7 +20,7 @@ export const AlertBanner = ({
     {...restProps}
   >
     <div className="flex flex-col flex-grow lg:justify-between lg:flex-row">
-      <div className="p-2 mr-2 lg:max-w-[73%]">
+      <div className={`p-2 mr-2 ${actionText ? 'lg:max-w-[73%]' : ''}`}>
         {title && <H4 className="mb-2">{title}</H4>}
         <Body2>{message}</Body2>
       </div>
