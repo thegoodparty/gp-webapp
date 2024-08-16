@@ -1,7 +1,7 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { deleteCookie, getCookie, setUserCookie } from 'helpers/cookieHelper';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
