@@ -9,7 +9,6 @@ const serverToken = getServerToken();
 
 export default async function Nav() {
   const campaignStatus = await fetchCampaignStatus(serverToken);
-  console.log('campaignStatus', campaignStatus);
   return (
     <>
       <div className="fixed w-screen h-14 z-50">
