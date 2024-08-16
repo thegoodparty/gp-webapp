@@ -10,8 +10,7 @@ export default async function Nav() {
   const user = getServerUser();
   if (user) {
     const serverToken = getServerToken();
-    const campaignStatus = await fetchCampaignStatus(serverToken);
-    console.log('campaignStatus', campaignStatus);
+    campaignStatus = await fetchCampaignStatus(serverToken);
   }
 
   return (
