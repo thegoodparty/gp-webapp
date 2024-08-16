@@ -5,7 +5,14 @@ import { setTokenCookie } from 'helpers/tokenCookie';
 
 export async function PUT(request, { params: { loginType } }) {
   const data = await request.json();
-  const api = gpApi.entrance.login;
+  let api;
+  if (loginType === 'login') {
+    api = gpApi.entrance.login;
+  }
+  if (loginType === 'social-login') {
+    api = gpApi.entrance.socialLogin;
+  }
+
   const { token, user, newUser } = await gpFetch(
     {
       ...api,
@@ -22,7 +29,6 @@ export async function PUT(request, { params: { loginType } }) {
 }
 
 export async function POST(request, { params: { loginType } }) {
-  console.log('loginType POST', loginType);
   const data = await request.json();
   const api = gpApi.entrance.register;
   const { token, user } = await gpFetch(
