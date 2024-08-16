@@ -51,8 +51,7 @@ export default function DashboardPage(props) {
   const { checkoutSessionId, customerId, demoPersona } = JSON.parse(
     userMetaData || '{}',
   );
-  const { pathToVictory, goals, reportedVoterGoals, details, isPro, data } =
-    campaign;
+  const { pathToVictory, goals, details, isPro, data } = campaign;
   const { reportedVoterGoals } = data || {};
   const { primaryElectionDate, subscriptionId } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
