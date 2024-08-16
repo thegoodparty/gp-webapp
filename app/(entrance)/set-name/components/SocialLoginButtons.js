@@ -107,10 +107,6 @@ export default function SocialLoginButtons() {
       </GoogleOAuthProvider>
 
       <FacebookLoginButton loginSuccessCallback={socialLoginCallback} />
-
-      <div data-cy="twitter-login" className="mt-6">
-        <TwitterButton />
-      </div>
     </>
   );
 }
