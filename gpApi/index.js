@@ -26,10 +26,10 @@ const gpApi = {
     },
   },
   entrance: {
-    // register: {
-    //   url: `${base}entrance/register`,
-    //   method: 'POST',
-    // },
+    register: {
+      url: `${base}entrance/register`,
+      method: 'POST',
+    },
     login: {
       url: `${base}entrance/login`,
       method: 'PUT',
@@ -78,6 +78,16 @@ const gpApi = {
     create: {
       url: `${base}campaign`,
       method: 'POST',
+      withAuth: true,
+    },
+    createDemoCampaign: {
+      url: `${base}campaign/demo`,
+      method: 'POST',
+      withAuth: true,
+    },
+    deleteDemoCampaign: {
+      url: `${base}campaign/demo`,
+      method: 'DELETE',
       withAuth: true,
     },
     update: {
@@ -227,10 +237,6 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      // find: {
-      //   url: `${base}candidate-position`,
-      //   method: 'GET',
-      // },
       find: {
         url: `${base}campaign-position`,
         method: 'GET',
@@ -325,6 +331,16 @@ const gpApi = {
     updateUser: {
       url: `${base}user`,
       method: 'PUT',
+      withAuth: true,
+    },
+    updateMeta: {
+      url: `${base}user/meta`,
+      method: 'PUT',
+      withAuth: true,
+    },
+    getMeta: {
+      url: `${base}user/meta`,
+      method: 'GET',
       withAuth: true,
     },
     refresh: {
@@ -640,11 +656,6 @@ const gpApi = {
     },
   },
   voterData: {
-    // purchaseVoterFile: {
-    //   url: `${base}voter-data/voter-file`, //admin
-    //   method: 'POST',
-    //   withAuth: true,
-    // },
     locations: {
       url: `${base}voter-data/locations`,
       method: 'GET',

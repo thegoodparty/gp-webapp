@@ -20,3 +20,22 @@ export async function PUT(request, { params: { loginType } }) {
 
   return setTokenCookie(NextResponse.json({ user, newUser }), token);
 }
+
+export async function POST(request, { params: { loginType } }) {
+  console.log('loginType POST', loginType);
+  const data = await request.json();
+  const api = gpApi.entrance.register;
+  const { token, user } = await gpFetch(
+    {
+      ...api,
+      url: `${process.env.NEXT_PUBLIC_API_BASE}/api/v1/entrance/${loginType}`,
+    },
+    data,
+  );
+
+  if (!token) {
+    return new NextResponse('Forbidden', { status: 403 });
+  }
+
+  return setTokenCookie(NextResponse.json({ user, newUser: true }), token);
+}

@@ -7,6 +7,11 @@ export const CampaignContext = createContext([null, () => {}]);
 export const CampaignProvider = ({ children }) => {
   const [campaign, setCampaign] = useState(null);
 
+  const refreshCampaign = async () => {
+    const { campaign } = await fetchUserClientCampaign();
+    setCampaign(campaign.ok === false ? null : campaign);
+  };
+
   useEffect(() => {
     const getCampaign = async () => {
       const { campaign } = await fetchUserClientCampaign();
@@ -17,7 +22,7 @@ export const CampaignProvider = ({ children }) => {
   }, []);
 
   return (
-    <CampaignContext.Provider value={[campaign, setCampaign]}>
+    <CampaignContext.Provider value={[campaign, setCampaign, refreshCampaign]}>
       {children}
     </CampaignContext.Provider>
   );

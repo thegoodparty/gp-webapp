@@ -9,6 +9,10 @@ import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
 import Caption from '@shared/typography/Caption';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Paper from '@shared/utils/Paper';
+import H2 from '@shared/typography/H2';
+import PasswordInput from '@shared/inputs/PasswrodInput';
+import DeleteAccountButton from './DeleteAccountButton';
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed';
 const CURRENT_PASSWORD_INCORRECT = 'Current password is incorrect';
@@ -96,85 +100,69 @@ function PasswordSection({ user: initUser }) {
     }
   };
 
-  const defaultHelpText = `For security, passwords must have at least 1 capital letter, 1
-    lowercase, 1 special character, 1 number, and 8 characters
-    minimum`;
-
-  const passwordChangeSuccessfulText =
-    passwordChangeSuccessful &&
-    `Password successfully ${user?.hasPassword ? 'changed' : 'created'}`;
-
-  const helpText =
-    errorMessage || passwordChangeSuccessfulText || defaultHelpText;
-
   return (
-    <section className="py-4 border-b border-slate-300 flex">
-      <div className="shrink-0 pr-3 text-indigo-600 pt-[6px]">
-        <TfiLock />
-      </div>
-      <div className="flex-1">
-        <form noValidate onSubmit={(e) => e.preventDefault()}>
-          <H4>Password</H4>
-          <Body2 className="text-indigo-600 mb-6">
-            {user?.hasPassword ? 'Change' : 'Create'} your password
-          </Body2>
-          <div className="grid grid-cols-12 gap-3">
-            <div className="col-span-12 lg:col-span-6">
-              {user?.hasPassword && (
-                <div className="mb-4">
-                  <TextField
-                    label="Old Password"
-                    fullWidth
-                    variant="outlined"
-                    type="password"
-                    value={state.oldPassword}
-                    onChange={(e) => {
-                      onChangeField('oldPassword', e.target.value);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-            <div className="col-span-12 lg:col-span-6 hidden lg:block">
-              &nbsp;
-            </div>
-            <div className="col-span-12 lg:col-span-6">
-              <TextField
-                label="Password"
-                fullWidth
-                variant="outlined"
-                value={state.password}
-                type="password"
-                onChange={(e) => {
-                  onChangeField('password', e.target.value);
-                }}
-              />
-            </div>
-            <div className="col-span-12 lg:col-span-8 mt-4">
-              <Caption
-                className={`${errorMessage ? 'text-error' : ''}${
-                  passwordChangeSuccessful ? 'text-success' : ''
-                }`}
-              >
-                {helpText}
-              </Caption>
-            </div>
-            <div className="col-span-12 lg:col-span-4 flex justify-end items-end">
-              <div onClick={handleSavePassword}>
-                <PrimaryButton
-                  disabled={!fieldsValid}
-                  type="submit"
-                  size="medium"
-                  loading={loading}
-                >
-                  Save
-                </PrimaryButton>
+    <Paper className="mt-4">
+      <H2>Password</H2>
+      <Body2 className="text-gray-600 mb-8">
+        Update your password and manage account.
+      </Body2>
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <H4>Password</H4>
+        <Body2 className="text-indigo-600 mb-6">
+          {user?.hasPassword ? 'Change' : 'Create'} your password
+        </Body2>
+        <div className="grid grid-cols-12 gap-3">
+          <div className="col-span-12 lg:col-span-6">
+            {user?.hasPassword && (
+              <div className="mb-4">
+                <PasswordInput
+                  onChangeCallback={(pwd) => {
+                    onChangeField('oldPassword', pwd);
+                  }}
+                  label="Old Password"
+                  helperText=""
+                />
               </div>
+            )}
+          </div>
+          <div className="col-span-12 lg:col-span-6 hidden lg:block">
+            &nbsp;
+          </div>
+          <div className="col-span-12 lg:col-span-6">
+            <PasswordInput
+              onChangeCallback={(pwd) => {
+                onChangeField('password', pwd);
+              }}
+              label="New Password"
+            />
+          </div>
+
+          <div className="col-span-12 lg:col-span-6 hidden lg:block">
+            &nbsp;
+          </div>
+
+          <div className="col-span-12 ">&nbsp;</div>
+
+          <div className="col-span-12 lg:col-span-6">
+            <div>
+              <PrimaryButton
+                disabled={!fieldsValid}
+                type="submit"
+                loading={loading}
+                onClick={handleSavePassword}
+              >
+                Save Changes
+              </PrimaryButton>
             </div>
           </div>
-        </form>
-      </div>
-    </section>
+          <div className="col-span-12 lg:col-span-6">
+            <div className="flex justify-end">
+              <DeleteAccountButton />
+            </div>
+          </div>
+        </div>
+      </form>
+    </Paper>
   );
 }
 

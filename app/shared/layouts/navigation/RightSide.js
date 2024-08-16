@@ -11,7 +11,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { useUser } from '@shared/hooks/useUser';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 
-export default function RightSide() {
+export default function RightSide({ campaignStatus }) {
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -21,7 +21,10 @@ export default function RightSide() {
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
-  const isOnboardingPath = pathname?.startsWith('/onboarding');
+  const isOnboardingPath =
+    pathname?.startsWith('/onboarding') ||
+    pathname?.startsWith('/browsing') ||
+    pathname === '/account-type';
 
   const toggleProfile = () => {
     closeAll();
@@ -64,6 +67,7 @@ export default function RightSide() {
           <DashboardOrContinue
             isDashboardPath={isDashboardPath}
             closeAll={closeAll}
+            campaignStatus={campaignStatus}
           />
           {isDashboardPath && (
             <TopDashboardMenu
@@ -75,9 +79,12 @@ export default function RightSide() {
         </>
       ) : (
         <>
-          <Link href="/login" id="nav-sign-in" className="mr-6">
+          <Link href="/login" id="nav-login" className="lg:mr-3 xl:mr-6">
+            <div className="font-medium text-base">Login</div>
+          </Link>
+          <Link href="/sign-up" id="nav-sign-up" className="lg:mr-3 xl:mr-6">
             <PrimaryButton variant="text" size="medium">
-              <div className="font-medium text-base">Sign in</div>
+              <div className="font-medium text-base">Sign up</div>
             </PrimaryButton>
           </Link>
           <Link href="/run-for-office" id="nav-get-tools">

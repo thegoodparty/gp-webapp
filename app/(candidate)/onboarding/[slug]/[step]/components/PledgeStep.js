@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   onboardingStep,
   updateCampaign,
@@ -7,8 +7,6 @@ import {
 import contentfulHelper from 'helpers/contentfulHelper';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { IoDocumentText } from 'react-icons/io5';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaChild } from 'react-icons/fa';
@@ -17,16 +15,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
 import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements';
 import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
-
-async function launchCampaign() {
-  try {
-    const api = gpApi.campaign.launch;
-    return await gpFetch(api);
-  } catch (e) {
-    console.log('error at launchCampaign', e);
-    return false;
-  }
-}
+import { useRouter } from 'next/navigation';
 
 const steps = ['1', '2', '3', '4'];
 const emoticons = [
@@ -56,6 +45,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
   const [state, setState] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations();
+  const router = useRouter();
 
   if (!pledge) {
     return null;
@@ -89,10 +79,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
     ];
 
     await updateCampaign(attr);
-    const res = await launchCampaign();
-    if (res) {
-      window.location.href = '/dashboard/plan';
-    }
+    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
   };
 
   const onChangeField = (key, value) => {

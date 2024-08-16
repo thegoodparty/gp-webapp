@@ -1,11 +1,15 @@
-import { MdError, MdInfo } from 'react-icons/md';
+import { MdCheck, MdError, MdInfo, MdWarning } from 'react-icons/md';
 
-export const AlertIcon = ({ level, className }) => {
-  switch (level) {
+export const AlertIcon = ({ severity, className }) => {
+  switch (severity) {
     case 'error':
       return <MdError className={className} />;
     case 'info':
       return <MdInfo className={className} />;
+    case 'warning':
+      return <MdWarning className={className} />;
+    case 'success':
+      return <MdCheck className={className} />;
     default:
       return null;
   }

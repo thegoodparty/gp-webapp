@@ -30,7 +30,7 @@ export default function ErrorButton({
     baseClass['active:bg-red-400'] = true;
   } else if (variant === 'outlined') {
     baseClass['bg-white'] = true;
-    baseClass['text-primary'] = true;
+    baseClass['text-red-500'] = true;
     baseClass['border-2'] = true;
     baseClass['border-red-500'] = true;
     baseClass['hover:bg-red-500'] = true;

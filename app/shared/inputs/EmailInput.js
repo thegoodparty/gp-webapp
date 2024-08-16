@@ -16,12 +16,13 @@ export default function EmailInput({
   className,
   placeholder,
   useLabel = true,
+  required,
 }) {
   return (
     <TextField
       value={value}
       label={useLabel ? 'Email' : ''}
-      required
+      required={required}
       size="medium"
       fullWidth
       name="email"
@@ -30,7 +31,7 @@ export default function EmailInput({
       onBlur={onBlurCallback}
       variant="outlined"
       className={className}
-      placeholder={useLabel === false ? placeholder : ''}
+      placeholder={placeholder || ''}
       InputLabelProps={
         shrink
           ? {

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import ButtonLoading from './ButtonLoading';
 import { setSize } from './PrimaryButton';
 import { buttonOnClickHandler } from '@shared/buttons/buttonOnClickHandler';
+import { compileButtonClassName } from '@shared/buttons/compileButtonClassName';
 
 export default function SuccessButton({
   children,
@@ -27,7 +28,7 @@ export default function SuccessButton({
   }
   if (variant === 'contained') {
     baseClass['bg-green-400'] = true;
-    baseClass['text-indigo-900'] = true;
+    baseClass['text-white'] = true;
     baseClass['hover:bg-green-300'] = true;
     baseClass['active:bg-green-300'] = true;
   } else if (variant === 'outlined') {
@@ -81,7 +82,7 @@ export default function SuccessButton({
 
   return (
     <button
-      className={clsx({ ...baseClass, ...className })}
+      className={compileButtonClassName(baseClass, className)}
       style={style}
       disabled={disabled}
       {...restProps}

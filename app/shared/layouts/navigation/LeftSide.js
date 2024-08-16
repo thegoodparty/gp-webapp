@@ -7,7 +7,11 @@ import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns';
 
 export default function LeftSide() {
   const pathname = usePathname();
-  const isOnboardingPath = pathname?.startsWith('/onboarding');
+  const isOnboardingPath =
+    pathname?.startsWith('/onboarding') ||
+    pathname?.startsWith('/browsing') ||
+    pathname === '/account-type';
+
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
@@ -19,7 +23,7 @@ export default function LeftSide() {
   return (
     <div className="items-center hidden lg:flex">
       <NavDropdowns />
-      <Link href="/about" id="nav-mission" className="ml-6">
+      <Link href="/about" id="nav-mission" className="lg:ml-3 xl:ml-6">
         <PrimaryButton variant="text" size="medium">
           <div className="font-medium text-base">Our Mission</div>
         </PrimaryButton>

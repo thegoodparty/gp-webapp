@@ -49,6 +49,19 @@ export function onboardingStep(campaign, step) {
   return `onboarding-${nextStep}`;
 }
 
+export async function createDemoCampaign() {
+  try {
+    const api = gpApi.campaign.createDemoCampaign;
+    const { slug } = await gpFetch(api);
+    if (slug) {
+      deleteCookie('afterAction');
+      deleteCookie('returnUrl');
+    }
+  } catch (e) {
+    return false;
+  }
+}
+
 export async function createCampaign() {
   try {
     const api = gpApi.campaign.create;
@@ -68,6 +81,16 @@ export async function createCampaign() {
       window.location.href = `/onboarding/${slug}/1`;
     }
   } catch (e) {
+    return false;
+  }
+}
+
+export async function updateUserMeta(meta) {
+  try {
+    const api = gpApi.user.updateMeta;
+    return await gpFetch(api, { meta });
+  } catch (e) {
+    console.log('error', e);
     return false;
   }
 }

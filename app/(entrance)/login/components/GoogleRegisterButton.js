@@ -46,15 +46,15 @@ const GoogleRegisterButton = ({ loginSuccessCallback }) => {
         className={'rounded-lg py-5 px-1 relative text-center'}
         style={{
           backgroundColor: '#fff',
-          border: 'solid 2px #000',
+          border: 'solid 2px #484E55',
         }}
         data-cy={`google-social-login`}
       >
-        <div className="text-xs lg:text-sm bg-white text-black relative  py-4 px-1 w-full">
-          <span className="absolute left-3 t-4 lg:text-xl">
+        <div className="text-xs lg:text-sm bg-white text-black relative px-4 w-full flex items-center justify-center">
+          <div className="lg:text-lg mr-2">
             <FcGoogle />
-          </span>
-          <div className="font-bold">Continue with Google</div>
+          </div>
+          <div className="font-bold">Google</div>
         </div>
       </Button>
     </div>

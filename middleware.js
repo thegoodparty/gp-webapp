@@ -32,6 +32,7 @@ export default async function middleware(req) {
   const apiRewriteRequest =
     pathname.startsWith('/api/v1') &&
     !pathname.includes('login') &&
+    !pathname.includes('register') &&
     !pathname.includes('logout');
 
   if (apiRewriteRequest) {

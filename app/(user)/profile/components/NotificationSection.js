@@ -1,35 +1,35 @@
 'use client';
-/**
- *
- * PersonalSection
- *
- */
 
 import { useState, useEffect } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
-import { TbMailPlus } from 'react-icons/tb';
 import H5 from '@shared/typography/H5';
 import { Switch } from '@mui/material';
 import { useUser } from '@shared/hooks/useUser';
+import Paper from '@shared/utils/Paper';
+import H2 from '@shared/typography/H2';
 
 const fields = [
   {
     key: 'notificationEmails',
-    label: 'Notification Emails',
-    subTitle: 'Get notification about your campaign action items',
+    label: 'Campaign Emails',
+    subTitle: 'Receive notification about your campaign action items',
+  },
+  {
+    key: 'textNotification',
+    label: 'SMS Messages',
+    subTitle: 'Receive text notification about your campaign action items',
   },
   {
     key: 'marketingEmails',
     label: 'Marketing Emails',
-    subTitle: 'Get marketing emails from GoodParty.org',
+    subTitle: 'Receive marketing emails from GoodParty.org',
   },
   {
-    key: 'textNotification',
-    label: 'SMS Notification',
-    subTitle: 'Get text notification about your campaign action items',
+    key: 'weeklyNewsletter',
+    label: 'Weekly Newsletter',
+    subTitle: "Receive GoodParty.org's weekly newsletter.",
   },
 ];
 
@@ -72,45 +72,37 @@ export default function NotificationSection() {
   };
 
   return (
-    <section className="py-4 border-b border-slate-300 flex">
-      <div className="shrink-0 pr-3 text-indigo-50 pt-[6px]">
-        <TbMailPlus />
-      </div>
-      <div className="flex-1">
-        <H4>Emails &amp; Notification</H4>
-        <Body2 className="text-indigo-600 mb-6">
-          Update your email and notification preferences here
-        </Body2>
-        {fields.map((field) => (
-          <div
-            className="flex justify-between mb-5 items-center"
-            key={field.key}
-          >
-            <div>
-              <H5>{field.label}</H5>
-              <Body2>{field.subTitle}</Body2>
-            </div>
-            <div>
-              <Switch
-                onChange={(e) => {
-                  handleChange(field.key, e);
-                }}
-                //
-                checked={state[field.key]}
-                sx={{
-                  '&.MuiSwitch-root .MuiSwitch-switchBase': {
-                    color: '#F54966',
-                  },
-
-                  '&.MuiSwitch-root .Mui-checked': {
-                    color: '#0EB66F',
-                  },
-                }}
-              />
-            </div>
+    <Paper className="mt-4">
+      <H2>Notification Settings</H2>
+      <Body2 className="text-gray-600 mb-8">
+        Manage your notification preferences.
+      </Body2>
+      {fields.map((field) => (
+        <div className="flex justify-between mb-5 items-center" key={field.key}>
+          <div>
+            <H5>{field.label}</H5>
+            <Body2>{field.subTitle}</Body2>
           </div>
-        ))}
-      </div>
-    </section>
+          <div>
+            <Switch
+              onChange={(e) => {
+                handleChange(field.key, e);
+              }}
+              //
+              checked={state[field.key]}
+              sx={{
+                '&.MuiSwitch-root .MuiSwitch-switchBase': {
+                  color: '#F9F9F9',
+                },
+
+                '&.MuiSwitch-root .Mui-checked': {
+                  color: '#0D1528',
+                },
+              }}
+            />
+          </div>
+        </div>
+      ))}
+    </Paper>
   );
 }
