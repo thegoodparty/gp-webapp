@@ -5,10 +5,10 @@ import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
 import { getServerToken } from 'helpers/userServerHelper';
 
-const serverToken = getServerToken();
-
 export default async function Nav() {
+  const serverToken = getServerToken();
   const campaignStatus = await fetchCampaignStatus(serverToken);
+
   return (
     <>
       <div className="fixed w-screen h-14 z-50">
