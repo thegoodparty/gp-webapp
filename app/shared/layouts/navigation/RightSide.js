@@ -11,7 +11,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { useUser } from '@shared/hooks/useUser';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 
-export default function RightSide() {
+export default function RightSide({ campaignStatus }) {
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -67,6 +67,7 @@ export default function RightSide() {
           <DashboardOrContinue
             isDashboardPath={isDashboardPath}
             closeAll={closeAll}
+            campaignStatus={campaignStatus}
           />
           {isDashboardPath && (
             <TopDashboardMenu

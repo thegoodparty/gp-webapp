@@ -1,10 +1,14 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';
-import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
+// import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 
-export default function DashboardOrContinue({ isDashboardPath, closeAll }) {
-  const [campaignStatus] = useCampaignStatus();
+export default function DashboardOrContinue({
+  isDashboardPath,
+  closeAll,
+  campaignStatus,
+}) {
+  // const [campaignStatus] = useCampaignStatus();
   const { status, slug, step } = campaignStatus || {};
   if (!status) {
     return (

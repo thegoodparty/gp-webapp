@@ -1,9 +1,15 @@
+import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
+import { getServerToken } from 'helpers/userServerHelper';
 
-export default function Nav() {
+const serverToken = getServerToken();
+
+export default async function Nav() {
+  const campaignStatus = await fetchCampaignStatus(serverToken);
+  console.log('campaignStatus', campaignStatus);
   return (
     <>
       <div className="fixed w-screen h-14 z-50">
@@ -13,7 +19,7 @@ export default function Nav() {
               <HeaderLogo />
               <LeftSide />
             </div>
-            <RightSide />
+            <RightSide campaignStatus={campaignStatus} />
           </div>
         </div>
       </div>
