@@ -3,11 +3,16 @@ import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
-import { getServerToken } from 'helpers/userServerHelper';
+import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 
 export default async function Nav() {
-  const serverToken = getServerToken();
-  const campaignStatus = await fetchCampaignStatus(serverToken);
+  let campaignStatus = false;
+  const user = getServerUser();
+  if (user) {
+    const serverToken = getServerToken();
+    const campaignStatus = await fetchCampaignStatus(serverToken);
+    console.log('campaignStatus', campaignStatus);
+  }
 
   return (
     <>
