@@ -11,6 +11,7 @@ import GoogleLoginButton from './GoogleLoginButton';
 import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
+import Overline from '@shared/typography/Overline';
 
 async function login(payload) {
   try {
@@ -95,13 +96,12 @@ export default function SocialLoginButtons() {
 
   return (
     <>
-      <div className="my-8 h-4 relative">
+      <div className="my-4 h-4 relative">
         <div className="border-b border-neutral-200 h-4" />
-        <div
-          className="absolute w-12 text-center top-1 bg-white text-neutral-500"
-          style={{ left: 'calc(50% - 24px)' }}
-        >
-          Or
+        <div className="absolute w-full text-center top-1  ">
+          <Overline className="bg-white inline-block px-3">
+            OR CONTINUE WITH
+          </Overline>
         </div>
       </div>
 

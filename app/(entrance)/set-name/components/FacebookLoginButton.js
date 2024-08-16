@@ -54,7 +54,7 @@ const FacebookLoginButton = ({ loginSuccessCallback }) => {
         <div className="absolute left-2 top-3 p-1 w-4 h-4 flex items-center justify-center lg:left-3 lg:top-3 text-xs lg:w-8 lg:h-8">
           <FaFacebook size={30} />
         </div>
-        CONTINUE WITH FACEBOOK
+        FACEBOOK
       </FacebookLogin>
     </div>
   );

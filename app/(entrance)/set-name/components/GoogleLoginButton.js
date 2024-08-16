@@ -46,7 +46,7 @@ const GoogleLoginButton = ({ loginSuccessCallback }) => {
           <span className="absolute left-3 t-4 lg:text-xl">
             <FcGoogle />
           </span>
-          <div className="font-bold">Continue with Google</div>
+          <div className="font-bold">Google</div>
         </div>
       </Button>
     </div>

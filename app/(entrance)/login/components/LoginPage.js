@@ -1,7 +1,6 @@
 'use client';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
 import {
   deleteCookie,
@@ -13,7 +12,6 @@ import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import SocialRegisterButtons from './SocialRegisterButtons';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
@@ -21,8 +19,7 @@ import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import { useUser } from '@shared/hooks/useUser';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
-import Overline from '@shared/typography/Overline';
-import SuccessButton from '@shared/buttons/SuccessButton';
+import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginButtons';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -155,7 +152,7 @@ export default function LoginPage() {
           </div>
 
           <Suspense>
-            <SocialRegisterButtons />
+            <SocialLoginButtons />
           </Suspense>
         </div>
       </div>
