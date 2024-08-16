@@ -22,6 +22,7 @@ export const EinCheckInput = ({
   validated,
   setValidated,
   onChange = () => {},
+  ...restProps
 }) => {
   const handleOnChange = async (e) => {
     const newVal = e.currentTarget.value;
@@ -56,6 +57,7 @@ export const EinCheckInput = ({
         ),
       }}
       fullWidth
+      {...restProps}
     />
   );
 };

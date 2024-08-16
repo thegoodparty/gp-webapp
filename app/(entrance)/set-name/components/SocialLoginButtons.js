@@ -1,7 +1,7 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { deleteCookie, getCookie, setUserCookie } from 'helpers/cookieHelper';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,7 @@ import GoogleLoginButton from './GoogleLoginButton';
 import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
+import Overline from '@shared/typography/Overline';
 
 async function login(payload) {
   try {
@@ -71,9 +72,6 @@ export default function SocialLoginButtons() {
           isError: false,
         };
       });
-      if (afterAction === 'createCampaign') {
-        await createCampaign(router);
-      }
       const returnCookie = getCookie('returnUrl');
       if (returnCookie) {
         deleteCookie('returnUrl');
@@ -95,13 +93,12 @@ export default function SocialLoginButtons() {
 
   return (
     <>
-      <div className="my-8 h-4 relative">
+      <div className="my-4 h-4 relative">
         <div className="border-b border-neutral-200 h-4" />
-        <div
-          className="absolute w-12 text-center top-1 bg-white text-neutral-500"
-          style={{ left: 'calc(50% - 24px)' }}
-        >
-          Or
+        <div className="absolute w-full text-center top-1  ">
+          <Overline className="bg-white inline-block px-3">
+            OR CONTINUE WITH
+          </Overline>
         </div>
       </div>
 
@@ -110,10 +107,6 @@ export default function SocialLoginButtons() {
       </GoogleOAuthProvider>
 
       <FacebookLoginButton loginSuccessCallback={socialLoginCallback} />
-
-      <div data-cy="twitter-login" className="mt-6">
-        <TwitterButton />
-      </div>
     </>
   );
 }

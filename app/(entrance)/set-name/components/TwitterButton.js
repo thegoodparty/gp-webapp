@@ -30,7 +30,7 @@ export default function TwitterButton({ mode = 'login' }) {
         <span className="absolute left-3 t-4 lg:text-xl">
           <FaTwitter />
         </span>
-        <div className="font-bold">Continue with Twitter</div>
+        <div className="font-bold">Twitter</div>
       </div>
     </Button>
   );

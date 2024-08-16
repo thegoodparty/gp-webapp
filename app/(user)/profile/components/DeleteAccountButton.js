@@ -11,11 +11,13 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ErrorButton from '@shared/buttons/ErrorButton';
 import { FaTrash } from 'react-icons/fa';
+import { handleLogOut } from '@shared/user/handleLogOut';
 
 async function deleteAccountCallback() {
   try {
     const api = gpApi.user.deleteAccount;
     await gpFetch(api);
+    await handleLogOut();
     deleteCookies();
     window.location.href = '/';
   } catch (error) {
