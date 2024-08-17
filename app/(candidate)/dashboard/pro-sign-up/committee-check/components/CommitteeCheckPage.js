@@ -73,8 +73,8 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   };
 
   useEffect(() => {
-    doEinCheck(einInputValue, einInputValue);
-  }, [einInputValue]);
+    doEinCheck();
+  }, [campaignCommittee, einInputValue]);
 
   const onCampaignCommitteeBlur = () =>
     doEinCheck(einInputValue, einInputValue);
@@ -123,6 +123,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             election data.
           </Body2>
           <TextField
+            name="campaign-committee"
             className="!mb-4"
             label="Name Of Campaign Committee"
             value={campaignCommittee}
@@ -141,6 +142,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             fullWidth
           />
           <EinCheckInput
+            name="ein-number"
             loading={loadingEinCheck}
             value={einInputValue}
             validated={validatedEin}

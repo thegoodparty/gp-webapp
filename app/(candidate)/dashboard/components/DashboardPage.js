@@ -102,6 +102,9 @@ export default function DashboardPage(props) {
         doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
         calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
         digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
+        doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
+        calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
+        digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
       });
     }
 

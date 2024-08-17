@@ -5,7 +5,7 @@ import gpApi from 'gpApi';
 
 export const handleLogOut = async (e) => {
   deleteUserCookies();
-  fireGTMButtonClickEvent(e.currentTarget);
+  e?.currentTarget && fireGTMButtonClickEvent(e?.currentTarget);
   await gpFetch(gpApi.user.logout, false, false, false, false, true);
   window.location.replace('/');
 };
