@@ -1,7 +1,6 @@
 'use client';
 import DashboardLayout from '../shared/DashboardLayout';
-import ThisWeekSection from './ThisWeekSection';
-import ProgressSection from './ProgressSection';
+
 import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
 import { useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
@@ -10,7 +9,6 @@ import {
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import ElectionOver from './ElectionOver';
-import MapSection from './MapSection';
 import UpdateHistorySection from './UpdateHistorySection';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -19,6 +17,7 @@ import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
 import AlertSection from './AlertSection';
 import { P2vSection } from './p2v/P2vSection';
+import ContactMethodsSection from './contactMethods/ContactMethodsSection';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -44,7 +43,7 @@ export default function DashboardPage(props) {
   const { campaign } = props;
   const [user, setUser] = useUser();
 
-  const { pathToVictory, goals, data, details, isPro } = campaign;
+  const { pathToVictory, goals, data, details } = campaign;
   const { reportedVoterGoals } = data || {};
   const { primaryElectionDate } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
@@ -74,6 +73,10 @@ export default function DashboardPage(props) {
         doorKnocking: reportedVoterGoals?.doorKnocking || 0,
         calls: reportedVoterGoals?.calls || 0,
         digital: reportedVoterGoals?.digital || 0,
+        directMail: reportedVoterGoals?.directMail || 0,
+        digitalAds: reportedVoterGoals?.digitalAds || 0,
+        text: reportedVoterGoals?.text || 0,
+        events: reportedVoterGoals?.events || 0,
       });
       loadHistory();
       updateUserCookie();
@@ -102,9 +105,10 @@ export default function DashboardPage(props) {
         doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
         calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
         digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
-        doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
-        calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
-        digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
+        directMail: campaignObj?.data?.reportedVoterGoals?.directMail || 0,
+        digitalAds: campaignObj?.data?.reportedVoterGoals?.digitalAds || 0,
+        text: campaignObj?.data?.reportedVoterGoals?.text || 0,
+        events: campaignObj?.data?.reportedVoterGoals?.events || 0,
       });
     }
 
@@ -139,9 +143,6 @@ export default function DashboardPage(props) {
     deleteHistoryCallBack,
   };
 
-  console.log('childProps', childProps);
-  console.log('state', state);
-
   return (
     <DashboardLayout {...childProps}>
       <div>
@@ -153,10 +154,7 @@ export default function DashboardPage(props) {
               <>
                 <AlertSection campaign={campaign} />
                 <P2vSection {...childProps} />
-
-                <ThisWeekSection {...childProps} />
-                {voterMap ? <MapSection map={voterMap} /> : null}
-                <ProgressSection {...childProps} />
+                <ContactMethodsSection {...childProps} />
                 <UpdateHistorySection {...childProps} />
               </>
             )}

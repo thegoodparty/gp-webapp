@@ -13,10 +13,16 @@ export function ContactedBarSection(props) {
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
 
   const needed = parseInt(resolvedContactGoal, 10);
+  const { doorKnocking, calls, digital, directMail, digitalAds, text, events } =
+    reportedVoterGoals || {};
   const contacted =
-    (reportedVoterGoals?.calls || 0) +
-    (reportedVoterGoals?.doorKnocking || 0) +
-    (reportedVoterGoals?.digital || 0);
+    (doorKnocking || 0) +
+    (calls || 0) +
+    (digital || 0) +
+    (directMail || 0) +
+    (digitalAds || 0) +
+    (text || 0) +
+    (events || 0);
 
   const percent = (contacted / needed) * 100;
   let bgColor = 'bg-black';

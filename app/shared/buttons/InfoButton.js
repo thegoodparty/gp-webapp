@@ -30,6 +30,7 @@ export default function InfoButton({
     baseClass['bg-indigo-50'] = true;
     baseClass['text-indigo-900'] = true;
     baseClass['hover:bg-indigo-500'] = true;
+    baseClass['hover:text-white'] = true;
     baseClass['active:bg-indigo-500'] = true;
   } else if (variant === 'outlined') {
     baseClass['bg-white'] = true;

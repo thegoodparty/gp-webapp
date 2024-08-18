@@ -8,10 +8,25 @@ import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
 import Actions from './Actions';
 
+/*
+ 'doorKnocking',
+        'calls',
+        'digital',
+        'directMail',
+        'digitalAds',
+        'text',
+        'events',
+        'yardSigns',
+        */
 const fields = {
-  doorKnocking: { icon: <RiDoorOpenLine />, title: 'Doors knocked' },
-  calls: { icon: <RiPhoneLine />, title: 'Calls made' },
-  digital: { icon: <FaBullhorn />, title: 'Online impressions' },
+  doorKnocking: { title: 'Doors knocked' },
+  calls: { title: 'Calls made' },
+  digital: { title: 'Digital Ads' },
+  directMail: { title: 'Direct mail sent' },
+  digitalAds: { title: 'Digital ads' },
+  text: { title: 'Texts sent' },
+  events: { title: 'Events Attendance' },
+  yardSigns: { title: 'Yard signs' },
 };
 
 export default function UpdateHistorySection(props) {
@@ -43,16 +58,24 @@ export default function UpdateHistorySection(props) {
 
   const columns = useMemo(() => [
     {
+      Header: 'Actions',
+      Cell: ({ row }) => {
+        return (
+          <Actions
+            {...row.original}
+            showMenu={showMenu}
+            setShowMenu={setShowMenu}
+            deleteHistoryCallBack={deleteHistoryCallBack}
+          />
+        );
+      },
+    },
+    {
       Header: 'Name',
       accessor: 'type',
       collapse: true,
       Cell: ({ row }) => {
-        return (
-          <div className="flex items-center pl-2">
-            {fields[row.original.type].icon} &nbsp;{' '}
-            {fields[row.original.type].title}
-          </div>
-        );
+        return <div className="">{fields[row.original.type]?.title}</div>;
       },
     },
     {
@@ -80,20 +103,6 @@ export default function UpdateHistorySection(props) {
       sortType: 'datetime',
       Cell: ({ row }) => {
         return dateUsHelper(row.original.createdAt);
-      },
-    },
-    {
-      Header: 'Actions',
-      collapse: true,
-      Cell: ({ row }) => {
-        return (
-          <Actions
-            {...row.original}
-            showMenu={showMenu}
-            setShowMenu={setShowMenu}
-            deleteHistoryCallBack={deleteHistoryCallBack}
-          />
-        );
       },
     },
   ]);

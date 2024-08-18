@@ -9,7 +9,7 @@ export default function Actions({
   deleteHistoryCallBack,
 }) {
   return (
-    <div className="flex justify-center relative">
+    <div className="relative">
       <BsThreeDotsVertical
         onClick={() => {
           setShowMenu(id);
@@ -21,10 +21,10 @@ export default function Actions({
           <div
             className="fixed h-screen w-screen top-14 left-0"
             onClick={() => {
-              setShowMenu(0);
+              setShowMenu(false);
             }}
           />
-          <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 right-24 top-3">
+          <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-4 top-2">
             <DeleteAction
               id={id}
               setShowMenu={setShowMenu}
