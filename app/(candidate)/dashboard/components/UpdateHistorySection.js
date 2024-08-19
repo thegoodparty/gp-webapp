@@ -3,21 +3,10 @@ import H3 from '@shared/typography/H3';
 import UserAvatar from '@shared/user/UserAvatar';
 import Table from '@shared/utils/Table';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { useMemo, useState } from 'react';
-import { FaBullhorn } from 'react-icons/fa';
-import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
+import { memo, useState } from 'react';
 import Actions from './Actions';
+import Paper from '@shared/utils/Paper';
 
-/*
- 'doorKnocking',
-        'calls',
-        'digital',
-        'directMail',
-        'digitalAds',
-        'text',
-        'events',
-        'yardSigns',
-        */
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
   calls: { title: 'Calls made' },
@@ -29,7 +18,7 @@ const fields = {
   yardSigns: { title: 'Yard signs' },
 };
 
-export default function UpdateHistorySection(props) {
+const UpdateHistorySection = memo(function UpdateHistorySection(props) {
   const [showMenu, setShowMenu] = useState(0);
 
   const { deleteHistoryCallBack, updateHistory } = props;
@@ -105,15 +94,19 @@ export default function UpdateHistorySection(props) {
     },
   ];
   return (
-    <section className="mt-12 mb-6 max-w-[90vw] overflow-x-auto">
-      <H3>Update history</H3>
+    <Paper className="mt-12">
+      <div className="min-w-[600px] max-w-[90vw] overflow-x-auto">
+        <H3>Update history</H3>
 
-      <Table
-        columns={columns}
-        data={inputData}
-        filterColumns={false}
-        pagination={false}
-      />
-    </section>
+        <Table
+          columns={columns}
+          data={inputData}
+          filterColumns={false}
+          pagination={false}
+        />
+      </div>
+    </Paper>
   );
-}
+});
+
+export default UpdateHistorySection;

@@ -2,7 +2,7 @@
 import DashboardLayout from '../shared/DashboardLayout';
 
 import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
 import {
   getCampaign,
@@ -97,7 +97,7 @@ export default function DashboardPage(props) {
   const dateRange = weekRangeFromDate(resolvedDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
-  const deleteHistoryCallBack = async () => {
+  const deleteHistoryCallBack = useCallback(async () => {
     const resp = await getCampaign();
     if (resp && resp?.campaign) {
       const campaignObj = resp.campaign;
@@ -113,23 +113,28 @@ export default function DashboardPage(props) {
     }
 
     await loadHistory();
-  };
+  }, []);
 
-  const updateCountCallback = async (key, value, newAddition) => {
-    const newState = {
-      ...state,
-      [key]: value,
-    };
-    setState(newState);
+  const updateCountCallback = useCallback(
+    async (key, value, newAddition) => {
+      const newState = {
+        ...state,
+        [key]: value,
+      };
+      setState(newState);
 
-    await updateCampaign([{ key: 'data.reportedVoterGoals', value: newState }]);
+      await updateCampaign([
+        { key: 'data.reportedVoterGoals', value: newState },
+      ]);
 
-    await createUpdateHistory({
-      type: key,
-      quantity: newAddition,
-    });
-    await loadHistory();
-  };
+      await createUpdateHistory({
+        type: key,
+        quantity: newAddition,
+      });
+      await loadHistory();
+    },
+    [state],
+  );
 
   const childProps = {
     ...props,

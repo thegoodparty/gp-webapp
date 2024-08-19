@@ -10,7 +10,7 @@ export function P2vSection(props) {
   return (
     <Paper className="mb-4">
       <P2vTitle />
-      <CurrentPhase {...props} />
+      <CurrentPhase campaign={props.campaign} />
       <ContactedBarSection {...props} />
     </Paper>
   );

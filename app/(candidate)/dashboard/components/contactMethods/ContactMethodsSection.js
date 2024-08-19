@@ -3,6 +3,7 @@ import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
 import { FaDoorClosed } from 'react-icons/fa';
 import MethodRow from './MethodRow';
+import { memo } from 'react';
 
 const methods = [
   {
@@ -99,7 +100,7 @@ const methods = [
   },
 ];
 
-export default function ContactMethodsSection(props) {
+const ContactMethodsSection = memo(function ContactMethodsSection(props) {
   return (
     <Paper>
       <H2>Voter Contact Methods</H2>
@@ -109,4 +110,5 @@ export default function ContactMethodsSection(props) {
       ))}
     </Paper>
   );
-}
+});
+export default ContactMethodsSection;

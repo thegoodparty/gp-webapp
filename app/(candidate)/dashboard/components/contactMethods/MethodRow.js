@@ -10,7 +10,6 @@ export default function MethodRow(props) {
   const { method, campaign } = props;
   const { title, description, cta, icon, comingSoon, voterFileKey } = method;
   const { isPro } = campaign || {};
-  console.log('campaign', campaign);
   return (
     <div className="border border-gray-200 p-4 rounded-lg mt-4">
       <div className="grid grid-cols-12 gap-4">

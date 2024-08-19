@@ -4,6 +4,7 @@ import { useUser } from '@shared/hooks/useUser';
 import { ProSignUpAlert } from './ProSignUpAlert';
 import { CompleteProSignUpAlert } from './CompleteProSignUpAlert';
 import { PendingProSubscriptionAlert } from './PendingProSignUpAlert';
+import { DemoAccountWarningAlert } from '../shared/DemoAccountWarningAlert';
 
 export default function AlertSection(props) {
   const [user, setUser] = useUser();
@@ -35,6 +36,7 @@ export default function AlertSection(props) {
           {showSubscriptionPendingAlert && <PendingProSubscriptionAlert />}
         </>
       )}
+      {demoPersona && <DemoAccountWarningAlert />}
     </div>
   );
 }
