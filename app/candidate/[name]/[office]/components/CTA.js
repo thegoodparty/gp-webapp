@@ -64,7 +64,7 @@ export default function CTA({ children, id }) {
         if (user) {
           router.push('/dashboard');
         } else {
-          router.push('/login');
+          router.push('/run-for-office');
         }
         break;
       case 'help':
