@@ -15,7 +15,7 @@ export default function Hero() {
         <div className="grid grid-cols-12 gap-4 items-center">
           <div className="col-span-12 lg:col-span-6">
             <h1 className="font-semibold text-6xl md:text-7xl mb-7">
-              Free tools and tactics for your campaign
+              Supercharge your local campaign
             </h1>
             <H3>
               GoodParty.org helps people-powered candidates run viable campaigns

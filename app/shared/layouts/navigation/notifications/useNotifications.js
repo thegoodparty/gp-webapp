@@ -1,3 +1,4 @@
+import { useUser } from '@shared/hooks/useUser';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
@@ -15,13 +16,13 @@ export async function fetchNotifications() {
 
 export default function useNotifications() {
   const [notifications, setNotifications] = useState([]);
+  const [user] = useUser();
 
   useEffect(() => {
-    const user = getUserCookie();
     if (user) {
       loadNotifications();
     }
-  }, []);
+  }, [user]);
 
   const loadNotifications = async () => {
     const res = await fetchNotifications();
