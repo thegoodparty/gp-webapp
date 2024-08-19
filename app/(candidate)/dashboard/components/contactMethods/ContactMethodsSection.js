@@ -16,6 +16,7 @@ const methods = [
       "Update the total number of doors you've knocked on this week:",
     modalLabel: 'Doors Knocked',
     icon: <FaDoorClosed />,
+    voterFileKey: 'doorknocking',
   },
   {
     key: 'directMail',
@@ -28,6 +29,7 @@ const methods = [
       "Update the total number of direct mail pieces you've sent this week:",
     modalLabel: 'Mail Sent',
     icon: <FaDoorClosed />,
+    voterFileKey: 'directmail',
   },
   {
     key: 'calls',
