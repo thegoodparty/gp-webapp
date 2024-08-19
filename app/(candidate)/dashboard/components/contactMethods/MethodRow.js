@@ -1,4 +1,3 @@
-import InfoButton from '@shared/buttons/InfoButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
@@ -7,8 +6,10 @@ import { MdLock } from 'react-icons/md';
 import LogProgress from './LogProgress';
 
 export default function MethodRow(props) {
-  const { method } = props;
+  const { method, campaign } = props;
   const { title, description, cta, icon } = method;
+  const { isPro } = campaign || {};
+  console.log('campaign', campaign);
   return (
     <div className="border border-gray-200 p-4 rounded-lg mt-4">
       <div className="grid grid-cols-12 gap-4">
@@ -31,12 +32,16 @@ export default function MethodRow(props) {
               </PrimaryButton>
             </div>
             <div className="col-span-4">
-              <PrimaryButton fullWidth>
-                <div className="flex items-center justify-center">
-                  <MdLock className="mr-2" />
-                  {cta}
-                </div>
-              </PrimaryButton>
+              {isPro ? (
+                <PrimaryButton fullWidth>Pro {cta}</PrimaryButton>
+              ) : (
+                <PrimaryButton fullWidth>
+                  <div className="flex items-center justify-center">
+                    <MdLock className="mr-2" />
+                    {cta}
+                  </div>
+                </PrimaryButton>
+              )}
             </div>
             <div className="col-span-4">
               <LogProgress card={method} {...props} />
