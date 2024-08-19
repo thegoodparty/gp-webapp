@@ -4,10 +4,11 @@ import H3 from '@shared/typography/H3';
 import { BsStars } from 'react-icons/bs';
 import { MdLock } from 'react-icons/md';
 import LogProgress from './LogProgress';
+import Link from 'next/link';
 
 export default function MethodRow(props) {
   const { method, campaign } = props;
-  const { title, description, cta, icon } = method;
+  const { title, description, cta, icon, comingSoon, voterFileKey } = method;
   const { isPro } = campaign || {};
   console.log('campaign', campaign);
   return (
@@ -33,7 +34,17 @@ export default function MethodRow(props) {
             </div>
             <div className="col-span-4">
               {isPro ? (
-                <PrimaryButton fullWidth>Pro {cta}</PrimaryButton>
+                <>
+                  {comingSoon ? (
+                    <PrimaryButton disabled fullWidth>
+                      Coming Soon
+                    </PrimaryButton>
+                  ) : (
+                    <Link href={`/dashboard/voter-records/${voterFileKey}`}>
+                      <PrimaryButton fullWidth>{cta}</PrimaryButton>
+                    </Link>
+                  )}
+                </>
               ) : (
                 <PrimaryButton fullWidth>
                   <div className="flex items-center justify-center">

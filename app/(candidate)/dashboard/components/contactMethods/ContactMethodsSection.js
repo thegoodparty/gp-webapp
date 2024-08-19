@@ -42,6 +42,7 @@ const methods = [
       "Update the total number of constituents you've called this week:",
     modalLabel: 'Calls',
     icon: <FaDoorClosed />,
+    voterFileKey: 'telemarketing',
   },
   {
     key: 'digitalAds',
@@ -54,6 +55,7 @@ const methods = [
       "Update the total number of digital ads you've distributed this week:",
     modalLabel: 'Digital Advertising',
     icon: <FaDoorClosed />,
+    voterFileKey: 'digitalads',
   },
   {
     key: 'text',
@@ -66,6 +68,7 @@ const methods = [
       "Update the total number of constituents you've texted this week:",
     modalLabel: 'Texts Messages',
     icon: <FaDoorClosed />,
+    voterFileKey: 'sms',
   },
   {
     key: 'events',
@@ -77,6 +80,7 @@ const methods = [
     modalSubTitle: 'Update the total number of people in attendance:',
     modalLabel: 'Attendance',
     icon: <FaDoorClosed />,
+    comingSoon: true,
   },
   {
     key: 'yardSigns',
@@ -91,6 +95,7 @@ const methods = [
       "As a reminder, lawn signs are good practice for any political campaign but it's unknown how much they contribute to win rate. Adding lawn signs does not increase your % of voters contacted. Any contacts made from lawn signs are a healthy buffer in addition to our formula.",
     modalLabel: 'Yard Signs',
     icon: <FaDoorClosed />,
+    comingSoon: true,
   },
 ];
 
