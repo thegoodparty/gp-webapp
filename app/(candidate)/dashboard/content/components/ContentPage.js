@@ -23,7 +23,8 @@ export default function ContentPage(props) {
     setForceOpenModal(true);
   };
   const cookie = getCookie('tutorial-content');
-  const shouldShowTutorial = !cookie && !props.campaign?.aiContent;
+  const shouldShowTutorial =
+    !cookie && !props.campaign?.aiContent && !forceOpenModal;
   return (
     <DashboardLayout {...props}>
       <TitleSection

@@ -54,9 +54,7 @@ export default function UpdateHistorySection(props) {
     });
   }
 
-  const data = useMemo(() => inputData);
-
-  const columns = useMemo(() => [
+  const columns = [
     {
       Header: 'Actions',
       Cell: ({ row }) => {
@@ -105,14 +103,14 @@ export default function UpdateHistorySection(props) {
         return dateUsHelper(row.original.createdAt);
       },
     },
-  ]);
+  ];
   return (
     <section className="mt-12 mb-6 max-w-[90vw] overflow-x-auto">
       <H3>Update history</H3>
 
       <Table
         columns={columns}
-        data={data}
+        data={inputData}
         filterColumns={false}
         pagination={false}
       />

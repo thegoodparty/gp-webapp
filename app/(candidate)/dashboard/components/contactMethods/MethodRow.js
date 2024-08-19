@@ -25,12 +25,14 @@ export default function MethodRow(props) {
         <div className="col-span-12 lg:col-span-7">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-4">
-              <PrimaryButton variant="outlined" fullWidth>
-                <div className="flex items-center justify-center">
-                  <BsStars className="mr-2" />
-                  Generate Script
-                </div>
-              </PrimaryButton>
+              <Link href="/dashboard/content?showModal=true">
+                <PrimaryButton variant="outlined" fullWidth>
+                  <div className="flex items-center justify-center">
+                    <BsStars className="mr-2" />
+                    Generate Script
+                  </div>
+                </PrimaryButton>
+              </Link>
             </div>
             <div className="col-span-4">
               {isPro ? (
