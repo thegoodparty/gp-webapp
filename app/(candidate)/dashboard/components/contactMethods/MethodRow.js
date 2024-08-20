@@ -47,12 +47,14 @@ export default function MethodRow(props) {
                   )}
                 </>
               ) : (
-                <PrimaryButton fullWidth>
-                  <div className="flex items-center justify-center">
-                    <MdLock className="mr-2" />
-                    {cta}
-                  </div>
-                </PrimaryButton>
+                <Link href="/dashboard/upgrade-to-pro">
+                  <PrimaryButton fullWidth>
+                    <div className="flex items-center justify-center">
+                      <MdLock className="mr-2" />
+                      {cta}
+                    </div>
+                  </PrimaryButton>
+                </Link>
               )}
             </div>
             <div className="col-span-12 lg:col-span-4">
