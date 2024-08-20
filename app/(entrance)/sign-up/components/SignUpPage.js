@@ -7,18 +7,14 @@ import { useHookstate } from '@hookstate/core';
 import { Fragment, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { globalUserState } from '@shared/layouts/navigation/ProfileDropdown';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import Paper from '@shared/utils/Paper';
 import Body2 from '@shared/typography/Body2';
 import RenderInputField from '@shared/inputs/RenderInputField';
-import Overline from '@shared/typography/Overline';
-import SuccessButton from '@shared/buttons/SuccessButton';
 import Link from 'next/link';
 import { useUser } from '@shared/hooks/useUser';
-import Body1 from '@shared/typography/Body1';
 
 const fields = [
   {
@@ -70,8 +66,6 @@ export const validateZip = (zip) => {
 async function register(firstName, lastName, email, phone, zip, password) {
   try {
     const api = gpApi.entrance.register;
-    console.log('api', api);
-    console.log('gpApi', gpApi.entrance);
 
     const payload = {
       firstName,
@@ -81,7 +75,6 @@ async function register(firstName, lastName, email, phone, zip, password) {
       zip,
       password,
     };
-    console.log('api', api);
     const res = await gpFetch(api, payload);
     if (res.status === 409) {
       return { exists: true };
