@@ -42,7 +42,7 @@ export const CurrentPhase = memo(function CurrentPhase({ campaign }) {
   }
 
   return (
-    <div className="hidden md:flex justify-between bg-primary-background mt-4 p-4 rounded-lg border border-primary mb-4">
+    <div className="hidden md:flex justify-between bg-primary-background mt-4 p-6 rounded-lg border border-primary mb-4">
       <div className="flex">
         <BsFillPersonCheckFill size={20} className="mt-1" />
         <div className="ml-4">

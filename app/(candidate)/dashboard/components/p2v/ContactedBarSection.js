@@ -45,7 +45,7 @@ export function ContactedBarSection(props) {
   }
 
   return (
-    <div className="p-4 border border-slate-300 rounded-lg mt-4 md:mt-0">
+    <div className="p-6 border border-slate-300 rounded-lg mt-4 md:mt-0">
       <div className="md:flex justify-between">
         <div className="md:flex items-baseline mb-4 ">
           <MarketingH2 className={`${textColor} text-center md:text-left`}>
