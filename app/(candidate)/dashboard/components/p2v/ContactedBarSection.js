@@ -70,7 +70,10 @@ export function ContactedBarSection(props) {
         <Body1>
           <strong>Needed:</strong> {numberFormatter(needed)} voter contact
         </Body1>
-        <P2vModal triggerElement={<BsInfoCircle className="ml-2" />} />
+        <P2vModal
+          triggerElement={<BsInfoCircle className="ml-2" />}
+          pathToVictory={pathToVictory}
+        />
       </div>
     </div>
   );

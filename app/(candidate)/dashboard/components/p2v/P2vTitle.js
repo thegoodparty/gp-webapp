@@ -20,6 +20,7 @@ export function P2vTitle(props) {
               Understanding Path to Victory
             </SecondaryButton>
           }
+          pathToVictory={props.pathToVictory}
         />
       </div>
     </div>

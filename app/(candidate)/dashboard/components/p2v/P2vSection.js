@@ -9,7 +9,7 @@ import { ContactedBarSection } from './ContactedBarSection';
 export function P2vSection(props) {
   return (
     <Paper className="mb-4">
-      <P2vTitle />
+      <P2vTitle {...props} />
       <CurrentPhase campaign={props.campaign} />
       <ContactedBarSection {...props} />
     </Paper>

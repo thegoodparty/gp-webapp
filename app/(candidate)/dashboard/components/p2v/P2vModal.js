@@ -5,10 +5,36 @@ import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
+import { numberFormatter } from 'helpers/numberHelper';
 import { useState } from 'react';
 
-export function P2vModal({ triggerElement }) {
+const pathToVictoryExample = {
+  averageTurnout: 1370,
+  democrats: 561,
+  electionLocation: 'NC##FLAT ROCK VLG',
+  electionType: 'Village',
+  indies: 1547,
+  p2vCompleteDate: '2024-08-14',
+  p2vStatus: 'Complete',
+  projectedTurnout: 1386,
+  republicans: 1114,
+  totalRegisteredVoters: 3222,
+  voterContactGoal: '3535.00',
+  winNumber: '707.00',
+};
+
+export function P2vModal({ triggerElement, pathToVictory = {} }) {
   const [open, setOpen] = useState(false);
+
+  const { totalRegisteredVoters, projectedTurnout } = pathToVictory;
+  let turnoutPerc = 0;
+  if (totalRegisteredVoters !== 0) {
+    turnoutPerc = numberFormatter(
+      (projectedTurnout / totalRegisteredVoters) * 100,
+    );
+  }
+
+  const targetVotes = numberFormatter(projectedTurnout / 2 + 1);
 
   return (
     <>
@@ -31,21 +57,29 @@ export function P2vModal({ triggerElement }) {
             Understanding Your Path to Victory
           </H1>
           <Body1>
-            You have <strong>10,000 voters</strong> in your district.
+            You have{' '}
+            <strong>{numberFormatter(totalRegisteredVoters)} voters</strong> in
+            your district.
             <br />
-            Expected <strong>voter turnout is 50%*</strong> in your race. <br />
-            That means, <strong>approx. 5,000 people</strong> will vote in your
-            election.
+            Expected <strong>voter turnout is {turnoutPerc}%*</strong> in your
+            race. <br />
+            That means,{' '}
+            <strong>
+              approx. {numberFormatter(projectedTurnout)} people
+            </strong>{' '}
+            will vote in your election.
             <br />
             <br />
             You need a minimum of <strong>50% + 1 vote</strong> of those votes.{' '}
             <br />
-            You should target <strong>2,626 votes**</strong> in order to win.
+            You should target <strong>{targetVotes} votes**</strong> in order to
+            win.
             <br />
             <br />
             You need to contact those{' '}
-            <strong>2,625 voters a minimum of 5x.</strong> <br />
-            That equals <strong>13,125 voter contacts.</strong>
+            <strong>{targetVotes} voters a minimum of 5x.</strong> <br />
+            That equals{' '}
+            <strong>{numberFormatter(targetVotes * 5)} voter contacts.</strong>
           </Body1>
           <Body2 className="mt-8 text-gray-600">
             * Your turnout rate is calculated by the last 3 election cycles.
