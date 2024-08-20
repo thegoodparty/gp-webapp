@@ -23,7 +23,7 @@ export default function MethodRow(props) {
 
         <div className="col-span-12 lg:col-span-7">
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-4">
+            <div className="col-span-12 lg:col-span-4">
               <Link href="/dashboard/content?showModal=true">
                 <PrimaryButton variant="outlined" fullWidth>
                   <div className="flex items-center justify-center">
@@ -33,7 +33,7 @@ export default function MethodRow(props) {
                 </PrimaryButton>
               </Link>
             </div>
-            <div className="col-span-4">
+            <div className="col-span-12 lg:col-span-4">
               {isPro ? (
                 <>
                   {comingSoon ? (
@@ -55,7 +55,7 @@ export default function MethodRow(props) {
                 </PrimaryButton>
               )}
             </div>
-            <div className="col-span-4">
+            <div className="col-span-12 lg:col-span-4">
               <LogProgress card={method} {...props} />
             </div>
           </div>

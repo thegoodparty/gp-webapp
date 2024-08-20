@@ -1,11 +1,14 @@
 'use client';
-import H3 from '@shared/typography/H3';
 import UserAvatar from '@shared/user/UserAvatar';
-import Table from '@shared/utils/Table';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { memo, useState } from 'react';
+import { Fragment, memo, useState } from 'react';
 import Actions from './Actions';
 import Paper from '@shared/utils/Paper';
+import H2 from '@shared/typography/H2';
+import Body2 from '@shared/typography/Body2';
+import Overline from '@shared/typography/Overline';
+import H5 from '@shared/typography/H5';
+import { numberFormatter } from 'helpers/numberHelper';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -43,67 +46,74 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
     });
   }
 
-  const columns = [
-    {
-      Header: 'Actions',
-      Cell: ({ row }) => {
-        return (
-          <Actions
-            {...row.original}
-            showMenu={showMenu}
-            setShowMenu={setShowMenu}
-            deleteHistoryCallBack={deleteHistoryCallBack}
-          />
-        );
-      },
-    },
-    {
-      Header: 'Name',
-      accessor: 'type',
-      collapse: true,
-      Cell: ({ row }) => {
-        return <div className="">{fields[row.original.type]?.title}</div>;
-      },
-    },
-    {
-      Header: 'Qty',
-      accessor: 'quantity',
-      collapse: true,
-    },
-    {
-      Header: 'User',
-      accessor: 'user',
-      collapse: true,
-      Cell: ({ row }) => {
-        return (
-          <div className="flex items-center pl-2">
-            <UserAvatar user={row.original.user} size="small" /> &nbsp;{' '}
-            {row.original.name}
-          </div>
-        );
-      },
-    },
-    {
-      Header: 'Added',
-      accessor: 'createdAt',
-      collapse: true,
-      sortType: 'datetime',
-      Cell: ({ row }) => {
-        return dateUsHelper(row.original.createdAt);
-      },
-    },
-  ];
   return (
     <Paper className="mt-12">
-      <div className="min-w-[600px] max-w-[90vw] overflow-x-auto">
-        <H3>Update history</H3>
+      <div className="">
+        <H2>Campaign Action History</H2>
+        <Body2 className="mb-4 text-gray-600">
+          View all recorded progress entries for your campaign below.
+        </Body2>
 
-        <Table
-          columns={columns}
-          data={inputData}
-          filterColumns={false}
-          pagination={false}
-        />
+        <div className="grid grid-cols-12  bg-black text-white rounded-t-lg">
+          <div className="col-span-8 md:col-span-4 lg:col-span-3">
+            <Overline className="p-4 pl-10">Method</Overline>
+          </div>
+
+          <div className="hidden lg:block lg:col-span-3">
+            <Overline className=" p-4">User</Overline>
+          </div>
+
+          <div className="col-span-4 md:col-span-4 lg:col-span-3">
+            <Overline className=" p-4"># Records</Overline>
+          </div>
+
+          <div className="hidden md:block md:col-span-4 lg:col-span-3">
+            <Overline className=" p-4">Date Added</Overline>
+          </div>
+        </div>
+        <div className="grid grid-cols-12 rounded-b-lg">
+          {inputData.map((data, index) => (
+            <Fragment key={data.id}>
+              <div
+                className={`col-span-8 md:col-span-4 lg:col-span-3 flex items-center p-2 border-b border-gray-200 ${
+                  index % 2 === 0 ? '' : 'bg-gray-50'
+                } border-l`}
+              >
+                <Actions
+                  {...data}
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
+                  deleteHistoryCallBack={deleteHistoryCallBack}
+                />
+                <H5 className="ml-3">{fields[data.type]?.title}</H5>
+              </div>
+
+              <div
+                className={`hidden lg:flex lg:col-span-3 p-2 border-b  items-center  border-gray-200 ${
+                  index % 2 === 0 ? '' : 'bg-gray-50'
+                }`}
+              >
+                <UserAvatar user={data.user} size="small" /> &nbsp; {data.name}
+              </div>
+
+              <div
+                className={`col-span-4 md:col-span-4 lg:col-span-3 p-2 border-b border-gray-200 flex items-center  border-r md:border-r-0 ${
+                  index % 2 === 0 ? '' : 'bg-gray-50'
+                }`}
+              >
+                <H5>{numberFormatter(data.quantity)}</H5>
+              </div>
+
+              <div
+                className={`hidden md:flex items-center md:col-span-4 lg:col-span-3 p-2 border-b border-gray-200 md:border-r ${
+                  index % 2 === 0 ? '' : 'bg-gray-50'
+                }`}
+              >
+                <H5>{dateUsHelper(data.createdAt)}</H5>
+              </div>
+            </Fragment>
+          ))}
+        </div>
       </div>
     </Paper>
   );
