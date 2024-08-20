@@ -5,11 +5,26 @@ import { BsStars } from 'react-icons/bs';
 import { MdLock } from 'react-icons/md';
 import LogProgress from './LogProgress';
 import Link from 'next/link';
+import { numberFormatter } from 'helpers/numberHelper';
 
 export default function MethodRow(props) {
-  const { method, campaign } = props;
-  const { title, description, cta, icon, comingSoon, voterFileKey } = method;
+  const { method, campaign, pathToVictory } = props;
+  const {
+    title,
+    description,
+    cta,
+    icon,
+    comingSoon,
+    voterFileKey,
+    perc,
+    percText,
+  } = method;
   const { isPro } = campaign || {};
+
+  let { voterContactGoal } = pathToVictory || {};
+  voterContactGoal = voterContactGoal || 0;
+  const perNumber = numberFormatter((voterContactGoal * perc) / 100);
+
   return (
     <div className="border border-gray-200 p-4 rounded-lg mt-4">
       <div className="grid grid-cols-12 gap-4">
@@ -17,7 +32,12 @@ export default function MethodRow(props) {
           <div className="mr-4 text-xl mt-1">{icon}</div>
           <div>
             <H3>{title}</H3>
-            <Body2 className="mt-1">{description}</Body2>
+            <Body2 className="mt-1">
+              {description}{' '}
+              <strong>
+                ({perNumber} {percText})
+              </strong>
+            </Body2>
           </div>
         </div>
 

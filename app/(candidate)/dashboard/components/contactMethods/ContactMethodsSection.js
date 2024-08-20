@@ -24,6 +24,8 @@ const methods = [
     modalLabel: 'Doors Knocked',
     icon: <FaDoorClosed />,
     voterFileKey: 'doorknocking',
+    perc: 30,
+    percText: 'doors',
   },
   {
     key: 'directMail',
@@ -37,6 +39,8 @@ const methods = [
     modalLabel: 'Mail Sent',
     icon: <MdEmail />,
     voterFileKey: 'directmail',
+    perc: 20,
+    percText: 'pieces of mail',
   },
   {
     key: 'calls',
@@ -50,6 +54,8 @@ const methods = [
     modalLabel: 'Calls',
     icon: <FaPhone />,
     voterFileKey: 'telemarketing',
+    perc: 10,
+    percText: 'phone calls',
   },
   {
     key: 'digitalAds',
@@ -63,6 +69,8 @@ const methods = [
     modalLabel: 'Digital Advertising',
     icon: <MdShare />,
     voterFileKey: 'digitalads',
+    perc: 10,
+    percText: 'digital impressions',
   },
   {
     key: 'text',
@@ -73,21 +81,25 @@ const methods = [
     modalTitle: 'Add Text Messages',
     modalSubTitle:
       "Update the total number of constituents you've texted this week:",
-    modalLabel: 'Texts Messages',
+    modalLabel: 'Text Messages',
     icon: <MdOutlinePhoneIphone />,
     voterFileKey: 'sms',
+    perc: 20,
+    percText: 'text messages',
   },
   {
     key: 'events',
     title: 'Events & Rallies',
     description:
-      'We recommend events & rallies to make up 10% of your overall voter contacts (1,313 conversations)',
+      'We recommend events & rallies to make up 10% of your overall voter contacts',
     cta: 'Data-Driven Events',
     modalTitle: 'Add Events & Rallies',
     modalSubTitle: 'Update the total number of people in attendance:',
     modalLabel: 'Attendance',
     icon: <MdPeopleAlt />,
     comingSoon: true,
+    perc: 10,
+    percText: 'conversations',
   },
   {
     key: 'yardSigns',
@@ -103,6 +115,8 @@ const methods = [
     modalLabel: 'Yard Signs',
     icon: <FaMapSigns />,
     comingSoon: true,
+    perc: 5,
+    percText: 'signs',
   },
 ];
 
