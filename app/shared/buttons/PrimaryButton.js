@@ -10,7 +10,7 @@ export function setSize(baseClass, size, variant) {
     baseClass['px-6'] = true;
     if (variant === 'outlined') {
       baseClass['py-3'] = false;
-      baseClass['py-[10px]'] = true;
+      baseClass['py-3'] = true;
     }
   } else if (size === 'medium') {
     baseClass['text-base'] = true;
