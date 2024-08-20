@@ -6,7 +6,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { ArrowBackIos } from '@mui/icons-material';
 import Link from 'next/link';
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 function JobPage({ job }) {
   const [jobId, setJobId] = useState(null);
