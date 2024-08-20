@@ -1,9 +1,15 @@
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
-import { FaDoorClosed } from 'react-icons/fa';
+import { FaDoorClosed, FaMapSigns, FaPhone } from 'react-icons/fa';
 import MethodRow from './MethodRow';
 import { memo } from 'react';
+import {
+  MdEmail,
+  MdOutlinePhoneIphone,
+  MdPeopleAlt,
+  MdShare,
+} from 'react-icons/md';
 
 const methods = [
   {
@@ -29,7 +35,7 @@ const methods = [
     modalSubTitle:
       "Update the total number of direct mail pieces you've sent this week:",
     modalLabel: 'Mail Sent',
-    icon: <FaDoorClosed />,
+    icon: <MdEmail />,
     voterFileKey: 'directmail',
   },
   {
@@ -42,7 +48,7 @@ const methods = [
     modalSubTitle:
       "Update the total number of constituents you've called this week:",
     modalLabel: 'Calls',
-    icon: <FaDoorClosed />,
+    icon: <FaPhone />,
     voterFileKey: 'telemarketing',
   },
   {
@@ -55,7 +61,7 @@ const methods = [
     modalSubTitle:
       "Update the total number of digital ads you've distributed this week:",
     modalLabel: 'Digital Advertising',
-    icon: <FaDoorClosed />,
+    icon: <MdShare />,
     voterFileKey: 'digitalads',
   },
   {
@@ -68,7 +74,7 @@ const methods = [
     modalSubTitle:
       "Update the total number of constituents you've texted this week:",
     modalLabel: 'Texts Messages',
-    icon: <FaDoorClosed />,
+    icon: <MdOutlinePhoneIphone />,
     voterFileKey: 'sms',
   },
   {
@@ -80,7 +86,7 @@ const methods = [
     modalTitle: 'Add Events & Rallies',
     modalSubTitle: 'Update the total number of people in attendance:',
     modalLabel: 'Attendance',
-    icon: <FaDoorClosed />,
+    icon: <MdPeopleAlt />,
     comingSoon: true,
   },
   {
@@ -95,7 +101,7 @@ const methods = [
     infoBanner:
       "As a reminder, lawn signs are good practice for any political campaign but it's unknown how much they contribute to win rate. Adding lawn signs does not increase your % of voters contacted. Any contacts made from lawn signs are a healthy buffer in addition to our formula.",
     modalLabel: 'Yard Signs',
-    icon: <FaDoorClosed />,
+    icon: <FaMapSigns />,
     comingSoon: true,
   },
 ];
