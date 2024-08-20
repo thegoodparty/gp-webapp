@@ -66,15 +66,18 @@ export function ContactedBarSection(props) {
         <strong>Current:</strong> {numberFormatter(contacted)} voters
       </Body1>
       <AnimatedBar contacted={contacted} needed={needed} bgColor={bgColor} />
-      <div className="mt-2 flex justify-center md:justify-end items-center">
-        <Body1>
-          <strong>Needed:</strong> {numberFormatter(needed)} voter contact
-        </Body1>
-        <P2vModal
-          triggerElement={<BsInfoCircle className="ml-2" />}
-          pathToVictory={pathToVictory}
-        />
-      </div>
+
+      <P2vModal
+        triggerElement={
+          <div className="mt-2 flex justify-center md:justify-end items-center">
+            <Body1>
+              <strong>Needed:</strong> {numberFormatter(needed)} voter contact
+            </Body1>
+            <BsInfoCircle className="ml-2" />
+          </div>
+        }
+        pathToVictory={pathToVictory}
+      />
     </div>
   );
 }
