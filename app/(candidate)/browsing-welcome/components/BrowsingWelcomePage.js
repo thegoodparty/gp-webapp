@@ -19,8 +19,8 @@ export const BrowsingWelcomePage = ({ user }) => (
     <Body2 className="text-center mb-8">
       We are really excited to show you around. Let&apos;s get started!
     </Body2>
-    <Link className="block self-start w-full md:w-auto" href="/dashboard">
+    <a className="block self-start w-full md:w-auto" href="/dashboard">
       <PrimaryButton className="w-full">View Dashboard</PrimaryButton>
-    </Link>
+    </a>
   </CardPageWrapper>
 );
