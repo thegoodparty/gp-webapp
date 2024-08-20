@@ -13,7 +13,7 @@ export default function MethodRow(props) {
   return (
     <div className="border border-gray-200 p-4 rounded-lg mt-4">
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 lg:col-span-5 flex">
+        <div className="col-span-12 lg:col-span-4 flex xl:col-span-6">
           <div className="mr-4 text-xl mt-1">{icon}</div>
           <div>
             <H3>{title}</H3>
@@ -21,7 +21,7 @@ export default function MethodRow(props) {
           </div>
         </div>
 
-        <div className="col-span-12 lg:col-span-7">
+        <div className="col-span-12 lg:col-span-8 xl:col-span-6">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-4">
               <Link href="/dashboard/content?showModal=true">
