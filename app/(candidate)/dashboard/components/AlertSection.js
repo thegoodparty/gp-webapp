@@ -5,6 +5,7 @@ import { ProSignUpAlert } from './ProSignUpAlert';
 import { CompleteProSignUpAlert } from './CompleteProSignUpAlert';
 import { PendingProSubscriptionAlert } from './PendingProSignUpAlert';
 import { DemoAccountWarningAlert } from '../shared/DemoAccountWarningAlert';
+import { ProExpertAlert } from './ProExpertAlert';
 
 export default function AlertSection(props) {
   const [user, setUser] = useUser();
@@ -37,6 +38,7 @@ export default function AlertSection(props) {
         </>
       )}
       {demoPersona && <DemoAccountWarningAlert />}
+      {isPro && <ProExpertAlert />}
     </div>
   );
 }

@@ -32,13 +32,18 @@ export const SeverityButton = ({
       className={`
       flex
       items-center
-      text-info-contrast
-      bg-info
-      hover:bg-info-dark
       w-full
       justify-center
       lg:justify-normal
       lg:w-auto
+      ${
+        severity === 'info'
+          ? `
+        text-info-contrast
+      bg-info
+      hover:bg-info-dark`
+          : ''
+      }
       ${className}
     `}
       size="medium"
