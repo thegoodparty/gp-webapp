@@ -7,7 +7,6 @@ import styles from './BlogArticle.module.scss';
 import Banner from './Banner';
 import ShareBlog from 'app/blog/shared/ShareBlog';
 import BlogPopup from './BlogPopup';
-import Callout from '@shared/utils/Callout';
 import ArticleTags from './ArticleTags';
 
 export default function BlogArticle({ sections, article }) {
@@ -27,7 +26,6 @@ export default function BlogArticle({ sections, article }) {
 
   return (
     <>
-      <Callout />
       <BlogWrapper
         sections={sections}
         sectionSlug={sectionSlug}
