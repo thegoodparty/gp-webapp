@@ -3,30 +3,30 @@ import { AlertIcon } from '@shared/alerts/AlertIcon';
 
 const containerClasses = [
   {
-    info: 'text-info-dark',
-    warning: 'text-warning-dark',
-    error: 'text-error-dark',
-    success: 'text-success-dark',
+    info: '[&&]:text-info-dark',
+    warning: '[&&]:text-warning-dark',
+    error: '[&&]:text-error-dark',
+    success: '[&&]:text-success-dark',
   },
   {
-    info: 'border-info-dark',
-    warning: 'border-warning-dark',
-    error: 'border-error-dark',
-    success: 'border-success-dark',
+    info: '[&&]:border-info-dark',
+    warning: '[&&]:border-warning-dark',
+    error: '[&&]:border-error-dark',
+    success: '[&&]:border-success-dark',
   },
   {
-    info: 'bg-info-background',
-    warning: 'bg-warning-background',
-    error: 'bg-error-background',
-    success: 'bg-success-background',
+    info: '[&&]:bg-info-background',
+    warning: '[&&]:bg-warning-background',
+    error: '[&&]:bg-error-background',
+    success: '[&&]:bg-success-background',
   },
 ];
 
 const iconClasses = {
-  info: 'text-info-dark',
-  warning: 'text-warning-dark',
-  error: 'text-error-dark',
-  success: 'text-success-dark',
+  info: '[&&]:text-info-dark',
+  warning: '[&&]:text-warning-dark',
+  error: '[&&]:text-error-dark',
+  success: '[&&]:text-success-dark',
 };
 
 export const StyledAlert = ({
@@ -43,8 +43,8 @@ export const StyledAlert = ({
     <Alert
       className={`
       ${compiledContainerClasses}  
-      rounded-lg 
-      p-2
+      [&&]:rounded-lg 
+      [&&]:p-2
       [&>div.MuiAlert-message]:p-0
       [&>div.MuiAlert-icon]:py-2
       [&>div.MuiAlert-icon]:ml-2
