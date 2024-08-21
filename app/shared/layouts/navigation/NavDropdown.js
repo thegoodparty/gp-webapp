@@ -1,7 +1,8 @@
 'use client';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { FaChevronDown, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
+import { OpenInNewRounded } from '@mui/icons-material';
 import { memo } from 'react';
 
 function NavDropdown({ open, toggleCallback, links, label = '', id }) {
@@ -49,7 +50,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
                     {link.icon}
                     <div className="ml-3">{link.label}</div>
                   </div>
-                  {link.external && <FaExternalLinkAlt size={14} />}
+                  {link.external && <OpenInNewRounded />}
                 </div>
               </Link>
             ))}
