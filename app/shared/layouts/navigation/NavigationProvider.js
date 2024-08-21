@@ -1,68 +1,95 @@
 'use client';
 import { createContext, useCallback, useEffect, useState } from 'react';
+import { FaDiscord } from 'react-icons/fa';
+
 import {
-  FaClipboardList,
-  FaDiscord,
-  FaGraduationCap,
-  FaListUl,
-  FaPeopleCarry,
-  FaRegCalendarCheck,
-  FaRegNewspaper,
-  FaSearch,
-  FaTools,
-  FaUserTie,
-} from 'react-icons/fa';
+  ConstructionRounded,
+  EmojiEventsRounded,
+  GroupRounded,
+  FolderSharedRounded,
+  LibraryBooksRounded,
+  SlideshowRounded,
+  SearchRounded,
+  VolunteerActivismRounded,
+  EventAvailableRounded,
+  MailRounded,
+  NewspaperRounded,
+  ListRounded,
+} from '@mui/icons-material';
+
 import { usePathname } from 'next/navigation';
 
 export const RUN_LINKS = [
   {
-    label: 'Campaign tools',
+    label: 'Campaign Tools',
     href: '/run-for-office',
-    icon: <FaTools />,
+    icon: <ConstructionRounded />,
     id: 'nav-campaign-tools',
   },
   {
-    label: 'Academy',
-    href: '/academy',
-    icon: <FaGraduationCap />,
-    id: 'nav-academy',
+    label: 'GoodParty.org Pro',
+    href: 'https://lp.goodparty.org/pro-lp/',
+    icon: <EmojiEventsRounded />,
+    id: 'nav-good-party-pro',
+    external: true,
   },
   {
-    label: 'Talk to an expert',
+    label: 'Get a Demo',
     href: '/get-a-demo',
-    icon: <FaUserTie />,
-    id: 'nav-talk-expert',
+    icon: <GroupRounded />,
+    id: 'nav-get-demo',
   },
   {
-    label: 'Product tour',
+    label: 'Voter Data',
+    href: 'https://lp.goodparty.org/voter-data',
+    icon: <FolderSharedRounded />,
+    id: 'nav-voter-data',
+    external: true,
+  },
+  {
+    label: 'Template Library',
+    href: 'https://lp.goodparty.org/template-library',
+    icon: <LibraryBooksRounded />,
+    id: 'nav-template-library',
+    external: true,
+  },
+  {
+    label: 'Product Tour',
     href: '/product-tour',
-    icon: <FaClipboardList />,
+    icon: <SlideshowRounded />,
     id: 'nav-tour',
   },
   {
-    label: 'Explore offices',
+    label: 'Explore Offices',
     href: '/elections',
-    icon: <FaSearch />,
+    icon: <SearchRounded />,
     id: 'nav-explore-offices',
   },
 ];
+
 export const COMMUNITY_LINKS = [
   {
     label: 'Volunteer',
     href: '/volunteer',
-    icon: <FaPeopleCarry />,
+    icon: <VolunteerActivismRounded />,
     id: 'nav-volunteer',
   },
   {
-    label: 'Info session',
+    label: 'Info Session',
     href: '/info-session',
-    icon: <FaRegCalendarCheck />,
+    icon: <EventAvailableRounded />,
     id: 'nav-info-session',
+  },
+  {
+    label: 'Get Stickers',
+    href: '/get-stickers',
+    icon: <MailRounded />,
+    id: 'nav-get-stickers',
   },
   {
     label: 'Discord',
     href: 'https://discord.gg/invite/goodparty',
-    icon: <FaDiscord />,
+    icon: <FaDiscord size={24} />,
     id: 'nav-discord',
     external: true,
   },
@@ -71,13 +98,13 @@ export const RESOURCES_LINKS = [
   {
     label: 'Blog',
     href: '/blog',
-    icon: <FaRegNewspaper />,
+    icon: <NewspaperRounded />,
     id: 'nav-blog',
   },
   {
     label: 'Glossary',
     href: '/political-terms',
-    icon: <FaListUl />,
+    icon: <ListRounded />,
     id: 'nav-glossary',
   },
 ];
