@@ -54,7 +54,7 @@ export function ContactedBarSection(props) {
           <H2 className="ml-2 text-center md:text-left">of voters contacted</H2>
         </div>
         {percent > 0 && (
-          <div className="md:pl-2">
+          <div className="md:pl-2 md:max-w-xs">
             <AlertBanner
               message="Contact more voters to increase your chances of winning."
               severity={severity}
