@@ -27,10 +27,10 @@ export default function SuccessButton({
     baseClass['w-full'] = true;
   }
   if (variant === 'contained') {
-    baseClass['bg-green-400'] = true;
+    baseClass['bg-success-main'] = true;
     baseClass['text-white'] = true;
-    baseClass['hover:bg-green-300'] = true;
-    baseClass['active:bg-green-300'] = true;
+    baseClass['hover:bg-success-light'] = true;
+    baseClass['active:bg-success-main'] = true;
   } else if (variant === 'outlined') {
     baseClass['bg-white'] = true;
     baseClass['text-indigo-900'] = true;
