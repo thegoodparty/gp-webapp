@@ -26,15 +26,18 @@ const pathToVictoryExample = {
 export function P2vModal({ triggerElement, pathToVictory = {} }) {
   const [open, setOpen] = useState(false);
 
-  const { totalRegisteredVoters, projectedTurnout } = pathToVictory;
+  const {
+    totalRegisteredVoters,
+    projectedTurnout,
+    voterContactGoal,
+    winNumber,
+  } = pathToVictory;
   let turnoutPerc = 0;
   if (totalRegisteredVoters !== 0) {
     turnoutPerc = numberFormatter(
       (projectedTurnout / totalRegisteredVoters) * 100,
     );
   }
-
-  const targetVotes = numberFormatter(projectedTurnout / 2 + 1);
 
   return (
     <>
@@ -70,16 +73,19 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
             will vote in your election.
             <br />
             <br />
-            You need a minimum of <strong>50% + 1 vote</strong> of those votes.{' '}
-            <br />
-            You should target <strong>{targetVotes} votes**</strong> in order to
+            You need a minimum of <strong>51%</strong> of those votes. <br />
+            You should target{' '}
+            <strong>{numberFormatter(winNumber)} votes**</strong> in order to
             win.
             <br />
             <br />
             You need to contact those{' '}
-            <strong>{targetVotes} voters a minimum of 5x.</strong> <br />
+            <strong>
+              {numberFormatter(winNumber)} voters a minimum of 5x.
+            </strong>{' '}
+            <br />
             That equals{' '}
-            <strong>{numberFormatter(targetVotes * 5)} voter contacts.</strong>
+            <strong>{numberFormatter(voterContactGoal)} voter contacts.</strong>
           </Body1>
           <Body2 className="mt-8 text-gray-600">
             * Your turnout rate is calculated by the last 3 election cycles.

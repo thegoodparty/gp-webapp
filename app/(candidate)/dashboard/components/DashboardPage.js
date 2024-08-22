@@ -157,7 +157,6 @@ export default function DashboardPage(props) {
               <ElectionOver />
             ) : (
               <>
-                <AlertSection campaign={campaign} />
                 <P2vSection {...childProps} />
                 <ContactMethodsSection {...childProps} />
                 <UpdateHistorySection {...childProps} />
