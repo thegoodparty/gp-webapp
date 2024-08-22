@@ -34,7 +34,7 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
     );
   }
 
-  const targetVotes = numberFormatter(projectedTurnout / 2 + 1);
+  const targetVotes = numberFormatter(Math.ceil(projectedTurnout * 0.51));
 
   return (
     <>
