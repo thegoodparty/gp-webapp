@@ -11,13 +11,13 @@ export const CampaignProvider = ({ children }) => {
 
   const refreshCampaign = async () => {
     const { campaign } = await fetchUserClientCampaign();
-    setCampaign(campaign.ok === false ? null : campaign);
+    setCampaign(campaign?.ok && campaign.ok === false ? null : campaign);
   };
 
   useEffect(() => {
     const getCampaign = async () => {
       const { campaign } = await fetchUserClientCampaign();
-      setCampaign(campaign.ok === false ? null : campaign);
+      setCampaign(campaign?.ok && campaign.ok === false ? null : campaign);
     };
     if (user) {
       getCampaign();
