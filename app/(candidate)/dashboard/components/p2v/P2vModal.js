@@ -35,8 +35,6 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
     );
   }
 
-  const targetVotes = numberFormatter(voterContactGoal);
-
   return (
     <>
       <div
@@ -71,8 +69,7 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
             will vote in your election.
             <br />
             <br />
-            You need a minimum of <strong>50% + 1 vote</strong> of those votes.{' '}
-            <br />
+            You need a minimum of <strong>51%</strong> of those votes. <br />
             You should target <strong>{targetVotes} votes**</strong> in order to
             win.
             <br />
