@@ -81,7 +81,7 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
             <strong>{targetVotes} voters a minimum of 5x.</strong> <br />
             That equals{' '}
             <strong>
-              {numberFormatter(praseInt(voterContactGoal) * 5)} voter contacts.
+              {numberFormatter(parseInt(voterContactGoal) * 5)} voter contacts.
             </strong>
           </Body1>
           <Body2 className="mt-8 text-gray-600">
