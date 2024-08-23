@@ -9,6 +9,7 @@ import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
 import H5 from '@shared/typography/H5';
 import { numberFormatter } from 'helpers/numberHelper';
+import H3 from '@shared/typography/H3';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -25,6 +26,8 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
   const [showMenu, setShowMenu] = useState(0);
 
   const { deleteHistoryCallBack, updateHistory } = props;
+
+  console.log('updateHistory', updateHistory);
 
   const inputData = [];
   if (updateHistory) {
@@ -53,67 +56,84 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
         <Body2 className="mb-4 text-gray-600">
           View all recorded progress entries for your campaign below.
         </Body2>
-
-        <div className="grid grid-cols-12  bg-black text-white rounded-t-lg">
-          <div className="col-span-8 md:col-span-4 lg:col-span-3">
-            <Overline className="p-4 pl-10">Method</Overline>
-          </div>
-
-          <div className="hidden lg:block lg:col-span-3">
-            <Overline className=" p-4">User</Overline>
-          </div>
-
-          <div className="col-span-4 md:col-span-4 lg:col-span-3">
-            <Overline className=" p-4"># Records</Overline>
-          </div>
-
-          <div className="hidden md:block md:col-span-4 lg:col-span-3">
-            <Overline className=" p-4">Date Added</Overline>
-          </div>
-        </div>
-        <div className="grid grid-cols-12 rounded-b-lg">
-          {inputData.map((data, index) => (
-            <Fragment key={data.id}>
-              <div
-                className={`col-span-8 md:col-span-4 lg:col-span-3 flex items-center p-2 border-b border-gray-200 ${
-                  index % 2 === 0 ? '' : 'bg-gray-50'
-                } border-l`}
-              >
-                <Actions
-                  {...data}
-                  showMenu={showMenu}
-                  setShowMenu={setShowMenu}
-                  deleteHistoryCallBack={deleteHistoryCallBack}
-                />
-                <H5 className="ml-3">{fields[data.type]?.title}</H5>
+        {inputData.length === 0 ? (
+          <Paper>
+            <div className="flex flex-col justify-center items-center py-4">
+              <div className="text-4xl">
+                <span role="img" aria-label="Frowning Face">
+                  ☹️
+                </span>
+              </div>
+              <H3 className="mt-4">
+                You do not have any campaign history yet.
+              </H3>
+            </div>
+          </Paper>
+        ) : (
+          <>
+            <div className="grid grid-cols-12  bg-black text-white rounded-t-lg">
+              <div className="col-span-8 md:col-span-4 lg:col-span-3">
+                <Overline className="p-4 pl-10">Method</Overline>
               </div>
 
-              <div
-                className={`hidden lg:flex lg:col-span-3 p-2 border-b  items-center  border-gray-200 ${
-                  index % 2 === 0 ? '' : 'bg-gray-50'
-                }`}
-              >
-                <UserAvatar user={data.user} size="small" /> &nbsp; {data.name}
+              <div className="hidden lg:block lg:col-span-3">
+                <Overline className=" p-4">User</Overline>
               </div>
 
-              <div
-                className={`col-span-4 md:col-span-4 lg:col-span-3 p-2 border-b border-gray-200 flex items-center  border-r md:border-r-0 ${
-                  index % 2 === 0 ? '' : 'bg-gray-50'
-                }`}
-              >
-                <H5>{numberFormatter(data.quantity)}</H5>
+              <div className="col-span-4 md:col-span-4 lg:col-span-3">
+                <Overline className=" p-4"># Records</Overline>
               </div>
 
-              <div
-                className={`hidden md:flex items-center md:col-span-4 lg:col-span-3 p-2 border-b border-gray-200 md:border-r ${
-                  index % 2 === 0 ? '' : 'bg-gray-50'
-                }`}
-              >
-                <H5>{dateUsHelper(data.createdAt)}</H5>
+              <div className="hidden md:block md:col-span-4 lg:col-span-3">
+                <Overline className=" p-4">Date Added</Overline>
               </div>
-            </Fragment>
-          ))}
-        </div>
+            </div>
+            <div className="grid grid-cols-12 rounded-b-lg">
+              {inputData.map((data, index) => (
+                <Fragment key={data.id}>
+                  <div
+                    className={`col-span-8 md:col-span-4 lg:col-span-3 flex items-center p-2 border-b border-gray-200 ${
+                      index % 2 === 0 ? '' : 'bg-gray-50'
+                    } border-l`}
+                  >
+                    <Actions
+                      {...data}
+                      showMenu={showMenu}
+                      setShowMenu={setShowMenu}
+                      deleteHistoryCallBack={deleteHistoryCallBack}
+                    />
+                    <H5 className="ml-3">{fields[data.type]?.title}</H5>
+                  </div>
+
+                  <div
+                    className={`hidden lg:flex lg:col-span-3 p-2 border-b  items-center  border-gray-200 ${
+                      index % 2 === 0 ? '' : 'bg-gray-50'
+                    }`}
+                  >
+                    <UserAvatar user={data.user} size="small" /> &nbsp;{' '}
+                    {data.name}
+                  </div>
+
+                  <div
+                    className={`col-span-4 md:col-span-4 lg:col-span-3 p-2 border-b border-gray-200 flex items-center  border-r md:border-r-0 ${
+                      index % 2 === 0 ? '' : 'bg-gray-50'
+                    }`}
+                  >
+                    <H5>{numberFormatter(data.quantity)}</H5>
+                  </div>
+
+                  <div
+                    className={`hidden md:flex items-center md:col-span-4 lg:col-span-3 p-2 border-b border-gray-200 md:border-r ${
+                      index % 2 === 0 ? '' : 'bg-gray-50'
+                    }`}
+                  >
+                    <H5>{dateUsHelper(data.createdAt)}</H5>
+                  </div>
+                </Fragment>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </Paper>
   );
