@@ -32,7 +32,7 @@ const methods = [
     title: 'Direct Mail',
     description:
       'We recommend direct mail to make up 20% of your overall voter contacts',
-    cta: 'Get Email Targets',
+    cta: 'Get Mail Targets',
     modalTitle: 'Add Direct Mail',
     modalSubTitle:
       "Update the total number of direct mail pieces you've sent this week:",
