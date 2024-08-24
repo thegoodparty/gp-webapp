@@ -10,7 +10,9 @@ import Overline from '@shared/typography/Overline';
 import Modal from '@shared/utils/Modal';
 import Paper from '@shared/utils/Paper';
 import { useState } from 'react';
+import { BsPersonFillCheck } from 'react-icons/bs';
 import { IoMdMegaphone } from 'react-icons/io';
+import { MdHowToVote } from 'react-icons/md';
 
 export const phases = [
   {
@@ -22,7 +24,7 @@ export const phases = [
     size: 'Broad, slightly segmented (if at all).',
   },
   {
-    icon: <IoMdMegaphone />,
+    icon: <BsPersonFillCheck />,
     phase: 'PHASE 2',
     title: 'Contact',
     objective:
@@ -31,7 +33,7 @@ export const phases = [
     size: 'Mid-sized, segmented slightly but not very granular.',
   },
   {
-    icon: <IoMdMegaphone />,
+    icon: <MdHowToVote />,
     phase: 'PHASE 3',
     title: 'Vote',
     objective: 'Increase voter turnout among your supporters.',
@@ -74,8 +76,8 @@ export function PhasesModal() {
                 key={phase.title}
               >
                 <Paper className="h-full">
-                  {phase.icon}
-                  <Overline className="mt-2">{phase.phase}</Overline>
+                  <div className="text-5xl">{phase.icon}</div>
+                  <Overline className="mt-3">{phase.phase}</Overline>
                   <H3>{phase.title}</H3>
                   <H6 className="mt-2">Objective</H6>
                   <Body2>{phase.objective}</Body2>
