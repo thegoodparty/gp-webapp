@@ -46,7 +46,7 @@ export default function MethodRow(props) {
             <div className="col-span-12 lg:col-span-4">
               <Link href="/dashboard/content?showModal=true">
                 <PrimaryButton variant="outlined" fullWidth>
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center generate-script">
                     <BsStars className="mr-2" />
                     Generate Script
                   </div>
@@ -68,7 +68,7 @@ export default function MethodRow(props) {
                 </>
               ) : (
                 <Link href="/dashboard/upgrade-to-pro">
-                  <PrimaryButton fullWidth>
+                  <PrimaryButton fullWidth className="pro-upgrade-tracker">
                     <div className="flex items-center justify-center">
                       <MdLock className="mr-2" />
                       {cta}

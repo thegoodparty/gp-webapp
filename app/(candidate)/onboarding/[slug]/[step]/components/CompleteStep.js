@@ -9,6 +9,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
+import { trackEvent } from 'helpers/fullStoryHelper';
 import { useState } from 'react';
 
 async function launchCampaign() {
@@ -44,6 +45,7 @@ export default function CompleteStep() {
     await updateCampaign(attr);
     const res = await launchCampaign();
     if (res) {
+      trackEvent('onboarding_complete', { type: 'candidate' });
       window.location.href = '/dashboard/plan';
     } else {
       setLoading(false);
