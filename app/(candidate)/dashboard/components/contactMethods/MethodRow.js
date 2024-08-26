@@ -41,44 +41,46 @@ export default function MethodRow(props) {
           </div>
         </div>
 
-        <div className="col-span-12 xl:col-span-9 2xl:col-span-7">
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 lg:col-span-4">
-              <Link href="/dashboard/content?showModal=true">
-                <PrimaryButton variant="outlined" fullWidth>
-                  <div className="flex items-center justify-center generate-script">
-                    <BsStars className="mr-2" />
-                    Generate Script
-                  </div>
-                </PrimaryButton>
-              </Link>
-            </div>
-            <div className="col-span-12 lg:col-span-4">
-              {isPro ? (
-                <>
-                  {comingSoon ? (
-                    <PrimaryButton disabled fullWidth>
-                      Coming Soon
-                    </PrimaryButton>
-                  ) : (
-                    <Link href={`/dashboard/voter-records/${voterFileKey}`}>
-                      <PrimaryButton fullWidth>{cta}</PrimaryButton>
-                    </Link>
-                  )}
-                </>
-              ) : (
-                <Link href="/dashboard/upgrade-to-pro">
-                  <PrimaryButton fullWidth className="pro-upgrade-tracker">
-                    <div className="flex items-center justify-center">
-                      <MdLock className="mr-2" />
-                      {cta}
+        <div className="col-span-12 xl:col-span-9 2xl:col-span-7 xl:flex xl:justify-end">
+          <div className="2xl:w-[800px]">
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-span-12 lg:col-span-4">
+                <Link href="/dashboard/content?showModal=true">
+                  <PrimaryButton variant="outlined" fullWidth>
+                    <div className="flex items-center justify-center generate-script">
+                      <BsStars className="mr-2" />
+                      Generate Script
                     </div>
                   </PrimaryButton>
                 </Link>
-              )}
-            </div>
-            <div className="col-span-12 lg:col-span-4">
-              <LogProgress card={method} {...props} />
+              </div>
+              <div className="col-span-12 lg:col-span-4">
+                {isPro ? (
+                  <>
+                    {comingSoon ? (
+                      <PrimaryButton disabled fullWidth>
+                        Coming Soon
+                      </PrimaryButton>
+                    ) : (
+                      <Link href={`/dashboard/voter-records/${voterFileKey}`}>
+                        <PrimaryButton fullWidth>{cta}</PrimaryButton>
+                      </Link>
+                    )}
+                  </>
+                ) : (
+                  <Link href="/dashboard/upgrade-to-pro">
+                    <PrimaryButton fullWidth className="pro-upgrade-tracker">
+                      <div className="flex items-center justify-center">
+                        <MdLock className="mr-2" />
+                        {cta}
+                      </div>
+                    </PrimaryButton>
+                  </Link>
+                )}
+              </div>
+              <div className="col-span-12 lg:col-span-4">
+                <LogProgress card={method} {...props} />
+              </div>
             </div>
           </div>
         </div>
