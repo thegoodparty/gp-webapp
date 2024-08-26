@@ -37,6 +37,7 @@ export default function LogProgress({
         onClick={() => {
           setShowModal(true);
         }}
+        className="log-progress"
       >
         Log Progress
       </InfoButton>

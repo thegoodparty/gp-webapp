@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCampaign } from '@shared/hooks/useCampaign';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 const options = [
   {
@@ -41,6 +42,7 @@ export default function BrowsingFinalPage() {
   const handleNext = async () => {
     await updateUserMeta({ demoPersona: selected });
     await createDemoCampaign();
+    trackEvent('demo_onboarding_complete', { demoPersona: selected });
     await refreshCampaign();
   };
 
