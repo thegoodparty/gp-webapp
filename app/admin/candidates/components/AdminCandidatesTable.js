@@ -84,6 +84,21 @@ export default function AdminCandidatesTable({ campaigns }) {
       'didWin',
       'filingPeriodsStart',
       'filingPeriodsEnd',
+      'hbPastCandidate',
+      'hbIncumbent',
+      'hbCandidateExperienceLevel',
+      'hbFinalViabilityRating',
+      'hbPrimaryElectionResult',
+      'hbElectionResults',
+      'hbProfessionalExperience',
+      'hbP2pCampaigns',
+      'hbP2pSent',
+      'hbConfirmedSelfFiler',
+      'hbVerifiedCandidates',
+      'hbDateVerified',
+      'hbProCandidate',
+      'hbFilingDeadline',
+      'hbOpponents',
     ],
   ];
 
@@ -103,7 +118,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       updatedAt,
     } = campaign;
 
-    const { currentStep, reportedVoterGoals } = data || {};
+    const { currentStep, reportedVoterGoals, hubSpotUpdates } = data || {};
     const {
       zip,
       level,
@@ -116,6 +131,24 @@ export default function AdminCandidatesTable({ campaigns }) {
       primaryElectionDate,
       campaignCommittee,
     } = details || {};
+
+    const {
+      past_candidate,
+      incumbent,
+      candidate_experience_level,
+      final_viability_rating,
+      primary_election_result,
+      election_results,
+      professional_experience,
+      p2p_campaigns,
+      p2p_sent,
+      confirmed_self_filer,
+      verified_candidates,
+      date_verified,
+      pro_candidate,
+      filing_deadline,
+      opponents,
+    } = hubSpotUpdates || {};
 
     const lastVisited = user?.lastVisited;
 
@@ -194,6 +227,21 @@ export default function AdminCandidatesTable({ campaigns }) {
       didWin: didWinDisplay,
       filingPeriodsStart: filingPeriodsStart,
       filingPeriodsEnd: filingPeriodsEnd,
+      hbPastCandidate: past_candidate,
+      hbIncumbent: incumbent,
+      hbCandidateExperienceLevel: candidate_experience_level,
+      hbFinalViabilityRating: final_viability_rating,
+      hbPrimaryElectionResult: primary_election_result,
+      hbElectionResults: election_results,
+      hbProfessionalExperience: professional_experience,
+      hbP2pCampaigns: p2p_campaigns,
+      hbP2pSent: p2p_sent,
+      hbConfirmedSelfFiler: confirmed_self_filer,
+      hbVerifiedCandidates: verified_candidates,
+      hbDateVerified: date_verified,
+      hbProCandidate: pro_candidate,
+      hbFilingDeadline: filing_deadline,
+      hbOpponents: opponents,
     };
     inputData.push(fields);
     let csvFields = fields;
@@ -237,6 +285,44 @@ export default function AdminCandidatesTable({ campaigns }) {
       Header: 'Running',
       accessor: 'knowRun',
     },
+
+    { Header: 'HB Past Candidate', accessor: 'hbPastCandidate' },
+    { Header: 'Hb Incumbent', accessor: 'hbIncumbent' },
+    {
+      Header: 'Hb Candidate Experience Level',
+      accessor: 'hbCandidateExperienceLevel',
+    },
+    { Header: 'Hb Final Viability Rating', accessor: 'hbFinalViabilityRating' },
+    {
+      Header: 'Hb Primary Election Result',
+      accessor: 'hbPrimaryElectionResult',
+    },
+    { Header: 'Hb Election Results', accessor: 'hbElectionResults' },
+    {
+      Header: 'Hb Professional Experience',
+      accessor: 'hbProfessionalExperience',
+    },
+    { Header: 'Hb P2p Campaigns', accessor: 'hbP2pCampaigns' },
+    { Header: 'Hb P2p Sent', accessor: 'hbP2pSent' },
+    { Header: 'Hb Confirmed Self Filer', accessor: 'hbConfirmedSelfFiler' },
+    { Header: 'Hb Verified Candidates', accessor: 'hbVerifiedCandidates' },
+    { Header: 'Hb Date Verified', accessor: 'hbDateVerified' },
+    { Header: 'Hb Pro Candidate', accessor: 'hbProCandidate' },
+    { Header: 'Hb Filing Deadline', accessor: 'hbFilingDeadline' },
+    { Header: 'Hb Opponents', accessor: 'hbOpponents' },
+    {
+      Header: 'First Name',
+      accessor: 'firstName',
+    },
+    {
+      Header: 'Last Name',
+      accessor: 'lastName',
+    },
+    {
+      Header: 'Short Version',
+      accessor: 'shortVersion',
+    },
+
     {
       Header: 'Is Pro?',
       accessor: 'isPro',
