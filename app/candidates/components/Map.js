@@ -3,6 +3,8 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { useCallback, useState } from 'react';
 import mapSkin from './mapSkin';
 import Markers from './Markers';
+import LoadingMapAnimation from '@shared/animations/LoadingMapAnimation';
+import H3 from '@shared/typography/H3';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
@@ -55,7 +57,10 @@ export default function Map(props) {
           <Markers />
         </GoogleMap>
       ) : (
-        <div>Loading</div>
+        <div className="h-[calc(100vh-56px-96px)] flex flex-col items-center justify-center mb-4 py-4">
+          <H3>Loading...</H3>
+          <LoadingMapAnimation />
+        </div>
       )}
     </div>
   );
