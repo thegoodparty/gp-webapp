@@ -1,13 +1,10 @@
 import { notFound } from 'next/navigation';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import BlogPage from 'app/blog/components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
-import BlogArticleTagPage from './components/BlogArticleTagPage';
-import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
-import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 import { fetchSections } from 'app/blog/shared/fetchSections';
+import BlogWrapper from 'app/blog/shared/BlogWrapper';
+import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
 
 const fetchArticlesByTag = async (tag) => {
   const api = gpApi.content.articlesByTag;
@@ -38,14 +35,21 @@ export default async function Page({ params }) {
   }
   const { tagName, articles } = await fetchArticlesByTag(tag);
 
-  const sectionsRes = await fetchSections();
-  const sections = sectionsRes.content;
+  if (!articles) {
+    return null;
+  }
 
-  const childProps = {
-    sections,
-    tagName,
-    articles,
-  };
+  const { content: sections } = await fetchSections();
 
-  return <BlogArticleTagPage {...childProps} />;
+  return (
+    <BlogWrapper sections={sections} sectionTitle={tagName} useH1>
+      <div className="border-t-2 border-gray-200 pt-16 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-16">
+          {articles.map((article) => (
+            <ArticleSnippet article={article} key={article.slug} />
+          ))}
+        </div>
+      </div>
+    </BlogWrapper>
+  );
 }

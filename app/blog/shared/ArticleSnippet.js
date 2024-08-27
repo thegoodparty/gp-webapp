@@ -1,45 +1,60 @@
-/**
- *
- * ArticleSnippet
- *
- */
-
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiArrowNarrowRight } from 'react-icons/hi';
+import { dateUsHelper } from 'helpers/dateHelper';
+import clsx from 'clsx';
+import Overline from '@shared/typography/Overline';
+import BaseButton from '@shared/buttons/BaseButton';
 
-import styles from './ArticleSnippet.module.scss';
-import TimeAgoClient from '@shared/utils/TimeAgoClient';
+/**
+ * @typedef {Object} ArticleSnippetProps
+ * @property {Object} article Article object to render
+ * @property {boolean} heroMode Render snippet styled as a hero element
+ * @property {Object} section Section object article belongs to
+ */
 
-function ArticleSnippet({
+/**
+ * UI for embedded article previews
+ * @param {ArticleSnippetProps} props
+ */
+
+export default function ArticleSnippet({
   article,
   heroMode,
-  target = false,
-  minimal,
   section,
+
+  // minimal NOTE: was not being used anywhere
+  // target = false, NOTE: does not seem to be used anywhere, default false value throws error when being applied to Link.target prop
 }) {
   if (!article) {
     return null;
   }
-  const { title, mainImage, publishDate, summary, readingTime, slug } = article;
+
+  const { title, mainImage, publishDate, summary, readTime, slug } = article;
   const sectionName = section?.fields?.title;
 
   return (
-    <Link
-      id={slug}
-      href={`/blog/article/${slug}`}
-      className="no-underline"
-      target={target}
-    >
-      <article className={`${styles.wrapper} ${heroMode && styles.hero}`}>
+    <Link id={slug} href={`/blog/article/${slug}`} className="no-underline">
+      <article
+        className={clsx('h-full', {
+          ['mb-16 bg-indigo-100 p-8 rounded-2xl']: heroMode,
+        })}
+      >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className={heroMode ? 'lg:col-span-1' : 'lg:col-span-3'}>
             {mainImage && (
               <div
-                className={`${styles.image} ${heroMode && styles.heroImage}`}
+                className={clsx(
+                  'relative w-full',
+                  heroMode ? 'min-h-[280px]' : 'min-h-[200px]',
+                )}
               >
                 <Image
+                  style={{
+                    'border-radius': '4px',
+                    'object-fit': 'cover',
+                    'object-position': 'center',
+                  }}
                   src={`https:${mainImage.url}`}
                   alt={mainImage.alt}
                   sizes="100vw"
@@ -51,39 +66,31 @@ function ArticleSnippet({
           </div>
           <div
             className={
-              heroMode && mainImage ? 'lg:col-span-2' : 'lg:col-span-3'
+              heroMode && mainImage
+                ? 'lg:col-span-2 self-center'
+                : 'lg:col-span-3'
             }
           >
-            <div className={styles.content}>
-              <div>
-                {!minimal && (
-                  <div className={styles.topSection}>
-                    <strong>{sectionName}</strong> &middot;{' '}
-                    <TimeAgoClient date={publishDate} />
-                  </div>
-                )}
-                <h2 className={styles.title}>{title}</h2>
-                <p className={styles.summary}>{summary}</p>
+            {heroMode ? (
+              <div className="lg:ml-8">
+                <h3 className="mb-2 font-medium text-4xl">{title}</h3>
+                <p>{summary}</p>
+                <button className="bg-indigo-700 mt-6 px-6 py-3 text-white rounded-lg w-full md:w-auto hover:bg-indigo-900">
+                  Read More
+                </button>
               </div>
-              <div className={styles.bottom}>
-                {!minimal && (
-                  <div className={styles.time}>
-                    {readingTime && readingTime.text}
-                  </div>
-                )}
-
-                <div className={styles.full}>
-                  <div>Read Full &nbsp;</div> <HiArrowNarrowRight />
-                </div>
+            ) : (
+              <div className="flex flex-col justify-between h-full">
+                {sectionName && <Overline>{sectionName}</Overline>}
+                <h3 className="my-2 font-medium text-2xl">{title}</h3>
+                <p className="font-regular font-sfpro text-base">
+                  {dateUsHelper(publishDate, 'long')}
+                </p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </article>
     </Link>
   );
 }
-
-ArticleSnippet.propTypes = {};
-
-export default ArticleSnippet;

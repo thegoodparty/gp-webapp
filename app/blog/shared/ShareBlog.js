@@ -6,6 +6,7 @@ import { FaFacebookF, FaTwitter } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import { AiOutlineLink } from 'react-icons/ai';
 import { appBase } from 'gpApi';
+import Overline from '@shared/typography/Overline';
 
 export default function ShareBlog() {
   const pathname = usePathname();
@@ -51,20 +52,19 @@ export default function ShareBlog() {
   ];
 
   return (
-    <div className="hidden lg:block fixed top-[600px] right-[20px] h-screen flex flex-col justify-center items-center p-4">
+    <div className="mb-8">
+      <Overline className="mb-2">Share on</Overline>
       {channels.map((channel, index) => (
         <Fragment key={channel.label}>
           {channel.link && (
             <a
+              className="w-8 h-8 mr-4 rounded-full bg-blue-500 text-white inline-flex justify-center items-center"
               href={channel.link}
               target="_blank"
               rel="noopener noreferrer nofollow"
               id={`${channel.label}-share`}
-              className="p-10"
             >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FFD481] to-[#C5F4FF] bg-opacity-20 flex justify-center items-center">
-                {channel.icon}
-              </div>
+              {channel.icon}
             </a>
           )}
         </Fragment>
