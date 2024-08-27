@@ -1,7 +1,7 @@
 'use client';
 import { useContext } from 'react';
 import { MapContext } from './CandidatesPage';
-import { Marker } from '@react-google-maps/api';
+import { Marker, MarkerClusterer } from '@react-google-maps/api';
 
 export default function Markers() {
   const { campaigns } = useContext(MapContext);
@@ -16,14 +16,17 @@ export default function Markers() {
   });
 
   return (
-    <>
-      {markers.map((marker) => (
-        <Marker
-          key={marker.id}
-          position={marker.position}
-          icon={{ url: 'https://assets.goodparty.org/heart-hologram.svg' }}
-        />
-      ))}
-    </>
+    <MarkerClusterer>
+      {(clusterer) =>
+        markers.map((marker) => (
+          <Marker
+            key={marker.id}
+            clusterer={clusterer}
+            position={marker.position}
+            icon={{ url: 'https://assets.goodparty.org/heart-hologram.svg' }}
+          />
+        ))
+      }
+    </MarkerClusterer>
   );
 }
