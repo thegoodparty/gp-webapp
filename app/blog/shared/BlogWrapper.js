@@ -45,7 +45,7 @@ export default function BlogWrapper({
   return (
     <>
       <StickersCallout />
-      <MaxWidth className="!pt-8">
+      <div className="max-w-screen-xl mx-auto px-6 py-8">
         {sectionTitle && (
           <Breadcrumbs
             links={breadcrumbs}
@@ -84,7 +84,7 @@ export default function BlogWrapper({
         )}
 
         {children}
-      </MaxWidth>
+      </div>
     </>
   );
 }
