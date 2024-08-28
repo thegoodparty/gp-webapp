@@ -61,9 +61,9 @@ export default function BlogAuthor({
         {imageUrl && (
           <Image
             style={{
-              'object-fit': 'cover',
-              'object-position': 'top center',
-              'border-radius': '50%',
+              objectFit: 'cover',
+              objectPosition: 'top center',
+              borderRadius: '50%',
             }}
             src={`https:${imageUrl}`}
             alt={name}
