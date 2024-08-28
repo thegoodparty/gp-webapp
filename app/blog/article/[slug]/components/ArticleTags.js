@@ -1,6 +1,5 @@
-import Pill from '@shared/buttons/Pill';
-import H3 from '@shared/typography/H3';
 import Link from 'next/link';
+import Overline from '@shared/typography/Overline';
 
 export default function ArticleTags({ tags }) {
   if (!tags) {
@@ -8,12 +7,14 @@ export default function ArticleTags({ tags }) {
   }
   return (
     <div>
-      <H3 className="my-3">Tags</H3>
+      <Overline className="my-3">Tags</Overline>
       {tags.map((tag) => (
-        <Link href={`/blog/tag/${tag.slug}`} key={tag.slug}>
-          <div className="bg-secondary-light  mb-3 px-3 py-2 text-sm rounded-full mr-2 inline-block font-medium cursor-pointer transition-shadow hover:shadow-md">
-            {tag.name}
-          </div>
+        <Link
+          href={`/blog/tag/${tag.slug}`}
+          key={tag.slug}
+          className="rounded-md text-sm py-2 px-4 mr-2 bg-indigo-200 no-underline cursor hover:bg-indigo-300"
+        >
+          {tag.name}
         </Link>
       ))}
     </div>

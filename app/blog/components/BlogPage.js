@@ -1,43 +1,31 @@
 import { Fragment } from 'react';
-import ArticleSnippet from '../shared/ArticleSnippet';
-import BlogWrapper from '../shared/BlogWrapper';
-import SubscribeBlog from './SubscribeBlog';
 import Link from 'next/link';
-import { colors } from '../shared/BlogColors';
+import BlogWrapper from '../shared/BlogWrapper';
+import ArticleSnippet from '../shared/ArticleSnippet';
+import MarketingH5 from '@shared/typography/MarketingH5';
+import SubscribeBlog from './SubscribeBlog';
 
-export default function BlogPage({
-  sections,
-  hero,
-  sectionSlug,
-  sectionTitle,
-  sectionIndex,
-  articlesTitles,
-}) {
+export default async function BlogPage({ sections, hero }) {
   return (
-    <BlogWrapper
-      sections={sections}
-      sectionSlug={sectionSlug}
-      sectionTitle={sectionTitle}
-      articlesTitles={articlesTitles}
-      useH1
-    >
-      {sectionSlug === undefined && sections && sections.length > 0 && (
-        <div className="grid-cols-12 col-span-12">
+    <BlogWrapper sections={sections}>
+      {sections?.length > 0 && (
+        <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
+          <MarketingH5 className="mb-6">Featured Article</MarketingH5>
           <ArticleSnippet article={hero} heroMode section={hero.section} />
           {sections.map((section, index) => {
             return (
               <Fragment key={section.id}>
                 <Link
+                  className="no-underline flex justify-between align-center mb-6 mt-16"
                   href={`/blog/section/${section.fields.slug}`}
                   id={`blog-${section.fields.slug}`}
                   aria-label={section.fields.title}
                 >
-                  <button
-                    className={`${
-                      index <= 3 ? colors[index] : 'bg-primary-dark'
-                    } py-2 px-4 mb-3 mt-10 text-sm font-bold text-white cursor-pointer rounded-full`}
-                  >
+                  <MarketingH5 className="!m-0">
                     {section.fields.title}
+                  </MarketingH5>
+                  <button class="text-sm text-dark bg-transparent rounded-lg py-2 px-3 hover:bg-gray-100">
+                    Read More
                   </button>
                 </Link>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -48,41 +36,12 @@ export default function BlogPage({
                       section={section}
                     />
                   ))}
-                  {section.fields.slug == 'onboarding-live' ? (
-                    <SubscribeBlog />
-                  ) : (
-                    <></>
-                  )}
                 </div>
               </Fragment>
             );
           })}
+          {/* <SubscribeBlog className="mt-6" /> */}
         </div>
-      )}
-      {sectionSlug && sections[sectionIndex].articles.length > 1 ? (
-        <>
-          <ArticleSnippet
-            article={hero}
-            heroMode
-            section={sections[sectionIndex]}
-          />
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {sections[sectionIndex].articles.map((article, index) => (
-              <Fragment key={article.id}>
-                {index > 0 && (
-                  <div>
-                    <ArticleSnippet
-                      article={article}
-                      section={sections[sectionIndex]}
-                    />
-                  </div>
-                )}
-              </Fragment>
-            ))}
-          </div>
-        </>
-      ) : (
-        <></>
       )}
     </BlogWrapper>
   );
