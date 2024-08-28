@@ -35,8 +35,8 @@ export default function ArticleSnippet({
   return (
     <Link id={slug} href={`/blog/article/${slug}`} className="no-underline">
       <article
-        className={clsx('h-full', {
-          ['mb-16 bg-indigo-100 p-8 rounded-2xl']: heroMode,
+        className={clsx('h-full hover:bg-indigo-100 p-4 rounded-lg', {
+          ['mb-16 bg-indigo-100 p-8 rounded-2xl hover:bg-indigo-300']: heroMode,
         })}
       >
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
