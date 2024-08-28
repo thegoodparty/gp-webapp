@@ -3,8 +3,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchSections } from 'app/blog/shared/fetchSections';
-import BlogWrapper from 'app/blog/shared/BlogWrapper';
-import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
+import BlogTagPage from './components/BlogTagPage';
 
 const fetchArticlesByTag = async (tag) => {
   const api = gpApi.content.articlesByTag;
@@ -42,14 +41,10 @@ export default async function Page({ params }) {
   const { content: sections } = await fetchSections();
 
   return (
-    <BlogWrapper sections={sections} sectionTitle={tagName}>
-      <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-16">
-          {articles.map((article) => (
-            <ArticleSnippet article={article} key={article.slug} />
-          ))}
-        </div>
-      </div>
-    </BlogWrapper>
+    <BlogTagPage
+      sections={sections}
+      sectionTitle={tagName}
+      articles={articles}
+    />
   );
 }

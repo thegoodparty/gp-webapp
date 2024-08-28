@@ -1,10 +1,10 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import React from 'react';
 import StickersCallout from '@shared/utils/StickersCallout';
-import BlogH1 from '../components/BlogH1';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Overline from '@shared/typography/Overline';
+import Body2 from '@shared/typography/Body2';
+import MarketingH2 from '@shared/typography/MarketingH2';
 
 function CategoryButton({ children, isSelected }) {
   const colorClasses = isSelected
@@ -75,12 +75,14 @@ export default function BlogWrapper({
           ))}
         </nav>
 
-        <BlogH1 className="mt-8">{sectionTitle ? sectionTitle : 'Blog'}</BlogH1>
+        <MarketingH2 className="mt-8 mb-4" asH1>
+          {sectionTitle ? sectionTitle : 'Blog'}
+        </MarketingH2>
         {!sectionTitle && (
-          <p className="font-light mb-6">
+          <Body2 className="mb-6">
             Insights into politics, running for office, and the latest updates
             from the independent movement
-          </p>
+          </Body2>
         )}
 
         {children}

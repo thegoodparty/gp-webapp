@@ -3,6 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { dateUsHelper } from 'helpers/dateHelper';
 import Overline from '@shared/typography/Overline';
+import MarketingH4 from '@shared/typography/MarketingH4';
+import MarketingH5 from '@shared/typography/MarketingH5';
+import Body1 from '@shared/typography/Body1';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 import clsx from 'clsx';
 
 /**
@@ -72,19 +76,17 @@ export default function ArticleSnippet({
           >
             {heroMode ? (
               <div className="lg:ml-8">
-                <h3 className="mb-2 font-medium text-4xl">{title}</h3>
-                <p className="font-light">{summary}</p>
-                <button className="bg-indigo-700 mt-6 px-6 py-3 text-white rounded-lg w-full md:w-auto hover:bg-indigo-900">
+                <MarketingH4 className="mb-2">{title}</MarketingH4>
+                <Body1>{summary}</Body1>
+                <PrimaryButton className="mt-6 md:w-auto" fullWidth>
                   Read More
-                </button>
+                </PrimaryButton>
               </div>
             ) : (
               <div className="flex flex-col justify-between h-full">
                 {sectionName && <Overline>{sectionName}</Overline>}
-                <h3 className="my-2 font-medium text-2xl">{title}</h3>
-                <p className="font-light font-sfpro text-base">
-                  {dateUsHelper(publishDate, 'long')}
-                </p>
+                <MarketingH5 className="my-2">{title}</MarketingH5>
+                <Body1>{dateUsHelper(publishDate, 'long')}</Body1>
               </div>
             )}
           </div>

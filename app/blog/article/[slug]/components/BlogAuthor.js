@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import { dateUsHelper } from 'helpers/dateHelper';
+import H4 from '@shared/typography/H4';
+import Body2 from '@shared/typography/Body2';
 
 /**
  * @typedef {Object} BlogAuthorProps
  * @property {string} imageUrl URL for author's image
  * @property {string} name Display name for author
- * @property {string} summary Summary for author (only for footer style)
  * @property {Date | string | number} publishDate date to display as published date (only for default style)
  * @property {Date | string | number} updateDate date to display as updated date (only for default style)
- * @property {boolean} asFooter render as blog article footer
  */
 
 /**
@@ -18,43 +18,9 @@ import { dateUsHelper } from 'helpers/dateHelper';
 export default function BlogAuthor({
   name,
   imageUrl,
-  summary,
   publishDate,
   updateDate,
-  asFooter = false,
 }) {
-  if (asFooter) {
-    // Footer style
-    return (
-      <div className="flex items-center gap-x-3 py-8">
-        <div>
-          {imageUrl && (
-            <div className="relative w-20 rounded">
-              <Image
-                style={{
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  borderRadius: '10px',
-                }}
-                src={`https:${imageUrl}`}
-                alt={name}
-                width={80}
-                height={80}
-              />
-            </div>
-          )}
-        </div>
-        <div>
-          <p className="font-medium text-lg mb-2">{name}</p>
-          <p className="font-sfpro text-gray-600 font-light text-sm">
-            {summary}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // "Card" style
   return (
     <div className="flex gap-x-6 mb-12 mt-8">
       <div className="relative w-15 rounded">
@@ -73,8 +39,8 @@ export default function BlogAuthor({
         )}
       </div>
       <div>
-        <p className="font-medium text-lg mb-2">{name}</p>
-        <p className="font-sfpro text-gray-600 font-light text-sm">
+        <H4 className="mb-2">{name}</H4>
+        <Body2 className="text-gray-600">
           Published: {dateUsHelper(publishDate)}
           {updateDate && (
             <>
@@ -82,7 +48,7 @@ export default function BlogAuthor({
               Updated: {dateUsHelper(updateDate)}
             </>
           )}
-        </p>
+        </Body2>
       </div>
     </div>
   );

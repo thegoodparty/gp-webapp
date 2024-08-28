@@ -6,8 +6,9 @@ import BlogPopup from './BlogPopup';
 import ArticleTags from './ArticleTags';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Overline from '@shared/typography/Overline';
-import BlogH1 from 'app/blog/components/BlogH1';
+import MarketingH2 from '@shared/typography/MarketingH2';
 import BlogAuthor from './BlogAuthor';
+import BlogAuthorFooter from './BlogAuthorFooter';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 
 export default function BlogArticle({ sections, article }) {
@@ -63,7 +64,9 @@ export default function BlogArticle({ sections, article }) {
       <Overline className="inline-block bg-purple-500 text-white px-2 py-1 rounded">
         {section.fields?.title}
       </Overline>
-      <BlogH1>{title}</BlogH1>
+      <MarketingH2 className="mt-8 mb-4" asH1>
+        {title}
+      </MarketingH2>
       <BlogAuthor
         imageUrl={author.fields.image?.url}
         name={author.fields.name}
@@ -82,7 +85,7 @@ export default function BlogArticle({ sections, article }) {
         </div>
         <ArticleTags tags={tags} />
       </div>
-      <BlogAuthor
+      <BlogAuthorFooter
         imageUrl={author.fields.image?.url}
         name={author.fields.name}
         summary={author.fields.summary}
