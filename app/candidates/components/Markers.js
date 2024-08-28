@@ -4,21 +4,17 @@ import { MapContext } from './CandidatesPage';
 import { Marker, MarkerClusterer } from '@react-google-maps/api';
 
 export default function Markers() {
-  const { campaigns } = useContext(MapContext);
-  const markers = campaigns.map((campaign) => {
-    return {
-      id: campaign.slug,
-      position: {
-        lat: campaign.geoLocation?.lat,
-        lng: campaign.geoLocation?.lng,
-      },
-    };
-  });
+  const { visibleMarkers } = useContext(MapContext);
 
   return (
-    <MarkerClusterer>
+    <MarkerClusterer
+      options={{
+        maxZoom: 15, // Set the maxZoom level to stop clustering at this zoom level or higher
+        gridSize: 80,
+      }}
+    >
       {(clusterer) =>
-        markers.map((marker) => (
+        visibleMarkers.map((marker) => (
           <Marker
             key={marker.id}
             clusterer={clusterer}

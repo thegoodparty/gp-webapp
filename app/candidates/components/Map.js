@@ -1,10 +1,12 @@
 'use client';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useContext, useRef } from 'react';
 import mapSkin from './mapSkin';
 import Markers from './Markers';
 import LoadingMapAnimation from '@shared/animations/LoadingMapAnimation';
 import H3 from '@shared/typography/H3';
+import { MapContext } from './CandidatesPage';
+import { debounce } from 'helpers/debounceHelper';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
@@ -23,45 +25,56 @@ const mapOptions = {
   fullscreenControl: false, // Disables the fullscreen control button
   streetViewControl: false, // Disables the Street View pegman control
   styles: mapSkin,
+  minZoom: 4,
 };
 
-export default function Map(props) {
+const Map = memo(() => {
+  const { markers, updateVisibleMarkers } = useContext(MapContext);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey,
   });
-  const [map, setMap] = useState(null);
+  const mapRef = useRef(null);
 
-  const onLoad = useCallback(function callback(map) {
-    // const bounds = new window.google.maps.LatLngBounds(center);
-    // map.fitBounds(bounds);
-
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null);
-  }, []);
+  const handleBoundsChanged = useCallback(
+    debounce(() => {
+      if (mapRef.current) {
+        const bounds = mapRef.current.getBounds();
+        const filteredMarkers = markers.filter((marker) =>
+          bounds.contains({
+            lat: marker.position.lat,
+            lng: marker.position.lng,
+          }),
+        );
+        updateVisibleMarkers(filteredMarkers);
+      }
+    }, 300),
+    [markers, updateVisibleMarkers],
+  ); // 300ms debounce time, adjust as needed
 
   return (
-    <div className="flex-1 h-3/4 md:h-auto">
+    <div className="h-1/4 md:h-[calc(100vh-56px)]">
       {isLoaded ? (
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
           zoom={5}
-          onLoad={onLoad}
-          onUnmount={onUnmount}
           options={mapOptions}
+          onLoad={(map) => (mapRef.current = map)}
+          onBoundsChanged={handleBoundsChanged}
         >
           <Markers />
         </GoogleMap>
       ) : (
-        <div className="h-[calc(100vh-56px-96px)] flex flex-col items-center justify-center mb-4 py-4">
+        <div className="h-[calc(100vh-56px)] flex flex-col items-center justify-center mb-4 py-4">
           <H3>Loading...</H3>
           <LoadingMapAnimation />
         </div>
       )}
     </div>
   );
-}
+});
+
+Map.displayName = 'Map';
+
+export default Map;
