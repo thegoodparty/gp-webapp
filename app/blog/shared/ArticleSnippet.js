@@ -50,9 +50,9 @@ export default function ArticleSnippet({
               >
                 <Image
                   style={{
-                    'border-radius': '4px',
-                    'object-fit': 'cover',
-                    'object-position': 'center',
+                    borderRadius: '4px',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
                   }}
                   src={`https:${mainImage.url}`}
                   alt={mainImage.alt}

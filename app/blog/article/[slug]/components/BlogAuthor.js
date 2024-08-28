@@ -32,9 +32,9 @@ export default function BlogAuthor({
             <div className="relative w-20 rounded">
               <Image
                 style={{
-                  'object-fit': 'cover',
-                  'object-position': 'top center',
-                  'border-radius': '10px',
+                  objectFit: 'cover',
+                  objectPosition: 'top center',
+                  borderRadius: '10px',
                 }}
                 src={`https:${imageUrl}`}
                 alt={name}

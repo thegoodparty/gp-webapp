@@ -48,9 +48,9 @@ export default function BlogArticle({ sections, article }) {
         <div className="relative min-h-[280px] lg:min-h-[350px] w-full my-8">
           <Image
             style={{
-              'border-radius': '10px',
-              'object-fit': 'cover',
-              'object-position': 'center',
+              borderRadius: '10px',
+              objectFit: 'cover',
+              objectPosition: 'center',
             }}
             src={`https:${mainImage.url}`}
             alt={mainImage.alt}
