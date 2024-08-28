@@ -42,8 +42,8 @@ export default async function Page({ params }) {
   const { content: sections } = await fetchSections();
 
   return (
-    <BlogWrapper sections={sections} sectionTitle={tagName} useH1>
-      <div className="border-t-2 border-gray-200 pt-16 pb-8">
+    <BlogWrapper sections={sections} sectionTitle={tagName}>
+      <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-16">
           {articles.map((article) => (
             <ArticleSnippet article={article} key={article.slug} />

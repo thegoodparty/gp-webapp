@@ -39,7 +39,7 @@ export default async function Page({ params }) {
       sectionSlug={slug}
     >
       {slug && sections[sectionIndex].articles.length > 1 && (
-        <div className="border-t-2 border-gray-200 pt-16 pb-8">
+        <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
           <BlogH2>Featured Article</BlogH2>
           <ArticleSnippet
             article={hero}

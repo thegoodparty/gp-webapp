@@ -53,7 +53,7 @@ export default function ShareBlog() {
 
   return (
     <div className="mb-8">
-      <Overline className="mb-2">Share on</Overline>
+      <Overline className="mb-4">Share on</Overline>
       {channels.map((channel, index) => (
         <Fragment key={channel.label}>
           {channel.link && (

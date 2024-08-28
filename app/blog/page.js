@@ -20,7 +20,7 @@ export default async function Page({ params, searchParams }) {
   return (
     <BlogWrapper sections={sections}>
       {sections?.length > 0 && (
-        <div className="border-t-2 border-gray-200 pt-16 pb-8">
+        <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
           <BlogH2>Featured Article</BlogH2>
           <ArticleSnippet article={hero} heroMode section={hero.section} />
           {sections.map((section, index) => {

@@ -1,81 +1,88 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Link from 'next/link';
 import React from 'react';
-import { AiOutlineHome } from 'react-icons/ai';
-import BlogSearch from '../components/BlogSearch';
-import BaseButtonClient from '../../shared/buttons/BaseButtonClient';
-import styles from './BlogWrapper.module.scss';
-import { colors } from './BlogColors';
 import StickersCallout from '@shared/utils/StickersCallout';
 import BlogH1 from '../components/BlogH1';
+import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Overline from '@shared/typography/Overline';
 
+function CategoryButton({ children, isSelected }) {
+  const colorClasses = isSelected
+    ? 'text-white bg-purple-500 hover:bg-purple-700'
+    : 'bg-indigo-200 hover:bg-indigo-300';
+
+  return (
+    <button
+      className={`rounded-md text-sm py-2 px-4 mr-2 no-underline cursor ${colorClasses}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/**
+ * @typedef {Object} BlogWrapperProps
+ * @property {Object[]} sections Array of sections to link to at the top of wrapper
+ * @property {string} sectionSlug Slug for the currently viewed page
+ * @property {string} sectionTitle Title for the currently viewed page
+ */
+
+/**
+ * Wrapper element for Blog list views
+ * @param {BlogWrapperProps} props
+ */
 export default function BlogWrapper({
   children,
   sections,
   sectionSlug,
   sectionTitle,
-  isArticle,
 }) {
+  const breadcrumbs = [
+    { href: '/blog', label: 'Blog' },
+    { label: sectionTitle },
+  ];
+
   return (
     <>
       <StickersCallout />
-      <MaxWidth>
-        <BlogH1>{sectionTitle ? sectionTitle : 'Blog'}</BlogH1>
+      <MaxWidth className="!pt-8">
+        {sectionTitle && (
+          <Breadcrumbs
+            links={breadcrumbs}
+            delimiter="chevron"
+            wrapText={true}
+            className="!pt-0"
+          />
+        )}
 
-        <div className={styles.sectionsSlugWrapper}>
-          <div className={styles.sectionsSlug}>
+        <Overline>Categories</Overline>
+        <nav className="flex flex-wrap items-center gap-2 mt-2">
+          <Link id="blog-home" href="/blog">
+            <CategoryButton isSelected={!sectionTitle}>
+              Latest Articles
+            </CategoryButton>
+          </Link>
+
+          {sections.map((section, index) => (
             <Link
-              id="blog-home"
-              href="/blog"
-              className="inline-flex"
-              aria-label="Blog Homepage"
+              key={section.fields.slug}
+              href={`/blog/section/${section.fields.slug}`}
             >
-              <BaseButtonClient
-                style={{ backgroundColor: '#000', color: '#ffffff' }}
-                className="py-3 px-4 mb-3 ml-3 mr-3 font-bold"
-              >
-                <AiOutlineHome size={18} />
-              </BaseButtonClient>
+              <CategoryButton isSelected={section.fields.slug === sectionSlug}>
+                {section.fields.title}
+              </CategoryButton>
             </Link>
-            {sections.map((section, index) => (
-              <React.Fragment key={section.fields.slug}>
-                {section.fields.slug === sectionSlug ? (
-                  <Link
-                    className={styles.section}
-                    href={
-                      isArticle ? `/blog/section/${section.fields.slug}` : '#'
-                    }
-                  >
-                    <BaseButtonClient
-                      className={`${
-                        index <= 4 ? colors[index] : 'bg-primary-dark'
-                      } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
-                    >
-                      {section.fields.title}
-                    </BaseButtonClient>
-                  </Link>
-                ) : (
-                  <Link
-                    id={`blog-section-${section.fields.slug}`}
-                    href={`/blog/section/${section.fields.slug}`}
-                    key={section.id}
-                    className={styles.section}
-                  >
-                    <BaseButtonClient
-                      className={`${
-                        !sectionTitle && index <= 4
-                          ? colors[index]
-                          : 'bg-gray-800'
-                      } py-3 px-4 mb-3 mr-3 font-bold text-white rounded-full`}
-                    >
-                      {section.fields.title}
-                    </BaseButtonClient>
-                  </Link>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
+          ))}
+        </nav>
+
+        <BlogH1>{sectionTitle ? sectionTitle : 'Blog'}</BlogH1>
+        {!sectionTitle && (
+          <p className="font-light mb-6">
+            Insights into politics, running for office, and the latest updates
+            from the independent movement
+          </p>
+        )}
+
         {children}
       </MaxWidth>
     </>

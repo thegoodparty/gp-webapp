@@ -9,6 +9,7 @@ import clsx from 'clsx';
  * @property {string} links[].href href for link
  * @property {string} links[].label display label for link
  * @property {'slash'|'chevron'} delimiter type of delimiter character to display
+ * @property {boolean} wrapText whether the breadcrumb list text should wrap
  * @property {string} className extra classes to add to wrapper element
  * */
 
@@ -16,7 +17,12 @@ import clsx from 'clsx';
  * Breadcrumb navigation with schema metadata
  * @param {BreadcrumbProps} props
  */
-export default function Breadcrumbs({ links, delimiter = 'slash', className }) {
+export default function Breadcrumbs({
+  links,
+  delimiter = 'slash',
+  wrapText = false,
+  className,
+}) {
   const schema = [];
   links.forEach((link, index) => {
     schema.push({
@@ -34,7 +40,8 @@ export default function Breadcrumbs({ links, delimiter = 'slash', className }) {
   return (
     <div
       className={clsx(
-        'flex items-center whitespace-nowrap max-w-[100vw] overflow-x-auto py-6',
+        'flex items-center py-6',
+        { 'whitespace-nowrap max-w-[100vw] overflow-x-auto': !wrapText },
         className,
       )}
     >
@@ -45,15 +52,19 @@ export default function Breadcrumbs({ links, delimiter = 'slash', className }) {
           itemListElement: schema,
         }}
       />
-      <nav className="flex" aria-label="Breadcrumb">
-        <ol className="inline-flex items-center space-x-1">
+      <nav aria-label="Breadcrumb">
+        <ol
+          className={clsx('flex items-center gap-x-1 gap-y-2', {
+            'flex-wrap': wrapText,
+          })}
+        >
           {links.map((link, index) => (
             <li key={link.label}>
               {index < links.length - 1 && (
                 <div className="flex items-center">
                   <a
                     href={link.href}
-                    className="inline-flex items-center cur text-base text-primary-light hover:text-primary hover:underline"
+                    className="whitespace-nowrap text-base text-primary-light hover:text-primary hover:underline"
                   >
                     <div className="text-base">{link.label}</div>
                   </a>
@@ -64,7 +75,11 @@ export default function Breadcrumbs({ links, delimiter = 'slash', className }) {
             </li>
           ))}
           <li>
-            <div className="text-base text-primary-dark">
+            <div
+              className={clsx('text-base text-primary-dark', {
+                'whitespace-nowrap': !wrapText,
+              })}
+            >
               {links[links.length - 1].label}
             </div>
           </li>

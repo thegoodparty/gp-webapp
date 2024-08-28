@@ -2,9 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { dateUsHelper } from 'helpers/dateHelper';
-import clsx from 'clsx';
 import Overline from '@shared/typography/Overline';
-import BaseButton from '@shared/buttons/BaseButton';
+import clsx from 'clsx';
 
 /**
  * @typedef {Object} ArticleSnippetProps
@@ -74,7 +73,7 @@ export default function ArticleSnippet({
             {heroMode ? (
               <div className="lg:ml-8">
                 <h3 className="mb-2 font-medium text-4xl">{title}</h3>
-                <p>{summary}</p>
+                <p className="font-light">{summary}</p>
                 <button className="bg-indigo-700 mt-6 px-6 py-3 text-white rounded-lg w-full md:w-auto hover:bg-indigo-900">
                   Read More
                 </button>
@@ -83,7 +82,7 @@ export default function ArticleSnippet({
               <div className="flex flex-col justify-between h-full">
                 {sectionName && <Overline>{sectionName}</Overline>}
                 <h3 className="my-2 font-medium text-2xl">{title}</h3>
-                <p className="font-regular font-sfpro text-base">
+                <p className="font-light font-sfpro text-base">
                   {dateUsHelper(publishDate, 'long')}
                 </p>
               </div>
