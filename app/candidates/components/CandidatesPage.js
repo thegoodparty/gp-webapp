@@ -1,6 +1,6 @@
 'use client';
 import Hero from './Hero';
-import { createContext, useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
 import Map from './Map';
 import Results from './Results';
 import Filters from './Filters';
@@ -8,7 +8,6 @@ import Filters from './Filters';
 export const MapContext = createContext();
 
 export default function CandidatesPage(props) {
-  console.log('props', props.campaigns);
   const { campaigns } = props;
   const initMarkers = (campaigns || []).map((campaign) => {
     return {
@@ -21,11 +20,29 @@ export default function CandidatesPage(props) {
     };
   });
 
-  const [markers, setMarkers] = useState(initMarkers);
+  const [markers, _] = useState(initMarkers);
   const [visibleMarkers, setVisibleMarkers] = useState(initMarkers);
+  const [filters, setFilters] = useState({
+    party: '',
+  });
+
+  const onChangeFilters = useCallback((key, val) => {
+    const updatedFilters = { ...filters, [key]: val };
+    setFilters(updatedFilters);
+    filterMarkers(visibleMarkers, updatedFilters);
+  }, []);
 
   const updateVisibleMarkers = (filteredMarkers) => {
-    setVisibleMarkers(filteredMarkers);
+    filterMarkers(filteredMarkers, filters);
+  };
+
+  const filterMarkers = (currentMarkers, updatedFilters) => {
+    if (updatedFilters.party && updatedFilters.party !== '') {
+      currentMarkers = currentMarkers.filter(
+        (marker) => marker.party === updatedFilters.party,
+      );
+    }
+    setVisibleMarkers(currentMarkers);
   };
 
   const childProps = {
@@ -33,6 +50,8 @@ export default function CandidatesPage(props) {
     campaigns,
     visibleMarkers,
     updateVisibleMarkers,
+    filters,
+    onChangeFilters,
   };
 
   return (

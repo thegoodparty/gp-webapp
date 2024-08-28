@@ -28,29 +28,31 @@ const mapOptions = {
   minZoom: 4,
 };
 
-const Map = memo(() => {
-  const { markers, updateVisibleMarkers } = useContext(MapContext);
+const Map = () => {
+  const { markers, updateVisibleMarkers, visibleMarkers } =
+    useContext(MapContext);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey,
   });
   const mapRef = useRef(null);
 
-  const handleBoundsChanged = useCallback(
-    debounce(() => {
-      if (mapRef.current) {
-        const bounds = mapRef.current.getBounds();
-        const filteredMarkers = markers.filter((marker) =>
-          bounds.contains({
-            lat: marker.position.lat,
-            lng: marker.position.lng,
-          }),
-        );
-        updateVisibleMarkers(filteredMarkers);
-      }
-    }, 300),
-    [markers, updateVisibleMarkers],
-  ); // 300ms debounce time, adjust as needed
+  const handleBoundsChanged = useCallback(() => {
+    debounce(updateMarkers);
+  }, [markers, updateVisibleMarkers]);
+
+  const updateMarkers = () => {
+    if (mapRef.current) {
+      const bounds = mapRef.current.getBounds();
+      const filteredMarkers = markers.filter((marker) =>
+        bounds.contains({
+          lat: marker.position.lat,
+          lng: marker.position.lng,
+        }),
+      );
+      updateVisibleMarkers(filteredMarkers);
+    }
+  };
 
   return (
     <div className="h-1/4 md:h-[calc(100vh-56px)]">
@@ -73,7 +75,7 @@ const Map = memo(() => {
       )}
     </div>
   );
-});
+};
 
 Map.displayName = 'Map';
 
