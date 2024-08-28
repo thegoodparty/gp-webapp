@@ -57,7 +57,7 @@ export default function BlogAuthor({
   // "Card" style
   return (
     <div className="flex gap-x-6 mb-12 mt-8">
-      <div className="relative w-15 rounded bg-black">
+      <div className="relative w-15 rounded">
         {imageUrl && (
           <Image
             style={{
