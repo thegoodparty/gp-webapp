@@ -29,7 +29,7 @@ export default function ArticleSnippet({
     return null;
   }
 
-  const { title, mainImage, publishDate, summary, readTime, slug } = article;
+  const { title, mainImage, publishDate, summary, slug } = article;
   const sectionName = section?.fields?.title;
 
   return (
