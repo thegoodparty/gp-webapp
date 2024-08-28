@@ -5,7 +5,13 @@ const invalidDateFormat = (date) =>
 
 const isInvalidDateObject = (date) => typeof date === 'object' && isNaN(date);
 
-export const dateUsHelper = (orgDate) => {
+/**
+ * Helper to format a date to readable string
+ * @param {Date | string | number} orgDate date to format
+ * @param {'short'|'long'} monthFormat option to format month
+ * @returns {string} formatted date string
+ */
+export const dateUsHelper = (orgDate, monthFormat = 'short') => {
   if (invalidDateFormat(orgDate)) {
     return orgDate;
   } else if (isInvalidDateObject(orgDate)) {
@@ -16,7 +22,7 @@ export const dateUsHelper = (orgDate) => {
     const pstDate = new Date(date.getTime() + 8 * ONE_HOUR);
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
-      month: 'short',
+      month: monthFormat,
       day: 'numeric',
     }).format(pstDate);
   } catch (err) {

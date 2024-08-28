@@ -4,40 +4,39 @@
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0.1px;
-  :global(h1) {
-    margin: 24px 0 32px;
-    font-weight: 900;
-    font-size: 28px;
-    @include lg {
-      font-size: 36px;
+
+  :global(a) {
+    color: #1a6afc;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
     }
+  }
+
+  :global(h1) {
+    margin: 32px 0 24px;
+    font-weight: 500;
+    font-size: 36px;
   }
 
   :global(h2) {
-    margin: 24px 0 32px;
-    font-weight: 900;
-    font-size: 20px;
-    @include lg {
-      font-size: 28px;
-    }
+    margin: 32px 0 24px;
+    font-weight: 500;
+    font-size: 28px;
   }
 
   :global(h3) {
-    margin: 20px 0 24px;
-    font-weight: 900;
-    font-size: 18px;
-    @include lg {
-      font-size: 22px;
-    }
+    margin: 24px 0 20px;
+    font-weight: 500;
+    font-size: 22px;
   }
 
   :global(h4) {
-    margin: 20px 0;
-    font-weight: 900;
-    font-size: 16px;
-    @include lg {
-      font-size: 20px;
-    }
+    margin: 24px 0 20px;
+    font-weight: 500;
+    font-size: 20px;
   }
 
   :global(img) {

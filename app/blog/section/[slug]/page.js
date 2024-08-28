@@ -1,11 +1,9 @@
 import { notFound } from 'next/navigation';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import BlogPage from 'app/blog/components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
-import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import BlogSectionPage from './components/BlogSectionPage';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -23,24 +21,23 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const { slug } = params;
+
   if (!slug) {
     notFound();
   }
+
   const { sections, hero, sectionIndex } = await fetchArticlesBySections(slug);
+  const sectionTitle = sections[sectionIndex].fields.title;
 
-  const { titles } = await fetchArticlesTitles();
-
-  const childProps = {
-    sections,
-    sectionSlug: slug,
-    sectionTitle: sections[sectionIndex].fields.title,
-    hero,
-    sectionIndex,
-    section: sections[sectionIndex],
-    articlesTitles: titles,
-  };
-
-  return <BlogPage {...childProps} />;
+  return (
+    <BlogSectionPage
+      sections={sections}
+      sectionTitle={sectionTitle}
+      sectionIndex={sectionIndex}
+      slug={slug}
+      hero={hero}
+    />
+  );
 }
 
 export async function generateStaticParams() {

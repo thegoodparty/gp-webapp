@@ -1,13 +1,9 @@
 import { notFound } from 'next/navigation';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import BlogPage from 'app/blog/components/BlogPage';
 import pageMetaData from 'helpers/metadataHelper';
-import BlogArticleTagPage from './components/BlogArticleTagPage';
-import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
-import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 import { fetchSections } from 'app/blog/shared/fetchSections';
+import BlogTagPage from './components/BlogTagPage';
 
 const fetchArticlesByTag = async (tag) => {
   const api = gpApi.content.articlesByTag;
@@ -38,14 +34,17 @@ export default async function Page({ params }) {
   }
   const { tagName, articles } = await fetchArticlesByTag(tag);
 
-  const sectionsRes = await fetchSections();
-  const sections = sectionsRes.content;
+  if (!articles) {
+    return null;
+  }
 
-  const childProps = {
-    sections,
-    tagName,
-    articles,
-  };
+  const { content: sections } = await fetchSections();
 
-  return <BlogArticleTagPage {...childProps} />;
+  return (
+    <BlogTagPage
+      sections={sections}
+      sectionTitle={tagName}
+      articles={articles}
+    />
+  );
 }

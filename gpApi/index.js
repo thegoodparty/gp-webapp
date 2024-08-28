@@ -108,6 +108,11 @@ const gpApi = {
       withAuth: true,
     },
 
+    mapList: {
+      url: `${base}campaigns/map`,
+      method: 'GET',
+    },
+
     launch: {
       url: `${base}campaign/launch`,
       method: 'POST',
@@ -721,6 +726,10 @@ const gpApi = {
     },
     list: {
       url: `${base}candidates`,
+      method: 'GET',
+    },
+    mapList: {
+      url: `${base}candidates/map`,
       method: 'GET',
     },
   },

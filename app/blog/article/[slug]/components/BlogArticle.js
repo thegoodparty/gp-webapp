@@ -1,13 +1,15 @@
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import BlogWrapper from 'app/blog/shared/BlogWrapper';
 import contentfulHelper from 'helpers/contentfulHelper';
-import { dateUsHelper } from 'helpers/dateHelper';
 import Image from 'next/image';
-import styles from './BlogArticle.module.scss';
 import Banner from './Banner';
 import ShareBlog from 'app/blog/shared/ShareBlog';
 import BlogPopup from './BlogPopup';
 import ArticleTags from './ArticleTags';
+import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import Overline from '@shared/typography/Overline';
+import MarketingH2 from '@shared/typography/MarketingH2';
+import BlogAuthor from './BlogAuthor';
+import BlogAuthorFooter from './BlogAuthorFooter';
+import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 
 export default function BlogArticle({ sections, article }) {
   const {
@@ -23,92 +25,72 @@ export default function BlogArticle({ sections, article }) {
     tags,
   } = article;
   const sectionSlug = section?.fields?.slug;
+  const sectionTitle = section?.fields?.title;
+
+  const breadcrumbs = [
+    { href: '/blog', label: 'Blog' },
+    {
+      href: `/blog/section/${sectionSlug}`,
+      label: sectionTitle,
+    },
+    { label: title },
+  ];
 
   return (
-    <>
-      <BlogWrapper
-        sections={sections}
-        sectionSlug={sectionSlug}
-        isArticle={!!title}
-      >
-        <BlogPopup />
-        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 items-center">
-          {mainImage && (
-            <div>
-              <div className={styles.image}>
-                <Image
-                  src={`https:${mainImage.url}`}
-                  alt={mainImage.alt}
-                  sizes="100vw"
-                  fill
-                  priority
-                />
-              </div>
-            </div>
+    <article className="max-w-[800px] mx-auto px-6 py-8">
+      <BlogPopup />
+      <Breadcrumbs
+        className="!p-0"
+        links={breadcrumbs}
+        delimiter="chevron"
+        wrapText={true}
+      />
+      {mainImage && (
+        <div className="relative min-h-[280px] lg:min-h-[350px] w-full my-8">
+          <Image
+            style={{
+              borderRadius: '10px',
+              objectFit: 'cover',
+              objectPosition: 'center',
+            }}
+            src={`https:${mainImage.url}`}
+            alt={mainImage.alt}
+            sizes="100vw"
+            fill
+            priority
+          />
+        </div>
+      )}
+      <Overline className="inline-block bg-purple-500 text-white px-2 py-1 rounded">
+        {section.fields?.title}
+      </Overline>
+      <MarketingH2 className="mt-8 mb-4" asH1>
+        {title}
+      </MarketingH2>
+      <BlogAuthor
+        imageUrl={author.fields.image?.url}
+        name={author.fields.name}
+        publishDate={publishDate}
+        // updateDate={publishDate}
+      />
+      <ShareBlog />
+      <div className="border-t-[1px] border-b-[1px] border-gray-200 py-8">
+        <div>
+          <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
+          {body2 && banner && <Banner banner={banner} idIndex="1" />}
+          {body2 && (
+            <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
           )}
-          <div>
-            <ShareBlog />
-            <div>
-              <div className={styles.section}>{section.fields?.title}</div>
-              <h1 className={styles.h1}>{title}</h1>
-              <div className={styles.time}>{readingTime?.text}</div>
-              <div className={styles.topAuthorWrapper}>
-                <div className={styles.authorImage}>
-                  {author.fields.image?.url && (
-                    <Image
-                      src={`https:${author.fields.image?.url}`}
-                      alt={mainImage?.alt}
-                      width={60}
-                      height={60}
-                    />
-                  )}
-                </div>
-                <div className={styles.authorNameTop}>
-                  {author.fields.name} &middot; {dateUsHelper(publishDate)}
-                </div>
-              </div>
-            </div>
-          </div>
+          {banner && <Banner banner={banner} idIndex="2" />}
         </div>
-        <div className={styles.maxWidth}>
-          <div className={styles.copy}>
-            <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
-            {body2 && banner && <Banner banner={banner} idIndex="1" />}
-            {body2 && (
-              <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
-            )}
-            {banner && <Banner banner={banner} idIndex="2" />}
-          </div>
-          <ArticleTags tags={tags} />
-
-          <div className={styles.authorWrapper}>
-            <div className={styles.authorInner}>
-              <div className={styles.author}>
-                <div>
-                  {author.fields.image?.url && (
-                    <div className={styles.authorImage}>
-                      <Image
-                        src={`https:${author.fields.image?.url}`}
-                        alt={mainImage?.alt}
-                        width={60}
-                        height={60}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <div className={styles.authorName}>
-                    By {author.fields.name}
-                  </div>
-                  <div className={styles.authorSummary}>
-                    {author.fields.summary}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </BlogWrapper>
-    </>
+        <ArticleTags tags={tags} />
+      </div>
+      <BlogAuthorFooter
+        imageUrl={author.fields.image?.url}
+        name={author.fields.name}
+        summary={author.fields.summary}
+        asFooter={true}
+      />
+    </article>
   );
 }
