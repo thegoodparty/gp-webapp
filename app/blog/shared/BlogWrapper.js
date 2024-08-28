@@ -75,7 +75,7 @@ export default function BlogWrapper({
           ))}
         </nav>
 
-        <BlogH1>{sectionTitle ? sectionTitle : 'Blog'}</BlogH1>
+        <BlogH1 className="mt-8">{sectionTitle ? sectionTitle : 'Blog'}</BlogH1>
         {!sectionTitle && (
           <p className="font-light mb-6">
             Insights into politics, running for office, and the latest updates
