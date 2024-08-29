@@ -42,6 +42,11 @@ export default function BlogWrapper({
     { label: sectionTitle },
   ];
 
+  // ensure sections are ordered correctly
+  const sortedSections = sections.sort(
+    (a, b) => Number(a.fields?.order) - Number(b.fields?.order),
+  );
+
   return (
     <>
       <StickersCallout />
