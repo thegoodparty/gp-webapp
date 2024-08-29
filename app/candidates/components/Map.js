@@ -43,7 +43,7 @@ const Map = () => {
   };
 
   return (
-    <div className="h-1/4 md:h-[calc(100vh-56px)]">
+    <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)]">
       {isLoaded ? (
         <>
           <GoogleMap

@@ -122,7 +122,10 @@ export default function CandidatesPage(props) {
   };
 
   const onSelectCampaign = (campaign) => {
-    if (selectedCampaign && selectedCampaign.slug === campaign.slug) {
+    if (
+      !campaign ||
+      (selectedCampaign && selectedCampaign.slug === campaign.slug)
+    ) {
       setSelectedCampaign(null);
       return;
     }
