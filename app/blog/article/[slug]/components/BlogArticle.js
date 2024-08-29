@@ -46,7 +46,7 @@ export default function BlogArticle({ sections, article }) {
         wrapText={true}
       />
       {mainImage && (
-        <div className="relative min-h-[280px] lg:min-h-[350px] w-full my-8">
+        <div className="relative min-h-[270px] w-full my-8">
           <Image
             style={{
               borderRadius: '10px',
@@ -64,16 +64,18 @@ export default function BlogArticle({ sections, article }) {
       <Overline className="inline-block bg-purple-500 text-white px-2 py-1 rounded">
         {section.fields?.title}
       </Overline>
-      <MarketingH2 className="mt-8 mb-4" asH1>
+      <MarketingH2 className="mt-8 mb-4 !text-4xl" asH1>
         {title}
       </MarketingH2>
-      <BlogAuthor
-        imageUrl={author.fields.image?.url}
-        name={author.fields.name}
-        publishDate={publishDate}
-        // updateDate={publishDate}
-      />
-      <ShareBlog />
+      <div class="md:flex items-center justify-between">
+        <BlogAuthor
+          imageUrl={author.fields.image?.url}
+          name={author.fields.name}
+          publishDate={publishDate}
+          // updateDate={publishDate}
+        />
+        <ShareBlog />
+      </div>
       <div className="border-t-[1px] border-b-[1px] border-gray-200 py-8">
         <div>
           <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
