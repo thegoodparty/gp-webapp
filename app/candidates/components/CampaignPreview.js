@@ -7,6 +7,7 @@ import { MdStars } from 'react-icons/md';
 import Overline from '@shared/typography/Overline';
 import H2 from '@shared/typography/H2';
 import H5 from '@shared/typography/H5';
+import Image from 'next/image';
 
 export default function CampaignPreview() {
   const { selectedCampaign } = useContext(MapContext);
