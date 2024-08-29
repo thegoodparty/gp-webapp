@@ -43,15 +43,15 @@ export default function CampaignPreview() {
           {firstName} {lastName}
         </H2>
         <div className="flex mb-3 items-center">
-          <MdStars className="text-secondary-light" size={20} />
+          <MdStars className="text-blue" size={20} />
           <H5 className="ml-2">{party}</H5>
         </div>
         <div className="flex mb-3 items-center">
-          <IoPersonSharp className="text-secondary-light" size={20} />
+          <IoPersonSharp className="text-blue" size={20} />
           <H5 className="ml-2">Running for {office}</H5>
         </div>
         <div className="flex  items-center mb-8">
-          <FaMapMarkerAlt className="text-secondary-light" size={20} />
+          <FaMapMarkerAlt className="text-blue" size={20} />
           <H5 className="ml-2">
             {city ? `${city}, ` : ''}
             {state}
