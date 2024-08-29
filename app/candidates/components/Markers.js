@@ -4,7 +4,7 @@ import { MapContext } from './CandidatesPage';
 import { Marker, MarkerClusterer } from '@react-google-maps/api';
 
 export default function Markers() {
-  const { visibleMarkers } = useContext(MapContext);
+  const { visibleMarkers, onSelectCampaign } = useContext(MapContext);
 
   return (
     <MarkerClusterer
@@ -20,6 +20,9 @@ export default function Markers() {
             clusterer={clusterer}
             position={marker.position}
             icon={{ url: 'https://assets.goodparty.org/heart-hologram.svg' }}
+            onClick={() => {
+              onSelectCampaign(marker);
+            }}
           />
         ))
       }
