@@ -42,6 +42,11 @@ export default function BlogWrapper({
     { label: sectionTitle },
   ];
 
+  // ensure sections are ordered correctly
+  const sortedSections = sections.sort(
+    (a, b) => Number(a.fields?.order) - Number(b.fields?.order),
+  );
+
   return (
     <>
       <StickersCallout />
@@ -63,7 +68,7 @@ export default function BlogWrapper({
             </CategoryButton>
           </Link>
 
-          {sections.map((section, index) => (
+          {sortedSections.map((section, index) => (
             <Link
               key={section.fields.slug}
               href={`/blog/section/${section.fields.slug}`}
