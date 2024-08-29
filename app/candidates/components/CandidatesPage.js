@@ -1,11 +1,19 @@
 'use client';
 import Hero from './Hero';
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useRef, useState } from 'react';
 import Map from './Map';
 import Results from './Results';
 import Filters from './Filters';
+import { useJsApiLoader } from '@react-google-maps/api';
 
 export const MapContext = createContext();
+
+const center = {
+  lat: 39.8283,
+  lng: -98.5795,
+};
+
+const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
 export default function CandidatesPage(props) {
   const { campaigns } = props;
@@ -20,10 +28,21 @@ export default function CandidatesPage(props) {
     };
   });
 
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: apiKey,
+    libraries: ['places'], // Load the places library for search
+  });
+
+  const mapRef = useRef(null);
   const [markers, _] = useState(initMarkers);
   const [visibleMarkers, setVisibleMarkers] = useState(initMarkers);
+  const [mapCenter, setMapCenter] = useState(center);
+  const [zoom, setZoom] = useState(5);
   const [filters, setFilters] = useState({
     party: '',
+    level: '',
+    results: '',
   });
 
   const onChangeFilters = useCallback((key, val) => {
@@ -42,7 +61,61 @@ export default function CandidatesPage(props) {
         (marker) => marker.party === updatedFilters.party,
       );
     }
+    if (updatedFilters.level && updatedFilters.level !== '') {
+      currentMarkers = currentMarkers.filter(
+        (marker) => marker.ballotLevel === updatedFilters.level,
+      );
+    }
+    if (updatedFilters.results && updatedFilters.results !== '') {
+      currentMarkers = currentMarkers.filter((marker) => {
+        // updated filters values are win lose and running
+        // marker results (didWin) are true, false, and null
+        if (updatedFilters.results === 'win') {
+          return marker.didWin === true;
+        }
+        if (updatedFilters.results === 'lose') {
+          return marker.didWin === false;
+        }
+        if (updatedFilters.results === 'running') {
+          return marker.didWin === null;
+        }
+      });
+    }
+
     setVisibleMarkers(currentMarkers);
+  };
+
+  const onPlacesChanged = (places) => {
+    if (places.length > 0) {
+      const place = places[0];
+      const location = place.geometry.location;
+      if (mapRef.current) {
+        const map = mapRef.current;
+
+        // Step 1: Zoom out
+        map.setZoom(4);
+
+        // Step 2: Pan to the new location
+        setTimeout(() => {
+          map.panTo({ lat: location.lat(), lng: location.lng() });
+
+          // Step 3: Smoothly zoom in
+          const smoothZoom = (map, targetZoom, currentZoom) => {
+            if (currentZoom >= targetZoom) return;
+            const zoomStep = currentZoom + 1;
+            map.setZoom(zoomStep);
+
+            // Use setTimeout for a smooth transition
+            setTimeout(() => {
+              smoothZoom(map, targetZoom, zoomStep);
+            }, 200); // Adjust the delay for smoother or faster transitions
+          };
+
+          // Start smooth zoom
+          smoothZoom(map, 13, 4); // Adjust final zoom level and initial zoom level as needed
+        }, 500); // Delay to allow pan to start
+      }
+    }
   };
 
   const childProps = {
@@ -52,7 +125,14 @@ export default function CandidatesPage(props) {
     updateVisibleMarkers,
     filters,
     onChangeFilters,
+    onPlacesChanged,
+    mapCenter,
+    isLoaded,
+    zoom,
+    mapRef,
   };
+
+  console.log('markers', markers);
 
   return (
     <MapContext.Provider value={childProps}>
