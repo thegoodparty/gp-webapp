@@ -5,6 +5,8 @@ import Map from './Map';
 import Results from './Results';
 import Filters from './Filters';
 import { useJsApiLoader } from '@react-google-maps/api';
+import { Campaign } from '@mui/icons-material';
+import CampaignPreview from './CampaignPreview';
 
 export const MapContext = createContext();
 
@@ -39,6 +41,7 @@ export default function CandidatesPage(props) {
   const [visibleMarkers, setVisibleMarkers] = useState(initMarkers);
   const [mapCenter, setMapCenter] = useState(center);
   const [zoom, setZoom] = useState(5);
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [filters, setFilters] = useState({
     party: '',
     level: '',
@@ -118,6 +121,19 @@ export default function CandidatesPage(props) {
     }
   };
 
+  const onSelectCampaign = (campaign) => {
+    if (selectedCampaign && selectedCampaign.slug === campaign.slug) {
+      setSelectedCampaign(null);
+      return;
+    }
+    setMapCenter({
+      lat: campaign.geoLocation.lat,
+      lng: campaign.geoLocation.lng,
+    });
+    setZoom(13);
+    setSelectedCampaign(campaign);
+  };
+
   const childProps = {
     markers,
     campaigns,
@@ -130,6 +146,8 @@ export default function CandidatesPage(props) {
     isLoaded,
     zoom,
     mapRef,
+    onSelectCampaign,
+    selectedCampaign,
   };
 
   console.log('markers', markers);
@@ -144,6 +162,7 @@ export default function CandidatesPage(props) {
         <div className="flex flex-col  shadow-lg relative z-20">
           <Filters />
           <Results />
+          <CampaignPreview />
         </div>
       </div>
     </MapContext.Provider>

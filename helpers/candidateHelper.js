@@ -1,5 +1,5 @@
 import React from 'react';
-import { toPrecision } from './numberHelper';
+import { shortToLongState } from 'helpers/statesHelper';
 
 // returns only articles that match the page.
 import { slugify } from './articleHelper';
