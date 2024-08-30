@@ -52,14 +52,14 @@ export async function generateMetadata({ params }) {
     normalizedPositionName,
   } = race || {};
   let locStr = locationName;
-  if (level === 'local') {
+  if (!level || level.toLowerCase() === 'local') {
     locStr += `${race.municipality?.name}, ${race.state.toUpperCase()}`;
   }
-  if (level === 'city') {
+  if (level.toLowerCase() === 'city') {
     locStr += ` City, ${race.state.toUpperCase()}`;
-  } else if (level === 'county') {
+  } else if (level.toLowerCase() === 'county') {
     locStr += ` County, ${race.state.toUpperCase()}`;
-  } else if (level === 'state') {
+  } else if (level.toLowerCase() === 'state') {
     // locStr += ` ${race.state.toUpperCase()}`
   }
 
