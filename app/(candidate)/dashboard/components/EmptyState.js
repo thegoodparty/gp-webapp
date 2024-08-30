@@ -1,28 +1,36 @@
+import WandAnimation from '@shared/animations/WandAnimation';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
-import H2 from '@shared/typography/H2';
-import Image from 'next/image';
-import emptyImg from 'public/images/dashboard/empty-dashboard.jpg';
-import { FaLock } from 'react-icons/fa';
+import H3 from '@shared/typography/H3';
+import Paper from '@shared/utils/Paper';
+import Link from 'next/link';
 
-export default function EmptyState() {
+export default function EmptyState({ campaign }) {
+  const { office, otherOffice } = campaign?.details || {};
+  const resolvedOffice = office === 'Other' ? otherOffice : office;
   return (
-    <div className="relative h-[calc(100vh-60px)] max-w-[940px] mx-auto">
-      <Image
-        src={emptyImg}
-        alt="Empty Dashboard"
-        fill
-        className=" object-contain object-top hidden lg:block"
-      />
-      <div className="absolute h-full w-full flex items-center justify-center">
-        <div className="p-10 bg-white rounded-3xl flex flex-col items-center max-w-xl text-center">
-          <FaLock />
-          <H2 className="mt-10 mb-8">We&apos;ll have this for you shortly</H2>
-          <Body1>
-            We&apos;re working on gathering more information needed for this
-            section. Hang tight while our team gathers this information for you.
+    <Paper>
+      <div className="p-4 md:py-8 lg:py-12 flex items-center justify-center">
+        <div className="flex flex-col items-center text-center ">
+          <div className="h-24 w-24">
+            <WandAnimation loop />
+          </div>
+          <H3 className="mt-4">
+            We&apos;re currently gathering the necessary data for{' '}
+            <strong>{resolvedOffice}.</strong>
+          </H3>
+          <Body1 className="mt-4">
+            Please check back soon, and we&apos;ll have the information ready
+            for you. It takes up to 72 hours.
+            <br />
+            If you need assistance in the meantime, feel free to contact our
+            support team.
           </Body1>
+          <Link href="/pro-consultation">
+            <PrimaryButton className="mt-8">Contact Us</PrimaryButton>
+          </Link>
         </div>
       </div>
-    </div>
+    </Paper>
   );
 }
