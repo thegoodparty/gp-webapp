@@ -14,14 +14,14 @@ export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props;
   const { level, state, locationName } = race;
   let loc = locationName;
-  if (level === 'local') {
+  if (!level || level.toLowerCase() === 'local') {
     loc += `${race.municipality?.name}, ${race.state.toUpperCase()}`;
   }
-  if (level === 'city') {
+  if (level.toLowerCase() === 'city') {
     loc += `, ${state.toUpperCase()}`;
-  } else if (level === 'county') {
+  } else if (level.toLowerCase() === 'county') {
     loc += ` County, ${state.toUpperCase()}`;
-  } else if (level === 'state') {
+  } else if (level.toLowerCase() === 'state') {
   }
 
   const positionLink = (race) => {
