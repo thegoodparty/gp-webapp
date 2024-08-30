@@ -164,7 +164,7 @@ export default function DashboardPage(props) {
             )}
           </>
         ) : (
-          <EmptyState />
+          <EmptyState campaign={campaign} />
         )}
       </div>
     </DashboardLayout>
