@@ -1,4 +1,5 @@
-import UpgradeToProPage from './components/ProMeetingPage';
+import { redirect } from 'next/navigation';
+// import UpgradeToProPage from './components/ProMeetingPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 const meta = pageMetaData({
@@ -11,5 +12,6 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  return <UpgradeToProPage />;
+  redirect('/dashboard/upgrade-to-pro');
+  // return <UpgradeToProPage />;
 }
