@@ -10,11 +10,7 @@ const defaultFileTypes = [
       'Voter file (All Fields)',
       'Voter file',
       'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE VOTERS"
-      />,
+      'All Available Voters',
     ],
   },
   {
@@ -24,26 +20,13 @@ const defaultFileTypes = [
       'Door Knocking (Default)',
       'Door Knocking',
       'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE ADDRESSES"
-      />,
+      'All Available Addresses',
     ],
   },
   {
     key: 'sms',
     name: `SMS Texting - ${date}`,
-    fields: [
-      'Texting (Default)',
-      'Texting',
-      'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE PHONES"
-      />,
-    ],
+    fields: ['Texting (Default)', 'Texting', 'All', 'All Available Phones'],
   },
   {
     key: 'directMail',
@@ -52,11 +35,7 @@ const defaultFileTypes = [
       'Direct Mail (Default)',
       'Direct Mail',
       'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE ADDRESSES"
-      />,
+      'All Available Addresses',
     ],
   },
   {
@@ -66,11 +45,7 @@ const defaultFileTypes = [
       'Digital Advertising (Default)',
       'Facebook',
       'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE SOCIAL"
-      />,
+      'All Available Social',
     ],
   },
   {
@@ -80,11 +55,7 @@ const defaultFileTypes = [
       'Phone Banking (Default)',
       'Phone Banking',
       'All',
-      <Chip
-        key="all"
-        className="bg-gray-700 text-white"
-        label="ALL AVAILABLE LANDLINES"
-      />,
+      'All Available Landlines',
     ],
   },
 ];

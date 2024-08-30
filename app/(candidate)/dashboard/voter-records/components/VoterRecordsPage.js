@@ -20,7 +20,7 @@ import { slugify } from 'helpers/articleHelper';
 import voterFileTypes from './VoterFileTypes';
 import NeedHelp from './NeedHelp';
 
-const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE', 'ACTIONS'];
+const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE'];
 
 export async function fetchVoterFile(type, customFilters) {
   try {
@@ -65,11 +65,7 @@ export default function VoterRecordsPage(props) {
             file.name,
             file.channel,
             file.purpose || '',
-            <Chip
-              key="custom"
-              className="bg-orange-700 text-white"
-              label="CUSTOM VOTER FILE"
-            />,
+            'Custom Voter File',
           ],
         });
       });
@@ -154,19 +150,17 @@ export default function VoterRecordsPage(props) {
                 />
               </div>
             </div>
-            <div className="mt-8 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 border-x border-x-gray-200 ">
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 border-x border-x-gray-200 ">
               {tableHeaders.map((header, index) => (
                 <div
                   className={` bg-primary text-white p-4 ${
                     index === 0 ? 'rounded-tl-lg' : ''
                   } ${
-                    index === tableHeaders.length - 1
-                      ? 'rounded-tr-lg text-right'
-                      : ''
-                  } ${
-                    index === tableHeaders.length - 1 || index === 2
-                      ? 'col-span-1'
-                      : 'col-span-2'
+                    index === tableHeaders.length - 1 ? 'rounded-tr-lg ' : ''
+                  } ${index === 2 ? 'rounded-tr-lg lg:rounded-none' : ''} ${
+                    index === 1 ? 'rounded-tr-lg md:rounded-none' : ''
+                  } ${index === 0 ? 'rounded-tr-lg sm:rounded-none' : ''} ${
+                    index === 2 ? 'col-span-1' : 'col-span-2'
                   } ${header === 'AUDIENCE' ? 'hidden lg:block' : ''}
               
               ${header === 'PURPOSE' ? 'hidden md:block' : ''} ${
@@ -184,14 +178,10 @@ export default function VoterRecordsPage(props) {
                       key={`${file.key}-${index2}`}
                       className={`p-4 border-b border-b-gray-200 ${
                         index % 2 !== 0 ? ' bg-indigo-50' : ''
-                      } ${
-                        index2 === tableHeaders.length - 1 || index2 === 2
-                          ? 'col-span-1'
-                          : 'col-span-2'
-                      }
+                      } ${index2 === 2 ? 'col-span-1' : 'col-span-2'}
                   
-                  ${index2 === 3 ? 'hidden lg:block' : ''} ${
-                        index2 === 2 ? 'hidden md:block' : ''
+                  ${index2 === 3 ? 'hidden lg:block ' : ''} ${
+                        index2 === 2 ? 'hidden md:block ' : ''
                       }${index2 === 1 ? 'hidden sm:block' : ''}`}
                     >
                       <Link
@@ -213,34 +203,15 @@ export default function VoterRecordsPage(props) {
                       </Link>
                     </div>
                   ))}
-
-                  <div
-                    className={`col-span-1 p-4 border-b border-b-gray-200 flex justify-end ${
-                      index % 2 !== 0 ? ' bg-indigo-50' : ''
-                    }`}
-                  >
-                    {loading === `index-${index}` ? (
-                      <div className="mr-3 cursor-not-allowed">
-                        <CircularProgress size={20} />
-                      </div>
-                    ) : (
-                      <FaDownload
-                        className={`mr-3 cursor-pointer ${
-                          loading ? 'opacity-50' : ''
-                        }`}
-                        onClick={() => {
-                          handleDownload(
-                            file.key,
-                            file.isCustom,
-                            file.name,
-                            index,
-                          );
-                        }}
-                      />
-                    )}
-                  </div>
                 </Fragment>
               ))}
+            </div>
+            <div className="mt-8 flex justify-center">
+              <CustomVoterFile
+                {...props}
+                reloadCampaignCallback={reloadCampaign}
+                campaign={campaign}
+              />
             </div>
           </>
         ) : (
