@@ -3,7 +3,6 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { useCallback, useContext } from 'react';
 import mapSkin from './mapSkin';
 import Markers from './Markers';
-import LoadingMapAnimation from '@shared/animations/LoadingMapAnimation';
 import H3 from '@shared/typography/H3';
 import { MapContext } from './CandidatesPage';
 import { debounce } from 'helpers/debounceHelper';
@@ -60,7 +59,6 @@ const Map = () => {
       ) : (
         <div className="h-[calc(100vh-56px)] flex flex-col items-center justify-center mb-4 py-4">
           <H3>Loading...</H3>
-          <LoadingMapAnimation />
         </div>
       )}
     </div>

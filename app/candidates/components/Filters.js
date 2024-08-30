@@ -23,7 +23,6 @@ const levelOptions = [
 const resultsOptions = [
   // win lose or running
   { key: 'win', label: 'Win' },
-  { key: 'lose', label: 'Lose' },
   { key: 'running', label: 'Running' },
 ];
 
