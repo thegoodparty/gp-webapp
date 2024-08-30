@@ -47,7 +47,6 @@ async function wakeUp() {
 }
 
 export default function VoterRecordsPage(props) {
-  const [loading, setLoading] = useState(false);
   const [campaign, setCampaign] = useState(props.campaign);
   const addCustomVoterFiles = () => {
     if (
@@ -84,44 +83,6 @@ export default function VoterRecordsPage(props) {
     const updatedFiles = addCustomVoterFiles();
     setVoterFiles(updatedFiles);
   }, [campaign]);
-
-  const handleDownload = async (type, isCustom, name, index) => {
-    if (loading) {
-      return;
-    }
-    setLoading(`index-${index}`);
-    let response;
-    if (isCustom) {
-      trackEvent('Download Voter File attempt', { type: 'custom' });
-      const customFilters = campaign.data.customVoterFiles[type];
-      response = await fetchVoterFile('custom', customFilters);
-    } else {
-      response = await fetchVoterFile(type);
-      trackEvent('Download Voter File attempt', { type });
-    }
-
-    if (response) {
-      // Read the response as Blob
-      const blob = await response.blob();
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `${name}.csv`);
-      document.body.appendChild(link);
-      link.click();
-
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-      trackEvent('Download Voter File Success', { type });
-    } else {
-      trackEvent('Download Voter File Failure', {
-        type,
-        slug: props.campaign.slug,
-      });
-    }
-    setLoading(false);
-  };
 
   const reloadCampaign = async () => {
     const res = await getCampaign();
