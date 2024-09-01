@@ -735,4 +735,19 @@ const gpApi = {
   },
 };
 
+// replacing all non authenticated routes with apiBase
+replaceBase(gpApi);
+
+function replaceBase(obj) {
+  Object.keys(obj).forEach((key) => {
+    if (typeof obj[key].url === 'string') {
+      if (!obj[key].withAuth) {
+        obj[key].url = obj[key].url.replace(appBase, apiBase);
+      }
+    } else {
+      replaceBase(obj[key]);
+    }
+  });
+}
+
 export default gpApi;
