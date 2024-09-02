@@ -15,6 +15,9 @@ const base = `${appBase}/api/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
+console.log('apiBase', apiBase);
+console.log('appBase', appBase);
+
 const gpApi = {
   homepage: {
     subscribeEmail: {
@@ -753,4 +756,5 @@ function replaceBase(obj) {
   });
 }
 
+console.log('gpApi', gpApi);
 export default gpApi;

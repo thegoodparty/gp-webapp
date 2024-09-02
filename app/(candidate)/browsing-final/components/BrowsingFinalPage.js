@@ -51,7 +51,7 @@ export default function BrowsingFinalPage() {
       <div className="text-center mb-8 pt-8">
         <H1>How would you like to demo GoodParty.org?</H1>
         <Body2 className="mt-3">
-          Please select which office you’d like to browse:
+          Please select which office you&apos;d like to browse:
         </Body2>
       </div>
       <RadioList
