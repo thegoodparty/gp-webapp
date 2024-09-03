@@ -3,6 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useState } from 'react';
 import { fetchVoterFile } from '../../components/VoterRecordsPage';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import { CircularProgress } from '@mui/material';
 
 export default function DownloadFile(props) {
   const [loading, setLoading] = useState(false);
@@ -48,7 +49,12 @@ export default function DownloadFile(props) {
 
   return (
     <div className="mt-3 md:mt-0">
-      <PrimaryButton disabled={loading} onClick={handleDownload} fullWidth>
+      <PrimaryButton
+        disabled={loading}
+        onClick={handleDownload}
+        fullWidth
+        loading={loading}
+      >
         Download CSV
       </PrimaryButton>
     </div>

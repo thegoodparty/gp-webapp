@@ -1,4 +1,7 @@
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
+if (!apiBase) {
+  apiBase = 'https://api-dev.goodparty.org';
+}
 
 // CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
@@ -734,5 +737,20 @@ const gpApi = {
     },
   },
 };
+
+// replacing all non authenticated routes with apiBase
+replaceBase(gpApi);
+
+function replaceBase(obj) {
+  Object.keys(obj).forEach((key) => {
+    if (typeof obj[key].url === 'string') {
+      if (!obj[key].withAuth) {
+        obj[key].url = obj[key].url.replace(appBase, apiBase);
+      }
+    } else {
+      replaceBase(obj[key]);
+    }
+  });
+}
 
 export default gpApi;
