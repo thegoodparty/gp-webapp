@@ -11,7 +11,7 @@ export let appBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
-const base = `${appBase}/api/v1/`;
+let base = `${appBase}/api/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
