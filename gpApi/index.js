@@ -17,6 +17,7 @@ export const isProd = apiBase === 'https://api.goodparty.org';
 
 if (!appBase) {
   appBase = `https://${process.env.VERCEL_URL}`;
+  base = `${appBase}/api/v1/`;
 }
 
 console.log('apiBase', apiBase);
