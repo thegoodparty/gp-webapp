@@ -20,9 +20,6 @@ if (!appBase) {
   base = `${appBase}/api/v1/`;
 }
 
-console.log('apiBase', apiBase);
-console.log('appBase', appBase);
-
 const gpApi = {
   homepage: {
     subscribeEmail: {
@@ -761,5 +758,4 @@ function replaceBase(obj) {
   });
 }
 
-console.log('gpApi', gpApi);
 export default gpApi;
