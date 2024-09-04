@@ -10,8 +10,10 @@ import MarketingH2 from '@shared/typography/MarketingH2';
 import BlogAuthor from './BlogAuthor';
 import BlogAuthorFooter from './BlogAuthorFooter';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
+import ArticleFaqs from './ArticleFaqs';
+import ScrollToTop from './ScrollToTop';
 
-export default function BlogArticle({ sections, article }) {
+export default function BlogArticlePage({ sections, article }) {
   const {
     section,
     author,
@@ -37,7 +39,7 @@ export default function BlogArticle({ sections, article }) {
   ];
 
   return (
-    <article className="max-w-[800px] mx-auto px-6 py-8">
+    <article id="article-top" className="max-w-[800px] mx-auto px-6 py-8">
       <BlogPopup />
       <Breadcrumbs
         className="!p-0"
@@ -67,7 +69,7 @@ export default function BlogArticle({ sections, article }) {
       <MarketingH2 className="mt-8 mb-4 !text-4xl" asH1>
         {title}
       </MarketingH2>
-      <div class="md:flex items-center justify-between">
+      <div className="md:flex items-center justify-between">
         <BlogAuthor
           imageUrl={author.fields.image?.url}
           name={author.fields.name}
@@ -83,9 +85,14 @@ export default function BlogArticle({ sections, article }) {
           {body2 && (
             <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
           )}
-          {banner && <Banner banner={banner} idIndex="2" />}
         </div>
-        <ArticleTags tags={tags} />
+        <ShareBlog className="mt-8" />
+        {banner && <Banner banner={banner} idIndex="2" />}
+        <ArticleFaqs />
+        <div className="relative">
+          <ArticleTags tags={tags} />
+          <ScrollToTop />
+        </div>
       </div>
       <BlogAuthorFooter
         imageUrl={author.fields.image?.url}

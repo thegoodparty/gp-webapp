@@ -1,0 +1,11 @@
+.wrapper {
+  :global(.MuiInputBase-root) {
+    margin-top: 8px;
+    border-radius: 8px !important;
+    font-family: inherit;
+
+    fieldset {
+      bottom: 4px;
+    }
+  }
+}

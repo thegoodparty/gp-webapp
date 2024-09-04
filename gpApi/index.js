@@ -80,6 +80,10 @@ const gpApi = {
       url: `${base}content/blog-articles-by-tag`,
       method: 'GET',
     },
+    articleTags: {
+      url: `${base}content/article-tags`,
+      method: 'GET',
+    },
   },
 
   campaign: {
