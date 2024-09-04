@@ -24,7 +24,7 @@ const pathToVictoryExample = {
 };
 
 export function P2vModal({ triggerElement, pathToVictory = {} }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const {
     totalRegisteredVoters,
