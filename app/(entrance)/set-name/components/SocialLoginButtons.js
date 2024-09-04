@@ -65,7 +65,7 @@ export default function SocialLoginButtons() {
     const { user, token } = await login(payload);
     if (user) {
       setUser(user);
-      saveToken(token);
+      await saveToken(token);
       snackbarState.set(() => {
         return {
           isOpen: true,
