@@ -403,6 +403,13 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    files: {
+      generateSignedUploadUrl: {
+        url: `${base}user/files/generate-signed-upload-url`,
+        method: 'PUT',
+        withAuth: true,
+      },
+    },
   },
   //
   // admin
@@ -748,11 +755,11 @@ replaceBase(gpApi);
 
 function replaceBase(obj) {
   Object.keys(obj).forEach((key) => {
-    if (typeof obj[key].url === 'string') {
+    if (obj[key].url && typeof obj[key].url === 'string') {
       if (!obj[key].withAuth) {
         obj[key].url = obj[key].url.replace(appBase, apiBase);
       }
-    } else {
+    } else if (typeof obj[key] === 'object') {
       replaceBase(obj[key]);
     }
   });
