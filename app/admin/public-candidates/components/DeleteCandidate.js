@@ -5,6 +5,7 @@ import { useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { revalidatePage } from 'helpers/cacheHelper';
 
 export async function deleteCandidate(path) {
   try {
@@ -29,6 +30,7 @@ export default function DeleteCandidate() {
 
   const handleDelete = async () => {
     await deleteCandidate(path);
+    await revalidatePage('/candidate/[name]/[office]');
     setShowWarning(false);
     setPath('');
   };
