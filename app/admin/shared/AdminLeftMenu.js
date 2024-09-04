@@ -34,6 +34,10 @@ export const leftMenuItems = [
     label: 'Pro users w/o voter file',
     link: '/admin/pro-no-voter-file',
   },
+  {
+    label: 'Public Candidates',
+    link: '/admin/public-candidates',
+  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {
