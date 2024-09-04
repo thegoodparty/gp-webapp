@@ -20,6 +20,7 @@ import { useUser } from '@shared/hooks/useUser';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
 import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginButtons';
+import saveToken from 'helpers/saveToken';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -55,11 +56,12 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user } = await login(state.email, state.password);
+      const { user, token } = await login(state.email, state.password);
 
       if (user) {
         setUserCookie(user);
         setUser(user);
+        saveToken(token);
 
         const returnUrl = getCookie('returnUrl');
         if (returnUrl) {

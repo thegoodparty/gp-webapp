@@ -98,12 +98,7 @@ export default async function middleware(req) {
       { status: 301 },
     );
   }
-  const apiRewriteRequest =
-    pathname.startsWith('/api/v1') &&
-    !pathname.includes('login') &&
-    !pathname.includes('register') &&
-    !pathname.includes('social-login') &&
-    !pathname.includes('logout');
+  const apiRewriteRequest = pathname.startsWith('/api/v1');
 
   if (apiRewriteRequest) {
     return await handleApiRequestRewrite(req);

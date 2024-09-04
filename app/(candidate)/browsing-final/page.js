@@ -5,7 +5,7 @@ import BrowsingFinalPage from './components/BrowsingFinalPage';
 
 const meta = pageMetaData({
   title: 'How would you like to demo GoodParty.org?',
-  description: 'Please select which office you’d like to browse',
+  description: "Please select which office you'd like to browse",
   slug: '/browsing-final',
 });
 export const metadata = meta;
