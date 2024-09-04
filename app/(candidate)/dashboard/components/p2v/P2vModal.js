@@ -24,7 +24,7 @@ const pathToVictoryExample = {
 };
 
 export function P2vModal({ triggerElement, pathToVictory = {} }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const {
     totalRegisteredVoters,
@@ -59,40 +59,75 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
           <H1 className="text-center mb-8">
             Understanding Your Path to Victory
           </H1>
-          <Body1>
-            You have{' '}
-            <strong>{numberFormatter(totalRegisteredVoters)} voters</strong> in
-            your district.
-            <br />
-            Expected <strong>voter turnout is {turnoutPerc}%*</strong> in your
-            race. <br />
-            That means,{' '}
-            <strong>
-              approx. {numberFormatter(projectedTurnout)} people
-            </strong>{' '}
-            will vote in your election.
-            <br />
-            <br />
-            You need a minimum of <strong>51%</strong> of those votes. <br />
-            You should target{' '}
-            <strong>{numberFormatter(winNumber)} votes**</strong> in order to
-            win.
-            <br />
-            <br />
-            You need to contact those{' '}
-            <strong>
-              {numberFormatter(winNumber)} voters a minimum of 5x.
-            </strong>{' '}
-            <br />
-            That equals{' '}
-            <strong>{numberFormatter(voterContactGoal)} voter contacts.</strong>
-          </Body1>
-          <Body2 className="mt-8 text-gray-600">
-            * Your turnout rate is calculated by the last 3 election cycles.
-            <br />
-            ** A margin of 2.5% has been added to the minimum projected number
-            of votes needed to win.
-          </Body2>
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-12 md:col-span-10">
+              <Body1 className="mb-8">
+                <strong>Your Path to Victory:</strong>
+              </Body1>
+              <ul>
+                <li>
+                  <Body1>
+                    <strong>
+                      {numberFormatter(totalRegisteredVoters)} Total Voters
+                    </strong>{' '}
+                    (in your district)
+                  </Body1>
+                </li>
+                <li>
+                  <Body1>
+                    <strong>
+                      {numberFormatter(projectedTurnout)} Expected Voters
+                    </strong>{' '}
+                    (based on {turnoutPerc}% turnout)
+                  </Body1>
+                </li>
+                <li>
+                  <Body1>
+                    <strong>
+                      {numberFormatter(winNumber)}Votes Needed to Win
+                    </strong>{' '}
+                    (this includes a small safety margin)
+                  </Body1>
+                </li>
+              </ul>
+              <Body1 className="my-8">
+                <strong>What You Need to Do:</strong>
+              </Body1>
+              <ul>
+                <li>
+                  <Body1>
+                    <strong>Contact {numberFormatter(winNumber)} Voters</strong>{' '}
+                    (aim to reach each one at least 5 times)
+                  </Body1>
+                </li>
+                <li>
+                  <Body1>
+                    <strong>
+                      {numberFormatter(voterContactGoal)} Total Contacts Needed{' '}
+                    </strong>{' '}
+                    to ensure you turn out enough voters
+                  </Body1>
+                </li>
+              </ul>
+            </div>
+
+            <div className="hidden md:flex flex-col md:col-span-2 tracking-wide  h-full  text-right justify-between font-normal font-sfpro text-base pb-4">
+              <div> {numberFormatter(totalRegisteredVoters)}</div>
+              <div>x {turnoutPerc}%</div>
+              <div className="h-[1px] bg-slate-300"></div>
+
+              <div>{numberFormatter(projectedTurnout)}</div>
+              <div>x 50%</div>
+              <div className="h-[1px] bg-slate-300"></div>
+
+              <div>{numberFormatter(winNumber)}</div>
+              <div>x 5</div>
+              <div className="h-[1px] bg-slate-300"></div>
+
+              <div>{numberFormatter(voterContactGoal)}</div>
+            </div>
+          </div>
+
           <PrimaryButton
             fullWidth
             className="mt-8"
