@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
 
 const dbRedirects = {
   '/bz':
@@ -96,6 +97,11 @@ export default async function middleware(req) {
       `${req.nextUrl.origin}${url}${req.nextUrl.search || ''}`,
       { status: 301 },
     );
+  }
+  const apiRewriteRequest = pathname.startsWith('/api/v1');
+
+  if (apiRewriteRequest) {
+    return await handleApiRequestRewrite(req);
   }
 
   return NextResponse.next();

@@ -9,6 +9,7 @@ import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
 import Overline from '@shared/typography/Overline';
+import saveToken from 'helpers/saveToken';
 
 async function register(payload) {
   try {
@@ -58,7 +59,7 @@ export default function SocialRegisterButtons() {
       email,
       socialToken: idToken,
     };
-    const { user, newUser } = await register(payload);
+    const { user, newUser, token } = await register(payload);
 
     if (user) {
       snackbarState.set(() => {
@@ -69,6 +70,7 @@ export default function SocialRegisterButtons() {
         };
       });
       setUser(user);
+      saveToken(token);
 
       const returnUrl = getCookie('returnUrl');
 

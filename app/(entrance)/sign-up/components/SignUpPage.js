@@ -15,6 +15,7 @@ import Body2 from '@shared/typography/Body2';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import Link from 'next/link';
 import { useUser } from '@shared/hooks/useUser';
+import saveToken from 'helpers/saveToken';
 
 const fields = [
   {
@@ -104,7 +105,7 @@ export default function SignUpPage() {
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, exists } = await register(
+      const { user, exists, token } = await register(
         state.firstName,
         state.lastName,
         state.email,
@@ -117,6 +118,8 @@ export default function SignUpPage() {
 
       if (user) {
         setUser(user);
+        // need to make it post request
+        saveToken(token);
         window.location.href = '/account-type';
         return;
       } else {

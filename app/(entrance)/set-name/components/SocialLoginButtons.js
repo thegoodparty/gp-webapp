@@ -12,12 +12,12 @@ import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
 import Overline from '@shared/typography/Overline';
+import saveToken from 'helpers/saveToken';
 
 async function login(payload) {
   try {
     const api = gpApi.entrance.socialLogin;
-    const { user, token } = await gpFetch(api, payload);
-    return user;
+    return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -62,9 +62,10 @@ export default function SocialLoginButtons() {
       socialToken: idToken,
     };
 
-    const user = await login(payload);
+    const { user, token } = await login(payload);
     if (user) {
       setUser(user);
+      saveToken(token);
       snackbarState.set(() => {
         return {
           isOpen: true,
