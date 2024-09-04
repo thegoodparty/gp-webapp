@@ -736,9 +736,10 @@ const gpApi = {
       url: `${base}candidates`,
       method: 'GET',
     },
-    mapList: {
-      url: `${base}candidates/map`,
-      method: 'GET',
+    delete: {
+      url: `${base}candidate`,
+      method: 'DELETE',
+      withAuth: true, //admin
     },
   },
 };
