@@ -119,7 +119,7 @@ export default function SignUpPage() {
       if (user) {
         setUser(user);
         // need to make it post request
-        saveToken(token);
+        await saveToken(token);
         window.location.href = '/account-type';
         return;
       } else {

@@ -70,7 +70,7 @@ export default function SocialRegisterButtons() {
         };
       });
       setUser(user);
-      saveToken(token);
+      await saveToken(token);
 
       const returnUrl = getCookie('returnUrl');
 

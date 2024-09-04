@@ -61,7 +61,7 @@ export default function LoginPage() {
       if (user) {
         setUserCookie(user);
         setUser(user);
-        saveToken(token);
+        await saveToken(token);
 
         const returnUrl = getCookie('returnUrl');
         if (returnUrl) {
