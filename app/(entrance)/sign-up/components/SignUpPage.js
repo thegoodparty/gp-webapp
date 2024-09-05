@@ -117,9 +117,9 @@ export default function SignUpPage() {
       console.log('exists', exists);
 
       if (user) {
-        setUser(user);
-        // need to make it post request
         await saveToken(token);
+        setUser(user);
+
         window.location.href = '/account-type';
         return;
       } else {

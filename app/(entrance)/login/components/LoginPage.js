@@ -59,9 +59,9 @@ export default function LoginPage() {
       const { user, token } = await login(state.email, state.password);
 
       if (user) {
+        await saveToken(token);
         setUserCookie(user);
         setUser(user);
-        await saveToken(token);
 
         const returnUrl = getCookie('returnUrl');
         if (returnUrl) {

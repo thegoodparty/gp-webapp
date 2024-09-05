@@ -69,8 +69,8 @@ export default function SocialRegisterButtons() {
           isError: false,
         };
       });
-      setUser(user);
       await saveToken(token);
+      setUser(user);
 
       const returnUrl = getCookie('returnUrl');
 
