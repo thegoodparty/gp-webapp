@@ -63,26 +63,24 @@ export default function LoginPage() {
         setUserCookie(user);
         setUser(user);
 
-        setTimeout(async () => {
-          const returnUrl = getCookie('returnUrl');
-          if (returnUrl) {
-            deleteCookie('returnUrl');
-            window.location.href = returnUrl;
-            return;
-          }
+        const returnUrl = getCookie('returnUrl');
+        if (returnUrl) {
+          deleteCookie('returnUrl');
+          window.location.href = returnUrl;
+          return;
+        }
 
-          const status = await fetchCampaignStatus();
+        const status = await fetchCampaignStatus();
 
-          if (status?.status === 'candidate') {
-            window.location.href = '/dashboard';
-            return;
-          }
-          if (status?.status === 'volunteer') {
-            window.location.href = '/volunteer-dashboard';
-            return;
-          }
-          window.location.href = '/';
-        }, 200);
+        if (status?.status === 'candidate') {
+          window.location.href = '/dashboard';
+          return;
+        }
+        if (status?.status === 'volunteer') {
+          window.location.href = '/volunteer-dashboard';
+          return;
+        }
+        window.location.href = '/';
       } else {
         snackbarState.set(() => {
           return {
