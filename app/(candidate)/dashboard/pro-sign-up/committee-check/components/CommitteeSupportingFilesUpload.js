@@ -5,8 +5,36 @@ import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { CircularProgress } from '@mui/material';
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
+import { useCampaign } from '@shared/hooks/useCampaign';
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 const FILE_LIMIT_MB = 10;
+
+const EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX = `ein-support-documents`;
+
+const getEinSupportDocumentFolderName = (id, slug) =>
+  `${id}-${slug}-${EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX}`;
+
+const uploadFileToS3 = async (file, bucket) => {
+  const { name: fileName, type: fileType } = file;
+  const { signedUploadUrl } = await gpFetch(
+    gpApi.user.files.generateSignedUploadUrl,
+    {
+      fileType,
+      fileName,
+      bucket,
+    },
+  );
+  const formData = new FormData();
+  formData.append('document', file);
+  return await fetch(signedUploadUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': fileType,
+    },
+    body: formData,
+  });
+};
 
 export const CommitteeSupportingFilesUpload = ({
   campaign = {},
@@ -14,7 +42,9 @@ export const CommitteeSupportingFilesUpload = ({
   onUploadSuccess = () => {},
   onUploadError = (e) => {},
 }) => {
-  const { id: campaignId } = campaign;
+  const [authenticatedCampaign = {}] = useCampaign();
+  const campaignId = campaign?.id || authenticatedCampaign?.id;
+  const campaignSlug = campaign?.slug || authenticatedCampaign?.slug;
   const fileInputRef = useRef(null);
   const [fileInfo, setFileInfo] = useState(null);
   const [loadingFileUpload, setLoadingFileUpload] = useState(false);
@@ -38,17 +68,23 @@ export const CommitteeSupportingFilesUpload = ({
     }
     setLoadingFileUpload(true);
     setFileInfo(file);
-    const formData = new FormData();
-    formData.append('document', file);
-    const apiConfig = campaignId
-      ? {
-          ...gpApi.campaign.einSupportingDocumentUpload,
-          url: `${gpApi.campaign.einSupportingDocumentUpload.url}/${campaignId}`,
-        }
-      : gpApi.campaign.einSupportingDocumentUpload;
 
     try {
-      const result = await gpFetch(apiConfig, formData, null, null, true);
+      const bucketFolderName = getEinSupportDocumentFolderName(
+        campaignId,
+        campaignSlug,
+      );
+      const bucket = `ein-supporting-documents/${bucketFolderName}`;
+      const result = await uploadFileToS3(file, bucket);
+      await updateCampaign(
+        [
+          {
+            key: 'details.einSupportingDocument',
+            value: `${bucketFolderName}/${file.name}`,
+          },
+        ],
+        campaignSlug,
+      );
       onUploadSuccess(result);
     } catch (e) {
       console.error('Error uploading file', e);

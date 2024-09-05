@@ -24,9 +24,11 @@ export default function AlertSection(props) {
   const subscriptionPending =
     checkoutSessionId && customerId && !subscriptionId;
 
-  const showProSignUpAlert = hasntEnteredProFlow || !isPro;
   const showCompleteProSignUpAlert = startedProCheckout;
   const showSubscriptionPendingAlert = subscriptionPending;
+  const showProSignUpAlert =
+    (hasntEnteredProFlow || !isPro) &&
+    !(showCompleteProSignUpAlert || showSubscriptionPendingAlert);
 
   return (
     <div>
