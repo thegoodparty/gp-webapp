@@ -59,28 +59,30 @@ export default function LoginPage() {
       const { user, token } = await login(state.email, state.password);
 
       if (user) {
+        await saveToken(token);
         setUserCookie(user);
         setUser(user);
-        await saveToken(token);
 
-        const returnUrl = getCookie('returnUrl');
-        if (returnUrl) {
-          deleteCookie('returnUrl');
-          window.location.href = returnUrl;
-          return;
-        }
+        setTimeout(async () => {
+          const returnUrl = getCookie('returnUrl');
+          if (returnUrl) {
+            deleteCookie('returnUrl');
+            window.location.href = returnUrl;
+            return;
+          }
 
-        const status = await fetchCampaignStatus();
+          const status = await fetchCampaignStatus();
 
-        if (status?.status === 'candidate') {
-          window.location.href = '/dashboard';
-          return;
-        }
-        if (status?.status === 'volunteer') {
-          window.location.href = '/volunteer-dashboard';
-          return;
-        }
-        window.location.href = '/';
+          if (status?.status === 'candidate') {
+            window.location.href = '/dashboard';
+            return;
+          }
+          if (status?.status === 'volunteer') {
+            window.location.href = '/volunteer-dashboard';
+            return;
+          }
+          window.location.href = '/';
+        }, 200);
       } else {
         snackbarState.set(() => {
           return {
