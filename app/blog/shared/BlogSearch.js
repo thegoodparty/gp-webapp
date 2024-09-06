@@ -4,7 +4,6 @@ import { Autocomplete, TextField, InputAdornment } from '@mui/material';
 import { SearchRounded } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
-import styles from './BlogSearch.module.scss';
 
 /**
  * @typedef {Object} BlogSearchProps
@@ -24,19 +23,39 @@ export default function BlogSearch({ blogItems }) {
   return (
     <div className="w-full md:w-[715px] lg:w-auto">
       <Autocomplete
-        className={`${styles.wrapper}`}
         options={blogItems}
         getOptionLabel={(option) => option.title}
+        disablePortal
         fullWidth
+        sx={{
+          '& + .MuiAutocomplete-popper .MuiAutocomplete-option': {
+            fontFamily: 'var(--sfpro-font)',
+            '&.Mui-focused, &.Mui-hover': {
+              backgroundColor: '#EEF3F6',
+            },
+            '&.Mui-focusVisible': {
+              backgroundColor: '#E0E6EC',
+            },
+          },
+        }}
         renderInput={(params) => (
           <TextField
+            sx={{
+              '& .MuiInputBase-formControl': {
+                borderRadius: '8px !important',
+                fontFamily: 'inherit',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                bottom: '5px',
+              },
+            }}
             ref={params.InputProps.ref}
             {...params}
             placeholder="Search all blog articles"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchRounded className="ml-3" />
+                  <SearchRounded />
                 </InputAdornment>
               ),
             }}

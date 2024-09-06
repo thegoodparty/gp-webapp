@@ -70,7 +70,7 @@ export default async function BlogWrapper({
 
         <div className="flex flex-wrap justify-between">
           <Overline className="basis-full">Categories</Overline>
-          <nav className="flex flex-wrap items-center gap-2 mt-2">
+          <nav className="flex flex-wrap items-center gap-2">
             <Link id="blog-home" href="/blog">
               <CategoryButton isSelected={!sectionTitle}>
                 Latest Articles
