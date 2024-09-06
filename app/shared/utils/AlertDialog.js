@@ -43,11 +43,7 @@ function AlertDialog({
           {description}
         </Body2>
         <div className="flex items-center justify-center">
-          <SecondaryButton
-            className="mr-4"
-            size="medium"
-            onClick={handleCancel}
-          >
+          <SecondaryButton className="mr-4" onClick={handleCancel}>
             {cancelLabel}
           </SecondaryButton>
 
@@ -60,7 +56,7 @@ function AlertDialog({
               </ErrorButton>
             </div>
           ) : (
-            <PrimaryButton size="medium" onClick={handleProceed}>
+            <PrimaryButton onClick={handleProceed}>
               {proceedLabel}
             </PrimaryButton>
           )}
