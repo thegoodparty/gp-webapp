@@ -7,6 +7,7 @@ export default function Actions({
   showMenu,
   setShowMenu,
   deleteHistoryCallBack,
+  actionName,
 }) {
   return (
     <div className="relative">
@@ -27,6 +28,13 @@ export default function Actions({
           <div className="absolute bg-white px-4 py-3 rounded-xl shadow-lg z-10 left-4 top-2">
             <DeleteAction
               id={id}
+              description={
+                <>
+                  Are you sure you want to delete <strong>{actionName}?</strong>
+                  <br />
+                  Deleted campaign history cannot be recovered.{' '}
+                </>
+              }
               setShowMenu={setShowMenu}
               deleteHistoryCallBack={deleteHistoryCallBack}
             />
