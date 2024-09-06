@@ -98,6 +98,9 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
                   >
                     <Actions
                       {...data}
+                      actionName={`${numberFormatter(data.quantity)} ${
+                        fields[data.type]?.title
+                      }`}
                       showMenu={showMenu}
                       setShowMenu={setShowMenu}
                       deleteHistoryCallBack={deleteHistoryCallBack}

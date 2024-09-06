@@ -26,6 +26,7 @@ export default function DeleteAction({
   id,
   setShowMenu,
   deleteHistoryCallBack,
+  description,
 }) {
   const [showDelete, setShowDelete] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
@@ -70,9 +71,11 @@ export default function DeleteAction({
         handleClose={() => {
           setShowDelete(false);
         }}
-        title="Delete Update"
-        description="Are you sure you want to delete this update?"
+        redButton={false}
+        title="Delete Campaign Action"
+        description={description}
         handleProceed={handleDelete}
+        proceedLabel="Delete"
       />
     </>
   );
