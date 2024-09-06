@@ -33,6 +33,7 @@ export default function Banner({ banner, idIndex = '1' }) {
             id="glossary-learn-more"
             href={buttonLink}
             target={isExternalLink ? '_blank' : '_self'}
+            rel={isExternalLink ? 'noopener noreferrer nofollow' : undefined}
           >
             <PrimaryButton className="mb-8 mt-4 md:mb-0">
               {buttonLabel}

@@ -2,11 +2,8 @@
 
 import Overline from '@shared/typography/Overline';
 import { ArrowUpwardRounded } from '@mui/icons-material';
-import { useState } from 'react';
 
 export default function ScrollToTop() {
-  const [showLink, setShowLink] = useState(false);
-
   function handleClick(e) {
     e.preventDefault();
     window.scrollTo({
@@ -19,6 +16,7 @@ export default function ScrollToTop() {
   return (
     <a
       className="group hidden lg:block absolute text-center bottom-[-32px] left-[100%] ml-[50px] z-10"
+      rel="noopener noreferrer nofollow"
       href="#article-top"
       onClick={handleClick}
     >

@@ -9,7 +9,7 @@ import IconButton from '@shared/buttons/IconButton';
 import { MdChevronRight } from 'react-icons/md';
 
 async function fetchFaqs() {
-  const api = { ...gpApi.content.contentByKey };
+  const api = gpApi.content.contentByKey;
   const payload = {
     key: 'articleCategories',
     subValue: 'How GoodParty.org Works',
@@ -17,7 +17,7 @@ async function fetchFaqs() {
   return await gpFetch(api, payload, 3600);
 }
 
-export default async function ArticleFaqs({}) {
+export default async function ArticleFaqs() {
   const { content: { articles } = {} } = await fetchFaqs();
 
   const subset = articles.slice(0, 5);
