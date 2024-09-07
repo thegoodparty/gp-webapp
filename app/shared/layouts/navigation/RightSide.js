@@ -10,6 +10,7 @@ import DashboardOrContinue from './DashboardOrContinue';
 import InfoButton from '@shared/buttons/InfoButton';
 import { useUser } from '@shared/hooks/useUser';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
+import FullStorySelectiveInit from './FullStorySelectiveInit';
 
 export default function RightSide({ campaignStatus }) {
   const [user] = useUser();
@@ -94,6 +95,7 @@ export default function RightSide({ campaignStatus }) {
           </Link>
         </>
       )}
+      <FullStorySelectiveInit user={user} />
     </div>
   );
 }

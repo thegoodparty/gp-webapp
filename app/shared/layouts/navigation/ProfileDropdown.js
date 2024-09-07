@@ -36,7 +36,6 @@ function ProfileDropdown({ open, toggleCallback, user }) {
   useEffect(() => {
     if (user) {
       hubspotIntegration(user);
-      fullstoryIndentity(user);
     }
   }, [user]);
 
@@ -51,27 +50,6 @@ function ProfileDropdown({ open, toggleCallback, user }) {
     ]);
   };
 
-  const fullstoryIndentity = (userI) => {
-    if (typeof FS === 'undefined') {
-      return;
-    }
-    const impersonateUser = getCookie('impersonateUser');
-    if (impersonateUser) {
-      FS.shutdown();
-      return;
-    }
-    if (userI && userI.email) {
-      const domain = userI.email.split('@')[1];
-      if (domain === 'goodparty.org' || userI.isAdmin) {
-        FS.shutdown();
-      } else {
-        FS.identify(userI.id, {
-          displayName: `${userI.firstName} ${userI.lastName}`,
-          email: userI.email,
-        });
-      }
-    }
-  };
   return (
     <div
       className="ml-2 relative cursor-pointer "
