@@ -15,6 +15,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { flows } from '../../questions/components/QuestionsPage';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { BsStars } from 'react-icons/bs';
 
 async function generateAI(key, regenerate, chat, editMode) {
   try {
@@ -273,7 +274,10 @@ export default function CampaignPlanSection({
                     <div className="py-8 flex justify-center">
                       <Link href={`/dashboard/questions?generate=${key}`}>
                         <PrimaryButton>
-                          Answer additional questions
+                          <div className="flex items-center">
+                            <div className="mr-1">Generate</div>
+                            <BsStars />
+                          </div>
                         </PrimaryButton>
                       </Link>
                     </div>
