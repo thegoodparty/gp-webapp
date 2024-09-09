@@ -217,7 +217,6 @@ export default function CampaignPlanSection({
       handleRegenerate('');
     }
   };
-
   return (
     <section
       key={section.key}

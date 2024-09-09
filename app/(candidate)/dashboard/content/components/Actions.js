@@ -69,7 +69,7 @@ export default function Actions(props) {
               }}
             >
               <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap p-1">
+                <div className="flex items-center whitespace-nowrap">
                   <BsThreeDots className="text-sm" />
                   &nbsp;
                 </div>
@@ -84,7 +84,7 @@ export default function Actions(props) {
               className="ml-5 hidden md:block"
             >
               <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap p-1">
+                <div className="flex items-center whitespace-nowrap">
                   <BsThreeDots className="text-sm" />
                   &nbsp;
                 </div>

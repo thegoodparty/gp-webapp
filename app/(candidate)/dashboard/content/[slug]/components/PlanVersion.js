@@ -23,7 +23,7 @@ export default function PlanVersion({
         }}
       >
         <SecondaryButton size="medium">
-          <div className="flex items-center whitespace-nowrap p-1">
+          <div className="flex items-center whitespace-nowrap">
             Version &nbsp;
             <IoIosArrowDown className="text-sm" />
           </div>
