@@ -38,9 +38,10 @@ const parties = [
 ];
 
 const options = [
-  { key: 'democrat', label: 'Democrat' },
-  { key: 'republican', label: 'Republican' },
   { key: 'independent', label: 'Independent' },
+  { key: 'republican', label: 'Republican' },
+  { key: 'democrat', label: 'Democrat' },
+  { key: 'forward', label: 'Forward Party' },
   { key: 'libertarian', label: 'Libertarian' },
   { key: 'green', label: 'Green Party' },
   { key: 'nonpartisan', label: 'Nonpartisan' },
