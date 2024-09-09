@@ -55,13 +55,13 @@ export async function generateMetadata({ params }) {
   if (!level || level.toLowerCase() === 'local') {
     locStr = `${
       locationName || race.municipality?.name || ''
-    }, ${race.state.toUpperCase()}`;
+    }, ${race?.state?.toUpperCase()}`;
   }
-  if (level.toLowerCase() === 'city') {
-    locStr += ` City, ${race.state.toUpperCase()}`;
-  } else if (level.toLowerCase() === 'county') {
-    locStr += ` County, ${race.state.toUpperCase()}`;
-  } else if (level.toLowerCase() === 'state') {
+  if (level?.toLowerCase() === 'city') {
+    locStr += ` City, ${race.state?.toUpperCase() || ''}`;
+  } else if (level?.toLowerCase() === 'county') {
+    locStr += ` County, ${race.state?.toUpperCase() || ''}`;
+  } else if (level?.toLowerCase() === 'state') {
     // locStr += ` ${race.state.toUpperCase()}`
   }
 

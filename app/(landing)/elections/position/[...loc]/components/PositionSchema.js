@@ -21,7 +21,7 @@ export default function PositionSchema({ race, loc }) {
   } = race;
   let locStr = locationName;
   if (level === 'local') {
-    locStr += `${municipality?.name}, ${state.toUpperCase()}`;
+    locStr += `${municipality?.name}, ${state?.toUpperCase() || ''}`;
   }
   if (level === 'city') {
     locStr += ` City, ${state}`;
