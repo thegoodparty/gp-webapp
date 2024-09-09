@@ -1,7 +1,7 @@
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
-import BrowsingPage from './components/BrowsingPage';
+import BrowsingPage from 'app/(candidate)/onboarding/browsing/components/BrowsingPage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
@@ -20,7 +20,7 @@ const meta = pageMetaData({
   title: 'explore GoodParty.org',
   description:
     "To help us make your experience even better, could you let us know why you're just browsing?",
-  slug: '/browsing',
+  slug: '/onboarding/browsing',
 });
 export const metadata = meta;
 

@@ -2,7 +2,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
-import Link from 'next/link';
 import React from 'react';
 import Image from 'next/image';
 

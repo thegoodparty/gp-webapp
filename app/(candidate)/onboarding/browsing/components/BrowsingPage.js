@@ -42,7 +42,7 @@ export default function BrowsingPage({ metaData }) {
 
   const handleNext = async () => {
     await updateUserMeta({ whyBrowsing: selected });
-    router.push('/browsing-final');
+    router.push('/onboarding/browsing/final');
   };
   return (
     <CardPageWrapper>
@@ -60,7 +60,7 @@ export default function BrowsingPage({ metaData }) {
       />
 
       <div className="flex items-center justify-between mt-12">
-        <Link href="/account-type">
+        <Link href="/sign-up/account-type">
           <SecondaryButton>
             <div className="min-w-[120px]">Back</div>
           </SecondaryButton>

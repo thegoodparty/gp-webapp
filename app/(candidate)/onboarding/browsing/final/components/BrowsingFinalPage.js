@@ -61,12 +61,12 @@ export default function BrowsingFinalPage() {
       />
 
       <div className="flex items-center justify-between mt-12">
-        <Link href="/browsing">
+        <Link href="/onboarding/browsing">
           <SecondaryButton>
             <div className="min-w-[120px]">Back</div>
           </SecondaryButton>
         </Link>
-        <Link disabled={!selected} href="/browsing-welcome">
+        <Link disabled={!selected} href="/onboarding/browsing/welcome">
           <PrimaryButton disabled={!selected} onClick={handleNext}>
             <div className="min-w-[120px]">Next</div>
           </PrimaryButton>

@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 const options = [
   { key: 'running', label: 'Currently running for office' },
-  // { key: 'supporting', label: 'Supporting a candidate' },
+  { key: 'managing', label: 'Managing a campaign' },
   { key: 'browsing', label: 'Just browsing' },
 ];
 
@@ -30,7 +30,7 @@ export default function AccountTypePage() {
       await createCampaign();
     } else if (selected === 'browsing') {
       await updateUserMeta({ accountType: 'browsing' });
-      router.push('/browsing');
+      router.push('/onboarding/browsing');
     }
   };
   return (
@@ -49,7 +49,7 @@ export default function AccountTypePage() {
       />
 
       <div className="flex items-center justify-between mt-12">
-        <Link href="/">
+        <Link href="/public">
           <SecondaryButton>
             <div className="min-w-[120px]">Cancel</div>
           </SecondaryButton>

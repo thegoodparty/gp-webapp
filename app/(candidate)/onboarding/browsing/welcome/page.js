@@ -1,12 +1,12 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
-import BrowsingFinalPage from './components/BrowsingFinalPage';
+import { BrowsingWelcomePage } from 'app/(candidate)/onboarding/browsing/welcome/components/BrowsingWelcomePage';
 
 const meta = pageMetaData({
-  title: 'How would you like to demo GoodParty.org?',
-  description: "Please select which office you'd like to browse",
-  slug: '/browsing-final',
+  title: 'One final question',
+  description: "Please select who you'd like to portray on your demo account:",
+  slug: '/onboarding/welcome',
 });
 export const metadata = meta;
 
@@ -16,5 +16,5 @@ export default async function Page() {
     redirect('/login');
   }
 
-  return <BrowsingFinalPage />;
+  return <BrowsingWelcomePage user={user} />;
 }
