@@ -1,4 +1,6 @@
-import BlackButton from '@shared/buttons/BlackButton';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Body1 from '@shared/typography/Body1';
+import MarketingH5 from '@shared/typography/MarketingH5';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,75 +15,50 @@ export default function Banner({ banner, idIndex = '1' }) {
     bannerClassName,
   } = banner;
 
-  let isExternalLink = buttonLink?.startsWith('http');
+  const isExternalLink = buttonLink?.startsWith('http');
+
   return (
     <div
-      className={`pt-10 my-12 flex flex-col items-center rounded-lg overflow-hidden ${
-        bannerClassName || ''
-      }`}
       id={`${bannerClassName || 'banner-id'}-${idIndex}`}
-      style={{ boxShadow: '0 0 6px 3px rgba(0, 0, 0, 0.1)' }}
+      className={`p-8 my-8 block md:flex rounded-lg bg-indigo-200 ${bannerClassName}`}
     >
-      <Image
-        src="/images/black-logo.svg"
-        width={131}
-        height={15}
-        alt="GoodParty.org"
-      />
-      <div className="grid grid-cols-12 gap3 lg:items-stretch">
-        <div className="col-span-12 lg:col-span-6">
-          <div className="px-10 flex flex-col items-center lg:mb-10">
-            <h3 className="font-black text-center text-4xl mt-8">{title}</h3>
-            <div className="mt-4  text-center">{description}</div>
-            {buttonLink && buttonLabel && (
-              <div className="mt-6 inline-block">
-                {isExternalLink ? (
-                  <a
-                    id="glossary-learn-more"
-                    href={buttonLink}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                  >
-                    <BlackButton>
-                      <strong>{buttonLabel}</strong>
-                    </BlackButton>
-                  </a>
-                ) : (
-                  <Link id="glossary-learn-more" href={buttonLink}>
-                    <BlackButton>
-                      <strong>{buttonLabel}</strong>
-                    </BlackButton>
-                  </Link>
-                )}
-              </div>
-            )}
-          </div>
+      <div className="grow flex flex-col justify-between">
+        <div>
+          <MarketingH5 className="mb-2">{title}</MarketingH5>
+          <Body1 className="text-gray-600">{description}</Body1>
         </div>
 
-        <div className="col-span-12 lg:col-span-6">
-          {smallImage && (
-            <div className="h-full relative w-full lg:hidden">
-              <Image
-                src={`https:${smallImage.url}`}
-                alt={smallImage.alt}
-                sizes="100vw"
-                fill
-                className="object-contain object-center"
-              />
-            </div>
-          )}
-          {largeImage && (
-            <div className="h-full relative w-full hidden lg:block">
-              <Image
-                src={`https:${largeImage.url}`}
-                alt={largeImage.alt}
-                sizes="100vw"
-                fill
-                className="object-contain object-center pr-10"
-              />
-            </div>
-          )}
-        </div>
+        {buttonLink && buttonLabel && (
+          <Link
+            id="glossary-learn-more"
+            href={buttonLink}
+            target={isExternalLink ? '_blank' : '_self'}
+            rel={isExternalLink ? 'noopener noreferrer nofollow' : undefined}
+          >
+            <PrimaryButton className="mb-8 mt-4 md:mb-0">
+              {buttonLabel}
+            </PrimaryButton>
+          </Link>
+        )}
+      </div>
+
+      <div className="relative basis-[200px] min-h-[200px] ml-4">
+        {smallImage && (
+          <Image
+            className="object-contain object-center lg:hidden"
+            src={`https:${smallImage.url}`}
+            alt={smallImage.alt}
+            fill
+          />
+        )}
+        {largeImage && (
+          <Image
+            className="object-contain object-center hidden lg:block"
+            src={`https:${largeImage.url}`}
+            alt={largeImage.alt}
+            fill
+          />
+        )}
       </div>
     </div>
   );

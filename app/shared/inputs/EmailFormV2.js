@@ -6,6 +6,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 export async function subscribeEmail(payload) {
   try {
@@ -17,7 +18,15 @@ export async function subscribeEmail(payload) {
   }
 }
 
-const EmailFormV2 = ({ formId, pageName, label = 'Get Started', labelId }) => {
+const EmailFormV2 = ({
+  formId,
+  pageName,
+  label = 'Get Started',
+  labelId,
+  placeholder = 'Email',
+  primaryButton = false,
+  className,
+}) => {
   const [email, setEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -52,7 +61,12 @@ const EmailFormV2 = ({ formId, pageName, label = 'Get Started', labelId }) => {
     }
   };
   return (
-    <form noValidate onSubmit={(e) => e.preventDefault()} id={labelId}>
+    <form
+      className={className}
+      noValidate
+      onSubmit={(e) => e.preventDefault()}
+      id={labelId}
+    >
       {success ? (
         <div
           className={`bg-purple text-white rounded-full mb-24 lg:mb-0 lg:w-[50%] xl:w-[45%] py-5 px-7 flex justify-between items-center`}
@@ -74,7 +88,7 @@ const EmailFormV2 = ({ formId, pageName, label = 'Get Started', labelId }) => {
                 setEmail(e.target.value);
               }}
               value={email}
-              placeholder="Email"
+              placeholder={placeholder}
               className="
                 py-4
                 pl-4
@@ -93,12 +107,16 @@ const EmailFormV2 = ({ formId, pageName, label = 'Get Started', labelId }) => {
               id="submit-email"
               type="submit"
             >
-              <SecondaryButton
-                className="bg-secondary-main border-none"
-                onClick={submitForm}
-              >
-                {label}
-              </SecondaryButton>
+              {primaryButton ? (
+                <PrimaryButton onClick={submitForm}>{label}</PrimaryButton>
+              ) : (
+                <SecondaryButton
+                  className="bg-secondary-main border-none"
+                  onClick={submitForm}
+                >
+                  {label}
+                </SecondaryButton>
+              )}
             </div>
 
             {!!showError && (

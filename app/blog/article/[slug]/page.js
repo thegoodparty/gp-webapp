@@ -3,9 +3,10 @@ import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ArticleSchema from './ArticleSchema';
-import BlogArticle from './components/BlogArticle';
+import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchSections } from 'app/blog/shared/fetchSections';
+// import RelatedArticles from './components/RelatedArticles';
 
 export const fetchArticle = async (slug) => {
   const api = gpApi.content.contentByKey;
@@ -53,7 +54,7 @@ export default async function Page({ params }) {
 
   return (
     <>
-      <BlogArticle {...childProps} />
+      <BlogArticlePage {...childProps} />
       <ArticleSchema article={content} />
     </>
   );

@@ -3,8 +3,19 @@ import Link from 'next/link';
 import BlogWrapper from '../shared/BlogWrapper';
 import ArticleSnippet from '../shared/ArticleSnippet';
 import MarketingH5 from '@shared/typography/MarketingH5';
-import SubscribeBlog from './SubscribeBlog';
+import SubscribeBlog from '../shared/SubscribeBlog';
 
+/**
+ * @typedef {Object} BlogPageProps
+ * @property {Object[]} sections Array of sections to render top level links for
+ * @property {Object} hero Article object to render as hero/featured article
+ */
+
+/**
+ * Root component for Blog Home page
+ * @param {BlogPageProps} props
+ * @returns
+ */
 export default async function BlogPage({ sections, hero }) {
   return (
     <BlogWrapper sections={sections}>
@@ -37,10 +48,12 @@ export default async function BlogPage({ sections, hero }) {
                     />
                   ))}
                 </div>
+                {index === 0 && (
+                  <SubscribeBlog className="col-span-1 lg:col-span-3 mt-16" />
+                )}
               </Fragment>
             );
           })}
-          {/* <SubscribeBlog className="mt-6" /> */}
         </div>
       )}
     </BlogWrapper>

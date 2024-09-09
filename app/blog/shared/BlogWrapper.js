@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import React from 'react';
+import { fetchArticleTags } from './fetchArticleTags';
+import { fetchArticlesTitles } from './fetchArticlesTitles';
 import StickersCallout from '@shared/utils/StickersCallout';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import Overline from '@shared/typography/Overline';
 import Body2 from '@shared/typography/Body2';
 import MarketingH2 from '@shared/typography/MarketingH2';
+import ExploreTags from './ExploreTags';
+import MoreResources from './MoreResources';
+import BlogSearch from './BlogSearch';
 
 function CategoryButton({ children, isSelected }) {
   const colorClasses = isSelected
@@ -31,12 +36,15 @@ function CategoryButton({ children, isSelected }) {
  * Wrapper element for Blog list views
  * @param {BlogWrapperProps} props
  */
-export default function BlogWrapper({
+export default async function BlogWrapper({
   children,
   sections,
   sectionSlug,
   sectionTitle,
 }) {
+  const { tags } = await fetchArticleTags();
+  const { titles } = await fetchArticlesTitles();
+
   const breadcrumbs = [
     { href: '/blog', label: 'Blog' },
     { label: sectionTitle },
@@ -50,7 +58,7 @@ export default function BlogWrapper({
   return (
     <>
       <StickersCallout />
-      <div className="max-w-screen-xl mx-auto px-6 py-8">
+      <div className="min-w-[400px] max-w-screen-xl mx-auto px-6 py-8">
         {sectionTitle && (
           <Breadcrumbs
             links={breadcrumbs}
@@ -60,25 +68,30 @@ export default function BlogWrapper({
           />
         )}
 
-        <Overline>Categories</Overline>
-        <nav className="flex flex-wrap items-center gap-2 mt-2">
-          <Link id="blog-home" href="/blog">
-            <CategoryButton isSelected={!sectionTitle}>
-              Latest Articles
-            </CategoryButton>
-          </Link>
-
-          {sortedSections.map((section, index) => (
-            <Link
-              key={section.fields.slug}
-              href={`/blog/section/${section.fields.slug}`}
-            >
-              <CategoryButton isSelected={section.fields.slug === sectionSlug}>
-                {section.fields.title}
+        <div className="flex flex-wrap justify-between">
+          <Overline className="basis-full">Categories</Overline>
+          <nav className="flex flex-wrap items-center gap-2 mt-2">
+            <Link id="blog-home" href="/blog">
+              <CategoryButton isSelected={!sectionTitle}>
+                Latest Articles
               </CategoryButton>
             </Link>
-          ))}
-        </nav>
+
+            {sortedSections.map((section, index) => (
+              <Link
+                key={section.fields.slug}
+                href={`/blog/section/${section.fields.slug}`}
+              >
+                <CategoryButton
+                  isSelected={section.fields.slug === sectionSlug}
+                >
+                  {section.fields.title}
+                </CategoryButton>
+              </Link>
+            ))}
+          </nav>
+          <BlogSearch blogItems={titles} />
+        </div>
 
         <MarketingH2 className="mt-8 mb-4" asH1>
           {sectionTitle ? sectionTitle : 'Blog'}
@@ -91,6 +104,9 @@ export default function BlogWrapper({
         )}
 
         {children}
+
+        <ExploreTags tags={tags} />
+        <MoreResources />
       </div>
     </>
   );

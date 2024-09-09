@@ -8,7 +8,7 @@ import { AiOutlineLink } from 'react-icons/ai';
 import { appBase } from 'gpApi';
 import Overline from '@shared/typography/Overline';
 
-export default function ShareBlog() {
+export default function ShareBlog({ className }) {
   const pathname = usePathname();
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';
@@ -52,7 +52,7 @@ export default function ShareBlog() {
   ];
 
   return (
-    <div className="mb-8">
+    <div className={`mb-8 ${className}`}>
       <Overline className="mb-4">Share on</Overline>
       {channels.map((channel, index) => (
         <Fragment key={channel.label}>
