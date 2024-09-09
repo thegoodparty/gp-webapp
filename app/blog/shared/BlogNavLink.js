@@ -14,9 +14,6 @@ export default function BlogNavLink({
 
   return (
     <Link href={href}>
-      {/* <TopButton isSelected={section.fields.slug === sectionSlug}>
-      {section.fields.title}
-    </TopButton> */}
       <button
         className={`rounded-md text-sm py-2 px-4 mr-2 no-underline cursor ${colorClasses}`}
       >

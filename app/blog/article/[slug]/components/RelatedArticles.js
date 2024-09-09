@@ -48,7 +48,7 @@ export default function RelatedArticles({ articles }) {
           />
         ))}
       {hasPages && (
-        <div className="col-span-1 lg:col-span-3">
+        <div className="text-center lg:text-left col-span-1 lg:col-span-3">
           <IconButton
             disabled={currentPage === 0}
             onClick={decrementPage}

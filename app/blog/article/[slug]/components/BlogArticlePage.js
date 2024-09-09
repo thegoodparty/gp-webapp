@@ -150,7 +150,6 @@ export default async function BlogArticlePage({ article }) {
           imageUrl={author.fields.image?.url}
           name={author.fields.name}
           summary={author.fields.summary}
-          asFooter={true}
         />
       </article>
       {relatedArticles && <RelatedArticles articles={relatedArticles} />}
