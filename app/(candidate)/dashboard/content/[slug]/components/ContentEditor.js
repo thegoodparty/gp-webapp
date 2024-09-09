@@ -18,6 +18,7 @@ import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { fetchInputFields } from '../../components/NewContentFlow';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { BsStars } from 'react-icons/bs';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -219,7 +220,7 @@ export default function ContentEditor({
           <Link href="/dashboard/content">
             <div className="hidden md:block">
               <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap p-1">
+                <div className="flex items-center whitespace-nowrap">
                   <MdOutlineArrowBackIos className="text-sm" />
                   &nbsp; Back
                 </div>
@@ -231,7 +232,7 @@ export default function ContentEditor({
           <Link href="/dashboard/content">
             <div className="md:hidden">
               <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap p-1">
+                <div className="flex items-center whitespace-nowrap">
                   <MdOutlineArrowBackIos className="text-sm" />
                   &nbsp;
                 </div>
@@ -246,8 +247,8 @@ export default function ContentEditor({
 
           <div className="ml-1 mr-1">
             <div
-              className={`p-1 mt-2 ${
-                saved === 'Saving...' ? 'text-primary' : 'text-indigo-100'
+              className={`p-1 mt-2 ml-3 ${
+                saved === 'Saving...' ? 'text-primary' : 'text-indigo-400'
               }`}
             >
               {saved}
@@ -259,7 +260,11 @@ export default function ContentEditor({
           {inputFields && (
             <div className="mr-3" onClick={() => setShowModal(true)}>
               <PrimaryButton size="medium">
-                Change <span className="hidden md:inline-block">details</span>
+                <div className="flex items-center">
+                  {' '}
+                  <BsStars className="mr-2" />
+                  Regenerate
+                </div>
               </PrimaryButton>
             </div>
           )}
