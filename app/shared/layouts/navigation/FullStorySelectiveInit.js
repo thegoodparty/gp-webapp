@@ -1,5 +1,6 @@
 'use client';
 
+import { getCookie } from 'helpers/cookieHelper';
 import { useEffect } from 'react';
 
 const USER_RATIO = 1; // asign all users to FullStory
