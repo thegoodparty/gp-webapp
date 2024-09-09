@@ -60,14 +60,25 @@ export default function BrowsingFinalPage() {
         selectCallback={setSelected}
       />
 
-      <div className="flex items-center justify-between mt-12">
-        <Link href="/onboarding/browsing">
-          <SecondaryButton>
+      <div className="flex flex-wrap items-center justify-between mt-12">
+        <Link
+          className="w-full mb-4 md:w-auto md:mb-auto"
+          href="/onboarding/browsing"
+        >
+          <SecondaryButton className="w-full">
             <div className="min-w-[120px]">Back</div>
           </SecondaryButton>
         </Link>
-        <Link disabled={!selected} href="/onboarding/browsing/welcome">
-          <PrimaryButton disabled={!selected} onClick={handleNext}>
+        <Link
+          className="w-full mb-4 md:w-auto md:mb-auto"
+          disabled={!selected}
+          href="/onboarding/browsing/welcome"
+        >
+          <PrimaryButton
+            className="w-full"
+            disabled={!selected}
+            onClick={handleNext}
+          >
             <div className="min-w-[120px]">Next</div>
           </PrimaryButton>
         </Link>

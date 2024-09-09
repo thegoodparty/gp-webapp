@@ -22,7 +22,7 @@ const CARD_FREE = {
     'AI Campaign Content',
     'Campaign progress tracker',
     'Path to Victory report',
-    'Consultation with a campaign manager',
+    'Consultation with a campaign managing',
     'Discord community',
     'Good Party Academy',
   ],

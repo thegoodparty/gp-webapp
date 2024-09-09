@@ -59,13 +59,19 @@ export default function BrowsingPage({ metaData }) {
         selectCallback={setSelected}
       />
 
-      <div className="flex items-center justify-between mt-12">
-        <Link href="/sign-up/account-type">
-          <SecondaryButton>
+      <div className="flex flex-wrap items-center justify-between mt-12">
+        <Link
+          className="w-full mb-4 md:w-auto md:mb-auto"
+          href="/sign-up/account-type"
+        >
+          <SecondaryButton className="w-full">
             <div className="min-w-[120px]">Back</div>
           </SecondaryButton>
         </Link>
-        <PrimaryButton onClick={handleNext}>
+        <PrimaryButton
+          className="w-full mb-4 md:w-auto md:mb-auto"
+          onClick={handleNext}
+        >
           <div className="min-w-[120px]">Next</div>
         </PrimaryButton>
       </div>

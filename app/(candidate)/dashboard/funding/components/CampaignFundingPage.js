@@ -146,7 +146,7 @@ const fundingFields = [
       {
         title: 'Assign responsibilities:',
         description:
-          'Delegate tasks related to meeting filing and finance deadlines to your campaign treasurer, compliance manager, or other team members as appropriate. Make sure everyone is aware of their responsibilities and the importance of meeting these deadlines.',
+          'Delegate tasks related to meeting filing and finance deadlines to your campaign treasurer, compliance managing, or other team members as appropriate. Make sure everyone is aware of their responsibilities and the importance of meeting these deadlines.',
       },
       {
         title: 'Set reminders and notifications:',

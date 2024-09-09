@@ -3,10 +3,8 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import RadioList from '@shared/inputs/RadioList';
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
-import Paper from '@shared/utils/Paper';
 import {
   createCampaign,
   updateUserMeta,
@@ -26,11 +24,17 @@ export default function AccountTypePage() {
   const router = useRouter();
 
   const handleNext = async () => {
-    if (selected === 'running') {
-      await createCampaign();
-    } else if (selected === 'browsing') {
-      await updateUserMeta({ accountType: 'browsing' });
-      router.push('/onboarding/browsing');
+    switch (selected) {
+      case 'running':
+        await createCampaign();
+        break;
+      case 'browsing':
+        await updateUserMeta({ accountType: 'browsing' });
+        router.push('/onboarding/browsing');
+        break;
+      case 'managing':
+        router.push('/onboarding/managing/candidate-lookup');
+        break;
     }
   };
   return (
@@ -48,13 +52,16 @@ export default function AccountTypePage() {
         selectCallback={setSelected}
       />
 
-      <div className="flex items-center justify-between mt-12">
-        <Link href="/public">
-          <SecondaryButton>
+      <div className="flex flex-wrap items-center justify-between mt-12">
+        <Link className="w-full mb-4 md:w-auto md:mb-auto" href="/public">
+          <SecondaryButton className="w-full">
             <div className="min-w-[120px]">Cancel</div>
           </SecondaryButton>
         </Link>
-        <PrimaryButton onClick={handleNext}>
+        <PrimaryButton
+          className="w-full mb-4 md:w-auto md:mb-auto"
+          onClick={handleNext}
+        >
           <div className="min-w-[120px]">Next</div>
         </PrimaryButton>
       </div>
