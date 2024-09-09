@@ -13,18 +13,11 @@ import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import ArticleFaqs from './ArticleFaqs';
 import ScrollToTop from './ScrollToTop';
 import RelatedArticles from './RelatedArticles';
-
-//TEMP
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-const fetchArticlesByTag = async (tag) => {
-  const api = gpApi.content.articlesByTag;
-  const payload = {
-    tag,
-  };
-
-  return await gpFetch(api, payload, 3600);
-};
+import Link from 'next/link';
+import { MdOpenInNew } from 'react-icons/md';
+import IconButton from '@shared/buttons/IconButton';
+import Body1 from '@shared/typography/Body1';
+import HighlightedContent from './HighlightedContent';
 
 export default async function BlogArticlePage({ article }) {
   const {
@@ -35,9 +28,14 @@ export default async function BlogArticlePage({ article }) {
     banner,
     mainImage,
     publishDate,
+    updateDate,
     readingTime,
     title,
     tags,
+    keyInformation,
+    endCallout,
+    relatedArticles,
+    references,
   } = article;
   const sectionSlug = section?.fields?.slug;
   const sectionTitle = section?.fields?.title;
@@ -49,9 +47,6 @@ export default async function BlogArticlePage({ article }) {
     },
     { label: title },
   ];
-
-  // TODO: replace with new field from Contentful
-  const { articles: relatedArticles } = await fetchArticlesByTag(tags[0]?.slug);
 
   return (
     <>
@@ -90,21 +85,62 @@ export default async function BlogArticlePage({ article }) {
             imageUrl={author.fields.image?.url}
             name={author.fields.name}
             publishDate={publishDate}
-            // updateDate={publishDate}
+            updateDate={updateDate}
           />
           <ShareBlog />
         </div>
         <div className="border-t-[1px] border-b-[1px] border-gray-200 py-8">
           <div>
+            {keyInformation?.length > 0 && (
+              <HighlightedContent className="mt-0">
+                <Overline>Key Information</Overline>
+                <ul className="list-outside mb-0 [&>li]:leading-6">
+                  {keyInformation.map((info, index) => (
+                    <li key={index}>{info}</li>
+                  ))}
+                </ul>
+              </HighlightedContent>
+            )}
             <CmsContentWrapper>{contentfulHelper(body)}</CmsContentWrapper>
             {body2 && banner && <Banner banner={banner} idIndex="1" />}
             {body2 && (
               <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
             )}
+            {endCallout && (
+              <HighlightedContent className="italic">
+                {endCallout}
+              </HighlightedContent>
+            )}
           </div>
           <ShareBlog className="mt-8" />
           {banner && <Banner banner={banner} idIndex="2" />}
           <ArticleFaqs />
+          {references?.length > 0 && (
+            <div className="py-6 px-8 mb-8 bg-blue-50 rounded">
+              <Overline>Reference</Overline>
+
+              {references.map(({ name, description, url }) => (
+                <div key={name + url} className="mt-4">
+                  <Link
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="group underline inline-flex items-center text-xl text-blue"
+                  >
+                    {name}
+                    <IconButton className="ml-1 group-hover:bg-indigo-700/[0.08]">
+                      <MdOpenInNew className="text-2xl" />
+                    </IconButton>
+                  </Link>
+                  {description && (
+                    <Body1 className="mt-1 basis-full text-gray-600">
+                      {description}
+                    </Body1>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
           <div className="relative">
             <ArticleTags tags={tags} />
             <ScrollToTop />

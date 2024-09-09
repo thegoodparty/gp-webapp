@@ -4,7 +4,6 @@ import gpFetch from 'gpApi/gpFetch';
 import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
-// import RelatedArticles from './components/RelatedArticles';
 
 export const fetchArticle = async (slug) => {
   const api = gpApi.content.contentByKey;

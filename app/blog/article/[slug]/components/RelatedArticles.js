@@ -13,7 +13,7 @@ export default function RelatedArticles({ articles }) {
 
   if (!articles || articles.length <= 0) return null;
 
-  const hasPages = articles.length > 3;
+  const hasPages = articles.length > PAGE_SIZE;
   const lastPage = Math.floor((articles.length - 1) / PAGE_SIZE);
   const startIndex = currentPage * PAGE_SIZE;
 

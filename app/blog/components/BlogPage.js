@@ -9,6 +9,7 @@ import SubscribeBlog from '../shared/SubscribeBlog';
  * @typedef {Object} BlogPageProps
  * @property {Object[]} sections Array of sections to render top level links for
  * @property {Object} hero Article object to render as hero/featured article
+ * @property {Object[]} topTags Array of tags/slugs to render underneath home page heading
  */
 
 /**
@@ -16,9 +17,15 @@ import SubscribeBlog from '../shared/SubscribeBlog';
  * @param {BlogPageProps} props
  * @returns
  */
-export default async function BlogPage({ sections, hero }) {
+export default async function BlogPage({ sections, hero, topTags }) {
   return (
-    <BlogWrapper sections={sections}>
+    <BlogWrapper
+      sections={sections}
+      pageTitle="Blog"
+      pageSubtitle="Insights into politics, running for office, and the latest updates from the independent movement"
+      topTags={topTags}
+      showBreadcrumbs={false}
+    >
       {sections?.length > 0 && (
         <div className="border-t-[1px] border-gray-200 pt-16 pb-8">
           <MarketingH5 className="mb-6">Featured Article</MarketingH5>
