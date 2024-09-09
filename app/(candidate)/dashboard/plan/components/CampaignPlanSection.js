@@ -86,7 +86,6 @@ export default function CampaignPlanSection({
   candidatePositions,
   expandSection,
 }) {
-  const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [isEdited, setIsEdited] = useState(false);
   const [plan, setPlan] = useState(false);
@@ -104,6 +103,8 @@ export default function CampaignPlanSection({
       setPlan(aiContent[key]);
       setLoading(false);
       setIsTyped(true);
+    } else {
+      handleRegenerate('');
     }
   }, [aiContent]);
 
@@ -223,71 +224,64 @@ export default function CampaignPlanSection({
       id={`plan-section-${section.key}`}
       className="my-3"
     >
-      <TogglePanel
-        label={section.title}
-        icon={loading ? <CircularProgress size={20} /> : section.icon}
-        openCallback={handleOpen}
-        forceExpand={expandSection}
-      >
-        <div className={`section-content-${section.key}`}>
-          {loading ? (
-            <LoadingAI />
-          ) : (
-            <div className="border border-slate-500 bg-indigo-50 rounded-xl">
-              {plan ? (
-                <>
-                  <PlanVersion
-                    campaign={campaign}
-                    versions={versions ? versions[key] : {}}
-                    updatePlanCallback={updatePlanCallback}
-                    latestVersion={aiContent ? aiContent[key] : false}
-                  />
-                  <PlanDisplay
-                    plan={plan}
-                    isTyped={isTyped}
-                    setIsTyped={setIsTyped}
-                    setEdit={setEdit}
-                    isFailed={isFailed}
-                    handleEdit={handleEdit}
-                    editMode={editMode}
-                  />
+      <div className={`section-content-${section.key}`}>
+        {loading ? (
+          <LoadingAI />
+        ) : (
+          <div className="border border-slate-500 bg-indigo-50 rounded-xl">
+            {plan ? (
+              <>
+                <PlanVersion
+                  campaign={campaign}
+                  versions={versions ? versions[key] : {}}
+                  updatePlanCallback={updatePlanCallback}
+                  latestVersion={aiContent ? aiContent[key] : false}
+                />
+                <PlanDisplay
+                  plan={plan}
+                  isTyped={isTyped}
+                  setIsTyped={setIsTyped}
+                  setEdit={setEdit}
+                  isFailed={isFailed}
+                  handleEdit={handleEdit}
+                  editMode={editMode}
+                />
 
-                  <PlanActions
-                    isEdited={isEdited}
-                    handleSave={handleSave}
-                    handleRegenerate={handleRegenerate}
-                  />
-                </>
-              ) : (
-                <>
-                  {canGenerateAi ? (
-                    <div className="py-12 flex justify-center">
-                      <div
-                        onClick={() => {
-                          handleRegenerate('');
-                        }}
-                      >
-                        <PrimaryButton>Generate {section.title}</PrimaryButton>
-                      </div>
+                <PlanActions
+                  isEdited={isEdited}
+                  handleSave={handleSave}
+                  handleRegenerate={handleRegenerate}
+                />
+              </>
+            ) : (
+              <>
+                {canGenerateAi ? (
+                  <div className="py-12 flex justify-center">
+                    <div
+                      onClick={() => {
+                        handleRegenerate('');
+                      }}
+                    >
+                      <PrimaryButton>Generate {section.title}</PrimaryButton>
                     </div>
-                  ) : (
-                    <div className="py-8 flex justify-center">
-                      <Link href={`/dashboard/questions?generate=${key}`}>
-                        <PrimaryButton>
-                          <div className="flex items-center">
-                            <div className="mr-1">Generate</div>
-                            <BsStars />
-                          </div>
-                        </PrimaryButton>
-                      </Link>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      </TogglePanel>
+                  </div>
+                ) : (
+                  <div className="py-8 flex justify-center">
+                    <Link href={`/dashboard/questions?generate=${key}`}>
+                      <PrimaryButton>
+                        <div className="flex items-center">
+                          <div className="mr-1">Generate</div>
+                          <BsStars />
+                        </div>
+                      </PrimaryButton>
+                    </Link>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
