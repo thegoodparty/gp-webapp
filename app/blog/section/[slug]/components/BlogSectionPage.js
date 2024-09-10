@@ -38,7 +38,7 @@ export default function BlogSectionPage({
       pageSlug={slug}
     >
       {slug && articles.length > 1 && (
-        <div className="border-t-[1px] border-gray-200 py-16">
+        <div className="border-t border-gray-200 py-16">
           <MarketingH5 className="mb-6">Featured Article</MarketingH5>
           <ArticleSnippet article={hero} heroMode section={section} />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-16">

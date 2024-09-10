@@ -9,7 +9,7 @@ export default function BlogTagPage({ sections, tagName, tagSlug, articles }) {
 
   return (
     <BlogWrapper sections={sections} pageTitle={tagName} pageSlug={tagSlug}>
-      <div className="border-t-[1px] border-gray-200 py-16">
+      <div className="border-t border-gray-200 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-16">
           {firstPageArticles.map((article) => (
             <ArticleSnippet article={article} key={article.slug} />

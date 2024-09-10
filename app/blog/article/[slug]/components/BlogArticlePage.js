@@ -89,7 +89,7 @@ export default async function BlogArticlePage({ article }) {
           />
           <ShareBlog />
         </div>
-        <div className="border-t-[1px] border-b-[1px] border-gray-200 py-8">
+        <div className="border-y border-gray-200 py-8">
           <div>
             {keyInformation?.length > 0 && (
               <HighlightedContent className="mt-0">
