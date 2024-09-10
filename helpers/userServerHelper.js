@@ -16,9 +16,14 @@ export const getServerToken = () =>
   determineImpersonateCookieOrNot('token', 'impersonateToken');
 
 export const getServerUser = () => {
-  const userJSON = determineImpersonateCookieOrNot('user', 'impersonateUser');
-  if (userJSON && typeof userJSON === 'object') {
-    return userJSON;
+  try {
+    const userJSON = determineImpersonateCookieOrNot('user', 'impersonateUser');
+    if (userJSON && typeof userJSON === 'object') {
+      return userJSON;
+    }
+    return userJSON ? JSON.parse(userJSON) : null;
+  } catch (e) {
+    console.log('Error in getServerUser', e);
+    return null;
   }
-  return userJSON ? JSON.parse(userJSON) : null;
 };
