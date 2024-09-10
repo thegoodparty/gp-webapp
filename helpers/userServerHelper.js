@@ -17,5 +17,8 @@ export const getServerToken = () =>
 
 export const getServerUser = () => {
   const userJSON = determineImpersonateCookieOrNot('user', 'impersonateUser');
+  if (userJSON && typeof userJSON === 'object') {
+    return userJSON;
+  }
   return userJSON ? JSON.parse(userJSON) : null;
 };
