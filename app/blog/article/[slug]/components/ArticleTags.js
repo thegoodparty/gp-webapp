@@ -12,7 +12,7 @@ export default function ArticleTags({ tags }) {
         <Link
           href={`/blog/tag/${tag.slug}`}
           key={tag.slug}
-          className="rounded-md text-sm py-2 px-4 mr-2 bg-indigo-200 no-underline cursor hover:bg-indigo-300"
+          className="inline-block rounded-md text-sm py-2 px-4 mb-2 mr-2 bg-indigo-200 no-underline cursor hover:bg-indigo-300"
         >
           {tag.name}
         </Link>
