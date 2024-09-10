@@ -1,12 +1,9 @@
 import { notFound } from 'next/navigation';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchSections } from 'app/blog/shared/fetchSections';
-// import RelatedArticles from './components/RelatedArticles';
 
 export const fetchArticle = async (slug) => {
   const api = gpApi.content.contentByKey;
@@ -44,17 +41,9 @@ export default async function Page({ params }) {
     notFound();
   }
 
-  const sectionsRes = await fetchSections();
-  const sections = sectionsRes.content;
-
-  const childProps = {
-    article: content,
-    sections,
-  };
-
   return (
     <>
-      <BlogArticlePage {...childProps} />
+      <BlogArticlePage article={content} />
       <ArticleSchema article={content} />
     </>
   );

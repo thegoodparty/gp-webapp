@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 export const COLOR_CLASSES = {
   primary:
     'text-primary-dark hover:bg-indigo-700/[0.08] focus:active:bg-indigo-700/[0.3]',
@@ -23,14 +25,14 @@ export const SIZE_CLASSES = {
 };
 
 const BASE_CLASSES =
-  'rounded-[100%] text-3xl text-center bg-white disabled:opacity-50 disabled:hover:bg-white';
+  'rounded-full text-3xl text-center bg-transparent disabled:opacity-50 disabled:hover:bg-transparent';
 
 /**
  * @typedef {Object} IconButtonProps
  * @property {keyof SIZE_CLASSES} size Size of the button
  * @property {keyof COLOR_CLASSES} color Color style for the button
- * @property {boolean} disabled Disable the button
  * @property {string} className Extra classes to add to button element
+ * @property {...unknown} restProps Any more props to pass to button element
  */
 
 /**
@@ -39,7 +41,7 @@ const BASE_CLASSES =
  * @param {IconButtonProps} props
  * @example
  * // Must pass desired icon component as a child
- * <IconButton size="small" color='neutral'>
+ * <IconButton size="small" color='neutral' onClick={callbackFn}>
  *   <MdChevronRight />
  * </IconButton>
  */
@@ -47,17 +49,17 @@ const BASE_CLASSES =
 export default function IconButton({
   size = 'medium',
   color = 'primary',
-  disabled = false,
   children,
   className,
+  ...restProps
 }) {
   const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium;
   const colorClasses = COLOR_CLASSES[color] || COLOR_CLASSES.primary;
 
   return (
     <button
-      className={`${BASE_CLASSES} ${sizeClasses} ${colorClasses} ${className}`}
-      disabled={disabled}
+      className={clsx(BASE_CLASSES, sizeClasses, colorClasses, className)}
+      {...restProps}
     >
       {children}
     </button>
