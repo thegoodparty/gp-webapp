@@ -18,6 +18,7 @@ import TemplateList from './TemplatesList';
 import QuestionProgress, {
   calcAnswers,
 } from '../../plan/components/QuestionProgress';
+import { BsStars } from 'react-icons/bs';
 
 export async function fetchInputFields(subKey) {
   const api = gpApi.content.contentByKey;
@@ -114,7 +115,11 @@ export default function NewContentFlow(props) {
         onClick={() => setShowModal(true)}
         id="new-content-btn"
       >
-        <PrimaryButton>+ Generate...</PrimaryButton>
+        <PrimaryButton>
+          <div className="flex items-center">
+            <BsStars className="mr-2" /> Generate
+          </div>
+        </PrimaryButton>
       </div>
 
       <Modal closeCallback={closeModal} open={showModal}>
