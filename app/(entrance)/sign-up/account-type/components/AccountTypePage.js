@@ -20,10 +20,12 @@ const options = [
 ];
 
 export default function AccountTypePage() {
+  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState('running');
   const router = useRouter();
 
   const handleNext = async () => {
+    setLoading(true);
     switch (selected) {
       case 'running':
         await createCampaign();
@@ -33,9 +35,11 @@ export default function AccountTypePage() {
         router.push('/onboarding/browsing');
         break;
       case 'managing':
+        await updateUserMeta({ accountType: 'managing' });
         router.push('/onboarding/managing/candidate-lookup');
         break;
     }
+    setLoading(false);
   };
   return (
     <CardPageWrapper>
@@ -59,6 +63,8 @@ export default function AccountTypePage() {
           </SecondaryButton>
         </Link>
         <PrimaryButton
+          loading={loading}
+          disabled={loading}
           className="w-full mb-4 md:w-auto md:mb-auto"
           onClick={handleNext}
         >

@@ -29,7 +29,7 @@ export const CandidateLookupPage = ({}) => {
   return (
     <CardPageWrapper>
       <div className="text-center mb-4 pt-0">
-        <H1>Let&apos;s look for them on GoodParty.org.</H1>
+        <H1>Let&apos;s look for the campaign on GoodParty.org</H1>
         <Body2 className="mt-3 mb-8">
           What is your candidates campaign email?
         </Body2>
