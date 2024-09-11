@@ -43,7 +43,8 @@ export default async function Page({ params }) {
   return (
     <BlogTagPage
       sections={sections}
-      sectionTitle={tagName}
+      tagName={tagName}
+      tagSlug={tag}
       articles={articles}
     />
   );
