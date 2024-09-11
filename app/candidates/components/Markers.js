@@ -6,17 +6,17 @@ import { Marker, MarkerClusterer } from '@react-google-maps/api';
 const clusterStyles = [
   {
     url: 'https://assets.goodparty.org/map-cluster-icon-center.png', // URL to the cluster image
+    height: 60, // Height of the cluster image
+    width: 60, // Width of the cluster image
+    textColor: 'white', // Text color for the cluster count
+    textSize: 11, // Text size for the cluster count
+  },
+  {
+    url: 'https://assets.goodparty.org/map-cluster-icon-center.png', // URL to the cluster image
     height: 80, // Height of the cluster image
     width: 80, // Width of the cluster image
     textColor: 'white', // Text color for the cluster count
     textSize: 12, // Text size for the cluster count
-  },
-  {
-    url: 'https://assets.goodparty.org/map-cluster-icon-center.png', // URL to the cluster image
-    height: 120, // Height of the cluster image
-    width: 120, // Width of the cluster image
-    textColor: 'white', // Text color for the cluster count
-    textSize: 14, // Text size for the cluster count
   },
 ];
 
@@ -39,6 +39,7 @@ export default function Markers() {
             position={marker.position}
             icon={{
               url: 'https://assets.goodparty.org/gp-marker-single.png',
+              scaledSize: new window.google.maps.Size(50, 50),
             }}
             onClick={() => {
               onSelectCampaign(marker);
