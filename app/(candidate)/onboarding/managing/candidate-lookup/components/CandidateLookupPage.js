@@ -11,19 +11,41 @@ import Link from 'next/link';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useRouter } from 'next/navigation';
+import gpFetch from 'gpApi/gpFetch';
+import gpApi from 'gpApi';
+import { useHookstate } from '@hookstate/core';
+import { globalSnackbarState } from '@shared/utils/Snackbar';
 
 export const CandidateLookupPage = ({}) => {
-  const [email, setEmail] = useState('');
+  const [candidateEmail, setCandidateEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const snackbarState = useHookstate(globalSnackbarState);
 
   const onChange = ({ currentTarget }) => {
-    setEmail(currentTarget.value);
+    setCandidateEmail(currentTarget.value);
     setValidEmail(isValidEmail(currentTarget.value));
   };
 
-  const handleNext = () => {
-    router.push('/onboarding/managing/final');
+  const handleNext = async () => {
+    setLoading(true);
+    const newRequest = await gpFetch(gpApi.campaign.campaignRequests.create, {
+      candidateEmail,
+      role: 'manager',
+    });
+    setLoading(false);
+    if (!newRequest || newRequest.ok === false) {
+      const message = 'Error creating campaign request';
+      console.error(message);
+      snackbarState.set(() => ({
+        isOpen: true,
+        isError: true,
+        message,
+      }));
+    } else {
+      router.push('/onboarding/managing/final');
+    }
   };
 
   return (
@@ -39,7 +61,7 @@ export const CandidateLookupPage = ({}) => {
         {...{
           className: 'w-full',
           label: 'Candidate Email',
-          value: email,
+          value: candidateEmail,
           onChange,
           shrink: true,
           placeholder: 'hello@email.com',
@@ -64,9 +86,10 @@ export const CandidateLookupPage = ({}) => {
           </SecondaryButton>
         </Link>
         <PrimaryButton
+          loading={loading}
           onClick={handleNext}
           className="w-full mb-4 md:w-auto md:mb-auto"
-          disabled={!validEmail}
+          disabled={!validEmail || loading}
         >
           <div className="min-w-[120px]">Send Request</div>
         </PrimaryButton>
