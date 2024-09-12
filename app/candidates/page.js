@@ -21,8 +21,6 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page({ params, searchParams }) {
   adminAccessOnly();
-  const { campaigns } = await fetchCampaigns();
 
-  const childProps = { campaigns };
-  return <CandidatesPage {...childProps} />;
+  return <CandidatesPage />;
 }
