@@ -35,7 +35,7 @@ export default function WhyUse() {
       </Body1>
       <div className="flex flex-col md:flex-row px-8 md:px-0 gap-8 mt-12 mx-auto max-w-4xl">
         {vanityMetrics.map((metric) => (
-          <div className="text-left">
+          <div key={metric.title} className="text-left">
             <Overline>{metric.title}</Overline>
             <Body1 className="mt-4 border-l border-white px-4">
               <span className="font-outfit block font-medium text-5xl leading-snug">

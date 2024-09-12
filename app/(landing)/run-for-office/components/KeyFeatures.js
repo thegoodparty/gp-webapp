@@ -52,8 +52,8 @@ export default function KeyFeatures() {
               Create winning content in seconds
             </MarketingH4>
             <Body1 className="mb-8">
-              Save time and multiply your campaign's output with AI trained on
-              dozens of carefully honed templates, from press releases to
+              Save time and multiply your campaign&apos;s output with AI trained
+              on dozens of carefully honed templates, from press releases to
               endorsement pitches.
             </Body1>
           </hgroup>
@@ -87,7 +87,7 @@ export default function KeyFeatures() {
             </MarketingH4>
             <Body1 className="mb-8">
               Get 1:1 support and advice from our campaign experts, whether
-              you're running for town council or Congress.
+              you&apos;re running for town council or Congress.
             </Body1>
           </hgroup>
           <CTALink id="tools-access-experts" />
