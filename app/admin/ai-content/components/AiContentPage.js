@@ -2,11 +2,25 @@
 
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Table from '@shared/utils/Table';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+export const fetchCampaigns = async () => {
+  const api = gpApi.campaign.list;
+  return await gpFetch(api);
+};
 
 export default function AiContentsPage(props) {
-  const { campaigns } = props;
+  const [campaigns, setCampaigns] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { campaigns } = await fetchCampaigns();
+      setCampaigns(campaigns);
+    };
+    fetchData();
+  }, []);
 
   const inputData = [];
   const contentCount = {};
@@ -32,18 +46,21 @@ export default function AiContentsPage(props) {
       count: contentCount[key],
     });
   });
-  const data = useMemo(() => inputData);
+  const data = useMemo(() => inputData, [inputData]);
 
-  const columns = useMemo(() => [
-    {
-      Header: 'Content Type',
-      accessor: 'contentType',
-    },
-    {
-      Header: 'Count',
-      accessor: 'count',
-    },
-  ]);
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Content Type',
+        accessor: 'contentType',
+      },
+      {
+        Header: 'Count',
+        accessor: 'count',
+      },
+    ],
+    [],
+  );
 
   return (
     <AdminWrapper {...props}>
