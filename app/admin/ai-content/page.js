@@ -12,20 +12,12 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export const fetchCampaigns = async () => {
-  const api = gpApi.campaign.list;
-  const token = getServerToken();
-  return await gpFetch(api, false, false, token);
-};
-
 export default async function Page() {
   adminAccessOnly();
-  const { campaigns } = await fetchCampaigns();
 
   const childProps = {
     pathname: '/admin/ai-content',
     title: 'AI Content',
-    campaigns,
   };
   return <AiContentPage {...childProps} />;
 }
