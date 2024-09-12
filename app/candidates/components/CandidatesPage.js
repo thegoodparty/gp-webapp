@@ -1,12 +1,16 @@
 'use client';
 import Hero from './Hero';
-import { createContext, useCallback, useRef, useState } from 'react';
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import Map from './Map';
 import Results from './Results';
 import Filters from './Filters';
 import { useJsApiLoader } from '@react-google-maps/api';
 import { Campaign } from '@mui/icons-material';
 import CampaignPreview from './CampaignPreview';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+import { CircularProgress } from '@mui/material';
+import H2 from '@shared/typography/H2';
 
 export const MapContext = createContext();
 
@@ -15,20 +19,39 @@ const center = {
   lng: -98.5795,
 };
 
+export const fetchCampaigns = async () => {
+  const api = gpApi.campaign.mapList;
+
+  return await gpFetch(api);
+};
+
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
 export default function CandidatesPage(props) {
-  const { campaigns } = props;
-  const initMarkers = (campaigns || []).map((campaign) => {
-    return {
-      id: campaign.slug,
-      position: {
-        lat: campaign.geoLocation?.lat,
-        lng: campaign.geoLocation?.lng,
-      },
-      ...campaign,
-    };
-  });
+  const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    loadCampaigns();
+  }, []);
+
+  const loadCampaigns = async () => {
+    const { campaigns } = await fetchCampaigns();
+    setCampaigns(campaigns);
+
+    const initMarkers = (campaigns || []).map((campaign) => {
+      return {
+        id: campaign.slug,
+        position: {
+          lat: campaign.geoLocation?.lat,
+          lng: campaign.geoLocation?.lng,
+        },
+        ...campaign,
+      };
+    });
+    setMarkers(initMarkers);
+    setVisibleMarkers(initMarkers);
+    setLoading(false);
+  };
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -37,8 +60,8 @@ export default function CandidatesPage(props) {
   });
 
   const mapRef = useRef(null);
-  const [markers, _] = useState(initMarkers);
-  const [visibleMarkers, setVisibleMarkers] = useState(initMarkers);
+  const [markers, setMarkers] = useState([]);
+  const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState(center);
   const [zoom, setZoom] = useState(5);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
@@ -157,17 +180,23 @@ export default function CandidatesPage(props) {
 
   return (
     <MapContext.Provider value={childProps}>
-      <div className="h-[calc(100vh-56px)] md:flex flex-row-reverse border-t border-gray-300">
-        <div className="flex-1 h-3/4 md:h-auto">
-          {/* <Hero /> */}
-          <Map />
+      {loading ? (
+        <div className="h-[calc(100vh-56px)] flex items-center justify-center flex-col">
+          <CircularProgress />
+          <H2 className="mt-2">Loading...</H2>
         </div>
-        <div className="flex flex-col  shadow-lg relative z-20">
-          <Filters />
-          <Results />
-          <CampaignPreview />
+      ) : (
+        <div className="h-[calc(100vh-56px)] md:flex flex-row-reverse border-t border-gray-300">
+          <div className="flex-1 h-3/4 md:h-auto">
+            <Map />
+          </div>
+          <div className="flex flex-col  shadow-lg relative z-20">
+            <Filters />
+            <Results />
+            <CampaignPreview />
+          </div>
         </div>
-      </div>
+      )}
     </MapContext.Provider>
   );
 }
