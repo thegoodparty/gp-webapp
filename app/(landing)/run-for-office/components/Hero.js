@@ -1,38 +1,50 @@
-'use client';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import RunCampaignButton from './RunCampaignButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Image from 'next/image';
 import Link from 'next/link';
-import H3 from '@shared/typography/H3';
-import WhiteButton from './WhiteButton';
+import Body1 from '@shared/typography/Body1';
+import MarketingH2 from '@shared/typography/MarketingH2';
 import heroImg from 'public/images/run-for-office/run-hero.png';
+import Button from '@shared/buttons/Button';
 
 export default function Hero() {
   return (
-    <MaxWidth>
-      <section className="py-12 lg:py-14">
-        <div className="grid grid-cols-12 gap-4 items-center">
-          <div className="col-span-12 lg:col-span-6">
-            <h1 className="font-semibold text-6xl md:text-7xl mb-7">
-              Supercharge your local campaign
-            </h1>
-            <H3>
-              GoodParty.org helps people-powered candidates run viable campaigns
-              with free tech, data, and insights.
-            </H3>
-            <div className="mt-10 flex">
-              <RunCampaignButton id="hero-get-started" />
-              <Link href="/get-a-demo" id="hero-demo" className="block ml-5">
-                <WhiteButton label="Get a Demo" />
-              </Link>
-            </div>
-          </div>
-          <div className="col-span-12 lg:col-span-6 mt-10 lg:mt-0">
-            <Image src={heroImg} alt="run for office" priority />
-          </div>
+    <section className="box-content max-w-screen-xl mx-auto py-16 px-4 md:px-8 lg:px-24 sm:flex flex-col md:grid grid-cols-12 gap-x-4 items-center">
+      <div className="max-w-lg pb-10 md:pb-8 col-span-6">
+        <MarketingH2
+          asH1
+          className="text-5xl !leading-snug !font-semibold mb-6"
+        >
+          Supercharge your local campaign
+        </MarketingH2>
+        <Body1>
+          GoodParty.org empowers grassroots candidates to run viable campaigns
+          with free tech, data, and support.
+        </Body1>
+        <div className="mt-8">
+          <Link href="/sign-up" id="hero-get-started">
+            <Button className="mr-4 mb-4 w-full md:w-auto" size="large">
+              Get Started
+            </Button>
+          </Link>
+          <Link href="/product-tour" id="hero-demo">
+            <Button
+              className="w-full md:w-auto"
+              size="large"
+              variant="outlined"
+            >
+              Book a free demo
+            </Button>
+          </Link>
         </div>
-      </section>
-    </MaxWidth>
+      </div>
+      <div className="grow md:text-right col-span-6">
+        <Image
+          src={heroImg}
+          className="max-w-xl w-full inline"
+          alt="run for office"
+          priority
+          full
+        />
+      </div>
+    </section>
   );
 }

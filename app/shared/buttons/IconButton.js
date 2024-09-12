@@ -30,7 +30,7 @@ const BASE_CLASSES =
 /**
  * @typedef {Object} IconButtonProps
  * @property {keyof SIZE_CLASSES} size Size of the button
- * @property {keyof COLOR_CLASSES} color Color style for the button
+ * @property {keyof COLOR_CLASSES} color Color theme for the button
  * @property {string} className Extra classes to add to button element
  * @property {...unknown} restProps Any more props to pass to button element
  */

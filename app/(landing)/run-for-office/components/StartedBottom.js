@@ -1,31 +1,40 @@
 import Image from 'next/image';
-import RunCampaignButton from './RunCampaignButton';
+import Button from '@shared/buttons/Button';
 import Link from 'next/link';
-import WhiteButton from './WhiteButton';
+import MarketingH3 from '@shared/typography/MarketingH3';
+import Body1 from '@shared/typography/Body1';
 
 export default function StartedBottom() {
   return (
     <>
-      <div className="bg-[linear-gradient(172deg,_#F9FAFB_54.5%,_#D8ED50_55%)] h-[calc(100vw*.17)] w-full" />
-      <section className="bg-[#D8ED50] flex flex-col items-center pt-12 pb-12 lg:pb-24">
+      <div className="bg-[linear-gradient(172deg,_#F7FAFB_54.5%,_#fff_55%)] h-[calc(100vw*.17)] w-full" />
+      <section className="bg-white text-center py-12 lg:pb-24">
         <Image
+          className="inline mb-6"
           src="/images/logo-hologram-white.svg"
           alt="GoodParty"
           width={136}
           height={111}
         />
-        <h2 className="text-3xl lg:text-6xl font-semibold text-center mt-4">
-          Get started
-        </h2>
-        <h3 className="text-xl lg:px-12 font-normal mt-5 mb-10  text-center">
-          Try our tools risk free to scale your campaign,
-          <br />
-          or get a demo with one of our campaign experts.
-        </h3>
-        <div className="mt-10 flex">
-          <RunCampaignButton id="bottom-get-started" />
-          <Link href="/get-a-demo" id="bottom-demo" className="block ml-5">
-            <WhiteButton label="Get a Demo" />
+        <MarketingH3>Get started</MarketingH3>
+        <Body1 className="inline-block m-6 max-w-2xl">
+          Try our tools risk free to scale your campaign, or get a demo with one
+          of our campaign experts.
+        </Body1>
+        <div className="p-4">
+          <Link href="/sign-up" id="hero-get-started">
+            <Button className="mr-4 mb-4 w-full md:w-auto" size="large">
+              Get free tools
+            </Button>
+          </Link>
+          <Link href="/product-tour" id="hero-demo">
+            <Button
+              className="w-full md:w-auto"
+              size="large"
+              variant="outlined"
+            >
+              Interactive demo
+            </Button>
           </Link>
         </div>
       </section>

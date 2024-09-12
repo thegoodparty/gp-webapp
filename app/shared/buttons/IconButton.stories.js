@@ -15,7 +15,7 @@ const argTypes = {
   color: {
     control: 'select',
     options: Object.keys(COLOR_CLASSES),
-    description: 'Color style to use for button',
+    description: 'Color theme to use for button',
     table: {
       type: {
         summary: 'string',
