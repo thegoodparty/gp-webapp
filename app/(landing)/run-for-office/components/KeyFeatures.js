@@ -1,107 +1,121 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import contentImg from 'public/images/run-for-office/my-content.png';
 import trackerImg from 'public/images/run-for-office/campaign-tracker.png';
 import expertsImg from 'public/images/run-for-office/experts.png';
 import mapImg from 'public/images/run-for-office/map.png';
-import GetStartedCTA from './GetStartedCTA';
+import MarketingH3 from '@shared/typography/MarketingH3';
+import Body1 from '@shared/typography/Body1';
+import MarketingH4 from '@shared/typography/MarketingH4';
+import Button from '@shared/buttons/Button';
+import { MdArrowForward } from 'react-icons/md';
+import Link from 'next/link';
+
+function CardWrapper({ children, className }) {
+  return (
+    <div
+      className={`px-4 py-8 md:px-8 bg-white rounded-3xl border border-black/[0.12] ${
+        className || ''
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+function CTALink({ id, href = '/sign-up' }) {
+  return (
+    <Link id={id} href={href} className="no-underline">
+      <Button variant="text" size="large" className="flex items-center gap-2">
+        Get Started
+        <MdArrowForward className="text-2xl" />
+      </Button>
+    </Link>
+  );
+}
 
 export default function KeyFeatures() {
   return (
-    <section className="relative py-12 lg:py-20">
-      <MaxWidth>
-        <div className="relative z-10">
-          <h2 className="text-3xl lg:text-6xl font-semibold ">
-            Key features -free!
-          </h2>
-          <div className="grid grid-cols-12 gap-4 mt-10">
-            <div className="col-span-12 lg:col-span-5">
-              <div className="bg-white rounded-2xl px-5 pt-5 lg:px-14 lg:pt-14 h-full shadow-lg  flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl lg:text-3xl font-semibold">
-                    1. Create winning content in seconds
-                  </h3>
-                  <div className="text-lg my-8">
-                    Save time and multiply your campaign&apos;s output with AI
-                    trained on dozens of carefully honed templates from press
-                    releases to endorsement pitches.
-                  </div>
-                  <GetStartedCTA id="tools-winning-content" />
-                </div>
-                <Image src={contentImg} alt="content" className="mt-10" />
-              </div>
-            </div>
-            <div className="col-span-12 lg:col-span-7">
-              <div className="bg-white rounded-2xl p-5 lg:p-14  h-full shadow-lg">
-                <Image src={trackerImg} alt="content" className="mb-10" />
-                <h3 className="text-2xl lg:text-3xl font-semibold">
-                  2. Run a data-driven campaign
-                </h3>
-                <div className="text-lg mb-4">
-                  Unlock{' '}
-                  <Image
-                    src="/images/heart-hologram.svg"
-                    width={30}
-                    height={24}
-                    alt="gp"
-                    className="inline-block mx-1"
-                  />{' '}
-                  AI Data Analyst to transform voter data into a winning
-                  canvassing plan and turnout strategy.
-                </div>
-                <GetStartedCTA id="tools-data-campaign" />
-              </div>
-            </div>
-            <div className="col-span-12 lg:col-span-6">
-              <div className="bg-white rounded-2xl p-5 lg:p-14  h-full shadow-lg">
-                <Image src={expertsImg} alt="content" className="mb-10" />
-                <h3 className="text-2xl lg:text-3xl font-semibold">
-                  3. Access to real campaign experts
-                </h3>
-                <div className="text-lg mb-4">
-                  Get 1:1 support and advice from our campaign experts, whether
-                  you&apos;re running for town council or congress.
-                </div>
-                <GetStartedCTA id="tools-access-experts" />
-              </div>
-            </div>
-            <div className="col-span-12 lg:col-span-6">
-              <div className="flex flex-col justify-between h-full">
-                <div className="bg-white rounded-2xl p-5 lg:p-14  h-full shadow-lg">
-                  <div className="flex justify-center">
-                    <Image src={mapImg} alt="content" className="mb-10" />
-                  </div>
-                  <h3 className="text-2xl lg:text-3xl font-semibold">
-                    4. Devoted volunteer network
-                  </h3>
-                  <div className="text-lg mb-4">
-                    Tap into our movement of 1,000+ remote volunteers eager to
-                    help power your path to victory.
-                  </div>
-                  <GetStartedCTA id="tools-volunteer-network" />
-                </div>
-                <div className="bg-white rounded-2xl p-5 lg:p-14  h-full shadow-lg mt-4">
-                  <h3 className="text-2xl lg:text-3xl font-semibold">
-                    5. Dedicated resource library
-                  </h3>
-                  <div className="text-lg mb-4">
-                    A carefully curated library of the most proven resources to
-                    help you become a viable candidate.
-                  </div>
-                  <GetStartedCTA id="tools-resource-library" />
-                </div>
-              </div>
-            </div>
-          </div>
+    <section className="box-content max-w-screen-xl mx-auto pt-24 px-4 md:px-8 lg:px-24">
+      <MarketingH3 className="text-center mb-4 !text-4xl md:!text-5xl">
+        Essential free features
+      </MarketingH3>
+      <Body1 className="text-center">
+        Save time and cut costs with free campaign software.
+      </Body1>
+      <div className="pt-16 grid grid-cols-1 md:grid-cols-12 gap-6">
+        <CardWrapper className="pt-8 md:pt-12 pb-0 col-span-12 md:col-span-5">
+          <hgroup className="px-6">
+            <MarketingH4 className="mb-4">
+              Create winning content in seconds
+            </MarketingH4>
+            <Body1 className="mb-8">
+              Save time and multiply your campaign&apos;s output with AI trained
+              on dozens of carefully honed templates, from press releases to
+              endorsement pitches.
+            </Body1>
+          </hgroup>
+          <CTALink id="tools-winning-content" />
+          <Image src={contentImg} alt="content" className="mt-10" />
+        </CardWrapper>
+
+        <CardWrapper className="col-span-12 md:col-span-7">
+          <Image src={trackerImg} alt="content" className="mt-0 md:mt-8" />
+          <hgroup className="px-6">
+            <MarketingH4 className="mt-6 mb-4">
+              Run a data-driven campaign
+            </MarketingH4>
+            <Body1 className="mb-8">
+              Get custom data for your race in minutes to level up your outreach
+              efforts and understand what motivates your voters.
+            </Body1>
+          </hgroup>
+          <CTALink id="tools-data-campaign" href="/login" />
+        </CardWrapper>
+
+        <CardWrapper className="col-span-12 md:col-span-7">
+          <Image
+            src={expertsImg}
+            alt="content"
+            className="mt-0 md:mt-10 mb-8"
+          />
+          <hgroup className="px-6">
+            <MarketingH4 className="mb-4">
+              Access to real campaign experts
+            </MarketingH4>
+            <Body1 className="mb-8">
+              Get 1:1 support and advice from our campaign experts, whether
+              you&apos;re running for town council or Congress.
+            </Body1>
+          </hgroup>
+          <CTALink id="tools-access-experts" />
+        </CardWrapper>
+        <div className="col-span-12 md:col-span-5">
+          <CardWrapper className="mb-6">
+            <Image src={mapImg} alt="content" className="mb-8" />
+            <hgroup className="px-6">
+              <MarketingH4 className="mb-4">
+                Devoted volunteer network
+              </MarketingH4>
+              <Body1 className="mb-8">
+                Tap into our movement of 1,000+ remote volunteers eager to help
+                power your path to victory.
+              </Body1>
+            </hgroup>
+            <CTALink id="tools-volunteer-network" />
+          </CardWrapper>
+          <CardWrapper>
+            <hgroup className="px-6">
+              <MarketingH4 className="mb-4">
+                Dedicated resource library{' '}
+              </MarketingH4>
+              <Body1 className="mb-8">
+                A carefully curated library of the most proven resources to help
+                you become a viable candidate.
+              </Body1>
+            </hgroup>
+            <CTALink id="tools-resource-library" />
+          </CardWrapper>
         </div>
-      </MaxWidth>
-      <div className="absolute w-full left-0 h-full top-0">
-        <Image
-          src="/images/landing-pages/spot-bg.svg"
-          fill
-          alt="bg"
-          className="object-cover  object-left-top"
-        />
       </div>
     </section>
   );
