@@ -79,29 +79,6 @@ export default function Pricing() {
           price={10}
           color="lime"
         />
-        {/* <div className="p-12 rounded-md bg-lime-400">
-          <div>
-            <MarketingH4 className="border-b border-black/[0.6]">
-              Pro
-            </MarketingH4>
-     =
-            <div className="font-bold mb-6">Everything in free plus…</div>
-            {points2.map((point) => (
-              <div key={point} className="flex items-center mb-4">
-                <div className="w-4 h-4 flex items-center justify-center rounded-full bg-lime-200 border border-primary mr-3">
-                  <IoMdCheckmark size={12} />
-                </div>
-                <div>{point}</div>
-              </div>
-            ))}
-          </div>
-          <div>
-            <div className="mt-14 mb-8 text-4xl font-light">$10/month</div>
-            <Link id="pro-candidtate" href="/get-a-demo">
-              <PrimaryButton fullWidth>Get Started</PrimaryButton>
-            </Link>
-          </div>
-        </div> */}
       </div>
     </section>
   );

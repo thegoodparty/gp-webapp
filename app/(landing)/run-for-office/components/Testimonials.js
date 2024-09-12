@@ -16,89 +16,6 @@ const SM_PAGE_SIZE = 1;
 const LG_MIN = 1024;
 const MD_MIN = 768;
 
-const testimonials = [
-  {
-    name: 'Joe Jernigan von Jenson de Jonson',
-    office: 'Candidate for SC House District 111',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/7iXcLSYYfoG6KuzALoEuSo/5cae482b9311ad4ac6cbf959f5560c0d/Joe_Jernigan.jpg',
-      alt: 'Joe Jernigan',
-    },
-    testimonial:
-      "The best tool GoodParty.org has to offer for Political Campaigns, is the AI tool that takes YOUR ideas/goals and inserts them into a beautifully-written statement, reflecting what you input! This has proven excellent for me, as I've used to it partially craft some of my Official Campaign Statements!",
-  },
-  {
-    name: 'Japjeet Uppal',
-    office: 'Candidate for Livingston, CA City Council',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/5aOMolTAK1apiOWJl3Xuvt/d4d4994aa4465365fd45074cc2508be8/Japjeet_Uppal.jpg',
-      alt: 'Japjeet Uppal',
-    },
-    testimonial:
-      "It's wild to me still that I get to do all of this for free. I very much appreciate GoodParty.org's mission and that there's people like you who are willing to put the time in to invest in folks like me all across the country, because we 100% need it.",
-  },
-  {
-    name: 'Mary Anderson',
-    office: 'Candidate for Snohomish, County WA Judge',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/5F56YyUMfJViMshnO52CDZ/8f072f7e875deb4d33aa1537efe57899/Mary_Anderson.jpg',
-      alt: 'Mary Anderson',
-    },
-    testimonial:
-      "With respect to the tools that GoodParty.org offers, I think it's absolutely phenomenal for me: the AI, the tracking, the ability to actually see the progress on how well you're doing and what you need to do.",
-  },
-  {
-    name: 'Borton Bort',
-    office: 'Candidate for Bloopberg, County WA Judge',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/5F56YyUMfJViMshnO52CDZ/8f072f7e875deb4d33aa1537efe57899/Mary_Anderson.jpg',
-      alt: 'Mary Anderson',
-    },
-    testimonial:
-      'kdfjskf sldkjf lsdkfj sdlkfj sldkfj lsdkfj sdlkfj sldkf jlsdkfj dlskfj lsdkfj lsdkfj lksjf lksdjf lksdjf lks',
-  },
-  {
-    name: 'Jenny Joni',
-    office: 'Judge forever and ever',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/5aOMolTAK1apiOWJl3Xuvt/d4d4994aa4465365fd45074cc2508be8/Japjeet_Uppal.jpg',
-      alt: 'Japjeet Uppal',
-    },
-    testimonial:
-      'fdslkfjdslk sldkfj sdlkfj sdlkfj lskdfj lskdjf lsdkjf lskdj flksdj flskdjf lksdj flksdj flskd jflksdj flks jf.',
-  },
-  {
-    name: 'Patrick Porkins',
-    office: 'Candidate for SC House District 111',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/7iXcLSYYfoG6KuzALoEuSo/5cae482b9311ad4ac6cbf959f5560c0d/Joe_Jernigan.jpg',
-      alt: 'Joe Jernigan',
-    },
-    testimonial:
-      'fkdjs lkdsjf sdlkfj lksdfj lsdkfj lsdkfj lsdkjf lkdsjf lksdjf ldskfj ldskfj lsdk',
-  },
-  {
-    name: 'Amy Amyson',
-    office: 'Candidate for Snohomish, County WA Judge',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/5F56YyUMfJViMshnO52CDZ/8f072f7e875deb4d33aa1537efe57899/Mary_Anderson.jpg',
-      alt: 'Mary Anderson',
-    },
-    testimonial:
-      'KDFJSDKPFJ S:KDFJ SD:KF JSDKF JSLDKF JLJFKSLDJF LKSDJF KLSJDFLKSDJ FKLSDJ FLKSDJ FLKSDJF KLSDJ FKLDS fjSK',
-  },
-  {
-    name: 'Japjeet Uppal',
-    office: 'Candidate for Livingston, CA City Council',
-    image: {
-      url: '//images.ctfassets.net/g08ybc4r0f4b/5aOMolTAK1apiOWJl3Xuvt/d4d4994aa4465365fd45074cc2508be8/Japjeet_Uppal.jpg',
-      alt: 'Japjeet Uppal',
-    },
-    testimonial:
-      "It's wild to me still that I get to do all of this for free. I very much appreciate GoodParty.org's mission and that there's people like you who are willing to put the time in to invest in folks like me all across the country, because we 100% need it.",
-  },
-];
-
 function PageDot({ pageNum, isSelected, onClick }) {
   return (
     <span
@@ -117,12 +34,6 @@ export default function Testimonials({ testimonials }) {
   const [pageSize, setPageSize] = useState(SM_PAGE_SIZE);
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize);
-
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
-
     function handleResize() {
       const windowWidth = window.innerWidth;
       if (windowWidth <= LG_MIN) {
@@ -131,6 +42,12 @@ export default function Testimonials({ testimonials }) {
         setPageSize(LG_PAGE_SIZE);
       }
     }
+
+    window.addEventListener('resize', handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   if (!testimonials || testimonials.length <= 0) return null;

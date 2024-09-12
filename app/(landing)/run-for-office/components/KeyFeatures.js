@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import contentImg from 'public/images/run-for-office/my-content.png';
-// import contentImg from 'public/images/run-for-office/my-content.gif';
 import trackerImg from 'public/images/run-for-office/campaign-tracker.png';
 import expertsImg from 'public/images/run-for-office/experts.png';
 import mapImg from 'public/images/run-for-office/map.png';
