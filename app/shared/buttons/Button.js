@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 export const COLOR_CLASSES = {
   primary:
     'text-primary-contrast bg-primary-main hover:[&:not([disabled])]:bg-primary-dark focus:active:outline-primary-main/30',
@@ -113,7 +111,9 @@ export default function Button({
   return (
     <button
       type="button"
-      className={clsx(baseClasses, sizeClasses, colorClasses, className)}
+      className={`${baseClasses} ${sizeClasses} ${colorClasses} ${
+        className || ''
+      }`}
       {...restProps}
     >
       {children}

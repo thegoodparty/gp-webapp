@@ -9,15 +9,13 @@ import MarketingH4 from '@shared/typography/MarketingH4';
 import Button from '@shared/buttons/Button';
 import { MdArrowForward } from 'react-icons/md';
 import Link from 'next/link';
-import clsx from 'clsx';
 
 function CardWrapper({ children, className }) {
   return (
     <div
-      className={clsx(
-        'px-4 py-8 md:px-8 bg-white rounded-3xl border border-black/[0.12]',
-        className,
-      )}
+      className={`px-4 py-8 md:px-8 bg-white rounded-3xl border border-black/[0.12] ${
+        className || ''
+      }`}
     >
       {children}
     </div>
