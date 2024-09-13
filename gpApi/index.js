@@ -207,7 +207,7 @@ const gpApi = {
         withAuth: true,
       },
       delete: {
-        url: `${base}campaign/volunteer/request/:id`,
+        url: `${base}campaign/volunteer/requests/:id`,
         method: 'DELETE',
         withAuth: true,
       },

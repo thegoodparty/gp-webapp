@@ -6,7 +6,7 @@ import Invitation from './Invitation';
 export default function PendingInvitations(props) {
   const { invitations, reloadInvitationsCallback } = props;
   return (
-    <Paper>
+    <Paper className="mb-4">
       <div className="flex justify-between items-center">
         <H2>Pending Invitations</H2>
         <InviteButton reloadInvitationsCallback={reloadInvitationsCallback} />

@@ -7,6 +7,7 @@ import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import PendingInvitations from './PendingInvitations';
 import VolunteersSection from './VolunteersSection';
+import { PendingRequests } from 'app/(candidate)/dashboard/team/components/PendingRequests';
 
 async function fetchInvitations() {
   try {
@@ -20,6 +21,7 @@ async function fetchInvitations() {
 }
 
 export default function TeamSection(props) {
+  const { requests } = props;
   const [volunteers, setVolunteers] = useState(props.volunteers || []);
   const [invitations, setInvitations] = useState(props.invitations || []);
 
@@ -30,23 +32,28 @@ export default function TeamSection(props) {
 
   return (
     <section className="">
-      {volunteers?.length === 0 && invitations?.length === 0 ? (
-        <EmptyState reloadInvitationsCallback={reloadInvitationsCallback} />
-      ) : null}
+      {Boolean(
+        !volunteers?.length && !invitations?.length && !requests?.length,
+      ) && <EmptyState reloadInvitationsCallback={reloadInvitationsCallback} />}
 
-      {invitations && invitations.length > 0 ? (
-        <PendingInvitations
-          reloadInvitationsCallback={reloadInvitationsCallback}
-          invitations={invitations}
-        />
-      ) : null}
-      {volunteers && volunteers.length > 0 ? (
+      {Boolean(volunteers && volunteers.length) && (
         <VolunteersSection
           volunteers={volunteers}
           invitations={invitations}
           reloadInvitationsCallback={reloadInvitationsCallback}
         />
-      ) : null}
+      )}
+
+      {Boolean(invitations && invitations.length) && (
+        <PendingInvitations
+          reloadInvitationsCallback={reloadInvitationsCallback}
+          invitations={invitations}
+        />
+      )}
+
+      {Boolean(requests && requests.length) && (
+        <PendingRequests requests={requests} />
+      )}
     </section>
   );
 }

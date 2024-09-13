@@ -1,8 +1,6 @@
 'use client';
-
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput';
-import TextField from '@shared/inputs/TextField';
 import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
 import gpApi from 'gpApi';
