@@ -20,9 +20,9 @@ export default function Banner({ banner, idIndex = '1' }) {
   return (
     <div
       id={`${bannerClassName || 'banner-id'}-${idIndex}`}
-      className={`p-8 my-8 block md:flex rounded-lg bg-indigo-200 ${bannerClassName}`}
+      className={`my-8 block md:grid grid-cols-2 gap-4 rounded-lg bg-indigo-200 ${bannerClassName}`}
     >
-      <div className="grow flex flex-col justify-between">
+      <div className="p-8 pr-0 col-span-1 flex flex-col justify-between">
         <div>
           <MarketingH5 className="mb-2">{title}</MarketingH5>
           <Body1 className="text-gray-600">{description}</Body1>
@@ -42,21 +42,23 @@ export default function Banner({ banner, idIndex = '1' }) {
         )}
       </div>
 
-      <div className="relative basis-[200px] min-h-[200px] ml-4">
+      <div className="overflow-hidden rounded-lg col-span-1">
         {smallImage && (
           <Image
-            className="object-contain object-center lg:hidden"
+            className="w-full object-contain object-center lg:hidden"
             src={`https:${smallImage.url}`}
             alt={smallImage.alt}
-            fill
+            width={200}
+            height={200}
           />
         )}
         {largeImage && (
           <Image
-            className="object-contain object-center hidden lg:block"
+            className="w-full object-contain object-center hidden lg:block"
             src={`https:${largeImage.url}`}
             alt={largeImage.alt}
-            fill
+            width={200}
+            height={200}
           />
         )}
       </div>

@@ -11,20 +11,15 @@ import { MdChevronRight } from 'react-icons/md';
 async function fetchFaqs() {
   const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'articleCategories',
-    subValue: 'How GoodParty.org Works',
+    key: 'blogHome',
   };
   return await gpFetch(api, payload, 3600);
 }
 
 export default async function ArticleFaqs() {
-  const { content: { articles } = {} } = await fetchFaqs();
+  const { content: { faqs } = {} } = await fetchFaqs();
 
-  const subset = articles.slice(0, 5);
-
-  subset.forEach((article) => {
-    article.url = faqArticleRoute(article);
-  });
+  if (!faqs || faqs.length <= 0) return null;
 
   return (
     <>
@@ -37,10 +32,10 @@ export default async function ArticleFaqs() {
       </Body1>
 
       <ul className="list-none list-outside p-0 mb-8">
-        {subset.map((article) => (
+        {faqs.map((article) => (
           <li key={article.id}>
             <Link
-              href={article.url}
+              href={faqArticleRoute(article)}
               className="group font-sfpro flex items-center justify-between border-b-[1px] border-gray-200 py-2"
             >
               {article.title}
