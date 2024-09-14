@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 import CandidateCard from 'app/candidate/[name]/[office]/components/CandidateCard';
 import { IoPersonSharp } from 'react-icons/io5';
 import { FaMapMarkerAlt } from 'react-icons/fa';

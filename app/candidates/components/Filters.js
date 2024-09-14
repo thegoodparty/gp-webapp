@@ -2,7 +2,7 @@
 
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { useContext, useState } from 'react';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 import Search from './Search';
 
 const partyOptions = [
@@ -30,7 +30,7 @@ export default function Filters() {
   const { filters, onChangeFilters } = useContext(MapContext);
 
   return (
-    <div className="p-4 border-b border-slate-300 md:w-[300px] lg:w-[400px]">
+    <div className="p-4 border-b border-slate-300 md:w-[300px] lg:w-[400px] bg-white">
       <div className="relative">
         <Search />
       </div>
