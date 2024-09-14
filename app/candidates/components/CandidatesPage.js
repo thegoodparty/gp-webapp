@@ -12,7 +12,7 @@ export default function CandidatesPage(props) {
     <>
       <Hero count={campaigns.length} />
       <MapSection campaigns={campaigns} />
-      <WinnerListSection campaigns={campaigns} />
+      <WinnerListSection allCampaigns={campaigns} />
       <InfoSection />
     </>
   );

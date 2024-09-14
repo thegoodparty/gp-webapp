@@ -172,7 +172,7 @@ export default function MapSection({ campaigns }) {
         </div>
       ) : (
         <>
-          <section className="h-[calc(100vh-56px)]  bg-primary-dark px-4 lg:px-8">
+          <section className="h-[calc(100vh-56px)]  bg-primary-dark px-4 lg:px-8 overflow-hidden">
             <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
               <div className="flex-1 h-3/4 md:h-auto">
                 <Map />
