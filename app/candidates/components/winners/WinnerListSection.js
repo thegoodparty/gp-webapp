@@ -157,7 +157,7 @@ import FilteredWinnerList from './FilteredWinnerList';
 
 export default function WinnerListSection({ allCampaigns }) {
   const winnersOnly = allCampaigns.filter((campaign) => campaign.didWin);
-  // I need deduped offices - don;t want to show the same office twice
+
   const allOffices = winnersOnly.map((campaign) => campaign.office);
   const offices = [...new Set(allOffices)]; // dedupe
 

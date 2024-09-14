@@ -1,6 +1,5 @@
 import Slider from 'react-slick';
-import '@shared/inputs/slick.min.css';
-import '@shared/inputs/slick-theme.min.css';
+
 import WinnerSnippet from './WinnerSnippet';
 import H5 from '@shared/typography/H5';
 import { numberFormatter } from 'helpers/numberHelper';
