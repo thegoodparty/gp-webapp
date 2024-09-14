@@ -172,7 +172,7 @@ export default function MapSection({ campaigns }) {
         </div>
       ) : (
         <>
-          <div className="h-[calc(100vh-56px)]  bg-primary-dark px-4 lg:px-8">
+          <section className="h-[calc(100vh-56px)]  bg-primary-dark px-4 lg:px-8">
             <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
               <div className="flex-1 h-3/4 md:h-auto">
                 <Map />
@@ -183,7 +183,7 @@ export default function MapSection({ campaigns }) {
                 <CampaignPreview />
               </div>
             </div>
-          </div>
+          </section>
           <div className="h-4 md:h-8 bg-primary-dark">&nbsp;</div>
         </>
       )}
