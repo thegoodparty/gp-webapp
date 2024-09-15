@@ -92,7 +92,7 @@ export default function FacesSection() {
                     />
                   </div>
                   <div className="lg:pl-8">
-                    <MarketingH5>"{card.quote}"</MarketingH5>
+                    <MarketingH5>&ldquo;{card.quote}&rdquo;</MarketingH5>
                     <H2 className="mt-8">{card.name}</H2>
                     <Body1 className="mt-2">{card.office}</Body1>
                   </div>
