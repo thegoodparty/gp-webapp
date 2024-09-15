@@ -42,7 +42,7 @@ const cards = [
     modalDescription: (
       <>
         GoodParty.org Certified candidates run grassroots campaigns that depend
-        on being connected to and promoted by the people that they'll be
+        on being connected to and promoted by the people that they&apos;ll be
         serving.
         <br />
         <br />
