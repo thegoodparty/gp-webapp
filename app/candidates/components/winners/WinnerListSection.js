@@ -185,8 +185,8 @@ export default function WinnerListSection({ allCampaigns }) {
   return (
     <div className="py-8 px-4 lg:p-16">
       <MaxWidth>
-        <MarketingH2>
-          <span className="flex justify-center">
+        <MarketingH2 className="text-center">
+          <span className="">
             {winnersOnly.length > 0 ? winnersOnly.length : ''} independents won
             using
             <Image
@@ -194,7 +194,7 @@ export default function WinnerListSection({ allCampaigns }) {
               width={60}
               height={60}
               alt="gp.org"
-              className="mx-3 mt-3"
+              className="mx-3 mt-3 static inline-block w-12 h-12 lg:w-16 lg:h-16"
               priority
             />{' '}
             tools

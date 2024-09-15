@@ -9,19 +9,20 @@ import Image from 'next/image';
 import Slider from 'react-slick';
 const cards = [
   {
-    name: 'Tom Simes',
-    quote:
-      "I want to be the candidate that I would want to see, someone who's non-partisan, not an ideologue, just somebody who wants to solve problems and be positive, inspirational, and aspirational.",
-    office: 'State House Candidate, Arizona',
-    image: 'https://assets.goodparty.org/map-search/lori-bryson.jpg',
-  },
-  {
     name: 'West Seegmiller',
     quote:
       "I am a candidate that will always fight for someone's right to disagree with me, to be heard and to be considered with respect — not to be attacked or vilified, and not to use a position of power to harm someone's life or livelihood. I'm an anti-corruption candidate, and I have the scars to prove it.",
     office: 'West Hollywood, CA City Council',
     image: 'https://assets.goodparty.org/map-search/lori-bryson.jpg',
   },
+  {
+    name: 'Tom Simes',
+    quote:
+      "I want to be the candidate that I would want to see, someone who's non-partisan, not an ideologue, just somebody who wants to solve problems and be positive, inspirational, and aspirational.",
+    office: 'State House Candidate, Arizona',
+    image: 'https://assets.goodparty.org/map-search/lori-bryson.jpg',
+  },
+
   {
     name: 'Patsy Nyberg',
     quote:
@@ -76,28 +77,30 @@ export default function FacesSection() {
         <MarketingH2 className="text-white text-center mb-12">
           Faces of the movement
         </MarketingH2>
-        <Slider {...settings}>
-          {cards.map((card) => (
-            <div key={card.name} className="px-2">
-              <div className="bg-indigo-100 rounded-3xl p-8 lg:flex">
-                <div className="lg:w-48 lg:h-48 lg:flex-shrink-0 mb-8 lg:mb-0 flex justify-center ">
-                  <Image
-                    src={card.image}
-                    width={192}
-                    height={192}
-                    alt={card.name}
-                    className="rounded-3xl w-48 h-48 border border-slate-300"
-                  />
-                </div>
-                <div className="lg:pl-8">
-                  <MarketingH5>"{card.quote}"</MarketingH5>
-                  <H2 className="mt-8">{card.name}</H2>
-                  <Body1 className="mt-2">{card.office}</Body1>
+        <div className="px-4 lg:px-0">
+          <Slider {...settings}>
+            {cards.map((card) => (
+              <div key={card.name} className="px-2">
+                <div className="bg-indigo-100 rounded-3xl p-8 lg:flex">
+                  <div className="lg:w-48 lg:h-48 lg:flex-shrink-0 mb-8 lg:mb-0 flex justify-center ">
+                    <Image
+                      src={card.image}
+                      width={192}
+                      height={192}
+                      alt={card.name}
+                      className="rounded-3xl w-48 h-48 border border-slate-300"
+                    />
+                  </div>
+                  <div className="lg:pl-8">
+                    <MarketingH5>"{card.quote}"</MarketingH5>
+                    <H2 className="mt-8">{card.name}</H2>
+                    <Body1 className="mt-2">{card.office}</Body1>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </div>
       </MaxWidth>
     </div>
   );

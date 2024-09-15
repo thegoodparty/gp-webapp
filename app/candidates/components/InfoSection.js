@@ -5,7 +5,7 @@ import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import MarketingH2 from '@shared/typography/MarketingH2';
-import MarketingH4 from '@shared/typography/MarketingH4';
+import MarketingH5 from '@shared/typography/MarketingH5';
 import Modal from '@shared/utils/Modal';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -42,7 +42,7 @@ const cards = [
     modalDescription: (
       <>
         GoodParty.org Certified candidates run grassroots campaigns that depend
-        on being connected to and promoted by the people that they’ll be
+        on being connected to and promoted by the people that they'll be
         serving.
         <br />
         <br />
@@ -100,24 +100,22 @@ export default function InfoSection() {
   return (
     <div className="bg-indigo-100 py-8 lg:py-16">
       <MaxWidth>
-        <MarketingH2>
-          <span className="flex justify-center">
-            Who are
-            <Image
-              src="/images/heart.svg"
-              width={60}
-              height={60}
-              alt="gp.org"
-              className="mx-3 mt-3"
-              priority
-            />{' '}
-            independent candidates?
-          </span>
+        <MarketingH2 className="text-center">
+          Who are
+          <Image
+            src="/images/heart.svg"
+            width={80}
+            height={80}
+            alt="gp.org"
+            className="mx-3 static inline-block w-12 h-12 lg:w-20 lg:h-20"
+            priority
+          />
+          independent candidates?
         </MarketingH2>
-        <MarketingH4 className="mt-8 text-center mb-6 lg:mb-12">
+        <MarketingH5 className="mt-8 text-center mb-6 lg:mb-12">
           Candidates are Independent, People-Powered, Anti-Corruption, and agree
           to a minimum standard of civility.
-        </MarketingH4>
+        </MarketingH5>
         <div className="grid grid-cols-12 gap-4">
           {cards.map((card) => (
             <div
@@ -127,7 +125,9 @@ export default function InfoSection() {
               <div className=" md:pb-12 lg:pb-28 ">
                 <div className="text-5xl">{card.icon}</div>
                 <H2 className="mt-2">{card.title}</H2>
-                <Body1 className="mt-2 text-gray-600">{card.description}</Body1>
+                <Body1 className="mt-2 text-gray-600 mb-4 lg:mb-0">
+                  {card.description}
+                </Body1>
               </div>
               <PrimaryButton
                 fullWidth

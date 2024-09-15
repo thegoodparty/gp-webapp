@@ -7,6 +7,7 @@ import InfoSection from './InfoSection';
 import FacesSection from './FacesSection';
 import '@shared/inputs/slick.min.css';
 import '@shared/inputs/slick-theme.min.css';
+import CommunitySection from './CommunitySection';
 
 export default function CandidatesPage(props) {
   const { campaigns } = useMapCampaigns();
@@ -18,6 +19,7 @@ export default function CandidatesPage(props) {
       <WinnerListSection allCampaigns={campaigns} />
       <InfoSection />
       <FacesSection />
+      <CommunitySection />
     </>
   );
 }
