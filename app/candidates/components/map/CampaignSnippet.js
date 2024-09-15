@@ -3,7 +3,7 @@ import H3 from '@shared/typography/H3';
 import UserAvatar from '@shared/user/UserAvatar';
 import { useContext } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 
 export default function CampaignSnippet({ campaign }) {
   const {

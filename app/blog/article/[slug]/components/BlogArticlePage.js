@@ -33,7 +33,7 @@ export default async function BlogArticlePage({ article }) {
     title,
     tags,
     keyInformation,
-    endCallout,
+    endHighlight,
     relatedArticles,
     references,
   } = article;
@@ -106,9 +106,9 @@ export default async function BlogArticlePage({ article }) {
             {body2 && (
               <CmsContentWrapper>{contentfulHelper(body2)}</CmsContentWrapper>
             )}
-            {endCallout && (
-              <HighlightedContent className="italic">
-                {endCallout}
+            {endHighlight && (
+              <HighlightedContent>
+                {contentfulHelper(endHighlight)}
               </HighlightedContent>
             )}
           </div>

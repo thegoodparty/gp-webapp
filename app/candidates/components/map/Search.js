@@ -1,6 +1,6 @@
 import { StandaloneSearchBox } from '@react-google-maps/api';
 import { useContext, useRef } from 'react';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 
 export default function Search() {
   const searchBoxRef = useRef(null);

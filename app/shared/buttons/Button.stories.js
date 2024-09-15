@@ -1,5 +1,4 @@
-import { MdStar } from 'react-icons/md';
-import IconButton, { COLOR_CLASSES, SIZE_CLASSES } from './IconButton';
+import Button, { COLOR_CLASSES, SIZE_CLASSES, VARIANT_CLASSES } from './Button';
 
 const argTypes = {
   size: {
@@ -23,7 +22,7 @@ const argTypes = {
     },
   },
   children: {
-    description: 'JSX inside the button, intended to be an Icon component',
+    description: 'JSX content inside the button',
     table: {
       type: {
         summary: 'node',
@@ -31,7 +30,7 @@ const argTypes = {
     },
   },
   className: {
-    description: 'classes to override default classes',
+    description: 'classes to add to / override default classes',
   },
   disabled: {
     options: [true, false],
@@ -47,14 +46,26 @@ const argTypes = {
 };
 
 export default {
-  title: 'Buttons/IconButton',
-  component: IconButton,
+  title: 'Buttons/Button',
+  component: Button,
   tags: ['autodocs'],
   args: {
-    children: <MdStar />,
+    children: 'Click Me',
   },
-
   argTypes: argTypes,
+  render: (args) => (
+    <div class="flex gap-2">
+      <Button {...args} variant="contained">
+        Contained
+      </Button>
+      <Button {...args} variant="outlined">
+        Outlined
+      </Button>
+      <Button {...args} variant="text">
+        Text
+      </Button>
+    </div>
+  ),
 };
 
 export const Primary = {

@@ -12,8 +12,9 @@ export const fetchCampaigns = async () => {
 
 export async function generateMetadata({ params, searchParams }) {
   const meta = pageMetaData({
-    title: 'Candidate Search | GoodParty.org',
-    description: 'Find your candidate for the upcoming election',
+    title: 'GoodParty.org Certified Independent Candidates',
+    description:
+      'Find independent, people-powered, and anti-corruption candidates running for office in your area. Search by office type, name, party affiliation, and more.',
     slug: `/candidates`,
   });
   return meta;

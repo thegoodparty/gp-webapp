@@ -2,7 +2,7 @@
 
 import { useContext } from 'react';
 import CampaignSnippet from './CampaignSnippet';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 
 export default function Results(props) {
   const { visibleMarkers } = useContext(MapContext);
