@@ -3,7 +3,7 @@
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { useContext, useState } from 'react';
 import { MapContext } from './MapSection';
-import Search from './Search';
+// import Search from './Search';
 
 const partyOptions = [
   { key: 'independent', label: 'Independent' },
@@ -30,11 +30,11 @@ export default function Filters() {
   const { filters, onChangeFilters } = useContext(MapContext);
 
   return (
-    <div className="p-4 border-b border-slate-300 md:w-[300px] lg:w-[400px] bg-white">
-      <div className="relative">
+    <div className="p-4 border-b border-slate-300 md:w-[400px] lg:w-[500px] bg-white">
+      {/* <div className="relative">
         <Search />
-      </div>
-      <div className="grid grid-cols-12 gap-2 mt-2">
+      </div> */}
+      <div className="grid grid-cols-12 gap-2">
         <div className=" col-span-4">
           <Select
             native

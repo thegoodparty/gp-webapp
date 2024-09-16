@@ -4,44 +4,40 @@ import UserAvatar from '@shared/user/UserAvatar';
 import { useContext } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { MapContext } from './MapSection';
+import Subtitle2 from '@shared/typography/Subtitle2';
 
 export default function CampaignSnippet({ campaign }) {
-  const {
-    firstName,
-    lastName,
-    avatar,
-    didWin,
-    office,
-    state,
-    ballotLevel,
-    zip,
-  } = campaign;
+  const { firstName, lastName, avatar, office, state } = campaign;
 
   const { onSelectCampaign, selectedCampaign } = useContext(MapContext);
   return (
-    <div className=" m-2">
+    <div className="mx-4 my-2">
       <div
-        className={`flex px-3 py-4  rounded shadow-sm hover:shadow-lg transition-shadow cursor-pointer ${
-          selectedCampaign?.slug === campaign.slug ? 'bg-blue-100' : 'bg-white'
+        className={`flex p-3  rounded-xl hover:bg-info-background border border-gray-200 cursor-pointer ${
+          selectedCampaign?.slug === campaign.slug
+            ? 'bg-info-background'
+            : 'bg-white'
         }`}
         onClick={() => {
           onSelectCampaign(campaign);
         }}
       >
-        <div className="mt-1">
+        <div className="">
           {avatar ? (
-            <UserAvatar user={campaign} size="smaller" />
+            <UserAvatar user={campaign} size="large" />
           ) : (
-            <FaUserCircle size={24} />
+            <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-gray-200 border border-gray-300">
+              <FaUserCircle size={24} />
+            </div>
           )}
         </div>
         <div className="flex-1 pl-3">
           <H3>
             {firstName} {lastName}
           </H3>
-          <Body2 className="mt-2 text-gray-600">
+          <Subtitle2 className=" text-gray-600">
             Running for {office}, {state}
-          </Body2>
+          </Subtitle2>
         </div>
       </div>
     </div>
