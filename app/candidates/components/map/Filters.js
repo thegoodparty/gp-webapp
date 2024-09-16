@@ -1,8 +1,9 @@
 'use client';
 
 import { FormControl, MenuItem, Select } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MapContext } from './MapSection';
+import Checkbox from '@shared/inputs/Checkbox';
 // import Search from './Search';
 
 const partyOptions = [
@@ -27,7 +28,13 @@ const resultsOptions = [
 ];
 
 export default function Filters() {
-  const { filters, onChangeFilters } = useContext(MapContext);
+  const { filters, onChangeFilters, campaigns } = useContext(MapContext);
+  const [officeOptions, setOfficeOptions] = useState([]);
+  useEffect(() => {
+    const allOffices = campaigns.map((campaign) => campaign.office);
+    const offices = [...new Set(allOffices)]; // dedupe
+    setOfficeOptions(offices);
+  }, [campaigns]);
 
   return (
     <div className="p-4 border-b border-slate-300 md:w-[400px] lg:w-[500px] bg-white">
@@ -42,7 +49,6 @@ export default function Filters() {
             value={filters.party}
             variant="outlined"
             onChange={(e) => onChangeFilters('party', e.target.value)}
-            size="small"
           >
             <option value="">Party</option>
             {partyOptions.map((op) => (
@@ -59,7 +65,6 @@ export default function Filters() {
             value={filters.level}
             variant="outlined"
             onChange={(e) => onChangeFilters('level', e.target.value)}
-            size="small"
           >
             <option value="">Level</option>
             {levelOptions.map((op) => (
@@ -73,19 +78,26 @@ export default function Filters() {
           <Select
             native
             fullWidth
-            value={filters.results}
+            value={filters.offices}
             variant="outlined"
-            onChange={(e) => onChangeFilters('results', e.target.value)}
-            size="small"
+            onChange={(e) => onChangeFilters('office', e.target.value)}
           >
-            <option value="">Results</option>
-            {resultsOptions.map((op) => (
-              <option value={op.key} key={op.key}>
-                {op.label}
+            <option value="">Office</option>
+            {officeOptions.map((op) => (
+              <option value={op} key={op}>
+                {op}
               </option>
             ))}
           </Select>
         </div>
+      </div>
+      <div className="flex mt-4 items-center justify-center">
+        <Checkbox
+          label="Show Winners Only"
+          checked={filters.win}
+          onChange={(e) => onChangeFilters('results', e.target.checked)}
+        />{' '}
+        Show Winners Only
       </div>
     </div>
   );

@@ -54,7 +54,8 @@ export default function MapSection({ campaigns }) {
   const [filters, setFilters] = useState({
     party: '',
     level: '',
-    results: '',
+    results: false,
+    office: '',
   });
 
   const onChangeFilters = useCallback((key, val) => {
@@ -79,18 +80,24 @@ export default function MapSection({ campaigns }) {
         (marker) => marker.ballotLevel === updatedFilters.level,
       );
     }
-    if (updatedFilters.results && updatedFilters.results !== '') {
+    if (updatedFilters.level && updatedFilters.level !== '') {
+      updatedMarkers = updatedMarkers.filter(
+        (marker) => marker.ballotLevel === updatedFilters.level,
+      );
+    }
+    if (updatedFilters.office && updatedFilters.office !== '') {
+      updatedMarkers = updatedMarkers.filter(
+        (marker) => marker.office === updatedFilters.office,
+      );
+    }
+    if (updatedFilters.results) {
       updatedMarkers = updatedMarkers.filter((marker) => {
         // updated filters values are win lose and running
         // marker results (didWin) are true, false, and null
-        if (updatedFilters.results === 'win') {
+        if (updatedFilters.results) {
           return marker.didWin === true;
-        }
-        if (updatedFilters.results === 'lose') {
-          return marker.didWin === false;
-        }
-        if (updatedFilters.results === 'running') {
-          return marker.didWin === null;
+        } else {
+          return marker;
         }
       });
     }
