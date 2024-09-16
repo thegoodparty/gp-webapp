@@ -6,12 +6,7 @@ import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
-
-const isValidUrl = (url) => {
-  const regex =
-    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-  return regex.test(String(url).toLowerCase());
-};
+import { isValidUrl } from 'helpers/linkhelper';
 
 const fields = [
   {
