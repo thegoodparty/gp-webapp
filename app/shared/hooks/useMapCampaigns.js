@@ -7,7 +7,7 @@ const fetchCampaigns = async () => {
   try {
     const api = gpApi.campaign.mapList;
 
-    return await gpFetch(api);
+    return await gpFetch(api, false, 3600);
   } catch (err) {
     console.log(err);
     return [];
