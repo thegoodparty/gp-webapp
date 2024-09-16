@@ -7,6 +7,12 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 
+const isValidUrl = (url) => {
+  const regex =
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+  return regex.test(String(url).toLowerCase());
+};
+
 const fields = [
   {
     key: 'campaignCommittee',
@@ -40,8 +46,8 @@ const fields = [
     key: 'website',
     label: 'Campaign website',
     type: 'text',
-    validate: 'url',
-    helperText: 'Please provide a full url starting with http',
+    validateFn: isValidUrl,
+    helperText: 'Please provide a full url starting with http:// or https://',
   },
 ];
 
@@ -53,6 +59,7 @@ export default function CampaignSection(props) {
   const [state, setState] = useState(initialState);
   const [saving, setSaving] = useState(false);
   const { campaign } = props;
+
   useEffect(() => {
     if (campaign?.details) {
       const newState = {};
@@ -62,10 +69,17 @@ export default function CampaignSection(props) {
       setState(newState);
     }
   }, [campaign]);
+
   const canSave = () => {
     let able = true;
     fields.forEach((field) => {
-      if (field.required && state[field.key] === '') {
+      const value = state[field.key];
+
+      if (field.required && value === '') {
+        able = false;
+      }
+
+      if (field.validateFn && value != '' && !field.validateFn(value)) {
         able = false;
       }
     });
@@ -95,17 +109,23 @@ export default function CampaignSection(props) {
     <section className="border-t pt-6 border-gray-600">
       <H3 className="pb-6">Campaign Details</H3>
       <div className="grid grid-cols-12 gap-3">
-        {fields.map((field) => (
-          <div key={field.key} className="col-span-12 md:col-span-6">
-            <div className={`${field.type === 'select' ? '' : 'pt-5'}`}>
-              <RenderInputField
-                field={field}
-                value={state[field.key]}
-                onChangeCallback={onChangeField}
-              />
+        {fields.map((field) => {
+          const value = state[field.key];
+          return (
+            <div key={field.key} className="col-span-12 md:col-span-6">
+              <div className={`${field.type === 'select' ? '' : 'pt-5'}`}>
+                <RenderInputField
+                  field={field}
+                  value={value}
+                  onChangeCallback={onChangeField}
+                  error={
+                    field.validateFn && value != '' && !field.validateFn(value)
+                  }
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div className="flex justify-end mb-6">
         {saving ? (
