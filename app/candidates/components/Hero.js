@@ -1,6 +1,4 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
 import MarketingH1 from '@shared/typography/MarketingH1';
 import MarketingH4 from '@shared/typography/MarketingH4';
 import { numberFormatter } from 'helpers/numberHelper';

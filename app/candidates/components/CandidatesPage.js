@@ -9,12 +9,12 @@ import '@shared/inputs/slick.min.css';
 import '@shared/inputs/slick-theme.min.css';
 import CommunitySection from './CommunitySection';
 
-export default function CandidatesPage(props) {
+export default function CandidatesPage({ count }) {
   const { campaigns } = useMapCampaigns();
 
   return (
     <>
-      <Hero count={campaigns.length} />
+      <Hero count={count} />
       <MapSection campaigns={campaigns} />
       <WinnerListSection allCampaigns={campaigns} />
       <InfoSection />

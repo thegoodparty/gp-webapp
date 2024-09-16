@@ -7,9 +7,10 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import CampaignPreview from './CampaignPreview';
 import { CircularProgress } from '@mui/material';
 import H2 from '@shared/typography/H2';
-import { useMapCampaigns } from '@shared/hooks/useMapCampaigns';
 
 export const MapContext = createContext();
+
+const INITIAL_ZOOM = 14;
 
 const center = {
   lat: 39.8283,
@@ -123,7 +124,7 @@ export default function MapSection({ campaigns }) {
           };
 
           // Start smooth zoom
-          smoothZoom(map, 13, 4); // Adjust final zoom level and initial zoom level as needed
+          smoothZoom(map, INITIAL_ZOOM, 4); // Adjust final zoom level and initial zoom level as needed
         }, 500); // Delay to allow pan to start
       }
     }
@@ -141,7 +142,7 @@ export default function MapSection({ campaigns }) {
       lat: campaign.geoLocation.lat,
       lng: campaign.geoLocation.lng,
     });
-    setZoom(13);
+    setZoom(INITIAL_ZOOM);
     setSelectedCampaign(campaign);
   };
 
