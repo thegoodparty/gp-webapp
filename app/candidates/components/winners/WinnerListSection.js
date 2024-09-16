@@ -4,7 +4,7 @@ import MarketingH4 from '@shared/typography/MarketingH4';
 import Image from 'next/image';
 import WinnerFilters from './WinnerFilters';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilteredWinnerList from './FilteredWinnerList';
 
 // const tempCampaigns = [
@@ -156,12 +156,24 @@ import FilteredWinnerList from './FilteredWinnerList';
 // ];
 
 export default function WinnerListSection({ allCampaigns }) {
-  const winnersOnly = allCampaigns.filter((campaign) => campaign.didWin);
+  const [campaigns, setCampaigns] = useState([]);
+  const [offices, setOffices] = useState([]);
 
-  const allOffices = winnersOnly.map((campaign) => campaign.office);
-  const offices = [...new Set(allOffices)]; // dedupe
+  useEffect(() => {
+    let winners = [];
+    allCampaigns.forEach((campaign) => {
+      if (campaign.didWin === true) {
+        winners.push(campaign);
+      }
+    });
 
-  const [campaigns, setCampaigns] = useState(winnersOnly);
+    const allOffices = winners.map((campaign) => campaign.office);
+    const offices = [...new Set(allOffices)]; // dedupe
+
+    setCampaigns(winners);
+    setOffices(offices);
+  }, [allCampaigns]);
+
   const [filters, setFilters] = useState({
     state: '',
     office: '',
@@ -171,8 +183,9 @@ export default function WinnerListSection({ allCampaigns }) {
   const onChangeFilters = (key, value) => {
     setFilters({ ...filters, [key]: value });
 
-    const filteredCampaigns = winnersOnly.filter((campaign) => {
+    const filteredCampaigns = allCampaigns.filter((campaign) => {
       return (
+        campaign.didWin === true &&
         (key === 'state' ? campaign.state === value || value === '' : true) &&
         (key === 'office' ? campaign.office === value || value === '' : true) &&
         (key === 'level'
@@ -182,12 +195,13 @@ export default function WinnerListSection({ allCampaigns }) {
     });
     setCampaigns(filteredCampaigns);
   };
+  
   return (
     <div className="py-8 px-4 lg:p-16">
       <MaxWidth>
         <MarketingH2 className="text-center">
           <span className="">
-            {winnersOnly.length > 0 ? winnersOnly.length : ''} independents won
+            {campaigns.length > 0 ? campaigns.length : ''} independents won
             using
             <Image
               src="/images/heart.svg"

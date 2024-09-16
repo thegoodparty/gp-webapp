@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import WinnerSnippet from './WinnerSnippet';
 import H5 from '@shared/typography/H5';
 import { numberFormatter } from 'helpers/numberHelper';
+import { useEffect, useState } from 'react';
 
 const settings = {
   dots: true,
@@ -15,15 +16,19 @@ const settings = {
 
 export default function FilteredWinnerList({ campaigns }) {
   // split campaigns to and array of arrays each has 9 campaigns max
-  const splitCampaigns = campaigns.reduce((acc, campaign, index) => {
-    const i = Math.floor(index / 9);
-    if (!acc[i]) {
-      acc[i] = [];
-    }
-    acc[i].push(campaign);
-    return acc;
-  }, []);
-  console.log('splitCampaigns', splitCampaigns);
+  const [splitCampaigns, setSplitCampaigns] = useState([]);
+  useEffect(() => {
+    const split = campaigns.reduce((acc, campaign, index) => {
+      const i = Math.floor(index / 9);
+      if (!acc[i]) {
+        acc[i] = [];
+      }
+      acc[i].push(campaign);
+      return acc;
+    }, []);
+    setSplitCampaigns(split);
+  }, [campaigns]);
+
   return (
     <div className="pb-4">
       <H5 className="mb-6">{numberFormatter(campaigns.length)} candidates</H5>
