@@ -39,7 +39,7 @@ export default function CommunitySection() {
           </div>
           <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
             <Image
-              src="https://assets.goodparty.org/map-search/community-section.png"
+              src="https://assets.goodparty.org/map-search/community.png"
               width={593}
               height={464}
               alt="Community Section"
