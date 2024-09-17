@@ -71,12 +71,12 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams() {
-  const letters = alphabet;
+// export async function generateStaticParams() {
+//   const letters = alphabet;
 
-  return letters.map((letter) => {
-    return {
-      slug: letter,
-    };
-  });
-}
+//   return letters.map((letter) => {
+//     return {
+//       slug: letter,
+//     };
+//   });
+// }
