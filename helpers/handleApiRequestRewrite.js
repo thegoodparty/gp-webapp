@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
-const apiRootUrl = new URL(process.env.NEXT_PUBLIC_API_BASE);
+const apiRootUrl = new URL(
+  process.env.NEXT_PUBLIC_API_BASE || 'https://api-dev.goodparty.org',
+);
 
 const apiRewriteUrl = (ReqNextUrl) => {
   const newUrl = ReqNextUrl.clone();

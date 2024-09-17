@@ -21,14 +21,10 @@ const mapOptions = {
 };
 
 const Map = () => {
-  const { markers, updateVisibleMarkers, mapCenter, isLoaded, zoom, mapRef } =
+  const { markers, mapCenter, isLoaded, zoom, mapRef, setVisibleMarkers } =
     useContext(MapContext);
 
-  const handleBoundsChanged = useCallback(() => {
-    debounce(updateMarkers);
-  }, [markers, updateVisibleMarkers]);
-
-  const updateMarkers = () => {
+  const updateMarkers = useCallback(() => {
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
       const filteredMarkers = markers.filter((marker) =>
@@ -37,9 +33,13 @@ const Map = () => {
           lng: marker.position.lng,
         }),
       );
-      updateVisibleMarkers(filteredMarkers);
+      setVisibleMarkers(filteredMarkers); // Now using setVisibleMarkers from context
     }
-  };
+  }, [markers, mapRef, setVisibleMarkers]);
+
+  const handleBoundsChanged = useCallback(() => {
+    debounce(updateMarkers(), 300); // Debounced marker update
+  }, [updateMarkers]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)]">

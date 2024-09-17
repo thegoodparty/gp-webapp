@@ -1,11 +1,18 @@
 'use client';
-import { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Map from './Map';
 import Results from './Results';
 import Filters from './Filters';
 import { useJsApiLoader } from '@react-google-maps/api';
 import CampaignPreview from './CampaignPreview';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, debounce } from '@mui/material';
 import H2 from '@shared/typography/H2';
 
 export const MapContext = createContext();
@@ -19,33 +26,8 @@ const center = {
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
-export default function MapSection({ campaigns }) {
+export default function MapSection({ campaigns = [] }) {
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if (campaigns && campaigns.length > 0) {
-      const initMarkers = (campaigns || []).map((campaign) => {
-        return {
-          id: campaign.slug,
-          position: {
-            lat: campaign.geoLocation?.lat,
-            lng: campaign.geoLocation?.lng,
-          },
-          ...campaign,
-        };
-      });
-      setMarkers(initMarkers);
-      setVisibleMarkers(initMarkers);
-      setLoading(false);
-    }
-  }, [campaigns]);
-
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: apiKey,
-    libraries: ['places'], // Load the places library for search
-  });
-
-  const mapRef = useRef(null);
   const [markers, setMarkers] = useState([]);
   const [visibleMarkers, setVisibleMarkers] = useState([]);
   const [mapCenter, setMapCenter] = useState(center);
@@ -59,62 +41,76 @@ export default function MapSection({ campaigns }) {
     name: '',
   });
 
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: apiKey,
+    libraries: ['places'], // Load the places library for search
+  });
+
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (campaigns && campaigns.length > 0) {
+      const initMarkers = campaigns.map((campaign) => ({
+        id: campaign.slug,
+        position: {
+          lat: campaign.geoLocation?.lat,
+          lng: campaign.geoLocation?.lng,
+        },
+        ...campaign,
+      }));
+      setMarkers(initMarkers);
+      setVisibleMarkers(initMarkers);
+      setLoading(false);
+    }
+  }, [campaigns]);
+
+  // Debounced onChangeFilters to prevent unnecessary renders
   const onChangeFilters = useCallback(
-    (key, val) => {
-      const updatedFilters = { ...filters, [key]: val };
-      setFilters(updatedFilters);
-      filterMarkers(updatedFilters);
-    },
-    [filters],
+    debounce((key, val) => {
+      setFilters((prevFilters) => ({
+        ...prevFilters, // Spread the previous filters to retain the current values
+        [key]: val, // Update the filter based on the key-value pair
+      }));
+    }, 300),
+    [],
   );
 
-  const updateVisibleMarkers = () => {
-    filterMarkers(filters);
-  };
-
-  const filterMarkers = (updatedFilters) => {
+  const filteredMarkers = useMemo(() => {
     let updatedMarkers = markers;
-    if (updatedFilters.party && updatedFilters.party !== '') {
+    if (filters.party) {
       updatedMarkers = updatedMarkers.filter(
-        (marker) => marker.party === updatedFilters.party,
+        (marker) => marker.party === filters.party,
       );
     }
-    if (updatedFilters.level && updatedFilters.level !== '') {
+    if (filters.level) {
       updatedMarkers = updatedMarkers.filter(
-        (marker) => marker.ballotLevel === updatedFilters.level,
+        (marker) => marker.ballotLevel === filters.level,
       );
     }
-    if (updatedFilters.level && updatedFilters.level !== '') {
+    if (filters.office) {
       updatedMarkers = updatedMarkers.filter(
-        (marker) => marker.ballotLevel === updatedFilters.level,
+        (marker) => marker.office === filters.office,
       );
     }
-    if (updatedFilters.office && updatedFilters.office !== '') {
-      updatedMarkers = updatedMarkers.filter(
-        (marker) => marker.office === updatedFilters.office,
-      );
-    }
-    if (updatedFilters.name && updatedFilters.name !== '') {
+    if (filters.name) {
       updatedMarkers = updatedMarkers.filter((marker) => {
         const name = `${marker.firstName} ${marker.lastName}`.toLowerCase();
-        return name.includes(updatedFilters.name.toLowerCase());
+        return name.includes(filters.name.toLowerCase());
       });
     }
-
-    if (updatedFilters.results) {
-      updatedMarkers = updatedMarkers.filter((marker) => {
-        // updated filters values are win lose and running
-        // marker results (didWin) are true, false, and null
-        if (updatedFilters.results) {
-          return marker.didWin === true;
-        } else {
-          return marker;
-        }
-      });
+    if (filters.results) {
+      updatedMarkers = updatedMarkers.filter(
+        (marker) => marker.didWin === true,
+      );
     }
+    return updatedMarkers;
+  }, [filters, markers]);
 
-    setVisibleMarkers(updatedMarkers);
-  };
+  // Update visible markers whenever filtered markers change
+  useEffect(() => {
+    setVisibleMarkers(filteredMarkers);
+  }, [filteredMarkers]);
 
   const onPlacesChanged = (places) => {
     if (places.length > 0) {
@@ -165,23 +161,33 @@ export default function MapSection({ campaigns }) {
     setSelectedCampaign(campaign);
   };
 
-  const childProps = {
-    markers,
-    campaigns,
-    visibleMarkers,
-    updateVisibleMarkers,
-    filters,
-    onChangeFilters,
-    onPlacesChanged,
-    mapCenter,
-    isLoaded,
-    zoom,
-    mapRef,
-    onSelectCampaign,
-    selectedCampaign,
-  };
-
-  console.log('markers', markers);
+  // Memoized childProps to prevent unnecessary re-renders
+  const childProps = useMemo(
+    () => ({
+      markers,
+      visibleMarkers,
+      setVisibleMarkers, // Now passing setVisibleMarkers
+      filters,
+      onChangeFilters,
+      onPlacesChanged,
+      mapCenter,
+      isLoaded,
+      zoom,
+      mapRef,
+      onSelectCampaign,
+      selectedCampaign,
+    }),
+    [
+      markers,
+      visibleMarkers,
+      filters,
+      mapCenter,
+      zoom,
+      selectedCampaign,
+      onPlacesChanged,
+      onChangeFilters,
+    ],
+  );
 
   return (
     <MapContext.Provider value={childProps}>
@@ -192,12 +198,12 @@ export default function MapSection({ campaigns }) {
         </div>
       ) : (
         <>
-          <section className="h-[calc(100vh-56px)]  bg-primary-dark px-4 lg:px-8 overflow-hidden">
+          <section className="h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden">
             <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
               <div className="flex-1 h-3/4 md:h-auto">
                 <Map />
               </div>
-              <div className="flex flex-col  shadow-lg relative z-20">
+              <div className="flex flex-col shadow-lg relative z-20">
                 <Filters />
                 <Results />
                 <CampaignPreview />
