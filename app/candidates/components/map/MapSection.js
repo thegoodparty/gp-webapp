@@ -56,13 +56,17 @@ export default function MapSection({ campaigns }) {
     level: '',
     results: false,
     office: '',
+    name: '',
   });
 
-  const onChangeFilters = useCallback((key, val) => {
-    const updatedFilters = { ...filters, [key]: val };
-    setFilters(updatedFilters);
-    filterMarkers(updatedFilters);
-  }, []);
+  const onChangeFilters = useCallback(
+    (key, val) => {
+      const updatedFilters = { ...filters, [key]: val };
+      setFilters(updatedFilters);
+      filterMarkers(updatedFilters);
+    },
+    [filters],
+  );
 
   const updateVisibleMarkers = () => {
     filterMarkers(filters);
@@ -90,6 +94,13 @@ export default function MapSection({ campaigns }) {
         (marker) => marker.office === updatedFilters.office,
       );
     }
+    if (updatedFilters.name && updatedFilters.name !== '') {
+      updatedMarkers = updatedMarkers.filter((marker) => {
+        const name = `${marker.firstName} ${marker.lastName}`.toLowerCase();
+        return name.includes(updatedFilters.name.toLowerCase());
+      });
+    }
+
     if (updatedFilters.results) {
       updatedMarkers = updatedMarkers.filter((marker) => {
         // updated filters values are win lose and running

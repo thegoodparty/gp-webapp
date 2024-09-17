@@ -4,6 +4,7 @@ import { FormControl, MenuItem, Select } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { MapContext } from './MapSection';
 import Checkbox from '@shared/inputs/Checkbox';
+import TextField from '@shared/inputs/TextField';
 // import Search from './Search';
 
 const partyOptions = [
@@ -37,67 +38,78 @@ export default function Filters() {
   }, [campaigns]);
 
   return (
-    <div className="p-4 border-b border-slate-300 md:w-[400px] lg:w-[500px] bg-white">
-      {/* <div className="relative">
+    <div className="md:w-[400px] lg:w-[500px] bg-white">
+      <div className="p-4">
+        {/* <div className="relative">
         <Search />
       </div> */}
-      <div className="grid grid-cols-12 gap-2">
-        <div className=" col-span-4">
-          <Select
-            native
-            fullWidth
-            value={filters.party}
-            variant="outlined"
-            onChange={(e) => onChangeFilters('party', e.target.value)}
-          >
-            <option value="">Party</option>
-            {partyOptions.map((op) => (
-              <option value={op.key} key={op.key}>
-                {op.label}
-              </option>
-            ))}
-          </Select>
+        <div className="grid grid-cols-12 gap-2">
+          <div className=" col-span-4">
+            <Select
+              native
+              fullWidth
+              value={filters.party}
+              variant="outlined"
+              onChange={(e) => onChangeFilters('party', e.target.value)}
+            >
+              <option value="">Party</option>
+              {partyOptions.map((op) => (
+                <option value={op.key} key={op.key}>
+                  {op.label}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className=" col-span-4">
+            <Select
+              native
+              fullWidth
+              value={filters.level}
+              variant="outlined"
+              onChange={(e) => onChangeFilters('level', e.target.value)}
+            >
+              <option value="">Level</option>
+              {levelOptions.map((op) => (
+                <option value={op.key} key={op.key}>
+                  {op.label}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className=" col-span-4">
+            <Select
+              native
+              fullWidth
+              value={filters.offices}
+              variant="outlined"
+              onChange={(e) => onChangeFilters('office', e.target.value)}
+            >
+              <option value="">Office</option>
+              {officeOptions.map((op) => (
+                <option value={op} key={op}>
+                  {op}
+                </option>
+              ))}
+            </Select>
+          </div>
         </div>
-        <div className=" col-span-4">
-          <Select
-            native
-            fullWidth
-            value={filters.level}
-            variant="outlined"
-            onChange={(e) => onChangeFilters('level', e.target.value)}
-          >
-            <option value="">Level</option>
-            {levelOptions.map((op) => (
-              <option value={op.key} key={op.key}>
-                {op.label}
-              </option>
-            ))}
-          </Select>
-        </div>
-        <div className=" col-span-4">
-          <Select
-            native
-            fullWidth
-            value={filters.offices}
-            variant="outlined"
-            onChange={(e) => onChangeFilters('office', e.target.value)}
-          >
-            <option value="">Office</option>
-            {officeOptions.map((op) => (
-              <option value={op} key={op}>
-                {op}
-              </option>
-            ))}
-          </Select>
+        <div className="flex mt-4 items-center justify-center">
+          <Checkbox
+            label="Show Winners Only"
+            checked={filters.win}
+            onChange={(e) => onChangeFilters('results', e.target.checked)}
+          />{' '}
+          Show Winners Only
         </div>
       </div>
-      <div className="flex mt-4 items-center justify-center">
-        <Checkbox
-          label="Show Winners Only"
-          checked={filters.win}
-          onChange={(e) => onChangeFilters('results', e.target.checked)}
-        />{' '}
-        Show Winners Only
+      <div className="bg-indigo-100 p-4">
+        <TextField
+          label="Search for a candidate"
+          fullWidth
+          value={filters.name}
+          onChange={(e) => onChangeFilters('name', e.target.value)}
+          className="bg-white"
+        />
       </div>
     </div>
   );
