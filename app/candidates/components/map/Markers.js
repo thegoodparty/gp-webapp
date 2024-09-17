@@ -1,6 +1,6 @@
 'use client';
 import { useContext } from 'react';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 import { Marker, MarkerClusterer } from '@react-google-maps/api';
 
 const clusterStyles = [

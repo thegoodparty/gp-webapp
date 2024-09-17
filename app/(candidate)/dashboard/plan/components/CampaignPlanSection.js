@@ -103,8 +103,6 @@ export default function CampaignPlanSection({
       setPlan(aiContent[key]);
       setLoading(false);
       setIsTyped(true);
-    } else {
-      handleRegenerate('');
     }
   }, [aiContent]);
 
@@ -223,68 +221,71 @@ export default function CampaignPlanSection({
       id={`plan-section-${section.key}`}
       className="my-3"
     >
-      <div className={`section-content-${section.key}`}>
-        {loading ? (
-          <LoadingAI />
-        ) : (
-          <div className="border border-slate-500 bg-indigo-50 rounded-xl">
-            {plan ? (
-              <>
-                <PlanVersion
-                  campaign={campaign}
-                  versions={versions ? versions[key] : {}}
-                  updatePlanCallback={updatePlanCallback}
-                  latestVersion={aiContent ? aiContent[key] : false}
-                />
-                <PlanDisplay
-                  plan={plan}
-                  isTyped={isTyped}
-                  setIsTyped={setIsTyped}
-                  setEdit={setEdit}
-                  isFailed={isFailed}
-                  handleEdit={handleEdit}
-                  editMode={editMode}
-                />
+      <TogglePanel
+        label={section.title}
+        icon={loading ? <CircularProgress size={20} /> : section.icon}
+        openCallback={handleOpen}
+        forceExpand={expandSection}
+      >
+        <div className={`section-content-${section.key}`}>
+          {loading ? (
+            <LoadingAI />
+          ) : (
+            <div className="border border-slate-500 bg-indigo-50 rounded-xl">
+              {plan ? (
+                <>
+                  <PlanVersion
+                    campaign={campaign}
+                    versions={versions ? versions[key] : {}}
+                    updatePlanCallback={updatePlanCallback}
+                    latestVersion={aiContent ? aiContent[key] : false}
+                  />
+                  <PlanDisplay
+                    plan={plan}
+                    isTyped={isTyped}
+                    setIsTyped={setIsTyped}
+                    setEdit={setEdit}
+                    isFailed={isFailed}
+                    handleEdit={handleEdit}
+                    editMode={editMode}
+                  />
 
-                <PlanActions
-                  isEdited={isEdited}
-                  handleSave={handleSave}
-                  handleRegenerate={handleRegenerate}
-                />
-              </>
-            ) : (
-              <>
-                {canGenerateAi ? (
-                  <div className="py-12 flex justify-center">
-                    <div
-                      onClick={() => {
-                        handleRegenerate('');
-                      }}
-                    >
-                      <PrimaryButton>Generate {section.title}</PrimaryButton>
+                  <PlanActions
+                    isEdited={isEdited}
+                    handleSave={handleSave}
+                    handleRegenerate={handleRegenerate}
+                  />
+                </>
+              ) : (
+                <>
+                  {canGenerateAi ? (
+                    <div className="py-12 flex justify-center">
+                      <div
+                        onClick={() => {
+                          handleRegenerate('');
+                        }}
+                      >
+                        <PrimaryButton>Generate {section.title}</PrimaryButton>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="py-8 flex justify-center">
-                    <Link href={`/dashboard/questions?generate=${key}`}>
-                      <PrimaryButton>
-                        <div className="flex items-center">
-                          <div className="mr-1">Generate</div>
-                          <BsStars />
-                        </div>
-                      </PrimaryButton>
-                    </Link>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        )}
-      </div>
+                  ) : (
+                    <div className="py-8 flex justify-center">
+                      <Link href={`/dashboard/questions?generate=${key}`}>
+                        <PrimaryButton>
+                          <div className="flex items-center">
+                            <div className="mr-1">Generate</div>
+                            <BsStars />
+                          </div>
+                        </PrimaryButton>
+                      </Link>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </TogglePanel>
     </section>
   );
 }
-
-/*
-{"slug":"tomer-almog","lastVisited":1706588129827,"id":1,"currentStep":5,"goals":{},"details":{"phone":"3109759102","runForOffice":"yes","campaignCommittee":"committee of Javascript","noCommittee":false,"party":"Independent","otherParty":"","zip":"93065","office":"Other","positionId":"Z2lkOi8vYmFsbG90LWZhY3RvcnkvUG9zaXRpb24vNDYxNTQ=","electionId":"Z2lkOi8vYmFsbG90LWZhY3RvcnkvRWxlY3Rpb24vNDMxNw==","state":"CA","otherOffice":"U.S. Senate - California","officeTermLength":"2 years","district":"","city":"","ballotOffice":null,"pledged":true},"lastStepDate":"2024-01-17","launchStatus":"launched","candidateSlug":"tomer-almog","p2vStatus":"Waiting"}
-*/
