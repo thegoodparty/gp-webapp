@@ -7,7 +7,11 @@ import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
-import { PENDING_REQUEST_ACTIONS } from 'app/(candidate)/dashboard/team/components/PendingRequestActions';
+
+export const PENDING_REQUEST_ACTIONS = {
+  GRANT: 'GRANT',
+  DELETE: 'DELETE',
+};
 
 const deleteCampaignRequest = async (
   requestId,
@@ -50,10 +54,35 @@ export const PendingRequests = (props) => {
     );
   };
 
+  const handleGrant = async (request) => {
+    try {
+      const { url, ...apiProperties } = gpApi.campaign.campaignRequests.grant;
+      const result = await gpFetch({
+        url: url.replace(':id', request.id),
+        ...apiProperties,
+      });
+      if (!result || result.ok === false) {
+        console.error('error at approveCampaignRequest', result);
+        snackbarState.set(() => ({
+          isOpen: true,
+          isError: true,
+          message: 'Error approving request',
+        }));
+      } else {
+        setRequests(requests.filter((r) => r.id !== request.id));
+      }
+    } catch (e) {
+      console.error('error at approveCampaignRequest', e);
+    }
+  };
+
   const handleAction = async (action, request) => {
     switch (action) {
       case PENDING_REQUEST_ACTIONS.DELETE:
         await handleDelete(request);
+        break;
+      case PENDING_REQUEST_ACTIONS.GRANT:
+        await handleGrant(request);
         break;
       default:
         break;

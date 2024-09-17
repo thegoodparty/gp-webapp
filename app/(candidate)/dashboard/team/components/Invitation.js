@@ -5,8 +5,11 @@ import Body2 from '@shared/typography/Body2';
 export default function Invitation(props) {
   const { invitation } = props;
   return (
-    <div className="col-span-6 md:col-span-6 lg:col-span-4" key={invitation.id}>
-      <div className="p-2 md:p-6 border border-slate-300 rounded-lg flex justify-between">
+    <div
+      className="col-span-12 md:col-span-12 lg:col-span-6"
+      key={invitation.id}
+    >
+      <div className="py-6 px-4 border border-slate-300 rounded-lg flex justify-between">
         <div>
           <div>
             <a
