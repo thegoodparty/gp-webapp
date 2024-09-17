@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
+import Body1 from '@shared/typography/Body1';
 
 export const PENDING_REQUEST_ACTIONS = {
   GRANT: 'GRANT',
@@ -35,8 +36,33 @@ const deleteCampaignRequest = async (
   }
 };
 
-export const PendingRequests = (props) => {
-  const [requests, setRequests] = useState(props.requests || []);
+const grantCampaignRequest = async (
+  requestId,
+  onSuccess = () => {},
+  onError = () => {},
+) => {
+  try {
+    const { url, ...apiProperties } = gpApi.campaign.campaignRequests.grant;
+    const result = await gpFetch({
+      url: url.replace(':id', requestId),
+      ...apiProperties,
+    });
+    if (!result || result.ok === false) {
+      console.error('error at approveCampaignRequest', result);
+      onError();
+    } else {
+      onSuccess();
+    }
+  } catch (e) {
+    console.error('error at approveCampaignRequest', e);
+  }
+};
+
+export const PendingRequests = ({
+  requests: initRequests,
+  onAction = () => {},
+}) => {
+  const [requests, setRequests] = useState(initRequests || []);
   const snackbarState = useHookstate(globalSnackbarState);
 
   const handleDelete = async (request) => {
@@ -55,25 +81,19 @@ export const PendingRequests = (props) => {
   };
 
   const handleGrant = async (request) => {
-    try {
-      const { url, ...apiProperties } = gpApi.campaign.campaignRequests.grant;
-      const result = await gpFetch({
-        url: url.replace(':id', request.id),
-        ...apiProperties,
-      });
-      if (!result || result.ok === false) {
-        console.error('error at approveCampaignRequest', result);
+    await grantCampaignRequest(
+      request.id,
+      () => {
+        setRequests(requests.filter((r) => r.id !== request.id));
+      },
+      () => {
         snackbarState.set(() => ({
           isOpen: true,
           isError: true,
           message: 'Error approving request',
         }));
-      } else {
-        setRequests(requests.filter((r) => r.id !== request.id));
-      }
-    } catch (e) {
-      console.error('error at approveCampaignRequest', e);
-    }
+      },
+    );
   };
 
   const handleAction = async (action, request) => {
@@ -87,22 +107,30 @@ export const PendingRequests = (props) => {
       default:
         break;
     }
+    await onAction();
   };
 
   return (
-    <Paper>
-      <div className="flex justify-between items-center">
-        <H2>Pending Requests</H2>
-      </div>
-      <div className="grid grid-cols-12 gap-4 mt-12">
-        {requests.map((request) => (
-          <PendingRequestCard
-            key={request.id}
-            onAction={handleAction}
-            request={request}
-          />
-        ))}
-      </div>
-    </Paper>
+    Boolean(requests?.length) && (
+      <Paper className="mb-4">
+        <div className="flex justify-between items-center">
+          <header className="align-left">
+            <H2>Requested</H2>
+            <Body1 className="text-gray-500">
+              Someone has requested to join your campaign.
+            </Body1>
+          </header>
+        </div>
+        <div className="grid grid-cols-12 gap-4 mt-12">
+          {requests.map((request) => (
+            <PendingRequestCard
+              key={request.id}
+              onAction={handleAction}
+              request={request}
+            />
+          ))}
+        </div>
+      </Paper>
+    )
   );
 };

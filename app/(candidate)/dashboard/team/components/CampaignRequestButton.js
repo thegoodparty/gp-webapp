@@ -12,7 +12,7 @@ export const CampaignRequestButton = ({
   ...restButtonProps
 }) => {
   const [showDialog, setShowDialog] = useState(false);
-  console.log(`dialogOptions =>`, dialogOptions);
+
   return (
     <>
       <Button

@@ -1,13 +1,22 @@
 'use client';
-import Paper from '@shared/utils/Paper';
 import { useState } from 'react';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import PendingInvitations from './PendingInvitations';
 import VolunteersSection from './VolunteersSection';
 import { PendingRequests } from 'app/(candidate)/dashboard/team/components/PendingRequests';
+
+const fetchVolunteers = async () => {
+  try {
+    const api = gpApi.campaign.campaignVolunteer.list;
+
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error at fetchVolunteers', e);
+    return {};
+  }
+};
 
 async function fetchInvitations() {
   try {
@@ -25,6 +34,9 @@ export default function TeamSection(props) {
   const [volunteers, setVolunteers] = useState(props.volunteers || []);
   const [invitations, setInvitations] = useState(props.invitations || []);
 
+  const reloadVolunteers = async () =>
+    setVolunteers((await fetchVolunteers()).volunteers);
+
   const reloadInvitationsCallback = async () => {
     const res = await fetchInvitations();
     setInvitations(res.invitations);
@@ -35,6 +47,10 @@ export default function TeamSection(props) {
       {Boolean(
         !volunteers?.length && !invitations?.length && !requests?.length,
       ) && <EmptyState reloadInvitationsCallback={reloadInvitationsCallback} />}
+
+      {Boolean(requests && requests.length) && (
+        <PendingRequests requests={requests} onAction={reloadVolunteers} />
+      )}
 
       {Boolean(volunteers && volunteers.length) && (
         <VolunteersSection
@@ -49,10 +65,6 @@ export default function TeamSection(props) {
           reloadInvitationsCallback={reloadInvitationsCallback}
           invitations={invitations}
         />
-      )}
-
-      {Boolean(requests && requests.length) && (
-        <PendingRequests requests={requests} />
       )}
     </section>
   );

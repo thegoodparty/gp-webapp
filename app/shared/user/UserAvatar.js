@@ -20,8 +20,6 @@ function UserAvatar({ user, size = 'small', ...restProps }) {
     fontSizeClass = 'text-lg';
   }
 
-  user.avatar = '';
-
   return (
     <div className={`${sizeClass}`}>
       {user.avatar ? (
@@ -31,7 +29,7 @@ function UserAvatar({ user, size = 'small', ...restProps }) {
         ></div>
       ) : (
         <div
-          className={`cursor-pointer flex items-center justify-center font-bold text-gray-500 uppercase ${fontSizeClass} ${sizeClass} ${className}`}
+          className={`cursor-pointer flex items-center justify-center text-gray-500 uppercase ${fontSizeClass} ${sizeClass} ${className}`}
         >
           {initials ? <span>{initials}</span> : <MdPerson />}
         </div>
