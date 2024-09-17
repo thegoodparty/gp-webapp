@@ -32,6 +32,9 @@ export default function Filters() {
   const { filters, onChangeFilters, campaigns } = useContext(MapContext);
   const [officeOptions, setOfficeOptions] = useState([]);
   useEffect(() => {
+    if (!campaigns || campaigns.length === 0) {
+      return;
+    }
     const allOffices = campaigns.map((campaign) => campaign.office);
     const offices = [...new Set(allOffices)]; // dedupe
     setOfficeOptions(offices);
