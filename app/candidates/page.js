@@ -7,7 +7,7 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 const fetchCount = async () => {
   const api = gpApi.campaign.mapCount;
 
-  return await gpFetch(api);
+  return await gpFetch(api, false, 3600);
 };
 
 export async function generateMetadata({ params, searchParams }) {
