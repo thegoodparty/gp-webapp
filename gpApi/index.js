@@ -124,6 +124,10 @@ const gpApi = {
       url: `${base}campaigns/map`,
       method: 'GET',
     },
+    mapCount: {
+      url: `${base}campaigns/map-count`,
+      method: 'GET',
+    },
 
     launch: {
       url: `${base}campaign/launch`,

@@ -218,6 +218,44 @@ const sections = [
     ],
   },
   {
+    title: 'Viability Score',
+    fields: [
+      {
+        key: 'viability.level',
+        label: 'Election Level',
+        type: 'select',
+        options: ['', 'local', 'city', 'county', 'state', 'federal'],
+      },
+      {
+        key: 'viability.isPartisan',
+        label: 'Is Partisan',
+        type: 'select',
+        options: ['', 'true', 'false'],
+      },
+      {
+        key: 'viability.isIncumbent',
+        label: 'Is Incumbent',
+        type: 'select',
+        options: ['', 'true', 'false'],
+      },
+      {
+        key: 'viability.isUncontested',
+        label: 'Is Uncontested',
+        type: 'select',
+        options: ['', 'true', 'false'],
+      },
+      { key: 'viability.candidates', label: 'Candidates', type: 'number' },
+      { key: 'viability.seats', label: 'Seats', type: 'number' },
+      {
+        key: 'viability.candidatesPerSeat',
+        label: 'Candidates Per Seat',
+        type: 'number',
+        formula: true,
+      },
+      { key: 'viability.score', label: 'Score', type: 'number', formula: true },
+    ],
+  },
+  {
     title: 'Vote Goal',
     fields: [
       {
@@ -319,9 +357,11 @@ const sections = [
 
 const initialState = {};
 const keys = [];
+const keyTypes = {};
 
 sections.forEach((section) => {
   section.fields.forEach((field) => {
+    keyTypes[field.key] = field.type;
     if (field.initialValue) {
       initialState[field.key] = field.initialValue;
     } else {
@@ -337,9 +377,10 @@ sections.forEach((section) => {
 
 export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
-  const { pathToVictory, details } = campaign;
+  let { pathToVictory, details } = campaign;
   const [locations, setLocations] = useState([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
+
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
@@ -392,6 +433,27 @@ export default function AdminVictoryPathPage(props) {
     }
   }, [state.winNumber, state.averageTurnoutPercent]);
 
+  useEffect(() => {
+    if (pathToVictory?.viability) {
+      for (let key in pathToVictory.viability) {
+        let value = pathToVictory.viability[key];
+        if (value === 'true' || value === 'false') {
+          value = value === 'true';
+        }
+        if (key !== 'level' && value !== '') {
+          value = parseInt(value);
+        }
+        pathToVictory[`viability.${key}`] = value;
+      }
+    }
+    setState((prevState) => {
+      return {
+        ...prevState,
+        ...pathToVictory,
+      };
+    });
+  }, [pathToVictory]);
+
   const onChangeField = (key, value) => {
     let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
     let averageTurnoutPercent = Math.round(
@@ -405,9 +467,43 @@ export default function AdminVictoryPathPage(props) {
     }
 
     let val = value;
-    if (keys[key] === 'number') {
+    if (keyTypes[key] === 'number' && value !== '') {
       val = parseInt(value);
+    } else if (keyTypes[key] === 'select' && value !== '') {
+      if (value === 'true' || value === 'false') {
+        val = value === 'true';
+      }
+    } else {
+      val = value;
     }
+
+    let candidatesPerSeat;
+    if (key === 'viability.seats' && value > 0) {
+      candidatesPerSeat = Math.ceil(state['viability.candidates'] / value);
+    } else if (key === 'viability.candidates' && value > 0) {
+      candidatesPerSeat = Math.ceil(value / state['viability.seats']);
+    } else {
+      candidatesPerSeat = state['viability.candidatesPerSeat'];
+    }
+
+    let score = calculateViabilityScore({
+      level: key === 'viability.level' ? val : state['viability.level'],
+      isPartisan:
+        key === 'viability.isPartisan' ? val : state['viability.isPartisan'],
+      isIncumbent:
+        key === 'viability.isIncumbent' ? val : state['viability.isIncumbent'],
+      isUncontested:
+        key === 'viability.isUncontested'
+          ? val
+          : state['viability.isUncontested'],
+      candidates:
+        key === 'viability.candidates' && val !== ''
+          ? parseInt(val)
+          : state['viability.candidates'],
+      candidatesPerSeat,
+    });
+
+    console.log('saving key', key, 'value', val, 'typeof', typeof val);
 
     setState({
       ...state,
@@ -415,6 +511,8 @@ export default function AdminVictoryPathPage(props) {
       winNumber,
       averageTurnoutPercent,
       averageTurnoutPercent,
+      'viability.candidatesPerSeat': candidatesPerSeat,
+      'viability.score': score,
     });
   };
 
@@ -461,6 +559,68 @@ export default function AdminVictoryPathPage(props) {
     });
   };
 
+  const calculateViabilityScore = (viability) => {
+    const {
+      level,
+      isPartisan,
+      isIncumbent,
+      isUncontested,
+      candidates,
+      candidatesPerSeat,
+    } = viability;
+
+    let score = 0;
+    if (level) {
+      if (level === 'city' || level === 'local') {
+        score += 1;
+      } else if (viability.level === 'county') {
+        score += 1;
+      } else if (viability.level === 'state') {
+        score += 0.5;
+      }
+    }
+
+    console.log('typeof isPartisan', typeof isPartisan);
+    if (typeof isPartisan === 'boolean') {
+      if (isPartisan) {
+        score += 0.25;
+      } else {
+        score += 1;
+      }
+    }
+
+    if (typeof isIncumbent === 'boolean') {
+      if (isIncumbent) {
+        score += 1;
+      } else {
+        score += 0.5;
+      }
+    }
+
+    if (typeof isUncontested === 'boolean') {
+      if (isUncontested) {
+        score += 5;
+        return score;
+      }
+    }
+
+    if (typeof candidates === 'number') {
+      if (candidates > 0) {
+        if (candidatesPerSeat <= 2) {
+          score += 0.75;
+        } else if (candidatesPerSeat === 3) {
+          score += 0.5;
+        } else if (candidatesPerSeat >= 4) {
+          score += 0.25;
+        }
+      } else {
+        score += 0.25;
+      }
+    }
+
+    return score;
+  };
+
   const save = async () => {
     snackbarState.set(() => {
       return {
@@ -469,11 +629,7 @@ export default function AdminVictoryPathPage(props) {
         isError: false,
       };
     });
-    const updated = {
-      ...pathToVictory,
-      ...state,
-      p2vStatus: 'Complete',
-    };
+
     try {
       // only send mail the first time we update pathToVictory
       if (!pathToVictory) {

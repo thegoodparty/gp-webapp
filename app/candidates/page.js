@@ -4,16 +4,17 @@ import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 
-export const fetchCampaigns = async () => {
-  const api = gpApi.campaign.mapList;
+const fetchCount = async () => {
+  const api = gpApi.campaign.mapCount;
 
   return await gpFetch(api);
 };
 
 export async function generateMetadata({ params, searchParams }) {
   const meta = pageMetaData({
-    title: 'Candidate Search | GoodParty.org',
-    description: 'Find your candidate for the upcoming election',
+    title: 'GoodParty.org Certified Independent Candidates',
+    description:
+      'Find independent, people-powered, and anti-corruption candidates running for office in your area. Search by office type, name, party affiliation, and more.',
     slug: `/candidates`,
   });
   return meta;
@@ -21,6 +22,7 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page({ params, searchParams }) {
   adminAccessOnly();
-
-  return <CandidatesPage />;
+  const { count } = await fetchCount();
+  const childProps = { count };
+  return <CandidatesPage {...childProps} />;
 }

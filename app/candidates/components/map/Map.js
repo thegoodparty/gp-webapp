@@ -4,7 +4,7 @@ import { useCallback, useContext } from 'react';
 import mapSkin from './mapSkin';
 import Markers from './Markers';
 import H3 from '@shared/typography/H3';
-import { MapContext } from './CandidatesPage';
+import { MapContext } from './MapSection';
 import { debounce } from 'helpers/debounceHelper';
 
 const containerStyle = {
