@@ -23,7 +23,7 @@ export default function ResetPasswordForm({
       </hgroup>
       <TextField
         newStyle
-        concealValue
+        required
         type="password"
         value={password}
         label="New Password"
@@ -37,7 +37,7 @@ export default function ResetPasswordForm({
       <TextField
         className="mt-6"
         newStyle
-        concealValue
+        required
         type="password"
         value={confirmPassword}
         label="Confirm New Password"

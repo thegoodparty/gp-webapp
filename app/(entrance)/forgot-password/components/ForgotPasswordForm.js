@@ -23,6 +23,7 @@ export default function ForgotPassowordForm({
       </hgroup>
       <TextField
         newStyle
+        required
         value={email}
         label="Email"
         placeholder="hello@email.com"
