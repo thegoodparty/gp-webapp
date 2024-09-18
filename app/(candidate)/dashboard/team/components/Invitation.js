@@ -1,6 +1,4 @@
-import { dateUsHelper } from 'helpers/dateHelper';
 import Actions from './Actions';
-import Body2 from '@shared/typography/Body2';
 import { CampaignTeamMemberInfo } from 'app/(candidate)/dashboard/team/components/CampaignTeamMemberInfo';
 
 export default function Invitation(props) {
@@ -12,18 +10,6 @@ export default function Invitation(props) {
     >
       <div className="py-6 px-4 border border-slate-300 rounded-lg flex justify-between">
         <CampaignTeamMemberInfo user={invitation} role={invitation.role} />
-        {/*<div>*/}
-
-        {/*<div>*/}
-        {/*  <a*/}
-        {/*    href={`mailto:${invitation.email}`}*/}
-        {/*    className="underline text-blue-700 mb-2 block"*/}
-        {/*  >*/}
-        {/*    {invitation.email}*/}
-        {/*  </a>*/}
-        {/*</div>*/}
-        {/*<Body2>Sent at: {dateUsHelper(invitation.createdAt)}</Body2>*/}
-        {/*</div>*/}
         <div>
           <Actions {...props} />
         </div>
