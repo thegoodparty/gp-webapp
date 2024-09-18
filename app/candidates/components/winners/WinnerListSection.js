@@ -155,13 +155,13 @@ import FilteredWinnerList from './FilteredWinnerList';
 //   },
 // ];
 
-export default function WinnerListSection({ allCampaigns }) {
+export default function WinnerListSection({ allCampaigns = [] }) {
   const [campaigns, setCampaigns] = useState([]);
   const [offices, setOffices] = useState([]);
 
   useEffect(() => {
     let winners = [];
-    allCampaigns.forEach((campaign) => {
+    (allCampaigns || []).forEach((campaign) => {
       if (campaign.didWin === true) {
         winners.push(campaign);
       }
@@ -195,7 +195,7 @@ export default function WinnerListSection({ allCampaigns }) {
     });
     setCampaigns(filteredCampaigns);
   };
-  
+
   return (
     <div className="py-8 px-4 lg:p-16">
       <MaxWidth>
