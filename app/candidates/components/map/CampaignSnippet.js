@@ -10,7 +10,7 @@ export default function CampaignSnippet({ campaign }) {
   const { firstName, lastName, avatar, office, state } = campaign;
 
   const { onSelectCampaign, selectedCampaign } = useContext(MapContext);
-  console.log('selectedCampaign', selectedCampaign);
+
   return (
     <div className="mx-4 my-2">
       <div

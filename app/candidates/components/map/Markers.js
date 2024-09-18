@@ -21,18 +21,18 @@ const clusterStyles = [
 ];
 
 export default function Markers() {
-  const { visibleMarkers, onSelectCampaign } = useContext(MapContext);
+  const { campaigns, onSelectCampaign } = useContext(MapContext);
 
   return (
     <MarkerClusterer
       options={{
         maxZoom: 15, // Set the maxZoom level to stop clustering at this zoom level or higher
-        gridSize: 80,
+        gridSize: 150,
         styles: clusterStyles,
       }}
     >
       {(clusterer) =>
-        visibleMarkers.map((marker) => (
+        campaigns.map((marker) => (
           <Marker
             key={marker.id}
             clusterer={clusterer}
