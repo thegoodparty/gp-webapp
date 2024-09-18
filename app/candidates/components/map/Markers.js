@@ -21,7 +21,7 @@ const clusterStyles = [
 ];
 
 export default function Markers() {
-  const { visibleMarkers, onSelectCampaign } = useContext(MapContext);
+  const { campaigns, onSelectCampaign } = useContext(MapContext);
 
   return (
     <MarkerClusterer
@@ -32,7 +32,7 @@ export default function Markers() {
       }}
     >
       {(clusterer) =>
-        visibleMarkers.map((marker) => (
+        campaigns.map((marker) => (
           <Marker
             key={marker.id}
             clusterer={clusterer}

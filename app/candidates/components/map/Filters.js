@@ -1,10 +1,11 @@
 'use client';
 
-import { FormControl, MenuItem, Select } from '@mui/material';
+import { Select } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { MapContext } from './MapSection';
 import Checkbox from '@shared/inputs/Checkbox';
 import TextField from '@shared/inputs/TextField';
+import { debounce } from 'helpers/debounceHelper';
 // import Search from './Search';
 
 const partyOptions = [
@@ -31,6 +32,7 @@ const resultsOptions = [
 export default function Filters() {
   const { filters, onChangeFilters, campaigns } = useContext(MapContext);
   const [officeOptions, setOfficeOptions] = useState([]);
+  const [name, setName] = useState('');
   useEffect(() => {
     if (!campaigns || campaigns.length === 0) {
       return;
@@ -38,7 +40,12 @@ export default function Filters() {
     const allOffices = campaigns.map((campaign) => campaign.office);
     const offices = [...new Set(allOffices)]; // dedupe
     setOfficeOptions(offices);
-  }, [campaigns]);
+  }, [campaigns, filters]);
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    debounce(onChangeFilters, 500, 'name', e.target.value);
+  };
 
   return (
     <div className="md:w-[400px] lg:w-[500px] bg-white">
@@ -109,8 +116,8 @@ export default function Filters() {
         <TextField
           label="Search for a candidate"
           fullWidth
-          value={filters.name}
-          onChange={(e) => onChangeFilters('name', e.target.value)}
+          value={name}
+          onChange={handleNameChange}
           className="bg-white"
         />
       </div>

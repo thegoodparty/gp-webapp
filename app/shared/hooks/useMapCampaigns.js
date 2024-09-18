@@ -3,27 +3,28 @@ import { useEffect, useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-const fetchCampaigns = async () => {
+const fetchCampaigns = async (filters) => {
   try {
     const api = gpApi.campaign.mapList;
 
-    return await gpFetch(api, false, 3600);
+    return await gpFetch(api, filters, 3600);
   } catch (err) {
     console.log(err);
     return [];
   }
 };
 
-export const useMapCampaigns = () => {
+export const useMapCampaigns = (filters) => {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    loadCampaigns();
-  }, []);
+    console.log('in useMapCampaigns', filters);
+    loadCampaigns(filters);
+  }, [filters]);
 
-  const loadCampaigns = async () => {
-    const { campaigns } = await fetchCampaigns();
-    setCampaigns(campaigns);
+  const loadCampaigns = async (filters) => {
+    const { campaigns } = await fetchCampaigns(filters);
+    setCampaigns(campaigns || []);
   };
 
   return { campaigns };
