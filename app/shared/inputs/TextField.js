@@ -11,7 +11,12 @@ import IconButton from '@shared/buttons/IconButton';
 
 function ConcealButton({ concealed, onClick }) {
   return (
-    <IconButton className="leading-[18px]" size="small" onClick={onClick}>
+    <IconButton
+      type="button"
+      className="leading-[18px]"
+      size="small"
+      onClick={onClick}
+    >
       {concealed ? <RemoveRedEyeRounded /> : <VisibilityOffOutlined />}
     </IconButton>
   );

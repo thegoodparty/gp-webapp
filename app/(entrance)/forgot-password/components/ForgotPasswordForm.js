@@ -44,7 +44,12 @@ export default function ForgotPassowordForm({
         <span className="relative z-10 bg-white px-6">OR</span>
       </Overline>
       <Link href="/login">
-        <Button size="large" variant="outlined" className="w-full">
+        <Button
+          type="button"
+          size="large"
+          variant="outlined"
+          className="w-full"
+        >
           Back to Login
         </Button>
       </Link>
