@@ -191,27 +191,27 @@ const gpApi = {
 
     campaignRequests: {
       create: {
-        url: `${base}campaign/volunteer/requests`,
+        url: `${base}campaign/volunteer/request`,
         method: 'POST',
         withAuth: true,
       },
       list: {
-        url: `${base}campaign/volunteer/requests`,
+        url: `${base}campaign/volunteer/request`,
         method: 'GET',
         withAuth: true,
       },
       get: {
-        url: `${base}campaign/volunteer/requests/:id`,
+        url: `${base}campaign/volunteer/request/:id`,
         method: 'GET',
         withAuth: true,
       },
       grant: {
-        url: `${base}campaign/volunteer/requests/:id/grant`,
+        url: `${base}campaign/volunteer/request/:id/grant`,
         method: 'GET',
         withAuth: true,
       },
       delete: {
-        url: `${base}campaign/volunteer/requests/:id`,
+        url: `${base}campaign/volunteer/request/:id`,
         method: 'DELETE',
         withAuth: true,
       },
@@ -221,6 +221,16 @@ const gpApi = {
       create: {
         url: `${base}campaign/volunteer`,
         method: 'POST',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/volunteer/:id`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}campaign/volunteer/:id`,
+        method: 'PATCH',
         withAuth: true,
       },
       list: {

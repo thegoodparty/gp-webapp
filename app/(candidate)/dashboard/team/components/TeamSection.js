@@ -56,7 +56,7 @@ export default function TeamSection(props) {
         <VolunteersSection
           volunteers={volunteers}
           invitations={invitations}
-          reloadInvitationsCallback={reloadInvitationsCallback}
+          onAction={reloadVolunteers}
         />
       )}
 

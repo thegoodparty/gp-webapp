@@ -20,7 +20,6 @@ export const handleApiRequestRewrite = async (req) => {
   (impersonateToken || token) &&
     req.headers.set('Authorization', `Bearer ${impersonateToken || token}`);
 
-  console.info(`req.nextUrl =>`, req.nextUrl);
   return NextResponse.rewrite(apiRewriteUrl(req.nextUrl), {
     request: req,
   });
