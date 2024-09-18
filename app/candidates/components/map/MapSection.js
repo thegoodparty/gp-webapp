@@ -99,7 +99,6 @@ export default function MapSection({ isLoaded }) {
       campaigns,
       filters,
       onChangeFilters,
-
       mapCenter,
       isLoaded,
       zoom,

@@ -26,6 +26,8 @@
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.5",
+    "@googlemaps/js-api-loader": "^1.16.8",
+    "@googlemaps/markerclusterer": "^2.5.3",
     "@greatsumini/react-facebook-login": "^3.3.3",
     "@hookstate/core": "^4.0.0-rc21",
     "@mui/icons-material": "^5.10.14",
