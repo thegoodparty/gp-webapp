@@ -21,24 +21,36 @@ const mapOptions = {
 };
 
 const Map = () => {
-  const { markers, mapCenter, isLoaded, zoom, mapRef, setVisibleMarkers } =
+  const { campaigns, mapCenter, isLoaded, zoom, mapRef, onChangeMapBounds } =
     useContext(MapContext);
 
   const updateMarkers = useCallback(() => {
     if (mapRef.current) {
       const bounds = mapRef.current.getBounds();
-      const filteredMarkers = markers.filter((marker) =>
-        bounds.contains({
-          lat: marker.position.lat,
-          lng: marker.position.lng,
-        }),
-      );
-      setVisibleMarkers(filteredMarkers); // Now using setVisibleMarkers from context
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        console.log('NE (Lat, Lng):', ne.lat(), ne.lng());
+        console.log('SW (Lat, Lng):', sw.lat(), sw.lng());
+
+        /*
+neLat: false,
+    neLng: false,
+    swLat: false,
+    swLng: false,
+  */
+        onChangeMapBounds({
+          neLat: ne.lat(),
+          neLng: ne.lng(),
+          swLat: sw.lat(),
+          swLng: sw.lng(),
+        });
+      }
     }
-  }, [markers, mapRef, setVisibleMarkers]);
+  }, [campaigns, mapRef]);
 
   const handleBoundsChanged = useCallback(() => {
-    debounce(updateMarkers(), 300); // Debounced marker update
+    debounce(updateMarkers, 300); // Debounced marker update
   }, [updateMarkers]);
 
   return (

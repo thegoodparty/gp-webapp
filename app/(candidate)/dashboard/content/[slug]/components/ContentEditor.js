@@ -80,7 +80,7 @@ export default function ContentEditor({
   const handleEdit = async (editedPlan, debounceTime = 5000) => {
     setPlan(editedPlan);
     if (campaignPlan[key].content != plan) {
-      debounce(handleTypingComplete, undefined, debounceTime);
+      debounce(handleTypingComplete, debounceTime);
     }
   };
 
