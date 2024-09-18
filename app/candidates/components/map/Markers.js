@@ -27,7 +27,7 @@ export default function Markers() {
     <MarkerClusterer
       options={{
         maxZoom: 15, // Set the maxZoom level to stop clustering at this zoom level or higher
-        gridSize: 80,
+        gridSize: 150,
         styles: clusterStyles,
       }}
     >
