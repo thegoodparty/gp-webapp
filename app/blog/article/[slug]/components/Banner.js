@@ -45,20 +45,28 @@ export default function Banner({ banner, idIndex = '1' }) {
       <div className="overflow-hidden rounded-lg col-span-1">
         {smallImage && (
           <Image
-            className="w-full object-contain object-center lg:hidden"
+            style={{
+              maxWidth: smallImage.size?.width,
+              maxHeight: smallImage.size?.height,
+            }}
+            className="w-full object-contain object-center mx-auto lg:hidden"
             src={`https:${smallImage.url}`}
             alt={smallImage.alt}
-            width={200}
-            height={200}
+            width={smallImage.size?.width || 200}
+            height={smallImage.size?.height || 200}
           />
         )}
         {largeImage && (
           <Image
-            className="w-full object-contain object-center hidden lg:block"
+            style={{
+              maxWidth: largeImage.size?.width,
+              maxHeight: largeImage.size?.height,
+            }}
+            className="w-full object-contain object-center mx-auto hidden lg:block"
             src={`https:${largeImage.url}`}
             alt={largeImage.alt}
-            width={200}
-            height={200}
+            width={largeImage.size?.width || 200}
+            height={largeImage.size?.height || 200}
           />
         )}
       </div>
