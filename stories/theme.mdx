@@ -1,119 +1,16 @@
 import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+import { renderColorSwatches } from './colors.mdx';
 
 <Meta title="Theme/Theme Colors" />
-
 <ColorPalette>
-
-{' '}
-
-<ColorItem
-  title="Primary"
-  colors={{
-    DEFAULT: '#242D3D',
-    dark: '#0D1528',
-    main: '#242D3D',
-    light: '#484E55',
-    background: '#F7FAFB',
-    contrast: '#FFFFFF',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Secondary"
-  colors={{
-    DEFAULT: '#DFF265',
-    dark: '#A6B649',
-    main: '#DFF265',
-    light: '#F1FBA3',
-    background: '#FEFFF2',
-    contrast: '#000000',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Tertiary"
-  colors={{
-    DEFAULT: '#6E37FF',
-    dark: '#3D1BB7',
-    main: '#6E37FF',
-    light: '#AE86FF',
-    background: '#F8F3FF',
-    contrast: '#FFFFFF',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Neutral"
-  colors={{
-    DEFAULT: '#B9C3CC',
-    dark: '#484E55',
-    main: '#B9C3CC',
-    light: '#F7FAFB',
-    background: '#F7FAFB',
-    contrast: '#000000',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Error"
-  colors={{
-    DEFAULT: '#E00C30',
-    dark: '#93081F',
-    main: '#E00C30',
-    light: '#F56C6A',
-    background: '#FFE8E8',
-    contrast: '#FFFFFF',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Success"
-  colors={{
-    DEFAULT: '#30A541',
-    dark: '#0F5F31',
-    main: '#30A541',
-    light: '#86E382',
-    background: '#EEFFE9',
-    contrast: '#FFFFFF',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Info"
-  colors={{
-    DEFAULT: '#1B6AFC',
-    dark: '#0D3CB5',
-    main: '#1B6AFC',
-    light: '#75AFFE',
-    background: '#E3F1FF',
-    contrast: '#FFFFFF',
-  }}
-/>
-
-{' '}
-
-<ColorItem
-  title="Warning"
-  colors={{
-    DEFAULT: '#FF9800',
-    dark: '#CA7204',
-    main: '#FF9800',
-    light: '#F9CA67',
-    background: '#FFF5D5',
-    contrast: '#000000',
-  }}
-/>
-
+  {renderColorSwatches(
+    'primary',
+    'secondary',
+    'tertiary',
+    'neutral',
+    'error',
+    'success',
+    'warning',
+    'info',
+  )}
 </ColorPalette>

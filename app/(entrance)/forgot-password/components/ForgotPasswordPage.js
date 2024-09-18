@@ -1,16 +1,16 @@
 'use client';
-import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
-import gpApi from 'gpApi/index.js';
+
+import { useMemo, useState } from 'react';
 import { useHookstate } from '@hookstate/core';
-import Link from 'next/link.js';
-import { useState } from 'react';
+import gpApi from 'gpApi/index.js';
 import gpFetch from 'gpApi/gpFetch.js';
+import { isValidEmail } from 'helpers/validations';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
-import H1 from '@shared/typography/H1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import ForgotPassowordForm from './ForgotPasswordForm';
+import ForgotPasswordSuccess from './ForgotPasswordSuccess';
 
-async function retrievePassword(email) {
+async function sendForgotPasswordEmail(email) {
   try {
     const payload = {
       email,
@@ -24,23 +24,25 @@ async function retrievePassword(email) {
 }
 
 export default function ForgotPasswordPage() {
-  const [state, setState] = useState({
-    email: '',
-    forgotSent: false,
-  });
+  const [email, setEmail] = useState('');
+  const [forgotEmailSent, setForgotEmailSent] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
+  const isValid = useMemo(() => isValidEmail(email), [email]);
+  const showError = email !== '' && !isValid;
 
-  const enableSubmit = () => isValidEmail(state.email);
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  const handleSubmit = async () => {
-    if (enableSubmit()) {
-      const res = await retrievePassword(state.email);
+    if (isValid) {
+      const res = await sendForgotPasswordEmail(email);
+
       if (res) {
-        onChangeField(true, 'forgotSent');
+        setForgotEmailSent(true);
+
         snackbarState.set(() => {
           return {
             isOpen: true,
-            message: `A password reset link was sent to ${state.email}`,
+            message: `A password reset link was sent to ${email}`,
             isError: false,
           };
         });
@@ -54,62 +56,21 @@ export default function ForgotPasswordPage() {
         });
       }
     }
-  };
-
-  const onChangeField = (value, key) => {
-    setState({
-      ...state,
-      [key]: value,
-    });
-  };
+  }
 
   return (
     <CardPageWrapper>
-      <div className={`flex items-center justify-center`}>
-        <div className="max-w-2xl grid" style={{ width: '75vw' }}>
-          <div className="text-center mb-8 pt-8">
-            <H1 data-cy="register-title">Forgot Password?</H1>
-          </div>
-
-          {state.forgotSent ? (
-            <div className="text-2xl font-black my-6 p-4 border border-black rounded text-center">
-              Your password recovery link was sent to {state.email}
-            </div>
-          ) : (
-            <form
-              noValidate
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              data-cy="email-form"
-              id="register-page-form"
-            >
-              <EmailInput
-                onChangeCallback={(e) => onChangeField(e.target.value, 'email')}
-                value={state.email}
-              />
-
-              <br />
-              <br />
-
-              <PrimaryButton
-                fullWidth
-                disabled={!enableSubmit()}
-                onClick={handleSubmit}
-                type="submit"
-              >
-                Send Recovery Email
-              </PrimaryButton>
-            </form>
-          )}
-          <br />
-          <br />
-
-          <Link href="/login" className="text-sm">
-            Back to login
-          </Link>
-        </div>
-      </div>
+      {forgotEmailSent ? (
+        <ForgotPasswordSuccess email={email} />
+      ) : (
+        <ForgotPassowordForm
+          email={email}
+          isValid={isValid}
+          showError={showError}
+          onEmailChange={setEmail}
+          onSubmit={handleSubmit}
+        />
+      )}
     </CardPageWrapper>
   );
 }

@@ -1,16 +1,14 @@
 'use client';
-import PasswordInput from '@shared/inputs/PasswrodInput.js';
-import gpApi from 'gpApi/index.js';
+
+import { useState, useMemo } from 'react';
 import { useHookstate } from '@hookstate/core';
-import { useState } from 'react';
-import gpFetch from 'gpApi/gpFetch.js';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { passwordRegex } from 'helpers/userHelper';
-import { useRouter } from 'next/navigation';
+import { isValidPassword } from '@shared/inputs/IsValidPassword';
+import gpApi from 'gpApi/index.js';
+import gpFetch from 'gpApi/gpFetch.js';
+import ResetPasswordForm from './ResetPasswordForm';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
-import H1 from '@shared/typography/H1';
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import ResetPasswordSuccess from './ResetPasswordSuccess';
 
 async function resetPassword(email, password, token) {
   try {
@@ -28,22 +26,25 @@ async function resetPassword(email, password, token) {
 }
 
 export default function ResetPasswordPage({ email, token }) {
-  const [state, setState] = useState({
-    password: '',
-  });
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [resetSuccessful, setResetSuccessful] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
-  const router = useRouter();
-  if (!isValidEmail(email)) {
-    router.push('/login');
-  }
+  const isValid = useMemo(() => isValidPassword(password), [password]);
+  const isMatch = useMemo(
+    () => password === confirmPassword,
+    [password, confirmPassword],
+  );
 
-  const enableSubmit = () =>
-    state.password !== '' && state.password.match(passwordRegex);
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  const handleSubmit = async () => {
-    if (enableSubmit()) {
-      const res = await resetPassword(email, state.password, token);
+    if (isValid) {
+      const res = await resetPassword(email, password, token);
+
       if (res) {
+        setResetSuccessful(true);
+
         snackbarState.set(() => {
           return {
             isOpen: true,
@@ -51,61 +52,33 @@ export default function ResetPasswordPage({ email, token }) {
             isError: false,
           };
         });
-        router.push('/login');
       } else {
         snackbarState.set(() => {
           return {
             isOpen: true,
-            message: 'Error sending password reset link.',
+            message: 'Error updating password.',
             isError: true,
           };
         });
       }
     }
-  };
-
-  const onChangeField = (key, value) => {
-    setState({
-      ...state,
-      [key]: value,
-    });
-  };
+  }
 
   return (
     <CardPageWrapper>
-      <div className={`flex items-center justify-center `}>
-        <div className="py-6 max-w-2xl grid" style={{ width: '75vw' }}>
-          <div className="text-center mb-8 pt-8">
-            <H1>Enter a new password for {email}</H1>
-          </div>
-
-          <form
-            noValidate
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-            data-cy="reset-password-form"
-            id="reset-password-form"
-          >
-            <PasswordInput
-              onChangeCallback={(pwd) => onChangeField('password', pwd)}
-              value={state.password}
-            />
-
-            <br />
-            <br />
-
-            <PrimaryButton
-              fullWidth
-              disabled={!enableSubmit()}
-              onClick={handleSubmit}
-              type="submit"
-            >
-              CHANGE PASSWORD
-            </PrimaryButton>
-          </form>
-        </div>
-      </div>
+      {resetSuccessful ? (
+        <ResetPasswordSuccess />
+      ) : (
+        <ResetPasswordForm
+          password={password}
+          confirmPassword={confirmPassword}
+          isValid={isValid}
+          isMatch={isMatch}
+          onSubmit={handleSubmit}
+          onPasswordChange={setPassword}
+          onConfirmPasswordChange={setConfirmPassword}
+        />
+      )}
     </CardPageWrapper>
   );
 }
