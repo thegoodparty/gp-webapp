@@ -182,7 +182,7 @@ export default function MyContent(props) {
 
   const handleJobProcessing = () => {
     aiTotalCount++;
-    debounce(getUserCampaign, undefined, 10000);
+    debounce(getUserCampaign, 10000);
 
     if (aiTotalCount >= 100) {
       //fail

@@ -40,18 +40,18 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams() {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'blogSections',
-    deleteKey: 'articles',
-  };
+// export async function generateStaticParams() {
+//   const api = gpApi.content.contentByKey;
+//   const payload = {
+//     key: 'blogSections',
+//     deleteKey: 'articles',
+//   };
 
-  const { content } = await gpFetch(api, payload);
+//   const { content } = await gpFetch(api, payload);
 
-  return content?.map((section) => {
-    return {
-      slug: section?.fields?.slug,
-    };
-  });
-}
+//   return content?.map((section) => {
+//     return {
+//       slug: section?.fields?.slug,
+//     };
+//   });
+// }

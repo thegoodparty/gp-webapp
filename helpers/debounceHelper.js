@@ -1,6 +1,6 @@
-export function debounce(func, args, timeout = 600) {
+export function debounce(func, timeout = 600, ...args) {
   clearTimeout(window.timer);
   window.timer = setTimeout(() => {
-    func(args);
+    func(...(args.length ? args : []));
   }, timeout);
 }

@@ -49,16 +49,16 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams() {
-  const api = gpApi.content.contentByKey;
+// export async function generateStaticParams() {
+//   const api = gpApi.content.contentByKey;
 
-  const { content } = await gpFetch(api, {
-    key: 'blogArticles',
-  });
+//   const { content } = await gpFetch(api, {
+//     key: 'blogArticles',
+//   });
 
-  return content?.map((article) => {
-    return {
-      slug: article.slug,
-    };
-  });
-}
+//   return content?.map((article) => {
+//     return {
+//       slug: article.slug,
+//     };
+//   });
+// }
