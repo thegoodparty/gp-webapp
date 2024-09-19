@@ -10,10 +10,10 @@ export default function ResetPasswordSuccess() {
       <hgroup className="text-center">
         <H1 className="mb-4">Success!</H1>
         <Body2 className="mb-8">Your password has been updated.</Body2>
-        <div className="rounded-full mt-12 mb-16 h-[120px] w-[120px] inline-flex items-center justify-center bg-green">
-          <CheckRounded className="text-8xl text-white" />
-        </div>
       </hgroup>
+      <div className="rounded-full mx-auto my-16 h-[120px] w-[120px] flex items-center justify-center bg-green">
+        <CheckRounded className="text-8xl text-white" />
+      </div>
       <Link href="/login">
         <Button size="large" className="w-full">
           Login

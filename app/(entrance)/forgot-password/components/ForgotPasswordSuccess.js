@@ -15,10 +15,10 @@ export default function ForgotPasswordSuccess({ email }) {
           associated with a GoodParty.org account, you&apos;ll receive a link to
           reset your password shortly. Please check your inbox and spam folder.
         </Body2>
-        <div className="rounded-full mt-12 mb-16 h-[120px] w-[120px] inline-flex items-center justify-center bg-green">
-          <CheckRounded className="text-8xl text-white" />
-        </div>
       </hgroup>
+      <div className="rounded-full my-16 mx-auto h-[120px] w-[120px] flex items-center justify-center bg-green">
+        <CheckRounded className="text-8xl text-white" />
+      </div>
       <Link href="/">
         <Button size="large" className="w-full">
           Return to GoodParty.org

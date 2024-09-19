@@ -1,66 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { InputAdornment, TextField as MuiTextField } from '@mui/material';
 import {
-  ErrorOutlineRounded,
-  RemoveRedEyeRounded,
-  VisibilityOffOutlined,
-} from '@mui/icons-material';
-import IconButton from '@shared/buttons/IconButton';
+  InputAdornment,
+  TextField as MuiTextField,
+  TextFieldProps as MuiTextFieldProps,
+} from '@mui/material';
+import { ErrorOutlineRounded } from '@mui/icons-material';
 
-function ConcealButton({ concealed, onClick }) {
-  return (
-    <IconButton
-      type="button"
-      className="leading-[18px]"
-      size="small"
-      onClick={onClick}
-    >
-      {concealed ? <RemoveRedEyeRounded /> : <VisibilityOffOutlined />}
-    </IconButton>
-  );
-}
+const ADORNMENTS = {
+  error: <ErrorOutlineRounded className="text-red" />,
+};
 
-export default function TextField({
-  newStyle = false,
-  error,
-  type,
-  ...restProps
-}) {
-  const shouldConcealValue = newStyle && type === 'password';
-  const [concealed, setConcealed] = useState(shouldConcealValue);
+/**
+ * @typedef {Object} TextFieldProps
+ * @property {(keyof ADORNMENTS | JSX.Element)[]} endAdornments Shorthand prop for rendering adornments, pass array of icon elements or strings
+ */
 
-  function handleConcealClick() {
-    setConcealed((value) => !value);
-  }
+/**
+ * Wrapper around MuiTextField component
+ * @param {MuiTextFieldProps & TextFieldProps}} props
+ * @example
+ * <TextField value="something" endAdornments={[
+ *    <CheckRounded className='text-green' />,
+ *    'error'
+ *   ]}
+ * />
+ */
 
+export default function TextField({ endAdornments, ...restProps }) {
   return (
     <MuiTextField
       variant="outlined"
-      sx={
-        newStyle && {
-          '& .MuiInputBase-formControl': {
-            borderRadius: '8px',
-            fontFamily: 'var(--outfit-font)',
-          },
-          '& .MuiFormLabel-root': {
-            fontFamily: 'var(--outfit-font)',
-          },
-        }
-      }
-      error={error}
-      type={shouldConcealValue && !concealed ? 'text' : type}
       InputProps={{
-        endAdornment: newStyle && (
-          <InputAdornment className="[&>*]:ml-2" position="end">
-            {shouldConcealValue && (
-              <ConcealButton
-                concealed={concealed}
-                onClick={handleConcealClick}
-              />
+        endAdornment: endAdornments?.length > 0 && (
+          <InputAdornment position="end">
+            {endAdornments.map(
+              (adornment) => ADORNMENTS[adornment] ?? adornment,
             )}
-            {error && <ErrorOutlineRounded className="text-red" />}
           </InputAdornment>
         ),
         ...restProps?.InputProps, // ensure adornment shorthand doesn't override any other InputProps

@@ -26,15 +26,35 @@ async function resetPassword(email, password, token) {
 }
 
 export default function ResetPasswordPage({ email, token }) {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [{ value: password, isValid }, setPassword] = useState({
+    value: '',
+    isValid: true,
+  });
+  const [{ value: confirmPassword, isMatch }, setConfirmPassword] = useState({
+    value: '',
+    isMatch: true,
+  });
   const [resetSuccessful, setResetSuccessful] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
-  const isValid = useMemo(() => isValidPassword(password), [password]);
-  const isMatch = useMemo(
-    () => password === confirmPassword,
-    [password, confirmPassword],
-  );
+
+  function handlePasswordChange(newPwd, pwdValid) {
+    setPassword({
+      value: newPwd,
+      isValid: pwdValid,
+    });
+
+    setConfirmPassword((state) => ({
+      ...state,
+      isMatch: state.value === newPwd,
+    }));
+  }
+
+  function handleConfirmChange(newConfirmPwd) {
+    setConfirmPassword({
+      value: newConfirmPwd,
+      isMatch: password === newConfirmPwd,
+    });
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -75,8 +95,8 @@ export default function ResetPasswordPage({ email, token }) {
           isValid={isValid}
           isMatch={isMatch}
           onSubmit={handleSubmit}
-          onPasswordChange={setPassword}
-          onConfirmPasswordChange={setConfirmPassword}
+          onPasswordChange={handlePasswordChange}
+          onConfirmPasswordChange={handleConfirmChange}
         />
       )}
     </CardPageWrapper>

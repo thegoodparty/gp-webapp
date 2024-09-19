@@ -1,7 +1,7 @@
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import Button from '@shared/buttons/Button';
-import TextField from '@shared/inputs/TextField';
+import PasswordInput from '@shared/inputs/PasswrodInput';
 
 export default function ResetPasswordForm({
   password,
@@ -12,6 +12,8 @@ export default function ResetPasswordForm({
   onConfirmPasswordChange,
   onSubmit,
 }) {
+  const showConfirmError = confirmPassword !== '' && !isMatch;
+
   return (
     <form noValidate onSubmit={onSubmit}>
       <hgroup className="text-center">
@@ -21,32 +23,19 @@ export default function ResetPasswordForm({
           <br /> Enter new password below.
         </Body2>
       </hgroup>
-      <TextField
-        newStyle
-        required
-        type="password"
+      <PasswordInput
         value={password}
         label="New Password"
-        fullWidth
-        onChange={(e) => onPasswordChange(e.target.value)}
+        onChangeCallback={onPasswordChange}
         error={password !== '' && !isValid}
-        helperText={
-          'Please ensure your password has at least 8 characters, including at least one letter and one number.'
-        }
       />
-      <TextField
+      <PasswordInput
         className="mt-6"
-        newStyle
-        required
-        type="password"
         value={confirmPassword}
         label="Confirm New Password"
-        fullWidth
-        onChange={(e) => onConfirmPasswordChange(e.target.value)}
-        error={confirmPassword !== '' && !isMatch}
-        helperText={
-          confirmPassword !== '' && !isMatch && 'Passwords do not match'
-        }
+        onChangeCallback={onConfirmPasswordChange}
+        error={showConfirmError}
+        helperText={showConfirmError && 'Passwords do not match'}
       />
       <Button
         className="w-full mt-8"

@@ -1,17 +1,18 @@
 import Link from 'next/link';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
-import TextField from '@shared/inputs/TextField';
 import Button from '@shared/buttons/Button';
 import Overline from '@shared/typography/Overline';
+import EmailInput from '@shared/inputs/EmailInput';
 
-export default function ForgotPassowordForm({
+export default function ForgotPasswordForm({
   email,
   isValid,
-  showError,
   onEmailChange,
   onSubmit,
 }) {
+  const showError = email !== '' && !isValid;
+
   return (
     <form noValidate onSubmit={onSubmit}>
       <hgroup className="text-center">
@@ -21,17 +22,16 @@ export default function ForgotPassowordForm({
           password.
         </Body2>
       </hgroup>
-      <TextField
-        newStyle
+
+      <EmailInput
         required
         value={email}
-        label="Email"
         placeholder="hello@email.com"
-        fullWidth
-        onChange={(e) => onEmailChange(e.target.value)}
+        newCallbackSignature
+        onChangeCallback={onEmailChange}
         helperText={showError && 'Please enter a valid email address'}
-        error={showError}
-      ></TextField>
+        endAdornments={showError && ['error']}
+      />
       <Body2 className="mt-6 mb-8 text-center text-gray-600">
         Having trouble? &nbsp;
         <Link href="/contact" className="text-blue">

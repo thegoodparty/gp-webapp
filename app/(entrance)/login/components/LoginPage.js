@@ -133,12 +133,13 @@ export default function LoginPage() {
 
             <div className="flex mt-5">
               <PasswordInput
+                value={state.password}
                 label="Password"
                 onChangeCallback={(pwd) => onChangeField(pwd, 'password')}
                 InputLabelProps={{
                   shrink: true,
                 }}
-                placeholder="please don't use your dogs name"
+                placeholder="Please don't use your dog's name"
               />
             </div>
             <div className="flex justify-center mt-12" onClick={handleSubmit}>

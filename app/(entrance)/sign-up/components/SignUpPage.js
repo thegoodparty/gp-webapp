@@ -36,7 +36,7 @@ const fields = [
     key: 'email',
     label: 'Email',
     type: 'email',
-    placeholder: 'hellow@email.com',
+    placeholder: 'hello@email.com',
     required: true,
   },
   {
@@ -197,7 +197,7 @@ export default function SignUpPage() {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      placeholder="Please don't use your dog name"
+                      placeholder="Please don't use your dog's name"
                     />
                   </div>
                 </div>

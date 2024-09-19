@@ -1,13 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import gpApi from 'gpApi/index.js';
 import gpFetch from 'gpApi/gpFetch.js';
-import { isValidEmail } from 'helpers/validations';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
-import ForgotPassowordForm from './ForgotPasswordForm';
+import ForgotPasswordForm from './ForgotPasswordForm';
 import ForgotPasswordSuccess from './ForgotPasswordSuccess';
 
 async function sendForgotPasswordEmail(email) {
@@ -24,11 +23,16 @@ async function sendForgotPasswordEmail(email) {
 }
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+  const [{ email, isValid }, setState] = useState({
+    email: '',
+    isValid: true,
+  });
   const [forgotEmailSent, setForgotEmailSent] = useState(false);
   const snackbarState = useHookstate(globalSnackbarState);
-  const isValid = useMemo(() => isValidEmail(email), [email]);
-  const showError = email !== '' && !isValid;
+
+  function handleEmailChange(email, isValid) {
+    setState({ email, isValid });
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -63,11 +67,10 @@ export default function ForgotPasswordPage() {
       {forgotEmailSent ? (
         <ForgotPasswordSuccess email={email} />
       ) : (
-        <ForgotPassowordForm
+        <ForgotPasswordForm
           email={email}
           isValid={isValid}
-          showError={showError}
-          onEmailChange={setEmail}
+          onEmailChange={handleEmailChange}
           onSubmit={handleSubmit}
         />
       )}
