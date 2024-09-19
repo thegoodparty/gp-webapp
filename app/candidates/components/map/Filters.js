@@ -6,6 +6,7 @@ import { MapContext } from './MapSection';
 import Checkbox from '@shared/inputs/Checkbox';
 import TextField from '@shared/inputs/TextField';
 import { debounce } from 'helpers/debounceHelper';
+import { states } from 'helpers/statesHelper';
 // import Search from './Search';
 
 const partyOptions = [
@@ -37,7 +38,7 @@ export default function Filters() {
     if (!campaigns || campaigns.length === 0) {
       return;
     }
-    const allOffices = campaigns.map((campaign) => campaign.office);
+    const allOffices = campaigns.map((campaign) => campaign.normalizedOffice);
     const offices = [...new Set(allOffices)]; // dedupe
     setOfficeOptions(offices);
   }, [campaigns, filters]);
@@ -54,7 +55,23 @@ export default function Filters() {
         <Search />
       </div> */}
         <div className="grid grid-cols-12 gap-2">
-          <div className=" col-span-4">
+          <div className="col-span-6">
+            <Select
+              native
+              fullWidth
+              value={filters.state}
+              variant="outlined"
+              onChange={(e) => onChangeFilters('state', e.target.value)}
+            >
+              <option value="">State</option>
+              {states.map((op) => (
+                <option value={op.abbreviation} key={op.abbreviation}>
+                  {op.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="col-span-6">
             <Select
               native
               fullWidth
@@ -70,7 +87,7 @@ export default function Filters() {
               ))}
             </Select>
           </div>
-          <div className=" col-span-4">
+          <div className=" col-span-6">
             <Select
               native
               fullWidth
@@ -86,7 +103,7 @@ export default function Filters() {
               ))}
             </Select>
           </div>
-          <div className=" col-span-4">
+          <div className=" col-span-6">
             <Select
               native
               fullWidth

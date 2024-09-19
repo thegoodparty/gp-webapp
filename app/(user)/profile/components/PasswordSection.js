@@ -116,6 +116,7 @@ function PasswordSection({ user: initUser }) {
             {user?.hasPassword && (
               <div className="mb-4">
                 <PasswordInput
+                  value={state.oldPassword}
                   onChangeCallback={(pwd) => {
                     onChangeField('oldPassword', pwd);
                   }}
@@ -130,6 +131,7 @@ function PasswordSection({ user: initUser }) {
           </div>
           <div className="col-span-12 lg:col-span-6">
             <PasswordInput
+              value={state.password}
               onChangeCallback={(pwd) => {
                 onChangeField('password', pwd);
               }}

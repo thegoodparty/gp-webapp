@@ -8,6 +8,7 @@ import {
   MarkerClusterer,
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer';
+import { debounce } from 'helpers/debounceHelper';
 
 const containerStyle = {
   width: '100%',
@@ -31,15 +32,17 @@ const Map = () => {
     onChangeMapBounds,
     onSelectCampaign,
   } = useContext(MapContext);
+
+  console.log('campaigns (Map.js)', campaigns);
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
+  const markersRef = useRef([]);
   const [markerCluster, setMarkerCluster] = useState(null);
 
   // Initialize Google Map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapContainerRef.current) return;
 
-    console.log('Initializing map...');
     const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
       center: mapCenter,
       zoom: zoom,
@@ -57,7 +60,7 @@ const Map = () => {
         if (bounds) {
           const ne = bounds.getNorthEast();
           const sw = bounds.getSouthWest();
-          onChangeMapBounds({
+          debounce(onChangeMapBounds, 500, {
             neLat: ne.lat(),
             neLng: ne.lng(),
             swLat: sw.lat(),
@@ -72,6 +75,20 @@ const Map = () => {
       window.google.maps.event.removeListener(boundsChangedListener);
     };
   }, [isLoaded, mapCenter, zoom, onChangeMapBounds]);
+
+  const clearMarkers = () => {
+    if (markersRef.current.length > 0) {
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current = [];
+    } else {
+      markersRef.current = [];
+    }
+    // Clear clusters if they exist
+    if (markerCluster) {
+      markerCluster.clearMarkers();
+      setMarkerCluster(null); // Reset cluster reference
+    }
+  };
 
   // Function to create markers
   const createMarkers = useCallback(() => {
@@ -136,11 +153,24 @@ const Map = () => {
 
   // Initialize markers and clusters
   useEffect(() => {
-    if (!mapRef.current || !isLoaded || !campaigns.length || !window.google)
+    console.log('in use effect with campaigns1', campaigns);
+    if (!mapRef.current || !isLoaded || !window.google) {
+      console.log('returning');
       return;
+    }
+    console.log('in use effect with campaigns2', campaigns);
+    if (campaigns.length === 0) {
+      clearMarkers();
+      console.log('returning2');
+      return;
+    }
 
+    console.log('in use effect with campaigns3', campaigns);
+
+    clearMarkers();
     // Create markers
     const markers = createMarkers();
+    markersRef.current = markers;
 
     // Clear existing cluster if any
     if (markerCluster) {
@@ -165,8 +195,7 @@ const Map = () => {
 
     // Cleanup on unmount
     return () => {
-      markers.forEach((marker) => marker.setMap(null));
-      if (markerCluster) markerCluster.clearMarkers();
+      clearMarkers();
     };
   }, [campaigns, isLoaded]);
 

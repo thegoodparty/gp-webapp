@@ -1,14 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import TextField from './TextField';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { RemoveRedEyeRounded, VisibilityOffRounded } from '@mui/icons-material';
 import { isValidPassword } from './IsValidPassword';
 
 export default function PasswordInput({
   onChangeCallback,
-  variant = 'outlined',
   label = 'Password',
   helperText = 'Please ensure your password has at least 8 characters, including at least one letter and one number.',
   autoFocus = false,
@@ -16,62 +14,53 @@ export default function PasswordInput({
   InputLabelProps = {},
   placeholder = '',
   value = '',
+  error,
+  ...restProps
 }) {
-  const [password, setPassword] = useState(value);
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(false);
+  const [isValid, setIsValid] = useState(true);
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
+  const handleChangePassword = (event) => {
+    const pwd = event.target.value;
+    const pwdValid = isValidPassword(pwd);
+
+    setIsValid(pwdValid);
+    onChangeCallback(pwd, pwdValid);
   };
 
-  const onChangePassword = (event) => {
-    if (event) {
-      const pwd = event.target.value;
-      const isValid = isValidPassword(pwd);
-      if (!isValid) {
-        setError(true);
-      } else {
-        setError(false);
-      }
-      setPassword(pwd);
-      onChangeCallback(pwd);
-    }
-  };
   return (
     <TextField
-      value={password}
+      value={value}
       label={label}
       required
       size="medium"
-      style={{ width: '100%' }}
+      fullWidth
       type={showPassword ? 'text' : 'password'}
       helperText={helperText}
       name="password"
-      onChange={onChangePassword}
+      onChange={handleChangePassword}
       placeholder={placeholder}
       data-cy="password"
-      variant={variant}
       autoFocus={autoFocus}
       className={className}
       InputLabelProps={InputLabelProps}
-      error={error}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
+      error={error ?? !isValid}
+      endAdornments={[
+        <IconButton
+          key="pwd-btn"
+          aria-label="toggle password visibility"
+          onClick={handleClickShowPassword}
+          type="button"
+        >
+          {showPassword ? <VisibilityOffRounded /> : <RemoveRedEyeRounded />}
+        </IconButton>,
+        error && 'error',
+      ]}
+      {...restProps}
     />
   );
 }
