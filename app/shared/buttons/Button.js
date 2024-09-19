@@ -97,7 +97,7 @@ export default function Button({
   ...restProps
 }) {
   let baseClasses =
-    'rounded-md text-center disabled:opacity-50 disabled:cursor-not-allowed';
+    'rounded-lg text-center disabled:opacity-50 disabled:cursor-not-allowed';
 
   if (variant !== 'text') baseClasses += ' border-2 border-transparent ';
 

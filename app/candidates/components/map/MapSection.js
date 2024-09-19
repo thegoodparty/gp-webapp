@@ -35,6 +35,7 @@ export default function MapSection({ isLoaded }) {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [filters, setFilters] = useState({
     party: '',
+    state: '',
     level: '',
     results: false,
     office: '',

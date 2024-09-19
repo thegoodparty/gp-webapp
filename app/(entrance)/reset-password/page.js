@@ -2,6 +2,7 @@ import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import ResetPasswordPage from './components/ResetPasswordPage';
 import pageMetaData from 'helpers/metadataHelper';
+import { isValidEmail } from 'helpers/validations';
 
 const meta = pageMetaData({
   title: 'Password Reset | GoodParty.org',
@@ -23,10 +24,9 @@ export default async function Page({ searchParams }) {
     redirect('/forgot-password');
   }
 
-  const childProps = {
-    email,
-    token,
-  };
+  if (!isValidEmail(email)) {
+    redirect('/login');
+  }
 
-  return <ResetPasswordPage {...childProps} />;
+  return <ResetPasswordPage email={email} token={token} />;
 }

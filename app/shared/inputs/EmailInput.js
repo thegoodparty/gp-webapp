@@ -1,12 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import TextField from './TextField';
+import { isValidEmail } from 'helpers/validations';
 
-export const isValidEmail = (mail) => {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(mail).toLowerCase());
-};
+// NOTE: leaving export here for now to not break existing imports
+export { isValidEmail };
 
 export default function EmailInput({
   value,
@@ -17,7 +16,24 @@ export default function EmailInput({
   placeholder,
   useLabel = true,
   required,
+  newCallbackSignature = false,
+  ...restProps
 }) {
+  const [isValid, setIsValid] = useState(true);
+
+  function handleChange(e) {
+    const newValue = e.target.value;
+    const emailValid = isValidEmail(newValue);
+
+    setIsValid(emailValid);
+
+    if (newCallbackSignature) {
+      onChangeCallback(newValue, emailValid);
+    } else {
+      onChangeCallback(e);
+    }
+  }
+
   return (
     <TextField
       value={value}
@@ -26,10 +42,9 @@ export default function EmailInput({
       size="medium"
       fullWidth
       name="email"
-      error={value !== '' && !isValidEmail(value)}
-      onChange={onChangeCallback}
+      error={value !== '' && !isValid}
+      onChange={handleChange}
       onBlur={onBlurCallback}
-      variant="outlined"
       className={className}
       placeholder={placeholder || ''}
       InputLabelProps={
@@ -39,6 +54,7 @@ export default function EmailInput({
             }
           : {}
       }
+      {...restProps}
     />
   );
 }
