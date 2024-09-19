@@ -18,7 +18,6 @@ export const useMapCampaigns = (filters) => {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    console.log('in useMapCampaigns', filters);
     loadCampaigns(filters);
   }, [filters]);
 

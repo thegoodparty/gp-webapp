@@ -30,8 +30,6 @@ export default function CandidatesPage({ count }) {
     };
   }, []);
 
-  console.log('isLoaded', isLoaded);
-
   return (
     <>
       <Hero count={count} />
