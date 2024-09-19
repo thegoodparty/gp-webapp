@@ -76,6 +76,9 @@ export const CommitteeSupportingFilesUpload = ({
       );
       const bucket = `ein-supporting-documents/${bucketFolderName}`;
       const result = await uploadFileToS3(file, bucket);
+      if (!result?.ok) {
+        throw new Error('Failed to upload file to S3');
+      }
       await updateCampaign(
         [
           {
@@ -85,7 +88,7 @@ export const CommitteeSupportingFilesUpload = ({
         ],
         campaignSlug,
       );
-      onUploadSuccess(result);
+      onUploadSuccess(file.name);
     } catch (e) {
       console.error('Error uploading file', e);
     } finally {

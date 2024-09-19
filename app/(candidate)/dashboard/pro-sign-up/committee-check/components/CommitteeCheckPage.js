@@ -99,7 +99,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     doCampaignUpdate();
   };
 
-  const onUploadSuccess = ({ uploadedFilename } = {}) =>
+  const onUploadSuccess = (uploadedFilename = '') =>
     uploadedFilename && setUploadedFilename(uploadedFilename);
   const onUploadError = (e) => {
     console.error('Error uploading file', e);
