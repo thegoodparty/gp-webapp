@@ -14,10 +14,8 @@ const deleteCampaignVolunteer = async (
   onError = () => {},
 ) => {
   try {
-    const { url, ...apiProperties } = gpApi.campaign.campaignVolunteer.delete;
-    const result = await gpFetch({
-      url: url.replace(':id', volunteerId),
-      ...apiProperties,
+    const result = await gpFetch(gpApi.campaign.campaignVolunteer.delete, {
+      id: volunteerId,
     });
     if (!result || result.ok === false) {
       console.error('error at deleteCampaignVolunteer', result);

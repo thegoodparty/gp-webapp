@@ -224,12 +224,12 @@ const gpApi = {
         withAuth: true,
       },
       delete: {
-        url: `${base}campaign/volunteer/:id`,
+        url: `${base}campaign/volunteer`,
         method: 'DELETE',
         withAuth: true,
       },
       update: {
-        url: `${base}campaign/volunteer/:id`,
+        url: `${base}campaign/volunteer`,
         method: 'PATCH',
         withAuth: true,
       },
