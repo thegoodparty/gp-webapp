@@ -37,7 +37,7 @@ export default function Filters() {
     if (!campaigns || campaigns.length === 0) {
       return;
     }
-    const allOffices = campaigns.map((campaign) => campaign.office);
+    const allOffices = campaigns.map((campaign) => campaign.normalizedOffice);
     const offices = [...new Set(allOffices)]; // dedupe
     setOfficeOptions(offices);
   }, [campaigns, filters]);
