@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar.js';
-import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import gpApi from 'gpApi/index.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import ResetPasswordForm from './ResetPasswordForm';
