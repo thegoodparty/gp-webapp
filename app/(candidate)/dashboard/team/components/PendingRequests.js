@@ -20,10 +20,8 @@ const deleteCampaignRequest = async (
   onError = () => {},
 ) => {
   try {
-    const { url, ...apiProperties } = gpApi.campaign.campaignRequests.delete;
-    const result = await gpFetch({
-      url: url.replace(':id', requestId),
-      ...apiProperties,
+    const result = await gpFetch(gpApi.campaign.campaignRequests.delete, {
+      id: requestId,
     });
     if (!result || result.ok === false) {
       console.error('error at deleteCampaignRequest', result);
@@ -42,10 +40,8 @@ const grantCampaignRequest = async (
   onError = () => {},
 ) => {
   try {
-    const { url, ...apiProperties } = gpApi.campaign.campaignRequests.grant;
-    const result = await gpFetch({
-      url: url.replace(':id', requestId),
-      ...apiProperties,
+    const result = await gpFetch(gpApi.campaign.campaignRequests.grant, {
+      id: requestId,
     });
     if (!result || result.ok === false) {
       console.error('error at approveCampaignRequest', result);

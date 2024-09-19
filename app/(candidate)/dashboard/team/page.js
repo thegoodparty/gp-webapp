@@ -31,9 +31,13 @@ async function loadInvitations() {
 
 async function getCampaignRequests() {
   try {
-    const api = gpApi.campaign.campaignRequests.list;
     const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    return await gpFetch(
+      gpApi.campaign.campaignRequests.list,
+      false,
+      false,
+      token,
+    );
   } catch (e) {
     console.log('error at fetchInvitations', e);
     return {};
