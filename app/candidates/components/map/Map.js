@@ -8,6 +8,7 @@ import {
   MarkerClusterer,
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer';
+import { debounce } from 'helpers/debounceHelper';
 
 const containerStyle = {
   width: '100%',
@@ -57,7 +58,7 @@ const Map = () => {
         if (bounds) {
           const ne = bounds.getNorthEast();
           const sw = bounds.getSouthWest();
-          onChangeMapBounds({
+          debounce(onChangeMapBounds, 500, {
             neLat: ne.lat(),
             neLng: ne.lng(),
             swLat: sw.lat(),
