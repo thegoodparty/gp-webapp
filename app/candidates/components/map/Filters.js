@@ -12,6 +12,8 @@ import { states } from 'helpers/statesHelper';
 const partyOptions = [
   { key: 'independent', label: 'Independent' },
   { key: 'libertarian', label: 'Libertarian' },
+  { key: 'forward', label: 'Forward Party' },
+  { key: 'libertarian', label: 'Libertarian' },
   { key: 'green', label: 'Green Party' },
   { key: 'nonpartisan', label: 'Nonpartisan' },
 ];
