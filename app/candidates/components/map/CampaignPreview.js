@@ -31,7 +31,7 @@ export default function CampaignPreview() {
     didWin,
   } = selectedCampaign;
   return (
-    <div className="fixed  md:absolute top-[56px] md:top-0 left-0 w-screen  md:left-[416px] lg:left-[516px] md:w-[320px]   md:shadow md:mt-4  md:rounded-2xl">
+    <div className="absolute top-0 left-0 w-[calc(100vw-32px)]   md:left-[416px] lg:left-[516px] md:w-[320px]   md:shadow md:mt-4  md:rounded-2xl z-50">
       <div className="h-full bg-white p-4 md:rounded-2xl">
         <div className="flex justify-end">
           <div
@@ -60,22 +60,27 @@ export default function CampaignPreview() {
         <MarketingH5 className="mb-4">
           {firstName} {lastName}
         </MarketingH5>
-
-        <div className="flex mb-3 items-center">
-          <MdWorkHistory size={20} className="text-primary-light" />
-          <Body1 className="ml-2 gray-600">{office}</Body1>
-        </div>
-        <div className="flex mb-3 items-center">
-          <MdLocationOn size={20} className="text-primary-light" />
-          <Body1 className="ml-2 gray-600">
-            {city ? `${city}, ` : ''}
-            {state}
-          </Body1>
-        </div>
-        <div className="flex mb-3 items-center">
-          <MdGroupWork size={20} className="text-primary-light" />
-          <Body1 className="ml-2 gray-600">{party}</Body1>
-        </div>
+        {office && (
+          <div className="flex mb-3 items-center">
+            <MdWorkHistory size={20} className="text-primary-light" />
+            <Body1 className="ml-2 gray-600">{office}</Body1>
+          </div>
+        )}
+        {state && (
+          <div className="flex mb-3 items-center">
+            <MdLocationOn size={20} className="text-primary-light" />
+            <Body1 className="ml-2 gray-600">
+              {city ? `${city}, ` : ''}
+              {state}
+            </Body1>
+          </div>
+        )}
+        {party && (
+          <div className="flex mb-3 items-center">
+            <MdGroupWork size={20} className="text-primary-light" />
+            <Body1 className="ml-2 gray-600">{party}</Body1>
+          </div>
+        )}
         {electionDate && (
           <div className="flex mb-3 items-center">
             <MdCalendarMonth size={20} className="text-primary-light" />

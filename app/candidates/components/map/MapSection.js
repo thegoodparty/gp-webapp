@@ -26,7 +26,7 @@ const center = {
   lng: -98.5795,
 };
 
-export default function MapSection({ isLoaded }) {
+export default function MapSection({ isLoaded, state }) {
   const [allCampaigns, setAllCampaigns] = useState(null); // State to store the first response
 
   const [loading, setLoading] = useState(true);
@@ -35,7 +35,7 @@ export default function MapSection({ isLoaded }) {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [filters, setFilters] = useState({
     party: '',
-    state: '',
+    state: state || '',
     level: '',
     results: false,
     office: '',
@@ -134,7 +134,7 @@ export default function MapSection({ isLoaded }) {
           </div>
         ) : (
           <>
-            <section className="h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden">
+            <section className="md:h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden">
               <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
                 <div className="flex-1 h-3/4 md:h-auto">
                   <Map />

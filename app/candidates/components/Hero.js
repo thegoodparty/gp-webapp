@@ -4,12 +4,12 @@ import MarketingH4 from '@shared/typography/MarketingH4';
 import { numberFormatter } from 'helpers/numberHelper';
 import Image from 'next/image';
 
-export default function Hero({ count = 0 }) {
+export default function Hero({ count = 0, longState }) {
   return (
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>
         <MarketingH1 className="text-center">
-          {count === 0 ? '' : numberFormatter(count)}{' '}
+          {count}{' '}
           <Image
             src="/images/heart.svg"
             width={80}
@@ -18,7 +18,8 @@ export default function Hero({ count = 0 }) {
             className="mx-3 static inline-block w-12 h-12 lg:w-20 lg:h-20"
             priority
           />
-          Independent Civic Heroes Running in the U.S.
+          Independent Civic Heroes Running in{' '}
+          {longState ? longState : 'the U.S'}.
         </MarketingH1>
         <MarketingH4 className="mt-8">
           Learn where Independent, People-Powered, and Anti-Corruption

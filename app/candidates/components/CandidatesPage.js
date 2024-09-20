@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
-export default function CandidatesPage({ count }) {
+export default function CandidatesPage({ count, longState, state }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -32,8 +32,8 @@ export default function CandidatesPage({ count }) {
 
   return (
     <>
-      <Hero count={count} />
-      <MapSection isLoaded={isLoaded} />
+      <Hero count={count} longState={longState} />
+      <MapSection isLoaded={isLoaded} state={state} />
       <InfoSection />
       <FacesSection />
       <CommunitySection />
