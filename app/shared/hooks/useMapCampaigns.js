@@ -6,7 +6,6 @@ import gpFetch from 'gpApi/gpFetch';
 const fetchCampaigns = async (filters) => {
   try {
     const api = gpApi.campaign.mapList;
-    console.log('filters', filters);
     if (
       filters &&
       (filters.neLat === '' ||
