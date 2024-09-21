@@ -57,7 +57,6 @@ export default function FeaturedCities() {
   const [featuredCities, setFeaturedCities] = useState(defaultCities);
 
   useEffect(() => {
-    console.log('in use effect');
     getIpLocation();
   }, []);
 
