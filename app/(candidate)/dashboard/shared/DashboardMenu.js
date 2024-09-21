@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
-import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
+import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
 import {
   RiBook2Line,
@@ -24,6 +24,12 @@ const DEFAULT_MENU_ITEMS = [
     icon: <GiProgression />,
     link: '/dashboard/upgrade-to-pro',
     id: 'upgrade-pro-dashboard',
+  },
+  {
+    label: 'Campaign Manager',
+    icon: <BsStars />,
+    link: '/dashboard/campaign-manager',
+    id: 'campaign-manager-dashboard',
   },
   {
     label: 'AI Campaign Plan',
