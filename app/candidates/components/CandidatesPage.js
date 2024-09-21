@@ -7,6 +7,7 @@ import '@shared/inputs/slick.min.css';
 import '@shared/inputs/slick-theme.min.css';
 import CommunitySection from './CommunitySection';
 import { useEffect, useState } from 'react';
+import UserSnapScript from '@shared/scripts/UserSnapScript';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
@@ -37,6 +38,7 @@ export default function CandidatesPage({ count, longState, state }) {
       <InfoSection />
       <FacesSection />
       <CommunitySection />
+      <UserSnapScript />
     </>
   );
 }
