@@ -134,12 +134,12 @@ export default function MapSection({ isLoaded, state }) {
           </div>
         ) : (
           <>
-            <section className="md:h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden">
+            <section className="md:h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden relative">
               <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
                 <div className="flex-1 h-3/4 md:h-auto">
                   <Map />
                 </div>
-                <div className="flex flex-col shadow-lg relative z-20">
+                <div className="flex flex-col shadow-lg md:relative z-20">
                   <Filters />
                   <Results />
                   <CampaignPreview />
