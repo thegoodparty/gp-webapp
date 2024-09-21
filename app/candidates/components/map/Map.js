@@ -161,8 +161,10 @@ const Map = () => {
     }
 
     clearMarkers();
+    clearMarkers();
     // Create markers
     const markers = createMarkers();
+    markersRef.current = markers;
     markersRef.current = markers;
 
     // Clear existing cluster if any
