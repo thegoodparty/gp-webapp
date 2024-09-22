@@ -5,23 +5,6 @@ import ChatHistory from './ChatHistory';
 import Chat from './Chat';
 import ChatInput from './ChatInput';
 
-const chat = [
-  { role: 'system', content: 'Welcome to the chat!' },
-  { role: 'user', content: 'Hi! how are you doing?' },
-  {
-    role: 'system',
-    content: `well well well
-    <br/>
-    <h3>Select one option:</h3> 
-    
-    <ol role="list">
-    <li>Great</li>
-    <li>Good</li>
-    <li>Bad</li>
-    </ol>`,
-  },
-];
-
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
@@ -30,9 +13,11 @@ export default function CampaignManagerPage(props) {
   };
 
   const contextProps = {
-    chat,
     handleNewInput,
+    ...props,
   };
+
+  console.log('props', props);
 
   return (
     <DashboardLayout {...props} showAlert={false}>

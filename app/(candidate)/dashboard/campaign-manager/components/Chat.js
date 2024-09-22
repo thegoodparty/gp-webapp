@@ -6,7 +6,7 @@ export default function Chat() {
   const { chat } = useContext(ChatContext);
   return (
     <div>
-      {chat.map((message, index) => (
+      {(chat || []).map((message, index) => (
         <ChatMessage key={index} message={message} />
       ))}
     </div>

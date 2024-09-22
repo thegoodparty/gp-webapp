@@ -5,7 +5,7 @@ export default function ChatMessage({ message }) {
   const { content, role } = message;
   return (
     <div className={`flex p-4 ${role === 'user' ? 'justify-end' : ''}`}>
-      {role === 'system' ? (
+      {role === 'assistant' ? (
         <div className="p-4 flex">
           <BsStars size={16} />
           <Body2 className="ml-2 prose">
