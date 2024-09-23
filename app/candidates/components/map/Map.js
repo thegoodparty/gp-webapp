@@ -33,7 +33,6 @@ const Map = () => {
     onSelectCampaign,
   } = useContext(MapContext);
 
-  console.log('campaigns (Map.js)', campaigns);
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
@@ -153,19 +152,13 @@ const Map = () => {
 
   // Initialize markers and clusters
   useEffect(() => {
-    console.log('in use effect with campaigns1', campaigns);
     if (!mapRef.current || !isLoaded || !window.google) {
-      console.log('returning');
       return;
     }
-    console.log('in use effect with campaigns2', campaigns);
     if (campaigns.length === 0) {
       clearMarkers();
-      console.log('returning2');
       return;
     }
-
-    console.log('in use effect with campaigns3', campaigns);
 
     clearMarkers();
     // Create markers

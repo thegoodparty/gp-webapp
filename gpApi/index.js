@@ -148,6 +148,29 @@ const gpApi = {
       withAuth: true,
     },
 
+    chat: {
+      get: {
+        url: `${base}campaign/ai/chat`,
+        method: 'GET',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}campaign/ai/chat`,
+        method: 'PUT',
+        withAuth: true,
+      },
+      create: {
+        url: `${base}campaign/ai/chat`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/ai/chats`,
+        method: 'GET',
+        withAuth: true,
+      },
+    },
+
     UpdateHistory: {
       create: {
         url: `${base}campaign/update-history`,
