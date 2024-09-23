@@ -118,7 +118,6 @@ const Map = () => {
     if (!mapRef.current || campaigns.length === 0) {
       return;
     }
-    console.log('sFilterChanged', isFilterChanged);
     if (isFilterChanged) {
       const bounds = new window.google.maps.LatLngBounds();
 
