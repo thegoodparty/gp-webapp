@@ -40,6 +40,10 @@ export default function FullStorySelectiveInit({ user }) {
     if (typeof FS === 'undefined') {
       return;
     }
+    if (!user) {
+      FS.shutdown();
+    }
+    /*
     const random = Math.random();
     if (!user) {
       if (random > GUEST_RATIO) {
@@ -50,6 +54,6 @@ export default function FullStorySelectiveInit({ user }) {
         FS.shutdown();
       }
     }
+      */
   };
-  return null;
 }
