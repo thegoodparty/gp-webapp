@@ -1,14 +1,20 @@
 import TextField from '@shared/inputs/TextField';
 import { MdSend } from 'react-icons/md';
 import { ChatContext } from './CampaignManagerPage';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { GiSandsOfTime } from 'react-icons/gi';
 
 export default function ChatInput() {
-  const { handleNewInput } = useContext(ChatContext);
+  const { handleNewInput, loading } = useContext(ChatContext);
+  const [text, setText] = useState('');
 
   const onSubmit = (e) => {
+    if (loading) {
+      return;
+    }
     e.preventDefault();
     console.log('submit');
+    handleNewInput(text);
   };
 
   return (
@@ -19,8 +25,13 @@ export default function ChatInput() {
             placeholder="Ask me anything about your campaign..."
             fullWidth
             className="rounded-full bg-white"
+            value={text}
+            disabled={loading}
+            onChange={(e) => {
+              setText(e.target.value);
+            }}
             InputProps={{
-              endAdornment: <MdSend />,
+              endAdornment: loading ? <GiSandsOfTime size={20} /> : <MdSend />,
               style: {
                 outline: 'none',
               },
@@ -53,8 +64,9 @@ export default function ChatInput() {
             }}
           />
           <button
+            disabled={loading}
             type="submit"
-            className="w-12 h-12 absolute right-1 top-1 opacity-0"
+            className="w-12 h-12 absolute right-8 top-1 opacity-0"
           />
         </form>
       </div>

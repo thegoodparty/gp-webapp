@@ -54,12 +54,15 @@ export default async function Page({ params, searchParams }) {
   const { campaign } = await fetchUserCampaign();
   const { chats } = await fetchChatHistory();
   let currentChat;
+  let threadId;
   if (!chats || chats.length === 0) {
-    currentChat = await createInitialChat();
+    const res = await createInitialChat();
+    threadId = res.threadId;
+    currentChat = res.chat;
   } else {
     //get the last chat
-    const lastChat = chats[0].thread;
-    currentChat = await getChatThread({ threadId: lastChat });
+    threadId = chats[0].threadId;
+    currentChat = await getChatThread({ threadId });
   }
   const childProps = {
     pathname: '/dashboard/campaign-manager',
@@ -67,6 +70,7 @@ export default async function Page({ params, searchParams }) {
     campaign,
     chats,
     chat: currentChat?.chat,
+    threadId,
   };
 
   return <CampaignManagerPage {...childProps} />;
