@@ -27,12 +27,6 @@ const DEFAULT_MENU_ITEMS = [
   },
 
   {
-    label: 'Campaign Manager',
-    icon: <BsStars />,
-    link: '/dashboard/campaign-manager',
-    id: 'campaign-manager-dashboard',
-  },
-  {
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
     link: '/dashboard/plan',
@@ -101,6 +95,7 @@ const getDashboardMenuItems = (campaign, user) => {
   }
   if (user?.isAdmin) {
     menuItems.splice(5, 0, DOOR_KNOCKING_MENU_ITEM);
+
     menuItems.splice(1, 0, CAMPAIGN_MANAGER_MENU_ITEM);
   }
   return menuItems;
