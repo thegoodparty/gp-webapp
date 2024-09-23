@@ -138,9 +138,13 @@ const Map = () => {
       if (count < 10) {
         iconSize = new window.google.maps.Size(60, 60);
         labelFontSize = '11px';
-      } else {
+      }
+      if (count < 100) {
         iconSize = new window.google.maps.Size(80, 80);
-        labelFontSize = '12px';
+        labelFontSize = '11px';
+      } else {
+        iconSize = new window.google.maps.Size(100, 100);
+        labelFontSize = '11px';
       }
 
       return new window.google.maps.Marker({
