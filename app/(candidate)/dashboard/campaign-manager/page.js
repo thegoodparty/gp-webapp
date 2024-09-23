@@ -21,7 +21,8 @@ export async function createInitialChat() {
   try {
     const api = gpApi.campaign.chat.create;
     const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    const payload = { message: ' ' };
+    return await gpFetch(api, payload, false, token);
   } catch (e) {
     console.log('error', e);
     return false;
