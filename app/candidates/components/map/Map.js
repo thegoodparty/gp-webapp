@@ -36,8 +36,8 @@ const Map = () => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
-  const [markerCluster, setMarkerCluster] = useState(null);
-
+  const markerClusterRef = useRef(null);
+  const isProgrammaticChangeRef = useRef(false);
   // Initialize Google Map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapContainerRef.current) return;
@@ -48,30 +48,30 @@ const Map = () => {
       ...mapOptions,
     });
 
-    // Store the map instance
     mapRef.current = mapInstance;
 
-    // Add bounds_changed listener without debounce
-    const boundsChangedListener = mapInstance.addListener(
-      'bounds_changed',
-      () => {
-        const bounds = mapInstance.getBounds();
-        if (bounds) {
-          const ne = bounds.getNorthEast();
-          const sw = bounds.getSouthWest();
-          debounce(onChangeMapBounds, 500, {
-            neLat: ne.lat(),
-            neLng: ne.lng(),
-            swLat: sw.lat(),
-            swLng: sw.lng(),
-          });
-        }
-      },
-    );
+    const idleListener = mapInstance.addListener('idle', () => {
+      if (isProgrammaticChangeRef.current) {
+        isProgrammaticChangeRef.current = false;
+        return;
+      }
+
+      const bounds = mapInstance.getBounds();
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        debounce(onChangeMapBounds, 500, {
+          neLat: ne.lat(),
+          neLng: ne.lng(),
+          swLat: sw.lat(),
+          swLng: sw.lng(),
+        });
+      }
+    });
 
     // Cleanup listener on unmount
     return () => {
-      window.google.maps.event.removeListener(boundsChangedListener);
+      window.google.maps.event.removeListener(idleListener);
     };
   }, [isLoaded, mapCenter, zoom, onChangeMapBounds]);
 
@@ -79,17 +79,14 @@ const Map = () => {
     if (markersRef.current.length > 0) {
       markersRef.current.forEach((marker) => marker.setMap(null));
       markersRef.current = [];
-    } else {
-      markersRef.current = [];
     }
-    // Clear clusters if they exist
-    if (markerCluster) {
-      markerCluster.clearMarkers();
-      setMarkerCluster(null); // Reset cluster reference
+
+    if (markerClusterRef.current) {
+      markerClusterRef.current.clearMarkers();
+      markerClusterRef.current = null;
     }
   };
 
-  // Function to create markers
   const createMarkers = useCallback(() => {
     if (!mapRef.current || !window.google) {
       console.log('Map or Google not ready yet');
@@ -107,7 +104,6 @@ const Map = () => {
         },
       });
 
-      // Add click listener
       marker.addListener('click', () => {
         onSelectCampaign(campaign);
       });
@@ -116,10 +112,24 @@ const Map = () => {
     });
   }, [campaigns, onSelectCampaign]);
 
+  const adjustMapBounds = useCallback(() => {
+    if (!mapRef.current || campaigns.length === 0) {
+      return;
+    }
+
+    const bounds = new window.google.maps.LatLngBounds();
+
+    campaigns.forEach((campaign) => {
+      bounds.extend(campaign.position);
+    });
+
+    isProgrammaticChangeRef.current = true;
+    mapRef.current.fitBounds(bounds);
+  }, [campaigns]);
+
   // Custom renderer for cluster icons
   const customRenderer = {
     render({ count, position }) {
-      // Determine icon size and text size based on count
       let iconSize, labelFontSize;
       if (count < 10) {
         iconSize = new window.google.maps.Size(60, 60);
@@ -150,7 +160,6 @@ const Map = () => {
     },
   };
 
-  // Initialize markers and clusters
   useEffect(() => {
     if (!mapRef.current || !isLoaded || !window.google) {
       return;
@@ -161,38 +170,35 @@ const Map = () => {
     }
 
     clearMarkers();
-    clearMarkers();
-    // Create markers
     const markers = createMarkers();
     markersRef.current = markers;
     markersRef.current = markers;
 
-    // Clear existing cluster if any
-    if (markerCluster) {
-      markerCluster.clearMarkers();
+    if (markerClusterRef.current) {
+      markerClusterRef.current.clearMarkers();
     }
 
-    // Create an instance of SuperClusterAlgorithm with your options
     const algorithm = new SuperClusterAlgorithm({
       maxZoom: 15,
       radius: 150,
     });
 
-    // Create new marker clusterer with custom renderer and algorithm instance
     const newMarkerCluster = new MarkerClusterer({
       markers,
       map: mapRef.current,
-      algorithm: algorithm, // Pass the algorithm instance here
+      algorithm: algorithm,
       renderer: customRenderer,
     });
 
-    setMarkerCluster(newMarkerCluster);
+    markerClusterRef.current = newMarkerCluster;
+
+    adjustMapBounds();
 
     // Cleanup on unmount
     return () => {
       clearMarkers();
     };
-  }, [campaigns, isLoaded]);
+  }, [campaigns, isLoaded, adjustMapBounds]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)]">

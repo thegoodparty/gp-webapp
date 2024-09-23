@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
-import { BsGraphUp, BsPostcardHeart } from 'react-icons/bs';
+import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
 import {
   RiBook2Line,
@@ -25,6 +25,7 @@ const DEFAULT_MENU_ITEMS = [
     link: '/dashboard/upgrade-to-pro',
     id: 'upgrade-pro-dashboard',
   },
+
   {
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
@@ -80,6 +81,13 @@ const DOOR_KNOCKING_MENU_ITEM = {
   id: 'door-knocking-dashboard',
 };
 
+const CAMPAIGN_MANAGER_MENU_ITEM = {
+  label: 'Campaign Manager',
+  icon: <BsStars />,
+  link: '/dashboard/campaign-manager',
+  id: 'campaign-manager-dashboard',
+};
+
 const getDashboardMenuItems = (campaign, user) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
@@ -87,6 +95,7 @@ const getDashboardMenuItems = (campaign, user) => {
   }
   if (user?.isAdmin) {
     menuItems.splice(5, 0, DOOR_KNOCKING_MENU_ITEM);
+    menuItems.splice(1, 0, CAMPAIGN_MANAGER_MENU_ITEM);
   }
   return menuItems;
 };
