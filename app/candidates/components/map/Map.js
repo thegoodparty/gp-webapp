@@ -31,6 +31,8 @@ const Map = () => {
     zoom,
     onChangeMapBounds,
     onSelectCampaign,
+    isFilterChanged,
+    setIsFilterChanged,
   } = useContext(MapContext);
 
   const mapContainerRef = useRef(null);
@@ -116,16 +118,19 @@ const Map = () => {
     if (!mapRef.current || campaigns.length === 0) {
       return;
     }
+    console.log('sFilterChanged', isFilterChanged);
+    if (isFilterChanged) {
+      const bounds = new window.google.maps.LatLngBounds();
 
-    const bounds = new window.google.maps.LatLngBounds();
+      campaigns.forEach((campaign) => {
+        bounds.extend(campaign.position);
+      });
 
-    campaigns.forEach((campaign) => {
-      bounds.extend(campaign.position);
-    });
-
-    isProgrammaticChangeRef.current = true;
-    mapRef.current.fitBounds(bounds);
-  }, [campaigns]);
+      isProgrammaticChangeRef.current = true;
+      mapRef.current.fitBounds(bounds);
+      setIsFilterChanged(false);
+    }
+  }, [campaigns, isFilterChanged]);
 
   // Custom renderer for cluster icons
   const customRenderer = {

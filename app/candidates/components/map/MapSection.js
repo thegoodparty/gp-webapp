@@ -33,6 +33,7 @@ export default function MapSection({ isLoaded, state }) {
   const [mapCenter, setMapCenter] = useState(center);
   const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [filters, setFilters] = useState({
     party: '',
     state: state || '',
@@ -69,6 +70,7 @@ export default function MapSection({ isLoaded, state }) {
       ...prevFilters, // Spread the previous filters to retain the current values
       [key]: val, // Update the filter based on the key-value pair
     }));
+    setIsFilterChanged(true);
   }, []);
 
   const onChangeMapBounds = useCallback((bounds) => {
@@ -107,6 +109,8 @@ export default function MapSection({ isLoaded, state }) {
       onSelectCampaign,
       selectedCampaign,
       onChangeMapBounds,
+      isFilterChanged,
+      setIsFilterChanged,
     }),
     [
       campaigns,
@@ -117,6 +121,7 @@ export default function MapSection({ isLoaded, state }) {
       selectedCampaign,
       onChangeFilters,
       onChangeMapBounds,
+      isFilterChanged,
     ],
   );
 
