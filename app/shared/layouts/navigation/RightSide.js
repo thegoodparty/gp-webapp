@@ -13,6 +13,7 @@ import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboar
 import FullStorySelectiveInit from './FullStorySelectiveInit';
 
 export default function RightSide({ campaignStatus }) {
+  const { campaignRequestPending } = campaignStatus;
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -63,17 +64,21 @@ export default function RightSide({ campaignStatus }) {
             toggleCallback={toggleProfile}
             user={user}
           />
-          <DashboardOrContinue
-            isDashboardPath={isDashboardPath}
-            closeAll={closeAll}
-            campaignStatus={campaignStatus}
-          />
-          {isDashboardPath && (
-            <TopDashboardMenu
-              open={dashboardOpen}
-              toggleCallback={toggleDashboard}
-              pathname={pathname}
-            />
+          {!campaignRequestPending && (
+            <>
+              <DashboardOrContinue
+                isDashboardPath={isDashboardPath}
+                closeAll={closeAll}
+                campaignStatus={campaignStatus}
+              />
+              {isDashboardPath && (
+                <TopDashboardMenu
+                  open={dashboardOpen}
+                  toggleCallback={toggleDashboard}
+                  pathname={pathname}
+                />
+              )}
+            </>
           )}
         </>
       ) : (

@@ -19,9 +19,7 @@ export default function DashboardOrContinue({
         onClick={closeAll}
         id="nav-continue-setup"
       >
-        <WarningButton size="medium">
-          Continue<span className="hidden lg:inline"> Setup</span>
-        </WarningButton>
+        <WarningButton size="medium">Continue Setup</WarningButton>
       </Link>
     );
   }
