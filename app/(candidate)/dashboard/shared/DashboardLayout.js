@@ -11,6 +11,7 @@ export default function DashboardLayout({
   candidateSlug,
   pathToVictory,
   campaign,
+  showAlert = true,
 }) {
   const [user] = useUser();
   const { demoPersona } = JSON.parse((user || {}).metaData || '{}');
@@ -30,7 +31,7 @@ export default function DashboardLayout({
           />
         </div>
         <main className="lg:ml-8 flex-1">
-          <AlertSection campaign={campaign} />
+          {showAlert && <AlertSection campaign={campaign} />}
           {children}
         </main>
       </div>

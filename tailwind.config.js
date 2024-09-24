@@ -129,6 +129,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx}', // Note the addition of the `app` directory.
     './components/**/*.{js,ts,jsx,tsx}',
   ],
+  plugins: [require('@tailwindcss/typography')],
   theme: {
     screens: {
       xs: '400px',
