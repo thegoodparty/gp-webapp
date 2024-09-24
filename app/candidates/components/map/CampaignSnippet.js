@@ -27,7 +27,7 @@ export default function CampaignSnippet({ campaign }) {
         <div className="">
           {avatar ? (
             <Image
-              src="https://assets.goodparty.org/uploads/94c711f1-3c19-43f3-a86a-25c41dc9bab6.jpg"
+              src={avatar}
               className="h-12 w-12 rounded-2xl"
               width={48}
               height={48}
