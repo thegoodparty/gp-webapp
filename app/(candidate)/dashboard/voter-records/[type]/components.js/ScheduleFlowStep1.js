@@ -20,7 +20,7 @@ export default function ScheduleFlowStep1({
   type,
 }) {
   const isTel = type === 'telemarketing';
-  let price = 0.03;
+  let price = 0.35;
   if (type === 'telemarketing') {
     price = 0.04;
     if (voicemailValue) {
