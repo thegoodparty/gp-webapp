@@ -5,7 +5,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateAccess';
 
 const meta = pageMetaData({
-  title: 'Sign up up to GoodParty.org',
+  title: 'Sign up to GoodParty.org',
   description: 'Sign up to GoodParty.org.',
   slug: '/sign-up',
 });
