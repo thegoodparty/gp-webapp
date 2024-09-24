@@ -5,6 +5,7 @@ import CampaignManagerPage from './components/CampaignManagerPage';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { adminAccessOnly } from 'helpers/permissionHelper';
 
 export async function fetchChatHistory() {
   try {
@@ -21,7 +22,8 @@ export async function createInitialChat() {
   try {
     const api = gpApi.campaign.chat.create;
     const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    const payload = { message: ' ' };
+    return await gpFetch(api, payload, false, token);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -48,7 +50,8 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
-  await candidateAccess();
+  // await candidateAccess();
+  adminAccessOnly();
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
   const { campaign } = await fetchUserCampaign();

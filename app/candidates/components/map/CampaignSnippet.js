@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { MapContext } from './MapSection';
 import Subtitle2 from '@shared/typography/Subtitle2';
+import Image from 'next/image';
 
 export default function CampaignSnippet({ campaign }) {
   const { firstName, lastName, avatar, office, state } = campaign;
@@ -25,7 +26,13 @@ export default function CampaignSnippet({ campaign }) {
       >
         <div className="">
           {avatar ? (
-            <UserAvatar user={campaign} size="large" />
+            <Image
+              src={avatar}
+              className="h-12 w-12 rounded-2xl"
+              width={48}
+              height={48}
+              alt={`${firstName} ${lastName}`}
+            />
           ) : (
             <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-gray-200 border border-gray-300">
               <FaUserCircle size={24} />
