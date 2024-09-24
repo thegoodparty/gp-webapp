@@ -55,9 +55,7 @@ export default function VolunteersSection(props) {
 
           <Body2>Manage all your team members in one place. </Body2>
         </div>
-        {!hideButton && (
-          <InviteButton reloadInvitationsCallback={reloadInvitationsCallback} />
-        )}
+        {!hideButton && <InviteButton reloadInvitationsCallback={onAction} />}
       </div>
 
       <div className="grid grid-cols-12 gap-4 mt-8">
