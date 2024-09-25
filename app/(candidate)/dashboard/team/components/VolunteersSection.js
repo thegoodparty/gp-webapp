@@ -29,7 +29,7 @@ const deleteCampaignVolunteer = async (
 };
 
 export default function VolunteersSection(props) {
-  const { volunteers, onAction, invitations } = props;
+  const { volunteers, onAction, invitations, reloadInvitations } = props;
   const snackbarState = useHookstate(globalSnackbarState);
 
   const handleRemove = async (volunteerId) => {
@@ -55,7 +55,9 @@ export default function VolunteersSection(props) {
 
           <Body2>Manage all your team members in one place. </Body2>
         </div>
-        {!hideButton && <InviteButton reloadInvitationsCallback={onAction} />}
+        {!hideButton && (
+          <InviteButton reloadInvitationsCallback={reloadInvitations} />
+        )}
       </div>
 
       <div className="grid grid-cols-12 gap-4 mt-8">

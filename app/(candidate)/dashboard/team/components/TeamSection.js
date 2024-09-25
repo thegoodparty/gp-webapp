@@ -57,6 +57,7 @@ export default function TeamSection(props) {
           volunteers={volunteers}
           invitations={invitations}
           onAction={reloadVolunteers}
+          reloadInvitations={reloadInvitationsCallback}
         />
       )}
 

@@ -1,7 +1,4 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
-import { getServerToken } from 'helpers/userServerHelper';
 import AdminCachePage from './components/AdminCachePage';
 import pageMetaData from 'helpers/metadataHelper';
 
