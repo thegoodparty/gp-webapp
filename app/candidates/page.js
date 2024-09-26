@@ -16,6 +16,7 @@ export async function generateMetadata({ params, searchParams }) {
     description:
       'Find independent, people-powered, and anti-corruption candidates running for office in your area. Search by office type, name, party affiliation, and more.',
     slug: `/candidates`,
+    image: 'https://assets.goodparty.org/candidates-map.jpg',
   });
   return meta;
 }
