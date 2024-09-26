@@ -33,6 +33,7 @@ const Map = () => {
     onSelectCampaign,
     isFilterChanged,
     setIsFilterChanged,
+    isCampaignsLoading,
   } = useContext(MapContext);
 
   const mapContainerRef = useRef(null);
@@ -118,7 +119,9 @@ const Map = () => {
     if (!mapRef.current || campaigns.length === 0) {
       return;
     }
-    if (isFilterChanged) {
+    console.log('isFilterChanged', isFilterChanged);
+    console.log('campaignsLoading', isCampaignsLoading);
+    if (isFilterChanged && !isCampaignsLoading) {
       const bounds = new window.google.maps.LatLngBounds();
 
       campaigns.forEach((campaign) => {
@@ -129,7 +132,7 @@ const Map = () => {
       mapRef.current.fitBounds(bounds);
       setIsFilterChanged(false);
     }
-  }, [campaigns, isFilterChanged]);
+  }, [campaigns, isFilterChanged, isCampaignsLoading]);
 
   // Custom renderer for cluster icons
   const customRenderer = {
@@ -208,11 +211,18 @@ const Map = () => {
   }, [campaigns, isLoaded, adjustMapBounds]);
 
   return (
-    <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)]">
+    <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
       {isLoaded ? (
-        <div ref={mapContainerRef} style={containerStyle}>
-          {/* Map will be rendered here */}
-        </div>
+        <>
+          <div ref={mapContainerRef} style={containerStyle}>
+            {/* Map will be rendered here */}
+          </div>
+          {isCampaignsLoading && (
+            <div className="h-full w-full absolute top-0 left-0 bg-black bg-opacity-80 flex items-center justify-center z-40 text-white">
+              <H3>Loading...</H3>
+            </div>
+          )}
+        </>
       ) : (
         <div className="h-[calc(100vh-56px)] flex flex-col items-center justify-center mb-4 py-4">
           <H3>Loading...</H3>
