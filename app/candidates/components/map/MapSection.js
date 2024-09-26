@@ -47,7 +47,8 @@ export default function MapSection({ isLoaded, state }) {
     swLng: false,
   });
   const isFilterEmpty = Object.values(filters).every((val) => !val);
-  const { campaigns } = useMapCampaigns(isFilterEmpty ? null : filters);
+  const { campaigns, isCampaignsLoading, setIsCampaignsLoading } =
+    useMapCampaigns(isFilterEmpty ? null : filters);
 
   useEffect(() => {
     // Only cache the first response
@@ -64,18 +65,18 @@ export default function MapSection({ isLoaded, state }) {
     }
   }, [campaigns]);
 
-  // Debounced onChangeFilters to prevent unnecessary renders
   const onChangeFilters = useCallback((key, val) => {
     setFilters((prevFilters) => ({
-      ...prevFilters, // Spread the previous filters to retain the current values
-      [key]: val, // Update the filter based on the key-value pair
+      ...prevFilters,
+      [key]: val,
     }));
+    setIsCampaignsLoading(true);
     setIsFilterChanged(true);
   }, []);
 
   const onChangeMapBounds = useCallback((bounds) => {
     setFilters((prevFilters) => ({
-      ...prevFilters, // Spread the previous filters to retain the current values
+      ...prevFilters,
       ...bounds,
     }));
   }, []);
@@ -111,6 +112,7 @@ export default function MapSection({ isLoaded, state }) {
       onChangeMapBounds,
       isFilterChanged,
       setIsFilterChanged,
+      isCampaignsLoading,
     }),
     [
       campaigns,
@@ -122,6 +124,7 @@ export default function MapSection({ isLoaded, state }) {
       onChangeFilters,
       onChangeMapBounds,
       isFilterChanged,
+      isCampaignsLoading,
     ],
   );
 
