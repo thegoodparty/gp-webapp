@@ -22,9 +22,10 @@ export const isProd = apiBase === 'https://api.goodparty.org';
 console.log(`appBase =>`, appBase);
 console.log(`process.env.VERCEL_BRANCH_URL =>`, process.env.VERCEL_BRANCH_URL);
 if (!appBase) {
-  appBase = window
-    ? window.location.origin
-    : `https://${process.env.VERCEL_BRANCH_URL}`;
+  appBase =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : `https://${process.env.VERCEL_BRANCH_URL}`;
   base = `${appBase}/api/v1/`;
 }
 console.log(`appBase =>`, appBase);
