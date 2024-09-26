@@ -31,7 +31,7 @@ export default function CampaignSnippet({ campaign }) {
               className="h-12 w-12 rounded-2xl"
               width={48}
               height={48}
-              alt={`${firstName} ${lastName}`}
+              alt={`${firstName?.charAt(0) || ''} ${lastName?.charAt(0) || ''}`}
             />
           ) : (
             <div className="h-12 w-12 rounded-2xl flex items-center justify-center bg-gray-200 border border-gray-300">
