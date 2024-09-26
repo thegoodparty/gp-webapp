@@ -27,15 +27,18 @@ const fetchCampaigns = async (filters) => {
 
 export const useMapCampaigns = (filters) => {
   const [campaigns, setCampaigns] = useState([]);
+  const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
 
   useEffect(() => {
+    setIsCampaignsLoading(true);
     loadCampaigns(filters);
   }, [filters]);
 
   const loadCampaigns = async (filters) => {
     const { campaigns } = await fetchCampaigns(filters);
     setCampaigns(campaigns || []);
+    setIsCampaignsLoading(false);
   };
 
-  return { campaigns };
+  return { campaigns, isCampaignsLoading, setIsCampaignsLoading };
 };
