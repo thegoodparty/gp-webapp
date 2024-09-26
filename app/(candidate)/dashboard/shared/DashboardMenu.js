@@ -88,13 +88,6 @@ const CAMPAIGN_MANAGER_MENU_ITEM = {
   id: 'campaign-manager-dashboard',
 };
 
-const CAMPAIGN_MANAGER_MENU_ITEM = {
-  label: 'Campaign Manager',
-  icon: <BsStars />,
-  link: '/dashboard/campaign-manager',
-  id: 'campaign-manager-dashboard',
-};
-
 const getDashboardMenuItems = (campaign, user) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
