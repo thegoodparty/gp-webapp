@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
-import Body1 from '@shared/typography/Body1';
+import Body2 from '@shared/typography/Body2';
 
 export const PENDING_REQUEST_ACTIONS = {
   GRANT: 'GRANT',
@@ -109,15 +109,15 @@ export const PendingRequests = ({
   return (
     Boolean(requests?.length) && (
       <Paper className="mb-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-6">
           <header className="align-left">
-            <H2>Requested</H2>
-            <Body1 className="text-gray-500">
+            <H2 className="mb-2">Requested</H2>
+            <Body2 className="text-gray-700">
               Someone has requested to join your campaign.
-            </Body1>
+            </Body2>
           </header>
         </div>
-        <div className="grid grid-cols-12 gap-4 mt-12">
+        <div className="grid grid-cols-12 gap-4">
           {requests.map((request) => (
             <PendingRequestCard
               key={request.id}

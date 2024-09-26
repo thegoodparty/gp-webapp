@@ -2,9 +2,7 @@
 import { useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import EmptyState from './EmptyState';
-import PendingInvitations from './PendingInvitations';
-import VolunteersSection from './VolunteersSection';
+import TeamMembers from 'app/(candidate)/dashboard/team/components/TeamMembers';
 import { PendingRequests } from 'app/(candidate)/dashboard/team/components/PendingRequests';
 
 const fetchVolunteers = async () => {
@@ -30,9 +28,13 @@ async function fetchInvitations() {
 }
 
 export default function TeamSection(props) {
-  const { requests } = props;
-  const [volunteers, setVolunteers] = useState(props.volunteers || []);
-  const [invitations, setInvitations] = useState(props.invitations || []);
+  const {
+    requests,
+    volunteers: initVolunteers,
+    invitations: initInvitations,
+  } = props;
+  const [volunteers, setVolunteers] = useState(initVolunteers || []);
+  const [invitations, setInvitations] = useState(initInvitations || []);
 
   const reloadVolunteers = async () =>
     setVolunteers((await fetchVolunteers()).volunteers);
@@ -44,29 +46,16 @@ export default function TeamSection(props) {
 
   return (
     <section className="">
-      {Boolean(
-        !volunteers?.length && !invitations?.length && !requests?.length,
-      ) && <EmptyState reloadInvitationsCallback={reloadInvitationsCallback} />}
-
       {Boolean(requests && requests.length) && (
         <PendingRequests requests={requests} onAction={reloadVolunteers} />
       )}
 
-      {Boolean(volunteers && volunteers.length) && (
-        <VolunteersSection
-          volunteers={volunteers}
-          invitations={invitations}
-          onAction={reloadVolunteers}
-          reloadInvitations={reloadInvitationsCallback}
-        />
-      )}
-
-      {Boolean(invitations && invitations.length) && (
-        <PendingInvitations
-          reloadInvitationsCallback={reloadInvitationsCallback}
-          invitations={invitations}
-        />
-      )}
+      <TeamMembers
+        volunteers={volunteers}
+        invitations={invitations}
+        onAction={reloadVolunteers}
+        reloadInvitations={reloadInvitationsCallback}
+      />
     </section>
   );
 }

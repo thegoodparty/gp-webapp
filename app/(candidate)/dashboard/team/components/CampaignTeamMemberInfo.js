@@ -15,7 +15,7 @@ export const CampaignTeamMemberInfo = ({ user, role }) => {
           size="small"
         />
       </div>
-      <div className="block">
+      <div className="block min-h-[97px]">
         {fullName && <div className="font-medium mb-1">{fullName}</div>}
         {role && (
           <div className="mb-1 text-sm capitalize">{ROLE_LABELS[role]}</div>
