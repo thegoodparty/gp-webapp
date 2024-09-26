@@ -40,15 +40,15 @@ export default function ShareMap() {
   ];
 
   return (
-    <div className="mt-8 bg-primary-dark px-4 lg:px-8 ">
+    <div className="mt-8 bg-primary-dark px-4 lg:px-8 flex justify-center">
       <Button
         color="neutral"
-        className="w-full flex items-center justify-center text-lg bg-white"
+        className="flex mx-4 items-center justify-center text-lg bg-white"
         onClick={() => {
           setOpen(true);
         }}
       >
-        <MdShare className="mr-2" />
+        <MdShare className="mr-2 " />
         <span>Share This Map</span>
       </Button>
       <Modal
