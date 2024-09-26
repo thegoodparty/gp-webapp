@@ -1,12 +1,7 @@
-console.log(
-  `process.env.NEXT_PUBLIC_API_BASE =>`,
-  process.env.NEXT_PUBLIC_API_BASE,
-);
 export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
 if (!apiBase) {
   apiBase = 'https://api-dev.goodparty.org';
 }
-console.log(`apiBase =>`, apiBase);
 
 // CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
@@ -19,8 +14,7 @@ export let appBase = Boolean(process.env.CI)
 let base = `${appBase}/api/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
-console.log(`appBase =>`, appBase);
-console.log(`process.env.VERCEL_BRANCH_URL =>`, process.env.VERCEL_BRANCH_URL);
+
 if (!appBase) {
   appBase =
     typeof window !== 'undefined'
@@ -28,8 +22,7 @@ if (!appBase) {
       : `https://${process.env.VERCEL_BRANCH_URL}`;
   base = `${appBase}/api/v1/`;
 }
-console.log(`appBase =>`, appBase);
-console.log(`base =>`, base);
+
 const gpApi = {
   homepage: {
     subscribeEmail: {
@@ -844,7 +837,5 @@ function replaceBase(obj) {
     }
   });
 }
-
-console.log(`gpApi =>`, gpApi);
 
 export default gpApi;

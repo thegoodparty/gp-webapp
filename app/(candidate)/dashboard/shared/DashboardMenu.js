@@ -111,7 +111,7 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  const notifications = useNotifications();
+  const notifications = useNotifications() || [];
   const campaignRequestNotifications = notifications.filter((notification) => {
     const { data = {}, isRead } = notification || {};
     const { type } = data;
