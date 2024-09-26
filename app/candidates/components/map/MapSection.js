@@ -15,6 +15,7 @@ import { CircularProgress, debounce } from '@mui/material';
 import H2 from '@shared/typography/H2';
 import WinnerListSection from '../winners/WinnerListSection';
 import { useMapCampaigns } from '@shared/hooks/useMapCampaigns';
+import ShareMap from './ShareMap';
 
 export const MapContext = createContext();
 
@@ -47,7 +48,8 @@ export default function MapSection({ isLoaded, state }) {
     swLng: false,
   });
   const isFilterEmpty = Object.values(filters).every((val) => !val);
-  const { campaigns } = useMapCampaigns(isFilterEmpty ? null : filters);
+  const { campaigns, isCampaignsLoading, setIsCampaignsLoading } =
+    useMapCampaigns(isFilterEmpty ? null : filters);
 
   useEffect(() => {
     // Only cache the first response
@@ -64,18 +66,18 @@ export default function MapSection({ isLoaded, state }) {
     }
   }, [campaigns]);
 
-  // Debounced onChangeFilters to prevent unnecessary renders
   const onChangeFilters = useCallback((key, val) => {
     setFilters((prevFilters) => ({
-      ...prevFilters, // Spread the previous filters to retain the current values
-      [key]: val, // Update the filter based on the key-value pair
+      ...prevFilters,
+      [key]: val,
     }));
+    setIsCampaignsLoading(true);
     setIsFilterChanged(true);
   }, []);
 
   const onChangeMapBounds = useCallback((bounds) => {
     setFilters((prevFilters) => ({
-      ...prevFilters, // Spread the previous filters to retain the current values
+      ...prevFilters,
       ...bounds,
     }));
   }, []);
@@ -111,6 +113,7 @@ export default function MapSection({ isLoaded, state }) {
       onChangeMapBounds,
       isFilterChanged,
       setIsFilterChanged,
+      isCampaignsLoading,
     }),
     [
       campaigns,
@@ -122,6 +125,7 @@ export default function MapSection({ isLoaded, state }) {
       onChangeFilters,
       onChangeMapBounds,
       isFilterChanged,
+      isCampaignsLoading,
     ],
   );
 
@@ -138,7 +142,7 @@ export default function MapSection({ isLoaded, state }) {
             <H2 className="mt-2">Loading...</H2>
           </div>
         ) : (
-          <>
+          <div className="bg-primary-dark">
             <section className="md:h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden relative">
               <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
                 <div className="flex-1 h-3/4 md:h-auto">
@@ -151,8 +155,9 @@ export default function MapSection({ isLoaded, state }) {
                 </div>
               </div>
             </section>
+            <ShareMap />
             <div className="h-4 md:h-8 bg-primary-dark">&nbsp;</div>
-          </>
+          </div>
         )}
       </MapContext.Provider>
       <WinnerListSection allCampaigns={allCampaigns} />
