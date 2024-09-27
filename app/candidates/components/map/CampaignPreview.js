@@ -25,6 +25,7 @@ export default function CampaignPreview() {
     lastName,
     office,
     city,
+    county,
     state,
     avatar,
     electionDate,
@@ -71,6 +72,7 @@ export default function CampaignPreview() {
             <MdLocationOn size={20} className="text-primary-light" />
             <Body1 className="ml-2 gray-600">
               {city ? `${city}, ` : ''}
+              {county ? `${county}, ` : ''}
               {state}
             </Body1>
           </div>
