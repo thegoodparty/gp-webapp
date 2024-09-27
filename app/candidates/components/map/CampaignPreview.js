@@ -12,6 +12,7 @@ import {
 import Image from 'next/image';
 import MarketingH5 from '@shared/typography/MarketingH5';
 import Body1 from '@shared/typography/Body1';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function CampaignPreview() {
   const { selectedCampaign, onSelectCampaign } = useContext(MapContext);
@@ -25,6 +26,7 @@ export default function CampaignPreview() {
     lastName,
     office,
     city,
+    county,
     state,
     avatar,
     electionDate,
@@ -71,6 +73,7 @@ export default function CampaignPreview() {
             <MdLocationOn size={20} className="text-primary-light" />
             <Body1 className="ml-2 gray-600">
               {city ? `${city}, ` : ''}
+              {county ? `${county}, ` : ''}
               {state}
             </Body1>
           </div>
@@ -85,7 +88,7 @@ export default function CampaignPreview() {
           <div className="flex mb-3 items-center">
             <MdCalendarMonth size={20} className="text-primary-light" />
             <Body1 className="ml-2 gray-600">
-              Election Day: {electionDate}
+              Election Day: {dateUsHelper(electionDate)}
             </Body1>
           </div>
         )}

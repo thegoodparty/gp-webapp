@@ -28,6 +28,7 @@ export default function CampaignSnippet({ campaign }) {
             <Image
               src={avatar}
               className="h-12 w-12 rounded-2xl"
+              unoptimized
               width={48}
               height={48}
               alt={`${firstName?.charAt(0) || ''} ${lastName?.charAt(0) || ''}`}
