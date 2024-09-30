@@ -24,7 +24,7 @@ export default function ScheduleCard(props) {
           Connect with our Politics team to schedule a {typeText} campaign.
           Attach your script and pay just{' '}
           {type === 'sms'
-            ? '$.03 per text or less. Replies are free.'
+            ? '$.035 per text or less. Replies are free.'
             : '$.04 per outbound call. Automatically leave voicemails for one and a half cents.'}
         </Body2>
       </div>
