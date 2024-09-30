@@ -1,8 +1,10 @@
-import { getServerUser } from 'helpers/userServerHelper';
+import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import { fetchUserMeta } from 'helpers/fetchUserMeta';
 import pageMetaData from 'helpers/metadataHelper';
 import { ManagingFinalPage } from 'app/(candidate)/onboarding/managing/final/components/ManagingFinalPage';
+import gpFetch from 'gpApi/gpFetch';
+import gpApi from 'gpApi';
 
 const meta = pageMetaData({
   title: 'Request Submitted',
@@ -17,10 +19,22 @@ const Page = async () => {
     redirect('/login');
   }
   const { metaData } = await fetchUserMeta();
+  const { id: userId } = user;
+
+  const requests = await gpFetch(
+    gpApi.campaign.campaignRequests.get,
+    {
+      userId,
+    },
+    false,
+    getServerToken(),
+  );
+
+  const { candidateEmail } = requests?.length ? requests[0] : {};
 
   const childProps = {
     metaData,
-    candidateEmail: 'candidate@campaign.org', // TODO: get this from invites/requests record
+    candidateEmail,
   };
 
   return <ManagingFinalPage {...childProps} />;

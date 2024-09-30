@@ -26,14 +26,9 @@ export const ManagingFinalPage = ({ candidateEmail }) => {
           <CheckmarkAnimation loop={false} />
         </div>
         <Body2>
-          If your candidate is already in our system, they will receive an email
-          to confirm your role as their Campaign Manager. Once they accept,
-          you&apos;ll have full access to manage the campaign through your
-          account.
-        </Body2>
-        <Body2 className="mt-3">
-          If not, they will receive an invitation to create an account and add
-          you as their Campaign Manager.
+          Your candidate will receive an email to confirm you as their Campaign
+          Manager. If they&apos;re new to our system, they&apos;ll be prompted
+          to create an account.
         </Body2>
       </div>
 
