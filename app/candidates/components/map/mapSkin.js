@@ -9,6 +9,15 @@ const mapSkin = [
     ],
   },
   {
+    featureType: 'administrative.land_parcel',
+    elementType: 'labels.text',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
     featureType: 'landscape',
     elementType: 'all',
     stylers: [
@@ -39,11 +48,29 @@ const mapSkin = [
     ],
   },
   {
+    featureType: 'road',
+    elementType: 'labels.text',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
     featureType: 'road.highway',
     elementType: 'all',
     stylers: [
       {
         visibility: 'simplified',
+      },
+    ],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text',
+    stylers: [
+      {
+        visibility: 'off',
       },
     ],
   },
@@ -57,8 +84,26 @@ const mapSkin = [
     ],
   },
   {
+    featureType: 'road.local',
+    elementType: 'labels.text',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
     featureType: 'transit',
     elementType: 'all',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'labels.text',
     stylers: [
       {
         visibility: 'off',
