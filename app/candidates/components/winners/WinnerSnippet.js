@@ -1,19 +1,23 @@
 import Body1 from '@shared/typography/Body1';
 import H4 from '@shared/typography/H4';
 import Image from 'next/image';
+import { useState } from 'react';
 import { IoPersonSharp } from 'react-icons/io5';
 
 export default function WinnerSnippet({ campaign }) {
   const { firstName, lastName, office, state, avatar } = campaign;
+  const [imageError, setImageError] = useState(false);
   return (
     <div className="border border-slate-300 rounded-2xl p-6 flex">
-      {avatar ? (
+      {!imageError && avatar ? (
         <Image
           src={avatar}
-          alt={`${firstName} ${lastName}`}
-          width={64}
-          height={64}
-          className="rounded-xl"
+          className="h-12 w-12 rounded-2xl"
+          unoptimized
+          width={48}
+          height={48}
+          alt={`${firstName?.charAt(0) || ''} ${lastName?.charAt(0) || ''}`}
+          onError={() => setImageError(true)}
         />
       ) : (
         <div className="w-12 h-12 bg-slate-300 rounded-xl flex items-center justify-center text-2xl text-slate-600">
