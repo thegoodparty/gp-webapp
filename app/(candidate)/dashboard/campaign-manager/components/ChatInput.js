@@ -8,13 +8,14 @@ export default function ChatInput() {
   const { handleNewInput, loading } = useContext(ChatContext);
   const [text, setText] = useState('');
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     if (loading) {
       return;
     }
     e.preventDefault();
     console.log('submit');
-    handleNewInput(text);
+    await handleNewInput(text);
+    setText('');
   };
 
   return (

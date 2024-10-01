@@ -1,4 +1,5 @@
 import Body2 from '@shared/typography/Body2';
+import { marked } from 'marked';
 import { BsStars } from 'react-icons/bs';
 import Typewriter from 'typewriter-effect';
 
@@ -8,7 +9,14 @@ export default function ChatMessage({
   setShouldType,
   scrollCallback,
 }) {
-  const { content, role } = message;
+  let { content, role } = message;
+  try {
+    if (role === 'assistant') {
+      content = marked(content);
+    }
+  } catch (e) {
+    console.log('error converting marked', e);
+  }
   return (
     <div className={`flex p-4 ${role === 'user' ? 'justify-end' : ''}`}>
       {role === 'assistant' ? (
