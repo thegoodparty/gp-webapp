@@ -2,6 +2,7 @@ import EmailForm from '@shared/inputs/EmailForm';
 import Image from 'next/image';
 import bgImg from '/public/images/homepage/art.png';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import Button from '@shared/buttons/Button';
 
 export default function Hero() {
   return (
@@ -33,12 +34,9 @@ export default function Hero() {
             Learn how you can plug in to inspiring independent campaigns or get
             access to our free tools for people-powered candidates
           </h3>
-          <EmailForm
-            formId="5d84452a-01df-422b-9734-580148677d2c"
-            pageName="Home Page"
-            labelId="subscribe-form"
-            label="Join the movement"
-          />
+          <Button variant="primary" size="large" className="mt-5">
+            Find Candidates
+          </Button>
         </div>
         <div className="flex col-span-12 lg:col-span-5 relative h-full lg:pt-10">
           <Image

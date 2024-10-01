@@ -18,6 +18,11 @@ export const FOOTER_COLUMNS = [
       },
       { label: 'About Us', link: '/about', id: 'footer-org-about-us' },
       { label: 'Our Team', link: '/team', id: 'footer-org-our-team' },
+      {
+        label: 'Find Candidates',
+        link: '/candidates',
+        id: 'footer-org-candidates',
+      },
       { label: 'Careers', link: '/work-with-us', id: 'footer-org-careers' },
     ],
   },
