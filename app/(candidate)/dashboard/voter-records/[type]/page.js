@@ -7,8 +7,8 @@ import VoterFileDetailPage from './components.js/VoterFileDetailPage';
 import { fetchCanDownload } from '../page';
 
 const meta = pageMetaData({
-  title: 'Voter Records detailed view | GoodParty.org',
-  description: 'Voter Records detailed view',
+  title: 'Voter Data detailed view | GoodParty.org',
+  description: 'Voter Data detailed view',
   slug: '/dashboard/voter-records',
 });
 export const metadata = meta;
