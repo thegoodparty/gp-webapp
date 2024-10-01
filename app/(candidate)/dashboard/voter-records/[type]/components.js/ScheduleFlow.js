@@ -89,6 +89,7 @@ export default function ScheduleFlow(props) {
     const updatedState = {
       ...state,
       voterFileUrl,
+      type,
     };
     await scheduleCampaign(updatedState);
   };
