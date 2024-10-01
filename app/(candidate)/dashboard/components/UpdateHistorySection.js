@@ -13,13 +13,13 @@ import H3 from '@shared/typography/H3';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
+  text: { title: 'Texts sent' },
   calls: { title: 'Calls made' },
+  yardSigns: { title: 'Yard signs' },
   digital: { title: 'Digital Ads' },
   directMail: { title: 'Direct mail sent' },
   digitalAds: { title: 'Digital ads' },
-  text: { title: 'Texts sent' },
   events: { title: 'Events Attendance' },
-  yardSigns: { title: 'Yard signs' },
 };
 
 const UpdateHistorySection = memo(function UpdateHistorySection(props) {
