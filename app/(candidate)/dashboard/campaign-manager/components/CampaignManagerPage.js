@@ -7,6 +7,12 @@ import ChatInput from './ChatInput';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import CreateNewChat from './CreateNewChat';
+import {
+  createInitialChat,
+  fetchChatHistory,
+  getChatThread,
+} from './ajaxActions';
+import useChat from './useChat';
 
 export async function updateChat(threadId, input) {
   try {
@@ -25,9 +31,8 @@ export async function updateChat(threadId, input) {
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
-  const { threadId } = props;
-  console.log('props.chat', props.chat);
-  const [chat, setChat] = useState(props.chat);
+  const { chat, setChat, threadId, chats } = useChat();
+
   const [loading, setLoading] = useState(false);
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
@@ -44,12 +49,13 @@ export default function CampaignManagerPage(props) {
     handleNewInput,
     ...props,
     chat,
+    chats,
     loading,
     shouldType,
     setShouldType,
   };
 
-  console.log('props', props);
+  console.log('contextProps', contextProps);
 
   return (
     <DashboardLayout {...props} showAlert={false}>
