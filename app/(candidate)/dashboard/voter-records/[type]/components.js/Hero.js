@@ -41,10 +41,7 @@ export default function Hero(props) {
   });
 
   const file = fileByKey[type];
-  console.log('file', file);
   const { isCustom, index } = file || {};
-
-  console.log('isCustom', isCustom);
 
   return (
     <Paper className="mt-4">
@@ -55,7 +52,7 @@ export default function Hero(props) {
             Key data associated with this voter file.
           </Body2>
         </div>
-        <DownloadFile {...props} />
+        <DownloadFile {...props} isCustom={isCustom} index={index} />
       </div>
       <div className="mt-6 grid grid-cols-12 gap-4">
         <div className=" col-span-12">
