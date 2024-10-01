@@ -7,7 +7,7 @@ import { CircularProgress } from '@mui/material';
 
 export default function DownloadFile(props) {
   const [loading, setLoading] = useState(false);
-  const { type, campaign, fileName, isCustom } = props;
+  const { type, campaign, fileName, isCustom, index } = props;
 
   const handleDownload = async () => {
     if (loading) {
@@ -17,7 +17,7 @@ export default function DownloadFile(props) {
     let response;
     if (isCustom) {
       trackEvent('Download Voter File attempt', { type: 'custom' });
-      const customFilters = campaign.data.customVoterFiles[type];
+      const customFilters = campaign.data.customVoterFiles[index];
       response = await fetchVoterFile('custom', customFilters);
     } else {
       response = await fetchVoterFile(type);
