@@ -1,6 +1,9 @@
+import { getServerUser } from 'helpers/userServerHelper';
 import Script from 'next/script';
 
 export default function FullStoryScript() {
+  const user = getServerUser();
+  if (!user) return null;
   return (
     <Script
       strategy="afterInteractive"
