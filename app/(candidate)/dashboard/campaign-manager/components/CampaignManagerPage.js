@@ -6,7 +6,6 @@ import Chat from './Chat';
 import ChatInput from './ChatInput';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import Button from '@shared/buttons/Button';
 import CreateNewChat from './CreateNewChat';
 
 export async function updateChat(threadId, input) {
