@@ -53,12 +53,6 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-team-dashboard',
   },
   {
-    label: 'Funding',
-    icon: <BsGraphUp />,
-    link: '/dashboard/funding',
-    id: 'funding-dashboard',
-  },
-  {
     label: 'Resources Library',
     icon: <RiBook2Line />,
     link: '/dashboard/resources',
