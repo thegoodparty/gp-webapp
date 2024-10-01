@@ -74,7 +74,6 @@ export default function ScheduleFlow(props) {
   };
 
   const handleSubmit = async () => {
-    // await scheduleCampaign(state {...state, voterFileUrl});
     const activeFilters = Object.keys(state.audience).filter((key) => state.audience[key]);
     const customFilters = {
       filters: activeFilters,
@@ -84,6 +83,7 @@ export default function ScheduleFlow(props) {
       customFilters: JSON.stringify(customFilters),
     });
 
+    // If queryString handles the type, it appends it to the end instead of the beginning
     const voterFileUrl = `${gpApi.voterData.getVoterFile.url}?type=${type}&${customFiltersEncoded}`;
 
     const updatedState = {
