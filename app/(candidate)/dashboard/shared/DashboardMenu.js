@@ -20,7 +20,7 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-tracker-dashboard',
   },
   {
-    label: 'Voter Records',
+    label: 'Voter Data',
     icon: <GiProgression />,
     link: '/dashboard/upgrade-to-pro',
     id: 'upgrade-pro-dashboard',
@@ -63,7 +63,7 @@ const DEFAULT_MENU_ITEMS = [
 
 const VOTER_RECORDS_MENU_ITEM = {
   id: 'voter-records-dashboard',
-  label: 'Voter Records',
+  label: 'Voter Data',
   link: '/dashboard/voter-records',
   icon: <GiProgression />,
 };
