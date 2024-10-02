@@ -16,11 +16,14 @@ export default function Banner({ banner, idIndex = '1' }) {
   } = banner;
 
   const isExternalLink = buttonLink?.startsWith('http');
+  const bannerId = `${bannerClassName || 'banner-id'}-${idIndex}`;
 
   return (
     <div
-      id={`${bannerClassName || 'banner-id'}-${idIndex}`}
-      className={`my-8 block md:grid grid-cols-2 gap-4 rounded-lg bg-indigo-200 ${bannerClassName}`}
+      id={bannerId + '-banner'}
+      className={`my-8 block md:grid grid-cols-2 gap-4 rounded-lg bg-indigo-200 ${
+        bannerClassName || ''
+      }`}
     >
       <div className="p-8 pr-0 col-span-1 flex flex-col justify-between">
         <div>
@@ -30,7 +33,7 @@ export default function Banner({ banner, idIndex = '1' }) {
 
         {buttonLink && buttonLabel && (
           <Link
-            id="glossary-learn-more"
+            id={bannerId}
             href={buttonLink}
             target={isExternalLink ? '_blank' : '_self'}
             rel={isExternalLink ? 'noopener noreferrer nofollow' : undefined}
