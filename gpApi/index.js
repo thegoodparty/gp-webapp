@@ -95,6 +95,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    adminCreate: {
+      url: `${base}admin-campaign`,
+      method: 'POST',
+      withAuth: true,
+    },
     createDemoCampaign: {
       url: `${base}campaign/demo`,
       method: 'POST',
@@ -487,6 +492,11 @@ const gpApi = {
   // admin
   //
   admin: {
+    isAdmin: {
+      url: `${base}admin/is-admin`,
+      method: 'GET',
+      withAuth: true,
+    },
     victoryMail: {
       url: `${base}admin/victory-mail`,
       method: 'POST',

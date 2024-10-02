@@ -6,12 +6,17 @@ export const CampaignOfficeSelectionModal = ({
   show = false,
   onClose = () => {},
   onSelect = () => {},
+  adminMode = false,
 }) => (
   <Modal
     open={show}
     closeCallback={onClose}
     boxClassName="w-[95vw] lg:w-[60vw]"
   >
-    <OfficeStep campaign={campaign} updateCallback={onSelect} />
+    <OfficeStep
+      campaign={campaign}
+      updateCallback={onSelect}
+      adminMode={adminMode}
+    />
   </Modal>
 );

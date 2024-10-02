@@ -35,7 +35,7 @@ const buildDefaultTableFilters = (searchParams) =>
   );
 
 export default async function Page({ searchParams }) {
-  adminAccessOnly();
+  await adminAccessOnly();
   const { users } = await fetchUsers();
 
   const childProps = {

@@ -59,7 +59,7 @@ export default function TargetCard(props) {
           <span className="text-secondary-light">
             {numberFormatter(totalRegisteredVoters)}
           </span>{' '}
-          voter records and contact info for{' '}
+          voter data and contact info for{' '}
           <span className="text-secondary-light">{office}</span> of{' '}
           <span className="text-secondary-light">
             {city}, {state}.

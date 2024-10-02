@@ -13,6 +13,8 @@ import H4 from '@shared/typography/H4';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { CircularProgress } from '@mui/material';
+import Button from '@shared/buttons/Button';
+import Link from 'next/link';
 
 const fetchCampaigns = async () => {
   try {
@@ -52,17 +54,22 @@ const CampaignStatisticsPage = (props) => {
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
-        <H2
-          className="cursor-pointer inline-flex items-center [&>svg]:inline [&>svg]:ml-1"
-          onClick={() => setShowForm(!showForm)}
-        >
-          Search Campaigns{' '}
-          <FiChevronRight
-            className={`transition-all transform${
-              showForm ? ' rotate-90' : ''
-            }`}
-          />
-        </H2>
+        <div className="flex justify-between items-center">
+          <H2
+            className="cursor-pointer inline-flex items-center [&>svg]:inline [&>svg]:ml-1"
+            onClick={() => setShowForm(!showForm)}
+          >
+            Search Campaigns{' '}
+            <FiChevronRight
+              className={`transition-all transform${
+                showForm ? ' rotate-90' : ''
+              }`}
+            />
+          </H2>
+          <Link href="/admin/add-campaign">
+            <Button color="success">Add a new campaign</Button>
+          </Link>
+        </div>
         <SearchForm show={showForm} />
         {campaigns?.length > 0 ? (
           <AdminCandidatesTable campaigns={campaigns} />

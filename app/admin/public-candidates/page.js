@@ -10,7 +10,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  adminAccessOnly();
+  await adminAccessOnly();
 
   return <PublicCandidates />;
 }

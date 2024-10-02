@@ -22,21 +22,6 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { trackEvent } from 'helpers/fullStoryHelper';
 import RadioList from '@shared/inputs/RadioList';
 
-const parties = [
-  {
-    name: 'Independent',
-    label: 'Independent / Non-Partisan',
-    logo: independentLogo,
-    wide: true,
-  },
-  { name: 'Libertarian Party', logo: libertarianLogo },
-  { name: 'Forward Party', logo: fwdLogo },
-  { name: 'Green Party', logo: greedLogo },
-  { name: 'Reform Party', logo: reformLogo },
-  { name: 'Democratic Party', logo: demLogo },
-  { name: 'Republican Party', logo: repLogo },
-];
-
 const options = [
   { key: 'independent', label: 'Independent' },
   { key: 'republican', label: 'Republican' },

@@ -36,10 +36,16 @@ export default function Testimonials({ testimonials }) {
   useEffect(() => {
     function handleResize() {
       const windowWidth = window.innerWidth;
-      if (windowWidth <= LG_MIN) {
-        setPageSize(windowWidth <= MD_MIN ? SM_PAGE_SIZE : MD_PAGE_SIZE);
-      } else {
-        setPageSize(LG_PAGE_SIZE);
+      const newPageSize =
+        windowWidth > LG_MIN
+          ? LG_PAGE_SIZE
+          : windowWidth <= MD_MIN
+          ? SM_PAGE_SIZE
+          : MD_PAGE_SIZE;
+
+      if (pageSize !== newPageSize) {
+        setPageSize(newPageSize);
+        setCurrentPage(0);
       }
     }
 
@@ -48,7 +54,7 @@ export default function Testimonials({ testimonials }) {
     handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [pageSize]);
 
   if (!testimonials || testimonials.length <= 0) return null;
 

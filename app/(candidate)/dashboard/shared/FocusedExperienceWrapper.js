@@ -1,4 +1,3 @@
-import FullStoryScript from '@shared/scripts/FullStoryScript';
 import { Paper } from '@mui/material';
 
 export const FocusedExperienceWrapper = ({
@@ -7,7 +6,6 @@ export const FocusedExperienceWrapper = ({
   ...restProps
 }) => (
   <div className="w-full px-4 bg-indigo-100">
-    <FullStoryScript />
     <div className="min-h-[calc(100vh-60px)] py-20 w-full">
       <div className="max-w-screen-sm mx-auto">
         <Paper

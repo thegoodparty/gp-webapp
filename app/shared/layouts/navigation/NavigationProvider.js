@@ -17,6 +17,8 @@ import {
   ListRounded,
 } from '@mui/icons-material';
 
+import MapIcon from '@mui/icons-material/Map';
+
 import { usePathname } from 'next/navigation';
 
 export const RUN_LINKS = [
@@ -73,6 +75,12 @@ export const COMMUNITY_LINKS = [
     href: '/volunteer',
     icon: <VolunteerActivismRounded />,
     id: 'nav-volunteer',
+  },
+  {
+    label: 'Find Candidates',
+    href: '/candidates',
+    icon: <MapIcon />,
+    id: 'nav-find-candidates',
   },
   {
     label: 'Info Session',

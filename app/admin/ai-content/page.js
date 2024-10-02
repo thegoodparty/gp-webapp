@@ -13,7 +13,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  adminAccessOnly();
+  await adminAccessOnly();
 
   const childProps = {
     pathname: '/admin/ai-content',
