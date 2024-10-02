@@ -68,21 +68,10 @@ export function PhasesModal() {
       >
         <div className="min-w-[80vw] lg:min-w-[800px]">
           <H1 className="text-center mb-8">About Phases</H1>
-          <div className="mt-8 block flex flex-col md:flex-row gap-4 justify-between">
-            <Body2 className="text-gray-600">
-              GoodParty.org breaks down political campaigns into phases of how
-              candidates should be connecting with their constituents.
-            </Body2>
-            <Link
-              className="grow whitespace-nowrap"
-              href="/blog/article/navigating-three-phases-of-a-successful-political-campaign"
-              target="_blank"
-            >
-              <Button className="w-full md:w-auto" color="neutral">
-                Read More
-              </Button>
-            </Link>
-          </div>
+          <Body2 className="mt-8 text-gray-600 text-center">
+            GoodParty.org breaks down political campaigns into phases of how
+            candidates should be connecting with their constituents.
+          </Body2>
 
           <div className="mt-8 grid grid-cols-12 gap-4">
             {phases.map((phase, index) => (
