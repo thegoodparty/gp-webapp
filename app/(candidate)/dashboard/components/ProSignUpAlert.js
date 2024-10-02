@@ -4,9 +4,9 @@ import { MdChevronRight } from 'react-icons/md';
 export const ProSignUpAlert = () => (
   <AlertBanner
     {...{
-      title: 'Need Additional Support?',
+      title: 'Level Up Your Campaign',
       message:
-        'We have your back. Get voter data, 24/7 access to experts, and more for just $10/mo.',
+        'Access campaign essentials like text banking, voter data, and 1:1 expert support for just $10/month.',
       actionHref: '/dashboard/pro-sign-up',
       actionText: (
         <div className="flex items-center" id="pro_upgrade_alert">
