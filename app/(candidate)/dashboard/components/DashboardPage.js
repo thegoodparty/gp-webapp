@@ -45,12 +45,13 @@ export default function DashboardPage(props) {
 
   const { pathToVictory, goals, data, details } = campaign;
   const { reportedVoterGoals } = data || {};
-  const { primaryElectionDate, primaryResult } = details || {};
+  const { primaryElectionDate, primaryResult: storedPrimaryResult } =
+    details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
   const [primaryResultState, setPrimaryResultState] = useState({
     modalOpen: false,
     modalDismissed: false,
-    resultSet: !!primaryResult,
+    primaryResult: storedPrimaryResult,
   });
 
   const officeName =
@@ -101,11 +102,11 @@ export default function DashboardPage(props) {
 
   if (primaryElectionDate) {
     const primaryElectionDateObj = new Date(primaryElectionDate);
-    const { modalOpen, resultSet, modalDismissed } = primaryResultState;
+    const { modalOpen, primaryResult, modalDismissed } = primaryResultState;
 
     if (primaryElectionDateObj > now) {
       resolvedDate = primaryElectionDate;
-    } else if (!resultSet && !modalOpen && !modalDismissed) {
+    } else if (!primaryResult && !modalOpen && !modalDismissed) {
       // Primary date has passed, open up results modal
       setPrimaryResultState((state) => ({
         ...state,
@@ -165,18 +166,18 @@ export default function DashboardPage(props) {
         return {
           ...state,
           modalOpen: false,
-          resultSet: true,
+          primaryResult: selectedResult,
         };
       } else {
         // user pressed Cancel to dismiss modal for now
         return {
-          ...state,
           modalOpen: false,
           modalDismissed: true,
+          primaryResult: undefined,
         };
       }
     });
-  });
+  }, []);
 
   const childProps = {
     ...props,
@@ -190,12 +191,15 @@ export default function DashboardPage(props) {
     deleteHistoryCallBack,
   };
 
+  console.log('WEKS', weeksUntil.weeks);
+
   return (
     <DashboardLayout {...childProps}>
       <div>
         {contactGoals ? (
           <>
-            {weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate ? (
+            {(weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate) ||
+            primaryResultState.primaryResult === 'lost' ? (
               <ElectionOver />
             ) : (
               <>
