@@ -1,6 +1,7 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { deleteUserCookies } from 'helpers/cookieHelper';
 import { useEffect } from 'react';
 // import { redirect } from 'next/navigation';
 
@@ -18,6 +19,7 @@ async function fetchLogout() {
 export default function LogoutPage() {
   useEffect(() => {
     async function logout() {
+      deleteUserCookies();
       await fetchLogout();
       window.location.replace('/');
     }

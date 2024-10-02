@@ -29,7 +29,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params }) {
-  adminAccessOnly();
+  await adminAccessOnly();
   const { slug } = params;
   const { campaign } = await fetchCampaignBySlugAdminOnly(slug);
   const { updateHistory } = await fetchAdminUpdateHistory(slug);

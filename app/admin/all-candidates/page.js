@@ -19,7 +19,7 @@ export const fetchCandidates = async () => {
 };
 
 export default async function Page() {
-  adminAccessOnly();
+  await adminAccessOnly();
   const { candidates } = await fetchCandidates();
 
   const childProps = {
