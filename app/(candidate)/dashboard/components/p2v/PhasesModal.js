@@ -1,7 +1,7 @@
 'use client';
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
+import Button from '@shared/buttons/Button';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import H3 from '@shared/typography/H3';
@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { BsPersonFillCheck } from 'react-icons/bs';
 import { IoMdMegaphone } from 'react-icons/io';
 import { MdHowToVote } from 'react-icons/md';
+import Link from 'next/link';
 
 export const phases = [
   {
@@ -22,6 +23,7 @@ export const phases = [
     objective: 'Identify voter preferences, concerns, and support levels.',
     timing: '6-12+ months before your election.',
     size: 'Broad, slightly segmented (if at all).',
+    link: '/blog/article/setting-the-stage-awareness-phase-of-political-campaigns',
   },
   {
     icon: <BsPersonFillCheck />,
@@ -31,6 +33,7 @@ export const phases = [
       'Target voters who are likely to be swayed by campaign messaging.',
     timing: '< 6 months - 6 weeks before your election.',
     size: 'Mid-sized, segmented slightly but not very granular.',
+    link: '/blog/article/engaging-voters-contact-phase-of-a-political-campaign',
   },
   {
     icon: <MdHowToVote />,
@@ -39,6 +42,7 @@ export const phases = [
     objective: 'Increase voter turnout among your supporters.',
     timing: 'The last 4-6 weeks leading up to your election.',
     size: 'Small, highly refined and discrete based on tactics.',
+    link: '/blog/article/turning-support-into-victory-vote-phase-of-a-political-campaign',
   },
 ];
 
@@ -64,18 +68,18 @@ export function PhasesModal() {
       >
         <div className="min-w-[80vw] lg:min-w-[800px]">
           <H1 className="text-center mb-8">About Phases</H1>
-
           <Body2 className="mt-8 text-gray-600 text-center">
             GoodParty.org breaks down political campaigns into phases of how
             candidates should be connecting with their constituents.
           </Body2>
+
           <div className="mt-8 grid grid-cols-12 gap-4">
             {phases.map((phase, index) => (
               <div
                 className="col-span-12 md:col-span-4 h-full"
                 key={phase.title}
               >
-                <Paper className="h-full">
+                <Paper className="h-full flex flex-col">
                   <div className="text-5xl">{phase.icon}</div>
                   <Overline className="mt-3">{phase.phase}</Overline>
                   <H3>{phase.title}</H3>
@@ -84,7 +88,12 @@ export function PhasesModal() {
                   <H6 className="mt-2">Timing</H6>
                   <Body2>{phase.timing}</Body2>
                   <H6 className="mt-2">Audience Size</H6>
-                  <Body2>{phase.size}</Body2>
+                  <Body2 className="mb-6">{phase.size}</Body2>
+                  <Link href={phase.link} target="_blank" className="mt-auto">
+                    <Button className="w-full" size="large" color="neutral">
+                      Learn More
+                    </Button>
+                  </Link>
                 </Paper>
               </div>
             ))}
