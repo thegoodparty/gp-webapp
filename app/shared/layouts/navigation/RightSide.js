@@ -64,22 +64,20 @@ export default function RightSide({ campaignStatus }) {
             toggleCallback={toggleProfile}
             user={user}
           />
-          {!campaignRequestPending && (
-            <>
+          {!campaignRequestPending &&
+            (isDashboardPath ? (
+              <TopDashboardMenu
+                open={dashboardOpen}
+                toggleCallback={toggleDashboard}
+                pathname={pathname}
+              />
+            ) : (
               <DashboardOrContinue
                 isDashboardPath={isDashboardPath}
                 closeAll={closeAll}
                 campaignStatus={campaignStatus}
               />
-              {isDashboardPath && (
-                <TopDashboardMenu
-                  open={dashboardOpen}
-                  toggleCallback={toggleDashboard}
-                  pathname={pathname}
-                />
-              )}
-            </>
-          )}
+            ))}
         </>
       ) : (
         <>

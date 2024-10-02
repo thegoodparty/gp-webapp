@@ -59,7 +59,7 @@ export default async function Page({ params, searchParams }) {
   const { volunteers } = await loadVolunteers();
   const { invitations } = await loadInvitations();
   const requests = await getCampaignRequests();
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = getServerUser();
 
   const childProps = {
     pathname: '/dashboard/team',

@@ -58,11 +58,8 @@ export default async function candidateAccess() {
   if (campaignRequests && campaignRequests.length) {
     return redirect('/onboarding/managing/final');
   }
-  const volunteers = await getCampaignVolunteersByUserId(user?.id);
 
-  //TODO: determine if user is a CM and allow access to the page
-
-  if (!campaignStatus || campaignStatus.status !== 'candidate') {
+  if (!['candidate', 'volunteer', 'manager'].includes(campaignStatus?.status)) {
     redirect('/');
   }
 }
