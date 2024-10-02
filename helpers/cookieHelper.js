@@ -35,7 +35,7 @@ export const deleteCookies = () => {
 };
 
 export const deleteUserCookies = () => {
-  deleteCookie('user'); // now deleted by api server.
+  deleteCookie('user');
   deleteCookie('impersonateUser');
   deleteCookie('signupRedirect');
 };

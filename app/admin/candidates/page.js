@@ -20,7 +20,7 @@ export const fetchCampaigns = async () => {
 };
 
 export default async function Page() {
-  adminAccessOnly();
+  await adminAccessOnly();
   const { campaigns } = await fetchCampaigns();
 
   const childProps = {

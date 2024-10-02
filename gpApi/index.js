@@ -451,6 +451,11 @@ const gpApi = {
   // admin
   //
   admin: {
+    isAdmin: {
+      url: `${base}admin/is-admin`,
+      method: 'GET',
+      withAuth: true,
+    },
     victoryMail: {
       url: `${base}admin/victory-mail`,
       method: 'POST',

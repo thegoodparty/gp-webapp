@@ -29,7 +29,7 @@ export default async function Page({ params, searchParams }) {
   if (!longState) {
     notFound();
   }
-  adminAccessOnly();
+  await adminAccessOnly();
   const { count } = await fetchCount(upperState);
   const childProps = { count, longState, state: upperState };
   return <CandidatesPage {...childProps} />;
