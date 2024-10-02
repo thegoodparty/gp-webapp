@@ -15,9 +15,9 @@ import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
-import AlertSection from './AlertSection';
 import { P2vSection } from './p2v/P2vSection';
 import ContactMethodsSection from './contactMethods/ContactMethodsSection';
+import PrimaryResultModal from './PrimaryResultModal';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -45,8 +45,18 @@ export default function DashboardPage(props) {
 
   const { pathToVictory, goals, data, details } = campaign;
   const { reportedVoterGoals } = data || {};
-  const { primaryElectionDate } = details || {};
+  const { primaryElectionDate, primaryResult } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
+  const [primaryResultState, setPrimaryResultState] = useState({
+    modalOpen: false,
+    modalDismissed: false,
+    resultSet: !!primaryResult,
+  });
+
+  const officeName =
+    details.office.toLowerCase() === 'other'
+      ? details.otherOffice
+      : details.office;
 
   const [state, setState] = useState({
     doorKnocking: reportedVoterGoals?.doorKnocking || 0,
@@ -88,8 +98,20 @@ export default function DashboardPage(props) {
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const now = new Date();
   let resolvedDate = electionDate;
-  if (primaryElectionDate && new Date(primaryElectionDate) > now) {
-    resolvedDate = primaryElectionDate;
+
+  if (primaryElectionDate) {
+    const primaryElectionDateObj = new Date(primaryElectionDate);
+    const { modalOpen, resultSet, modalDismissed } = primaryResultState;
+
+    if (primaryElectionDateObj > now) {
+      resolvedDate = primaryElectionDate;
+    } else if (!resultSet && !modalOpen && !modalDismissed) {
+      // Primary date has passed, open up results modal
+      setPrimaryResultState((state) => ({
+        ...state,
+        modalOpen: true,
+      }));
+    }
   }
 
   const weeksUntil = weeksTill(resolvedDate);
@@ -136,6 +158,26 @@ export default function DashboardPage(props) {
     [state],
   );
 
+  const primaryResultCloseCallback = useCallback((selectedResult) => {
+    setPrimaryResultState((state) => {
+      if (selectedResult) {
+        // user selected their primary election result
+        return {
+          ...state,
+          modalOpen: false,
+          resultSet: true,
+        };
+      } else {
+        // user pressed Cancel to dismiss modal for now
+        return {
+          ...state,
+          modalOpen: false,
+          modalDismissed: true,
+        };
+      }
+    });
+  });
+
   const childProps = {
     ...props,
     contactGoals,
@@ -167,6 +209,14 @@ export default function DashboardPage(props) {
           <EmptyState campaign={campaign} />
         )}
       </div>
+      {primaryElectionDate && (
+        <PrimaryResultModal
+          open={primaryResultState.modalOpen}
+          onClose={primaryResultCloseCallback}
+          electionDate={electionDate}
+          officeName={officeName}
+        />
+      )}
     </DashboardLayout>
   );
 }
