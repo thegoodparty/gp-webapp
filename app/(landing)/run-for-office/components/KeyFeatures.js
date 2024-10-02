@@ -25,7 +25,7 @@ function CardWrapper({ children, className }) {
 function CTALink({ id, href = '/sign-up' }) {
   return (
     <Link id={id} href={href} className="no-underline">
-      <Button variant="text" size="large" className="flex items-center gap-2">
+      <Button size="medium" className="flex items-center gap-2">
         Get Started
         <MdArrowForward className="text-2xl" />
       </Button>
@@ -43,8 +43,8 @@ export default function KeyFeatures() {
         Save time and cut costs with free campaign software.
       </Body1>
       <div className="pt-16 grid grid-cols-1 md:grid-cols-12 gap-6">
-        <CardWrapper className="pt-8 md:pt-12 pb-0 col-span-12 md:col-span-5">
-          <hgroup className="px-6">
+        <CardWrapper className="pt-8 md:pt-12 pb-0 col-span-12 md:col-span-5 flex flex-col">
+          <hgroup>
             <MarketingH4 className="mb-4">
               Create winning content in seconds
             </MarketingH4>
@@ -54,13 +54,15 @@ export default function KeyFeatures() {
               endorsement pitches.
             </Body1>
           </hgroup>
-          <CTALink id="tools-winning-content" />
-          <Image src={contentImg} alt="content" className="mt-10" />
+          <div className="pb-10">
+            <CTALink id="tools-winning-content" />
+          </div>
+          <Image src={contentImg} alt="content" className="mt-auto" />
         </CardWrapper>
 
         <CardWrapper className="col-span-12 md:col-span-7">
           <Image src={trackerImg} alt="content" className="mt-0 md:mt-8" />
-          <hgroup className="px-6">
+          <hgroup>
             <MarketingH4 className="mt-6 mb-4">
               Run a data-driven campaign
             </MarketingH4>
@@ -78,7 +80,7 @@ export default function KeyFeatures() {
             alt="content"
             className="mt-0 md:mt-10 mb-8"
           />
-          <hgroup className="px-6">
+          <hgroup>
             <MarketingH4 className="mb-4">
               Access to real campaign experts
             </MarketingH4>
@@ -92,7 +94,7 @@ export default function KeyFeatures() {
         <div className="col-span-12 md:col-span-5">
           <CardWrapper className="mb-6">
             <Image src={mapImg} alt="content" className="mb-8" />
-            <hgroup className="px-6">
+            <hgroup>
               <MarketingH4 className="mb-4">
                 Devoted volunteer network
               </MarketingH4>
@@ -104,7 +106,7 @@ export default function KeyFeatures() {
             <CTALink id="tools-volunteer-network" />
           </CardWrapper>
           <CardWrapper>
-            <hgroup className="px-6">
+            <hgroup>
               <MarketingH4 className="mb-4">
                 Dedicated resource library{' '}
               </MarketingH4>
