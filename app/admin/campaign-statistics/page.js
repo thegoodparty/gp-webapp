@@ -39,6 +39,7 @@ export default async function Page({ searchParams }) {
   adminAccessOnly();
 
   const {
+    id,
     state,
     slug,
     email,
@@ -52,6 +53,7 @@ export default async function Page({ searchParams }) {
   } = searchParams || {};
 
   const initialParams = {
+    id,
     state,
     slug,
     email,
@@ -63,6 +65,7 @@ export default async function Page({ searchParams }) {
     campaignStatus,
     firehose,
   };
+
   const paramsAreEmpty = Object.values(initialParams).every(
     (val) => val === undefined || val === '',
   );

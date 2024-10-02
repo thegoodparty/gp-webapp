@@ -18,7 +18,23 @@ const fetchUsers = async () => {
   return await gpFetch(api, false, false, token);
 };
 
-export default async function Page() {
+const buildDefaultTableFilters = (searchParams) =>
+  Object.keys(searchParams).reduce(
+    (accumulator, key) => [
+      ...accumulator,
+      ...(searchParams[key]
+        ? [
+            {
+              id: key,
+              value: searchParams[key],
+            },
+          ]
+        : []),
+    ],
+    [],
+  );
+
+export default async function Page({ searchParams }) {
   adminAccessOnly();
   const { users } = await fetchUsers();
 
@@ -26,6 +42,8 @@ export default async function Page() {
     pathname: '/admin/users',
     title: 'Users',
     users,
+    defaultFilters: buildDefaultTableFilters(searchParams),
   };
+
   return <AdminUsersPage {...childProps} />;
 }
