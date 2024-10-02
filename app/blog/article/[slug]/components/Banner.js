@@ -20,7 +20,7 @@ export default function Banner({ banner, idIndex = '1' }) {
 
   return (
     <div
-      id={bannerId}
+      id={bannerId + '-banner'}
       className={`my-8 block md:grid grid-cols-2 gap-4 rounded-lg bg-indigo-200 ${
         bannerClassName || ''
       }`}
@@ -33,7 +33,7 @@ export default function Banner({ banner, idIndex = '1' }) {
 
         {buttonLink && buttonLabel && (
           <Link
-            id={bannerId + '-link'}
+            id={bannerId}
             href={buttonLink}
             target={isExternalLink ? '_blank' : '_self'}
             rel={isExternalLink ? 'noopener noreferrer nofollow' : undefined}
