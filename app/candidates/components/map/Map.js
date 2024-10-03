@@ -181,6 +181,7 @@ const Map = () => {
     clearMarkers();
     const markers = createMarkers();
     markersRef.current = markers;
+    markersRef.current = markers;
 
     if (markerClusterRef.current) {
       markerClusterRef.current.clearMarkers();
