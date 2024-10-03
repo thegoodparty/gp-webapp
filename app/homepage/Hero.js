@@ -3,6 +3,7 @@ import Image from 'next/image';
 import bgImg from '/public/images/homepage/art.png';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Button from '@shared/buttons/Button';
+import Link from 'next/link';
 
 export default function Hero() {
   return (
@@ -34,9 +35,11 @@ export default function Hero() {
             Learn how you can plug in to inspiring independent campaigns or get
             access to our free tools for people-powered candidates
           </h3>
-          <Button variant="primary" size="large" className="mt-5">
-            Find Candidates
-          </Button>
+          <Link href="/candidates">
+            <Button variant="primary" size="large" className="mt-5">
+              Find Candidates
+            </Button>
+          </Link>
         </div>
         <div className="flex col-span-12 lg:col-span-5 relative h-full lg:pt-10">
           <Image

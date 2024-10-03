@@ -19,8 +19,8 @@ export async function fetchCanDownload() {
 }
 
 const meta = pageMetaData({
-  title: 'Voter Records | GoodParty.org',
-  description: 'Voter Records',
+  title: 'Voter Data | GoodParty.org',
+  description: 'Voter Data',
   slug: '/dashboard/voter-records',
 });
 export const metadata = meta;

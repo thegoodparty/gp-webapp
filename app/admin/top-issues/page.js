@@ -19,7 +19,7 @@ const fetchIssues = async () => {
 };
 
 export default async function Page() {
-  adminAccessOnly();
+  await adminAccessOnly();
   const res = await fetchIssues();
   const { topIssues } = res;
   const childProps = {

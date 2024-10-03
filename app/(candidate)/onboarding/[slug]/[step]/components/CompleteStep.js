@@ -31,6 +31,8 @@ export default function CompleteStep() {
     if (loading) {
       return;
     }
+    setLoading(true);
+
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -38,7 +40,6 @@ export default function CompleteStep() {
         isError: false,
       };
     });
-    setLoading(true);
 
     const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }];
 

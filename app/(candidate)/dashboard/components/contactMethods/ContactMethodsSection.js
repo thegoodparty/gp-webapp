@@ -28,19 +28,19 @@ const methods = [
     percText: 'doors',
   },
   {
-    key: 'directMail',
-    title: 'Direct Mail',
+    key: 'text',
+    title: 'Texting',
     description:
-      'We recommend direct mail to make up 20% of your overall voter contacts',
-    cta: 'Get Mail Targets',
-    modalTitle: 'Add Direct Mail',
+      'We recommend texting to make up 20% of your overall voter contacts',
+    cta: 'Get Text/SMS Targets',
+    modalTitle: 'Add Text Messages',
     modalSubTitle:
-      "Update the total number of direct mail pieces you've sent this week:",
-    modalLabel: 'Mail Sent',
-    icon: <MdEmail />,
-    voterFileKey: 'directmail',
+      "Update the total number of constituents you've texted this week:",
+    modalLabel: 'Text Messages',
+    icon: <MdOutlinePhoneIphone />,
+    voterFileKey: 'sms',
     perc: 20,
-    percText: 'pieces of mail',
+    percText: 'text messages',
   },
   {
     key: 'calls',
@@ -57,50 +57,7 @@ const methods = [
     perc: 10,
     percText: 'phone calls',
   },
-  {
-    key: 'digitalAds',
-    title: 'Digital Advertising',
-    description:
-      'We recommend digital advertising to make up 10% of your overall voter contacts',
-    cta: 'Explore Smart Ads',
-    modalTitle: 'Add Digital Advertising',
-    modalSubTitle:
-      "Update the total number of digital ads you've distributed this week:",
-    modalLabel: 'Digital Advertising',
-    icon: <MdShare />,
-    voterFileKey: 'digitalads',
-    perc: 10,
-    percText: 'digital impressions',
-  },
-  {
-    key: 'text',
-    title: 'Texting',
-    description:
-      'We recommend texting to make up 20% of your overall voter contacts',
-    cta: 'Get Text/SMS Targets',
-    modalTitle: 'Add Text Messages',
-    modalSubTitle:
-      "Update the total number of constituents you've texted this week:",
-    modalLabel: 'Text Messages',
-    icon: <MdOutlinePhoneIphone />,
-    voterFileKey: 'sms',
-    perc: 20,
-    percText: 'text messages',
-  },
-  {
-    key: 'events',
-    title: 'Events & Rallies',
-    description:
-      'We recommend events & rallies to make up 10% of your overall voter contacts',
-    cta: 'Data-Driven Events',
-    modalTitle: 'Add Events & Rallies',
-    modalSubTitle: 'Update the total number of people in attendance:',
-    modalLabel: 'Attendance',
-    icon: <MdPeopleAlt />,
-    comingSoon: true,
-    perc: 10,
-    percText: 'conversations',
-  },
+
   {
     key: 'yardSigns',
     title: 'Yard Signs',
@@ -117,6 +74,53 @@ const methods = [
     comingSoon: true,
     perc: 5,
     percText: 'signs',
+  },
+
+  {
+    key: 'digitalAds',
+    title: 'Digital Advertising',
+    description:
+      'We recommend digital advertising to make up 10% of your overall voter contacts',
+    cta: 'Explore Smart Ads',
+    modalTitle: 'Add Digital Advertising',
+    modalSubTitle:
+      "Update the total number of digital ads you've distributed this week:",
+    modalLabel: 'Digital Advertising',
+    icon: <MdShare />,
+    voterFileKey: 'digitalads',
+    perc: 10,
+    percText: 'digital impressions',
+  },
+
+  {
+    key: 'directMail',
+    title: 'Direct Mail',
+    description:
+      'We recommend direct mail to make up 20% of your overall voter contacts',
+    cta: 'Get Mail Targets',
+    modalTitle: 'Add Direct Mail',
+    modalSubTitle:
+      "Update the total number of direct mail pieces you've sent this week:",
+    modalLabel: 'Mail Sent',
+    icon: <MdEmail />,
+    voterFileKey: 'directmail',
+    perc: 20,
+    percText: 'pieces of mail',
+  },
+
+  {
+    key: 'events',
+    title: 'Events & Rallies',
+    description:
+      'We recommend events & rallies to make up 10% of your overall voter contacts',
+    cta: 'Data-Driven Events',
+    modalTitle: 'Add Events & Rallies',
+    modalSubTitle: 'Update the total number of people in attendance:',
+    modalLabel: 'Attendance',
+    icon: <MdPeopleAlt />,
+    comingSoon: true,
+    perc: 10,
+    percText: 'conversations',
   },
 ];
 
