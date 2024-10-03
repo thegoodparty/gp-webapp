@@ -68,7 +68,7 @@ export default function ToolsSection() {
                 </Link>
               </div>
               <div className="mt-4 pl-0 md:pl-3">
-                <Link href="/academy" id="candidates_academy">
+                <Link href="/get-a-demo" id="candidates_academy">
                   <SecondaryButton size="medium">Get a Demo</SecondaryButton>
                 </Link>
               </div>
