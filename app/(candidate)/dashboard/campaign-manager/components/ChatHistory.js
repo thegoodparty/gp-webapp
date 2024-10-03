@@ -14,10 +14,11 @@ export default function ChatHistory() {
   return (
     <>
       <Button
-        variant="text"
         onClick={() => {
           setOpen(true);
         }}
+        color="neutral"
+        className="bg-white text-black w-full mt-4"
       >
         <div className="flex items-center">
           <MdMenu />
