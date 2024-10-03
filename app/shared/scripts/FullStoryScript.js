@@ -11,10 +11,9 @@ export default function FullStoryScript() {
       id="fullstory"
       dangerouslySetInnerHTML={{
         __html: `
-        if(true || window.location.hostname === 'goodparty.org'){
-        console.log("LOADING FS");
+        if(window.location.hostname === 'goodparty.org'){
           window['_fs_host'] = 'fullstory.com';
-          window['_fs_script'] = 'edge.fullstory.com/s/fs-debug.js';
+          window['_fs_script'] = 'edge.fullstory.com/s/fs.js';
           window['_fs_org'] = 'TBEDP';
           window['_fs_namespace'] = 'FS';
           !function(m,n,e,t,l,o,g,y){var s,f,a=function(h){
