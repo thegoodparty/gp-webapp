@@ -19,7 +19,7 @@ const fetchUsers = async () => {
 };
 
 export default async function Page() {
-  adminAccessOnly();
+  await adminAccessOnly();
   const { users } = await fetchUsers();
 
   const childProps = {

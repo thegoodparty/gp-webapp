@@ -11,10 +11,11 @@ import { useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-async function runP2V() {
+async function runP2V(slug) {
   try {
     const api = gpApi.voterData.pathToVictory;
-    return await gpFetch(api);
+    const payload = { slug };
+    return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -22,7 +23,7 @@ async function runP2V() {
 }
 
 export default function OfficeStep(props) {
-  const { campaign, step, updateCallback } = props;
+  const { campaign, step, updateCallback, adminMode } = props;
   const router = useRouter();
   const [state, setState] = useState({
     ballotOffice: false,
@@ -124,9 +125,13 @@ export default function OfficeStep(props) {
       attr.push({ key: 'data.currentStep', value: currentStep });
     }
 
-    await updateCampaign(attr);
-
-    await runP2V();
+    if (adminMode) {
+      await updateCampaign(attr, campaign.slug);
+      await runP2V(campaign.slug);
+    } else {
+      await updateCampaign(attr);
+      await runP2V();
+    }
 
     if (step) {
       router.push(`/onboarding/${campaign.slug}/${step + 1}`);

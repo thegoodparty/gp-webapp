@@ -60,13 +60,16 @@ export default function CampaignManagerPage(props) {
   return (
     <DashboardLayout {...props} showAlert={false}>
       <ChatContext.Provider value={contextProps}>
-        <div className="p-4 max-w-[900px] mx-auto h-full pb-16 overflow-auto">
-          <div className="flex justify-between">
-            <CreateNewChat />
-            <ChatHistory />
+        <div className="p-4 max-w-[960px] mx-auto h-full pb-16 overflow-auto">
+          <div className="md:flex md:flex-row-reverse">
+            <div className="md:w-[170px] md:flex md:flex-col md:items-end">
+              <CreateNewChat />
+              <ChatHistory />
+            </div>
+            <div className=" md:flex-1 md:pr-6">
+              <Chat />
+            </div>
           </div>
-
-          <Chat />
           <ChatInput />
         </div>
       </ChatContext.Provider>

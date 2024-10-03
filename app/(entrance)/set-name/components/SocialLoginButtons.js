@@ -13,6 +13,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
 import Overline from '@shared/typography/Overline';
 import saveToken from 'helpers/saveToken';
+import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 
 async function login(payload) {
   try {
@@ -78,9 +79,18 @@ export default function SocialLoginButtons() {
         deleteCookie('returnUrl');
         router.push(returnCookie);
       } else {
-        router.push('/');
+        const status = await fetchCampaignStatus();
+
+        if (status?.status === 'candidate') {
+          window.location.href = '/dashboard';
+          return;
+        }
+        if (status?.status === 'volunteer') {
+          window.location.href = '/volunteer-dashboard';
+          return;
+        }
+        window.location.href = '/';
       }
-      window.location.href = '/';
     } else {
       snackbarState.set(() => {
         return {

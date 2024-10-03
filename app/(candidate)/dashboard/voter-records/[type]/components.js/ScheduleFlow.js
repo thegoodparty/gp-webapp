@@ -10,6 +10,7 @@ import ScheduleFlowStep4 from './ScheduleFlowStep4';
 import ScheduleFlowStep5 from './ScheduleFlowStep5';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import queryString from 'query-string';
 
 export async function scheduleCampaign(state) {
   try {
@@ -27,6 +28,8 @@ export async function scheduleCampaign(state) {
 }
 
 export default function ScheduleFlow(props) {
+  const { type } = props;
+  
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     step: 1,
@@ -71,7 +74,24 @@ export default function ScheduleFlow(props) {
   };
 
   const handleSubmit = async () => {
-    await scheduleCampaign(state);
+    const activeFilters = Object.keys(state.audience).filter((key) => state.audience[key]);
+    const customFilters = {
+      filters: activeFilters,
+    };
+
+    const customFiltersEncoded = queryString.stringify({
+      customFilters: JSON.stringify(customFilters),
+    });
+
+    // If queryString handles the type, it appends it to the end instead of the beginning
+    const voterFileUrl = `${gpApi.voterData.getVoterFile.url}?type=${type}&${customFiltersEncoded}`;
+
+    const updatedState = {
+      ...state,
+      voterFileUrl,
+      type,
+    };
+    await scheduleCampaign(updatedState);
   };
 
   const childProps = {
