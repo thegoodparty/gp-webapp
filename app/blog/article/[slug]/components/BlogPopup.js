@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { setCookie, getCookie } from 'helpers/cookieHelper.js';
 import Modal from '@shared/utils/Modal';
 
-const POPUP_DELAY = 30000;
+const POPUP_DELAY = 20000;
 export default function BlogPopup() {
   const [showModal, setShowModal] = useState(false);
 
