@@ -1,7 +1,7 @@
 'use client';
 
 import Modal from '@shared/utils/Modal';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
@@ -11,6 +11,7 @@ import ScheduleFlowStep5 from './ScheduleFlowStep5';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import queryString from 'query-string';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 export async function scheduleCampaign(state) {
   try {
@@ -38,6 +39,16 @@ export default function ScheduleFlow(props) {
     audience: {},
     script: false,
   });
+
+  const trackingAttrs = useMemo(() =>
+    buildTrackingAttrs(
+      'Schedule Contact Campaign Link',
+      {
+        type,
+      },
+      [type],
+    ),
+  );
 
   const handleChange = (key, value) => {
     setState({
@@ -108,6 +119,7 @@ export default function ScheduleFlow(props) {
       <div
         className="mt-4 flex items-center justify-end cursor-pointer hover:underline"
         onClick={() => setOpen(true)}
+        {...trackingAttrs}
       >
         <div className="mr-2">Schedule Today</div>
         <IoArrowForward />

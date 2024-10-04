@@ -4,7 +4,8 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import { useState } from 'react';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import { useState, useMemo } from 'react';
 
 export default function ScheduleFlowStep4({
   onChangeCallback,
@@ -18,6 +19,11 @@ export default function ScheduleFlowStep4({
     date: '',
     message: '',
   });
+
+  const trackingAttrs = useMemo(
+    buildTrackingAttrs('Schedule Contact Campaign Submit Button', { type }),
+    [type],
+  );
 
   const onChangeField = (key, value) => {
     const newState = {
@@ -92,7 +98,11 @@ export default function ScheduleFlowStep4({
             <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
           </div>
           <div className="col-span-6 text-right mt-6">
-            <PrimaryButton onClick={handleNext} disabled={!canSubmit()}>
+            <PrimaryButton
+              onClick={handleNext}
+              disabled={!canSubmit()}
+              {...trackingAttrs}
+            >
               Next
             </PrimaryButton>
           </div>
