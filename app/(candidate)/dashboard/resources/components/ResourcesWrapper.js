@@ -1,7 +1,12 @@
 'use client';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import ResourceCard from '@shared/cards/ResourceCard';
 
-export default function ResourceWrapper({ articlesBySlug, resource }) {
+export default function ResourceWrapper({
+  sectionTitle,
+  articlesBySlug,
+  resource,
+}) {
   let { title, slug, type, description, file } = resource;
   let articleSlug = '';
   let link = file;
@@ -16,5 +21,18 @@ export default function ResourceWrapper({ articlesBySlug, resource }) {
     link = `/blog/article/${articleSlug}`;
   }
 
-  return <ResourceCard title={title} description={description} link={link} />;
+  const trackingAttrs = buildTrackingAttrs('Resource Library Link', {
+    section: sectionTitle,
+    title,
+    type,
+  });
+
+  return (
+    <ResourceCard
+      title={title}
+      description={description}
+      link={link}
+      {...trackingAttrs}
+    />
+  );
 }

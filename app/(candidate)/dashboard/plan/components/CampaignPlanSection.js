@@ -269,6 +269,7 @@ export default function CampaignPlanSection({
                   />
 
                   <PlanActions
+                    section={section}
                     isEdited={isEdited}
                     handleSave={handleSave}
                     handleRegenerate={handleRegenerate}
