@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import LoadingAI from './LoadingAI';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { flows } from '../../questions/components/QuestionsPage';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { BsStars } from 'react-icons/bs';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 async function generateAI(key, regenerate, chat, editMode) {
   try {
@@ -215,6 +216,22 @@ export default function CampaignPlanSection({
       handleRegenerate('');
     }
   };
+
+  const [panelTrackingAttrs, buttonTrackingAttrs] = useMemo(() => {
+    const sectionAttrs = {
+      title: section.title,
+      key: section.key,
+    };
+
+    return [
+      buildTrackingAttrs('Generate AI Plan Panel', {
+        hasContent: !!plan,
+        ...sectionAttrs,
+      }),
+      buildTrackingAttrs('Generate AI Plan Button', sectionAttrs),
+    ];
+  }, [section, plan]);
+
   return (
     <section
       key={section.key}
@@ -226,6 +243,7 @@ export default function CampaignPlanSection({
         icon={loading ? <CircularProgress size={20} /> : section.icon}
         openCallback={handleOpen}
         forceExpand={expandSection}
+        {...panelTrackingAttrs}
       >
         <div className={`section-content-${section.key}`}>
           {loading ? (
@@ -264,6 +282,7 @@ export default function CampaignPlanSection({
                         onClick={() => {
                           handleRegenerate('');
                         }}
+                        {...buttonTrackingAttrs}
                       >
                         <PrimaryButton>Generate {section.title}</PrimaryButton>
                       </div>
