@@ -21,7 +21,8 @@ export default function ScheduleFlowStep4({
   });
 
   const trackingAttrs = useMemo(
-    buildTrackingAttrs('Schedule Contact Campaign Submit Button', { type }),
+    () =>
+      buildTrackingAttrs('Schedule Contact Campaign Submit Button', { type }),
     [type],
   );
 

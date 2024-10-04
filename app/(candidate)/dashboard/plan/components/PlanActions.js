@@ -1,15 +1,20 @@
 import React from 'react';
+import { useMemo } from 'react';
 import AiModal from './AiModal';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaSave } from 'react-icons/fa';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 function PlanActions({ handleSave, handleRegenerate, isEdited, section }) {
-  const trackingAttrs = buildTrackingAttrs('Edit AI Plan Save Button', {
-    hasChanges: isEdited,
-    section: section.title,
-    key: section.key,
-  });
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Edit AI Plan Save Button', {
+        hasChanges: isEdited,
+        section: section.title,
+        key: section.key,
+      }),
+    [isEdited, section],
+  );
 
   return (
     <div className="flex items-center justify-center mt-6 py-6 hidden-for-print">

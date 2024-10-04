@@ -30,7 +30,7 @@ export async function scheduleCampaign(state) {
 
 export default function ScheduleFlow(props) {
   const { type } = props;
-  
+
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
     step: 1,
@@ -40,14 +40,9 @@ export default function ScheduleFlow(props) {
     script: false,
   });
 
-  const trackingAttrs = useMemo(() =>
-    buildTrackingAttrs(
-      'Schedule Contact Campaign Link',
-      {
-        type,
-      },
-      [type],
-    ),
+  const trackingAttrs = useMemo(
+    () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
+    [type],
   );
 
   const handleChange = (key, value) => {
@@ -85,7 +80,9 @@ export default function ScheduleFlow(props) {
   };
 
   const handleSubmit = async () => {
-    const activeFilters = Object.keys(state.audience).filter((key) => state.audience[key]);
+    const activeFilters = Object.keys(state.audience).filter(
+      (key) => state.audience[key],
+    );
     const customFilters = {
       filters: activeFilters,
     };
