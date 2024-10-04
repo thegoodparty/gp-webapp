@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import ChatHistory from './ChatHistory';
 import Chat from './Chat';
@@ -32,11 +32,15 @@ export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
   const { chat, setChat, threadId, setThreadId, chats } = useChat();
+  const lastMessageRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
     setLoading(true);
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     if (!threadId || chat.length === 0) {
       const { threadId: newThreadId, chat: newChat } = await createInitialChat(
         input,
@@ -47,6 +51,9 @@ export default function CampaignManagerPage(props) {
       const { message } = await updateChat(threadId, input);
       let updatedChat = [...chat, { role: 'user', content: input }, message];
       setChat(updatedChat);
+    }
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
     setLoading(false);
     setShouldType(true);
@@ -62,7 +69,10 @@ export default function CampaignManagerPage(props) {
     setShouldType,
     setThreadId,
     setChat,
+    lastMessageRef,
   };
+
+  console.log('lastMessageRef', lastMessageRef);
 
   return (
     <DashboardLayout {...props} showAlert={false}>
