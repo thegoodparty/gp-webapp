@@ -1,10 +1,7 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
-import candidateAccess from '../shared/candidateAccess';
 import CampaignManagerPage from './components/CampaignManagerPage';
-import { getServerToken, getServerUser } from 'helpers/userServerHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { getServerUser } from 'helpers/userServerHelper';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 
 const meta = pageMetaData({

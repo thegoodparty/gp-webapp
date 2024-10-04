@@ -1,25 +1,15 @@
 import Button from '@shared/buttons/Button';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { useContext } from 'react';
 import { FiPlus } from 'react-icons/fi';
-
-export async function createChat() {
-  try {
-    const api = gpApi.campaign.chat.create;
-    const payload = { message: ' ' };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
+import { ChatContext } from './CampaignManagerPage';
 
 export default function CreateNewChat() {
-  const handleCreate = async () => {
-    console.log('creating new chat');
-    await createChat();
-    console.log('created');
-    window.location.reload();
+  const { setThreadId, setChat } = useContext(ChatContext);
+  const handleCreate = () => {
+    setChat([]);
+    setThreadId(null);
   };
 
   return (
