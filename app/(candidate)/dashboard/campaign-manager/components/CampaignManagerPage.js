@@ -54,11 +54,15 @@ export default function CampaignManagerPage(props) {
       let updatedChat = [...chat, { role: 'user', content: input }, message];
       setChat(updatedChat);
     }
+    scrollDown();
+    setLoading(false);
+    setShouldType(true);
+  };
+
+  const scrollDown = () => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    setLoading(false);
-    setShouldType(true);
   };
 
   const contextProps = {
@@ -72,6 +76,7 @@ export default function CampaignManagerPage(props) {
     setThreadId,
     setChat,
     lastMessageRef,
+    scrollDown,
   };
 
   console.log('lastMessageRef', lastMessageRef);

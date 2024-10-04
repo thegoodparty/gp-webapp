@@ -3,23 +3,28 @@ import { ChatContext } from './CampaignManagerPage';
 import ChatMessage from './ChatMessage';
 import EmptyChat from './EmptyChat';
 import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
+import LoadingChatAnimation from './LoadingChatAnimation';
 
 export default function Chat() {
-  const { chat, shouldType, setShouldType, loading, lastMessageRef } =
-    useContext(ChatContext);
+  const {
+    chat,
+    shouldType,
+    setShouldType,
+    loading,
+    lastMessageRef,
+    scrollDown,
+  } = useContext(ChatContext);
 
   useEffect(() => {
     // When new messages are added, scroll to the bottom
     if (shouldType) {
-      if (lastMessageRef.current) {
-        lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
+      scrollDown();
     }
   }, [shouldType, loading]);
 
   const scrollCallback = () => {
     if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+      scrollDown();
     }
   };
 
@@ -40,11 +45,7 @@ export default function Chat() {
       ) : (
         <EmptyChat />
       )}
-      {loading && (
-        <div className="w-20 relative ml-6 mb-12">
-          <LoadingDotsAnimation />
-        </div>
-      )}
+      <LoadingChatAnimation />
       {/* This empty div is used as a reference to scroll to */}
       <div ref={lastMessageRef}></div>
     </div>
