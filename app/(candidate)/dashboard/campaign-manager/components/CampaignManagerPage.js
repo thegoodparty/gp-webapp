@@ -31,16 +31,23 @@ export async function updateChat(threadId, input) {
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
-  const { chat, setChat, threadId, chats } = useChat();
+  const { chat, setChat, threadId, setThreadId, chats } = useChat();
 
   const [loading, setLoading] = useState(false);
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
     setLoading(true);
-    const { message } = await updateChat(threadId, input);
-
-    let updatedChat = [...chat, { role: 'user', content: input }, message];
-    setChat(updatedChat);
+    if (!threadId || chat.length === 0) {
+      const { threadId: newThreadId, chat: newChat } = await createInitialChat(
+        input,
+      );
+      setThreadId(newThreadId);
+      setChat(newChat);
+    } else {
+      const { message } = await updateChat(threadId, input);
+      let updatedChat = [...chat, { role: 'user', content: input }, message];
+      setChat(updatedChat);
+    }
     setLoading(false);
     setShouldType(true);
   };
@@ -53,9 +60,9 @@ export default function CampaignManagerPage(props) {
     loading,
     shouldType,
     setShouldType,
+    setThreadId,
+    setChat,
   };
-
-  console.log('contextProps', contextProps);
 
   return (
     <DashboardLayout {...props} showAlert={false}>
