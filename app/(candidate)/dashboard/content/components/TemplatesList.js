@@ -61,10 +61,13 @@ export default function TemplateList(props) {
           <H3>{category.name}</H3>
           <div className="grid grid-cols-12 gap-3 mt-4">
             {category.templates.map((template) => {
-              const trackingAttrs = buildTrackingAttrs('Generate AI Content', {
-                category: category.name,
-                template: template.key,
-              });
+              const trackingAttrs = buildTrackingAttrs(
+                'Generate AI Content Button',
+                {
+                  category: category.name,
+                  key: template.key,
+                },
+              );
 
               return (
                 <div
