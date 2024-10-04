@@ -6,7 +6,7 @@ import H1 from '@shared/typography/H1';
 import Overline from '@shared/typography/Overline';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { trackEvent } from 'helpers/fullStoryHelper';
+import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
 
 import { useEffect, useState } from 'react';
 import CustomVoterAudienceFilters from './CustomVoterAudienceFilters';
@@ -100,6 +100,8 @@ export default function CustomVoterAudience({
     setLoading(false);
   };
 
+  const trackingAttrs = buildTrackingAttrs('Create Custom Voter File Button');
+
   return (
     <div className="w-[90vw] max-w-5xl p-2 md:p-8">
       <div className=" text-center mb-8">
@@ -117,7 +119,11 @@ export default function CustomVoterAudience({
 
       <div className="flex justify-between mt-12">
         <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
-        <PrimaryButton disabled={!canSave()} onClick={handleSubmit}>
+        <PrimaryButton
+          disabled={!canSave()}
+          onClick={handleSubmit}
+          {...trackingAttrs}
+        >
           Create Voter File
         </PrimaryButton>
       </div>

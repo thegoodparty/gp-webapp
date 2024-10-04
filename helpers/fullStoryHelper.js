@@ -1,3 +1,5 @@
+import { kebabCase } from 'lodash';
+
 export const trackEvent = (name, properties) => {
   try {
     if (typeof FS === 'undefined') {
@@ -35,7 +37,7 @@ export const buildTrackingAttrs = (name, properties) => {
   const propSchema = {};
 
   Object.entries(properties).forEach(([key, initialValue]) => {
-    const prefixedKey = `data-${key}`;
+    const prefixedKey = `data-${kebabCase(key)}`;
     let value = initialValue;
     let propType;
 
