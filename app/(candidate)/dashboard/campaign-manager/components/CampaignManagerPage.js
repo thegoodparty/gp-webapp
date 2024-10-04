@@ -13,6 +13,7 @@ import {
   getChatThread,
 } from './ajaxActions';
 import useChat from './useChat';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 export async function updateChat(threadId, input) {
   try {
@@ -38,6 +39,7 @@ export default function CampaignManagerPage(props) {
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
     setLoading(true);
+    trackEvent('campaign_manager_chatbot_input', { input });
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
