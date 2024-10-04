@@ -1,4 +1,5 @@
 'use client';
+import { useMemo } from 'react';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import ResourceCard from '@shared/cards/ResourceCard';
 
@@ -10,6 +11,17 @@ export default function ResourceWrapper({
   let { title, slug, type, description, file } = resource;
   let articleSlug = '';
   let link = file;
+
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Resource Library Link', {
+        section: sectionTitle,
+        title,
+        type,
+      }),
+    [sectionTitle, title, type],
+  );
+
   if (type === 'blog') {
     const content = articlesBySlug[slug];
     if (!content) {
@@ -20,12 +32,6 @@ export default function ResourceWrapper({
     articleSlug = content.slug;
     link = `/blog/article/${articleSlug}`;
   }
-
-  const trackingAttrs = buildTrackingAttrs('Resource Library Link', {
-    section: sectionTitle,
-    title,
-    type,
-  });
 
   return (
     <ResourceCard

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Modal from '@shared/utils/Modal';
 import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -33,11 +33,15 @@ export default function LogProgress({
     setValue(0);
   };
 
-  const submitTrackingAttrs = buildTrackingAttrs('Log Progress Submit Button', {
-    key,
-    title,
-    value,
-  });
+  const submitTrackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Log Progress Submit Button', {
+        key,
+        title,
+        value,
+      }),
+    [key, title, value],
+  );
 
   return (
     <div className="">
