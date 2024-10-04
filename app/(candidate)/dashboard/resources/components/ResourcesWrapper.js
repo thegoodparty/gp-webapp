@@ -11,16 +11,6 @@ export default function ResourceWrapper({
   let { title, slug, type, description, file } = resource;
   let articleSlug = '';
   let link = file;
-  if (type === 'blog') {
-    const content = articlesBySlug[slug];
-    if (!content) {
-      return null;
-    }
-    title = content.title;
-    description = content.summary;
-    articleSlug = content.slug;
-    link = `/blog/article/${articleSlug}`;
-  }
 
   const trackingAttrs = useMemo(
     () =>
@@ -31,6 +21,17 @@ export default function ResourceWrapper({
       }),
     [sectionTitle, title, type],
   );
+
+  if (type === 'blog') {
+    const content = articlesBySlug[slug];
+    if (!content) {
+      return null;
+    }
+    title = content.title;
+    description = content.summary;
+    articleSlug = content.slug;
+    link = `/blog/article/${articleSlug}`;
+  }
 
   return (
     <ResourceCard
