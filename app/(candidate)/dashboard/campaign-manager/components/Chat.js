@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef } from 'react';
 import { ChatContext } from './CampaignManagerPage';
 import ChatMessage from './ChatMessage';
+import EmptyChat from './EmptyChat';
 
 export default function Chat() {
   const { chat, shouldType, setShouldType } = useContext(ChatContext);
@@ -22,16 +23,22 @@ export default function Chat() {
   };
 
   return (
-    <div>
-      {(chat || []).map((message, index) => (
-        <ChatMessage
-          key={index}
-          message={message}
-          type={shouldType && index === chat.length - 1}
-          setShouldType={setShouldType}
-          scrollCallback={scrollCallback}
-        />
-      ))}
+    <div className="min-h-full">
+      {chat && chat.length > 0 ? (
+        <>
+          {(chat || []).map((message, index) => (
+            <ChatMessage
+              key={index}
+              message={message}
+              type={shouldType && index === chat.length - 1}
+              setShouldType={setShouldType}
+              scrollCallback={scrollCallback}
+            />
+          ))}
+        </>
+      ) : (
+        <EmptyChat />
+      )}
       {/* This empty div is used as a reference to scroll to */}
       <div ref={lastMessageRef}></div>
     </div>
