@@ -20,17 +20,20 @@ export default function FullStorySelectiveInit({ user }) {
     }
     const impersonateUser = getCookie('impersonateUser');
     if (impersonateUser) {
-      FS.shutdown();
+      FS('shutdown');
       return;
     }
     if (userI && userI.email) {
       const domain = userI.email.split('@')[1];
       if (domain === 'goodparty.org' || userI.isAdmin) {
-        FS.shutdown();
+        FS('shutdown');
       } else {
-        FS.identify(userI.id, {
-          displayName: `${userI.firstName} ${userI.lastName}`,
-          email: userI.email,
+        FS('setIdentity', {
+          uid: userI.id,
+          properties: {
+            displayName: `${userI.firstName} ${userI.lastName}`,
+            email: userI.email,
+          },
         });
       }
     }
@@ -41,7 +44,7 @@ export default function FullStorySelectiveInit({ user }) {
       return;
     }
     if (!user) {
-      FS.shutdown();
+      FS('shutdown');
     }
     /*
     const random = Math.random();
