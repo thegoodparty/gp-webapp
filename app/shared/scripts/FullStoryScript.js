@@ -11,7 +11,7 @@ export default function FullStoryScript() {
       id="fullstory"
       dangerouslySetInnerHTML={{
         __html: `
-        if(window.location.hostname === 'goodparty.org' || window.location.hosthame === 'dev.goodparty.org'){
+        if(window.location.hostname === 'goodparty.org' || window.location.hostname === 'dev.goodparty.org'){
           window['_fs_host'] = 'fullstory.com';
           window['_fs_script'] = window.location.hostname === 'goodparty.org' ? 'edge.fullstory.com/s/fs.js' : 'edge.fullstory.com/s/fs-debug.js';
           window['_fs_org'] = 'TBEDP';
