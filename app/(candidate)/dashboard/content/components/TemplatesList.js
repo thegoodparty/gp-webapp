@@ -13,6 +13,7 @@ import { SiMinutemailer } from 'react-icons/si';
 
 import Caption from '@shared/typography/Caption';
 import { calcAnswers } from '../../plan/components/QuestionProgress';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 const categoryIcons = {
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,
@@ -59,21 +60,28 @@ export default function TemplateList(props) {
         <div key={category.name} className="mt-9 mb-4">
           <H3>{category.name}</H3>
           <div className="grid grid-cols-12 gap-3 mt-4">
-            {category.templates.map((template) => (
-              <div
-                key={template.key}
-                className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"
-              >
+            {category.templates.map((template) => {
+              const trackingAttrs = buildTrackingAttrs('Generate AI Content', {
+                category: category.name,
+                template: template.key,
+              });
+
+              return (
                 <div
-                  onClick={() => {
-                    handleClick(template.key);
-                  }}
-                  id={`template-card-${template.key}`}
-                  className={`generate-content bg-gray-50 border flex md:flex-col  rounded-xl pt-5 px-7 pb-5 md:pb-14 ${
-                    selectedKey === template.key
-                      ? ' shadow-lg border-black'
-                      : 'border-slate-700'
-                  } transition duration-300 ease-in-out  
+                  key={template.key}
+                  className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"
+                >
+                  <div
+                    {...trackingAttrs}
+                    onClick={() => {
+                      handleClick(template.key);
+                    }}
+                    id={`template-card-${template.key}`}
+                    className={`generate-content bg-gray-50 border flex md:flex-col  rounded-xl pt-5 px-7 pb-5 md:pb-14 ${
+                      selectedKey === template.key
+                        ? ' shadow-lg border-black'
+                        : 'border-slate-700'
+                    } transition duration-300 ease-in-out  
                   
                   ${
                     requiresQuestions[template.key]
@@ -82,19 +90,20 @@ export default function TemplateList(props) {
                   }
                   
                   `}
-                >
-                  <div className="mr-3 md:mr-0 md:mb-4 text-2xl ">
-                    {categoryIcons[category.name]}
+                  >
+                    <div className="mr-3 md:mr-0 md:mb-4 text-2xl ">
+                      {categoryIcons[category.name]}
+                    </div>
+                    <H5>{template.name}</H5>
                   </div>
-                  <H5>{template.name}</H5>
+                  {requiresQuestions[template.key] && (
+                    <Caption className="mt-2 text-center">
+                      Answer all questions to unlock
+                    </Caption>
+                  )}
                 </div>
-                {requiresQuestions[template.key] && (
-                  <Caption className="mt-2 text-center">
-                    Answer all questions to unlock
-                  </Caption>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}
