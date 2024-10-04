@@ -3,11 +3,11 @@ import { parsePhoneNumber } from 'libphonenumber-js';
 import { ROLE_LABELS } from 'app/(candidate)/dashboard/team/components/PendingRequestCard';
 import { getUserFullName } from '@shared/utils/getUserFullName';
 
-export const CampaignTeamMemberInfo = ({ user, role }) => {
+export const CampaignTeamMemberInfo = ({ user, role, className = '' }) => {
   const fullName = getUserFullName(user);
   const { email, phone } = user;
   return (
-    <div className="flex justify-between">
+    <div className={`flex justify-between ${className}`}>
       <div className="bg-primary rounded-xl h-fit p-4 mr-4">
         <UserAvatar
           className="!cursor-default text-white"

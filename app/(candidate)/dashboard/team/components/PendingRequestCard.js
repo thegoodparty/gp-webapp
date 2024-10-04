@@ -19,11 +19,11 @@ export const PendingRequestCard = ({
 
   return (
     <div className="col-span-12 md:col-span-12 lg:col-span-6">
-      <div className="py-6 px-4 border border-slate-300 rounded-lg flex justify-between">
-        <CampaignTeamMemberInfo user={user} role={role} />
-        <div className="flex h-fit">
+      <div className="py-6 px-4 border border-slate-300 rounded-lg flex justify-between flex-wrap">
+        <CampaignTeamMemberInfo className="mr-4" user={user} role={role} />
+        <div className="flex flex-wrap h-fit w-full md:w-fit">
           <CampaignRequestButton
-            className="mr-4"
+            className="w-full mb-2 md:mb-0 md:mr-4 md:w-fit"
             onProceed={() => onAction(PENDING_REQUEST_ACTIONS.DELETE, request)}
             color="primary"
             variant="outlined"
@@ -36,6 +36,7 @@ export const PendingRequestCard = ({
             Deny
           </CampaignRequestButton>
           <CampaignRequestButton
+            className="w-full md:w-fit"
             color="primary"
             onProceed={() => onAction(PENDING_REQUEST_ACTIONS.GRANT, request)}
             dialogOptions={{
