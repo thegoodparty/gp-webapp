@@ -2,6 +2,7 @@ import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import ListItem from '@shared/utils/ListItem';
 import TogglePanel from '@shared/utils/TogglePanel';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 const websiteSteps = [
   {
@@ -44,11 +45,22 @@ export default function CampaignWebsite(props) {
             Your online presence is an important part of your campaign strategy.
             Here are some helpful tips for building a good campaign site.
           </Body2>
-          {websiteSteps.map((step, index) => (
-            <ListItem key={step.title} title={step.title} number={index + 1}>
-              {step.description}
-            </ListItem>
-          ))}
+          {websiteSteps.map((step, index) => {
+            const trackingAttrs = buildTrackingAttrs(
+              'Campaign Plan Website Accordion',
+              { title: step.title, number: index + 1 },
+            );
+            return (
+              <ListItem
+                key={step.title}
+                title={step.title}
+                number={index + 1}
+                {...trackingAttrs}
+              >
+                {step.description}
+              </ListItem>
+            );
+          })}
         </div>
       </TogglePanel>
     </div>

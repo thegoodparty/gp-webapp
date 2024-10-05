@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Modal from '@shared/utils/Modal';
 import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -6,6 +6,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import { AlertBanner } from '../AlertBanner';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 export default function LogProgress({
   card,
@@ -14,7 +15,8 @@ export default function LogProgress({
 }) {
   const [showModal, setShowModal] = useState(false);
 
-  const { key, modalTitle, modalSubTitle, modalLabel, infoBanner } = card;
+  const { key, title, modalTitle, modalSubTitle, modalLabel, infoBanner } =
+    card;
 
   const [value, setValue] = useState(0);
 
@@ -30,6 +32,17 @@ export default function LogProgress({
     setShowModal(false);
     setValue(0);
   };
+
+  const submitTrackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Log Progress Submit Button', {
+        key,
+        title,
+        value,
+      }),
+    [key, title, value],
+  );
+
   return (
     <div className="">
       <InfoButton
@@ -64,7 +77,11 @@ export default function LogProgress({
               <InfoButton className="" onClick={() => setShowModal(false)}>
                 Cancel
               </InfoButton>
-              <PrimaryButton onClick={handleSubmit} disabled={value <= 0}>
+              <PrimaryButton
+                onClick={handleSubmit}
+                disabled={value <= 0}
+                {...submitTrackingAttrs}
+              >
                 Add
               </PrimaryButton>
             </div>

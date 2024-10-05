@@ -30,7 +30,7 @@ export default function RelatedArticles({ articles }) {
   }
 
   return (
-    <div className="p-24 bg-mint-50 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="py-24 px-6 lg:px-24 bg-mint-50 grid grid-cols-1 lg:grid-cols-3 gap-8">
       <MarketingH2 className="col-span-1 lg:col-span-3 mb-2">
         You may also like...
       </MarketingH2>

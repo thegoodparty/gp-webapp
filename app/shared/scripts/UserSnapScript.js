@@ -1,5 +1,6 @@
 'use client';
 import { getUserCookie } from 'helpers/cookieHelper';
+import { trackEvent } from 'helpers/fullStoryHelper';
 import Script from 'next/script';
 import { useEffect } from 'react';
 
@@ -14,6 +15,12 @@ export default function UserSnapScript() {
             ? `${user.firstName} ${user.lastName}`
             : 'visitor',
         },
+      });
+
+      api.on('submit', () => {
+        trackEvent('usersnap_submission', {
+          isVisitor: !user?.email,
+        });
       });
     };
   }, []);
