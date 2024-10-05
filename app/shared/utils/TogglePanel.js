@@ -14,6 +14,7 @@ export default function TogglePanel({
   // badge,
   children,
   openCallback,
+  ...restProps
 }) {
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
@@ -37,6 +38,7 @@ export default function TogglePanel({
           open ? 'rounded-t-xl' : 'rounded-xl'
         }`}
         onClick={toggleOpen}
+        {...restProps}
       >
         <div className="flex items-center">
           {icon && (

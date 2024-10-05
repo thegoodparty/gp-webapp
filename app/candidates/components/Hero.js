@@ -9,7 +9,7 @@ export default function Hero({ count = 0, longState }) {
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>
         <MarketingH1 className="text-center">
-          {count}{' '}
+          {numberFormatter(count)}{' '}
           <Image
             src="/images/heart.svg"
             width={80}

@@ -2,8 +2,11 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import { P2vModal } from './P2vModal';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 export function P2vTitle(props) {
+  const trackingAttrs = buildTrackingAttrs('Understanding P2V Button');
+
   return (
     <div className="lg:flex justify-between">
       <div className="">
@@ -16,7 +19,7 @@ export function P2vTitle(props) {
       <div className="mt-4 lg:mt-0">
         <P2vModal
           triggerElement={
-            <SecondaryButton fullWidth variant="outlined">
+            <SecondaryButton fullWidth variant="outlined" {...trackingAttrs}>
               Understanding Path to Victory
             </SecondaryButton>
           }

@@ -14,11 +14,7 @@ const useChat = () => {
     const { chats: fetchedChats } = await fetchChatHistory();
     let currentChat;
     let threadId;
-    if (!fetchedChats || fetchedChats.length === 0) {
-      const res = await createInitialChat();
-      threadId = res.threadId;
-      currentChat = res.chat;
-    } else {
+    if (fetchedChats && fetchedChats.length > 0) {
       // Get the last chat
       threadId = fetchedChats[0].threadId;
       currentChat = await getChatThread({ threadId });
@@ -32,7 +28,7 @@ const useChat = () => {
     loadInitialChats();
   }, []);
 
-  return { chat, setChat, threadId, chats };
+  return { chat, setChat, threadId, setThreadId, chats };
 };
 
 export default useChat;

@@ -4,12 +4,13 @@ import Pill from '@shared/buttons/Pill';
 import Modal from '@shared/utils/Modal';
 import Image from 'next/image';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { FaRedo } from 'react-icons/fa';
 import TextField from '@shared/inputs/TextField';
 import { Select } from '@mui/material';
 import AlertDialog from '@shared/utils/AlertDialog';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 const knobs = [
   {
@@ -32,7 +33,7 @@ const knobs = [
   },
 ];
 
-export default function AiModal({ submitCallback, showWarning }) {
+export default function AiModal({ submitCallback, showWarning, section }) {
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [state, setState] = useState({
@@ -88,9 +89,25 @@ export default function AiModal({ submitCallback, showWarning }) {
     setShowModal(true);
   };
 
+  const [saveTrackingAttrs, startTrackingAttrs] = useMemo(() => {
+    return [
+      buildTrackingAttrs('Refine AI Plan Submit Button', {
+        section: section.title,
+        key: section.key,
+        tone: state.tone,
+        style: state.style,
+        length: state.length,
+      }),
+      buildTrackingAttrs('Refine AI Plan Start Button', {
+        section: section.title,
+        key: section.key,
+      }),
+    ];
+  }, [state.tone, state.style, state.length, section]);
+
   return (
     <>
-      <div onClick={handleRegenerate} className="mr-3">
+      <div onClick={handleRegenerate} className="mr-3" {...startTrackingAttrs}>
         <SecondaryButton>
           <div className="flex items-center">
             <FaRedo />
@@ -154,7 +171,7 @@ export default function AiModal({ submitCallback, showWarning }) {
           >
             Cancel
           </div>
-          <div onClick={handleSubmit}>
+          <div onClick={handleSubmit} {...saveTrackingAttrs}>
             <SecondaryButton>Submit</SecondaryButton>
           </div>
         </div>
