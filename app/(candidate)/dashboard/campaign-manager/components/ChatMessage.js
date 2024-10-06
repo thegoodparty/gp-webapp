@@ -7,6 +7,7 @@ import { FaRegCopy } from 'react-icons/fa';
 import { useState } from 'react';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { IoMdCheckmark } from 'react-icons/io';
+import { MdOutlineRefresh } from 'react-icons/md';
 
 export default function ChatMessage({
   message,
@@ -54,7 +55,8 @@ export default function ChatMessage({
               <>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
                 <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-4">
-                  <div>
+                  <MdOutlineRefresh className="mr-3" size={20} />
+                  <>
                     {copied ? (
                       <div className="px-2 py-1 bg-primary/[0.08] flex items-center rounded-full">
                         <IoMdCheckmark size={16} className="mr-2" />
@@ -70,7 +72,7 @@ export default function ChatMessage({
                         </CopyToClipboard>
                       </div>
                     )}
-                  </div>
+                  </>
                 </div>
               </>
             )}
