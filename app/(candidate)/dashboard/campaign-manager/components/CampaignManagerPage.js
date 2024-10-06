@@ -32,8 +32,15 @@ export async function updateChat(threadId, input) {
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
-  const { chat, setChat, threadId, setThreadId, chats, loadChatByThreadId } =
-    useChat();
+  const {
+    chat,
+    setChat,
+    threadId,
+    setThreadId,
+    chats,
+    loadChatByThreadId,
+    regenerateChat,
+  } = useChat();
   const lastMessageRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
@@ -66,6 +73,14 @@ export default function CampaignManagerPage(props) {
     }
   };
 
+  const handleRegenerate = async () => {
+    setLoading(true);
+    setChat(chat.slice(0, -1));
+    await regenerateChat();
+    setShouldType(true);
+    setLoading(false);
+  };
+
   const contextProps = {
     handleNewInput,
     ...props,
@@ -79,6 +94,7 @@ export default function CampaignManagerPage(props) {
     lastMessageRef,
     scrollDown,
     loadChatByThreadId,
+    handleRegenerate,
   };
 
   return (
