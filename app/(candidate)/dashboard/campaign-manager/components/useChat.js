@@ -24,11 +24,17 @@ const useChat = () => {
     setThreadId(threadId);
   };
 
+  const loadChatByThreadId = async (threadId) => {
+    const currentChat = await getChatThread({ threadId });
+    setChat(currentChat?.chat || []);
+    setThreadId(threadId);
+  };
+
   useEffect(() => {
     loadInitialChats();
   }, []);
 
-  return { chat, setChat, threadId, setThreadId, chats };
+  return { chat, setChat, threadId, setThreadId, chats, loadChatByThreadId };
 };
 
 export default useChat;

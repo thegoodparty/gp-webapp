@@ -32,7 +32,8 @@ export async function updateChat(threadId, input) {
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
-  const { chat, setChat, threadId, setThreadId, chats } = useChat();
+  const { chat, setChat, threadId, setThreadId, chats, loadChatByThreadId } =
+    useChat();
   const lastMessageRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
@@ -77,9 +78,8 @@ export default function CampaignManagerPage(props) {
     setChat,
     lastMessageRef,
     scrollDown,
+    loadChatByThreadId,
   };
-
-  console.log('lastMessageRef', lastMessageRef);
 
   return (
     <DashboardLayout {...props} showAlert={false}>
