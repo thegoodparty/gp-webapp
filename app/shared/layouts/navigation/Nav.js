@@ -17,7 +17,6 @@ export default async function Nav() {
       setUserCookie(user);
     }
   }
-  console.log(`campaignStatus =>`, campaignStatus);
 
   return (
     <>
