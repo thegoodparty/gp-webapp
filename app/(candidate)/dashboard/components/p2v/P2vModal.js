@@ -84,7 +84,7 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
                 <li>
                   <Body1>
                     <strong>
-                      {numberFormatter(winNumber)}Votes Needed to Win
+                      {numberFormatter(winNumber)} Votes Needed to Win
                     </strong>{' '}
                     (this includes a small safety margin)
                   </Body1>
