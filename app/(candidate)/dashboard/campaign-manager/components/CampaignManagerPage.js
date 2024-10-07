@@ -13,6 +13,7 @@ import {
   getChatThread,
 } from './ajaxActions';
 import useChat from './useChat';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 export async function updateChat(threadId, input) {
   try {
@@ -31,13 +32,22 @@ export async function updateChat(threadId, input) {
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
-  const { chat, setChat, threadId, setThreadId, chats } = useChat();
+  const {
+    chat,
+    setChat,
+    threadId,
+    setThreadId,
+    chats,
+    loadChatByThreadId,
+    regenerateChat,
+  } = useChat();
   const lastMessageRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
     setLoading(true);
+    trackEvent('campaign_manager_chatbot_input', { input });
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -52,11 +62,23 @@ export default function CampaignManagerPage(props) {
       let updatedChat = [...chat, { role: 'user', content: input }, message];
       setChat(updatedChat);
     }
+    scrollDown();
+    setLoading(false);
+    setShouldType(true);
+  };
+
+  const scrollDown = () => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    setLoading(false);
+  };
+
+  const handleRegenerate = async () => {
+    setLoading(true);
+    setChat(chat.slice(0, -1));
+    await regenerateChat();
     setShouldType(true);
+    setLoading(false);
   };
 
   const contextProps = {
@@ -70,9 +92,10 @@ export default function CampaignManagerPage(props) {
     setThreadId,
     setChat,
     lastMessageRef,
+    scrollDown,
+    loadChatByThreadId,
+    handleRegenerate,
   };
-
-  console.log('lastMessageRef', lastMessageRef);
 
   return (
     <DashboardLayout {...props} showAlert={false}>

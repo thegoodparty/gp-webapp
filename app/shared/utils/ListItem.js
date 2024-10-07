@@ -9,6 +9,7 @@ export default function ListItem({
   title,
   number,
   children,
+  ...restProps
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -18,6 +19,7 @@ export default function ListItem({
         onClick={() => {
           setOpen(!open);
         }}
+        {...restProps}
       >
         {variant === 'list' && (
           <div className="mr-5 h-6 w-6 bg-primary-dark text-slate-50 flex items-center justify-center rounded-full font-semibold">

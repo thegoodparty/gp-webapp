@@ -132,7 +132,11 @@ export default function ResourcesPage(props) {
                   key={field.title || field.slug}
                   className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-full"
                 >
-                  <ResourceWrapper resource={field} {...props} />
+                  <ResourceWrapper
+                    sectionTitle={section.title}
+                    resource={field}
+                    {...props}
+                  />
                 </div>
               ))}
             </div>

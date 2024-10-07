@@ -7,7 +7,7 @@ import {
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import independentLogo from '/public/images/parties-logos/independent.png';
 import libertarianLogo from '/public/images/parties-logos/libertarian-logo.png';
 import fwdLogo from '/public/images/parties-logos/fwd-logo.png';
@@ -21,6 +21,7 @@ import Modal from '@shared/utils/Modal';
 import InfoButton from '@shared/buttons/InfoButton';
 import { trackEvent } from 'helpers/fullStoryHelper';
 import RadioList from '@shared/inputs/RadioList';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 const options = [
   { key: 'independent', label: 'Independent' },
@@ -141,8 +142,16 @@ export default function PartyStep(props) {
     party: campaign?.details?.party || '',
     otherParty: campaign?.details?.otherParty || '',
   });
-
   const [showInvalidModal, setShowInvalidModal] = useState(false);
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Onboarding Next Button', {
+        step,
+        party: state.party || 'other',
+        otherParty: state.otherParty,
+      }),
+    [step, state.party, state.otherParty],
+  );
 
   const onChangeField = (key, value) => {
     if (key === 'otherParty' && value !== '') {
@@ -228,7 +237,11 @@ export default function PartyStep(props) {
           </div>
         </div>
         <div className="mt-10" onClick={handleSave}>
-          <PrimaryButton disabled={!canSubmit()} type="submit">
+          <PrimaryButton
+            disabled={!canSubmit()}
+            type="submit"
+            {...trackingAttrs}
+          >
             Next
           </PrimaryButton>
         </div>

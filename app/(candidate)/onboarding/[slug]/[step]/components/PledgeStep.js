@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   onboardingStep,
   updateCampaign,
@@ -16,6 +16,7 @@ import { AcknowledgementQuestion } from '@shared/acknowledgements/Acknowledgemen
 import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements';
 import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
 import { useRouter } from 'next/navigation';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 const steps = ['1', '2', '3', '4'];
 const emoticons = [
@@ -46,6 +47,10 @@ export default function PledgeStep({ campaign, pledge, step }) {
   const [loading, setLoading] = useState(false);
   const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations();
   const router = useRouter();
+  const trackingAttrs = useMemo(
+    () => buildTrackingAttrs('Onboarding Next Button', { step }),
+    [step],
+  );
 
   if (!pledge) {
     return null;
@@ -136,7 +141,11 @@ export default function PledgeStep({ campaign, pledge, step }) {
           </div>
         )}
         <div onClick={handleSave}>
-          <PrimaryButton disabled={!canSave()} loading={loading}>
+          <PrimaryButton
+            disabled={!canSave()}
+            loading={loading}
+            {...trackingAttrs}
+          >
             Submit
           </PrimaryButton>
         </div>
