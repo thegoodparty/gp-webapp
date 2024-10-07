@@ -75,7 +75,10 @@ export default function DashboardPage(props) {
   //  What we should be doing is fetching the user object from the server on each route change,
   //  and then we won't have to do this.
   const updateUserCookie = async () => {
-    setUser((await updateUser()) || {});
+    const updated = await updateUser();
+    if (updated) {
+      setUser(updated);
+    }
   };
 
   useEffect(() => {

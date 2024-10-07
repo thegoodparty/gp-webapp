@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import ChatHistory from './ChatHistory';
 import Chat from './Chat';
@@ -13,6 +13,7 @@ import {
   getChatThread,
 } from './ajaxActions';
 import useChat from './useChat';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 export async function updateChat(threadId, input) {
   try {
@@ -31,12 +32,25 @@ export async function updateChat(threadId, input) {
 export const ChatContext = createContext([[], (v) => {}]);
 
 export default function CampaignManagerPage(props) {
-  const { chat, setChat, threadId, setThreadId, chats } = useChat();
+  const {
+    chat,
+    setChat,
+    threadId,
+    setThreadId,
+    chats,
+    loadChatByThreadId,
+    regenerateChat,
+  } = useChat();
+  const lastMessageRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
     setLoading(true);
+    trackEvent('campaign_manager_chatbot_input', { input });
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     if (!threadId || chat.length === 0) {
       const { threadId: newThreadId, chat: newChat } = await createInitialChat(
         input,
@@ -48,8 +62,23 @@ export default function CampaignManagerPage(props) {
       let updatedChat = [...chat, { role: 'user', content: input }, message];
       setChat(updatedChat);
     }
+    scrollDown();
     setLoading(false);
     setShouldType(true);
+  };
+
+  const scrollDown = () => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleRegenerate = async () => {
+    setLoading(true);
+    setChat(chat.slice(0, -1));
+    await regenerateChat();
+    setShouldType(true);
+    setLoading(false);
   };
 
   const contextProps = {
@@ -62,6 +91,10 @@ export default function CampaignManagerPage(props) {
     setShouldType,
     setThreadId,
     setChat,
+    lastMessageRef,
+    scrollDown,
+    loadChatByThreadId,
+    handleRegenerate,
   };
 
   return (

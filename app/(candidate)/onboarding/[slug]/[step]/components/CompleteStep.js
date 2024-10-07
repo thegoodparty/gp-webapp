@@ -9,7 +9,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
-import { trackEvent } from 'helpers/fullStoryHelper';
+import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
 import { useState } from 'react';
 
 async function launchCampaign() {
@@ -26,6 +26,7 @@ export default function CompleteStep() {
   const [loading, setLoading] = useState(false);
   const user = getUserCookie(true);
   const snackbarState = useHookstate(globalSnackbarState);
+  const trackingAttrs = buildTrackingAttrs('Onboarding Complete Button');
 
   const handleSave = async () => {
     if (loading) {
@@ -70,7 +71,7 @@ export default function CompleteStep() {
         You&apos;re officially part of the GoodParty.org community. Let&apos;s
         get started!
       </Body1>
-      <PrimaryButton onClick={handleSave} fullWidth>
+      <PrimaryButton onClick={handleSave} fullWidth {...trackingAttrs}>
         {loading ? 'Launching...' : 'View Dashboard'}
       </PrimaryButton>
     </div>

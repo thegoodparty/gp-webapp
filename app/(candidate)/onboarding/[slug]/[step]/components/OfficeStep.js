@@ -7,9 +7,10 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 async function runP2V(slug) {
   try {
@@ -29,6 +30,13 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   });
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Onboarding Next Button', {
+        step,
+      }),
+    [step],
+  );
 
   const canSubmit = () => {
     if (step) {
@@ -184,6 +192,7 @@ export default function OfficeStep(props) {
             disabled={!canSubmit()}
             type="submit"
             onClick={handleSave}
+            {...trackingAttrs}
           >
             {step ? 'Next' : 'Save'}
           </PrimaryButton>
