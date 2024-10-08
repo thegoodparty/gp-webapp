@@ -11,7 +11,7 @@ import { useState } from 'react';
 import {
   deleteCandidatePosition,
   updateCandidatePosition,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import { useHookstate } from '@hookstate/core';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 

@@ -7,12 +7,12 @@ import { MdCheckBox } from 'react-icons/md';
 import H4 from '@shared/typography/H4';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/details/components/issues/useCandidatePositions';
+import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions';
 import {
   deleteCandidatePosition,
   handleDeleteCustomIssue,
   loadCandidatePosition,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { useHookstate } from '@hookstate/core';

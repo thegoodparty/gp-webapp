@@ -5,7 +5,7 @@ import QuestionsPage from './components/QuestionsPage';
 import {
   fetchIssues,
   loadCandidatePosition,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
   title: 'Additional Questions | GoodParty.org',

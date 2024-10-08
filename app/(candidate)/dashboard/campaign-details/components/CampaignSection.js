@@ -101,7 +101,7 @@ export default function CampaignSection(props) {
   };
 
   return (
-    <section className="border-t pt-6 border-gray-600">
+    <section>
       <H3 className="pb-6">Campaign Details</H3>
       <div className="grid grid-cols-12 gap-3">
         {fields.map((field) => {

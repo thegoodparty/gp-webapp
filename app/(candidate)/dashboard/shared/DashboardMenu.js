@@ -49,10 +49,10 @@ const DEFAULT_MENU_ITEMS = [
     id: 'my-content-dashboard',
   },
   {
-    label: 'My Details',
+    label: 'Campaign Details',
     icon: <RiUserHeartLine />,
-    link: '/dashboard/details',
-    id: 'details-dashboard',
+    link: '/dashboard/campaign-details',
+    id: 'campaign-details-dashboard',
   },
 
   CAMPAIGN_TEAM_MENU_ITEM,

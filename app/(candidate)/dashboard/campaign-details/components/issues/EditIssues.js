@@ -14,7 +14,7 @@ import SuggestedIssues from './SuggestedIssues';
 import {
   loadCandidatePosition,
   saveCandidatePosition,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 
 export default function EditIssues(props) {
   const {
@@ -58,22 +58,6 @@ export default function EditIssues(props) {
     if (customTitle !== '') {
       await handleCustomIssue(candidatePosition, customTitle, maxOrder);
     } else {
-      // if (isStaged && campaign) {
-      //   const existing = campaign.details?.topIssues || {};
-      //   existing[`position-${position.id}`] = candidatePosition;
-      //   if (!existing.positions) {
-      //     existing.positions = [];
-      //   }
-      //   existing.positions.push(position);
-      //   await saveCallback({
-      //     ...campaign,
-      //     details: {
-      //       ...campaign.details,
-      //       topIssues: existing,
-      //     },
-      //   });
-      //   window.location.reload();
-      // } else {
       await saveCandidatePosition({
         description: candidatePosition,
         campaignSlug: campaign.slug,

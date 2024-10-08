@@ -8,13 +8,13 @@ import {
 import FunFact from './FunFact';
 import PastExperience from './PastExperience';
 import AddIssues from './issues/AddIssues';
-import RunningAgainstSection from '../../details/components/RunningAgainstSection';
+import RunningAgainstSection from 'app/(candidate)/dashboard/campaign-details/components/RunningAgainstSection';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import Website from './Website';
 import Done from './Done';
-import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 
 export const flows = {

@@ -6,12 +6,12 @@ import { getServerUser } from 'helpers/userServerHelper';
 import {
   fetchIssues,
   loadCandidatePosition,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
-  title: 'My Details | GoodParty.org',
-  description: 'My details',
-  slug: '/dashboard/details',
+  title: 'campaign Details | GoodParty.org',
+  description: 'Campaign Details',
+  slug: '/dashboard/campaign-details',
 });
 export const metadata = meta;
 
@@ -24,7 +24,7 @@ export default async function Page({ params, searchParams }) {
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
-    pathname: '/dashboard/details',
+    pathname: '/dashboard/campaign-details',
     campaign,
     candidatePositions,
     topIssues,

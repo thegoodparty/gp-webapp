@@ -160,7 +160,10 @@ export default function BallotRaces(props) {
         { key: 'details.office', value: updated.details.office },
         { key: 'details.city', value: updated.details.city },
         { key: 'details.district', value: updated.details.district },
-        { key: 'details.electionDate', value: updated.details.electionDate },
+        {
+          key: 'details.electionDate',
+          value: updated.details.electionDate,
+        },
         {
           key: 'details.officeTermLength',
           value: updated.details.officeTermLength,
@@ -177,7 +180,10 @@ export default function BallotRaces(props) {
         { key: 'details.office', value: updated.details.office },
         { key: 'details.city', value: updated.details.city },
         { key: 'details.district', value: updated.details.district },
-        { key: 'details.electionDate', value: updated.details.electionDate },
+        {
+          key: 'details.electionDate',
+          value: updated.details.electionDate,
+        },
         {
           key: 'details.officeTermLength',
           value: updated.details.officeTermLength,
