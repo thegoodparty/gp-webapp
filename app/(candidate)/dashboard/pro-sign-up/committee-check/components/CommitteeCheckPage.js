@@ -155,7 +155,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             fullWidth
           />
           <Overline className="flex items-center">
-            My race doesn't require an EIN
+            My race doesn&apos;t require an EIN
             <Switch
               onChange={(e) => handleSkipEinToggle(e.target.checked)}
               checked={skipEin}
