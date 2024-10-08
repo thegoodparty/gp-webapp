@@ -29,6 +29,7 @@ export default function MethodRow(props) {
   // Check campaign viability to show special callout
   const hbViability = campaign.data?.hubSpotUpdates?.final_viability_rating;
   const showSpecialCallout =
+    specialCallout &&
     typeof hbViability === 'string' &&
     ['has a chance', 'likely to win', 'frontrunner'].includes(
       hbViability.toLowerCase(),
@@ -53,6 +54,11 @@ export default function MethodRow(props) {
         <div className="col-span-12  2xl:col-span-7 2xl:flex 2xl:justify-end">
           <div className="2xl:w-[800px]">
             <div className="grid grid-cols-12 gap-4">
+              {showSpecialCallout && (
+                <div className="block col-span-12 2xl:hidden">
+                  {specialCallout}
+                </div>
+              )}
               <div className="col-span-12 lg:col-span-4">
                 <Link href="/dashboard/content?showModal=true">
                   <PrimaryButton variant="outlined" fullWidth>
@@ -96,8 +102,8 @@ export default function MethodRow(props) {
           </div>
         </div>
       </div>
-      {specialCallout && showSpecialCallout && (
-        <div className="mt-4">{specialCallout}</div>
+      {showSpecialCallout && (
+        <div className="hidden 2xl:block mt-4">{specialCallout}</div>
       )}
     </div>
   );
