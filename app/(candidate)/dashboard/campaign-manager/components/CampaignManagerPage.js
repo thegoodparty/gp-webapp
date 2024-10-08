@@ -81,6 +81,8 @@ export default function CampaignManagerPage(props) {
     setLoading(false);
   };
 
+  console.log('chat', chat);
+
   const contextProps = {
     handleNewInput,
     ...props,

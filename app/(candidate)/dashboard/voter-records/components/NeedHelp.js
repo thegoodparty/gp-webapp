@@ -23,7 +23,13 @@ export async function sendMessage(type, message) {
   }
 }
 
-const types = ['Direct Mail', 'Door Knocking', 'Texting', 'Phone Banking'];
+const types = [
+  'Direct Mail',
+  'Door Knocking',
+  'Texting',
+  'Phone Banking',
+  'Digital Advertising',
+];
 
 export default function NeedHelp() {
   const [open, setOpen] = useState(false);

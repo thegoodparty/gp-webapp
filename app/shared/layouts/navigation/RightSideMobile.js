@@ -81,47 +81,53 @@ export default function RightSideMobile() {
                 />
               ) : (
                 <div
-                  className={`w-[270px] bg-primary-dark text-white h-screen overflow-auto px-4 pt-24 ${
-                    user ? 'pb-36' : 'pb-60'
-                  } relative`}
+                  className={`flex flex-col w-[270px] bg-primary-dark text-white h-screen relative`}
                 >
-                  {user && (
-                    <H3 className="mb-8">
-                      {user.firstName} {user.lastName}
-                    </H3>
-                  )}
-                  {sections.map((section) => (
-                    <div
-                      key={section.title}
-                      className="border-b border-indigo-400 pb-3 mb-3"
-                    >
-                      <Caption className="py-2">{section.title}</Caption>
-                      {section.links.map((link) => (
-                        <Link
-                          href={link.href}
-                          id={`mobile-nav-${link.id}`}
-                          key={link.id}
-                          className="no-underline font-medium"
-                          rel={`${
-                            link.external ? 'noopener noreferrer nofollow' : ''
-                          }`}
-                          onClick={closeMenu}
-                        >
-                          <div
-                            data-cy="header-link"
-                            className="py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
+                  <div
+                    className={`grow overflow-auto px-4 pt-24 ${
+                      user ? 'pb-36' : 'pb-60'
+                    }`}
+                  >
+                    {user && (
+                      <H3 className="mb-8">
+                        {user.firstName} {user.lastName}
+                      </H3>
+                    )}
+                    {sections.map((section) => (
+                      <div
+                        key={section.title}
+                        className="border-b border-indigo-400 pb-3 mb-3"
+                      >
+                        <Caption className="py-2">{section.title}</Caption>
+                        {section.links.map((link) => (
+                          <Link
+                            href={link.href}
+                            id={`mobile-nav-${link.id}`}
+                            key={link.id}
+                            className="no-underline font-medium"
+                            rel={`${
+                              link.external
+                                ? 'noopener noreferrer nofollow'
+                                : ''
+                            }`}
+                            onClick={closeMenu}
                           >
-                            <div className="flex items-center">
-                              {link.icon}
-                              <div className="ml-3">{link.label}</div>
+                            <div
+                              data-cy="header-link"
+                              className="py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
+                            >
+                              <div className="flex items-center">
+                                {link.icon}
+                                <div className="ml-3">{link.label}</div>
+                              </div>
+                              {link.external && <FaExternalLinkAlt size={14} />}
                             </div>
-                            {link.external && <FaExternalLinkAlt size={14} />}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  ))}
-                  <div className={`fixed right-0 bottom-0 w-[270px] h-auto`}>
+                          </Link>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={`w-full h-auto`}>
                     <div className={`p-6 bg-primary-dark h-auto`}>
                       {user ? (
                         <>
