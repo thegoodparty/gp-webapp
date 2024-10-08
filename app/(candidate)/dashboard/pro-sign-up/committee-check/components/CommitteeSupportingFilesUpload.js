@@ -7,10 +7,14 @@ import { CircularProgress } from '@mui/material';
 import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon';
 
 const FILE_LIMIT_MB = 10;
 
 const EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX = `ein-support-documents`;
+
+const HELP_MESSAGE =
+  'A campaign filing document is the official document you filed with your election agency (e.g., Secretary of State or Board of Elections) to declare your candidacy. Common names include Statement of Candidacy, Declaration of Candidacy, or Certificate of Nomination.';
 
 const getEinSupportDocumentFolderName = (id, slug) =>
   `${id}-${slug}-${EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX}`;
@@ -105,7 +109,12 @@ export const CommitteeSupportingFilesUpload = ({
         onClick={onFileBrowseClick}
         label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
-        helperText={errorMessge || `File size less than ${FILE_LIMIT_MB}MB`}
+        helperText={
+          errorMessge || `PDF file with size less than ${FILE_LIMIT_MB}MB`
+        }
+        InputProps={{
+          endAdornment: <InputHelpIcon message={HELP_MESSAGE} />,
+        }}
       />
 
       <PrimaryButton
