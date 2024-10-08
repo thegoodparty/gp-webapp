@@ -8,14 +8,6 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { useState, useMemo } from 'react';
-import independentLogo from '/public/images/parties-logos/independent.png';
-import libertarianLogo from '/public/images/parties-logos/libertarian-logo.png';
-import fwdLogo from '/public/images/parties-logos/fwd-logo.png';
-import greedLogo from '/public/images/parties-logos/green-logo.png';
-import reformLogo from '/public/images/parties-logos/reform-logo.png';
-import demLogo from '/public/images/parties-logos/democratic-logo.png';
-import repLogo from '/public/images/parties-logos/republican-logo.png';
-import Image from 'next/image';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
 import InfoButton from '@shared/buttons/InfoButton';

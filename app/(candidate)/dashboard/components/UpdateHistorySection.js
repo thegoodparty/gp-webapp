@@ -27,8 +27,6 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
 
   const { deleteHistoryCallBack, updateHistory } = props;
 
-  console.log('updateHistory', updateHistory);
-
   const inputData = [];
   if (updateHistory) {
     updateHistory.map((update) => {

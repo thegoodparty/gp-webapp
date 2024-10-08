@@ -1,6 +1,6 @@
 'use client';
 import DashboardLayout from '../../shared/DashboardLayout';
-import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/details/components/issues/CandidatePositionsProvider';
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -22,7 +22,7 @@ const CARD_FREE = {
     'AI Campaign Content',
     'Campaign progress tracker',
     'Path to Victory report',
-    'Consultation with a campaign manager',
+    'Consultation with a campaign managing',
     'Discord community',
     'Good Party Academy',
   ],

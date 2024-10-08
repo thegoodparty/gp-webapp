@@ -8,9 +8,7 @@ import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns';
 export default function LeftSide() {
   const pathname = usePathname();
   const isOnboardingPath =
-    pathname?.startsWith('/onboarding') ||
-    pathname?.startsWith('/browsing') ||
-    pathname === '/account-type';
+    pathname?.startsWith('/onboarding') || pathname === '/sign-up/account-type';
 
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||

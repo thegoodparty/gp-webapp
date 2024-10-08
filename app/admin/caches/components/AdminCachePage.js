@@ -3,7 +3,6 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import Table from '@shared/utils/Table';
 import { useMemo } from 'react';
-import gpFetch from 'gpApi/gpFetch';
 import BustCacheButton from './BustCacheButton';
 
 export default function AdminUsersPage(props) {

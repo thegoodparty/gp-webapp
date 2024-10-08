@@ -4,11 +4,7 @@ import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 
-export default function DashboardOrContinue({
-  isDashboardPath,
-  closeAll,
-  campaignStatus,
-}) {
+export default function DashboardOrContinue({ closeAll, campaignStatus }) {
   const [campaignStatusClient] = useCampaignStatus();
   let resolvedStatus = campaignStatusClient || campaignStatus;
   const { status, slug, step } = resolvedStatus || {};
@@ -19,51 +15,33 @@ export default function DashboardOrContinue({
         onClick={closeAll}
         id="nav-continue-setup"
       >
-        <WarningButton size="medium">
-          Continue<span className="hidden lg:inline"> Setup</span>
-        </WarningButton>
+        <WarningButton size="medium">Continue Setup</WarningButton>
       </Link>
     );
   }
 
-  let dashboardLink = '/dashboard';
+  const isVolunteer = status === 'volunteer';
 
   return (
     <div className="ml-4">
-      {status === 'candidate' ? (
-        <>
-          {!isDashboardPath && (
-            <Link
-              href={`${dashboardLink}`}
-              onClick={closeAll}
-              id="nav-dashboard"
-            >
-              <PrimaryButton size="medium">Dashboard</PrimaryButton>
-            </Link>
-          )}
-        </>
+      {['candidate', 'volunteer', 'manager'].includes(status) ? (
+        <Link
+          href={isVolunteer ? '/volunteer-dashboard' : '/dashboard'}
+          onClick={closeAll}
+          id={isVolunteer ? 'nav-volunteer-dashboard' : 'nav-dashboard'}
+        >
+          <PrimaryButton size="medium">Dashboard</PrimaryButton>
+        </Link>
       ) : (
-        <>
-          {status === 'volunteer' ? (
-            <Link
-              href="/volunteer-dashboard"
-              onClick={closeAll}
-              id="nav-volunteer-dashboard"
-            >
-              <PrimaryButton size="medium">Dashboard</PrimaryButton>
-            </Link>
-          ) : (
-            <Link
-              href={`/onboarding/${slug}/${step || 1}`}
-              onClick={closeAll}
-              id="nav-continue-onboarding"
-            >
-              <WarningButton size="medium">
-                Continue<span className="hidden lg:inline"> Onboarding</span>
-              </WarningButton>
-            </Link>
-          )}
-        </>
+        <Link
+          href={`/onboarding/${slug}/${step || 1}`}
+          onClick={closeAll}
+          id="nav-continue-onboarding"
+        >
+          <WarningButton size="medium">
+            Continue<span className="hidden lg:inline"> Onboarding</span>
+          </WarningButton>
+        </Link>
       )}
     </div>
   );
