@@ -31,8 +31,13 @@ const useChat = () => {
   };
 
   const regenerateChat = async () => {
-    const currentChat = await regenerateChatThread(threadId);
-    setChat(currentChat?.chat || []);
+    const { message } = await regenerateChatThread(threadId);
+    console.log('message in regenerateChat', message);
+    console.log('regenerate chat before', chat);
+    const updatedChat = chat.slice(0, -1);
+    updatedChat.push(message);
+    console.log('regenerate chat after', updatedChat);
+    setChat(updatedChat);
   };
 
   useEffect(() => {
