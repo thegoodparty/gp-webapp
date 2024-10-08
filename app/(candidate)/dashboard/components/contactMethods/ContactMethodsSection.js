@@ -10,6 +10,7 @@ import {
   MdPeopleAlt,
   MdShare,
 } from 'react-icons/md';
+import { StyledAlert } from '@shared/alerts/StyledAlert';
 
 const methods = [
   {
@@ -41,6 +42,12 @@ const methods = [
     voterFileKey: 'sms',
     perc: 20,
     percText: 'text messages',
+    specialCallout: (
+      <StyledAlert severity="info" className="flex items-center">
+        <span className="font-bold">Maximize your reach:</span> Get 5,000 texts
+        for free on your first texting campaign
+      </StyledAlert>
+    ),
   },
   {
     key: 'calls',
