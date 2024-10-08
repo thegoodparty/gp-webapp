@@ -19,7 +19,6 @@ import {
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
 import Overline from '@shared/typography/Overline';
-import Checkbox from '@shared/inputs/Checkbox';
 import { Switch } from '@mui/material';
 
 const COMMITTEE_HELP_MESSAGE = (
