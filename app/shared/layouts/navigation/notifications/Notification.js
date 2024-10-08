@@ -44,11 +44,13 @@ export default function Notifications({
           <div className="px-3">
             <H6 className="text-slate-100">{title}</H6>
             <Caption className="text-gray-600">{subTitle}</Caption>
-            <Subtitle2
-              className={`mt-6 ${isRead ? 'text-gray-600' : 'text-red-200'}`}
-            >
-              Due {dateUsHelper(dueDate)}
-            </Subtitle2>
+            {dueDate && (
+              <Subtitle2
+                className={`mt-6 ${isRead ? 'text-gray-600' : 'text-red-200'}`}
+              >
+                Due {dateUsHelper(dueDate)}
+              </Subtitle2>
+            )}
           </div>
         </div>
         <div className="shrink-0 flex items-center">

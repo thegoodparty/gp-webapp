@@ -10,8 +10,6 @@ import { RiImageAddFill } from 'react-icons/ri';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { setUserCookie } from 'helpers/cookieHelper';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 
 async function fileSelectCallback(image, uploadCallback, isUserImage) {
   let api;
@@ -25,9 +23,6 @@ async function fileSelectCallback(image, uploadCallback, isUserImage) {
   const res = await gpFetch(api, formData, 3600, false, true);
   if (res.success && res.data.files.length > 0) {
     uploadCallback(`${res.data.baseurl}${res.data.files[0]}`);
-    // if (isUserImage) {
-    //   setUserCookie(res.updatedUser);
-    // }
   } else {
     uploadCallback(false);
   }

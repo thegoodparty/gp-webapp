@@ -1,12 +1,20 @@
 'use client';
-import Paper from '@shared/utils/Paper';
 import { useState } from 'react';
-
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import EmptyState from './EmptyState';
-import PendingInvitations from './PendingInvitations';
-import VolunteersSection from './VolunteersSection';
+import TeamMembers from 'app/(candidate)/dashboard/team/components/TeamMembers';
+import { PendingRequests } from 'app/(candidate)/dashboard/team/components/PendingRequests';
+
+const fetchVolunteers = async () => {
+  try {
+    const api = gpApi.campaign.campaignVolunteer.list;
+
+    return await gpFetch(api);
+  } catch (e) {
+    console.log('error at fetchVolunteers', e);
+    return {};
+  }
+};
 
 async function fetchInvitations() {
   try {
@@ -20,8 +28,16 @@ async function fetchInvitations() {
 }
 
 export default function TeamSection(props) {
-  const [volunteers, setVolunteers] = useState(props.volunteers || []);
-  const [invitations, setInvitations] = useState(props.invitations || []);
+  const {
+    requests,
+    volunteers: initVolunteers,
+    invitations: initInvitations,
+  } = props;
+  const [volunteers, setVolunteers] = useState(initVolunteers || []);
+  const [invitations, setInvitations] = useState(initInvitations || []);
+
+  const reloadVolunteers = async () =>
+    setVolunteers((await fetchVolunteers()).volunteers);
 
   const reloadInvitationsCallback = async () => {
     const res = await fetchInvitations();
@@ -30,23 +46,16 @@ export default function TeamSection(props) {
 
   return (
     <section className="">
-      {volunteers?.length === 0 && invitations?.length === 0 ? (
-        <EmptyState reloadInvitationsCallback={reloadInvitationsCallback} />
-      ) : null}
+      {Boolean(requests && requests.length) && (
+        <PendingRequests requests={requests} onAction={reloadVolunteers} />
+      )}
 
-      {invitations && invitations.length > 0 ? (
-        <PendingInvitations
-          reloadInvitationsCallback={reloadInvitationsCallback}
-          invitations={invitations}
-        />
-      ) : null}
-      {volunteers && volunteers.length > 0 ? (
-        <VolunteersSection
-          volunteers={volunteers}
-          invitations={invitations}
-          reloadInvitationsCallback={reloadInvitationsCallback}
-        />
-      ) : null}
+      <TeamMembers
+        volunteers={volunteers}
+        invitations={invitations}
+        onAction={reloadVolunteers}
+        reloadInvitations={reloadInvitationsCallback}
+      />
     </section>
   );
 }

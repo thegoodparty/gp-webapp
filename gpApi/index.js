@@ -16,7 +16,10 @@ let base = `${appBase}/api/v1/`;
 export const isProd = apiBase === 'https://api.goodparty.org';
 
 if (!appBase) {
-  appBase = `https://${process.env.VERCEL_URL}`;
+  appBase =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : `https://${process.env.VERCEL_BRANCH_URL}`;
   base = `${appBase}/api/v1/`;
 }
 
@@ -222,10 +225,48 @@ const gpApi = {
       },
     },
 
+    campaignRequests: {
+      create: {
+        url: `${base}campaign/volunteer/request`,
+        method: 'POST',
+        withAuth: true,
+      },
+      list: {
+        url: `${base}campaign/volunteer/requests`,
+        method: 'GET',
+        withAuth: true,
+      },
+      get: {
+        url: `${base}campaign/volunteer/request`,
+        method: 'GET',
+        withAuth: true,
+      },
+      grant: {
+        url: `${base}campaign/volunteer/request/grant`,
+        method: 'GET',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/volunteer/request`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+    },
+
     campaignVolunteer: {
       create: {
         url: `${base}campaign/volunteer`,
         method: 'POST',
+        withAuth: true,
+      },
+      delete: {
+        url: `${base}campaign/volunteer`,
+        method: 'DELETE',
+        withAuth: true,
+      },
+      update: {
+        url: `${base}campaign/volunteer`,
+        method: 'PATCH',
         withAuth: true,
       },
       list: {

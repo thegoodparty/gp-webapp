@@ -4,6 +4,7 @@ import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
+import { setUserCookie } from 'helpers/cookieHelper';
 
 export default async function Nav() {
   let campaignStatus = false;
@@ -11,6 +12,10 @@ export default async function Nav() {
   if (user) {
     const serverToken = getServerToken();
     campaignStatus = await fetchCampaignStatus(serverToken);
+    const { status, user = {} } = campaignStatus;
+    if (status === 'manager') {
+      setUserCookie(user);
+    }
   }
 
   return (
