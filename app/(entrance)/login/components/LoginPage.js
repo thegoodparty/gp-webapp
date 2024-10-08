@@ -41,6 +41,15 @@ async function login(email, password) {
   }
 }
 
+const getCampaignRequests = async (userId) => {
+  try {
+    return await gpFetch(gpApi.campaign.campaignRequests.get, { userId });
+  } catch (e) {
+    console.log('error at getCampaignRequests', e);
+    return {};
+  }
+};
+
 export default function LoginPage() {
   const [state, setState] = useState({
     email: '',
@@ -62,6 +71,12 @@ export default function LoginPage() {
         await saveToken(token);
         setUserCookie(user);
         setUser(user);
+        const campaignRequests = await getCampaignRequests(user.id);
+
+        if (campaignRequests?.length) {
+          window.location.href = '/onboarding/managing/final';
+          return;
+        }
 
         const returnUrl = getCookie('returnUrl');
         if (returnUrl) {

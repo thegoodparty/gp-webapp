@@ -15,7 +15,6 @@ import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
-import AlertSection from './AlertSection';
 import { P2vSection } from './p2v/P2vSection';
 import ContactMethodsSection from './contactMethods/ContactMethodsSection';
 
@@ -41,7 +40,7 @@ export async function fetchUpdateHistory() {
 
 export default function DashboardPage(props) {
   const { campaign } = props;
-  const [user, setUser] = useUser();
+  const [_, setUser] = useUser();
 
   const { pathToVictory, goals, data, details } = campaign;
   const { reportedVoterGoals } = data || {};

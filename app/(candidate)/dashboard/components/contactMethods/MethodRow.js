@@ -18,6 +18,7 @@ export default function MethodRow(props) {
     voterFileKey,
     perc,
     percText,
+    specialCallout,
   } = method;
   const { isPro } = campaign || {};
 
@@ -25,9 +26,17 @@ export default function MethodRow(props) {
   voterContactGoal = voterContactGoal || 0;
   const perNumber = numberFormatter((voterContactGoal * perc) / 100);
 
+  // Check campaign viability to show special callout
+  const hbViability = campaign.data?.hubSpotUpdates?.final_viability_rating;
+  const showSpecialCallout =
+    typeof hbViability === 'string' &&
+    ['has a chance', 'likely to win', 'frontrunner'].includes(
+      hbViability.toLowerCase(),
+    );
+
   return (
     <div className="border border-gray-200 p-4 rounded-lg mt-4">
-      <div className="grid grid-cols-12 gap-8">
+      <div className="grid grid-cols-12 gap-8 items-center">
         <div className="col-span-12  flex  2xl:col-span-5">
           <div className="mr-4 text-xl mt-1">{icon}</div>
           <div>
@@ -63,7 +72,9 @@ export default function MethodRow(props) {
                       </PrimaryButton>
                     ) : (
                       <Link href={`/dashboard/voter-records/${voterFileKey}`}>
-                        <PrimaryButton fullWidth>{cta}</PrimaryButton>
+                        <PrimaryButton className="whitespace-nowrap" fullWidth>
+                          {cta}
+                        </PrimaryButton>
                       </Link>
                     )}
                   </>
@@ -85,6 +96,9 @@ export default function MethodRow(props) {
           </div>
         </div>
       </div>
+      {specialCallout && showSpecialCallout && (
+        <div className="mt-4">{specialCallout}</div>
+      )}
     </div>
   );
 }

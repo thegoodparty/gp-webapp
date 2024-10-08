@@ -3,40 +3,27 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import Tooltip from '@mui/material/Tooltip';
 import Table from '@shared/utils/Table';
-
 import { useMemo } from 'react';
 import { formatToPhone } from 'helpers/numberHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 
-export const deleteUserCallback = async (id) => {
-  const api = gpApi.admin.deleteUser;
-  const payload = { id };
-  return await gpFetch(api, payload);
-};
+const buildTableInputData = (users) =>
+  users.map((user) => {
+    const metaData = (user.metaData && JSON.parse(user.metaData)) || {};
+    return {
+      ...user,
+      userType: user.isAdmin ? 'admin' : user.candidate ? 'candidate' : 'user',
+      lastVisited: metaData?.lastVisited && new Date(metaData?.lastVisited),
+      createdAt: user.createdAt && new Date(user.createdAt),
+      campaigns: user.campaigns || [],
+    };
+  });
 
 export default function AdminUsersPage(props) {
   const users = props.users || [];
-
-  const inputData = [];
-
-  users.map((user) => {
-    let metaData = user.metaData;
-    if (metaData) {
-      metaData = JSON.parse(metaData);
-    }
-    const fields = {
-      ...user,
-      userType: user.isAdmin ? 'admin' : user.candidate ? 'candidate' : 'user',
-      lastVisited: new Date(metaData?.lastVisited),
-      createdAt: new Date(user.createdAt),
-    };
-
-    inputData.push(fields);
-  });
+  const { defaultFilters = [] } = props;
+  const inputData = buildTableInputData(users);
 
   const data = useMemo(() => inputData);
 
@@ -72,7 +59,25 @@ export default function AdminUsersPage(props) {
         </Tooltip>
       ),
     },
-
+    {
+      Header: 'Campaign Role(s)',
+      accessor: 'campaigns',
+      Cell: ({ row }) => {
+        return (
+          Boolean(row.original.campaigns?.length) &&
+          row.original.campaigns.map((campaign) => (
+            <a
+              key={campaign.id}
+              className="underline"
+              href={`/admin/campaign-statistics?id=${campaign.id}`}
+            >
+              {campaign.slug} -{' '}
+              <span className="capitalize">{campaign.role}</span>
+            </a>
+          ))
+        );
+      },
+    },
     {
       Header: 'Last Visit',
       accessor: 'lastVisited',
@@ -120,6 +125,10 @@ export default function AdminUsersPage(props) {
 
       collapse: true,
     },
+    {
+      accessor: 'id',
+      hide: true,
+    },
   ]);
 
   return (
@@ -129,6 +138,7 @@ export default function AdminUsersPage(props) {
           data={data}
           columns={columns}
           defaultPageSize={25}
+          defaultFilters={defaultFilters}
           showPagination
           filterable
         />

@@ -5,7 +5,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 import {
   findExistingCustomIssueIndex,
   writeCampaignCustomIssue,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons';
 
 export default function AddCustomIssue({

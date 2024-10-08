@@ -8,7 +8,7 @@ import {
   filterIssues,
   handleDeleteCustomIssue,
   saveCandidatePosition,
-} from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import { IssuesSearch } from './IssuesSearch';
 import { IssuesSelectList } from './IssuesSelectList';
 import { AddNewIssueTrigger } from './AddNewIssueTrigger';

@@ -2,7 +2,6 @@
 import UserSnapScript from '@shared/scripts/UserSnapScript';
 import DashboardMenu from './DashboardMenu';
 import { useUser } from '@shared/hooks/useUser';
-import { DemoAccountWarningAlert } from 'app/(candidate)/dashboard/shared/DemoAccountWarningAlert';
 import AlertSection from '../components/AlertSection';
 
 export default function DashboardLayout({
@@ -14,7 +13,6 @@ export default function DashboardLayout({
   showAlert = true,
 }) {
   const [user] = useUser();
-  const { demoPersona } = JSON.parse((user || {}).metaData || '{}');
 
   return (
     <>
