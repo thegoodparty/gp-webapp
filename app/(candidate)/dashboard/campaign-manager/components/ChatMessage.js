@@ -61,7 +61,7 @@ export default function ChatMessage({
                 <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-4">
                   {canRegenerate && (
                     <MdOutlineRefresh
-                      className="mr-3"
+                      className="mr-3 cursor-pointer"
                       size={20}
                       onClick={handleRegenerate}
                     />
