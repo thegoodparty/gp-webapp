@@ -39,6 +39,7 @@ export default function Chat() {
               type={shouldType && index === chat.length - 1}
               setShouldType={setShouldType}
               scrollCallback={scrollCallback}
+              canRegenerate={index === chat.length - 1}
             />
           ))}
         </>

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import {
-  createInitialChat,
   fetchChatHistory,
   getChatThread,
+  regenerateChatThread,
 } from './ajaxActions';
 
 const useChat = () => {
@@ -24,11 +24,35 @@ const useChat = () => {
     setThreadId(threadId);
   };
 
+  const loadChatByThreadId = async (threadId) => {
+    const currentChat = await getChatThread({ threadId });
+    setChat(currentChat?.chat || []);
+    setThreadId(threadId);
+  };
+
+  const regenerateChat = async () => {
+    const { message } = await regenerateChatThread(threadId);
+    console.log('message in regenerateChat', message);
+    console.log('regenerate chat before', chat);
+    const updatedChat = chat.slice(0, -1);
+    updatedChat.push(message);
+    console.log('regenerate chat after', updatedChat);
+    setChat(updatedChat);
+  };
+
   useEffect(() => {
     loadInitialChats();
   }, []);
 
-  return { chat, setChat, threadId, setThreadId, chats };
+  return {
+    chat,
+    setChat,
+    threadId,
+    setThreadId,
+    chats,
+    loadChatByThreadId,
+    regenerateChat,
+  };
 };
 
 export default useChat;
