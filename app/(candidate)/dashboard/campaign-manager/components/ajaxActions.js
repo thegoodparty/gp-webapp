@@ -43,3 +43,14 @@ export async function regenerateChatThread(threadId) {
     return false;
   }
 }
+
+export async function deleteThread(threadId) {
+  try {
+    const api = gpApi.campaign.chat.delete;
+    const payload = { threadId };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}
