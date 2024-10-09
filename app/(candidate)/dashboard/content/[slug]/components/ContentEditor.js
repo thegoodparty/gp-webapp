@@ -172,7 +172,6 @@ export default function ContentEditor({
         createInitialAI(true);
       }
     } else {
-      console.log('chatResponse', chatResponse);
       aiCount = 0;
       if (status === 'completed') {
         setPlan(chatResponse.content);

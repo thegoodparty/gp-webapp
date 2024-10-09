@@ -9,13 +9,14 @@ import Subtitle2 from '@shared/typography/Subtitle2';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineRefresh } from 'react-icons/md';
 import { ChatContext } from './CampaignManagerPage';
+import ChatFeedback from './ChatFeedback';
 
 export default function ChatMessage({
   message,
   type,
   setShouldType,
   scrollCallback,
-  canRegenerate,
+  isLastMessage,
 }) {
   const [copied, setCopied] = useState(false);
   const { handleRegenerate } = useContext(ChatContext);
@@ -59,12 +60,15 @@ export default function ChatMessage({
               <>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
                 <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-4">
-                  {canRegenerate && (
-                    <MdOutlineRefresh
-                      className="mr-3 cursor-pointer"
-                      size={20}
-                      onClick={handleRegenerate}
-                    />
+                  {isLastMessage && (
+                    <>
+                      <ChatFeedback />
+                      <MdOutlineRefresh
+                        className="mr-4 cursor-pointer"
+                        size={20}
+                        onClick={handleRegenerate}
+                      />
+                    </>
                   )}
                   <>
                     {copied ? (
