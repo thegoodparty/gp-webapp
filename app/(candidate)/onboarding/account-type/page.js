@@ -1,7 +1,7 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
-import AccountTypePage from 'app/(entrance)/sign-up/account-type/components/AccountTypePage';
+import AccountTypePage from 'app/(candidate)/onboarding/account-type/components/AccountTypePage';
 
 const meta = pageMetaData({
   title: 'Select account type',

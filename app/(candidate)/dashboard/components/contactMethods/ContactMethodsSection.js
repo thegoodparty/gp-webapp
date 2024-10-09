@@ -33,7 +33,7 @@ const methods = [
     title: 'Texting',
     description:
       'We recommend texting to make up 20% of your overall voter contacts',
-    cta: 'Get Text/SMS Targets',
+    cta: 'Schedule a Text Campaign',
     modalTitle: 'Add Text Messages',
     modalSubTitle:
       "Update the total number of constituents you've texted this week:",
@@ -42,6 +42,7 @@ const methods = [
     voterFileKey: 'sms',
     perc: 20,
     percText: 'text messages',
+    showScheduleButton: true,
     specialCallout: (
       <StyledAlert severity="info" className="flex items-center">
         <span className="font-bold">Maximize your reach:</span> Get 5,000 texts
