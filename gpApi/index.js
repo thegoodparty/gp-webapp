@@ -182,6 +182,11 @@ const gpApi = {
         method: 'DELETE',
         withAuth: true,
       },
+      feedback: {
+        url: `${base}campaign/ai/chat/feedback`,
+        method: 'POST',
+        withAuth: true,
+      },
     },
 
     UpdateHistory: {
