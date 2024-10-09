@@ -29,7 +29,7 @@ export async function scheduleCampaign(state) {
 }
 
 export default function ScheduleFlow(props) {
-  const { type } = props;
+  const { type, customButton } = props;
 
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
@@ -114,12 +114,18 @@ export default function ScheduleFlow(props) {
   return (
     <>
       <div
-        className="mt-4 flex items-center justify-end cursor-pointer hover:underline"
+        className="cursor-pointer hover:underline"
         onClick={() => setOpen(true)}
         {...trackingAttrs}
       >
-        <div className="mr-2">Schedule Today</div>
-        <IoArrowForward />
+        {customButton ? (
+          customButton
+        ) : (
+          <span className="mt-4 flex items-center justify-end">
+            <span className="mr-2">Schedule Today</span>
+            <IoArrowForward />
+          </span>
+        )}
       </div>
       <Modal open={open} closeCallback={() => setOpen(false)}>
         {state.step === 1 && (
