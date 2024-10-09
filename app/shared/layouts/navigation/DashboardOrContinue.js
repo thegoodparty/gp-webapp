@@ -8,10 +8,11 @@ export default function DashboardOrContinue({ closeAll, campaignStatus }) {
   const [campaignStatusClient] = useCampaignStatus();
   let resolvedStatus = campaignStatusClient || campaignStatus;
   const { status, slug, step } = resolvedStatus || {};
+
   if (!status) {
     return (
       <Link
-        href={`/${step || 'account-type'}`}
+        href={`/onboarding/${step || 'account-type'}`}
         onClick={closeAll}
         id="nav-continue-setup"
       >
