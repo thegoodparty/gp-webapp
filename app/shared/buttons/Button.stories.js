@@ -32,6 +32,17 @@ const argTypes = {
   className: {
     description: 'classes to add to / override default classes',
   },
+  loading: {
+    options: [true, false],
+    control: { type: 'select' },
+    description: 'Loading state',
+    table: {
+      type: {
+        summary: 'select',
+      },
+      defaultValue: { summary: false },
+    },
+  },
   disabled: {
     options: [true, false],
     control: { type: 'select' },

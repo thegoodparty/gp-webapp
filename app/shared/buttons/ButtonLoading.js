@@ -1,6 +1,18 @@
 'use client';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function ButtonLoading() {
-  return <CircularProgress size={16} className="mr-2" color="inherit" />;
+const SIZES = {
+  small: 14,
+  medium: 16,
+  large: 20,
+};
+
+export default function ButtonLoading({ size = 'medium', className = '' }) {
+  return (
+    <CircularProgress
+      size={SIZES[size] || SIZES.medium}
+      className={`mr-2 ${className}`}
+      color="inherit"
+    />
+  );
 }

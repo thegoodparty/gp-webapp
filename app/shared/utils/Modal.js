@@ -29,6 +29,7 @@ export default function Modal({
   boxClassName = '',
   boxStyle = {},
   preventBackdropClose = false,
+  hideClose = false,
 }) {
   const handleClose = (e, reason) => {
     if (reason === 'backdropClick' && preventBackdropClose) {
@@ -40,12 +41,14 @@ export default function Modal({
     <MuiModal open={open} onClose={handleClose}>
       <div className="bg-blue-400">
         <Box className={boxClassName} sx={style} style={boxStyle}>
-          <div
-            className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
-            onClick={closeCallback}
-          >
-            <IoIosCloseCircle size={24} />
-          </div>
+          {!hideClose && (
+            <div
+              className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
+              onClick={closeCallback}
+            >
+              <IoIosCloseCircle size={24} />
+            </div>
+          )}
           {children}
         </Box>
       </div>
