@@ -90,6 +90,7 @@ export default function MethodRow(props) {
                     ) : showScheduleButton ? (
                       <ScheduleFlow
                         type={voterFileKey}
+                        campaign={campaign}
                         customButton={
                           <PrimaryButton className="!text-base !px-3" fullWidth>
                             {cta}

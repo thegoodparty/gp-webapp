@@ -23,7 +23,7 @@ export default function ScheduleFlowStep2({
     onChangeCallback('audience', newState);
     // setState(newState);
     const selectedAudience = Object.keys(newState).filter(
-      (key) => newState[key],
+      (key) => newState[key] === true,
     );
     const res = await countVoterFile(isCustom ? 'custom' : type, {
       filters: selectedAudience,
@@ -32,7 +32,9 @@ export default function ScheduleFlowStep2({
   };
 
   const canContinue = () => {
-    return count !== 0 && Object.values(audience).some((value) => value);
+    return (
+      count !== 0 && Object.values(audience).some((value) => value === true)
+    );
   };
   let isTel = type === 'telemarketing';
   let price = 0.03;

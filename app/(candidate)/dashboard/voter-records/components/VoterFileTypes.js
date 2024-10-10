@@ -60,4 +60,8 @@ const defaultFileTypes = [
   },
 ];
 
+export const getDefaultVoterFileName = (type) =>
+  defaultFileTypes.find((file) => file.key.toLowerCase() === type.toLowerCase())
+    ?.fields?.[0];
+
 export default defaultFileTypes;
