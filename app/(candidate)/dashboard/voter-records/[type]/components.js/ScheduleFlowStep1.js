@@ -16,6 +16,7 @@ export default function ScheduleFlowStep1({
   voicemailValue,
   onChangeCallback,
   nextCallback,
+  backCallback,
   closeCallback,
   type,
 }) {
@@ -85,7 +86,9 @@ export default function ScheduleFlowStep1({
             </div>
           </div>
           <div className="col-span-6 text-left mt-6">
-            <SecondaryButton onClick={closeCallback}>Cancel</SecondaryButton>
+            <SecondaryButton onClick={isTel ? closeCallback : backCallback}>
+              {isTel ? 'Cancel' : 'Back'}
+            </SecondaryButton>
           </div>
           <div className="col-span-6 text-right mt-6">
             <PrimaryButton

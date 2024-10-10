@@ -3,6 +3,7 @@
 import Modal from '@shared/utils/Modal';
 import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
+import ScheduleFlowStep0 from './ScheduleFlowStep0';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
 import ScheduleFlowStep3 from './ScheduleFlowStep3';
@@ -28,12 +29,29 @@ export async function scheduleCampaign(state) {
   }
 }
 
-export default function ScheduleFlow(props) {
-  const { type, customButton } = props;
+/**
+ * @typedef {Object} ScheduleFlowProps
+ * @property {string} type
+ * @property {React.ReactElement} customButton Pass a custom element to use instead of "Schedule Today" link
+ * @property {Object} campaign
+ * @property {boolean} isCustom
+ * @property {string} fileName
+ */
 
+/**
+ * @param {ScheduleFlowProps} props
+ */
+export default function ScheduleFlow({
+  type,
+  customButton,
+  campaign,
+  isCustom,
+  fileName,
+}) {
+  const startingStep = type === 'sms' ? 0 : 1;
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
-    step: 1,
+    step: startingStep,
     budget: false,
     voicemail: undefined,
     audience: {},
@@ -72,7 +90,7 @@ export default function ScheduleFlow(props) {
 
   const handleReset = () => {
     setState({
-      step: 1,
+      step: startingStep,
       budget: 0,
       audience: {},
       script: false,
@@ -81,7 +99,7 @@ export default function ScheduleFlow(props) {
 
   const handleSubmit = async () => {
     const activeFilters = Object.keys(state.audience).filter(
-      (key) => state.audience[key],
+      (key) => state.audience[key] === true,
     );
     const customFilters = {
       filters: activeFilters,
@@ -102,7 +120,7 @@ export default function ScheduleFlow(props) {
     await scheduleCampaign(updatedState);
   };
 
-  const childProps = {
+  const callbackProps = {
     onChangeCallback: handleChange,
     closeCallback: handleClose,
     nextCallback: handleNext,
@@ -127,28 +145,42 @@ export default function ScheduleFlow(props) {
           </span>
         )}
       </div>
-      <Modal open={open} closeCallback={() => setOpen(false)}>
+      <Modal open={open} closeCallback={handleClose}>
+        {state.step === 0 && (
+          <ScheduleFlowStep0 type={type} {...callbackProps} />
+        )}
         {state.step === 1 && (
           <ScheduleFlowStep1
+            type={type}
             value={state.budget}
             voicemailValue={state.voicemail}
-            {...childProps}
-            {...props}
+            {...callbackProps}
           />
         )}
         {state.step === 2 && (
           <ScheduleFlowStep2
-            {...childProps}
-            {...props}
+            type={type}
             withVoicemail={!!state.voicemail}
             audience={state.audience}
+            isCustom={isCustom}
+            {...callbackProps}
           />
         )}
         {state.step === 3 && (
-          <ScheduleFlowStep3 {...childProps} {...props} script={state.script} />
+          <ScheduleFlowStep3
+            campaign={campaign}
+            script={state.script}
+            {...callbackProps}
+          />
         )}
-        {state.step === 4 && <ScheduleFlowStep4 {...childProps} {...props} />}
-        {state.step === 5 && <ScheduleFlowStep5 {...childProps} {...props} />}
+        {state.step === 4 && (
+          <ScheduleFlowStep4
+            type={type}
+            fileName={fileName}
+            {...callbackProps}
+          />
+        )}
+        {state.step === 5 && <ScheduleFlowStep5 {...callbackProps} />}
       </Modal>
     </>
   );
