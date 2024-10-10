@@ -112,8 +112,6 @@ export default function ScheduleFlow({
     // If queryString handles the type, it appends it to the end instead of the beginning
     const voterFileUrl = `${gpApi.voterData.getVoterFile.url}?type=${type}&${customFiltersEncoded}`;
 
-    console.log('BOUT TO SUBMIT', activeFilters, customFilters, voterFileUrl);
-
     const updatedState = {
       ...state,
       voterFileUrl,
