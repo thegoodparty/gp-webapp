@@ -114,8 +114,6 @@ export default function SignUpPage() {
         state.password,
       );
 
-      console.log('exists', exists);
-
       if (user) {
         await saveToken(token);
         setUser(user);
