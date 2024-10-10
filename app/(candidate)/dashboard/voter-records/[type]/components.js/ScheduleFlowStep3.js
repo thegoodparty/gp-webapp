@@ -6,6 +6,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import RadioList from '@shared/inputs/RadioList';
 
 const defaultScripts = [
   'why',
@@ -50,17 +51,30 @@ export default function ScheduleFlowStep3({
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
-        <H1>Select or Create a Script</H1>
+        <H1>Add a Script</H1>
         <Body1 className="mt-4 mb-8">
-          Attach your script below. If you have not already created a script,
-          use GoodParty.org&apos;s{' '}
-          <Link href="/dashboard/content" className="underline text-blue">
-            AI content creator to create one
-          </Link>
-          .
+          How would you like to add your script?
         </Body1>
 
         <div className="mt-6 text-left">
+          <RadioList
+            {...{
+              options: [
+                {
+                  key: 'saved',
+                  label: 'Use a saved script',
+                },
+                {
+                  key: 'generate',
+                  label: 'Generate a new script',
+                },
+                {
+                  key: 'create',
+                  label: 'Add your own script',
+                },
+              ],
+            }}
+          />
           <Select
             native
             value={script?.key}

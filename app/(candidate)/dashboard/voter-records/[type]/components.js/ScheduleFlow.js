@@ -31,9 +31,10 @@ export async function scheduleCampaign(state) {
 export default function ScheduleFlow(props) {
   const { type, customButton } = props;
 
-  const [open, setOpen] = useState(false);
+  // TODO: Set defaults back to what they should be for `open` and `state.step`
+  const [open, setOpen] = useState(true);
   const [state, setState] = useState({
-    step: 1,
+    step: 3,
     budget: false,
     voicemail: undefined,
     audience: {},
