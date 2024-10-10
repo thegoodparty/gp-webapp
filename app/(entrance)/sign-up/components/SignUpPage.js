@@ -120,7 +120,7 @@ export default function SignUpPage() {
         await saveToken(token);
         setUser(user);
 
-        window.location.href = '/sign-up/account-type';
+        window.location.href = '/onboarding/account-type';
         return;
       } else {
         if (exists) {
