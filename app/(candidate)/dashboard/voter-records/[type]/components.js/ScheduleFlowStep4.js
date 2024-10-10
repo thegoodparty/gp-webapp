@@ -6,6 +6,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { useState, useMemo } from 'react';
+import { getDefaultVoterFileName } from '../../components/VoterFileTypes';
 
 export default function ScheduleFlowStep4({
   onChangeCallback,
@@ -19,6 +20,11 @@ export default function ScheduleFlowStep4({
     date: '',
     message: '',
   });
+
+  const resolvedFileName = useMemo(
+    () => (fileName ? fileName : getDefaultVoterFileName(type)),
+    [fileName, type],
+  );
 
   const trackingAttrs = useMemo(
     () =>
@@ -52,7 +58,7 @@ export default function ScheduleFlowStep4({
         <H1>
           Schedule Campaign for:
           <br />
-          <span className="text-tertiary">{fileName}</span>
+          <span className="text-tertiary">{resolvedFileName}</span>
         </H1>
         <Body1 className="mt-4 mb-8">
           Use the from below to schedule your{' '}
