@@ -400,6 +400,10 @@ export default function AdminVictoryPathPage(props) {
     }
   }
 
+  function isNumeric(str) {
+    return !isNaN(str) && !isNaN(parseFloat(str));
+  }
+
   useEffect(() => {
     if (
       state.electionType &&
@@ -439,9 +443,8 @@ export default function AdminVictoryPathPage(props) {
         let value = pathToVictory.viability[key];
         if (value === 'true' || value === 'false') {
           value = value === 'true';
-        }
-        if (key !== 'level' && value !== '') {
-          value = parseInt(value);
+        } else if (value !== '' && isNumeric(value)) {
+          value = parseFloat(value);
         }
         pathToVictory[`viability.${key}`] = value;
       }
@@ -468,7 +471,7 @@ export default function AdminVictoryPathPage(props) {
 
     let val = value;
     if (keyTypes[key] === 'number' && value !== '') {
-      val = parseInt(value);
+      val = parseFloat(value);
     } else if (keyTypes[key] === 'select' && value !== '') {
       if (value === 'true' || value === 'false') {
         val = value === 'true';
@@ -539,23 +542,12 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const onChangeElectionType = async (key, value) => {
+    // we only want to update the election type if the location set
+    // now we clear the location options when the election type changes
     setState({
       ...state,
       [key]: value,
-    });
-    let attr = [];
-    attr.push({
-      key: 'pathToVictory.electionType',
-      value: state['electionType'],
-    });
-    await updateCampaign(attr, campaign.slug);
-
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saved Election Type.',
-        isError: false,
-      };
+      ['electionLocation']: '',
     });
   };
 
