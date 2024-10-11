@@ -44,13 +44,15 @@ export default function ScheduleFlowStep0({
         {SMS_CONTENT.map((item) => (
           <Alert
             key={item.title}
-            className="mb-3 bg-neutral-background rounded-md text-primary"
-            icon={
-              <item.iconComponent className="hidden md:block fill-gray-500" />
-            }
+            color="info"
+            className="mb-3"
+            sx={{ borderRadius: '8px' }}
+            icon={<item.iconComponent />}
           >
-            <AlertTitle className="font-bold flex items-center gap-2">
-              <item.iconComponent className="block md:hidden fill-gray-500" />
+            <AlertTitle
+              sx={{ fontWeight: '700' }}
+              className="flex items-center gap-2"
+            >
               {item.title}
             </AlertTitle>
             {item.text}
