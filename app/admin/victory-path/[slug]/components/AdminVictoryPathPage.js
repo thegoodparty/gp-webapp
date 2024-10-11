@@ -542,23 +542,12 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const onChangeElectionType = async (key, value) => {
+    // we only want to update the election type if the location set
+    // now we clear the location options when the election type changes
     setState({
       ...state,
       [key]: value,
-    });
-    let attr = [];
-    attr.push({
-      key: 'pathToVictory.electionType',
-      value: state['electionType'],
-    });
-    await updateCampaign(attr, campaign.slug);
-
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saved Election Type.',
-        isError: false,
-      };
+      ['electionLocation']: '',
     });
   };
 
