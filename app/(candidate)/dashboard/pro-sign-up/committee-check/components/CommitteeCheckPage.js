@@ -18,6 +18,8 @@ import {
 } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
+import Overline from '@shared/typography/Overline';
+import { Switch } from '@mui/material';
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -37,6 +39,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   const [einInputValue, setEinInputValue] = useState(
     campaign?.details?.einNumber || '',
   );
+  const [skipEin, setSkipEin] = useState(false);
   const [loadingEinCheck, setLoadingEinCheck] = useState(false);
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
   const [validatedEin, setValidatedEin] = useState(null);
@@ -99,6 +102,15 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     doCampaignUpdate();
   };
 
+  const handleSkipEinToggle = (toggleValue) => {
+    setSkipEin(toggleValue);
+
+    if (toggleValue === true) {
+      setEinInputValue('');
+      setValidatedEin(null);
+    }
+  };
+
   const onUploadSuccess = (uploadedFilename = '') =>
     uploadedFilename && setUploadedFilename(uploadedFilename);
   const onUploadError = (e) => {
@@ -107,7 +119,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   };
 
   const nextDisabled =
-    !(validatedEin && uploadedFilename) || loadingCampaignUpdate;
+    !((validatedEin || skipEin) && uploadedFilename) || loadingCampaignUpdate;
 
   return (
     <FocusedExperienceWrapper>
@@ -141,14 +153,23 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             }}
             fullWidth
           />
-          <EinCheckInput
-            name="ein-number"
-            loading={loadingEinCheck}
-            value={einInputValue}
-            validated={validatedEin}
-            setValidated={setValidatedEin}
-            onChange={setEinInputValue}
-          />
+          <Overline className="flex items-center">
+            My race doesn&apos;t require an EIN
+            <Switch
+              onChange={(e) => handleSkipEinToggle(e.target.checked)}
+              checked={skipEin}
+            />
+          </Overline>
+          {!skipEin && (
+            <EinCheckInput
+              name="ein-number"
+              loading={loadingEinCheck}
+              value={einInputValue}
+              validated={validatedEin}
+              setValidated={setValidatedEin}
+              onChange={setEinInputValue}
+            />
+          )}
           {validatedEin === false && (
             <Body2 className="text-error my-4 text-center">
               The provided EIN does not appear to match the given registered

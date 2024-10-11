@@ -1,16 +1,26 @@
+'use client';
 import Link from 'next/link';
-import { Fragment } from 'react';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
 import {
   RiBook2Line,
+  RiDoorOpenLine,
   RiTeamLine,
   RiUserHeartLine,
-  RiDoorOpenLine,
 } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 import { handleLogOut } from '@shared/user/handleLogOut';
+import useNotifications from '@shared/layouts/navigation/notifications/useNotifications';
+import { DashboardMenuItem } from 'app/(candidate)/dashboard/shared/DashboardMenuItem';
+
+const CAMPAIGN_TEAM_MENU_ITEM = {
+  label: 'Campaign Team',
+  icon: <RiTeamLine />,
+  link: '/dashboard/team',
+  section: 'Strategy',
+  id: 'campaign-team-dashboard',
+};
 
 const DEFAULT_MENU_ITEMS = [
   {
@@ -39,19 +49,13 @@ const DEFAULT_MENU_ITEMS = [
     id: 'my-content-dashboard',
   },
   {
-    label: 'My Details',
+    label: 'Campaign Details',
     icon: <RiUserHeartLine />,
-    link: '/dashboard/details',
-    id: 'details-dashboard',
+    link: '/dashboard/campaign-details',
+    id: 'campaign-details-dashboard',
   },
 
-  {
-    label: 'Campaign Team',
-    icon: <RiTeamLine />,
-    link: '/dashboard/team',
-    section: 'Strategy',
-    id: 'campaign-team-dashboard',
-  },
+  CAMPAIGN_TEAM_MENU_ITEM,
   {
     label: 'Resources Library',
     icon: <RiBook2Line />,
@@ -101,32 +105,36 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
+  const notifications = useNotifications() || [];
+  const campaignRequestNotifications = notifications.filter((notification) => {
+    const { data = {}, isRead } = notification || {};
+    const { type } = data;
+    return type === 'campaignRequest' && !isRead;
+  });
   const menuItems = getDashboardMenuItems(campaign, user);
 
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
-      {menuItems.map((page) => (
-        <Fragment key={page.label}>
-          {page.section && (
-            <div className="font-medium text-sm mt-4 px-3">{page.section}</div>
-          )}
-          <Link
-            href={page.link}
-            className="no-underline"
+      {menuItems.map((item) => {
+        const { id, link, section, icon, label } = item;
+        const notificationDot =
+          Boolean(campaignRequestNotifications?.length) &&
+          item === CAMPAIGN_TEAM_MENU_ITEM;
+        return (
+          <DashboardMenuItem
+            key={label}
+            id={id}
+            section={section}
+            link={link}
+            icon={icon}
             onClick={toggleCallback}
-            id={page.id}
+            pathname={pathname}
+            notificationDot={notificationDot}
           >
-            <div
-              className={`text-[17px] py-3 px-3 flex items-center rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark ${
-                pathname === page.link && 'text-slate-50 bg-primary-dark-dark'
-              }`}
-            >
-              {page.icon}
-              <div className="ml-2">{page.label}</div>
-            </div>
-          </Link>
-        </Fragment>
-      ))}
+            {label}
+          </DashboardMenuItem>
+        );
+      })}
       {mobileMode && (
         <div className="mt-4 border-t border-indigo-400 pt-4">
           <Link href="/profile" className="no-underline" id="nav-dash-settings">

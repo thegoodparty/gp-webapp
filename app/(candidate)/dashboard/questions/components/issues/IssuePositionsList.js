@@ -1,5 +1,5 @@
 import { IssuePosition } from 'app/(candidate)/dashboard/questions/components/issues/IssuePosition';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/details/components/issues/useCandidatePositions';
+import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions';
 
 const issueAlreadySelected = (position = {}, candidatePositions = []) =>
   Boolean(

@@ -1,22 +1,23 @@
 'use client';
-
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput';
-import TextField from '@shared/inputs/TextField';
-import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { BsPlusCircleFill } from 'react-icons/bs';
+import Body2 from '@shared/typography/Body2';
+import { MenuItem, Select } from '@mui/material';
+import H1 from '@shared/typography/H1';
 
-async function sendInvitation(email) {
+async function sendInvitation(email, role) {
   try {
     const api = gpApi.campaign.volunteerInvitation.create;
 
     const payload = {
       email,
-      role: 'volunteer',
+      role: role || 'volunteer',
     };
     return await gpFetch(api, payload);
   } catch (e) {
@@ -28,10 +29,11 @@ async function sendInvitation(email) {
 export default function InviteButton({ reloadInvitationsCallback }) {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('manager');
 
   const handleSave = async () => {
     if (canSave()) {
-      await sendInvitation(email);
+      await sendInvitation(email, role);
       await reloadInvitationsCallback();
       setShowModal(false);
     }
@@ -58,28 +60,46 @@ export default function InviteButton({ reloadInvitationsCallback }) {
       >
         <div className="w-[90vw] max-w-xl">
           <form noValidate onSubmit={(e) => e.preventDefault()}>
-            <H2 className="mb-6">Add Teammates</H2>
+            <header className="text-center">
+              <H1 className="mb-4">Add Team Member</H1>
+              <Body2 className="mb-8">
+                Send an invite via email to join the team
+              </Body2>
+            </header>
             <EmailInput
+              className="mb-6"
               value={email}
               fullWidth
               onChangeCallback={(e) => setEmail(e.target.value)}
             />
-            <div className="mt-16 flex justify-end">
-              <div
-                onClick={() => {
-                  setShowModal(false);
-                }}
-                className="mr-3"
+            <Select
+              value={role}
+              onChange={(v) => setRole(v)}
+              fullWidth
+              variant="outlined"
+            >
+              <MenuItem value="manager">Campaign Manager</MenuItem>
+            </Select>
+            <div className="mt-16 flex flex-col md:flex-row justify-between">
+              <Button
+                className="w-full md:min-w-[33%] md:max-w-[33%] mb-4 md:mb-0"
+                onClick={() => setShowModal(false)}
+                size="large"
+                color="neutral"
+                variant="contained"
               >
-                <PrimaryButton variant="outlined">Cancel</PrimaryButton>
-              </div>
-              <PrimaryButton
+                Cancel
+              </Button>
+              <Button
+                className="w-full md:min-w-[33%] md:max-w-[33%]"
+                size="large"
+                color="primary"
                 disabled={!canSave()}
                 type="submit"
                 onClick={handleSave}
               >
-                Save &amp; Continue
-              </PrimaryButton>
+                Add
+              </Button>
             </div>
           </form>
         </div>

@@ -12,7 +12,7 @@ const points = [
       "We'll learn about what you're running or thinking about running for and tell you about our mission.",
   },
   {
-    title: 'AI campaign manager',
+    title: 'AI campaign managing',
     subTitle:
       'Get a guided walkthrough of our tool and how it helps you plan, run, and win your campaign for elected office.',
   },

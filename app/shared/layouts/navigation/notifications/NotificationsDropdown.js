@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import useNotifications from './useNotifications';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { NotificationDot } from '@shared/utils/NotificationDot';
 
 export async function updateNotifications() {
   try {
@@ -51,9 +52,7 @@ export default function NotificationsDropdown({ user }) {
     >
       <div className="relative">
         <FaBell size={18} />
-        {showDot && (
-          <div className="absolute w-2 h-2 bg-red-400 rounded-full -top-1 -right-2"></div>
-        )}
+        {showDot && <NotificationDot />}
       </div>
       {open ? (
         <>

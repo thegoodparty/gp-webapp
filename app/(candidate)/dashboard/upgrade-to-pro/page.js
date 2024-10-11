@@ -2,7 +2,7 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import UpgradeToProPage from './components/UpdateToProPage';
 
 const meta = pageMetaData({
