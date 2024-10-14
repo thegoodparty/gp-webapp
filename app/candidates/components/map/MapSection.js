@@ -37,7 +37,6 @@ export default function MapSection({ isLoaded, state }) {
   const [mapCenter, setMapCenter] = useState(center); // Manages map's center state
   const [zoom, setZoom] = useState(INITIAL_ZOOM); // Manages map's zoom state
   const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [isFilterChanged, setIsFilterChanged] = useState(false);
 
   const [filters, setFilters] = useState({
     party: '',
@@ -108,7 +107,6 @@ export default function MapSection({ isLoaded, state }) {
         return newFilters;
       });
       setIsCampaignsLoading(true);
-      setIsFilterChanged(true);
     },
     [mapCenter, zoom, updateQueryParams, setIsCampaignsLoading],
   );
@@ -157,7 +155,6 @@ export default function MapSection({ isLoaded, state }) {
     // Update filters if different from query params
     if (JSON.stringify(filters) !== JSON.stringify(newFilters)) {
       setFilters(newFilters);
-      setIsFilterChanged(true); // Mark that filters have changed
     }
 
     // Update map center and zoom if different
@@ -204,8 +201,6 @@ export default function MapSection({ isLoaded, state }) {
       onSelectCampaign,
       selectedCampaign,
       onChangeMapBounds,
-      isFilterChanged,
-      setIsFilterChanged,
       isCampaignsLoading,
     }),
     [
@@ -217,7 +212,6 @@ export default function MapSection({ isLoaded, state }) {
       selectedCampaign,
       onChangeFilters,
       onChangeMapBounds,
-      isFilterChanged,
       isCampaignsLoading,
     ],
   );

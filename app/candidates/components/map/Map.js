@@ -31,8 +31,6 @@ const Map = () => {
     zoom,
     onChangeMapBounds,
     onSelectCampaign,
-    isFilterChanged,
-    setIsFilterChanged,
     isCampaignsLoading,
   } = useContext(MapContext);
 
@@ -124,23 +122,6 @@ const Map = () => {
     });
   }, [campaigns, onSelectCampaign]);
 
-  const adjustMapBounds = useCallback(() => {
-    if (!mapRef.current || campaigns.length === 0) {
-      return;
-    }
-    if (isFilterChanged && !isCampaignsLoading) {
-      const bounds = new window.google.maps.LatLngBounds();
-
-      campaigns.forEach((campaign) => {
-        bounds.extend(campaign.position);
-      });
-
-      isProgrammaticChangeRef.current = true;
-      mapRef.current.fitBounds(bounds);
-      setIsFilterChanged(false);
-    }
-  }, [campaigns, isFilterChanged, isCampaignsLoading]);
-
   // Custom renderer for cluster icons
   const customRenderer = {
     render({ count, position }) {
@@ -209,13 +190,11 @@ const Map = () => {
 
     markerClusterRef.current = newMarkerCluster;
 
-    adjustMapBounds();
-
     // Cleanup on unmount
     return () => {
       clearMarkers();
     };
-  }, [campaigns, isLoaded, adjustMapBounds]);
+  }, [campaigns, isLoaded]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
