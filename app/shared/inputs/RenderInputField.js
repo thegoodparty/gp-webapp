@@ -119,9 +119,6 @@ export default function RenderInputField({
             }
             label={field.label}
             error={error}
-            InputLabelProps={{
-              shrink: true,
-            }}
             disabled={field.disabled}
           >
             <option value="">Select</option>
