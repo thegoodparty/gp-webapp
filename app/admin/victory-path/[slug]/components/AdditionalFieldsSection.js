@@ -18,9 +18,9 @@ export default function AdditionalFieldsSection() {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
   const { isVerified, tier, didWin, slug } = campaign;
   const [state, setState] = useState({
-    isVerified,
-    tier,
-    didWin,
+    isVerified: isVerified ?? undefined,
+    tier: tier ?? undefined,
+    didWin: didWin ?? undefined,
   });
 
   const handleChange = async (key, value) => {

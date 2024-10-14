@@ -6,14 +6,23 @@ import { useEffect } from 'react';
 
 export default function UserSnapScript() {
   useEffect(() => {
-    window.onUsersnapLoad = function (api) {
+    window.onUsersnapLoad = async function (api) {
       const user = getUserCookie(true);
+      let fullstoryUrl;
+
+      try {
+        fullstoryUrl = await FS('getSessionAsync', { format: 'url.now' });
+      } catch (e) {
+        console.error('Failed to send FS url', e);
+      }
+
       api.init({
         custom: {
           userEmail: user?.email || 'visitor',
           userName: user?.firstName
             ? `${user.firstName} ${user.lastName}`
             : 'visitor',
+          fullstoryUrl,
         },
       });
 
