@@ -1,13 +1,11 @@
 'use client';
 
 import { Select } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { MapContext } from './MapSection';
+import { useEffect, useState } from 'react';
 import Checkbox from '@shared/inputs/Checkbox';
 import TextField from '@shared/inputs/TextField';
 import { debounce } from 'helpers/debounceHelper';
 import { states } from 'helpers/statesHelper';
-// import Search from './Search';
 
 const partyOptions = [
   { key: 'independent', label: 'Independent' },
@@ -25,16 +23,10 @@ const levelOptions = [
   { key: 'FEDERAL', label: 'Federal' },
 ];
 
-const resultsOptions = [
-  // win lose or running
-  { key: 'win', label: 'Win' },
-  { key: 'running', label: 'Running' },
-];
-
-export default function Filters() {
-  const { filters, onChangeFilters, campaigns } = useContext(MapContext);
+export default function Filters({ filters, onChangeFilters, campaigns }) {
   const [officeOptions, setOfficeOptions] = useState([]);
-  const [name, setName] = useState('');
+  const [name, setName] = useState(filters.name || ''); // Initialize with filter state
+
   useEffect(() => {
     if (!campaigns || campaigns.length === 0) {
       return;
@@ -42,7 +34,7 @@ export default function Filters() {
     const allOffices = campaigns.map((campaign) => campaign.normalizedOffice);
     const offices = [...new Set(allOffices)]; // dedupe
     setOfficeOptions(offices);
-  }, [campaigns, filters]);
+  }, [campaigns]);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -52,9 +44,6 @@ export default function Filters() {
   return (
     <div className="md:w-[400px] lg:w-[500px] bg-white">
       <div className="p-4">
-        {/* <div className="relative">
-        <Search />
-      </div> */}
         <div className="grid grid-cols-12 gap-2">
           <div className="col-span-6">
             <Select
@@ -108,7 +97,7 @@ export default function Filters() {
             <Select
               native
               fullWidth
-              value={filters.offices}
+              value={filters.office}
               variant="outlined"
               onChange={(e) => onChangeFilters('office', e.target.value)}
             >
@@ -124,7 +113,7 @@ export default function Filters() {
         <div className="flex mt-4 items-center justify-center">
           <Checkbox
             label="Show Winners Only"
-            checked={filters.win}
+            checked={filters.results}
             onChange={(e) => onChangeFilters('results', e.target.checked)}
           />{' '}
           Show Winners Only

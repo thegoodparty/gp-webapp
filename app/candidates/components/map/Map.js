@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import mapSkin from './mapSkin';
 import H3 from '@shared/typography/H3';
 import { MapContext } from './MapSection';
@@ -41,13 +41,14 @@ const Map = () => {
   const markersRef = useRef([]);
   const markerClusterRef = useRef(null);
   const isProgrammaticChangeRef = useRef(false);
+
   // Initialize Google Map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapContainerRef.current) return;
 
     const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
-      center: mapCenter,
-      zoom: zoom,
+      center: mapCenter, // Initial center
+      zoom: zoom, // Initial zoom
       ...mapOptions,
     });
 
@@ -77,6 +78,14 @@ const Map = () => {
       window.google.maps.event.removeListener(idleListener);
     };
   }, [isLoaded, mapCenter, zoom, onChangeMapBounds]);
+
+  // Update map's center and zoom when they change
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setCenter(mapCenter); // Update center
+      mapRef.current.setZoom(zoom); // Update zoom
+    }
+  }, [mapCenter, zoom]); // This ensures the map updates programmatically when mapCenter or zoom changes
 
   const clearMarkers = () => {
     if (markersRef.current.length > 0) {
@@ -180,7 +189,6 @@ const Map = () => {
 
     clearMarkers();
     const markers = createMarkers();
-    markersRef.current = markers;
     markersRef.current = markers;
 
     if (markerClusterRef.current) {
