@@ -13,9 +13,7 @@ const SMS_CONTENT = [
   {
     iconComponent: CreateRounded,
     title: 'Create',
-    text: 'Select your budget, identify your audience, and choose your script.',
-    // TODO: Switch to below text when Image Upload ticket is implemented
-    // text: 'Select your budget, identify your audience, choose your script, and upload an image.',
+    text: 'Select your budget, identify your audience, choose a script, and upload an image.',
   },
   {
     iconComponent: CalendarMonthRounded,

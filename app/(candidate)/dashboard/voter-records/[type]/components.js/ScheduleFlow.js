@@ -9,6 +9,7 @@ import ScheduleFlowStep2 from './ScheduleFlowStep2';
 import ScheduleFlowStep3 from './ScheduleFlowStep3';
 import ScheduleFlowStep4 from './ScheduleFlowStep4';
 import ScheduleFlowStep5 from './ScheduleFlowStep5';
+import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import queryString from 'query-string';
@@ -22,7 +23,23 @@ export async function scheduleCampaign(state) {
       date: state.schedule?.date,
       message: state.schedule?.message,
     };
-    return await gpFetch(api, payload);
+    const formData = new FormData();
+
+    for (const key in payload) {
+      let value = payload[key];
+      if (key === 'image' || value == undefined) continue;
+      if (typeof value === 'object') {
+        value = JSON.stringify(value);
+      }
+      formData.append(key, value);
+    }
+
+    // Skipper parser wants files after all other fields
+    if (payload.image) {
+      formData.append('image', payload.image);
+    }
+
+    return await gpFetch(api, formData, false, undefined, true);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -56,6 +73,7 @@ export default function ScheduleFlow({
     voicemail: undefined,
     audience: {},
     script: false,
+    image: undefined,
   });
 
   const trackingAttrs = useMemo(
@@ -74,7 +92,22 @@ export default function ScheduleFlow({
     setOpen(false);
     handleReset();
   };
+
   const handleNext = () => {
+    if (type === 'sms' && state.step === 3) {
+      return setState({
+        ...state,
+        step: 3.5,
+      });
+    }
+
+    if (state.step === 3.5) {
+      return setState({
+        ...state,
+        step: 4,
+      });
+    }
+
     setState({
       ...state,
       step: state.step + 1,
@@ -82,6 +115,13 @@ export default function ScheduleFlow({
   };
 
   const handleBack = () => {
+    if (state.step === 3.5) {
+      return setState({
+        ...state,
+        step: 3,
+      });
+    }
+
     setState({
       ...state,
       step: state.step - 1,
@@ -94,6 +134,7 @@ export default function ScheduleFlow({
       budget: 0,
       audience: {},
       script: false,
+      image: undefined,
     });
   };
 
@@ -173,6 +214,7 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
+        {state.step === 3.5 && <ScheduleFlowImageStep {...callbackProps} />}
         {state.step === 4 && (
           <ScheduleFlowStep4
             type={type}
