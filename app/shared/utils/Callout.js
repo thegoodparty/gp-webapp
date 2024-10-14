@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { useEffect, useState } from 'react';
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 export default function Callout() {
   const [showCallout, setShowCallout] = useState(true);
@@ -17,6 +18,8 @@ export default function Callout() {
       console.log(e);
     }
   }, []);
+
+  const trackingAttrs = buildTrackingAttrs('Join Discord Banner Link');
 
   return (
     showCallout && (
@@ -34,6 +37,7 @@ export default function Callout() {
                 href="https://discord.gg/invite/goodparty"
                 target="_blank"
                 aria-label="Join our Discord community - meet like-minded independents and get involved!"
+                {...trackingAttrs}
               >
                 <div className="whitespace-nowrap ml-5">
                   <PrimaryButton size="medium">Join Now</PrimaryButton>
