@@ -60,6 +60,17 @@ export default function FileDropZone({
     });
   }
 
+  function handleFileInput(e) {
+    const [file] = e.target.files;
+
+    if (file.size <= maxSize) {
+      onChange(file);
+    } else {
+      notifyError('File size too large');
+      return false;
+    }
+  }
+
   function handleDragOver(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -129,7 +140,7 @@ export default function FileDropZone({
         hidden
         type="file"
         accept={fileTypes}
-        onChange={(e) => onChange(e.target.files[0])}
+        onChange={handleFileInput}
       />
     </div>
   );

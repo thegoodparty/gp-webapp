@@ -6,7 +6,7 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
-import FileDropZone from '@shared/inputs/FIleDropZone';
+import FileDropZone from '@shared/inputs/FileDropZone';
 import ImageCropPreview from '@shared/inputs/ImageCropPreview';
 
 const MAX_FILE_SIZE = 500000;
@@ -34,16 +34,13 @@ export default function ScheduleFlowImageStep({
       <Body1 className="text-center my-8">
         Attach your image below.
         <br />
+        <span className={file?.size > MAX_FILE_SIZE ? 'text-error' : ''}>
+          Max file size:&nbsp;
+          {file ? `${(Number(file.size) / 1000).toLocaleString()} kB / ` : ''}
+          {(MAX_FILE_SIZE / 1000).toLocaleString()} kB
+        </span>
+        <br />
         <span className="font-bold">Accepted File Types: JPG, PNG or GIF.</span>
-        {file && (
-          <>
-            <br />
-            <span className={file.size > MAX_FILE_SIZE ? 'text-error' : ''}>
-              File size: {Number(file.size).toLocaleString()} kB /{' '}
-              {MAX_FILE_SIZE.toLocaleString()} kB
-            </span>
-          </>
-        )}
       </Body1>
       {file ? (
         <ImageCropPreview
