@@ -3,7 +3,7 @@
 import Modal from '@shared/utils/Modal';
 import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
-import ScheduleFlowStep0 from './ScheduleFlowStep0';
+import ScheduleFlowInstructions from './ScheduleFlowInstructions';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
 import ScheduleFlowStep3 from './ScheduleFlowStep3';
@@ -46,6 +46,19 @@ export async function scheduleCampaign(state) {
   }
 }
 
+const STEPS_BY_TYPE = {
+  sms: [
+    'intro',
+    'budget',
+    'audience',
+    'script',
+    'image',
+    'schedule',
+    'complete',
+  ],
+  telemarketing: ['budget', 'audience', 'script', 'schedule', 'complete'],
+};
+
 /**
  * @typedef {Object} ScheduleFlowProps
  * @property {string} type
@@ -65,16 +78,17 @@ export default function ScheduleFlow({
   isCustom,
   fileName,
 }) {
-  const startingStep = type === 'sms' ? 0 : 1;
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
-    step: startingStep,
+    step: 0,
     budget: false,
     voicemail: undefined,
     audience: {},
     script: false,
     image: undefined,
   });
+  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type]);
+  const stepName = stepList[state.step];
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
@@ -94,19 +108,7 @@ export default function ScheduleFlow({
   };
 
   const handleNext = () => {
-    if (type === 'sms' && state.step === 3) {
-      return setState({
-        ...state,
-        step: 3.5,
-      });
-    }
-
-    if (state.step === 3.5) {
-      return setState({
-        ...state,
-        step: 4,
-      });
-    }
+    if (state.step >= stepList.length - 1) return;
 
     setState({
       ...state,
@@ -115,12 +117,7 @@ export default function ScheduleFlow({
   };
 
   const handleBack = () => {
-    if (state.step === 3.5) {
-      return setState({
-        ...state,
-        step: 3,
-      });
-    }
+    if (state.step <= 0) return;
 
     setState({
       ...state,
@@ -130,7 +127,7 @@ export default function ScheduleFlow({
 
   const handleReset = () => {
     setState({
-      step: startingStep,
+      step: 0,
       budget: 0,
       audience: {},
       script: false,
@@ -187,10 +184,10 @@ export default function ScheduleFlow({
         )}
       </div>
       <Modal open={open} closeCallback={handleClose}>
-        {state.step === 0 && (
-          <ScheduleFlowStep0 type={type} {...callbackProps} />
+        {stepName === 'intro' && (
+          <ScheduleFlowInstructions type={type} {...callbackProps} />
         )}
-        {state.step === 1 && (
+        {stepName === 'budget' && (
           <ScheduleFlowStep1
             type={type}
             value={state.budget}
@@ -198,7 +195,7 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {state.step === 2 && (
+        {stepName === 'audience' && (
           <ScheduleFlowStep2
             type={type}
             withVoicemail={!!state.voicemail}
@@ -207,22 +204,22 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {state.step === 3 && (
+        {stepName === 'script' && (
           <ScheduleFlowStep3
             campaign={campaign}
             script={state.script}
             {...callbackProps}
           />
         )}
-        {state.step === 3.5 && <ScheduleFlowImageStep {...callbackProps} />}
-        {state.step === 4 && (
+        {stepName === 'image' && <ScheduleFlowImageStep {...callbackProps} />}
+        {stepName === 'schedule' && (
           <ScheduleFlowStep4
             type={type}
             fileName={fileName}
             {...callbackProps}
           />
         )}
-        {state.step === 5 && <ScheduleFlowStep5 {...callbackProps} />}
+        {stepName === 'complete' && <ScheduleFlowStep5 {...callbackProps} />}
       </Modal>
     </>
   );
