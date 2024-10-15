@@ -2,7 +2,6 @@ import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
 import Volunteer from './Volunteer';
-import InviteButton from './InviteButton';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useHookstate } from '@hookstate/core';
@@ -84,7 +83,6 @@ export default function TeamMembers({
             Manage all your team members in one place.{' '}
           </Body2>
         </div>
-        <InviteButton reloadInvitationsCallback={reloadInvitations} />
       </div>
 
       {!aggregatedTeamMembers.length ? (
