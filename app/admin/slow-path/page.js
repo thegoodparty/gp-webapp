@@ -6,7 +6,7 @@ const meta = pageMetaData({
   description: 'Admin TEST PAGE.',
 });
 export const metadata = meta;
-export const maxDuration = 25;
+export const maxDuration = 300;
 
 export default async function Page({ searchParams }) {
   await adminAccessOnly();
