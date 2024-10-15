@@ -11,7 +11,9 @@ export default function UserSnapScript() {
       let fullstoryUrl;
 
       try {
-        fullstoryUrl = await FS('getSessionAsync', { format: 'url.now' });
+        if (typeof FS !== 'undefined') {
+          fullstoryUrl = await FS('getSessionAsync', { format: 'url.now' });
+        }
       } catch (e) {
         console.error('Failed to send FS url', e);
       }

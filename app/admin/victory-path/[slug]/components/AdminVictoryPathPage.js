@@ -194,7 +194,7 @@ const electionTypeChoices = [
     title: 'Superintendent of Schools District',
   },
   { id: 'Unified_School_District', title: 'Unified School District' },
-  { id: 'Unified_School_Subdistrict', title: 'Unified School Subdistrict' },
+  { id: 'Unified_School_SubDistrict', title: 'Unified School SubDistrict' },
 ];
 
 const sections = [

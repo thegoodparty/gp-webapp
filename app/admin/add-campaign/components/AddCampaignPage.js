@@ -25,6 +25,18 @@ const createCampaign = async (payload) => {
   }
 };
 
+const sendEmail = async (userId) => {
+  try {
+    const payload = {
+      userId,
+    };
+    return await gpFetch(gpApi.campaign.adminCreateEmail, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+};
+
 const fields = [
   {
     key: 'firstName',
@@ -90,6 +102,7 @@ const AddCampaignPage = (props) => {
   };
 
   const handleUpdate = async () => {
+    await sendEmail(campaign.user);
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -103,6 +116,9 @@ const AddCampaignPage = (props) => {
   };
 
   const canCreate = () => {
+    if (campaign) {
+      return false;
+    }
     if (state.party === 'Other' && state.otherParty === '') {
       return false;
     }

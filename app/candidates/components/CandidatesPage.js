@@ -6,7 +6,7 @@ import FacesSection from './FacesSection';
 import '@shared/inputs/slick.min.css';
 import '@shared/inputs/slick-theme.min.css';
 import CommunitySection from './CommunitySection';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
@@ -34,7 +34,9 @@ export default function CandidatesPage({ count, longState, state }) {
   return (
     <>
       <Hero count={count} longState={longState} />
-      <MapSection isLoaded={isLoaded} state={state} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <MapSection isLoaded={isLoaded} state={state} />
+      </Suspense>
       <InfoSection />
       <FacesSection />
       <CommunitySection />
