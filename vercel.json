@@ -4,10 +4,5 @@
       "path": "/api/v1/campaign/election-events",
       "schedule": "0 16 * * *"
     }
-  ],
-  "functions": {
-    "app/admin/**/*.js": {
-      "maxDuration": 60
-    }
-  }
+  ]
 }

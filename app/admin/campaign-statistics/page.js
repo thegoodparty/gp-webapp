@@ -32,7 +32,7 @@ const meta = pageMetaData({
   slug: '/admin/campaign-statistics',
 });
 export const metadata = meta;
-export const maxDuration = 290;
+export const maxDuration = 60;
 
 export default async function Page({ searchParams }) {
   await adminAccessOnly();
