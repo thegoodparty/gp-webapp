@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import mapSkin from './mapSkin';
 import H3 from '@shared/typography/H3';
 import { MapContext } from './MapSection';
@@ -31,8 +31,6 @@ const Map = () => {
     zoom,
     onChangeMapBounds,
     onSelectCampaign,
-    isFilterChanged,
-    setIsFilterChanged,
     isCampaignsLoading,
   } = useContext(MapContext);
 
@@ -41,13 +39,14 @@ const Map = () => {
   const markersRef = useRef([]);
   const markerClusterRef = useRef(null);
   const isProgrammaticChangeRef = useRef(false);
+
   // Initialize Google Map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapContainerRef.current) return;
 
     const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
-      center: mapCenter,
-      zoom: zoom,
+      center: mapCenter, // Initial center
+      zoom: zoom, // Initial zoom
       ...mapOptions,
     });
 
@@ -77,6 +76,14 @@ const Map = () => {
       window.google.maps.event.removeListener(idleListener);
     };
   }, [isLoaded, mapCenter, zoom, onChangeMapBounds]);
+
+  // Update map's center and zoom when they change
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setCenter(mapCenter); // Update center
+      mapRef.current.setZoom(zoom); // Update zoom
+    }
+  }, [mapCenter, zoom]); // This ensures the map updates programmatically when mapCenter or zoom changes
 
   const clearMarkers = () => {
     if (markersRef.current.length > 0) {
@@ -114,23 +121,6 @@ const Map = () => {
       return marker;
     });
   }, [campaigns, onSelectCampaign]);
-
-  const adjustMapBounds = useCallback(() => {
-    if (!mapRef.current || campaigns.length === 0) {
-      return;
-    }
-    if (isFilterChanged && !isCampaignsLoading) {
-      const bounds = new window.google.maps.LatLngBounds();
-
-      campaigns.forEach((campaign) => {
-        bounds.extend(campaign.position);
-      });
-
-      isProgrammaticChangeRef.current = true;
-      mapRef.current.fitBounds(bounds);
-      setIsFilterChanged(false);
-    }
-  }, [campaigns, isFilterChanged, isCampaignsLoading]);
 
   // Custom renderer for cluster icons
   const customRenderer = {
@@ -181,7 +171,6 @@ const Map = () => {
     clearMarkers();
     const markers = createMarkers();
     markersRef.current = markers;
-    markersRef.current = markers;
 
     if (markerClusterRef.current) {
       markerClusterRef.current.clearMarkers();
@@ -201,13 +190,11 @@ const Map = () => {
 
     markerClusterRef.current = newMarkerCluster;
 
-    adjustMapBounds();
-
     // Cleanup on unmount
     return () => {
       clearMarkers();
     };
-  }, [campaigns, isLoaded, adjustMapBounds]);
+  }, [campaigns, isLoaded]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
