@@ -23,6 +23,11 @@ if (!appBase) {
   base = `${appBase}/api/v1/`;
 }
 
+console.log('=====================');
+console.log('apiBase', apiBase);
+console.log('appBase', appBase);
+console.log('base', base);
+
 const gpApi = {
   homepage: {
     subscribeEmail: {
@@ -97,6 +102,11 @@ const gpApi = {
     },
     adminCreate: {
       url: `${base}admin-campaign`,
+      method: 'POST',
+      withAuth: true,
+    },
+    adminCreateEmail: {
+      url: `${base}admin-campaign-email`,
       method: 'POST',
       withAuth: true,
     },

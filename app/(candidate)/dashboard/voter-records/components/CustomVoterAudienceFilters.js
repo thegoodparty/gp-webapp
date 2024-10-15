@@ -1,4 +1,5 @@
 import Checkbox from '@shared/inputs/Checkbox';
+import TextField from '@shared/inputs/TextField';
 import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
 
@@ -29,9 +30,9 @@ const fields = [
   {
     label: 'AGE',
     options: [
-      { key: 'age_18-25', label: '18-25' },
-      { key: 'age_25-35', label: '25-35' },
-      { key: 'age_35-50', label: '35-50' },
+      { key: 'age_18_25', label: '18-25' },
+      { key: 'age_25_35', label: '25-35' },
+      { key: 'age_35_50', label: '35-50' },
       { key: 'age_50+', label: '50+' },
     ],
   },
@@ -60,6 +61,7 @@ const purposeToFilters = {
     age_18_25: true,
     age_25_35: true,
     age_35_50: true,
+    audience_request: '',
   },
   Persuasion: {
     audience_likelyVoters: true,
@@ -69,6 +71,7 @@ const purposeToFilters = {
     age_18_25: true,
     age_25_35: true,
     age_35_50: true,
+    audience_request: '',
   },
   'Voter ID': {
     audience_superVoters: true,
@@ -80,6 +83,7 @@ const purposeToFilters = {
     age_18_25: true,
     age_25_35: true,
     age_35_50: true,
+    audience_request: '',
   },
 };
 
@@ -100,6 +104,7 @@ export default function CustomVoterAudienceFilters({
     age_18_25: false,
     age_25_35: false,
     age_35_50: false,
+    audience_request: '',
   });
 
   const { purpose } = prevStepValues || {};
@@ -112,8 +117,7 @@ export default function CustomVoterAudienceFilters({
     }
   }, [purpose]);
 
-  const handleChangeAudience = (option, e) => {
-    const val = e.target.checked;
+  const handleChangeAudience = (option, val) => {
     const newState = {
       ...state,
       [option]: val,
@@ -134,10 +138,9 @@ export default function CustomVoterAudienceFilters({
             <div key={option.key} className="flex items-center mt-3">
               <Checkbox
                 onChange={(e) => {
-                  handleChangeAudience(option.key, e);
+                  handleChangeAudience(option.key, e.target.checked);
                 }}
-                value={state[option.key]}
-                checked={state[option.key]}
+                checked={state[option.key] ?? false}
                 color="secondary"
               />
               <Body2>{option.label}</Body2>
@@ -145,6 +148,18 @@ export default function CustomVoterAudienceFilters({
           ))}
         </div>
       ))}
+      <TextField
+        className="col-span-12 mt-2 rounded-lg"
+        label="Audience Request"
+        placeholder="Is there a specific area in your district you are trying to target? Are you interested in reaching out to veterans in your community? Let us know here. "
+        value={state.audience_request}
+        onChange={(e) =>
+          handleChangeAudience('audience_request', e.target.value)
+        }
+        InputLabelProps={{ shrink: true, className: 'font-sfpro text-black' }}
+        multiline
+        rows={3}
+      ></TextField>
     </div>
   );
 }
