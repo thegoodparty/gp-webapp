@@ -105,6 +105,11 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
+    adminCreateEmail: {
+      url: `${base}admin-campaign-email`,
+      method: 'POST',
+      withAuth: true,
+    },
     createDemoCampaign: {
       url: `${base}campaign/demo`,
       method: 'POST',
