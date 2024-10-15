@@ -232,11 +232,7 @@ export default function MapSection({ isLoaded, state }) {
                   <Map />
                 </div>
                 <div className="flex flex-col shadow-lg md:relative z-20">
-                  <Filters
-                    filters={filters}
-                    onChangeFilters={onChangeFilters}
-                    campaigns={campaigns}
-                  />
+                  <Filters />
                   <Results />
                   <CampaignPreview />
                 </div>

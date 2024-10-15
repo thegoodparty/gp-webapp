@@ -1,11 +1,12 @@
 'use client';
 
 import { Select } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Checkbox from '@shared/inputs/Checkbox';
 import TextField from '@shared/inputs/TextField';
 import { debounce } from 'helpers/debounceHelper';
 import { states } from 'helpers/statesHelper';
+import { MapContext } from './MapSection';
 
 const partyOptions = [
   { key: 'independent', label: 'Independent' },
@@ -23,7 +24,8 @@ const levelOptions = [
   { key: 'FEDERAL', label: 'Federal' },
 ];
 
-export default function Filters({ filters, onChangeFilters, campaigns }) {
+export default function Filters() {
+  const { filters, onChangeFilters, campaigns } = useContext(MapContext);
   const [officeOptions, setOfficeOptions] = useState([]);
   const [name, setName] = useState(filters.name || ''); // Initialize with filter state
 
