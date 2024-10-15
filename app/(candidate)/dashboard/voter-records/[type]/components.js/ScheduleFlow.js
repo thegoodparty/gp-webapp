@@ -1,12 +1,11 @@
 'use client';
-
 import Modal from '@shared/utils/Modal';
 import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowInstructions from './ScheduleFlowInstructions';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
-import ScheduleFlowStep3 from './ScheduleFlowStep3';
+import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
 import ScheduleFlowStep4 from './ScheduleFlowStep4';
 import ScheduleFlowStep5 from './ScheduleFlowStep5';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
@@ -96,10 +95,10 @@ export default function ScheduleFlow({
   );
 
   const handleChange = (key, value) => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       [key]: value,
-    });
+    }));
   };
 
   const handleClose = () => {
@@ -109,11 +108,10 @@ export default function ScheduleFlow({
 
   const handleNext = () => {
     if (state.step >= stepList.length - 1) return;
-
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       step: state.step + 1,
-    });
+    }));
   };
 
   const handleBack = () => {
@@ -156,6 +154,11 @@ export default function ScheduleFlow({
       type,
     };
     await scheduleCampaign(updatedState);
+  };
+
+  const handleAddScriptOnComplete = (scriptKeyOrText) => {
+    handleChange('script', scriptKeyOrText);
+    handleNext();
   };
 
   const callbackProps = {
@@ -205,9 +208,9 @@ export default function ScheduleFlow({
           />
         )}
         {stepName === 'script' && (
-          <ScheduleFlowStep3
+          <ScheduleAddScriptFlow
             campaign={campaign}
-            script={state.script}
+            onComplete={handleAddScriptOnComplete}
             {...callbackProps}
           />
         )}

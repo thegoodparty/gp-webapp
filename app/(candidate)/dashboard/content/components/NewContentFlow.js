@@ -1,38 +1,21 @@
 'use client';
 
-import { Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import H2 from '@shared/typography/H2';
-import H6 from '@shared/typography/H6';
 import Modal from '@shared/utils/Modal';
 
 import { useEffect, useState } from 'react';
-
-import CircularProgress from '@mui/material/CircularProgress';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import TextField from '@shared/inputs/TextField';
 import InputFieldsModal from './InputFieldsModal';
 import TemplateList from './TemplatesList';
 import QuestionProgress, {
   calcAnswers,
 } from '../../plan/components/QuestionProgress';
 import { BsStars } from 'react-icons/bs';
-
-export async function fetchInputFields(subKey) {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'promptInputFields',
-  };
-
-  const { content } = await gpFetch(api, payload, 3600);
-  return content[subKey];
-}
+import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 
 export default function NewContentFlow(props) {
   const {
-    prompts,
     onSelectCallback,
     sections,
     isProcessing,
@@ -61,7 +44,7 @@ export default function NewContentFlow(props) {
 
   const onSelectPrompt = async () => {
     if (selected !== '') {
-      const content = await fetchInputFields(selected);
+      const content = await fetchPromptInputFields(selected);
       if (!content) {
         const key = findKey();
         onSelectCallback(key);

@@ -2,7 +2,6 @@ import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import Overline from '@shared/typography/Overline';
 import Paper from '@shared/utils/Paper';
-import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlow from './ScheduleFlow';
 
 export default function ScheduleCard(props) {

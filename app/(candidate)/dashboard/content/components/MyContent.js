@@ -1,18 +1,10 @@
 'use client';
-
-import {
-  fetchCampaignVersions,
-  getCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
-import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
-import { camelToSentence, camelToKebab } from 'helpers/stringHelper';
-import { useState, useEffect } from 'react';
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { camelToKebab, camelToSentence } from 'helpers/stringHelper';
+import { useEffect, useMemo, useState } from 'react';
 import Table from '@shared/utils/Table';
 import Actions from './Actions';
-import { useMemo } from 'react';
-import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { dateWithTime } from 'helpers/dateHelper';
 import Link from 'next/link';
 import { IoDocumentText } from 'react-icons/io5';
 import { useHookstate } from '@hookstate/core';
@@ -20,6 +12,7 @@ import { globalSnackbarState } from '@shared/utils/Snackbar';
 import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
 import NewContentFlow from './NewContentFlow';
+import { generateAIContent } from 'helpers/generateAIContent';
 
 const subSectionKey = 'aiContent';
 let aiTotalCount = 0;
@@ -219,22 +212,6 @@ export default function MyContent(props) {
     }
   }, [campaignPlan, section]);
 
-  async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
-    try {
-      const api = gpApi.campaign.ai.create;
-      return await gpFetch(api, {
-        key,
-        regenerate,
-        chat,
-        editMode,
-        inputValues,
-      });
-    } catch (e) {
-      console.log('error', e);
-      return false;
-    }
-  }
-
   const createInitialAI = async (
     regenerate,
     chat,
@@ -245,7 +222,7 @@ export default function MyContent(props) {
     const resolvedChat = chat || initialChat;
     const resolvedInitialValues =
       (inputValues && Object.keys(inputValues) > 0) || initialValues;
-    const { chatResponse, status } = await generateAI(
+    const { chatResponse, status } = await generateAIContent(
       section,
       regenerate,
       resolvedChat,
@@ -283,7 +260,6 @@ export default function MyContent(props) {
     <div>
       {loading ? (
         <div className="flex justify-center w-full">
-          {/* <CircularProgress size={50} /> */}
           <LoadingList />
         </div>
       ) : (
