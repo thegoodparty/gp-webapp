@@ -30,9 +30,9 @@ const fields = [
   {
     label: 'AGE',
     options: [
-      { key: 'age_18-25', label: '18-25' },
-      { key: 'age_25-35', label: '25-35' },
-      { key: 'age_35-50', label: '35-50' },
+      { key: 'age_18_25', label: '18-25' },
+      { key: 'age_25_35', label: '25-35' },
+      { key: 'age_35_50', label: '35-50' },
       { key: 'age_50+', label: '50+' },
     ],
   },
@@ -140,8 +140,7 @@ export default function CustomVoterAudienceFilters({
                 onChange={(e) => {
                   handleChangeAudience(option.key, e.target.checked);
                 }}
-                value={state[option.key]}
-                checked={state[option.key]}
+                checked={state[option.key] ?? false}
                 color="secondary"
               />
               <Body2>{option.label}</Body2>

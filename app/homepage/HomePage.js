@@ -3,14 +3,14 @@ import FactsSection from './FactsSection';
 import HowSection from './HowSection';
 import ToolsSection from './ToolsSection';
 import Cta from './Cta';
-// import Callout from '@shared/utils/Callout';
-import StickersCallout from '@shared/utils/StickersCallout';
+import Callout from '@shared/utils/Callout';
+// import StickersCallout from '@shared/utils/StickersCallout';
 
 export default function HomePage(props) {
   return (
     <div className="bg-indigo-50">
-      {/* <Callout /> */}
-      <StickersCallout />
+      <Callout />
+      {/* <StickersCallout /> */}
 
       <Hero />
 
