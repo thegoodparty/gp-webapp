@@ -1,11 +1,10 @@
 'use client';
-
 import Modal from '@shared/utils/Modal';
 import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
-import ScheduleFlowStep3 from './ScheduleFlowStep3';
+import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
 import ScheduleFlowStep4 from './ScheduleFlowStep4';
 import ScheduleFlowStep5 from './ScheduleFlowStep5';
 import gpApi from 'gpApi';
@@ -47,10 +46,10 @@ export default function ScheduleFlow(props) {
   );
 
   const handleChange = (key, value) => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       [key]: value,
-    });
+    }));
   };
 
   const handleClose = () => {
@@ -58,10 +57,10 @@ export default function ScheduleFlow(props) {
     handleReset();
   };
   const handleNext = () => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       step: state.step + 1,
-    });
+    }));
   };
 
   const handleBack = () => {
@@ -101,6 +100,11 @@ export default function ScheduleFlow(props) {
       type,
     };
     await scheduleCampaign(updatedState);
+  };
+
+  const handleAddScriptOnComplete = (scriptKeyOrText) => {
+    handleChange('script', scriptKeyOrText);
+    handleNext();
   };
 
   const childProps = {
@@ -146,7 +150,11 @@ export default function ScheduleFlow(props) {
           />
         )}
         {state.step === 3 && (
-          <ScheduleFlowStep3 {...childProps} {...props} script={state.script} />
+          <ScheduleAddScriptFlow
+            {...childProps}
+            {...props}
+            onComplete={handleAddScriptOnComplete}
+          />
         )}
         {state.step === 4 && <ScheduleFlowStep4 {...childProps} {...props} />}
         {state.step === 5 && <ScheduleFlowStep5 {...childProps} {...props} />}
