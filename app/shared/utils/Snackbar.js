@@ -11,6 +11,10 @@ export const globalSnackbarState = hookstate({
   autoHideDuration: 4000,
 });
 
+export function useSnackbarState() {
+  return useHookstate(globalSnackbarState);
+}
+
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
