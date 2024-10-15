@@ -29,7 +29,6 @@ const categoryIcons = {
 };
 
 export default function TemplateList(props) {
-  console.log(`props =>`, props);
   const {
     categories,
     onSelectCallback,
@@ -62,7 +61,6 @@ export default function TemplateList(props) {
           <H3>{category.name}</H3>
           <div className="grid grid-cols-12 gap-3 mt-4">
             {category.templates.map((template) => {
-              console.log(`template =>`, template);
               const trackingAttrs = buildTrackingAttrs(
                 'Generate AI Content Button',
                 {
