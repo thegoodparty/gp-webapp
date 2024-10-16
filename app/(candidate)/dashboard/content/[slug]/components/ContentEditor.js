@@ -16,9 +16,9 @@ import gpFetch from 'gpApi/gpFetch';
 import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
-import { fetchInputFields } from '../../components/NewContentFlow';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { BsStars } from 'react-icons/bs';
+import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -63,7 +63,7 @@ export default function ContentEditor({
 
   const loadInputFields = async () => {
     const keyNoDigits = key.replace(/\d+$/, '');
-    const content = await fetchInputFields(keyNoDigits);
+    const content = await fetchPromptInputFields(keyNoDigits);
     if (content) {
       setInputFields(content);
     } else {

@@ -194,7 +194,7 @@ const electionTypeChoices = [
     title: 'Superintendent of Schools District',
   },
   { id: 'Unified_School_District', title: 'Unified School District' },
-  { id: 'Unified_School_Subdistrict', title: 'Unified School Subdistrict' },
+  { id: 'Unified_School_SubDistrict', title: 'Unified School SubDistrict' },
 ];
 
 const sections = [
@@ -268,11 +268,6 @@ const sections = [
         label: 'Projected Turnout number',
         type: 'number',
       },
-      {
-        key: 'projectedTurnout',
-        label: 'Projected Turnout number',
-        type: 'number',
-      },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
       { key: 'voterContactGoal', label: 'Voter Contact Goal', type: 'number' },
     ],
@@ -289,12 +284,6 @@ const sections = [
         label: 'Average turnout number from past 3 races',
         label: 'Average turnout number from past 3 races',
         type: 'number',
-      },
-      {
-        key: 'averageTurnoutPercent',
-        label: 'Average Turnout Percent',
-        type: 'number',
-        formula: true,
       },
       {
         key: 'averageTurnoutPercent',
@@ -429,13 +418,19 @@ export default function AdminVictoryPathPage(props) {
       let averageTurnoutPercent = Math.round(
         (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
       );
-      setState({
+      setState((state) => ({
         ...state,
         winNumber,
         averageTurnoutPercent,
-      });
+      }));
     }
-  }, [state.winNumber, state.averageTurnoutPercent]);
+  }, [
+    state.winNumber,
+    state.averageTurnoutPercent,
+    state.averageTurnout,
+    state.projectedTurnout,
+    state.totalRegisteredVoters,
+  ]);
 
   useEffect(() => {
     if (pathToVictory?.viability) {
@@ -692,11 +687,7 @@ export default function AdminVictoryPathPage(props) {
             Slug: <strong>{campaign?.slug}</strong>
           </H2>
           <H3 className="mt-12 mb-6 flex items-center">
-            <Checkbox
-              value={notNeeded}
-              defaultChecked={notNeeded}
-              onChange={handleNotNeeded}
-            />
+            <Checkbox defaultChecked={notNeeded} onChange={handleNotNeeded} />
             <div>Mark campaign as not needing Path to Victory</div>
           </H3>{' '}
           <AdditionalFieldsSection />
@@ -796,9 +787,9 @@ export default function AdminVictoryPathPage(props) {
                       locations.length === 0 ? (
                       <div>
                         {loadingLocations ? (
-                          <div role="status" class="animate-pulse w-full">
-                            <div class="h-10 bg-gray-200 rounded-[4px] dark:bg-gray-700 w-full"></div>
-                            <span class="sr-only">Loading...</span>
+                          <div role="status" className="animate-pulse w-full">
+                            <div className="h-10 bg-gray-200 rounded-[4px] dark:bg-gray-700 w-full"></div>
+                            <span className="sr-only">Loading...</span>
                           </div>
                         ) : (
                           <TextField

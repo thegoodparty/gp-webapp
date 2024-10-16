@@ -1,3 +1,4 @@
+'use client';
 import Button from '@shared/buttons/Button';
 import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';

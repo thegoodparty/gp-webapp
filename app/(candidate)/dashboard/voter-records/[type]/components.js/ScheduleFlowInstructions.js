@@ -13,9 +13,7 @@ const SMS_CONTENT = [
   {
     iconComponent: CreateRounded,
     title: 'Create',
-    text: 'Select your budget, identify your audience, and choose your script.',
-    // TODO: Switch to below text when Image Upload ticket is implemented
-    // text: 'Select your budget, identify your audience, choose your script, and upload an image.',
+    text: 'Select your budget, identify your audience, choose a script, and upload an image.',
   },
   {
     iconComponent: CalendarMonthRounded,
@@ -29,7 +27,7 @@ const SMS_CONTENT = [
   },
 ];
 
-export default function ScheduleFlowStep0({
+export default function ScheduleFlowInstructions({
   type,
   nextCallback,
   closeCallback,
@@ -44,13 +42,15 @@ export default function ScheduleFlowStep0({
         {SMS_CONTENT.map((item) => (
           <Alert
             key={item.title}
-            className="mb-3 bg-neutral-background rounded-md text-primary"
-            icon={
-              <item.iconComponent className="hidden md:block fill-gray-500" />
-            }
+            color="info"
+            className="mb-3"
+            sx={{ borderRadius: '8px' }}
+            icon={<item.iconComponent />}
           >
-            <AlertTitle className="font-bold flex items-center gap-2">
-              <item.iconComponent className="block md:hidden fill-gray-500" />
+            <AlertTitle
+              sx={{ fontWeight: '700' }}
+              className="flex items-center gap-2"
+            >
               {item.title}
             </AlertTitle>
             {item.text}

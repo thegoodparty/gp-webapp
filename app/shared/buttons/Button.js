@@ -14,6 +14,9 @@ export const COLOR_CLASSES = {
     'text-success-contrast bg-success-main hover:[&:not([disabled])]:bg-success-dark focus:active:outline-success-main/30',
   neutral:
     'text-neutral-contrast bg-neutral-light hover:[&:not([disabled])]:bg-neutral-main focus:active:outline-neutral-main/40',
+  // WIP: only contained style for now
+  white:
+    'text-black bg-white hover:[&:not([disabled])]:bg-[#d6d6d6] focus:active:outline-white/40',
 };
 
 const OUTLINED_COLOR_CLASSES = {

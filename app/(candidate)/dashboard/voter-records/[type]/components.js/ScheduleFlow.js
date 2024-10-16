@@ -1,14 +1,14 @@
 'use client';
-
 import Modal from '@shared/utils/Modal';
 import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
-import ScheduleFlowStep0 from './ScheduleFlowStep0';
+import ScheduleFlowInstructions from './ScheduleFlowInstructions';
 import ScheduleFlowStep1 from './ScheduleFlowStep1';
 import ScheduleFlowStep2 from './ScheduleFlowStep2';
-import ScheduleFlowStep3 from './ScheduleFlowStep3';
+import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
 import ScheduleFlowStep4 from './ScheduleFlowStep4';
 import ScheduleFlowStep5 from './ScheduleFlowStep5';
+import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import queryString from 'query-string';
@@ -22,12 +22,41 @@ export async function scheduleCampaign(state) {
       date: state.schedule?.date,
       message: state.schedule?.message,
     };
-    return await gpFetch(api, payload);
+    const formData = new FormData();
+
+    for (const key in payload) {
+      let value = payload[key];
+      if (key === 'image' || value == undefined) continue;
+      if (typeof value === 'object') {
+        value = JSON.stringify(value);
+      }
+      formData.append(key, value);
+    }
+
+    // Skipper parser wants files after all other fields
+    if (payload.image) {
+      formData.append('image', payload.image);
+    }
+
+    return await gpFetch(api, formData, false, undefined, true);
   } catch (e) {
     console.log('error', e);
     return false;
   }
 }
+
+const STEPS_BY_TYPE = {
+  sms: [
+    'intro',
+    'budget',
+    'audience',
+    'script',
+    'image',
+    'schedule',
+    'complete',
+  ],
+  telemarketing: ['budget', 'audience', 'script', 'schedule', 'complete'],
+};
 
 /**
  * @typedef {Object} ScheduleFlowProps
@@ -48,15 +77,17 @@ export default function ScheduleFlow({
   isCustom,
   fileName,
 }) {
-  const startingStep = type === 'sms' ? 0 : 1;
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
-    step: startingStep,
+    step: 0,
     budget: false,
     voicemail: undefined,
     audience: {},
     script: false,
+    image: undefined,
   });
+  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type]);
+  const stepName = stepList[state.step];
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
@@ -64,24 +95,28 @@ export default function ScheduleFlow({
   );
 
   const handleChange = (key, value) => {
-    setState({
-      ...state,
+    setState((prevState) => ({
+      ...prevState,
       [key]: value,
-    });
+    }));
   };
 
   const handleClose = () => {
     setOpen(false);
     handleReset();
   };
+
   const handleNext = () => {
-    setState({
-      ...state,
+    if (state.step >= stepList.length - 1) return;
+    setState((prevState) => ({
+      ...prevState,
       step: state.step + 1,
-    });
+    }));
   };
 
   const handleBack = () => {
+    if (state.step <= 0) return;
+
     setState({
       ...state,
       step: state.step - 1,
@@ -90,10 +125,11 @@ export default function ScheduleFlow({
 
   const handleReset = () => {
     setState({
-      step: startingStep,
+      step: 0,
       budget: 0,
       audience: {},
       script: false,
+      image: undefined,
     });
   };
 
@@ -118,6 +154,11 @@ export default function ScheduleFlow({
       type,
     };
     await scheduleCampaign(updatedState);
+  };
+
+  const handleAddScriptOnComplete = (scriptKeyOrText) => {
+    handleChange('script', scriptKeyOrText);
+    handleNext();
   };
 
   const callbackProps = {
@@ -146,10 +187,10 @@ export default function ScheduleFlow({
         )}
       </div>
       <Modal open={open} closeCallback={handleClose}>
-        {state.step === 0 && (
-          <ScheduleFlowStep0 type={type} {...callbackProps} />
+        {stepName === 'intro' && (
+          <ScheduleFlowInstructions type={type} {...callbackProps} />
         )}
-        {state.step === 1 && (
+        {stepName === 'budget' && (
           <ScheduleFlowStep1
             type={type}
             value={state.budget}
@@ -157,7 +198,7 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {state.step === 2 && (
+        {stepName === 'audience' && (
           <ScheduleFlowStep2
             type={type}
             withVoicemail={!!state.voicemail}
@@ -166,21 +207,22 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {state.step === 3 && (
-          <ScheduleFlowStep3
+        {stepName === 'script' && (
+          <ScheduleAddScriptFlow
             campaign={campaign}
-            script={state.script}
+            onComplete={handleAddScriptOnComplete}
             {...callbackProps}
           />
         )}
-        {state.step === 4 && (
+        {stepName === 'image' && <ScheduleFlowImageStep {...callbackProps} />}
+        {stepName === 'schedule' && (
           <ScheduleFlowStep4
             type={type}
             fileName={fileName}
             {...callbackProps}
           />
         )}
-        {state.step === 5 && <ScheduleFlowStep5 {...callbackProps} />}
+        {stepName === 'complete' && <ScheduleFlowStep5 {...callbackProps} />}
       </Modal>
     </>
   );

@@ -5,8 +5,6 @@ import gpApi from 'gpApi';
 import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
 
-export const maxDuration = 60 * 5;
-
 const stripEmptyFilters = (filters) =>
   Object.keys(filters).reduce((acc, key) => {
     return {
@@ -34,6 +32,7 @@ const meta = pageMetaData({
   slug: '/admin/campaign-statistics',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 export default async function Page({ searchParams }) {
   await adminAccessOnly();
