@@ -1,3 +1,5 @@
+import ButtonLoading from './ButtonLoading';
+
 export const COLOR_CLASSES = {
   primary:
     'text-primary-contrast bg-primary-main hover:[&:not([disabled])]:bg-primary-dark focus:active:outline-primary-main/30',
@@ -97,6 +99,7 @@ export default function Button({
   color = 'primary',
   children,
   className,
+  loading,
   ...restProps
 }) {
   let baseClasses =
@@ -119,6 +122,10 @@ export default function Button({
       }`}
       {...restProps}
     >
+      {loading === true && (
+        <ButtonLoading size={size} className="align-text-bottom" />
+      )}
+
       {children}
     </button>
   );
