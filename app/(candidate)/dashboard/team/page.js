@@ -29,6 +29,21 @@ async function loadInvitations() {
   }
 }
 
+async function getCampaignRequests() {
+  try {
+    const token = getServerToken();
+    return await gpFetch(
+      gpApi.campaign.campaignRequests.list,
+      false,
+      false,
+      token,
+    );
+  } catch (e) {
+    console.log('error at fetchInvitations', e);
+    return {};
+  }
+}
+
 const meta = pageMetaData({
   title: 'Campaign Team | GoodParty.org',
   description: 'Campaign Team',
@@ -43,7 +58,8 @@ export default async function Page({ params, searchParams }) {
   const { candidateSlug } = campaign;
   const { volunteers } = await loadVolunteers();
   const { invitations } = await loadInvitations();
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const requests = await getCampaignRequests();
+  const user = getServerUser();
 
   const childProps = {
     pathname: '/dashboard/team',
@@ -51,6 +67,7 @@ export default async function Page({ params, searchParams }) {
     pathToVictory: campaign?.pathToVictory,
     volunteers,
     invitations,
+    requests,
     user,
     campaign,
   };

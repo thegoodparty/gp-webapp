@@ -65,7 +65,7 @@ export default {
   },
   argTypes: argTypes,
   render: (args) => (
-    <div class="flex gap-2">
+    <div class={'flex gap-2' + (args.color === 'white' ? ' bg-black p-2' : '')}>
       <Button {...args} variant="contained">
         Contained
       </Button>
@@ -132,5 +132,12 @@ export const Neutral = {
   args: {
     size: 'medium',
     color: 'neutral',
+  },
+};
+
+export const White = {
+  args: {
+    size: 'medium',
+    color: 'white',
   },
 };

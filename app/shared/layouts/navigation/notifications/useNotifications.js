@@ -18,16 +18,19 @@ export default function useNotifications() {
   const [notifications, setNotifications] = useState([]);
   const [user] = useUser();
 
+  const loadNotifications = async () => {
+    const res = await fetchNotifications();
+    setNotifications(res.notifications);
+  };
+
   useEffect(() => {
     if (user) {
       loadNotifications();
     }
   }, [user]);
 
-  const loadNotifications = async () => {
-    const res = await fetchNotifications();
-    setNotifications(res.notifications);
-  };
-
+  // TODO: The interface here should be like useState w/ the setter, setNotifications, exposed as well
+  //  so that actions in the UI and update the notifications state, especially now that we have the "dot"
+  //  in multiple places
   return notifications;
 }

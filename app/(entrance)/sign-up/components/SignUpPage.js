@@ -114,13 +114,11 @@ export default function SignUpPage() {
         state.password,
       );
 
-      console.log('exists', exists);
-
       if (user) {
         await saveToken(token);
         setUser(user);
 
-        window.location.href = '/account-type';
+        window.location.href = '/onboarding/account-type';
         return;
       } else {
         if (exists) {

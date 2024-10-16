@@ -15,5 +15,5 @@ export const handleDemoAccountDeletion =
       }));
       return;
     }
-    router.push('/account-type');
+    router.push('/sign-up/account-type');
   };

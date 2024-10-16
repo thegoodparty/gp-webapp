@@ -10,6 +10,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { useHookstate } from '@hookstate/core';
+import TextField from '@shared/inputs/TextField';
 
 const createCampaign = async (payload) => {
   try {
@@ -18,6 +19,18 @@ const createCampaign = async (payload) => {
       return res;
     }
     return false;
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+};
+
+const sendEmail = async (userId) => {
+  try {
+    const payload = {
+      userId,
+    };
+    return await gpFetch(gpApi.campaign.adminCreateEmail, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -39,7 +52,7 @@ const fields = [
     cols: 6,
     required: true,
   },
-  { key: 'email', label: 'Email', type: 'email', cols: 6, required: true },
+  { key: 'email', label: 'Email', type: 'email', cols: 12, required: true },
   { key: 'phone', label: 'Phone', type: 'phone', cols: 6, required: true },
   {
     key: 'zip',
@@ -60,6 +73,7 @@ const fields = [
       'Libertarian',
       'Green Party',
       'Nonpartisan',
+      'Other',
     ],
   },
 ];
@@ -68,6 +82,7 @@ const initialState = fields.reduce((acc, field) => {
   acc[field.key] = '';
   return acc;
 }, {});
+initialState.otherParty = '';
 
 const AddCampaignPage = (props) => {
   const [state, setState] = useState(initialState);
@@ -76,7 +91,10 @@ const AddCampaignPage = (props) => {
   const snackbarState = useHookstate(globalSnackbarState);
 
   const onChangeInput = (key, value) => {
-    setState((prevState) => ({ ...prevState, [key]: value }));
+    setState({
+      ...state,
+      [key]: value,
+    });
   };
 
   const handleEdit = () => {
@@ -84,6 +102,7 @@ const AddCampaignPage = (props) => {
   };
 
   const handleUpdate = async () => {
+    await sendEmail(campaign.user);
     snackbarState.set(() => {
       return {
         isOpen: true,
@@ -97,6 +116,12 @@ const AddCampaignPage = (props) => {
   };
 
   const canCreate = () => {
+    if (campaign) {
+      return false;
+    }
+    if (state.party === 'Other' && state.otherParty === '') {
+      return false;
+    }
     return fields.every((field) => state[field.key]);
   };
 
@@ -108,6 +133,7 @@ const AddCampaignPage = (props) => {
         isError: false,
       };
     });
+
     const res = await createCampaign(state);
     if (res) {
       console.log('success');
@@ -144,6 +170,16 @@ const AddCampaignPage = (props) => {
               key={field.key}
             />
           ))}
+          {state.party === 'Other' && (
+            <div className=" col-span-12 md:col-span-6 mt-5">
+              <TextField
+                label="Other Party"
+                onChange={(e) => onChangeInput('otherParty', e.target.value)}
+                value={state.otherParty}
+                fullWidth
+              />
+            </div>
+          )}
         </div>
 
         <div className="my-6">

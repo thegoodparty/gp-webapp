@@ -7,6 +7,7 @@ import {
 
 const useChat = () => {
   const [chat, setChat] = useState(null);
+  const [feedback, setFeedback] = useState(null);
   const [threadId, setThreadId] = useState(null);
   const [chats, setChats] = useState([]);
 
@@ -21,12 +22,14 @@ const useChat = () => {
     }
     setChats(fetchedChats || []);
     setChat(currentChat?.chat || []);
+    setFeedback(currentChat?.feedback);
     setThreadId(threadId);
   };
 
   const loadChatByThreadId = async (threadId) => {
     const currentChat = await getChatThread({ threadId });
     setChat(currentChat?.chat || []);
+    setFeedback(currentChat?.feedback);
     setThreadId(threadId);
   };
 
@@ -52,6 +55,7 @@ const useChat = () => {
     chats,
     loadChatByThreadId,
     regenerateChat,
+    feedback,
   };
 };
 

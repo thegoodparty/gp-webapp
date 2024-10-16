@@ -131,7 +131,7 @@ export default function RightSideMobile() {
                     <div className={`p-6 bg-primary-dark h-auto`}>
                       {user ? (
                         <>
-                          {status === 'candidate' && (
+                          {(status === 'candidate' || status === 'manager') && (
                             <>
                               {!isDashboardPath && (
                                 <Link

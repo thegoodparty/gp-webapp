@@ -40,6 +40,7 @@ export default function CampaignManagerPage(props) {
     chats,
     loadChatByThreadId,
     regenerateChat,
+    feedback,
   } = useChat();
   const lastMessageRef = useRef(null);
 
@@ -81,8 +82,6 @@ export default function CampaignManagerPage(props) {
     setLoading(false);
   };
 
-  console.log('chat', chat);
-
   const contextProps = {
     handleNewInput,
     ...props,
@@ -91,12 +90,14 @@ export default function CampaignManagerPage(props) {
     loading,
     shouldType,
     setShouldType,
+    threadId,
     setThreadId,
     setChat,
     lastMessageRef,
     scrollDown,
     loadChatByThreadId,
     handleRegenerate,
+    feedback,
   };
 
   return (

@@ -41,7 +41,7 @@ export async function fetchUpdateHistory() {
 
 export default function DashboardPage(props) {
   const { campaign } = props;
-  const [user, setUser] = useUser();
+  const [_, setUser] = useUser();
 
   const { pathToVictory, goals, data, details } = campaign;
   const { reportedVoterGoals } = data || {};

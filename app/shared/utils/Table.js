@@ -66,6 +66,7 @@ export default function Table({
   filterColumns = true,
   pagination = true,
   initialSortById = '',
+  defaultFilters = [],
 }) {
   const filterTypes = useMemo(
     () => ({
@@ -91,10 +92,13 @@ export default function Table({
     [filterColumns],
   );
 
+  const initialFilters = useMemo(() => defaultFilters, []);
+
   const initialState = useMemo(
     () => ({
       pageIndex: 0,
       sortBy: initialSortById ? [{ id: initialSortById, desc: true }] : [],
+      filters: initialFilters,
     }),
     [initialSortById],
   );
@@ -143,30 +147,33 @@ export default function Table({
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, i) => (
-                <th
-                  key={i}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                >
-                  <div
-                    className={`flex flex-row items-center ${
-                      index === 0 && 'pl-2'
-                    }`}
-                  >
-                    {column.render('Header')}
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
-                      ) : (
-                        <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
-                      )
-                    ) : null}
-                  </div>
-                  {column.canFilter && filterColumns
-                    ? column.render('Filter')
-                    : null}
-                </th>
-              ))}
+              {headerGroup.headers.map(
+                (column, i) =>
+                  Boolean(!column.hide) && (
+                    <th
+                      key={i}
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                    >
+                      <div
+                        className={`flex flex-row items-center ${
+                          index === 0 && 'pl-2'
+                        }`}
+                      >
+                        {column.render('Header')}
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
+                          ) : (
+                            <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
+                          )
+                        ) : null}
+                      </div>
+                      {column.canFilter && filterColumns
+                        ? column.render('Filter')
+                        : null}
+                    </th>
+                  ),
+              )}
             </tr>
           ))}
         </thead>
@@ -175,11 +182,14 @@ export default function Table({
             prepareRow(row);
             return (
               <tr key={i} {...row.getRowProps()}>
-                {row.cells.map((cell, j) => (
-                  <td key={j} {...cell.getCellProps()}>
-                    {cell.render('Cell')}
-                  </td>
-                ))}
+                {row.cells.map(
+                  (cell, j) =>
+                    Boolean(!cell.column.hide) && (
+                      <td key={j} {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                      </td>
+                    ),
+                )}
               </tr>
             );
           })}

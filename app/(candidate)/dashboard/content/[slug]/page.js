@@ -11,7 +11,6 @@ import EditContentPage from './components/EditContentPage';
 const meta = pageMetaData({
   title: 'Campaign Content | GoodParty.org',
   description: 'Campaign Content',
-  //   slug: '/dashboard/content',
 });
 export const metadata = meta;
 

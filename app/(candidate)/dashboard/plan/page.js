@@ -4,7 +4,7 @@ import candidateAccess from '../shared/candidateAccess';
 import CampaignPlanPage from './components/CampaignPlanPage';
 import { getServerUser } from 'helpers/userServerHelper';
 import { notFound } from 'next/navigation';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/details/components/issues/issuesUtils';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
   title: 'Campaign Plan | GoodParty.org',

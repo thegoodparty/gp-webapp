@@ -54,3 +54,14 @@ export async function deleteThread(threadId) {
     return false;
   }
 }
+
+export async function chatFeedback(threadId, type, message) {
+  try {
+    const api = gpApi.campaign.chat.feedback;
+    const payload = { threadId, message, type };
+    return await gpFetch(api, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+}

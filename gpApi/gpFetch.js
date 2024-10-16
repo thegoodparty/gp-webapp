@@ -1,5 +1,14 @@
 import { getCookie } from 'helpers/cookieHelper';
 
+const IS_LOCAL_ENVIRONMENT =
+  Boolean(
+    typeof process !== 'undefined' &&
+      process?.env?.NEXT_PUBLIC_APP_BASE?.includes('localhost'),
+  ) ||
+  Boolean(
+    typeof window !== 'undefined' && window.location.href.includes('localhost'),
+  );
+
 async function gpFetch(
   endpoint,
   data,
@@ -70,7 +79,7 @@ async function fetchCall(
     delete options.body;
   }
   let res;
-  if (revalidate) {
+  if (revalidate && !IS_LOCAL_ENVIRONMENT) {
     res = await fetch(url, { ...options, next: { revalidate } });
   } else {
     res = await fetch(url, { ...options, cache: 'no-store' });

@@ -3,7 +3,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import { useState } from 'react';
 
 export default function FunFact({
   value,

@@ -13,6 +13,7 @@ import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboar
 import FullStorySelectiveInit from './FullStorySelectiveInit';
 
 export default function RightSide({ campaignStatus }) {
+  const { campaignRequestPending } = campaignStatus;
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -23,9 +24,7 @@ export default function RightSide({ campaignStatus }) {
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
   const isOnboardingPath =
-    pathname?.startsWith('/onboarding') ||
-    pathname?.startsWith('/browsing') ||
-    pathname === '/account-type';
+    pathname?.startsWith('/onboarding') || pathname === '/sign-up/account-type';
 
   const toggleProfile = () => {
     closeAll();
@@ -65,18 +64,20 @@ export default function RightSide({ campaignStatus }) {
             toggleCallback={toggleProfile}
             user={user}
           />
-          <DashboardOrContinue
-            isDashboardPath={isDashboardPath}
-            closeAll={closeAll}
-            campaignStatus={campaignStatus}
-          />
-          {isDashboardPath && (
-            <TopDashboardMenu
-              open={dashboardOpen}
-              toggleCallback={toggleDashboard}
-              pathname={pathname}
-            />
-          )}
+          {!campaignRequestPending &&
+            (isDashboardPath ? (
+              <TopDashboardMenu
+                open={dashboardOpen}
+                toggleCallback={toggleDashboard}
+                pathname={pathname}
+              />
+            ) : (
+              <DashboardOrContinue
+                isDashboardPath={isDashboardPath}
+                closeAll={closeAll}
+                campaignStatus={campaignStatus}
+              />
+            ))}
         </>
       ) : (
         <>
