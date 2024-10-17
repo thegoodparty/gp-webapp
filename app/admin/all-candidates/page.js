@@ -11,6 +11,7 @@ const meta = pageMetaData({
   slug: '/admin/candidates',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 export const fetchCandidates = async () => {
   const api = gpApi.admin.candidates;

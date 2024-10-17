@@ -11,6 +11,7 @@ const meta = pageMetaData({
   slug: '/admin/top-issues',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 const fetchIssues = async () => {
   const api = gpApi.admin.topIssues.list;

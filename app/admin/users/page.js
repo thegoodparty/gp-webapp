@@ -11,6 +11,7 @@ const meta = pageMetaData({
   slug: '/admin/users',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 const fetchUsers = async () => {
   const api = gpApi.admin.users;

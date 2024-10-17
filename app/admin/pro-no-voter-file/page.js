@@ -21,6 +21,7 @@ const meta = pageMetaData({
   slug: '/admin/pro-no-voter-file',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 export default async function Page() {
   await adminAccessOnly();
