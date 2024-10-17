@@ -3,9 +3,8 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
-
-import { useEffect, useState } from 'react';
-
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import { useEffect, useMemo, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 
 export default function InputFieldsModal({
@@ -14,8 +13,17 @@ export default function InputFieldsModal({
   showModal,
   inputFields,
   inputValues,
+  selected,
 }) {
   const [inputState, setInputState] = useState({});
+
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Generate AI Content Additional Fields Submit', {
+        key: selected,
+      }),
+    [selected],
+  );
 
   useEffect(() => {
     if (inputValues) {
@@ -116,7 +124,7 @@ export default function InputFieldsModal({
           }}
         />
         <div className="flex justify-center mt-6">
-          <div onClick={handleCreate}>
+          <div onClick={handleCreate} {...trackingAttrs}>
             <PrimaryButton disabled={!canCreate()}>Create</PrimaryButton>
           </div>
         </div>
