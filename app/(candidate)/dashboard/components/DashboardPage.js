@@ -194,8 +194,6 @@ export default function DashboardPage(props) {
     deleteHistoryCallBack,
   };
 
-  console.log('WEKS', weeksUntil.weeks);
-
   return (
     <DashboardLayout {...childProps}>
       <div>

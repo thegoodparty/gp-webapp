@@ -3,11 +3,11 @@ import Modal from '@shared/utils/Modal';
 import { useState, useMemo } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowInstructions from './ScheduleFlowInstructions';
-import ScheduleFlowStep1 from './ScheduleFlowStep1';
-import ScheduleFlowStep2 from './ScheduleFlowStep2';
+import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep';
+import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep';
 import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
-import ScheduleFlowStep4 from './ScheduleFlowStep4';
-import ScheduleFlowStep5 from './ScheduleFlowStep5';
+import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
+import ScheduleFlowComplete from './ScheduleFlowComplete';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -191,7 +191,7 @@ export default function ScheduleFlow({
           <ScheduleFlowInstructions type={type} {...callbackProps} />
         )}
         {stepName === 'budget' && (
-          <ScheduleFlowStep1
+          <ScheduleFlowBudgetStep
             type={type}
             value={state.budget}
             voicemailValue={state.voicemail}
@@ -199,7 +199,7 @@ export default function ScheduleFlow({
           />
         )}
         {stepName === 'audience' && (
-          <ScheduleFlowStep2
+          <ScheduleFlowAudienceStep
             type={type}
             withVoicemail={!!state.voicemail}
             audience={state.audience}
@@ -214,15 +214,18 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {stepName === 'image' && <ScheduleFlowImageStep {...callbackProps} />}
+        {stepName === 'image' && (
+          <ScheduleFlowImageStep image={state.image} {...callbackProps} />
+        )}
         {stepName === 'schedule' && (
-          <ScheduleFlowStep4
+          <ScheduleFlowScheduleStep
+            schedule={state.schedule}
             type={type}
             fileName={fileName}
             {...callbackProps}
           />
         )}
-        {stepName === 'complete' && <ScheduleFlowStep5 {...callbackProps} />}
+        {stepName === 'complete' && <ScheduleFlowComplete {...callbackProps} />}
       </Modal>
     </>
   );

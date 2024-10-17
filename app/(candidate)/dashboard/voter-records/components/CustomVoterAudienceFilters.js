@@ -88,24 +88,28 @@ const purposeToFilters = {
 };
 
 export default function CustomVoterAudienceFilters({
+  audience,
+  showAudienceRequest,
   prevStepValues,
   onChangeCallback,
 }) {
   // set initial state to all false
-  const [state, setState] = useState({
-    audience_superVoters: false,
-    audience_likelyVoters: false,
-    audience_unreliableVoters: false,
-    audience_unlikelyVoters: false,
-    audience_firstTimeVoters: false,
-    party_independent: false,
-    party_democrat: false,
-    party_republican: false,
-    age_18_25: false,
-    age_25_35: false,
-    age_35_50: false,
-    audience_request: '',
-  });
+  const [state, setState] = useState(
+    audience || {
+      audience_superVoters: false,
+      audience_likelyVoters: false,
+      audience_unreliableVoters: false,
+      audience_unlikelyVoters: false,
+      audience_firstTimeVoters: false,
+      party_independent: false,
+      party_democrat: false,
+      party_republican: false,
+      age_18_25: false,
+      age_25_35: false,
+      age_35_50: false,
+      audience_request: '',
+    },
+  );
 
   const { purpose } = prevStepValues || {};
 
@@ -148,18 +152,20 @@ export default function CustomVoterAudienceFilters({
           ))}
         </div>
       ))}
-      <TextField
-        className="col-span-12 mt-2 rounded-lg"
-        label="Audience Request"
-        placeholder="Is there a specific area in your district you are trying to target? Are you interested in reaching out to veterans in your community? Let us know here. "
-        value={state.audience_request}
-        onChange={(e) =>
-          handleChangeAudience('audience_request', e.target.value)
-        }
-        InputLabelProps={{ shrink: true, className: 'font-sfpro text-black' }}
-        multiline
-        rows={3}
-      ></TextField>
+      {showAudienceRequest && (
+        <TextField
+          className="col-span-12 mt-2 rounded-lg"
+          label="Audience Request"
+          placeholder="Is there a specific area in your district you are trying to target? Are you interested in reaching out to veterans in your community? Let us know here. "
+          value={state.audience_request}
+          onChange={(e) =>
+            handleChangeAudience('audience_request', e.target.value)
+          }
+          InputLabelProps={{ shrink: true, className: 'font-sfpro text-black' }}
+          multiline
+          rows={3}
+        ></TextField>
+      )}
     </div>
   );
 }
