@@ -1,14 +1,16 @@
 'use client';
+
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import CustomVoterAudienceFilters from '../../components/CustomVoterAudienceFilters';
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { countVoterFile } from './RecordCount';
 import { numberFormatter } from 'helpers/numberHelper';
+import { debounce } from 'helpers/debounceHelper';
 
-export default function ScheduleFlowStep2({
+export default function ScheduleFlowAudienceStep({
   onChangeCallback,
   nextCallback,
   backCallback,
@@ -18,24 +20,30 @@ export default function ScheduleFlowStep2({
   isCustom,
 }) {
   const [count, setCount] = useState(0);
+  const hasValues = useMemo(
+    () => Object.values(audience).some((value) => value === true),
+    [audience],
+  );
 
-  const handleChangeAudience = async (newState) => {
+  useEffect(() => {
+    if (!hasValues) return;
+
+    debounce(async () => {
+      const selectedAudience = Object.keys(audience).filter(
+        (key) => audience[key] === true,
+      );
+      const res = await countVoterFile(isCustom ? 'custom' : type, {
+        filters: selectedAudience,
+      });
+
+      setCount(res?.count);
+    }, 300);
+  }, [audience, isCustom, type, hasValues]);
+
+  const handleChangeAudience = (newState) => {
     onChangeCallback('audience', newState);
-    // setState(newState);
-    const selectedAudience = Object.keys(newState).filter(
-      (key) => newState[key] === true,
-    );
-    const res = await countVoterFile(isCustom ? 'custom' : type, {
-      filters: selectedAudience,
-    });
-    setCount(res?.count);
   };
 
-  const canContinue = () => {
-    return (
-      count !== 0 && Object.values(audience).some((value) => value === true)
-    );
-  };
   let isTel = type === 'telemarketing';
   let price = 0.03;
   if (type === 'telemarketing') {
@@ -64,14 +72,18 @@ export default function ScheduleFlowStep2({
           </span>
         </div>
         <div className="text-left">
-          <CustomVoterAudienceFilters onChangeCallback={handleChangeAudience} />
+          <CustomVoterAudienceFilters
+            showAudienceRequest
+            audience={audience}
+            onChangeCallback={handleChangeAudience}
+          />
         </div>
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-6">
             <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
           </div>
           <div className="col-span-6 text-right mt-6">
-            <PrimaryButton onClick={nextCallback} disabled={!canContinue()}>
+            <PrimaryButton onClick={nextCallback} disabled={!hasValues}>
               Next
             </PrimaryButton>
           </div>
