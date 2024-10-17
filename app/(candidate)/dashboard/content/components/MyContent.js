@@ -13,6 +13,7 @@ import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
 import NewContentFlow from './NewContentFlow';
 import { generateAIContent } from 'helpers/generateAIContent';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 const subSectionKey = 'aiContent';
 let aiTotalCount = 0;
@@ -41,6 +42,7 @@ export default function MyContent(props) {
 
   const onSelectPrompt = (key, additionalPrompts, inputValues) => {
     setJobStarting(true);
+    trackEvent('ai_content_generation_start', { key });
     if (additionalPrompts) {
       setInitialChat(additionalPrompts);
     }
