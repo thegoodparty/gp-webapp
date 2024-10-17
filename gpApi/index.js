@@ -23,11 +23,6 @@ if (!appBase) {
   base = `${appBase}/api/v1/`;
 }
 
-console.log('=====================');
-console.log('apiBase', apiBase);
-console.log('appBase', appBase);
-console.log('base', base);
-
 const gpApi = {
   homepage: {
     subscribeEmail: {
