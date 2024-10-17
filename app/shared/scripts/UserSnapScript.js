@@ -18,10 +18,10 @@ export default function UserSnapScript() {
         },
       });
 
-      api.on('beforeSubmit', async ({ values, api }) => {
+      api.on('beforeSubmit', ({ values, api }) => {
         try {
           if (typeof FS !== 'undefined') {
-            const fullstoryUrl = await FS('getSessionAsync', {
+            const fullstoryUrl = FS('getSession', {
               format: 'url.now',
             });
             api.setValue('custom', { ...values.custom, fullstoryUrl });
