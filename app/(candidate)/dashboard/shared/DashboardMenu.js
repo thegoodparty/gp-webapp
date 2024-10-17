@@ -79,11 +79,11 @@ const DOOR_KNOCKING_MENU_ITEM = {
   id: 'door-knocking-dashboard',
 };
 
-const CAMPAIGN_MANAGER_MENU_ITEM = {
-  label: 'Campaign Manager',
+const CAMPAIGN_ASSISTANT_MENU_ITEM = {
+  label: 'Campaign Assistant',
   icon: <BsStars />,
-  link: '/dashboard/campaign-manager',
-  id: 'campaign-manager-dashboard',
+  link: '/dashboard/campaign-assistant',
+  id: 'campaign-assistant-dashboard',
 };
 
 const getDashboardMenuItems = (campaign, user) => {
@@ -93,7 +93,7 @@ const getDashboardMenuItems = (campaign, user) => {
   }
   if (user?.isAdmin) {
     menuItems.splice(5, 0, DOOR_KNOCKING_MENU_ITEM);
-    menuItems.splice(1, 0, CAMPAIGN_MANAGER_MENU_ITEM);
+    menuItems.splice(1, 0, CAMPAIGN_ASSISTANT_MENU_ITEM);
   }
   return menuItems;
 };
