@@ -16,40 +16,63 @@ import H2 from '@shared/typography/H2';
 import WinnerListSection from '../winners/WinnerListSection';
 import { useMapCampaigns } from '@shared/hooks/useMapCampaigns';
 import ShareMap from './ShareMap';
+import { useRouter } from 'next/navigation';
+import { debounce2 } from 'helpers/debounceHelper';
 
 export const MapContext = createContext();
 
 const ZOOMED_IN = 14;
 const INITIAL_ZOOM = 5;
 
-const center = {
+const INIT_CENTER = {
   lat: 39.8283,
   lng: -98.5795,
 };
 
-export default function MapSection({ isLoaded, state }) {
+export default function MapSection({ isLoaded, state, searchParams }) {
   const [allCampaigns, setAllCampaigns] = useState(null); // State to store the first response
-
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [mapCenter, setMapCenter] = useState(center);
-  const [zoom, setZoom] = useState(INITIAL_ZOOM);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [isFilterChanged, setIsFilterChanged] = useState(false);
   const [filters, setFilters] = useState({
-    party: '',
+    party: searchParams?.party || '',
     state: state || '',
-    level: '',
-    results: false,
-    office: '',
-    name: '',
-    neLat: false,
-    neLng: false,
-    swLat: false,
-    swLng: false,
+    level: searchParams?.level || '',
+    results: searchParams?.results === 'true',
+    office: searchParams?.office || '',
+    name: searchParams?.name || '',
+    neLat: searchParams?.neLat || false,
+    neLng: searchParams?.neLng || false,
+    swLat: searchParams?.swLat || false,
+    swLng: searchParams?.swLng || false,
+    zoom: searchParams?.zoom || INITIAL_ZOOM,
+    mapCenterLat: searchParams?.mapCenterLat || '',
+    mapCenterLng: searchParams?.mapCenterLng || '',
   });
+
+  useEffect(() => {
+    // if (!searchParams) return;
+
+    console.log('in use effect', searchParams);
+    setFilters({
+      party: searchParams?.party || '',
+      state: state || '',
+      level: searchParams?.level || '',
+      results: searchParams?.results === 'true',
+      office: searchParams?.office || '',
+      name: searchParams?.name || '',
+      neLat: searchParams?.neLat || false,
+      neLng: searchParams?.neLng || false,
+      swLat: searchParams?.swLat || false,
+      swLng: searchParams?.swLng || false,
+      zoom: searchParams?.zoom || INITIAL_ZOOM,
+      mapCenterLat: searchParams?.mapCenterLat || '',
+      mapCenterLng: searchParams?.mapCenterLng || '',
+    });
+  }, [searchParams, state]);
+
   const isFilterEmpty = Object.values(filters).every((val) => !val);
-  const { campaigns, isCampaignsLoading, setIsCampaignsLoading } =
-    useMapCampaigns(isFilterEmpty ? null : filters);
+  const { campaigns } = useMapCampaigns(isFilterEmpty ? null : filters);
 
   useEffect(() => {
     // Only cache the first response
@@ -61,25 +84,49 @@ export default function MapSection({ isLoaded, state }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    if (campaigns && campaigns.length > 0) {
+    if (campaigns) {
       setLoading(false);
     }
   }, [campaigns]);
 
   const onChangeFilters = useCallback((key, val) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
+    // add the filters to the url query only if they are not empty
+    const query = Object.entries({
+      ...filters,
       [key]: val,
-    }));
-    setIsCampaignsLoading(true);
-    setIsFilterChanged(true);
+    }).reduce((acc, [key, val]) => {
+      if (val) {
+        acc[key] = val;
+      }
+      return acc;
+    }, {});
+
+    console.log('updaring url changeFilters');
+    const queryString = new URLSearchParams(query).toString();
+    router.push(`?${queryString}`, { scroll: false, shallow: true });
   }, []);
 
+  // on Change Filters that can take multiple keys and values
+  const onChangeFiltersMultiple = (newFilters) => {
+    const query = Object.entries({
+      ...filters,
+      ...newFilters,
+    }).reduce((acc, [key, val]) => {
+      if (val) {
+        acc[key] = val;
+      }
+      return acc;
+    }, {});
+    console.log('filters', filters);
+    console.log('newFilters', newFilters);
+    console.log('query', query);
+    console.log('updating route onChangeFiltersMultiple');
+    const queryString = new URLSearchParams(query).toString();
+    router.push(`?${queryString}`, { scroll: false, shallow: true });
+  };
+
   const onChangeMapBounds = useCallback((bounds) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      ...bounds,
-    }));
+    onChangeFiltersMultiple(bounds);
   }, []);
 
   const onSelectCampaign = (campaign) => {
@@ -90,42 +137,47 @@ export default function MapSection({ isLoaded, state }) {
       setSelectedCampaign(null);
       return;
     }
-    setMapCenter({
-      lat: campaign.position.lat,
-      lng: campaign.position.lng,
+    console.log('onSelectCampaign', campaign);
+    onChangeFiltersMultiple({
+      zoom: ZOOMED_IN,
+      mapCenterLat: campaign.position.lat,
+      mapCenterLng: campaign.position.lng,
     });
-    setZoom(ZOOMED_IN);
+
     setSelectedCampaign(campaign);
   };
+  const center = {
+    lat: filters.mapCenterLat
+      ? parseFloat(filters.mapCenterLat)
+      : INIT_CENTER.lat,
+    lng: filters.mapCenterLng
+      ? parseFloat(filters.mapCenterLng)
+      : INIT_CENTER.lng,
+  };
 
+  const zoom = filters.zoom ? parseInt(filters.zoom, 10) : INITIAL_ZOOM;
   // Memoized childProps to prevent unnecessary re-renders
   const childProps = useMemo(
     () => ({
       campaigns,
       filters,
       onChangeFilters,
-      mapCenter,
+      mapCenter: center,
       isLoaded,
       zoom,
       mapRef,
       onSelectCampaign,
       selectedCampaign,
       onChangeMapBounds,
-      isFilterChanged,
-      setIsFilterChanged,
-      isCampaignsLoading,
     }),
     [
       campaigns,
       filters,
-      mapCenter,
+      center,
       isLoaded,
-      zoom,
       selectedCampaign,
       onChangeFilters,
       onChangeMapBounds,
-      isFilterChanged,
-      isCampaignsLoading,
     ],
   );
 
@@ -136,29 +188,22 @@ export default function MapSection({ isLoaded, state }) {
   return (
     <>
       <MapContext.Provider value={childProps}>
-        {loading ? (
-          <div className="h-[calc(100vh-56px)] flex items-center justify-center flex-col">
-            <CircularProgress />
-            <H2 className="mt-2">Loading...</H2>
-          </div>
-        ) : (
-          <div className="bg-primary-dark">
-            <section className="md:h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden relative">
-              <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
-                <div className="flex-1 h-3/4 md:h-auto">
-                  <Map />
-                </div>
-                <div className="flex flex-col shadow-lg md:relative z-20">
-                  <Filters />
-                  <Results />
-                  <CampaignPreview />
-                </div>
+        <div className="bg-primary-dark">
+          <section className="md:h-[calc(100vh-56px)] bg-primary-dark px-4 lg:px-8 overflow-hidden relative">
+            <div className="md:flex flex-row-reverse rounded-2xl overflow-hidden">
+              <div className="flex-1 h-3/4 md:h-auto">
+                <Map />
               </div>
-            </section>
-            <ShareMap />
-            <div className="h-4 md:h-8 bg-primary-dark">&nbsp;</div>
-          </div>
-        )}
+              <div className="flex flex-col shadow-lg md:relative z-20">
+                <Filters />
+                <Results />
+                <CampaignPreview />
+              </div>
+            </div>
+          </section>
+          <ShareMap />
+          <div className="h-4 md:h-8 bg-primary-dark">&nbsp;</div>
+        </div>
       </MapContext.Provider>
       <WinnerListSection allCampaigns={allCampaigns} />
     </>

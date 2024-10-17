@@ -8,7 +8,7 @@ import {
   MarkerClusterer,
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer';
-import { debounce } from 'helpers/debounceHelper';
+import { debounce, debounce2 } from 'helpers/debounceHelper';
 
 const containerStyle = {
   width: '100%',
@@ -31,45 +31,53 @@ const Map = () => {
     zoom,
     onChangeMapBounds,
     onSelectCampaign,
-    isFilterChanged,
-    setIsFilterChanged,
-    isCampaignsLoading,
+    filters,
   } = useContext(MapContext);
 
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const markerClusterRef = useRef(null);
-  const isProgrammaticChangeRef = useRef(false);
   // Initialize Google Map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapContainerRef.current) return;
 
     const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
       center: mapCenter,
-      zoom: zoom,
+      zoom,
       ...mapOptions,
     });
 
     mapRef.current = mapInstance;
 
-    const idleListener = mapInstance.addListener('idle', () => {
-      if (isProgrammaticChangeRef.current) {
-        isProgrammaticChangeRef.current = false;
-        return;
-      }
-
+    const debouncedUpdateBounds = debounce2(() => {
       const bounds = mapInstance.getBounds();
       if (bounds) {
         const ne = bounds.getNorthEast();
         const sw = bounds.getSouthWest();
-        debounce(onChangeMapBounds, 500, {
-          neLat: ne.lat(),
-          neLng: ne.lng(),
-          swLat: sw.lat(),
-          swLng: sw.lng(),
-        });
+        const currentCenter = mapInstance.getCenter();
+        const currentZoom = mapInstance.getZoom();
+        if (
+          filters.neLat != ne?.lat() ||
+          filters.neLng != ne?.lng() ||
+          filters.swLat != sw?.lat() ||
+          filters.swLng != sw?.lng()
+        ) {
+          onChangeMapBounds({
+            neLat: ne?.lat(),
+            neLng: ne?.lng(),
+            swLat: sw?.lat(),
+            swLng: sw?.lng(),
+            mapCenterLat: currentCenter?.lat(),
+            mapCenterLng: currentCenter?.lng(),
+            zoom: currentZoom,
+          });
+        }
       }
+    }, 500);
+
+    const idleListener = mapInstance.addListener('idle', () => {
+      debouncedUpdateBounds();
     });
 
     // Cleanup listener on unmount
@@ -114,23 +122,6 @@ const Map = () => {
       return marker;
     });
   }, [campaigns, onSelectCampaign]);
-
-  const adjustMapBounds = useCallback(() => {
-    if (!mapRef.current || campaigns.length === 0) {
-      return;
-    }
-    if (isFilterChanged && !isCampaignsLoading) {
-      const bounds = new window.google.maps.LatLngBounds();
-
-      campaigns.forEach((campaign) => {
-        bounds.extend(campaign.position);
-      });
-
-      isProgrammaticChangeRef.current = true;
-      mapRef.current.fitBounds(bounds);
-      setIsFilterChanged(false);
-    }
-  }, [campaigns, isFilterChanged, isCampaignsLoading]);
 
   // Custom renderer for cluster icons
   const customRenderer = {
@@ -201,32 +192,17 @@ const Map = () => {
 
     markerClusterRef.current = newMarkerCluster;
 
-    adjustMapBounds();
-
     // Cleanup on unmount
     return () => {
       clearMarkers();
     };
-  }, [campaigns, isLoaded, adjustMapBounds]);
+  }, [campaigns, isLoaded]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
-      {isLoaded ? (
-        <>
-          <div ref={mapContainerRef} style={containerStyle}>
-            {/* Map will be rendered here */}
-          </div>
-          {isCampaignsLoading && (
-            <div className="h-full w-full absolute top-0 left-0 bg-black bg-opacity-80 flex items-center justify-center z-40 text-white">
-              <H3>Loading...</H3>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="h-[calc(100vh-56px)] flex flex-col items-center justify-center mb-4 py-4">
-          <H3>Loading...</H3>
-        </div>
-      )}
+      <div ref={mapContainerRef} style={containerStyle}>
+        {/* Map will be rendered here */}
+      </div>
     </div>
   );
 };
