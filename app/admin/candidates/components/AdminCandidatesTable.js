@@ -165,6 +165,8 @@ export default function AdminCandidatesTable({ campaigns }) {
         ? 'Yes'
         : 'No';
 
+    let viabilityScore = pathToVictory?.data?.viability?.score || 0;
+
     if (!details?.pledged) {
       waitingForP2v = 'n/a';
     }
@@ -227,6 +229,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       yardSigns: reportedVoterGoals?.yardSigns || 0,
       aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
       waitingForP2v,
+      viabilityScore,
       pledged: details?.pledged && details.pledged === true ? 'Yes' : 'No',
       knowRun: runningForOffice,
       isPro: isPro ? 'Yes' : 'No',
@@ -313,6 +316,10 @@ export default function AdminCandidatesTable({ campaigns }) {
     {
       Header: 'Waiting for P2V',
       accessor: 'waitingForP2v',
+    },
+    {
+      Header: 'Viability Score',
+      accessor: 'viabilityScore',
     },
     {
       Header: 'Running',
