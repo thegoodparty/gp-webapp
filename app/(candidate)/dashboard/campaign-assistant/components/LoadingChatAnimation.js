@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 import Body2 from '@shared/typography/Body2';
 
 const messages = [

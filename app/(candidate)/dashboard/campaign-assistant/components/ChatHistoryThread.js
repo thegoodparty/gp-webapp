@@ -3,7 +3,7 @@ import Body2 from '@shared/typography/Body2';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { useContext } from 'react';
 import { BsStars } from 'react-icons/bs';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 import DeleteThread from './DeleteThread';
 
 export default function ChatHistoryThread({ chat, closeDrawer }) {

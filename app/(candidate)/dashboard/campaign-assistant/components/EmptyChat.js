@@ -3,7 +3,7 @@ import Button from '@shared/buttons/Button';
 import Body2 from '@shared/typography/Body2';
 import { useContext } from 'react';
 import { BsStars } from 'react-icons/bs';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 
 const prompts = [
   {

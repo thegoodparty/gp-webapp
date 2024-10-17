@@ -6,7 +6,7 @@ import Modal from '@shared/utils/Modal';
 import { useContext, useState } from 'react';
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
 import { chatFeedback } from './ajaxActions';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 
 export default function ChatFeedback() {
   const { feedback: dbFeedback, threadId } = useContext(ChatContext);

@@ -1,6 +1,6 @@
 import TextField from '@shared/inputs/TextField';
 import { MdSend } from 'react-icons/md';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 import { useContext, useState } from 'react';
 import { GiSandsOfTime } from 'react-icons/gi';
 
