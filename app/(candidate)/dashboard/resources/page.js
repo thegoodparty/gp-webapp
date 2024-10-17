@@ -10,7 +10,7 @@ import gpFetch from 'gpApi/gpFetch';
 async function fetchArticlesBySlug() {
   const api = gpApi.content.articlesBySlug;
 
-  return await gpFetch(api, false, 1);
+  return await gpFetch(api, false, 7200);
 }
 
 const meta = pageMetaData({
