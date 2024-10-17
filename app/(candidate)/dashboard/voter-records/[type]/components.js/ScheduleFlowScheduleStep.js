@@ -8,18 +8,21 @@ import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { useState, useMemo } from 'react';
 import { getDefaultVoterFileName } from '../../components/VoterFileTypes';
 
-export default function ScheduleFlowStep4({
+export default function ScheduleFlowScheduleStep({
   onChangeCallback,
   nextCallback,
   backCallback,
   submitCallback,
   fileName,
   type,
+  schedule,
 }) {
-  const [state, setState] = useState({
-    date: '',
-    message: '',
-  });
+  const [state, setState] = useState(
+    schedule || {
+      date: '',
+      message: '',
+    },
+  );
 
   const resolvedFileName = useMemo(
     () => (fileName ? fileName : getDefaultVoterFileName(type)),
@@ -93,7 +96,7 @@ export default function ScheduleFlowStep4({
             rows={5}
             fullWidth
             required
-            value={state.newDesc}
+            value={state.message}
             onChange={(e) => {
               onChangeField('message', e.target.value);
             }}
@@ -110,7 +113,7 @@ export default function ScheduleFlowStep4({
               disabled={!canSubmit()}
               {...trackingAttrs}
             >
-              Next
+              Submit
             </PrimaryButton>
           </div>
         </div>
