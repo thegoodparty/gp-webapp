@@ -4,6 +4,14 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import ResourcesPage from './components/ResourcesPage';
 import { getServerUser } from 'helpers/userServerHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
+
+async function fetchArticlesBySlug() {
+  const api = gpApi.content.articlesBySlug;
+
+  return await gpFetch(api, false, 1);
+}
 
 const meta = pageMetaData({
   title: 'Campaign Resources | GoodParty.org',
@@ -15,8 +23,9 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const { content } = await fetchContentByKey('blogArticles');
-  const articlesBySlug = mapArticlesBySlug(content);
+  const { articles: articlesBySlug } = await fetchArticlesBySlug(
+    'blogArticles',
+  );
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
   const { campaign } = await fetchUserCampaign();
@@ -29,12 +38,4 @@ export default async function Page({ params, searchParams }) {
   };
 
   return <ResourcesPage {...childProps} />;
-}
-
-function mapArticlesBySlug(content = []) {
-  let bySlug = {};
-  content.forEach((article) => {
-    bySlug[article.slug] = article;
-  });
-  return bySlug;
 }
