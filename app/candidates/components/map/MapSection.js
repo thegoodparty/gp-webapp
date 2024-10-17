@@ -53,7 +53,6 @@ export default function MapSection({ isLoaded, state, searchParams }) {
   useEffect(() => {
     // if (!searchParams) return;
 
-    console.log('in use effect', searchParams);
     setFilters({
       party: searchParams?.party || '',
       state: state || '',
@@ -101,7 +100,6 @@ export default function MapSection({ isLoaded, state, searchParams }) {
       return acc;
     }, {});
 
-    console.log('updaring url changeFilters');
     const queryString = new URLSearchParams(query).toString();
     router.push(`?${queryString}`, { scroll: false, shallow: true });
   }, []);
@@ -117,10 +115,7 @@ export default function MapSection({ isLoaded, state, searchParams }) {
       }
       return acc;
     }, {});
-    console.log('filters', filters);
-    console.log('newFilters', newFilters);
-    console.log('query', query);
-    console.log('updating route onChangeFiltersMultiple');
+
     const queryString = new URLSearchParams(query).toString();
     router.push(`?${queryString}`, { scroll: false, shallow: true });
   };
@@ -137,7 +132,6 @@ export default function MapSection({ isLoaded, state, searchParams }) {
       setSelectedCampaign(null);
       return;
     }
-    console.log('onSelectCampaign', campaign);
     onChangeFiltersMultiple({
       zoom: ZOOMED_IN,
       mapCenterLat: campaign.position.lat,
