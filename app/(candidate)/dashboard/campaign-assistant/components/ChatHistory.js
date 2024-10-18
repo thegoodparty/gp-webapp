@@ -4,7 +4,7 @@ import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import { useContext, useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 import ChatHistoryThread from './ChatHistoryThread';
 import Overline from '@shared/typography/Overline';
 

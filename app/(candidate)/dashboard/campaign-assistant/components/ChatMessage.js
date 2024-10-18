@@ -8,7 +8,7 @@ import { useContext, useState } from 'react';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineRefresh } from 'react-icons/md';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 import ChatFeedback from './ChatFeedback';
 
 export default function ChatMessage({
