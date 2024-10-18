@@ -49,10 +49,8 @@ export default function MapSection({ isLoaded, state, searchParams }) {
     mapCenterLat: searchParams?.mapCenterLat || '',
     mapCenterLng: searchParams?.mapCenterLng || '',
   });
-
   useEffect(() => {
     // if (!searchParams) return;
-
     setFilters({
       party: searchParams?.party || '',
       state: state || '',
@@ -88,21 +86,34 @@ export default function MapSection({ isLoaded, state, searchParams }) {
     }
   }, [campaigns]);
 
-  const onChangeFilters = useCallback((key, val) => {
-    // add the filters to the url query only if they are not empty
-    const query = Object.entries({
-      ...filters,
-      [key]: val,
-    }).reduce((acc, [key, val]) => {
-      if (val) {
-        acc[key] = val;
-      }
-      return acc;
-    }, {});
+  const onChangeFilters = useCallback(
+    (key, val) => {
+      // add the filters to the url query only if they are not empty
 
-    const queryString = new URLSearchParams(query).toString();
-    router.push(`?${queryString}`, { scroll: false, shallow: true });
-  }, []);
+      setFilters((prev) => {
+        const updatedFilters = {
+          ...prev,
+          [key]: val,
+        };
+
+        const query = Object.entries(updatedFilters).reduce(
+          (acc, [key, val]) => {
+            if (val) {
+              acc[key] = val;
+            }
+            return acc;
+          },
+          {},
+        );
+
+        const queryString = new URLSearchParams(query).toString();
+        router.push(`?${queryString}`, { scroll: false, shallow: true });
+
+        return updatedFilters;
+      });
+    },
+    [router, filters],
+  );
 
   // on Change Filters that can take multiple keys and values
   const onChangeFiltersMultiple = (newFilters) => {
@@ -115,6 +126,11 @@ export default function MapSection({ isLoaded, state, searchParams }) {
       }
       return acc;
     }, {});
+
+    setFilters((prev) => ({
+      ...prev,
+      ...newFilters,
+    }));
 
     const queryString = new URLSearchParams(query).toString();
     router.push(`?${queryString}`, { scroll: false, shallow: true });
