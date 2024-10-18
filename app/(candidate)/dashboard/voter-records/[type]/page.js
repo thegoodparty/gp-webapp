@@ -37,7 +37,7 @@ export default async function Page({ params, searchParams }) {
 
   const hasCompletedQuestions = answeredQuestions >= totalQuestions;
 
-  // TODO: Why in the world aren't these booleans just being passed along from the entity in Contentful?
+  // TODO: Find out why in the world aren't these booleans just being passed along from the entity in Contentful.
   const requiresQuestions = !hasCompletedQuestions
     ? (await fetchContentByKey('contentPromptsQuestions', 3600))?.content
     : {};

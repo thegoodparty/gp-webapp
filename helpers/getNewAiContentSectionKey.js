@@ -1,3 +1,5 @@
+// TODO: this should be looking at the current set of aiContent keys and making
+//  the determination based on that, not some arbitrary count w/ a limit of 100
 export const getNewAiContentSectionKey = (sections, selected) => {
   if (!sections[selected]) {
     return selected;

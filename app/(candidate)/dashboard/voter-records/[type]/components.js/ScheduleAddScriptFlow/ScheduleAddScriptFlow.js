@@ -15,7 +15,7 @@ export default function ScheduleAddScriptFlow({
   aiTemplateCategories = [],
 }) {
   const [currentScreen, setCurrentScreen] = useState(
-    ADD_SCRIPT_FLOW.GENERATE_REVIEW, //ADD_SCRIPT_FLOW.CHOOSE_FLOW,
+    ADD_SCRIPT_FLOW.CHOOSE_FLOW,
   );
   const [aiTemplateKey, setAiTemplateKey] = useState('');
   const [aiScriptKey, setAiScriptKey] = useState('');
