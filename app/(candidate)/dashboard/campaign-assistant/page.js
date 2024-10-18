@@ -3,6 +3,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import CampaignAssistantPage from './components/CampaignAssistantPage';
 import { getServerUser } from 'helpers/userServerHelper';
 import { adminAccessOnly } from 'helpers/permissionHelper';
+import candidateAccess from '../shared/candidateAccess';
 
 const meta = pageMetaData({
   title: 'Campaign Assistant | GoodParty.org',
@@ -12,8 +13,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
-  // await candidateAccess();
-  await adminAccessOnly();
+  await candidateAccess();
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
   const { campaign } = await fetchUserCampaign();

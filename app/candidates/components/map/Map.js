@@ -1,5 +1,12 @@
 'use client';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import mapSkin from './mapSkin';
 import H3 from '@shared/typography/H3';
 import { MapContext } from './MapSection';
@@ -9,6 +16,7 @@ import {
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer';
 import { debounce, debounce2 } from 'helpers/debounceHelper';
+import { useRouter } from 'next/navigation';
 
 const containerStyle = {
   width: '100%',
@@ -34,16 +42,27 @@ const Map = () => {
     filters,
   } = useContext(MapContext);
 
+  const router = useRouter();
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const markerClusterRef = useRef(null);
-  // Initialize Google Map
+
+  // Memoize the map center to prevent unnecessary re-renders
+  const memoizedCenter = useMemo(() => mapCenter, [mapCenter]);
+
+  // Initialize Google Map once
   useEffect(() => {
-    if (!isLoaded || !window.google || !mapContainerRef.current) return;
+    if (
+      !isLoaded ||
+      !window.google ||
+      !mapContainerRef.current ||
+      mapRef.current
+    )
+      return;
 
     const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
-      center: mapCenter,
+      center: memoizedCenter,
       zoom,
       ...mapOptions,
     });
@@ -57,11 +76,12 @@ const Map = () => {
         const sw = bounds.getSouthWest();
         const currentCenter = mapInstance.getCenter();
         const currentZoom = mapInstance.getZoom();
+
         if (
-          filters.neLat != ne?.lat() ||
-          filters.neLng != ne?.lng() ||
-          filters.swLat != sw?.lat() ||
-          filters.swLng != sw?.lng()
+          filters.neLat !== ne?.lat() ||
+          filters.neLng !== ne?.lng() ||
+          filters.swLat !== sw?.lat() ||
+          filters.swLng !== sw?.lng()
         ) {
           onChangeMapBounds({
             neLat: ne?.lat(),
@@ -80,11 +100,18 @@ const Map = () => {
       debouncedUpdateBounds();
     });
 
-    // Cleanup listener on unmount
     return () => {
       window.google.maps.event.removeListener(idleListener);
     };
-  }, [isLoaded, mapCenter, zoom, onChangeMapBounds]);
+  }, [isLoaded, memoizedCenter, zoom, onChangeMapBounds, filters]);
+
+  // Update map center and zoom without reinitializing the map
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setCenter(memoizedCenter);
+      mapRef.current.setZoom(zoom);
+    }
+  }, [memoizedCenter, zoom]);
 
   const clearMarkers = () => {
     if (markersRef.current.length > 0) {
@@ -98,6 +125,7 @@ const Map = () => {
     }
   };
 
+  // Memoize the createMarkers function to prevent it from changing on every render
   const createMarkers = useCallback(() => {
     if (!mapRef.current || !window.google) {
       console.log('Map or Google not ready yet');
@@ -123,47 +151,12 @@ const Map = () => {
     });
   }, [campaigns, onSelectCampaign]);
 
-  // Custom renderer for cluster icons
-  const customRenderer = {
-    render({ count, position }) {
-      let iconSize, labelFontSize;
-      if (count < 10) {
-        iconSize = new window.google.maps.Size(60, 60);
-        labelFontSize = '11px';
-      }
-      if (count < 100) {
-        iconSize = new window.google.maps.Size(80, 80);
-        labelFontSize = '11px';
-      } else {
-        iconSize = new window.google.maps.Size(100, 100);
-        labelFontSize = '11px';
-      }
-
-      return new window.google.maps.Marker({
-        position,
-        icon: {
-          url: 'https://assets.goodparty.org/map-cluster-icon-center.png',
-          scaledSize: iconSize,
-          labelOrigin: new window.google.maps.Point(
-            iconSize.width / 2,
-            iconSize.height / 2,
-          ),
-        },
-        label: {
-          text: String(count),
-          color: 'white',
-          fontSize: labelFontSize,
-          className: 'cluster-label',
-        },
-        clickable: true,
-      });
-    },
-  };
-
+  // Update markers when campaigns change
   useEffect(() => {
     if (!mapRef.current || !isLoaded || !window.google) {
       return;
     }
+
     if (campaigns.length === 0) {
       clearMarkers();
       return;
@@ -171,7 +164,6 @@ const Map = () => {
 
     clearMarkers();
     const markers = createMarkers();
-    markersRef.current = markers;
     markersRef.current = markers;
 
     if (markerClusterRef.current) {
@@ -187,16 +179,69 @@ const Map = () => {
       markers,
       map: mapRef.current,
       algorithm: algorithm,
-      renderer: customRenderer,
+      renderer: {
+        render({ count, position }) {
+          let iconSize, labelFontSize;
+          if (count < 10) {
+            iconSize = new window.google.maps.Size(60, 60);
+            labelFontSize = '11px';
+          } else if (count < 100) {
+            iconSize = new window.google.maps.Size(80, 80);
+            labelFontSize = '11px';
+          } else {
+            iconSize = new window.google.maps.Size(100, 100);
+            labelFontSize = '11px';
+          }
+
+          return new window.google.maps.Marker({
+            position,
+            icon: {
+              url: 'https://assets.goodparty.org/map-cluster-icon-center.png',
+              scaledSize: iconSize,
+              labelOrigin: new window.google.maps.Point(
+                iconSize.width / 2,
+                iconSize.height / 2,
+              ),
+            },
+            label: {
+              text: String(count),
+              color: 'white',
+              fontSize: labelFontSize,
+              className: 'cluster-label',
+            },
+            clickable: true,
+          });
+        },
+      },
     });
 
     markerClusterRef.current = newMarkerCluster;
 
-    // Cleanup on unmount
     return () => {
       clearMarkers();
     };
-  }, [campaigns, isLoaded]);
+  }, [campaigns, isLoaded, createMarkers]);
+
+  // Listen for URL changes to update the map when back button is pressed
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      const lat = parseFloat(urlParams.get('mapCenterLat'));
+      const lng = parseFloat(urlParams.get('mapCenterLng'));
+      const zoomLevel = parseInt(urlParams.get('zoom'), 10);
+
+      if (mapRef.current && !isNaN(lat) && !isNaN(lng) && !isNaN(zoomLevel)) {
+        mapRef.current.setCenter({ lat, lng });
+        mapRef.current.setZoom(zoomLevel);
+      }
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
