@@ -31,7 +31,7 @@ export async function updateChat(threadId, input) {
 
 export const ChatContext = createContext([[], (v) => {}]);
 
-export default function CampaignManagerPage(props) {
+export default function CampaignAssistantPage(props) {
   const {
     chat,
     setChat,
@@ -48,7 +48,7 @@ export default function CampaignManagerPage(props) {
   const [shouldType, setShouldType] = useState(false);
   const handleNewInput = async (input) => {
     setLoading(true);
-    trackEvent('campaign_manager_chatbot_input', { input });
+    trackEvent('campaign_assistant_chatbot_input', { input });
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
     }

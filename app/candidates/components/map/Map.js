@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import mapSkin from './mapSkin';
 import H3 from '@shared/typography/H3';
 import { MapContext } from './MapSection';
@@ -8,7 +8,7 @@ import {
   MarkerClusterer,
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer';
-import { debounce } from 'helpers/debounceHelper';
+import { debounce, debounce2 } from 'helpers/debounceHelper';
 
 const containerStyle = {
   width: '100%',
@@ -31,44 +31,53 @@ const Map = () => {
     zoom,
     onChangeMapBounds,
     onSelectCampaign,
-    isCampaignsLoading,
+    filters,
   } = useContext(MapContext);
 
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const markerClusterRef = useRef(null);
-  const isProgrammaticChangeRef = useRef(false);
-
   // Initialize Google Map
   useEffect(() => {
     if (!isLoaded || !window.google || !mapContainerRef.current) return;
 
     const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
-      center: mapCenter, // Initial center
-      zoom: zoom, // Initial zoom
+      center: mapCenter,
+      zoom,
       ...mapOptions,
     });
 
     mapRef.current = mapInstance;
 
-    const idleListener = mapInstance.addListener('idle', () => {
-      if (isProgrammaticChangeRef.current) {
-        isProgrammaticChangeRef.current = false;
-        return;
-      }
-
+    const debouncedUpdateBounds = debounce2(() => {
       const bounds = mapInstance.getBounds();
       if (bounds) {
         const ne = bounds.getNorthEast();
         const sw = bounds.getSouthWest();
-        debounce(onChangeMapBounds, 500, {
-          neLat: ne.lat(),
-          neLng: ne.lng(),
-          swLat: sw.lat(),
-          swLng: sw.lng(),
-        });
+        const currentCenter = mapInstance.getCenter();
+        const currentZoom = mapInstance.getZoom();
+        if (
+          filters.neLat != ne?.lat() ||
+          filters.neLng != ne?.lng() ||
+          filters.swLat != sw?.lat() ||
+          filters.swLng != sw?.lng()
+        ) {
+          onChangeMapBounds({
+            neLat: ne?.lat(),
+            neLng: ne?.lng(),
+            swLat: sw?.lat(),
+            swLng: sw?.lng(),
+            mapCenterLat: currentCenter?.lat(),
+            mapCenterLng: currentCenter?.lng(),
+            zoom: currentZoom,
+          });
+        }
       }
+    }, 500);
+
+    const idleListener = mapInstance.addListener('idle', () => {
+      debouncedUpdateBounds();
     });
 
     // Cleanup listener on unmount
@@ -76,14 +85,6 @@ const Map = () => {
       window.google.maps.event.removeListener(idleListener);
     };
   }, [isLoaded, mapCenter, zoom, onChangeMapBounds]);
-
-  // Update map's center and zoom when they change
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setCenter(mapCenter); // Update center
-      mapRef.current.setZoom(zoom); // Update zoom
-    }
-  }, [mapCenter, zoom]); // This ensures the map updates programmatically when mapCenter or zoom changes
 
   const clearMarkers = () => {
     if (markersRef.current.length > 0) {
@@ -171,6 +172,7 @@ const Map = () => {
     clearMarkers();
     const markers = createMarkers();
     markersRef.current = markers;
+    markersRef.current = markers;
 
     if (markerClusterRef.current) {
       markerClusterRef.current.clearMarkers();
@@ -198,22 +200,9 @@ const Map = () => {
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
-      {isLoaded ? (
-        <>
-          <div ref={mapContainerRef} style={containerStyle}>
-            {/* Map will be rendered here */}
-          </div>
-          {isCampaignsLoading && (
-            <div className="h-full w-full absolute top-0 left-0 bg-black bg-opacity-80 flex items-center justify-center z-40 text-white">
-              <H3>Loading...</H3>
-            </div>
-          )}
-        </>
-      ) : (
-        <div className="h-[calc(100vh-56px)] flex flex-col items-center justify-center mb-4 py-4">
-          <H3>Loading...</H3>
-        </div>
-      )}
+      <div ref={mapContainerRef} style={containerStyle}>
+        {/* Map will be rendered here */}
+      </div>
     </div>
   );
 };

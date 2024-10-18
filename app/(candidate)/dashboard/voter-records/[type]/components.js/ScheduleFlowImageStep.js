@@ -12,11 +12,12 @@ import ImageCropPreview from '@shared/inputs/ImageCropPreview';
 const MAX_FILE_SIZE = 500000;
 
 export default function ScheduleFlowImageStep({
+  image,
   onChangeCallback,
   nextCallback,
   backCallback,
 }) {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(image);
 
   function handleOnChange(newFile) {
     setFile(newFile);

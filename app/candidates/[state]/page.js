@@ -31,6 +31,6 @@ export default async function Page({ params, searchParams }) {
   }
   await adminAccessOnly();
   const { count } = await fetchCount(upperState);
-  const childProps = { count, longState, state: upperState };
+  const childProps = { count, longState, state: upperState, searchParams };
   return <CandidatesPage {...childProps} />;
 }

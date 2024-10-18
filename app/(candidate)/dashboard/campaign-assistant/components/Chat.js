@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from 'react';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 import ChatMessage from './ChatMessage';
 import EmptyChat from './EmptyChat';
 import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
