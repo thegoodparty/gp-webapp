@@ -141,13 +141,13 @@ export default function CustomVoterAudienceFilters({
           {field.options.map((option) => (
             <div key={option.key} className="flex items-center mt-3">
               <Checkbox
+                label={<Body2>{option.label}</Body2>}
                 onChange={(e) => {
                   handleChangeAudience(option.key, e.target.checked);
                 }}
                 checked={state[option.key] ?? false}
                 color="secondary"
               />
-              <Body2>{option.label}</Body2>
             </div>
           ))}
         </div>
