@@ -3,7 +3,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useContext } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import { ChatContext } from './CampaignManagerPage';
+import { ChatContext } from './CampaignAssistantPage';
 
 export default function CreateNewChat() {
   const { setThreadId, setChat } = useContext(ChatContext);
