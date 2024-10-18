@@ -8,11 +8,10 @@ import {
   buildAiContentSections,
 } from 'helpers/buildAiContentSections';
 import GearsAnimation from '@shared/animations/GearsAnimation';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { generateAIContent } from 'helpers/generateAIContent';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { debounce } from 'helpers/debounceHelper';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export const GenerateLoadingScreen = ({
   campaign = {},
@@ -23,19 +22,15 @@ export const GenerateLoadingScreen = ({
     campaign,
     AI_CONTENT_SUB_SECTION_KEY,
   );
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
   const [generateTimeoutId, setGenerateTimeoutId] = useState(null);
-  const [aiScriptKey, setAiScriptKey] = useState('');
   const [waiting, setWaiting] = useState(false);
 
   const fireError = () => {
     setGenerateTimeoutId(null);
-    snackbarState.set(() => ({
-      isOpen: true,
-      message:
-        'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
-      isError: true,
-    }));
+    errorSnackbar(
+      'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
+    );
   };
 
   const startTimeout = () => {
@@ -57,20 +52,18 @@ export const GenerateLoadingScreen = ({
     } else {
       clearTimeout(generateTimeoutId);
       setWaiting(false);
-      console.log(`aiScriptKey =>`, aiScriptKey);
       onNext(aiScriptKey);
     }
   };
 
   useEffect(() => {
-    const initiateContentGeneration = async (key) => {
+    const initiateContentGeneration = async (aiScriptKey) => {
       setWaiting(true);
       Boolean(!generateTimeoutId) && startTimeout();
-      const { chatResponse, status } = await generateAIContent(key);
-      console.log(`key =>`, key);
-      setAiScriptKey(() => key);
+      const { chatResponse, status } = await generateAIContent(aiScriptKey);
+
       if (status === 'processing' && !chatResponse) {
-        generateContentPolling(key);
+        generateContentPolling(aiScriptKey);
       } else {
         setWaiting(false);
         fireError();

@@ -201,7 +201,6 @@ export default function MyContent(props) {
       campaign &&
       (!campaignPlan || !campaignPlan[section])
     ) {
-      console.log('does this happen everytime??');
       createAIContent({
         section,
         initialChat,
