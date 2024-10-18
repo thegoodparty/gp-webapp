@@ -11,7 +11,13 @@ import UserSnapScript from '@shared/scripts/UserSnapScript';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
-export default function CandidatesPage({ count, longState, state }) {
+export default function CandidatesPage({
+  count,
+  searchParams,
+  longState,
+  state,
+}) {
+  console.log('searchParams', searchParams);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -34,9 +40,11 @@ export default function CandidatesPage({ count, longState, state }) {
   return (
     <>
       <Hero count={count} longState={longState} />
-      <Suspense fallback={<div>Loading...</div>}>
-        <MapSection isLoaded={isLoaded} state={state} />
-      </Suspense>
+      <MapSection
+        isLoaded={isLoaded}
+        state={state}
+        searchParams={searchParams}
+      />
       <InfoSection />
       <FacesSection />
       <CommunitySection />

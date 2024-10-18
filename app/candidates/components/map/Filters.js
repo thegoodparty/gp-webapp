@@ -55,7 +55,7 @@ export default function Filters() {
               variant="outlined"
               onChange={(e) => onChangeFilters('state', e.target.value)}
             >
-              <option value="">State</option>
+              <option value="">All States</option>
               {states.map((op) => (
                 <option value={op.abbreviation} key={op.abbreviation}>
                   {op.name}
@@ -71,7 +71,7 @@ export default function Filters() {
               variant="outlined"
               onChange={(e) => onChangeFilters('party', e.target.value)}
             >
-              <option value="">Party</option>
+              <option value="">All Parties</option>
               {partyOptions.map((op) => (
                 <option value={op.key} key={op.key}>
                   {op.label}
@@ -87,7 +87,7 @@ export default function Filters() {
               variant="outlined"
               onChange={(e) => onChangeFilters('level', e.target.value)}
             >
-              <option value="">Level</option>
+              <option value="">All Levels</option>
               {levelOptions.map((op) => (
                 <option value={op.key} key={op.key}>
                   {op.label}
@@ -103,7 +103,7 @@ export default function Filters() {
               variant="outlined"
               onChange={(e) => onChangeFilters('office', e.target.value)}
             >
-              <option value="">Office</option>
+              <option value="">All Offices</option>
               {officeOptions.map((op) => (
                 <option value={op} key={op}>
                   {op}

@@ -6,7 +6,7 @@ import H1 from '@shared/typography/H1';
 import { getUserCookie } from 'helpers/cookieHelper';
 import Link from 'next/link';
 
-export default function ScheduleFlowStep5({ resetCallback }) {
+export default function ScheduleFlowComplete({ resetCallback }) {
   const user = getUserCookie(true);
   return (
     <div className="p-4 w-[80vw] max-w-xl">

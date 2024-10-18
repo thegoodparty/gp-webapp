@@ -22,6 +22,6 @@ export async function generateMetadata({ params, searchParams }) {
 
 export default async function Page({ params, searchParams }) {
   const { count } = await fetchCount();
-  const childProps = { count };
+  const childProps = { count, searchParams };
   return <CandidatesPage {...childProps} />;
 }

@@ -1,28 +1,28 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
-import CampaignManagerPage from './components/CampaignManagerPage';
+import CampaignAssistantPage from './components/CampaignAssistantPage';
 import { getServerUser } from 'helpers/userServerHelper';
 import { adminAccessOnly } from 'helpers/permissionHelper';
+import candidateAccess from '../shared/candidateAccess';
 
 const meta = pageMetaData({
-  title: 'Campaign Manager | GoodParty.org',
-  description: 'Campaign Manager',
-  slug: '/dashboard/campaign-manager',
+  title: 'Campaign Assistant | GoodParty.org',
+  description: 'Campaign Assistant',
+  slug: '/dashboard/campaign-assistant',
 });
 export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
-  // await candidateAccess();
-  await adminAccessOnly();
+  await candidateAccess();
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
   const { campaign } = await fetchUserCampaign();
 
   const childProps = {
-    pathname: '/dashboard/campaign-manager',
+    pathname: '/dashboard/campaign-assistant',
     user,
     campaign,
   };
 
-  return <CampaignManagerPage {...childProps} />;
+  return <CampaignAssistantPage {...childProps} />;
 }

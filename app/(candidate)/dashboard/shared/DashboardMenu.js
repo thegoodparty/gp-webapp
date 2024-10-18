@@ -30,6 +30,12 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-tracker-dashboard',
   },
   {
+    label: 'Campaign Assistant',
+    icon: <BsStars />,
+    link: '/dashboard/campaign-assistant',
+    id: 'campaign-assistant-dashboard',
+  },
+  {
     label: 'Voter Data',
     icon: <GiProgression />,
     link: '/dashboard/upgrade-to-pro',
@@ -72,29 +78,12 @@ const VOTER_RECORDS_MENU_ITEM = {
   icon: <GiProgression />,
 };
 
-const DOOR_KNOCKING_MENU_ITEM = {
-  label: 'Door Knocking',
-  icon: <RiDoorOpenLine />,
-  link: '/dashboard/door-knocking/main',
-  id: 'door-knocking-dashboard',
-};
-
-const CAMPAIGN_MANAGER_MENU_ITEM = {
-  label: 'Campaign Manager',
-  icon: <BsStars />,
-  link: '/dashboard/campaign-manager',
-  id: 'campaign-manager-dashboard',
-};
-
 const getDashboardMenuItems = (campaign, user) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
     menuItems[1] = VOTER_RECORDS_MENU_ITEM;
   }
-  if (user?.isAdmin) {
-    menuItems.splice(5, 0, DOOR_KNOCKING_MENU_ITEM);
-    menuItems.splice(1, 0, CAMPAIGN_MANAGER_MENU_ITEM);
-  }
+
   return menuItems;
 };
 

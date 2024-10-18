@@ -23,11 +23,6 @@ if (!appBase) {
   base = `${appBase}/api/v1/`;
 }
 
-console.log('=====================');
-console.log('apiBase', apiBase);
-console.log('appBase', appBase);
-console.log('base', base);
-
 const gpApi = {
   homepage: {
     subscribeEmail: {
@@ -78,6 +73,10 @@ const gpApi = {
     },
     articlesTitles: {
       url: `${base}content/blog-articles-titles`,
+      method: 'GET',
+    },
+    articlesBySlug: {
+      url: `${base}content/blog-articles-by-slug`,
       method: 'GET',
     },
     articlesBySection: {

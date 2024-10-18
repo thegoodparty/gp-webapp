@@ -14,7 +14,7 @@ export async function fetchChatHistory() {
 export async function createInitialChat(message) {
   try {
     const api = gpApi.campaign.chat.create;
-    const payload = { message };
+    const payload = { message, initial: true };
     return await gpFetch(api, payload);
   } catch (e) {
     console.log('error', e);
