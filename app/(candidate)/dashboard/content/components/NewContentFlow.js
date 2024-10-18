@@ -13,17 +13,25 @@ import QuestionProgress, {
 } from '../../plan/components/QuestionProgress';
 import { BsStars } from 'react-icons/bs';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
+import {
+  AI_CONTENT_SUB_SECTION_KEY,
+  buildAiContentSections,
+} from 'helpers/buildAiContentSections';
+import { getNewAiContentSectionKey } from 'helpers/getNewAiContentSectionKey';
 
 export default function NewContentFlow(props) {
   const {
     onSelectCallback,
-    sections,
     isProcessing,
     campaign,
     requiresQuestions,
     candidatePositions,
     forceOpenModal,
   } = props;
+  const [sections] = buildAiContentSections(
+    campaign,
+    AI_CONTENT_SUB_SECTION_KEY,
+  );
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [selected, setSelected] = useState('');
@@ -46,7 +54,7 @@ export default function NewContentFlow(props) {
     if (selected !== '') {
       const content = await fetchPromptInputFields(selected);
       if (!content) {
-        const key = findKey();
+        const key = getNewAiContentSectionKey(sections, selected);
         onSelectCallback(key);
       } else {
         setInputFields(content);
@@ -56,21 +64,9 @@ export default function NewContentFlow(props) {
     }
   };
 
-  const findKey = () => {
-    if (!sections[selected]) {
-      return selected;
-    }
-    for (let i = 2; i <= 100; i++) {
-      if (!sections[`${selected}${i}`]) {
-        return `${selected}${i}`;
-      }
-    }
-    return `${selected}101`;
-  };
-
   const handleAdditionalInput = (additionalPrompt, inputValues) => {
     const chat = [{ role: 'user', content: additionalPrompt }];
-    const key = findKey();
+    const key = getNewAiContentSectionKey(sections, selected);
     onSelectCallback(key, chat, inputValues);
     setShowModal2(false);
     setInputFields([]);

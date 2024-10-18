@@ -21,15 +21,6 @@ export default function EditContentPage(props) {
     setUpdatedVersions(versions);
   };
 
-  // const updateCampaignCallback = async () => {
-  //   const campaignResp = await fetchUserCampaignClient();
-  //   setCampaign(campaignResp.campaign);
-  // };
-
-  // useEffect(() => {
-  //   updateCampaignCallback();
-  // }, []);
-
   return (
     <>
       {campaign != undefined ? (
