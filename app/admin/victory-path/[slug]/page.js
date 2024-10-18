@@ -10,6 +10,7 @@ const meta = pageMetaData({
   slug: '/admin/victory-path',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 export default async function Page({ params }) {
   await adminAccessOnly();

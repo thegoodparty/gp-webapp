@@ -8,6 +8,7 @@ const meta = pageMetaData({
   slug: '/admin/p2v-stats',
 });
 export const metadata = meta;
+export const maxDuration = 60;
 
 export default async function Page() {
   await adminAccessOnly();
