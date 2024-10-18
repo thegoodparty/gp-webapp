@@ -5,6 +5,10 @@ import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import VoterFileDetailPage from './components.js/VoterFileDetailPage';
 import { fetchCanDownload } from '../page';
+import { fetchContentByKey } from 'helpers/fetchHelper';
+import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+import { calcAnswers } from 'app/(candidate)/dashboard/plan/components/QuestionProgress';
 
 const meta = pageMetaData({
   title: 'Voter Data detailed view | GoodParty.org',
@@ -24,6 +28,30 @@ export default async function Page({ params, searchParams }) {
     redirect('/dashboard');
   }
 
+  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+
+  const { answeredQuestions, totalQuestions } = calcAnswers(
+    campaign,
+    candidatePositions,
+  );
+
+  const hasCompletedQuestions = answeredQuestions >= totalQuestions;
+
+  // TODO: Why in the world aren't these booleans just being passed along from the entity in Contentful?
+  const requiresQuestions = !hasCompletedQuestions
+    ? (await fetchContentByKey('contentPromptsQuestions', 3600))?.content
+    : {};
+
+  const categories = (
+    await fetchContentByKey('aiContentCategories', 3600)
+  )?.content?.map((category = {}) => ({
+    ...category,
+    templates: setRequiresQuestionsOnTemplates(
+      category.templates,
+      requiresQuestions,
+    ),
+  }));
+
   const isCustom = type.startsWith('custom-');
 
   const childProps = {
@@ -32,6 +60,7 @@ export default async function Page({ params, searchParams }) {
     campaign,
     type,
     isCustom,
+    categories,
   };
 
   return <VoterFileDetailPage {...childProps} />;

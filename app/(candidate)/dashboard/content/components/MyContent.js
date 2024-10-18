@@ -1,6 +1,6 @@
 'use client';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { camelToKebab, camelToSentence } from 'helpers/stringHelper';
+import { camelToKebab } from 'helpers/stringHelper';
 import { useEffect, useMemo, useState } from 'react';
 import Table from '@shared/utils/Table';
 import Actions from './Actions';
@@ -13,8 +13,11 @@ import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
 import NewContentFlow from './NewContentFlow';
 import { generateAIContent } from 'helpers/generateAIContent';
+import {
+  AI_CONTENT_SUB_SECTION_KEY,
+  buildAiContentSections,
+} from 'helpers/buildAiContentSections';
 
-const subSectionKey = 'aiContent';
 let aiTotalCount = 0;
 const excludedKeys = [
   'why',
@@ -146,24 +149,12 @@ export default function MyContent(props) {
     const campaignObj = campaignResponse.campaign;
     if (campaignObj) {
       setCampaign(campaignObj);
-      const campaignPlanObj = campaignObj[subSectionKey];
+      const campaignPlanObj = campaignObj[AI_CONTENT_SUB_SECTION_KEY];
       setCampaignPlan(campaignPlanObj);
-      let sectionsObj = campaignObj[subSectionKey] || {};
-
-      let jobsProcessing = false;
-      const statusObj = campaignObj[subSectionKey]?.generationStatus || {};
-      for (const statusKey in statusObj) {
-        if (statusObj[statusKey]['status'] === 'processing') {
-          jobsProcessing = true;
-          if (sectionsObj[statusKey] === undefined) {
-            sectionsObj[statusKey] = {};
-          }
-          sectionsObj[statusKey]['key'] = statusKey;
-          sectionsObj[statusKey]['name'] = camelToSentence(statusKey);
-          sectionsObj[statusKey]['updatedAt'] = undefined;
-          sectionsObj[statusKey]['status'] = 'processing';
-        }
-      }
+      const [sectionsObj, jobsProcessing] = buildAiContentSections(
+        campaignObj,
+        AI_CONTENT_SUB_SECTION_KEY,
+      );
       setSections(sectionsObj);
       setLoading(false);
 
@@ -208,34 +199,28 @@ export default function MyContent(props) {
       campaign &&
       (!campaignPlan || !campaignPlan[section])
     ) {
-      createInitialAI();
+      console.log('does this happen everytime??');
+      createAIContent({
+        section,
+        initialChat,
+        initialValues,
+      });
     }
   }, [campaignPlan, section]);
 
-  const createInitialAI = async (
-    regenerate,
-    chat,
-    editMode,
-    inputValues = {},
-  ) => {
-    // this is only called once now.
-    const resolvedChat = chat || initialChat;
-    const resolvedInitialValues =
-      (inputValues && Object.keys(inputValues) > 0) || initialValues;
+  const createAIContent = async ({
+    section = '',
+    initialChat = false,
+    initialValues = {},
+  }) => {
     const { chatResponse, status } = await generateAIContent(
       section,
-      regenerate,
-      resolvedChat,
-      editMode,
-      resolvedInitialValues,
+      initialChat,
+      initialValues,
     );
 
     if (!chatResponse && status === 'processing') {
-      // job has started.
       if (jobStarting === true) {
-        console.log('job has started processing!');
-
-        // refresh the campaign.
         await getUserCampaign();
         setJobStarting(false);
         setInitialChat(false);
@@ -267,7 +252,6 @@ export default function MyContent(props) {
           <NewContentFlow
             {...props}
             onSelectCallback={onSelectPrompt}
-            sections={sections}
             isProcessing={jobStarting}
             forceOpenModal={props.forceOpenModal}
           />

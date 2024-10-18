@@ -1,4 +1,4 @@
-import { Select } from '@mui/material';
+import { MenuItem, Select } from '@mui/material';
 
 const DEFAULT_SMS_SCRIPTS = [
   'why',
@@ -32,23 +32,24 @@ export const SmsScriptSelect = ({
   onSelect = (key) => {},
 }) => {
   const handleOnChange = (e) => {
-    onSelect(e.currentTarget.value);
+    onSelect(e.target.value);
   };
   return (
     <Select
-      native
       value={selectedKey || ''}
+      displayEmpty
       fullWidth
       required
       variant="outlined"
       onChange={handleOnChange}
     >
-      <option value="">Select a Script</option>
+      <MenuItem value="">Select a Script</MenuItem>
       {Boolean(aiContent) &&
         getSmsScriptSelectOptions(aiContent).map((op) => (
-          <option value={op.key} key={op.key}>
+          <MenuItem value={op.key} key={op.key}>
             {op.name}
-          </option>
+            {}
+          </MenuItem>
         ))}
     </Select>
   );
