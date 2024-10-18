@@ -1,13 +1,11 @@
 'use client';
-
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import { useState } from 'react';
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function rerunP2V(slug) {
   try {
@@ -22,31 +20,18 @@ async function rerunP2V(slug) {
 export default function RerunP2V() {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
   const [processing, setProcessing] = useState(false);
-
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const handleRerun = async () => {
     if (processing) return;
     setProcessing(true);
     const response = await rerunP2V(campaign.slug);
     if (response) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Path to victory rerun',
-          isError: false,
-        };
-      });
+      successSnackbar('Path to victory rerun');
       await revalidatePage('/admin/victory-path/[slug]');
       refreshCampaign();
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error rerunning path to victory',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error rerunning path to victory');
       setProcessing(false);
     }
   };

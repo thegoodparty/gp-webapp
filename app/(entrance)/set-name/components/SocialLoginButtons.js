@@ -1,12 +1,8 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { deleteCookie, getCookie, setUserCookie } from 'helpers/cookieHelper';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
-import TwitterButton from './TwitterButton';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleLoginButton from './GoogleLoginButton';
 import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -14,6 +10,7 @@ import { useUser } from '@shared/hooks/useUser';
 import Overline from '@shared/typography/Overline';
 import saveToken from 'helpers/saveToken';
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function login(payload) {
   try {
@@ -26,7 +23,7 @@ async function login(payload) {
 }
 
 export default function SocialLoginButtons() {
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
   const [_, setUser] = useUser();
   const router = useRouter();
 
@@ -67,13 +64,7 @@ export default function SocialLoginButtons() {
     if (user) {
       await saveToken(token);
       setUser(user);
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Welcome back to GoodParty.org!',
-          isError: false,
-        };
-      });
+      successSnackbar('Welcome back to GoodParty.org!');
       const returnCookie = getCookie('returnUrl');
       if (returnCookie) {
         deleteCookie('returnUrl');
@@ -92,13 +83,7 @@ export default function SocialLoginButtons() {
         window.location.href = '/';
       }
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error [loginType] in',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error [loginType] in');
     }
   };
 

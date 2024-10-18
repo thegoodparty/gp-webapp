@@ -12,8 +12,7 @@ import {
   deleteCandidatePosition,
   updateCandidatePosition,
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function EditCandidatePosition({
   candidatePosition,
@@ -27,7 +26,7 @@ export default function EditCandidatePosition({
   const [edit, setEdit] = useState(false);
   const [description, setDescription] = useState(candidatePosition.description);
   const [showAlert, setShowAlert] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const handleDelete = async () => {
     if (candidatePosition.isCustom) {
@@ -35,14 +34,9 @@ export default function EditCandidatePosition({
     } else {
       const deleteResp = await deleteCandidatePosition(candidatePosition.id);
       if (!deleteResp || deleteResp === false) {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message:
-              'Error deleting item. Please report an issue on the Feedback sidebar.',
-            isError: true,
-          };
-        });
+        errorSnackbar(
+          'Error deleting item. Please report an issue on the Feedback sidebar.',
+        );
       }
       updatePositionsCallback();
     }
@@ -81,14 +75,9 @@ export default function EditCandidatePosition({
         description,
       );
       if (!updateResp || updateResp === false) {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message:
-              'Error saving item. Please report an issue on the Feedback sidebar.',
-            isError: true,
-          };
-        });
+        errorSnackbar(
+          'Error saving item. Please report an issue on the Feedback sidebar.',
+        );
         await updatePositionsCallback();
       }
     }

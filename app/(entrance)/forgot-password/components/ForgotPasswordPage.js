@@ -1,13 +1,11 @@
 'use client';
-
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
 import gpApi from 'gpApi/index.js';
 import gpFetch from 'gpApi/gpFetch.js';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import ForgotPasswordSuccess from './ForgotPasswordSuccess';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function sendForgotPasswordEmail(email) {
   try {
@@ -28,7 +26,7 @@ export default function ForgotPasswordPage() {
     isValid: true,
   });
   const [forgotEmailSent, setForgotEmailSent] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   function handleEmailChange(email, isValid) {
     setState({ email, isValid });
@@ -42,22 +40,9 @@ export default function ForgotPasswordPage() {
 
       if (res) {
         setForgotEmailSent(true);
-
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: `A password reset link was sent to ${email}`,
-            isError: false,
-          };
-        });
+        successSnackbar(`A password reset link was sent to ${email}`);
       } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'Error sending password reset link.',
-            isError: true,
-          };
-        });
+        errorSnackbar('Error sending password reset link.');
       }
     }
   }

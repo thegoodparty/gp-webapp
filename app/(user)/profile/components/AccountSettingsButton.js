@@ -1,18 +1,17 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { PaymentPortalButton } from '@shared/PaymentPortalButton';
 import { MdOpenInNew } from 'react-icons/md';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { DemoAccountDeleteDialog } from '@shared/utils/DemoAccountDeleteDialog';
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
 import Link from 'next/link';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export const AccountSettingsButton = ({ isPro, isDemo }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   return isPro ? (
     <PaymentPortalButton>
@@ -27,7 +26,7 @@ export const AccountSettingsButton = ({ isPro, isDemo }) => {
       <DemoAccountDeleteDialog
         open={showModal}
         handleClose={() => setShowModal(false)}
-        handleProceed={handleDemoAccountDeletion(snackbarState, router)}
+        handleProceed={handleDemoAccountDeletion(errorSnackbar, router)}
       />
     </>
   ) : (

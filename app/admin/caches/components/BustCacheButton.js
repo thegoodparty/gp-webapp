@@ -3,9 +3,8 @@ import ErrorButton from '@shared/buttons/ErrorButton';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { revalidatePage } from 'helpers/cacheHelper';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import Modal from '@shared/utils/Modal';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function BustCacheButton({ name, description, paths }) {
   const [showBustCache, setShowBustCache] = useState(false);
@@ -14,17 +13,10 @@ export default function BustCacheButton({ name, description, paths }) {
   const handleOpenModal = () => {
     setShowModal(true);
   };
-
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const handleBustCache = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: `Busting Cache: ${description}...`,
-        isError: false,
-      };
-    });
+    successSnackbar(`Busting Cache: ${description}...`);
 
     let success = false;
     if (customPath === '') {
@@ -48,15 +40,11 @@ export default function BustCacheButton({ name, description, paths }) {
 
     setShowBustCache(false);
 
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: success
-          ? `Cached Busted: ${description}`
-          : `Error Busting Cache: ${description}`,
-        isError: !success,
-      };
-    });
+    if (success) {
+      successSnackbar(`Cached Busted: ${description}`);
+    } else {
+      errorSnackbar(`Error Busting Cache: ${description}`);
+    }
   };
 
   return (

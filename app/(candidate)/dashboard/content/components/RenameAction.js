@@ -2,16 +2,13 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { FaPencilAlt } from 'react-icons/fa';
-import { Button } from '@mui/material';
 import Modal from '@shared/utils/Modal';
 import { TextField } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import H2 from '@shared/typography/H2';
 import H6 from '@shared/typography/H6';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function renameContent(key, name) {
   try {
@@ -42,36 +39,21 @@ export default function RenameAction({
 }) {
   // const [showRename, setShowRename] = useState(false);
   const [newName, setNewName] = useState('');
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const handleRename = async (key, name) => {
     const renameResp = await renameContent(key, name);
     if (renameResp === true) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Renamed document',
-          isError: false,
-        };
-      });
+      successSnackbar('Renamed document');
       if (tableVersion === true) {
         window.location.href = '/dashboard/content';
       } else {
         setDocumentName(newName);
       }
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error renaming document',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error renaming document');
     }
     setShowRename(false);
-    // if(tableVersion === true) // then reload the table, else reload the page
-    // will the table reload ?
-    // window.location.reload();
   };
 
   return (

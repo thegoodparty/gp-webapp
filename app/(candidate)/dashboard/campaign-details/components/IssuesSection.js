@@ -15,10 +15,9 @@ import {
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import AlertDialog from '@shared/utils/AlertDialog';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import Link from 'next/link';
 import { IoAddSharp } from 'react-icons/io5';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
@@ -26,7 +25,7 @@ export default function IssuesSection(props) {
   const [combinedIssues, setCombinedIssues] = useState([]);
   const [editIssuePosition, setEditIssuePosition] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(null);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   useEffect(() => {
     const combined = [];
@@ -68,11 +67,7 @@ export default function IssuesSection(props) {
         throw new Error('issue malformed, cannot delete.', issue);
       }
     } catch (e) {
-      snackbarState.set({
-        isOpen: true,
-        message: 'Could not delete issue',
-        isError: true,
-      });
+      errorSnackbar('Could not delete issue');
     }
     setShowDeleteConfirmation(null);
   };

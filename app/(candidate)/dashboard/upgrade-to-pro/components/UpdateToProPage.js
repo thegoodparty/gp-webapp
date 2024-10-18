@@ -11,9 +11,8 @@ import { useUser } from '@shared/hooks/useUser';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { useState } from 'react';
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { useRouter } from 'next/navigation';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 const CARD_FREE = {
   backgroundClass: 'lime-400',
@@ -47,7 +46,7 @@ export default function DetailsPage(props) {
   const { metaData: userMetaData } = user || {};
   const { demoPersona } = JSON.parse(userMetaData || '{}');
   const [showDialog, setShowDialog] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const handleLinkOnClick = (e) => {
     if (demoPersona) {
@@ -107,7 +106,7 @@ export default function DetailsPage(props) {
                   To upgrade, you must first create a candidate account.
                 </>
               }
-              onCancel={handleDemoAccountDeletion(snackbarState, router)}
+              onCancel={handleDemoAccountDeletion(errorSnackbar, router)}
               cancelLabel="Create Account"
               proceedLabel="Continue Demo"
               redButton={false}

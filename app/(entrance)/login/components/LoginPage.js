@@ -7,11 +7,9 @@ import {
   getCookie,
   setUserCookie,
 } from 'helpers/cookieHelper.js';
-import { useHookstate } from '@hookstate/core';
 import Link from 'next/link.js';
 import { Suspense, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
@@ -21,6 +19,7 @@ import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
 import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginButtons';
 import saveToken from 'helpers/saveToken';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -57,8 +56,7 @@ export default function LoginPage() {
   });
 
   const [_, setUser] = useUser();
-
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const enableSubmit = () =>
     isValidEmail(state.email) && isValidPassword(state.password);
@@ -97,13 +95,7 @@ export default function LoginPage() {
         }
         window.location.href = '/';
       } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'The email or password are wrong.',
-            isError: true,
-          };
-        });
+        errorSnackbar('The email or password are wrong.');
       }
     }
   };

@@ -1,14 +1,13 @@
 'use client';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import { useHookstate } from '@hookstate/core';
 import { useState } from 'react';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { updateUser } from 'helpers/userHelper';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function SetNamePage() {
   const [state, setState] = useState({
@@ -16,8 +15,7 @@ export default function SetNamePage() {
     lastName: '',
     processing: false,
   });
-
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const enableSubmit = () =>
     !state.processing && state.firstName !== '' && state.lastName !== '';
@@ -38,13 +36,7 @@ export default function SetNamePage() {
         await createCampaign();
       }
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error creating campaign',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error creating campaign');
     }
   };
 

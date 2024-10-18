@@ -4,10 +4,8 @@ import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
-
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function deleteCampaign(slug) {
   try {
@@ -37,44 +35,20 @@ async function deactivateCandidate(slug) {
 
 export default function DeleteAction({ slug, isLive }) {
   const [showDelete, setShowDelete] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
 
   const handleDelete = async () => {
     if (isLive) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'hiding candidate',
-          isError: false,
-        };
-      });
+      successSnackbar('hiding candidate');
+      sna;
       await deactivateCandidate(slug);
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Hidden',
-          isError: false,
-        };
-      });
+      successSnackbar('Hidden');
       setShowDelete(false);
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Deleting...',
-          isError: false,
-        };
-      });
+      successSnackbar('Deleting...');
 
       await deleteCampaign(slug);
-
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Deleted',
-          isError: false,
-        };
-      });
+      successSnackbar('Deleted');
     }
     await revalidateCandidates();
     await revalidatePage('/admin/candidates');

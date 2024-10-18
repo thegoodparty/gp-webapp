@@ -1,8 +1,5 @@
 'use client';
-
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import gpApi from 'gpApi/index.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import ResetPasswordForm from './ResetPasswordForm';
@@ -11,6 +8,7 @@ import ResetPasswordSuccess from './ResetPasswordSuccess';
 import saveToken from 'helpers/saveToken';
 import { setUserCookie } from 'helpers/cookieHelper';
 import { useUser } from '@shared/hooks/useUser';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function setPasswordApi(email, password, token) {
   try {
@@ -37,8 +35,8 @@ export default function SetPasswordPage({ email, token }) {
     value: '',
     isMatch: true,
   });
-  const [resetSuccessful, setResetSuccessful] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const [resetSuccessful] = useState(false);
+  const { errorSnackbar } = useSnackbar();
 
   function handlePasswordChange(newPwd, pwdValid) {
     setPassword({
@@ -72,13 +70,7 @@ export default function SetPasswordPage({ email, token }) {
         setUser(user);
         window.location.href = '/dashboard';
       } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'Error saving password.',
-            isError: true,
-          };
-        });
+        errorSnackbar('Error saving password.');
       }
     }
   }

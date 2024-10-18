@@ -1,9 +1,7 @@
 'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { deleteCookie, getCookie, setUserCookie } from 'helpers/cookieHelper';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
+import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleRegisterButton from './GoogleRegisterButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -22,7 +20,7 @@ async function register(payload) {
 }
 
 export default function SocialRegisterButtons() {
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
   const [_, setUser] = useUser();
 
   const socialRegisterCallback = async (socialUser) => {
@@ -62,13 +60,7 @@ export default function SocialRegisterButtons() {
     const { user, newUser, token } = await register(payload);
 
     if (user) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: `Welcome ${newUser ? '' : 'back'} to GoodParty.org!`,
-          isError: false,
-        };
-      });
+      successSnackbar(`Welcome ${newUser ? '' : 'back'} to GoodParty.org!`);
       await saveToken(token);
       setUser(user);
 
@@ -90,13 +82,7 @@ export default function SocialRegisterButtons() {
 
       window.location.href = '/';
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error registering',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error registering');
     }
   };
   return (

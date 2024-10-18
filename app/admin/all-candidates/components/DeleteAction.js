@@ -6,8 +6,7 @@ import gpFetch from 'gpApi/gpFetch';
 import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
 
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function deleteCandidate(id) {
   try {
@@ -24,24 +23,12 @@ async function deleteCandidate(id) {
 
 export default function DeleteAction({ id }) {
   const [showDelete, setShowDelete] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
 
   const handleDelete = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'deleting candidate',
-        isError: false,
-      };
-    });
+    successSnackbar('deleting candidate');
     await deleteCandidate(id);
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleted',
-        isError: false,
-      };
-    });
+    successSnackbar('Deleted');
     setShowDelete(false);
 
     await revalidateCandidates();

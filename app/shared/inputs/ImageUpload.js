@@ -1,11 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RiImageAddFill } from 'react-icons/ri';
 import Button from '@mui/material/Button';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 const fileSelect = async (image, isUserImage) => {
   let api;
@@ -14,18 +13,12 @@ const fileSelect = async (image, isUserImage) => {
   } else {
     api = gpApi.uploadImage;
   }
-
   const formData = new FormData();
   formData.append('files[0]', image);
   const res = await gpFetch(api, formData, false, false, true);
-  if (res.success && res.data.files.length > 0) {
-    if (isUserImage) {
-      // setUserCookie(res.updatedUser);
-    }
-    return `${res.data.baseurl}${res.data.files[0]}`;
-  } else {
-    return false;
-  }
+  return res.success && res.data.files.length > 0
+    ? `${res.data.baseurl}${res.data.files[0]}`
+    : false;
 };
 
 export default function ImageUpload({
@@ -35,7 +28,7 @@ export default function ImageUpload({
   isUserImage,
   customId = 'file-uploader',
 }) {
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
   const [fileSizeError, setFileSizeError] = useState(false);
 
   const handleUploadImage = async () => {
@@ -47,13 +40,7 @@ export default function ImageUpload({
         setFileSizeError(true);
         return;
       }
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Uploading Image...',
-          isError: false,
-        };
-      });
+      successSnackbar('Uploading Image...');
       const url = await fileSelect(file, isUserImage);
       uploadCallback(url);
     }

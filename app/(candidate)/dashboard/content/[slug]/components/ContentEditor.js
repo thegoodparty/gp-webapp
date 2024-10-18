@@ -372,7 +372,6 @@ export default function ContentEditor({
                           initialText={plan}
                           onChangeCallback={handleEdit}
                           useOnChange
-                          // sx={{'jd-color-border': '#ffffff'}}
                         />
                       </>
                     )}

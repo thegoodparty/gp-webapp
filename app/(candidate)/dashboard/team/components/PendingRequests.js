@@ -4,10 +4,9 @@ import Paper from '@shared/utils/Paper';
 import { PendingRequestCard } from 'app/(candidate)/dashboard/team/components/PendingRequestCard';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import Body2 from '@shared/typography/Body2';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export const PENDING_REQUEST_ACTIONS = {
   GRANT: 'GRANT',
@@ -59,7 +58,7 @@ export const PendingRequests = ({
   onAction = () => {},
 }) => {
   const [requests, setRequests] = useState(initRequests || []);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const handleDelete = async (request) => {
     await deleteCampaignRequest(
@@ -67,12 +66,7 @@ export const PendingRequests = ({
       () => {
         setRequests(requests.filter((r) => r.id !== request.id));
       },
-      () =>
-        snackbarState.set(() => ({
-          isOpen: true,
-          isError: true,
-          message: 'Error deleting request',
-        })),
+      () => errorSnackbar('Error deleting request'),
     );
   };
 
@@ -82,13 +76,7 @@ export const PendingRequests = ({
       () => {
         setRequests(requests.filter((r) => r.id !== request.id));
       },
-      () => {
-        snackbarState.set(() => ({
-          isOpen: true,
-          isError: true,
-          message: 'Error approving request',
-        }));
-      },
+      () => errorSnackbar('Error approving request'),
     );
   };
 

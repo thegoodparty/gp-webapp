@@ -3,10 +3,8 @@ import ErrorButton from '@shared/buttons/ErrorButton';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function handleDeleteHistory(id) {
   try {
@@ -29,26 +27,14 @@ export default function DeleteAction({
   description,
 }) {
   const [showDelete, setShowDelete] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
 
   const handleDelete = async () => {
     setShowMenu(0);
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting...',
-        isError: false,
-      };
-    });
+    successSnackbar('Deleting...');
     const deleteResp = await handleDeleteHistory(id);
     if (deleteResp) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Deleted',
-          isError: false,
-        };
-      });
+      successSnackbar('Deleted');
     }
     // window.location.reload();
     await deleteHistoryCallBack();

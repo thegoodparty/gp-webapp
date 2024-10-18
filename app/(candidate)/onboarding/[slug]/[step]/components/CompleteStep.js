@@ -1,16 +1,15 @@
 'use client';
-import { useHookstate } from '@hookstate/core';
 import PartyAnimation from '@shared/animations/PartyAnimation';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
 import { useState } from 'react';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function launchCampaign() {
   try {
@@ -25,7 +24,7 @@ async function launchCampaign() {
 export default function CompleteStep() {
   const [loading, setLoading] = useState(false);
   const user = getUserCookie(true);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
   const trackingAttrs = buildTrackingAttrs('Onboarding Complete Button');
 
   const handleSave = async () => {
@@ -33,14 +32,7 @@ export default function CompleteStep() {
       return;
     }
     setLoading(true);
-
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
+    successSnackbar('Saving...');
 
     const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }];
 
@@ -51,13 +43,7 @@ export default function CompleteStep() {
       window.location.href = '/dashboard/plan';
     } else {
       setLoading(false);
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error launching your campaign',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error launching your campaign');
     }
   };
 

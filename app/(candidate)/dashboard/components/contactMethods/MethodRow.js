@@ -6,7 +6,7 @@ import { MdLock } from 'react-icons/md';
 import LogProgress from './LogProgress';
 import Link from 'next/link';
 import { numberFormatter } from 'helpers/numberHelper';
-import ScheduleFlow from '../../voter-records/[type]/components.js/ScheduleFlow';
+import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow';
 
 export default function MethodRow(props) {
   const { method, campaign = {}, pathToVictory = {} } = props;
