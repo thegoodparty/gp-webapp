@@ -3,11 +3,9 @@ import ErrorButton from '@shared/buttons/ErrorButton';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
-
+import { revalidatePage } from 'helpers/cacheHelper';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function deleteUser(id) {
   try {
@@ -22,25 +20,13 @@ async function deleteUser(id) {
 
 export default function DeleteAction({ id }) {
   const [showDelete, setShowDelete] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const handleDelete = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting...',
-        isError: false,
-      };
-    });
+    successSnackbar('Deleting...');
     await deleteUser(id);
     await revalidatePage('/admin/users');
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleted',
-        isError: false,
-      };
-    });
+    successSnackbar('Deleted');
     window.location.reload();
   };
 

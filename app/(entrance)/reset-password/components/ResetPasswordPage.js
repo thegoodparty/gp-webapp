@@ -1,13 +1,11 @@
 'use client';
-
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import gpApi from 'gpApi/index.js';
 import gpFetch from 'gpApi/gpFetch.js';
 import ResetPasswordForm from './ResetPasswordForm';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import ResetPasswordSuccess from './ResetPasswordSuccess';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function resetPassword(email, password, token) {
   try {
@@ -34,7 +32,7 @@ export default function ResetPasswordPage({ email, token }) {
     isMatch: true,
   });
   const [resetSuccessful, setResetSuccessful] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   function handlePasswordChange(newPwd, pwdValid) {
     setPassword({
@@ -63,22 +61,9 @@ export default function ResetPasswordPage({ email, token }) {
 
       if (res) {
         setResetSuccessful(true);
-
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: `Your password has been updated`,
-            isError: false,
-          };
-        });
+        successSnackbar(`Your password has been updated`);
       } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'Error updating password.',
-            isError: true,
-          };
-        });
+        errorSnackbar(`Error updating password`);
       }
     }
   }

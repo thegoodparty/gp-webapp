@@ -7,8 +7,6 @@ import Actions from './Actions';
 import { dateWithTime } from 'helpers/dateHelper';
 import Link from 'next/link';
 import { IoDocumentText } from 'react-icons/io5';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import LoadingList from '@shared/utils/LoadingList';
 import { debounce } from '/helpers/debounceHelper';
 import NewContentFlow from './NewContentFlow';
@@ -18,6 +16,7 @@ import {
   buildAiContentSections,
 } from 'helpers/buildAiContentSections';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 let aiTotalCount = 0;
 const excludedKeys = [
@@ -39,7 +38,7 @@ export default function MyContent(props) {
   const [campaign, setCampaign] = useState(undefined);
   const [campaignPlan, setCampaignPlan] = useState(undefined);
   const [jobStarting, setJobStarting] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   let tableVersion = true;
 
@@ -172,14 +171,9 @@ export default function MyContent(props) {
 
     if (aiTotalCount >= 100) {
       //fail
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message:
-            'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
-          isError: true,
-        };
-      });
+      errorSnackbar(
+        'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
+      );
       setLoading(false);
       setIsFailed(true);
       return;
@@ -231,14 +225,9 @@ export default function MyContent(props) {
       setLoading(false);
       setInitialChat(false);
       //fail
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message:
-            'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
-          isError: true,
-        };
-      });
+      errorSnackbar(
+        'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
+      );
     }
   };
 

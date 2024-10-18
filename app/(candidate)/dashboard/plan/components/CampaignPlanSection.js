@@ -2,9 +2,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import LoadingAI from './LoadingAI';
 import CircularProgress from '@mui/material/CircularProgress';
-
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import PlanVersion from './PlanVersion';
@@ -17,6 +14,7 @@ import { flows } from '../../questions/components/QuestionsPage';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { BsStars } from 'react-icons/bs';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function generateAI(key, regenerate, chat, editMode) {
   try {
@@ -94,7 +92,7 @@ export default function CampaignPlanSection({
   const [loading, setLoading] = useState(false);
   const [isTyped, setIsTyped] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
 
   const aiContent = campaign?.aiContent;
   const { key } = section;
@@ -106,12 +104,6 @@ export default function CampaignPlanSection({
       setIsTyped(true);
     }
   }, [aiContent]);
-
-  // useEffect(() => {
-  //   if (expandSection) {
-  //     handleOpen(false);
-  //   }
-  // }, [expandSection]);
 
   useEffect(() => {
     const can = canGenerate(campaign, key, candidatePositions);
@@ -185,13 +177,7 @@ export default function CampaignPlanSection({
   };
 
   const handleSave = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
+    successSnackbar('Saving...');
 
     const updated = campaign;
     if (!updated.aiContent) {

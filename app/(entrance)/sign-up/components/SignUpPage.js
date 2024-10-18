@@ -3,10 +3,8 @@ import { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi/index.js';
-import { useHookstate } from '@hookstate/core';
 import { Fragment, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
-import { globalSnackbarState } from '@shared/utils/Snackbar.js';
 import H1 from '@shared/typography/H1';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
@@ -16,6 +14,7 @@ import RenderInputField from '@shared/inputs/RenderInputField';
 import Link from 'next/link';
 import { useUser } from '@shared/hooks/useUser';
 import saveToken from 'helpers/saveToken';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 const fields = [
   {
@@ -96,8 +95,7 @@ export default function SignUpPage() {
     zip: '',
     password: '',
   });
-
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
   const [_, setUser] = useUser();
 
   const enableSubmit = () =>
@@ -121,23 +119,11 @@ export default function SignUpPage() {
         window.location.href = '/onboarding/account-type';
         return;
       } else {
-        if (exists) {
-          snackbarState.set(() => {
-            return {
-              isOpen: true,
-              message: `An account with this email (${state.email}) already exists`,
-              isError: true,
-            };
-          });
-        } else {
-          snackbarState.set(() => {
-            return {
-              isOpen: true,
-              message: 'Error creating account',
-              isError: true,
-            };
-          });
-        }
+        errorSnackbar(
+          exists
+            ? `An account with this email (${state.email}) already exists`
+            : 'Error creating account',
+        );
       }
     }
   };

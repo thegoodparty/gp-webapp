@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
-import { SmsScriptSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/SmsScriptSelect';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFooter';
+import { SmsScriptSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsScriptSelect';
+import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
 
 export const SelectSmSScriptScreen = ({
   aiContent,

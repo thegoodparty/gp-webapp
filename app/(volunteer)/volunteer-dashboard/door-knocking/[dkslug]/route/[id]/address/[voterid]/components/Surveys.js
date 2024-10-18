@@ -5,11 +5,10 @@ import AwarenessSurvey from './AwarenessSurvey';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import PersuasionSurvey from './PersuasionSurvey';
 import GotvSurvey from './GotvSurvey';
 import EducationSurvey from './EducationSurvey';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function saveSurvey(data, routeId, voterId) {
   try {
@@ -31,19 +30,13 @@ export default function Surveys(props) {
   const { voter, routeId, survey } = props;
   const { type } = voter.dkCampaign;
   const [surveyData, setSurveyData] = useState({});
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
   const handleSave = async (key, value) => {
     const data = { ...surveyData, [key]: value };
     setSurveyData(data);
     const res = await saveSurvey(data, routeId, voter.id);
     if (!res) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error saving. Please refresh and try again.',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error saving. Please refresh and try again.');
     }
   };
   return (

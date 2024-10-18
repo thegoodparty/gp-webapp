@@ -1,12 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { ChooseScriptAddFlow } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ChooseScriptAddFlow';
-import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFlow';
-import { SelectSmSScriptScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/SelectSmSScriptScreen';
-import { CreateSmSScriptScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/CreateSmSScriptScreen';
-import { SelectSmsAiTemplateScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/SelectSmsAiTemplateScreen';
-import { GenerateLoadingScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/GenerateLoadingScreen';
-import { GenerateReviewScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/GenerateReviewScreen';
+import { ChooseScriptAddFlow } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ChooseScriptAddFlow';
+import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow';
+import { SelectSmSScriptScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SelectSmSScriptScreen';
+import { CreateSmSScriptScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/CreateSmSScriptScreen';
+import { SelectSmsAiTemplateScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SelectSmsAiTemplateScreen';
+import { GenerateLoadingScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/GenerateLoadingScreen';
+import { GenerateReviewScreen } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/GenerateReviewScreen';
 
 export default function ScheduleAddScriptFlow({
   onComplete = (scriptKey) => {},

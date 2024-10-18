@@ -1,18 +1,15 @@
 'use client';
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { BsArrowRightShort } from 'react-icons/bs';
 import { FaCaretDown, FaCaretRight, FaEdit, FaTrash } from 'react-icons/fa';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import TextField from '@shared/inputs/TextField';
 import AlertDialog from '@shared/utils/AlertDialog';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { TopIssueDisplay } from './TopIssueDisplay';
 import { useTopIssues } from './UseTopIssuesContext';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 const createPositionCallback = async (name, topIssueId) => {
   const api = gpApi.admin.position.create;
@@ -49,16 +46,9 @@ export default function TopIssuesList() {
   const [positionName, setPositionName] = useState('');
   const [showPositionDeleteAlert, setShowPositionDeleteAlert] = useState(false);
   const [showIssueDeleteAlert, setShowIssueDeleteAlert] = useState(false);
-
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
   const savePosition = async (id) => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
+    successSnackbar('Saving...');
     await createPositionCallback(positionName, id);
     setAddNewPosition(false);
     setPositionName('');
@@ -66,39 +56,21 @@ export default function TopIssuesList() {
   };
 
   const savePositionEdit = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
+    successSnackbar('Saving...');
     await editPositionCallback(editPosition.id, editPosition.name);
     setEditPosition(false);
     window.location.reload();
   };
 
   const handleDeletePosition = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting...',
-        isError: false,
-      };
-    });
+    successSnackbar('Deleting...');
     await deletePositionCallback(showPositionDeleteAlert);
     setShowPositionDeleteAlert(false);
     window.location.reload();
   };
 
   const handleDeleteIssue = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Deleting...',
-        isError: false,
-      };
-    });
+    successSnackbar('Deleting...');
     await deleteTopIssueCallback(showIssueDeleteAlert);
     setTopIssues(topIssues.filter(({ id }) => id !== showIssueDeleteAlert));
     setShowIssueDeleteAlert(false);

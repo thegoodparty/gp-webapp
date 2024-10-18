@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import DeleteAction from './DeleteAction';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function reactivate(id) {
   try {
@@ -23,25 +22,12 @@ async function reactivate(id) {
 
 export default function Actions({ id, campaignOnboardingSlug, isActive }) {
   const [showMenu, setShowMenu] = useState(false);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
 
   const reactivateCandidate = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'reactivating candidate',
-        isError: false,
-      };
-    });
+    successSnackbar('reactivating candidate');
     await reactivate(id);
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Reactivated',
-        isError: false,
-      };
-    });
-
+    successSnackbar('Reactivated');
     await revalidateCandidates();
     await revalidatePage('/admin/all-candidates');
     await revalidatePage('/admin/candidates');
