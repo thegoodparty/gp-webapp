@@ -54,7 +54,13 @@ const Map = () => {
 
   // Initialize Google Map once
   useEffect(() => {
-    if (!isLoaded || !window.google || !mapContainerRef.current) return;
+    if (
+      !isLoaded ||
+      !window.google ||
+      !mapContainerRef.current ||
+      mapRef.current
+    )
+      return;
 
     if (!mapRef.current) {
       mapRef.current = new window.google.maps.Map(mapContainerRef.current, {
@@ -75,10 +81,10 @@ const Map = () => {
         const currentZoom = mapInstance.getZoom();
 
         if (
-          filters.neLat != ne?.lat() ||
-          filters.neLng != ne?.lng() ||
-          filters.swLat != sw?.lat() ||
-          filters.swLng != sw?.lng()
+          filters.neLat !== ne?.lat() ||
+          filters.neLng !== ne?.lng() ||
+          filters.swLat !== sw?.lat() ||
+          filters.swLng !== sw?.lng()
         ) {
           onChangeMapBounds({
             neLat: ne?.lat(),
