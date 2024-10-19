@@ -1,6 +1,6 @@
 'use client';
 import Modal from '@shared/utils/Modal';
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowInstructions from './ScheduleFlowInstructions';
 import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep';
@@ -10,40 +10,9 @@ import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
 import ScheduleFlowComplete from './ScheduleFlowComplete';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import queryString from 'query-string';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
-
-export async function scheduleCampaign(state) {
-  try {
-    const api = gpApi.voterData.schedule;
-    const payload = {
-      ...state,
-      date: state.schedule?.date,
-      message: state.schedule?.message,
-    };
-    const formData = new FormData();
-
-    for (const key in payload) {
-      let value = payload[key];
-      if (key === 'image' || value == undefined) continue;
-      if (typeof value === 'object') {
-        value = JSON.stringify(value);
-      }
-      formData.append(key, value);
-    }
-
-    // Skipper parser wants files after all other fields
-    if (payload.image) {
-      formData.append('image', payload.image);
-    }
-
-    return await gpFetch(api, formData, false, undefined, true);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
+import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
 
 const STEPS_BY_TYPE = {
   sms: [
@@ -76,6 +45,7 @@ export default function ScheduleFlow({
   campaign,
   isCustom,
   fileName,
+  categories = [],
 }) {
   const [open, setOpen] = useState(false);
   const [state, setState] = useState({
@@ -153,7 +123,7 @@ export default function ScheduleFlow({
       voterFileUrl,
       type,
     };
-    await scheduleCampaign(updatedState);
+    await scheduleVoterMessagingCampaign(updatedState);
   };
 
   const handleAddScriptOnComplete = (scriptKeyOrText) => {
@@ -211,6 +181,7 @@ export default function ScheduleFlow({
           <ScheduleAddScriptFlow
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
+            aiTemplateCategories={categories}
             {...callbackProps}
           />
         )}
