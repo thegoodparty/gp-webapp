@@ -3,7 +3,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../../shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import VoterFileDetailPage from './components.js/VoterFileDetailPage';
+import VoterFileDetailPage from 'app/(candidate)/dashboard/voter-records/[type]/components/VoterFileDetailPage';
 import { fetchCanDownload } from '../page';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';

@@ -1,5 +1,4 @@
 'use client';
-
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import Body1 from '@shared/typography/Body1';
@@ -7,14 +6,13 @@ import H1 from '@shared/typography/H1';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import gpApi from 'gpApi';
 import { useState } from 'react';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import gpFetch from 'gpApi/gpFetch';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function P2VStatsPage(props) {
   const [processing, setProcessing] = useState(false);
   const [p2vStats, setP2vStats] = useState({});
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const getP2VStats = async () => {
     try {
@@ -32,34 +30,16 @@ export default function P2VStatsPage(props) {
   };
 
   const handleP2VStats = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Refreshing stats',
-        isError: false,
-      };
-    });
+    successSnackbar('Refreshing stats');
 
     if (processing) return;
     setProcessing(true);
     const res = await getP2VStats();
     if (res) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Completed',
-          isError: false,
-        };
-      });
+      successSnackbar('Completed');
       setProcessing(false);
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error refreshing stats. Please try again later.',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error refreshing stats. Please try again later.');
     }
   };
   return (

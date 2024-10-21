@@ -2,8 +2,8 @@
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import RadioList from '@shared/inputs/RadioList';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFooter';
-import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFlow';
+import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
+import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow';
 import { useState } from 'react';
 
 export const ChooseScriptAddFlow = ({

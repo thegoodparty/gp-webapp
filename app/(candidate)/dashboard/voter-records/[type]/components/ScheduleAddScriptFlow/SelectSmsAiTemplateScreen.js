@@ -2,10 +2,10 @@
 import { getAiSmsTemplatesFromCategories } from 'helpers/getAiSmsTemplatesFromCategories';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFooter';
+import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
 import { useState } from 'react';
 import Link from 'next/link';
-import { SmsTemplateSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/SmsTemplateSelect';
+import { SmsTemplateSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsTemplateSelect';
 
 export const SelectSmsAiTemplateScreen = ({
   onBack = () => {},

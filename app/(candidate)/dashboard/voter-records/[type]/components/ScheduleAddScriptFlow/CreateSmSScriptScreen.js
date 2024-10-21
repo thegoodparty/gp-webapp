@@ -2,7 +2,7 @@ import { useState } from 'react';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import TextField from '@shared/inputs/TextField';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFooter';
+import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
 
 const MAX_SMS_CHAR_COUNT = 1600;
 export const CreateSmSScriptScreen = ({
