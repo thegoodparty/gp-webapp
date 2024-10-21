@@ -81,7 +81,7 @@ const VOTER_RECORDS_MENU_ITEM = {
 const getDashboardMenuItems = (campaign, user) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
-    menuItems[1] = VOTER_RECORDS_MENU_ITEM;
+    menuItems[2] = VOTER_RECORDS_MENU_ITEM;
   }
 
   return menuItems;
