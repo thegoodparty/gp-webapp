@@ -1,7 +1,5 @@
 'use client';
 import { useTopIssues } from './UseTopIssuesContext';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import React, { useState } from 'react';
 import { SVGIconChooser } from './SVGIconChooser';
 import TextField from '@shared/inputs/TextField';
@@ -9,6 +7,7 @@ import gpApi from '../../../../gpApi';
 import gpFetch from '../../../../gpApi/gpFetch';
 import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export const createTopIssue = async (name, icon) => {
   const api = gpApi.admin.topIssues.create;
@@ -18,21 +17,16 @@ export const createTopIssue = async (name, icon) => {
   };
   return await gpFetch(api, payload);
 };
+
 export const TopIssueCreator = ({}) => {
   const [topIssues, setTopIssues] = useTopIssues();
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
   const [addNewIssue, setAddNewIssue] = useState(false);
   const [topIssueName, setTopIssueName] = useState('');
   const [svgData, setSvgData] = useState(null);
 
   const handleCreate = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'creating issue',
-        isError: false,
-      };
-    });
+    successSnackbar('creating issue');
     setTopIssues([await createTopIssue(topIssueName, svgData), ...topIssues]);
     setAddNewIssue(false);
     setTopIssueName('');

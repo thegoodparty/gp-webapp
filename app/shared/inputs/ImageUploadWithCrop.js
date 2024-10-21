@@ -47,7 +47,6 @@ export default function ImageUploadWithCrop({
   customElement,
   customId = 'file-uploader',
 }) {
-  // const snackbarState = useHookstate(globalSnackbarState);
   const imgRef = useRef(null);
   const [crop, setCrop] = useState({
     unit: '%', // Can be 'px' or '%'

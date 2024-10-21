@@ -1,19 +1,11 @@
 'use client';
-import { useState } from 'react';
 import { CopyToClipboard as CopyHelper } from 'react-copy-to-clipboard';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function CopyToClipboard({ children, text }) {
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar } = useSnackbar();
   const onCopyHandler = () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Copied to clipboard',
-        isError: false,
-      };
-    });
+    successSnackbar('Copied to clipboard');
   };
 
   return (

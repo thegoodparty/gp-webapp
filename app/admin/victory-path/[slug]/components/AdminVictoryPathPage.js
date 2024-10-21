@@ -1,15 +1,12 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
-import { Select } from '@mui/material';
-import { Autocomplete, Box } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
@@ -22,6 +19,7 @@ import VoterFileSection from './VoterFileSection';
 import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection';
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export async function sendVictoryMail(slug) {
   try {
@@ -282,7 +280,6 @@ const sections = [
       {
         key: 'averageTurnout',
         label: 'Average turnout number from past 3 races',
-        label: 'Average turnout number from past 3 races',
         type: 'number',
       },
       {
@@ -410,7 +407,7 @@ export default function AdminVictoryPathPage(props) {
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
   );
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (!state.winNumber || !state.averageTurnoutPercent) {
@@ -508,7 +505,6 @@ export default function AdminVictoryPathPage(props) {
       [key]: val,
       winNumber,
       averageTurnoutPercent,
-      averageTurnoutPercent,
       'viability.candidatesPerSeat': candidatesPerSeat,
       'viability.score': score,
     });
@@ -526,14 +522,7 @@ export default function AdminVictoryPathPage(props) {
       value: state['electionType'],
     });
     await updateCampaign(attr, campaign.slug);
-
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saved Election Location.',
-        isError: false,
-      };
-    });
+    successSnackbar('Saved Election Location.');
   };
 
   const onChangeElectionType = async (key, value) => {
@@ -609,13 +598,7 @@ export default function AdminVictoryPathPage(props) {
   };
 
   const save = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saving...',
-        isError: false,
-      };
-    });
+    successSnackbar('Saving...');
 
     try {
       // only send mail the first time we update pathToVictory
@@ -639,25 +622,12 @@ export default function AdminVictoryPathPage(props) {
       attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
 
       await updateCampaign(attr, campaign.slug);
-
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Saved',
-          isError: false,
-        };
-      });
+      successSnackbar('Saved');
       await revalidatePage('/admin/victory-path/[slug]');
       window.location.reload();
     } catch (e) {
       console.log('error in p2v save', e);
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error saving campaign',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error saving campaign');
     }
   };
 

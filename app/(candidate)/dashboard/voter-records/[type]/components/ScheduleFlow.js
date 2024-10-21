@@ -5,7 +5,7 @@ import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowInstructions from './ScheduleFlowInstructions';
 import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep';
 import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep';
-import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
+import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
 import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
 import ScheduleFlowComplete from './ScheduleFlowComplete';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
