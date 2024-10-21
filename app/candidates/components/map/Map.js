@@ -16,7 +16,7 @@ import {
   SuperClusterAlgorithm,
 } from '@googlemaps/markerclusterer';
 import { debounce, debounce2 } from 'helpers/debounceHelper';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const containerStyle = {
   width: '100%',
@@ -43,6 +43,7 @@ const Map = () => {
   } = useContext(MapContext);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
@@ -224,24 +225,15 @@ const Map = () => {
 
   // Listen for URL changes to update the map when back button is pressed
   useEffect(() => {
-    const handleRouteChange = (url) => {
-      const urlParams = new URLSearchParams(url.split('?')[1]);
-      const lat = parseFloat(urlParams.get('mapCenterLat'));
-      const lng = parseFloat(urlParams.get('mapCenterLng'));
-      const zoomLevel = parseInt(urlParams.get('zoom'), 10);
+    const lat = parseFloat(searchParams.get('mapCenterLat'));
+    const lng = parseFloat(searchParams.get('mapCenterLng'));
+    const zoomLevel = parseInt(searchParams.get('zoom'), 10);
 
-      if (mapRef.current && !isNaN(lat) && !isNaN(lng) && !isNaN(zoomLevel)) {
-        mapRef.current.setCenter({ lat, lng });
-        mapRef.current.setZoom(zoomLevel);
-      }
-    };
-
-    router.events.on('routeChangeComplete', handleRouteChange);
-
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router]);
+    if (mapRef.current && !isNaN(lat) && !isNaN(lng) && !isNaN(zoomLevel)) {
+      mapRef.current.setCenter({ lat, lng });
+      mapRef.current.setZoom(zoomLevel);
+    }
+  }, [searchParams.toString()]);
 
   return (
     <div className="h-[calc(100vh-56px-220px)] md:h-[calc(100vh-56px)] relative">
