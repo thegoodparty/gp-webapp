@@ -32,7 +32,6 @@ const INIT_CENTER = {
 export default function MapSection({ isLoaded, state, searchParams }) {
   const [allCampaigns, setAllCampaigns] = useState(null); // State to store the first response
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [filters, setFilters] = useState({
     party: searchParams?.party || '',
@@ -73,18 +72,12 @@ export default function MapSection({ isLoaded, state, searchParams }) {
 
   useEffect(() => {
     // Only cache the first response
-    if (campaigns.length > 0 && !allCampaigns && isFilterEmpty) {
+    if (campaigns.length > 0 && !allCampaigns) {
       setAllCampaigns(campaigns);
     }
-  }, [campaigns, allCampaigns, isFilterEmpty]);
+  }, [campaigns, allCampaigns]);
 
   const mapRef = useRef(null);
-
-  useEffect(() => {
-    if (campaigns) {
-      setLoading(false);
-    }
-  }, [campaigns]);
 
   const onChangeFilters = useCallback(
     (key, val) => {
