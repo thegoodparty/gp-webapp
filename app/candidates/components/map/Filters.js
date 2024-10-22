@@ -117,8 +117,7 @@ export default function Filters() {
             label="Show Winners Only"
             checked={filters.results}
             onChange={(e) => onChangeFilters('results', e.target.checked)}
-          />{' '}
-          Show Winners Only
+          />
         </div>
       </div>
       <div className="bg-indigo-100 p-4">
