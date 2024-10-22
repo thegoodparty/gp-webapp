@@ -1,3 +1,4 @@
+'use client';
 import Body2 from '@shared/typography/Body2';
 import { marked } from 'marked';
 import { BsStars } from 'react-icons/bs';
@@ -15,11 +16,10 @@ export default function ChatMessage({
   message,
   type,
   setShouldType,
-  scrollCallback,
   isLastMessage,
 }) {
   const [copied, setCopied] = useState(false);
-  const { handleRegenerate, lastMessageRef } = useChat();
+  const { handleRegenerate, lastMessageRef, scrollDown } = useChat();
   let { content, role } = message;
   try {
     if (role === 'assistant') {
@@ -56,7 +56,7 @@ export default function ChatMessage({
                     .typeString(content)
                     .callFunction(() => {
                       setShouldType(false);
-                      scrollCallback();
+                      scrollDown();
                     })
                     .start();
                 }}

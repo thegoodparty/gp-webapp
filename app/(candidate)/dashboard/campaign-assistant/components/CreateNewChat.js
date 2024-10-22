@@ -1,5 +1,5 @@
+'use client';
 import Button from '@shared/buttons/Button';
-import { useContext } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 

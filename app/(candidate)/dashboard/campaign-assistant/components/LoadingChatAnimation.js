@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
 import Body2 from '@shared/typography/Body2';

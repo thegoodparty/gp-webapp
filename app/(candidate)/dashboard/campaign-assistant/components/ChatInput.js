@@ -1,3 +1,4 @@
+'use client';
 import TextField from '@shared/inputs/TextField';
 import { MdSend } from 'react-icons/md';
 import { useState } from 'react';
@@ -13,8 +14,8 @@ export default function ChatInput() {
       return;
     }
     e.preventDefault();
-    await handleNewInput(text);
     setText('');
+    await handleNewInput(text);
   };
 
   return (

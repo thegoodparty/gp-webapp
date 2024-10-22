@@ -1,3 +1,4 @@
+'use client';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { createContext, useEffect, useRef, useState } from 'react';
@@ -28,6 +29,7 @@ export const ChatContext = createContext({
   chats: [],
   loading: false,
   shouldType: false,
+  loadInitialChats: async () => {},
   setShouldType: (v) => {},
   threadId: null,
   setThreadId: (v) => {},
@@ -39,6 +41,7 @@ export const ChatContext = createContext({
   handleRegenerate: async () => {},
   feedback: null,
 });
+
 export const ChatProvider = ({ children }) => {
   const [chat, setChat] = useState([]);
   const [chats, setChats] = useState([]);
@@ -48,11 +51,13 @@ export const ChatProvider = ({ children }) => {
   const [feedback, setFeedback] = useState(null);
   const lastMessageRef = useRef(null);
 
-  const scrollDown = () => {
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const scrollDown = () =>
+    lastMessageRef.current &&
+    lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+
+  useEffect(() => {
+    chat?.length && scrollDown();
+  }, [chat]);
 
   const loadInitialChats = async () => {
     const { chats: fetchedChats } = await fetchChatHistory();
@@ -69,17 +74,12 @@ export const ChatProvider = ({ children }) => {
     setThreadId(threadId);
   };
 
-  useEffect(() => {
-    loadInitialChats();
-  }, []);
-
   const handleNewInput = async (input) => {
     const userMessage = { role: 'user', content: input };
     const updatedChat = [...chat, userMessage];
     trackEvent('campaign_assistant_chatbot_input', { input });
-    setChat(() => updatedChat);
+    setChat(updatedChat);
     setLoading(true);
-    scrollDown();
     if (!threadId || chat.length === 0) {
       const { threadId: newThreadId, chat: newChat } = await createInitialChat(
         input,
@@ -90,7 +90,6 @@ export const ChatProvider = ({ children }) => {
       const { message } = await updateChat(threadId, input);
       setChat([...updatedChat, message]);
     }
-    scrollDown();
     setLoading(false);
     setShouldType(true);
   };
@@ -123,6 +122,7 @@ export const ChatProvider = ({ children }) => {
         chat,
         chats,
         loading,
+        feedback,
         shouldType,
         setShouldType,
         threadId,
@@ -130,10 +130,10 @@ export const ChatProvider = ({ children }) => {
         setChat,
         lastMessageRef,
         scrollDown,
+        loadInitialChats,
         loadChatByThreadId,
         handleNewInput,
         handleRegenerate,
-        feedback,
       }}
     >
       {children}

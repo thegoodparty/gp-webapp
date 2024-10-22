@@ -1,4 +1,3 @@
-'use client';
 import DashboardLayout from '../../shared/DashboardLayout';
 import ChatHistory from './ChatHistory';
 import Chat from './Chat';

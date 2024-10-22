@@ -1,3 +1,4 @@
+'use client';
 import Button from '@shared/buttons/Button';
 import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';

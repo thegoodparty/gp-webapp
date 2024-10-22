@@ -1,12 +1,12 @@
+'use client';
 import { Drawer } from '@mui/material';
 import Button from '@shared/buttons/Button';
 import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import { useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
-import ChatHistoryThread from './ChatHistoryThread';
-import Overline from '@shared/typography/Overline';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+import { ChatHistoryGroup } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryGroup';
 
 export default function ChatHistory() {
   const { chats } = useChat();
@@ -66,22 +66,7 @@ export default function ChatHistory() {
             </Subtitle1>
           </div>
           {chatsByDate.map(({ title, chats }) => (
-            <>
-              {chats.length > 0 && (
-                <div className="p-6 mt-3">
-                  <Overline className="mb-2 text-gray-400">{title}</Overline>
-                  <div className="">
-                    {chats.map((chat) => (
-                      <ChatHistoryThread
-                        key={chat.threadId}
-                        chat={chat}
-                        closeDrawer={closeDrawer}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
+            <ChatHistoryGroup key={title} title={title} chats={chats} />
           ))}
         </div>
       </Drawer>

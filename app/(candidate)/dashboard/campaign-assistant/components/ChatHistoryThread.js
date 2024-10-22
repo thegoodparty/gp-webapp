@@ -1,3 +1,4 @@
+'use client';
 import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import { dateUsHelper } from 'helpers/dateHelper';
