@@ -1,7 +1,11 @@
 import Overline from '@shared/typography/Overline';
 import ChatHistoryThread from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryThread';
 
-export const ChatHistoryGroup = ({ title, chats }) => {
+export const ChatHistoryGroup = ({
+  title = '',
+  chats = [],
+  closeDrawer = () => {},
+}) => {
   return (
     <>
       {chats.length > 0 && (

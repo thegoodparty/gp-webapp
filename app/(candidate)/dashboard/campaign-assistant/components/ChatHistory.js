@@ -66,7 +66,12 @@ export default function ChatHistory() {
             </Subtitle1>
           </div>
           {chatsByDate.map(({ title, chats }) => (
-            <ChatHistoryGroup key={title} title={title} chats={chats} />
+            <ChatHistoryGroup
+              key={title}
+              title={title}
+              chats={chats}
+              closeDrawer={closeDrawer}
+            />
           ))}
         </div>
       </Drawer>
