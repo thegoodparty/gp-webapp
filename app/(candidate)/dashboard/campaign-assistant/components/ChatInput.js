@@ -1,11 +1,11 @@
 import TextField from '@shared/inputs/TextField';
 import { MdSend } from 'react-icons/md';
-import { ChatContext } from './CampaignAssistantPage';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { GiSandsOfTime } from 'react-icons/gi';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 export default function ChatInput() {
-  const { handleNewInput, loading } = useContext(ChatContext);
+  const { handleNewInput, loading } = useChat();
   const [text, setText] = useState('');
 
   const onSubmit = async (e) => {
@@ -13,7 +13,6 @@ export default function ChatInput() {
       return;
     }
     e.preventDefault();
-    console.log('submit');
     await handleNewInput(text);
     setText('');
   };

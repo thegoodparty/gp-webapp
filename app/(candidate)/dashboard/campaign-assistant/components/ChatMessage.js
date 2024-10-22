@@ -4,12 +4,12 @@ import { BsStars } from 'react-icons/bs';
 import Typewriter from 'typewriter-effect';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FaRegCopy } from 'react-icons/fa';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineRefresh } from 'react-icons/md';
-import { ChatContext } from './CampaignAssistantPage';
 import ChatFeedback from './ChatFeedback';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 export default function ChatMessage({
   message,
@@ -19,7 +19,7 @@ export default function ChatMessage({
   isLastMessage,
 }) {
   const [copied, setCopied] = useState(false);
-  const { handleRegenerate } = useContext(ChatContext);
+  const { handleRegenerate, lastMessageRef } = useChat();
   let { content, role } = message;
   try {
     if (role === 'assistant') {
@@ -36,7 +36,12 @@ export default function ChatMessage({
   };
 
   return (
-    <div className={`flex p-4 ${role === 'user' ? 'justify-end' : ''}`}>
+    <div
+      className={`flex p-4 ${role === 'user' ? 'justify-end' : ''}`}
+      {...{
+        ...(isLastMessage ? { ref: lastMessageRef } : {}),
+      }}
+    >
       {role === 'assistant' ? (
         <div className="p-4 flex">
           <BsStars size={16} />

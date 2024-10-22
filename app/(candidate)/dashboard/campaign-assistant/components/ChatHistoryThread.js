@@ -1,13 +1,12 @@
 import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { useContext } from 'react';
 import { BsStars } from 'react-icons/bs';
-import { ChatContext } from './CampaignAssistantPage';
 import DeleteThread from './DeleteThread';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 export default function ChatHistoryThread({ chat, closeDrawer }) {
-  const { loadChatByThreadId } = useContext(ChatContext);
+  const { loadChatByThreadId } = useChat();
   const handleClick = () => {
     loadChatByThreadId(chat.threadId);
     closeDrawer();

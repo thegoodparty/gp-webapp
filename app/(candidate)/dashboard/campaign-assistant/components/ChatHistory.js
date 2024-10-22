@@ -2,14 +2,14 @@ import { Drawer } from '@mui/material';
 import Button from '@shared/buttons/Button';
 import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
-import { ChatContext } from './CampaignAssistantPage';
 import ChatHistoryThread from './ChatHistoryThread';
 import Overline from '@shared/typography/Overline';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 export default function ChatHistory() {
-  const { chats } = useContext(ChatContext);
+  const { chats } = useChat();
   const [open, setOpen] = useState(false);
   const [chatsByDate, setChatsByDate] = useState([]);
   // split chats to this week, this month and older

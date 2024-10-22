@@ -1,19 +1,11 @@
-import { useContext, useEffect, useRef } from 'react';
-import { ChatContext } from './CampaignAssistantPage';
+import { useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import EmptyChat from './EmptyChat';
-import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
 import LoadingChatAnimation from './LoadingChatAnimation';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 export default function Chat() {
-  const {
-    chat,
-    shouldType,
-    setShouldType,
-    loading,
-    lastMessageRef,
-    scrollDown,
-  } = useContext(ChatContext);
+  const { chat, shouldType, setShouldType, loading, scrollDown } = useChat();
 
   useEffect(() => {
     // When new messages are added, scroll to the bottom
@@ -21,12 +13,6 @@ export default function Chat() {
       scrollDown();
     }
   }, [shouldType, loading]);
-
-  const scrollCallback = () => {
-    if (lastMessageRef.current) {
-      scrollDown();
-    }
-  };
 
   return (
     <div className="min-h-full">
@@ -38,7 +24,7 @@ export default function Chat() {
               message={message}
               type={shouldType && index === chat.length - 1}
               setShouldType={setShouldType}
-              scrollCallback={scrollCallback}
+              scrollCallback={scrollDown}
               isLastMessage={index === chat.length - 1}
             />
           ))}
@@ -48,7 +34,7 @@ export default function Chat() {
       )}
       <LoadingChatAnimation />
       {/* This empty div is used as a reference to scroll to */}
-      <div ref={lastMessageRef}></div>
+      {/*<div ref={lastMessageRef}></div>*/}
     </div>
   );
 }
