@@ -49,7 +49,7 @@ export default function ChatHistory() {
           setOpen(true);
         }}
         color="neutral"
-        className="bg-white text-black w-full mt-4"
+        className="bg-white text-black w-full mt-2"
       >
         <div className="flex items-center">
           <MdMenu />

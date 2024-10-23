@@ -12,14 +12,9 @@ import { MdOutlineRefresh } from 'react-icons/md';
 import ChatFeedback from './ChatFeedback';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
-export default function ChatMessage({
-  message,
-  type,
-  setShouldType,
-  isLastMessage,
-}) {
+export default function ChatMessage({ message, type, isLastMessage }) {
   const [copied, setCopied] = useState(false);
-  const { handleRegenerate, lastMessageRef, scrollDown } = useChat();
+  const { handleRegenerate, finishTyping } = useChat();
   let { content, role } = message;
   try {
     if (role === 'assistant') {
@@ -36,14 +31,9 @@ export default function ChatMessage({
   };
 
   return (
-    <div
-      className={`flex p-4 ${role === 'user' ? 'justify-end' : ''}`}
-      {...{
-        ...(isLastMessage ? { ref: lastMessageRef } : {}),
-      }}
-    >
+    <div className={`flex py-2 px-4 ${role === 'user' ? 'justify-end' : ''}`}>
       {role === 'assistant' ? (
-        <div className="p-4 flex">
+        <div className="flex">
           <BsStars size={16} />
           <Body2 className="ml-2 prose">
             {type ? (
@@ -54,17 +44,14 @@ export default function ChatMessage({
                 onInit={(typewriter) => {
                   typewriter
                     .typeString(content)
-                    .callFunction(() => {
-                      setShouldType(false);
-                      scrollDown();
-                    })
+                    .callFunction(finishTyping)
                     .start();
                 }}
               />
             ) : (
               <>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
-                <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-4">
+                <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-2">
                   {isLastMessage && (
                     <>
                       <ChatFeedback />
@@ -98,7 +85,7 @@ export default function ChatMessage({
           </Body2>
         </div>
       ) : (
-        <div className=" bg-white p-4 rounded-lg">
+        <div className=" bg-white py-2 px-4 rounded-lg">
           <Body2>{content}</Body2>
         </div>
       )}

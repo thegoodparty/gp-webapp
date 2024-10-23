@@ -8,17 +8,17 @@ import { ChatProvider } from 'app/(candidate)/dashboard/campaign-assistant/compo
 const CampaignAssistantPage = (props) => (
   <DashboardLayout {...props} showAlert={false}>
     <ChatProvider>
-      <div className="p-4 max-w-[960px] mx-auto h-full pb-16 overflow-auto">
-        <div className="md:flex md:flex-row-reverse">
-          <div className="md:w-[170px] md:flex md:flex-col md:items-end">
+      <div className="px-4 max-w-[960px] mx-auto">
+        <div className="flex flex-col md:flex-row-reverse">
+          <div className="">
             <CreateNewChat />
             <ChatHistory />
           </div>
-          <div className=" md:flex-1 md:pr-6">
+          <div className="flex flex-col w-full h-[calc(100vh-156px)] md:h-[calc(100vh-64px)] overscroll-none">
             <Chat />
+            <ChatInput />
           </div>
         </div>
-        <ChatInput />
       </div>
     </ChatProvider>
   </DashboardLayout>

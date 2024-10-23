@@ -34,10 +34,9 @@ export const ChatContext = createContext({
   threadId: null,
   setThreadId: (v) => {},
   setChat: (v) => {},
-  lastMessageRef: null,
-  scrollDown: (lastMsgRef) => {},
+  scrollDown: () => {},
   loadChatByThreadId: async (threadId) => {},
-  handleNewInput: (lastMsgRef) => async (input) => {},
+  handleNewInput: async (input) => {},
   handleRegenerate: async () => {},
   feedback: null,
 });
@@ -49,15 +48,29 @@ export const ChatProvider = ({ children }) => {
   const [shouldType, setShouldType] = useState(false);
   const [threadId, setThreadId] = useState('');
   const [feedback, setFeedback] = useState(null);
-  const lastMessageRef = useRef(null);
+  const scrollingThreadRef = useRef(null);
 
   const scrollDown = () =>
-    lastMessageRef.current &&
-    lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    scrollingThreadRef.current &&
+    scrollingThreadRef.current.scrollTo({
+      behavior: 'smooth',
+      top: scrollingThreadRef.current.scrollHeight + 16,
+    });
+
+  const scrollUp = () =>
+    scrollingThreadRef.current &&
+    scrollingThreadRef.current.scrollTo({
+      behavior: 'smooth',
+      top: 0,
+    });
+
+  const finishTyping = () => {
+    setShouldType(false);
+  };
 
   useEffect(() => {
     chat?.length && scrollDown();
-  }, [chat]);
+  }, [chat, shouldType]);
 
   const loadInitialChats = async () => {
     const { chats: fetchedChats } = await fetchChatHistory();
@@ -124,16 +137,17 @@ export const ChatProvider = ({ children }) => {
         loading,
         feedback,
         shouldType,
-        setShouldType,
         threadId,
         setThreadId,
         setChat,
-        lastMessageRef,
+        scrollingThreadRef,
         scrollDown,
+        scrollUp,
         loadInitialChats,
         loadChatByThreadId,
         handleNewInput,
         handleRegenerate,
+        finishTyping,
       }}
     >
       {children}

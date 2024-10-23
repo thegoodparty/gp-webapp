@@ -11,11 +11,7 @@ export default function CreateNewChat() {
   };
 
   return (
-    <Button
-      variant="primary"
-      onClick={handleCreate}
-      className="w-full md:w-auto"
-    >
+    <Button variant="primary" onClick={handleCreate} className="w-full">
       <span className="flex items-center">
         <FiPlus />
         <span className="ml-2">New Chat</span>
