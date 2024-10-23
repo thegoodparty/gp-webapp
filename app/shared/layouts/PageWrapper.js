@@ -28,8 +28,9 @@ export default function PageWrapper({ children, hideFooter }) {
                       <Footer />
                     </Suspense>
                   )}
-                  <Snackbar />
+
                   <Suspense>
+                    <Snackbar />
                     <CookiesSnackbar />
                   </Suspense>
                 </div>
