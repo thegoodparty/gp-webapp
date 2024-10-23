@@ -6,6 +6,7 @@ import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 import CustomVoterAudience from './CustomVoterAudience';
+import Button from '@shared/buttons/Button';
 
 const fields = [
   {
@@ -61,14 +62,16 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
 
   return (
     <>
-      <PrimaryButton
+      <Button
+        size="large"
+        className="w-full md:w-auto"
         onClick={() => {
           setOpen(true);
         }}
-        className="w-full md:w-auto"
       >
         Create a custom voter file
-      </PrimaryButton>
+      </Button>
+
       <Modal closeCallback={handleClose} open={open}>
         {!showAudience ? (
           <div className="w-[80vw] max-w-xl p-2 md:p-8">

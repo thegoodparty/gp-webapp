@@ -1,9 +1,8 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useState } from 'react';
 import { fetchVoterFile } from '../../components/VoterRecordsPage';
 import { trackEvent } from 'helpers/fullStoryHelper';
-import { CircularProgress } from '@mui/material';
+import Button from '@shared/buttons/Button';
 
 export default function DownloadFile(props) {
   const [loading, setLoading] = useState(false);
@@ -49,14 +48,15 @@ export default function DownloadFile(props) {
 
   return (
     <div className="mt-3 md:mt-0">
-      <PrimaryButton
+      <Button
+        size="large"
+        className="w-full"
         disabled={loading}
         onClick={handleDownload}
-        fullWidth
         loading={loading}
       >
         Download CSV
-      </PrimaryButton>
+      </Button>
     </div>
   );
 }
