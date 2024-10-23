@@ -9,20 +9,27 @@ import { slugify } from 'helpers/articleHelper';
 import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 
-const getCustomVoterFileName = (customVoterFiles = [], type) =>
-  customVoterFiles.find((file) => `custom-${slugify(file.name, true)}` === type)
-    ?.name;
+const getCustomVoterFile = (customVoterFiles = [], type) =>
+  customVoterFiles.find(
+    (file) => `custom-${slugify(file.name, true)}` === type,
+  );
 
 export default function VoterFileDetailPage(props) {
   const { type, campaign, isCustom } = props;
-  const fileName = isCustom
-    ? getCustomVoterFileName(campaign.data?.customVoterFiles, type)
-    : getDefaultVoterFileName(type);
+  const customFile = isCustom
+    ? getCustomVoterFile(campaign.data?.customVoterFiles, type)
+    : null;
+  const fileName = isCustom ? customFile?.name : getDefaultVoterFileName(type);
 
   return (
     <DashboardLayout {...props}>
       <BackToAllFiles />
-      <Hero {...props} fileName={fileName} />
+      <Hero
+        type={type}
+        campaign={campaign}
+        fileName={fileName}
+        customFile={customFile}
+      />
       {!isCustom && type !== 'full' && (
         <>
           <Paper className="my-4">

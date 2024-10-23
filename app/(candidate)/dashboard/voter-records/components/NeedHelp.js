@@ -8,6 +8,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import NeedHelpSuccess from './NeedHelpSuccess';
+import Button from '@shared/buttons/Button';
 
 export async function sendMessage(type, message) {
   try {
@@ -68,14 +69,16 @@ export default function NeedHelp() {
   };
   return (
     <>
-      <SecondaryButton
+      <Button
+        size="large"
+        color="neutral"
         onClick={() => {
           setOpen(true);
         }}
         className="mr-4 mb-4 md:mb-0 w-full md:w-auto"
       >
         Need Help?
-      </SecondaryButton>
+      </Button>
       <Modal closeCallback={handleClose} open={open}>
         <div className="w-[80vw] max-w-xl p-2 md:p-8">
           {showSuccess ? (
