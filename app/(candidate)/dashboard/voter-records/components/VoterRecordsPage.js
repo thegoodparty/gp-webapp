@@ -4,21 +4,18 @@ import DashboardLayout from '../../shared/DashboardLayout';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Paper from '@shared/utils/Paper';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
-import { FaDownload } from 'react-icons/fa';
-import { trackEvent } from 'helpers/fullStoryHelper';
-import Chip from '@shared/utils/Chip';
 import CustomVoterFile from './CustomVoterFile';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { CircularProgress } from '@mui/material';
 import CantDownload from './CantDownload';
 import Link from 'next/link';
 import { slugify } from 'helpers/articleHelper';
 import voterFileTypes from './VoterFileTypes';
 import NeedHelp from './NeedHelp';
+import ViewAudienceFiltersModal from './ViewAudienceFiltersModal';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE'];
 
@@ -48,6 +45,8 @@ async function wakeUp() {
 
 export default function VoterRecordsPage(props) {
   const [campaign, setCampaign] = useState(props.campaign);
+  const [modalFileKey, setModalFileKey] = useState(null);
+
   const addCustomVoterFiles = () => {
     if (
       campaign.data?.customVoterFiles &&
@@ -66,6 +65,7 @@ export default function VoterRecordsPage(props) {
             file.purpose || '',
             'Custom Voter File',
           ],
+          filters: file.filters,
         });
       });
       return updatedFiles;
@@ -118,9 +118,9 @@ export default function VoterRecordsPage(props) {
                     index === 0 ? 'rounded-tl-lg' : ''
                   } ${
                     index === tableHeaders.length - 1 ? 'rounded-tr-lg ' : ''
-                  } ${index === 2 ? 'rounded-tr-lg lg:rounded-none' : ''} ${
-                    index === 1 ? 'rounded-tr-lg md:rounded-none' : ''
-                  } ${index === 0 ? 'rounded-tr-lg sm:rounded-none' : ''} ${
+                  } ${index === 2 ? 'rounded-tr-lg lg:rounded-tr-none' : ''} ${
+                    index === 1 ? 'rounded-tr-lg md:rounded-tr-none' : ''
+                  } ${index === 0 ? 'rounded-tr-lg sm:rounded-tr-none' : ''} ${
                     index === 2 ? 'col-span-1' : 'col-span-2'
                   } ${header === 'AUDIENCE' ? 'hidden lg:block' : ''}
               
@@ -137,31 +137,42 @@ export default function VoterRecordsPage(props) {
                   {file.fields.map((field, index2) => (
                     <div
                       key={`${file.key}-${index2}`}
-                      className={`p-4 border-b border-b-gray-200 ${
+                      className={`p-4 border-b border-b-gray-200 flex items-center ${
                         index % 2 !== 0 ? ' bg-indigo-50' : ''
                       } ${index2 === 2 ? 'col-span-1' : 'col-span-2'}
                   
-                  ${index2 === 3 ? 'hidden lg:block ' : ''} ${
-                        index2 === 2 ? 'hidden md:block ' : ''
-                      }${index2 === 1 ? 'hidden sm:block' : ''}`}
+                  ${index2 === 3 ? 'hidden lg:flex ' : ''} ${
+                        index2 === 2 ? 'hidden md:flex ' : ''
+                      }${index2 === 1 ? 'hidden sm:flex' : ''}`}
                     >
-                      <Link
-                        href={
-                          file.isCustom
-                            ? `/dashboard/voter-records/custom-${slugify(
-                                file.name,
-                                true,
-                              )}`
-                            : `/dashboard/voter-records/${file.key.toLowerCase()}`
-                        }
-                        className={`${
-                          index2 === 0
-                            ? 'text-info underline hover:text-info-dark'
-                            : ''
-                        }`}
-                      >
-                        {field}
-                      </Link>
+                      {index2 === 0 ? (
+                        <Link
+                          href={
+                            file.isCustom
+                              ? `/dashboard/voter-records/custom-${slugify(
+                                  file.name,
+                                  true,
+                                )}`
+                              : `/dashboard/voter-records/${file.key.toLowerCase()}`
+                          }
+                          className="text-info underline hover:text-info-dark"
+                        >
+                          {field}
+                        </Link>
+                      ) : (
+                        <>
+                          {field}
+                          {file.isCustom && index2 === 3 && (
+                            <ViewAudienceFiltersModal
+                              open={modalFileKey === file.key}
+                              file={file}
+                              onOpen={() => setModalFileKey(file.key)}
+                              onClose={() => setModalFileKey(null)}
+                              className="ml-1 self-center"
+                            />
+                          )}
+                        </>
+                      )}
                     </div>
                   ))}
                 </Fragment>
