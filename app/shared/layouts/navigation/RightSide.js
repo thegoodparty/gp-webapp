@@ -23,8 +23,7 @@ export default function RightSide({ campaignStatus }) {
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/volunteer-dashboard');
-  const isOnboardingPath =
-    pathname?.startsWith('/onboarding') || pathname === '/sign-up/account-type';
+  const isOnboardingPath = pathname?.startsWith('/onboarding');
 
   const toggleProfile = () => {
     closeAll();

@@ -2,7 +2,10 @@
 import { hookstate, useHookstate } from '@hookstate/core';
 import MuiSnackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect } from 'react';
+import { useSearchParams, usePathname } from 'next/navigation';
+
+export const REDIRECT_MSG_PARAM = 'showRedirMsg';
 
 export const globalSnackbarState = hookstate({
   isOpen: false,
@@ -22,6 +25,30 @@ const Alert = forwardRef(function Alert(props, ref) {
 export default function Snackbar() {
   const state = useHookstate(globalSnackbarState);
   const snackbarState = state.get();
+  const params = useSearchParams();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const redirMsg = params.get(REDIRECT_MSG_PARAM);
+
+    if (redirMsg) {
+      // remove redirect message param
+      const newParams = new URLSearchParams(params);
+      newParams.delete(REDIRECT_MSG_PARAM);
+      window.history.replaceState(
+        null,
+        undefined,
+        pathname + '?' + newParams.toString(),
+      );
+
+      // Show message after user has been redirected
+      state.set(() => ({
+        isOpen: true,
+        message: redirMsg,
+        isError: false,
+      }));
+    }
+  }, [params, pathname]);
 
   const { isOpen, message, isError, autoHideDuration } = snackbarState;
   const handleClose = (event, reason) => {
