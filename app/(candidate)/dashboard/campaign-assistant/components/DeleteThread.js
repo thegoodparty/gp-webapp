@@ -1,3 +1,4 @@
+'use client';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';

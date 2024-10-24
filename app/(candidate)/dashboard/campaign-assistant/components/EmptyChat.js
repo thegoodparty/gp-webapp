@@ -1,9 +1,8 @@
 'use client';
 import Button from '@shared/buttons/Button';
 import Body2 from '@shared/typography/Body2';
-import { useContext } from 'react';
 import { BsStars } from 'react-icons/bs';
-import { ChatContext } from './CampaignAssistantPage';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 const prompts = [
   {
@@ -25,7 +24,7 @@ const prompts = [
 ];
 
 export default function EmptyChat() {
-  const { handleNewInput } = useContext(ChatContext);
+  const { handleNewInput } = useChat();
 
   const handleClick = (prompt) => {
     handleNewInput(prompt.prompt);

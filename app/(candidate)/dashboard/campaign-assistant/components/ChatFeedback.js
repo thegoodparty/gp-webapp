@@ -1,15 +1,16 @@
+'use client';
 import Button from '@shared/buttons/Button';
 import TextField from '@shared/inputs/TextField';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
 import { chatFeedback } from './ajaxActions';
-import { ChatContext } from './CampaignAssistantPage';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 export default function ChatFeedback() {
-  const { feedback: dbFeedback, threadId } = useContext(ChatContext);
+  const { feedback: dbFeedback, threadId } = useChat();
   const [showModal, setShowModal] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [type, setType] = useState(dbFeedback?.type);
