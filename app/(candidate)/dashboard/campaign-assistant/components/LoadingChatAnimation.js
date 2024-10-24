@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+'use client';
+import { useState, useEffect } from 'react';
 import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
-import { ChatContext } from './CampaignAssistantPage';
 import Body2 from '@shared/typography/Body2';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
 const messages = [
   'Reading your campaign data and strategies...',
@@ -11,7 +12,7 @@ const messages = [
 ];
 
 export default function LoadingChatAnimation() {
-  const { loading, scrollDown } = useContext(ChatContext);
+  const { loading, scrollDown } = useChat();
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
