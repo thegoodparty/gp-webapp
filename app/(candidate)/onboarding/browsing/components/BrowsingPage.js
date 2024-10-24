@@ -62,7 +62,7 @@ export default function BrowsingPage({ metaData }) {
       <div className="flex flex-wrap items-center justify-between mt-12">
         <Link
           className="w-full mb-4 md:w-auto md:mb-auto"
-          href="/sign-up/account-type"
+          href="/onboarding/account-type"
         >
           <SecondaryButton className="w-full">
             <div className="min-w-[120px]">Back</div>
