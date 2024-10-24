@@ -19,7 +19,7 @@ export default function ChatInput() {
   };
 
   return (
-    <div className="w-full mx-auto p-4 bg-indigo-100 relative px-4 ">
+    <div className="w-full mx-auto pt-4 pb-2 bg-indigo-100 relative px-4 ">
       <form noValidate onSubmit={onSubmit}>
         <TextField
           placeholder="Ask me anything about your campaign..."
