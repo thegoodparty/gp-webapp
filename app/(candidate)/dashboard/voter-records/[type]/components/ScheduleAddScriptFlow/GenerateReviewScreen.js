@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/AddScriptFooter';
+import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
 import RichEditor from '@shared/utils/RichEditor';
 import {
   getCampaign,

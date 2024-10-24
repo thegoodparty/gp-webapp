@@ -1,5 +1,4 @@
 'use client';
-
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -8,9 +7,8 @@ import PhoneInput from '@shared/inputs/PhoneInput';
 import TextField from '@shared/inputs/TextField';
 import EmailInput from '@shared/inputs/EmailInput';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import { Fragment } from 'react';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export async function subscribeEmail(payload) {
   try {
@@ -24,7 +22,6 @@ export async function subscribeEmail(payload) {
 
 export default function SignupForm({
   formId,
-  fullWidth = false,
   pageName,
   label = 'Get Started',
   labelId,
@@ -38,9 +35,8 @@ export default function SignupForm({
   const [showError, setShowError] = useState(false);
   const [phone, setPhone] = useState('');
   const [showForm, setShowForm] = useState(true);
-
   const canSubmit = () => isValidEmail(email);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const fields = [
     {
@@ -129,24 +125,13 @@ export default function SignupForm({
         pageName,
       });
       if (success) {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'Check your email to learn more',
-            isError: false,
-            autoHideDuration: null,
-          };
+        successSnackbar('Check your email to learn more', {
+          autoHideDuration: null,
         });
         onSuccessCallback();
         setShowForm(false);
       } else {
-        snackbarState.set(() => {
-          return {
-            isOpen: true,
-            message: 'An error occurred. Please try again.',
-            isError: true,
-          };
-        });
+        errorSnackbar('An error occurred. Please try again.');
       }
     } else {
       setShowError('Please enter a valid email');

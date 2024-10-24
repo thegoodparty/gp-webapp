@@ -94,22 +94,21 @@ export default function CustomVoterAudienceFilters({
   onChangeCallback,
 }) {
   // set initial state to all false
-  const [state, setState] = useState(
-    audience || {
-      audience_superVoters: false,
-      audience_likelyVoters: false,
-      audience_unreliableVoters: false,
-      audience_unlikelyVoters: false,
-      audience_firstTimeVoters: false,
-      party_independent: false,
-      party_democrat: false,
-      party_republican: false,
-      age_18_25: false,
-      age_25_35: false,
-      age_35_50: false,
-      audience_request: '',
-    },
-  );
+  const [state, setState] = useState({
+    audience_superVoters: false,
+    audience_likelyVoters: false,
+    audience_unreliableVoters: false,
+    audience_unlikelyVoters: false,
+    audience_firstTimeVoters: false,
+    party_independent: false,
+    party_democrat: false,
+    party_republican: false,
+    age_18_25: false,
+    age_25_35: false,
+    age_35_50: false,
+    audience_request: '',
+    ...audience,
+  });
 
   const { purpose } = prevStepValues || {};
 

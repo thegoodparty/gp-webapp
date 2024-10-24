@@ -5,12 +5,10 @@ import { IoArrowForward } from 'react-icons/io5';
 import ScheduleFlowInstructions from './ScheduleFlowInstructions';
 import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep';
 import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep';
-import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components.js/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
+import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
 import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
 import ScheduleFlowComplete from './ScheduleFlowComplete';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
-import gpApi from 'gpApi';
-import queryString from 'query-string';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
 
@@ -104,23 +102,8 @@ export default function ScheduleFlow({
   };
 
   const handleSubmit = async () => {
-    const activeFilters = Object.keys(state.audience).filter(
-      (key) => state.audience[key] === true,
-    );
-    const customFilters = {
-      filters: activeFilters,
-    };
-
-    const customFiltersEncoded = queryString.stringify({
-      customFilters: JSON.stringify(customFilters),
-    });
-
-    // If queryString handles the type, it appends it to the end instead of the beginning
-    const voterFileUrl = `${gpApi.voterData.getVoterFile.url}?type=${type}&${customFiltersEncoded}`;
-
     const updatedState = {
       ...state,
-      voterFileUrl,
       type,
     };
     await scheduleVoterMessagingCampaign(updatedState);

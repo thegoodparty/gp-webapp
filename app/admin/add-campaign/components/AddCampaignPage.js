@@ -8,9 +8,8 @@ import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
-import { useHookstate } from '@hookstate/core';
 import TextField from '@shared/inputs/TextField';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 const createCampaign = async (payload) => {
   try {
@@ -88,7 +87,7 @@ const AddCampaignPage = (props) => {
   const [state, setState] = useState(initialState);
   const [showModal, setShowModal] = useState(false);
   const [campaign, setCampaign] = useState(null);
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const onChangeInput = (key, value) => {
     setState({
@@ -103,13 +102,7 @@ const AddCampaignPage = (props) => {
 
   const handleUpdate = async () => {
     await sendEmail(campaign.user);
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Saved',
-        isError: false,
-      };
-    });
+    successSnackbar('Saved');
     setShowModal(false);
     setState(initialState);
     setCampaign(null);
@@ -126,33 +119,15 @@ const AddCampaignPage = (props) => {
   };
 
   const handleCreate = async () => {
-    snackbarState.set(() => {
-      return {
-        isOpen: true,
-        message: 'Creating...',
-        isError: false,
-      };
-    });
+    successSnackbar('Creating...');
 
     const res = await createCampaign(state);
     if (res) {
       console.log('success');
       setCampaign(res.campaign);
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Created!',
-          isError: false,
-        };
-      });
+      successSnackbar('Created!');
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Error creating campaign. Is this email already in use?',
-          isError: true,
-        };
-      });
+      errorSnackbar('Error creating campaign. Is this email already in use?');
     }
   };
 

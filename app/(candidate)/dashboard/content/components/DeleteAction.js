@@ -2,8 +2,7 @@
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 async function deleteContent(key) {
   try {
@@ -24,27 +23,15 @@ export default function DeleteAction({
   showDelete,
   setShowDelete,
 }) {
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const handleDelete = async (documentKey) => {
     const deleteResp = await deleteContent(documentKey);
     if (deleteResp) {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Deleted',
-          isError: false,
-        };
-      });
+      successSnackbar('Deleted');
       window.location.href = '/dashboard/content';
     } else {
-      snackbarState.set(() => {
-        return {
-          isOpen: true,
-          message: 'Failed to delete.',
-          isError: true,
-        };
-      });
+      errorSnackbar('Failed to delete.');
     }
   };
 

@@ -4,11 +4,10 @@ import Paper from '@shared/utils/Paper';
 import Volunteer from './Volunteer';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
 import Invitation from 'app/(candidate)/dashboard/team/components/Invitation';
 import H3 from '@shared/typography/H3';
 import SadFaceAnimation from '@shared/animations/SadFaceAnimation';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 const deleteCampaignVolunteer = async (
   volunteerId,
@@ -45,15 +44,11 @@ export default function TeamMembers({
   invitations = [],
   reloadInvitations,
 }) {
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const handleRemove = async (volunteerId) => {
     await deleteCampaignVolunteer(volunteerId, onAction, () =>
-      snackbarState.set(() => ({
-        isOpen: true,
-        isError: true,
-        message: 'Error removing volunteer',
-      })),
+      errorSnackbar('Error removing volunteer'),
     );
   };
 

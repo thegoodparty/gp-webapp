@@ -13,15 +13,14 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useRouter } from 'next/navigation';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
-import { useHookstate } from '@hookstate/core';
-import { globalSnackbarState } from '@shared/utils/Snackbar';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export const CandidateLookupPage = ({}) => {
   const [candidateEmail, setCandidateEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const snackbarState = useHookstate(globalSnackbarState);
+  const { errorSnackbar } = useSnackbar();
 
   const onChange = ({ currentTarget }) => {
     setCandidateEmail(currentTarget.value);
@@ -38,11 +37,7 @@ export const CandidateLookupPage = ({}) => {
     if (!newRequest || newRequest.ok === false) {
       const message = 'Error creating campaign request';
       console.error(message);
-      snackbarState.set(() => ({
-        isOpen: true,
-        isError: true,
-        message,
-      }));
+      errorSnackbar(message);
     } else {
       router.push('/onboarding/managing/final');
     }

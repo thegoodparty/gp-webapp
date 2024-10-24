@@ -54,21 +54,17 @@ const Map = () => {
 
   // Initialize Google Map once
   useEffect(() => {
-    if (
-      !isLoaded ||
-      !window.google ||
-      !mapContainerRef.current ||
-      mapRef.current
-    )
-      return;
+    if (!isLoaded || !window.google || !mapContainerRef.current) return;
 
-    const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
-      center: memoizedCenter,
-      zoom,
-      ...mapOptions,
-    });
+    if (!mapRef.current) {
+      mapRef.current = new window.google.maps.Map(mapContainerRef.current, {
+        center: memoizedCenter,
+        zoom,
+        ...mapOptions,
+      });
+    }
 
-    mapRef.current = mapInstance;
+    const mapInstance = mapRef.current;
 
     const debouncedUpdateBounds = debounce2(() => {
       const bounds = mapInstance.getBounds();
@@ -79,10 +75,10 @@ const Map = () => {
         const currentZoom = mapInstance.getZoom();
 
         if (
-          filters.neLat !== ne?.lat() ||
-          filters.neLng !== ne?.lng() ||
-          filters.swLat !== sw?.lat() ||
-          filters.swLng !== sw?.lng()
+          filters.neLat != ne?.lat() ||
+          filters.neLng != ne?.lng() ||
+          filters.swLat != sw?.lat() ||
+          filters.swLng != sw?.lng()
         ) {
           onChangeMapBounds({
             neLat: ne?.lat(),
