@@ -11,5 +11,5 @@ export const handleDemoAccountDeletion =
       errorSnackbar('Error clearing demo campaign');
       return;
     }
-    router.push('/sign-up/account-type');
+    router.push('/onboarding/account-type');
   };
