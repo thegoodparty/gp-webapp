@@ -16,7 +16,7 @@ export default async function Page() {
   if (user) {
     const { status, slug } = await fetchCampaignStatus();
     if (status === 'candidate') {
-      redirect(`/dashboard`);
+      redirect('/dashboard');
     } else if (slug) {
       redirect(`/onboarding/${slug}/1`);
     } else {

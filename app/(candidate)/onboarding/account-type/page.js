@@ -6,7 +6,7 @@ import AccountTypePage from 'app/(candidate)/onboarding/account-type/components/
 const meta = pageMetaData({
   title: 'Select account type',
   description: 'Select account type',
-  slug: '/sign-up/account-type',
+  slug: '/onboarding/account-type',
 });
 export const metadata = meta;
 

@@ -34,7 +34,8 @@ export default function RightSideMobile() {
   const [campaignStatus, setCampaignStatus] = useCampaignStatus();
   const { status, step, slug } = campaignStatus || {};
   const pathname = usePathname();
-  const isDashboardPath = pathname?.startsWith('/dashboard');
+  const isDashboardPath =
+    pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile');
   const isVolunteerDashboardPath = pathname?.startsWith('/volunteer-dashboard');
 
   let dashboardLink = '/dashboard';
