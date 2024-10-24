@@ -14,7 +14,7 @@ const CampaignAssistantPage = (props) => (
             <CreateNewChat />
             <ChatHistory />
           </div>
-          <div className="flex flex-col w-full h-[calc(100vh-156px)] md:h-[calc(100vh-64px)] overscroll-none">
+          <div className="flex flex-col w-full h-[calc(100vh-164px)] md:h-[calc(100vh-72px)] overscroll-none">
             <Chat />
             <ChatInput />
           </div>

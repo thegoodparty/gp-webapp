@@ -33,9 +33,9 @@ export default function ChatMessage({ message, type, isLastMessage }) {
   return (
     <div className={`flex py-2 px-4 ${role === 'user' ? 'justify-end' : ''}`}>
       {role === 'assistant' ? (
-        <div className="flex">
+        <div className="flex items-start">
           <BsStars size={16} />
-          <Body2 className="ml-2 prose">
+          <Body2 className="ml-2 prose [&>div>p:first-child]:mt-0">
             {type ? (
               <Typewriter
                 options={{

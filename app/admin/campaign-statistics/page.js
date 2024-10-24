@@ -27,8 +27,8 @@ const fetchCampaigns = async (filters) => {
 };
 
 const meta = pageMetaData({
-  title: 'Campaign Statistics | GOOD PARTY',
-  description: 'Admin Campaign Statistics.',
+  title: 'Campaign | GOOD PARTY',
+  description: 'Admin Campaign.',
   slug: '/admin/campaign-statistics',
 });
 export const metadata = meta;
@@ -77,7 +77,7 @@ export default async function Page({ searchParams }) {
 
   const childProps = {
     pathname: '/admin/campaign-statistics',
-    title: 'Campaign Statistics',
+    title: 'Campaigns',
     campaigns,
     fireHose: Boolean(firehose) && !withParams,
   };
