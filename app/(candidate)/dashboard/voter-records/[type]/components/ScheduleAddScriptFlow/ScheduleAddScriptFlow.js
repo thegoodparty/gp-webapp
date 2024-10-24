@@ -31,7 +31,7 @@ export default function ScheduleAddScriptFlow({
 
   const Screens = {
     [ADD_SCRIPT_FLOW.CHOOSE_FLOW]: (
-      <ChooseScriptAddFlow onBack={onBack} onNext={onNext} />
+      <ChooseScriptAddFlow onBack={() => onBack()} onNext={onNext} />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS]: (
       <SelectSmSScriptScreen
