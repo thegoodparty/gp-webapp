@@ -29,7 +29,7 @@ export default function Page() {
           </div>
         </Link>
       </div>
-      <div className="w-[100%] h-[calc(100vh-56px)] hidden md:block">
+      <div className="w-[100%] h-screen hidden md:block">
         <iframe
           src="https://capture.navattic.com/clnkk83pm00m208l76gq2arcm"
           width="100%"
