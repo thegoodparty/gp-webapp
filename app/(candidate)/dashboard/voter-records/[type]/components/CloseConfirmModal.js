@@ -10,7 +10,7 @@ export default function CloseConfirmModal({ open, onConfirm, onCancel }) {
         <H1 className="mb-4">Are you sure you want to exit?</H1>
         <Body1 className="mb-10">
           Leaving now means you&apos;ll need to start over next time you
-          schedule a text campaign.
+          schedule a campaign.
         </Body1>
         <div className="flex justify-center gap-4">
           <Button color="neutral" size="large" onClick={onConfirm}>
