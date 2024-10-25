@@ -39,6 +39,7 @@ export const FOOTER_COLUMNS = [
         label: 'Interactive Demo',
         link: '/product-tour',
         id: 'footer-support-demo',
+        useNativeLink: true,
       },
     ],
   },

@@ -2,7 +2,6 @@
 import { Outfit } from 'next/font/google';
 import localFont from 'next/font/local';
 import Script from 'next/script';
-
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
 import { appBase, isProd } from 'gpApi';

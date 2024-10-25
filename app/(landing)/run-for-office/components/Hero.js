@@ -25,7 +25,9 @@ export default function Hero() {
               Get Started
             </Button>
           </Link>
-          <Link href="/product-tour" id="hero-demo">
+          {/*This needs to be an anchor tag to force a page load for the
+            Product Tour page, to ensure the main nav doesn't render twice.*/}
+          <a href="/product-tour" id="hero-demo">
             <Button
               className="w-full md:w-auto"
               size="large"
@@ -33,7 +35,7 @@ export default function Hero() {
             >
               Book a free demo
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
       <div className="grow md:text-right col-span-6">
