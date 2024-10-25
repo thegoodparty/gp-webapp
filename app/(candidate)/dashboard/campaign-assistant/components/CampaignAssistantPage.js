@@ -10,7 +10,7 @@ const CampaignAssistantPage = (props) => (
     <ChatProvider>
       <div className="px-4 max-w-[960px] mx-auto">
         <div className="flex flex-col md:flex-row-reverse">
-          <div className="">
+          <div className="md:pl-4">
             <CreateNewChat />
             <ChatHistory />
           </div>
