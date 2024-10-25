@@ -67,7 +67,7 @@ export default function DashboardPage(props) {
 
   const loadHistory = async () => {
     const res = await fetchUpdateHistory();
-    setUpdateHistory(res.updateHistory);
+    setUpdateHistory(res?.updateHistory || []);
   };
 
   // TODO: we're only having to do this, because we're caching the user object in the cookie and
