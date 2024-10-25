@@ -12,7 +12,7 @@ import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import CloseConfirmModal from './CloseConfirmModal';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
-import { isEqual, omit } from 'lodash';
+import { isEqual } from 'lodash';
 
 const STEPS_BY_TYPE = {
   sms: [
