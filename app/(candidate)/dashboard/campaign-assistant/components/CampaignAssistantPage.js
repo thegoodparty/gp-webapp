@@ -1,121 +1,27 @@
-'use client';
-import { createContext, useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../../shared/DashboardLayout';
 import ChatHistory from './ChatHistory';
 import Chat from './Chat';
 import ChatInput from './ChatInput';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import CreateNewChat from './CreateNewChat';
-import {
-  createInitialChat,
-  fetchChatHistory,
-  getChatThread,
-} from './ajaxActions';
-import useChat from './useChat';
-import { trackEvent } from 'helpers/fullStoryHelper';
+import { ChatProvider } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatProvider';
 
-export async function updateChat(threadId, input) {
-  try {
-    const api = gpApi.campaign.chat.update;
-    const payload = {
-      threadId,
-      message: input,
-    };
-    return await gpFetch(api, payload);
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-}
-
-export const ChatContext = createContext([[], (v) => {}]);
-
-export default function CampaignAssistantPage(props) {
-  const {
-    chat,
-    setChat,
-    threadId,
-    setThreadId,
-    chats,
-    loadChatByThreadId,
-    regenerateChat,
-    feedback,
-  } = useChat();
-  const lastMessageRef = useRef(null);
-
-  const [loading, setLoading] = useState(false);
-  const [shouldType, setShouldType] = useState(false);
-  const handleNewInput = async (input) => {
-    setLoading(true);
-    trackEvent('campaign_assistant_chatbot_input', { input });
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-    if (!threadId || chat.length === 0) {
-      const { threadId: newThreadId, chat: newChat } = await createInitialChat(
-        input,
-      );
-      setThreadId(newThreadId);
-      setChat(newChat);
-    } else {
-      const { message } = await updateChat(threadId, input);
-      let updatedChat = [...chat, { role: 'user', content: input }, message];
-      setChat(updatedChat);
-    }
-    scrollDown();
-    setLoading(false);
-    setShouldType(true);
-  };
-
-  const scrollDown = () => {
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleRegenerate = async () => {
-    setLoading(true);
-    setChat(chat.slice(0, -1));
-    await regenerateChat();
-    setShouldType(true);
-    setLoading(false);
-  };
-
-  const contextProps = {
-    handleNewInput,
-    ...props,
-    chat,
-    chats,
-    loading,
-    shouldType,
-    setShouldType,
-    threadId,
-    setThreadId,
-    setChat,
-    lastMessageRef,
-    scrollDown,
-    loadChatByThreadId,
-    handleRegenerate,
-    feedback,
-  };
-
-  return (
-    <DashboardLayout {...props} showAlert={false}>
-      <ChatContext.Provider value={contextProps}>
-        <div className="p-4 max-w-[960px] mx-auto h-full pb-16 overflow-auto">
-          <div className="md:flex md:flex-row-reverse">
-            <div className="md:w-[170px] md:flex md:flex-col md:items-end">
-              <CreateNewChat />
-              <ChatHistory />
-            </div>
-            <div className=" md:flex-1 md:pr-6">
-              <Chat />
-            </div>
+const CampaignAssistantPage = (props) => (
+  <DashboardLayout {...props} showAlert={false}>
+    <ChatProvider>
+      <div className="px-4 max-w-[960px] mx-auto">
+        <div className="flex flex-col md:flex-row-reverse">
+          <div className="md:pl-4">
+            <CreateNewChat />
+            <ChatHistory />
           </div>
-          <ChatInput />
+          <div className="flex flex-col w-full h-[calc(100vh-164px)] md:h-[calc(100vh-72px)] overscroll-none">
+            <Chat />
+            <ChatInput />
+          </div>
         </div>
-      </ChatContext.Provider>
-    </DashboardLayout>
-  );
-}
+      </div>
+    </ChatProvider>
+  </DashboardLayout>
+);
+
+export default CampaignAssistantPage;

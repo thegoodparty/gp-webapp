@@ -1,25 +1,20 @@
+'use client';
 import Body2 from '@shared/typography/Body2';
 import { marked } from 'marked';
 import { BsStars } from 'react-icons/bs';
 import Typewriter from 'typewriter-effect';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FaRegCopy } from 'react-icons/fa';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineRefresh } from 'react-icons/md';
-import { ChatContext } from './CampaignAssistantPage';
 import ChatFeedback from './ChatFeedback';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
-export default function ChatMessage({
-  message,
-  type,
-  setShouldType,
-  scrollCallback,
-  isLastMessage,
-}) {
+export default function ChatMessage({ message, type, isLastMessage }) {
   const [copied, setCopied] = useState(false);
-  const { handleRegenerate } = useContext(ChatContext);
+  const { handleRegenerate, finishTyping } = useChat();
   let { content, role } = message;
   try {
     if (role === 'assistant') {
@@ -36,11 +31,11 @@ export default function ChatMessage({
   };
 
   return (
-    <div className={`flex p-4 ${role === 'user' ? 'justify-end' : ''}`}>
+    <div className={`flex py-2 px-4 ${role === 'user' ? 'justify-end' : ''}`}>
       {role === 'assistant' ? (
-        <div className="p-4 flex">
+        <div className="flex items-start">
           <BsStars size={16} />
-          <Body2 className="ml-2 prose">
+          <Body2 className="ml-2 prose [&>div>p:first-child]:mt-0">
             {type ? (
               <Typewriter
                 options={{
@@ -49,17 +44,14 @@ export default function ChatMessage({
                 onInit={(typewriter) => {
                   typewriter
                     .typeString(content)
-                    .callFunction(() => {
-                      setShouldType(false);
-                      scrollCallback();
-                    })
+                    .callFunction(finishTyping)
                     .start();
                 }}
               />
             ) : (
               <>
                 <div dangerouslySetInnerHTML={{ __html: content }} />
-                <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-4">
+                <div className="flex items-center border-b border-black/[0.12] w-[250px] pb-4 mb-2">
                   {isLastMessage && (
                     <>
                       <ChatFeedback />
@@ -93,7 +85,7 @@ export default function ChatMessage({
           </Body2>
         </div>
       ) : (
-        <div className=" bg-white p-4 rounded-lg">
+        <div className=" bg-white py-2 px-4 rounded-lg">
           <Body2>{content}</Body2>
         </div>
       )}

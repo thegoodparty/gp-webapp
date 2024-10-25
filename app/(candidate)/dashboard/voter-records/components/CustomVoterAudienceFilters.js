@@ -92,6 +92,7 @@ export default function CustomVoterAudienceFilters({
   showAudienceRequest,
   prevStepValues,
   onChangeCallback,
+  readOnly = false,
 }) {
   // set initial state to all false
   const [state, setState] = useState({
@@ -121,6 +122,8 @@ export default function CustomVoterAudienceFilters({
   }, [purpose]);
 
   const handleChangeAudience = (option, val) => {
+    if (readOnly) return;
+
     const newState = {
       ...state,
       [option]: val,
@@ -146,6 +149,7 @@ export default function CustomVoterAudienceFilters({
                 }}
                 checked={state[option.key] ?? false}
                 color="secondary"
+                disabled={readOnly}
               />
             </div>
           ))}

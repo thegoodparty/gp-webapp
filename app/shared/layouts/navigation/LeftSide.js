@@ -4,17 +4,24 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns';
+import { useMemo } from 'react';
+
+// list of paths to hide marketing nav
+const HIDE_NAV_PATHS = [
+  '/onboarding',
+  '/dashboard',
+  '/volunteer-dashboard',
+  '/profile',
+];
 
 export default function LeftSide() {
   const pathname = usePathname();
-  const isOnboardingPath =
-    pathname?.startsWith('/onboarding') || pathname === '/sign-up/account-type';
+  const shouldHideNav = useMemo(
+    () => HIDE_NAV_PATHS.some((path) => pathname?.startsWith(path)),
+    [pathname],
+  );
 
-  const isDashboardPath =
-    pathname?.startsWith('/dashboard') ||
-    pathname?.startsWith('/volunteer-dashboard');
-
-  if (isOnboardingPath || isDashboardPath) {
+  if (shouldHideNav) {
     return null;
   }
 

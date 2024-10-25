@@ -1,54 +1,50 @@
-import { useContext, useEffect, useRef } from 'react';
-import { ChatContext } from './CampaignAssistantPage';
+'use client';
+import { useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import EmptyChat from './EmptyChat';
-import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
 import LoadingChatAnimation from './LoadingChatAnimation';
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+import { Fab } from '@mui/material';
+import { MdKeyboardArrowUp } from 'react-icons/md';
 
 export default function Chat() {
-  const {
-    chat,
-    shouldType,
-    setShouldType,
-    loading,
-    lastMessageRef,
-    scrollDown,
-  } = useContext(ChatContext);
+  const { chat, shouldType, loadInitialChats, scrollingThreadRef, scrollUp } =
+    useChat();
 
   useEffect(() => {
-    // When new messages are added, scroll to the bottom
-    if (shouldType) {
-      scrollDown();
-    }
-  }, [shouldType, loading]);
-
-  const scrollCallback = () => {
-    if (lastMessageRef.current) {
-      scrollDown();
-    }
-  };
+    const initialLoad = async () => {
+      await loadInitialChats();
+    };
+    initialLoad();
+  }, []);
 
   return (
-    <div className="min-h-full">
-      {chat && chat.length > 0 ? (
-        <>
-          {(chat || []).map((message, index) => (
-            <ChatMessage
-              key={index}
-              message={message}
-              type={shouldType && index === chat.length - 1}
-              setShouldType={setShouldType}
-              scrollCallback={scrollCallback}
-              isLastMessage={index === chat.length - 1}
-            />
-          ))}
-        </>
-      ) : (
-        <EmptyChat />
-      )}
-      <LoadingChatAnimation />
-      {/* This empty div is used as a reference to scroll to */}
-      <div ref={lastMessageRef}></div>
+    <div
+      ref={scrollingThreadRef}
+      className="flex-grow overflow-auto md:flex-1 md:pr-6 relative"
+    >
+      <div className="min-h-full">
+        {chat && chat.length > 0 ? (
+          <>
+            {(chat || []).map((message, index) => (
+              <ChatMessage
+                key={index}
+                message={message}
+                type={shouldType && index === chat.length - 1}
+                isLastMessage={index === chat.length - 1}
+              />
+            ))}
+          </>
+        ) : (
+          <EmptyChat />
+        )}
+        <LoadingChatAnimation />
+        <div className="fixed bottom-28">
+          <Fab onClick={scrollUp} size="small" color="primary">
+            <MdKeyboardArrowUp />
+          </Fab>
+        </div>
+      </div>
     </div>
   );
 }
