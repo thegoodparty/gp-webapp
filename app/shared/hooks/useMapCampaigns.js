@@ -37,7 +37,6 @@ export const useMapCampaigns = (filters) => {
   }, [filters]);
 
   async function loadCampaigns(filters) {
-    console.log('loading map campaigns');
     const { campaigns } = await fetchCampaigns(filters);
     setCampaigns(campaigns || []);
     setIsCampaignsLoading(false);
