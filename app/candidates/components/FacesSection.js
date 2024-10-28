@@ -8,6 +8,7 @@ import MarketingH2 from '@shared/typography/MarketingH2';
 import MarketingH5 from '@shared/typography/MarketingH5';
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 import Slider from 'react-slick';
 const cards = [
   {
@@ -79,7 +80,7 @@ const settings = {
   arrows: true,
 };
 
-export default function FacesSection() {
+export default memo(function FacesSection() {
   return (
     <div className="bg-primary-dark py-8 lg:py-16">
       <MaxWidth>
@@ -118,4 +119,4 @@ export default function FacesSection() {
       </MaxWidth>
     </div>
   );
-}
+});

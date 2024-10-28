@@ -1,7 +1,6 @@
 'use client';
 
-import { useContext } from 'react';
-import { MapContext } from './MapSection';
+import { memo } from 'react';
 import { IoClose } from 'react-icons/io5';
 import {
   MdBeenhere,
@@ -16,8 +15,10 @@ import MarketingH5 from '@shared/typography/MarketingH5';
 import Body1 from '@shared/typography/Body1';
 import { dateUsHelper } from 'helpers/dateHelper';
 
-export default function CampaignPreview() {
-  const { selectedCampaign, onSelectCampaign } = useContext(MapContext);
+export default memo(function CampaignPreview({
+  selectedCampaign,
+  onSelectCampaign,
+}) {
   if (!selectedCampaign) {
     return null;
   }
@@ -103,4 +104,4 @@ export default function CampaignPreview() {
       </div>
     </div>
   );
-}
+});

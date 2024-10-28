@@ -4,8 +4,9 @@ import MarketingH4 from '@shared/typography/MarketingH4';
 import Image from 'next/image';
 import WinnerFilters from './WinnerFilters';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import FilteredWinnerList from './FilteredWinnerList';
+import { useMapCampaigns } from '@shared/hooks/useMapCampaigns';
 
 // const tempCampaigns = [
 //   {
@@ -155,7 +156,8 @@ import FilteredWinnerList from './FilteredWinnerList';
 //   },
 // ];
 
-export default function WinnerListSection({ allCampaigns = [] }) {
+export default memo(function WinnerListSection() {
+  const { campaigns: allCampaigns } = useMapCampaigns(null);
   const [campaigns, setCampaigns] = useState([]);
   const [offices, setOffices] = useState([]);
 
@@ -222,4 +224,4 @@ export default function WinnerListSection({ allCampaigns = [] }) {
       </MaxWidth>
     </div>
   );
-}
+});
