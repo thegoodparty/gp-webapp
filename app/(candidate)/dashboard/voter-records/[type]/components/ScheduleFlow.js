@@ -12,7 +12,7 @@ import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import CloseConfirmModal from './CloseConfirmModal';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
-import { isEqual } from 'lodash';
+import { isObjectEqual } from 'helpers/objectHelper';
 
 const STEPS_BY_TYPE = {
   sms: [
@@ -75,7 +75,7 @@ export default function ScheduleFlow({
   };
 
   const handleClose = () => {
-    if (isEqual(state, DEFAULT_STATE)) {
+    if (isObjectEqual(state, DEFAULT_STATE)) {
       handleCloseConfirm();
       return;
     }
