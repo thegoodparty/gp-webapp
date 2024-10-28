@@ -172,10 +172,11 @@ const Map = memo(
         }
 
         return campaigns.map((campaign) => {
+          const title = `${campaign.firstName} ${campaign.lastName}`;
           const marker = new window.google.maps.Marker({
             position: campaign.position,
             map: mapRef.current,
-            title: campaign.name,
+            title,
             icon: {
               url: 'https://assets.goodparty.org/gp-marker-single.png',
               scaledSize: new window.google.maps.Size(50, 50),
@@ -184,6 +185,23 @@ const Map = memo(
 
           marker.addListener('click', () => {
             onSelectCampaign(campaign);
+          });
+
+          const infowindow = new google.maps.InfoWindow({
+            headerDisabled: true,
+            content: `<h3 style="font-weight: 700">${title}</h3><p>Candidate for ${campaign.normalizedOffice}</p>`,
+            ariaLabel: campaign.name,
+          });
+
+          marker.addListener('mouseover', () => {
+            infowindow.open({
+              anchor: marker,
+              map: mapRef.current,
+            });
+          });
+
+          marker.addListener('mouseout', () => {
+            infowindow.close();
           });
 
           return marker;
