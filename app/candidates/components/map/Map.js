@@ -61,7 +61,6 @@ const Map = memo(
         () => {
           return {
             moveMapWithHistory: (boundsOrPoint) => {
-              // console.log(searchParams);
               const paramsWithBounds = new URLSearchParams({
                 ...Object.fromEntries(searchParams),
                 bounds: JSON.stringify(mapRef.current.getBounds()),
@@ -113,7 +112,7 @@ const Map = memo(
             },
           };
         },
-        [searchParams, router],
+        [searchParams, router, campaigns],
       );
 
       // Initialize Google Map once
