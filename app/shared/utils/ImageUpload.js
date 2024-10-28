@@ -33,9 +33,12 @@ function ImageUploadWrapper({
   maxFileSize,
   customElement,
   isUserImage,
+  loadingStatusCallback = () => {},
 }) {
   const [fileSizeError, setFileSizeError] = useState(false);
-  const handleUploadImage = (img) => {
+
+  const handleUploadImage = async (img) => {
+    loadingStatusCallback(true);
     setFileSizeError(false);
     const node = document.getElementById('file-uploader');
     const file = node.files ? node.files[0] : false;
@@ -44,7 +47,8 @@ function ImageUploadWrapper({
         setFileSizeError(true);
         return;
       }
-      fileSelectCallback(file, uploadCallback, isUserImage);
+      await fileSelectCallback(file, uploadCallback, isUserImage);
+      loadingStatusCallback(false);
     }
   };
 
