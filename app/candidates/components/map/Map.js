@@ -79,7 +79,8 @@ const Map = memo(
                 //set to full bounds of campaign markers
                 const fullBounds = new window.google.maps.LatLngBounds();
                 for (const campaign of campaigns) {
-                  fullBounds.extend(campaign.position);
+                  if (campaign.position?.lat && campaign.position?.lng)
+                    fullBounds.extend(campaign.position);
                 }
                 mapRef.current.fitBounds(fullBounds);
               } else if (
