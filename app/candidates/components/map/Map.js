@@ -118,7 +118,13 @@ const Map = memo(
 
       // Initialize Google Map once
       useEffect(() => {
-        if (!isLoaded || !window.google || !mapContainerRef.current) return;
+        if (
+          !isLoaded ||
+          !window.google ||
+          !mapContainerRef.current ||
+          mapRef.current
+        )
+          return;
 
         if (!mapRef.current) {
           mapRef.current = new window.google.maps.Map(mapContainerRef.current, {
