@@ -45,6 +45,7 @@ export default memo(function MapSection({ isLoaded, state, searchParams }) {
   }, [searchParams, state]);
 
   useEffect(() => {
+    if (!mapBounds) return;
     // filter visible campaigns
     const { neLat, neLng, swLat, swLng } = mapBounds;
 
