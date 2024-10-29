@@ -9,8 +9,10 @@ import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type
 import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
 import ScheduleFlowComplete from './ScheduleFlowComplete';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
+import CloseConfirmModal from './CloseConfirmModal';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
+import { isObjectEqual } from 'helpers/objectHelper';
 
 const STEPS_BY_TYPE = {
   sms: [
@@ -23,6 +25,15 @@ const STEPS_BY_TYPE = {
     'complete',
   ],
   telemarketing: ['budget', 'audience', 'script', 'schedule', 'complete'],
+};
+
+const DEFAULT_STATE = {
+  step: 0,
+  budget: false,
+  voicemail: undefined,
+  audience: {},
+  script: false,
+  image: undefined,
 };
 
 /**
@@ -46,14 +57,8 @@ export default function ScheduleFlow({
   categories = [],
 }) {
   const [open, setOpen] = useState(false);
-  const [state, setState] = useState({
-    step: 0,
-    budget: false,
-    voicemail: undefined,
-    audience: {},
-    script: false,
-    image: undefined,
-  });
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [state, setState] = useState(DEFAULT_STATE);
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type]);
   const stepName = stepList[state.step];
 
@@ -70,6 +75,20 @@ export default function ScheduleFlow({
   };
 
   const handleClose = () => {
+    if (isObjectEqual(state, DEFAULT_STATE)) {
+      handleCloseConfirm();
+      return;
+    }
+
+    setConfirmOpen(true);
+  };
+
+  const handleCloseCancel = () => {
+    setConfirmOpen(false);
+  };
+
+  const handleCloseConfirm = () => {
+    setConfirmOpen(false);
     setOpen(false);
     handleReset();
   };
@@ -92,13 +111,7 @@ export default function ScheduleFlow({
   };
 
   const handleReset = () => {
-    setState({
-      step: 0,
-      budget: 0,
-      audience: {},
-      script: false,
-      image: undefined,
-    });
+    setState(DEFAULT_STATE);
   };
 
   const handleSubmit = async () => {
@@ -139,6 +152,11 @@ export default function ScheduleFlow({
           </span>
         )}
       </div>
+      <CloseConfirmModal
+        open={confirmOpen}
+        onCancel={handleCloseCancel}
+        onConfirm={handleCloseConfirm}
+      />
       <Modal open={open} closeCallback={handleClose}>
         {stepName === 'intro' && (
           <ScheduleFlowInstructions type={type} {...callbackProps} />

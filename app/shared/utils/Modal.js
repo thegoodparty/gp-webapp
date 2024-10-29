@@ -29,10 +29,14 @@ export default function Modal({
   boxClassName = '',
   boxStyle = {},
   preventBackdropClose = false,
+  preventEscClose = false,
   hideClose = false,
 }) {
   const handleClose = (e, reason) => {
-    if (reason === 'backdropClick' && preventBackdropClose) {
+    if (
+      (reason === 'backdropClick' && preventBackdropClose) ||
+      (reason === 'escapeKeyDown' && preventEscClose)
+    ) {
       return;
     }
     closeCallback();
