@@ -5,6 +5,10 @@ import RenderInputField from '@shared/inputs/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
 import H2 from '@shared/typography/H2';
 import Body1 from '@shared/typography/Body1';
+import {
+  dateFromNonStandardUSFormatString,
+  isSameDay,
+} from 'helpers/dateHelper';
 
 const fields = [
   {
@@ -45,6 +49,7 @@ const fields = [
     label: 'Election Date',
     type: 'date',
     required: true,
+    noPastDates: true,
   },
 ];
 
@@ -59,15 +64,17 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
     ballotOffice: campaign.details?.ballotOffice || false,
     electionDate: campaign.details?.electionDate || '',
   });
+  const now = new Date();
+  const selectedDate = dateFromNonStandardUSFormatString(state['electionDate']);
+  const error =
+    state.electionDate && !isSameDay(selectedDate, now) && selectedDate < now;
 
-  const canSave = () => {
-    return (
-      state.state !== '' &&
-      state.office !== '' &&
-      state.officeTermLength !== '' &&
-      state.electionDate !== ''
-    );
-  };
+  const disableSubmit =
+    state.state === '' ||
+    state.office === '' ||
+    state.officeTermLength === '' ||
+    state.electionDate === '' ||
+    error;
 
   const onChange = (key, value) => {
     setState({
@@ -77,7 +84,7 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
   };
 
   const handleSave = async () => {
-    if (!canSave()) {
+    if (disableSubmit) {
       return;
     }
     const updated = campaign;
@@ -108,11 +115,12 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
           key={field.key}
           value={state[field.key]}
           onChangeCallback={onChange}
+          error={field.noPastDates && error}
         />
       ))}
 
       <div className="flex justify-center mb-8">
-        <BlackButtonClient onClick={handleSave} disabled={!canSave()}>
+        <BlackButtonClient onClick={handleSave} disabled={disableSubmit}>
           <div className="font-black">Save</div>
         </BlackButtonClient>
       </div>
