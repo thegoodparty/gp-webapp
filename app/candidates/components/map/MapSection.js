@@ -46,32 +46,15 @@ export default memo(function MapSection({ isLoaded, state, searchParams }) {
 
   useEffect(() => {
     // filter visible campaigns
-    const { neLat, neLng, swLat, swLng } = mapBounds || {};
-
-    if (neLat && neLng && swLat && swLng) {
-      const visibleCampaigns = campaigns.filter(filterPosition);
+    if (mapBounds) {
+      const visibleCampaigns = campaigns.filter((camp) =>
+        mapBounds.contains(camp.position),
+      );
       setVisibleCampaigns(visibleCampaigns);
       return;
     }
 
     setVisibleCampaigns(null);
-
-    function filterPosition(campaign) {
-      // Geolocation filtering
-      if (campaign.position.lat && campaign.position.lng) {
-        if (
-          campaign.position.lat < swLat ||
-          campaign.position.lat > neLat ||
-          campaign.position.lng < swLng ||
-          campaign.position.lng > neLng
-        ) {
-          return false;
-        }
-        return true;
-      } else {
-        return true;
-      }
-    }
   }, [campaigns, mapBounds]);
 
   const onChangeFilters = useCallback(
@@ -112,10 +95,7 @@ export default memo(function MapSection({ isLoaded, state, searchParams }) {
   );
 
   const onChangeMapBounds = useCallback((bounds) => {
-    const { lat: neLat, lng: neLng } = bounds.getNorthEast().toJSON();
-    const { lat: swLat, lng: swLng } = bounds.getSouthWest().toJSON();
-
-    setMapBounds({ neLat, neLng, swLat, swLng });
+    setMapBounds(bounds);
   }, []);
 
   const onSelectCampaign = useCallback((campaign) => {
