@@ -30,15 +30,17 @@ export const useMapCampaigns = (filters) => {
   const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
 
   useEffect(() => {
+    const isFilterEmpty =
+      !filters || Object.values(filters).every((val) => !val);
     setIsCampaignsLoading(true);
-    loadCampaigns(filters);
+    loadCampaigns(isFilterEmpty ? null : filters);
   }, [filters]);
 
-  const loadCampaigns = async (filters) => {
+  async function loadCampaigns(filters) {
     const { campaigns } = await fetchCampaigns(filters);
     setCampaigns(campaigns || []);
     setIsCampaignsLoading(false);
-  };
+  }
 
   return { campaigns, isCampaignsLoading, setIsCampaignsLoading };
 };
