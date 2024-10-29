@@ -8,7 +8,7 @@ import MarketingH2 from '@shared/typography/MarketingH2';
 import MarketingH5 from '@shared/typography/MarketingH5';
 import Modal from '@shared/utils/Modal';
 import Image from 'next/image';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { BiSolidHappy } from 'react-icons/bi';
 import { FaHeart } from 'react-icons/fa';
 import { MdPeople } from 'react-icons/md';
@@ -95,7 +95,7 @@ const cards = [
   },
 ];
 
-export default function InfoSection() {
+export default memo(function InfoSection() {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="bg-indigo-100 py-8 lg:py-16">
@@ -156,4 +156,4 @@ export default function InfoSection() {
       </Modal>
     </div>
   );
-}
+});

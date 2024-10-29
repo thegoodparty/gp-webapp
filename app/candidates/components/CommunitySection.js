@@ -4,8 +4,9 @@ import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import Image from 'next/image';
 import Link from 'next/link';
+import { memo } from 'react';
 
-export default function CommunitySection() {
+export default memo(function CommunitySection() {
   return (
     <div className="bg-slate-100 py-8 lg:py-24">
       <MaxWidth>
@@ -49,4 +50,4 @@ export default function CommunitySection() {
       </MaxWidth>
     </div>
   );
-}
+});

@@ -1,14 +1,15 @@
 import H3 from '@shared/typography/H3';
-import { useContext, useState } from 'react';
+import { memo, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-import { MapContext } from './MapSection';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import Image from 'next/image';
 
-export default function CampaignSnippet({ campaign }) {
+export default memo(function CampaignSnippet({
+  campaign,
+  onSelectCampaign,
+  selectedCampaign,
+}) {
   const { firstName, lastName, avatar, office, state } = campaign;
-
-  const { onSelectCampaign, selectedCampaign } = useContext(MapContext);
   const [imageError, setImageError] = useState(false); // State to track image load errors
 
   return (
@@ -51,4 +52,4 @@ export default function CampaignSnippet({ campaign }) {
       </div>
     </div>
   );
-}
+});
