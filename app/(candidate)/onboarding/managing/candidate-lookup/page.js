@@ -21,6 +21,7 @@ const Page = async () => {
 
   const childProps = {
     metaData,
+    user,
   };
 
   return <CandidateLookupPage {...childProps} />;

@@ -15,12 +15,17 @@ import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { useSnackbar } from 'helpers/useSnackbar';
 
-export const CandidateLookupPage = ({}) => {
+export const CandidateLookupPage = ({ user }) => {
+  const { email: userEmail } = user;
   const [candidateEmail, setCandidateEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { errorSnackbar } = useSnackbar();
+
+  const isSameAsUserEmail =
+    candidateEmail && userEmail && candidateEmail === userEmail;
+  const disableNext = !validEmail || isSameAsUserEmail || loading;
 
   const onChange = ({ currentTarget }) => {
     setCandidateEmail(currentTarget.value);
@@ -61,6 +66,10 @@ export const CandidateLookupPage = ({}) => {
           shrink: true,
           placeholder: 'hello@email.com',
           required: true,
+          error: isSameAsUserEmail,
+          helperText: isSameAsUserEmail
+            ? "It looks like you've entered your email address, please enter the candidate's email address associated with the campaign."
+            : undefined,
           InputProps: {
             startAdornment: (
               <InputAdornment className="text-black" position="start">
@@ -84,7 +93,7 @@ export const CandidateLookupPage = ({}) => {
           loading={loading}
           onClick={handleNext}
           className="w-full mb-4 md:w-auto md:mb-auto"
-          disabled={!validEmail || loading}
+          disabled={disableNext}
         >
           <div className="min-w-[120px]">Send Request</div>
         </PrimaryButton>
