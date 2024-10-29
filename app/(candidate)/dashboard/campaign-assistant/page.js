@@ -23,6 +23,6 @@ export default async function Page({ params, searchParams }) {
     user,
     campaign,
   };
-
-  return <CampaignAssistantPage {...childProps} />;
+  return <div>disabled</div>;
+  // return <CampaignAssistantPage {...childProps} />;
 }

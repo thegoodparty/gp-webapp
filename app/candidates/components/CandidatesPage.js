@@ -6,8 +6,9 @@ import FacesSection from './FacesSection';
 import '@shared/inputs/slick.min.css';
 import '@shared/inputs/slick-theme.min.css';
 import CommunitySection from './CommunitySection';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
+import Script from 'next/script';
 
 const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
 
@@ -17,28 +18,17 @@ export default function CandidatesPage({
   longState,
   state,
 }) {
-  console.log('searchParams', searchParams);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
-
-  useEffect(() => {
-    if (isAdded) {
-      return;
-    }
-    setIsAdded(true);
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-    script.async = true;
-    script.onload = () => setIsLoaded(true);
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script); // Cleanup when unmounted
-    };
-  }, []);
 
   return (
     <>
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`}
+        onReady={() => {
+          console.log('maps loaded');
+          setIsLoaded(true);
+        }}
+      />
       <Hero count={count} longState={longState} />
       <MapSection
         isLoaded={isLoaded}

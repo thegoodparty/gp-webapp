@@ -1,11 +1,9 @@
 'use client';
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
-import ErrorButton from '@shared/buttons/ErrorButton';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 
 function AlertDialog({
   handleClose,
@@ -25,6 +23,7 @@ function AlertDialog({
     }
     handleClose();
   };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -43,23 +42,21 @@ function AlertDialog({
           {description}
         </Body2>
         <div className="flex items-center justify-center">
-          <SecondaryButton className="mr-4" onClick={handleCancel}>
+          <Button
+            className="mr-2"
+            variant="contained"
+            color="neutral"
+            onClick={handleCancel}
+          >
             {cancelLabel}
-          </SecondaryButton>
-
-          {redButton ? (
-            <div onClick={handleProceed}>
-              <ErrorButton>
-                <div className="py-0 px-6 text-sm font-black ">
-                  {proceedLabel}
-                </div>
-              </ErrorButton>
-            </div>
-          ) : (
-            <PrimaryButton onClick={handleProceed}>
-              {proceedLabel}
-            </PrimaryButton>
-          )}
+          </Button>
+          <Button
+            onClick={handleProceed}
+            color={redButton ? 'error' : 'primary'}
+            variant="contained"
+          >
+            {proceedLabel}
+          </Button>
         </div>
       </div>
     </Dialog>

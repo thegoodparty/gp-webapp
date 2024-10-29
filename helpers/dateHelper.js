@@ -98,3 +98,16 @@ export const dateUSClientLocaleHelper = (utcTimeSecs) =>
   new Intl.DateTimeFormat('en-US', {
     dateStyle: 'long',
   }).format(new Date(utcTimeSecs * 1000));
+
+export const dateFromNonStandardUSFormatString = (dateStr) => {
+  if (invalidDateFormat(dateStr)) {
+    return dateStr;
+  }
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+export const isSameDay = (date1, date2) =>
+  date1.getFullYear() === date2.getFullYear() &&
+  date1.getMonth() === date2.getMonth() &&
+  date1.getDate() === date2.getDate();

@@ -4,12 +4,12 @@ import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
 import { appBase } from 'gpApi';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { MdFacebook, MdShare } from 'react-icons/md';
 
-export default function ShareMap() {
+export default memo(function ShareMap() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const url = appBase + pathname;
@@ -77,4 +77,4 @@ export default function ShareMap() {
       </Modal>
     </div>
   );
-}
+});

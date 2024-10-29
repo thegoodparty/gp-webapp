@@ -15,7 +15,9 @@ export default function Footer() {
   const isOnboardingPath = pathname?.startsWith('/onboarding');
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
-    pathname?.startsWith('/volunteer-dashboard');
+    pathname?.startsWith('/volunteer-dashboard') ||
+    pathname?.startsWith('/product-tour');
+
   const isProfilePath = pathname?.startsWith('/profile');
   if (isOnboardingPath || isDashboardPath || isProfilePath) {
     return null;
@@ -43,6 +45,15 @@ export default function Footer() {
                     <FooterExternalLink {...link} />
                   ) : link.buttonStyle ? (
                     <FooterButtonLink {...link} />
+                  ) : link.useNativeLink ? (
+                    <a
+                      id={link.id}
+                      href={link.link}
+                      className="pl-3"
+                      data-cy="footer-link"
+                    >
+                      {link.label}
+                    </a>
                   ) : (
                     <Link
                       id={link.id}

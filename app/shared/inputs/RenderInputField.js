@@ -6,7 +6,6 @@ import Select from '@mui/material/Select';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@shared/inputs/RadioGroup';
-// import PositionsSelector from '../../(candidate)/onboarding/shared/PositionsAutocomplete';
 import Checkbox from '@shared/inputs/Checkbox';
 
 export default function RenderInputField({
@@ -42,9 +41,17 @@ export default function RenderInputField({
           InputLabelProps={{
             shrink: true,
           }}
-          inputProps={field.maxLength ? { maxLength: field.maxLength } : {}}
+          inputProps={{
+            ...(field.maxLength ? { maxLength: field.maxLength } : {}),
+            ...(field.type === 'date' && field.noPastDates
+              ? {
+                  min: new Date().toISOString().split('T')[0],
+                }
+              : {}),
+          }}
           helperText={field.helperText}
           disabled={field.disabled}
+          disableFuture
         />
       )}
       {field.type === 'email' && (
@@ -145,14 +152,6 @@ export default function RenderInputField({
           </div>
         </div>
       )}
-      {/* {field.type === 'positionsSelector' && (
-        <PositionsSelector
-          positions={positions}
-          updateCallback={(positions) =>
-            onChangeCallback('positions', positions)
-          }
-        />
-      )} */}
     </div>
   );
 }

@@ -29,12 +29,12 @@ const DEFAULT_MENU_ITEMS = [
     link: '/dashboard',
     id: 'campaign-tracker-dashboard',
   },
-  {
-    label: 'Campaign Assistant',
-    icon: <BsStars />,
-    link: '/dashboard/campaign-assistant',
-    id: 'campaign-assistant-dashboard',
-  },
+  // {
+  //   label: 'Campaign Assistant',
+  //   icon: <BsStars />,
+  //   link: '/dashboard/campaign-assistant',
+  //   id: 'campaign-assistant-dashboard',
+  // },
   {
     label: 'Voter Data',
     icon: <GiProgression />,

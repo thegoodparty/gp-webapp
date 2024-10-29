@@ -3,8 +3,9 @@ import MarketingH1 from '@shared/typography/MarketingH1';
 import MarketingH4 from '@shared/typography/MarketingH4';
 import { numberFormatter } from 'helpers/numberHelper';
 import Image from 'next/image';
+import { memo } from 'react';
 
-export default function Hero({ count = 0, longState }) {
+export default memo(function Hero({ count = 0, longState }) {
   return (
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>
@@ -28,4 +29,4 @@ export default function Hero({ count = 0, longState }) {
       </MaxWidth>
     </div>
   );
-}
+});
