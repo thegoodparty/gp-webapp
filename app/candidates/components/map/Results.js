@@ -1,22 +1,50 @@
 'use client';
 
-import { useContext } from 'react';
+import { memo } from 'react';
 import CampaignSnippet from './CampaignSnippet';
-import { MapContext } from './MapSection';
 import H5 from '@shared/typography/H5';
 import H3 from '@shared/typography/H3';
 import Body1 from '@shared/typography/Body1';
 import Button from '@shared/buttons/Button';
 import { useUser } from '@shared/hooks/useUser';
+import { ZoomOutMapRounded } from '@mui/icons-material';
 
-export default function Results(props) {
-  const { campaigns } = useContext(MapContext);
+export default memo(function Results({
+  campaigns,
+  totalNumCampaigns,
+  onSelectCampaign,
+  selectedCampaign,
+  onZoomOut,
+}) {
   const user = useUser();
+  const viewingSubset = campaigns.length < totalNumCampaigns;
+
   return (
     <div className="md:w-[400px] lg:w-[500px] h-80  md:h-[calc(100vh-56px-298px)] border-r border-gray-300 md:overflow-y-auto bg-indigo-100 overflow-auto">
-      <H5 className="p-6">{campaigns.length} candidates</H5>
+      <H5 className="p-6 flex gap-2 items-center">
+        Viewing {campaigns.length} candidates
+        {viewingSubset && (
+          <>
+            <span className="font-normal">({totalNumCampaigns} total)</span>
+            <Button
+              onClick={onZoomOut}
+              size="small"
+              color="white"
+              className="ml-auto flex gap-2 items-center"
+            >
+              <ZoomOutMapRounded className="text-sm" />
+              Zoom Out
+            </Button>
+          </>
+        )}
+      </H5>
       {campaigns.map((campaign) => (
-        <CampaignSnippet key={campaign.slug} campaign={campaign} />
+        <CampaignSnippet
+          key={campaign.slug}
+          campaign={campaign}
+          onSelectCampaign={onSelectCampaign}
+          selectedCampaign={selectedCampaign}
+        />
       ))}
       {campaigns.length === 0 && (
         <div className="px-4">
@@ -37,4 +65,4 @@ export default function Results(props) {
       )}
     </div>
   );
-}
+});
