@@ -8,6 +8,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import FileDropZone from '@shared/inputs/FileDropZone';
 import ImageCropPreview from '@shared/inputs/ImageCropPreview';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 const MAX_FILE_SIZE = 500000;
 
@@ -23,6 +24,10 @@ export default function ScheduleFlowImageStep({
   function handleOnChange(newFile) {
     setFile(newFile);
     onChangeCallback('image', newFile);
+
+    if (file?.size > MAX_FILE_SIZE) {
+      trackEvent('schedule_campaign_image_too_large', { fileSize: file.size });
+    }
   }
 
   function handleClearFile() {
