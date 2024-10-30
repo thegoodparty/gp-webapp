@@ -22,6 +22,13 @@ const CAMPAIGN_TEAM_MENU_ITEM = {
   id: 'campaign-team-dashboard',
 };
 
+const VOTER_DATA_UPGRADE_ITEM = {
+  label: 'Voter Data',
+  icon: <GiProgression />,
+  link: '/dashboard/upgrade-to-pro',
+  id: 'upgrade-pro-dashboard',
+};
+
 const DEFAULT_MENU_ITEMS = [
   {
     label: 'Campaign Tracker',
@@ -35,13 +42,7 @@ const DEFAULT_MENU_ITEMS = [
   //   link: '/dashboard/campaign-assistant',
   //   id: 'campaign-assistant-dashboard',
   // },
-  {
-    label: 'Voter Data',
-    icon: <GiProgression />,
-    link: '/dashboard/upgrade-to-pro',
-    id: 'upgrade-pro-dashboard',
-  },
-
+  VOTER_DATA_UPGRADE_ITEM,
   {
     label: 'AI Campaign Plan',
     icon: <TbBrain />,
@@ -81,7 +82,8 @@ const VOTER_RECORDS_MENU_ITEM = {
 const getDashboardMenuItems = (campaign, user) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
-    menuItems[2] = VOTER_RECORDS_MENU_ITEM;
+    const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM);
+    menuItems[index] = VOTER_RECORDS_MENU_ITEM;
   }
 
   return menuItems;
