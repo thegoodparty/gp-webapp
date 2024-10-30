@@ -75,7 +75,7 @@ export default function ScheduleFlow({
   };
 
   const handleClose = () => {
-    if (isObjectEqual(state, DEFAULT_STATE)) {
+    if (isObjectEqual(state, DEFAULT_STATE) || stepName === 'complete') {
       handleCloseConfirm();
       return;
     }
@@ -119,7 +119,7 @@ export default function ScheduleFlow({
       ...state,
       type,
     };
-    await scheduleVoterMessagingCampaign(updatedState);
+    return await scheduleVoterMessagingCampaign(updatedState);
   };
 
   const handleAddScriptOnComplete = (scriptKeyOrText) => {

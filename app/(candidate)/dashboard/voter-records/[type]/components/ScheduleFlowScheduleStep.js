@@ -7,6 +7,7 @@ import H1 from '@shared/typography/H1';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import { useState, useMemo } from 'react';
 import { getDefaultVoterFileName } from '../../components/VoterFileTypes';
+import { useSnackbar } from 'helpers/useSnackbar';
 
 export default function ScheduleFlowScheduleStep({
   onChangeCallback,
@@ -17,6 +18,7 @@ export default function ScheduleFlowScheduleStep({
   type,
   schedule,
 }) {
+  const { errorSnackbar, successSnackbar } = useSnackbar();
   const [state, setState] = useState(
     schedule || {
       date: '',
@@ -46,9 +48,16 @@ export default function ScheduleFlowScheduleStep({
 
   const canSubmit = () => state.date != '' && state.message != '';
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    const resp = await submitCallback();
+
+    if (resp.ok === false) {
+      errorSnackbar('Failed to submit request.');
+      return;
+    }
+
+    successSnackbar('Request submitted successfully.');
     nextCallback();
-    submitCallback();
   };
   const isTel = type === 'telemarketing';
   const today = new Date();
