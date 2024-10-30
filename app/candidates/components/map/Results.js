@@ -8,6 +8,7 @@ import Body1 from '@shared/typography/Body1';
 import Button from '@shared/buttons/Button';
 import { useUser } from '@shared/hooks/useUser';
 import { ZoomOutMapRounded } from '@mui/icons-material';
+import { numberFormatter } from 'helpers/numberHelper';
 
 export default memo(function Results({
   campaigns,
@@ -22,10 +23,14 @@ export default memo(function Results({
   return (
     <div className="md:w-[400px] lg:w-[500px] h-80  md:h-[calc(100vh-56px-298px)] border-r border-gray-300 md:overflow-y-auto bg-indigo-100 overflow-auto">
       <H5 className="p-6 flex gap-2 items-center">
-        Viewing {campaigns.length} candidates
+        Viewing {campaigns.length ? numberFormatter(campaigns.length) : ''}{' '}
+        candidates
         {viewingSubset && (
           <>
-            <span className="font-normal">({totalNumCampaigns} total)</span>
+            <span className="font-normal">
+              ({totalNumCampaigns ? numberFormatter(totalNumCampaigns) : ''}{' '}
+              total)
+            </span>
             <Button
               onClick={onZoomOut}
               size="small"
