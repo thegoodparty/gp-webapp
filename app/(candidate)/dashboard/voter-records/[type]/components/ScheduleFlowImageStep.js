@@ -8,6 +8,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import FileDropZone from '@shared/inputs/FileDropZone';
 import ImageCropPreview from '@shared/inputs/ImageCropPreview';
+import { trackEvent } from 'helpers/fullStoryHelper';
 
 const MAX_FILE_SIZE = 500000;
 
@@ -18,10 +19,15 @@ export default function ScheduleFlowImageStep({
   backCallback,
 }) {
   const [file, setFile] = useState(image);
+  const fileTooLarge = file?.size > MAX_FILE_SIZE;
 
   function handleOnChange(newFile) {
     setFile(newFile);
     onChangeCallback('image', newFile);
+
+    if (file?.size > MAX_FILE_SIZE) {
+      trackEvent('schedule_campaign_image_too_large', { fileSize: file.size });
+    }
   }
 
   function handleClearFile() {
@@ -35,7 +41,7 @@ export default function ScheduleFlowImageStep({
       <Body1 className="text-center my-8">
         Attach your image below.
         <br />
-        <span className={file?.size > MAX_FILE_SIZE ? 'text-error' : ''}>
+        <span className={fileTooLarge ? 'text-error' : ''}>
           Max file size:&nbsp;
           {file ? `${(Number(file.size) / 1000).toLocaleString()} kB / ` : ''}
           {(MAX_FILE_SIZE / 1000).toLocaleString()} kB
@@ -54,7 +60,7 @@ export default function ScheduleFlowImageStep({
       )}
       <div className="mt-8 flex justify-between">
         <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
-        <PrimaryButton disabled={!file} onClick={nextCallback}>
+        <PrimaryButton disabled={!file || fileTooLarge} onClick={nextCallback}>
           Next
         </PrimaryButton>
       </div>
