@@ -52,11 +52,11 @@ export default function ScheduleFlowScheduleStep({
     const resp = await submitCallback();
 
     if (resp.ok === false) {
-      errorSnackbar('Failed to schedule campaign.');
+      errorSnackbar('Failed to submit request.');
       return;
     }
 
-    successSnackbar('Campaign scheduled successfully.');
+    successSnackbar('Request submitted successfully.');
     nextCallback();
   };
   const isTel = type === 'telemarketing';
