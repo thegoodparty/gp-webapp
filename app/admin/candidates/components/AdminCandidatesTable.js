@@ -46,6 +46,7 @@ export default function AdminCandidatesTable({ campaigns }) {
   const csvData = [
     [
       'id',
+      'candidateUserId',
       'isActive',
       'slug',
       'firstName',
@@ -81,6 +82,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       'yardSigns',
       'aiDocsCreated',
       'waitingForP2v',
+      'p2vStatus',
       'pledged',
       'knowRun',
       'isPro',
@@ -229,6 +231,7 @@ export default function AdminCandidatesTable({ campaigns }) {
       yardSigns: reportedVoterGoals?.yardSigns || 0,
       aiDocsCreated: aiContent ? Object.keys(aiContent).length : 0,
       waitingForP2v,
+      p2vStatus: pathToVictory?.data?.p2vStatus,
       viabilityScore,
       pledged: details?.pledged && details.pledged === true ? 'Yes' : 'No',
       knowRun: runningForOffice,
@@ -316,6 +319,10 @@ export default function AdminCandidatesTable({ campaigns }) {
     {
       Header: 'Waiting for P2V',
       accessor: 'waitingForP2v',
+    },
+    {
+      Header: 'P2V Status',
+      accessor: 'p2vStatus',
     },
     {
       Header: 'Viability Score',
