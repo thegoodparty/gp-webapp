@@ -4,6 +4,7 @@ import CampaignStatisticsPage from './components/CampaignStatisticsPage';
 import gpApi from 'gpApi';
 import { getServerToken } from 'helpers/userServerHelper';
 import gpFetch from 'gpApi/gpFetch';
+import { pick } from 'helpers/objectHelper';
 
 const stripEmptyFilters = (filters) =>
   Object.keys(filters).reduce((acc, key) => {
@@ -34,36 +35,24 @@ const meta = pageMetaData({
 export const metadata = meta;
 export const maxDuration = 60;
 
-export default async function Page({ searchParams }) {
+export default async function Page({ searchParams = {} }) {
   await adminAccessOnly();
 
-  const {
-    id,
-    state,
-    slug,
-    email,
-    level,
-    primaryElectionDateStart,
-    primaryElectionDateEnd,
-    generalElectionDateStart,
-    generalElectionDateEnd,
-    campaignStatus,
-    firehose,
-  } = searchParams || {};
-
-  const initialParams = {
-    id,
-    state,
-    slug,
-    email,
-    level,
-    primaryElectionDateStart,
-    primaryElectionDateEnd,
-    generalElectionDateStart,
-    generalElectionDateEnd,
-    campaignStatus,
-    firehose,
-  };
+  const initialParams = pick(searchParams, [
+    'id',
+    'state',
+    'slug',
+    'email',
+    'level',
+    'primaryElectionDateStart',
+    'primaryElectionDateEnd',
+    'generalElectionDateStart',
+    'generalElectionDateEnd',
+    'campaignStatus',
+    'p2vStatus',
+    'firehose',
+  ]);
+  const firehose = initialParams.fireHose;
 
   const paramsAreEmpty = Object.values(initialParams).every(
     (val) => val === undefined || val === '',

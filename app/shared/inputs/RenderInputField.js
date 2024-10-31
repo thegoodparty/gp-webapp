@@ -51,7 +51,6 @@ export default function RenderInputField({
           }}
           helperText={field.helperText}
           disabled={field.disabled}
-          disableFuture
         />
       )}
       {field.type === 'email' && (

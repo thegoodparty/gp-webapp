@@ -33,6 +33,18 @@ const formFields = [
     options: ['local', 'city', 'county', 'state', 'federal'],
   },
   {
+    key: 'campaignStatus',
+    label: 'Campaign Status',
+    type: 'select',
+    options: ['active', 'inactive'],
+  },
+  {
+    key: 'p2vStatus',
+    label: 'P2V Status',
+    type: 'select',
+    options: ['Waiting', 'Complete', 'Failed'],
+  },
+  {
     key: 'primaryElectionDateStart',
     label: 'Primary Election Date Start',
     type: 'date',
@@ -41,12 +53,6 @@ const formFields = [
     key: 'primaryElectionDateEnd',
     label: 'Primary Election Date End',
     type: 'date',
-  },
-  {
-    key: 'campaignStatus',
-    label: 'Campaign Status',
-    type: 'select',
-    options: ['active', 'inactive'],
   },
   {
     key: 'generalElectionDateStart',
@@ -125,7 +131,7 @@ export default function SearchForm({ show = true }) {
         {formFields.map((field) => (
           <div
             key={field.key}
-            className={`mb-3 col-span-12 md:col-span-6 lg:col-span-4 ${
+            className={`mb-3 col-span-12 md:col-span-6 lg:col-span-3 ${
               field.type === 'select' ? 'mt-0' : 'mt-5'
             }`}
           >
