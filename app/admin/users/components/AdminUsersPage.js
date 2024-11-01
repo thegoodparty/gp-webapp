@@ -3,21 +3,11 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import Tooltip from '@mui/material/Tooltip';
 import Table from '@shared/utils/Table';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { formatToPhone } from 'helpers/numberHelper';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
-import Button from '@shared/buttons/Button';
-import Modal from '@shared/utils/Modal';
-import H2 from '@shared/typography/H2';
-import TextField from '@shared/inputs/TextField';
-import { MenuItem, Select } from '@mui/material';
-import { USER_ROLES } from 'helpers/userHelper';
-import { ModalFooter } from '@shared/ModalFooter';
-import { isValidEmail } from 'helpers/validations';
-import gpFetch from 'gpApi/gpFetch';
-import { useSnackbar } from 'helpers/useSnackbar';
-import gpApi from 'gpApi';
+import { AddUserButton } from 'app/admin/users/components/AddUserButton';
 
 const buildTableInputData = (users) =>
   users.map((user) => {
@@ -166,134 +156,3 @@ export default function AdminUsersPage(props) {
     </AdminWrapper>
   );
 }
-
-const createNewUser = async ({ firstName, lastName, email, role }) => {
-  try {
-    const user = await gpFetch(gpApi.admin.createUser, {
-      firstName,
-      lastName,
-      email,
-      role,
-    });
-    console.log(`user =>`, user);
-    if (user) {
-      return user;
-    }
-    return false;
-  } catch (e) {
-    console.log('error', e);
-    return false;
-  }
-};
-
-const AddUserButton = ({ onClick = () => {} }) => {
-  const { successSnackbar, errorSnackbar } = useSnackbar();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [role, setRole] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
-
-  const handleOnClick = () => {
-    openModal();
-    onClick();
-  };
-
-  const handleSubmit = async () => {
-    const newUser = await createNewUser({
-      firstName,
-      lastName,
-      email,
-      role,
-    });
-    if (!newUser) {
-      errorSnackbar('Error creating new user');
-      return;
-    }
-    successSnackbar('User created successfully');
-    closeModal();
-    window.location.reload();
-  };
-
-  const emailIsValid = email !== '' && isValidEmail(email);
-
-  const formValid =
-    emailIsValid && role !== '' && firstName !== '' && lastName !== '';
-
-  return (
-    <>
-      <Button
-        {...{
-          onClick: handleOnClick,
-          color: 'success',
-        }}
-      >
-        Add User
-      </Button>
-      <Modal
-        {...{
-          boxClassName: 'w-[95vw] md:w-auto',
-          open: modalOpen,
-          closeCallback: () => setModalOpen(false),
-        }}
-      >
-        <H2 className="text-center mb-4">Add User</H2>
-        <div className="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
-          <TextField
-            {...{
-              className: 'w-full',
-              label: 'First Name',
-              onChange: (e) => setFirstName(e.target.value),
-            }}
-          />
-          <TextField
-            {...{
-              className: 'w-full',
-              label: 'Last Name',
-              onChange: (e) => setLastName(e.target.value),
-            }}
-          />
-        </div>
-        <TextField
-          {...{
-            className: 'w-full mb-2',
-            label: 'Email',
-            onChange: (e) => {
-              setEmail(e.target.value);
-            },
-          }}
-        ></TextField>
-        <Select
-          {...{
-            className: 'w-full',
-            value: role,
-            displayEmpty: true,
-            onChange: (e) => setRole(e.target.value),
-            InputProps: {
-              className: 'capitalize',
-            },
-          }}
-        >
-          <MenuItem value="">Select</MenuItem>
-          {Object.values(USER_ROLES).map((role) => (
-            <MenuItem className="capitalize" value={role} key={role}>
-              <span className="capitalize">{role}</span>
-            </MenuItem>
-          ))}
-        </Select>
-        <ModalFooter
-          {...{
-            onBack: closeModal,
-            onNext: handleSubmit,
-            disabled: !formValid,
-            nextText: 'Add User',
-            backText: 'Cancel',
-          }}
-        />
-      </Modal>
-    </>
-  );
-};
