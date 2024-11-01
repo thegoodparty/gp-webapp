@@ -20,6 +20,7 @@ import Body2 from '@shared/typography/Body2';
 import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginButtons';
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { USER_ROLES } from 'helpers/userHelper';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -80,6 +81,11 @@ export default function LoginPage() {
         if (returnUrl) {
           deleteCookie('returnUrl');
           window.location.href = returnUrl;
+          return;
+        }
+
+        if (user?.role === USER_ROLES.SALES) {
+          window.location.href = '/sales/add-campaign';
           return;
         }
 

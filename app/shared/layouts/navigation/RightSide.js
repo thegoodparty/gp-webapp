@@ -11,6 +11,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { useUser } from '@shared/hooks/useUser';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 import FullStorySelectiveInit from './FullStorySelectiveInit';
+import { USER_ROLES } from 'helpers/userHelper';
 
 export default function RightSide({ campaignStatus }) {
   const { campaignRequestPending } = campaignStatus;
@@ -64,6 +65,7 @@ export default function RightSide({ campaignStatus }) {
             user={user}
           />
           {!campaignRequestPending &&
+            user?.role !== USER_ROLES.SALES &&
             (isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}
