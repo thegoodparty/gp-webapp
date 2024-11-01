@@ -18,7 +18,6 @@ async function checkIsAdmin() {
 
 export const canCreateCampaigns = async () => {
   const user = getServerUser();
-  console.log(`user =>`, user);
   if (user?.role !== USER_ROLES.SALES && !user?.isAdmin) {
     redirect('/login');
   }
