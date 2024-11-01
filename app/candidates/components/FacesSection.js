@@ -1,5 +1,5 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Body1 from '@shared/typography/Body1';
 import H2 from '@shared/typography/H2';
@@ -7,7 +7,6 @@ import H2 from '@shared/typography/H2';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import MarketingH5 from '@shared/typography/MarketingH5';
 import Image from 'next/image';
-import Link from 'next/link';
 import { memo } from 'react';
 import Slider from 'react-slick';
 const cards = [
@@ -105,11 +104,14 @@ export default memo(function FacesSection() {
                     <MarketingH5>&ldquo;{card.quote}&rdquo;</MarketingH5>
                     <H2 className="mt-8">{card.name}</H2>
                     <Body1 className="mt-2">{card.office}</Body1>
-                    <Link href={card.link}>
-                      <PrimaryButton className="mt-8">
-                        Read Candidate Story
-                      </PrimaryButton>
-                    </Link>
+                    <Button
+                      tabIndex={-1}
+                      href={card.link}
+                      size="large"
+                      className="mt-8"
+                    >
+                      Read Candidate Story
+                    </Button>
                   </div>
                 </div>
               </div>

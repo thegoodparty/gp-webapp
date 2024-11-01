@@ -1,12 +1,10 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import Button from '@shared/buttons/Button';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import RadioList from '@shared/inputs/RadioList';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import { updateUserMeta } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -60,20 +58,21 @@ export default function BrowsingPage({ metaData }) {
       />
 
       <div className="flex flex-wrap items-center justify-between mt-12">
-        <Link
-          className="w-full mb-4 md:w-auto md:mb-auto"
+        <Button
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[170px]"
           href="/onboarding/account-type"
+          size="large"
+          color="neutral"
         >
-          <SecondaryButton className="w-full">
-            <div className="min-w-[120px]">Back</div>
-          </SecondaryButton>
-        </Link>
-        <PrimaryButton
-          className="w-full mb-4 md:w-auto md:mb-auto"
+          Back
+        </Button>
+        <Button
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[170px]"
           onClick={handleNext}
+          size="large"
         >
-          <div className="min-w-[120px]">Next</div>
-        </PrimaryButton>
+          Next
+        </Button>
       </div>
     </CardPageWrapper>
   );

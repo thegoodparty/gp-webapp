@@ -3,6 +3,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
+import Button from '@shared/buttons/Button';
 
 export default function DashboardOrContinue({ closeAll, campaignStatus }) {
   const [campaignStatusClient] = useCampaignStatus();
@@ -11,13 +12,15 @@ export default function DashboardOrContinue({ closeAll, campaignStatus }) {
 
   if (!status) {
     return (
-      <Link
+      <Button
         href={`/onboarding/${step || 'account-type'}`}
         onClick={closeAll}
         id="nav-continue-setup"
+        color="secondary"
+        className="!py-2 !text-base font-medium border-none ml-2"
       >
-        <WarningButton size="medium">Continue Setup</WarningButton>
-      </Link>
+        Continue Setup
+      </Button>
     );
   }
 
@@ -26,23 +29,24 @@ export default function DashboardOrContinue({ closeAll, campaignStatus }) {
   return (
     <div className="ml-4">
       {['candidate', 'volunteer', 'manager'].includes(status) ? (
-        <Link
+        <Button
           href={isVolunteer ? '/volunteer-dashboard' : '/dashboard'}
           onClick={closeAll}
           id={isVolunteer ? 'nav-volunteer-dashboard' : 'nav-dashboard'}
+          className="font-medium !text-base !py-2 border-none"
         >
-          <PrimaryButton size="medium">Dashboard</PrimaryButton>
-        </Link>
+          Dashboard
+        </Button>
       ) : (
-        <Link
+        <Button
           href={`/onboarding/${slug}/${step || 1}`}
           onClick={closeAll}
           id="nav-continue-onboarding"
+          color="secondary"
+          className="!py-2 !text-base font-medium border-none"
         >
-          <WarningButton size="medium">
-            Continue<span className="hidden lg:inline"> Onboarding</span>
-          </WarningButton>
-        </Link>
+          Continue<span className="hidden lg:inline"> Onboarding</span>
+        </Button>
       )}
     </div>
   );

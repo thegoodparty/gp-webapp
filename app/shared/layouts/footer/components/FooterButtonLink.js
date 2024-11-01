@@ -1,10 +1,12 @@
-import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 
 export const FooterButtonLink = ({ link, id, label, buttonStyle }) => (
-  <Link id={id} href={link} data-cy="footer-link">
-    <PrimaryButton size="medium" style={buttonStyle}>
-      {label}
-    </PrimaryButton>
-  </Link>
+  <Button
+    id={id}
+    href={link}
+    color={buttonStyle}
+    className="focus-visible:outline-white/40 !text-base"
+  >
+    {label}
+  </Button>
 );
