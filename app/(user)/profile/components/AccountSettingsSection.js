@@ -16,12 +16,13 @@ export const AccountSettingsSection = () => {
   const { demoPersona } = userMetaData;
   const [campaign] = useCampaign();
   const { isPro, details = {} } = campaign || {};
-  const { subscriptionCancelAt } = details;
+  const { subscriptionCancelAt, subscriptionId } = details;
   const plan = isPro
     ? 'Candidate PRO'
     : demoPersona
     ? 'Demo'
     : 'Candidate FREE';
+  const hideButtonForLimboProUsers = isPro && !Boolean(subscriptionId);
 
   return (
     <Paper className="mt-4">
@@ -48,7 +49,12 @@ export const AccountSettingsSection = () => {
               </Link>
             </Body2>
           </div>
-          <AccountSettingsButton isPro={isPro} isDemo={Boolean(demoPersona)} />
+          {hideButtonForLimboProUsers ? null : (
+            <AccountSettingsButton
+              isPro={isPro}
+              isDemo={Boolean(demoPersona)}
+            />
+          )}
         </div>
       </Paper>
     </Paper>
