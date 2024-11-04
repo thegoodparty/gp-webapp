@@ -2,7 +2,7 @@
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import RadioList from '@shared/inputs/RadioList';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
+import { ModalFooter } from '@shared/ModalFooter';
 import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow';
 import { useState } from 'react';
 
@@ -36,11 +36,7 @@ export const ChooseScriptAddFlow = ({
           selectCallback={setSelected}
         />
       </div>
-      <AddScriptFooter
-        onBack={onBack}
-        onNext={handleOnNext}
-        disabled={!selected}
-      />
+      <ModalFooter onBack={onBack} onNext={handleOnNext} disabled={!selected} />
     </>
   );
 };
