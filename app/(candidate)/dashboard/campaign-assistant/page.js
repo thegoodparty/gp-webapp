@@ -23,6 +23,5 @@ export default async function Page({ params, searchParams }) {
     user,
     campaign,
   };
-  return <div>disabled</div>;
-  // return <CampaignAssistantPage {...childProps} />;
+  return <CampaignAssistantPage {...childProps} />;
 }
