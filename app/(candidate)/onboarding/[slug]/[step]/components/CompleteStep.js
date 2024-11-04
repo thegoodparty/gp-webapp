@@ -10,6 +10,7 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
+import Button from '@shared/buttons/Button';
 
 async function launchCampaign() {
   try {
@@ -57,9 +58,15 @@ export default function CompleteStep() {
         You&apos;re officially part of the GoodParty.org community. Let&apos;s
         get started!
       </Body1>
-      <PrimaryButton onClick={handleSave} fullWidth {...trackingAttrs}>
+      <Button
+        size="large"
+        className="w-full"
+        onClick={handleSave}
+        fullWidth
+        {...trackingAttrs}
+      >
         {loading ? 'Launching...' : 'View Dashboard'}
-      </PrimaryButton>
+      </Button>
     </div>
   );
 }

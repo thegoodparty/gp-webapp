@@ -2,20 +2,20 @@ import clsx from 'clsx';
 
 export const COLOR_CLASSES = {
   primary:
-    'text-primary-dark hover:bg-indigo-700/[0.08] focus:active:bg-indigo-700/[0.3]',
+    'text-primary-dark hover:bg-indigo-700/[0.08] focus-visible:bg-indigo-700/[0.3] active:bg-indigo-700/[0.3]',
   secondary:
-    'text-secondary-dark hover:bg-lime-500/[0.16] focus:active:bg-lime-700/[0.4]',
+    'text-secondary-dark hover:bg-lime-500/[0.16] focus-visible:bg-lime-700/[0.4] active:bg-lime-700/[0.4]',
   tertiary:
-    'text-tertiary-dark hover:bg-purple-500/[0.08] focus:active:bg-purple-500/[0.3]',
+    'text-tertiary-dark hover:bg-purple-500/[0.08] focus-visible:bg-purple-500/[0.3] active:bg-purple-500/[0.3]',
   error:
-    'text-error-dark hover:bg-red-500/[0.08] focus:active:bg-red-500/[0.3]',
+    'text-error-dark hover:bg-red-500/[0.08] focus-visible:bg-red-500/[0.3] active:bg-red-500/[0.3]',
   warning:
-    'text-warning-dark hover:bg-orange-500/[0.08] focus:active:bg-orange-500/[0.3]',
-  info: 'text-info-dark hover:bg-blue-500/[0.08] focus:active:bg-blue-500/[0.3]',
+    'text-warning-dark hover:bg-orange-500/[0.08] focus-visible:bg-orange-500/[0.3] active:bg-orange-500/[0.3]',
+  info: 'text-info-dark hover:bg-blue-500/[0.08] focus-visible:bg-blue-500/[0.3] active:bg-blue-500/[0.3]',
   success:
-    'text-success-dark hover:bg-green-500/[0.08] focus:active:bg-green-500/[0.3]',
+    'text-success-dark hover:bg-green-500/[0.08] focus-visible:bg-green-500/[0.3] active:bg-green-500/[0.3]',
   neutral:
-    'text-neutral-dark hover:bg-indigo-300/[0.16] focus:active:bg-indigo-300/[0.4]',
+    'text-neutral-dark hover:bg-indigo-300/[0.16] focus-visible:bg-indigo-300/[0.4] active:bg-indigo-300/[0.4]',
 };
 
 export const SIZE_CLASSES = {

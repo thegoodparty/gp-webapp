@@ -8,7 +8,6 @@ import Body1 from '@shared/typography/Body1';
 import MarketingH4 from '@shared/typography/MarketingH4';
 import Button from '@shared/buttons/Button';
 import { MdArrowForward } from 'react-icons/md';
-import Link from 'next/link';
 
 function CardWrapper({ children, className }) {
   return (
@@ -24,12 +23,15 @@ function CardWrapper({ children, className }) {
 
 function CTALink({ id, href = '/sign-up' }) {
   return (
-    <Link id={id} href={href} className="no-underline">
-      <Button size="medium" className="flex items-center gap-2">
-        Get Started
-        <MdArrowForward className="text-2xl" />
-      </Button>
-    </Link>
+    <Button
+      id={id}
+      href={href}
+      size="medium"
+      className="inline-flex items-center gap-2"
+    >
+      Get Started
+      <MdArrowForward className="text-2xl" />
+    </Button>
   );
 }
 

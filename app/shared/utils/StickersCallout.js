@@ -4,6 +4,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Button from '@shared/buttons/Button';
 
 export default function StickersCallout() {
   const [showCallout, setShowCallout] = useState(true);
@@ -18,6 +19,15 @@ export default function StickersCallout() {
       console.log(e);
     }
   }, []);
+
+  const handleClose = () => {
+    try {
+      localStorage.setItem('callout4thJuly', true);
+      setShowCallout(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     showCallout && (
@@ -39,30 +49,22 @@ export default function StickersCallout() {
                 />
                 <span>Stickers for Free</span>
               </div>
-              <Link
+              <Button
                 id="nav-stickers-callout"
                 href="/get-stickers"
                 aria-label="Claim Your Stickers"
+                size="large"
+                className="whitespace-nowrap ml-5 !py-2 border-none"
               >
-                <div className="whitespace-nowrap ml-5">
-                  <PrimaryButton size="medium">
-                    Claim Your Stickers
-                  </PrimaryButton>
-                </div>
-              </Link>
+                Claim Your Stickers
+              </Button>
             </div>
             <div
               className="flex px-3 mr-2 cursor-pointer"
-              onClick={() => {
-                try {
-                  localStorage.setItem('callout4thJuly', true);
-                  setShowCallout(false);
-                } catch (e) {
-                  console.log(e);
-                }
-              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleClose()}
+              onClick={handleClose}
             >
-              <IoIosCloseCircle size={24} />
+              <IoIosCloseCircle role="button" tabIndex={0} size={24} />
             </div>
           </div>
         </div>

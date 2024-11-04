@@ -23,13 +23,20 @@ export default function ZipChanger({ zip, updateZipCallback, count }) {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') handleToggle();
+  };
+
   return (
     <div className="">
       <Body1 className="font-semibold">
         {count} Offices available in
         <span
+          role="button"
+          tabIndex={0}
           className="inline-block ml-2 text-purple-400 font-medium cursor-pointer underline"
           onClick={handleToggle}
+          onKeyDown={handleKeyPress}
         >
           {updatedZip}
         </span>
@@ -44,8 +51,10 @@ export default function ZipChanger({ zip, updateZipCallback, count }) {
           }}
           error={!isValid}
         />
-        <div className="mt-6 text-center" onClick={handleToggle}>
-          <PrimaryButton disabled={!isValid}>Save</PrimaryButton>
+        <div className="mt-6 text-center">
+          <PrimaryButton onClick={handleToggle} disabled={!isValid}>
+            Save
+          </PrimaryButton>
         </div>
       </Modal>
     </div>

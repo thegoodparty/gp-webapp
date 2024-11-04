@@ -75,10 +75,15 @@ export default function TemplateList(props) {
                   className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"
                 >
                   <div
+                    role="button"
+                    tabIndex={0}
                     {...trackingAttrs}
                     onClick={() => {
                       handleClick(template.key);
                     }}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && handleClick(template.key)
+                    }
                     id={`template-card-${template.key}`}
                     className={`generate-content bg-gray-50 border flex md:flex-col  rounded-xl pt-5 px-7 pb-5 md:pb-14 ${
                       selectedKey === template.key

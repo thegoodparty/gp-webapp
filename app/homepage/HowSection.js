@@ -1,10 +1,9 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import softwareImg from '/public/images/homepage/software.png';
 import genzImg from '/public/images/homepage/genz.png';
 import mapImg from '/public/images/homepage/map.png';
+import Button from '@shared/buttons/Button';
 
 export default function HowSection() {
   return (
@@ -41,11 +40,15 @@ export default function HowSection() {
                 candidates across the country
               </div>
               <div className="mt-4">
-                <Link href="/run-for-office" id="hiw_act_now">
-                  <SecondaryButton size="medium">
-                    Run for office
-                  </SecondaryButton>
-                </Link>
+                <Button
+                  size="large"
+                  className="!py-2"
+                  href="/run-for-office"
+                  id="hiw_act_now"
+                  color="neutral"
+                >
+                  Run for office
+                </Button>
               </div>
             </div>
           </div>
@@ -99,9 +102,15 @@ export default function HowSection() {
                 campaigns with our volunteer programs
               </div>
               <div className="mt-4">
-                <Link href="/volunteer" id="hiw_volunteer">
-                  <SecondaryButton size="medium">Volunteer</SecondaryButton>
-                </Link>
+                <Button
+                  size="large"
+                  className="!py-2"
+                  href="/volunteer"
+                  id="hiw_volunteer"
+                  color="neutral"
+                >
+                  Volunteer
+                </Button>
               </div>
             </div>
           </div>
@@ -126,9 +135,15 @@ export default function HowSection() {
                 matter most
               </div>
               <div className="mt-4">
-                <Link href="/run-for-office" id="hiw_run">
-                  <SecondaryButton size="medium">Act now</SecondaryButton>
-                </Link>
+                <Button
+                  size="large"
+                  className="!py-2"
+                  href="/run-for-office"
+                  id="hiw_run"
+                  color="neutral"
+                >
+                  Act now
+                </Button>
               </div>
             </div>
           </div>

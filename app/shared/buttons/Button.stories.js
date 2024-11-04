@@ -75,6 +75,32 @@ export default {
       <Button {...args} variant="text">
         Text
       </Button>
+      <Button
+        {...args}
+        variant="contained"
+        href="https://goodparty.org"
+        onClick={(e) => e.preventDefault()}
+      >
+        Contained Link
+      </Button>
+
+      <Button
+        {...args}
+        variant="outlined"
+        href="https://goodparty.org"
+        onClick={(e) => e.preventDefault()}
+      >
+        Outlined Link
+      </Button>
+
+      <Button
+        {...args}
+        variant="text"
+        href="https://goodparty.org"
+        onClick={(e) => e.preventDefault()}
+      >
+        Text Link
+      </Button>
     </div>
   ),
 };

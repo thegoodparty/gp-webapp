@@ -35,11 +35,9 @@ export default function Hero() {
             Learn how you can plug in to inspiring independent campaigns or get
             access to our free tools for people-powered candidates
           </h3>
-          <Link href="/candidates">
-            <Button variant="primary" size="large" className="mt-5">
-              Find Candidates
-            </Button>
-          </Link>
+          <Button href="/candidates" size="large" className="mt-5">
+            Find Candidates
+          </Button>
         </div>
         <div className="flex col-span-12 lg:col-span-5 relative h-full lg:pt-10">
           <Image
