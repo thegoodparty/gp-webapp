@@ -141,12 +141,17 @@ export default function ScheduleFlow({
       <div
         className="cursor-pointer hover:underline"
         onClick={() => setOpen(true)}
+        onKeyDown={(e) => e.key === 'Enter' && setOpen(true)}
         {...trackingAttrs}
       >
         {customButton ? (
           customButton
         ) : (
-          <span className="mt-4 flex items-center justify-end">
+          <span
+            role="button"
+            tabIndex={0}
+            className="mt-4 flex items-center justify-end"
+          >
             <span className="mr-2">Schedule Today</span>
             <IoArrowForward />
           </span>

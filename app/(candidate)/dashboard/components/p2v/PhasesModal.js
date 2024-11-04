@@ -13,7 +13,6 @@ import { useState } from 'react';
 import { BsPersonFillCheck } from 'react-icons/bs';
 import { IoMdMegaphone } from 'react-icons/io';
 import { MdHowToVote } from 'react-icons/md';
-import Link from 'next/link';
 
 export const phases = [
   {
@@ -89,11 +88,15 @@ export function PhasesModal() {
                   <Body2>{phase.timing}</Body2>
                   <H6 className="mt-2">Audience Size</H6>
                   <Body2 className="mb-6">{phase.size}</Body2>
-                  <Link href={phase.link} target="_blank" className="mt-auto">
-                    <Button className="w-full" size="large" color="neutral">
-                      Learn More
-                    </Button>
-                  </Link>
+                  <Button
+                    href={phase.link}
+                    target="_blank"
+                    className="w-full mt-auto"
+                    size="large"
+                    color="neutral"
+                  >
+                    Learn More
+                  </Button>
                 </Paper>
               </div>
             ))}

@@ -1,13 +1,17 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 import { IncludedPartiesList } from './IncludedPartiesList';
+import Button from '@shared/buttons/Button';
 
-const LearnAboutOurTeamButton = (props) => (
-  <Link href="/team" {...props}>
-    <PrimaryButton className="w-full md:w-auto">
-      Learn about our team
-    </PrimaryButton>
-  </Link>
+const LearnAboutOurTeamButton = ({ className, ...restProps }) => (
+  <Button
+    href="/team"
+    className={'w-full md:w-auto ' + className}
+    size="large"
+    {...restProps}
+  >
+    Learn about our team
+  </Button>
 );
 
 const NotPoliticalSection = () => (

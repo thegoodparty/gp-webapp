@@ -1,11 +1,10 @@
 'use client';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import SuccessButton from '@shared/buttons/SuccessButton';
 import { FaCheck } from 'react-icons/fa';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar';
 import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody';
 import { useEffect, useRef, useState } from 'react';
+import Button from '@shared/buttons/Button';
 
 export const AcknowledgementQuestion = ({
   emoticon = <></>,
@@ -35,26 +34,26 @@ export const AcknowledgementQuestion = ({
 
         <div className="flex justify-center mt-8">
           {acknowledged ? (
-            <div
+            <Button
               onClick={() => {
                 onAcknowledge(false);
               }}
+              className="flex items-center"
+              size="large"
+              color="success"
             >
-              <SuccessButton>
-                <div className="flex items-center">
-                  <FaCheck />
-                  <div className="ml-2">{buttonTexts[1]}</div>
-                </div>
-              </SuccessButton>
-            </div>
+              <FaCheck />
+              <div className="ml-2">{buttonTexts[1]}</div>
+            </Button>
           ) : (
-            <div
+            <Button
               onClick={() => {
                 onAcknowledge(true);
               }}
+              size="large"
             >
-              <PrimaryButton>{buttonTexts[0]}</PrimaryButton>
-            </div>
+              {buttonTexts[0]}
+            </Button>
           )}
         </div>
       </AcknowledgementQuestionBody>

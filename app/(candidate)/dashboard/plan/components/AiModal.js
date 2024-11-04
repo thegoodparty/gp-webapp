@@ -166,8 +166,11 @@ export default function AiModal({ submitCallback, showWarning, section }) {
         </div>
         <div className="flex justify-center items-center mt-3">
           <div
+            role="button"
+            tabIndex={0}
             className="mr-6 cursor-pointer hover:underline"
             onClick={() => setShowModal(false)}
+            onKeyDown={(e) => e.key === 'Enter' && setShowModal(false)}
           >
             Cancel
           </div>

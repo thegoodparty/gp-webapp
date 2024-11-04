@@ -48,7 +48,7 @@ export default function TermsHomePage(props) {
 
             {recentGlossaryItems.map((item) => (
               <Fragment key={item}>
-                <Link href={termLinkByTitle(item)}>
+                <Link href={termLinkByTitle(item)} className="block">
                   <div className="text-lg lg:flex  pt-2 mt-2">
                     <h2 className="mb-1 lg:mb-0 lg:basis-1/3 underline">
                       {item}

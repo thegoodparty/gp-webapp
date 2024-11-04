@@ -1,9 +1,9 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import React from 'react';
 import Image from 'next/image';
+import Button from '@shared/buttons/Button';
 
 export const BrowsingWelcomePage = ({ user }) => (
   <CardPageWrapper>
@@ -18,8 +18,8 @@ export const BrowsingWelcomePage = ({ user }) => (
     <Body2 className="text-center mb-8">
       We are really excited to show you around. Let&apos;s get started!
     </Body2>
-    <a className="block self-start w-full md:w-auto" href="/dashboard">
-      <PrimaryButton className="w-full">View Dashboard</PrimaryButton>
-    </a>
+    <Button className="block w-full" href="/dashboard" size="large">
+      View Dashboard
+    </Button>
   </CardPageWrapper>
 );

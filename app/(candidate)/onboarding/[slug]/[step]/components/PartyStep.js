@@ -14,6 +14,7 @@ import InfoButton from '@shared/buttons/InfoButton';
 import { trackEvent } from 'helpers/fullStoryHelper';
 import RadioList from '@shared/inputs/RadioList';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 const options = [
   { key: 'independent', label: 'Independent' },
@@ -228,14 +229,16 @@ export default function PartyStep(props) {
             />
           </div>
         </div>
-        <div className="mt-10" onClick={handleSave}>
-          <PrimaryButton
+        <div className="mt-10">
+          <Button
+            onClick={handleSave}
             disabled={!canSubmit()}
             type="submit"
+            size="large"
             {...trackingAttrs}
           >
             Next
-          </PrimaryButton>
+          </Button>
         </div>
       </div>
       {showInvalidModal && (
@@ -246,16 +249,17 @@ export default function PartyStep(props) {
             outside of the Two Party system.
           </div>
           <div className="mt-10 flex items-center justify-center">
-            <div className="mr-4" onClick={() => setShowInvalidModal(false)}>
-              <InfoButton>
-                <div className="px-6 ">Okay</div>
-              </InfoButton>
-            </div>
-            <a href="/about">
-              <PrimaryButton>
-                <div className="px-6 ">Learn more</div>
-              </PrimaryButton>
-            </a>
+            <Button
+              className="mr-4"
+              size="large"
+              color="neutral"
+              onClick={() => setShowInvalidModal(false)}
+            >
+              <div className="px-6 ">Okay</div>
+            </Button>
+            <Button href="/about" size="large">
+              <div className="px-6 ">Learn more</div>
+            </Button>
           </div>
         </Modal>
       )}

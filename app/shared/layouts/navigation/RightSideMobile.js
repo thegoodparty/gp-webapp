@@ -1,11 +1,10 @@
 'use client';
-import Hamburger from 'hamburger-react';
+import Hamburger from '@shared/utils/Hamburger';
 import { useState } from 'react';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Caption from '@shared/typography/Caption';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import PurpleButton from '@shared/buttons/PurpleButton';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
@@ -19,7 +18,7 @@ import {
 import { useUser } from '@shared/hooks/useUser';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
-import SuccessButton from '@shared/buttons/SuccessButton';
+import Button from '@shared/buttons/Button';
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
@@ -60,7 +59,13 @@ export default function RightSideMobile() {
               </div>
             </>
           )}
-          <Hamburger toggled={isOpen} toggle={setOpen} size={24} rounded />
+          <Hamburger
+            hideOutline={false}
+            toggled={isOpen}
+            toggle={setOpen}
+            size={24}
+            rounded
+          />
         </div>
         <SwipeableDrawer
           open={isOpen}
@@ -105,7 +110,7 @@ export default function RightSideMobile() {
                             href={link.href}
                             id={`mobile-nav-${link.id}`}
                             key={link.id}
-                            className="no-underline font-medium"
+                            className="block no-underline font-medium py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
                             rel={`${
                               link.external
                                 ? 'noopener noreferrer nofollow'
@@ -113,16 +118,11 @@ export default function RightSideMobile() {
                             }`}
                             onClick={closeMenu}
                           >
-                            <div
-                              data-cy="header-link"
-                              className="py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
-                            >
-                              <div className="flex items-center">
-                                {link.icon}
-                                <div className="ml-3">{link.label}</div>
-                              </div>
-                              {link.external && <FaExternalLinkAlt size={14} />}
+                            <div className="flex items-center">
+                              {link.icon}
+                              <div className="ml-3">{link.label}</div>
                             </div>
+                            {link.external && <FaExternalLinkAlt size={14} />}
                           </Link>
                         ))}
                       </div>
@@ -135,95 +135,71 @@ export default function RightSideMobile() {
                           {(status === 'candidate' || status === 'manager') && (
                             <>
                               {!isDashboardPath && (
-                                <Link
+                                <Button
                                   href={`${dashboardLink}`}
                                   id="mobile-nav-dashboard"
                                   onClick={closeMenu}
+                                  color="tertiary"
+                                  size="large"
+                                  className="w-full font-medium focus-visible:outline-white/40"
                                 >
-                                  <PurpleButton
-                                    style={{
-                                      backgroundColor: '#642EFF',
-                                      color: '#FFF',
-                                      borderRadius: '8px',
-                                      width: '100%',
-                                    }}
-                                  >
-                                    Dashboard
-                                  </PurpleButton>
-                                </Link>
+                                  Dashboard
+                                </Button>
                               )}
                             </>
                           )}
                           {status === 'volunteer' && (
-                            <>
-                              <Link
-                                href="volunteer-dashboard"
-                                id="mobile-nav-vol-dashboard"
-                                onClick={closeMenu}
-                              >
-                                <PurpleButton
-                                  fullWidth
-                                  style={{
-                                    backgroundColor: '#642EFF',
-                                    color: '#FFF',
-                                    borderRadius: '8px',
-                                    width: '100%',
-                                  }}
-                                >
-                                  Dashboard
-                                </PurpleButton>
-                              </Link>
-                            </>
+                            <Button
+                              href="volunteer-dashboard"
+                              id="mobile-nav-vol-dashboard"
+                              onClick={closeMenu}
+                              color="tertiary"
+                              size="large"
+                              className="w-full font-medium focus-visible:outline-white/40"
+                            >
+                              Dashboard
+                            </Button>
                           )}
                           {status === 'onboarding' && (
-                            <Link
+                            <Button
                               href={`/onboarding/${slug}/${step || 1}`}
                               id="mobile-nav-continue-onboarding"
                               onClick={closeMenu}
+                              color="tertiary"
+                              size="large"
+                              className="w-full font-medium focus-visible:outline-white/40"
                             >
-                              <PurpleButton
-                                fullWidth
-                                style={{
-                                  backgroundColor: '#642EFF',
-                                  color: '#FFF',
-                                  borderRadius: '8px',
-                                  width: '100%',
-                                }}
-                              >
-                                Continue Onboarding
-                              </PurpleButton>
-                            </Link>
+                              Continue Onboarding
+                            </Button>
                           )}
                         </>
                       ) : (
                         <>
-                          <Link href="/login" onClick={closeMenu}>
-                            <div className="w-full text-white pb-4 text-center font-medium">
-                              Login
-                            </div>
-                          </Link>
-                          <Link href="/sign-up" onClick={closeMenu}>
-                            <SuccessButton className="w-full text-white py-4 text-center font-medium">
-                              Sign Up
-                            </SuccessButton>
-                          </Link>
                           <Link
-                            href="/run-for-office"
-                            className="mt-4 block"
+                            href="/login"
                             onClick={closeMenu}
+                            className="block w-full text-white py-2 mb-2 text-center font-medium"
                           >
-                            <PurpleButton
-                              fullWidth
-                              style={{
-                                backgroundColor: '#642EFF',
-                                color: '#FFF',
-                                borderRadius: '8px',
-                                width: '100%',
-                              }}
-                            >
-                              Get Campaign Tools
-                            </PurpleButton>
+                            Login
                           </Link>
+                          <Button
+                            href="/sign-up"
+                            onClick={closeMenu}
+                            size="large"
+                            color="success"
+                            className="w-full text-white text-center font-medium focus-visible:outline-white/40"
+                          >
+                            Sign Up
+                          </Button>
+                          <Button
+                            href="/run-for-office"
+                            className="mt-4 w-full block font-medium focus-visible:outline-white/40"
+                            onClick={closeMenu}
+                            size="large"
+                            color="tertiary"
+                          >
+                            Get Campaign Tools
+                          </Button>
                         </>
                       )}
                     </div>

@@ -15,9 +15,9 @@ import {
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import AlertDialog from '@shared/utils/AlertDialog';
-import Link from 'next/link';
 import { IoAddSharp } from 'react-icons/io5';
 import { useSnackbar } from 'helpers/useSnackbar';
+import Button from '@shared/buttons/Button';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
@@ -77,12 +77,14 @@ export default function IssuesSection(props) {
       <H3 className="flex justify-between items-center">
         <span>Your Top Issues</span>
         {(!combinedIssues?.length || combinedIssues?.length < 3) && (
-          <Link href="/dashboard/questions?generate=all">
-            <PrimaryButton className="inline-flex align-center" size="medium">
-              Finish Entering Issues
-              <IoAddSharp className="ml-1 inline text-2xl" />
-            </PrimaryButton>
-          </Link>
+          <Button
+            size="large"
+            href="/dashboard/questions?generate=all"
+            className="inline-flex align-center !py-2"
+          >
+            Finish Entering Issues
+            <IoAddSharp className="ml-1 inline text-2xl" />
+          </Button>
         )}
       </H3>
       {editIssuePosition ? (

@@ -7,13 +7,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { useState } from 'react';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import Link from 'next/link';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useRouter } from 'next/navigation';
 import gpFetch from 'gpApi/gpFetch';
 import gpApi from 'gpApi';
 import { useSnackbar } from 'helpers/useSnackbar';
+import Button from '@shared/buttons/Button';
 
 export const CandidateLookupPage = ({ user }) => {
   const { email: userEmail } = user;
@@ -81,22 +79,23 @@ export const CandidateLookupPage = ({ user }) => {
       />
 
       <div className="flex flex-wrap items-center justify-between mt-8">
-        <Link
-          className="w-full mb-4 md:w-auto md:mb-auto"
+        <Button
+          size="large"
+          color="neutral"
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[170px]"
           href="/onboarding/account-type"
         >
-          <SecondaryButton className="w-full">
-            <div className="min-w-[120px]">Back</div>
-          </SecondaryButton>
-        </Link>
-        <PrimaryButton
+          Back
+        </Button>
+        <Button
+          size="large"
           loading={loading}
           onClick={handleNext}
-          className="w-full mb-4 md:w-auto md:mb-auto"
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[170px]"
           disabled={disableNext}
         >
-          <div className="min-w-[120px]">Send Request</div>
-        </PrimaryButton>
+          Send Request
+        </Button>
       </div>
     </CardPageWrapper>
   );

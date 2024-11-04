@@ -2,8 +2,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Image from 'next/image';
 import peopleImg from 'public/images/landing-pages/discord-people.png';
 import ballotBoxImg from 'public/images/landing-pages/ballot-box.png';
-import CTA from './CTA';
-import WarningButton from '@shared/buttons/WarningButton';
+import Button from '@shared/buttons/Button';
 
 export default function JoinDiscord() {
   return (
@@ -28,14 +27,16 @@ export default function JoinDiscord() {
               height={64}
               className="mb-10"
             />
-            <a
+            <Button
               href="https://discord.gg/goodparty"
               id="cta-discord"
               target="_blank"
               rel="noopener noreferrer nofollow"
+              size="large"
+              color="secondary"
             >
-              <WarningButton>Join our Discord</WarningButton>
-            </a>
+              Join our Discord
+            </Button>
           </div>
           <div className="col-span-12 md:col-span-6">
             <div className="md:px-10">

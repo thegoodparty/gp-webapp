@@ -1,4 +1,3 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import { BsStars } from 'react-icons/bs';
@@ -7,6 +6,7 @@ import LogProgress from './LogProgress';
 import Link from 'next/link';
 import { numberFormatter } from 'helpers/numberHelper';
 import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow';
+import Button from '@shared/buttons/Button';
 
 export default function MethodRow(props) {
   const { method, campaign = {}, pathToVictory = {} } = props;
@@ -45,7 +45,7 @@ export default function MethodRow(props) {
               <H3>{title}</H3>
             ) : (
               <Link href={`/dashboard/voter-records/${voterFileKey}`}>
-                <H3>{title}</H3>
+                <H3 className="inline-block">{title}</H3>
               </Link>
             )}
 
@@ -67,54 +67,52 @@ export default function MethodRow(props) {
                 </div>
               )}
               <div className="col-span-12 lg:col-span-4">
-                <Link href="/dashboard/content?showModal=true">
-                  <PrimaryButton
-                    className="!text-base"
-                    variant="outlined"
-                    fullWidth
-                  >
-                    <div className="flex items-center justify-center generate-script">
-                      <BsStars className="mr-2" />
-                      Generate Script
-                    </div>
-                  </PrimaryButton>
-                </Link>
+                <Button
+                  href="/dashboard/content?showModal=true"
+                  size="large"
+                  variant="outlined"
+                  className="w-full flex items-center justify-center generate-script"
+                >
+                  <BsStars className="mr-2" />
+                  Generate Script
+                </Button>
               </div>
               <div className="col-span-12 lg:col-span-4">
                 {isPro ? (
                   <>
                     {comingSoon ? (
-                      <PrimaryButton className="!text-base" disabled fullWidth>
+                      <Button size="large" className="w-full" disabled>
                         Coming Soon
-                      </PrimaryButton>
+                      </Button>
                     ) : showScheduleButton ? (
                       <ScheduleFlow
                         type={voterFileKey}
                         campaign={campaign}
                         customButton={
-                          <PrimaryButton className="!text-base !px-3" fullWidth>
+                          <Button size="large" className="w-full !px-3">
                             {cta}
-                          </PrimaryButton>
+                          </Button>
                         }
                       />
                     ) : (
-                      <Link href={`/dashboard/voter-records/${voterFileKey}`}>
-                        <PrimaryButton className="!text-base !px-3" fullWidth>
-                          {cta}
-                        </PrimaryButton>
-                      </Link>
+                      <Button
+                        href={`/dashboard/voter-records/${voterFileKey}`}
+                        size="large"
+                        className="w-full !px-3"
+                      >
+                        {cta}
+                      </Button>
                     )}
                   </>
                 ) : (
-                  <Link href="/dashboard/upgrade-to-pro">
-                    <PrimaryButton
-                      fullWidth
-                      className="!text-base !px-2 pro-upgrade-tracker flex items-center justify-center gap-1"
-                    >
-                      <MdLock />
-                      {cta}
-                    </PrimaryButton>
-                  </Link>
+                  <Button
+                    href="/dashboard/upgrade-to-pro"
+                    size="large"
+                    className="w-full !px-2 pro-upgrade-tracker flex items-center justify-center gap-1"
+                  >
+                    <MdLock />
+                    {cta}
+                  </Button>
                 )}
               </div>
               <div className="col-span-12 lg:col-span-4">

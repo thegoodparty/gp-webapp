@@ -5,6 +5,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Carousel from '@shared/inputs/Carousel';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import softwareImg from '/public/images/homepage/software.png';
+import Button from '@shared/buttons/Button';
 
 const sections = [
   {
@@ -61,16 +62,26 @@ export default function ToolsSection() {
             </div>
             <div className="flex flex-col md:flex-row">
               <div className="mt-4">
-                <Link href="/run-for-office" id="candidates_tool">
-                  <WarningButton size="medium">
-                    Free campaign tools
-                  </WarningButton>
-                </Link>
+                <Button
+                  size="large"
+                  className="!py-2"
+                  href="/run-for-office"
+                  id="candidates_tool"
+                  color="secondary"
+                >
+                  Free campaign tools
+                </Button>
               </div>
               <div className="mt-4 pl-0 md:pl-3">
-                <Link href="/get-a-demo" id="candidates_academy">
-                  <SecondaryButton size="medium">Get a Demo</SecondaryButton>
-                </Link>
+                <Button
+                  size="large"
+                  className="!py-2"
+                  href="/get-a-demo"
+                  id="candidates_academy"
+                  color="neutral"
+                >
+                  Get a Demo
+                </Button>
               </div>
             </div>
           </div>

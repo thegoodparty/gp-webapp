@@ -1,11 +1,10 @@
-import BlackButton from '@shared/buttons/BlackButton';
 import CmsContentWrapper from '@shared/content/CmsContentWrapper';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import contentfulHelper from 'helpers/contentfulHelper';
-import Link from 'next/link';
 import TermsByLetter from '../../components/TermsByLetter';
 import Banner from '/app/blog/article/[slug]/components/Banner';
+import Button from '@shared/buttons/Button';
 
 export default function TermsItemPage({ item, items, activeLetter }) {
   const letter = activeLetter;
@@ -52,20 +51,23 @@ export default function TermsItemPage({ item, items, activeLetter }) {
         </div>
         {cta && ctaLink && !banner && (
           <>
+            <Button href={ctaLink} size="large">
+              {cta}
+            </Button>
             {isAbsolute ? (
-              <a
+              <Button
+                nativeLink
                 href={ctaLink}
                 rel="noopener noreferrer nofollow"
                 target="_blank"
+                size="large"
               >
-                <BlackButton>{cta}</BlackButton>
-              </a>
+                {cta}
+              </Button>
             ) : (
-              <Link href={ctaLink}>
-                <BlackButton>
-                  <strong>{cta}</strong>
-                </BlackButton>
-              </Link>
+              <Button href={ctaLink} size="large">
+                {cta}
+              </Button>
             )}
           </>
         )}
