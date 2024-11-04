@@ -1,6 +1,7 @@
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import pageMetaData from 'helpers/metadataHelper';
-import AddCampaignPage from './components/AddCampaignPage';
+import AdminWrapper from 'app/admin/shared/AdminWrapper';
+import { CreateCampaignForm } from '@shared/CreateCampaignForm';
 
 const meta = pageMetaData({
   title: 'Add Campaign| GOOD PARTY',
@@ -9,7 +10,7 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page({ searchParams }) {
+export default async function Page() {
   await adminAccessOnly();
 
   const childProps = {
@@ -17,5 +18,9 @@ export default async function Page({ searchParams }) {
     title: 'Add a new Campaign',
   };
 
-  return <AddCampaignPage {...childProps} />;
+  return (
+    <AdminWrapper {...childProps}>
+      <CreateCampaignForm />
+    </AdminWrapper>
+  );
 }

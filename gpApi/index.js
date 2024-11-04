@@ -617,6 +617,11 @@ const gpApi = {
       method: 'GET',
       withAuth: true,
     },
+    createUser: {
+      url: `${base}admin/user`,
+      method: 'POST',
+      withAuth: true,
+    },
     deleteUser: {
       url: `${base}admin/user`,
       method: 'DELETE',

@@ -16,3 +16,8 @@ export async function updateUser(updateFields = {}) {
     console.log('Error updating user', error);
   }
 }
+
+export const USER_ROLES = {
+  SALES: 'sales',
+  CAMPAIGN: 'campaign',
+};
