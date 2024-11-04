@@ -1,8 +1,7 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Link from 'next/link';
 import Image from 'next/image';
 import winImg from 'public/images/landing-pages/win.png';
+import Button from '@shared/buttons/Button';
 
 export default function HelpWin() {
   return (
@@ -22,20 +21,15 @@ export default function HelpWin() {
                 Stay up to date on the latest volunteer news and opportunities
                 via text.
               </div>
-              <Link
+
+              <Button
                 href="/info-session"
                 id="schedule-info-session"
-                className="hidden md:block"
+                size="large"
+                className="w-full md:w-auto"
               >
-                <PrimaryButton>Schedule info session</PrimaryButton>
-              </Link>
-              <Link
-                href="/info-session"
-                id="schedule-info-session-mobile"
-                className=" md:hidden"
-              >
-                <PrimaryButton fullWidth>Schedule info session</PrimaryButton>
-              </Link>
+                Schedule info session
+              </Button>
             </div>
             <div className=" col-span-12 md:col-span-6 hidden md:block">
               <div className="mx-12 xl:mx-20">
