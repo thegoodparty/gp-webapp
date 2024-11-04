@@ -37,7 +37,14 @@ export default function ArticleSnippet({
   const sectionName = section?.fields?.title;
 
   return (
-    <Link id={slug} href={`/blog/article/${slug}`} className="no-underline">
+    <Link
+      id={slug}
+      href={`/blog/article/${slug}`}
+      className={
+        'no-underline block outline-offset-0' +
+        (heroMode ? ' rounded-2xl' : ' rounded-lg')
+      }
+    >
       <article
         className={clsx('h-full hover:bg-indigo-100 p-4 rounded-lg', {
           ['mb-16 bg-indigo-100 p-8 rounded-2xl hover:bg-indigo-200']: heroMode,
