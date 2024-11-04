@@ -2,7 +2,7 @@ import { useState } from 'react';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import { SmsScriptSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsScriptSelect';
-import { AddScriptFooter } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFooter';
+import { ModalFooter } from '@shared/ModalFooter';
 
 export const SelectSmSScriptScreen = ({
   aiContent,
@@ -25,7 +25,7 @@ export const SelectSmSScriptScreen = ({
           onSelect={onSelect}
         />
       </div>
-      <AddScriptFooter
+      <ModalFooter
         onBack={onBack}
         onNext={handleOnNext}
         disabled={!smsScript}

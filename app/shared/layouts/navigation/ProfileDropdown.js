@@ -1,5 +1,4 @@
 'use client';
-
 import Link from 'next/link';
 import {
   FaChevronDown,
@@ -10,11 +9,12 @@ import {
 } from 'react-icons/fa';
 import { memo, useEffect } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
-import { getCookie } from 'helpers/cookieHelper';
 import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
+import { MdAdd } from 'react-icons/md';
+import { USER_ROLES } from 'helpers/userHelper';
 
 const links = [
   {
@@ -106,6 +106,20 @@ function ProfileDropdown({ open, toggleCallback, user }) {
                 </div>
               </Link>
             ))}
+            {user.role === USER_ROLES.SALES && !impersonating && (
+              <Link
+                href="/sales/add-campaign"
+                className="no-underline font-normal"
+              >
+                <div
+                  data-cy="header-link"
+                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
+                >
+                  <MdAdd />
+                  <div className="ml-3">Add Campaign</div>
+                </div>
+              </Link>
+            )}
             {user.isAdmin && !impersonating && (
               <Link href="/admin" className="no-underline font-normal">
                 <div
