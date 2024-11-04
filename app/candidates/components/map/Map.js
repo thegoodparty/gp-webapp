@@ -175,6 +175,7 @@ const Map = memo(
         return campaigns.map((campaign) => {
           const title = `${campaign.firstName} ${campaign.lastName}`;
           const marker = new window.google.maps.Marker({
+            optimized: true,
             position: campaign.position,
             map: mapRef.current,
             title,
@@ -255,6 +256,7 @@ const Map = memo(
               }
 
               return new window.google.maps.Marker({
+                optimized: true,
                 position,
                 icon: {
                   url: 'https://assets.goodparty.org/map-cluster-icon-center.png',

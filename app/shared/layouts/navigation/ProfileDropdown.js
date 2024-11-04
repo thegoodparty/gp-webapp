@@ -50,14 +50,30 @@ function ProfileDropdown({ open, toggleCallback, user }) {
     ]);
   };
 
+  const handleEnterPress = (e, cb) => {
+    if (e.key == 'Enter') cb();
+  };
+
+  const handleKeyToggle = (e) => {
+    if (e.key == 'Enter' || (e.key == 'Escape' && open)) toggleCallback();
+  };
+
+  const handleStopImpersonate = () => {
+    clearImpersonation();
+    window.location.href = '/admin';
+  };
+
   return (
     <div
       className="ml-2 relative cursor-pointer "
       onClick={toggleCallback}
+      onKeyDown={handleKeyToggle}
       id="nav-run-dropdown"
     >
       <div>
         <div
+          role="button"
+          tabIndex={0}
           className={`flex items-center  rounded-full px-2 py-1 ${
             impersonating ? 'bg-orange-400' : 'bg-indigo-50'
           }`}
@@ -91,19 +107,14 @@ function ProfileDropdown({ open, toggleCallback, user }) {
                 href={link.href}
                 id={`nav-${link.id}`}
                 key={link.id}
-                className="no-underline font-medium"
+                className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
                 rel={`${link.external ? 'noopener noreferrer nofollow' : ''}`}
               >
-                <div
-                  data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
-                >
-                  <div className="flex items-center">
-                    {link.icon}
-                    <div className="ml-3">{link.label}</div>
-                  </div>
-                  {link.external && <FaExternalLinkAlt size={14} />}
+                <div className="flex items-center">
+                  {link.icon}
+                  <div className="ml-3">{link.label}</div>
                 </div>
+                {link.external && <FaExternalLinkAlt size={14} />}
               </Link>
             ))}
             {user.role === USER_ROLES.SALES && !impersonating && (
@@ -121,33 +132,34 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               </Link>
             )}
             {user.isAdmin && !impersonating && (
-              <Link href="/admin" className="no-underline font-normal">
-                <div
-                  data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
-                >
-                  <HiOutlineStar />
-                  <div className="ml-3">Admin</div>
-                </div>
+              <Link
+                href="/admin"
+                className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+              >
+                <HiOutlineStar />
+                <div className="ml-3">Admin</div>
               </Link>
             )}
             {impersonating && (
               <div
+                role="link"
+                tabIndex={0}
                 data-cy="header-link"
-                className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
-                onClick={() => {
-                  clearImpersonation();
-                  window.location.href = '/admin';
-                }}
+                className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                onClick={handleStopImpersonate}
+                onKeyDown={(e) => handleEnterPress(e, handleStopImpersonate)}
               >
                 <FaTheaterMasks />
                 <div className="ml-3">Stop Impersonating</div>
               </div>
             )}
             <div
+              role="link"
+              tabIndex={0}
               data-cy="header-link"
-              className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
+              className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
               onClick={handleLogOut}
+              onKeyDown={(e) => handleEnterPress(e, () => handleLogOut(e))}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />

@@ -1,6 +1,5 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import Button from '@shared/buttons/Button';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import RadioList from '@shared/inputs/RadioList';
 import Body2 from '@shared/typography/Body2';
@@ -9,7 +8,6 @@ import {
   createCampaign,
   updateUserMeta,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -57,19 +55,23 @@ export default function AccountTypePage() {
       />
 
       <div className="flex flex-wrap items-center justify-between mt-12">
-        <Link className="w-full mb-4 md:w-auto md:mb-auto" href="/public">
-          <SecondaryButton className="w-full">
-            <div className="min-w-[120px]">Cancel</div>
-          </SecondaryButton>
-        </Link>
-        <PrimaryButton
+        <Button
+          href="/"
+          size="large"
+          color="neutral"
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[120px]"
+        >
+          Cancel
+        </Button>
+        <Button
+          size="large"
           loading={loading}
           disabled={loading}
-          className="w-full mb-4 md:w-auto md:mb-auto"
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[120px]"
           onClick={handleNext}
         >
-          <div className="min-w-[120px]">Next</div>
-        </PrimaryButton>
+          Next
+        </Button>
       </div>
     </CardPageWrapper>
   );

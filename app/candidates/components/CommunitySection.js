@@ -1,3 +1,4 @@
+import Button from '@shared/buttons/Button';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Body1 from '@shared/typography/Body1';
@@ -23,19 +24,22 @@ export default memo(function CommunitySection() {
               </Body1>
             </div>
             <div className="lg:flex mt-12 lg:mt-0">
-              <Link href="/volunteer">
-                <PrimaryButton className="mr-5 block  w-full lg:w-auto">
-                  Join the discord
-                </PrimaryButton>
-              </Link>
-              <Link href="/run-for-office">
-                <PrimaryButton
-                  variant="outlined"
-                  className="block mt-4 lg:mt-0 w-full lg:w-auto"
-                >
-                  Campaign Tools
-                </PrimaryButton>
-              </Link>
+              <Button
+                href="/volunteer"
+                size="large"
+                className="mr-5 block w-full lg:w-auto"
+              >
+                Join the discord
+              </Button>
+
+              <Button
+                href="/run-for-office"
+                size="large"
+                variant="outlined"
+                className="block mt-4 lg:mt-0 w-full lg:w-auto"
+              >
+                Campaign Tools
+              </Button>
             </div>
           </div>
           <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">

@@ -24,6 +24,7 @@ export default function Categories({ content }) {
                   <Link
                     href={faqArticleRoute(article)}
                     data-cy="faq-article-link"
+                    className="block"
                   >
                     <div className="py-2 pl-10" data-cy="faq-article-title">
                       {article.title}

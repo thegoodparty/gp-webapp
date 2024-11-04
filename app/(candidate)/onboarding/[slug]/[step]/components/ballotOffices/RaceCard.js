@@ -39,6 +39,12 @@ export default function RaceCard({
     pillColor = 'bg-[#C985F2] bg-opacity-50';
   }
 
+  const handleKeyDown = (e, race) => {
+    if (e.key === 'Enter') {
+      selectCallback(race);
+    }
+  };
+
   const renderOption = (label) => {
     const matches = match(label, inputValue, {
       insideWords: true,
@@ -63,8 +69,11 @@ export default function RaceCard({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className="flex px-4 py-4 bg-indigo-50 rounded-md mb-2 items-center justify-between cursor-pointer transition-colors hover:bg-slate-200"
       onClick={() => selectCallback(race)}
+      onKeyDown={(e) => handleKeyDown(e, race)}
     >
       <div className="flex items-center">
         {selected ? (

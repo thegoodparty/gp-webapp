@@ -1,12 +1,11 @@
 import { useState, useMemo } from 'react';
 import Modal from '@shared/utils/Modal';
 import TextField from '@shared/inputs/TextField';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import InfoButton from '@shared/buttons/InfoButton';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import { AlertBanner } from '../AlertBanner';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 export default function LogProgress({
   card,
@@ -45,15 +44,16 @@ export default function LogProgress({
 
   return (
     <div className="">
-      <InfoButton
-        fullWidth
+      <Button
+        color="neutral"
+        size="large"
         onClick={() => {
           setShowModal(true);
         }}
-        className="log-progress !text-base"
+        className="log-progress w-full"
       >
         Log Progress
-      </InfoButton>
+      </Button>
       {showModal ? (
         <Modal closeCallback={() => setShowModal(false)} open>
           <div className="w-[80vw] max-w-[640px] lg:p-6">
@@ -74,16 +74,22 @@ export default function LogProgress({
             />
 
             <div className="flex justify-between items-center mt-6">
-              <InfoButton className="" onClick={() => setShowModal(false)}>
+              <Button
+                size="large"
+                color="neutral"
+                className=""
+                onClick={() => setShowModal(false)}
+              >
                 Cancel
-              </InfoButton>
-              <PrimaryButton
+              </Button>
+              <Button
+                size="large"
                 onClick={handleSubmit}
                 disabled={value <= 0}
                 {...submitTrackingAttrs}
               >
                 Add
-              </PrimaryButton>
+              </Button>
             </div>
           </div>
         </Modal>

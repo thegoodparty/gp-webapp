@@ -1,8 +1,7 @@
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
-import Link from 'next/link';
 import { StyledAlert } from '@shared/alerts/StyledAlert';
-import { SeverityButton } from '@shared/buttons/SeverityButton';
+import Button from '@shared/buttons/Button';
 
 export const AlertBanner = ({
   title,
@@ -24,30 +23,15 @@ export const AlertBanner = ({
         {title && <H4 className="mb-2">{title}</H4>}
         <Body2>{message}</Body2>
       </div>
-      {actionHref ? (
-        <Link
-          className="
-            inline-block
-            hover:no-underline
-          "
-          href={actionHref}
+      {actionText && (
+        <Button
+          href={actionHref ? actionHref : undefined}
+          className="!text-base lg:self-center lg:mr-2"
+          onClick={actionOnClick}
+          color={severity}
         >
-          {actionText && (
-            <SeverityButton onClick={actionOnClick} severity={severity}>
-              {actionText}
-            </SeverityButton>
-          )}
-        </Link>
-      ) : (
-        actionText && (
-          <SeverityButton
-            className="h-fit"
-            onClick={actionOnClick}
-            severity={severity}
-          >
-            {actionText}
-          </SeverityButton>
-        )
+          {actionText}
+        </Button>
       )}
     </div>
   </StyledAlert>

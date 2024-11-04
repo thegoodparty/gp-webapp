@@ -1,7 +1,7 @@
 'use client';
 import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import Hamburger from 'hamburger-react';
+import Hamburger from '@shared/utils/Hamburger';
 import { useEffect, useState } from 'react';
 
 function disableScroll() {
@@ -40,7 +40,12 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
   };
   return (
     <div className="lg:hidden">
-      <Hamburger toggled={open} toggle={toggleCallback} size={20} />
+      <Hamburger
+        hideOutline={false}
+        toggled={open}
+        toggle={toggleCallback}
+        size={20}
+      />
       {open && (
         <div className="fixed top-14 left-0 w-screen h-[calc(100vh-56px)] bg-indigo-50 p-2 overflow-x-hidden overflow-y-auto">
           <DashboardMenu

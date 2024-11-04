@@ -1,7 +1,6 @@
 'use client';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import Pill from '@shared/buttons/Pill';
-import Link from 'next/link';
+import Button from '@shared/buttons/Button';
 
 export default function Cta() {
   return (
@@ -11,11 +10,15 @@ export default function Cta() {
           Any questions? Schedule a demo with our team
         </h3>
         <div>
-          <Link href="/get-a-demo" id="prefooter_demo">
-            <Pill outlined className="w-48 cursor-pointer">
-              <div className="tracking-wide ">GET A DEMO</div>
-            </Pill>
-          </Link>
+          <Button
+            href="/get-a-demo"
+            id="prefooter_demo"
+            variant="outlined"
+            size="large"
+            className="font-bold !rounded-full w-48"
+          >
+            <span className="tracking-wide">GET A DEMO</span>
+          </Button>
         </div>
       </div>
     </MaxWidth>

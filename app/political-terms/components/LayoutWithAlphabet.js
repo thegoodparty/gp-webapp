@@ -38,7 +38,7 @@ export default function LayoutWithAlphabet({ activeLetter = 'A', children }) {
           <Link
             key={letter}
             href={`/political-terms/${letter.toLowerCase()}`}
-            className="pb-1 block lg:inline-block lg:pr-3"
+            className="pb-1 block lg:inline-block lg:mr-3"
             style={
               activeLetter === letter
                 ? { fontWeight: '900', color: 'black' }

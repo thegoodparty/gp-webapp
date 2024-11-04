@@ -1,11 +1,10 @@
 import { states } from 'helpers/statesHelper';
-import Link from 'next/link';
 import Hero from './Hero';
 import FeaturedCities from './FeaturedCities';
 import LinksSection from '../shared/LinksSection';
 import Tools from './Tools';
 import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 
 export default function ElectionsPage() {
   const divisionLink = (state) => {
@@ -43,11 +42,9 @@ export default function ElectionsPage() {
             </div>
           }
           cta={
-            <Link href="/academy">
-              <PrimaryButton>
-                Learn more about GoodParty.org Academy
-              </PrimaryButton>
-            </Link>
+            <Button href="/academy" size="large">
+              Learn more about GoodParty.org Academy
+            </Button>
           }
         />
       </div>

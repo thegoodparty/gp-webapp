@@ -118,6 +118,7 @@ export default function FileDropZone({
   return (
     <div
       role="button"
+      tabIndex={0}
       className={`w-full h-52 border-2 border-dashed border-black/[0.12] rounded-2xl ${
         isDragging
           ? 'bg-indigo-100'
@@ -130,6 +131,7 @@ export default function FileDropZone({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onClick={handleClick}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
     >
       <div className="pointer-events-none text-center">
         <CameraAltRounded className="text-5xl mt-16" />

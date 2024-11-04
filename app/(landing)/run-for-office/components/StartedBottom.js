@@ -22,22 +22,26 @@ export default function StartedBottom() {
           of our campaign experts.
         </Body1>
         <div className="p-4">
-          <Link href="/sign-up" id="hero-get-started">
-            <Button className="mr-4 mb-4 w-full md:w-auto" size="large">
-              Get free tools
-            </Button>
-          </Link>
+          <Button
+            href="/sign-up"
+            id="hero-get-started"
+            className="mr-4 mb-4 w-full md:w-auto"
+            size="large"
+          >
+            Get free tools
+          </Button>
           {/*This needs to be an anchor tag to force a page load for the
             Product Tour page, to ensure the main nav doesn't render twice.*/}
-          <a href="/product-tour" id="hero-demo">
-            <Button
-              className="w-full md:w-auto"
-              size="large"
-              variant="outlined"
-            >
-              Interactive demo
-            </Button>
-          </a>
+          <Button
+            nativeLink
+            href="/product-tour"
+            id="hero-demo"
+            className="w-full md:w-auto"
+            size="large"
+            variant="outlined"
+          >
+            Interactive demo
+          </Button>
         </div>
       </section>
     </>

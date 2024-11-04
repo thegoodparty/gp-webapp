@@ -1,10 +1,10 @@
 'use client';
-import ErrorButton from '@shared/buttons/ErrorButton';
 import AlertDialog from '@shared/utils/AlertDialog';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
+import Button from '@shared/buttons/Button';
 
 async function handleDeleteHistory(id) {
   try {
@@ -42,15 +42,17 @@ export default function DeleteAction({
 
   return (
     <>
-      <div
-        className="my-3"
-        onClick={() => {
-          setShowDelete(true);
-        }}
-      >
-        <ErrorButton size="small" fullWidth>
+      <div className="my-3">
+        <Button
+          onClick={() => {
+            setShowDelete(true);
+          }}
+          size="small"
+          color="error"
+          className="w-full"
+        >
           <span className="whitespace-nowrap">Delete</span>
-        </ErrorButton>
+        </Button>
       </div>
       <AlertDialog
         open={showDelete}

@@ -41,6 +41,9 @@ export default function Actions(props) {
         {tableVersion === true && (!status || status != 'processing') ? (
           <div>
             <BsThreeDots
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
               onClick={() => {
                 setShowMenu(!showMenu);
               }}
@@ -52,6 +55,9 @@ export default function Actions(props) {
           status !== undefined &&
           status === 'processing' ? (
           <div
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
             onClick={() => {
               setShowMenu(!showMenu);
             }}

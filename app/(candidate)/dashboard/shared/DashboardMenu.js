@@ -104,6 +104,10 @@ export default function DashboardMenu({
   });
   const menuItems = getDashboardMenuItems(campaign, user);
 
+  const handleEnterPress = (e) => {
+    if (e.key == 'Enter') handleLogOut(e);
+  };
+
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
@@ -128,17 +132,20 @@ export default function DashboardMenu({
       })}
       {mobileMode && (
         <div className="mt-4 border-t border-indigo-400 pt-4">
-          <Link href="/profile" className="no-underline" id="nav-dash-settings">
-            <div
-              className={`text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark `}
-            >
-              <div className="ml-2">Settings</div>
-            </div>
+          <Link
+            href="/profile"
+            className="no-underline block block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
+            id="nav-dash-settings"
+          >
+            <div className="ml-2">Settings</div>
           </Link>
 
           <div
-            className="text-[17px] py-3 px-3  rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer"
+            role="link"
+            tabIndex={0}
+            className="block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark cursor-pointer"
             onClick={handleLogOut}
+            onKeyDown={(e) => handleEnterPress(e)}
           >
             <div id="nav-log-out" className="ml-2">
               Logout
