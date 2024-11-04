@@ -2,6 +2,7 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
+import { USER_ROLES } from 'helpers/userHelper';
 
 async function checkIsAdmin() {
   try {
@@ -14,6 +15,13 @@ async function checkIsAdmin() {
     return false;
   }
 }
+
+export const canCreateCampaigns = async () => {
+  const user = getServerUser();
+  if (user?.role !== USER_ROLES.SALES && !user?.isAdmin) {
+    redirect('/login');
+  }
+};
 
 export const adminAccessOnly = async () => {
   const user = getServerUser();
