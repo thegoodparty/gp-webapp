@@ -19,5 +19,9 @@ export const deleteTokenCookie = (resp) => {
     ...TOKEN_CONFIG,
     expires: new Date(0),
   });
+  resp.cookies.set('impersonateToken', '', {
+    ...TOKEN_CONFIG,
+    expires: new Date(0),
+  });
   return resp;
 };
