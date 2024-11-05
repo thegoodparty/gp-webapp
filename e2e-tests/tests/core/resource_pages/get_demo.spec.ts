@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { coreNav } from '../../../helpers';
+import { coreNav, checkImgAltText } from '../../../helpers';
 const { addTestResult } = require('../../../testrailHelper');
 const fs = require('fs');
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
@@ -23,15 +23,7 @@ test('Verify Get a Demo page', async ({ page }) => {
         await expect(page.getByText(pageHeader)).toBeVisible();
 
         // Verify page images with alt text
-        for (const altText of pageImgAltText) {
-            const imgLocators = page.locator(`img[alt="${altText}"]`);
-            const count = await imgLocators.count();
-
-            expect(count).toBeGreaterThan(0);
-            if (count > 0) {
-                await expect(imgLocators.first()).toBeVisible({ timeout: 5000 });
-            }
-        }
+        await checkImgAltText(page, pageImgAltText);
 
         // Verify HubSpot demo calendar
         await expect(hubSpotLocator).toBeVisible();
