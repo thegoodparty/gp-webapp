@@ -1,5 +1,5 @@
-const axios = require('axios');
 require('dotenv').config();
+const axios = require('axios');
 
 const TESTRAIL_URL = process.env.TESTRAIL_URL;
 const AUTH = {
