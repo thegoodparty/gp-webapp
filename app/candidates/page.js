@@ -3,10 +3,10 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
 
-const fetchCount = async () => {
+const fetchCount = async (onlyWinners = false) => {
   const api = gpApi.campaign.mapCount;
 
-  return await gpFetch(api, false, 3600);
+  return await gpFetch(api, { results: onlyWinners ? true : undefined }, 3600);
 };
 
 export async function generateMetadata({ params, searchParams }) {
@@ -21,7 +21,7 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function Page({ params, searchParams }) {
-  const { count } = await fetchCount();
+  const { count } = await fetchCount(true);
   const childProps = { count, searchParams };
   return <CandidatesPage {...childProps} />;
 }

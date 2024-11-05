@@ -21,7 +21,7 @@ export default memo(function MapSection({ isLoaded, state, searchParams }) {
     party: searchParams?.party || '',
     state: state || searchParams?.state || '',
     level: searchParams?.level || '',
-    results: searchParams?.results === 'true',
+    results: searchParams?.results ? searchParams?.results === 'true' : true, // default to filter for winners
     office: searchParams?.office || '',
     name: searchParams?.name || '',
   });
@@ -30,12 +30,14 @@ export default memo(function MapSection({ isLoaded, state, searchParams }) {
   useEffect(() => {
     setFilters((currentFilters) => {
       const searchParamFilters = {
-        party: searchParams?.party || '',
-        state: state || searchParams?.state || '',
-        level: searchParams?.level || '',
-        results: searchParams?.results === 'true',
-        office: searchParams?.office || '',
-        name: searchParams?.name || '',
+        party: searchParams?.party || currentFilters.party,
+        state: state || searchParams?.state || currentFilters.state,
+        level: searchParams?.level || currentFilters.level,
+        results: searchParams?.results
+          ? searchParams?.results === 'true'
+          : currentFilters.results,
+        office: searchParams?.office || currentFilters.office,
+        name: searchParams?.name || currentFilters.name,
       };
 
       return isObjectEqual(currentFilters, searchParamFilters)
