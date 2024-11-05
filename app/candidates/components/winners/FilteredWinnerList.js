@@ -47,7 +47,7 @@ const settings = {
     </div>
   ),
   afterChange: (index) => {
-    // handles
+    // handles limiting the number of pagination dots that are visible at once
     const currentDot = document.querySelector('.slick-dots .slick-active');
     const dotWrapper = currentDot.parentElement.parentElement;
 
