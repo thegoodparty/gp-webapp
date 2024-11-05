@@ -49,7 +49,7 @@ function PricingCard({ heading, subheading, price, points, color }) {
         ))}
       </ul>
       <div className="mt-14 mb-8 text-4xl font-medium">${price}/month</div>
-      <Link id="free-candidtate" href="/sign-up">
+      <Link id="free-candidate" href="/sign-up">
         <Button className="w-full">Get Started</Button>
       </Link>
     </div>
