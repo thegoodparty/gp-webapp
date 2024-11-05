@@ -5,13 +5,69 @@ import H5 from '@shared/typography/H5';
 import { numberFormatter } from 'helpers/numberHelper';
 import { useEffect, useState } from 'react';
 
+function CustomArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      className={'before:!text-primary ' + className}
+      style={{ ...style }}
+      onClick={onClick}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick(e)}
+    />
+  );
+}
+
 const settings = {
   dots: true,
   infinite: true,
   speed: 500,
   slidesToShow: 1,
   slidesToScroll: 1,
-  arrows: false,
+  arrows: true,
+  nextArrow: <CustomArrow />,
+  prevArrow: <CustomArrow />,
+  appendDots: (dots) => (
+    <div
+      style={{
+        overflow: 'hidden',
+        maxWidth: '400px',
+        left: 'calc(50% - 200px)',
+        margin: '0 auto',
+      }}
+    >
+      <ul
+        style={{
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {dots}
+      </ul>
+    </div>
+  ),
+  afterChange: (index) => {
+    // handles
+    const currentDot = document.querySelector('.slick-dots .slick-active');
+    const dotWrapper = currentDot.parentElement.parentElement;
+
+    if (
+      currentDot.offsetLeft > dotWrapper.scrollLeft + dotWrapper.clientWidth ||
+      currentDot.offsetLeft < dotWrapper.scrollLeft
+    ) {
+      console.log('out of view');
+
+      const scrollTarget = Math.max(
+        0,
+        currentDot.offsetLeft - dotWrapper.clientWidth / 2,
+      );
+
+      dotWrapper.scrollTo({
+        left: scrollTarget,
+        behavior: 'smooth',
+      });
+    }
+  },
 };
 
 export default function FilteredWinnerList({ campaigns }) {
