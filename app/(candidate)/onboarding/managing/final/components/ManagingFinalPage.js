@@ -3,8 +3,8 @@ import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation';
+import Button from '@shared/buttons/Button';
 
 export const ManagingFinalPage = ({ candidateEmail }) => {
   return (
@@ -33,11 +33,9 @@ export const ManagingFinalPage = ({ candidateEmail }) => {
       </div>
 
       <div className="flex flex-wrap items-center justify-between mt-8">
-        <Link className="w-full" href="/">
-          <PrimaryButton className="w-full">
-            <div className="min-w-[120px]">Return to GoodParty.org</div>
-          </PrimaryButton>
-        </Link>
+        <Button href="/" className="w-full min-w-[170px]">
+          Return to GoodParty.org
+        </Button>
       </div>
     </CardPageWrapper>
   );

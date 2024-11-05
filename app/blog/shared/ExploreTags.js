@@ -17,13 +17,13 @@ export default function ExploreTags({ tags }) {
           <Link
             key={name + slug}
             href={`/blog/tag/${slug}`}
-            className={`inline-block py-2.5 px-4 rounded-md ${
+            className={`inline-block py-2.5 px-4 rounded-md outline-offset-0 focus-visible:outline-primary-dark/40 ${
               selectedTag === slug
                 ? 'text-white bg-purple-500 hover:bg-purple-700'
                 : 'bg-white hover:bg-indigo-200 '
             }`}
           >
-            <button>{name}</button>
+            {name}
           </Link>
         ))}
       </div>

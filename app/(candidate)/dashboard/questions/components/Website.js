@@ -46,8 +46,11 @@ export default function Website({
         </div>
       </form>
       <div
+        role="button"
+        tabIndex={0}
         className="flex justify-center mt-10 underline cursor-pointer"
         onClick={handleSkip}
+        onKeyDown={(e) => e.key === 'Enter' && handleSkip()}
       >
         Skip for now
       </div>

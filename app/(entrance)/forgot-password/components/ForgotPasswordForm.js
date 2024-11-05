@@ -44,16 +44,16 @@ export default function ForgotPasswordForm({
       <Overline className="relative font-medium text-center py-2 my-2 before:block before:bg-black/[0.12] before:absolute before:h-px before:w-full before:top-1/2">
         <span className="relative z-10 bg-white px-6">OR</span>
       </Overline>
-      <Link href="/login">
-        <Button
-          type="button"
-          size="large"
-          variant="outlined"
-          className="w-full"
-        >
-          Back to Login
-        </Button>
-      </Link>
+
+      <Button
+        href="/login"
+        type="button"
+        size="large"
+        variant="outlined"
+        className="w-full"
+      >
+        Back to Login
+      </Button>
     </form>
   );
 }

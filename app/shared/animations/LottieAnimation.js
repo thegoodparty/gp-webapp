@@ -14,15 +14,18 @@ export default function LottieAnimation({ style = {}, ...restProps }) {
   const lottieProps = { ...defaultOptions, ...restProps };
 
   return (
-    <Lottie
-      style={{ ...defaultOptions.style, ...style }}
-      options={lottieProps}
-      eventListeners={[
-        {
-          eventName: 'complete',
-          callback,
-        },
-      ]}
-    />
+    // NOTE: inert needs a string value here or React throws an error (Fixed in React 19)
+    <div inert="true">
+      <Lottie
+        style={{ ...defaultOptions.style, ...style }}
+        options={lottieProps}
+        eventListeners={[
+          {
+            eventName: 'complete',
+            callback,
+          },
+        ]}
+      />
+    </div>
   );
 }

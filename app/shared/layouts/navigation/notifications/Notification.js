@@ -35,7 +35,7 @@ export default function Notifications({
   return (
     <Link
       href={link}
-      className="no-underline"
+      className="no-underline block mx-2"
       onClick={closeNotificationCallback}
     >
       <div className="py-3 px-5 border-t border-primary-dark flex justify-between items-center transition-colors hover:bg-primary-dark-dark">

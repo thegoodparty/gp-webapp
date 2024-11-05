@@ -1,10 +1,9 @@
-import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
+import Button from '@shared/buttons/Button';
 
 export default function CTA({ id }) {
   return (
-    <Link href="/info-session" id={id}>
-      <WarningButton>Get Involved</WarningButton>
-    </Link>
+    <Button href="/info-session" id={id} size="large" color="secondary">
+      Get Involved
+    </Button>
   );
 }

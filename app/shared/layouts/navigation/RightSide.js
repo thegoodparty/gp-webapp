@@ -3,14 +3,15 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import TopDashboardMenu from './TopDashboardMenu';
 import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import NotificationsDropdown from './notifications/NotificationsDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import DashboardOrContinue from './DashboardOrContinue';
-import InfoButton from '@shared/buttons/InfoButton';
 import { useUser } from '@shared/hooks/useUser';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 import FullStorySelectiveInit from './FullStorySelectiveInit';
+import NavButton from './NavButton';
+import Button from '@shared/buttons/Button';
+import { USER_ROLES } from 'helpers/userHelper';
 
 export default function RightSide({ campaignStatus }) {
   const { campaignRequestPending } = campaignStatus;
@@ -42,13 +43,14 @@ export default function RightSide({ campaignStatus }) {
 
   if (isOnboardingPath) {
     return (
-      <a
+      <Button
         href="/"
         id="nav-onboarding-finish-later"
-        className="hidden lg:block relative z-[60]"
+        className="hidden lg:block relative z-[60] font-medium !text-base !py-2"
+        variant="text"
       >
-        <InfoButton size="medium">Finish later</InfoButton>
-      </a>
+        Finish Later
+      </Button>
     );
   }
 
@@ -64,6 +66,7 @@ export default function RightSide({ campaignStatus }) {
             user={user}
           />
           {!campaignRequestPending &&
+            user?.role !== USER_ROLES.SALES &&
             (isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}
@@ -83,16 +86,20 @@ export default function RightSide({ campaignStatus }) {
           <Link href="/login" id="nav-login" className="lg:mr-3 xl:mr-6">
             <div className="font-medium text-base">Login</div>
           </Link>
-          <Link href="/sign-up" id="nav-sign-up" className="lg:mr-3 xl:mr-6">
-            <PrimaryButton variant="text" size="medium">
-              <div className="font-medium text-base">Sign up</div>
-            </PrimaryButton>
-          </Link>
-          <Link href="/run-for-office" id="nav-get-tools">
-            <PrimaryButton size="medium">
-              <div className="font-medium text-base">Get Campaign Tools</div>
-            </PrimaryButton>
-          </Link>
+          <NavButton
+            href="/sign-up"
+            id="nav-sign-up"
+            className="lg:mr-3 xl:mr-6"
+          >
+            <span className="font-medium text-base">Sign up</span>
+          </NavButton>
+          <Button
+            href="/run-for-office"
+            id="nav-get-tools"
+            className="!py-2 border-none"
+          >
+            <span className="font-medium text-base">Get Campaign Tools</span>
+          </Button>
         </>
       )}
       <FullStorySelectiveInit user={user} />

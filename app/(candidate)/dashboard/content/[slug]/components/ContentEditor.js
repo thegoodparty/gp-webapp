@@ -5,10 +5,8 @@ import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
 import BlackButton from '@shared/buttons/BlackButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { FaGlobe } from 'react-icons/fa';
-import Link from 'next/link';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
 import gpApi from 'gpApi';
@@ -19,6 +17,7 @@ import InputFieldsModal from '../../components/InputFieldsModal';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { BsStars } from 'react-icons/bs';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
+import Button from '@shared/buttons/Button';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -215,29 +214,14 @@ export default function ContentEditor({
     <div>
       <div className="flex w-full h-auto p-5 items-center justify-items-center bg-indigo-50">
         <div className="flex justify-start">
-          {/* desktop back button */}
-          <Link href="/dashboard/content">
-            <div className="hidden md:block">
-              <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap">
-                  <MdOutlineArrowBackIos className="text-sm" />
-                  &nbsp; Back
-                </div>
-              </SecondaryButton>
-            </div>
-          </Link>
-
-          {/* mobile back button */}
-          <Link href="/dashboard/content">
-            <div className="md:hidden">
-              <SecondaryButton size="medium">
-                <div className="flex items-center whitespace-nowrap">
-                  <MdOutlineArrowBackIos className="text-sm" />
-                  &nbsp;
-                </div>
-              </SecondaryButton>
-            </div>
-          </Link>
+          <Button
+            href="/dashboard/content"
+            color="neutral"
+            className="flex items-center whitespace-nowrap"
+          >
+            <MdOutlineArrowBackIos className="text-sm" />
+            <span className="hidden md:inline">&nbsp; Back</span>
+          </Button>
 
           {/* desktop new document name. (not shown on mobile) */}
           <div className="ml-5 hidden md:block whitespace-nowrap">

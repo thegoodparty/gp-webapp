@@ -11,6 +11,7 @@ import { useState, useMemo } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 async function runP2V(slug) {
   try {
@@ -187,7 +188,8 @@ export default function OfficeStep(props) {
           />
         </div>
         <div className={`${step ? 'flex justify-end w-full' : ''}`}>
-          <PrimaryButton
+          <Button
+            size="large"
             className={{ block: true }}
             disabled={!canSubmit()}
             type="submit"
@@ -195,7 +197,7 @@ export default function OfficeStep(props) {
             {...trackingAttrs}
           >
             {step ? 'Next' : 'Save'}
-          </PrimaryButton>
+          </Button>
         </div>
       </div>
     </form>

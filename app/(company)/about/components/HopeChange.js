@@ -1,6 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import Button from '@shared/buttons/Button';
 
 const HopeChangeCard = ({ children }) => (
   <section
@@ -40,10 +39,13 @@ export const HopeChange = ({
     />
     <h3 className="text-2xl font-medium mb-4 md:text-4xl">{header}</h3>
     <p className="font-sfpro text-sm leading-6 mb-4 md:text-base">{blurb}</p>
-    <Link className="md:absolute md:bottom-0" href={href}>
-      <SecondaryButton className="bg-secondary-main border-none w-full">
-        {buttonText}
-      </SecondaryButton>
-    </Link>
+    <Button
+      className="md:absolute md:bottom-0"
+      href={href}
+      size="large"
+      color="neutral"
+    >
+      {buttonText}
+    </Button>
   </HopeChangeCard>
 );

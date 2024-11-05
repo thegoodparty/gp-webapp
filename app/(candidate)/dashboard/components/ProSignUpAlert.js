@@ -9,7 +9,10 @@ export const ProSignUpAlert = () => (
         'Access campaign essentials like text banking, voter data, and 1:1 expert support for just $10/month.',
       actionHref: '/dashboard/pro-sign-up',
       actionText: (
-        <div className="flex items-center" id="pro_upgrade_alert">
+        <div
+          className="flex items-center justify-center lg:justify-start"
+          id="pro_upgrade_alert"
+        >
           Upgrade Today
           <MdChevronRight className="ml-1" size={24} />
         </div>

@@ -1,6 +1,4 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import RadioList from '@shared/inputs/RadioList';
 import Body2 from '@shared/typography/Body2';
@@ -9,10 +7,10 @@ import {
   createDemoCampaign,
   updateUserMeta,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import Link from 'next/link';
 import { useState } from 'react';
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 const options = [
   {
@@ -61,27 +59,24 @@ export default function BrowsingFinalPage() {
       />
 
       <div className="flex flex-wrap items-center justify-between mt-12">
-        <Link
-          className="w-full mb-4 md:w-auto md:mb-auto"
+        <Button
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[170px]"
           href="/onboarding/browsing"
+          size="large"
+          color="neutral"
         >
-          <SecondaryButton className="w-full">
-            <div className="min-w-[120px]">Back</div>
-          </SecondaryButton>
-        </Link>
-        <Link
-          className="w-full mb-4 md:w-auto md:mb-auto"
+          Back
+        </Button>
+
+        <Button
+          className="w-full mb-4 md:w-auto md:mb-auto min-w-[170px]"
           disabled={!selected}
           href="/onboarding/browsing/welcome"
+          onClick={handleNext}
+          size="large"
         >
-          <PrimaryButton
-            className="w-full"
-            disabled={!selected}
-            onClick={handleNext}
-          >
-            <div className="min-w-[120px]">Next</div>
-          </PrimaryButton>
-        </Link>
+          Next
+        </Button>
       </div>
     </CardPageWrapper>
   );

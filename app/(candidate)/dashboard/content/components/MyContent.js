@@ -84,6 +84,7 @@ export default function MyContent(props) {
             <Link
               href="/dashboard/content/[slug]"
               as={`/dashboard/content/${row.original.slug}`}
+              className="inline-block"
             >
               <div className="flex flex-row items-center font-semibold">
                 <IoDocumentText className="ml-3 text-md shrink-0" />

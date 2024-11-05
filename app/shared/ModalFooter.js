@@ -1,7 +1,7 @@
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 
-export const AddScriptFooter = ({
+export const ModalFooter = ({
   onBack = () => {},
   onNext = () => {},
   disabled = false,

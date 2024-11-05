@@ -7,13 +7,20 @@ import { useMemo } from 'react';
 import { formatToPhone } from 'helpers/numberHelper';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
+import { AddUserButton } from 'app/admin/users/components/AddUserButton';
 
 const buildTableInputData = (users) =>
   users.map((user) => {
     const metaData = (user.metaData && JSON.parse(user.metaData)) || {};
+    const userType = user.isAdmin
+      ? 'admin'
+      : user.candidate
+      ? 'candidate'
+      : user.role || 'user';
+
     return {
       ...user,
-      userType: user.isAdmin ? 'admin' : user.candidate ? 'candidate' : 'user',
+      userType,
       lastVisited: metaData?.lastVisited && new Date(metaData?.lastVisited),
       createdAt: user.createdAt && new Date(user.createdAt),
       campaigns: user.campaigns || [],
@@ -134,6 +141,9 @@ export default function AdminUsersPage(props) {
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
+        <div className="flex flex-col items-end">
+          <AddUserButton />
+        </div>
         <Table
           data={data}
           columns={columns}

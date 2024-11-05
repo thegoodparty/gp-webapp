@@ -4,6 +4,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 export default function Callout() {
   const [showCallout, setShowCallout] = useState(true);
@@ -21,6 +22,15 @@ export default function Callout() {
 
   const trackingAttrs = buildTrackingAttrs('Join Discord Banner Link');
 
+  function handleClose() {
+    try {
+      localStorage.setItem('callout', true);
+      setShowCallout(false);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     showCallout && (
       <div className="flex w-screen h-auto">
@@ -32,30 +42,24 @@ export default function Callout() {
                 Join our Discord community - meet like-minded independents and
                 get involved!
               </span>
-              <Link
+              <Button
                 id="nav-join-discord"
                 href="https://discord.gg/invite/goodparty"
                 target="_blank"
                 aria-label="Join our Discord community - meet like-minded independents and get involved!"
                 {...trackingAttrs}
+                size="large"
+                className="whitespace-nowrap ml-5 !py-2 border-none"
               >
-                <div className="whitespace-nowrap ml-5">
-                  <PrimaryButton size="medium">Join Now</PrimaryButton>
-                </div>
-              </Link>
+                Join Now
+              </Button>
             </div>
             <div
               className="flex px-3 mr-2 cursor-pointer"
-              onClick={() => {
-                try {
-                  localStorage.setItem('callout', true);
-                  setShowCallout(false);
-                } catch (e) {
-                  console.log(e);
-                }
-              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleClose()}
+              onClick={handleClose}
             >
-              <IoIosCloseCircle size={24} />
+              <IoIosCloseCircle role="button" tabIndex={0} size={24} />
             </div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 'use client';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { useState } from 'react';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
@@ -9,6 +8,7 @@ import {
   dateFromNonStandardUSFormatString,
   isSameDay,
 } from 'helpers/dateHelper';
+import Button from '@shared/buttons/Button';
 
 const fields = [
   {
@@ -120,9 +120,9 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
       ))}
 
       <div className="flex justify-center mb-8">
-        <BlackButtonClient onClick={handleSave} disabled={disableSubmit}>
+        <Button size="large" onClick={handleSave} disabled={disableSubmit}>
           <div className="font-black">Save</div>
-        </BlackButtonClient>
+        </Button>
       </div>
     </div>
   );

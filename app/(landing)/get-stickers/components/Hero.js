@@ -1,8 +1,7 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import { Anton } from 'next/font/google';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const anoton = Anton({ weight: '400', subsets: ['latin'] });
 
@@ -47,19 +46,23 @@ export default function Hero() {
         </h2>
         <div className="grid grid-cols-12 gap-4 mt-8">
           <div className="col-span-12 md:col-span-4">
-            <Link href="/get-stickers#get-stickers">
-              <PrimaryButton className="mt-8">Send Me Stickers!</PrimaryButton>
-            </Link>
+            <Button
+              size="large"
+              className="mt-8"
+              href="/get-stickers#get-stickers"
+            >
+              Send Me Stickers!
+            </Button>
           </div>
           <div className="col-span-12 md:col-span-4">
-            <Link href="/run-for-office">
-              <PrimaryButton className="mt-8">Run for Office</PrimaryButton>
-            </Link>
+            <Button size="large" className="mt-8" href="/run-for-office">
+              Run for Office
+            </Button>
           </div>
           <div className="col-span-12 md:col-span-4">
-            <Link href="/">
-              <PrimaryButton className="mt-8">Learn More</PrimaryButton>
-            </Link>
+            <Button size="large" className="mt-8" href="/">
+              Learn More
+            </Button>
           </div>
         </div>
       </div>

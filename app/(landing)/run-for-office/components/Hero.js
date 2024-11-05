@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import Body1 from '@shared/typography/Body1';
 import MarketingH2 from '@shared/typography/MarketingH2';
 import heroImg from 'public/images/run-for-office/run-hero.png';
@@ -20,22 +19,26 @@ export default function Hero() {
           with free tech, data, and support.
         </Body1>
         <div className="mt-8">
-          <Link href="/sign-up" id="hero-get-started">
-            <Button className="mr-4 mb-4 w-full md:w-auto" size="large">
-              Get Started
-            </Button>
-          </Link>
+          <Button
+            href="/sign-up"
+            id="hero-get-started"
+            className="mr-4 mb-4 w-full md:w-auto"
+            size="large"
+          >
+            Get Started
+          </Button>
           {/*This needs to be an anchor tag to force a page load for the
             Product Tour page, to ensure the main nav doesn't render twice.*/}
-          <a href="/product-tour" id="hero-demo">
-            <Button
-              className="w-full md:w-auto"
-              size="large"
-              variant="outlined"
-            >
-              Book a free demo
-            </Button>
-          </a>
+          <Button
+            nativeLink
+            href="/product-tour"
+            id="hero-demo"
+            className="w-full md:w-auto"
+            size="large"
+            variant="outlined"
+          >
+            Book a free demo
+          </Button>
         </div>
       </div>
       <div className="grow md:text-right col-span-6">
