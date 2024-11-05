@@ -6,7 +6,6 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-  useMemo,
 } from 'react';
 import mapSkin from './mapSkin';
 import {

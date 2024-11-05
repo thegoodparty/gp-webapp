@@ -6,10 +6,14 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
 
-const fetchCount = async (state) => {
+const fetchCount = async (state, onlyWinners = false) => {
   const api = gpApi.campaign.mapCount;
 
-  return await gpFetch(api, { state }, 3600);
+  return await gpFetch(
+    api,
+    { state, results: onlyWinners ? true : undefined },
+    3600,
+  );
 };
 
 export async function generateMetadata({ params, searchParams }) {
@@ -30,7 +34,7 @@ export default async function Page({ params, searchParams }) {
     notFound();
   }
   await adminAccessOnly();
-  const { count } = await fetchCount(upperState);
+  const { count } = await fetchCount(upperState, true);
   const childProps = { count, longState, state: upperState, searchParams };
   return <CandidatesPage {...childProps} />;
 }
