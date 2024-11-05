@@ -50,13 +50,13 @@ const settings = {
     // handles limiting the number of pagination dots that are visible at once
     const currentDot = document.querySelector('.slick-dots .slick-active');
     const dotWrapper = currentDot.parentElement.parentElement;
+    const padding = currentDot.offsetWidth * 1.5;
 
     if (
-      currentDot.offsetLeft > dotWrapper.scrollLeft + dotWrapper.clientWidth ||
-      currentDot.offsetLeft < dotWrapper.scrollLeft
+      currentDot.offsetLeft >
+        dotWrapper.scrollLeft + dotWrapper.clientWidth - padding ||
+      currentDot.offsetLeft < dotWrapper.scrollLeft + padding
     ) {
-      console.log('out of view');
-
       const scrollTarget = Math.max(
         0,
         currentDot.offsetLeft - dotWrapper.clientWidth / 2,
