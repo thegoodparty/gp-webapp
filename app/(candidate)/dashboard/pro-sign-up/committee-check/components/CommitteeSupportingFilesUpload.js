@@ -113,7 +113,7 @@ export const CommitteeSupportingFilesUpload = ({
           errorMessge || `PDF file with size less than ${FILE_LIMIT_MB}MB`
         }
         InputProps={{
-          endAdornment: <InputHelpIcon message={HELP_MESSAGE} />,
+          endAdornment: <InputHelpIcon showOnFocus message={HELP_MESSAGE} />,
         }}
       />
 

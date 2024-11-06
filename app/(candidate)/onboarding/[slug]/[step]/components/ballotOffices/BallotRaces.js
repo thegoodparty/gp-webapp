@@ -246,7 +246,7 @@ export default function BallotRaces(props) {
                       role="button"
                       tabIndex={0}
                       className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
-                      onClick={handleYearClick}
+                      onClick={() => handleYearClick(electionYear)}
                       onKeyDown={(e) => handleKeyDown(e, electionYear)}
                     >
                       {electionYear}

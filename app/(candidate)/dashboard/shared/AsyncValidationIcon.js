@@ -15,5 +15,5 @@ export const AsyncValidationIcon = ({
   ) : validated === false ? (
     <MdCancel className="text-error" size={24} />
   ) : (
-    <InputHelpIcon message={message} />
+    <InputHelpIcon showOnFocus message={message} />
   );
