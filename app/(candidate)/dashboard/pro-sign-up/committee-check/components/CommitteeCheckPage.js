@@ -3,8 +3,6 @@ import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/Focus
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import Link from 'next/link';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import TextField from '@shared/inputs/TextField';
 import { useEffect, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch';
@@ -20,6 +18,7 @@ import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyPr
 import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
 import Overline from '@shared/typography/Overline';
 import { Switch } from '@mui/material';
+import Button from '@shared/buttons/Button';
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -188,12 +187,21 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
           />
 
           <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
-            <Link className="block mb-4 md:mb-0" href="/dashboard/pro-sign-up">
-              <SecondaryButton className="w-full">Back</SecondaryButton>
-            </Link>
-            <PrimaryButton onClick={handleNextClick} disabled={nextDisabled}>
+            <Button
+              href="/dashboard/pro-sign-up"
+              size="large"
+              color="neutral"
+              className=" mb-4 md:mb-0"
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleNextClick}
+              disabled={nextDisabled}
+              size="large"
+            >
               Next
-            </PrimaryButton>
+            </Button>
           </section>
         </>
       )}
