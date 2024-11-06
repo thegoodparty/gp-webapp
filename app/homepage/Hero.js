@@ -20,9 +20,9 @@ export default async function Hero() {
 
   return (
     <MaxWidth>
-      <div className="grid grid-cols-12 gap-8 lg:gap-16 md:justify-items-center pt-20 bg-indigo-50 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0">
+      <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-20 bg-indigo-50 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0">
         <div className="col-span-12 lg:col-span-6">
-          <h1 className="text-4xl leading-tight font-semibold xs:font-bold md:text-5xl md:leading-tight lg:text-6xl lg:leading-snug">
+          <h1 className="text-4xl leading-tight font-semibold xs:font-bold md:text-5xl md:leading-tight xl:text-6xl xl:leading-snug">
             We empowered {winnerCount} Independent wins in 2024 🎉
           </h1>
           <h2 className="text-lg font-sfpro font-normal leading-6 mt-8">
