@@ -2,14 +2,13 @@
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
 import { campaignOfficeFields } from 'helpers/campaignOfficeFields';
 import { useState } from 'react';
 import { CampaignOfficeInputFields } from 'app/(candidate)/dashboard/shared/CampaignOfficeInputFields';
 import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
+import Button from '@shared/buttons/Button';
 
 const ProSignUpPage = ({ campaign }) => {
   const [campaignState, setCampaignState] = useState(campaign);
@@ -37,17 +36,21 @@ const ProSignUpPage = ({ campaign }) => {
             We need to verify your info to give you access to GoodParty.org Pro.
           </Body2>
           <CampaignOfficeInputFields values={officeFields} gridLayout={false} />
-          <PrimaryButton
-            className="mb-8"
-            fullWidth
+          <Button
+            className="mb-8 w-full"
             variant="outlined"
+            size="large"
             onClick={() => setShowModal(true)}
           >
             Edit Office
-          </PrimaryButton>
-          <Link href="/dashboard/pro-sign-up/committee-check">
-            <PrimaryButton fullWidth>Confirm</PrimaryButton>
-          </Link>
+          </Button>
+          <Button
+            href="/dashboard/pro-sign-up/committee-check"
+            className="w-full"
+            size="large"
+          >
+            Confirm
+          </Button>
           <CampaignOfficeSelectionModal
             campaign={campaignState}
             show={showModal}
