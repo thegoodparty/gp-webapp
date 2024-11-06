@@ -1,8 +1,8 @@
 // Load environment variables
-require('dotenv').config();
+import 'dotenv/config';
 
 // Import Axios for making API requests
-const axios = require('axios');
+import axios from 'axios';
 
 // Check that the environment variables are loaded
 console.log("TESTRAIL_URL:", process.env.TESTRAIL_URL);

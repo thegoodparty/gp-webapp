@@ -1,5 +1,5 @@
-require('dotenv').config();
-const axios = require('axios');
+import 'dotenv/config';
+import axios from 'axios';
 
 const TESTRAIL_URL = process.env.TESTRAIL_URL;
 const AUTH = {
@@ -8,7 +8,7 @@ const AUTH = {
 };
 
 // Helper to post results to TestRail
-async function addTestResult(runId, caseId, statusId, comment = '') {
+export async function addTestResult(runId, caseId, statusId, comment = '') {
     try {
         const response = await axios.post(
             `${TESTRAIL_URL}/index.php?/api/v2/add_result_for_case/${runId}/${caseId}`,
@@ -24,7 +24,7 @@ async function addTestResult(runId, caseId, statusId, comment = '') {
 }
 
 // Helper to create a new test run
-async function createTestRun(name, caseIds) {
+export async function createTestRun(name, caseIds) {
     try {
         const response = await axios.post(
             `${TESTRAIL_URL}/index.php?/api/v2/add_run/${process.env.TESTRAIL_PROJECT_ID}`,

@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav, checkImgAltText } from '../../../helpers';
-const { addTestResult } = require('../../../testrailHelper');
-const fs = require('fs');
+import { coreNav, checkImgAltText } from '@helpers';
+import { addTestResult } from '@testrailHelper';
+import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Get a Demo page', async ({ page }) => {
@@ -11,10 +12,13 @@ test('Verify Get a Demo page', async ({ page }) => {
     const pageHeader = /Get a demo of GoodParty.org's free tools for independent and 3rd party candidates/;
     const pageImgAltText = ['Jared and Rob', 'Lisa'];
     const hubSpotLocator = page.locator(`iframe[title="Book a Meeting"]`);
+    const calendarDateTitle = /Find a time to meet with Good Party/
+    const calendarTimeTitle = /What time works best\?/
+    const calendarInfoTitle = /Your information/
 
     try {
         await page.goto('/');
-        await coreNav(page, '#nav-nav-get-demo');
+        await coreNav(page, 'nav-get-demo');
 
         // Verify page title
         await expect(page).toHaveTitle(pageTitle);
@@ -34,15 +38,15 @@ test('Verify Get a Demo page', async ({ page }) => {
         }
 
         // Click the first available date within the calendar
-        await frame.locator(`text="Find a time to meet with Good Party"`).isVisible();
+        await frame.locator(`text="${calendarDateTitle}"`).isVisible();
         await frame.locator('[data-test-id="available-date"]').first().click();
         
         // click first available time
-        await frame.locator(`text="What time works best?"`).isVisible();
+        await frame.locator(`text="${calendarTimeTitle}"`).isVisible();
         await frame.locator('[data-test-id="time-picker-btn"]').first().click();
 
         // Verify "Your Information" page
-        await frame.locator(`text="Your information"`).isVisible();
+        await frame.locator(`text="${calendarInfoTitle}"`).isVisible();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

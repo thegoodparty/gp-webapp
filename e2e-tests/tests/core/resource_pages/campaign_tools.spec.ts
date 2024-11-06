@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav, checkButtons, checkImgAltText } from '../../../helpers';
-const { addTestResult } = require('../../../testrailHelper');
-const fs = require('fs');
+import { coreNav, checkButtons, checkImgAltText } from '@helpers';
+import { addTestResult } from '@testrailHelper';
+import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Campaign Tools page', async ({ page }) => {
@@ -10,17 +11,10 @@ test('Verify Campaign Tools page', async ({ page }) => {
     const pageTitle = /Campaign Tools/;
     const pageHeader = /Supercharge your local campaign/;
     const pageButtons = [
-        '#hero-get-started', 
-        '#hero-demo', 
-        '#tools-winning-content', 
-        '#tools-data-campaign', 
-        '#tools-access-experts', 
-        '#tools-volunteer-network', 
-        '#tools-resource-library', 
-        '#started-card-voter-data', 
-        '#started-card-texting-tools', 
-        '#started-card-expert-support', 
-        '#free-candidate'
+        'Get Started', 
+        'Book a free demo', 
+        'Get free tools',
+        'Interactive demo'
     ];
     const pageImgAltText = [
         'run for office', 
@@ -30,7 +24,7 @@ test('Verify Campaign Tools page', async ({ page }) => {
 
     try {
         await page.goto('/');
-        await coreNav(page, '#nav-nav-campaign-tools');
+        await coreNav(page, 'nav-campaign-tools');
 
         // Verify page title
         await expect(page).toHaveTitle(pageTitle);

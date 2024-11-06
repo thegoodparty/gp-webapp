@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@helpers": ["helpers.ts"],
+        "@testrailHelper": ["testrailHelper.ts"]
+        }
+    }
+}
+  
