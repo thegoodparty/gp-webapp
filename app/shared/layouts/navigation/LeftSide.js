@@ -30,7 +30,7 @@ export default function LeftSide() {
       <NavDropdowns />
       <Link href="/about" id="nav-mission" className="lg:ml-3 xl:ml-6">
         <PrimaryButton variant="text" size="medium">
-          <div className="font-medium text-base">Our Mission</div>
+          <div className="font-medium text-base" data-testid="nav-our-mission">Our Mission</div>
         </PrimaryButton>
       </Link>
     </div>

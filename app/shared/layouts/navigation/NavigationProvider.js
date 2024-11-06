@@ -27,12 +27,14 @@ export const RUN_LINKS = [
     href: '/run-for-office',
     icon: <ConstructionRounded />,
     id: 'nav-campaign-tools',
+    dataTestId: 'nav-campaign-tools'
   },
   {
     label: 'GoodParty.org Pro',
     href: 'https://lp.goodparty.org/pro-lp/',
     icon: <EmojiEventsRounded />,
     id: 'nav-good-party-pro',
+    dataTestId: 'nav-good-party-pro',
     external: true,
   },
   {
@@ -40,12 +42,14 @@ export const RUN_LINKS = [
     href: '/get-a-demo',
     icon: <GroupRounded />,
     id: 'nav-get-demo',
+    dataTestId: 'nav-get-demo',
   },
   {
     label: 'Voter Data',
     href: 'https://lp.goodparty.org/voter-data',
     icon: <FolderSharedRounded />,
     id: 'nav-voter-data',
+    dataTestId: 'nav-voter-data',
     external: true,
   },
   {
@@ -53,6 +57,7 @@ export const RUN_LINKS = [
     href: 'https://lp.goodparty.org/template-library',
     icon: <LibraryBooksRounded />,
     id: 'nav-template-library',
+    dataTestId: 'nav-template-library',
     external: true,
   },
   {
@@ -60,12 +65,14 @@ export const RUN_LINKS = [
     href: '/product-tour',
     icon: <SlideshowRounded />,
     id: 'nav-tour',
+    dataTestId: 'nav-tour',
   },
   {
     label: 'Explore Offices',
     href: '/elections',
     icon: <SearchRounded />,
     id: 'nav-explore-offices',
+    dataTestId: 'nav-explore-offices',
   },
 ];
 
@@ -75,30 +82,36 @@ export const COMMUNITY_LINKS = [
     href: '/volunteer',
     icon: <VolunteerActivismRounded />,
     id: 'nav-volunteer',
+    dataTestId: 'nav-volunteer',
   },
   {
     label: 'Find Candidates',
     href: '/candidates',
     icon: <MapIcon />,
     id: 'nav-find-candidates',
+    dataTestId: 'nav-find-candidates',
   },
   {
     label: 'Info Session',
     href: '/info-session',
     icon: <EventAvailableRounded />,
     id: 'nav-info-session',
+    dataTestId: 'nav-info-session',
+
   },
   {
     label: 'Get Stickers',
     href: '/get-stickers',
     icon: <MailRounded />,
     id: 'nav-get-stickers',
+    dataTestId: 'nav-get-stickers',
   },
   {
     label: 'Discord',
     href: 'https://discord.gg/invite/goodparty',
     icon: <FaDiscord size={24} />,
     id: 'nav-discord',
+    dataTestId: 'nav-discord',
     external: true,
   },
 ];
@@ -108,28 +121,33 @@ export const RESOURCES_LINKS = [
     href: '/blog',
     icon: <NewspaperRounded />,
     id: 'nav-blog',
+    dataTestId: 'nav-blog',
   },
   {
     label: 'Glossary',
     href: '/political-terms',
     icon: <ListRounded />,
     id: 'nav-glossary',
+    dataTestId: 'nav-glossary',
   },
 ];
 const DROPDOWNS = [
   {
     id: 'nav-candidates',
     label: 'For Candidates',
+    dataTestId: 'nav-candidates',
     links: RUN_LINKS,
   },
   {
     id: 'nav-voters',
     label: 'For Voters',
+    dataTestId: 'nav-voters',
     links: COMMUNITY_LINKS,
   },
   {
     id: 'nav-resources',
     label: 'Resources',
+    dataTestId: 'nav-resources',
     links: RESOURCES_LINKS,
   },
 ];

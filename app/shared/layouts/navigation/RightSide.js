@@ -81,16 +81,16 @@ export default function RightSide({ campaignStatus }) {
       ) : (
         <>
           <Link href="/login" id="nav-login" className="lg:mr-3 xl:mr-6">
-            <div className="font-medium text-base">Login</div>
+            <div className="font-medium text-base" data-testid="nav-login">Login</div>
           </Link>
           <Link href="/sign-up" id="nav-sign-up" className="lg:mr-3 xl:mr-6">
             <PrimaryButton variant="text" size="medium">
-              <div className="font-medium text-base">Sign up</div>
+              <div className="font-medium text-base" data-testid="nav-sign-up">Sign up</div>
             </PrimaryButton>
           </Link>
           <Link href="/run-for-office" id="nav-get-tools">
             <PrimaryButton size="medium">
-              <div className="font-medium text-base">Get Campaign Tools</div>
+              <div className="font-medium text-base" data-testid="nav-get-tools">Get Campaign Tools</div>
             </PrimaryButton>
           </Link>
         </>

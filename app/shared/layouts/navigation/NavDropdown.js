@@ -5,7 +5,7 @@ import { FaChevronDown } from 'react-icons/fa';
 import { OpenInNewRounded } from '@mui/icons-material';
 import { memo } from 'react';
 
-function NavDropdown({ open, toggleCallback, links, label = '', id }) {
+function NavDropdown({ open, dataTestId = '', toggleCallback, links, label = '', id }) {
   return (
     <div className="lg:ml-3 xl:ml-6 relative cursor-pointer ">
       <PrimaryButton
@@ -15,7 +15,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
         size="medium"
       >
         <div className="flex items-center">
-          <div className="font-medium text-base">{label}</div>
+          <div className="font-medium text-base" data-testid={dataTestId}>{label}</div>
           <FaChevronDown
             className={`ml-2 mt-[2px] transition-all ${open && 'rotate-180'}`}
           />
@@ -44,6 +44,7 @@ function NavDropdown({ open, toggleCallback, links, label = '', id }) {
               >
                 <div
                   data-cy="header-link"
+                  data-testid={link.dataTestId}
                   className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
                 >
                   <div className="flex items-center">
