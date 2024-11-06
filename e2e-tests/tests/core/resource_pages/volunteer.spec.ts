@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav, checkButtons, checkImgAltText, userData } from '../../../helpers';
-const { addTestResult } = require('../../../testrailHelper');
-const fs = require('fs');
+import { coreNav, checkButtons, checkImgAltText, userData } from '@helpers';
+import { addTestResult } from '@testrailHelper';
+import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Explore Offices page', async ({ page }) => {
@@ -10,26 +11,22 @@ test('Verify Explore Offices page', async ({ page }) => {
     const pageTitle = /Get Involved/;
     const pageHeader = /Turn dissatisfaction into action/;
     const pageButtons = [
-        '#volunteer-hero-form-submit',
-        '#cta-dissatisfaction',
-        '[id="cta-Whatever you can do!"]',
-        '[id="cta-Connect and make friends"]',
-        '[id="cta-Real action = real electoral results"]',
-        '#cta-benefits',
-        '#cta-discord',
-        '[id="from community"]',
-        '#schedule-info-session'
+        'Start taking action',
+        'Get Involved',
+        'Join our Discord',
+        'Schedule info session'
     ];
-
     const pageImgAltText = [
         'megaphone', 'Whatever you can do!', 'Help with your creativity!', 
         'Connect and make friends', 'Real action = real electoral results', 'Sal Davis', 
         'Terry Vo', 'Kieryn McCann', 'Level up', 'Networking', 'Fun perks', 'Real Impact', 'discord', 'GoodParty'
     ];
+    const volunteerButton = /Start taking action/
+    const volunteerConfirm = /Thank you! we will be in touch soon./
 
     try {
         await page.goto('/');
-        await coreNav(page, '#nav-nav-volunteer');
+        await coreNav(page, 'nav-volunteer');
 
         // Verify page title
         await expect(page).toHaveTitle(pageTitle);
@@ -44,18 +41,16 @@ test('Verify Explore Offices page', async ({ page }) => {
         await checkImgAltText(page, pageImgAltText);
 
         // Verify volunteer form
-        await page.locator('#\\:r0\\:').fill(userData.firstName);
-        await page.locator('#\\:r1\\:').fill(userData.lastName);
-        await page.locator('#\\:r2\\:').fill(userData.phoneNumber);
-        await page.locator('#\\:r3\\:').fill(userData.email);
-        await page.locator('.PrivateSwitchBase-input').click();
-
-        await page.locator('#volunteer-hero-form-submit').click();
-
-        await expect(page.getByText('Thank you! we will be in touch soon.')).toBeVisible();
+        await page.locator("input[name='First Name']").fill(userData.firstName);
+        await page.locator("input[name='Last Name']").fill(userData.lastName);
+        await page.locator("input[name='phone']").fill(userData.phoneNumber);
+        await page.locator("input[name='email']").fill(userData.email);
+        await page.locator("input[type='checkbox']").click();
+        await page.locator('button', { hasText: volunteerButton}).click();
+        await expect(page.getByText(volunteerConfirm)).toBeVisible();
 
         // Locate all expandable sections
-        const expandables = page.locator('.bg-slate-200.cursor-pointer');
+        const expandables = page.getByTestId('faq-expandable');
         const count = await expandables.count();
 
         // Loop through each FAQ section and expand it

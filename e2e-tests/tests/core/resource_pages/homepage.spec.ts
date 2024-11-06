@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-const { addTestResult } = require('../../../testrailHelper');
-const fs = require('fs');
+import { addTestResult } from '@testrailHelper';
+import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const pageTitle = /GoodParty.org/

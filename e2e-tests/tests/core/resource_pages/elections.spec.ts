@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav, checkImgAltText } from '../../../helpers';
-const { addTestResult } = require('../../../testrailHelper');
-const fs = require('fs');
+import { coreNav, checkImgAltText } from '@helpers';
+import { addTestResult } from '@testrailHelper';
+import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Explore Offices page', async ({ page }) => {
@@ -15,7 +16,7 @@ test('Verify Explore Offices page', async ({ page }) => {
 
     try {
         await page.goto('/');
-        await coreNav(page, '#nav-nav-explore-offices');
+        await coreNav(page, 'nav-explore-offices');
 
         // Verify page title
         await expect(page).toHaveTitle(pageTitle);
