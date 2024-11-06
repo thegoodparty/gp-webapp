@@ -19,6 +19,7 @@ import { useUser } from '@shared/hooks/useUser';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
 import Button from '@shared/buttons/Button';
+import { useCampaign } from '@shared/hooks/useCampaign';
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
@@ -31,6 +32,7 @@ export default function RightSideMobile() {
   const [isOpen, setOpen] = useState(false);
   const [user] = useUser();
   const [campaignStatus, setCampaignStatus] = useCampaignStatus();
+  const [campaign] = useCampaign();
   const { status, step, slug } = campaignStatus || {};
   const pathname = usePathname();
   const isDashboardPath =
@@ -76,13 +78,18 @@ export default function RightSideMobile() {
           onOpen={() => {}}
         >
           {user && isDashboardPath ? (
-            <DashboardMobile user={user} pathname={pathname} />
+            <DashboardMobile
+              user={user}
+              pathname={pathname}
+              campaign={campaign}
+            />
           ) : (
             <>
               {user && isVolunteerDashboardPath ? (
                 <VolunteerDashboardMobile
                   user={user}
                   pathname={pathname}
+                  campaign={campaign}
                   closeCallback={closeMenu}
                 />
               ) : (
