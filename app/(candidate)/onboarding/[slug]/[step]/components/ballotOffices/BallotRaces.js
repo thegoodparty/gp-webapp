@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import H4 from '@shared/typography/H4';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { OfficeSelectionFilters } from 'app/(candidate)/onboarding/[slug]/[step]/components/ballotOffices/OfficeSelectionFilters';
+import Button from '@shared/buttons/Button';
 
 const fetchRaces = async (zip) => {
   const api = gpApi.ballotData.races;
@@ -78,6 +79,18 @@ export default function BallotRaces(props) {
   if (!zip) {
     return <div>No valid zip</div>;
   }
+
+  const handleKeyDown = (e, electionYear) => {
+    if (e.key === 'Enter') {
+      handleYearClick(electionYear);
+    }
+  };
+
+  const handleYearClick = (electionYear) =>
+    setCollapsedYears({
+      ...collapsedYears,
+      [electionYear]: !collapsedYears[electionYear],
+    });
 
   const handleSelect = (race) => {
     if (race?.id === selected?.id) {
@@ -230,13 +243,11 @@ export default function BallotRaces(props) {
                   (yearFilter && electionYear === yearFilter)) && (
                   <div key={electionYear}>
                     <H4
+                      role="button"
+                      tabIndex={0}
                       className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
-                      onClick={() =>
-                        setCollapsedYears({
-                          ...collapsedYears,
-                          [electionYear]: !collapsedYears[electionYear],
-                        })
-                      }
+                      onClick={handleYearClick}
+                      onKeyDown={(e) => handleKeyDown(e, electionYear)}
                     >
                       {electionYear}
                       {collapsedYears[electionYear] ? (
@@ -263,12 +274,15 @@ export default function BallotRaces(props) {
                 ),
             )}
           {!loading && (
-            <div
-              className="px-4 py-4 cursor-pointer rounded-md transition-colors hover:bg-slate-100 text-center"
+            <Button
               onClick={showCustomModal}
+              color="neutral"
+              variant="text"
+              size="large"
+              className="w-full"
             >
               I can&apos;t see my position
-            </div>
+            </Button>
           )}
         </div>
       )}

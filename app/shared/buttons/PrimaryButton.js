@@ -42,6 +42,7 @@ export default function PrimaryButton({
     'font-medium': true,
     '[&>svg]:inline': true,
     'transition-colors': true,
+    'focus-visible:outline-primary-dark/30': true,
   };
   if (variant === 'contained') {
     baseClass['bg-primary-dark'] = true;

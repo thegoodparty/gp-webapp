@@ -44,13 +44,19 @@ export default function NotificationsDropdown({ user }) {
     }
     toggleCallback();
   };
+
+  const handleKeyPress = (e) => {
+    if (e.key == 'Enter' || (e.key == 'Escape' && open)) handleClick();
+  };
+
   return (
     <div
       className={`mr-2 relative cursor-pointer px-4 `}
       onClick={handleClick}
+      onKeyDown={handleKeyPress}
       id="nav-notifications-dropdown"
     >
-      <div className="relative">
+      <div role="button" tabIndex={0} className="relative">
         <FaBell size={18} />
         {showDot && <NotificationDot />}
       </div>

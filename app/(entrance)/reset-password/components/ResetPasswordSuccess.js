@@ -14,16 +14,12 @@ export default function ResetPasswordSuccess() {
       <div className="rounded-full mx-auto my-16 h-[120px] w-[120px] flex items-center justify-center bg-green">
         <CheckRounded className="text-8xl text-white" />
       </div>
-      <Link href="/login">
-        <Button size="large" className="w-full">
-          Login
-        </Button>
-      </Link>
-      <Link href="/">
-        <Button variant="outlined" size="large" className="mt-4 w-full">
-          Return to GoodParty.org
-        </Button>
-      </Link>
+      <Button href="/login" size="large" className="w-full">
+        Login
+      </Button>
+      <Button href="/" variant="outlined" size="large" className="mt-4 w-full">
+        Return to GoodParty.org
+      </Button>
     </>
   );
 }

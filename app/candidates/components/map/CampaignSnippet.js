@@ -12,10 +12,18 @@ export default memo(function CampaignSnippet({
   const { firstName, lastName, avatar, office, state } = campaign;
   const [imageError, setImageError] = useState(false); // State to track image load errors
 
+  function handleKeyPress(e, campaign) {
+    if (e.key == 'Enter') {
+      onSelectCampaign(campaign);
+    }
+  }
+
   return (
     <div className="mx-4 my-2">
       <div
-        className={`flex p-3  rounded-xl hover:bg-info-background border border-gray-200 cursor-pointer ${
+        role="button"
+        tabIndex="0"
+        className={`flex p-3 rounded-xl hover:bg-info-background border border-gray-200 cursor-pointer ${
           selectedCampaign?.slug === campaign.slug
             ? 'bg-info-background'
             : 'bg-white'
@@ -23,6 +31,7 @@ export default memo(function CampaignSnippet({
         onClick={() => {
           onSelectCampaign(campaign);
         }}
+        onKeyDown={(e) => handleKeyPress(e, campaign)}
       >
         <div className="">
           {!imageError && avatar ? (

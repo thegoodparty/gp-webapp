@@ -6,7 +6,7 @@ import FacesSection from './FacesSection';
 import '@shared/inputs/slick.min.css';
 import '@shared/inputs/slick-theme.min.css';
 import CommunitySection from './CommunitySection';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
 import Script from 'next/script';
 

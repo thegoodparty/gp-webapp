@@ -14,7 +14,7 @@ export const FOOTER_COLUMNS = [
         label: 'Volunteer',
         link: '/volunteer',
         id: 'footer-org-volunteer',
-        buttonStyle: { backgroundColor: '#642EFF' },
+        buttonStyle: 'tertiary',
       },
       { label: 'About Us', link: '/about', id: 'footer-org-about-us' },
       { label: 'Our Team', link: '/team', id: 'footer-org-our-team' },
@@ -50,10 +50,7 @@ export const FOOTER_COLUMNS = [
         label: 'Run for office',
         link: '/run-for-office',
         id: 'footer-campaign-run',
-        buttonStyle: {
-          backgroundColor: '#E4F47D',
-          color: 'black',
-        },
+        buttonStyle: 'secondary',
       },
       {
         label: 'Explore offices',

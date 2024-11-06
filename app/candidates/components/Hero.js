@@ -10,7 +10,8 @@ export default memo(function Hero({ count = 0, longState }) {
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>
         <MarketingH1 className="text-center">
-          {numberFormatter(count)}{' '}
+          We Empowered&nbsp;
+          {numberFormatter(count)}
           <Image
             src="/images/heart.svg"
             width={80}
@@ -19,12 +20,12 @@ export default memo(function Hero({ count = 0, longState }) {
             className="mx-3 static inline-block w-12 h-12 lg:w-20 lg:h-20"
             priority
           />
-          Independent Civic Heroes Running in{' '}
-          {longState ? longState : 'the U.S'}.
+          Independent Victories Across {longState ? longState : 'the U.S'}. 🎉
         </MarketingH1>
+
         <MarketingH4 className="mt-8">
-          Learn where Independent, People-Powered, and Anti-Corruption
-          candidates are running and winning nationwide
+          See where GoodParty.org empowered independent candidates won their
+          elections to transform civic leadership in their communities.
         </MarketingH4>
       </MaxWidth>
     </div>

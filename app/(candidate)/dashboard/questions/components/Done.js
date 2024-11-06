@@ -1,9 +1,9 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Confetti from './Confetti';
 import H1 from '@shared/typography/H1';
 import { useEffect } from 'react';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 export default function Done() {
   useEffect(() => {
@@ -12,10 +12,10 @@ export default function Done() {
   return (
     <div className="flex flex-col h-[calc(100vh-216px)] items-center justify-center">
       <H1 className="text-center">You&apos;re all set!</H1>
-      <a href="/dashboard/plan" className="mt-10 block">
-        <PrimaryButton>Back to Dashboard</PrimaryButton>
-      </a>
-      <Confetti button={<PrimaryButton>Done</PrimaryButton>} />
+      <Button href="/dashboard/plan" size="large" className="mt-10 block">
+        Back to Dashboard
+      </Button>
+      <Confetti />
     </div>
   );
 }

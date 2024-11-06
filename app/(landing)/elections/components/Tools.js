@@ -1,3 +1,4 @@
+import Button from '@shared/buttons/Button';
 import WarningButton from '@shared/buttons/WarningButton';
 import Body1 from '@shared/typography/Body1';
 import Image from 'next/image';
@@ -34,9 +35,14 @@ export default function Tools({ negativeMargin = true }) {
                 how the AI Campaign Manager can streamline your campaign
                 strategy.
               </Body1>
-              <Link href="/get-a-demo" id="get-a-demo">
-                <WarningButton>Get a free demo</WarningButton>
-              </Link>
+              <Button
+                href="/get-a-demo"
+                id="get-a-demo"
+                size="large"
+                color="secondary"
+              >
+                Get a free demo
+              </Button>
             </div>
             <div className="col-span-12 md:col-span-6">
               <Image
@@ -76,13 +82,15 @@ export default function Tools({ negativeMargin = true }) {
             <h3 className="text-3xl md:text-5xl font-medium mb-10">
               Try the AI campaign manager today
             </h3>
-            <Link
+            <Button
               href="/run-for-office"
               aria-label="Try the AI campaign manager today"
               id="run-for-office-get-started"
+              size="large"
+              color="secondary"
             >
-              <WarningButton>Get started</WarningButton>
-            </Link>
+              Get started
+            </Button>
           </div>
         </div>
       </div>

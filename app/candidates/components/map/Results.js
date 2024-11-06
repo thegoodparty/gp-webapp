@@ -35,7 +35,7 @@ export default memo(function Results({
               onClick={onZoomOut}
               size="small"
               color="white"
-              className="ml-auto flex gap-2 items-center"
+              className="ml-auto flex gap-2 items-center focus-visible:!outline-primary-main/30"
             >
               <ZoomOutMapRounded className="text-sm" />
               Zoom Out

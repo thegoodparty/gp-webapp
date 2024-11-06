@@ -19,11 +19,9 @@ export default function ForgotPasswordSuccess({ email }) {
       <div className="rounded-full my-16 mx-auto h-[120px] w-[120px] flex items-center justify-center bg-green">
         <CheckRounded className="text-8xl text-white" />
       </div>
-      <Link href="/">
-        <Button size="large" className="w-full">
-          Return to GoodParty.org
-        </Button>
-      </Link>
+      <Button href="/" size="large" className="w-full">
+        Return to GoodParty.org
+      </Button>
     </>
   );
 }

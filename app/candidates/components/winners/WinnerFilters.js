@@ -12,7 +12,7 @@ const levelOptions = [
   { key: 'FEDERAL', label: 'Federal' },
 ];
 
-export default function WinnerFilters({ onChangeFilters, offices }) {
+export default function WinnerFilters({ filters, onChangeFilters, offices }) {
   return (
     <div className="grid grid-cols-12 gap-4  mb-12 lg:mb-24">
       <div className=" col-span-12 lg:col-span-10">
@@ -22,6 +22,7 @@ export default function WinnerFilters({ onChangeFilters, offices }) {
               native
               fullWidth
               variant="outlined"
+              value={filters?.state || ''}
               onChange={(e) => onChangeFilters('state', e.target.value)}
               style={{ paddingTop: '4px' }}
             >
@@ -38,6 +39,7 @@ export default function WinnerFilters({ onChangeFilters, offices }) {
               native
               fullWidth
               variant="outlined"
+              value={filters?.office || ''}
               onChange={(e) => onChangeFilters('office', e.target.value)}
               style={{ paddingTop: '4px' }}
             >
@@ -54,6 +56,7 @@ export default function WinnerFilters({ onChangeFilters, offices }) {
               native
               fullWidth
               variant="outlined"
+              value={filters?.level || ''}
               onChange={(e) => onChangeFilters('level', e.target.value)}
               style={{ paddingTop: '4px' }}
             >

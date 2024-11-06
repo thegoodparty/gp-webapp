@@ -1,6 +1,3 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
 import { IoMdCheckmark } from 'react-icons/io';
 import MarketingH3 from '@shared/typography/MarketingH3';
 import MarketingH4 from '@shared/typography/MarketingH4';
@@ -49,9 +46,9 @@ function PricingCard({ heading, subheading, price, points, color }) {
         ))}
       </ul>
       <div className="mt-14 mb-8 text-4xl font-medium">${price}/month</div>
-      <Link id="free-candidate" href="/sign-up">
-        <Button className="w-full">Get Started</Button>
-      </Link>
+      <Button id="free-candidate" href="/sign-up" className="w-full">
+        Get Started
+      </Button>
     </div>
   );
 }

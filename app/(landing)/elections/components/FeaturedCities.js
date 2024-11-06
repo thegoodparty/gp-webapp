@@ -1,12 +1,11 @@
 'use client';
-import WarningButton from '@shared/buttons/WarningButton';
+import Button from '@shared/buttons/Button';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { slugify } from 'helpers/articleHelper';
 import { isbot } from 'isbot';
 import Image from 'next/image';
-import Link from 'next/link';
 import map from 'public/images/elections/map.png';
 import { useEffect, useState } from 'react';
 
@@ -120,14 +119,13 @@ export default function FeaturedCities() {
                     open elections
                   </div>
                   <div className="mt-6 md:mt-10">
-                    <Link
+                    <Button
                       href={link(city)}
                       id={`view-city-${slugify(city.name, true)}`}
+                      color="secondary"
                     >
-                      <WarningButton size="medium">
-                        View {city.name} elections
-                      </WarningButton>
-                    </Link>
+                      View {city.name} elections
+                    </Button>
                   </div>
                 </div>
               ))}

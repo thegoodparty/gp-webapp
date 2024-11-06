@@ -17,6 +17,7 @@ import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/compon
 import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
 import { useRouter } from 'next/navigation';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button';
 
 const steps = ['1', '2', '3', '4'];
 const emoticons = [
@@ -136,19 +137,24 @@ export default function PledgeStep({ campaign, pledge, step }) {
       </div>
       <div className="flex justify-center mb-10">
         {hubSpotWidgetLoaded && (
-          <div onClick={openChat} className="mr-4">
-            <InfoButton>Ask a question</InfoButton>
-          </div>
-        )}
-        <div onClick={handleSave}>
-          <PrimaryButton
-            disabled={!canSave()}
-            loading={loading}
-            {...trackingAttrs}
+          <Button
+            onClick={openChat}
+            className="mr-4"
+            size="large"
+            color="neutral"
           >
-            Submit
-          </PrimaryButton>
-        </div>
+            Ask a question
+          </Button>
+        )}
+        <Button
+          size="large"
+          onClick={handleSave}
+          disabled={!canSave()}
+          loading={loading}
+          {...trackingAttrs}
+        >
+          Submit
+        </Button>
       </div>
     </div>
   );

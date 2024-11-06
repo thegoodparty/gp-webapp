@@ -1,8 +1,7 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 import Body1 from '@shared/typography/Body1';
 import MarketingH5 from '@shared/typography/MarketingH5';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function Banner({ banner, idIndex = '1' }) {
   const {
@@ -32,16 +31,16 @@ export default function Banner({ banner, idIndex = '1' }) {
         </div>
 
         {buttonLink && buttonLabel && (
-          <Link
+          <Button
             id={bannerId}
             href={buttonLink}
             target={isExternalLink ? '_blank' : '_self'}
             rel={isExternalLink ? 'noopener noreferrer nofollow' : undefined}
+            className="mb-8 mt-4 md:mb-0 self-start"
+            size="large"
           >
-            <PrimaryButton className="mb-8 mt-4 md:mb-0">
-              {buttonLabel}
-            </PrimaryButton>
-          </Link>
+            {buttonLabel}
+          </Button>
         )}
       </div>
 

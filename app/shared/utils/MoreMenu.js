@@ -18,7 +18,12 @@ export const MoreMenu = ({ onClose = (menuItem) => {}, menuItems = [] }) => {
   return (
     <>
       <MdMoreVert
+        role="button"
+        tabIndex={0}
         onClick={handleMenuAnchorClick}
+        onKeyDown={(e) =>
+          (e.key === 'Enter' || e.key === ' ') && handleMenuAnchorClick(e)
+        }
         className="text-2xl cursor-pointer"
       />
       <Menu

@@ -58,7 +58,12 @@ export default function PlanDisplay({
               ) : (
                 <div dangerouslySetInnerHTML={{ __html: plan?.content }} />
               )}
-              <div className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-indigo-500 cursor-pointer hidden-for-print">
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && setEdit()}
+                className="absolute bottom-2 right-2 rounded-full w-10 h-10 flex items-center justify-center bg-indigo-500 cursor-pointer hidden-for-print"
+              >
                 <FaPencilAlt />
               </div>
             </div>

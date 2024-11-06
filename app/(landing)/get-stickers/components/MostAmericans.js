@@ -1,8 +1,7 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import Button from '@shared/buttons/Button';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Body1 from '@shared/typography/Body1';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function MostAmericans() {
   return (
@@ -78,11 +77,13 @@ export default function MostAmericans() {
             </div>
           </div>
           <div className="text-center md:w-56 mx-auto">
-            <Link href="/get-stickers#get-stickers">
-              <PrimaryButton className="mt-8" fullWidth>
-                Send Me Stickers!
-              </PrimaryButton>
-            </Link>
+            <Button
+              href="/get-stickers#get-stickers"
+              size="large"
+              className="mt-8 w-full"
+            >
+              Send Me Stickers!
+            </Button>
           </div>
         </MaxWidth>
       </section>

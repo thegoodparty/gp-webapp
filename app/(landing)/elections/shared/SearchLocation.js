@@ -1,7 +1,6 @@
 'use client';
 
 import { InputAdornment, Select } from '@mui/material';
-import SuccessButton from '@shared/buttons/SuccessButton';
 import H2 from '@shared/typography/H2';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -11,6 +10,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
+import Button from '@shared/buttons/Button';
 
 const fetchState = async (state) => {
   const api = gpApi.race.byState;
@@ -209,14 +209,15 @@ export default function SearchLocation({ withHeader = false, initialState }) {
         </div>
         <div className="col-span-12 md:col-span-3">
           <div id="location-search-go">
-            <SuccessButton
+            <Button
               id="election-click-go"
-              style={{ padding: '12px 20px', marginTop: '4px' }}
+              size="large"
+              color="success"
               disabled={state.state === ''}
               onClick={handleSubmit}
             >
               Go
-            </SuccessButton>
+            </Button>
           </div>
         </div>
       </div>

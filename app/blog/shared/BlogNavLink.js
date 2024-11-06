@@ -13,12 +13,11 @@ export default function BlogNavLink({
     : 'bg-indigo-200 hover:bg-indigo-300';
 
   return (
-    <Link href={href}>
-      <button
-        className={`rounded-md text-sm py-2 px-4 mr-2 no-underline cursor ${colorClasses}`}
-      >
-        {children}
-      </button>
+    <Link
+      href={href}
+      className={`rounded-md text-sm py-2 px-4 mr-2 no-underline cursor focus-visible:outline-primary-dark/40 outline-offset-0 ${colorClasses}`}
+    >
+      {children}
     </Link>
   );
 }

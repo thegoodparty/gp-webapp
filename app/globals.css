@@ -7,6 +7,10 @@
   outline: none;
 }
 
+*:focus-visible {
+  outline: 3px solid color-mix(in srgb, currentColor 40%, transparent);
+}
+
 body {
   width: 100%;
   height: 100%;

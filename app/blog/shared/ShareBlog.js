@@ -58,7 +58,7 @@ export default function ShareBlog({ className }) {
         <Fragment key={channel.label}>
           {channel.link && (
             <a
-              className="w-8 h-8 mr-4 rounded-full bg-blue-500 text-white inline-flex justify-center items-center"
+              className="w-8 h-8 mr-4 rounded-full bg-blue-500 text-white inline-flex justify-center items-center outline-offset-0 focus-visible:outline-primary-dark/40"
               href={channel.link}
               target="_blank"
               rel="noopener noreferrer nofollow"

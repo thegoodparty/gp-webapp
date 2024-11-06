@@ -49,7 +49,7 @@ export default function Footer() {
                     <a
                       id={link.id}
                       href={link.link}
-                      className="pl-3"
+                      className="ml-3"
                       data-cy="footer-link"
                     >
                       {link.label}
@@ -57,7 +57,7 @@ export default function Footer() {
                   ) : (
                     <Link
                       id={link.id}
-                      className="pl-3"
+                      className="ml-3"
                       href={link.link}
                       data-cy="footer-link"
                     >
@@ -132,6 +132,7 @@ export default function Footer() {
                   rel="noopener noreferrer nofollow"
                   title={social.label}
                   data-cy="footer-link"
+                  className="inline-block"
                 >
                   {social.icon}
                 </a>

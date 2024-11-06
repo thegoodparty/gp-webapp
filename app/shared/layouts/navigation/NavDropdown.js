@@ -38,21 +38,15 @@ function NavDropdown({ open, dataTestId = '', toggleCallback, links, label = '',
                 href={link.href}
                 id={`nav-${link.id}`}
                 key={link.id}
-                className="no-underline font-medium"
+                className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
                 rel={`${link.external ? 'noopener noreferrer nofollow' : ''}`}
                 target={`${link.external ? '_blank' : ''}`}
               >
-                <div
-                  data-cy="header-link"
-                  data-testid={link.dataTestId}
-                  className="py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
-                >
-                  <div className="flex items-center">
-                    {link.icon}
-                    <div className="ml-3">{link.label}</div>
-                  </div>
-                  {link.external && <OpenInNewRounded />}
+                <div className="flex items-center" data-testid={link.dataTestId}>
+                  {link.icon}
+                  <div className="ml-3">{link.label}</div>
                 </div>
+                {link.external && <OpenInNewRounded />}
               </Link>
             ))}
           </div>
