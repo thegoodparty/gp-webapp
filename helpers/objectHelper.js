@@ -13,7 +13,7 @@ export function isObjectEqual(x, y, deepCompare = false) {
   return x && y && tx === 'object' && tx === ty
     ? ok(x).length === ok(y).length &&
         ok(x).every((key) =>
-          deepCompare ? deepEqual(x[key], y[key]) : x[key] === y[key],
+          deepCompare ? isObjectEqual(x[key], y[key], true) : x[key] === y[key],
         )
     : x === y;
 }
