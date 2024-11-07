@@ -54,7 +54,6 @@ export default async function sitemap() {
     '/privacy',
     '/work-with-us',
     '/contact',
-    '/pricing',
     '/political-terms',
     '/volunteer',
     '/academy',

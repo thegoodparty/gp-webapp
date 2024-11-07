@@ -113,9 +113,9 @@ export default function IssuesSection(props) {
                 />
                 {issue.type === 'position' ? (
                   <>
-                    <div className="opacity-40 p-4 flex mb-4">
-                      <MdCheckBox className="mt-1 mr-2" />
-                      {issue.position?.name}
+                    <div className="opacity-40 p-4 mb-4">
+                      <MdCheckBox className="float-left mt-[2px] w-4 h-4" />
+                      <div className="ml-5">{issue.position?.name}</div>
                     </div>
                     <TextField
                       disabled
@@ -129,9 +129,9 @@ export default function IssuesSection(props) {
                     />
                   </>
                 ) : (
-                  <div className="opacity-40 p-4 flex">
-                    <MdCheckBox className="mt-1 mr-2" />
-                    <div>{issue.position}</div>
+                  <div className="opacity-40 p-4">
+                    <MdCheckBox className="float-left mt-[2px] w-4 h-4" />
+                    <div className="ml-5">{issue.position}</div>
                   </div>
                 )}
                 <div className="flex justify-end mt-8">
