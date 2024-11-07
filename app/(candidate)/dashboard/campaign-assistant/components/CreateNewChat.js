@@ -11,10 +11,15 @@ export default function CreateNewChat() {
   };
 
   return (
-    <Button variant="primary" onClick={handleCreate} className="w-full">
+    <Button
+      size="large"
+      color="tertiary"
+      onClick={handleCreate}
+      className="!px-3 md:!px-6"
+    >
       <span className="flex items-center">
-        <FiPlus />
-        <span className="ml-2">New Chat</span>
+        <FiPlus size={24} />
+        <span className="ml-2 hidden md:block">New Chat</span>
       </span>
     </Button>
   );
