@@ -28,12 +28,12 @@ export default function ChatFeedback() {
   return (
     <div className="flex items-center">
       <div
-        className={`mr-3 cursor-pointer rounded-full hover:bg-indigo-700 hover:bg-opacity-10 p-2 ${
+        className={`mr-1 cursor-pointer rounded-full hover:bg-indigo-700 hover:bg-opacity-10 p-2 ${
           type === 'positive' ? 'bg-indigo-700 bg-opacity-10' : ''
         }`}
         onClick={handleSubmitPositive}
       >
-        <IoMdThumbsUp className="" size={18} />
+        <IoMdThumbsUp size={18} />
       </div>
       <div
         className={`mr-3 cursor-pointer rounded-full hover:bg-indigo-700 hover:bg-opacity-10 p-2 ${
@@ -44,7 +44,7 @@ export default function ChatFeedback() {
           setType('negative');
         }}
       >
-        <IoMdThumbsDown size={18} className=" cursor-pointer" />
+        <IoMdThumbsDown size={18} />
       </div>
       <Modal
         title="Feedback"
