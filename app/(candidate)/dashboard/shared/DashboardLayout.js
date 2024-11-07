@@ -28,7 +28,7 @@ export default function DashboardLayout({
             campaign={campaign}
           />
         </div>
-        <main className="lg:ml-8 flex-1">
+        <main className="lg:ml-6 flex-1">
           {showAlert && <AlertSection campaign={campaign} />}
           {children}
         </main>

@@ -30,7 +30,7 @@ export default function EmptyChat() {
     handleNewInput(prompt.prompt);
   };
   return (
-    <div className="text-center w-full min-h-[calc(100vh-56px-220px)] md:min-h-[calc(100vh-56px-120px)] flex items-center justify-center">
+    <div className="text-center w-full h-full flex items-center justify-center">
       <div>
         <div className="flex justify-center text-indigo-500 mb-6">
           <BsStars size={48} />

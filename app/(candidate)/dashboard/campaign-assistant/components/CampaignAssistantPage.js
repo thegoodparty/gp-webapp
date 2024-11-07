@@ -4,22 +4,24 @@ import Chat from './Chat';
 import ChatInput from './ChatInput';
 import CreateNewChat from './CreateNewChat';
 import { ChatProvider } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatProvider';
+import H2 from '@shared/typography/H2';
+import Paper from '@shared/utils/Paper';
 
 const CampaignAssistantPage = (props) => (
   <DashboardLayout {...props} showAlert={false}>
     <ChatProvider>
-      <div className="px-4 max-w-[960px] mx-auto">
-        <div className="flex flex-col md:flex-row-reverse">
-          <div className="md:pl-4">
-            <CreateNewChat />
-            <ChatHistory />
-          </div>
-          <div className="flex flex-col w-full h-[calc(100vh-164px)] md:h-[calc(100vh-72px)] overscroll-none">
-            <Chat />
-            <ChatInput />
-          </div>
+      <Paper className="h-[calc(100vh-72px)] flex flex-col">
+        <header className="flex items-center gap-4 mb-6">
+          <H2 className="grow">Campaign Assistant</H2>
+          <ChatHistory />
+          <CreateNewChat />
+        </header>
+
+        <div className="grow overflow-hidden rounded-md bg-indigo-100 border border-black/[0.12] flex flex-col relative">
+          <Chat />
+          <ChatInput />
         </div>
-      </div>
+      </Paper>
     </ChatProvider>
   </DashboardLayout>
 );
