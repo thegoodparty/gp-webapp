@@ -7,7 +7,6 @@ import AlertSection from '../components/AlertSection';
 export default function DashboardLayout({
   children,
   pathname,
-  candidateSlug,
   pathToVictory,
   campaign,
   showAlert = true,
@@ -22,14 +21,13 @@ export default function DashboardLayout({
         <div className="hidden lg:block">
           <DashboardMenu
             pathname={pathname}
-            candidateSlug={candidateSlug}
             pathToVictory={pathToVictory}
             user={user}
             campaign={campaign}
           />
         </div>
         <main className="lg:ml-8 flex-1">
-          {showAlert && <AlertSection campaign={campaign} />}
+          {campaign && showAlert && <AlertSection campaign={campaign} />}
           {children}
         </main>
       </div>
