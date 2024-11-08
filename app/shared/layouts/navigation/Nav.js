@@ -29,8 +29,9 @@ export default async function Nav() {
           >
             <div className="flex items-center">
               <HeaderLogo />
-              <Body2 className="pl-2 italic xl:block lg:hidden md:block ">
-                empowering independents to run , win and serve!
+              <Body2 className="pl-2 italic xl:block lg:hidden xs:block hidden">
+                empowering independents to run
+                <span className="hidden md:inline">, win</span> and serve!
               </Body2>
               <LeftSide />
             </div>
