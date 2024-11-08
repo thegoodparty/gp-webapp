@@ -18,6 +18,8 @@ import { useUser } from '@shared/hooks/useUser';
 import { P2vSection } from './p2v/P2vSection';
 import ContactMethodsSection from './contactMethods/ContactMethodsSection';
 import PrimaryResultModal from './PrimaryResultModal';
+import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign';
+import LoadingAnimation from '@shared/utils/LoadingAnimation';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -39,30 +41,32 @@ export async function fetchUpdateHistory() {
   }
 }
 
-export default function DashboardPage(props) {
-  const { campaign } = props;
+export default function DashboardPage({ pathname }) {
   const [_, setUser] = useUser();
+  const [campaign, setCampaign] = useState(null);
 
-  const { pathToVictory, goals, data, details } = campaign;
-  const { reportedVoterGoals } = data || {};
-  const { primaryElectionDate, primaryResult: storedPrimaryResult } =
-    details || {};
+  const { pathToVictory, goals, details } = campaign || {};
+  const { primaryElectionDate } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
   const [primaryResultState, setPrimaryResultState] = useState({
     modalOpen: false,
     modalDismissed: false,
-    primaryResult: storedPrimaryResult,
+    primaryResult: undefined,
   });
 
   const officeName =
-    details.office.toLowerCase() === 'other'
-      ? details.otherOffice
-      : details.office;
+    details?.office.toLowerCase() === 'other'
+      ? details?.otherOffice
+      : details?.office;
 
   const [state, setState] = useState({
-    doorKnocking: reportedVoterGoals?.doorKnocking || 0,
-    calls: reportedVoterGoals?.calls || 0,
-    digital: reportedVoterGoals?.digital || 0,
+    doorKnocking: 0,
+    calls: 0,
+    digital: 0,
+    directMail: 0,
+    digitalAds: 0,
+    text: 0,
+    events: 0,
   });
 
   const loadHistory = async () => {
@@ -82,7 +86,17 @@ export default function DashboardPage(props) {
   };
 
   useEffect(() => {
-    if (campaign) {
+    if (campaign) return;
+
+    loadCampaign();
+
+    async function loadCampaign() {
+      const { campaign } = await fetchUserClientCampaign();
+      setCampaign(campaign);
+
+      const reportedVoterGoals = campaign.data?.reportedVoterGoals;
+      const storedPrimaryResult = campaign.details?.primaryResult;
+
       setState({
         doorKnocking: reportedVoterGoals?.doorKnocking || 0,
         calls: reportedVoterGoals?.calls || 0,
@@ -92,13 +106,20 @@ export default function DashboardPage(props) {
         text: reportedVoterGoals?.text || 0,
         events: reportedVoterGoals?.events || 0,
       });
+
+      setPrimaryResultState({
+        modalOpen: false,
+        modalDismissed: false,
+        primaryResult: storedPrimaryResult,
+      });
+
       loadHistory();
       updateUserCookie();
     }
-  }, [campaign]);
+  }, []);
 
   const electionDate = details?.electionDate || goals?.electionDate;
-  const { voterContactGoal, voteGoal, voterMap } = pathToVictory || {};
+  const { voterContactGoal, voteGoal } = pathToVictory || {};
   let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
   const now = new Date();
   let resolvedDate = electionDate;
@@ -163,27 +184,35 @@ export default function DashboardPage(props) {
   );
 
   const primaryResultCloseCallback = useCallback((selectedResult) => {
-    setPrimaryResultState((state) => {
-      if (selectedResult) {
-        // user selected their primary election result
-        return {
-          ...state,
-          modalOpen: false,
+    if (selectedResult) {
+      // user selected their primary election result
+      setPrimaryResultState((state) => ({
+        ...state,
+        modalOpen: false,
+        primaryResult: selectedResult,
+      }));
+
+      //update local campaign object
+      setCampaign((campaign) => ({
+        ...campaign,
+        details: {
+          ...campaign.details,
           primaryResult: selectedResult,
-        };
-      } else {
-        // user pressed Cancel to dismiss modal for now
-        return {
-          modalOpen: false,
-          modalDismissed: true,
-          primaryResult: undefined,
-        };
-      }
-    });
+        },
+      }));
+    } else {
+      // user pressed Cancel to dismiss modal for now
+      setPrimaryResultState({
+        modalOpen: false,
+        modalDismissed: true,
+        primaryResult: undefined,
+      });
+    }
   }, []);
 
   const childProps = {
-    ...props,
+    campaign,
+    pathname,
     contactGoals,
     weeksUntil,
     reportedVoterGoals: state,
@@ -196,31 +225,38 @@ export default function DashboardPage(props) {
 
   return (
     <DashboardLayout {...childProps}>
-      <div>
-        {contactGoals ? (
-          <>
-            {(weeksUntil.weeks < 0 && resolvedDate !== primaryElectionDate) ||
-            primaryResultState.primaryResult === 'lost' ? (
-              <ElectionOver />
-            ) : (
+      {campaign ? (
+        <>
+          <div>
+            {contactGoals ? (
               <>
-                <P2vSection {...childProps} />
-                <ContactMethodsSection {...childProps} />
-                <UpdateHistorySection {...childProps} />
+                {(weeksUntil.weeks < 0 &&
+                  resolvedDate !== primaryElectionDate) ||
+                primaryResultState.primaryResult === 'lost' ? (
+                  <ElectionOver />
+                ) : (
+                  <>
+                    <P2vSection {...childProps} />
+                    <ContactMethodsSection {...childProps} />
+                    <UpdateHistorySection {...childProps} />
+                  </>
+                )}
               </>
+            ) : (
+              <EmptyState campaign={campaign} />
             )}
-          </>
-        ) : (
-          <EmptyState campaign={campaign} />
-        )}
-      </div>
-      {primaryElectionDate && (
-        <PrimaryResultModal
-          open={primaryResultState.modalOpen}
-          onClose={primaryResultCloseCallback}
-          electionDate={electionDate}
-          officeName={officeName}
-        />
+          </div>
+          {primaryElectionDate && (
+            <PrimaryResultModal
+              open={primaryResultState.modalOpen}
+              onClose={primaryResultCloseCallback}
+              electionDate={electionDate}
+              officeName={officeName}
+            />
+          )}
+        </>
+      ) : (
+        <LoadingAnimation title="Loading your dashboard" fullPage={false} />
       )}
     </DashboardLayout>
   );
