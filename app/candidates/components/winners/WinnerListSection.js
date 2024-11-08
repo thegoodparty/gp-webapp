@@ -29,18 +29,30 @@ export default memo(function WinnerListSection() {
     level: '',
   });
 
-  const onChangeFilters = (key, value) => {
-    setFilters({ [key]: value });
+  const onChangeFilters = (newFilters) => {
+    setFilters(newFilters);
 
     const filteredCampaigns = allCampaigns.filter((campaign) => {
-      return (
-        (key === 'state' ? campaign.state === value || value === '' : true) &&
-        (key === 'office' ? campaign.office === value || value === '' : true) &&
-        (key === 'level'
-          ? campaign.ballotLevel === value || value === ''
-          : true)
-      );
+      const { state, office, level } = newFilters;
+
+      const stateMatch =
+        typeof state === 'string' && state !== ''
+          ? campaign.state === state
+          : true;
+      const officeMatch =
+        typeof office === 'string' && office !== ''
+          ? campaign.office === office
+          : true;
+      const levelMatch =
+        typeof level === 'string' && level !== ''
+          ? campaign.ballotLevel === level
+          : true;
+
+      if (stateMatch && officeMatch && levelMatch) {
+        return campaign;
+      }
     });
+
     setCampaigns(filteredCampaigns);
   };
 
