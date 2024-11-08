@@ -2,6 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
+import { numberFormatter } from 'helpers/numberHelper';
 
 const fetchCount = async (onlyWinners = false) => {
   const api = gpApi.campaign.mapCount;
@@ -10,8 +11,12 @@ const fetchCount = async (onlyWinners = false) => {
 };
 
 export async function generateMetadata({ params, searchParams }) {
+  const { count } = await fetchCount(true);
+  const title = `${numberFormatter(
+    count,
+  )} Wins by Independents across the U.S. 🎉`;
   const meta = pageMetaData({
-    title: 'GoodParty.org Certified Independent Candidates',
+    title,
     description:
       'Find independent, people-powered, and anti-corruption candidates running for office in your area. Search by office type, name, party affiliation, and more.',
     slug: `/candidates`,
