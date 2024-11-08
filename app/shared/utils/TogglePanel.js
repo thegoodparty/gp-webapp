@@ -37,6 +37,7 @@ export default function TogglePanel({
         className={`bg-slate-200 py-5 px-7 flex items-center justify-between cursor-pointer mt-2 ${
           open ? 'rounded-t-xl' : 'rounded-xl'
         }`}
+        data-testid="faq-expandable"
         onClick={toggleOpen}
         {...restProps}
       >

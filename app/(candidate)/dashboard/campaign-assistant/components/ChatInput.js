@@ -4,9 +4,11 @@ import { MdSend } from 'react-icons/md';
 import { useState } from 'react';
 import { GiSandsOfTime } from 'react-icons/gi';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+import { Fab } from '@mui/material';
+import { MdKeyboardArrowUp } from 'react-icons/md';
 
 export default function ChatInput() {
-  const { handleNewInput, loading } = useChat();
+  const { handleNewInput, loading, scrollUp } = useChat();
   const [text, setText] = useState('');
 
   const onSubmit = async (e) => {
@@ -19,12 +21,17 @@ export default function ChatInput() {
   };
 
   return (
-    <div className="w-full mx-auto pt-4 pb-2 bg-indigo-100 relative px-4 ">
+    <div className="w-full max-w-[960px] px-4 pb-6 self-center relative">
+      <div className="absolute bottom-[10px] pb-6 left-6 min-[1400px]:left-[-40px]">
+        <Fab onClick={scrollUp} size="small" color="primary">
+          <MdKeyboardArrowUp className="text-primary" />
+        </Fab>
+      </div>
       <form noValidate onSubmit={onSubmit}>
         <TextField
           placeholder="Ask me anything about your campaign..."
           fullWidth
-          className="rounded-full bg-white"
+          className="rounded-full bg-white pl-6 min-[1400px]:pl-0"
           value={text}
           disabled={loading}
           onChange={(e) => {

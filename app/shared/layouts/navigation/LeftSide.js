@@ -28,7 +28,7 @@ export default function LeftSide() {
     <div className="items-center hidden lg:flex">
       <NavDropdowns />
       <NavButton href="/about" id="nav-mission" className="lg:ml-3 xl:ml-6">
-        <span className="font-medium text-base">Our Mission</span>
+        <span className="font-medium text-base" data-testid="nav-our-mission">Our Mission</span>
       </NavButton>
     </div>
   );

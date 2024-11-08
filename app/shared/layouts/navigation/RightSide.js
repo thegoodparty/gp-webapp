@@ -84,12 +84,13 @@ export default function RightSide({ campaignStatus }) {
       ) : (
         <>
           <Link href="/login" id="nav-login" className="lg:mr-3 xl:mr-6">
-            <div className="font-medium text-base">Login</div>
+            <div className="font-medium text-base" data-testid="nav-login">Login</div>
           </Link>
           <NavButton
             href="/sign-up"
             id="nav-sign-up"
             className="lg:mr-3 xl:mr-6"
+            data-testid="nav-sign-up"
           >
             <span className="font-medium text-base">Sign up</span>
           </NavButton>
@@ -97,6 +98,7 @@ export default function RightSide({ campaignStatus }) {
             href="/run-for-office"
             id="nav-get-tools"
             className="!py-2 border-none"
+            data-testid="nav-get-tools"
           >
             <span className="font-medium text-base">Get Campaign Tools</span>
           </Button>

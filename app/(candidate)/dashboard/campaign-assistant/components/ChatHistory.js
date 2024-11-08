@@ -45,15 +45,15 @@ export default function ChatHistory() {
   return (
     <>
       <Button
+        size="large"
         onClick={() => {
           setOpen(true);
         }}
-        color="neutral"
-        className="bg-white text-black w-full mt-2"
+        className="!px-3 md:!px-6"
       >
         <div className="flex items-center">
-          <MdMenu />
-          <div className="ml-2">View Chat History</div>
+          <MdMenu size={24} />
+          <div className="ml-2 hidden md:block">View Chat History</div>
         </div>
       </Button>
 

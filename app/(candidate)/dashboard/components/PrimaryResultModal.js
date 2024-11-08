@@ -87,7 +87,13 @@ export default function PrimaryResultModal({
   }
 
   return (
-    <Modal open={open} boxClassName="p-16 pt-0" preventBackdropClose hideClose>
+    <Modal
+      open={open}
+      boxClassName="p-16 pt-0"
+      preventEscClose
+      preventBackdropClose
+      hideClose
+    >
       {!formSubmitted ? (
         <form onSubmit={handleSubmit} className="pt-16 max-w-[640px]">
           <H1 className="mb-4 text-center">
