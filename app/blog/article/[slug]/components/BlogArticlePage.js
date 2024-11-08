@@ -59,7 +59,7 @@ export default async function BlogArticlePage({ article }) {
           wrapText={true}
         />
         {mainImage && (
-          <div className="relative min-h-[270px] w-full my-8">
+          <div className="relative min-h-[270px] w-full my-8" data-testid="articleHeroImage">
             <Image
               style={{
                 borderRadius: '10px',
@@ -74,7 +74,7 @@ export default async function BlogArticlePage({ article }) {
             />
           </div>
         )}
-        <Overline className="inline-block bg-purple-500 text-white px-2 py-1 rounded">
+        <Overline className="inline-block bg-purple-500 text-white px-2 py-1 rounded" data-testid="articleCategory">
           {section.fields?.title}
         </Overline>
         <MarketingH2 className="mt-8 mb-4 !text-4xl" asH1>
