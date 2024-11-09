@@ -4,6 +4,7 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import Button from '@shared/buttons/Button';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import Link from 'next/link';
 
 const fetchWinnerCount = async () => {
   const api = gpApi.campaign.mapCount;
@@ -42,13 +43,15 @@ export default async function Hero() {
           </Button>
         </div>
         <div className="col-span-12 lg:col-span-6 relative h-full">
-          <Image
-            src={bgImg}
-            sizes="50vw"
-            className="object-contain object-right-top"
-            alt=""
-            priority
-          />
+          <Link href="/candidates" title="winners">
+            <Image
+              src={bgImg}
+              sizes="50vw"
+              className="object-contain object-right-top"
+              alt=""
+              priority
+            />
+          </Link>
         </div>
       </div>
     </MaxWidth>
