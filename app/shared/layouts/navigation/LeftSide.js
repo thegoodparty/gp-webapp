@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns';
 import { useMemo } from 'react';
 import NavButton from './NavButton';
+import Body2 from '@shared/typography/Body2';
 
 // list of paths to hide marketing nav
 const HIDE_NAV_PATHS = [
@@ -26,9 +27,12 @@ export default function LeftSide() {
 
   return (
     <div className="items-center hidden lg:flex">
+      
       <NavDropdowns />
       <NavButton href="/about" id="nav-mission" className="lg:ml-3 xl:ml-6">
-        <span className="font-medium text-base" data-testid="nav-our-mission">Our Mission</span>
+        <span className="font-medium text-base" data-testid="nav-our-mission">
+          Our Mission
+        </span>
       </NavButton>
     </div>
   );
