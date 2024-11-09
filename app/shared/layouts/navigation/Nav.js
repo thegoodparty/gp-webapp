@@ -31,7 +31,10 @@ export default async function Nav() {
               <HeaderLogo />
               <Body2 className="pl-2 italic xl:block lg:hidden xs:block hidden">
                 empowering independents to run
-                <span className="hidden md:inline">, win</span> and serve!
+                <span className="hidden md:inline xl:hidden 2xl:inline">
+                  , win
+                </span>{' '}
+                and serve!
               </Body2>
               <LeftSide />
             </div>
