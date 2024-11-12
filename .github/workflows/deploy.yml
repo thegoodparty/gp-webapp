@@ -38,9 +38,34 @@ jobs:
               echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
           fi
 
-      - name: Trigger Playwright Tests in Separate Repo
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+
+      - name: Install Dependencies for gp-webapp
+        run: npm install
+
+      - name: Deploy to Vercel
         run: |
-          curl -X POST -H "Authorization: token ${{ secrets.GH_PAT }}" \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          https://api.github.com/repos/thegoodparty/test-automation/dispatches \
-          -d '{"event_type": "run-playwright-tests", "client_payload": {"base_url": "${{ env.BASE_URL }}"}}'
+          vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Checkout test-automation Repository
+        uses: actions/checkout@v4
+        with:
+          repository: thegoodparty/test-automation
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: test-automation
+
+      - name: Install Playwright Dependencies in test-automation Repo
+        run: |
+          cd test-automation
+          npm install
+          npx playwright install --with-deps
+
+      - name: Run Playwright Tests
+        run: |
+          cd test-automation
+          BASE_URL=https://your-vercel-deployment-url.com npx playwright test
+        env:
+          VERCEL_URL: ${{ steps.deploy.outputs.url }}
