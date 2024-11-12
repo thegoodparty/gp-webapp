@@ -31,7 +31,7 @@ export default async function ArticleFaqs() {
         </Link>
       </Body1>
 
-      <ul className="list-none list-outside p-0 mb-8">
+      <ul className="list-none list-outside p-0 mb-8" data-testid="faqSection">
         {faqs.map((article) => (
           <li key={article.id}>
             <Link

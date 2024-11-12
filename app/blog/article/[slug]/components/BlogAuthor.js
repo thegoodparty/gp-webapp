@@ -22,7 +22,7 @@ export default function BlogAuthor({
   updateDate,
 }) {
   return (
-    <div className="flex gap-x-6 mb-12 mt-8">
+    <div className="flex gap-x-6 mb-12 mt-8" data-testid="blogAuthor">
       <div className="relative w-15 rounded">
         {imageUrl && (
           <Image

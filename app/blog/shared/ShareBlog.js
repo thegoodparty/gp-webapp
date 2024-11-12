@@ -52,7 +52,7 @@ export default function ShareBlog({ className }) {
   ];
 
   return (
-    <div className={`mb-8 ${className}`}>
+    <div className={`mb-8 ${className}`} data-testid="shareBlog">
       <Overline className="mb-4">Share on</Overline>
       {channels.map((channel, index) => (
         <Fragment key={channel.label}>
