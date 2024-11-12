@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
 
       - name: Install Playwright Dependencies in test-automation Repo
