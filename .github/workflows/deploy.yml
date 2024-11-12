@@ -11,9 +11,6 @@ jobs:
       ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
     name: Playwright Functional Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./scripts
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
@@ -53,6 +50,9 @@ jobs:
 
       - name: List Files in Workspace
         run: ls -R
+
+      - name: Debug BASE_URL value
+        run: echo "BASE_URL is ${{ env.BASE_URL }}"
 
       - name: Install Playwright Dependencies in test-automation Repo
         run: |
