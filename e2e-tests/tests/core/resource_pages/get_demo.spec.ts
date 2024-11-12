@@ -20,8 +20,11 @@ test('Verify Get a Demo page', async ({ page }) => {
         await page.goto('/');
         await coreNav(page, 'nav-get-demo');
 
+        // Waits for page to load completely
+        await page.waitForLoadState('networkidle');
+
         // Verify page title
-        await expect(page).toHaveTitle(pageTitle);
+        await expect(page).toHaveTitle(pageTitle, { timeout: 5000 });
 
         // Verify page contents
         await expect(page.getByText(pageHeader)).toBeVisible();
@@ -30,7 +33,7 @@ test('Verify Get a Demo page', async ({ page }) => {
         await checkImgAltText(page, pageImgAltText);
 
         // Verify HubSpot demo calendar
-        await expect(hubSpotLocator).toBeVisible();
+        await expect(hubSpotLocator).toBeVisible({ timeout: 5000 });
         const frame = await hubSpotLocator.contentFrame();
 
         if (!frame) {

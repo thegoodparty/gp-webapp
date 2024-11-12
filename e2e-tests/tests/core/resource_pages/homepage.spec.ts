@@ -14,6 +14,9 @@ test('Verify Homepage', async ({ page }) => {
   try {
     await page.goto('/');
 
+    // Waits for page to load completely
+    await page.waitForLoadState('networkidle');
+
     // Verify page title
     await expect(page).toHaveTitle(pageTitle);
 

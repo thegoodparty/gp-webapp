@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import 'dotenv/config';
 
 module.exports = async () => {
-    const testRunId = await createTestRun('Playwright Test Run', [1,2,4,5,7,8]);
+    const testRunId = await createTestRun('Playwright Test Run', [1,2,4,5,7,8,12,16,17]);
     fs.writeFileSync('testRunId.txt', testRunId.toString());
     console.log(`Test run created with ID: ${testRunId}`);
 };

@@ -28,8 +28,11 @@ test('Verify Explore Offices page', async ({ page }) => {
         await page.goto('/');
         await coreNav(page, 'nav-volunteer');
 
+        // Waits for page to load completely
+        await page.waitForLoadState('networkidle');
+
         // Verify page title
-        await expect(page).toHaveTitle(pageTitle);
+        await expect(page).toHaveTitle(pageTitle, { timeout: 5000 });
 
         // Verify page contents
         await expect(page.getByText(pageHeader)).toBeVisible();

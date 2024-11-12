@@ -29,8 +29,8 @@ export async function coreNav(page, navSelect) {
 
 export async function checkButtons(page, buttonsArray) {
         for (const buttonText of buttonsArray) {
-        const buttonLocators = page.locator('button', { hasText: buttonText});
-        const count = await buttonLocators.count();
+            const buttonLocators = page.locator(`a:has-text("${buttonText}"), button:has-text("${buttonText}")`);
+            const count = await buttonLocators.count();
 
         if (count > 0) {
             await expect(buttonLocators.first()).toBeVisible({ timeout: 5000 });
