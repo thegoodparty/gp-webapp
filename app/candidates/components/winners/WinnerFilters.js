@@ -1,6 +1,8 @@
+'use client';
 import { Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { states } from 'helpers/statesHelper';
+import { useState } from 'react';
 
 const stateOptions = states;
 
@@ -13,6 +15,19 @@ const levelOptions = [
 ];
 
 export default function WinnerFilters({ filters, onChangeFilters, offices }) {
+  const [localFilters, setLocalFlters] = useState(filters);
+
+  const handleLocalChange = (key, val) => {
+    setLocalFlters((current) => ({
+      ...current,
+      [key]: val,
+    }));
+  };
+
+  const handleSubmitChanges = () => {
+    onChangeFilters(localFilters);
+  };
+
   return (
     <div className="grid grid-cols-12 gap-4  mb-12 lg:mb-24">
       <div className=" col-span-12 lg:col-span-10">
@@ -22,8 +37,8 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }) {
               native
               fullWidth
               variant="outlined"
-              value={filters?.state || ''}
-              onChange={(e) => onChangeFilters('state', e.target.value)}
+              value={localFilters?.state || ''}
+              onChange={(e) => handleLocalChange('state', e.target.value)}
               style={{ paddingTop: '4px' }}
             >
               <option value="">All States</option>
@@ -39,8 +54,8 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }) {
               native
               fullWidth
               variant="outlined"
-              value={filters?.office || ''}
-              onChange={(e) => onChangeFilters('office', e.target.value)}
+              value={localFilters?.office || ''}
+              onChange={(e) => handleLocalChange('office', e.target.value)}
               style={{ paddingTop: '4px' }}
             >
               <option value="">All Offices</option>
@@ -56,8 +71,8 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }) {
               native
               fullWidth
               variant="outlined"
-              value={filters?.level || ''}
-              onChange={(e) => onChangeFilters('level', e.target.value)}
+              value={localFilters?.level || ''}
+              onChange={(e) => handleLocalChange('level', e.target.value)}
               style={{ paddingTop: '4px' }}
             >
               <option value="">All Levels</option>
@@ -71,7 +86,11 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }) {
         </div>
       </div>
       <div className=" col-span-12 lg:col-span-2">
-        <PrimaryButton fullWidth className="lg:mt-1">
+        <PrimaryButton
+          fullWidth
+          className="lg:mt-1"
+          onClick={handleSubmitChanges}
+        >
           <div className="py-1 ">Apply Filters</div>
         </PrimaryButton>
       </div>
