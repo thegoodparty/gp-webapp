@@ -28,16 +28,6 @@ jobs:
                          | jq -r '.[0].name')
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Set env BASE_URL based on branch
-        run: |
-          if [[ $BRANCH_NAME == 'master' ]]; then
-              echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
-          elif [[ $BRANCH_NAME == 'qa' ]]; then
-              echo "BASE_URL=https://qa.goodparty.org" >> "$GITHUB_ENV"
-          else
-              echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
-          fi
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -47,8 +37,12 @@ jobs:
         run: npm install
 
       - name: Deploy to Vercel
+        id: deploy
         run: |
           vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Capture Vercel Deployment URL
+        run: echo "BASE_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm)" >> $GITHUB_ENV
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
@@ -66,6 +60,6 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          BASE_URL=https://your-vercel-deployment-url.com npx playwright test
+          npx playwright test
         env:
-          VERCEL_URL: ${{ steps.deploy.outputs.url }}
+          BASE_URL: ${{ env.BASE_URL }}
