@@ -51,6 +51,9 @@ jobs:
           token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
 
+      - name: List Files in Workspace
+        run: ls -R
+
       - name: Install Playwright Dependencies in test-automation Repo
         run: |
           cd test-automation
