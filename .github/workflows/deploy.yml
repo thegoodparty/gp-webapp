@@ -1,0 +1,46 @@
+name: Deployment and Playwright Tests
+
+on:
+  deployment_status:
+
+jobs:
+  test:
+    if: >
+      github.event_name == 'deployment_status' &&
+      github.event.deployment_status.state == 'success' &&
+      ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
+    name: Playwright Functional Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./scripts
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+
+      - name: Install jq (JSON processor)
+        run: sudo apt-get install -y jq
+
+      - name: Fetch branch name from commit SHA
+        run: |
+          BRANCH_NAME=$(curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+                         "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.deployment.ref }}/branches-where-head" \
+                         | jq -r '.[0].name')
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Set env BASE_URL based on branch
+        run: |
+          if [[ $BRANCH_NAME == 'master' ]]; then
+              echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
+          elif [[ $BRANCH_NAME == 'qa' ]]; then
+              echo "BASE_URL=https://qa.goodparty.org" >> "$GITHUB_ENV"
+          else
+              echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
+          fi
+
+      - name: Trigger Playwright Tests in Separate Repo
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.GH_PAT }}" \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          https://api.github.com/repos/thegoodparty/test-automation/dispatches \
+          -d '{"event_type": "run-playwright-tests", "client_payload": {"base_url": "${{ env.BASE_URL }}"}}'
