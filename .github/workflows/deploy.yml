@@ -49,7 +49,7 @@ jobs:
           vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Capture Vercel Deployment URL
-        run: echo "BASE_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm)" >> $GITHUB_ENV
+        run: echo "VERCEL_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm)" >> $GITHUB_ENV
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
