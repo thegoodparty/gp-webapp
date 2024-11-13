@@ -44,6 +44,11 @@ test('Verify Campaign Tools page', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
     }
 });
