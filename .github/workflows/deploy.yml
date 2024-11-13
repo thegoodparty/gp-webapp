@@ -11,6 +11,9 @@ jobs:
       ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
     name: Playwright Functional Test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./scripts
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
@@ -24,6 +27,19 @@ jobs:
                          "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.deployment.ref }}/branches-where-head" \
                          | jq -r '.[0].name')
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Set env BASE_URL based on branch
+        run: |
+          if [[ $BRANCH_NAME == 'master' ]]; then
+              echo "BASE_URL=https://goodparty.org" >> "$GITHUB_ENV"
+          elif [[ $BRANCH_NAME == 'qa' ]]; then
+              echo "BASE_URL=https://qa.goodparty.org" >> "$GITHUB_ENV"
+          else
+              echo "BASE_URL=https://dev.goodparty.org" >> "$GITHUB_ENV"
+          fi
+
+      - name: Debug BASE_URL value
+        run: echo "BASE_URL is ${{ env.BASE_URL }}"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -47,12 +63,6 @@ jobs:
           repository: thegoodparty/test-automation
           token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
-
-      - name: List Files in Workspace
-        run: ls -R
-
-      - name: Debug BASE_URL value
-        run: echo "BASE_URL is ${{ env.BASE_URL }}"
 
       - name: Install Playwright Dependencies in test-automation Repo
         run: |
