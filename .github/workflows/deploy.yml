@@ -15,9 +15,6 @@ jobs:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
 
-      - name: Debug BASE_URL value
-        run: echo "BASE_URL is ${{ env.BASE_URL }}"
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -29,11 +26,11 @@ jobs:
       - name: Deploy to Vercel
         id: deploy
         run: |
-          vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+          vercel --token ${{ secrets.VERCEL_TOKEN }}
 
       - name: Capture Vercel Deployment URL
         run: |
-          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --prod --confirm)
+          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
       - name: Debug BASE_URL value
