@@ -42,11 +42,11 @@ test('Verify Get a Demo page', async ({ page }) => {
 
         // Click the first available date within the calendar
         await frame.locator(`text="${calendarDateTitle}"`).isVisible();
-        await frame.locator('[data-test-id="available-date"]').first().click();
+        await frame.locator('[data-test-id="available-date"]').first().click({ timeout: 10000 });
         
         // click first available time
         await frame.locator(`text="${calendarTimeTitle}"`).isVisible();
-        await frame.locator('[data-test-id="time-picker-btn"]').first().click();
+        await frame.locator('[data-test-id="time-picker-btn"]').first().click({ timeout: 10000 });
 
         // Verify "Your Information" page
         await frame.locator(`text="${calendarInfoTitle}"`).isVisible();
