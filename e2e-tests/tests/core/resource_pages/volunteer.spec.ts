@@ -25,7 +25,7 @@ test('Verify Explore Offices page', async ({ page }) => {
     const volunteerConfirm = /Thank you! we will be in touch soon./
 
     try {
-        await page.goto('/');
+        await page.goto(process.env.BASE_URL);
         await coreNav(page, 'nav-volunteer');
 
         // Waits for page to load completely

@@ -20,7 +20,7 @@ test('Verify Blog page', async ({ page }) => {
     ];
 
     try {
-        await page.goto('/');
+        await page.goto(process.env.BASE_URL);
         await coreNav(page, 'nav-blog');
 
         // Waits for page to load completely
