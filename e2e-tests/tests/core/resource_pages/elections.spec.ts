@@ -15,7 +15,7 @@ test('Verify Explore Offices page', async ({ page }) => {
     ];
 
     try {
-        await page.goto('/');
+        await page.goto(process.env.BASE_URL);
         await coreNav(page, 'nav-explore-offices');
 
         // Waits for page to load completely

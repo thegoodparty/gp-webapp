@@ -17,7 +17,7 @@ test('Verify Get a Demo page', async ({ page }) => {
     const calendarInfoTitle = /Your information/
 
     try {
-        await page.goto('/');
+        await page.goto(process.env.BASE_URL);
         await coreNav(page, 'nav-get-demo');
 
         // Waits for page to load completely
