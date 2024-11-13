@@ -11,15 +11,9 @@ jobs:
       ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
     name: Playwright Functional Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./scripts
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
-
-      - name: Install jq (JSON processor)
-        run: sudo apt-get install -y jq
 
       - name: Fetch branch name from commit SHA
         run: |
@@ -63,6 +57,9 @@ jobs:
           repository: thegoodparty/test-automation
           token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
+
+      - name: List Files in Workspace
+        run: ls -R
 
       - name: Install Playwright Dependencies in test-automation Repo
         run: |
