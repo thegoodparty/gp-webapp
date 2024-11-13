@@ -12,8 +12,8 @@ test('Verify Homepage', async ({ page }) => {
   const caseId = 1;
 
   try {
-    await page.goto(process.env.BASE_URL);
-
+    await page.goto('/');
+    
     // Waits for page to load completely
     await page.waitForLoadState('networkidle');
 
