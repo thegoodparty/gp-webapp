@@ -18,7 +18,7 @@ function GpHead({ title, description, image, slug = '/' }) {
       ) : (
         <meta
           property="og:image"
-          content="https://assets.goodparty.org/gp-share.jpg"
+          content="https://assets.goodparty.org/gp-share.png"
         />
       )}
       <link
