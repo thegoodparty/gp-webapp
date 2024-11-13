@@ -1,7 +1,7 @@
 const pageMetaData = ({
   title,
   description,
-  image = 'https://assets.goodparty.org/gp-share.jpg',
+  image = 'https://assets.goodparty.org/gp-share.png',
   slug = '/',
 }) => {
   return {
