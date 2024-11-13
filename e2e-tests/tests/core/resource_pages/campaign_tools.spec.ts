@@ -23,7 +23,7 @@ test('Verify Campaign Tools page', async ({ page }) => {
     ];
 
     try {
-        await page.goto('/');
+        await page.goto(process.env.BASE_URL);
         await coreNav(page, 'nav-campaign-tools');
 
         // Waits for page to load completely
