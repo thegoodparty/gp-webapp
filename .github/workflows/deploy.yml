@@ -70,4 +70,6 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test --env BASE_URL=${{ env.BASE_URL }}
+          npx playwright test
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
