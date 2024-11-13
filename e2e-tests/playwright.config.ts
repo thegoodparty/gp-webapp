@@ -5,9 +5,9 @@ export default defineConfig({
   globalTeardown: require.resolve('./globalTeardown.js'),
 
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  retries: 1,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
