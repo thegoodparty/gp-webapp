@@ -8,7 +8,7 @@ import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
 
 const CampaignAssistantPage = (props) => (
-  <DashboardLayout {...props} showAlert={false}>
+  <DashboardLayout {...props} wrapperClassName="w-full" showAlert={false}>
     <ChatProvider>
       <Paper className="h-[calc(100vh-72px)] flex flex-col">
         <header className="flex items-center gap-4 mb-6">

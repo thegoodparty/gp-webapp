@@ -10,6 +10,7 @@ export default function DashboardLayout({
   pathToVictory,
   campaign,
   showAlert = true,
+  wrapperClassName = '',
 }) {
   const [user] = useUser();
 
@@ -26,7 +27,7 @@ export default function DashboardLayout({
             campaign={campaign}
           />
         </div>
-        <main className="lg:ml-6 flex-1">
+        <main className={'lg:ml-6 flex-1 ' + wrapperClassName}>
           {campaign && showAlert && <AlertSection campaign={campaign} />}
           {children}
         </main>
