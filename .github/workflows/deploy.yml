@@ -1,0 +1,67 @@
+name: Deployment and Playwright Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - qa
+      - master
+  push:
+    branches:
+      - develop
+      - qa
+      - master
+
+jobs:
+  test:
+    if: >
+      (github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success') ||
+      (github.event_name == 'pull_request' || github.event_name == 'push')
+    name: Playwright Functional Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+
+      - name: Install Dependencies for gp-webapp
+        run: npm install
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          vercel --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Capture Vercel Deployment URL
+        run: |
+          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
+          echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+
+      - name: Checkout test-automation Repository
+        uses: actions/checkout@v4
+        with:
+          repository: thegoodparty/test-automation
+          token: ${{ secrets.GH_PAT_TEST }}
+          path: test-automation
+
+      - name: Install Playwright Dependencies in test-automation Repo
+        run: |
+          cd test-automation
+          npm install
+          npx playwright install --with-deps
+
+      - name: Run Playwright Tests
+        run: |
+          cd test-automation
+          npx playwright test
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          
+      - name: Report Test Results
+        if: failure()
+        run: |
+          echo "Playwright tests failed. Review the test results."

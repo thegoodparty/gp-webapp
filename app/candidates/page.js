@@ -11,10 +11,7 @@ const fetchCount = async (onlyWinners = false) => {
 };
 
 export async function generateMetadata({ params, searchParams }) {
-  const { count } = await fetchCount(true);
-  const title = `${numberFormatter(
-    count,
-  )} Wins by Independents across the U.S. 🎉`;
+  const title = `3,120 Wins by Independents across the U.S. 🎉`;
   const meta = pageMetaData({
     title,
     description:
@@ -26,7 +23,6 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function Page({ params, searchParams }) {
-  const { count } = await fetchCount(true);
-  const childProps = { count, searchParams };
+  const childProps = { searchParams };
   return <CandidatesPage {...childProps} />;
 }
