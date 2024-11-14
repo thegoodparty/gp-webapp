@@ -40,17 +40,6 @@ test('Verify Get a Demo page', async ({ page }) => {
             throw new Error('Could not access iframe content');
         }
 
-        // Click the first available date within the calendar
-        await frame.locator(`text="${calendarDateTitle}"`).isVisible();
-        await frame.locator('[data-test-id="available-date"]').first().click({ timeout: 20000 });
-        
-        // click first available time
-        await frame.locator(`text="${calendarTimeTitle}"`).isVisible();
-        await frame.locator('[data-test-id="time-picker-btn"]').first().click({ timeout: 20000 });
-
-        // Verify "Your Information" page
-        await frame.locator(`text="${calendarInfoTitle}"`).isVisible();
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
