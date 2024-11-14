@@ -5,10 +5,9 @@ import OptimizeScript from '@shared/scripts/OptimizeScript';
 // import { fetchCandidate } from './candidate/[slug]/page';
 
 const meta = pageMetaData({
-  title:
-    'GoodParty.org | Free tools to change the rules and disrupt the corrupt.',
+  title: 'GoodParty.org | Empowering independents to run, win and serve.',
   description:
-    "Not a political party, we're building tools to change the rules, empowering creatives to mobilize community & disrupt the corrupt two-party system. Join us!",
+    "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",
   slug: '/',
 });
 
