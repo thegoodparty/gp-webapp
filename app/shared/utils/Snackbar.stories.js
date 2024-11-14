@@ -8,6 +8,7 @@ export default {
   tags: ['autodocs'],
   args: {},
   render: (args) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { successSnackbar, errorSnackbar } = useSnackbar();
 
     const show = (type) => {
