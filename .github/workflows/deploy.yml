@@ -1,11 +1,7 @@
 name: Deployment and Playwright Tests
 
 on:
-  pull_request:
-    branches:
-      - master
-      - develop
-      - qa
+  deployment_status:
 
 jobs:
   test:
@@ -13,7 +9,7 @@ jobs:
       github.event_name == 'deployment_status' &&
       github.event.deployment_status.state == 'success' &&
       ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
-    name: Playwright Tests
+    name: Playwright Functional Test
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository to the runner
@@ -62,7 +58,7 @@ jobs:
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
-
+          
       - name: Report Test Results
         if: failure()
         run: |
