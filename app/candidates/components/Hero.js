@@ -10,7 +10,7 @@ export default memo(function Hero({ count = 0, longState }) {
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>
         <h1 className="text-center font-medium text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-          {numberFormatter(count)} Wins by
+          3,120 Wins by
           <div className="md:hidden" />
           <Image
             src="/images/heart.svg"
