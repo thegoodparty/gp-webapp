@@ -54,6 +54,7 @@ const Map = memo(
       const mapRef = useRef(null);
       const markersRef = useRef([]);
       const markerClusterRef = useRef(null);
+      const firstMarkerRender = useRef(true);
 
       useImperativeHandle(
         ref,
@@ -171,7 +172,11 @@ const Map = memo(
           return [];
         }
 
-        return campaigns.map((campaign) => {
+        // bounds object, will use below to move map to contain all markers
+        const fitBounds = firstMarkerRender.current;
+        const fullBounds = new window.google.maps.LatLngBounds();
+
+        const markers = campaigns.map((campaign) => {
           const title = `${campaign.firstName} ${campaign.lastName}`;
           const marker = new window.google.maps.Marker({
             optimized: true,
@@ -205,8 +210,20 @@ const Map = memo(
             infowindow.close();
           });
 
+          // add campaign position to full bounds object
+          if (fitBounds && campaign.position?.lat && campaign.position?.lng)
+            fullBounds.extend(campaign.position);
+
           return marker;
         });
+
+        // fit map to full bounds of all campaigns
+        if (fitBounds) {
+          mapRef.current.fitBounds(fullBounds);
+          firstMarkerRender.current = false;
+        }
+
+        return markers;
       }, [campaigns, onSelectCampaign]);
 
       // Update markers when campaigns change
