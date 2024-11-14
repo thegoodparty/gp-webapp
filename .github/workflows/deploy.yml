@@ -58,3 +58,8 @@ jobs:
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
+          
+      - name: Report Test Results
+        if: failure()
+        run: |
+          echo "Playwright tests failed. Review the test results."
