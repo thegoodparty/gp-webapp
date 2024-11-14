@@ -2,13 +2,22 @@ name: Deployment and Playwright Tests
 
 on:
   deployment_status:
+  pull_request:
+    branches:
+      - develop
+      - qa
+      - master
+  push:
+    branches:
+      - develop
+      - qa
+      - master
 
 jobs:
   test:
     if: >
-      github.event_name == 'deployment_status' &&
-      github.event.deployment_status.state == 'success' &&
-      ! startsWith(github.event.deployment_status.target_url, 'https://gp-styleguide')
+      (github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success') ||
+      (github.event_name == 'pull_request' || github.event_name == 'push')
     name: Playwright Functional Test
     runs-on: ubuntu-latest
     steps:
