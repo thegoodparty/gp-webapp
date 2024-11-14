@@ -60,6 +60,7 @@ jobs:
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
+          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           
       - name: Report Test Results
         if: failure()
