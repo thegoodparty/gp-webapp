@@ -71,14 +71,17 @@ jobs:
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
-          STATUS=$([[ ${{ job.status }} == "success" ]] && echo "Pass" || echo "Fail")
-          COLOR=$([[ ${{ job.status }} == "success" ]] && echo "good" || echo "danger")
+          # Set STATUS and COLOR based on job status
+          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
+          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
+          
+          # Send the Slack notification
           curl -X POST -H "Content-type: application/json" \
           --data '{
-            "text": "Playwright Test Results ("$STATUS")",
+            "text": "Playwright Test Results ('"${STATUS}"')",
             "attachments": [
               {
-                "color": "'"$COLOR"'",
+                "color": "'"${COLOR}"'",
                 "fields": [
                   { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
                   { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
@@ -95,3 +98,4 @@ jobs:
               }
             ]
           }' $SLACK_WORKFLOW_WEBHOOK
+      
