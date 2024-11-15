@@ -86,7 +86,7 @@ jobs:
           TEST_RUN_NAME: ${{ env.TEST_RUN_NAME }}
         run: |
           # Retrieve tests in the run and filter out failed tests
-          TESTRAIL_RESPONSE=$(curl -s -u "your_username:${{ secrets.TESTRAIL_API_KEY }}" "${{ secrets.TESTRAIL_API_URL }}/get_tests/${{ env.TEST_RUN_ID }}")
+          TESTRAIL_RESPONSE=$(curl -s -u "dustin+playwright@goodparty.org:${{ secrets.TESTRAIL_API_KEY }}" "${{ secrets.TESTRAIL_API_URL }}/get_tests/${{ env.TEST_RUN_ID }}")
           FAILED_TESTS=$(echo "$TESTRAIL_RESPONSE" | jq '[.[] | select(.status_id == 5)]')
           FAILED_COUNT=$(echo "$FAILED_TESTS" | jq 'length')
           
