@@ -57,7 +57,7 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test
+          npx playwright test --reporter=json > playwright-results.json
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
