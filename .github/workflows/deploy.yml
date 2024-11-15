@@ -73,7 +73,7 @@ jobs:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
           # Parse Playwright results
-          RESULTS_FILE=test-results/playwright-results.json
+          RESULTS_FILE=playwright-results.json
           TOTAL_TESTS=$(jq '.stats.expected' $RESULTS_FILE)
           FAILED_COUNT=$(jq '.stats.unexpected' $RESULTS_FILE)
           RUN_DURATION=$(jq '.stats.duration' $RESULTS_FILE)
