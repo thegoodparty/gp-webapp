@@ -28,6 +28,19 @@ const createNewUser = async ({ firstName, lastName, email, role }) => {
     return false;
   }
 };
+
+export const sendSetPasswordEmail = async (userId) => {
+  try {
+    const payload = {
+      userId,
+    };
+    return await gpFetch(gpApi.campaign.adminCreateEmail, payload);
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+};
+
 export const AddUserButton = ({ onClick = () => {} }) => {
   const { successSnackbar, errorSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
@@ -57,6 +70,11 @@ export const AddUserButton = ({ onClick = () => {} }) => {
     if (!newUser) {
       errorSnackbar('Error creating new user');
       return;
+    }
+
+    if (newUser.role === USER_ROLES.SALES) {
+      // send set password email
+      sendSetPasswordEmail(newUser.id);
     }
     successSnackbar('User created successfully');
     closeModal();
