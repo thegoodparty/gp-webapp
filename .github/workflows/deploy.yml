@@ -57,65 +57,41 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          mkdir -p test-results
-          chmod -R u+w test-results
-          npx playwright test --reporter=json > test-results/playwright-results.json
+          npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
-          
+
       - name: Report Test Results
         if: failure()
         run: |
           echo "Playwright tests failed. Review the test results."
           
-      - name: Notify Slack Workflow with Test Results
-        if: always()
+      - name: Notify Slack Workflow
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
-          # Locate results file
-          RESULTS_FILE=test-results/playwright-results.json
-          if [ ! -f "$RESULTS_FILE" ]; then
-            echo "{}" > "$RESULTS_FILE"
-            echo "Results file not found. Created an empty file."
-          fi
-
-          # Parse Playwright results
-          TOTAL_TESTS=$(jq '.stats.expected' $RESULTS_FILE)
-          FAILED_COUNT=$(jq '.stats.unexpected' $RESULTS_FILE)
-          RUN_DURATION=$(jq '.stats.duration' $RESULTS_FILE)
-          FAILED_SUMMARY=$(jq -r '.suites[].specs[].tests[] | select(.results[].status == "unexpected") | "- \(.title)"' $RESULTS_FILE | tr '\n' ',' | sed 's/,$//')
-
-          # Convert duration to seconds
-          RUN_DURATION_SECS=$(awk "BEGIN {print $RUN_DURATION / 1000}")
-
-          # Determine overall run status
-          if [ "$FAILED_COUNT" -gt 0 ]; then
-            RUN_STATUS="failed"
-          else
-            RUN_STATUS="passed"
-          fi
-
-          # Generate the Slack notification
+          STATUS=$([[ ${{ job.status }} == "success" ]] && echo "Pass" || echo "Fail")
+          COLOR=$([[ ${{ job.status }} == "success" ]] && echo "good" || echo "danger")
           curl -X POST -H "Content-type: application/json" \
           --data '{
-            "text": "Playwright Test Results",
+            "text": "Playwright Test Results ("$STATUS")",
             "attachments": [
               {
-                "color": "'"$(if [ "$FAILED_COUNT" -gt 0 ]; then echo "danger"; else echo "good"; fi)"'",
+                "color": "'"$COLOR"'",
                 "fields": [
                   { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
                   { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
-                  { "title": "Total Tests", "value": "'"$TOTAL_TESTS"'", "short": true },
-                  { "title": "Failed Tests", "value": "'"$FAILED_COUNT"'", "short": true },
-                  { "title": "Duration", "value": "'"${RUN_DURATION_SECS}s"'", "short": true }
+                  { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
+                ],
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "View Test Runs",
+                    "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
+                    "style": "primary"
+                  }
                 ]
-              },
-              {
-                "title": "Failed Tests",
-                "text": "'"$FAILED_SUMMARY"'",
-                "color": "danger"
               }
             ]
           }' $SLACK_WORKFLOW_WEBHOOK
