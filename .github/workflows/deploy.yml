@@ -57,7 +57,9 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test --reporter=json > playwright-results.json
+          mkdir -p test-results
+          chmod -R u+w test-results
+          npx playwright test --reporter=json > test-results/playwright-results.json
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
@@ -72,8 +74,14 @@ jobs:
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
+          # Locate results file
+          RESULTS_FILE=test-results/playwright-results.json
+          if [ ! -f "$RESULTS_FILE" ]; then
+            echo "{}" > "$RESULTS_FILE"
+            echo "Results file not found. Created an empty file."
+          fi
+
           # Parse Playwright results
-          RESULTS_FILE=playwright-results.json
           TOTAL_TESTS=$(jq '.stats.expected' $RESULTS_FILE)
           FAILED_COUNT=$(jq '.stats.unexpected' $RESULTS_FILE)
           RUN_DURATION=$(jq '.stats.duration' $RESULTS_FILE)
