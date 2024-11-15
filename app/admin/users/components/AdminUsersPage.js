@@ -40,7 +40,7 @@ export default function AdminUsersPage(props) {
       collapse: true,
       accessor: 'actions',
       Cell: ({ row }) => {
-        return <Actions {...row.original} />;
+        return <Actions user={row.original} />;
       },
     },
 
