@@ -10,7 +10,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
-    ["json", { outputFile: "playwright-results.json" }],
+    ["json", { outputFile: "test-results/playwright-results.json" }],
   ],
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:4000/", // Fallback to default URL if not provided
