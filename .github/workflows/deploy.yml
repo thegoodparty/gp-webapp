@@ -75,52 +75,54 @@ jobs:
           echo "Playwright tests failed. Review the test results."
 
           - name: Notify Slack Workflow with Test Results
-          if: always()
-          env:
-            SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
-            TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
-            TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-            TEST_RUN_ID: ${{ env.TEST_RUN_ID }}
-            TEST_RUN_NAME: ${{ env.TEST_RUN_NAME }}
-          run: |
-            # Retrieve tests in the run and filter out failed tests
-            TESTRAIL_RESPONSE=$(curl -s -u "your_username:${{ secrets.TESTRAIL_API_KEY }}" "${{ secrets.TESTRAIL_API_URL }}/get_tests/${{ env.TEST_RUN_ID }}")
-            FAILED_TESTS=$(echo "$TESTRAIL_RESPONSE" | jq '[.[] | select(.status_id == 5)]')
-            FAILED_COUNT=$(echo "$FAILED_TESTS" | jq 'length')
-            
-            # Create a list of failed tests, with each test on a separate line
-            FAILED_SUMMARY=$(echo "$FAILED_TESTS" | jq -r '.[] | "- \(.title)\n"' | tr -d '\n' | sed 's/\n/,/g')
-  
-            # Set overall status based on failed tests
-            if [ "$FAILED_COUNT" -gt 0 ]; then
-              RUN_STATUS="failed"
-            else
-              RUN_STATUS="passed"
-            fi
-  
-            # Generate the TestRail URL for the test run
-            TESTRAIL_URL="${{ secrets.TESTRAIL_API_URL }}/test-runs/${{ env.TEST_RUN_ID }}"
-  
-            # Send data to Slack Workflow Webhook with placeholders, including the commit SHA
-            curl -X POST -H "Content-type: application/json" \
-              --data '{
-                "branch": "'"${{ github.ref_name }}"'",
-                "commit_sha": "'"${{ github.sha }}"'",
-                "failed_count": "'"$FAILED_COUNT"'",
-                "failed_summary": "'"$FAILED_SUMMARY"'",
-                "run_status": "'"$RUN_STATUS"'",
-                "attachments": [
-                  {
-                    "text": "Click below to view the full TestRun details.",
-                    "fallback": "View TestRun Details",
-                    "actions": [
-                      {
-                        "type": "button",
-                        "text": "View TestRun",
-                        "url": "'"$TESTRAIL_URL"'"
-                      }
-                    ]
-                  }
-                ]
-              }' \
-              $SLACK_WORKFLOW_WEBHOOK
+          
+      - name: Notify Slack Workflow with Test Results
+        if: always()
+        env:
+          SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
+          TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TEST_RUN_ID: ${{ env.TEST_RUN_ID }}
+          TEST_RUN_NAME: ${{ env.TEST_RUN_NAME }}
+        run: |
+          # Retrieve tests in the run and filter out failed tests
+          TESTRAIL_RESPONSE=$(curl -s -u "your_username:${{ secrets.TESTRAIL_API_KEY }}" "${{ secrets.TESTRAIL_API_URL }}/get_tests/${{ env.TEST_RUN_ID }}")
+          FAILED_TESTS=$(echo "$TESTRAIL_RESPONSE" | jq '[.[] | select(.status_id == 5)]')
+          FAILED_COUNT=$(echo "$FAILED_TESTS" | jq 'length')
+          
+          # Create a list of failed tests, with each test on a separate line
+          FAILED_SUMMARY=$(echo "$FAILED_TESTS" | jq -r '.[] | "- \(.title)\n"' | tr -d '\n' | sed 's/\n/,/g')
+
+          # Set overall status based on failed tests
+          if [ "$FAILED_COUNT" -gt 0 ]; then
+            RUN_STATUS="failed"
+          else
+            RUN_STATUS="passed"
+          fi
+
+          # Generate the TestRail URL for the test run
+          TESTRAIL_URL="${{ secrets.TESTRAIL_API_URL }}/test-runs/${{ env.TEST_RUN_ID }}"
+
+          # Send data to Slack Workflow Webhook with placeholders, including the commit SHA
+          curl -X POST -H "Content-type: application/json" \
+            --data '{
+              "branch": "'"${{ github.ref_name }}"'",
+              "commit_sha": "'"${{ github.sha }}"'",
+              "failed_count": "'"$FAILED_COUNT"'",
+              "failed_summary": "'"$FAILED_SUMMARY"'",
+              "run_status": "'"$RUN_STATUS"'",
+              "attachments": [
+                {
+                  "text": "Click below to view the full TestRun details.",
+                  "fallback": "View TestRun Details",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "text": "View TestRun",
+                      "url": "'"$TESTRAIL_URL"'"
+                    }
+                  ]
+                }
+              ]
+            }' \
+            $SLACK_WORKFLOW_WEBHOOK
