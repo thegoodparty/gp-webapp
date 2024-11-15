@@ -64,8 +64,6 @@ export default function SetPasswordPage({ email, token }) {
       const res = await setPasswordApi(email, password, token);
       const { user, token: userToken } = res || {};
 
-      console.log('RESP', res);
-
       if (user && userToken) {
         await saveToken(userToken);
         setUserCookie(user);
