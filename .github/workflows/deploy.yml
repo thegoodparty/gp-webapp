@@ -60,8 +60,42 @@ jobs:
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          
+          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
+
       - name: Report Test Results
         if: failure()
         run: |
           echo "Playwright tests failed. Review the test results."
+          
+      - name: Notify Slack Workflow
+        env:
+          SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
+        run: |
+          # Set STATUS and COLOR based on job status
+          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
+          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
+          
+          # Send the Slack notification
+          curl -X POST -H "Content-type: application/json" \
+          --data '{
+            "text": "Playwright Test Results ('"${STATUS}"')",
+            "attachments": [
+              {
+                "color": "'"${COLOR}"'",
+                "fields": [
+                  { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
+                  { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
+                  { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
+                ],
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "View Test Runs",
+                    "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
+                    "style": "primary"
+                  }
+                ]
+              }
+            ]
+          }' $SLACK_WORKFLOW_WEBHOOK
+      
