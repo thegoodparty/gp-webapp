@@ -1,7 +1,8 @@
 import "dotenv/config";
 import { test, expect } from "@playwright/test";
-import { coreNav, checkButtons } from "@helpers";
-import { addTestResult } from "@testrailHelper";
+import { coreNav } from "helpers/navHelpers";
+import { checkButtons } from "helpers/domHelpers";
+import { addTestResult } from "helpers/testrailHelper";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
@@ -48,7 +49,7 @@ test("Verify Blog page", async ({ page }) => {
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
     // Capture screenshot on error
-    const screenshotPath = `screenshots/test-failure-${Date.now()}.png`;
+    const screenshotPath = `screenshots/test-failure-blog-${Date.now()}.png`;
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     // Report test results with screenshot path
@@ -108,7 +109,17 @@ test("Verify Blog filtering", async ({ page }) => {
     // Report test results
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    // Capture screenshot on error
+    const screenshotPath = `screenshots/test-failure-blog-filter-${Date.now()}.png`;
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+
+    // Report test results with screenshot path
+    await addTestResult(
+      runId,
+      caseId,
+      5,
+      `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`
+    );
   }
 });
 
@@ -154,7 +165,7 @@ test("Verify Blog Article page", async ({ page }) => {
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
     // Capture screenshot on error
-    const screenshotPath = `screenshots/test-failure-${Date.now()}.png`;
+    const screenshotPath = `screenshots/test-failure-blog-article-${Date.now()}.png`;
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     // Report test results with screenshot path

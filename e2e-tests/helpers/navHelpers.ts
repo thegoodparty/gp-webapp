@@ -1,13 +1,4 @@
 import { expect } from '@playwright/test';
-import { faker } from '@faker-js/faker';
-
-export const userData = {
-    firstName: faker.person.firstName().toString(),
-    middleName: faker.person.middleName().toString(),
-    lastName: faker.person.lastName().toString(),
-    phoneNumber: faker.phone.number({style: 'national'}).toString(),
-    email: faker.internet.email().toString()
-};
 
 export async function coreNav(page, navSelect) {
     const navCandidates = ['nav-campaign-tools', 'nav-good-party-pro', 'nav-get-demo', 'nav-voter-data', 'nav-template-library', 'nav-tour', 'nav-explore-offices'];
