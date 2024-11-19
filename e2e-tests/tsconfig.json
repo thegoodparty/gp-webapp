@@ -2,8 +2,8 @@
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@helpers": ["helpers.ts"],
-        "@testrailHelper": ["testrailHelper.ts"]
+        "@helpers": ["helpers/navHelpers.ts"],
+        "@testrailHelper": ["helpers/testrailHelper.ts"]
         }
     }
 }

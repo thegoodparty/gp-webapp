@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { addTestResult } from '@testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 

@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav, checkImgAltText } from '@helpers';
-import { addTestResult } from '@testrailHelper';
+import { coreNav } from 'helpers/navHelpers';
+import { checkImgAltText } from "helpers/domHelpers";
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
@@ -12,9 +13,6 @@ test('Verify Get a Demo page', async ({ page }) => {
     const pageHeader = /Get a demo of GoodParty.org's free tools for independent and 3rd party candidates/;
     const pageImgAltText = ['Jared and Rob', 'Lisa'];
     const hubSpotLocator = page.locator(`iframe[title="Book a Meeting"]`);
-    const calendarDateTitle = /Find a time to meet with Good Party/
-    const calendarTimeTitle = /What time works best\?/
-    const calendarInfoTitle = /Your information/
 
     try {
         await page.goto('/');
@@ -44,7 +42,7 @@ test('Verify Get a Demo page', async ({ page }) => {
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
         // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-${Date.now()}.png`;
+        const screenshotPath = `screenshots/test-failure-get-demo-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path

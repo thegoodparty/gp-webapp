@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav, checkImgAltText } from '@helpers';
-import { addTestResult } from '@testrailHelper';
+import { coreNav} from 'helpers/navHelpers';
+import { checkImgAltText } from "helpers/domHelpers";
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
@@ -34,7 +35,7 @@ test('Verify Explore Offices page', async ({ page }) => {
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
         // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-${Date.now()}.png`;
+        const screenshotPath = `screenshots/test-failure-resources-offices${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path
