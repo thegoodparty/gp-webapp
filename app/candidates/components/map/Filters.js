@@ -118,7 +118,7 @@ export default memo(function Filters({ filters, onChangeFilters, campaigns }) {
           />
         </div>
       </div>
-      <div className="bg-indigo-100 p-4">
+      <div className="bg-indigo-100 p-4 pb-2">
         <TextField
           label="Search for a candidate"
           fullWidth

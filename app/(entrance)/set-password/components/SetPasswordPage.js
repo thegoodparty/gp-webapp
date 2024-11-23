@@ -35,8 +35,8 @@ export default function SetPasswordPage({ email, token }) {
     value: '',
     isMatch: true,
   });
-  const [resetSuccessful] = useState(false);
-  const { errorSnackbar } = useSnackbar();
+  const [resetSuccessful, setResetSuccesful] = useState(false);
+  const { errorSnackbar, successSnackbar } = useSnackbar();
 
   function handlePasswordChange(newPwd, pwdValid) {
     setPassword({
@@ -69,8 +69,12 @@ export default function SetPasswordPage({ email, token }) {
         setUserCookie(user);
         setUser(user);
         window.location.href = '/dashboard';
+      } else if (res.ok === false) {
+        const { message } = await res.json();
+        errorSnackbar('Error saving password: ' + message);
       } else {
-        errorSnackbar('Error saving password.');
+        successSnackbar('Password updated successfully.');
+        setResetSuccesful(true);
       }
     }
   }
