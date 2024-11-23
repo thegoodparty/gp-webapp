@@ -14,6 +14,7 @@ export default function ErrorButton({
   loading = false,
   fullWidth = false,
   onClick,
+  dataTestId,
 }) {
   let baseClass = {
     'rounded-lg': true,
@@ -85,6 +86,7 @@ export default function ErrorButton({
       style={style}
       disabled={disabled}
       onClick={buttonOnClickHandler(onClick)}
+      data-testid={dataTestId || undefined}
     >
       {loading ? <ButtonLoading /> : null}
       {children}

@@ -60,6 +60,9 @@ export default function PasswordInput({
         </IconButton>,
         error && 'error',
       ]}
+      inputProps={{
+        'data-testid': restProps['data-testid'],
+      }}
       {...restProps}
     />
   );

@@ -141,6 +141,7 @@ export default function LoginPage() {
                 value={state.email}
                 shrink
                 placeholder="hello@email.com"
+                data-testid="login-email-input"
               />
             </div>
 
@@ -153,16 +154,17 @@ export default function LoginPage() {
                   shrink: true,
                 }}
                 placeholder="Please don't use your dog's name"
+                data-testid="login-password-input"
               />
             </div>
             <div className="flex justify-center mt-12" onClick={handleSubmit}>
-              <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth>
+              <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth data-testid="login-submit-button">
                 Login
               </PrimaryButton>
             </div>
           </form>
           <div className="mt-5 text-center">
-            <Link href="/forgot-password" className="text-sm underline">
+            <Link href="/forgot-password" className="text-sm underline" data-testid="login-forgot-password-link">
               Forgot your password?
             </Link>
           </div>

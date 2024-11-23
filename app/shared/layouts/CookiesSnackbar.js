@@ -22,12 +22,12 @@ export default function CookiesSnackbar() {
     setShowBanner(false);
   };
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-primary-dark text-white p-4 text-center">
+    <div className="fixed bottom-0 left-0 right-0 bg-primary-dark text-white p-4 text-center" data-testid="cookie-snackbar">
       We use cookies to personalize content, analyze traffic, and provide you
       with a better user experience. By continuing to browse this site, you
       consent to the use of cookies.
       <div className="mt-6" onClick={handleAccept}>
-        <ErrorButton className="ml-4" size="medium">
+        <ErrorButton className="ml-4" size="medium" dataTestId={"cookie-accept-btn"}>
           Accept
         </ErrorButton>
       </div>
