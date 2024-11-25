@@ -3,8 +3,7 @@ import * as fs from "fs";
 import "dotenv/config";
 
 module.exports = async () => {
-  const testRunName = process.env.TEST_RUN_NAME || "Playwright Test Run";
-  
+  const testRunName = process.env.TEST_RUN_NAME || "Playwright Test Run";  
   // Test cases to run on any environment
   let testCaseIds = [1, 2, 4, 5, 7, 8, 12, 16, 17, 22];
 
