@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+
+const projectEnv = process.env.PROJECT_ENV || "default";
+
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
@@ -17,32 +20,39 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-  {
-    name: "chromium",
-    use: { ...devices["Desktop Chrome"], baseURL: process.env.BASE_URL },
-  },
-  {
-    name: "firefox",
-    use: { ...devices["Desktop Firefox"], baseURL: process.env.BASE_URL },
-  },
-  {
-    name: "webkit",
-    use: { ...devices["Desktop Safari"], baseURL: process.env.BASE_URL },
-  },
-  // The following projects should only be run explicitly with the --project flag
-  {
-    name: "Local",
-    use: {
-      baseURL: "http://localhost:3000",
-      ...devices["Desktop Chrome"],
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"], baseURL: process.env.BASE_URL },
     },
-  },
-  {
-    name: "QA",
-    use: {
-      baseURL: "https://qa.goodparty.org",
-      ...devices["Desktop Chrome"],
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"], baseURL: process.env.BASE_URL },
     },
-  },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"], baseURL: process.env.BASE_URL },
+    },
+    ...(projectEnv === "local"
+      ? [
+          {
+            name: "Local",
+            use: {
+              baseURL: "http://localhost:3000",
+              ...devices["Desktop Chrome"],
+            },
+          },
+        ]
+      : []),
+    ...(projectEnv === "qa"
+      ? [
+          {
+            name: "QA",
+            use: {
+              baseURL: "https://qa.goodparty.org",
+              ...devices["Desktop Chrome"],
+            },
+          },
+        ]
+      : []),
   ],
 });
