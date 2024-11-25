@@ -4,10 +4,16 @@ import "dotenv/config";
 
 module.exports = async () => {
   const testRunName = process.env.TEST_RUN_NAME || "Playwright Test Run";
-  const testRunId = await createTestRun(
-    testRunName,
-    [1, 2, 4, 5, 7, 8, 12, 16, 17, 22]
-  );
+  
+  // Test cases to run on any environment
+  let testCaseIds = [1, 2, 4, 5, 7, 8, 12, 16, 17, 22];
+
+  // Test cases to run if pushing to the qa branch
+  if (process.env.BASE_URL && process.env.BASE_URL.includes("qa.goodparty.org")) {
+    testCaseIds = [1, 2, 4, 5, 7, 8, 12, 16, 17, 22];
+  }
+
+  const testRunId = await createTestRun(testRunName, testCaseIds);
   fs.writeFileSync("testRunId.txt", testRunId.toString());
   console.log(`Test run created with ID: ${testRunId}`);
 };
