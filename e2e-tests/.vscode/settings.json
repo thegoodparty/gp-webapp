@@ -1,0 +1,13 @@
+{
+    "testing.options": {
+      "env": {
+        "BASE_URL": "https://qa.goodparty.org",
+        "PROJECT_ENV": "qa"
+      }
+    },
+    "playwright.env": {
+      "BASE_URL": "https://qa.goodparty.org",
+      "PROJECT_ENV": "qa"
+    }
+  }
+  
