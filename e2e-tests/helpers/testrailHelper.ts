@@ -39,4 +39,10 @@ export async function createTestRun(name, caseIds) {
     }
 }
 
-module.exports = { addTestResult, createTestRun };
+// Helper to skip tests not designed to run outside of QA
+export async function skipNonQA(test) {
+    const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
+    test.skip(!isQAEnv, 'Only executable in the QA environment');
+}
+
+module.exports = { addTestResult, createTestRun, skipNonQA };
