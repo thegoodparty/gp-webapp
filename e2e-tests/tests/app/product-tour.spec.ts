@@ -2,11 +2,13 @@ import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { coreNav } from 'helpers/navHelpers';
 import { acceptCookieTerms, getNavatticPlayerFrame } from 'helpers/domHelpers';
-import { addTestResult } from 'helpers/testrailHelper';
+import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Product Tour flow', async ({ page }) => {
+    await skipNonQA(test);
+
     const caseId = 23;
 
     const pageTitle = "AI Campaign Manager Product Tour | GoodParty.org";

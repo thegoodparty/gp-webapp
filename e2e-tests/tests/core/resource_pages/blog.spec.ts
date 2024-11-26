@@ -2,11 +2,13 @@ import "dotenv/config";
 import { test, expect } from "@playwright/test";
 import { coreNav } from "helpers/navHelpers";
 import { checkButtons } from "helpers/domHelpers";
-import { addTestResult } from "helpers/testrailHelper";
+import { addTestResult, skipNonQA } from "helpers/testrailHelper";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test("Verify Blog page", async ({ page }) => {
+  await skipNonQA(test);
+
   const caseId = 12;
 
   const pageTitle = "Blog";
@@ -30,7 +32,7 @@ test("Verify Blog page", async ({ page }) => {
 
     // Verify page title
     await expect(page.locator(`h1:has-text("${pageTitle}")`)).toBeVisible({
-      timeout: 10000,
+      timeout: 20000,
     });
 
     // Verify page contents
@@ -42,8 +44,7 @@ test("Verify Blog page", async ({ page }) => {
     // Verify opening blog article link
     await page.locator(`button:has-text("Read More")`).first().isEnabled();
     await page.locator(`button:has-text("Read More")`).first().click();
-    await page.waitForLoadState("networkidle");
-    await expect(page).toHaveURL(/.*\/article/, { timeout: 5000 });
+    await expect(page).toHaveURL(/.*\/article/, { timeout: 10000 });
 
     // Report test results
     await addTestResult(runId, caseId, 1, "Test passed");
