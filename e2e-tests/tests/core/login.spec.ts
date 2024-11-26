@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { coreNav } from 'helpers/navHelpers';
-import { addTestResult } from 'helpers/testrailHelper';
+import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
@@ -9,8 +10,8 @@ test('Verify invalid login credentials error message', async ({ page }) => {
     const caseId = 22;
 
     const loginPageHeader = 'Login to GoodParty.org';
-    const invalidEmail = 'invalid@email.address';
-    const invalidPassword = 'Password123!';
+    const invalidEmail = userData.email;
+    const invalidPassword = invalidEmail;
     const invalidErrorMessage = 'The email or password are wrong.';
 
     try {
@@ -33,6 +34,41 @@ test('Verify invalid login credentials error message', async ({ page }) => {
     } catch (error) {
         // Capture screenshot on error
         const screenshotPath = `screenshots/test-failure-invalid-login-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
+
+test('Verify user can log in with valid credentials', async ({ page }) => {
+    await skipNonQA(test);
+
+    const caseId = 19;
+    const loginPageHeader = 'Login to GoodParty.org';
+    const continueSetupButton = 'Continue Setup';
+    const credentials = "dsison+autolocal01@goodparty.org";
+
+    try {
+        await page.goto('/');
+        await coreNav(page, 'nav-login');
+
+        // Verify user is on login page
+        await expect(page.getByText(loginPageHeader)).toBeVisible();
+
+        // Input valid login credentials
+        await page.locator('input[data-testid="login-email-input"]').fill(credentials);
+        await page.locator('input[data-testid="login-password-input"]').fill(credentials.split('').reverse().join(''));
+        await page.getByTestId('login-submit-button').click();
+
+        // Verify error message
+        await page.getByRole('link', { name: continueSetupButton }).isVisible();
+
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-valid-login-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path
