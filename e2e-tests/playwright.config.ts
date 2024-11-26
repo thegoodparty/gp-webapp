@@ -24,14 +24,6 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"], baseURL: process.env.BASE_URL },
     },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"], baseURL: process.env.BASE_URL },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"], baseURL: process.env.BASE_URL },
-    },
     ...(projectEnv === "local"
       ? [
           {

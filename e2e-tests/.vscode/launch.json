@@ -20,22 +20,6 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Run Playwright Local Tests",
-      "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
-      "args": [
-        "test",
-        "--project=Local"
-      ],
-      "env": {
-        "BASE_URL": "http://localhost:3000",
-        "PROJECT_ENV": "local"
-      },
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen"
-    },
-    {
-      "type": "node",
-      "request": "launch",
       "name": "Run Playwright Default Tests",
       "program": "${workspaceFolder}/node_modules/@playwright/test/cli.js",
       "args": [
