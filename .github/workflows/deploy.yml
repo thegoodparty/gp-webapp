@@ -32,7 +32,7 @@ jobs:
         id: deploy
         if: ${{ github.ref_name != 'qa' }}
         run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }}
+          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes
 
       - name: Capture Deployment URL
         run: |
