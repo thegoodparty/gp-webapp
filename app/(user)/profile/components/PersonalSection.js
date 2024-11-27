@@ -37,6 +37,7 @@ export const USER_SETTING_FIELDS = [
     initialValue: '',
     maxLength: 20,
     required: true,
+    dataTestid: 'personal-first-name',
   },
   {
     key: 'lastName',
@@ -44,6 +45,7 @@ export const USER_SETTING_FIELDS = [
     initialValue: '',
     maxLength: 20,
     required: true,
+    dataTestid: 'personal-last-name',
   },
   {
     key: 'email',
@@ -53,6 +55,7 @@ export const USER_SETTING_FIELDS = [
     type: 'email',
     cols: 12,
     required: true,
+    dataTestid: 'personal-email',
   },
   {
     key: 'phone',
@@ -61,6 +64,7 @@ export const USER_SETTING_FIELDS = [
     maxLength: 12,
     type: 'phone',
     required: true,
+    dataTestid: 'personal-phone',
   },
   {
     key: 'zip',
@@ -68,6 +72,7 @@ export const USER_SETTING_FIELDS = [
     initialValue: '',
     maxLength: 5,
     required: true,
+    dataTestid: 'personal-zip',
   },
 ];
 
@@ -179,6 +184,7 @@ function PersonalSection({ user }) {
                     shrink
                     required
                     label={field.label}
+                    data-testid={field.dataTestId}
                   />
                 </div>
               ) : (
@@ -192,6 +198,7 @@ function PersonalSection({ user }) {
                   required={field.required}
                   style={{ marginBottom: '16px' }}
                   InputLabelProps={{ shrink: true }}
+                  inputProps={{ 'data-testid': field.dataTestid }}
                 />
               )}
             </div>
