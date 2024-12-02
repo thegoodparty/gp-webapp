@@ -44,8 +44,6 @@ export default memo(function CampaignPreview({
     ? /won/i.test(hubSpotUpdates?.election_results)
     : didWin;
 
-  console.log(firstName, lastName, electionResults, primaryResults);
-
   return (
     <div className="absolute top-0 p-4 md:p-0 left-4 w-[calc(100vw-32px)]   md:left-[416px] lg:left-[516px] md:w-[320px]   md:shadow md:mt-4  rounded-2xl z-50">
       <div className="h-full bg-white p-4 rounded-2xl shadow-md md:shadow-none">
