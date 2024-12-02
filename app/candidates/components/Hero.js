@@ -3,15 +3,12 @@ import { numberFormatter } from 'helpers/numberHelper';
 import Image from 'next/image';
 import { memo } from 'react';
 
-export const WINNER_COUNT = 3441;
-
 export default memo(function Hero({ count = 0, longState }) {
   return (
     <div className="bg-primary-dark py-8 lg:py-24 text-white text-center ">
       <MaxWidth>
         <h1 className="text-center font-medium text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-          {/* {numberFormatter(count)} Wins&nbsp; */}
-          {WINNER_COUNT.toLocaleString()} Wins&nbsp;
+          {numberFormatter(count)} Wins&nbsp;
           <div className="sm:hidden" />
           & Counting
           <br /> by
