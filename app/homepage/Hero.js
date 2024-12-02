@@ -16,10 +16,9 @@ const fetchWinnerCount = async () => {
 export default async function Hero() {
   const { count } = await fetchWinnerCount();
 
-  // fallback to hardcoded 1,000 in case of bad api call
-  // const winnerCount =
-  //   typeof count === 'number' && count > 0 ? count.toLocaleString() : '1,000';
-  const winnerCount = WINNER_COUNT.toLocaleString();
+  // fallback to hardcoded 3,000+ in case of bad api call
+  const winnerCount =
+    typeof count === 'number' && count > 0 ? count.toLocaleString() : '3,000+';
 
   return (
     <MaxWidth>
