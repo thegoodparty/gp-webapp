@@ -5,7 +5,6 @@ import Button from '@shared/buttons/Button';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
-import { WINNER_COUNT } from 'app/candidates/components/Hero';
 
 const fetchWinnerCount = async () => {
   const api = gpApi.campaign.mapCount;
