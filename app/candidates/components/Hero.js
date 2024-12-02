@@ -3,7 +3,7 @@ import { numberFormatter } from 'helpers/numberHelper';
 import Image from 'next/image';
 import { memo } from 'react';
 
-export const WINNER_COUNT = 3435;
+export const WINNER_COUNT = 3441;
 
 export default memo(function Hero({ count = 0, longState }) {
   return (
