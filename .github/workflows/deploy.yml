@@ -5,12 +5,10 @@ on:
     branches:
       - develop
       - qa
-      - master
+
   push:
     branches:
-      - develop
       - qa
-      - master
 
 jobs:
   test:
@@ -33,13 +31,18 @@ jobs:
 
       - name: Deploy to Vercel
         id: deploy
+        if: ${{ github.ref_name != 'qa' }}
         run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }}
+          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes
 
-      - name: Capture Vercel Deployment URL
+      - name: Capture Deployment URL
         run: |
-          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
-          echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+          if [ "${{ github.ref_name }}" = "qa" ]; then
+            echo "BASE_URL=https://qa.goodparty.org" >> $GITHUB_ENV
+          else
+            DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
+            echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+          fi
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4

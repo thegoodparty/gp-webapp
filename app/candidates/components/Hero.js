@@ -1,6 +1,4 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import MarketingH1 from '@shared/typography/MarketingH1';
-import MarketingH4 from '@shared/typography/MarketingH4';
 import { numberFormatter } from 'helpers/numberHelper';
 import Image from 'next/image';
 import { memo } from 'react';
