@@ -5,3 +5,4 @@ node_modules/
 /playwright/.cache/
 /screenshots/
 playwright-results.json
+.env

@@ -17,6 +17,8 @@ export async function loginAccount(page, isOnboarded = true, emailAddress, passw
     if(isOnboarded) {
         // Verify user is on dashboard page
         await page.getByRole('heading', { name: 'Path to Victory' }).isVisible();
+    } else {
+        await page.getByRole('link', { name: 'Continue Setup' }).isVisible();
     }
 }
 
