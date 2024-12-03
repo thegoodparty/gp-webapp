@@ -4,6 +4,8 @@ import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
 import { numberFormatter } from 'helpers/numberHelper';
 
+export const WINNER_COUNT = 3287;
+
 const fetchCount = async (onlyWinners = false) => {
   const api = gpApi.campaign.mapCount;
 
@@ -11,7 +13,8 @@ const fetchCount = async (onlyWinners = false) => {
 };
 
 export async function generateMetadata({ params, searchParams }) {
-  const { count } = await fetchCount(true);
+  // const { count } = await fetchCount(true);
+  const count = WINNER_COUNT;
   const title = `${numberFormatter(
     count,
   )} Wins by Independents across the U.S. 🎉`;
@@ -26,7 +29,8 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function Page({ params, searchParams }) {
-  const { count } = await fetchCount(true);
+  // const { count } = await fetchCount(true);
+  const count = WINNER_COUNT;
   const childProps = { count, searchParams };
   return <CandidatesPage {...childProps} />;
 }

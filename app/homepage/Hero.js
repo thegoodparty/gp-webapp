@@ -5,6 +5,7 @@ import Button from '@shared/buttons/Button';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
+import { WINNER_COUNT } from 'app/candidates/page';
 
 const fetchWinnerCount = async () => {
   const api = gpApi.campaign.mapCount;
@@ -13,7 +14,8 @@ const fetchWinnerCount = async () => {
 };
 
 export default async function Hero() {
-  const { count } = await fetchWinnerCount();
+  // const { count } = await fetchWinnerCount();
+  const count = WINNER_COUNT;
 
   // fallback to hardcoded 3,000+ in case of bad api call
   const winnerCount =
