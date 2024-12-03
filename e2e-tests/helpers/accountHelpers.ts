@@ -4,6 +4,22 @@ import { coreNav } from 'helpers/navHelpers';
 import { userData, generateEmail, generatePhone } from 'helpers/dataHelpers';
 import { acceptCookieTerms } from 'helpers/domHelpers';
 
+export async function loginAccount(page, isOnboarded = true, emailAddress, password) {
+    await page.goto('/login');
+
+    // Accept cookie terms (if visible)
+    await acceptCookieTerms(page);
+
+    // Log into existing account
+    await page.getByTestId('login-email-input').nth(1).fill(emailAddress);
+    await page.getByTestId('login-password-input').nth(1).fill(password);
+    await page.getByTestId('login-submit-button').click();
+    if(isOnboarded) {
+        // Verify user is on dashboard page
+        await page.getByRole('heading', { name: 'Path to Victory' }).isVisible();
+    }
+}
+
 export async function createAccount(
         page, 
         accountType = null, 
