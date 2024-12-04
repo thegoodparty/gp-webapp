@@ -64,6 +64,16 @@ jobs:
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
+          NODE_PATH: ${{ secrets.NODE_PATH }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
+          TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
+          TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TEST_USER_EMAIL_1: ${{ secrets.TEST_USER_EMAIL_1 }}
+          TEST_USER_EMAIL_2: ${{ secrets.TEST_USER_EMAIL_2 }}
+          TEST_USER_PASSWORD_1: ${{ secrets.TEST_USER_PASSWORD_1 }}
+          TEST_USER_PASSWORD_2: ${{ secrets.TEST_USER_PASSWORD_2 }}
 
       - name: Report Test Results
         if: failure()
