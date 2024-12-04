@@ -8,15 +8,15 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
 const testTopicChat = /^Can you help me with my campaign strategy\?$/;
-const testAccount = process.env.TEST_USER_EMAIL_2;
-const testPassword = process.env.TEST_USER_PASSWORD_2;
+const testAccountState = process.env.TEST_USER_EMAIL_2;
+const testStatePassword = process.env.TEST_USER_PASSWORD_2;
 
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
     await skipNonQA(test, runId, caseId);
 
     try {
-        await loginAccount(page, true, testAccount, testPassword);
+        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Assistant');
 
         // Verify user is on campaign assistant page
@@ -49,7 +49,7 @@ test('Delete a conversation', async ({ page }) => {
     await skipNonQA(test, runId, caseId);
 
     try {
-        await loginAccount(page, true, testAccount, testAccount);
+        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Assistant');
 
         // Create new chat
