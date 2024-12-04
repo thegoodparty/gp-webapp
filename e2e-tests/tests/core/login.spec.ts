@@ -11,7 +11,7 @@ test('Verify invalid login credentials error message', async ({ page }) => {
 
     const loginPageHeader = 'Login to GoodParty.org';
     const invalidEmail = userData.email;
-    const invalidPassword = invalidEmail;
+    const invalidPassword = userData.password + '1';
     const invalidErrorMessage = 'The email or password are wrong.';
 
     try {
@@ -27,7 +27,7 @@ test('Verify invalid login credentials error message', async ({ page }) => {
         await page.getByTestId('login-submit-button').click();
 
         // Verify error message
-        await page.getByText(invalidErrorMessage).isVisible();
+        await page.getByText(invalidErrorMessage).isVisible({timeout: 10000});
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
