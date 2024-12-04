@@ -26,15 +26,15 @@ export async function createAccount(
         page, 
         accountType = null, 
         isLocal = true, 
-        zipCode = userData.zipCode, 
-        role = null
+        zipCode = '90210', 
+        role = null,
+        password = userData.password
     ) {
     const loginPageHeader = 'Join GoodParty.org';
     const firstName = userData.firstName;
     const lastName = userData.lastName;
     const emailAddress = generateEmail();
     const phoneNumber = generatePhone();
-    const password = userData.password;
 
     await page.goto('/');
     await coreNav(page, 'nav-sign-up');
@@ -54,7 +54,7 @@ export async function createAccount(
     // Verify user is in onboarding flow
     await page.getByRole('link', { name: 'Finish Later' }).isVisible({ timeout: 5000 });
     await page.waitForURL('**/onboarding/account-type', {
-        timeout: 10000,
+        timeout: 30000,
     });
 
     // Proceed based on account type

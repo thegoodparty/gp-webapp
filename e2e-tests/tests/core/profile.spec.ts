@@ -1,0 +1,151 @@
+import 'dotenv/config';
+import { expect, test } from '@playwright/test';
+import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { userData } from 'helpers/dataHelpers';
+import { createAccount, deleteAccount } from 'helpers/accountHelpers';
+import * as fs from 'fs';
+import { acceptCookieTerms } from 'helpers/domHelpers';
+const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+
+test('Adjust Personal Information', async ({ page }) => {
+    await skipNonQA(test);
+    const caseId = 33;
+    const firstName = userData.firstName;
+    const lastName = userData.lastName;
+    const emailAddress = userData.email;
+    const phoneNumber = userData.phoneNumber;
+    const zipCode = userData.zipCode.substring(0, 5);
+
+    try {
+        // Create account
+        await createAccount(page);
+
+        // Adjust personal information in profile settings
+        await page.goto('/profile');
+
+        // Accept cookie terms (if visible)
+        await acceptCookieTerms(page);
+
+        await page.locator("[data-testid='personal-first-name']").fill(firstName);
+        await page.locator("[data-testid='personal-last-name']").fill(lastName);
+        await page.locator("[data-testid='personal-email']").fill(emailAddress);
+        await page.locator("input[name='phone']").fill(phoneNumber);
+        await page.locator("[data-testid='personal-zip']").fill(zipCode);
+        await page.locator('form').filter({ hasText: 'Save Changes' }).getByRole('button').first().click();
+
+        // Waits for save to complete
+        await page.waitForLoadState('networkidle');
+        await page.reload({ waitUntil: 'domcontentloaded' });
+
+        // Verifies changes are saved
+        await expect(page.locator("[data-testid='personal-first-name']")).toHaveValue(firstName);
+        await expect(page.locator("[data-testid='personal-last-name']")).toHaveValue(lastName);
+        await expect(page.locator("[data-testid='personal-email']")).toHaveValue(emailAddress);
+        await expect(page.locator("input[name='phone']")).toHaveValue(phoneNumber);
+        await expect(page.locator("[data-testid='personal-zip']")).toHaveValue(zipCode);
+
+        // Delete account after signup
+        await deleteAccount(page);
+
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
+
+test('Adjust Notification Settings', async ({ page }) => {
+    await skipNonQA(test);
+    const caseId = 34;
+
+    try {
+        // Create account
+        await createAccount(page);
+
+        // Adjust notification settings in profile settings
+        await page.goto('/profile');
+
+        // Accept cookie terms (if visible)
+        await acceptCookieTerms(page);
+
+        const switchElements = page.getByRole('checkbox');
+        const switchCount = await switchElements.count();
+        expect(switchCount).toBeGreaterThanOrEqual(4);
+
+        // Click the notification switches and ensure they are checked
+        for (let i = 0; i < 4; i++) {
+            const switchToClick = switchElements.nth(i);
+            await switchToClick.click();
+
+            // Wait for the state to change to checked
+            await expect(page.locator('.MuiSwitch-switchBase').nth(i)).toHaveClass(/Mui-checked/);
+            await page.waitForTimeout(500);
+        }
+        const checkedElements = page.locator('.MuiSwitch-switchBase.Mui-checked');
+        const checkedCount = await checkedElements.count();
+
+        // Verify that 4 notification switches are checked
+        expect(checkedCount).toBe(4);
+
+        // Delete account after signup
+        await deleteAccount(page);
+
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
+
+test('Change Account Password', async ({ page }) => {
+    await skipNonQA(test);
+    const caseId = 35;
+    const password = userData.password;
+
+    try {
+        // Create account
+        await createAccount(page, null, true, '90210', null, password);
+
+        // Adjust notification settings in profile settings
+        await page.goto('/profile');
+
+        // Accept cookie terms (if visible)
+        await acceptCookieTerms(page);
+
+        // Change account password
+        await page.getByLabel('Old Password *').fill(`${password}1`);
+        await page.getByLabel('New Password *').fill(`${password}2`);
+        await page.getByRole('button', { name: 'Save Changes' }).nth(1).click();
+
+        // Wait for the response and check its content
+        const response = await page.waitForResponse((response) => 
+            response.url().includes('/password') && response.status() === 200
+        );
+
+        const responseBody = await response.json();
+        expect(responseBody.message).toBe("password successfully changed.");
+
+        // Delete account after signup
+        await deleteAccount(page);
+
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
