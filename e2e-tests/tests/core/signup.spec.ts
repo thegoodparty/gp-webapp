@@ -6,8 +6,8 @@ import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Sign up flow', async ({ page }) => {
-    await skipNonQA(test);
     const caseId = 18;
+    await skipNonQA(test, runId, caseId);
     try {
         // Create account
         await createAccount(page);
@@ -28,8 +28,8 @@ test('Sign up flow', async ({ page }) => {
 });
 
 test('Onboarding - Just Browsing', async ({ page }) => {
-    await skipNonQA(test);
     const caseId = 21;
+    await skipNonQA(test, runId, caseId);
     try {
         // Create account
         await createAccount(page, 'demo', true);
@@ -53,8 +53,8 @@ test('Onboarding - Just Browsing', async ({ page }) => {
 });
 
 test('Onboarding - Running for Office', async ({ page }) => {
-    await skipNonQA(test);
     const caseId = 20;
+    await skipNonQA(test, runId, caseId);
     const testZip = '94066';
     const role = 'California Attorney General';
     try {

@@ -4,6 +4,7 @@ import { coreNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import { userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
+import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify invalid login credentials error message', async ({ page }) => {
@@ -42,27 +43,14 @@ test('Verify invalid login credentials error message', async ({ page }) => {
 });
 
 test('Verify user can log in with valid credentials', async ({ page }) => {
-    await skipNonQA(test);
-
     const caseId = 19;
-    const loginPageHeader = 'Login to GoodParty.org';
-    const continueSetupButton = 'Continue Setup';
-    const credentials = "dsison+autolocal01@goodparty.org";
+    await skipNonQA(test, runId, caseId);
+
+    const testAccountOnboarding = process.env.TEST_USER_EMAIL_1;
+    const testOnboardingPassword = process.env.TEST_USER_PASSWORD_1;
 
     try {
-        await page.goto('/');
-        await coreNav(page, 'nav-login');
-
-        // Verify user is on login page
-        await expect(page.getByText(loginPageHeader)).toBeVisible();
-
-        // Input valid login credentials
-        await page.locator('input[data-testid="login-email-input"]').fill(credentials);
-        await page.locator('input[data-testid="login-password-input"]').fill(credentials.split('').reverse().join(''));
-        await page.getByTestId('login-submit-button').click();
-
-        // Verify error message
-        await page.getByRole('link', { name: continueSetupButton }).isVisible();
+        await loginAccount(page, false, testAccountOnboarding, testOnboardingPassword);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
