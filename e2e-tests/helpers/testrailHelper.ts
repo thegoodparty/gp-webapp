@@ -40,9 +40,13 @@ export async function createTestRun(name, caseIds) {
 }
 
 // Helper to skip tests not designed to run outside of QA
-export async function skipNonQA(test) {
+export async function skipNonQA(test, runId, caseId) {
     const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
-    test.skip(!isQAEnv, 'Only executable in the QA environment');
+    if (!isQAEnv) {
+        console.log(`Marking test case ${caseId} as "Skipped" in TestRail`);
+        await addTestResult(runId, caseId, 6, 'Test skipped because it only runs in QA environment.');
+        test.skip('Only executable in the QA environment');
+    }
 }
 
 module.exports = { addTestResult, createTestRun, skipNonQA };

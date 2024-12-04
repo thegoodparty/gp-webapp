@@ -42,3 +42,7 @@ export async function checkImgAltText(page, imgAltTextArray) {
         }
     }
 }
+
+export async function appNav(page, navSelect) {
+    await page.getByRole('link', { name: `${navSelect}` }).click();
+}
