@@ -55,7 +55,7 @@ export default function DashboardPage({ pathname }) {
   });
 
   const officeName =
-    details?.office.toLowerCase() === 'other'
+    details?.office?.toLowerCase() === 'other'
       ? details?.otherOffice
       : details?.office;
 
