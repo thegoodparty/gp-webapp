@@ -70,10 +70,18 @@ jobs:
           TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
           TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-          TEST_USER_EMAIL_1: ${{ secrets.TEST_USER_EMAIL_1 }}
-          TEST_USER_EMAIL_2: ${{ secrets.TEST_USER_EMAIL_2 }}
-          TEST_USER_PASSWORD_1: ${{ secrets.TEST_USER_PASSWORD_1 }}
-          TEST_USER_PASSWORD_2: ${{ secrets.TEST_USER_PASSWORD_2 }}
+          TEST_USER_ONBOARDING: ${{ secrets.TEST_USER_ONBOARDING}}
+          TEST_USER_LOCAL: ${{ secrets.TEST_USER_LOCAL }}
+          TEST_USER_STATE: ${{ secrets.TEST_USER_STATE }}
+          TEST_USER_FEDERAL: ${{ secrets.TEST_USER_FEDERAL }}
+          TEST_USER_DEMO_LOCAL: ${{ secrets.TEST_USER_DEMO_LOCAL }}
+          TEST_USER_DEMO_FEDERAL: ${{ secrets.TEST_USER_DEMO_FEDERAL }}
+          TEST_USER_ONBOARDING_PASSWORD: ${{ secrets.TEST_USER_ONBOARDING_PASSWORD }}
+          TEST_USER_LOCAL_PASSWORD: ${{ secrets.TEST_USER_LOCAL_PASSWORD }}
+          TEST_USER_STATE_PASSWORD: ${{ secrets.TEST_USER_STATE_PASSWORD}}
+          TEST_USER_FEDERAL_PASSWORD: ${{ secrets.TEST_USER_FEDERAL_PASSWORD}}
+          TEST_USER_DEMO_LOCAL_PASSWORD: ${{ secrets.TEST_USER_DEMO_LOCAL_PASSWORD }}
+          TEST_USER_DEMO_FEDERAL_PASSWORD: ${{ secrets.TEST_USER_DEMO_FEDERAL_PASSWORD }}
 
       - name: Report Test Results
         if: failure()
