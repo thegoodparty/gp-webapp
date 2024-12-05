@@ -30,8 +30,8 @@ export default function WhyUse() {
         Why use GoodParty.org?
       </MarketingH3>
       <Body1>
-        We&aspos;re leveling the playing field for non-partisan, independent,
-        and third-party candidates.
+        We&apos;re leveling the playing field for non-partisan, independent, and
+        third-party candidates.
       </Body1>
       <div className="flex flex-col md:flex-row px-8 md:px-0 gap-8 mt-12 mx-auto max-w-4xl">
         {vanityMetrics.map((metric) => (
