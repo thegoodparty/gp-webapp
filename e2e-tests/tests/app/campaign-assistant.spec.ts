@@ -13,7 +13,7 @@ const testStatePassword = process.env.TEST_USER_PASSWORD_2;
 
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
-    await skipNonQA(test, runId, caseId);
+    await skipNonQA(test);
 
     try {
         await loginAccount(page, true, testAccountState, testStatePassword);
@@ -46,7 +46,7 @@ test('Create new conversation', async ({ page }) => {
 
 test('Delete a conversation', async ({ page }) => {
     const caseId = 37;
-    await skipNonQA(test, runId, caseId);
+    await skipNonQA(test);
 
     try {
         await loginAccount(page, true, testAccountState, testStatePassword);
