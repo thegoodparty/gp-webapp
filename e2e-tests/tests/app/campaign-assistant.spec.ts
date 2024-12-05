@@ -8,8 +8,8 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
 const testTopicChat = /^Can you help me with my campaign strategy\?$/;
-const testAccountState = process.env.TEST_USER_EMAIL_2;
-const testStatePassword = process.env.TEST_USER_PASSWORD_2;
+const testAccountState = process.env.TEST_USER_STATE;
+const testStatePassword = process.env.TEST_USER_STATE_PASSWORD;
 
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
