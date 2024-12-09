@@ -46,8 +46,8 @@ test('Verify user can log in with valid credentials', async ({ page }) => {
     const caseId = 19;
     await skipNonQA(test);
 
-    const testAccountOnboarding = process.env.TEST_USER_EMAIL_1;
-    const testOnboardingPassword = process.env.TEST_USER_PASSWORD_1;
+    const testAccountOnboarding = process.env.TEST_USER_ONBOARDING;
+    const testOnboardingPassword = process.env.TEST_USER_ONBOARDING_PASSWORD;
 
     try {
         await loginAccount(page, false, testAccountOnboarding, testOnboardingPassword);
