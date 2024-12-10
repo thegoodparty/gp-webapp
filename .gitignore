@@ -40,3 +40,6 @@ next-env.d.ts
 /workbox-*
 
 /storybook-static
+
+# editor config
+/.vscode
