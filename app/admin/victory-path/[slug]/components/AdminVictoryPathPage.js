@@ -395,14 +395,14 @@ export default function AdminVictoryPathPage(props) {
       state.electionType &&
       state.electionType !== '' &&
       state.electionType !== null &&
-      campaign.details.state &&
-      campaign.details.state !== '' &&
-      campaign.details.state !== null
+      campaign.details?.state &&
+      campaign.details?.state !== '' &&
+      campaign.details?.state !== null
     ) {
       console.log(`getting voter locations for ${state.electionType}`);
-      getVoterLocations(state.electionType, campaign.details.state);
+      getVoterLocations(state.electionType, campaign.details?.state);
     }
-  }, [state.electionType, campaign.details.state]);
+  }, [state.electionType, campaign.details?.state]);
 
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
