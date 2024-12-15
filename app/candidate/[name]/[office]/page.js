@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import CandidatePage from './components/CandidatePage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import CandidateSchema from './components/CandidateSchema';
 
 export const fetchCandidate = async (name, office, bustCache) => {
@@ -42,7 +42,7 @@ export default async function Page({ params, searchParams }) {
     bustCache === 'true',
   );
   if (!candidate) {
-    notFound();
+    redirect('/candidates');
   }
 
   // const candidate = {
