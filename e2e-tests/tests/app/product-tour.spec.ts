@@ -4,7 +4,7 @@ import { coreNav } from 'helpers/navHelpers';
 import { acceptCookieTerms, getNavatticPlayerFrame } from 'helpers/domHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Product Tour flow', async ({ page }) => {
@@ -165,6 +165,9 @@ test('Verify Product Tour flow', async ({ page }) => {
 
         // Login page contents
         await navatticFramePopUp.getByText(loginPageTitle).waitFor();
+
+        // Delete account after test
+        await deleteAccount(page);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

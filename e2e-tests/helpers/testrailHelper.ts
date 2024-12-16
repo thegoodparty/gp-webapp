@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import axios from 'axios';
+import * as fs from 'fs';
 
 const TESTRAIL_URL = process.env.TESTRAIL_URL;
 const AUTH = {
@@ -54,12 +55,31 @@ export async function skipNonQA(test) {
     }
 }
 
-export function checkForTestFailures() {
-    const hasFailures = testResultStatuses.includes(5);
-    if (hasFailures) {
-        throw new Error('One or more tests failed during this run.');
+export async function checkForTestFailures() {
+    const TESTRAIL_URL = process.env.TESTRAIL_URL;
+    const AUTH = {
+        username: process.env.TESTRAIL_USERNAME,
+        password: process.env.TESTRAIL_API_KEY,
+    };
+    const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+
+    try {
+        const response = await axios.get(`${TESTRAIL_URL}/index.php?/api/v2/get_tests/${runId}`, { auth: AUTH });
+        const tests = response.data.tests;
+
+        const failedTests = tests.filter((test) => test.status_id === 5);
+
+        if (failedTests.length > 0) {
+            console.error(`Detected ${failedTests.length} failed test(s) in TestRail:`);
+            failedTests.forEach((test) => console.error(`- Test ID: ${test.case_id}, Title: ${test.title}`));
+            process.exit(1); // Exit with non-zero code to signal failure
+        }
+
+        console.log('All tests passed successfully.');
+    } catch (error) {
+        console.error('Error while checking TestRail results:', error.message);
+        process.exit(1); // Exit with non-zero code if there’s an error
     }
-    console.log('All tests passed successfully.');
 }
 
 module.exports = { addTestResult, createTestRun, skipNonQA, checkForTestFailures };
