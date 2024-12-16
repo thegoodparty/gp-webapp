@@ -14,9 +14,10 @@ export default defineConfig({
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],
+    ['./custom-reporter.js'],
   ],
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:4000/", // Fallback to default URL if not provided
+    baseURL: process.env.BASE_URL || "http://localhost:4000/",
     trace: "on-first-retry",
   },
   projects: [
