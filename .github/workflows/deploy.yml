@@ -85,6 +85,9 @@ jobs:
           TEST_USER_LOCAL_PRO: ${{ secrets.TEST_USER_LOCAL_PRO }}
           TEST_USER_LOCAL_PRO_PASSWORD: ${{ secrets.TEST_USER_LOCAL_PRO_PASSWORD }}
 
+      - name: Verify Test Results
+        run: node verify-results.js
+
       - name: Report Test Results
         if: failure()
         run: |
