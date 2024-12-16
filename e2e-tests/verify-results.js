@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const results = JSON.parse(fs.readFileSync('test-results/playwright-results.json', 'utf-8'));
+const results = JSON.parse(fs.readFileSync('./test-results/playwright-results.json', 'utf-8'));
 const failedTests = results.suites.reduce((count, suite) => {
   return count + suite.specs.filter(spec => spec.tests.some(test => test.status === 'failed')).length;
 }, 0);
