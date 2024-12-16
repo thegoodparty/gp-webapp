@@ -7,6 +7,8 @@ const AUTH = {
     password: process.env.TESTRAIL_API_KEY,
 };
 
+const testResultStatuses = [];
+
 // Helper to post results to TestRail
 export async function addTestResult(runId, caseId, statusId, comment = '') {
     try {
@@ -16,9 +18,14 @@ export async function addTestResult(runId, caseId, statusId, comment = '') {
             { auth: AUTH }
         );
         console.log(`Successfully updated TestRail case ID ${caseId} with status ${statusId}`);
+
+        // Store the status ID for tracking
+        testResultStatuses.push(statusId);
+
         return response.data;
     } catch (error) {
         console.error(`Failed to update TestRail case ID ${caseId}:`, error.message);
+        testResultStatuses.push(5); 
         throw error;
     }
 }
