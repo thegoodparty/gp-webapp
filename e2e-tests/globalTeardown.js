@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import path from 'path';
-import { checkForTestFailures } from 'helpers/testrailHelper';
+import { checkForTestFailures } from './helpers/testrailHelper';
 
 const filePath = path.join(__dirname, 'testRunId.txt');
 

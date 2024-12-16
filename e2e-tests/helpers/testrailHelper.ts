@@ -54,4 +54,12 @@ export async function skipNonQA(test) {
     }
 }
 
-module.exports = { addTestResult, createTestRun, skipNonQA };
+export function checkForTestFailures() {
+    const hasFailures = testResultStatuses.includes(5);
+    if (hasFailures) {
+        throw new Error('One or more tests failed during this run.');
+    }
+    console.log('All tests passed successfully.');
+}
+
+module.exports = { addTestResult, createTestRun, skipNonQA, checkForTestFailures };
