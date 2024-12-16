@@ -1,4 +1,4 @@
-import { Reporter } from ('@playwright/test/reporter');
+const { Reporter } = require('@playwright/test/reporter');
 
 class CustomReporter {
   onBegin(config, suite) {
