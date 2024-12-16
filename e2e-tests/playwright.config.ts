@@ -5,6 +5,7 @@ const projectEnv = process.env.PROJECT_ENV || "default";
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
+
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
