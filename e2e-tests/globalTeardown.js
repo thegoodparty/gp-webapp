@@ -18,9 +18,9 @@ module.exports = async () => {
 
         // Check for test failures
         console.log('Running checkForTestFailures...');
-        await checkForTestFailures(); // Assuming this function returns a promise
+        await checkForTestFailures();
     } catch (error) {
         console.error('Error during global teardown:', error.message);
-        process.exit(1); // Exit with a non-zero status code if there's an error
+        process.exit(1);
     }
 };
