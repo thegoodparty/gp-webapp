@@ -4,6 +4,7 @@ import { coreNav } from 'helpers/navHelpers';
 import { acceptCookieTerms, getNavatticPlayerFrame } from 'helpers/domHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
+import { createAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Product Tour flow', async ({ page }) => {
@@ -54,7 +55,15 @@ test('Verify Product Tour flow', async ({ page }) => {
     const navatticFrame = await getNavatticPlayerFrame(page);
     const navatticFramePopUp = await getNavatticPlayerFrame(page, true);
 
+    const testZip = '94066';
+    const role = 'California Attorney General';
     try {
+        // Create account
+        await createAccount(page, 'live', true, testZip, role);
+
+        // Confirm live account dashboard
+        await page.getByText('Learn how to use your personalized campaign plan').isVisible();
+        
         await page.goto('/');
         await coreNav(page, 'nav-tour');
 
