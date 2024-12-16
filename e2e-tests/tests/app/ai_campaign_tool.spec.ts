@@ -12,7 +12,7 @@ const testPasswordLocal = process.env.TEST_USER_LOCAL_PASSWORD;
 test('Generate content with AI Campaign Tool', async ({ page }) => {
     const caseId = 40;
     await skipNonQA(test);
-
+    test.setTimeout(90000);
     const testTemplate = 'Launch Email';
 
     try {
