@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount, loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = '#plan-section-why';
@@ -14,9 +14,16 @@ test('Complete AI Campaign Plan introduction', async ({ page }) => {
     const caseId = 39;
     await skipNonQA(test);
 
+    const testZip = '94066';
+    const role = 'California Attorney General';
     try {
-        await loginAccount(page, true, testAccountLocal, testPasswordLocal);
+        // Create account
+        await createAccount(page, 'live', true, testZip, role);
 
+        // Confirm live account dashboard
+        await page.getByText('Learn how to use your personalized campaign plan').isVisible();
+        await page.goto('/');
+        await page.getByRole('link', { name: 'Dashboard' }).click();
         await appNav(page, 'AI Campaign Plan');
 
         // Verify user is on the AI campaign plan page
@@ -33,6 +40,9 @@ test('Complete AI Campaign Plan introduction', async ({ page }) => {
         await page.locator('.introjs-nextbutton').click();
         await expect(page.getByRole('heading', { name: 'What is your current' })).toBeVisible();
         await page.locator('.introjs-overlay').isHidden();
+
+        // Delete account after test
+        await deleteAccount(page);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
