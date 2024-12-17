@@ -16,7 +16,7 @@ export const AccountSettingsSection = () => {
   const { demoPersona } = userMetaData;
   const [campaign] = useCampaign();
   const { isPro, details = {} } = campaign || {};
-  const { subscriptionCancelAt, subscriptionId } = details;
+  const { subscriptionCancelAt, subscriptionId } = details || {};
   const plan = isPro
     ? 'Candidate PRO'
     : demoPersona
