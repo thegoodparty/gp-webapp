@@ -12,7 +12,6 @@ const testPasswordLocal = process.env.TEST_USER_LOCAL_PASSWORD;
 test('Generate content with AI Campaign Tool', async ({ page }) => {
     const caseId = 40;
     await skipNonQA(test);
-    test.setTimeout(90000);
     const testTemplate = 'Launch Email';
 
     try {
@@ -43,12 +42,8 @@ test('Generate content with AI Campaign Tool', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-ai-campaign_plan-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
         // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 
 });
