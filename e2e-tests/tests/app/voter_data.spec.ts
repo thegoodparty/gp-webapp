@@ -53,7 +53,7 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
         await page.getByText('Voter file', { exact: true }).isVisible();
         await page.getByText('Door Knocking', { exact: true }).isVisible();
         await page.getByText('Texting', { exact: true }).isVisible();
-        await page.getByText('Direct Mail', { exact: true }).isVisible();
+        await page.getByText('Direct Mail (Default)', { exact: true }).isVisible();
         await page.getByText('Facebook', { exact: true }).isVisible();
         await page.getByText('Phone Banking', { exact: true }).isVisible();
 
