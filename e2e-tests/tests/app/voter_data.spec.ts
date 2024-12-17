@@ -46,6 +46,9 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
         await loginAccount(page, true, testAccountLocalPro, testLocalProPassword);
         await appNav(page, 'Voter Data');
 
+        // Waits for page to load completely
+        await page.waitForLoadState('networkidle');
+
         // Verify user is on voter data (pro) page
         await expect(page.getByRole('heading', { name: 'Voter File' })).toBeVisible();
 
