@@ -74,7 +74,7 @@ test('Update Office Details', async ({ page }) => {
     const caseId = 47;
     await skipNonQA(test);
 
-        try {
+    try {
         await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Details');
 
@@ -82,30 +82,30 @@ test('Update Office Details', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Determine current office details and new state to select
-        var newOfficeState = ''
-        var newOfficeZip = ''
-        var oldOfficeZip = ''
+        let newOfficeState = ''
+        let newOfficeZip = ''
+        let oldOfficeZip = ''
         const oldOfficeState = await page.getByLabel('State').inputValue();
         const oldOfficeTitle = await page.getByLabel('Office').inputValue();
-        if(oldOfficeState == 'CA') {
-            newOfficeState == 'NY'
+        if(oldOfficeState === 'CA') {
+            newOfficeState === 'NY'
             newOfficeZip = '10001'
             oldOfficeZip = '94066'
         } else {
-            newOfficeState =='CA'
+            newOfficeState ==='CA'
             newOfficeZip = '94066'
             oldOfficeZip = '10001'
         }
 
         // Select new office location
         await page.getByRole('button', { name: 'Edit Office Details' }).click();
-        await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden({timeout:15000});
+        await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
         await page.getByRole('button').first().click();
         await page.getByRole('textbox').fill(newOfficeZip);
         await page.getByRole('button', { name: 'Save' }).click();
 
         // Wait for new office location results
-        await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden({timeout:15000});
+        await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
 
         // Select first local office listing
         const officeSelection = page.getByRole('button', { name: 'Local' }).first();
