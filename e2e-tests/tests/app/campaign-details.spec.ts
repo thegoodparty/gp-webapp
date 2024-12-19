@@ -129,7 +129,163 @@ test('Update Office Details', async ({ page }) => {
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
         // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-campaign-details${Date.now()}.png`;
+        const screenshotPath = `screenshots/test-failure-office-details${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
+
+test('Update Your Why Statement', async ({ page }) => {
+    const caseId = 48;
+    await skipNonQA(test);
+
+    const newWhyStatement = generateTimeStamp() + ' Statement';
+
+    try {
+        await loginAccount(page, true, testAccountState, testStatePassword);
+        await appNav(page, 'Campaign Details');
+
+        // Verify user is on campaign details page
+        await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
+
+        // Update Your Why Statement
+        await page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
+        await page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
+        await page.getByRole('button', { name: 'Save' }).nth(2).click();
+        await page.waitForLoadState("networkidle");
+
+        // Refresh page
+        await page.reload({ waitUntil: 'domcontentloaded' });
+
+        // Confirm saved Why Statement
+        const updatedStatement = await page.getByPlaceholder('EXAMPLE: I have 5 years of').evaluate(
+            (el) => (el as HTMLTextAreaElement).value
+        );
+        await expect(updatedStatement).toBe(newWhyStatement);
+
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-why-statement${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
+
+
+test('Update Fun Facts about Yourself', async ({ page }) => {
+    const caseId = 49;
+    await skipNonQA(test);
+
+    const newFunFacts = generateTimeStamp() + ' Fun Fact';
+
+    try {
+        await loginAccount(page, true, testAccountState, testStatePassword);
+        await appNav(page, 'Campaign Details');
+
+        // Verify user is on campaign details page
+        await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
+
+        // Update Your Why Statement
+        await page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
+        await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
+        await page.getByRole('button', { name: 'Save' }).nth(3).click();
+        await page.waitForLoadState("networkidle");
+
+        // Refresh page
+        await page.reload({ waitUntil: 'domcontentloaded' });
+
+        // Confirm saved Why Statement
+        const updatedStatement = await page.getByPlaceholder('EXAMPLE: In my free time, I').evaluate(
+            (el) => (el as HTMLTextAreaElement).value
+        );
+        await expect(updatedStatement).toBe(newFunFacts);
+
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-fun-facts${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+
+        // Report test results with screenshot path
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+    }
+});
+
+test('Add/Edit/Delete Opponent', async ({ page }) => {
+    const caseId = 50;
+    await skipNonQA(test);
+
+    const opponent = generateTimeStamp() + ' Opponent';
+    const opponentDescription = generateTimeStamp() + ' Opponent Description';
+    const newOpponent = generateTimeStamp() + ' New Opponent';
+    const newOpponentDescription = generateTimeStamp() + ' New Opponent Description';
+
+
+    try {
+        await loginAccount(page, true, testAccountState, testStatePassword);
+        await appNav(page, 'Campaign Details');
+
+        // Verify user is on campaign details page
+        await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
+
+        // Delete any existing opponent data, if any
+        const deleteButtons = page.getByRole('button', { name: 'Delete' });
+        const buttonCount = await deleteButtons.count();
+
+        if (buttonCount > 0) {
+        // Loop through each delete button and click it
+        for (let i = 0; i < buttonCount; i++) {
+            await deleteButtons.nth(i).click();
+            }
+        await page.getByRole('button', { name: 'Save' }).nth(1).click();
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        }
+
+        // Add new opponent data
+        await page.getByRole('button', { name: 'Add New Opponent' }).click();
+        await page.getByLabel('Name *').fill(opponent);
+        await page.locator('form').getByRole('combobox').selectOption('Other');
+        await page.getByPlaceholder('EXAMPLE: Republican hotel').fill(opponentDescription);
+        await page.getByRole('button', { name: 'Add Opponent' }).click();
+        await page.getByRole('button', { name: 'Save' }).nth(1).click();
+
+        // Refresh page and confirm saved opponent data
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.getByText(opponent, { exact: true }).isVisible();
+
+        // Edit opponent data
+        await page.getByRole('button', { name: 'Edit', exact: true }).click();
+        await page.getByLabel('Name *').fill(newOpponent);
+        await page.locator('form').getByRole('combobox').selectOption('Independent');
+        await page.getByPlaceholder('EXAMPLE: Republican hotel').fill(newOpponentDescription);
+        await page.getByRole('button', { name: 'Finish Editing' }).click()
+        await page.getByRole('button', { name: 'Save' }).nth(1).click();
+
+        // Refresh page and confirm update to opponent data
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.getByText(newOpponent, { exact: true }).isVisible();
+
+        // Delete opponent data
+        await page.getByRole('button', { name: 'Delete' }).click();
+        await page.getByRole('button', { name: 'Save' }).nth(1).click();
+
+        // Refresh page and confirm deleted opponent data
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await expect(page.getByText(opponent)).toBeHidden();
+        await expect(page.getByText(newOpponent)).toBeHidden();
+    
+        // Report test results
+        await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+        // Capture screenshot on error
+        const screenshotPath = `screenshots/test-failure-opponent-data${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path
