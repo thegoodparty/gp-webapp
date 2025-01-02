@@ -54,6 +54,10 @@ export default async function candidateAccess() {
   const campaignStatus = await fetchCampaignStatus(token);
   const user = getServerUser();
 
+  if (!user) {
+    return redirect('/register');
+  }
+
   const campaignRequests = await getCampaignRequestsByUserId(user?.id);
   if (campaignRequests && campaignRequests.length) {
     return redirect('/onboarding/managing/final');
