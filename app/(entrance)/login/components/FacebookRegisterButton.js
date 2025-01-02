@@ -35,7 +35,7 @@ const FacebookRegisterButton = ({ loginSuccessCallback }) => {
   return (
     <div data-cy="facebook-login" className="mt-6">
       <FacebookLogin
-        appId="281110284260458"
+        appId="1115669002990304"
         className={
           'rounded-lg py-5 px-1 relative text-center text-sm font-bold w-full'
         }
