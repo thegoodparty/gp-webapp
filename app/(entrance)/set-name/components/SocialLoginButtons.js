@@ -4,7 +4,6 @@ import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
 import GoogleLoginButton from './GoogleLoginButton';
-// import FacebookLoginButton from './FacebookLoginButton';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
 import Overline from '@shared/typography/Overline';
@@ -101,8 +100,6 @@ export default function SocialLoginButtons() {
       <GoogleOAuthProvider clientId="28351607421-c9m6ig3vmto6hpke4g96ukgfl3vvko7g.apps.googleusercontent.com">
         <GoogleLoginButton loginSuccessCallback={socialLoginCallback} />
       </GoogleOAuthProvider>
-
-      {/* <FacebookLoginButton loginSuccessCallback={socialLoginCallback} /> */}
     </>
   );
 }
