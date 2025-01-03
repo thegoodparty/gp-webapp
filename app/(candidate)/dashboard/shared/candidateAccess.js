@@ -55,7 +55,7 @@ export default async function candidateAccess() {
   const user = getServerUser();
 
   if (!user) {
-    return redirect('/register');
+    return redirect('/sign-up');
   }
 
   const campaignRequests = await getCampaignRequestsByUserId(user?.id);
