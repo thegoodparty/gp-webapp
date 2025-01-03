@@ -48,14 +48,14 @@ const getCampaignVolunteersByUserId = async (userId) => {
 };
 
 export default async function candidateAccess() {
-  // don't remove this call. It prevents the build process to try to cache this page which should be dynamic
+  // don't remove this call. It prevents the build process to try to cache this page which should be dynamic.
   // https://nextjs.org/docs/messages/dynamic-server-error
   const token = getServerToken();
   const campaignStatus = await fetchCampaignStatus(token);
   const user = getServerUser();
 
   if (!user) {
-    return redirect('/register');
+    return redirect('/sign-up');
   }
 
   const campaignRequests = await getCampaignRequestsByUserId(user?.id);
