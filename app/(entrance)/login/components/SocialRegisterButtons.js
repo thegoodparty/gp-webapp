@@ -30,13 +30,7 @@ export default function SocialRegisterButtons() {
     // for facebook - get a larger image
     let socialPic = profilePicURL;
     let idToken;
-    if (provider === 'facebook') {
-      try {
-        idToken = socialUser._token.accessToken;
-      } catch (e) {
-        console.log('fb API error');
-      }
-    } else if (provider === 'google') {
+    if (provider === 'google') {
       // for gogole removing the "=s96-c" at the end of the string returns a large image.
       try {
         const largeImg = profilePicURL.substring(0, profilePicURL.indexOf('='));
