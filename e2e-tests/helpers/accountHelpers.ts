@@ -1,125 +1,159 @@
-import 'dotenv/config';
-import { expect } from '@playwright/test';
-import { coreNav } from 'helpers/navHelpers';
-import { userData, generateEmail, generatePhone } from 'helpers/dataHelpers';
-import { acceptCookieTerms } from 'helpers/domHelpers';
+import "dotenv/config";
+import { expect } from "@playwright/test";
+import { coreNav } from "helpers/navHelpers";
+import { userData, generateEmail, generatePhone } from "helpers/dataHelpers";
+import { acceptCookieTerms } from "helpers/domHelpers";
 
-export async function loginAccount(page, isOnboarded = true, emailAddress, password) {
-    await page.goto('/login');
+export async function loginAccount(
+  page,
+  isOnboarded = true,
+  emailAddress,
+  password
+) {
+  await page.goto("/login");
 
-    // Accept cookie terms (if visible)
-    await acceptCookieTerms(page);
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
 
-    // Log into existing account
-    await page.getByTestId('login-email-input').nth(1).fill(emailAddress);
-    await page.getByTestId('login-password-input').nth(1).fill(password);
-    await page.getByTestId('login-submit-button').click();
-    if(isOnboarded) {
-        // Verify user is on dashboard page
-        await page.getByRole('heading', { name: 'Path to Victory' }).isVisible();
-    } else {
-        await page.getByRole('link', { name: 'Continue Setup' }).isVisible();
-    }
+  // Log into existing account
+  await page.getByTestId("login-email-input").nth(1).fill(emailAddress);
+  await page.getByTestId("login-password-input").nth(1).fill(password);
+  await page.getByTestId("login-submit-button").click();
+  if (isOnboarded) {
+    // Verify user is on dashboard page
+    await page.getByRole("heading", { name: "Path to Victory" }).isVisible();
+  } else {
+    await page.getByRole("link", { name: "Continue Setup" }).isVisible();
+  }
 }
 
 export async function createAccount(
-        page, 
-        accountType = null, 
-        isLocal = true, 
-        zipCode = '90210', 
-        role = null,
-        password = userData.password
-    ) {
-    const loginPageHeader = 'Join GoodParty.org';
-    const firstName = userData.firstName;
-    const lastName = userData.lastName;
-    const emailAddress = generateEmail();
-    const phoneNumber = generatePhone();
+  page,
+  accountType = null,
+  isLocal = true,
+  zipCode = "90210",
+  role = null,
+  password = userData.password,
+  campaignEmail = null
+) {
+  const loginPageHeader = "Join GoodParty.org";
+  const firstName = userData.firstName;
+  const lastName = userData.lastName;
+  const emailAddress = generateEmail();
+  const phoneNumber = generatePhone();
 
-    await page.goto('/');
-    await coreNav(page, 'nav-sign-up');
+  await page.goto("/");
+  await coreNav(page, "nav-sign-up");
 
-    // Verify user is on login page
-    await expect(page.getByText(loginPageHeader)).toBeVisible();
+  // Verify user is on login page
+  await expect(page.getByText(loginPageHeader)).toBeVisible();
 
-    // Fill in sign up page
-    await page.getByRole('textbox', { name: 'First Name'}).fill(firstName);
-    await page.getByRole('textbox', { name: 'Last Name'}).fill(lastName);
-    await page.getByRole('textbox', { name: 'email'}).fill(emailAddress);
-    await page.getByRole('textbox', { name: 'phone'}).fill(phoneNumber);
-    await page.getByRole('textbox', { name: 'Zip Code'}).fill(zipCode);
-    await page.getByRole('textbox', { name: 'password'}).fill(password + '1');
-    await page.getByRole('button', { name: 'Join'}).click();
+  // Fill in sign up page
+  await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
+  await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
+  await page.getByRole("textbox", { name: "email" }).fill(emailAddress);
+  await page.getByRole("textbox", { name: "phone" }).fill(phoneNumber);
+  await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
+  await page.getByRole("textbox", { name: "password" }).fill(password + "1");
+  await page.getByRole("button", { name: "Join" }).click();
 
-    // Verify user is in onboarding flow
-    await page.getByRole('link', { name: 'Finish Later' }).isVisible({ timeout: 5000 });
-    await page.waitForURL('**/onboarding/account-type', {
-        timeout: 30000,
-    });
+  // Verify user is in onboarding flow
+  await page
+    .getByRole("link", { name: "Finish Later" })
+    .isVisible({ timeout: 5000 });
+  await page.waitForURL("**/onboarding/account-type", {
+    timeout: 30000,
+  });
 
-    // Proceed based on account type
-    if (accountType == 'live') {
-        await onboardingLive(page, role)
-    } else if (accountType == 'manager') {
-        await page.getByRole('radio', { name: 'Managing a campaign'}).click();
-        await page.getByRole('button', { name: 'Next'}).click();
-    } else if (accountType == 'demo') {
-        await onboardingDemo(page, isLocal);
-    } else {
-        return;
-    }
+  // Proceed based on account type
+  if (accountType == "live") {
+    await onboardingLive(page, role);
+  } else if (accountType == "manager") {
+    await onboardingMember(page, campaignEmail);
+    return emailAddress;
+  } else if (accountType == "demo") {
+    await onboardingDemo(page, isLocal);
+  } else {
+    return;
+  }
 }
 
 export async function deleteAccount(page) {
-    await page.goto('/profile');
+  await page.goto("/profile");
 
-    // Accept cookie terms (if visible)
-    await acceptCookieTerms(page);
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
 
-    await page.getByRole('button', { name: 'Delete Account'}).click();
-    await page.getByRole('button', { name: 'Proceed'}).click();
-    await expect(page.getByTestId('nav-login')).toBeVisible({ timeout: 10000 });
+  await page.getByRole("button", { name: "Delete Account" }).click();
+  await page.getByRole("button", { name: "Proceed" }).click();
+  await expect(page.getByTestId("nav-login")).toBeVisible({ timeout: 10000 });
 }
 
 export async function onboardingDemo(page, isLocal = true) {
-    // Accept cookie terms (if visible)
-    await acceptCookieTerms(page);
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
 
-    await page.getByRole('radio', { name: 'Just Browsing'}).click();
-    await page.getByRole('button', { name: 'Next'}).click();
-    await page.getByText("We're excited to have you exploring GoodParty.org!").isVisible();
-    await page.getByText("I'm not running, but am actively considering to run in the future").click();
-    await page.getByRole('button', { name: 'Next'}).click();
-    if(isLocal) {
-        await page.getByRole('radio', { name: 'Demo a Local Office'}).click();
-        await page.getByText('Next').click();
-        await page.getByText('View Dashboard').click();
-    } else {
-        await page.getByRole('radio', { name: 'Demo a Federal Office'}).click();
-        await page.getByText('Next').click();
-        await page.getByText('View Dashboard').click();
-    }
+  await page.getByRole("radio", { name: "Just Browsing" }).click();
+  await page.getByRole("button", { name: "Next" }).click();
+  await page
+    .getByText("We're excited to have you exploring GoodParty.org!")
+    .isVisible();
+  await page
+    .getByText(
+      "I'm not running, but am actively considering to run in the future"
+    )
+    .click();
+  await page.getByRole("button", { name: "Next" }).click();
+  if (isLocal) {
+    await page.getByRole("radio", { name: "Demo a Local Office" }).click();
+    await page.getByText("Next").click();
+    await page.getByText("View Dashboard").click();
+  } else {
+    await page.getByRole("radio", { name: "Demo a Federal Office" }).click();
+    await page.getByText("Next").click();
+    await page.getByText("View Dashboard").click();
+  }
 }
 
 export async function onboardingLive(page, role) {
-    // Accept cookie terms (if visible)
-    await acceptCookieTerms(page);
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
 
-    await page.getByRole('radio', { name: 'Currently running for office'}).click();
-    await page.getByRole('button', { name: 'Next'}).click();
-    await page.getByText("What office are you interested in?").isVisible();
-    await page.getByRole('progressbar').waitFor({ state: 'hidden', timeout: 20000 });
-    await page.getByRole('button', { name: role }).click();
-    await page.getByRole('button', { name: 'Next'}).click();
-    await page.getByText("How will your campaign appear on the ballot?").isVisible();
-    await page.getByLabel('Other').fill('Test')
-    await page.getByRole('button', { name: 'Next'}).click();
-    // Agree to GoodParty.org Terms
-    await page.getByRole('button', { name: 'I Agree'}).click();
-    await page.getByRole('button', { name: 'I Agree'}).click();
-    await page.getByRole('button', { name: 'I Agree'}).click();
-    await page.getByRole('button', { name: 'I Agree'}).click();
-    await page.getByRole('button', { name: 'Submit'}).click();
+  await page
+    .getByRole("radio", { name: "Currently running for office" })
+    .click();
+  await page.getByRole("button", { name: "Next" }).click();
+  await page.getByText("What office are you interested in?").isVisible();
+  await page
+    .getByRole("progressbar")
+    .waitFor({ state: "hidden", timeout: 20000 });
+  await page.getByRole("button", { name: role }).click();
+  await page.getByRole("button", { name: "Next" }).click();
+  await page
+    .getByText("How will your campaign appear on the ballot?")
+    .isVisible();
+  await page.getByLabel("Other").fill("Test");
+  await page.getByRole("button", { name: "Next" }).click();
+  // Agree to GoodParty.org Terms
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole("button", { name: "Submit" }).click();
 
-    await page.getByText('View Dashboard').click();
+  await page.getByText("View Dashboard").click();
+}
+
+export async function onboardingMember(page, campaignEmail) {
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
+
+  await page.getByRole("radio", { name: "Managing a campaign" }).click();
+  await page.getByRole("button", { name: "Next" }).click();
+  await page
+    .locator('input[placeholder="hello@email.com"]')
+    .fill(campaignEmail);
+  await page.getByRole("button", { name: "Send Request" }).click();
+  await page.getByRole("heading", { name: "Request Submitted" }).isVisible();
+  await page.getByRole("link", { name: "Return to GoodParty.org" }).click();
 }
