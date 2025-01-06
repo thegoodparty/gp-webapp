@@ -43,24 +43,6 @@ npm run storybook
 
 You will need to run also the api for the project <a href="https://github.com/thegoodparty/tgp-api">https://github.com/thegoodparty/tgp-api</a>
 
-## Tests
-
-We are using [cypress.io](https://www.cypress.io/) for our tests.
-To run with local api:
-
-- make sure you run your webapp and api local
-
-```
-npm run cypress-local
-```
-
-to run cypress with dev or prod api (and local webApp):
-
-```
-npm run cypress-local-dev
-npm run cypress-local-prod
-```
-
 ## License
 
 This project is licensed under the [Creative Common Zero (CC0)](https://creativecommons.org/share-your-work/public-domain/cc0/) License
