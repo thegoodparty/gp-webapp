@@ -3,6 +3,7 @@ name: Deployment and Playwright Tests
 on:
   pull_request:
     branches:
+      - develop
       - qa
 
 jobs:
