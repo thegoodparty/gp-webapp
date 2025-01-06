@@ -86,6 +86,7 @@ jobs:
           TEST_USER_LOCAL_PRO_PASSWORD: ${{ secrets.TEST_USER_LOCAL_PRO_PASSWORD }}
           
       - name: Notify Slack Workflow
+        if: always()
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
