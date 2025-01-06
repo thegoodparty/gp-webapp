@@ -4,7 +4,7 @@ import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
 import { numberFormatter } from 'helpers/numberHelper';
 
-export const WINNER_COUNT = 3396;
+export const WINNER_COUNT = 3446;
 
 const fetchCount = async (onlyWinners = false) => {
   const api = gpApi.campaign.mapCount;
