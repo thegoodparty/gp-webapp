@@ -66,7 +66,7 @@ const DEFAULT_MENU_ITEMS = [
   {
     label: 'Resources Library',
     icon: <RiBook2Line />,
-    link: '/dashboard/resources',
+    link: '/blog/section/for-candidates',
     section: 'Resources',
     id: 'resources-library',
   },
