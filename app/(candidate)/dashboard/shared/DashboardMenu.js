@@ -3,12 +3,7 @@ import Link from 'next/link';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
-import {
-  RiBook2Line,
-  RiDoorOpenLine,
-  RiTeamLine,
-  RiUserHeartLine,
-} from 'react-icons/ri';
+import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import useNotifications from '@shared/layouts/navigation/notifications/useNotifications';
@@ -43,12 +38,6 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-assistant-dashboard',
   },
   VOTER_DATA_UPGRADE_ITEM,
-  {
-    label: 'AI Campaign Plan',
-    icon: <TbBrain />,
-    link: '/dashboard/plan',
-    id: 'campaign-plan-dashboard',
-  },
   {
     label: 'AI Campaign Tool',
     icon: <BsPostcardHeart />,
