@@ -12,7 +12,7 @@ import { HiOutlineScale } from 'react-icons/hi';
 import { SiMinutemailer } from 'react-icons/si';
 
 import Caption from '@shared/typography/Caption';
-import { calcAnswers } from '../../plan/components/QuestionProgress';
+import { calcAnswers } from '../../shared/QuestionProgress';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 
 const categoryIcons = {

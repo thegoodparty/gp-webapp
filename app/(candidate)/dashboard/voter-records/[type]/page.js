@@ -8,7 +8,7 @@ import { fetchCanDownload } from '../page';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';
 import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import { calcAnswers } from 'app/(candidate)/dashboard/plan/components/QuestionProgress';
+import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress';
 
 const meta = pageMetaData({
   title: 'Voter Data detailed view | GoodParty.org',

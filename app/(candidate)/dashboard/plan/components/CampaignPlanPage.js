@@ -7,7 +7,7 @@ import TitleSection from '../../shared/TitleSection';
 import MessagingPanel from './MessagingPanel';
 import VisionPanel from './VisionPanel';
 import H3 from '@shared/typography/H3';
-import QuestionProgress from './QuestionProgress';
+import QuestionProgress from '../../shared/QuestionProgress';
 import PlanTutorial from './PlanTutorial';
 import { getCookie } from 'helpers/cookieHelper';
 

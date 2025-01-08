@@ -5,11 +5,14 @@ import { FaPencilAlt } from 'react-icons/fa';
 import styles from './CampaignPlan.module.scss';
 
 import dynamic from 'next/dynamic';
-const RichEditor = dynamic(() => import('./RichEditor'), {
-  loading: () => (
-    <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
-  ),
-});
+const RichEditor = dynamic(
+  () => import('../../../../shared/inputs/RichEditor'),
+  {
+    loading: () => (
+      <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+    ),
+  },
+);
 
 export default function PlanDisplay({
   plan,

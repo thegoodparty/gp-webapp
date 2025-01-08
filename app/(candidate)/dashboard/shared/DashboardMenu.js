@@ -134,7 +134,7 @@ export default function DashboardMenu({
         <div className="mt-4 border-t border-indigo-400 pt-4">
           <Link
             href="/profile"
-            className="no-underline block block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
+            className="no-underline block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
             id="nav-dash-settings"
           >
             <div className="ml-2">Settings</div>
