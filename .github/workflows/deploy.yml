@@ -21,6 +21,9 @@ jobs:
       - name: Install Dependencies for gp-webapp
         run: npm install
 
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
       - name: Deploy to Vercel
         id: deploy
         run: |
