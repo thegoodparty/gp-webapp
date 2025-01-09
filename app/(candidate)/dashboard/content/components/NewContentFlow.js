@@ -8,9 +8,7 @@ import Modal from '@shared/utils/Modal';
 import { useEffect, useState } from 'react';
 import InputFieldsModal from './InputFieldsModal';
 import TemplateList from './TemplatesList';
-import QuestionProgress, {
-  calcAnswers,
-} from '../../plan/components/QuestionProgress';
+import QuestionProgress, { calcAnswers } from '../../shared/QuestionProgress';
 import { BsStars } from 'react-icons/bs';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 import {
