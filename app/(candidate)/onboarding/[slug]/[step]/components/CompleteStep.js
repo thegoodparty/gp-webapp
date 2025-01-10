@@ -41,7 +41,7 @@ export default function CompleteStep() {
     const res = await launchCampaign();
     if (res) {
       trackEvent('onboarding_complete', { type: 'candidate' });
-      window.location.href = '/dashboard/plan';
+      window.location.href = '/dashboard';
     } else {
       setLoading(false);
       errorSnackbar('Error launching your campaign');
