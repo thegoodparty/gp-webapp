@@ -1,4 +1,4 @@
-import RichEditor from 'app/(candidate)/dashboard/plan/components/RichEditor';
+import RichEditor from '@shared/inputs/RichEditor';
 
 export default {
   title: 'Unshared/RichEditor',

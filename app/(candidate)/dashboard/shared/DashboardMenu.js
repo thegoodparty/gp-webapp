@@ -3,12 +3,7 @@ import Link from 'next/link';
 import { AiOutlineFlag } from 'react-icons/ai';
 import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
-import {
-  RiBook2Line,
-  RiDoorOpenLine,
-  RiTeamLine,
-  RiUserHeartLine,
-} from 'react-icons/ri';
+import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
 import { TbBrain } from 'react-icons/tb';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import useNotifications from '@shared/layouts/navigation/notifications/useNotifications';
@@ -43,12 +38,6 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-assistant-dashboard',
   },
   VOTER_DATA_UPGRADE_ITEM,
-  {
-    label: 'AI Campaign Plan',
-    icon: <TbBrain />,
-    link: '/dashboard/plan',
-    id: 'campaign-plan-dashboard',
-  },
   {
     label: 'AI Campaign Tool',
     icon: <BsPostcardHeart />,
@@ -134,7 +123,7 @@ export default function DashboardMenu({
         <div className="mt-4 border-t border-indigo-400 pt-4">
           <Link
             href="/profile"
-            className="no-underline block block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
+            className="no-underline block text-[17px] py-3 px-3 rounded-lg transition-colors hover:text-slate-50 hover:bg-primary-dark-dark"
             id="nav-dash-settings"
           >
             <div className="ml-2">Settings</div>
