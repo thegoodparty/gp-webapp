@@ -11,7 +11,12 @@ import { useRouter } from 'next/navigation';
 import { isObjectEqual } from 'helpers/objectHelper';
 import { CircularProgress } from '@mui/material';
 
-export default memo(function MapSection({ isLoaded, state, searchParams }) {
+export default memo(function MapSection({
+  isLoaded,
+  state,
+  searchParams,
+  count,
+}) {
   const router = useRouter();
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [visibleCampaigns, setVisibleCampaigns] = useState(null);
@@ -162,6 +167,7 @@ export default memo(function MapSection({ isLoaded, state, searchParams }) {
               <Results
                 onZoomOut={onZoomOut}
                 totalNumCampaigns={campaigns.length}
+                count={count}
                 campaigns={visibleCampaigns || campaigns}
                 onSelectCampaign={onSelectCampaign}
                 selectedCampaign={selectedCampaign}

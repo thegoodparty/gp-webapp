@@ -13,6 +13,7 @@ import { numberFormatter } from 'helpers/numberHelper';
 export default memo(function Results({
   campaigns,
   totalNumCampaigns,
+  count,
   onSelectCampaign,
   selectedCampaign,
   onZoomOut,
@@ -20,10 +21,12 @@ export default memo(function Results({
   const user = useUser();
   const viewingSubset = campaigns.length < totalNumCampaigns;
 
+  const totalCandidates = Math.max(totalNumCampaigns, count) || 0;
+
   return (
     <div className="md:w-[400px] lg:w-[500px] h-80  md:h-[calc(100vh-56px-298px)] border-r border-gray-300 bg-indigo-100 flex flex-col">
       <H5 className="pb-2 px-6 flex gap-2 items-center min-h-[50px]">
-        {totalNumCampaigns ? numberFormatter(totalNumCampaigns) : ''} candidates
+        {totalCandidates ? numberFormatter(totalCandidates) : ''} candidates
         {viewingSubset && (
           <>
             <span className="font-normal">
