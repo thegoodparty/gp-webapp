@@ -34,6 +34,7 @@ export default function CandidatesPage({
         isLoaded={isLoaded}
         state={state}
         searchParams={searchParams}
+        count={count}
       />
       <InfoSection />
       <FacesSection />
