@@ -11,8 +11,8 @@ import {
 import { userData } from "helpers/dataHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
-const testAccountLocalPro = process.env.TEST_USER_LOCAL_PRO;
-const testLocalProPassword = process.env.TEST_USER_LOCAL_PRO_PASSWORD;
+  const testAdmin = process.env.TEST_USER_ADMIN;
+  const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
 test("Add Campaign Manager", async ({ browser }) => {
   test.setTimeout(60000);
@@ -37,16 +37,16 @@ test("Add Campaign Manager", async ({ browser }) => {
       undefined,
       undefined,
       undefined,
-      testLocalProPassword,
-      testAccountLocalPro
+      undefined,
+      testAdmin
     );
 
     // Admin: Log in to approve campaign manager
     await loginAccount(
       adminPage,
       true,
-      testAccountLocalPro,
-      testLocalProPassword
+      testAdmin,
+      testAdminPassword
     );
     await appNav(adminPage, "Campaign Team");
     await adminPage.waitForFunction(

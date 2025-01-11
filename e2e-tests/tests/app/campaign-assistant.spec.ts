@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount, deleteAccount, loginAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
