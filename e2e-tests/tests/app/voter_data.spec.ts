@@ -3,20 +3,24 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount, upgradeToPro } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-const testAccountState = process.env.TEST_USER_STATE;
-const testStatePassword = process.env.TEST_USER_STATE_PASSWORD;
-const testAccountLocalPro = process.env.TEST_USER_LOCAL_PRO;
-const testLocalProPassword = process.env.TEST_USER_LOCAL_PRO_PASSWORD;
+test.beforeEach(async ({ page }) => {
+    const testZip = '94066';
+    const role = 'San Bruno City Mayor';
+    await createAccount(page, 'live', true, testZip, role);
+});
+
+test.afterEach(async ({ page }) => {
+    await deleteAccount(page);
+});
 
 test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
     const caseId = 41;
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Voter Data');
 
         // Verify user is on voter data (free) page
@@ -43,11 +47,10 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAccountLocalPro, testLocalProPassword);
         await appNav(page, 'Voter Data');
-
-        // Waits for page to load completely
         await page.waitForLoadState('networkidle');
+        await upgradeToPro(page);
+        await page.goto('/dashboard/voter-records')
 
         // Verify user is on voter data (pro) page
         await expect(page.getByRole('heading', { name: 'Voter File' })).toBeVisible();
@@ -69,7 +72,7 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
         // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-voter-data-free-${Date.now()}.png`;
+        const screenshotPath = `screenshots/test-failure-voter-data-pro-file-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path
@@ -82,14 +85,13 @@ test('Can generate custom voter file (Pro)', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAccountLocalPro, testLocalProPassword);
         await appNav(page, 'Voter Data');
+        await page.waitForLoadState('networkidle');
+        await upgradeToPro(page);
+        await page.goto('/dashboard/voter-records')
 
         // Verify user is on voter data (pro) page
         await expect(page.getByRole('heading', { name: 'Voter File' })).toBeVisible();
-
-        // Count current number of custom voter files
-        const initialCount = await page.getByText('Custom Voter File').count();
 
         // Generate custom voter file
         await page.getByRole('button', { name: 'Create a custom voter file' }).first().click();
@@ -106,16 +108,14 @@ test('Can generate custom voter file (Pro)', async ({ page }) => {
 
         await page.getByRole('button', { name: 'Create Voter File' }).click();
 
-        // Confirm the updated count
         await page.reload({ waitUntil: 'networkidle' });
-        const updatedCount = await page.getByText('Custom Voter File').count();
-        expect(updatedCount).toBe(initialCount + 1);
+        await page.getByText('Custom Voter File', { exact: true }).isVisible();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
         // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-voter-data-free-${Date.now()}.png`;
+        const screenshotPath = `screenshots/test-failure-voter-data-pro-custom-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path

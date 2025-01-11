@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { appNav } from "helpers/navHelpers";
 import { addTestResult, skipNonQA } from "helpers/testrailHelper";
 import * as fs from "fs";
@@ -16,7 +16,8 @@ const testLocalProPassword = process.env.TEST_USER_LOCAL_PRO_PASSWORD;
 
 test("Add Campaign Manager", async ({ browser }) => {
   test.setTimeout(60000);
-  const caseId = 51;
+  const caseId1 = 51;
+  const caseId2 = 44;
   await skipNonQA(test);
 
   try {
@@ -86,9 +87,11 @@ test("Add Campaign Manager", async ({ browser }) => {
     await adminContext.close();
 
     // Report test results
-    await addTestResult(runId, caseId, 1, "Test passed");
+    await addTestResult(runId, caseId1, 1, "Test passed");
+    await addTestResult(runId, caseId2, 1, "Test passed");
   } catch (error) {
     // Report test results
-    await addTestResult(runId, caseId, 5);
+    await addTestResult(runId, caseId1, 5);
+    await addTestResult(runId, caseId2, 5);
   }
 });
