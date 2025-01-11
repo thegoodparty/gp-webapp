@@ -115,6 +115,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   const fileInput = page.locator("button input[type='file']");
   await fileInput.setInputFiles(pdfPath);
   await expect(page.getByRole('button', { name: 'Next' })).toBeEnabled();
+  fs.unlinkSync(pdfPath);
   await page.getByRole('button', { name: 'Next' }).click();
 
   // Agree to GoodParty.org Terms

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount, deleteAccount, loginAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 import { generateTimeStamp } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
@@ -16,9 +16,6 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(async ({ page }) => {
     await deleteAccount(page);
 });
-
-const testAccountState = process.env.TEST_USER_LOCAL_PRO;
-const testStatePassword = process.env.TEST_USER_LOCAL_PRO_PASSWORD;
 
 test('Update Campaign Details', async ({ page }) => {
     const caseId = 46;
