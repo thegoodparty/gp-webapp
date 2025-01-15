@@ -27,6 +27,6 @@ export function generateEmail() {
 
 export function generatePhone() {
   const timeStamp = generateTimeStamp();
-  const number = `5555${timeStamp.slice(-6)}`;
+  const number = `5105${timeStamp.slice(-6)}`;
   return number;
 }
