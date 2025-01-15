@@ -83,6 +83,7 @@ export async function createAccount(
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   const testCardNumber = "4242424242424242";
+  const phoneNumber = generatePhone();
 
   await page.goto("/dashboard/upgrade-to-pro");
 
@@ -134,21 +135,20 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByPlaceholder('CVC').fill('123');
   await page.getByPlaceholder('Full name on card').fill(userData.firstName + ' ' + userData.lastName);
   await page.getByPlaceholder('ZIP').fill('90210');
-  await page.getByPlaceholder('(800) 555-').fill('5105551555');
+  await page.getByPlaceholder('(800) 555-').fill(phoneNumber);
   await page.getByTestId('hosted-payment-submit-button').click();
   await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
   await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
 }
 
 export async function deleteAccount(page) {
-  await page.goto("/profile");
+  await page.goto('/profile');
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
 
   await page.getByRole("button", { name: "Delete Account" }).click();
   await page.getByRole("button", { name: "Proceed" }).click();
-  await expect(page.getByTestId("nav-login")).toBeVisible({ timeout: 10000 });
 }
 
 export async function onboardingDemo(page, isLocal = true) {

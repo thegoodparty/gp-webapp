@@ -36,7 +36,7 @@ test('Create new conversation', async ({ page }) => {
         await page.getByRole('button', { name: testTopic }).click();
 
         // Verify conversation window
-        await page.locator('div').filter({ hasText: testTopicChat }).isVisible();
+        await page.locator('div').filter({ hasText: testTopicChat }).first().isVisible();
         await page.locator('.font-normal > div:nth-child(2)').isVisible({timeout: 20000});
 
         // Report test results
@@ -62,12 +62,12 @@ test('Delete a conversation', async ({ page }) => {
         await page.getByRole('button', { name: 'New Chat' }).click();
         await page.getByRole('button', { name: testTopic }).click();
 
-        // Verify conversation window
-        await page.locator('div').filter({ hasText: testTopicChat }).isVisible();
-        await page.locator('.font-normal > div:nth-child(2)').isVisible({timeout: 20000});
+        // Wait for response to generate
+        await page.waitForLoadState('networkidle');
 
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
+        await appNav(page, 'Campaign Assistant');
 
         // Open history and delete conversation
         await page.getByRole('button', { name: 'View Chat History' }).click();
