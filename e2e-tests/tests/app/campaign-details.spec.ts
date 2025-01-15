@@ -3,12 +3,19 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 import { generateTimeStamp } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-const testAccountState = process.env.TEST_USER_LOCAL_PRO;
-const testStatePassword = process.env.TEST_USER_LOCAL_PRO_PASSWORD;
+test.beforeEach(async ({ page }) => {
+    const testZip = '94066';
+    const role = 'California Attorney General';
+    await createAccount(page, 'live', true, testZip, role);
+});
+
+test.afterEach(async ({ page }) => {
+    await deleteAccount(page);
+});
 
 test('Update Campaign Details', async ({ page }) => {
     const caseId = 46;
@@ -17,28 +24,13 @@ test('Update Campaign Details', async ({ page }) => {
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
     const newWebsite = 'http://www.' + generateTimeStamp() + '.com/'
+    const newParty = 'Other';
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Details');
 
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
-
-        // Gather existing campaign details and ensure that they differ from new details
-        const oldCampaignCommittee = await page.getByPlaceholder('Campaign Committee').inputValue();
-        await expect(oldCampaignCommittee).not.toBe(newCampaignCommittee);
-        const oldOccupation = await page.getByLabel('Occupation *').inputValue();
-        await expect(oldOccupation).not.toBe(newOccupation);
-        const oldWebsite = await page.getByLabel('Campaign website').inputValue();
-        await expect(oldWebsite).not.toBe(newWebsite);
-        const oldParty = await page.getByRole('combobox').inputValue();
-        var newParty = '';
-        if(oldParty == 'Independent') {
-            newParty = 'Other'
-        } else {
-            newParty = 'Independent'
-        }
 
         // Update campaign details
         await page.getByPlaceholder('Campaign Committee').fill(newCampaignCommittee);
@@ -75,27 +67,15 @@ test('Update Office Details', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Details');
 
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Determine current office details and new state to select
-        let newOfficeState = ''
-        let newOfficeZip = ''
-        let oldOfficeZip = ''
+        const newOfficeZip = '10001';
         const oldOfficeState = await page.getByLabel('State').inputValue();
         const oldOfficeTitle = await page.getByLabel('Office').inputValue();
-        if(oldOfficeState === 'CA') {
-            newOfficeState === 'NY'
-            newOfficeZip = '10001'
-            oldOfficeZip = '94066'
-        } else {
-            newOfficeState ==='CA'
-            newOfficeZip = '94066'
-            oldOfficeZip = '10001'
-        }
 
         // Select new office location
         await page.getByRole('button', { name: 'Edit Office Details' }).click();
@@ -144,7 +124,6 @@ test('Update Your Why Statement', async ({ page }) => {
     const newWhyStatement = generateTimeStamp() + ' Statement';
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Details');
 
         // Verify user is on campaign details page
@@ -185,7 +164,6 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Details');
 
         // Verify user is on campaign details page
@@ -229,24 +207,10 @@ test('Add/Edit/Delete Opponent', async ({ page }) => {
 
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Details');
 
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
-
-        // Delete any existing opponent data, if any
-        const deleteButtons = page.getByRole('button', { name: 'Delete' });
-        const buttonCount = await deleteButtons.count();
-
-        if (buttonCount > 0) {
-        // Loop through each delete button and click it
-        for (let i = 0; i < buttonCount; i++) {
-            await deleteButtons.nth(i).click();
-            }
-        await page.getByRole('button', { name: 'Save' }).nth(1).click();
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        }
 
         // Add new opponent data
         await page.getByRole('button', { name: 'Add New Opponent' }).click();

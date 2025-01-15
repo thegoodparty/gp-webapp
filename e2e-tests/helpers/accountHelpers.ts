@@ -3,6 +3,9 @@ import { expect } from "@playwright/test";
 import { coreNav } from "helpers/navHelpers";
 import { userData, generateEmail, generatePhone } from "helpers/dataHelpers";
 import { acceptCookieTerms } from "helpers/domHelpers";
+import * as path from 'path';
+import * as fs from 'fs';
+import PDFDocument from 'pdfkit';
 
 export async function loginAccount(
   page,
@@ -78,6 +81,65 @@ export async function createAccount(
   }
 }
 
+export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
+  const testCardNumber = "4242424242424242";
+
+  await page.goto("/dashboard/upgrade-to-pro");
+
+  // Waits for page to load completely
+  await page.waitForLoadState('networkidle');
+
+  // Verify user is on voter data (free) page
+  await expect(page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' })).toBeVisible();
+  await page.getByRole('button', { name: 'Join Pro Today' }).click();
+
+  // Verify office details
+  await page.getByRole('heading', { name: 'Please confirm your office details.' }).isVisible();
+  await page.getByRole('link', { name: 'Confirm' }).click();
+  await page.getByLabel('Name Of Campaign Committee').fill(campaignCommittee);
+  await page.getByRole('checkbox').click();
+
+  // Generate a PDF file
+  const pdfPath = path.resolve(__dirname, 'sample.pdf');
+  const doc = new PDFDocument();
+  const writeStream = fs.createWriteStream(pdfPath);
+
+  doc.pipe(writeStream);
+  doc.text('This is a dynamically generated PDF file.');
+  doc.end();
+
+  // Wait for the PDF file to be written
+  await new Promise((resolve) => writeStream.on('finish', resolve));
+  
+  // Upload the PDF file
+  const fileInput = page.locator("button input[type='file']");
+  await fileInput.setInputFiles(pdfPath);
+  await expect(page.getByRole('button', { name: 'Next' })).toBeEnabled();
+  fs.unlinkSync(pdfPath);
+  await page.getByRole('button', { name: 'Next' }).click();
+
+  // Agree to GoodParty.org Terms
+  await page.getByRole("button", { name: "I Accept" }).click();
+  await page.getByRole("button", { name: "I Accept" }).click();
+  await page.getByRole("button", { name: "I Accept" }).click();
+  await page.getByPlaceholder('Jane Doe').fill(userData.firstName + ' ' + userData.lastName);
+  await page.getByRole('button', { name: 'Finish' }).click();
+
+  // Pay for pro through Stripe
+  await page.getByLabel('Email').fill(userData.email);
+  await page.getByTestId('product-summary-product-image', {timeout: 10000}).isVisible();
+  await page.getByTestId('card-accordion-item').click();
+  await page.getByPlaceholder('1234 1234 1234').fill(testCardNumber);
+  await page.getByPlaceholder('MM / YY').fill('12/28');
+  await page.getByPlaceholder('CVC').fill('123');
+  await page.getByPlaceholder('Full name on card').fill(userData.firstName + ' ' + userData.lastName);
+  await page.getByPlaceholder('ZIP').fill('90210');
+  await page.getByPlaceholder('(800) 555-').fill('5105551555');
+  await page.getByTestId('hosted-payment-submit-button').click();
+  await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
+  await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
+}
+
 export async function deleteAccount(page) {
   await page.goto("/profile");
 
@@ -127,7 +189,7 @@ export async function onboardingLive(page, role) {
   await page
     .getByRole("progressbar")
     .waitFor({ state: "hidden", timeout: 20000 });
-  await page.getByRole("button", { name: role }).click();
+  await page.getByRole("button", { name: role }).first().click();
   await page.getByRole("button", { name: "Next" }).click();
   await page
     .getByText("How will your campaign appear on the ballot?")
