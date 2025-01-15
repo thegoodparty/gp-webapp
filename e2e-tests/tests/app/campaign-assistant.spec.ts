@@ -3,20 +3,27 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount } from 'helpers/accountHelpers';
+import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
 const testTopicChat = /^Can you help me with my campaign strategy\?$/;
-const testAccountState = process.env.TEST_USER_STATE;
-const testStatePassword = process.env.TEST_USER_STATE_PASSWORD;
+
+test.beforeEach(async ({ page }) => {
+    const testZip = '94066';
+    const role = 'California Attorney General';
+    await createAccount(page, 'live', true, testZip, role);
+});
+
+test.afterEach(async ({ page }) => {
+    await deleteAccount(page);
+});
 
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Assistant');
 
         // Verify user is on campaign assistant page
@@ -29,7 +36,7 @@ test('Create new conversation', async ({ page }) => {
         await page.getByRole('button', { name: testTopic }).click();
 
         // Verify conversation window
-        await page.locator('div').filter({ hasText: testTopicChat }).first().isVisible();
+        await page.locator('div').filter({ hasText: testTopicChat }).isVisible();
         await page.locator('.font-normal > div:nth-child(2)').isVisible({timeout: 20000});
 
         // Report test results
@@ -49,7 +56,6 @@ test('Delete a conversation', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAccountState, testStatePassword);
         await appNav(page, 'Campaign Assistant');
 
         // Create new chat
@@ -57,7 +63,7 @@ test('Delete a conversation', async ({ page }) => {
         await page.getByRole('button', { name: testTopic }).click();
 
         // Verify conversation window
-        await page.locator('div').filter({ hasText: testTopicChat }).first().isVisible();
+        await page.locator('div').filter({ hasText: testTopicChat }).isVisible();
         await page.locator('.font-normal > div:nth-child(2)').isVisible({timeout: 20000});
 
         // Refresh page
