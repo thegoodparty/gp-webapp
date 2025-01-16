@@ -43,7 +43,6 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
 });
 
 test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
-    test.setTimeout(120000);
     const caseId = 42;
     await skipNonQA(test);
     try {
@@ -78,7 +77,6 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
 });
 
 test('Can generate custom voter file (Pro)', async ({ page }) => {
-    test.setTimeout(180000);
     const caseId = 43;
     await skipNonQA(test);
 
