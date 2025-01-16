@@ -31,9 +31,10 @@ test('Create new conversation', async ({ page }) => {
 
         // Create new chat
         await page.getByRole('button', { name: 'New Chat' }).click();
-
-        // Select suggested topic
         await page.getByRole('button', { name: testTopic }).click();
+
+        // Wait for response to generate
+        await page.waitForLoadState('networkidle');
 
         // Verify conversation window
         await page.locator('div').filter({ hasText: testTopicChat }).first().isVisible();
@@ -42,12 +43,9 @@ test('Create new conversation', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-new-chat-campaign-assistant-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 

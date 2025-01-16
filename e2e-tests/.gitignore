@@ -7,3 +7,4 @@ node_modules/
 playwright-results.json
 /helpers/sample.pdf
 .env
+testRunId.txt

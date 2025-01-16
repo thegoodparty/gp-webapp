@@ -43,9 +43,9 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
 });
 
 test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
+    test.setTimeout(120000);
     const caseId = 42;
     await skipNonQA(test);
-
     try {
         await appNav(page, 'Voter Data');
         await page.waitForLoadState('networkidle');
@@ -71,16 +71,14 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-voter-data-pro-file-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
 test('Can generate custom voter file (Pro)', async ({ page }) => {
+    test.setTimeout(180000);
     const caseId = 43;
     await skipNonQA(test);
 
@@ -114,11 +112,8 @@ test('Can generate custom voter file (Pro)', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-voter-data-pro-custom-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });

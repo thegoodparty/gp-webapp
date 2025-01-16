@@ -45,8 +45,8 @@ export async function createAccount(
   const emailAddress = generateEmail();
   const phoneNumber = generatePhone();
 
-  await page.goto("/");
-  await coreNav(page, "nav-sign-up");
+  await page.goto("/sign-up");
+  await page.waitForLoadState("networkidle");
 
   // Verify user is on login page
   await expect(page.getByText(loginPageHeader)).toBeVisible();
@@ -140,19 +140,31 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 }
 
 export async function deleteAccount(page) {
-  await page.goto('/profile');
+  try {
+    await page.goto('/profile');
 
-  // Accept cookie terms (if visible)
-  await acceptCookieTerms(page);
+    // Wait for the "Delete Account" button to be visible
+    await page.getByRole('button', { name: 'Delete Account' }).isVisible({ timeout: 10000 });
+    await page.getByRole('button', { name: 'Delete Account' }).click();
 
-  await page.getByRole("button", { name: "Delete Account" }).click();
-  await page.getByRole("button", { name: "Proceed" }).click();
+    // Confirm the deletion
+    await page.getByRole('button', { name: 'Proceed' }).click();
+
+    // Verify user is logged out
+    await expect(page.getByTestId('nav-login')).toBeVisible({ timeout: 10000 });
+    await page.context().clearCookies();
+    await page.close();
+  } catch (error) {
+    console.error('Error during deleteAccount:', error);
+    throw error;
+  }
 }
+
 
 export async function onboardingDemo(page, isLocal = true) {
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
-
+  await page.waitForLoadState('networkidle');
   await page.getByRole("radio", { name: "Just Browsing" }).click();
   await page.getByRole("button", { name: "Next" }).click();
   await page
@@ -178,10 +190,9 @@ export async function onboardingDemo(page, isLocal = true) {
 export async function onboardingLive(page, role) {
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
-
-  await page
-    .getByRole("radio", { name: "Currently running for office" })
-    .click();
+  await page.waitForLoadState('networkidle');
+  await page.waitForSelector('role=radio[name="Currently running for office"]', { state: "visible", timeout: 60000 });
+  await page.click('role=radio[name="Currently running for office"]');
   await page.getByRole("button", { name: "Next" }).click();
   await page.getByText("What office are you interested in?").isVisible();
   await page

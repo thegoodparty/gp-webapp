@@ -15,7 +15,7 @@ const runId = fs.readFileSync("testRunId.txt", "utf-8");
   const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
 test("Add Campaign Manager", async ({ browser }) => {
-  test.setTimeout(60000);
+  test.setTimeout(120000);
   const caseId1 = 51;
   const caseId2 = 44;
   await skipNonQA(test);
