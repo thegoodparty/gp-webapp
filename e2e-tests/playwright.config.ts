@@ -7,10 +7,10 @@ export default defineConfig({
   globalTeardown: require.resolve("./globalTeardown.js"),
   timeout: 180000,
   testDir: "./tests",
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  workers: 2,
+  retries: 0,
+  workers: 3,
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],

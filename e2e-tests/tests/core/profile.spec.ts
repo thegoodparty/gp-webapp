@@ -7,6 +7,16 @@ import * as fs from 'fs';
 import { acceptCookieTerms } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
+test.beforeEach(async ({ page }) => {
+    const testZip = '94066';
+    const role = 'California Attorney General';
+    await createAccount(page, 'live', true, testZip, role);
+});
+
+test.afterEach(async ({ page }) => {
+    await deleteAccount(page);
+});
+
 test('Adjust Personal Information', async ({ page }) => {
     await skipNonQA(test);
     const caseId = 33;
@@ -17,9 +27,6 @@ test('Adjust Personal Information', async ({ page }) => {
     const zipCode = userData.zipCode.substring(0, 5);
 
     try {
-        // Create account
-        await createAccount(page);
-
         // Adjust personal information in profile settings
         await page.goto('/profile');
 
@@ -44,9 +51,6 @@ test('Adjust Personal Information', async ({ page }) => {
         await expect(page.locator("input[name='phone']")).toHaveValue(phoneNumber);
         await expect(page.locator("[data-testid='personal-zip']")).toHaveValue(zipCode);
 
-        // Delete account after signup
-        await deleteAccount(page);
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
@@ -61,9 +65,6 @@ test('Adjust Notification Settings', async ({ page }) => {
     const caseId = 34;
 
     try {
-        // Create account
-        await createAccount(page);
-
         // Adjust notification settings in profile settings
         await page.goto('/profile');
 
@@ -89,9 +90,6 @@ test('Adjust Notification Settings', async ({ page }) => {
         // Verify that 4 notification switches are checked
         expect(checkedCount).toBe(4);
 
-        // Delete account after signup
-        await deleteAccount(page);
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
@@ -99,8 +97,8 @@ test('Adjust Notification Settings', async ({ page }) => {
         const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
@@ -110,8 +108,6 @@ test('Change Account Password', async ({ page }) => {
     const password = userData.password;
 
     try {
-        // Create account
-        await createAccount(page, null, true, '90210', null, password);
 
         // Adjust notification settings in profile settings
         await page.goto('/profile');
@@ -132,9 +128,6 @@ test('Change Account Password', async ({ page }) => {
         const responseBody = await response.json();
         expect(responseBody.message).toBe("password successfully changed.");
 
-        // Delete account after signup
-        await deleteAccount(page);
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
@@ -142,7 +135,7 @@ test('Change Account Password', async ({ page }) => {
         const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
