@@ -5,30 +5,9 @@ import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test('Sign up flow', async ({ page }) => {
-    const caseId = 18;
-    await skipNonQA(test);
-    try {
-        // Create account
-        await createAccount(page);
-
-        // Delete account after signup
-        await deleteAccount(page);
-
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-sign-up-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
-    }
-});
-
 test('Onboarding - Just Browsing', async ({ page }) => {
-    const caseId = 21;
+    const caseId1 = 18;
+    const caseId2 = 21;
     await skipNonQA(test);
     try {
         // Create account
@@ -41,14 +20,12 @@ test('Onboarding - Just Browsing', async ({ page }) => {
         await deleteAccount(page);
 
         // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
+        await addTestResult(runId, caseId1, 1, 'Test passed');
+        await addTestResult(runId, caseId2, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-sign-up-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId1, 5, `Test failed: ${error.stack}`);
+        await addTestResult(runId, caseId2, 5, `Test failed: ${error.stack}`);
     }
 });
 
@@ -70,11 +47,8 @@ test('Onboarding - Running for Office', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-sign-up-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
