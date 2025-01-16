@@ -142,7 +142,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 export async function deleteAccount(page) {
   try {
     await page.goto('/profile');
-
+    await page.waitForLoadState('networkidle');
     // Wait for the "Delete Account" button to be visible
     await page.getByRole('button', { name: 'Delete Account' }).isVisible({ timeout: 10000 });
     await page.getByRole('button', { name: 'Delete Account' }).click();
