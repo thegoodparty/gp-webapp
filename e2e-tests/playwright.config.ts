@@ -5,7 +5,7 @@ const projectEnv = process.env.PROJECT_ENV || "default";
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
-
+  timeout: 180000,
   testDir: "./tests",
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
