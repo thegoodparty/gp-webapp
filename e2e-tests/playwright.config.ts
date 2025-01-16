@@ -17,6 +17,8 @@ export default defineConfig({
   ],
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:4000/", // Fallback to default URL if not provided
+    storageState: undefined, // Disable shared storage state
+    contextOptions: { viewport: null }, // Create a fresh context for each test
     trace: "on-first-retry",
   },
   projects: [

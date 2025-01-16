@@ -5,9 +5,7 @@ export async function acceptCookieTerms(page) {
     try {
         await page.waitForSelector('[data-testid="cookie-snackbar"]', { state: 'visible', timeout: 2000 });
         await page.click('button[data-testid="cookie-accept-btn"]');
-        console.log('Cookie terms displayed and accepted');
     } catch(error) {
-        console.log('Cookie terms not displayed');
     }
 }
 
