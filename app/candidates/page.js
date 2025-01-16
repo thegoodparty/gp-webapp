@@ -6,11 +6,11 @@ import { numberFormatter } from 'helpers/numberHelper';
 
 export const WINNER_COUNT = 3448;
 
-const fetchCount = async (onlyWinners = false) => {
-  const api = gpApi.campaign.mapCount;
+// const fetchCount = async (onlyWinners = false) => {
+//   const api = gpApi.campaign.mapCount;
 
-  return await gpFetch(api, { results: onlyWinners ? true : undefined }, 3600);
-};
+//   return await gpFetch(api, { results: onlyWinners ? true : undefined }, 3600);
+// };
 
 export async function generateMetadata({ params, searchParams }) {
   // const { count } = await fetchCount(true);
