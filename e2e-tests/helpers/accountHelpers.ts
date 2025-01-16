@@ -64,9 +64,7 @@ export async function createAccount(
   await page
     .getByRole("link", { name: "Finish Later" })
     .isVisible({ timeout: 5000 });
-  await page.waitForURL("**/onboarding/account-type", {
-    timeout: 30000,
-  });
+  await page.waitForLoadState("networkidle");
 
   // Proceed based on account type
   if (accountType == "live") {
