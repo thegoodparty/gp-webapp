@@ -45,6 +45,9 @@ export async function createAccount(
   const emailAddress = generateEmail();
   const phoneNumber = generatePhone();
 
+  await page.context().clearCookies();
+  await page.context().clearPermissions();
+
   await page.goto("/sign-up");
   await page.waitForLoadState("networkidle");
 
