@@ -27,7 +27,6 @@ test('Adjust Personal Information', async ({ page }) => {
     const zipCode = userData.zipCode.substring(0, 5);
 
     try {
-        // Adjust personal information in profile settings
         await page.goto('/profile');
 
         // Accept cookie terms (if visible)
@@ -65,7 +64,6 @@ test('Adjust Notification Settings', async ({ page }) => {
     const caseId = 34;
 
     try {
-        // Adjust notification settings in profile settings
         await page.goto('/profile');
 
         // Accept cookie terms (if visible)
@@ -93,9 +91,6 @@ test('Adjust Notification Settings', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results
         await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
@@ -108,8 +103,6 @@ test('Change Account Password', async ({ page }) => {
     const password = userData.password;
 
     try {
-
-        // Adjust notification settings in profile settings
         await page.goto('/profile');
 
         // Accept cookie terms (if visible)
@@ -119,6 +112,7 @@ test('Change Account Password', async ({ page }) => {
         await page.getByLabel('Old Password *').fill(`${password}1`);
         await page.getByLabel('New Password *').fill(`${password}2`);
         await page.getByRole('button', { name: 'Save Changes' }).nth(1).click();
+        await page.waitForLoadState('networkidle');
 
         // Wait for the response and check its content
         const response = await page.waitForResponse((response) => 
@@ -131,9 +125,6 @@ test('Change Account Password', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-personal-info-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results
         await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);

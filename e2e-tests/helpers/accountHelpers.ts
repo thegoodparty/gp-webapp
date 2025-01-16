@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { expect } from "@playwright/test";
-import { coreNav } from "helpers/navHelpers";
 import { userData, generateEmail, generatePhone } from "helpers/dataHelpers";
 import { acceptCookieTerms } from "helpers/domHelpers";
 import * as path from 'path';
@@ -138,6 +137,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByPlaceholder('ZIP').fill('90210');
   await page.getByPlaceholder('(800) 555-').fill(phoneNumber);
   await page.getByTestId('hosted-payment-submit-button').click();
+  await page.waitForLoadState('networkidle');
   await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
   await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
 }
@@ -154,6 +154,7 @@ export async function deleteAccount(page) {
     await page.getByRole('button', { name: 'Proceed' }).click();
 
     // Verify user is logged out
+    await page.waitForLoadState('networkidle');
     await expect(page.getByTestId('nav-login')).toBeVisible({ timeout: 10000 });
     await page.context().clearCookies();
     await page.close();
