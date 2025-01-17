@@ -9,9 +9,16 @@ import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import Button from '@shared/buttons/Button';
 import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
+import { getUserCookie } from 'helpers/cookieHelper';
 
 const createCampaign = async (payload) => {
   try {
+    const user = getUserCookie(true);
+    if (!user || !user.email) {
+      console.log('User not found or missing email');
+    }
+    payload.adminEmail = user.email;
+
     const res = await gpFetch(gpApi.campaign.adminCreate, payload);
     if (res.campaign) {
       return res;
