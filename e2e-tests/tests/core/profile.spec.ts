@@ -112,11 +112,10 @@ test('Change Account Password', async ({ page }) => {
         await page.getByLabel('Old Password *').fill(`${password}1`);
         await page.getByLabel('New Password *').fill(`${password}2`);
         await page.getByRole('button', { name: 'Save Changes' }).nth(1).click();
-        await page.waitForLoadState('networkidle');
 
         // Wait for the response and check its content
         const response = await page.waitForResponse((response) => 
-            response.url().includes('/password') && response.status() === 200
+            response.url().includes('password') && response.status() === 200
         );
 
         const responseBody = await response.json();

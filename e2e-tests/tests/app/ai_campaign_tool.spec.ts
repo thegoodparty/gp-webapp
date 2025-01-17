@@ -10,7 +10,6 @@ const testZip = '94066';
 const role = 'California Attorney General';
 
 test('Generate content with AI Campaign Tool', async ({ page }) => {
-    test.setTimeout(120000);
     const caseId = 40;
     await skipNonQA(test);
     const testTemplate = 'Launch Email';
@@ -32,7 +31,6 @@ test('Generate content with AI Campaign Tool', async ({ page }) => {
         await page.getByRole('button', { name: 'Generate' }).click();
         await page.getByRole('heading', { name: 'Select a Template' }).isVisible();
         await page.getByRole('button', { name: testTemplate }).click();
-        await page.getByRole('link', { name: testTemplate }).isVisible({timeout: 45000});
 
         // Verify new content
         await page.getByRole('link', { name: testTemplate, exact: true }).click();
