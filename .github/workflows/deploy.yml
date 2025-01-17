@@ -7,7 +7,6 @@ on:
 
 jobs:
   test:
-    name: Playwright Functional Test
     runs-on: windows-latest
     steps:
       - name: Check out the repository to the runner
@@ -27,12 +26,8 @@ jobs:
       - name: Deploy to Vercel
         id: deploy
         run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes
-
-      - name: Capture Deployment URL
-        run: |
-          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
-          echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+          for /f "delims=" %%A in ('vercel --token %VERCEL_TOKEN% --yes') do set DEPLOYMENT_URL=%%A
+          echo BASE_URL=%DEPLOYMENT_URL% >> %GITHUB_ENV%
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
@@ -45,7 +40,7 @@ jobs:
         run: |
           cd test-automation
           npm install
-          npx playwright install --with-deps
+          npx playwright install
 
       - name: Run Playwright Tests
         run: |
@@ -68,30 +63,15 @@ jobs:
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
-          # Set STATUS and COLOR based on job status
-          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
-          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
-          
-          # Send the Slack notification
-          curl -X POST -H "Content-type: application/json" \
-          --data '{
-            "text": "Playwright Test Results ('"${STATUS}"')",
-            "attachments": [
-              {
-                "color": "'"${COLOR}"'",
-                "fields": [
-                  { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
-                  { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
-                  { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
-                ],
-                "actions": [
-                  {
-                    "type": "button",
-                    "text": "View Test Runs",
-                    "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
-                    "style": "primary"
-                  }
-                ]
-              }
-            ]
-          }' $SLACK_WORKFLOW_WEBHOOK
+          powershell -Command "
+          $STATUS = if (${{ job.status }} -eq 'success') { 'Pass' } else { 'Fail' }
+          $COLOR = if (${{ job.status }} -eq 'success') { 'good' } else { 'danger' }
+          Invoke-RestMethod -Method Post -Uri ${{ env.SLACK_WORKFLOW_WEBHOOK }} -Body (ConvertTo-Json @{
+            text = 'Playwright Test Results (' + $STATUS + ')'
+            attachments = @(@{
+              color = $COLOR
+              fields = @(@{ title = 'Branch'; value = '${{ github.ref_name }}'; short = $true },
+                         @{ title = 'Commit'; value = '${{ github.sha }}'; short = $true },
+                         @{ title = 'Vercel URL'; value = '${{ env.BASE_URL }}'; short = $true })
+            })
+          })"
