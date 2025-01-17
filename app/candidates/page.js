@@ -1,6 +1,4 @@
 import pageMetaData from 'helpers/metadataHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from './components/CandidatesPage';
 import { numberFormatter } from 'helpers/numberHelper';
 
