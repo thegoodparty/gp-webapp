@@ -15,9 +15,10 @@ const createCampaign = async (payload) => {
   try {
     const user = getUserCookie(true);
     if (!user || !user.email) {
-      console.log('User not found or missing email');
+      console.error('User not found or missing email');
+    } else {
+      payload.adminEmail = user.email;
     }
-    payload.adminEmail = user.email;
 
     const res = await gpFetch(gpApi.campaign.adminCreate, payload);
     if (res.campaign) {
