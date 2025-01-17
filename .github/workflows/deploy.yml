@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Playwright Functional Test
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
@@ -26,10 +26,6 @@ jobs:
 
       - name: Deploy to Vercel
         id: deploy
-        run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes
-
-      - name: Capture Deployment URL
         run: |
           DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
@@ -60,31 +56,14 @@ jobs:
           TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
           TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-          TEST_USER_ONBOARDING: ${{ secrets.TEST_USER_ONBOARDING }}
-          TEST_USER_LOCAL: ${{ secrets.TEST_USER_LOCAL }}
-          TEST_USER_STATE: ${{ secrets.TEST_USER_STATE }}
-          TEST_USER_FEDERAL: ${{ secrets.TEST_USER_FEDERAL }}
-          TEST_USER_DEMO_LOCAL: ${{ secrets.TEST_USER_DEMO_LOCAL }}
-          TEST_USER_DEMO_FEDERAL: ${{ secrets.TEST_USER_DEMO_FEDERAL }}
-          TEST_USER_ONBOARDING_PASSWORD: ${{ secrets.TEST_USER_ONBOARDING_PASSWORD }}
-          TEST_USER_LOCAL_PASSWORD: ${{ secrets.TEST_USER_LOCAL_PASSWORD }}
-          TEST_USER_STATE_PASSWORD: ${{ secrets.TEST_USER_STATE_PASSWORD }}
-          TEST_USER_FEDERAL_PASSWORD: ${{ secrets.TEST_USER_FEDERAL_PASSWORD }}
-          TEST_USER_DEMO_LOCAL_PASSWORD: ${{ secrets.TEST_USER_DEMO_LOCAL_PASSWORD }}
-          TEST_USER_DEMO_FEDERAL_PASSWORD: ${{ secrets.TEST_USER_DEMO_FEDERAL_PASSWORD }}
-          TEST_USER_LOCAL_PRO: ${{ secrets.TEST_USER_LOCAL_PRO }}
-          TEST_USER_LOCAL_PRO_PASSWORD: ${{ secrets.TEST_USER_LOCAL_PRO_PASSWORD }}
-
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+          
       - name: Notify Slack Workflow
         if: always()
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
-          # Set STATUS and COLOR based on job status
-          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
-          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
-          
-          # Send the Slack notification
           curl -X POST -H "Content-type: application/json" \
           --data '{
             "text": "Playwright Test Results ('"${STATUS}"')",
@@ -95,14 +74,6 @@ jobs:
                   { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
                   { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
                   { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
-                ],
-                "actions": [
-                  {
-                    "type": "button",
-                    "text": "View Test Runs",
-                    "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
-                    "style": "primary"
-                  }
                 ]
               }
             ]

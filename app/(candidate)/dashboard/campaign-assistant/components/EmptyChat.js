@@ -10,7 +10,7 @@ const prompts = [
     prompt: 'Can you help me with my campaign strategy?',
   },
   {
-    label: 'Crafting a why statement”',
+    label: 'Crafting a why statement',
     prompt:
       'Help me craft a why statement for my campaign. Ask me questions and keep a running draft going.',
   },

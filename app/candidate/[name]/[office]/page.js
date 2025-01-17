@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import CandidatePage from './components/CandidatePage';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import CandidateSchema from './components/CandidateSchema';
 
 export const fetchCandidate = async (name, office, bustCache) => {
