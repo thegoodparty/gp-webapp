@@ -50,7 +50,15 @@ jobs:
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
-
+          NODE_PATH: ${{ secrets.NODE_PATH }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
+          TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
+          TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+          
       - name: Notify Slack Workflow
         if: always()
         env:
