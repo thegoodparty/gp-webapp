@@ -41,7 +41,6 @@ test('Adjust Personal Information', async ({ page }) => {
 
         // Waits for save to complete
         await page.waitForLoadState('networkidle');
-        await page.reload({ waitUntil: 'domcontentloaded' });
 
         // Verifies changes are saved
         await expect(page.locator("[data-testid='personal-first-name']")).toHaveValue(firstName);

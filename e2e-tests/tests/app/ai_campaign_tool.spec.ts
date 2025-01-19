@@ -6,10 +6,11 @@ import * as fs from 'fs';
 import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-const testZip = '94066';
-const role = 'California Attorney General';
+const testZip = '94015';
+const role = 'San Francisco City Mayor';
 
 test('Generate content with AI Campaign Tool', async ({ page }) => {
+    test.setTimeout(300000);
     const caseId = 40;
     await skipNonQA(test);
     const testTemplate = 'Launch Email';

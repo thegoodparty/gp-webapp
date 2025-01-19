@@ -11,7 +11,7 @@ const testTopicChat = /^Can you help me with my campaign strategy\?$/;
 
 test.beforeEach(async ({ page }) => {
     const testZip = '94066';
-    const role = 'California Attorney General';
+    const role = 'San Bruno City Council';
     await createAccount(page, 'live', true, testZip, role);
 });
 

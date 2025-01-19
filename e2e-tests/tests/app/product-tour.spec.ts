@@ -56,7 +56,7 @@ test('Verify Product Tour flow', async ({ page }) => {
     const navatticFramePopUp = await getNavatticPlayerFrame(page, true);
 
     const testZip = '94066';
-    const role = 'California Attorney General';
+    const role = 'San Bruno City Council';
     try {
         // Create account
         await createAccount(page, 'live', true, testZip, role);
