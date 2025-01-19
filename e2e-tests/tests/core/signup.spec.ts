@@ -33,7 +33,7 @@ test('Onboarding - Running for Office', async ({ page }) => {
     const caseId = 20;
     await skipNonQA(test);
     const testZip = '94066';
-    const role = 'California Attorney General';
+    const role = 'San Bruno City Council';
     try {
         // Create account
         await createAccount(page, 'live', true, testZip, role);

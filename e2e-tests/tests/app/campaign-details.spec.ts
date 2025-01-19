@@ -9,7 +9,7 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
     const testZip = '94066';
-    const role = 'California Attorney General';
+    const role = 'San Bruno City Council';
     await createAccount(page, 'live', true, testZip, role);
 });
 
