@@ -50,7 +50,7 @@ test('Verify user can log in with valid credentials', async ({ page }) => {
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
     try {
-        await loginAccount(page, false, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

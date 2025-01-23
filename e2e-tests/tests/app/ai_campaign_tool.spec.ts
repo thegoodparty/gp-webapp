@@ -16,16 +16,11 @@ test.skip('Generate content with AI Campaign Tool', async ({page}) => {
     const testTemplate = 'Launch Email';
 
     try {
-        await loginAccount(page, true, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
         await appNav(page, 'AI Campaign Tool');
 
         // Verify user is on the AI campaign tool page
         await expect(page.getByRole('heading', { name: 'My Content' })).toBeVisible();
-
-        // Dismiss tutorial (if visible)
-        if(page.getByRole('heading', { name: 'Content Creation, Simplified' }).isVisible()) {
-            await page.getByRole('button', { name: '×' }).click();
-        }
 
         // Generate new content
         await page.getByRole('button', { name: 'Generate' }).click();
@@ -42,6 +37,7 @@ test.skip('Generate content with AI Campaign Tool', async ({page}) => {
         await page.getByRole('heading', { name: 'Delete Content' }).isVisible();
         await page.getByRole('button', { name: 'Proceed' }).click();
         await page.getByRole('link', { name: testTemplate, exact: true }).isHidden();
+        await page.waitForLoadState('networkidle');
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

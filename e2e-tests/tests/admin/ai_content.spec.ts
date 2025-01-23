@@ -13,7 +13,7 @@ test('Verify admin user can access AI Content page', async ({page}) => {
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
     try {
-        await loginAccount(page, true, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin');
         await page.getByRole('button', { name: 'AI Content' }).isVisible();
