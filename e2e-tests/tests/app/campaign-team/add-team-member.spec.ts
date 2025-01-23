@@ -44,7 +44,6 @@ test("Add Campaign Manager", async ({ browser }) => {
     // Admin: Log in to approve campaign manager
     await loginAccount(
       adminPage,
-      true,
       testAdmin,
       testAdminPassword
     );

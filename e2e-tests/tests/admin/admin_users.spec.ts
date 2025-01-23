@@ -14,7 +14,7 @@ test('Admin users page', async ({page}) => {
     await skipNonQA(test);
 
     try {
-        await loginAccount(page, true, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
         
         await page.waitForLoadState('networkidle');
         await page.goto('/admin');
@@ -49,7 +49,7 @@ test('Send candidate invite', async ({page}) => {
     const inviteEmail = userData.email;
 
     try {
-        await loginAccount(page, true, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin');
         await page.getByRole('button', { name: 'Users', exact: true }).click();
@@ -89,7 +89,7 @@ test('Send sales invite', async ({page}) => {
     const inviteEmail = userData.email;
 
     try {
-        await loginAccount(page, true, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin');
         await page.getByRole('button', { name: 'Users', exact: true }).click();

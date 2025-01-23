@@ -65,7 +65,7 @@ export async function cleanupSession() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await loginAccount(page, true, emailAddress, password);
+  await loginAccount(page, emailAddress, password);
   await deleteAccount(page);
 
   console.log('Test account deleted.');
@@ -76,7 +76,6 @@ export async function cleanupSession() {
 
 export async function loginAccount(
   page,
-  isOnboarded = true,
   emailAddress,
   password
 ) {
@@ -92,12 +91,6 @@ export async function loginAccount(
   await page.getByTestId("login-password-input").nth(1).fill(password);
   await page.getByTestId("login-submit-button").click();
   await page.waitForLoadState('networkidle');
-  if (isOnboarded) {
-    // Verify user is on dashboard page
-    await page.getByRole("heading", { name: "Path to Victory" }).isVisible();
-  } else {
-    await page.getByRole("link", { name: "Continue Setup" }).isVisible();
-  }
 }
 
 export async function createAccount(

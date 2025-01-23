@@ -5,6 +5,7 @@ import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import { acceptCookieTerms } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+import * as path from 'path';
 
 test.use({
   storageState: 'auth.json',
@@ -91,11 +92,16 @@ test('Adjust Notification Settings', async ({ page }) => {
     }
 });
 
-test.skip('Change Account Password', async ({ page }) => {
+test('Change Account Password', async ({ page }) => {
 
     await skipNonQA(test);
     const caseId = 35;
-    const password = userData.password;
+
+      const testAccountPath = path.resolve(__dirname, '../../testAccount.json');
+
+    const { password } = JSON.parse(
+        fs.readFileSync(testAccountPath, 'utf-8')
+    );
 
     try {
         await page.goto('/profile');
@@ -104,8 +110,8 @@ test.skip('Change Account Password', async ({ page }) => {
         await acceptCookieTerms(page);
 
         // Change account password
-        await page.getByLabel('Old Password *').fill(`${password}1`);
-        await page.getByLabel('New Password *').fill(`${password}2`);
+        await page.getByLabel('Old Password *').fill(`${password}`);
+        await page.getByLabel('New Password *').fill(`${password}`);
         await page.getByRole('button', { name: 'Save Changes' }).nth(1).click();
 
         // Wait for the response and check its content
