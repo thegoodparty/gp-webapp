@@ -9,7 +9,7 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 const testAdmin = process.env.TEST_USER_ADMIN;
 const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
-test('Admin users page', async ({ page }) => {
+test('Admin users page', async ({page}) => {
     const caseId = 26;
     await skipNonQA(test);
 
@@ -34,16 +34,13 @@ test('Admin users page', async ({ page }) => {
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-admin-users-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
-test('Send candidate invite', async ({ page }) => {
+test('Send candidate invite', async ({page}) => {
     const caseId = 53;
     await skipNonQA(test);
 
@@ -77,16 +74,13 @@ test('Send candidate invite', async ({ page }) => {
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-admin-candidate-invite-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
-test('Send sales invite', async ({ page }) => {
+test('Send sales invite', async ({page}) => {
     const caseId = 54;
     await skipNonQA(test);
 
@@ -120,11 +114,8 @@ test('Send sales invite', async ({ page }) => {
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-admin-candidate-invite-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });

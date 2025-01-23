@@ -5,7 +5,7 @@ import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test('Onboarding - Just Browsing', async ({ page }) => {
+test('Onboarding - Just Browsing', async ({page}) => {
     const caseId1 = 18;
     const caseId2 = 21;
     await skipNonQA(test);
@@ -29,7 +29,7 @@ test('Onboarding - Just Browsing', async ({ page }) => {
     }
 });
 
-test('Onboarding - Running for Office', async ({ page }) => {
+test('Onboarding - Running for Office', async ({page}) => {
     const caseId = 20;
     await skipNonQA(test);
     const testZip = '94066';
@@ -47,7 +47,6 @@ test('Onboarding - Running for Office', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-
         // Report test results
         await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }

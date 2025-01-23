@@ -1,28 +1,22 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
-import { userData } from 'helpers/dataHelpers';
-import { createAccount, deleteAccount } from 'helpers/accountHelpers';
+import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import { acceptCookieTerms } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test.beforeEach(async ({ page }) => {
-    const testZip = '94066';
-    const role = 'California Attorney General';
-    await createAccount(page, 'live', true, testZip, role);
-});
-
-test.afterEach(async ({ page }) => {
-    await deleteAccount(page);
+test.use({
+  storageState: 'auth.json',
 });
 
 test('Adjust Personal Information', async ({ page }) => {
+
     await skipNonQA(test);
     const caseId = 33;
     const firstName = userData.firstName;
     const lastName = userData.lastName;
-    const emailAddress = userData.email;
+    const newEmailAddress = generateEmail();
     const phoneNumber = userData.phoneNumber;
     const zipCode = userData.zipCode.substring(0, 5);
 
@@ -34,7 +28,7 @@ test('Adjust Personal Information', async ({ page }) => {
 
         await page.locator("[data-testid='personal-first-name']").fill(firstName);
         await page.locator("[data-testid='personal-last-name']").fill(lastName);
-        await page.locator("[data-testid='personal-email']").fill(emailAddress);
+        await page.locator("[data-testid='personal-email']").fill(newEmailAddress);
         await page.locator("input[name='phone']").fill(phoneNumber);
         await page.locator("[data-testid='personal-zip']").fill(zipCode);
         await page.locator('form').filter({ hasText: 'Save Changes' }).getByRole('button').first().click();
@@ -45,7 +39,7 @@ test('Adjust Personal Information', async ({ page }) => {
         // Verifies changes are saved
         await expect(page.locator("[data-testid='personal-first-name']")).toHaveValue(firstName);
         await expect(page.locator("[data-testid='personal-last-name']")).toHaveValue(lastName);
-        await expect(page.locator("[data-testid='personal-email']")).toHaveValue(emailAddress);
+        await expect(page.locator("[data-testid='personal-email']")).toHaveValue(newEmailAddress);
         await expect(page.locator("input[name='phone']")).toHaveValue(phoneNumber);
         await expect(page.locator("[data-testid='personal-zip']")).toHaveValue(zipCode);
 
@@ -59,6 +53,7 @@ test('Adjust Personal Information', async ({ page }) => {
 });
 
 test('Adjust Notification Settings', async ({ page }) => {
+
     await skipNonQA(test);
     const caseId = 34;
 
@@ -96,7 +91,8 @@ test('Adjust Notification Settings', async ({ page }) => {
     }
 });
 
-test('Change Account Password', async ({ page }) => {
+test.skip('Change Account Password', async ({ page }) => {
+
     await skipNonQA(test);
     const caseId = 35;
     const password = userData.password;

@@ -6,6 +6,10 @@ import { addTestResult, skipNonQA } from "helpers/testrailHelper";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
+test.beforeEach(async ({ page }) => {
+    await page.goto("/")
+});
+
 test("Verify Blog page", async ({ page }) => {
   await skipNonQA(test);
 
@@ -24,7 +28,6 @@ test("Verify Blog page", async ({ page }) => {
   ];
 
   try {
-    await page.goto(process.env.BASE_URL);
     await coreNav(page, "nav-blog");
 
     // Waits for page to load completely
@@ -49,16 +52,13 @@ test("Verify Blog page", async ({ page }) => {
     // Report test results
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    // Capture screenshot on error
-    const screenshotPath = `screenshots/test-failure-blog-${Date.now()}.png`;
-    await page.screenshot({ path: screenshotPath, fullPage: true });
 
-    // Report test results with screenshot path
+    // Report test results
     await addTestResult(
       runId,
       caseId,
       5,
-      `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`
+      `Test failed: ${error.stack}`
     );
   }
 });
@@ -77,7 +77,6 @@ test("Verify Blog filtering", async ({ page }) => {
   const testTopic = "Campaign Finance";
 
   try {
-    await page.goto("/");
     await coreNav(page, "nav-blog");
 
     // Waits for page to load completely
@@ -110,16 +109,13 @@ test("Verify Blog filtering", async ({ page }) => {
     // Report test results
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    // Capture screenshot on error
-    const screenshotPath = `screenshots/test-failure-blog-filter-${Date.now()}.png`;
-    await page.screenshot({ path: screenshotPath, fullPage: true });
 
-    // Report test results with screenshot path
+    // Report test results
     await addTestResult(
       runId,
       caseId,
       5,
-      `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`
+      `Test failed: ${error.stack}`
     );
   }
 });
@@ -128,7 +124,6 @@ test("Verify Blog Article page", async ({ page }) => {
   const caseId = 17;
 
   try {
-    await page.goto("/");
     await coreNav(page, "nav-blog");
 
     // Waits for page to load completely
@@ -165,16 +160,13 @@ test("Verify Blog Article page", async ({ page }) => {
     // Report test results
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    // Capture screenshot on error
-    const screenshotPath = `screenshots/test-failure-blog-article-${Date.now()}.png`;
-    await page.screenshot({ path: screenshotPath, fullPage: true });
 
-    // Report test results with screenshot path
+    // Report test results
     await addTestResult(
       runId,
       caseId,
       5,
-      `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`
+      `Test failed: ${error.stack}`
     );
   }
 });
