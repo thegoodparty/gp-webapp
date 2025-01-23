@@ -173,7 +173,7 @@ test('Verify Product Tour flow', async ({ page }) => {
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
 
-        // Report test results with screenshot path
+        // Report test results
         await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });

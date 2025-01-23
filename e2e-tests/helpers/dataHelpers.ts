@@ -22,7 +22,7 @@ export function generateTimeStamp() {
 
 export function generateEmail() {
   const timeStamp = generateTimeStamp();
-  return `${timeStamp}@test.pw`;
+  return `${timeStamp}@goodparty.org`;
 }
 
 export function generatePhone() {

@@ -1,4 +1,5 @@
 import { createTestRun } from "./helpers/testrailHelper";
+import { ensureSession } from "./helpers/accountHelpers";
 import * as fs from "fs";
 import "dotenv/config";
 
@@ -11,4 +12,5 @@ module.exports = async () => {
   const testRunId = await createTestRun(testRunName, testCaseIds);
   fs.writeFileSync("testRunId.txt", testRunId.toString());
   console.log(`Test run created with ID: ${testRunId}`);
+  await ensureSession();
 };

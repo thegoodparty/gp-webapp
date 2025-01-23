@@ -1,11 +1,15 @@
 import * as fs from 'fs';
 import path from 'path';
+import "dotenv/config";
 import { checkForTestFailures } from './helpers/testrailHelper';
+import { cleanupSession } from "./helpers/accountHelpers";
+
 
 const filePath = path.join(__dirname, 'testRunId.txt');
 
 module.exports = async () => {
     try {
+        await cleanupSession();
         // Check for test failures
         console.log('Running checkForTestFailures...');
         await checkForTestFailures();

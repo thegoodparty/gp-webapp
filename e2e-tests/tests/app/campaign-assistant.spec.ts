@@ -3,20 +3,17 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
 const testTopicChat = /^Can you help me with my campaign strategy\?$/;
 
-test.beforeEach(async ({ page }) => {
-    const testZip = '94066';
-    const role = 'San Bruno City Council';
-    await createAccount(page, 'live', true, testZip, role);
+test.use({
+  storageState: 'auth.json',
 });
 
-test.afterEach(async ({ page }) => {
-    await deleteAccount(page);
+test.beforeEach(async ({ page }) => {
+    await page.goto("/dashboard")
 });
 
 test('Create new conversation', async ({ page }) => {

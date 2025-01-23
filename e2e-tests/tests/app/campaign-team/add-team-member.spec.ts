@@ -37,6 +37,7 @@ test("Add Campaign Manager", async ({ browser }) => {
       undefined,
       undefined,
       undefined,
+      undefined,
       testAdmin
     );
 

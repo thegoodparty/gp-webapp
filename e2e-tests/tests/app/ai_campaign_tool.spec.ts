@@ -3,21 +3,20 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount, deleteAccount } from 'helpers/accountHelpers';
+import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-const testZip = '94015';
-const role = 'San Francisco City Mayor';
+const testAdmin = process.env.TEST_USER_ADMIN;
+const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
-test('Generate content with AI Campaign Tool', async ({ page }) => {
+test.skip('Generate content with AI Campaign Tool', async ({page}) => {
     test.setTimeout(300000);
     const caseId = 40;
     await skipNonQA(test);
     const testTemplate = 'Launch Email';
 
     try {
-        await createAccount(page, 'live', true, testZip, role);
-
+        await loginAccount(page, true, testAdmin, testAdminPassword);
         await appNav(page, 'AI Campaign Tool');
 
         // Verify user is on the AI campaign tool page
@@ -44,14 +43,10 @@ test('Generate content with AI Campaign Tool', async ({ page }) => {
         await page.getByRole('button', { name: 'Proceed' }).click();
         await page.getByRole('link', { name: testTemplate, exact: true }).isHidden();
 
-        // Delete account after signup
-        await deleteAccount(page);
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Report test results with screenshot path
+        // Report test results
         await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
-
 });

@@ -1,10 +1,78 @@
 import "dotenv/config";
-import { expect } from "@playwright/test";
+import { expect, chromium } from "@playwright/test";
 import { userData, generateEmail, generatePhone } from "helpers/dataHelpers";
 import { acceptCookieTerms } from "helpers/domHelpers";
 import * as path from 'path';
 import * as fs from 'fs';
 import PDFDocument from 'pdfkit';
+
+const SESSION_FILE = path.resolve(__dirname, '../auth.json');
+
+export async function ensureSession() {
+  if (fs.existsSync(SESSION_FILE)) {
+    console.log('Existing session found, deleting and creating a new one...');
+    
+    // Remove the existing session file
+    fs.unlinkSync(SESSION_FILE);
+    
+    // Remove account details file, if it exists
+    const accountFile = path.resolve(__dirname, '../testAccount.json');
+    if (fs.existsSync(accountFile)) {
+      fs.unlinkSync(accountFile);
+    }
+  } else {
+    console.log('No session found, creating a new one...');
+  }
+
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+
+  const testZip = '94066';
+  const role = 'San Bruno City Council';
+  const password = userData.password;
+  const emailAddress = generateEmail();
+
+  await createAccount(page, 'live', true, testZip, role, password, emailAddress);
+
+  // Save the storage state (session)
+  console.log(`Saving new test account: ${emailAddress} + ${password}1`);
+  await page.context().storageState({ path: SESSION_FILE });
+  await browser.close();
+
+  // Save account details for cleanup
+  fs.writeFileSync(
+    path.resolve(__dirname, '../testAccount.json'),
+    JSON.stringify({ emailAddress, password: password + '1' })
+  );
+
+  console.log('New session created and saved.');
+}
+
+
+export async function cleanupSession() {
+  const testAccountPath = path.resolve(__dirname, '../testAccount.json');
+
+  if (!fs.existsSync(testAccountPath)) {
+    console.log('No test account to clean up.');
+    return;
+  }
+
+  const { emailAddress, password } = JSON.parse(
+    fs.readFileSync(testAccountPath, 'utf-8')
+  );
+
+  console.log(`Cleaning up test account: ${emailAddress} + ${password}`);
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+
+  await loginAccount(page, true, emailAddress, password);
+  await deleteAccount(page);
+
+  console.log('Test account deleted.');
+  fs.unlinkSync(SESSION_FILE);
+  fs.unlinkSync(testAccountPath);
+  await browser.close();
+}
 
 export async function loginAccount(
   page,
@@ -12,7 +80,9 @@ export async function loginAccount(
   emailAddress,
   password
 ) {
-  await page.goto("/login");
+    const baseURL = process.env.BASE_URL || '';
+
+  await page.goto(`${baseURL}/login`);
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -21,6 +91,7 @@ export async function loginAccount(
   await page.getByTestId("login-email-input").nth(1).fill(emailAddress);
   await page.getByTestId("login-password-input").nth(1).fill(password);
   await page.getByTestId("login-submit-button").click();
+  await page.waitForLoadState('networkidle');
   if (isOnboarded) {
     // Verify user is on dashboard page
     await page.getByRole("heading", { name: "Path to Victory" }).isVisible();
@@ -36,15 +107,16 @@ export async function createAccount(
   zipCode = "90210",
   role = null,
   password = userData.password,
-  campaignEmail = null
+  emailAddress = generateEmail(),
+  candidateEmail = null
 ) {
   const loginPageHeader = "Join GoodParty.org";
   const firstName = userData.firstName;
   const lastName = userData.lastName;
-  const emailAddress = generateEmail();
   const phoneNumber = generatePhone();
+  const baseURL = process.env.BASE_URL || '';
 
-  await page.goto("/sign-up");
+  await page.goto(`${baseURL}/sign-up`);
 
   // Verify user is on login page
   await expect(page.getByText(loginPageHeader)).toBeVisible();
@@ -67,7 +139,7 @@ export async function createAccount(
   if (accountType == "live") {
     await onboardingLive(page, role);
   } else if (accountType == "manager") {
-    await onboardingMember(page, campaignEmail);
+    await onboardingMember(page, candidateEmail);
     return emailAddress;
   } else if (accountType == "demo") {
     await onboardingDemo(page, isLocal);
@@ -139,7 +211,8 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 
 export async function deleteAccount(page) {
   try {
-    await page.goto('/profile');
+    const baseURL = process.env.BASE_URL || '';
+    await page.goto(`${baseURL}/profile`);
     // Wait for the "Delete Account" button to be visible
     await page.getByRole('button', { name: 'Delete Account' }).isVisible({ timeout: 10000 });
     await page.getByRole('button', { name: 'Delete Account' }).click();
