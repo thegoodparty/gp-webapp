@@ -1,14 +1,14 @@
 export const impactStats = [
   {
-    stat: '25%',
-    description: 'Win rate in 2023',
+    stat: '54%',
+    description: 'Win rate in 2024',
   },
   {
-    stat: '500+',
-    description: 'Candidates supported',
+    stat: '3,444+',
+    description: 'Winning candidates',
   },
   {
-    stat: '1,100+',
+    stat: '2,290+',
     description: 'Volunteers nationwide',
   },
 ];
