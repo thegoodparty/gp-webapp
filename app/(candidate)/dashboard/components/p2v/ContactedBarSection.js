@@ -71,7 +71,7 @@ export function ContactedBarSection(props) {
         triggerElement={
           <div className="mt-2 flex justify-center md:justify-end items-center">
             <Body1>
-              <strong>Needed:</strong> {numberFormatter(needed)} voter contact
+              <strong>Needed:</strong> {numberFormatter(needed)} voter contacts
             </Body1>
             <BsInfoCircle className="ml-2" />
           </div>
