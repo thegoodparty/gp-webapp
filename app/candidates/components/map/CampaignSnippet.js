@@ -9,7 +9,15 @@ export default memo(function CampaignSnippet({
   onSelectCampaign,
   selectedCampaign,
 }) {
-  const { firstName, lastName, avatar, office, state } = campaign;
+  const {
+    firstName,
+    lastName,
+    avatar,
+    office,
+    state,
+    didWin,
+    data: { hubSpotUpdates } = {},
+  } = campaign;
   const [imageError, setImageError] = useState(false); // State to track image load errors
 
   function handleKeyPress(e, campaign) {
@@ -17,6 +25,15 @@ export default memo(function CampaignSnippet({
       onSelectCampaign(campaign);
     }
   }
+
+  const electionResults = hubSpotUpdates?.election_results
+    ? /won/i.test(hubSpotUpdates?.election_results)
+    : didWin;
+
+  const electionStatus =
+    typeof electionResults === 'boolean' && electionResults
+      ? 'Elected'
+      : 'Running';
 
   return (
     <div className="mx-4 my-2">
@@ -54,8 +71,9 @@ export default memo(function CampaignSnippet({
           <H3>
             {firstName} {lastName}
           </H3>
+
           <Subtitle2 className=" text-gray-600">
-            Running for {office}, {state}
+            {electionStatus} for {office}, {state}
           </Subtitle2>
         </div>
       </div>
