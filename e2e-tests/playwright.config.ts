@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import * as path from 'path';
 
 const projectEnv = process.env.PROJECT_ENV || "default";
 
@@ -17,8 +18,8 @@ export default defineConfig({
   ],
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:4000/", // Fallback to default URL if not provided
-    storageState: undefined, // Disable shared storage state
-    contextOptions: { viewport: null }, // Create a fresh context for each test
+    storageState: undefined,
+    contextOptions: { viewport: null },
     trace: "on-first-retry",
   },
   projects: [

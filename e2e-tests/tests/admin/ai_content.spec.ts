@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test('Verify admin user can access AI Content page', async ({ page }) => {
+test('Verify admin user can access AI Content page', async ({page}) => {
     const caseId = 29;
     await skipNonQA(test);
 
@@ -13,7 +13,7 @@ test('Verify admin user can access AI Content page', async ({ page }) => {
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
     try {
-        await loginAccount(page, true, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin');
         await page.getByRole('button', { name: 'AI Content' }).isVisible();
@@ -29,11 +29,8 @@ test('Verify admin user can access AI Content page', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-admin-dashboard-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });

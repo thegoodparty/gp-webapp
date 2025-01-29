@@ -3,18 +3,15 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount, deleteAccount } from 'helpers/accountHelpers';
 import { generateTimeStamp } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test.beforeEach(async ({ page }) => {
-    const testZip = '94066';
-    const role = 'San Bruno City Council';
-    await createAccount(page, 'live', true, testZip, role);
+test.use({
+  storageState: 'auth.json',
 });
 
-test.afterEach(async ({ page }) => {
-    await deleteAccount(page);
+test.beforeEach(async ({ page }) => {
+    await page.goto("/dashboard")
 });
 
 test('Update Campaign Details', async ({ page }) => {
@@ -53,12 +50,9 @@ test('Update Campaign Details', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-campaign-details${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
@@ -108,12 +102,9 @@ test('Update Office Details', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-office-details${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}}`);
     }
 });
 
@@ -144,12 +135,8 @@ test('Update Your Why Statement', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-why-statement${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
@@ -181,12 +168,8 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-fun-facts${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}}`);
     }
 });
 
@@ -242,11 +225,8 @@ test('Add/Edit/Delete Opponent', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-opponent-data${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}}`);
     }
 });

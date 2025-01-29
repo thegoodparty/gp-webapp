@@ -7,6 +7,10 @@ import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
+test.beforeEach(async ({ page }) => {
+    await page.goto("/")
+});
+
 test('Verify invalid login credentials error message', async ({ page }) => {
     const caseId = 22;
 
@@ -16,7 +20,6 @@ test('Verify invalid login credentials error message', async ({ page }) => {
     const invalidErrorMessage = 'The email or password are wrong.';
 
     try {
-        await page.goto('/');
         await coreNav(page, 'nav-login');
 
         // Verify user is on login page
@@ -33,12 +36,9 @@ test('Verify invalid login credentials error message', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-invalid-login-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
@@ -50,16 +50,14 @@ test('Verify user can log in with valid credentials', async ({ page }) => {
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
     try {
-        await loginAccount(page, false, testAdmin, testAdminPassword);
+        await loginAccount(page, testAdmin, testAdminPassword);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-valid-login-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });

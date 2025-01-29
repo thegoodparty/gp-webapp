@@ -7,6 +7,10 @@ import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
+test.beforeEach(async ({ page }) => {
+    await page.goto("/")
+});
+
 test('Verify Explore Offices page', async ({ page }) => {
     const caseId = 8;
 
@@ -28,7 +32,6 @@ test('Verify Explore Offices page', async ({ page }) => {
     const volunteerError = /Error submitting your form. Please refresh and try again./
 
     try {
-        await page.goto('/');
         await coreNav(page, 'nav-volunteer');
 
         // Waits for page to load completely
@@ -79,11 +82,8 @@ test('Verify Explore Offices page', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-resources-volunteer${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
