@@ -4,6 +4,8 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /screenshots/
+auth.json
+testAccount.json
 playwright-results.json
 /helpers/sample.pdf
 .env

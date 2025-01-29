@@ -3,17 +3,11 @@ import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { createAccount, deleteAccount, upgradeToPro } from 'helpers/accountHelpers';
+import { upgradeToPro } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test.beforeEach(async ({ page }) => {
-    const testZip = '94066';
-    const role = 'San Bruno City Mayor';
-    await createAccount(page, 'live', true, testZip, role);
-});
-
-test.afterEach(async ({ page }) => {
-    await deleteAccount(page);
+test.use({
+  storageState: 'auth.json',
 });
 
 test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
@@ -21,6 +15,7 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
     await skipNonQA(test);
 
     try {
+        await page.goto("/dashboard")
         await appNav(page, 'Voter Data');
 
         // Verify user is on voter data (free) page
@@ -33,19 +28,17 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-voter-data-free-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        // Report test results
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
 });
 
 test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
-    const caseId = 42;
+    const caseId1 = 42;
+    const caseId2 = 43;
     await skipNonQA(test);
     try {
+        await page.goto("/dashboard")
         await appNav(page, 'Voter Data');
         await page.waitForLoadState('networkidle');
         await upgradeToPro(page);
@@ -67,23 +60,6 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
         await page.getByRole('button', { name: 'Download CSV' }).isVisible();
         await expect(page.getByTestId('articleTitle')).toHaveText(/.+/, {timeout: 30000});
 
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-
-        // Report test results
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
-    }
-});
-
-test('Can generate custom voter file (Pro)', async ({ page }) => {
-    const caseId = 43;
-    await skipNonQA(test);
-
-    try {
-        await appNav(page, 'Voter Data');
-        await page.waitForLoadState('networkidle');
-        await upgradeToPro(page);
         await page.goto('/dashboard/voter-records')
 
         // Verify user is on voter data (pro) page
@@ -108,10 +84,11 @@ test('Can generate custom voter file (Pro)', async ({ page }) => {
         await page.getByText('Custom Voter File', { exact: true }).isVisible();
 
         // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
+        await addTestResult(runId, caseId1, 1, 'Test passed');
+        await addTestResult(runId, caseId2, 1, 'Test passed');
     } catch (error) {
-
         // Report test results
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+        await addTestResult(runId, caseId1, 5, `Test failed: ${error.stack}`);
+        await addTestResult(runId, caseId2, 5, `Test failed: ${error.stack}`);
     }
 });

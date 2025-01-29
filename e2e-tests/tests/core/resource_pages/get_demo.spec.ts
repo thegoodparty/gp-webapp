@@ -6,6 +6,10 @@ import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
+test.beforeEach(async ({ page }) => {
+    await page.goto("/")
+});
+
 test('Verify Get a Demo page', async ({ page }) => {
     const caseId = 5;
 
@@ -15,7 +19,6 @@ test('Verify Get a Demo page', async ({ page }) => {
     const hubSpotLocator = page.locator(`iframe[title="Book a Meeting"]`);
 
     try {
-        await page.goto('/');
         await coreNav(page, 'nav-get-demo');
 
         // Waits for page to load completely
@@ -41,11 +44,8 @@ test('Verify Get a Demo page', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        // Capture screenshot on error
-        const screenshotPath = `screenshots/test-failure-get-demo-${Date.now()}.png`;
-        await page.screenshot({ path: screenshotPath, fullPage: true });
 
         // Report test results with screenshot path
-        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}\nScreenshot: ${screenshotPath}`);
+        await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}}`);
     }
 });
