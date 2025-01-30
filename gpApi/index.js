@@ -467,7 +467,7 @@ const gpApi = {
       withAuth: true,
     },
     campaignStatus: {
-      url: `${base}campaigns/mine/status`,
+      url: `${base}campaigns/mine/status`, // TODO: move to campaign section
       method: 'GET',
       withAuth: true,
     },
