@@ -1,4 +1,5 @@
 import { getCookie } from 'helpers/cookieHelper';
+import { compile } from 'path-to-regexp';
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
@@ -17,8 +18,25 @@ async function gpFetch(
   isFormData = false,
   nonJSON = false,
 ) {
-  let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
-    endpoint;
+  let {
+    url,
+    method,
+    withAuth,
+    returnFullResponse,
+    additionalRequestOptions,
+    routeParams,
+  } = endpoint;
+
+  // check for route params and interpolate into url path
+  if (routeParams) {
+    const urlObj = new URL(url);
+
+    // TODO: need to delete keys from data that are interpolated into route?
+    urlObj.pathname = compile(urlObj.pathname)(data);
+
+    url = urlObj.toString();
+  }
+
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
     for (const key in data) {
@@ -53,7 +71,7 @@ async function gpFetch(
 export default gpFetch;
 
 function headersOptions(body, method = 'GET', token) {
-  const headers = {};
+  const headers = { 'Content-Type': 'application/json' };
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

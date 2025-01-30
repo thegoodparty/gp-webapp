@@ -4,7 +4,6 @@ import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
-import { setUserCookie } from 'helpers/cookieHelper';
 import Body2 from '@shared/typography/Body2';
 
 export default async function Nav() {
@@ -13,11 +12,12 @@ export default async function Nav() {
   if (user) {
     const serverToken = getServerToken();
     campaignStatus = await fetchCampaignStatus(serverToken);
-    const { status, user = {} } = campaignStatus;
-    if (status === 'manager') {
-      setUserCookie(user);
-    }
   }
+
+  // NOTE: campaignStatus being a failed Response object seems to be the source of below error
+  // Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components.
+  //        Classes or null prototypes are not supported.
+  if (campaignStatus instanceof Response) campaignStatus = false;
 
   return (
     <>
