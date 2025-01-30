@@ -14,6 +14,7 @@ import Button from '@shared/buttons/Button';
 import { USER_ROLES } from 'helpers/userHelper';
 
 export default function RightSide({ campaignStatus }) {
+  // TODO: campaignRequestPending not releveant anymore?
   const { campaignRequestPending } = campaignStatus;
   const [user] = useUser();
 

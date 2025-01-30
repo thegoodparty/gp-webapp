@@ -104,7 +104,7 @@ export default async function middleware(req) {
     );
   }
   const apiRewriteRequest =
-    pathname.startsWith('/api/v1') && !pathname.includes('/entrance/logout');
+    pathname.startsWith('/v1') && !pathname.includes('/entrance/logout');
 
   if (apiRewriteRequest) {
     return await handleApiRequestRewrite(req);
