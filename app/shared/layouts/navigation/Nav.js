@@ -12,12 +12,8 @@ export default async function Nav() {
   if (user) {
     const serverToken = getServerToken();
     campaignStatus = await fetchCampaignStatus(serverToken);
+    if (campaignStatus instanceof Response) campaignStatus = false;
   }
-
-  // NOTE: campaignStatus being a failed Response object seems to be the source of below error
-  // Error: Only plain objects, and a few built-ins, can be passed to Client Components from Server Components.
-  //        Classes or null prototypes are not supported.
-  if (campaignStatus instanceof Response) campaignStatus = false;
 
   return (
     <>
