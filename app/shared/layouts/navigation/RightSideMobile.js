@@ -8,7 +8,6 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
-import NotificationsDropdown from './notifications/NotificationsDropdown';
 import VolunteerDashboardMobile from '../VolunteerDashboardMobile';
 import {
   COMMUNITY_LINKS,
@@ -53,14 +52,7 @@ export default function RightSideMobile() {
             isOpen ? 'text-white' : ''
           }`}
         >
-          {!isOpen && user && (
-            <>
-              <ExitToDashboardButton />
-              <div>
-                <NotificationsDropdown user={user} />
-              </div>
-            </>
-          )}
+          {!isOpen && user && <ExitToDashboardButton />}
           <Hamburger
             hideOutline={false}
             toggled={isOpen}

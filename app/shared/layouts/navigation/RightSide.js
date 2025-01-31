@@ -3,7 +3,6 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import TopDashboardMenu from './TopDashboardMenu';
 import Link from 'next/link';
-import NotificationsDropdown from './notifications/NotificationsDropdown';
 import ProfileDropdown from './ProfileDropdown';
 import DashboardOrContinue from './DashboardOrContinue';
 import { useUser } from '@shared/hooks/useUser';
@@ -60,7 +59,6 @@ export default function RightSide({ campaignStatus }) {
       {user ? (
         <>
           <ExitToDashboardButton />
-          <NotificationsDropdown user={user} />
           <ProfileDropdown
             open={profileOpen}
             toggleCallback={toggleProfile}
@@ -85,7 +83,9 @@ export default function RightSide({ campaignStatus }) {
       ) : (
         <>
           <Link href="/login" id="nav-login" className="lg:mr-3 xl:mr-6">
-            <div className="font-medium text-base" data-testid="nav-login">Login</div>
+            <div className="font-medium text-base" data-testid="nav-login">
+              Login
+            </div>
           </Link>
           <NavButton
             href="/sign-up"
