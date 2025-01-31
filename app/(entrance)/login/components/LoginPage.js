@@ -101,7 +101,9 @@ export default function LoginPage() {
         }
         window.location.href = '/';
       } else {
-        errorSnackbar('The email or password are wrong.');
+        errorSnackbar(
+          'Invalid login. Please check your credentials and try again.',
+        );
       }
     }
   };
