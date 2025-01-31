@@ -26,8 +26,8 @@ if (!appBase) {
 const gpApi = {
   homepage: {
     subscribeEmail: {
-      url: `${base}subscribe/email`, // TODO: not migrated yet - WEB-3445
-      method: 'GET',
+      url: `${base}subscribe`,
+      method: 'POST',
     },
     declarationSignatures: {
       list: {
@@ -57,7 +57,7 @@ const gpApi = {
     socialLogin: {
       url: `${base}authentication/social-login/:socialProvider`,
       method: 'POST',
-      routeParams: true,
+      hasRouteParams: true,
     },
   },
   content: {
@@ -432,70 +432,56 @@ const gpApi = {
   //
   user: {
     updateUser: {
-      url: `${base}user`,
+      url: `${base}users/me`,
       method: 'PUT',
       withAuth: true,
     },
     updateMeta: {
-      url: `${base}user/meta`,
+      url: `${base}users/me/metadata`,
       method: 'PUT',
       withAuth: true,
     },
     getMeta: {
-      url: `${base}user/meta`,
+      url: `${base}users/me/metadata`,
       method: 'GET',
       withAuth: true,
     },
+    // TODO: rename to just "getUser"?
     refresh: {
-      url: `${base}user/refresh`,
-      method: 'PUT',
+      url: `${base}users/me`,
+      method: 'GET',
       withAuth: true,
     },
     logout: {
-      url: `${appBase}/api/v1/entrance/logout`, // TODO: move this route handler to match new api base?
+      url: `${appBase}/api/v1/entrance/logout`, // TODO: update logout handler to not have `/api` path?
       method: 'DELETE',
       withAuth: true,
     },
     changePassword: {
-      url: `${base}user/password`,
+      url: `${base}users/:id/password`,
       method: 'PUT',
       withAuth: true,
+      hasRouteParams: true,
     },
     deleteAccount: {
-      url: `${base}user`,
+      url: `${base}users/:id`,
       method: 'DELETE',
       withAuth: true,
+      hasRouteParams: true,
     },
     campaignStatus: {
       url: `${base}campaigns/mine/status`, // TODO: move to campaign section
       method: 'GET',
       withAuth: true,
     },
-    follow: {
-      list: {
-        url: `${base}supports`,
-        method: 'GET',
-        withAuth: true,
-      },
-      create: {
-        url: `${base}support`,
-        method: 'POST',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}support`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
     uploadAvatar: {
-      url: `${base}user/avatar`,
+      url: `${base}users/me/upload-image`,
       method: 'POST',
       withAuth: true,
     },
     files: {
       generateSignedUploadUrl: {
-        url: `${base}user/files/generate-signed-upload-url`,
+        url: `${base}users/files/generate-signed-upload-url`,
         method: 'PUT',
         withAuth: true,
       },
@@ -642,8 +628,9 @@ const gpApi = {
     withAuth: true,
   },
   logError: {
-    url: `${base}log-error`,
+    url: `${base}error-logger`,
     method: 'POST',
+    withAuth: true,
   },
   notification: {
     list: {
