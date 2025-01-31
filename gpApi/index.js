@@ -11,7 +11,7 @@ export let appBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
-let base = `${appBase}/api/v1/`;
+let base = `${appBase}/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
@@ -20,50 +20,44 @@ if (!appBase) {
     typeof window !== 'undefined'
       ? window.location.origin
       : `https://${process.env.VERCEL_BRANCH_URL}`;
-  base = `${appBase}/api/v1/`;
+  base = `${appBase}/v1/`;
 }
 
 const gpApi = {
   homepage: {
     subscribeEmail: {
-      url: `${base}subscribe/email`,
+      url: `${base}subscribe/email`, // TODO: not migrated yet - WEB-3445
       method: 'GET',
     },
     declarationSignatures: {
       list: {
-        url: `${base}declares`,
+        url: `${base}declare/list`,
         method: 'GET',
       },
     },
   },
+  // TODO: rename to authentication?
   entrance: {
     register: {
-      url: `${base}entrance/register`,
+      url: `${base}authentication/register`,
       method: 'POST',
     },
     login: {
-      url: `${base}entrance/login`,
-      method: 'PUT',
+      url: `${base}authentication/login`,
+      method: 'POST',
     },
     forgotPassword: {
-      url: `${base}entrance/send-password-recovery-email`,
+      url: `${base}authentication/send-recover-password-email`,
       method: 'POST',
     },
     resetPassword: {
-      url: `${base}entrance/reset-password`,
-      method: 'PUT',
+      url: `${base}authentication/reset-password`,
+      method: 'POST',
     },
     socialLogin: {
-      url: `${base}entrance/social-login`,
-      method: 'PUT',
-    },
-    twitterLogin: {
-      url: `${base}entrance/twitter-login`,
-      method: 'PUT',
-    },
-    verifyTwitterToken: {
-      url: `${base}entrance/twitter-confirm`,
-      method: 'PUT',
+      url: `${base}authentication/social-login/:socialProvider`,
+      method: 'POST',
+      routeParams: true,
     },
   },
   content: {
@@ -105,7 +99,7 @@ const gpApi = {
       withAuth: true,
     },
     adminCreateEmail: {
-      url: `${base}admin-campaign-email`,
+      url: `${base}authentication/send-set-password-email`, // TODO: move to entrance/auth section
       method: 'POST',
       withAuth: true,
     },
@@ -458,7 +452,7 @@ const gpApi = {
       withAuth: true,
     },
     logout: {
-      url: `${base}entrance/logout`,
+      url: `${appBase}/api/v1/entrance/logout`, // TODO: move this route handler to match new api base?
       method: 'DELETE',
       withAuth: true,
     },
@@ -473,7 +467,7 @@ const gpApi = {
       withAuth: true,
     },
     campaignStatus: {
-      url: `${base}user/campaign-status`,
+      url: `${base}campaigns/mine/status`, // TODO: move to campaign section
       method: 'GET',
       withAuth: true,
     },
