@@ -1,12 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { AiOutlineFlag } from 'react-icons/ai';
-import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
+import { BsPostcardHeart, BsStars } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
 import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
-import { TbBrain } from 'react-icons/tb';
 import { handleLogOut } from '@shared/user/handleLogOut';
-import useNotifications from '@shared/layouts/navigation/notifications/useNotifications';
 import { DashboardMenuItem } from 'app/(candidate)/dashboard/shared/DashboardMenuItem';
 
 const CAMPAIGN_TEAM_MENU_ITEM = {
@@ -85,12 +83,6 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  const notifications = useNotifications() || [];
-  const campaignRequestNotifications = notifications.filter((notification) => {
-    const { data = {}, isRead } = notification || {};
-    const { type } = data;
-    return type === 'campaignRequest' && !isRead;
-  });
   const menuItems = getDashboardMenuItems(campaign, user);
 
   const handleEnterPress = (e) => {
@@ -101,9 +93,7 @@ export default function DashboardMenu({
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
         const { id, link, section, icon, label } = item;
-        const notificationDot =
-          Boolean(campaignRequestNotifications?.length) &&
-          item === CAMPAIGN_TEAM_MENU_ITEM;
+
         return (
           <DashboardMenuItem
             key={label}
@@ -113,7 +103,6 @@ export default function DashboardMenu({
             icon={icon}
             onClick={toggleCallback}
             pathname={pathname}
-            notificationDot={notificationDot}
           >
             {label}
           </DashboardMenuItem>
