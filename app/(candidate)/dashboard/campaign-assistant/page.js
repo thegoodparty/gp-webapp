@@ -6,8 +6,8 @@ import { adminAccessOnly } from 'helpers/permissionHelper';
 import candidateAccess from '../shared/candidateAccess';
 
 const meta = pageMetaData({
-  title: 'Campaign Assistant | GoodParty.org',
-  description: 'Campaign Assistant',
+  title: 'AI Assistant | GoodParty.org',
+  description: 'AI Assistant',
   slug: '/dashboard/campaign-assistant',
 });
 export const metadata = meta;
