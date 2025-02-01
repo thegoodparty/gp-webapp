@@ -1,62 +1,65 @@
 'use client';
 import Link from 'next/link';
-import { AiOutlineFlag } from 'react-icons/ai';
-import { BsGraphUp, BsPostcardHeart, BsStars } from 'react-icons/bs';
-import { GiProgression } from 'react-icons/gi';
-import { RiBook2Line, RiTeamLine, RiUserHeartLine } from 'react-icons/ri';
-import { TbBrain } from 'react-icons/tb';
+
 import { handleLogOut } from '@shared/user/handleLogOut';
 import useNotifications from '@shared/layouts/navigation/notifications/useNotifications';
 import { DashboardMenuItem } from 'app/(candidate)/dashboard/shared/DashboardMenuItem';
+import {
+  MdAccountCircle,
+  MdAutoAwesome,
+  MdFactCheck,
+  MdFileOpen,
+  MdFolderShared,
+  MdLibraryBooks,
+  MdManageAccounts,
+} from 'react-icons/md';
 
 const CAMPAIGN_TEAM_MENU_ITEM = {
   label: 'Campaign Team',
-  icon: <RiTeamLine />,
+  icon: <MdManageAccounts />,
   link: '/dashboard/team',
-  section: 'Strategy',
   id: 'campaign-team-dashboard',
 };
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
-  icon: <GiProgression />,
+  icon: <MdFolderShared />,
   link: '/dashboard/upgrade-to-pro',
   id: 'upgrade-pro-dashboard',
 };
 
 const DEFAULT_MENU_ITEMS = [
   {
-    label: 'Campaign Tracker',
-    icon: <AiOutlineFlag />,
+    label: 'Dashboard',
+    icon: <MdFactCheck />,
     link: '/dashboard',
     id: 'campaign-tracker-dashboard',
   },
   {
-    label: 'Campaign Assistant',
-    icon: <BsStars />,
+    label: 'AI Assistant',
+    icon: <MdAutoAwesome />,
     link: '/dashboard/campaign-assistant',
     id: 'campaign-assistant-dashboard',
   },
   VOTER_DATA_UPGRADE_ITEM,
   {
-    label: 'AI Campaign Tool',
-    icon: <BsPostcardHeart />,
+    label: 'Content Builder',
+    icon: <MdFileOpen />,
     link: '/dashboard/content',
     id: 'my-content-dashboard',
   },
   {
-    label: 'Campaign Details',
-    icon: <RiUserHeartLine />,
+    label: 'My Profile',
+    icon: <MdAccountCircle />,
     link: '/dashboard/campaign-details',
     id: 'campaign-details-dashboard',
   },
 
   CAMPAIGN_TEAM_MENU_ITEM,
   {
-    label: 'Resources Library',
-    icon: <RiBook2Line />,
+    label: 'Free Resources',
+    icon: <MdLibraryBooks />,
     link: '/blog/section/for-candidates',
-    section: 'Resources',
     id: 'resources-library',
   },
 ];
@@ -65,7 +68,7 @@ const VOTER_RECORDS_MENU_ITEM = {
   id: 'voter-records-dashboard',
   label: 'Voter Data',
   link: '/dashboard/voter-records',
-  icon: <GiProgression />,
+  icon: <MdFolderShared />,
 };
 
 const getDashboardMenuItems = (campaign, user) => {
@@ -100,7 +103,7 @@ export default function DashboardMenu({
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
-        const { id, link, section, icon, label } = item;
+        const { id, link, icon, label } = item;
         const notificationDot =
           Boolean(campaignRequestNotifications?.length) &&
           item === CAMPAIGN_TEAM_MENU_ITEM;
@@ -108,7 +111,6 @@ export default function DashboardMenu({
           <DashboardMenuItem
             key={label}
             id={id}
-            section={section}
             link={link}
             icon={icon}
             onClick={toggleCallback}

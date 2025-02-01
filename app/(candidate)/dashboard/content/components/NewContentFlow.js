@@ -9,13 +9,13 @@ import { useEffect, useState } from 'react';
 import InputFieldsModal from './InputFieldsModal';
 import TemplateList from './TemplatesList';
 import QuestionProgress, { calcAnswers } from '../../shared/QuestionProgress';
-import { BsStars } from 'react-icons/bs';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
 } from 'helpers/buildAiContentSections';
 import { getNewAiContentSectionKey } from 'helpers/getNewAiContentSectionKey';
+import { MdAutoAwesome } from 'react-icons/md';
 
 export default function NewContentFlow(props) {
   const {
@@ -94,7 +94,7 @@ export default function NewContentFlow(props) {
       >
         <PrimaryButton>
           <div className="flex items-center">
-            <BsStars className="mr-2" /> Generate
+            <MdAutoAwesome className="mr-2" /> Generate
           </div>
         </PrimaryButton>
       </div>

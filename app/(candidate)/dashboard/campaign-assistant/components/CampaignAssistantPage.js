@@ -12,7 +12,7 @@ const CampaignAssistantPage = (props) => (
     <ChatProvider>
       <Paper className="h-[calc(100vh-72px)] flex flex-col">
         <header className="flex items-center gap-4 mb-6">
-          <H2 className="grow">Campaign Assistant</H2>
+          <H2 className="grow">AI Assistant</H2>
           <ChatHistory />
           <CreateNewChat />
         </header>

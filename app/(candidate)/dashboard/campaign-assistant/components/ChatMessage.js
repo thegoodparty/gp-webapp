@@ -1,14 +1,13 @@
 'use client';
 import Body2 from '@shared/typography/Body2';
 import { marked } from 'marked';
-import { BsStars } from 'react-icons/bs';
 import Typewriter from 'typewriter-effect';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FaRegCopy } from 'react-icons/fa';
 import { useState } from 'react';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { IoMdCheckmark } from 'react-icons/io';
-import { MdOutlineRefresh } from 'react-icons/md';
+import { MdOutlineRefresh, MdAutoAwesome } from 'react-icons/md';
 import ChatFeedback from './ChatFeedback';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
@@ -34,7 +33,7 @@ export default function ChatMessage({ message, type, isLastMessage }) {
     <div className={`flex py-2 px-4 ${role === 'user' ? 'justify-end' : ''}`}>
       {role === 'assistant' ? (
         <div className="flex items-start">
-          <BsStars size={16} />
+          <MdAutoAwesome size={16} />
           <Body2 className="ml-2 prose [&>div>p:first-child]:mt-0">
             {type ? (
               <Typewriter

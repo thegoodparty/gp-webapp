@@ -1,8 +1,8 @@
 'use client';
 import Button from '@shared/buttons/Button';
 import Body2 from '@shared/typography/Body2';
-import { BsStars } from 'react-icons/bs';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+import { MdAutoAwesome } from 'react-icons/md';
 
 const prompts = [
   {
@@ -34,7 +34,7 @@ export default function EmptyChat() {
     <div className="text-center w-full h-full flex items-center justify-center">
       <div>
         <div className="flex justify-center text-indigo-500 mb-6">
-          <BsStars size={48} />
+          <MdAutoAwesome size={48} />
         </div>
         <Body2>
           Ask me anything related to your campaign. Or click a topic below:
