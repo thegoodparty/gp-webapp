@@ -82,4 +82,15 @@ export async function checkForTestFailures() {
     }
 }
 
-module.exports = { addTestResult, createTestRun, skipNonQA, checkForTestFailures };
+export async function authFileCheck(test) {
+    const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
+    const isDevEnv = process.env.BASE_URL === 'https://dev.goodparty.org';
+    if (!isQAEnv && !isDevEnv) {
+        return;
+    }
+    test.use({
+        storageState: 'auth.json',
+    });
+}
+
+module.exports = { addTestResult, createTestRun, skipNonQA, checkForTestFailures, authFileCheck };

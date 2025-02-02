@@ -1,15 +1,13 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
 import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import { acceptCookieTerms } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 import * as path from 'path';
 
-test.use({
-  storageState: 'auth.json',
-});
+authFileCheck(test);
 
 test('Adjust Personal Information', async ({ page }) => {
 

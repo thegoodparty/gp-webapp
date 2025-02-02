@@ -1,16 +1,14 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
 const testTopicChat = /^Can you help me with my campaign strategy\?$/;
 
-test.use({
-  storageState: 'auth.json',
-});
+authFileCheck(test);
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard")
