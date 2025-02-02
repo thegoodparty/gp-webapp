@@ -45,12 +45,14 @@ export default function Hero({
     title = `Run for ${stateName} state office`;
     subTitle = `${stateName} state elections`;
   } else if (level === 'county') {
-    title = `Run for ${county?.county_full}, ${state.toUpperCase()} office`;
-    subTitle = `${county?.county_full} elections`;
+    title = `Run for ${
+      county?.county_full || 'a county'
+    }, ${state.toUpperCase()} office`;
+    subTitle = `${county?.county_full || 'county'} elections`;
   } else if (level === 'city') {
     const cityName = `${municipality?.city}`;
-    title = `Run for ${cityName} city office`;
-    subTitle = `${cityName} city elections`;
+    title = `Run for ${cityName || 'a'} city office`;
+    subTitle = `${cityName || ''} city elections`;
   }
   return (
     <>
