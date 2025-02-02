@@ -5,6 +5,8 @@ import { TbHomeShare } from 'react-icons/tb';
 import { numberFormatter } from 'helpers/numberHelper';
 
 export default function CityFacts({ city, county }) {
+  if (!city) return null;
+
   const {
     population,
     density,
