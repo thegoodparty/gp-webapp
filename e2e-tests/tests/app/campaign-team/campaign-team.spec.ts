@@ -1,13 +1,11 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test.use({
-  storageState: 'auth.json',
-});
+authFileCheck(test);
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard")

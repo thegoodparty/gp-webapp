@@ -1,14 +1,12 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { upgradeToPro } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-test.use({
-  storageState: 'auth.json',
-});
+authFileCheck(test);
 
 test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
     const caseId = 41;
