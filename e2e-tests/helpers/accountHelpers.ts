@@ -9,6 +9,12 @@ import PDFDocument from 'pdfkit';
 const SESSION_FILE = path.resolve(__dirname, '../auth.json');
 
 export async function ensureSession() {
+  const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
+  const isDevEnv = process.env.BASE_URL === 'https://dev.goodparty.org';
+  if (!isQAEnv && !isDevEnv) {
+      return;
+  }
+
   if (fs.existsSync(SESSION_FILE)) {
     console.log('Existing session found, deleting and creating a new one...');
     
@@ -50,6 +56,11 @@ export async function ensureSession() {
 
 
 export async function cleanupSession() {
+  const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
+  const isDevEnv = process.env.BASE_URL === 'https://dev.goodparty.org';
+  if (!isQAEnv && !isDevEnv) {
+      return;
+  }
   const testAccountPath = path.resolve(__dirname, '../testAccount.json');
 
   if (!fs.existsSync(testAccountPath)) {
