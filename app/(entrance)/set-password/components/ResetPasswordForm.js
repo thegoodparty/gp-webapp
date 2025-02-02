@@ -18,7 +18,7 @@ export default function ResetPasswordForm({
   return (
     <form noValidate onSubmit={onSubmit}>
       <hgroup className="text-center">
-        <H1 className="mb-4">{createMode ? 'Set' : 'Reset'} Password</H1>
+        <H1 className="mb-4">Supercharge your campaign</H1>
         {createMode ? (
           <Body2 className="mb-8">
             Please set a password for your new account
@@ -32,14 +32,14 @@ export default function ResetPasswordForm({
       </hgroup>
       <PasswordInput
         value={password}
-        label="New Password"
+        label="Password"
         onChangeCallback={onPasswordChange}
         error={password !== '' && !isValid}
       />
       <PasswordInput
         className="mt-6"
         value={confirmPassword}
-        label="Confirm New Password"
+        label="Confirm Password"
         onChangeCallback={onConfirmPasswordChange}
         error={showConfirmError}
         helperText={showConfirmError && 'Passwords do not match'}
@@ -50,7 +50,7 @@ export default function ResetPasswordForm({
         size="large"
         disabled={!isValid || !isMatch}
       >
-        {createMode ? 'Set' : 'Update'} Password
+        {createMode ? 'Get started' : 'Update password'}
       </Button>
     </form>
   );
