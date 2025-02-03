@@ -1,13 +1,10 @@
 'use client';
-import React, { useState } from 'react';
-import TextField from '@shared/inputs/TextField';
+import { useState } from 'react';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { passwordRegex, updateUser } from 'helpers/userHelper';
-import { TfiLock } from 'react-icons/tfi';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
-import Caption from '@shared/typography/Caption';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
@@ -16,7 +13,7 @@ import DeleteAccountButton from './DeleteAccountButton';
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed';
 const CURRENT_PASSWORD_INCORRECT = 'Current password is incorrect';
-const PASSWORD_CHANGE_SUCCESS_MESSAGE = 'password successfully changed.';
+const INVALID_PASSWORD_MSG = 'Invalid password';
 
 function PasswordSection({ user: initUser }) {
   const [user, setUser] = useState(initUser);
@@ -59,21 +56,18 @@ function PasswordSection({ user: initUser }) {
   };
 
   const handleReqResult = async (result) => {
-    if (result?.message === PASSWORD_CHANGE_SUCCESS_MESSAGE) {
+    if (result.ok) {
       setErrorMessage(null);
       setPasswordChangeSuccessful(true);
       setUser(await updateUser());
       reset();
-    } else if (result === false) {
-      setPasswordChangeSuccessful(false);
-      setErrorMessage(PASSWORD_REQUEST_FAILED);
-    } else if (!result.ok) {
+    } else {
       const reason = await result.json();
       setPasswordChangeSuccessful(false);
       setErrorMessage(
-        reason.message === 'incorrect password'
+        result.status === 401 && reason.message === INVALID_PASSWORD_MSG
           ? CURRENT_PASSWORD_INCORRECT
-          : reason.message,
+          : PASSWORD_REQUEST_FAILED,
       );
     }
   };
@@ -83,6 +77,7 @@ function PasswordSection({ user: initUser }) {
     setLoading(true);
     try {
       const result = await gpFetch(gpApi.user.changePassword, {
+        id: user.id,
         newPassword: password,
         oldPassword,
       });
@@ -159,7 +154,7 @@ function PasswordSection({ user: initUser }) {
           </div>
           <div className="col-span-12 lg:col-span-6">
             <div className="flex justify-end">
-              <DeleteAccountButton />
+              <DeleteAccountButton userId={user.id} />
             </div>
           </div>
         </div>

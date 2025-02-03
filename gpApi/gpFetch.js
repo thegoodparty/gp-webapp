@@ -1,5 +1,5 @@
 import { getCookie } from 'helpers/cookieHelper';
-import { compile } from 'path-to-regexp';
+import { compile, parse } from 'path-to-regexp';
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
@@ -10,6 +10,37 @@ const IS_LOCAL_ENVIRONMENT =
     typeof window !== 'undefined' && window.location.href.includes('localhost'),
   );
 
+/**
+ * helper function to interpolate route params into url
+ *
+ * */
+function handleRouteParams(urlString, data) {
+  const url = new URL(urlString);
+  const { tokens } = parse(url.pathname);
+  const hasRouteParams = tokens.some((token) => typeof token !== 'string');
+
+  if (!hasRouteParams || !data) return urlString;
+
+  // Find tokens that are parameters (objects with name property)
+  const compiledData = {};
+  tokens.forEach((token) => {
+    if (typeof token === 'object' && token.name) {
+      const paramName = token.name;
+      if (paramName in data) {
+        // Coerce value to string and store for compilation
+        compiledData[paramName] = String(data[paramName]);
+        // Remove used parameter from original data object
+        delete data[paramName];
+      }
+    }
+  });
+
+  // Compile the URL with the coerced values
+  url.pathname = compile(url.pathname)(compiledData);
+
+  return url.toString();
+}
+
 async function gpFetch(
   endpoint,
   data,
@@ -18,24 +49,10 @@ async function gpFetch(
   isFormData = false,
   nonJSON = false,
 ) {
-  let {
-    url,
-    method,
-    withAuth,
-    returnFullResponse,
-    additionalRequestOptions,
-    hasRouteParams,
-  } = endpoint;
+  let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
+    endpoint;
 
-  // check for route params and interpolate into url path
-  if (hasRouteParams) {
-    const urlObj = new URL(url);
-
-    // TODO: need to delete keys from data that are interpolated into route?
-    urlObj.pathname = compile(urlObj.pathname)(data);
-
-    url = urlObj.toString();
-  }
+  url = handleRouteParams(url, data);
 
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
@@ -48,7 +65,11 @@ async function gpFetch(
   }
 
   let body = data;
-  if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
+  if (
+    (method === 'POST' || method === 'PUT' || method === 'DELETE') &&
+    data &&
+    !isFormData
+  ) {
     body = JSON.stringify(data);
   }
 
@@ -57,7 +78,12 @@ async function gpFetch(
     autoToken = getCookie('impersonateToken') || token;
   }
 
-  const requestOptions = headersOptions(body, endpoint.method, autoToken);
+  const requestOptions = headersOptions(
+    body,
+    endpoint.method,
+    autoToken,
+    isFormData,
+  );
 
   return await fetchCall(
     url,
@@ -70,8 +96,12 @@ async function gpFetch(
 
 export default gpFetch;
 
-function headersOptions(body, method = 'GET', token) {
-  const headers = { 'Content-Type': 'application/json' };
+function headersOptions(body, method = 'GET', token, isFormData = false) {
+  const headers = {};
+
+  if (!isFormData) {
+    headers['content-type'] = 'application/json';
+  }
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;

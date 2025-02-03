@@ -11,7 +11,7 @@ import { AddUserButton } from 'app/admin/users/components/AddUserButton';
 
 const buildTableInputData = (users) =>
   users.map((user) => {
-    const metaData = (user.metaData && JSON.parse(user.metaData)) || {};
+    const metaData = user.metaData || {};
     const userType = user.isAdmin
       ? 'admin'
       : user.candidate

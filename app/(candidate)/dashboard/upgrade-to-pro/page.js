@@ -15,7 +15,7 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
   const user = getServerUser();
 

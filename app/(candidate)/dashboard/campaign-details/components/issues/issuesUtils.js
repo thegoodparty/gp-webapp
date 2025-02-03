@@ -43,7 +43,7 @@ export const saveCandidatePosition = async ({
   topIssueId,
 }) => {
   try {
-    const api = gpApi.campaign.candidatePosition.create;
+    const api = gpApi.campaign.campaignPosition.create;
     const payload = {
       description,
       campaignSlug,
@@ -61,7 +61,7 @@ export const saveCandidatePosition = async ({
 
 export const deleteCandidatePosition = async (id) => {
   try {
-    const api = gpApi.campaign.candidatePosition.delete;
+    const api = gpApi.campaign.campaignPosition.delete;
     const payload = {
       id,
     };
@@ -74,7 +74,7 @@ export const deleteCandidatePosition = async (id) => {
 
 export async function updateCandidatePosition(id, description) {
   try {
-    const api = gpApi.campaign.candidatePosition.update;
+    const api = gpApi.campaign.campaignPosition.update;
     const payload = {
       id,
       description,
@@ -88,7 +88,7 @@ export async function updateCandidatePosition(id, description) {
 
 export async function loadCandidatePosition(slug) {
   try {
-    const api = gpApi.campaign.candidatePosition.find;
+    const api = gpApi.campaign.campaignPosition.find;
     const payload = {
       slug,
     };

@@ -11,18 +11,13 @@ import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 
-async function fileSelectCallback(image, uploadCallback, isUserImage) {
-  let api;
-  if (isUserImage) {
-    api = gpApi.user.uploadAvatar;
-  } else {
-    api = gpApi.candidateApplication.uploadImage;
-  }
+async function fileSelectCallback(image, uploadCallback) {
+  const api = gpApi.user.uploadAvatar;
   const formData = new FormData();
-  formData.append('files[0]', image);
+  formData.append('file', image, image.name);
   const res = await gpFetch(api, formData, 3600, false, true);
-  if (res.success && res.data.files.length > 0) {
-    uploadCallback(`${res.data.baseurl}${res.data.files[0]}`);
+  if (res.avatar) {
+    uploadCallback(res.avatar);
   } else {
     uploadCallback(false);
   }
@@ -32,7 +27,6 @@ function ImageUploadWrapper({
   uploadCallback,
   maxFileSize,
   customElement,
-  isUserImage,
   loadingStatusCallback = () => {},
 }) {
   const [fileSizeError, setFileSizeError] = useState(false);
@@ -47,7 +41,7 @@ function ImageUploadWrapper({
         setFileSizeError(true);
         return;
       }
-      await fileSelectCallback(file, uploadCallback, isUserImage);
+      await fileSelectCallback(file, uploadCallback);
       loadingStatusCallback(false);
     }
   };

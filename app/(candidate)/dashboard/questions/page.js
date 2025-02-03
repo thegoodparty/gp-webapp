@@ -18,7 +18,7 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
   const { generate } = searchParams;
 
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
   const { topIssues } = await fetchIssues();
 

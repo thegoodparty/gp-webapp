@@ -10,9 +10,8 @@ import { ProExpertAlert } from './ProExpertAlert';
 export default function AlertSection(props) {
   const [user, setUser] = useUser();
   const { metaData: userMetaData } = user || {};
-  const { checkoutSessionId, customerId, demoPersona } = JSON.parse(
-    userMetaData || '{}',
-  );
+  const { checkoutSessionId, customerId, demoPersona } = userMetaData || {};
+
   const { campaign } = props;
   const { isPro, details } = campaign;
   const { subscriptionId } = details || {};

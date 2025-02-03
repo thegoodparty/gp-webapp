@@ -16,8 +16,8 @@ const ProSignUpPage = ({ campaign }) => {
   const officeFields = campaignOfficeFields(campaignState?.details);
 
   const onSelect = async () => {
-    const res = await getCampaign();
-    setCampaignState(res.campaign);
+    const campaign = await getCampaign();
+    setCampaignState(campaign);
     setShowModal(false);
   };
 

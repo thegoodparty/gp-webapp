@@ -21,10 +21,9 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 
 async function refreshUser() {
   try {
-    const api = gpApi.user.refresh;
+    const api = gpApi.user.getUser;
 
-    const { user } = await gpFetch(api);
-    return user;
+    return await gpFetch(api);
   } catch (error) {
     console.log('Error updating user', error);
   }
@@ -102,6 +101,7 @@ function PersonalSection({ user }) {
 
   const refetchUser = async () => {
     const updated = await refreshUser();
+
     setUserState(updated);
   };
 
