@@ -1,6 +1,6 @@
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
-import H6 from '@shared/typography/H6';
+import H3 from '@shared/typography/H3';
 import { WINNER_COUNT } from 'app/candidates/page';
 import { numberFormatter } from 'helpers/numberHelper';
 import Image from 'next/image';
@@ -58,7 +58,7 @@ export default function WinnersSection() {
               />
             </div>
             <div className="p-4 text-center">
-              <H6 className="mb-3">{card.name}</H6>
+              <H3>{card.name}</H3>
               <Body2 className="text-gray-600">{card.office}</Body2>
               <Body2 className="text-gray-600">{card.location}</Body2>
             </div>
