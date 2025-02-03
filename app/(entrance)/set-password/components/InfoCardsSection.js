@@ -1,5 +1,5 @@
 import Body1 from '@shared/typography/Body1';
-import H5 from '@shared/typography/H5';
+import H2 from '@shared/typography/H2';
 
 const { MdAnalytics, MdPeople, MdAutoAwesome } = require('react-icons/md');
 
@@ -35,7 +35,7 @@ export default function InfoCardsSection() {
           }`}
         >
           {card.icon}
-          <H5 className="my-2">{card.title}</H5>
+          <H2 className="my-2">{card.title}</H2>
           <Body1 className="text-gray-600">{card.description}</Body1>
         </div>
       ))}
