@@ -103,12 +103,12 @@ const gpApi = {
       withAuth: true,
     },
     createDemoCampaign: {
-      url: `${base}campaign/demo`, // TODO: remove? (not migrated)
+      url: `${base}campaign/demo`, // TODO: remove this route (WEB-3583)
       method: 'POST',
       withAuth: true,
     },
     deleteDemoCampaign: {
-      url: `${base}campaign/demo`, // TODO: remove? (not migrated)
+      url: `${base}campaign/demo`, // TODO: remove this route (WEB-3583)
       method: 'DELETE',
       withAuth: true,
     },
@@ -209,7 +209,7 @@ const gpApi = {
       },
     },
 
-    // TODO: remove? volunteerInvitation (not migrated)
+    // TODO: remove volunteerInvitation routes (WEB-3583)
     volunteerInvitation: {
       create: {
         url: `${base}campaign/volunteer/invitation`,
@@ -232,7 +232,7 @@ const gpApi = {
         withAuth: true,
       },
     },
-    // TODO: remove? campaignRequests (not migrated)
+    // TODO: remove campaignRequests routes (WEB-3583)
     campaignRequests: {
       create: {
         url: `${base}campaign/volunteer/request`,
@@ -260,7 +260,7 @@ const gpApi = {
         withAuth: true,
       },
     },
-    // TODO: remove campaignVolunteer? (not migrated)
+    // TODO: remove campaignVolunteer routes (WEB-3583)
     campaignVolunteer: {
       create: {
         url: `${base}campaign/volunteer`,
@@ -287,7 +287,6 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
-      // TODO: remove routes? (not migrated)
       routes: {
         list: {
           url: `${base}campaign/volunteer/routes`,
