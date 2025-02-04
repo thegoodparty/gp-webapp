@@ -8,6 +8,9 @@ const apiRewriteUrl = (ReqNextUrl) => {
   const newUrl = ReqNextUrl.clone();
   newUrl.protocol = apiRootUrl.protocol;
   newUrl.host = apiRootUrl.host;
+  // TODO: once we completely move to new api,
+  // change const versionBase in gpApi/routes.js
+  // and remove this .replace
   newUrl.pathname = ReqNextUrl.pathname.replace('/api', '');
   newUrl.search = ReqNextUrl.search;
   return newUrl.toString();
