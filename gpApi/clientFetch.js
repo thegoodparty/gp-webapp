@@ -1,4 +1,3 @@
-import { getToken } from 'helpers/cookieHelper';
 import { compile, parse } from 'path-to-regexp';
 import { apiUrl } from './routes';
 
@@ -32,7 +31,7 @@ const IS_LOCAL_ENVIRONMENT =
  *   or be sent as query parameters/request body. If the payload is not a FormData instance, it is sent as JSON.
  * @param {Object} [options] - Additional options for the fetch request.
  * @param {number} [options.revalidate] - Specifies the revalidation time (in seconds) for caching purposes.
- * @param {string} [options.serverToken] - A token to be used in the request, overriding the default token from cookies.
+ * @param {string} [options.serverToken] - A token to be used in the request, when sending from server (see serverFetch)
  *
  * @returns {Promise<ApiResponse>} The response object containing the status and parsed data.
  */
@@ -42,10 +41,9 @@ export async function clientFetch(endpoint, data, options = {}) {
 
   const url = buildUrl(path, data, method);
 
-  const token = serverToken ?? getToken();
   const headers = {};
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  if (serverToken) {
+    headers.Authorization = `Bearer ${serverToken}`;
   }
 
   const shouldCache = revalidate && !IS_LOCAL_ENVIRONMENT;
@@ -73,7 +71,6 @@ export async function clientFetch(endpoint, data, options = {}) {
     ok: res.ok,
     status: res.status,
     statusText: res.statusText,
-    // Parse the response as JSON if applicable; otherwise, as text.
     data: isJsonResponse ? await res.json() : await res.text(),
   };
 

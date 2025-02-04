@@ -8,7 +8,7 @@ const apiRewriteUrl = (ReqNextUrl) => {
   const newUrl = ReqNextUrl.clone();
   newUrl.protocol = apiRootUrl.protocol;
   newUrl.host = apiRootUrl.host;
-  newUrl.pathname = ReqNextUrl.pathname;
+  newUrl.pathname = ReqNextUrl.pathname.replace('/api', '');
   newUrl.search = ReqNextUrl.search;
   return newUrl.toString();
 };
