@@ -2,7 +2,7 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import UpgradeToProPage from './components/UpdateToProPage';
 
 const meta = pageMetaData({
@@ -16,7 +16,7 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
   const campaign = await fetchUserCampaign();
-  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
   const user = getServerUser();
 
   const childProps = {

@@ -68,56 +68,6 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
-    chat: {
-      get: {
-        url: `${base}campaign/ai/chat`,
-        method: 'GET',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaign/ai/chat`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      create: {
-        url: `${base}campaign/ai/chat`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaign/ai/chats`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/ai/chat`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      feedback: {
-        url: `${base}campaign/ai/chat/feedback`,
-        method: 'POST',
-        withAuth: true,
-      },
-    },
-
-    UpdateHistory: {
-      create: {
-        url: `${base}campaign/update-history`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaign/update-histories`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/update-history`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
 
     volunteerInvitation: {
       create: {
@@ -228,84 +178,11 @@ const gpApi = {
       },
     },
 
-    candidatePosition: {
-      create: {
-        url: `${base}candidate-position`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}candidate-position`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}candidate-position`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}candidate-positions`,
-        method: 'GET',
-        withAuth: true,
-      },
-      find: {
-        url: `${base}campaign-position`,
-        method: 'GET',
-      },
-    },
-
-    ai: {
-      create: {
-        url: `${base}campaign/ai`,
-        method: 'POST',
-        withAuth: true,
-      },
-      edit: {
-        url: `${base}campaign/ai`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      rename: {
-        url: `${base}campaign/ai/rename`,
-        method: 'POST',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/ai`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
-
-    onboarding: {
-      adminDelete: {
-        url: `${base}campaign`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      adminUpdate: {
-        url: `${base}campaign-admin`,
-        method: 'PUT',
-        withAuth: true,
-      },
-
-      planVersions: {
-        url: `${base}campaign/onboarding/planVersion`,
-        method: 'GET',
-        withAuth: true,
-      },
-    },
     einCheck: {
       url: `${base}campaign/ein-check`,
       method: 'GET',
       withAuth: true,
       returnFullResponse: true,
-    },
-    einSupportingDocumentUpload: {
-      url: `${base}campaign/ein-support-document`,
-      method: 'POST',
-      withAuth: true,
     },
   },
 
@@ -340,74 +217,10 @@ const gpApi = {
   // USER
   //
   user: {
-    updateUser: {
-      url: `${base}user`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    updateMeta: {
-      url: `${base}user/meta`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    getMeta: {
-      url: `${base}user/meta`,
-      method: 'GET',
-      withAuth: true,
-    },
-    refresh: {
-      url: `${base}user/refresh`,
-      method: 'PUT',
-      withAuth: true,
-    },
     logout: {
       url: `${base}entrance/logout`,
       method: 'DELETE',
       withAuth: true,
-    },
-    changePassword: {
-      url: `${base}user/password`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    deleteAccount: {
-      url: `${base}user`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    campaignStatus: {
-      url: `${base}user/campaign-status`,
-      method: 'GET',
-      withAuth: true,
-    },
-    follow: {
-      list: {
-        url: `${base}supports`,
-        method: 'GET',
-        withAuth: true,
-      },
-      create: {
-        url: `${base}support`,
-        method: 'POST',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}support`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
-    uploadAvatar: {
-      url: `${base}user/avatar`,
-      method: 'POST',
-      withAuth: true,
-    },
-    files: {
-      generateSignedUploadUrl: {
-        url: `${base}user/files/generate-signed-upload-url`,
-        method: 'PUT',
-        withAuth: true,
-      },
     },
   },
   //

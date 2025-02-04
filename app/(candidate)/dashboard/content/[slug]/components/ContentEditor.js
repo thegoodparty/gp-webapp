@@ -9,14 +9,14 @@ import { MdAutoAwesome, MdOutlineArrowBackIos } from 'react-icons/md';
 import { FaGlobe } from 'react-icons/fa';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -118,14 +118,14 @@ export default function ContentEditor({
 
   async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.ai.create;
-      return await gpFetch(api, {
+      const resp = await clientFetch(apiRoutes.campaign.ai.create, {
         key,
         regenerate,
         chat,
         editMode,
         inputValues,
       });
+      return resp.data;
     } catch (e) {
       console.log('error', e);
       return false;

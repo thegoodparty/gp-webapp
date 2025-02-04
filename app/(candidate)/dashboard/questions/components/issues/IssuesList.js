@@ -55,7 +55,7 @@ export default function IssuesList({
   const saveCallback = async (position, issue, candidatePosition) => {
     // if candidate position already exists in this order, delete it
     editIssuePosition?.id &&
-      (await deleteCandidatePosition(editIssuePosition.id));
+      (await deleteCandidatePosition(editIssuePosition.id, campaign.id));
 
     if (editIssuePosition?.type === 'custom') {
       updateCustomIssuesState(await handleDeleteCustomIssue(editIssuePosition));
@@ -72,7 +72,7 @@ export default function IssuesList({
   const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
     if (editIssuePosition?.id) {
-      await deleteCandidatePosition(editIssuePosition.id);
+      await deleteCandidatePosition(editIssuePosition.id, campaign.id);
     }
     const campaign = await getCampaign();
     setCampaign(campaign);

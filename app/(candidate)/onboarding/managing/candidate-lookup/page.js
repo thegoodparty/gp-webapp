@@ -17,7 +17,7 @@ const Page = async () => {
   if (!user) {
     redirect('/login');
   }
-  const { metaData } = await fetchUserMeta();
+  const metaData = await fetchUserMeta();
 
   const childProps = {
     metaData,

@@ -96,7 +96,7 @@ export default function QuestionsPage(props) {
     const campaign = await getCampaign();
     setCampaign(campaign);
     if (type === 'issues') {
-      const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+      const candidatePositions = await loadCandidatePosition(campaign.id);
       onChangeField('candidatePositions', candidatePositions);
       const campaign = await getCampaign();
       setCampaign(campaign);

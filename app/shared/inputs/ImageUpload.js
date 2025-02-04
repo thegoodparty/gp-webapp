@@ -5,20 +5,25 @@ import Button from '@mui/material/Button';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const fileSelect = async (image, isUserImage) => {
   let api;
   if (isUserImage) {
-    api = gpApi.user.uploadAvatar;
+    const formData = new FormData();
+    formData.append('file', image, image.name);
+    const resp = await clientFetch(apiRoutes.user.uploadAvatar, formData);
+    return resp.data?.avatar;
   } else {
     api = gpApi.uploadImage;
+    const formData = new FormData();
+    formData.append('files[0]', image);
+    const res = await gpFetch(api, formData, false, false, true);
+    return res.success && res.data.files.length > 0
+      ? `${res.data.baseurl}${res.data.files[0]}`
+      : false;
   }
-  const formData = new FormData();
-  formData.append('files[0]', image);
-  const res = await gpFetch(api, formData, false, false, true);
-  return res.success && res.data.files.length > 0
-    ? `${res.data.baseurl}${res.data.files[0]}`
-    : false;
 };
 
 export default function ImageUpload({

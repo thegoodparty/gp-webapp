@@ -8,16 +8,17 @@
 import React, { useState } from 'react';
 import { RiImageAddFill } from 'react-icons/ri';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function fileSelectCallback(image, uploadCallback) {
-  const api = gpApi.user.uploadAvatar;
   const formData = new FormData();
   formData.append('file', image, image.name);
-  const res = await gpFetch(api, formData, 3600, false, true);
-  if (res.avatar) {
-    uploadCallback(res.avatar);
+  const resp = await clientFetch(apiRoutes.user.uploadAvatar, formData, {
+    revalidate: 3600,
+  });
+  if (resp.data?.avatar) {
+    uploadCallback(resp.data.avatar);
   } else {
     uploadCallback(false);
   }

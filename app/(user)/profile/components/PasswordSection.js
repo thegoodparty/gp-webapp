@@ -1,7 +1,5 @@
 'use client';
 import { useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { passwordRegex, updateUser } from 'helpers/userHelper';
 import H4 from '@shared/typography/H4';
 import Body2 from '@shared/typography/Body2';
@@ -10,6 +8,8 @@ import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
 import PasswordInput from '@shared/inputs/PasswrodInput';
 import DeleteAccountButton from './DeleteAccountButton';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed';
 const CURRENT_PASSWORD_INCORRECT = 'Current password is incorrect';
@@ -62,7 +62,7 @@ function PasswordSection({ user: initUser }) {
       setUser(await updateUser());
       reset();
     } else {
-      const reason = await result.json();
+      const reason = await result.data;
       setPasswordChangeSuccessful(false);
       setErrorMessage(
         result.status === 401 && reason.message === INVALID_PASSWORD_MSG
@@ -76,11 +76,12 @@ function PasswordSection({ user: initUser }) {
     const { password, oldPassword } = state;
     setLoading(true);
     try {
-      const result = await gpFetch(gpApi.user.changePassword, {
+      const result = await clientFetch(apiRoutes.user.changePassword, {
         id: user.id,
         newPassword: password,
         oldPassword,
       });
+
       await handleReqResult(result);
     } catch (error) {
       console.error(error);

@@ -4,7 +4,7 @@ import candidateAccess from '../shared/candidateAccess';
 import QuestionsPage from './components/QuestionsPage';
 import {
   fetchIssues,
-  loadCandidatePosition,
+  serverLoadCandidatePosition,
 } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 
 const meta = pageMetaData({
@@ -19,7 +19,7 @@ export default async function Page({ params, searchParams }) {
   const { generate } = searchParams;
 
   const campaign = await fetchUserCampaign();
-  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
   const { topIssues } = await fetchIssues();
 
   const childProps = {

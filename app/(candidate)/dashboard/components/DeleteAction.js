@@ -1,18 +1,20 @@
 'use client';
 import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 async function handleDeleteHistory(id) {
   try {
-    const api = gpApi.campaign.UpdateHistory.delete;
     const payload = {
       id,
     };
-    const resp = await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.updateHistory.delete,
+      payload,
+    );
     return resp;
   } catch (e) {
     console.log('error', e);
@@ -33,7 +35,7 @@ export default function DeleteAction({
     setShowMenu(0);
     successSnackbar('Deleting...');
     const deleteResp = await handleDeleteHistory(id);
-    if (deleteResp) {
+    if (deleteResp?.ok) {
       successSnackbar('Deleted');
     }
     // window.location.reload();

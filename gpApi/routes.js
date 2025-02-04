@@ -46,6 +46,42 @@ export const apiRoutes = {
       method: 'POST',
     },
   },
+  user: {
+    updateUser: {
+      path: '/users/me',
+      method: 'PUT',
+    },
+    updateMeta: {
+      path: '/users/me/metadata',
+      method: 'PUT',
+    },
+    getMeta: {
+      path: '/users/me/metadata',
+      method: 'GET',
+    },
+    getUser: {
+      path: '/users/me',
+      method: 'GET',
+    },
+    changePassword: {
+      path: '/users/:id/password',
+      method: 'PUT',
+    },
+    deleteAccount: {
+      path: '/users/:id',
+      method: 'DELETE',
+    },
+    uploadAvatar: {
+      path: '/users/me/upload-image',
+      method: 'POST',
+    },
+    files: {
+      generateSignedUploadUrl: {
+        path: '/users/files/generate-signed-upload-url',
+        method: 'PUT',
+      },
+    },
+  },
   campaign: {
     create: {
       path: '/campaigns',
@@ -57,6 +93,10 @@ export const apiRoutes = {
     },
     get: {
       path: '/campaigns/mine',
+      method: 'GET',
+    },
+    status: {
+      path: '/campaigns/mine/status',
       method: 'GET',
     },
     findBySlug: {
@@ -81,8 +121,88 @@ export const apiRoutes = {
         method: 'GET',
       },
     },
-  },
 
+    ai: {
+      create: {
+        path: '/campaigns/ai',
+        method: 'POST',
+      },
+      rename: {
+        path: '/campaigns/ai/rename',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/ai/:key',
+        method: 'DELETE',
+      },
+    },
+
+    chat: {
+      get: {
+        path: '/campaigns/ai/chat/:threadId',
+        method: 'GET',
+      },
+      update: {
+        path: '/campaigns/ai/chat/:threadId',
+        method: 'PUT',
+      },
+      create: {
+        path: '/campaigns/ai/chat',
+        method: 'POST',
+      },
+      list: {
+        path: '/campaigns/ai/chat',
+        method: 'GET',
+      },
+      delete: {
+        path: '/campaigns/ai/chat/:threadId',
+        method: 'DELETE',
+      },
+      feedback: {
+        path: '/campaigns/ai/chat/:threadId/feedback',
+        method: 'POST',
+      },
+    },
+
+    updateHistory: {
+      create: {
+        path: '/campaigns/mine/update-history',
+        method: 'POST',
+      },
+      list: {
+        path: '/campaigns/mine/update-history',
+        method: 'GET',
+      },
+      delete: {
+        path: '/campaigns/mine/update-history/:id',
+        method: 'DELETE',
+      },
+    },
+
+    campaignPosition: {
+      create: {
+        path: '/campaigns/:id/positions',
+        method: 'POST',
+      },
+      update: {
+        path: '/campaigns/:id/positions/:positionId',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/:id/positions/:positionId',
+        method: 'DELETE',
+      },
+      find: {
+        path: '/campaigns/:id/positions',
+        method: 'GET',
+      },
+    },
+
+    planVersion: {
+      path: '/campaigns/mine/plan-version',
+      method: 'GET',
+    },
+  },
   admin: {
     campaign: {
       create: {
@@ -92,6 +212,10 @@ export const apiRoutes = {
       update: {
         path: '/admin/campaigns/:id',
         method: 'PUT',
+      },
+      delete: {
+        path: '/admin/campaigns/:id',
+        method: 'DELETE',
       },
     },
   },

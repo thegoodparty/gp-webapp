@@ -10,8 +10,6 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import ElectionOver from './ElectionOver';
 import UpdateHistorySection from './UpdateHistorySection';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
@@ -20,11 +18,16 @@ import ContactMethodsSection from './contactMethods/ContactMethodsSection';
 import PrimaryResultModal from './PrimaryResultModal';
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function createUpdateHistory(payload) {
   try {
-    const api = gpApi.campaign.UpdateHistory.create;
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.updateHistory.create,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at createUpdateHistory.', e);
     return {};
@@ -33,8 +36,12 @@ export async function createUpdateHistory(payload) {
 
 export async function fetchUpdateHistory() {
   try {
-    const api = gpApi.campaign.UpdateHistory.list;
-    return await gpFetch(api, false, 3); // 3 seconds cache to prevent multiple calls on load
+    const resp = await clientFetch(
+      apiRoutes.campaign.updateHistory.list,
+      undefined,
+      { revalidate: 3 }, // 3 seconds cache to prevent multiple calls on load
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at fetchUpdateHistory', e);
     return {};

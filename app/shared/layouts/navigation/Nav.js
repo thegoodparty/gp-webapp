@@ -1,17 +1,16 @@
-import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
-import { getServerToken, getServerUser } from 'helpers/userServerHelper';
+import { getServerUser } from 'helpers/userServerHelper';
 import Body2 from '@shared/typography/Body2';
+import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateAccess';
 
 export default async function Nav() {
   let campaignStatus = false;
   const user = getServerUser();
   if (user) {
-    const serverToken = getServerToken();
-    campaignStatus = await fetchCampaignStatus(serverToken);
+    campaignStatus = await fetchCampaignStatus();
     if (campaignStatus instanceof Response) campaignStatus = false;
   }
 

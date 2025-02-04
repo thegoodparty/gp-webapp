@@ -1,6 +1,9 @@
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 export const writeCampaignCustomIssue = async (
   existingIndex = -1,
@@ -43,7 +46,6 @@ export const saveCandidatePosition = async ({
   topIssueId,
 }) => {
   try {
-    const api = gpApi.campaign.campaignPosition.create;
     const payload = {
       description,
       campaignSlug,
@@ -52,49 +54,83 @@ export const saveCandidatePosition = async ({
       // TODO: remove order once the Sails "input" value for `order` is removed or made optional
       order: 0,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.campaignPosition.create,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at saveCandidatePosition', e);
     return false;
   }
 };
 
-export const deleteCandidatePosition = async (id) => {
+export const deleteCandidatePosition = async (positionId, campaignId) => {
   try {
-    const api = gpApi.campaign.campaignPosition.delete;
     const payload = {
-      id,
+      id: campaignId,
+      positionId,
     };
-    return await gpFetch(api, payload);
+    return await clientFetch(
+      apiRoutes.campaign.campaignPosition.delete,
+      payload,
+    );
   } catch (e) {
     console.log('error at saveCandidatePosition', e);
     return false;
   }
 };
 
-export async function updateCandidatePosition(id, description) {
+export async function updateCandidatePosition(
+  positionId,
+  description,
+  campaignId,
+) {
   try {
-    const api = gpApi.campaign.campaignPosition.update;
     const payload = {
-      id,
+      positionId,
       description,
+      id: campaignId,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.campaignPosition.update,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at saveCandidatePosition', e);
     return false;
   }
 }
 
-export async function loadCandidatePosition(slug) {
+export async function loadCandidatePosition(campaignId) {
   try {
-    const api = gpApi.campaign.campaignPosition.find;
     const payload = {
-      slug,
+      id: campaignId,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.campaignPosition.find,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at loadCandidatePosition', e);
+    return false;
+  }
+}
+
+export async function serverLoadCandidatePosition(campaignId) {
+  try {
+    const payload = {
+      id: campaignId,
+    };
+    const resp = await serverFetch(
+      apiRoutes.campaign.campaignPosition.find,
+      payload,
+    );
+    return resp.data;
+  } catch (e) {
+    console.log('error at serverLoadCandidatePosition', e);
     return false;
   }
 }

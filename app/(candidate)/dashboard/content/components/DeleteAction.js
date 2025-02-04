@@ -1,16 +1,15 @@
 'use client';
 import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 async function deleteContent(key) {
   try {
-    const api = gpApi.campaign.ai.delete;
     const payload = {
       key,
     };
-    await gpFetch(api, payload);
+    await clientFetch(apiRoutes.campaign.ai.delete, payload);
     return true;
   } catch (e) {
     console.log('error', e);
