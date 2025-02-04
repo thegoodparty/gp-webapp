@@ -219,4 +219,8 @@ export const apiRoutes = {
       },
     },
   },
+  logError: {
+    path: '/error-logger',
+    method: 'POST',
+  },
 };

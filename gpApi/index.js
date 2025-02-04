@@ -363,10 +363,7 @@ const gpApi = {
     method: 'POST',
     withAuth: true,
   },
-  logError: {
-    url: `${base}log-error`,
-    method: 'POST',
-  },
+
   notification: {
     list: {
       url: `${base}notifications`,
