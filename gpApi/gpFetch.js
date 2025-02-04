@@ -1,5 +1,4 @@
 import { getCookie } from 'helpers/cookieHelper';
-import { compile, parse } from 'path-to-regexp';
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
@@ -9,37 +8,6 @@ const IS_LOCAL_ENVIRONMENT =
   Boolean(
     typeof window !== 'undefined' && window.location.href.includes('localhost'),
   );
-
-/**
- * helper function to interpolate route params into url
- *
- * */
-function handleRouteParams(urlString, data) {
-  const url = new URL(urlString);
-  const { tokens } = parse(url.pathname);
-  const hasRouteParams = tokens.some((token) => typeof token !== 'string');
-
-  if (!hasRouteParams || !data) return urlString;
-
-  // Find tokens that are parameters (objects with name property)
-  const compiledData = {};
-  tokens.forEach((token) => {
-    if (typeof token === 'object' && token.name) {
-      const paramName = token.name;
-      if (paramName in data) {
-        // Coerce value to string and store for compilation
-        compiledData[paramName] = String(data[paramName]);
-        // Remove used parameter from original data object
-        delete data[paramName];
-      }
-    }
-  });
-
-  // Compile the URL with the coerced values
-  url.pathname = compile(url.pathname)(compiledData);
-
-  return url.toString();
-}
 
 async function gpFetch(
   endpoint,
@@ -51,9 +19,6 @@ async function gpFetch(
 ) {
   let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
     endpoint;
-
-  url = handleRouteParams(url, data);
-
   if ((method === 'GET' || method === 'DELETE') && data) {
     url = `${url}?`;
     for (const key in data) {
@@ -65,11 +30,7 @@ async function gpFetch(
   }
 
   let body = data;
-  if (
-    (method === 'POST' || method === 'PUT' || method === 'DELETE') &&
-    data &&
-    !isFormData
-  ) {
+  if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
     body = JSON.stringify(data);
   }
 
@@ -78,12 +39,7 @@ async function gpFetch(
     autoToken = getCookie('impersonateToken') || token;
   }
 
-  const requestOptions = headersOptions(
-    body,
-    endpoint.method,
-    autoToken,
-    isFormData,
-  );
+  const requestOptions = headersOptions(body, endpoint.method, autoToken);
 
   return await fetchCall(
     url,
@@ -96,12 +52,8 @@ async function gpFetch(
 
 export default gpFetch;
 
-function headersOptions(body, method = 'GET', token, isFormData = false) {
+function headersOptions(body, method = 'GET', token) {
   const headers = {};
-
-  if (!isFormData) {
-    headers['content-type'] = 'application/json';
-  }
 
   if (token) {
     headers.Authorization = `Bearer ${token}`;
@@ -139,12 +91,8 @@ async function fetchCall(
     // TODO: We should consider returning the response as is and handle the error at the caller level.
     //  There's no way for the caller to determine how to react to error response states w/ this current pattern.
     const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299;
-    const isJsonResponse =
-      res.headers.get('Content-Type')?.includes('application/json') ?? false;
-
-    return isSuccessfulResponseStatus && isJsonResponse
-      ? await res.json()
-      : res;
+    const jsonRes = isSuccessfulResponseStatus ? await res.json() : res;
+    return jsonRes;
   } catch (e) {
     console.error('error in fetchCall catch', e);
     return false;

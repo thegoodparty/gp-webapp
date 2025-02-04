@@ -88,3 +88,10 @@ export const getUserCookie = (withParse = false) => {
     return false;
   }
 };
+
+export const getToken = () => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+  return getCookie('impersonateToken') || getCookie('token');
+};
