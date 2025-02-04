@@ -41,10 +41,10 @@ export default function IssuesSection(props) {
   const completeCallback = async () => {
     const res = await loadCandidatePosition(props.campaign.slug);
     setCandidatePositions(res.candidatePositions);
-    const res2 = await getCampaign();
+    const campaign = await getCampaign();
 
     setEditIssuePosition(false);
-    setCampaign(res2.campaign);
+    setCampaign(campaign);
   };
 
   const handleDeleteConfirmation = async () => {

@@ -1,15 +1,13 @@
-import gpApi from 'gpApi';
-import { getServerToken } from 'helpers/userServerHelper';
-import gpFetch from 'gpApi/gpFetch';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function fetchCampaignBySlugAdminOnly(slug) {
   try {
-    const api = gpApi.campaign.findBySlug;
     const payload = {
       slug,
     };
-    const token = getServerToken();
-    return await gpFetch(api, payload, false, token);
+    const resp = await serverFetch(apiRoutes.campaign.findBySlug, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

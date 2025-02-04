@@ -1,18 +1,18 @@
 'use client';
 import { useState } from 'react';
-import gpApi from 'gpApi/index.js';
-import gpFetch from 'gpApi/gpFetch.js';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import ForgotPasswordSuccess from './ForgotPasswordSuccess';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function sendForgotPasswordEmail(email) {
   try {
     const payload = {
       email,
     };
-    await gpFetch(gpApi.entrance.forgotPassword, payload);
+    await clientFetch(apiRoutes.authentication.forgotPassword, payload);
     return true;
   } catch (e) {
     console.log('error', e);

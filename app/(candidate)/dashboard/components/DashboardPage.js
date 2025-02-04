@@ -145,17 +145,16 @@ export default function DashboardPage({ pathname }) {
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
   const deleteHistoryCallBack = useCallback(async () => {
-    const resp = await getCampaign();
-    if (resp && resp?.campaign) {
-      const campaignObj = resp.campaign;
+    const campaign = await getCampaign();
+    if (campaign) {
       setState({
-        doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
-        calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
-        digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
-        directMail: campaignObj?.data?.reportedVoterGoals?.directMail || 0,
-        digitalAds: campaignObj?.data?.reportedVoterGoals?.digitalAds || 0,
-        text: campaignObj?.data?.reportedVoterGoals?.text || 0,
-        events: campaignObj?.data?.reportedVoterGoals?.events || 0,
+        doorKnocking: campaign?.data?.reportedVoterGoals?.doorKnocking || 0,
+        calls: campaign?.data?.reportedVoterGoals?.calls || 0,
+        digital: campaign?.data?.reportedVoterGoals?.digital || 0,
+        directMail: campaign?.data?.reportedVoterGoals?.directMail || 0,
+        digitalAds: campaign?.data?.reportedVoterGoals?.digitalAds || 0,
+        text: campaign?.data?.reportedVoterGoals?.text || 0,
+        events: campaign?.data?.reportedVoterGoals?.events || 0,
       });
     }
 

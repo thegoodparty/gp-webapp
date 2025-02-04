@@ -16,7 +16,7 @@ const fields = [
 
 export default function AdditionalFieldsSection() {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
-  const { isVerified, tier, didWin, slug } = campaign;
+  const { isVerified, tier, didWin } = campaign;
   const [state, setState] = useState({
     isVerified: isVerified ?? undefined,
     tier: tier ?? undefined,
@@ -27,7 +27,7 @@ export default function AdditionalFieldsSection() {
     const newState = { ...state, [key]: value };
     setState(newState);
     await updateCampaignAdminOnly({
-      slug,
+      id: campaign.id,
       [key]: value,
     });
     await refreshCampaign();

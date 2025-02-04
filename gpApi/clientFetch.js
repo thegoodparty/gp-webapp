@@ -64,15 +64,17 @@ export async function clientFetch(endpoint, data, options = {}) {
     .get('Content-Type')
     ?.includes('application/json');
 
-  // Parse the response as JSON if applicable; otherwise, as text.
-  const parsedData = isJsonResponse ? await res.json() : await res.text();
-
-  return {
+  const response = {
     ok: res.ok,
     status: res.status,
     statusText: res.statusText,
-    data: parsedData,
+    // Parse the response as JSON if applicable; otherwise, as text.
+    data: isJsonResponse ? await res.json() : await res.text(),
   };
+
+  console.log('response', response);
+
+  return response;
 }
 
 /**
@@ -84,6 +86,7 @@ export async function clientFetch(endpoint, data, options = {}) {
  * @returns {string} The fully constructed URL with replaced route parameters and appended query parameters (if applicable).
  */
 function buildUrl(path, data, method) {
+  console.log('buildUrl', path, data, method);
   // route params
   let pathname = handleRouteParams(path, data);
 
@@ -104,6 +107,7 @@ function buildUrl(path, data, method) {
  * @returns {string} The URL with tokens replaced.
  */
 function handleRouteParams(path, data) {
+  console.log('handleRouteParams', path, data);
   const { tokens } = parse(path);
   const hasRouteParams = tokens.some((token) => typeof token !== 'string');
 

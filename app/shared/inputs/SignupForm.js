@@ -1,7 +1,5 @@
 'use client';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import TextField from '@shared/inputs/TextField';
@@ -9,10 +7,12 @@ import EmailInput from '@shared/inputs/EmailInput';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { Fragment } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export async function subscribeEmail(payload) {
   try {
-    await gpFetch(gpApi.homepage.subscribeEmail, payload);
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
     return true;
   } catch (e) {
     console.log('error', e);

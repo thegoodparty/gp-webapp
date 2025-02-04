@@ -24,45 +24,9 @@ if (!appBase) {
 }
 
 const gpApi = {
-  homepage: {
-    subscribeEmail: {
-      url: `${base}subscribe/email`,
-      method: 'GET',
-    },
-    declarationSignatures: {
-      list: {
-        url: `${base}declares`,
-        method: 'GET',
-      },
-    },
-  },
   entrance: {
-    register: {
-      url: `${base}entrance/register`,
-      method: 'POST',
-    },
-    login: {
-      url: `${base}entrance/login`,
-      method: 'PUT',
-    },
-    forgotPassword: {
-      url: `${base}entrance/send-password-recovery-email`,
-      method: 'POST',
-    },
-    resetPassword: {
-      url: `${base}entrance/reset-password`,
-      method: 'PUT',
-    },
-    socialLogin: {
-      url: `${base}entrance/social-login`,
-      method: 'PUT',
-    },
     twitterLogin: {
       url: `${base}entrance/twitter-login`,
-      method: 'PUT',
-    },
-    verifyTwitterToken: {
-      url: `${base}entrance/twitter-confirm`,
       method: 'PUT',
     },
   },
@@ -94,21 +58,6 @@ const gpApi = {
   },
 
   campaign: {
-    create: {
-      url: `${base}campaign`,
-      method: 'POST',
-      withAuth: true,
-    },
-    adminCreate: {
-      url: `${base}admin-campaign`,
-      method: 'POST',
-      withAuth: true,
-    },
-    adminCreateEmail: {
-      url: `${base}admin-campaign-email`,
-      method: 'POST',
-      withAuth: true,
-    },
     createDemoCampaign: {
       url: `${base}campaign/demo`,
       method: 'POST',
@@ -119,52 +68,6 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
-    update: {
-      url: `${base}campaign`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    get: {
-      url: `${base}campaign`,
-      method: 'GET',
-      withAuth: true,
-    },
-
-    list: {
-      //admin
-      url: `${base}campaigns`,
-      method: 'GET',
-      withAuth: true,
-    },
-
-    mapList: {
-      url: `${base}campaigns/map`,
-      method: 'GET',
-    },
-    mapCount: {
-      url: `${base}campaigns/map-count`,
-      method: 'GET',
-    },
-
-    launch: {
-      url: `${base}campaign/launch`,
-      method: 'POST',
-      withAuth: true,
-    },
-
-    findBySlug: {
-      //admin
-      url: `${base}campaign/by-slug`,
-      method: 'GET',
-      withAuth: true,
-    },
-
-    adminUpdate: {
-      url: `${base}campaign-admin`,
-      method: 'PUT',
-      withAuth: true,
-    },
-
     chat: {
       get: {
         url: `${base}campaign/ai/chat`,

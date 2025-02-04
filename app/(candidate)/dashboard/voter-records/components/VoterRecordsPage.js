@@ -85,8 +85,8 @@ export default function VoterRecordsPage(props) {
   }, [campaign]);
 
   const reloadCampaign = async () => {
-    const res = await getCampaign();
-    setCampaign(res.campaign);
+    const campaign = await getCampaign();
+    setCampaign(campaign);
   };
 
   return (

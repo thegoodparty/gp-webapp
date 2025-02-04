@@ -32,7 +32,7 @@ export const maxDuration = 60;
 export default async function Page({ params }) {
   await adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaignBySlugAdminOnly(slug);
+  const campaign = await fetchCampaignBySlugAdminOnly(slug);
   const { updateHistory } = await fetchAdminUpdateHistory(slug);
 
   const childProps = {

@@ -1,11 +1,11 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function updateCampaignAdminOnly(payload) {
   try {
-    const api = gpApi.campaign.adminUpdate;
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.admin.campaign.update, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

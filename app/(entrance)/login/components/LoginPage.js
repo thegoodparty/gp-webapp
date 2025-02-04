@@ -21,6 +21,8 @@ import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginBu
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
 import { USER_ROLES } from 'helpers/userHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -29,12 +31,12 @@ export const validateZip = (zip) => {
 
 async function login(email, password) {
   try {
-    const api = gpApi.entrance.login;
     const payload = {
       email,
       password,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.authentication.login, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -160,13 +162,22 @@ export default function LoginPage() {
               />
             </div>
             <div className="flex justify-center mt-12" onClick={handleSubmit}>
-              <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth data-testid="login-submit-button">
+              <PrimaryButton
+                disabled={!enableSubmit()}
+                type="submit"
+                fullWidth
+                data-testid="login-submit-button"
+              >
                 Login
               </PrimaryButton>
             </div>
           </form>
           <div className="mt-5 text-center">
-            <Link href="/forgot-password" className="text-sm underline" data-testid="login-forgot-password-link">
+            <Link
+              href="/forgot-password"
+              className="text-sm underline"
+              data-testid="login-forgot-password-link"
+            >
               Forgot your password?
             </Link>
           </div>

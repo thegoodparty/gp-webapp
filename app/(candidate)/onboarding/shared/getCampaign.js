@@ -2,6 +2,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { getServerToken } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 export async function fetchUserCampaignOld() {
   try {
@@ -16,9 +18,8 @@ export async function fetchUserCampaignOld() {
 
 export async function fetchUserCampaign() {
   try {
-    const api = gpApi.campaign.get;
-    const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    const resp = await serverFetch(apiRoutes.campaign.get);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

@@ -31,8 +31,8 @@ export default function OfficeSection(props) {
   };
 
   const handleUpdate = async () => {
-    const res = await getCampaign();
-    setCampaign(res.campaign);
+    const campaign = await getCampaign();
+    setCampaign(campaign);
     setShowModal(false);
   };
 

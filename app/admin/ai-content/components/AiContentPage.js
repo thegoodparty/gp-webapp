@@ -4,19 +4,19 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { useEffect, useMemo, useState } from 'react';
 import Table from '@shared/utils/Table';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const fetchCampaigns = async () => {
-  const api = gpApi.campaign.list;
-  return await gpFetch(api);
+  const resp = clientFetch(apiRoutes.campaign.list);
+  return resp.data;
 };
 
 export default function AiContentsPage(props) {
   const [campaigns, setCampaigns] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { campaigns } = await fetchCampaigns();
+      const campaigns = await fetchCampaigns();
       setCampaigns(campaigns);
     };
     fetchData();
