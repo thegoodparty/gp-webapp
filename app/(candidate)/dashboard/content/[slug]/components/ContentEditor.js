@@ -5,7 +5,7 @@ import PlanVersion from './PlanVersion';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import LoadingContent from './LoadingContent';
 import BlackButton from '@shared/buttons/BlackButton';
-import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { MdAutoAwesome, MdOutlineArrowBackIos } from 'react-icons/md';
 import { FaGlobe } from 'react-icons/fa';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
@@ -15,7 +15,6 @@ import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { BsStars } from 'react-icons/bs';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 import Button from '@shared/buttons/Button';
 
@@ -245,7 +244,7 @@ export default function ContentEditor({
               <PrimaryButton size="medium">
                 <div className="flex items-center">
                   {' '}
-                  <BsStars className="mr-2" />
+                  <MdAutoAwesome className="mr-2" />
                   Regenerate
                 </div>
               </PrimaryButton>

@@ -1,7 +1,6 @@
 import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
-import { BsStars } from 'react-icons/bs';
-import { MdLock } from 'react-icons/md';
+import { MdLock, MdAutoAwesome } from 'react-icons/md';
 import LogProgress from './LogProgress';
 import Link from 'next/link';
 import { numberFormatter } from 'helpers/numberHelper';
@@ -73,7 +72,7 @@ export default function MethodRow(props) {
                   variant="outlined"
                   className="w-full flex items-center justify-center generate-script"
                 >
-                  <BsStars className="mr-2" />
+                  <MdAutoAwesome className="mr-2" />
                   Generate Script
                 </Button>
               </div>

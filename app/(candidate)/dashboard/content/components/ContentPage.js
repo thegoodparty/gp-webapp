@@ -28,7 +28,7 @@ export default function ContentPage(props) {
   return (
     <DashboardLayout {...props}>
       <TitleSection
-        title="My Content"
+        title="Content Builder"
         subtitle={
           <div className="flex items-start">
             <Image

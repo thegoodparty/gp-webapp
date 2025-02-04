@@ -36,8 +36,12 @@ export async function generateMetadata({ params }) {
     const { county } = await fetchCounty(state, params.county);
 
     const meta = pageMetaData({
-      title: `Run for Office in ${county.county} county, ${stateName} ${year}`,
-      description: `Learn about available opportunities to run for office in ${county.county} county, ${stateName} and tips for launching a successful campaign.`,
+      title: `Run for Office in ${
+        county?.county || 'a'
+      } county, ${stateName} ${year}`,
+      description: `Learn about available opportunities to run for office in ${
+        county?.county || 'a'
+      } county, ${stateName} and tips for launching a successful campaign.`,
       slug: `/elections/${state}/${params.county}`,
     });
     return meta;
@@ -65,6 +69,9 @@ export default async function Page({ params }) {
   if (state.length > 2) {
     // state is the slug, county is the id
     const { race } = await fetchPosition(params.county); // this is the id
+    if (!race) {
+      notFound();
+    }
     const { county, municipality, state } = race;
     let url = `/elections/position/`;
     if (!county && !municipality) {

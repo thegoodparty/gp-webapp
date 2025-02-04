@@ -2,7 +2,7 @@
 import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { BsStars } from 'react-icons/bs';
+import { MdAutoAwesome } from 'react-icons/md';
 import DeleteThread from './DeleteThread';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 
@@ -18,7 +18,7 @@ export default function ChatHistoryThread({ chat, closeDrawer }) {
       onClick={handleClick}
     >
       <div className="flex">
-        <BsStars className=" opacity-50 mt-1" size={20} />
+        <MdAutoAwesome className=" opacity-50 mt-1" size={20} />
         <div className="ml-2">
           <Body1 className="line-clamp-1">{chat.name}</Body1>
           <Body2 className="mt-2 text-gray-300">
