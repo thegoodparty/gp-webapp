@@ -6,7 +6,6 @@ import gpApi from 'gpApi/index.js';
 import { Fragment, useState } from 'react';
 import gpFetch from 'gpApi/gpFetch.js';
 import H1 from '@shared/typography/H1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import Paper from '@shared/utils/Paper';
 import Body2 from '@shared/typography/Body2';
@@ -15,6 +14,8 @@ import Link from 'next/link';
 import { useUser } from '@shared/hooks/useUser';
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import Button from '@shared/buttons/Button';
 
 const fields = [
   {
@@ -95,6 +96,7 @@ export default function SignUpPage() {
     zip: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
   const { errorSnackbar } = useSnackbar();
   const [_, setUser] = useUser();
 
@@ -102,6 +104,9 @@ export default function SignUpPage() {
     isValidEmail(state.email) && isValidPassword(state.password);
 
   const handleSubmit = async () => {
+    if (loading) return;
+    setLoading(true);
+
     if (enableSubmit()) {
       const { user, exists, token } = await register(
         state.firstName,
@@ -115,8 +120,8 @@ export default function SignUpPage() {
       if (user) {
         await saveToken(token);
         setUser(user);
-
-        window.location.href = '/onboarding/account-type';
+        await createCampaign();
+        setLoading(false);
         return;
       } else {
         errorSnackbar(
@@ -124,6 +129,7 @@ export default function SignUpPage() {
             ? `An account with this email (${state.email}) already exists`
             : 'Error creating account',
         );
+        setLoading(false);
       }
     }
   };
@@ -187,13 +193,17 @@ export default function SignUpPage() {
                 </div>
 
                 <div className="mt-8" onClick={handleSubmit}>
-                  <PrimaryButton
-                    disabled={!enableSubmit()}
+                  <Button
+                    disabled={loading || !enableSubmit()}
                     type="submit"
                     fullWidth
+                    color="primary"
+                    size="large"
+                    className="w-full"
+                    loading={loading}
                   >
                     Join
-                  </PrimaryButton>
+                  </Button>
                 </div>
               </form>
             </Paper>
