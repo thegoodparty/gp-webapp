@@ -3,10 +3,8 @@ import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import DetailsPage from './components/DetailsPage';
 import { getServerUser } from 'helpers/userServerHelper';
-import {
-  fetchIssues,
-  serverLoadCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+import { fetchIssues } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverLoadCandidatePosition';
 
 const meta = pageMetaData({
   title: 'campaign Details | GoodParty.org',

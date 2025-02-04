@@ -2,9 +2,8 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import { getServerUser } from 'helpers/userServerHelper';
-import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import UpgradeToProPage from './components/UpdateToProPage';
-
+import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverLoadCandidatePosition';
 const meta = pageMetaData({
   title: 'Upgrade To Pro! | GoodParty.org',
   description: 'Upgrade To Pro!',

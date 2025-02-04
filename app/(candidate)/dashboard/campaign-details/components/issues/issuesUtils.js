@@ -3,7 +3,6 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
 
 export const writeCampaignCustomIssue = async (
   existingIndex = -1,
@@ -115,22 +114,6 @@ export async function loadCandidatePosition(campaignId) {
     return resp.data;
   } catch (e) {
     console.log('error at loadCandidatePosition', e);
-    return false;
-  }
-}
-
-export async function serverLoadCandidatePosition(campaignId) {
-  try {
-    const payload = {
-      id: campaignId,
-    };
-    const resp = await serverFetch(
-      apiRoutes.campaign.campaignPosition.find,
-      payload,
-    );
-    return resp.data;
-  } catch (e) {
-    console.log('error at serverLoadCandidatePosition', e);
     return false;
   }
 }
