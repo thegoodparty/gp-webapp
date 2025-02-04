@@ -41,8 +41,13 @@ export async function clientFetch(endpoint, data, options = {}) {
   const { revalidate, serverToken } = options;
 
   const url = buildUrl(path, data, method);
+
   const token = serverToken ?? getToken();
-  const headers = { Authorization: `Bearer ${token}` };
+  const headers = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const shouldCache = revalidate && !IS_LOCAL_ENVIRONMENT;
 
   let body = data;

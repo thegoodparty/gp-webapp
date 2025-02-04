@@ -364,23 +364,6 @@ const gpApi = {
     withAuth: true,
   },
 
-  notification: {
-    list: {
-      url: `${base}notifications`,
-      method: 'GET',
-      withAuth: true,
-    },
-    update: {
-      url: `${base}notification`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    updatePreferences: {
-      url: `${base}notification-preferences`,
-      method: 'PUT',
-      withAuth: true,
-    },
-  },
   ballotData: {
     races: {
       url: `${base}ballot-data/races`,

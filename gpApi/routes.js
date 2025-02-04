@@ -121,7 +121,6 @@ export const apiRoutes = {
         method: 'GET',
       },
     },
-
     ai: {
       create: {
         path: '/campaigns/ai',
@@ -136,7 +135,6 @@ export const apiRoutes = {
         method: 'DELETE',
       },
     },
-
     chat: {
       get: {
         path: '/campaigns/ai/chat/:threadId',
@@ -163,7 +161,6 @@ export const apiRoutes = {
         method: 'POST',
       },
     },
-
     updateHistory: {
       create: {
         path: '/campaigns/mine/update-history',
@@ -178,7 +175,6 @@ export const apiRoutes = {
         method: 'DELETE',
       },
     },
-
     campaignPosition: {
       create: {
         path: '/campaigns/:id/positions',
@@ -197,7 +193,6 @@ export const apiRoutes = {
         method: 'GET',
       },
     },
-
     planVersion: {
       path: '/campaigns/mine/plan-version',
       method: 'GET',
