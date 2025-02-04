@@ -48,7 +48,6 @@ function ImageSection() {
               {loading ? 'Updating...' : 'Upload Image'}
             </div>
           }
-          isUserImage
           uploadCallback={(image) => setUploadedImage(image)}
           maxFileSize={1000000}
           loadingStatusCallback={(loading) => setLoading(loading)}

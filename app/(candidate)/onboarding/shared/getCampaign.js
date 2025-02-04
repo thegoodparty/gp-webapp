@@ -27,7 +27,7 @@ export async function fetchUserCampaign() {
 
 export default async function getCampaign(params) {
   const { slug } = params;
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
 
   if (campaign?.slug !== slug) {
     redirect('/run-for-office');

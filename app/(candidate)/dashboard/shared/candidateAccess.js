@@ -58,11 +58,6 @@ export default async function candidateAccess() {
     return redirect('/sign-up');
   }
 
-  const campaignRequests = await getCampaignRequestsByUserId(user?.id);
-  if (campaignRequests && campaignRequests.length) {
-    return redirect('/onboarding/managing/final');
-  }
-
   if (!['candidate', 'volunteer', 'manager'].includes(campaignStatus?.status)) {
     redirect('/');
   }

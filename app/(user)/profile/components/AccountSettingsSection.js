@@ -12,7 +12,7 @@ import { AccountSettingsButton } from 'app/(user)/profile/components/AccountSett
 
 export const AccountSettingsSection = () => {
   const [user = {}] = useUser();
-  const userMetaData = JSON.parse(user?.metaData || '{}');
+  const userMetaData = user?.metaData || {};
   const { demoPersona } = userMetaData;
   const [campaign] = useCampaign();
   const { isPro, details = {} } = campaign || {};

@@ -65,7 +65,7 @@ export async function createDemoCampaign() {
 export async function createCampaign() {
   try {
     const api = gpApi.campaign.create;
-    const { slug } = await gpFetch(api);
+    const { slug } = await gpFetch(api, {});
     if (slug) {
       deleteCookie('afterAction');
       deleteCookie('returnUrl');

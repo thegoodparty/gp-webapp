@@ -8,8 +8,7 @@ export async function updateUser(updateFields = {}) {
   try {
     const api = gpApi.user.updateUser;
 
-    const response = await gpFetch(api, updateFields);
-    const { user } = response;
+    const user = await gpFetch(api, updateFields);
     setUserCookie(user);
     return user;
   } catch (error) {

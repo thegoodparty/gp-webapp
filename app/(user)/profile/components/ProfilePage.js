@@ -1,4 +1,3 @@
-import NotificationSection from './NotificationSection';
 import PasswordSection from './PasswordSection';
 import PersonalSection from './PersonalSection';
 
@@ -12,7 +11,6 @@ export default function ProfilePage(props) {
         <InvitationSection {...props} />
         <PersonalSection {...props} />
         <AccountSettingsSection {...props} />
-        <NotificationSection />
         <PasswordSection {...props} />
       </div>
     </div>

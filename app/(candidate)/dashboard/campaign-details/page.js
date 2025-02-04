@@ -18,7 +18,7 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
   const { candidatePositions } = await loadCandidatePosition(campaign.slug);
   const { topIssues } = await fetchIssues();
   const user = getServerUser(); // can be removed when door knocking app is not for admins only

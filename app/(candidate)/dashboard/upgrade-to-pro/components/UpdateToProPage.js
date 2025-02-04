@@ -44,7 +44,7 @@ export default function DetailsPage(props) {
   const [user] = useUser();
   const router = useRouter();
   const { metaData: userMetaData } = user || {};
-  const { demoPersona } = JSON.parse(userMetaData || '{}');
+  const { demoPersona } = userMetaData || {};
   const [showDialog, setShowDialog] = useState(false);
   const { errorSnackbar } = useSnackbar();
 

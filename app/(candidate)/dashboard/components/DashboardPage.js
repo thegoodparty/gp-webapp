@@ -70,8 +70,8 @@ export default function DashboardPage({ pathname }) {
   });
 
   const loadHistory = async () => {
-    const res = await fetchUpdateHistory();
-    setUpdateHistory(res?.updateHistory || []);
+    const updateHistory = await fetchUpdateHistory();
+    setUpdateHistory(updateHistory || []);
   };
 
   // TODO: we're only having to do this, because we're caching the user object in the cookie and
@@ -91,7 +91,7 @@ export default function DashboardPage({ pathname }) {
     loadCampaign();
 
     async function loadCampaign() {
-      const { campaign } = await fetchUserClientCampaign();
+      const campaign = await fetchUserClientCampaign();
       setCampaign(campaign);
 
       const reportedVoterGoals = campaign.data?.reportedVoterGoals;

@@ -29,7 +29,7 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
   if (!campaign?.isPro) {
     return redirect('/dashboard/upgrade-to-pro', 'replace');
   }

@@ -22,7 +22,7 @@ export default async function Page({ params }) {
     .content;
   const prompts = parsePrompts(promptsRaw);
 
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
 
   const childProps = {
     slug,
