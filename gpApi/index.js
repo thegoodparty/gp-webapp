@@ -187,25 +187,6 @@ const gpApi = {
   },
 
   topIssues: {
-    create: {
-      url: `${base}top-issue`,
-      method: 'POST',
-      withAuth: true,
-    },
-    update: {
-      url: `${base}top-issue`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    delete: {
-      url: `${base}top-issue`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    list: {
-      url: `${base}top-issues`, // non admin
-      method: 'GET',
-    },
     byLocation: {
       url: `${base}top-issue/by-location`, // non admin, for onboarding
       method: 'GET',
@@ -254,49 +235,7 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
-    topIssues: {
-      create: {
-        url: `${base}top-issue`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}top-issue`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}top-issue`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}top-issues`, // non admin
-        method: 'GET',
-      },
-    },
 
-    position: {
-      create: {
-        url: `${base}position`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}position`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}position`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}positions`, // non admin
-        method: 'GET',
-      },
-    },
     uploadedImages: {
       url: `${base}admin/uploaded-images`,
       method: 'POST',
@@ -354,10 +293,7 @@ const gpApi = {
       withAuth: true,
     },
   },
-  uploadImage: {
-    url: `${base}application/upload-image`,
-    method: 'POST',
-  },
+
   uploadBase64Image: {
     url: `${base}upload-base64-image`,
     method: 'POST',
@@ -396,17 +332,6 @@ const gpApi = {
     },
     proximity: {
       url: `${base}race/proximity-cities`,
-      method: 'GET',
-    },
-  },
-
-  jobs: {
-    list: {
-      url: `${base}jobs`,
-      method: 'GET',
-    },
-    find: {
-      url: `${base}job`,
       method: 'GET',
     },
   },

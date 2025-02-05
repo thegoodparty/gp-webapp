@@ -16,3 +16,10 @@ export async function serverLoadCandidatePosition(campaignId) {
     return false;
   }
 }
+
+export const serverFetchIssues = async () => {
+  const resp = serverFetch(apiRoutes.topIssue.list, undefined, {
+    revalidate: 3600,
+  });
+  return resp.data;
+};

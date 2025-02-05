@@ -1,6 +1,4 @@
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 
@@ -118,8 +116,12 @@ export async function loadCandidatePosition(campaignId) {
   }
 }
 
-export const fetchIssues = async () =>
-  await gpFetch(gpApi.admin.topIssues.list, false, 3600);
+export const fetchIssues = async () => {
+  const resp = clientFetch(apiRoutes.topIssue.list, undefined, {
+    revalidate: 3600,
+  });
+  return resp.data;
+};
 
 export const findExistingCustomIssueIndex = (
   { details: { customIssues = [] } = {} } = {},

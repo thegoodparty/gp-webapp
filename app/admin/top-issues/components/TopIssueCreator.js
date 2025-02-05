@@ -1,21 +1,21 @@
 'use client';
 import { useTopIssues } from './UseTopIssuesContext';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SVGIconChooser } from './SVGIconChooser';
 import TextField from '@shared/inputs/TextField';
-import gpApi from '../../../../gpApi';
-import gpFetch from '../../../../gpApi/gpFetch';
 import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const createTopIssue = async (name, icon) => {
-  const api = gpApi.admin.topIssues.create;
   const payload = {
     name,
     ...(icon ? { icon } : {}),
   };
-  return await gpFetch(api, payload);
+  const resp = await clientFetch(apiRoutes.topIssue.create, payload);
+  return resp.data;
 };
 
 export const TopIssueCreator = ({}) => {

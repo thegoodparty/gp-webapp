@@ -203,6 +203,38 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  topIssue: {
+    create: {
+      path: '/top-issues',
+      method: 'POST',
+    },
+    update: {
+      path: '/top-issues/:id',
+      method: 'PUT',
+    },
+    delete: {
+      path: '/top-issues/:id',
+      method: 'DELETE',
+    },
+    list: {
+      path: '/top-issues',
+      method: 'GET',
+    },
+    position: {
+      create: {
+        path: '/positions',
+        method: 'POST',
+      },
+      update: {
+        path: '/positions/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/positions/:id',
+        method: 'DELETE',
+      },
+    },
+  },
   admin: {
     campaign: {
       create: {
@@ -217,6 +249,16 @@ export const apiRoutes = {
         path: '/admin/campaigns/:id',
         method: 'DELETE',
       },
+    },
+  },
+  jobs: {
+    list: {
+      path: '/jobs',
+      method: 'GET',
+    },
+    find: {
+      path: '/jobs/:id',
+      method: 'GET',
     },
   },
   logError: {
