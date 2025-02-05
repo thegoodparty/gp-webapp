@@ -12,8 +12,28 @@ export async function updateCampaign(attr, slug) {
       attr = [attr];
     }
 
+    // TODO: update callers of this function to use the new api format
+    // convert the attr array to an object formatted for new api
+    const updates = attr.reduce((acc, { key, value }) => {
+      const keys = key.split('.');
+      let current = acc;
+      keys.forEach((k, index) => {
+        if (index === keys.length - 1) {
+          // Set the leaf value.
+          current[k] = value;
+        } else {
+          // Ensure the parent exists and is an object.
+          if (!current[k] || typeof current[k] !== 'object') {
+            current[k] = {};
+          }
+          current = current[k];
+        }
+      });
+      return acc;
+    }, {});
+
     const payload = {
-      attr,
+      ...updates,
       slug, // admin only
     };
     const resp = await clientFetch(apiRoutes.campaign.update, payload);

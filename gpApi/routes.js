@@ -93,7 +93,7 @@ export const apiRoutes = {
       method: 'POST',
     },
     update: {
-      path: '/campaigns',
+      path: '/campaigns/mine',
       method: 'PUT',
     },
     get: {
@@ -232,6 +232,30 @@ export const apiRoutes = {
       delete: {
         path: '/positions/:id',
         method: 'DELETE',
+      },
+    },
+  },
+  voters: {
+    voterFile: {
+      get: {
+        path: '/voter-data/voter-file',
+        method: 'GET',
+      },
+      wakeUp: {
+        path: '/voter-data/voter-file/wake-up',
+        method: 'GET',
+      },
+      schedule: {
+        path: '/voter-data/voter-file/schedule',
+        method: 'POST',
+      },
+      helpMessage: {
+        path: '/voter-data/voter-file/help-message',
+        method: 'POST',
+      },
+      canDownload: {
+        path: '/voter-data/voter-file/can-download',
+        method: 'GET',
       },
     },
   },

@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { USER_ROLES } from 'helpers/userHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
+import { userIsAdmin } from 'helpers/userHelper';
 
 async function checkIsAdmin() {
   try {

@@ -349,31 +349,6 @@ const gpApi = {
       method: 'POST',
       withAuth: true,
     },
-    getVoterFile: {
-      url: `${base}voter-data/voter-file`,
-      method: 'GET',
-      withAuth: true,
-    },
-    wakeUp: {
-      url: `${base}voter-data/voter-file/wake-up`,
-      method: 'GET',
-      withAuth: true,
-    },
-    schedule: {
-      url: `${base}voter-data/voter-file/schedule`,
-      method: 'POST',
-      withAuth: true,
-    },
-    helpMessage: {
-      url: `${base}voter-data/voter-file/help-message`,
-      method: 'POST',
-      withAuth: true,
-    },
-    canDownload: {
-      url: `${base}voter-data/voter-file/can-download`,
-      method: 'GET',
-      withAuth: true,
-    },
   },
   payments: {
     createCheckoutSession: {

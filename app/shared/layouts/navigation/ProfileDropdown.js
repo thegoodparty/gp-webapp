@@ -14,7 +14,7 @@ import UserAvatar from '@shared/user/UserAvatar';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
 import { MdAdd } from 'react-icons/md';
-import { USER_ROLES } from 'helpers/userHelper';
+import { USER_ROLES, userIsAdmin } from 'helpers/userHelper';
 
 const links = [
   {
@@ -131,7 +131,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
                 </div>
               </Link>
             )}
-            {user.isAdmin && !impersonating && (
+            {userIsAdmin(user) && !impersonating && (
               <Link
                 href="/admin"
                 className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
