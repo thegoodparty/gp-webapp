@@ -293,10 +293,7 @@ const gpApi = {
       withAuth: true,
     },
   },
-  uploadImage: {
-    url: `${base}application/upload-image`,
-    method: 'POST',
-  },
+
   uploadBase64Image: {
     url: `${base}upload-base64-image`,
     method: 'POST',
