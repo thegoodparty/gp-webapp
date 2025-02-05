@@ -4,10 +4,10 @@ import PortalPanel from '@shared/layouts/PortalPanel';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import gpApi from 'gpApi';
 import { useState } from 'react';
-import gpFetch from 'gpApi/gpFetch';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export default function P2VStatsPage(props) {
   const [processing, setProcessing] = useState(false);
@@ -16,11 +16,11 @@ export default function P2VStatsPage(props) {
 
   const getP2VStats = async () => {
     try {
-      const api = gpApi.admin.p2vStats;
-      const statsResponse = await gpFetch(api);
-      console.log('statsResponse', statsResponse);
-      if (statsResponse?.p2vStats) {
-        setP2vStats(statsResponse.p2vStats);
+      const resp = await clientFetch(apiRoutes.admin.campaign.p2vStats);
+      const statsResponse = resp.data;
+
+      if (statsResponse) {
+        setP2vStats(statsResponse);
       }
       return true;
     } catch (e) {

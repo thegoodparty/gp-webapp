@@ -20,11 +20,12 @@ import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/Ad
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
-export async function sendVictoryMail(slug) {
+export async function sendVictoryMail(id) {
   try {
-    const api = gpApi.admin.victoryMail;
-    return await gpFetch(api, { slug });
+    return await clientFetch(apiRoutes.admin.campaign.victoryMail, { id });
   } catch (e) {
     console.log('error', e);
     return false;
@@ -603,7 +604,7 @@ export default function AdminVictoryPathPage(props) {
     try {
       // only send mail the first time we update pathToVictory
       if (!pathToVictory) {
-        await sendVictoryMail(campaign.slug);
+        await sendVictoryMail(campaign.id);
       }
       // send only the keys that changed
       let keysToUpdate = [];

@@ -208,51 +208,13 @@ const gpApi = {
   // admin
   //
   admin: {
-    isAdmin: {
-      url: `${base}admin/is-admin`,
-      method: 'GET',
-      withAuth: true,
-    },
-    victoryMail: {
-      url: `${base}admin/victory-mail`,
-      method: 'POST',
-      withAuth: true,
-    },
-    proNoVoterFile: {
-      url: `${base}admin/campaign/pro-no-voter-file`,
-      method: 'GET',
-      withAuth: true,
-    },
-
-    enhanceCandidates: {
-      url: `${base}admin/candidate-enhance`,
-      method: 'POST',
-      withAuth: true,
-    },
-
     deactivateCandidate: {
       url: `${base}admin/deactivate-candidate-by-campaign`,
       method: 'PUT',
       withAuth: true,
     },
-
-    uploadedImages: {
-      url: `${base}admin/uploaded-images`,
-      method: 'POST',
-      withAuth: true,
-    },
-    uploadImage: {
-      url: `${base}admin/upload-image`,
-      method: 'POST',
-      withAuth: true,
-    },
     candidates: {
       url: `${base}admin/candidates`,
-      method: 'GET',
-      withAuth: true,
-    },
-    hiddenCandidates: {
-      url: `${base}admin/hidden-candidates`,
       method: 'GET',
       withAuth: true,
     },
@@ -264,32 +226,6 @@ const gpApi = {
     reactivateCandidate: {
       url: `${base}admin/candidate/reactivate`,
       method: 'PUT',
-      withAuth: true,
-    },
-
-    users: {
-      url: `${base}admin/users`,
-      method: 'GET',
-      withAuth: true,
-    },
-    createUser: {
-      url: `${base}admin/user`,
-      method: 'POST',
-      withAuth: true,
-    },
-    deleteUser: {
-      url: `${base}admin/user`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    impersonateUser: {
-      url: `${base}admin/user/impersonate`,
-      method: 'POST',
-      withAuth: true,
-    },
-    p2vStats: {
-      url: `${base}admin/p2v-stats`,
-      method: 'GET',
       withAuth: true,
     },
   },

@@ -236,6 +236,24 @@ export const apiRoutes = {
     },
   },
   admin: {
+    user: {
+      list: {
+        path: '/admin/users',
+        method: 'GET',
+      },
+      create: {
+        path: '/admin/users',
+        method: 'POST',
+      },
+      delete: {
+        path: '/admin/users/:id',
+        method: 'DELETE',
+      },
+      impersonate: {
+        path: '/admin/users/impersonate',
+        method: 'POST',
+      },
+    },
     campaign: {
       create: {
         path: '/admin/campaigns',
@@ -248,6 +266,18 @@ export const apiRoutes = {
       delete: {
         path: '/admin/campaigns/:id',
         method: 'DELETE',
+      },
+      victoryMail: {
+        path: '/admin/campaigns/:id/send-victory-email',
+        method: 'POST',
+      },
+      proNoVoterFile: {
+        path: '/admin/campaigns/pro-no-voter-file',
+        method: 'GET',
+      },
+      p2vStats: {
+        path: '/admin/campaigns/p2v-stats',
+        method: 'GET',
       },
     },
   },

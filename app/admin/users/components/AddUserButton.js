@@ -9,17 +9,18 @@ import TextField from '@shared/inputs/TextField';
 import { MenuItem, Select } from '@mui/material';
 import { USER_ROLES } from 'helpers/userHelper';
 import { ModalFooter } from '@shared/ModalFooter';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const createNewUser = async ({ firstName, lastName, email, role }) => {
   try {
-    const user = await gpFetch(gpApi.admin.createUser, {
+    const resp = await clientFetch(apiRoutes.admin.user.create, {
       firstName,
       lastName,
       email,
-      role,
+      roles: [role],
     });
+    const user = resp.data;
     if (user) {
       return user;
     }
