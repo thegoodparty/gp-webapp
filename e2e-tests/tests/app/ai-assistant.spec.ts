@@ -19,10 +19,10 @@ test('Create new conversation', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await appNav(page, 'Campaign Assistant');
+        await appNav(page, 'AI Assistant');
 
         // Verify user is on campaign assistant page
-        await expect(page.getByRole('heading', { name: 'Campaign Assistant' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();
 
         // Create new chat
         await page.getByRole('button', { name: 'New Chat' }).click();
@@ -49,7 +49,7 @@ test('Delete a conversation', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await appNav(page, 'Campaign Assistant');
+        await appNav(page, 'AI Assistant');
 
         // Create new chat
         await page.getByRole('button', { name: 'New Chat' }).click();
@@ -60,7 +60,7 @@ test('Delete a conversation', async ({ page }) => {
 
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await appNav(page, 'Campaign Assistant');
+        await appNav(page, 'AI Assistant');
 
         // Open history and delete conversation
         await page.getByRole('button', { name: 'View Chat History' }).click();

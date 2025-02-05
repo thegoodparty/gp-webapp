@@ -9,6 +9,7 @@ authFileCheck(test);
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard")
+    await appNav(page, 'Campaign Team');
 });
 
 test('Displays blank campaign team members page', async ({ page }) => {
@@ -16,8 +17,6 @@ test('Displays blank campaign team members page', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await appNav(page, 'Campaign Team');
-
         // Verify user is on the Campaign Team page
         await expect(page.getByRole('heading', { name: 'Campaign Team' })).toBeVisible();
         await expect(page.url()).toContain('/dashboard/team');
