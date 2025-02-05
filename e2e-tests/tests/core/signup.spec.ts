@@ -11,7 +11,7 @@ test('Onboarding - Just Browsing', async ({page}) => {
     await skipNonQA(test);
     try {
         // Create account
-        await createAccount(page, 'demo', true);
+        await createAccount(page);
 
         // Confirm demo account dashboard
         await page.getByText('Demo Account Notice').isVisible();
@@ -36,7 +36,7 @@ test('Onboarding - Running for Office', async ({page}) => {
     const role = 'San Bruno City Council';
     try {
         // Create account
-        await createAccount(page, 'live', true, testZip, role);
+        await createAccount(page, testZip, role);
 
         // Confirm live account dashboard
         await page.getByText('Learn how to use your personalized campaign plan').isVisible();

@@ -9,7 +9,8 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 authFileCheck(test);
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard")
+    await page.goto("/dashboard");
+    await appNav(page, 'My Profile');
 });
 
 test('Update Campaign Details', async ({ page }) => {
@@ -22,8 +23,6 @@ test('Update Campaign Details', async ({ page }) => {
     const newParty = 'Other';
 
     try {
-        await appNav(page, 'Campaign Details');
-
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
@@ -59,8 +58,6 @@ test('Update Office Details', async ({ page }) => {
     await skipNonQA(test);
 
     try {
-        await appNav(page, 'Campaign Details');
-
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
@@ -113,8 +110,6 @@ test('Update Your Why Statement', async ({ page }) => {
     const newWhyStatement = generateTimeStamp() + ' Statement';
 
     try {
-        await appNav(page, 'Campaign Details');
-
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
@@ -146,8 +141,6 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
     try {
-        await appNav(page, 'Campaign Details');
-
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
@@ -181,8 +174,6 @@ test('Add/Edit/Delete Opponent', async ({ page }) => {
     const newOpponentDescription = generateTimeStamp() + ' New Opponent Description';
 
     try {
-        await appNav(page, 'Campaign Details');
-
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
