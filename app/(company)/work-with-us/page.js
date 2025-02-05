@@ -4,9 +4,7 @@
  *
  */
 
-import React, { Suspense } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { Suspense } from 'react';
 import Hero from './components/Hero';
 import Values from './components/Values';
 // import LeverCareers from './components/LeverCareers';
@@ -14,6 +12,8 @@ import AshbyCareers from './components/AshbyCareers';
 import Why from './components/Why';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import pageMetaData from 'helpers/metadataHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 const meta = pageMetaData({
   title: 'Work with us | GoodParty.org',
@@ -25,8 +25,10 @@ export const metadata = meta;
 
 export const fetchJobs = async () => {
   try {
-    const api = gpApi.jobs.list;
-    return await gpFetch(api, false, 3600);
+    const resp = await serverFetch(apiRoutes.jobs.list, undefined, {
+      revalidate: 3600,
+    });
+    return resp.data;
   } catch (e) {
     console.log('error fetching jobs', e);
     return [];
@@ -34,7 +36,7 @@ export const fetchJobs = async () => {
 };
 
 async function CareersWrapper() {
-  const { jobs } = await fetchJobs();
+  const jobs = await fetchJobs();
 
   const childProps = {
     jobs,

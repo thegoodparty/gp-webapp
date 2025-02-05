@@ -336,17 +336,6 @@ const gpApi = {
     },
   },
 
-  jobs: {
-    list: {
-      url: `${base}jobs`,
-      method: 'GET',
-    },
-    find: {
-      url: `${base}job`,
-      method: 'GET',
-    },
-  },
-
   doorKnocking: {
     create: {
       url: `${base}campaign/door-knocking`,

@@ -251,6 +251,16 @@ export const apiRoutes = {
       },
     },
   },
+  jobs: {
+    list: {
+      path: '/jobs',
+      method: 'GET',
+    },
+    find: {
+      path: '/jobs/:id',
+      method: 'GET',
+    },
+  },
   logError: {
     path: '/error-logger',
     method: 'POST',
