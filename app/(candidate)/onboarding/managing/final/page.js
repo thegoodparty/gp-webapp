@@ -18,7 +18,7 @@ const Page = async () => {
   if (!user) {
     redirect('/login');
   }
-  const { metaData } = await fetchUserMeta();
+  const metaData = await fetchUserMeta();
   const { id: userId } = user;
 
   const requests = await gpFetch(

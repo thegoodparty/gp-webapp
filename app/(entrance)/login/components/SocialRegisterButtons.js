@@ -1,6 +1,4 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import GoogleRegisterButton from './GoogleRegisterButton';
@@ -8,11 +6,16 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useUser } from '@shared/hooks/useUser';
 import Overline from '@shared/typography/Overline';
 import saveToken from 'helpers/saveToken';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function register(payload) {
   try {
-    const api = gpApi.entrance.socialLogin;
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.authentication.socialLogin,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

@@ -1,3 +1,4 @@
+'use client';
 import { useSnackbar } from 'helpers/useSnackbar';
 import { useState } from 'react';
 import { isValidEmail } from 'helpers/validations';
@@ -34,7 +35,10 @@ export const sendSetPasswordEmail = async (userId) => {
     const payload = {
       userId,
     };
-    return await gpFetch(gpApi.campaign.adminCreateEmail, payload);
+    return await clientFetch(
+      apiRoutes.authentication.setSetPasswordEmail,
+      payload,
+    );
   } catch (e) {
     console.log('error', e);
     return false;

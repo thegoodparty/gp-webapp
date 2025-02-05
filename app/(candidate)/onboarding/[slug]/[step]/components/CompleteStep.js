@@ -14,8 +14,7 @@ import Button from '@shared/buttons/Button';
 
 async function launchCampaign() {
   try {
-    const api = gpApi.campaign.launch;
-    return await gpFetch(api);
+    return await clientFetch(apiRoutes.campaign.launch);
   } catch (e) {
     console.log('error at launchCampaign', e);
     return false;
@@ -39,7 +38,7 @@ export default function CompleteStep() {
 
     await updateCampaign(attr);
     const res = await launchCampaign();
-    if (res) {
+    if (res.ok) {
       trackEvent('onboarding_complete', { type: 'candidate' });
       window.location.href = '/dashboard';
     } else {

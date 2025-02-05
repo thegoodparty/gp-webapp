@@ -6,8 +6,6 @@
  */
 import { useEffect, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import Body2 from '@shared/typography/Body2';
@@ -18,12 +16,13 @@ import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
 import ImageSection from './ImageSection';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function refreshUser() {
   try {
-    const api = gpApi.user.getUser;
-
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.user.getUser);
+    return resp.data;
   } catch (error) {
     console.log('Error updating user', error);
   }

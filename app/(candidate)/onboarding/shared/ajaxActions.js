@@ -3,18 +3,21 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function updateCampaign(attr, slug) {
   try {
     if (!Array.isArray(attr) && typeof attr === 'object') {
       attr = [attr];
     }
-    const api = gpApi.campaign.update;
+
     const payload = {
       attr,
       slug, // admin only
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.campaign.update, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -23,8 +26,8 @@ export async function updateCampaign(attr, slug) {
 
 export async function getCampaign() {
   try {
-    const api = gpApi.campaign.get;
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.get);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -33,8 +36,8 @@ export async function getCampaign() {
 
 export async function fetchCampaignVersions() {
   try {
-    const api = gpApi.campaign.onboarding.planVersions;
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.planVersion);
+    return resp.data;
   } catch (e) {
     console.log('error at fetchCampaignVersions', e);
     return {};
@@ -64,8 +67,9 @@ export async function createDemoCampaign() {
 
 export async function createCampaign() {
   try {
-    const api = gpApi.campaign.create;
-    const { slug } = await gpFetch(api, {});
+    const resp = await clientFetch(apiRoutes.campaign.create);
+    const { slug } = resp.data;
+
     if (slug) {
       deleteCookie('afterAction');
       deleteCookie('returnUrl');
@@ -87,8 +91,8 @@ export async function createCampaign() {
 
 export async function updateUserMeta(meta) {
   try {
-    const api = gpApi.user.updateMeta;
-    return await gpFetch(api, { meta });
+    const resp = await clientFetch(apiRoutes.user.updateMeta, { meta });
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

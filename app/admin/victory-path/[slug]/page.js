@@ -15,7 +15,7 @@ export const maxDuration = 60;
 export default async function Page({ params }) {
   await adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaignBySlugAdminOnly(slug);
+  const campaign = await fetchCampaignBySlugAdminOnly(slug);
 
   const childProps = {
     pathname: '/admin/candidates',

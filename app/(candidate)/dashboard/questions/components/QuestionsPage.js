@@ -88,18 +88,18 @@ export default function QuestionsPage(props) {
     const attr = keys.map((key, i) => {
       return { key: keys[0], value: values[i] };
     });
-    const res = await updateCampaign(attr);
-    setCampaign(res.campaign);
+    const campaign = await updateCampaign(attr);
+    setCampaign(campaign);
   };
 
   const handleComplete = async (type = false) => {
-    const res = await getCampaign();
-    setCampaign(res.campaign);
+    const campaign = await getCampaign();
+    setCampaign(campaign);
     if (type === 'issues') {
-      const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+      const candidatePositions = await loadCandidatePosition(campaign.id);
       onChangeField('candidatePositions', candidatePositions);
-      const res = await getCampaign();
-      setCampaign(res.campaign);
+      const campaign = await getCampaign();
+      setCampaign(campaign);
     }
   };
   let nextKey;
@@ -110,7 +110,7 @@ export default function QuestionsPage(props) {
   }
 
   const updatePositionsCallback = async (freshCandidatePositions) => {
-    const { campaign } = await getCampaign();
+    const campaign = await getCampaign();
 
     onChangeField('candidatePositions', freshCandidatePositions);
     setCampaign(campaign);

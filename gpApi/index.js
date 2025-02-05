@@ -11,7 +11,7 @@ export let appBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
-let base = `${appBase}/v1/`;
+let base = `${appBase}/api/v1/`;
 
 export const isProd = apiBase === 'https://api.goodparty.org';
 
@@ -20,43 +20,14 @@ if (!appBase) {
     typeof window !== 'undefined'
       ? window.location.origin
       : `https://${process.env.VERCEL_BRANCH_URL}`;
-  base = `${appBase}/v1/`;
+  base = `${appBase}/api/v1/`;
 }
 
 const gpApi = {
-  homepage: {
-    subscribeEmail: {
-      url: `${base}subscribe`,
-      method: 'POST',
-    },
-    declarationSignatures: {
-      list: {
-        url: `${base}declare/list`,
-        method: 'GET',
-      },
-    },
-  },
-  // TODO: rename to authentication?
   entrance: {
-    register: {
-      url: `${base}authentication/register`,
-      method: 'POST',
-    },
-    login: {
-      url: `${base}authentication/login`,
-      method: 'POST',
-    },
-    forgotPassword: {
-      url: `${base}authentication/send-recover-password-email`,
-      method: 'POST',
-    },
-    resetPassword: {
-      url: `${base}authentication/reset-password`,
-      method: 'POST',
-    },
-    socialLogin: {
-      url: `${base}authentication/social-login/:socialProvider`,
-      method: 'POST',
+    twitterLogin: {
+      url: `${base}entrance/twitter-login`,
+      method: 'PUT',
     },
   },
   content: {
@@ -87,129 +58,17 @@ const gpApi = {
   },
 
   campaign: {
-    create: {
-      url: `${base}campaigns`,
-      method: 'POST',
-      withAuth: true,
-    },
-    adminCreate: {
-      url: `${base}admin/campaigns`, // TODO: move to admin section
-      method: 'POST',
-      withAuth: true,
-    },
-    adminCreateEmail: {
-      url: `${base}authentication/send-set-password-email`, // TODO: move to entrance/auth section
-      method: 'POST',
-      withAuth: true,
-    },
     createDemoCampaign: {
-      url: `${base}campaign/demo`, // TODO: remove this route (WEB-3583)
+      url: `${base}campaign/demo`,
       method: 'POST',
       withAuth: true,
     },
     deleteDemoCampaign: {
-      url: `${base}campaign/demo`, // TODO: remove this route (WEB-3583)
+      url: `${base}campaign/demo`,
       method: 'DELETE',
       withAuth: true,
     },
-    update: {
-      url: `${base}campaigns/mine`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    get: {
-      url: `${base}campaigns/mine`,
-      method: 'GET',
-      withAuth: true,
-    },
 
-    list: {
-      //admin
-      url: `${base}campaigns`,
-      method: 'GET',
-      withAuth: true,
-    },
-
-    mapList: {
-      url: `${base}campaigns/map`,
-      method: 'GET',
-    },
-    mapCount: {
-      url: `${base}campaigns/map/count`,
-      method: 'GET',
-    },
-
-    launch: {
-      url: `${base}campaigns/launch`,
-      method: 'POST',
-      withAuth: true,
-    },
-
-    findBySlug: {
-      //admin
-      url: `${base}campaigns/slug/:slug`,
-      method: 'GET',
-      withAuth: true,
-    },
-
-    adminUpdate: {
-      url: `${base}admin/campaigns/:id`, // TODO: move to admin section?
-      method: 'PUT',
-      withAuth: true,
-    },
-
-    chat: {
-      get: {
-        url: `${base}campaigns/ai/chat/:threadId`,
-        method: 'GET',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaigns/ai/chat/:threadId`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      create: {
-        url: `${base}campaigns/ai/chat`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaigns/ai/chat`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaigns/ai/chat/:threadId`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      feedback: {
-        url: `${base}campaigns/ai/chat/:threadId/feedback`,
-        method: 'POST',
-        withAuth: true,
-      },
-    },
-
-    UpdateHistory: {
-      create: {
-        url: `${base}campaigns/mine/update-history`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaigns/mine/update-history`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaigns/mine/update-history/:id`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
-
-    // TODO: remove volunteerInvitation routes (WEB-3583)
     volunteerInvitation: {
       create: {
         url: `${base}campaign/volunteer/invitation`,
@@ -232,7 +91,7 @@ const gpApi = {
         withAuth: true,
       },
     },
-    // TODO: remove campaignRequests routes (WEB-3583)
+
     campaignRequests: {
       create: {
         url: `${base}campaign/volunteer/request`,
@@ -260,7 +119,7 @@ const gpApi = {
         withAuth: true,
       },
     },
-    // TODO: remove campaignVolunteer routes (WEB-3583)
+
     campaignVolunteer: {
       create: {
         url: `${base}campaign/volunteer`,
@@ -287,6 +146,7 @@ const gpApi = {
         method: 'GET',
         withAuth: true,
       },
+
       routes: {
         list: {
           url: `${base}campaign/volunteer/routes`,
@@ -318,64 +178,11 @@ const gpApi = {
       },
     },
 
-    campaignPosition: {
-      create: {
-        url: `${base}campaigns/:id/positions`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaigns/:id/positions/:positionId`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaigns/:id/positions/:positionId`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      find: {
-        url: `${base}campaigns/:id/positions`,
-        method: 'GET',
-        withAuth: true,
-      },
-    },
-
-    ai: {
-      create: {
-        url: `${base}campaigns/ai`,
-        method: 'POST',
-        withAuth: true,
-      },
-      rename: {
-        url: `${base}campaigns/ai/rename`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaigns/ai/:key`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
-
-    onboarding: {
-      adminDelete: {
-        url: `${base}admin/campaigns/:id`, // TODO: move to admin section?
-        method: 'DELETE',
-        withAuth: true,
-      },
-      adminUpdate: {
-        url: `${base}admin/campaigns/:id`, // TODO: move to admin section?
-        method: 'PUT',
-        withAuth: true,
-      },
-
-      planVersions: {
-        url: `${base}campaigns/mine/plan-version`, // TODO: move into up campaign section?
-        method: 'GET',
-        withAuth: true,
-      },
+    einCheck: {
+      url: `${base}campaign/ein-check`,
+      method: 'GET',
+      withAuth: true,
+      returnFullResponse: true,
     },
   },
 
@@ -410,57 +217,10 @@ const gpApi = {
   // USER
   //
   user: {
-    updateUser: {
-      url: `${base}users/me`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    updateMeta: {
-      url: `${base}users/me/metadata`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    getMeta: {
-      url: `${base}users/me/metadata`,
-      method: 'GET',
-      withAuth: true,
-    },
-    getUser: {
-      url: `${base}users/me`,
-      method: 'GET',
-      withAuth: true,
-    },
     logout: {
-      url: `${appBase}/api/v1/entrance/logout`, // TODO: update logout handler to not have `/api` path?
+      url: `${base}entrance/logout`,
       method: 'DELETE',
       withAuth: true,
-    },
-    changePassword: {
-      url: `${base}users/:id/password`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    deleteAccount: {
-      url: `${base}users/:id`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    campaignStatus: {
-      url: `${base}campaigns/mine/status`, // TODO: move to campaign section?
-      method: 'GET',
-      withAuth: true,
-    },
-    uploadAvatar: {
-      url: `${base}users/me/upload-image`,
-      method: 'POST',
-      withAuth: true,
-    },
-    files: {
-      generateSignedUploadUrl: {
-        url: `${base}users/files/generate-signed-upload-url`,
-        method: 'PUT',
-        withAuth: true,
-      },
     },
   },
   //
@@ -603,11 +363,7 @@ const gpApi = {
     method: 'POST',
     withAuth: true,
   },
-  logError: {
-    url: `${base}error-logger`,
-    method: 'POST',
-    withAuth: true,
-  },
+
   ballotData: {
     races: {
       url: `${base}ballot-data/races`,

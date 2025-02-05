@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ContentEditor from './ContentEditor';
 import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
 import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
@@ -17,7 +17,7 @@ export default function EditContentPage(props) {
   const [updatedVersions, setUpdatedVersions] = useState(false);
 
   const updateVersionsCallback = async () => {
-    const { versions } = await fetchCampaignVersions();
+    const versions = await fetchCampaignVersions();
     setUpdatedVersions(versions);
   };
 

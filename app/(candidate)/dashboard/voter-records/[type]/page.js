@@ -7,9 +7,8 @@ import VoterFileDetailPage from 'app/(candidate)/dashboard/voter-records/[type]/
 import { fetchCanDownload } from '../page';
 import { fetchContentByKey } from 'helpers/fetchHelper';
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress';
-
+import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverLoadCandidatePosition';
 const meta = pageMetaData({
   title: 'Voter Data detailed view | GoodParty.org',
   description: 'Voter Data detailed view',
@@ -28,7 +27,7 @@ export default async function Page({ params, searchParams }) {
     redirect('/dashboard');
   }
 
-  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
 
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,

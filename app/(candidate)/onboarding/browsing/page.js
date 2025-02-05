@@ -18,7 +18,7 @@ export default async function Page() {
     redirect('/login');
   }
 
-  const { metaData } = await fetchUserMeta();
+  const metaData = await fetchUserMeta();
 
   const childProps = {
     metaData,

@@ -42,7 +42,7 @@ export const GenerateLoadingScreen = ({
   };
 
   const generateContentPolling = async (aiScriptKey) => {
-    const { campaign } = await getCampaign();
+    const campaign = await getCampaign();
     const [_, jobsProcessing] = buildAiContentSections(
       campaign,
       AI_CONTENT_SUB_SECTION_KEY,

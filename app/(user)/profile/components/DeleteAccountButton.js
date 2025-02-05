@@ -7,17 +7,16 @@
 import React, { useState } from 'react';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { deleteCookies } from 'helpers/cookieHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import ErrorButton from '@shared/buttons/ErrorButton';
 import { FaTrash } from 'react-icons/fa';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function deleteAccountCallback(id) {
   try {
-    const api = gpApi.user.deleteAccount;
-    const resp = await gpFetch(api, { id });
+    const resp = await clientFetch(apiRoutes.user.deleteAccount, { id });
 
     if (resp.ok) {
       await handleLogOut();
