@@ -9,7 +9,7 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 const testAdmin = process.env.TEST_USER_ADMIN;
 const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
-test.skip('Generate content with AI Campaign Tool', async ({page}) => {
+test.skip('Generate content with Content Builder', async ({page}) => {
     const caseId = 40;
     await skipNonQA(test);
     const testTemplate = 'Launch Email';
