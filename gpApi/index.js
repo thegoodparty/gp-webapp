@@ -187,25 +187,6 @@ const gpApi = {
   },
 
   topIssues: {
-    create: {
-      url: `${base}top-issue`,
-      method: 'POST',
-      withAuth: true,
-    },
-    update: {
-      url: `${base}top-issue`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    delete: {
-      url: `${base}top-issue`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    list: {
-      url: `${base}top-issues`, // non admin
-      method: 'GET',
-    },
     byLocation: {
       url: `${base}top-issue/by-location`, // non admin, for onboarding
       method: 'GET',
@@ -253,27 +234,6 @@ const gpApi = {
       url: `${base}admin/deactivate-candidate-by-campaign`,
       method: 'PUT',
       withAuth: true,
-    },
-    topIssues: {
-      create: {
-        url: `${base}top-issue`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}top-issue`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}top-issue`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}top-issues`, // non admin
-        method: 'GET',
-      },
     },
 
     position: {

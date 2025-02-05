@@ -10,6 +10,8 @@ import { TopIssueDisplay } from './TopIssueDisplay';
 import { useTopIssues } from './UseTopIssuesContext';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const createPositionCallback = async (name, topIssueId) => {
   const api = gpApi.admin.position.create;
@@ -24,9 +26,9 @@ const deletePositionCallback = async (id) => {
 };
 
 const deleteTopIssueCallback = async (id) => {
-  const api = gpApi.admin.topIssues.delete;
   const payload = { id };
-  return await gpFetch(api, payload);
+  const resp = await clientFetch(apiRoutes.topIssue.delete, payload);
+  return resp.data;
 };
 
 const editPositionCallback = async (id, name) => {
@@ -36,7 +38,8 @@ const editPositionCallback = async (id, name) => {
 };
 
 export const updateTopIssue = async (issue) => {
-  return await gpFetch(gpApi.admin.topIssues.update, issue);
+  const resp = await clientFetch(apiRoutes.topIssue.update, issue);
+  return resp.data;
 };
 
 export default function TopIssuesList() {

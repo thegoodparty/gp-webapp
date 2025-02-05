@@ -1,9 +1,7 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
-import { getServerToken } from 'helpers/userServerHelper';
 import AdminTopIssuesPage from './components/AdminTopIssuesPage';
 import pageMetaData from 'helpers/metadataHelper';
+import { serverFetchIssues } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
 
 const meta = pageMetaData({
   title: 'Top Issues | GoodParty.org',
@@ -13,16 +11,9 @@ const meta = pageMetaData({
 export const metadata = meta;
 export const maxDuration = 60;
 
-const fetchIssues = async () => {
-  const api = gpApi.admin.topIssues.list;
-  const token = getServerToken();
-  return await gpFetch(api, false, 1, token);
-};
-
 export default async function Page() {
   await adminAccessOnly();
-  const res = await fetchIssues();
-  const { topIssues } = res;
+  const topIssues = await serverFetchIssues();
   const childProps = {
     pathname: '/admin/top-issues',
     title: 'Top Issues',

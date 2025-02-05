@@ -203,6 +203,24 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  topIssue: {
+    create: {
+      path: '/top-issues',
+      method: 'POST',
+    },
+    update: {
+      path: '/top-issues/:id',
+      method: 'PUT',
+    },
+    delete: {
+      path: '/top-issues/:id',
+      method: 'DELETE',
+    },
+    list: {
+      path: '/top-issues',
+      method: 'GET',
+    },
+  },
   admin: {
     campaign: {
       create: {
