@@ -220,6 +220,20 @@ export const apiRoutes = {
       path: '/top-issues',
       method: 'GET',
     },
+    position: {
+      create: {
+        path: '/positions',
+        method: 'POST',
+      },
+      update: {
+        path: '/positions/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/positions/:id',
+        method: 'DELETE',
+      },
+    },
   },
   admin: {
     campaign: {

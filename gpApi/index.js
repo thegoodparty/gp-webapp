@@ -236,27 +236,6 @@ const gpApi = {
       withAuth: true,
     },
 
-    position: {
-      create: {
-        url: `${base}position`,
-        method: 'POST',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}position`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}position`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}positions`, // non admin
-        method: 'GET',
-      },
-    },
     uploadedImages: {
       url: `${base}admin/uploaded-images`,
       method: 'POST',

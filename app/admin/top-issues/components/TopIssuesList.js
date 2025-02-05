@@ -4,8 +4,6 @@ import { BsArrowRightShort } from 'react-icons/bs';
 import { FaCaretDown, FaCaretRight, FaEdit, FaTrash } from 'react-icons/fa';
 import TextField from '@shared/inputs/TextField';
 import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { TopIssueDisplay } from './TopIssueDisplay';
 import { useTopIssues } from './UseTopIssuesContext';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
@@ -14,15 +12,15 @@ import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
 
 const createPositionCallback = async (name, topIssueId) => {
-  const api = gpApi.admin.position.create;
   const payload = { name, topIssueId };
-  return await gpFetch(api, payload);
+  const resp = await clientFetch(apiRoutes.topIssue.position.create, payload);
+  return resp.data;
 };
 
 const deletePositionCallback = async (id) => {
-  const api = gpApi.admin.position.delete;
   const payload = { id };
-  return await gpFetch(api, payload);
+  const resp = await clientFetch(apiRoutes.topIssue.position.delete, payload);
+  return resp.data;
 };
 
 const deleteTopIssueCallback = async (id) => {
@@ -32,9 +30,9 @@ const deleteTopIssueCallback = async (id) => {
 };
 
 const editPositionCallback = async (id, name) => {
-  const api = gpApi.admin.position.update;
   const payload = { id, name };
-  return await gpFetch(api, payload);
+  const resp = await clientFetch(apiRoutes.topIssue.position.update, payload);
+  return resp.data;
 };
 
 export const updateTopIssue = async (issue) => {
