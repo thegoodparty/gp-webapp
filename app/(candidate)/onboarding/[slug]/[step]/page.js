@@ -4,7 +4,7 @@ import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
 import OnboardingPage from './components/OnboardingPage';
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GoodParty.org',
@@ -26,8 +26,7 @@ export default async function Page({ params }) {
 
   let pledge;
   if (stepInt === 3) {
-    const res = await fetchContentByKey('pledge');
-    pledge = res.content;
+    pledge = await fetchContentByType('pledge');
   }
 
   const childProps = {

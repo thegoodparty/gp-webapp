@@ -63,7 +63,7 @@ export default async function Page({ params }) {
   ];
   const articles = [];
   for (const slug of articleSlugs) {
-    const { content } = await fetchArticle(slug);
+    const content = await fetchArticle(slug);
     articles.push(content);
   }
   if (state.length > 2) {

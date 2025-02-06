@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import RunForOfficePage from './components/RunForOfficePage';
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 const meta = pageMetaData({
   title: 'Campaign Tools',
@@ -13,9 +13,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page(params) {
-  const { content: testimonials } = await fetchContentByKey(
-    'candidateTestimonials',
-  );
+  const testimonials = await fetchContentByType('candidateTestimonials');
 
   return <RunForOfficePage testimonials={testimonials} />;
 }

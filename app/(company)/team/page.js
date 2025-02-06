@@ -2,8 +2,8 @@ import React from 'react';
 import pageMetaData from 'helpers/metadataHelper';
 
 import TeamPage from './components/TeamsPage';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 const meta = pageMetaData({
   title: 'Team | GoodParty.org',
@@ -14,24 +14,23 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 async function fetchTeamMembersAndMilestones() {
-  const api = gpApi.content.contentByKey;
-  const [{ content: teamMembers }, { content: teamMilestones }] =
-    await Promise.all([
-      gpFetch(
-        api,
-        {
-          key: 'goodPartyTeamMembers',
-        },
-        3600,
-      ),
-      gpFetch(
-        api,
-        {
-          key: 'teamMilestones',
-        },
-        3600,
-      ),
-    ]);
+  const api = apiRoutes.content.getByType;
+  const [teamMembers, teamMilestones] = await Promise.all([
+    serverFetch(
+      api,
+      {
+        type: 'goodPartyTeamMembers',
+      },
+      { revalidate: 3600 },
+    ),
+    serverFetch(
+      api,
+      {
+        type: 'teamMilestone',
+      },
+      { revalidate: 3600 },
+    ),
+  ]);
   return { teamMembers, teamMilestones };
 }
 

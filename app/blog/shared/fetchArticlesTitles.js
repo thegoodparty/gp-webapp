@@ -1,7 +1,10 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 export const fetchArticlesTitles = async () => {
-  const api = gpApi.content.articlesTitles;
-  return await gpFetch(api, false, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, {
+    type: 'blogArticleTitles',
+  });
+
+  return resp.data;
 };

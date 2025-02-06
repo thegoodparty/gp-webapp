@@ -1,6 +1,4 @@
-import Pill from '@shared/buttons/Pill';
 import GoalsChart from '@shared/candidates/GoalsChart';
-import FaqLink from '@shared/content/FaqLink';
 import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 

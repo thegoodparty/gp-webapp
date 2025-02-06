@@ -33,8 +33,8 @@ export default async function BlogWrapper({
   showBreadcrumbs = true,
   children,
 }) {
-  const { tags } = await fetchArticleTags();
-  const { titles } = await fetchArticlesTitles();
+  const tags = await fetchArticleTags();
+  const titles = await fetchArticlesTitles();
 
   const breadcrumbs = [{ href: '/blog', label: 'Blog' }, { label: pageTitle }];
 

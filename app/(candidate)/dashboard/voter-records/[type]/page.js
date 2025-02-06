@@ -5,7 +5,7 @@ import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import VoterFileDetailPage from 'app/(candidate)/dashboard/voter-records/[type]/components/VoterFileDetailPage';
 import { fetchCanDownload } from '../page';
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress';
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
@@ -38,11 +38,11 @@ export default async function Page({ params, searchParams }) {
 
   // TODO: Find out why in the world aren't these booleans just being passed along from the entity in Contentful.
   const requiresQuestions = !hasCompletedQuestions
-    ? (await fetchContentByKey('contentPromptsQuestions', 3600))?.content
+    ? await fetchContentByType('contentPromptsQuestions', 3600)
     : {};
 
   const categories = (
-    await fetchContentByKey('aiContentCategories', 3600)
+    await fetchContentByType('aiContentCategories', 3600)
   )?.content?.map((category = {}) => ({
     ...category,
     templates: setRequiresQuestionsOnTemplates(

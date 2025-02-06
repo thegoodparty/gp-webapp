@@ -1,15 +1,17 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogPage from './components/BlogPage';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const fetchTopTags = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'blogHome',
+    type: 'blogHome',
   };
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };
 
 const meta = pageMetaData({
@@ -21,7 +23,7 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   const { sections, hero } = await fetchArticlesBySections();
-  const { content: { tags } = {} } = await fetchTopTags();
+  const { tags } = await fetchTopTags();
 
   return <BlogPage sections={sections} hero={hero} topTags={tags} />;
 }
