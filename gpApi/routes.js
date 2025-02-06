@@ -4,13 +4,11 @@
 //   data should be directed to the API base, not the Next.js application proxy
 export const apiBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE || process.env.VERCEL_BRANCH_URL;
+  : process.env.NEXT_PUBLIC_APP_BASE || process.env.VERCEL_URL;
 
 const versionBase = '/api/v1';
 
 export const apiUrl = apiBase + versionBase;
-
-export const isProd = apiBase === 'https://api.goodparty.org';
 
 export const apiRoutes = {
   homepage: {
