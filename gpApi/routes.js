@@ -4,7 +4,7 @@
 //   data should be directed to the API base, not the Next.js application proxy
 export const apiBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE;
+  : process.env.NEXT_PUBLIC_APP_BASE || process.env.VERCEL_BRANCH_URL;
 
 const versionBase = '/api/v1';
 
