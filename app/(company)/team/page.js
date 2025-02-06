@@ -15,7 +15,7 @@ export const metadata = meta;
 
 async function fetchTeamMembersAndMilestones() {
   const api = apiRoutes.content.getByType;
-  const [teamMembers, teamMilestones] = await Promise.all([
+  const [{ data: teamMembers }, { data: teamMilestones }] = await Promise.all([
     serverFetch(
       api,
       {
