@@ -4,13 +4,13 @@ import { compile, parse } from 'path-to-regexp';
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
 //   the Next.js app is currently being built and cannot be talked to, so build requests for static content
 //   data should be directed to the API base, not the Next.js application proxy
-export const apiBase = Boolean(process.env.CI)
+const apiBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
 const versionBase = '/api/v1';
 
-export const apiUrl = apiBase + versionBase;
+const apiUrl = apiBase + versionBase;
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
