@@ -1,4 +1,4 @@
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../shared/candidateAccess';
@@ -17,17 +17,15 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
   const campaign = await fetchUserCampaign();
 
-  const promptsRaw = (await fetchContentByKey('candidateContentPrompts', 3600))
-    .content;
+  const promptsRaw = await fetchContentByType('candidateContentPrompts', 3600);
   const prompts = parsePrompts(promptsRaw);
 
-  const requiresQuestions = (
-    await fetchContentByKey('contentPromptsQuestions', 3600)
-  ).content;
+  const requiresQuestions = await fetchContentByType(
+    'contentPromptsQuestions',
+    3600,
+  );
 
-  const categories = (await fetchContentByKey('aiContentCategories', 3600))
-    .content;
-
+  const categories = await fetchContentByType('aiContentCategories', 3600);
   const candidatePositions = await serverLoadCandidatePosition(campaign.id);
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
 

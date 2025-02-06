@@ -30,32 +30,6 @@ const gpApi = {
       method: 'PUT',
     },
   },
-  content: {
-    contentByKey: {
-      url: `${base}content/content-by-key`,
-      method: 'GET',
-    },
-    articlesTitles: {
-      url: `${base}content/blog-articles-titles`,
-      method: 'GET',
-    },
-    articlesBySlug: {
-      url: `${base}content/blog-articles-by-slug`,
-      method: 'GET',
-    },
-    articlesBySection: {
-      url: `${base}content/blog-articles-by-section`,
-      method: 'GET',
-    },
-    articlesByTag: {
-      url: `${base}content/blog-articles-by-tag`,
-      method: 'GET',
-    },
-    articleTags: {
-      url: `${base}content/article-tags`,
-      method: 'GET',
-    },
-  },
 
   campaign: {
     createDemoCampaign: {
@@ -340,6 +314,7 @@ const gpApi = {
   },
   voterData: {
     pathToVictory: {
+      // TODO: not migrated to nest yet!!!
       url: `${base}voter-data/path-to-victory`,
       method: 'POST',
       withAuth: true,

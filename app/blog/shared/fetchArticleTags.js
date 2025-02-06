@@ -1,7 +1,9 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 export const fetchArticleTags = async () => {
-  const api = gpApi.content.articleTags;
-  return await gpFetch(api, false, 3600);
+  const resp = await serverFetch(apiRoutes.content.articleTags, undefined, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };

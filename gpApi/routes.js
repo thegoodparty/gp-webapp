@@ -203,6 +203,42 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  content: {
+    getByType: {
+      path: '/content/type/:type',
+      method: 'GET',
+    },
+    getById: {
+      path: '/content/:id',
+      method: 'GET',
+    },
+    glossaryBySlug: {
+      path: '/content/type/glossaryItem/by-slug',
+      method: 'GET',
+    },
+    glossaryByLetter: {
+      path: '/content/type/glossaryItem/by-letter',
+      method: 'GET',
+    },
+    articleTags: {
+      path: '/content/article-tags',
+      method: 'GET',
+    },
+    blogArticle: {
+      getBySlug: {
+        path: '/content/blog-articles-by-slug/:slug',
+        method: 'GET',
+      },
+      getBySection: {
+        path: '/content/blog-articles-by-section/:sectionSlug',
+        method: 'GET',
+      },
+      getByTag: {
+        path: '/content/blog-articles-by-tag/:tag',
+        method: 'GET',
+      },
+    },
+  },
   topIssue: {
     create: {
       path: '/top-issues',
