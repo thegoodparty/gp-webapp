@@ -34,13 +34,10 @@ async function fetchTeamMembersAndMilestones() {
   return { teamMembers, teamMilestones };
 }
 
-const sortTeamMembers = (teamMembers) =>
-  teamMembers.sort((a, b) => (a.order > b.order ? 1 : -1));
-
 const Page = async () => {
   const { teamMembers, teamMilestones } = await fetchTeamMembersAndMilestones();
   const childProps = {
-    teamMembers: sortTeamMembers(teamMembers),
+    teamMembers,
     teamMilestones,
   };
   return <TeamPage {...childProps} />;
