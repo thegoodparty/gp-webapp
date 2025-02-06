@@ -230,7 +230,7 @@ export const apiRoutes = {
     },
     blogArticle: {
       getBySlug: {
-        path: '/content/blog-articles-by-slug/:slug',
+        path: '/content/blog-article/:slug',
         method: 'GET',
       },
       getBySection: {
