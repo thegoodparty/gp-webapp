@@ -1,307 +1,427 @@
-let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
-if (!apiBase) {
-  apiBase = 'https://api-dev.goodparty.org';
-}
+export const API_ROOT =
+  process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api-dev.goodparty.org';
 
 // CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
 //   the Next.js app is currently being built and cannot be talked to, so build requests for static content
 //   data should be directed to the API base, not the Next.js application proxy
-let appBase = Boolean(process.env.CI)
-  ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE;
+export const WEB_APP_ROOT = process.env.CI
+  ? API_ROOT
+  : process.env.NEXT_PUBLIC_APP_BASE ||
+    `https://${process.env.VERCEL_BRANCH_URL}`;
 
-let base = `${appBase}/api/v1/`;
+export const VERSION_PREFIX = '/v1';
 
-if (!appBase) {
-  appBase =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : `https://${process.env.VERCEL_BRANCH_URL}`;
-  base = `${appBase}/api/v1/`;
-}
-
-const gpApi = {
-  entrance: {
-    twitterLogin: {
-      url: `${base}entrance/twitter-login`,
-      method: 'PUT',
+export const apiRoutes = {
+  homepage: {
+    subscribeEmail: {
+      path: '/subscribe',
+      method: 'POST',
+    },
+    declarationSignatures: {
+      list: {
+        path: '/declare/list',
+        method: 'GET',
+      },
     },
   },
-
+  authentication: {
+    register: {
+      path: '/authentication/register',
+      method: 'POST',
+    },
+    login: {
+      path: '/authentication/login',
+      method: 'POST',
+    },
+    logout: {
+      path: '/logout',
+      method: 'DELETE',
+      nextApiRoute: true, // identifies next /api folder route handlers
+    },
+    forgotPassword: {
+      path: '/authentication/send-recover-password-email',
+      method: 'POST',
+    },
+    resetPassword: {
+      path: '/authentication/reset-password',
+      method: 'POST',
+    },
+    socialLogin: {
+      path: '/authentication/social-login/:socialProvider',
+      method: 'POST',
+    },
+    setSetPasswordEmail: {
+      path: '/authentication/send-set-password-email',
+      method: 'POST',
+    },
+  },
+  user: {
+    updateUser: {
+      path: '/users/me',
+      method: 'PUT',
+    },
+    updateMeta: {
+      path: '/users/me/metadata',
+      method: 'PUT',
+    },
+    getMeta: {
+      path: '/users/me/metadata',
+      method: 'GET',
+    },
+    getUser: {
+      path: '/users/me',
+      method: 'GET',
+    },
+    changePassword: {
+      path: '/users/:id/password',
+      method: 'PUT',
+    },
+    deleteAccount: {
+      path: '/users/:id',
+      method: 'DELETE',
+    },
+    uploadAvatar: {
+      path: '/users/me/upload-image',
+      method: 'POST',
+    },
+    files: {
+      generateSignedUploadUrl: {
+        path: '/users/files/generate-signed-upload-url',
+        method: 'PUT',
+      },
+    },
+  },
   campaign: {
-    createDemoCampaign: {
-      url: `${base}campaign/demo`,
-      method: 'POST',
-      withAuth: true,
-    },
-    deleteDemoCampaign: {
-      url: `${base}campaign/demo`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-
-    volunteerInvitation: {
-      create: {
-        url: `${base}campaign/volunteer/invitation`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaign/volunteer/invitations`,
-        method: 'GET',
-        withAuth: true,
-      },
-      listByUser: {
-        url: `${base}campaign/volunteer/invitations-by-user`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/volunteer/invitation`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
-
-    campaignRequests: {
-      create: {
-        url: `${base}campaign/volunteer/request`,
-        method: 'POST',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaign/volunteer/requests`,
-        method: 'GET',
-        withAuth: true,
-      },
-      get: {
-        url: `${base}campaign/volunteer/request`,
-        method: 'GET',
-        withAuth: true,
-      },
-      grant: {
-        url: `${base}campaign/volunteer/request/grant`,
-        method: 'GET',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/volunteer/request`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-    },
-
-    campaignVolunteer: {
-      create: {
-        url: `${base}campaign/volunteer`,
-        method: 'POST',
-        withAuth: true,
-      },
-      delete: {
-        url: `${base}campaign/volunteer`,
-        method: 'DELETE',
-        withAuth: true,
-      },
-      update: {
-        url: `${base}campaign/volunteer`,
-        method: 'PATCH',
-        withAuth: true,
-      },
-      list: {
-        url: `${base}campaign/volunteers`,
-        method: 'GET',
-        withAuth: true,
-      },
-      listByUser: {
-        url: `${base}campaign/volunteer-by-user`,
-        method: 'GET',
-        withAuth: true,
-      },
-
-      routes: {
-        list: {
-          url: `${base}campaign/volunteer/routes`,
-          method: 'GET',
-          withAuth: true,
-        },
-        find: {
-          url: `${base}campaign/volunteer/route`,
-          method: 'GET',
-          withAuth: true,
-        },
-        claim: {
-          url: `${base}campaign/volunteer/route/claim`,
-          method: 'PUT',
-          withAuth: true,
-        },
-        unclaim: {
-          url: `${base}campaign/volunteer/route/unclaim`,
-          method: 'PUT',
-          withAuth: true,
-        },
-      },
-      voter: {
-        find: {
-          url: `${base}voter`,
-          method: 'GET',
-          withAuth: true,
-        },
-      },
-    },
-
-    einCheck: {
-      url: `${base}campaign/ein-check`,
-      method: 'GET',
-      withAuth: true,
-      returnFullResponse: true,
-    },
-  },
-
-  topIssues: {
-    byLocation: {
-      url: `${base}top-issue/by-location`, // non admin, for onboarding
-      method: 'GET',
-      withAuth: true,
-    },
-  },
-
-  //
-  // admin
-  //
-  admin: {
-    deactivateCandidate: {
-      url: `${base}admin/deactivate-candidate-by-campaign`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    candidates: {
-      url: `${base}admin/candidates`,
-      method: 'GET',
-      withAuth: true,
-    },
-    deleteCandidate: {
-      url: `${base}new-candidate`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    reactivateCandidate: {
-      url: `${base}admin/candidate/reactivate`,
-      method: 'PUT',
-      withAuth: true,
-    },
-  },
-
-  uploadBase64Image: {
-    url: `${base}upload-base64-image`,
-    method: 'POST',
-    withAuth: true,
-  },
-
-  doorKnocking: {
     create: {
-      url: `${base}campaign/door-knocking`,
+      path: '/campaigns',
       method: 'POST',
-      withAuth: true,
     },
     update: {
-      url: `${base}campaign/door-knocking`,
+      path: '/campaigns/mine',
       method: 'PUT',
-      withAuth: true,
-    },
-    archive: {
-      url: `${base}campaign/door-knocking/archive`,
-      method: 'PUT',
-      withAuth: true,
-    },
-    list: {
-      url: `${base}campaign/door-knockings`,
-      method: 'GET',
-      withAuth: true,
     },
     get: {
-      url: `${base}campaign/door-knocking`,
+      path: '/campaigns/mine',
       method: 'GET',
-      withAuth: true,
     },
-    delete: {
-      url: `${base}campaign/door-knocking`,
-      method: 'DELETE',
-      withAuth: true,
+    status: {
+      path: '/campaigns/mine/status',
+      method: 'GET',
     },
-    route: {
-      find: {
-        url: `${base}campaign/door-knocking/route`,
-        method: 'GET',
-        withAuth: true,
-      },
-    },
-    survey: {
-      create: {
-        url: `${base}campaign/door-knocking/survey`,
-        method: 'POST',
-        withAuth: true,
-      },
-      find: {
-        url: `${base}campaign/door-knocking/survey`,
-        method: 'GET',
-        withAuth: true,
-      },
-      complete: {
-        url: `${base}campaign/door-knocking/complete-survey`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      skip: {
-        url: `${base}campaign/door-knocking/skip-survey`,
-        method: 'PUT',
-        withAuth: true,
-      },
-      download: {
-        url: `${base}campaign/door-knocking/download`,
-        method: 'GET',
-        withAuth: true,
-      },
-    },
-  },
-  voterData: {
-    pathToVictory: {
-      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
-      url: `${base}voter-data/path-to-victory`,
-      method: 'POST',
-      withAuth: true,
-    },
-  },
-  candidate: {
-    find: {
-      url: `${base}candidate`,
+    findBySlug: {
+      path: '/campaigns/slug/:slug',
       method: 'GET',
     },
     list: {
-      url: `${base}candidates`,
+      path: '/campaigns',
       method: 'GET',
     },
-    delete: {
-      url: `${base}candidate`,
-      method: 'DELETE',
-      withAuth: true, //admin
+    launch: {
+      path: '/campaigns/launch',
+      method: 'POST',
+    },
+    map: {
+      list: {
+        path: '/campaigns/map',
+        method: 'GET',
+      },
+      count: {
+        path: '/campaigns/map/count',
+        method: 'GET',
+      },
+    },
+    ai: {
+      create: {
+        path: '/campaigns/ai',
+        method: 'POST',
+      },
+      rename: {
+        path: '/campaigns/ai/rename',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/ai/:key',
+        method: 'DELETE',
+      },
+    },
+    chat: {
+      get: {
+        path: '/campaigns/ai/chat/:threadId',
+        method: 'GET',
+      },
+      update: {
+        path: '/campaigns/ai/chat/:threadId',
+        method: 'PUT',
+      },
+      create: {
+        path: '/campaigns/ai/chat',
+        method: 'POST',
+      },
+      list: {
+        path: '/campaigns/ai/chat',
+        method: 'GET',
+      },
+      delete: {
+        path: '/campaigns/ai/chat/:threadId',
+        method: 'DELETE',
+      },
+      feedback: {
+        path: '/campaigns/ai/chat/:threadId/feedback',
+        method: 'POST',
+      },
+    },
+    updateHistory: {
+      create: {
+        path: '/campaigns/mine/update-history',
+        method: 'POST',
+      },
+      list: {
+        path: '/campaigns/mine/update-history',
+        method: 'GET',
+      },
+      delete: {
+        path: '/campaigns/mine/update-history/:id',
+        method: 'DELETE',
+      },
+    },
+    campaignPosition: {
+      create: {
+        path: '/campaigns/:id/positions',
+        method: 'POST',
+      },
+      update: {
+        path: '/campaigns/:id/positions/:positionId',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/:id/positions/:positionId',
+        method: 'DELETE',
+      },
+      find: {
+        path: '/campaigns/:id/positions',
+        method: 'GET',
+      },
+    },
+    planVersion: {
+      path: '/campaigns/mine/plan-version',
+      method: 'GET',
     },
   },
+  content: {
+    getByType: {
+      path: '/content/type/:type',
+      method: 'GET',
+    },
+    getById: {
+      path: '/content/:id',
+      method: 'GET',
+    },
+    glossaryBySlug: {
+      path: '/content/type/glossaryItem/by-slug',
+      method: 'GET',
+    },
+    glossaryByLetter: {
+      path: '/content/type/glossaryItem/by-letter',
+      method: 'GET',
+    },
+    articleTags: {
+      path: '/content/article-tags',
+      method: 'GET',
+    },
+    getBlogSections: {
+      path: '/content/blog-articles-by-section',
+      method: 'GET',
+    },
+    blogArticle: {
+      getBySlug: {
+        path: '/content/blog-article/:slug',
+        method: 'GET',
+      },
+      getBySection: {
+        path: '/content/blog-articles-by-section/:sectionSlug',
+        method: 'GET',
+      },
+      getByTag: {
+        path: '/content/blog-articles-by-tag/:tag',
+        method: 'GET',
+      },
+    },
+  },
+  topIssue: {
+    create: {
+      path: '/top-issues',
+      method: 'POST',
+    },
+    update: {
+      path: '/top-issues/:id',
+      method: 'PUT',
+    },
+    delete: {
+      path: '/top-issues/:id',
+      method: 'DELETE',
+    },
+    list: {
+      path: '/top-issues',
+      method: 'GET',
+    },
+    position: {
+      create: {
+        path: '/positions',
+        method: 'POST',
+      },
+      update: {
+        path: '/positions/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/positions/:id',
+        method: 'DELETE',
+      },
+    },
+  },
+  voters: {
+    locations: {
+      path: '/voters/locations',
+      method: 'GET',
+    },
+    voterFile: {
+      get: {
+        path: '/voters/voter-file',
+        method: 'GET',
+      },
+      wakeUp: {
+        path: '/voters/voter-file/wake-up',
+        method: 'GET',
+      },
+      schedule: {
+        path: '/voters/voter-file/schedule',
+        method: 'POST',
+      },
+      helpMessage: {
+        path: '/voters/voter-file/help-message',
+        method: 'POST',
+      },
+      canDownload: {
+        path: '/voters/voter-file/can-download',
+        method: 'GET',
+      },
+    },
+  },
+  admin: {
+    bustCache: {
+      path: '/revalidate',
+      method: 'GET',
+      nextApiRoute: true,
+    },
+    user: {
+      list: {
+        path: '/admin/users',
+        method: 'GET',
+      },
+      create: {
+        path: '/admin/users',
+        method: 'POST',
+      },
+      delete: {
+        path: '/admin/users/:id',
+        method: 'DELETE',
+      },
+      impersonate: {
+        path: '/admin/users/impersonate',
+        method: 'POST',
+      },
+    },
+    campaign: {
+      create: {
+        path: '/admin/campaigns',
+        method: 'POST',
+      },
+      update: {
+        path: '/admin/campaigns/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/admin/campaigns/:id',
+        method: 'DELETE',
+      },
+      victoryMail: {
+        path: '/admin/campaigns/:id/send-victory-email',
+        method: 'POST',
+      },
+      proNoVoterFile: {
+        path: '/admin/campaigns/pro-no-voter-file',
+        method: 'GET',
+      },
+      p2vStats: {
+        path: '/admin/campaigns/p2v-stats',
+        method: 'GET',
+      },
+    },
+  },
+  race: {
+    ballotData: {
+      byYear: {
+        path: '/ballotdata/races-by-year',
+        method: 'GET',
+      },
+    },
+    get: {
+      path: '/races',
+      method: 'GET',
+    },
+    byHashId: {
+      path: '/races/:hashId',
+      method: 'GET',
+    },
+    byProximity: {
+      path: '/races/proximity-cities',
+      method: 'GET',
+    },
+    byCity: {
+      path: '/races/by-city',
+      method: 'GET',
+    },
+    byCounty: {
+      path: '/races/by-county',
+      method: 'GET',
+    },
+    byState: {
+      path: '/races/by-state',
+      method: 'GET',
+    },
+    allForState: {
+      path: '/races/all-state',
+      method: 'GET',
+    },
+  },
+  payments: {
+    createCheckoutSession: {
+      path: '/payments/purchase/checkout-session',
+      method: 'POST',
+    },
+    createPortalSession: {
+      path: '/payments/purchase/portal-session',
+      method: 'POST',
+    },
+  },
+  jobs: {
+    list: {
+      path: '/jobs',
+      method: 'GET',
+    },
+    find: {
+      path: '/jobs/:id',
+      method: 'GET',
+    },
+  },
+  logError: {
+    path: '/error-logger',
+    method: 'POST',
+  },
+  setCookie: {
+    path: '/set-cookie',
+    method: 'POST',
+    nextApiRoute: true,
+  },
 };
-
-// replacing all non authenticated routes with apiBase
-replaceBase(gpApi);
-
-function replaceBase(obj) {
-  Object.keys(obj).forEach((key) => {
-    if (obj[key].url && typeof obj[key].url === 'string') {
-      if (!obj[key].withAuth) {
-        obj[key].url = obj[key].url.replace(appBase, apiBase);
-      }
-    } else if (typeof obj[key] === 'object') {
-      replaceBase(obj[key]);
-    }
-  });
-}
-
-export default gpApi;

@@ -13,7 +13,7 @@ export default function DashboardOrContinue({ closeAll, campaignStatus }) {
   if (!status) {
     return (
       <Button
-        href={`/onboarding/${step || '1'}`}
+        href={`/onboarding/${step || 'account-type'}`}
         onClick={closeAll}
         id="nav-continue-setup"
         color="secondary"
