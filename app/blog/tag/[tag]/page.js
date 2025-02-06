@@ -10,9 +10,13 @@ const fetchArticlesByTag = async (tag) => {
     tag,
   };
 
-  const resp = serverFetch(apiRoutes.content.blogArticle.getByTag, payload, {
-    revalidate: 1,
-  });
+  const resp = await serverFetch(
+    apiRoutes.content.blogArticle.getByTag,
+    payload,
+    {
+      revalidate: 1,
+    },
+  );
 
   return resp.data;
 };
