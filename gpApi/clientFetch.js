@@ -52,8 +52,6 @@ export async function clientFetch(endpoint, data, options = {}) {
 
   const url = buildUrl(path, data, method);
 
-  console.log('fetching', url);
-
   const headers = {};
   if (serverToken) {
     headers.Authorization = `Bearer ${serverToken}`;
