@@ -224,6 +224,10 @@ export const apiRoutes = {
       path: '/content/article-tags',
       method: 'GET',
     },
+    getBlogSections: {
+      path: '/content/blog-articles-by-section',
+      method: 'GET',
+    },
     blogArticle: {
       getBySlug: {
         path: '/content/blog-articles-by-slug/:slug',
