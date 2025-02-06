@@ -236,25 +236,29 @@ export const apiRoutes = {
     },
   },
   voters: {
+    locations: {
+      path: '/voters/locations',
+      method: 'GET',
+    },
     voterFile: {
       get: {
-        path: '/voter-data/voter-file',
+        path: '/voters/voter-file',
         method: 'GET',
       },
       wakeUp: {
-        path: '/voter-data/voter-file/wake-up',
+        path: '/voters/voter-file/wake-up',
         method: 'GET',
       },
       schedule: {
-        path: '/voter-data/voter-file/schedule',
+        path: '/voters/voter-file/schedule',
         method: 'POST',
       },
       helpMessage: {
-        path: '/voter-data/voter-file/help-message',
+        path: '/voters/voter-file/help-message',
         method: 'POST',
       },
       canDownload: {
-        path: '/voter-data/voter-file/can-download',
+        path: '/voters/voter-file/can-download',
         method: 'GET',
       },
     },

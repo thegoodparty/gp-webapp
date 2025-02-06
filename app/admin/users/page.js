@@ -13,7 +13,7 @@ export const metadata = meta;
 export const maxDuration = 60;
 
 const fetchUsers = async () => {
-  const resp = await serverFetch(apiRoutes.admin.users.list);
+  const resp = await serverFetch(apiRoutes.admin.user.list);
   return resp.data;
 };
 

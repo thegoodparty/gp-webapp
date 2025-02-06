@@ -7,8 +7,6 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import { Autocomplete } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import H3 from '@shared/typography/H3';
 import H2 from '@shared/typography/H2';
@@ -375,10 +373,12 @@ export default function AdminVictoryPathPage(props) {
 
   async function getVoterLocations(electionType, state) {
     try {
-      const api = gpApi.voterData.locations;
       setLoadingLocations(true);
-      const locationResp = await gpFetch(api, { electionType, state });
-      const items = locationResp?.locations || [];
+      const locationResp = await clientFetch(apiRoutes.voters.locations, {
+        electionType,
+        state,
+      });
+      const items = locationResp?.data || [];
       setLocations(items);
       setLoadingLocations(false);
     } catch (e) {
