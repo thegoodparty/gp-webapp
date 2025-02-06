@@ -8,12 +8,13 @@ import { formatToPhone } from 'helpers/numberHelper';
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
 import Actions from './Actions';
 import { AddUserButton } from 'app/admin/users/components/AddUserButton';
+import { userIsAdmin } from 'helpers/userHelper';
 
 const buildTableInputData = (users) =>
   users.map((user) => {
     const metaData = user.metaData || {};
-    const userType = user.isAdmin
-      ? 'admin'
+    const userType = userIsAdmin(user.isAdmin)
+      ? 'admin' // TODO: fix this, needs to handle user.roles array now
       : user.candidate
       ? 'candidate'
       : user.role || 'user';

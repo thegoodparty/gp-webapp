@@ -1,23 +1,23 @@
+'use client';
 import { InputLabel, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import NeedHelpSuccess from './NeedHelpSuccess';
 import Button from '@shared/buttons/Button';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export async function sendMessage(type, message) {
   try {
-    const api = gpApi.voterData.helpMessage;
     const payload = {
       type,
       message,
     };
-    return await gpFetch(api, payload);
+    return await clientFetch(apiRoutes.voters.voterFile.helpMessage, payload);
   } catch (e) {
     console.log('error', e);
     return false;

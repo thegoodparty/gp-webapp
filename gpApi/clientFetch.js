@@ -37,7 +37,7 @@ const IS_LOCAL_ENVIRONMENT =
  */
 export async function clientFetch(endpoint, data, options = {}) {
   const { path, method } = endpoint;
-  const { revalidate, serverToken } = options;
+  const { revalidate, serverToken, returnFullResponse } = options;
 
   const url = buildUrl(path, data, method);
 
@@ -48,10 +48,12 @@ export async function clientFetch(endpoint, data, options = {}) {
 
   const shouldCache = revalidate && !IS_LOCAL_ENVIRONMENT;
 
-  let body = data;
-  if (!(data instanceof FormData)) {
-    headers['content-type'] = 'application/json';
-    body = JSON.stringify(data);
+  let body;
+  if (data instanceof FormData) {
+    body = data;
+  } else {
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify(data ?? {}); // to avoid sending empty object
   }
 
   const res = await fetch(url, {
@@ -62,6 +64,10 @@ export async function clientFetch(endpoint, data, options = {}) {
     body: method === 'GET' || method === 'DELETE' ? undefined : body,
     ...(shouldCache ? { next: { revalidate } } : { cache: 'no-store' }),
   });
+
+  if (returnFullResponse) {
+    return res;
+  }
 
   const isJsonResponse = res.headers
     .get('Content-Type')

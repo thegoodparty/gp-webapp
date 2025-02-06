@@ -1,16 +1,15 @@
 'use client';
 import PartyAnimation from '@shared/animations/PartyAnimation';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
 import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 async function launchCampaign() {
   try {

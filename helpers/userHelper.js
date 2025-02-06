@@ -15,7 +15,16 @@ export async function updateUser(updateFields = {}) {
   }
 }
 
+export function userIsAdmin(user) {
+  return userHasRole(user, USER_ROLES.ADMIN);
+}
+
+export function userHasRole(user, role) {
+  return user?.roles?.includes(role);
+}
+
 export const USER_ROLES = {
   SALES: 'sales',
   CAMPAIGN: 'campaign',
+  ADMIN: 'admin',
 };

@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import { SVGIconChooser } from './SVGIconChooser';
+import { useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 import { FaCheck, FaEdit } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
@@ -31,10 +30,6 @@ export const TopIssueDisplay = ({ issue }) => {
 
   return editTopIssueId === issue.id ? (
     <>
-      <SVGIconChooser
-        svgData={editTopIssueIcon}
-        setSvgData={(data) => setEditTopIssueIcon(data)}
-      />
       <TextField
         className="mx-2"
         fullWidth={true}

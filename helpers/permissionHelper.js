@@ -1,15 +1,15 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { getServerToken, getServerUser } from 'helpers/userServerHelper';
+import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import { USER_ROLES } from 'helpers/userHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
+import { userIsAdmin } from 'helpers/userHelper';
 
 async function checkIsAdmin() {
   try {
-    const api = gpApi.admin.isAdmin;
+    const resp = await serverFetch(apiRoutes.user.getUser);
 
-    const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    return userIsAdmin(resp.data);
   } catch (e) {
     console.log('error at fetchDkCampaign', e);
     return false;
@@ -25,7 +25,7 @@ export const canCreateCampaigns = async () => {
 
 export const adminAccessOnly = async () => {
   const user = getServerUser();
-  if (!user?.isAdmin) {
+  if (!userIsAdmin(user)) {
     redirect('/login');
   }
   const isAdmin = await checkIsAdmin();
