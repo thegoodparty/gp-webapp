@@ -1,15 +1,9 @@
-import { appBase } from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-
 export const revalidatePage = async (path) => {
-  const api = {
-    url: `${appBase}/api/revalidate`,
+  const params = new URLSearchParams({ path });
+  const resp = await fetch(`/api/revalidate?${params.toString()}`, {
     method: 'GET',
-  };
-  const payload = {
-    path,
-  };
-  return await gpFetch(api, payload);
+  });
+  return resp.json();
 };
 
 export const revalidateCandidates = async () => {

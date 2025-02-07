@@ -1,16 +1,5 @@
 import { compile, parse } from 'path-to-regexp';
-
-// CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
-//   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
-//   the Next.js app is currently being built and cannot be talked to, so build requests for static content
-//   data should be directed to the API base, not the Next.js application proxy
-const apiBase = Boolean(process.env.CI)
-  ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE;
-
-const versionBase = '/api/v1';
-
-const apiUrl = apiBase + versionBase;
+import { API_ROOT, VERSION_PREFIX } from './routes';
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
