@@ -359,6 +359,16 @@ export const apiRoutes = {
       },
     },
   },
+  payments: {
+    createCheckoutSession: {
+      path: '/payments/purchase/checkout-session',
+      method: 'POST',
+    },
+    createPortalSession: {
+      path: '/payments/purchase/portal-session',
+      method: 'POST',
+    },
+  },
   jobs: {
     list: {
       path: '/jobs',

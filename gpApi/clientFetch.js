@@ -37,23 +37,15 @@ const IS_LOCAL_ENVIRONMENT =
  * @returns {Promise<ApiResponse>} The response object containing the status and parsed data.
  */
 export async function clientFetch(endpoint, data, options = {}) {
-  const { path, method, nextApiRoute } = endpoint;
+  const { method } = endpoint;
   const { revalidate, serverToken, returnFullResponse } = options;
 
-  let url;
-  if (nextApiRoute) {
-    // Next.js API route, use the /api prefix without version prefix
-    url = `/api${path}`;
-  } else {
-    url = buildUrl(path, data, method);
-  }
+  const url = buildUrl(endpoint, data);
 
   const headers = {};
   if (serverToken) {
     headers.Authorization = `Bearer ${serverToken}`;
   }
-
-  const shouldCache = revalidate && !IS_LOCAL_ENVIRONMENT;
 
   let body;
   if (data instanceof FormData) {
@@ -62,6 +54,8 @@ export async function clientFetch(endpoint, data, options = {}) {
     headers['Content-Type'] = 'application/json';
     body = JSON.stringify(data ?? {}); // to avoid sending empty object
   }
+
+  const shouldCache = revalidate && !IS_LOCAL_ENVIRONMENT;
 
   const res = await fetch(url, {
     headers,
@@ -98,7 +92,7 @@ export async function clientFetch(endpoint, data, options = {}) {
  * @param {string} method - The HTTP method being used.
  * @returns {string} The constructed URL with replaced route parameters and appended query parameters.
  */
-function buildUrl(path, data, method) {
+function buildUrl({ path, method, nextApiRoute }, data) {
   // route params
   let pathname = handleRouteParams(path, data);
 
@@ -106,6 +100,11 @@ function buildUrl(path, data, method) {
   if ((method === 'GET' || method === 'DELETE') && data) {
     const params = new URLSearchParams(data);
     pathname = `${pathname}?${params.toString()}`;
+  }
+
+  if (nextApiRoute) {
+    // Next.js API route, use the /api prefix without version prefix
+    return `/api${pathname}`;
   }
 
   // Return a full API URL if running on the server,

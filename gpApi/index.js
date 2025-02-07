@@ -308,28 +308,6 @@ const gpApi = {
       withAuth: true,
     },
   },
-  payments: {
-    createCheckoutSession: {
-      url: `${base}payments/purchase/checkout-session`,
-      method: 'POST',
-      withAuth: true,
-    },
-    updateCheckoutSession: {
-      url: `${base}payments/purchase/checkout-session`,
-      method: 'PATCH',
-      withAuth: true,
-    },
-    deleteCheckoutSession: {
-      url: `${base}payments/purchase/checkout-session`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    createPortalSession: {
-      url: `${base}payments/purchase/portal-session`,
-      method: 'POST',
-      withAuth: true,
-    },
-  },
   candidate: {
     find: {
       url: `${base}candidate`,
