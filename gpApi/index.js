@@ -13,8 +13,6 @@ export let appBase = Boolean(process.env.CI)
 
 let base = `${appBase}/api/v1/`;
 
-export const isProd = apiBase === 'https://api.goodparty.org';
-
 if (!appBase) {
   appBase =
     typeof window !== 'undefined'

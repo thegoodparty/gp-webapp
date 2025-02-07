@@ -4,9 +4,11 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
-import { appBase, isProd } from 'gpApi';
+import { appBase } from 'gpApi';
 import VwoScript from '@shared/scripts/VwoScript';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
+
+const IS_PROD = process.env.VERCEL_ENV === 'production';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
 
@@ -60,7 +62,7 @@ export default function RootLayout({ children }) {
         <meta property="twitter:card" content="summary_large_image" />
         <meta name="theme-color" content="#ffffff" />
         <meta property="fb:app_id" content="241239336921963" />
-        {!isProd && <meta name="robots" content="noindex" />}
+        {!IS_PROD && <meta name="robots" content="noindex" />}
         <link
           rel="icon"
           type="image/png"
