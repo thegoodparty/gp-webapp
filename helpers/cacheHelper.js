@@ -1,9 +1,9 @@
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+
 export const revalidatePage = async (path) => {
-  const params = new URLSearchParams({ path });
-  const resp = await fetch(`/api/revalidate?${params.toString()}`, {
-    method: 'GET',
-  });
-  return resp.json();
+  const resp = await clientFetch(apiRoutes.admin.bustCache, { path });
+  return resp.data;
 };
 
 export const revalidateCandidates = async () => {
