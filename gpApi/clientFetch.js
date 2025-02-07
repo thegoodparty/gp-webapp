@@ -14,6 +14,7 @@ const IS_LOCAL_ENVIRONMENT =
  * @typedef {Object} ApiEndpoint
  * @property {string} path - The request path, which may contain route parameters.
  * @property {string} method - The HTTP method (e.g., 'GET', 'POST', 'PUT', 'DELETE').
+ * @property {boolean} nextApiRoute - Indicates if the endpoint is a Next.js API route (/api folder routes).
  */
 
 /**
@@ -36,10 +37,16 @@ const IS_LOCAL_ENVIRONMENT =
  * @returns {Promise<ApiResponse>} The response object containing the status and parsed data.
  */
 export async function clientFetch(endpoint, data, options = {}) {
-  const { path, method } = endpoint;
+  const { path, method, nextApiRoute } = endpoint;
   const { revalidate, serverToken, returnFullResponse } = options;
 
-  const url = buildUrl(path, data, method);
+  let url;
+  if (nextApiRoute) {
+    // Next.js API route, use the /api prefix without version prefix
+    url = `/api${path}`;
+  } else {
+    url = buildUrl(path, data, method);
+  }
 
   const headers = {};
   if (serverToken) {
@@ -89,7 +96,7 @@ export async function clientFetch(endpoint, data, options = {}) {
  * @param {string} path - The base URL path which may contain route parameter tokens.
  * @param {Object} data - Data object containing values for route parameters and/or query parameters.
  * @param {string} method - The HTTP method being used.
- * @returns {string} The fully constructed URL with replaced route parameters and appended query parameters (if applicable).
+ * @returns {string} The constructed URL with replaced route parameters and appended query parameters.
  */
 function buildUrl(path, data, method) {
   // route params
@@ -101,7 +108,10 @@ function buildUrl(path, data, method) {
     pathname = `${pathname}?${params.toString()}`;
   }
 
-  return `${apiUrl}${pathname}`;
+  // Return a full API URL if running on the server,
+  // otherwise just return the relative path prefixed with /api for proxy
+  const root = typeof window === 'undefined' ? API_ROOT : '/api';
+  return `${root}${VERSION_PREFIX}${pathname}`;
 }
 
 /**

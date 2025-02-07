@@ -167,16 +167,6 @@ const gpApi = {
   },
 
   //
-  // USER
-  //
-  user: {
-    logout: {
-      url: `${base}entrance/logout`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-  },
-  //
   // admin
   //
   admin: {

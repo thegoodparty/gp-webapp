@@ -34,6 +34,11 @@ export const apiRoutes = {
       path: '/authentication/login',
       method: 'POST',
     },
+    logout: {
+      path: '/logout',
+      method: 'DELETE',
+      nextApiRoute: true, // identifies next /api folder route handlers
+    },
     forgotPassword: {
       path: '/authentication/send-recover-password-email',
       method: 'POST',
@@ -304,6 +309,11 @@ export const apiRoutes = {
     },
   },
   admin: {
+    bustCache: {
+      path: '/revalidate',
+      method: 'GET',
+      nextApiRoute: true,
+    },
     user: {
       list: {
         path: '/admin/users',
@@ -362,5 +372,10 @@ export const apiRoutes = {
   logError: {
     path: '/error-logger',
     method: 'POST',
+  },
+  setCookie: {
+    path: '/set-cookie',
+    method: 'POST',
+    nextApiRoute: true,
   },
 };
