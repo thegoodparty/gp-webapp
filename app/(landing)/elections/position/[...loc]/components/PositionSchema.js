@@ -1,7 +1,5 @@
-import { appBase } from 'gpApi';
-import { slugify } from 'helpers/articleHelper';
-import React from 'react';
 import { JsonLd } from 'react-schemaorg';
+import { WEB_APP_ROOT } from 'gpApi/routes';
 
 export default function PositionSchema({ race, loc }) {
   const {
@@ -31,7 +29,7 @@ export default function PositionSchema({ race, loc }) {
     locStr += ` ${state}`;
   }
   const slug = `elections/position/${loc.join('/')}`;
-  const url = `${appBase}/${slug}`;
+  const url = `${WEB_APP_ROOT}/${slug}`;
   const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified';
 
   return (

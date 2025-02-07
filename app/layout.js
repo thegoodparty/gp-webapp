@@ -4,9 +4,9 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
-import { appBase } from 'gpApi';
 import VwoScript from '@shared/scripts/VwoScript';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
+import { WEB_APP_ROOT } from 'gpApi/routes';
 
 const IS_PROD = process.env.VERCEL_ENV === 'production';
 
@@ -43,7 +43,7 @@ const sfPro = localFont({
 
 export const metadata = {
   applicationName: 'GoodParty',
-  metadataBase: new URL(appBase),
+  metadataBase: new URL(WEB_APP_ROOT),
   title: 'GoodParty.org | Empowering independents to run, win and serve.',
   description:
     "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",

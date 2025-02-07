@@ -2,7 +2,6 @@
 import Button from '@shared/buttons/Button';
 import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
-import { appBase } from 'gpApi';
 import { usePathname } from 'next/navigation';
 import { memo, useState } from 'react';
 import { FaLinkedin } from 'react-icons/fa';
@@ -12,6 +11,8 @@ import { MdFacebook, MdShare } from 'react-icons/md';
 export default memo(function ShareMap() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+
+  const appBase = window.location.origin;
   const url = appBase + pathname;
   const encodedUrl = encodeURIComponent(url);
   const messageNoUrl =
