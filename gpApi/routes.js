@@ -1,5 +1,5 @@
 export const API_ROOT =
-  process.env.NEXT_PUBLIC_API_BASE || 'https://api-dev.goodparty.org';
+  process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api-dev.goodparty.org';
 
 // CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
