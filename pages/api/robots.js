@@ -1,9 +1,9 @@
-import gpApi, { appBase, isProd } from 'gpApi';
+export const IS_PROD = process.env.VERCEL_ENV === 'production';
 
 export default async function sitemap(req, res) {
   try {
     let robots;
-    if (isProd) {
+    if (IS_PROD) {
       robots = `User-agent: *
 Disallow: /api
 Disallow: /admin/*
