@@ -2,7 +2,7 @@ import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
 
 export async function fetchContentByType(type, cacheTime = 3600) {
-  return await serverFetch(
+  const resp = await serverFetch(
     apiRoutes.content.getByType,
     {
       type,
@@ -11,4 +11,6 @@ export async function fetchContentByType(type, cacheTime = 3600) {
       revalidate: cacheTime,
     },
   );
+
+  return resp.data;
 }

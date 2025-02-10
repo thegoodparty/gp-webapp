@@ -4,8 +4,6 @@ import Sticky from 'react-stickynode';
 import { useEffect, useState } from 'react';
 import ZipChanger from './ZipChanger';
 import { CircularProgress } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import Modal from '@shared/utils/Modal';
@@ -15,11 +13,15 @@ import H4 from '@shared/typography/H4';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 import { OfficeSelectionFilters } from 'app/(candidate)/onboarding/[slug]/[step]/components/ballotOffices/OfficeSelectionFilters';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
-const fetchRaces = async (zip) => {
-  const api = gpApi.ballotData.races;
-  const payload = { zip };
-  return await gpFetch(api, payload, 3600);
+const fetchRaces = async (zipcode) => {
+  const payload = { zipcode };
+
+  const resp = await clientFetch(apiRoutes.race.ballotData.byYear, payload);
+
+  return resp.data;
 };
 
 export default function BallotRaces(props) {
