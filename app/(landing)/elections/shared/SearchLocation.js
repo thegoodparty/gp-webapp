@@ -2,8 +2,6 @@
 
 import { InputAdornment, Select } from '@mui/material';
 import H2 from '@shared/typography/H2';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { slugify } from 'helpers/articleHelper';
 import { states } from 'helpers/statesHelper';
 import Image from 'next/image';
@@ -11,24 +9,32 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchState = async (state) => {
-  const api = gpApi.race.byState;
   const payload = {
     state,
   };
 
-  return await gpFetch(api, payload, 3600);
+  const resp = await clientFetch(apiRoutes.race.byState, payload, {
+    revalidate: 3600,
+  });
+
+  return resp.data;
 };
 
 const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty;
   const payload = {
     state,
     county,
   };
 
-  return await gpFetch(api, payload, 3600);
+  const resp = await clientFetch(apiRoutes.race.byCounty, payload, {
+    revalidate: 3600,
+  });
+
+  return resp.data;
 };
 
 const nameCompare = ({ name: aName }, { name: bName }) =>
