@@ -198,42 +198,6 @@ const gpApi = {
     withAuth: true,
   },
 
-  ballotData: {
-    races: {
-      url: `${base}ballot-data/races`,
-      method: 'GET',
-      withAuth: true,
-    },
-  },
-
-  race: {
-    byState: {
-      url: `${base}race/by-state`,
-      method: 'GET',
-    },
-    allStates: {
-      // for sitemaps
-      url: `${base}race/all-state`,
-      method: 'GET',
-    },
-    byCounty: {
-      url: `${base}race/by-county`,
-      method: 'GET',
-    },
-    byCity: {
-      url: `${base}race/by-city`,
-      method: 'GET',
-    },
-    byRace: {
-      url: `${base}race`,
-      method: 'GET',
-    },
-    proximity: {
-      url: `${base}race/proximity-cities`,
-      method: 'GET',
-    },
-  },
-
   doorKnocking: {
     create: {
       url: `${base}campaign/door-knocking`,
@@ -304,28 +268,6 @@ const gpApi = {
     pathToVictory: {
       // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
       url: `${base}voter-data/path-to-victory`,
-      method: 'POST',
-      withAuth: true,
-    },
-  },
-  payments: {
-    createCheckoutSession: {
-      url: `${base}payments/purchase/checkout-session`,
-      method: 'POST',
-      withAuth: true,
-    },
-    updateCheckoutSession: {
-      url: `${base}payments/purchase/checkout-session`,
-      method: 'PATCH',
-      withAuth: true,
-    },
-    deleteCheckoutSession: {
-      url: `${base}payments/purchase/checkout-session`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-    createPortalSession: {
-      url: `${base}payments/purchase/portal-session`,
       method: 'POST',
       withAuth: true,
     },

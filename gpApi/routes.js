@@ -359,6 +359,52 @@ export const apiRoutes = {
       },
     },
   },
+  race: {
+    ballotData: {
+      byYear: {
+        path: '/ballotdata/races-by-year',
+        method: 'GET',
+      },
+    },
+    get: {
+      path: '/races',
+      method: 'GET',
+    },
+    byHashId: {
+      path: '/races/:hashId',
+      method: 'GET',
+    },
+    byProximity: {
+      path: '/races/proximity-cities',
+      method: 'GET',
+    },
+    byCity: {
+      path: '/races/by-city',
+      method: 'GET',
+    },
+    byCounty: {
+      path: '/races/by-county',
+      method: 'GET',
+    },
+    byState: {
+      path: '/races/by-state',
+      method: 'GET',
+    },
+    allForState: {
+      path: '/races/all-state',
+      method: 'GET',
+    },
+  },
+  payments: {
+    createCheckoutSession: {
+      path: '/payments/purchase/checkout-session',
+      method: 'POST',
+    },
+    createPortalSession: {
+      path: '/payments/purchase/portal-session',
+      method: 'POST',
+    },
+  },
   jobs: {
     list: {
       path: '/jobs',
