@@ -40,13 +40,8 @@ export async function clientFetch(endpoint, data, options = {}) {
   const { path, method, nextApiRoute } = endpoint;
   const { revalidate, serverToken, returnFullResponse } = options;
 
-  let url;
-  if (nextApiRoute) {
-    // Next.js API route, use the /api prefix without version prefix
-    url = `/api${path}`;
-  } else {
-    url = buildUrl(path, data, method);
-  }
+  // If a Next.js API route, use the /api prefix without version prefix
+  const url = nextApiRoute ? `/api${path}` : buildUrl(path, data, method);
 
   const headers = {};
   if (serverToken) {
