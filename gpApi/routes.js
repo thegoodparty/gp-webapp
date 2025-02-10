@@ -1,16 +1,16 @@
+export const API_ROOT =
+  process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api-dev.goodparty.org';
+
 // CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
 //   the Next.js app is currently being built and cannot be talked to, so build requests for static content
 //   data should be directed to the API base, not the Next.js application proxy
-export const apiBase = Boolean(process.env.CI)
-  ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE || process.env.VERCEL_BRANCH_URL;
+export const WEB_APP_ROOT = process.env.CI
+  ? API_ROOT
+  : process.env.NEXT_PUBLIC_APP_BASE ||
+    `https://${process.env.VERCEL_BRANCH_URL}`;
 
-const versionBase = '/api/v1';
-
-export const apiUrl = apiBase + versionBase;
-
-export const isProd = apiBase === 'https://api.goodparty.org';
+export const VERSION_PREFIX = '/v1';
 
 export const apiRoutes = {
   homepage: {
@@ -33,6 +33,11 @@ export const apiRoutes = {
     login: {
       path: '/authentication/login',
       method: 'POST',
+    },
+    logout: {
+      path: '/logout',
+      method: 'DELETE',
+      nextApiRoute: true, // identifies next /api folder route handlers
     },
     forgotPassword: {
       path: '/authentication/send-recover-password-email',
@@ -203,6 +208,46 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  content: {
+    getByType: {
+      path: '/content/type/:type',
+      method: 'GET',
+    },
+    getById: {
+      path: '/content/:id',
+      method: 'GET',
+    },
+    glossaryBySlug: {
+      path: '/content/type/glossaryItem/by-slug',
+      method: 'GET',
+    },
+    glossaryByLetter: {
+      path: '/content/type/glossaryItem/by-letter',
+      method: 'GET',
+    },
+    articleTags: {
+      path: '/content/article-tags',
+      method: 'GET',
+    },
+    getBlogSections: {
+      path: '/content/blog-articles-by-section',
+      method: 'GET',
+    },
+    blogArticle: {
+      getBySlug: {
+        path: '/content/blog-article/:slug',
+        method: 'GET',
+      },
+      getBySection: {
+        path: '/content/blog-articles-by-section/:sectionSlug',
+        method: 'GET',
+      },
+      getByTag: {
+        path: '/content/blog-articles-by-tag/:tag',
+        method: 'GET',
+      },
+    },
+  },
   topIssue: {
     create: {
       path: '/top-issues',
@@ -236,30 +281,39 @@ export const apiRoutes = {
     },
   },
   voters: {
+    locations: {
+      path: '/voters/locations',
+      method: 'GET',
+    },
     voterFile: {
       get: {
-        path: '/voter-data/voter-file',
+        path: '/voters/voter-file',
         method: 'GET',
       },
       wakeUp: {
-        path: '/voter-data/voter-file/wake-up',
+        path: '/voters/voter-file/wake-up',
         method: 'GET',
       },
       schedule: {
-        path: '/voter-data/voter-file/schedule',
+        path: '/voters/voter-file/schedule',
         method: 'POST',
       },
       helpMessage: {
-        path: '/voter-data/voter-file/help-message',
+        path: '/voters/voter-file/help-message',
         method: 'POST',
       },
       canDownload: {
-        path: '/voter-data/voter-file/can-download',
+        path: '/voters/voter-file/can-download',
         method: 'GET',
       },
     },
   },
   admin: {
+    bustCache: {
+      path: '/revalidate',
+      method: 'GET',
+      nextApiRoute: true,
+    },
     user: {
       list: {
         path: '/admin/users',
@@ -318,5 +372,10 @@ export const apiRoutes = {
   logError: {
     path: '/error-logger',
     method: 'POST',
+  },
+  setCookie: {
+    path: '/set-cookie',
+    method: 'POST',
+    nextApiRoute: true,
   },
 };

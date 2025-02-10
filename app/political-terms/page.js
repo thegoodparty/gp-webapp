@@ -1,16 +1,21 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { fetchContentByKey } from 'helpers/fetchHelper';
 import TermsHomePage from './components/TermsHomePage';
 import pageMetaData from 'helpers/metadataHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 export async function fetchGlossaryByLetter() {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'glossaryItemsByLetter',
-  };
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(
+    apiRoutes.content.glossaryByLetter,
+    undefined,
+    { revalidate: 3600 },
+  );
+  return resp.data;
 }
+
+const fetchGlossaryByTitle = async () => {
+  const resp = await serverFetch(apiRoutes.content.glossaryBySlug);
+  return resp.data;
+};
 
 const meta = pageMetaData({
   title: 'Political Terms & Definitions | GoodParty.org',
@@ -21,11 +26,10 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  const { content } = await fetchGlossaryByLetter();
+  const content = await fetchGlossaryByLetter();
   const a_items = content['A'];
 
-  const glossaryItemsContent = await fetchContentByKey('glossaryItemsByTitle');
-  const glossaryItems = glossaryItemsContent.content;
+  const glossaryItems = await fetchGlossaryByTitle();
 
   let glossaryItemsArray = [];
   Object.keys(glossaryItems).forEach((item) => {
@@ -33,16 +37,17 @@ export default async function Page() {
   });
   glossaryItemsArray.sort();
 
-  const recentGlossaryItemsContent = await fetchContentByKey(
-    'recentGlossaryItems',
-  );
-  const recentGlossaryItems = recentGlossaryItemsContent.content;
+  // TODO: reimplement or remove - we dont have recentGlossaryItems atm
+  // const recentGlossaryItemsContent = await fetchContentByKey(
+  //   'recentGlossaryItems',
+  // );
+  // const recentGlossaryItems = recentGlossaryItemsContent.content;
 
   const childProps = {
     activeLetter: 'A',
     items: a_items,
     glossaryItems: glossaryItemsArray,
-    recentGlossaryItems: recentGlossaryItems,
+    recentGlossaryItems: [],
   };
   return <TermsHomePage {...childProps} />;
 }

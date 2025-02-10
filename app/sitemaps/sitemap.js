@@ -1,41 +1,41 @@
 import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute } from '../../helpers/articleHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 const appBase = process.env.NEXT_PUBLIC_APP_BASE;
 
 export const fetchFAQs = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'faqArticles',
+    type: 'faqArticle',
   };
-  return await gpFetch(api, payload);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload);
+  return resp.data;
 };
 
 export const fetchGlossaryByTitle = async () => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'glossaryItemsByTitle',
-  };
-  return await gpFetch(api, payload);
+  const resp = await serverFetch(apiRoutes.content.glossaryBySlug);
+  return resp.data;
 };
 
 const fetchArticles = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'blogArticles',
+    type: 'blogArticle',
   };
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };
 
 export const fetchSections = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'blogSections',
-    deleteKey: 'articles',
+    type: 'blogSections',
   };
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };
 
 const now = new Date();
@@ -74,10 +74,8 @@ export default async function sitemap() {
     });
   });
   try {
-    const blogRes = await fetchArticles();
-    const blogArticles = blogRes.content;
-    const blogSectionsRes = await fetchSections();
-    const blogSections = blogSectionsRes.content;
+    const blogArticles = await fetchArticles();
+    const blogSections = await fetchSections();
     blogArticles.forEach((article) => {
       mainSitemap.push({
         url: `${appBase}/blog/article/${article.slug}`,
@@ -100,7 +98,7 @@ export default async function sitemap() {
   }
 
   try {
-    const faqArticles = (await fetchFAQs()).content;
+    const faqArticles = await fetchFAQs();
     faqArticles.forEach((article) => {
       mainSitemap.push({
         url: `${appBase}${faqArticleRoute(article)}`,
@@ -122,7 +120,7 @@ export default async function sitemap() {
   });
 
   try {
-    const { content } = await fetchGlossaryByTitle();
+    const content = await fetchGlossaryByTitle();
     Object.keys(content).forEach((slug) => {
       mainSitemap.push({
         url: `${appBase}/political-terms/${slug}`,

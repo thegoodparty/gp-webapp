@@ -11,6 +11,6 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  const { content } = await fetchContent('privacyPage');
+  const content = await fetchContent('privacyPage');
   return <FullContentPage content={content} />;
 }

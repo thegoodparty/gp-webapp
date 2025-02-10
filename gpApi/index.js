@@ -1,4 +1,4 @@
-export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
+let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
 if (!apiBase) {
   apiBase = 'https://api-dev.goodparty.org';
 }
@@ -7,13 +7,11 @@ if (!apiBase) {
 //   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
 //   the Next.js app is currently being built and cannot be talked to, so build requests for static content
 //   data should be directed to the API base, not the Next.js application proxy
-export let appBase = Boolean(process.env.CI)
+let appBase = Boolean(process.env.CI)
   ? process.env.NEXT_PUBLIC_API_BASE
   : process.env.NEXT_PUBLIC_APP_BASE;
 
 let base = `${appBase}/api/v1/`;
-
-export const isProd = apiBase === 'https://api.goodparty.org';
 
 if (!appBase) {
   appBase =
@@ -28,32 +26,6 @@ const gpApi = {
     twitterLogin: {
       url: `${base}entrance/twitter-login`,
       method: 'PUT',
-    },
-  },
-  content: {
-    contentByKey: {
-      url: `${base}content/content-by-key`,
-      method: 'GET',
-    },
-    articlesTitles: {
-      url: `${base}content/blog-articles-titles`,
-      method: 'GET',
-    },
-    articlesBySlug: {
-      url: `${base}content/blog-articles-by-slug`,
-      method: 'GET',
-    },
-    articlesBySection: {
-      url: `${base}content/blog-articles-by-section`,
-      method: 'GET',
-    },
-    articlesByTag: {
-      url: `${base}content/blog-articles-by-tag`,
-      method: 'GET',
-    },
-    articleTags: {
-      url: `${base}content/article-tags`,
-      method: 'GET',
     },
   },
 
@@ -195,16 +167,6 @@ const gpApi = {
   },
 
   //
-  // USER
-  //
-  user: {
-    logout: {
-      url: `${base}entrance/logout`,
-      method: 'DELETE',
-      withAuth: true,
-    },
-  },
-  //
   // admin
   //
   admin: {
@@ -339,12 +301,8 @@ const gpApi = {
     },
   },
   voterData: {
-    locations: {
-      url: `${base}voter-data/locations`,
-      method: 'GET',
-      withAuth: true,
-    },
     pathToVictory: {
+      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
       url: `${base}voter-data/path-to-victory`,
       method: 'POST',
       withAuth: true,

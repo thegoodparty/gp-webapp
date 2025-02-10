@@ -1,17 +1,24 @@
 import { notFound } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchSections } from 'app/blog/shared/fetchSections';
 import BlogTagPage from './components/BlogTagPage';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchArticlesByTag = async (tag) => {
-  const api = gpApi.content.articlesByTag;
   const payload = {
     tag,
   };
 
-  return await gpFetch(api, payload, 1);
+  const resp = await serverFetch(
+    apiRoutes.content.blogArticle.getByTag,
+    payload,
+    {
+      revalidate: 1,
+    },
+  );
+
+  return resp.data;
 };
 
 export async function generateMetadata({ params }) {
@@ -38,7 +45,7 @@ export default async function Page({ params }) {
     return null;
   }
 
-  const { content: sections } = await fetchSections();
+  const sections = await fetchSections();
 
   return (
     <BlogTagPage

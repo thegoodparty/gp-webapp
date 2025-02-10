@@ -22,7 +22,7 @@ export default function ArticleSchema({ article }) {
         articleBody: cmsToPlainText(body),
         articleSection: section.fields?.title ?? '',
         genre: section.fields?.title ?? '',
-        wordCount: readingTime.words,
+        wordCount: readingTime?.words,
         author: {
           name: author.fields.name,
           image: `https:${author.fields.image?.url}`,
