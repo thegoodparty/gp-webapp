@@ -266,7 +266,7 @@ const gpApi = {
   },
   voterData: {
     pathToVictory: {
-      // TODO: not migrated to nest yet!!!
+      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
       url: `${base}voter-data/path-to-victory`,
       method: 'POST',
       withAuth: true,
