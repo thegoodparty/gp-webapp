@@ -9,14 +9,13 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 authFileCheck(test);
 
 test.beforeEach(async ({ page }) => {
+    await skipNonQA(test);
     await page.goto("/dashboard");
     await appNav(page, 'My Profile');
 });
 
 test('Update Campaign Details', async ({ page }) => {
     const caseId = 46;
-    await skipNonQA(test);
-
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
     const newWebsite = 'http://www.' + generateTimeStamp() + '.com/'
@@ -55,8 +54,6 @@ test('Update Campaign Details', async ({ page }) => {
 
 test('Update Office Details', async ({ page }) => {
     const caseId = 47;
-    await skipNonQA(test);
-
     try {
         // Verify user is on campaign details page
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
@@ -105,8 +102,6 @@ test('Update Office Details', async ({ page }) => {
 
 test('Update Your Why Statement', async ({ page }) => {
     const caseId = 48;
-    await skipNonQA(test);
-
     const newWhyStatement = generateTimeStamp() + ' Statement';
 
     try {
@@ -136,8 +131,6 @@ test('Update Your Why Statement', async ({ page }) => {
 
 test('Update Fun Facts about Yourself', async ({ page }) => {
     const caseId = 49;
-    await skipNonQA(test);
-
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
     try {
@@ -166,8 +159,6 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
 
 test('Add/Edit/Delete Opponent', async ({ page }) => {
     const caseId = 50;
-    await skipNonQA(test);
-
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
     const newOpponent = generateTimeStamp() + ' New Opponent';

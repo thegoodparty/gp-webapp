@@ -8,14 +8,13 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 authFileCheck(test);
 
 test.beforeEach(async ({ page }) => {
+    await skipNonQA(test);
     await page.goto("/dashboard")
     await appNav(page, 'Campaign Team');
 });
 
 test('Displays blank campaign team members page', async ({ page }) => {
     const caseId = 45;
-    await skipNonQA(test);
-
     try {
         // Verify user is on the Campaign Team page
         await expect(page.getByRole('heading', { name: 'Campaign Team' })).toBeVisible();
