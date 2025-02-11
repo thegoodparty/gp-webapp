@@ -12,6 +12,7 @@ const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 const testSearchEmail = 'test@pro.co';
 
 test.beforeEach(async ({page}) => {
+    await skipNonQA(test);
     await loginAccount(page, testAdmin, testAdminPassword);
     await page.waitForLoadState('networkidle');
     await page.goto('/admin');
@@ -22,8 +23,6 @@ test.beforeEach(async ({page}) => {
 
 test('Verify admin user can access Admin Campaigns page', async ({page}) => {
     const caseId = 25;
-    await skipNonQA(test);
-
     try {
         // Verify Campaigns page
         await page.getByRole('heading', { name: 'Campaigns' }).isVisible();
@@ -45,8 +44,6 @@ test('Verify admin user can access Admin Campaigns page', async ({page}) => {
 
 test('Verify admin user can impersonate user', async ({page}) => {
     const caseId = 73;
-    await skipNonQA(test);
-
     try {
         // Search and select user for impersonation
         await page.getByLabel('User Email').fill(testSearchEmail);
@@ -73,8 +70,6 @@ test('Verify admin user can impersonate user', async ({page}) => {
 
 test('Verify admin user can add/delete campaigns', async ({page}) => {
     const caseId = 74;
-    await skipNonQA(test);
-
     const testFirstName = faker.person.firstName();
     const testLastName = faker.person.lastName();
     const testEmail = generateEmail();

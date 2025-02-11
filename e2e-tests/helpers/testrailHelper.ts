@@ -52,6 +52,7 @@ export async function skipNonQA(test) {
     const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
     if (!isQAEnv) {
         test.skip('Only executable in the QA environment');
+        return;
     }
 }
 
