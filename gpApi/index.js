@@ -22,13 +22,6 @@ if (!appBase) {
 }
 
 const gpApi = {
-  entrance: {
-    twitterLogin: {
-      url: `${base}entrance/twitter-login`,
-      method: 'PUT',
-    },
-  },
-
   campaign: {
     createDemoCampaign: {
       url: `${base}campaign/demo`,
@@ -158,14 +151,6 @@ const gpApi = {
     },
   },
 
-  topIssues: {
-    byLocation: {
-      url: `${base}top-issue/by-location`, // non admin, for onboarding
-      method: 'GET',
-      withAuth: true,
-    },
-  },
-
   //
   // admin
   //
@@ -264,14 +249,7 @@ const gpApi = {
       },
     },
   },
-  voterData: {
-    pathToVictory: {
-      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
-      url: `${base}voter-data/path-to-victory`,
-      method: 'POST',
-      withAuth: true,
-    },
-  },
+
   candidate: {
     find: {
       url: `${base}candidate`,
