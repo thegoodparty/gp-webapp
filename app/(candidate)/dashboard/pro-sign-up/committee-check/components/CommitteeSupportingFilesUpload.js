@@ -30,7 +30,7 @@ const uploadFileToS3 = async (file, bucket) => {
 
   const { signedUploadUrl } = resp.data;
   const formData = new FormData();
-  formData.append('document', file);
+  formData.append('document', file, fileName);
   return await fetch(signedUploadUrl, {
     method: 'PUT',
     headers: {

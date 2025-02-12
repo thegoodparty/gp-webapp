@@ -17,7 +17,7 @@ import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import { useUser } from '@shared/hooks/useUser';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
-import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginButtons';
+import SocialLoginButtons from './SocialLoginButtons';
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
 import { USER_ROLES } from 'helpers/userHelper';
