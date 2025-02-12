@@ -31,6 +31,7 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   });
+  const [processing, setProcessing] = useState(false);
   const trackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Onboarding Next Button', {
@@ -67,7 +68,9 @@ export default function OfficeStep(props) {
   };
 
   const handleSave = async () => {
+    setProcessing(true);
     if (!canSubmit()) {
+      setProcessing(false);
       return;
     }
     const { position, election, id, filingPeriods } = state.ballotOffice;
@@ -148,6 +151,7 @@ export default function OfficeStep(props) {
     if (updateCallback) {
       await updateCallback();
     }
+    setProcessing(false);
   };
 
   const handleBallotOffice = async (office) => {
@@ -191,7 +195,8 @@ export default function OfficeStep(props) {
           <Button
             size="large"
             className={{ block: true }}
-            disabled={!canSubmit()}
+            disabled={!canSubmit() || processing}
+            loading={processing}
             type="submit"
             onClick={handleSave}
             {...trackingAttrs}
