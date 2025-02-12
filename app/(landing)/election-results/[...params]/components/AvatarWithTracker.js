@@ -1,9 +1,7 @@
 import CandidateAvatar from '@shared/candidates/CandidateAvatar';
 import VictoryTracker from './VictoryTracker';
-import dynamic from 'next/dynamic';
 import QuestionButton from '@shared/buttons/QuestionButton';
 import Link from 'next/link';
-const ImageUploader = dynamic(() => import('./ImageUploader'));
 
 export default function AvatarWithTracker(props) {
   const { candidate, editMode, candidateUrl, priority } = props;
@@ -40,7 +38,6 @@ export default function AvatarWithTracker(props) {
             <CandidateAvatar candidate={candidate} priority={priority} />
           )}
         </div>
-        {editMode ? <ImageUploader {...props} /> : null}
       </div>
     </div>
   );

@@ -23,11 +23,6 @@ if (!appBase) {
 
 const gpApi = {
   campaign: {
-    createDemoCampaign: {
-      url: `${base}campaign/demo`,
-      method: 'POST',
-      withAuth: true,
-    },
     deleteDemoCampaign: {
       url: `${base}campaign/demo`,
       method: 'DELETE',
@@ -175,12 +170,6 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
-  },
-
-  uploadBase64Image: {
-    url: `${base}upload-base64-image`,
-    method: 'POST',
-    withAuth: true,
   },
 
   doorKnocking: {
