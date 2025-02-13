@@ -2,20 +2,20 @@ import { getServerToken, getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
 import ProfilePage from './components/ProfilePage';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+//import gpApi from 'gpApi';
+//import gpFetch from 'gpApi/gpFetch';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 
-async function fetchInvitations(token) {
-  try {
-    const api = gpApi.campaign.volunteerInvitation.listByUser;
+// async function fetchInvitations(token) {
+//   try {
+//     //const api = gpApi.campaign.volunteerInvitation.listByUser;
 
-    return await gpFetch(api, false, false, token);
-  } catch (e) {
-    console.log('error at fetchInvitations', e);
-    return {};
-  }
-}
+//     return await gpFetch(api, false, false, token);
+//   } catch (e) {
+//     console.log('error at fetchInvitations', e);
+//     return {};
+//   }
+// }
 
 const meta = pageMetaData({
   title: 'Profile Settings',
@@ -32,9 +32,9 @@ export default async function Page() {
   const { campaign } = await fetchUserCampaign();
   const { subscriptionCancelAt } = campaign?.details || {};
 
-  const { invitations } = await fetchInvitations(token);
+  //const { invitations } = await fetchInvitations(token);
   const childProps = {
-    invitations,
+    //invitations,
     user,
     isPro: campaign?.isPro,
     subscriptionCancelAt,
