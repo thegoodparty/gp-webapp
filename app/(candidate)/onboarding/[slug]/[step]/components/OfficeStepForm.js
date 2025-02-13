@@ -31,7 +31,7 @@ const fields = [
   },
   {
     key: 'electionDate',
-    label: 'GeneralElection Date',
+    label: 'General Election Date',
     type: 'date',
     required: true,
   },
