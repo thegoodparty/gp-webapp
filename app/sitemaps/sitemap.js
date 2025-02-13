@@ -2,8 +2,7 @@ import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
 import { faqArticleRoute } from '../../helpers/articleHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
-
-const appBase = process.env.NEXT_PUBLIC_APP_BASE;
+import { APP_BASE } from 'appEnv';
 
 export const fetchFAQs = async () => {
   const payload = {
@@ -67,7 +66,7 @@ export default async function sitemap() {
 
   staticUrls.forEach((url) => {
     mainSitemap.push({
-      url: `${appBase}${url}`,
+      url: `${APP_BASE}${url}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 1,
@@ -78,7 +77,7 @@ export default async function sitemap() {
     const blogSections = await fetchSections();
     blogArticles.forEach((article) => {
       mainSitemap.push({
-        url: `${appBase}/blog/article/${article.slug}`,
+        url: `${APP_BASE}/blog/article/${article.slug}`,
         lastModified: article.publishDate,
         changeFrequency: 'monthly',
         priority: 0.9,
@@ -87,7 +86,7 @@ export default async function sitemap() {
 
     blogSections.forEach((section) => {
       mainSitemap.push({
-        url: `${appBase}/blog/section/${section.fields?.slug}`,
+        url: `${APP_BASE}/blog/section/${section.fields?.slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.9,
@@ -101,7 +100,7 @@ export default async function sitemap() {
     const faqArticles = await fetchFAQs();
     faqArticles.forEach((article) => {
       mainSitemap.push({
-        url: `${appBase}${faqArticleRoute(article)}`,
+        url: `${APP_BASE}${faqArticleRoute(article)}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,
@@ -112,7 +111,7 @@ export default async function sitemap() {
   }
   alphabet.forEach((letter) => {
     mainSitemap.push({
-      url: `${appBase}/political-terms/${letter}`,
+      url: `${APP_BASE}/political-terms/${letter}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.6,
@@ -123,7 +122,7 @@ export default async function sitemap() {
     const content = await fetchGlossaryByTitle();
     Object.keys(content).forEach((slug) => {
       mainSitemap.push({
-        url: `${appBase}/political-terms/${slug}`,
+        url: `${APP_BASE}/political-terms/${slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,

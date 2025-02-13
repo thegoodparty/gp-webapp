@@ -6,9 +6,7 @@ import PageWrapper from './shared/layouts/PageWrapper';
 import './globals.css';
 import VwoScript from '@shared/scripts/VwoScript';
 import FullStoryScript from '@shared/scripts/FullStoryScript';
-import { WEB_APP_ROOT } from 'gpApi/routes';
-
-const IS_PROD = process.env.VERCEL_ENV === 'production';
+import { APP_BASE, IS_PROD } from 'appEnv';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
 
@@ -43,7 +41,7 @@ const sfPro = localFont({
 
 export const metadata = {
   applicationName: 'GoodParty',
-  metadataBase: new URL(WEB_APP_ROOT),
+  metadataBase: new URL(APP_BASE),
   title: 'GoodParty.org | Empowering independents to run, win and serve.',
   description:
     "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",

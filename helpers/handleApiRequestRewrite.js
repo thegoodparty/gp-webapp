@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { API_ROOT } from 'gpApi/routes';
+
+import { API_ROOT } from 'appEnv';
 
 const apiRootUrl = new URL(API_ROOT);
 

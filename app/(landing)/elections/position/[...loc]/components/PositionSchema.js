@@ -1,5 +1,5 @@
 import { JsonLd } from 'react-schemaorg';
-import { WEB_APP_ROOT } from 'gpApi/routes';
+import { APP_BASE } from 'appEnv';
 
 export default function PositionSchema({ race, loc }) {
   const {
@@ -29,7 +29,7 @@ export default function PositionSchema({ race, loc }) {
     locStr += ` ${state}`;
   }
   const slug = `elections/position/${loc.join('/')}`;
-  const url = `${WEB_APP_ROOT}/${slug}`;
+  const url = `${APP_BASE}/${slug}`;
   const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified';
 
   return (
