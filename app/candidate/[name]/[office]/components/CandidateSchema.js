@@ -1,6 +1,6 @@
-import { WEB_APP_ROOT } from 'gpApi/routes';
 import React from 'react';
 import { JsonLd } from 'react-schemaorg';
+import { APP_BASE } from 'appEnv';
 
 export default function CandidateSchema({ candidate, slug }) {
   const {
@@ -44,7 +44,7 @@ export default function CandidateSchema({ candidate, slug }) {
         address,
         email,
         sameAs,
-        url: `${WEB_APP_ROOT}/${slug}`,
+        url: `${APP_BASE}/${slug}`,
       }}
     />
   );

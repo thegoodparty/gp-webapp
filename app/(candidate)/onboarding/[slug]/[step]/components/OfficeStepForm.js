@@ -1,5 +1,4 @@
 'use client';
-
 import Button from '@shared/buttons/Button';
 import { useUser } from '@shared/hooks/useUser';
 import RenderInputField from '@shared/inputs/RenderInputField';
@@ -21,7 +20,7 @@ const fields = [
     type: 'select',
     required: true,
     options: [
-      'Local/Township',
+      'Local or Township',
       'City',
       'County',
       'Regional',

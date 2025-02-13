@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
-import { VERSION_PREFIX } from 'gpApi/routes';
+
+import { API_VERSION_PREFIX } from 'appEnv';
 
 const dbRedirects = {
   '/bz':
@@ -105,7 +106,7 @@ export default async function middleware(req) {
     );
   }
 
-  const apiRewriteRequest = pathname.startsWith(`/api${VERSION_PREFIX}`);
+  const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`);
 
   if (apiRewriteRequest) {
     return await handleApiRequestRewrite(req);
