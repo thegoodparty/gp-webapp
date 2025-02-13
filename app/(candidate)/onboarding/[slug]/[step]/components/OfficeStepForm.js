@@ -1,5 +1,4 @@
 'use client';
-
 import Button from '@shared/buttons/Button';
 import { useUser } from '@shared/hooks/useUser';
 import RenderInputField from '@shared/inputs/RenderInputField';
@@ -31,7 +30,7 @@ const fields = [
   },
   {
     key: 'electionDate',
-    label: 'GeneralElection Date',
+    label: 'General Election Date',
     type: 'date',
     required: true,
   },
