@@ -20,7 +20,7 @@ const fields = [
     type: 'select',
     required: true,
     options: [
-      'Local or Township',
+      'Local/Township',
       'City',
       'County',
       'Regional',
