@@ -11,15 +11,15 @@ import {
   MdFileOpen,
   MdFolderShared,
   MdLibraryBooks,
-  MdManageAccounts,
+  //MdManageAccounts,
 } from 'react-icons/md';
 
-const CAMPAIGN_TEAM_MENU_ITEM = {
-  label: 'Campaign Team',
-  icon: <MdManageAccounts />,
-  link: '/dashboard/team',
-  id: 'campaign-team-dashboard',
-};
+// const CAMPAIGN_TEAM_MENU_ITEM = {
+//   label: 'Campaign Team',
+//   icon: <MdManageAccounts />,
+//   link: '/dashboard/team',
+//   id: 'campaign-team-dashboard',
+// };
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -55,7 +55,7 @@ const DEFAULT_MENU_ITEMS = [
     id: 'campaign-details-dashboard',
   },
 
-  CAMPAIGN_TEAM_MENU_ITEM,
+  //CAMPAIGN_TEAM_MENU_ITEM,
   {
     label: 'Free Resources',
     icon: <MdLibraryBooks />,
@@ -88,12 +88,12 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  const notifications = useNotifications() || [];
-  const campaignRequestNotifications = notifications.filter((notification) => {
-    const { data = {}, isRead } = notification || {};
-    const { type } = data;
-    return type === 'campaignRequest' && !isRead;
-  });
+  // const notifications = useNotifications() || [];
+  // const campaignRequestNotifications = notifications.filter((notification) => {
+  //   const { data = {}, isRead } = notification || {};
+  //   const { type } = data;
+  //   return type === 'campaignRequest' && !isRead;
+  // });
   const menuItems = getDashboardMenuItems(campaign, user);
 
   const handleEnterPress = (e) => {
@@ -104,9 +104,9 @@ export default function DashboardMenu({
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
         const { id, link, icon, label } = item;
-        const notificationDot =
-          Boolean(campaignRequestNotifications?.length) &&
-          item === CAMPAIGN_TEAM_MENU_ITEM;
+        // const notificationDot =
+        //   Boolean(campaignRequestNotifications?.length) &&
+        //   item === CAMPAIGN_TEAM_MENU_ITEM;
         return (
           <DashboardMenuItem
             key={label}
@@ -115,7 +115,8 @@ export default function DashboardMenu({
             icon={icon}
             onClick={toggleCallback}
             pathname={pathname}
-            notificationDot={notificationDot}
+            //notificationDot={notificationDot}
+            notificationDot={false}
           >
             {label}
           </DashboardMenuItem>
