@@ -20,15 +20,7 @@ const fields = [
     label: 'Level',
     type: 'select',
     required: true,
-    options: [
-      'Local',
-      'City',
-      'Township',
-      'County',
-      'Regional',
-      'State',
-      'Federal',
-    ],
+    options: ['Local', 'City', 'County', 'Regional', 'State', 'Federal'],
   },
   {
     key: 'electionDate',
