@@ -1,4 +1,4 @@
-export const IS_PROD = process.env.VERCEL_ENV === 'production';
+import { IS_PROD } from 'appEnv';
 
 export default async function sitemap(req, res) {
   try {

@@ -1,14 +1,5 @@
 import { compile, parse } from 'path-to-regexp';
-import { API_ROOT, VERSION_PREFIX } from './routes';
-
-const IS_LOCAL_ENVIRONMENT =
-  Boolean(
-    typeof process !== 'undefined' &&
-      process?.env?.NEXT_PUBLIC_APP_BASE?.includes('localhost'),
-  ) ||
-  Boolean(
-    typeof window !== 'undefined' && window.location.href.includes('localhost'),
-  );
+import { API_ROOT, API_VERSION_PREFIX, IS_LOCAL } from 'appEnv';
 
 /**
  * @typedef {Object} ApiEndpoint
@@ -55,7 +46,7 @@ export async function clientFetch(endpoint, data, options = {}) {
     body = JSON.stringify(data ?? {}); // to avoid sending empty object
   }
 
-  const shouldCache = revalidate && !IS_LOCAL_ENVIRONMENT;
+  const shouldCache = revalidate && !IS_LOCAL;
 
   const res = await fetch(url, {
     headers,
@@ -110,7 +101,7 @@ function buildUrl({ path, method, nextApiRoute }, data) {
   // Return a full API URL if running on the server,
   // otherwise just return the relative path prefixed with /api for proxy
   const root = typeof window === 'undefined' ? API_ROOT : '/api';
-  return `${root}${VERSION_PREFIX}${pathname}`;
+  return `${root}${API_VERSION_PREFIX}${pathname}`;
 }
 
 /**
