@@ -21,9 +21,8 @@ const fields = [
     type: 'select',
     required: true,
     options: [
-      'Local',
+      'Local/Township',
       'City',
-      'Township',
       'County',
       'Regional',
       'State',
@@ -32,7 +31,7 @@ const fields = [
   },
   {
     key: 'electionDate',
-    label: 'GeneralElection Date',
+    label: 'General Election Date',
     type: 'date',
     required: true,
   },
