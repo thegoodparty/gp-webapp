@@ -77,6 +77,8 @@ test('Verify admin user can add/delete campaigns', async ({page}) => {
     const testZipCode = '94066';
     const testParty = 'Independent';
     const role = "San Bruno City Council";
+    const electionLevel = 'City';
+    const electionDate = '2028-11-10';
 
     try {
         // Add a new campaign
@@ -91,6 +93,11 @@ test('Verify admin user can add/delete campaigns', async ({page}) => {
         await page.getByRole('button', { name: 'Step 1 - Create Campaign' }).click();
         await page.waitForLoadState('networkidle');
         await page.getByRole('button', { name: 'Step 2 - Select Office' }).click();
+        await page.getByText('To pull accurate results,').isVisible();
+        await page.getByLabel('Zipcode *').fill(testZipCode);
+        await page.getByRole('combobox').selectOption(electionLevel);
+        await page.getByLabel('General Election Date *').fill(electionDate);
+        await page.getByRole('button', { name: 'Next' }).click();
         await page.getByText("What office are you interested in?").isVisible();
         await page
           .getByRole("progressbar")

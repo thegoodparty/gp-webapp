@@ -116,6 +116,8 @@ export async function createAccount(
   const lastName = userData.lastName;
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
+  const electionLevel = 'City';
+  const electionDate = '2028-11-10';
 
   await page.goto(`${baseURL}/sign-up`);
 
@@ -133,6 +135,11 @@ export async function createAccount(
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
+
+  await page.getByText('To pull accurate results,').isVisible();
+  await page.getByRole('combobox').selectOption(electionLevel);
+  await page.getByLabel('General Election Date *').fill(electionDate);
+  await page.getByRole('button', { name: 'Next' }).click();
 
   await page.getByText("What office are you interested in?").isVisible();
   await page
@@ -153,6 +160,7 @@ export async function createAccount(
   await page.getByRole("button", { name: "Submit" }).click();
 
   await page.getByText("View Dashboard").click();
+  await page.waitForLoadState('networkidle');
 }
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {

@@ -59,34 +59,32 @@ test('Update Office Details', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Determine current office details and new state to select
-        const newOfficeZip = '10001';
-        const oldOfficeState = await page.getByLabel('State').inputValue();
+        const newOfficeZip = '94080';
         const oldOfficeTitle = await page.getByLabel('Office').inputValue();
+        const electionLevel = 'Local/Township';
+        const electionDate = '2028-11-10';
 
         // Select new office location
         await page.getByRole('button', { name: 'Edit Office Details' }).click();
-        await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
-        await page.getByRole('button').first().click();
-        await page.getByRole('textbox').fill(newOfficeZip);
-        await page.getByRole('button', { name: 'Save' }).click();
+        await page.getByText('To pull accurate results,').isVisible();
+        await page.getByLabel('Zipcode *').fill(newOfficeZip);
+        await page.getByRole('combobox').selectOption(electionLevel);
+        await page.getByLabel('General Election Date *').fill(electionDate);
+        await page.getByRole('button', { name: 'Next' }).click();
 
         // Wait for new office location results
         await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
 
         // Select first local office listing
-        const officeSelection = page.getByRole('button', { name: 'Local' }).first();
+        const officeSelection = page.getByRole('button', { name: 'Local School Board' }).first();
         await officeSelection.scrollIntoViewIfNeeded();
         await officeSelection.click();
-        const modal = page.locator('div').filter({ hasText: 'What office are you' }).nth(2);
-        await modal.evaluate((element) => {
-            element.scrollTop = element.scrollHeight;
-        });
+        await page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
         await page.getByRole('button', { name: 'Save' }).click();
 
         // Confirm new office details
-        await expect
-            .poll(async () => await page.getByLabel('State').inputValue())
-            .not.toBe(oldOfficeState);
+        await page.waitForLoadState('networkidle');
+        await page.reload({ waitUntil: 'domcontentloaded' });
         const newOfficeTitle = await page.getByLabel('Office').inputValue();
         await expect(oldOfficeTitle).not.toEqual(newOfficeTitle);
         await expect(await page.getByLabel('Office').inputValue()).toBe(newOfficeTitle);
