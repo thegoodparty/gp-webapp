@@ -19,7 +19,7 @@ export default function RightSide({ campaignStatus }) {
   const [dashboardOpen, setDashboardOpen] = useState(false);
 
   const pathname = usePathname();
-  const isDashboardPath = pathname?.startsWith('/dashboard')
+  const isDashboardPath = pathname?.startsWith('/dashboard');
   const isOnboardingPath = pathname?.startsWith('/onboarding');
 
   const toggleProfile = () => {
@@ -78,7 +78,9 @@ export default function RightSide({ campaignStatus }) {
       ) : (
         <>
           <Link href="/login" id="nav-login" className="lg:mr-3 xl:mr-6">
-            <div className="font-medium text-base" data-testid="nav-login">Login</div>
+            <div className="font-medium text-base" data-testid="nav-login">
+              Login
+            </div>
           </Link>
           <NavButton
             href="/sign-up"

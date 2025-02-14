@@ -1,30 +1,34 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import { notFound, redirect, permanentRedirect } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { notFound, permanentRedirect } from 'next/navigation';
 import ElectionsCountyPage from './components/ElectionsCountyPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty;
   const payload = {
     state,
     county,
   };
 
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.race.byCounty, payload, {
+    revalidate: 3600,
+  });
+
+  return resp.data;
 };
 
 const fetchPosition = async (id) => {
-  const api = gpApi.race.byRace;
   const payload = {
-    id,
+    hashId: id,
   };
 
-  console.log('api', api);
+  const resp = await serverFetch(apiRoutes.race.byHashId, payload, {
+    revalidate: 0,
+  });
 
-  return await gpFetch(api, payload, 0);
+  return resp.data;
 };
 
 const year = new Date().getFullYear();
@@ -63,12 +67,12 @@ export default async function Page({ params }) {
   ];
   const articles = [];
   for (const slug of articleSlugs) {
-    const { content } = await fetchArticle(slug);
+    const content = await fetchArticle(slug);
     articles.push(content);
   }
   if (state.length > 2) {
     // state is the slug, county is the id
-    const { race } = await fetchPosition(params.county); // this is the id
+    const race = await fetchPosition(params.county); // this is the id
     if (!race) {
       notFound();
     }

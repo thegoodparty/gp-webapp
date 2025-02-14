@@ -32,8 +32,11 @@ export default function EditCandidatePosition({
     if (candidatePosition.isCustom) {
       await handleDeleteCustom();
     } else {
-      const deleteResp = await deleteCandidatePosition(candidatePosition.id);
-      if (!deleteResp || deleteResp === false) {
+      const deleteResp = await deleteCandidatePosition(
+        candidatePosition.id,
+        campaign.id,
+      );
+      if (!deleteResp || deleteResp.ok === false) {
         errorSnackbar(
           'Error deleting item. Please report an issue on the Feedback sidebar.',
         );
@@ -73,6 +76,7 @@ export default function EditCandidatePosition({
       const updateResp = await updateCandidatePosition(
         candidatePosition.id,
         description,
+        campaign.id,
       );
       if (!updateResp || updateResp === false) {
         errorSnackbar(

@@ -1,7 +1,5 @@
 'use client';
 
-import WarningButton from '@shared/buttons/WarningButton';
-import ImageUpload from '@shared/inputs/ImageUpload';
 import ImageUploadWithCrop from '@shared/inputs/ImageUploadWithCrop';
 import { revalidateCandidates } from 'helpers/cacheHelper';
 

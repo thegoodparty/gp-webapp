@@ -3,6 +3,8 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionPage from './components/ElectionPage';
 import pageMetaData from 'helpers/metadataHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 // import ElectionSchema from './ElectionSchema';
 
 export const fetchCandidate = async (slug) => {
@@ -19,14 +21,15 @@ export const fetchCandidate = async (slug) => {
 };
 
 export const fetchElection = async (slug) => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'elections',
-    subKey: 'slug',
-    subValue: slug,
+    type: 'election',
   };
 
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload);
+
+  const elections = resp.data;
+
+  return elections.find((election) => election.slug === slug);
 };
 
 export async function generateMetadata({ params }) {
@@ -34,7 +37,7 @@ export async function generateMetadata({ params }) {
   const city = paramsList?.length > 0 ? paramsList[0] : false;
   const year = paramsList?.length > 1 ? paramsList[1] : false;
   const slug = `${city}-${year}`;
-  const { content } = await fetchElection(slug);
+  const content = await fetchElection(slug);
 
   const meta = pageMetaData({
     title: content?.pageTitle,
@@ -56,7 +59,7 @@ export default async function Page({ params }) {
     notFound();
   }
   const slug = `${city}-${year}`;
-  const { content } = await fetchElection(slug);
+  const content = await fetchElection(slug);
   if (!content) {
     notFound();
   }

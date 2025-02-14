@@ -2,17 +2,20 @@ import pageMetaData from 'helpers/metadataHelper';
 import ElectionsStatePage from './components/ElectionsStatePage';
 import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const fetchState = async (state) => {
-  const api = gpApi.race.byState;
   const payload = {
     state,
   };
 
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.race.byState, payload, {
+    revalidate: 3600,
+  });
+
+  return resp.data;
 };
 
 const year = new Date().getFullYear();
@@ -43,7 +46,7 @@ export default async function Page({ params }) {
   ];
   const articles = [];
   for (const slug of articleSlugs) {
-    const { content } = await fetchArticle(slug);
+    const content = await fetchArticle(slug);
     articles.push(content);
   }
 

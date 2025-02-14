@@ -53,7 +53,7 @@ export default function AiContent({ campaign }) {
   const [updatedVersions, setUpdatedVersions] = useState(false);
 
   const updateVersionsCallback = async () => {
-    const { versions } = await fetchCampaignVersions();
+    const versions = await fetchCampaignVersions();
     setUpdatedVersions(versions);
   };
 

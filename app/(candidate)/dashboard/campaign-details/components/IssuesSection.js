@@ -39,12 +39,12 @@ export default function IssuesSection(props) {
   }, [candidatePositions, campaign.details?.customIssues]);
 
   const completeCallback = async () => {
-    const res = await loadCandidatePosition(props.campaign.slug);
-    setCandidatePositions(res.candidatePositions);
-    const res2 = await getCampaign();
+    const candidatePositions = await loadCandidatePosition(campaign.id);
+    setCandidatePositions(candidatePositions);
+    const campaign = await getCampaign();
 
     setEditIssuePosition(false);
-    setCampaign(res2.campaign);
+    setCampaign(campaign);
   };
 
   const handleDeleteConfirmation = async () => {
@@ -59,7 +59,7 @@ export default function IssuesSection(props) {
           },
         });
       } else if (issue.id) {
-        await deleteCandidatePosition(issue.id);
+        await deleteCandidatePosition(issue.id, campaign.id);
         setCandidatePositions(
           candidatePositions.filter((position) => position.id !== issue.id),
         );

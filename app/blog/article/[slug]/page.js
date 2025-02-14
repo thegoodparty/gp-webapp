@@ -1,24 +1,27 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const fetchArticle = async (slug) => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'blogArticles',
-    subKey: 'slug',
-    subValue: slug,
-  };
+  const resp = await serverFetch(
+    apiRoutes.content.blogArticle.getBySlug,
+    {
+      slug,
+    },
+    {
+      revalidate: 3600,
+    },
+  );
 
-  return await gpFetch(api, payload, 3600);
+  return resp.data;
 };
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { content } = await fetchArticle(slug);
+  const content = await fetchArticle(slug);
 
   const meta = pageMetaData({
     title: `${content?.title} | GoodParty.org`,
@@ -35,7 +38,7 @@ export default async function Page({ params }) {
     redirect('/blog');
   }
 
-  const { content } = await fetchArticle(slug);
+  const content = await fetchArticle(slug);
 
   if (!content) {
     redirect('/blog');

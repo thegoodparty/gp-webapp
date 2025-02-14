@@ -1,16 +1,16 @@
 'use client';
 
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export async function subscribeEmail(payload) {
   try {
-    await gpFetch(gpApi.homepage.subscribeEmail, payload);
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
     return true;
   } catch (e) {
     console.log('error', e);

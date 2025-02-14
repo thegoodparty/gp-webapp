@@ -2,8 +2,6 @@
 import RaceCard from './RaceCard';
 import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import Modal from '@shared/utils/Modal';
@@ -12,11 +10,15 @@ import { useRouter } from 'next/navigation';
 import Button from '@shared/buttons/Button';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
-const fetchRaces = async (zip, level, electionDate) => {
-  const api = gpApi.ballotData.races;
-  const payload = { zip, level, electionDate };
-  return await gpFetch(api, payload, 3600);
+const fetchRaces = async (zipcode, level, electionDate) => {
+  const payload = { zipcode, level, electionDate };
+
+  const resp = await clientFetch(apiRoutes.race.ballotData.byYear, payload);
+
+  return resp.data;
 };
 
 export default function BallotRaces(props) {
@@ -142,7 +144,7 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {races &&
+          {Array.isArray(races) &&
             races.map((race, index) => (
               <RaceCard
                 key={index}

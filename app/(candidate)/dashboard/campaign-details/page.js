@@ -4,9 +4,9 @@ import candidateAccess from '../shared/candidateAccess';
 import DetailsPage from './components/DetailsPage';
 import { getServerUser } from 'helpers/userServerHelper';
 import {
-  fetchIssues,
-  loadCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+  serverFetchIssues,
+  serverLoadCandidatePosition,
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
 
 const meta = pageMetaData({
   title: 'campaign Details | GoodParty.org',
@@ -18,9 +18,9 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const { campaign } = await fetchUserCampaign();
-  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-  const { topIssues } = await fetchIssues();
+  const campaign = await fetchUserCampaign();
+  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
+  const topIssues = await serverFetchIssues();
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {

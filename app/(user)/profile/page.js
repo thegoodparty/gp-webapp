@@ -16,7 +16,7 @@ export default async function Page() {
     redirect('/login');
   }
   const token = getServerToken();
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
   const { subscriptionCancelAt } = campaign?.details || {};
 
   const childProps = {

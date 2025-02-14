@@ -1,20 +1,21 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { adminAccessOnly } from 'helpers/permissionHelper';
-import { getServerToken } from 'helpers/userServerHelper';
 import AdminVictoryPathPage from './components/CandidateMetricsPage';
 import pageMetaData from 'helpers/metadataHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 import { fetchCampaignBySlugAdminOnly } from 'app/admin/shared/fetchCampaignBySlugAdminOnly';
 
 async function fetchAdminUpdateHistory(slug) {
   try {
-    const api = gpApi.campaign.UpdateHistory.list;
     const payload = {
       slug,
     };
-    const token = getServerToken();
-    return await gpFetch(api, payload, false, token);
+    const resp = await serverFetch(
+      apiRoutes.campaign.updateHistory.list,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at fetchUpdateHistory', e);
     return {};
@@ -32,8 +33,8 @@ export const maxDuration = 60;
 export default async function Page({ params }) {
   await adminAccessOnly();
   const { slug } = params;
-  const { campaign } = await fetchCampaignBySlugAdminOnly(slug);
-  const { updateHistory } = await fetchAdminUpdateHistory(slug);
+  const campaign = await fetchCampaignBySlugAdminOnly(slug);
+  const updateHistory = await fetchAdminUpdateHistory(slug);
 
   const childProps = {
     pathname: '/admin/candidates',

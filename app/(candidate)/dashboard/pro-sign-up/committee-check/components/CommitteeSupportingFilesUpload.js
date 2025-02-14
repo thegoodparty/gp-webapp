@@ -1,6 +1,4 @@
-import React, { useRef, useState } from 'react';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
+import { useRef, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { CircularProgress } from '@mui/material';
@@ -8,6 +6,8 @@ import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const FILE_LIMIT_MB = 10;
 
@@ -21,14 +21,14 @@ const getEinSupportDocumentFolderName = (id, slug) =>
 
 const uploadFileToS3 = async (file, bucket) => {
   const { name: fileName, type: fileType } = file;
-  const { signedUploadUrl } = await gpFetch(
-    gpApi.user.files.generateSignedUploadUrl,
-    {
-      fileType,
-      fileName,
-      bucket,
-    },
-  );
+
+  const resp = await clientFetch(apiRoutes.user.files.generateSignedUploadUrl, {
+    fileType,
+    fileName,
+    bucket,
+  });
+
+  const { signedUploadUrl } = resp.data;
   const formData = new FormData();
   formData.append('document', file);
   return await fetch(signedUploadUrl, {

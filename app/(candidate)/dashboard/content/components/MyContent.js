@@ -147,8 +147,7 @@ export default function MyContent(props) {
   ]);
 
   async function getUserCampaign() {
-    const campaignResponse = await getCampaign();
-    const campaignObj = campaignResponse.campaign;
+    const campaignObj = await getCampaign();
     if (campaignObj) {
       setCampaign(campaignObj);
       const campaignPlanObj = campaignObj[AI_CONTENT_SUB_SECTION_KEY];

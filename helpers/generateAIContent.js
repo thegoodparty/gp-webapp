@@ -1,14 +1,14 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const generateAIContent = async (key, chat, inputValues = {}) => {
   try {
-    const api = gpApi.campaign.ai.create;
-    return await gpFetch(api, {
+    const resp = await clientFetch(apiRoutes.campaign.ai.create, {
       key,
       chat,
       inputValues,
     });
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

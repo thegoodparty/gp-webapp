@@ -1,8 +1,8 @@
 import pageMetaData from 'helpers/metadataHelper';
 import DeclarePage from './components/DeclarePage';
 import { Libre_Baskerville, Tangerine } from 'next/font/google';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 const baskerville = Libre_Baskerville({
   weight: ['400', '700'],
@@ -16,8 +16,10 @@ const tangerine = Tangerine({
 
 async function fetchSignatures() {
   try {
-    const api = gpApi.homepage.declarationSignatures.list;
-    return await gpFetch(api);
+    const resp = await serverFetch(
+      apiRoutes.homepage.declarationSignatures.list,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at fetchSignatures', e);
     return {};

@@ -1,7 +1,7 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import FaqsPage from './components/FaqsPage';
 import pageMetaData from 'helpers/metadataHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 const meta = pageMetaData({
   title: 'FAQs | GoodParty.org',
@@ -11,13 +11,17 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 const fetchContent = async () => {
-  const api = { ...gpApi.content.contentByKey };
-  api.url += '?key=articleCategories';
-  return await gpFetch(api, false, 3600);
+  const resp = await serverFetch(
+    apiRoutes.content.getByType,
+    { type: 'articleCategories' },
+    { revalidate: 3600 },
+  );
+
+  return resp.data;
 };
 
 export default async function Page({ params, searchParams }) {
-  const { content } = await fetchContent();
+  const content = await fetchContent();
   const childProps = {
     content,
   };

@@ -2,9 +2,7 @@
 import { isValidEmail } from '@shared/inputs/EmailInput.js';
 import PasswordInput from '@shared/inputs/PasswrodInput.js';
 import MaxWidth from '@shared/layouts/MaxWidth';
-import gpApi from 'gpApi/index.js';
 import { Fragment, useState } from 'react';
-import gpFetch from 'gpApi/gpFetch.js';
 import H1 from '@shared/typography/H1';
 import { isValidPassword } from '@shared/inputs/IsValidPassword';
 import Paper from '@shared/utils/Paper';
@@ -14,6 +12,8 @@ import Link from 'next/link';
 import { useUser } from '@shared/hooks/useUser';
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Button from '@shared/buttons/Button';
 
@@ -66,8 +66,6 @@ export const validateZip = (zip) => {
 
 async function register(firstName, lastName, email, phone, zip, password) {
   try {
-    const api = gpApi.entrance.register;
-
     const payload = {
       firstName,
       lastName,
@@ -76,11 +74,12 @@ async function register(firstName, lastName, email, phone, zip, password) {
       zip,
       password,
     };
-    const res = await gpFetch(api, payload);
-    if (res.status === 409) {
+
+    const resp = await clientFetch(apiRoutes.authentication.register, payload);
+    if (resp.status === 409) {
       return { exists: true };
     }
-    return res;
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

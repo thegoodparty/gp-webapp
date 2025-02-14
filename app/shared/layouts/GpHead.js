@@ -1,8 +1,8 @@
 import React from 'react';
+import { APP_BASE } from 'appEnv';
 
 function GpHead({ title, description, image, slug = '/' }) {
-  const appBase = process.env.NEXT_PUBLIC_APP_BASE;
-  const canonical = appBase + slug;
+  const canonical = APP_BASE + slug;
   return (
     <>
       <title>{title}</title>

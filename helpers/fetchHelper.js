@@ -1,10 +1,16 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
-export async function fetchContentByKey(key, cacheTime = 3600) {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key,
-  };
-  return await gpFetch(api, payload, cacheTime);
+export async function fetchContentByType(type, cacheTime = 3600) {
+  const resp = await serverFetch(
+    apiRoutes.content.getByType,
+    {
+      type,
+    },
+    {
+      revalidate: cacheTime,
+    },
+  );
+
+  return resp.data;
 }

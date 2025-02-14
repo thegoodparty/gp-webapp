@@ -1,6 +1,4 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { useRouter } from 'next/navigation';
 import GoogleLoginButton from './GoogleLoginButton';
@@ -10,11 +8,16 @@ import Overline from '@shared/typography/Overline';
 import saveToken from 'helpers/saveToken';
 import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function login(payload) {
   try {
-    const api = gpApi.entrance.socialLogin;
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.authentication.socialLogin,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

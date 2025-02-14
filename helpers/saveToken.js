@@ -1,11 +1,9 @@
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+
 const saveToken = async (token) => {
-  return await fetch('/api/set-cookie', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token }),
-  });
+  const resp = await clientFetch(apiRoutes.setCookie, { token });
+  return resp.data;
 };
 
 export default saveToken;

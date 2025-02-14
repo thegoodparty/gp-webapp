@@ -3,18 +3,41 @@
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { deleteCookie, getCookie } from 'helpers/cookieHelper';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function updateCampaign(attr, slug) {
   try {
     if (!Array.isArray(attr) && typeof attr === 'object') {
       attr = [attr];
     }
-    const api = gpApi.campaign.update;
+
+    // TODO: update callers of this function to use the new api format
+    // convert the attr array to an object formatted for new api
+    const updates = attr.reduce((acc, { key, value }) => {
+      const keys = key.split('.');
+      let current = acc;
+      keys.forEach((k, index) => {
+        if (index === keys.length - 1) {
+          // Set the leaf value.
+          current[k] = value;
+        } else {
+          // Ensure the parent exists and is an object.
+          if (!current[k] || typeof current[k] !== 'object') {
+            current[k] = {};
+          }
+          current = current[k];
+        }
+      });
+      return acc;
+    }, {});
+
     const payload = {
-      attr,
+      ...updates,
       slug, // admin only
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.campaign.update, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -23,8 +46,8 @@ export async function updateCampaign(attr, slug) {
 
 export async function getCampaign() {
   try {
-    const api = gpApi.campaign.get;
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.get);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -33,8 +56,8 @@ export async function getCampaign() {
 
 export async function fetchCampaignVersions() {
   try {
-    const api = gpApi.campaign.onboarding.planVersions;
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.planVersion);
+    return resp.data;
   } catch (e) {
     console.log('error at fetchCampaignVersions', e);
     return {};
@@ -64,8 +87,9 @@ export async function createDemoCampaign() {
 
 export async function createCampaign() {
   try {
-    const api = gpApi.campaign.create;
-    const { slug } = await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.create);
+    const { slug } = resp.data;
+
     if (slug) {
       deleteCookie('afterAction');
       deleteCookie('returnUrl');
@@ -87,8 +111,8 @@ export async function createCampaign() {
 
 export async function updateUserMeta(meta) {
   try {
-    const api = gpApi.user.updateMeta;
-    return await gpFetch(api, { meta });
+    const resp = await clientFetch(apiRoutes.user.updateMeta, { meta });
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

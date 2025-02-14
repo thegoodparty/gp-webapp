@@ -1,15 +1,13 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { deleteUserCookies } from 'helpers/cookieHelper';
 import { useEffect } from 'react';
-// import { redirect } from 'next/navigation';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function fetchLogout() {
   // clear cookies set by server.
   try {
-    const api = gpApi.user.logout;
-    return await gpFetch(api, false, false);
+    return await clientFetch(apiRoutes.authentication.logout);
   } catch (e) {
     console.log('error at fetchLogout', e);
     return false;

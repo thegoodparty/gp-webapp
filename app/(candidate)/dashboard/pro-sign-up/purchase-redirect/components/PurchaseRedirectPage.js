@@ -2,19 +2,19 @@
 import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { updateUser } from 'helpers/userHelper';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const doRedirect = async (currentTimeoutId) => {
   clearTimeout(currentTimeoutId);
   try {
-    const { redirectUrl } =
-      (await gpFetch(gpApi.payments.createCheckoutSession, null, false)) || {};
+    const resp = await clientFetch(apiRoutes.payments.createCheckoutSession);
+    const { redirectUrl } = resp.data || {};
     await updateUser();
     if (redirectUrl) {
       window.location.href = redirectUrl;

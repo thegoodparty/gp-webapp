@@ -5,11 +5,11 @@ import { IoIosText } from 'react-icons/io';
 import { FaFacebookF, FaTwitter } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import { AiOutlineLink } from 'react-icons/ai';
-import { appBase } from 'gpApi';
 import Overline from '@shared/typography/Overline';
 
 export default function ShareBlog({ className }) {
   const pathname = usePathname();
+  const appBase = window.location.origin;
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';
   const encodedUrl = encodeURIComponent(url);

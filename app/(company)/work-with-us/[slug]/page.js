@@ -1,18 +1,19 @@
 import { notFound } from 'next/navigation';
-
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 import JobPage from '../components/JobPage';
 import pageMetaData from 'helpers/metadataHelper';
 
 export const fetchJob = async (slug) => {
   try {
-    const api = gpApi.jobs.find;
     const payload = {
       id: slug,
     };
+    const resp = await serverFetch(apiRoutes.jobs.find, payload, {
+      revalidate: 3600,
+    });
 
-    return await gpFetch(api, payload, 3600);
+    return resp.data;
   } catch (e) {
     console.log('error fetching job', e);
     return null;
@@ -21,7 +22,7 @@ export const fetchJob = async (slug) => {
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { job } = await fetchJob(slug);
+  const job = await fetchJob(slug);
   if (!job) {
     notFound();
   }
@@ -39,7 +40,7 @@ export default async function Page({ params }) {
     notFound();
   }
 
-  const { job } = await fetchJob(slug);
+  const job = await fetchJob(slug);
   if (!job) {
     notFound();
   }
