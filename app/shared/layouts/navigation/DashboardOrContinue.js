@@ -24,15 +24,15 @@ export default function DashboardOrContinue({ closeAll, campaignStatus }) {
     );
   }
 
-  const isVolunteer = status === 'volunteer';
+  //const isVolunteer = status === 'volunteer';
 
   return (
     <div className="ml-4">
-      {['candidate', 'volunteer', 'manager'].includes(status) ? (
+      {['candidate'].includes(status) ? (
         <Button
-          href={isVolunteer ? '/volunteer-dashboard' : '/dashboard'}
+          href={'/dashboard'}
           onClick={closeAll}
-          id={isVolunteer ? 'nav-volunteer-dashboard' : 'nav-dashboard'}
+          id={'nav-dashboard'}
           className="font-medium !text-base !py-2 border-none"
         >
           Dashboard

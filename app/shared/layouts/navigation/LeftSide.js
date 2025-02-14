@@ -10,7 +10,7 @@ import Body2 from '@shared/typography/Body2';
 const HIDE_NAV_PATHS = [
   '/onboarding',
   '/dashboard',
-  '/volunteer-dashboard',
+  //'/volunteer-dashboard',
   '/profile',
 ];
 
