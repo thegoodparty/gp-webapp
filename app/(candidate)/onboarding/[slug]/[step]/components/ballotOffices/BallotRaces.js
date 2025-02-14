@@ -149,7 +149,7 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {Array.isArray(races) &&
+          {races &&
             races.map((race, index) => (
               <RaceCard
                 key={index}
