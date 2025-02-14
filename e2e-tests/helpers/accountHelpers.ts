@@ -113,7 +113,7 @@ export async function createAccount(
 ) {
   const loginPageHeader = "Join GoodParty.org";
   const firstName = userData.firstName;
-  const lastName = userData.lastName;
+  const lastName = 'Playwright';
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'City';
