@@ -1,4 +1,6 @@
 'use client';
+import PrimaryButton from '@shared/buttons/PrimaryButton';
+import H1 from '@shared/typography/H1';
 import {
   onboardingStep,
   updateCampaign,
@@ -11,7 +13,6 @@ import gpFetch from 'gpApi/gpFetch';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
 import OfficeStepForm from './OfficeStepForm';
-
 async function runP2V(slug) {
   try {
     const api = gpApi.voterData.pathToVictory;
@@ -30,8 +31,6 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   });
-  const [part, setPart] = useState(1); // this step has two parts.
-
   const [processing, setProcessing] = useState(false);
   const trackingAttrs = useMemo(
     () =>
@@ -177,22 +176,6 @@ export default function OfficeStep(props) {
         election: { id: campaign.details.electionId },
       }
     : false;
-
-  const handleNextPart = (zip, level, electionDate) => {
-    setState({
-      ...state,
-      ballotSearch: {
-        zip,
-        level,
-        electionDate,
-      },
-    });
-    setPart(2);
-  };
-
-  const handleBack = () => {
-    setPart(1);
-  };
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
