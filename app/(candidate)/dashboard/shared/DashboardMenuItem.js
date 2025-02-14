@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { NotificationDot } from '@shared/utils/NotificationDot';
 
 export const DashboardMenuItem = ({
   id,
@@ -8,7 +7,6 @@ export const DashboardMenuItem = ({
   children,
   onClick,
   pathname,
-  notificationDot,
 }) => {
   return (
     <>
@@ -23,7 +21,6 @@ export const DashboardMenuItem = ({
         {icon || null}
         <div className="relative">
           <div className="ml-2">{children}</div>
-          {notificationDot && <NotificationDot />}
         </div>
       </Link>
     </>
