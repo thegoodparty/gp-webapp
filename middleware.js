@@ -109,7 +109,11 @@ export default async function middleware(req) {
   const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`);
 
   if (apiRewriteRequest) {
-    return await handleApiRequestRewrite(req);
+    try {
+      return await handleApiRequestRewrite(req);
+    } catch (error) {
+      console.error('Error in handleApiRequestRewrite', error);
+    }
   }
 
   return NextResponse.next({
