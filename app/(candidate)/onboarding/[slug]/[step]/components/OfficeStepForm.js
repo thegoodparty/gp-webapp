@@ -68,7 +68,7 @@ export default function OfficeStepForm(props) {
       ...state,
       [key]: value,
     });
-    // Clear error when user types
+    //  Clear error when user types
   };
 
   return (
