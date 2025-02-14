@@ -14,7 +14,12 @@ import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 
 const fetchRaces = async (zipcode, level, electionDate) => {
-  const payload = { zipcode, level, electionDate };
+  let cleanLevel = level;
+  if (level === 'Local/Township') {
+    cleanLevel = 'Local';
+  }
+
+  const payload = { zipcode, level: cleanLevel, electionDate };
 
   const resp = await clientFetch(apiRoutes.race.ballotData.byYear, payload);
 
