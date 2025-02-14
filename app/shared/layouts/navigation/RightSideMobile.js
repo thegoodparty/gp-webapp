@@ -8,7 +8,6 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
-import NotificationsDropdown from './notifications/NotificationsDropdown';
 import {
   COMMUNITY_LINKS,
   RESOURCES_LINKS,
@@ -30,7 +29,7 @@ const sections = [
 export default function RightSideMobile() {
   const [isOpen, setOpen] = useState(false);
   const [user] = useUser();
-  const [campaignStatus, setCampaignStatus] = useCampaignStatus();
+  const [campaignStatus] = useCampaignStatus();
   const [campaign] = useCampaign();
   const { status, step, slug } = campaignStatus || {};
   const pathname = usePathname();
@@ -54,7 +53,6 @@ export default function RightSideMobile() {
             <>
               <ExitToDashboardButton />
               <div>
-                <NotificationsDropdown user={user} />
               </div>
             </>
           )}

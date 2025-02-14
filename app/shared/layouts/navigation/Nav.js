@@ -4,7 +4,6 @@ import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
 import { getServerToken, getServerUser } from 'helpers/userServerHelper';
-import { setUserCookie } from 'helpers/cookieHelper';
 import Body2 from '@shared/typography/Body2';
 
 export default async function Nav() {

@@ -1,7 +1,5 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
 import Button from '@shared/buttons/Button';
 
 export const ExitToDashboardButton = () => {

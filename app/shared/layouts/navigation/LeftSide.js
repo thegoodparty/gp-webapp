@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns';
 import { useMemo } from 'react';
 import NavButton from './NavButton';
-import Body2 from '@shared/typography/Body2';
 
 // list of paths to hide marketing nav
 const HIDE_NAV_PATHS = [
