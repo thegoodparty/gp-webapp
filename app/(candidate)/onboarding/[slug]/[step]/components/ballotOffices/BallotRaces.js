@@ -15,11 +15,7 @@ import Body1 from '@shared/typography/Body1';
 
 const fetchRaces = async (zip, level, electionDate) => {
   const api = gpApi.ballotData.races;
-  let cleanLevel = level;
-  if (level === 'Local/Township') {
-    cleanLevel = 'Local';
-  }
-  const payload = { zip, level: cleanLevel, electionDate };
+  const payload = { zip, level, electionDate };
   return await gpFetch(api, payload, 3600);
 };
 
@@ -146,7 +142,7 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {Array.isArray(races) &&
+          {races &&
             races.map((race, index) => (
               <RaceCard
                 key={index}
