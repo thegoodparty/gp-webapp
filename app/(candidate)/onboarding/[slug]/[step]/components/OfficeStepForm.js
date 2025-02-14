@@ -46,9 +46,7 @@ export default function OfficeStepForm(props) {
   const [user, _] = useUser();
 
   const canSubmit = () => {
-    return (
-      state.zip && state.level && state.electionDate && validateZip(state.zip)
-    );
+    return state.zip && state.level && validateZip(state.zip);
   };
 
   const handleNext = async () => {
@@ -68,7 +66,7 @@ export default function OfficeStepForm(props) {
       ...state,
       [key]: value,
     });
-    //  Clear error when user types
+    // Clear error when user types
   };
 
   return (
