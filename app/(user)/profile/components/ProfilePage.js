@@ -1,8 +1,6 @@
 import NotificationSection from './NotificationSection';
 import PasswordSection from './PasswordSection';
 import PersonalSection from './PersonalSection';
-
-//import InvitationSection from './InvitationSection';
 import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection';
 
 export default function ProfilePage(props) {

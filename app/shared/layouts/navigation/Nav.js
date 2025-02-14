@@ -13,10 +13,6 @@ export default async function Nav() {
   if (user) {
     const serverToken = getServerToken();
     campaignStatus = await fetchCampaignStatus(serverToken);
-    //const { status, user = {} } = campaignStatus;
-    // if (status === 'manager') {
-    //   setUserCookie(user);
-    // }
   }
 
   return (

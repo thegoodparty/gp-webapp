@@ -14,7 +14,6 @@ import Button from '@shared/buttons/Button';
 import { USER_ROLES } from 'helpers/userHelper';
 
 export default function RightSide({ campaignStatus }) {
-  //const { campaignRequestPending } = campaignStatus;
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);

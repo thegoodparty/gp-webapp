@@ -1,7 +1,4 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 import Button from '@shared/buttons/Button';
 
@@ -23,8 +20,6 @@ export default function DashboardOrContinue({ closeAll, campaignStatus }) {
       </Button>
     );
   }
-
-  //const isVolunteer = status === 'volunteer';
 
   return (
     <div className="ml-4">
