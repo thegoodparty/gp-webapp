@@ -113,6 +113,7 @@ export default async function middleware(req) {
       return await handleApiRequestRewrite(req);
     } catch (error) {
       console.error('Error in handleApiRequestRewrite', error);
+      throw error;
     }
   }
 
