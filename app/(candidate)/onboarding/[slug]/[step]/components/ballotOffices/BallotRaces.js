@@ -243,43 +243,16 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {filtered &&
-            electionYears?.map(
-              (electionYear) =>
-                (!yearFilter ||
-                  (yearFilter && electionYear === yearFilter)) && (
-                  <div key={electionYear}>
-                    <H4
-                      role="button"
-                      tabIndex={0}
-                      className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
-                      onClick={() => handleYearClick(electionYear)}
-                      onKeyDown={(e) => handleKeyDown(e, electionYear)}
-                    >
-                      {electionYear}
-                      {collapsedYears[electionYear] ? (
-                        <FaChevronRight className="inline-block ml-1" />
-                      ) : (
-                        <FaChevronDown className="inline-block ml-1" />
-                      )}
-                    </H4>
-                    {!collapsedYears[electionYear] &&
-                      filtered[electionYear]
-                        .sort((a, b) =>
-                          a.position.name.localeCompare(b.position.name),
-                        )
-                        .map((race, index) => (
-                          <RaceCard
-                            key={index}
-                            race={race}
-                            selected={race?.id === selected.id}
-                            selectCallback={handleSelect}
-                            inputValue={inputValue}
-                          />
-                        ))}
-                  </div>
-                ),
-            )}
+          {races &&
+            races.map((race, index) => (
+              <RaceCard
+                key={index}
+                race={race}
+                selected={race?.id === selected.id}
+                selectCallback={handleSelect}
+                inputValue={inputValue}
+              />
+            ))}
           {!loading && (
             <Button
               onClick={showCustomModal}
