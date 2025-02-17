@@ -72,9 +72,11 @@ export default async function sitemap() {
       priority: 1,
     });
   });
+
+  const blogArticles = await fetchArticles();
+  const blogSections = await fetchSections();
+
   try {
-    const blogArticles = await fetchArticles();
-    const blogSections = await fetchSections();
     blogArticles.forEach((article) => {
       mainSitemap.push({
         url: `${APP_BASE}/blog/article/${article.slug}`,
@@ -96,8 +98,9 @@ export default async function sitemap() {
     console.log('error at blog SiteMapXML', e);
   }
 
+  const faqArticles = await fetchFAQs();
+
   try {
-    const faqArticles = await fetchFAQs();
     faqArticles.forEach((article) => {
       mainSitemap.push({
         url: `${APP_BASE}${faqArticleRoute(article)}`,
@@ -118,8 +121,9 @@ export default async function sitemap() {
     });
   });
 
+  const content = await fetchGlossaryByTitle();
+
   try {
-    const content = await fetchGlossaryByTitle();
     Object.keys(content).forEach((slug) => {
       mainSitemap.push({
         url: `${APP_BASE}/political-terms/${slug}`,

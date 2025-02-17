@@ -1,13 +1,13 @@
 'use client';
 import Button from '@shared/buttons/Button';
 import MaxWidth from '@shared/layouts/MaxWidth';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import { slugify } from 'helpers/articleHelper';
 import { isbot } from 'isbot';
 import Image from 'next/image';
 import map from 'public/images/elections/map.png';
 import { useEffect, useState } from 'react';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
 
 const fetchLocFromIp = async () => {
   const resp = await fetch(
@@ -21,13 +21,12 @@ const fetchLocFromIp = async () => {
 
 async function fetchFeatured(city, state) {
   try {
+    const api = gpApi.race.proximity;
     const payload = {
       city,
       state,
     };
-    return await clientFetch(apiRoutes.race.byProximity, payload, {
-      revalidate: 3600,
-    });
+    return await gpFetch(api, payload, 3600);
   } catch (e) {
     console.log('error', e);
     return false;

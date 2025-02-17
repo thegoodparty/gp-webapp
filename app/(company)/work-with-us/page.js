@@ -24,15 +24,10 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export const fetchJobs = async () => {
-  try {
-    const resp = await serverFetch(apiRoutes.jobs.list, undefined, {
-      revalidate: 3600,
-    });
-    return resp.data;
-  } catch (e) {
-    console.log('error fetching jobs', e);
-    return [];
-  }
+  const resp = await serverFetch(apiRoutes.jobs.list, undefined, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };
 
 async function CareersWrapper() {

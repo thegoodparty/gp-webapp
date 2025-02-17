@@ -1,8 +1,8 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import Script from 'next/script';
 
-export default function FullStoryScript() {
-  const user = getServerUser();
+export default async function FullStoryScript() {
+  const user = await getServerUser();
   if (!user) return null;
   return (
     <Script

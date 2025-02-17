@@ -21,7 +21,7 @@ const fetchRaces = async (zipcode, level, electionDate) => {
 
   const payload = { zipcode, level: cleanLevel, electionDate };
 
-  const resp = await clientFetch(apiRoutes.race.ballotData.byYear, payload);
+  const resp = await clientFetch(apiRoutes.elections.racesByYear, payload);
 
   return resp.data;
 };

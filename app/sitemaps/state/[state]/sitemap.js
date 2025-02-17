@@ -5,21 +5,18 @@ on production the path is https://www.getelected.com/sitemaps/state/ca/sitemap/4
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 */
 
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import { flatStates } from 'helpers/statesHelper';
-import { serverFetch } from 'gpApi/serverFetch';
-import { apiRoutes } from 'gpApi/routes';
 import { APP_BASE } from 'appEnv';
 
 const fetchState = async (state) => {
+  const api = gpApi.race.allStates;
   const payload = {
     state,
   };
 
-  const resp = await serverFetch(apiRoutes.race.allStates, payload, {
-    revalidate: 3600,
-  });
-
-  return resp.data;
+  return await gpFetch(api, payload, 3600);
 };
 
 const now = new Date();
