@@ -1,23 +1,20 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import ElectionsCityPage from './components/ElectionsCityPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
-import { serverFetch } from 'gpApi/serverFetch';
-import { apiRoutes } from 'gpApi/routes';
 
 export const fetchCity = async (state, county, city) => {
+  const api = gpApi.race.byCity;
   const payload = {
     state,
     county,
     city,
   };
 
-  const resp = await serverFetch(apiRoutes.race.byCity, payload, {
-    revalidate: 3600,
-  });
-
-  return resp.data;
+  return await gpFetch(api, payload, 3600);
 };
 
 const year = new Date().getFullYear();

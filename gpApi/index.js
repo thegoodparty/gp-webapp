@@ -172,6 +172,34 @@ const gpApi = {
     },
   },
 
+  race: {
+    byState: {
+      url: `${base}race/by-state`,
+      method: 'GET',
+    },
+    allStates: {
+      // for sitemaps
+      url: `${base}race/all-state`,
+      method: 'GET',
+    },
+    byCounty: {
+      url: `${base}race/by-county`,
+      method: 'GET',
+    },
+    byCity: {
+      url: `${base}race/by-city`,
+      method: 'GET',
+    },
+    byRace: {
+      url: `${base}race`,
+      method: 'GET',
+    },
+    proximity: {
+      url: `${base}race/proximity-cities`,
+      method: 'GET',
+    },
+  },
+
   doorKnocking: {
     create: {
       url: `${base}campaign/door-knocking`,
