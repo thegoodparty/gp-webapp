@@ -17,14 +17,14 @@ async function checkIsAdmin() {
 }
 
 export const canCreateCampaigns = async () => {
-  const user = getServerUser();
+  const user = await getServerUser();
   if (user?.role !== USER_ROLES.SALES && !user?.isAdmin) {
     redirect('/login');
   }
 };
 
 export const adminAccessOnly = async () => {
-  const user = getServerUser();
+  const user = await getServerUser();
   if (!userIsAdmin(user)) {
     redirect('/login');
   }

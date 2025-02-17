@@ -1,27 +1,7 @@
-export let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
-if (!apiBase) {
-  apiBase = 'https://api-dev.goodparty.org';
-}
+import { OLD_API_ROOT } from 'appEnv';
 
-// CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
-//   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
-//   the Next.js app is currently being built and cannot be talked to, so build requests for static content
-//   data should be directed to the API base, not the Next.js application proxy
-export let appBase = Boolean(process.env.CI)
-  ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE;
-
-let base = `${appBase}/api/v1/`;
-
-export const isProd = apiBase === 'https://api.goodparty.org';
-
-if (!appBase) {
-  appBase =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : `https://${process.env.VERCEL_BRANCH_URL}`;
-  base = `${appBase}/api/v1/`;
-}
+// Just want to point to old api base for old endpoints we want to keep
+let base = `${OLD_API_ROOT}/api/v1/`;
 
 const gpApi = {
   homepage: {
@@ -502,7 +482,6 @@ const gpApi = {
       method: 'PUT',
       withAuth: true,
     },
-
     users: {
       url: `${base}admin/users`,
       method: 'GET',
@@ -537,6 +516,32 @@ const gpApi = {
     url: `${base}upload-base64-image`,
     method: 'POST',
     withAuth: true,
+  race: {
+    byState: {
+      url: `${base}race/by-state`,
+      method: 'GET',
+    },
+    allStates: {
+      // for sitemaps
+      url: `${base}race/all-state`,
+      method: 'GET',
+    },
+    byCounty: {
+      url: `${base}race/by-county`,
+      method: 'GET',
+    },
+    byCity: {
+      url: `${base}race/by-city`,
+      method: 'GET',
+    },
+    byRace: {
+      url: `${base}race`,
+      method: 'GET',
+    },
+    proximity: {
+      url: `${base}race/proximity-cities`,
+      method: 'GET',
+    },
   },
   logError: {
     url: `${base}log-error`,
@@ -664,6 +669,7 @@ const gpApi = {
       withAuth: true,
     },
   },
+
   candidate: {
     find: {
       url: `${base}candidate`,
@@ -679,21 +685,5 @@ const gpApi = {
       withAuth: true, //admin
     },
   },
-};
-
-// replacing all non authenticated routes with apiBase
-replaceBase(gpApi);
-
-function replaceBase(obj) {
-  Object.keys(obj).forEach((key) => {
-    if (obj[key].url && typeof obj[key].url === 'string') {
-      if (!obj[key].withAuth) {
-        obj[key].url = obj[key].url.replace(appBase, apiBase);
-      }
-    } else if (typeof obj[key] === 'object') {
-      replaceBase(obj[key]);
-    }
-  });
+  }
 }
-
-export default gpApi;

@@ -79,6 +79,14 @@ export const apiRoutes = {
     },
   },
   campaign: {
+    pathToVictory: {
+      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
+      // this is just a placeholder for testing with
+      create: {
+        path: '/campaigns/mine/path-to-victory',
+        method: 'POST',
+      },
+    },
     create: {
       path: '/campaigns',
       method: 'POST',
@@ -251,6 +259,10 @@ export const apiRoutes = {
       path: '/top-issues',
       method: 'GET',
     },
+    byLocation: {
+      path: '/top-issues/by-location',
+      method: 'GET',
+    },
     position: {
       create: {
         path: '/positions',
@@ -345,39 +357,9 @@ export const apiRoutes = {
       },
     },
   },
-  race: {
-    ballotData: {
-      byYear: {
-        path: '/ballotdata/races-by-year',
-        method: 'GET',
-      },
-    },
-    get: {
-      path: '/races',
-      method: 'GET',
-    },
-    byHashId: {
-      path: '/races/:hashId',
-      method: 'GET',
-    },
-    byProximity: {
-      path: '/races/proximity-cities',
-      method: 'GET',
-    },
-    byCity: {
-      path: '/races/by-city',
-      method: 'GET',
-    },
-    byCounty: {
-      path: '/races/by-county',
-      method: 'GET',
-    },
-    byState: {
-      path: '/races/by-state',
-      method: 'GET',
-    },
-    allForState: {
-      path: '/races/all-state',
+  elections: {
+    racesByYear: {
+      path: '/elections/races-by-year',
       method: 'GET',
     },
   },

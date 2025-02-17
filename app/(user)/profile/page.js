@@ -11,7 +11,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  const user = getServerUser();
+  const user = await getServerUser();
   if (!user) {
     redirect('/login');
   }

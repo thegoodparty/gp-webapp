@@ -8,7 +8,7 @@ import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateA
 
 export default async function Nav() {
   let campaignStatus = false;
-  const user = getServerUser();
+  const user = await getServerUser();
   if (user) {
     campaignStatus = await fetchCampaignStatus();
     if (campaignStatus instanceof Response) campaignStatus = false;

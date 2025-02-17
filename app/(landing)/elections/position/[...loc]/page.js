@@ -1,12 +1,13 @@
 import pageMetaData from 'helpers/metadataHelper';
+import gpApi from 'gpApi';
+import gpFetch from 'gpApi/gpFetch';
 import { notFound, redirect } from 'next/navigation';
 import PositionPage from './components/PositionPage';
 import PositionSchema from './components/PositionSchema';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
-import { serverFetch } from 'gpApi/serverFetch';
-import { apiRoutes } from 'gpApi/routes';
 
 const fetchPosition = async (state, county, city, positionSlug) => {
+  const api = gpApi.race.byRace;
   const payload = {
     state,
     county,
@@ -14,11 +15,7 @@ const fetchPosition = async (state, county, city, positionSlug) => {
     positionSlug,
   };
 
-  const resp = await serverFetch(apiRoutes.race.get, payload, {
-    revalidate: 3600,
-  });
-
-  return resp.data;
+  return await gpFetch(api, payload, 3600);
 };
 
 const parseLoc = (loc) => {
