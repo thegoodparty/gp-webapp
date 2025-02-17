@@ -15,15 +15,8 @@ const tangerine = Tangerine({
 });
 
 async function fetchSignatures() {
-  try {
-    const resp = await serverFetch(
-      apiRoutes.homepage.declarationSignatures.list,
-    );
-    return resp.data;
-  } catch (e) {
-    console.log('error at fetchSignatures', e);
-    return {};
-  }
+  const resp = await serverFetch(apiRoutes.homepage.declarationSignatures.list);
+  return resp.data;
 }
 
 const meta = pageMetaData({
