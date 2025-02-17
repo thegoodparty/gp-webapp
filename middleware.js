@@ -88,7 +88,7 @@ const dbRedirects = {
 
 export default async function middleware(req) {
   const { pathname } = req.nextUrl;
-
+  console.log(`in middleware for pathname: ${pathname}`);
   // This is a workaround to pass the pathname to SSR pages
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set('x-pathname', pathname);
@@ -107,9 +107,14 @@ export default async function middleware(req) {
   }
 
   const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`);
-
+  console.log(`apiRewriteRequest =>`, apiRewriteRequest);
   if (apiRewriteRequest) {
-    return await handleApiRequestRewrite(req);
+    try {
+      return await handleApiRequestRewrite(req);
+    } catch (error) {
+      console.error('Error in handleApiRequestRewrite', error);
+      throw error;
+    }
   }
 
   return NextResponse.next({
