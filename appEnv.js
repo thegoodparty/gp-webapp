@@ -16,6 +16,9 @@ export const IS_LOCAL =
 export const API_ROOT =
   process.env.NEXT_PUBLIC_API_BASE || 'https://gp-api-dev.goodparty.org';
 
+export const OLD_API_ROOT =
+  process.env.NEXT_PUBLIC_OLD_API_BASE || 'https://api-dev.goodparty.org';
+
 export const API_VERSION_PREFIX = '/v1';
 
 export const APP_BASE = IS_LOCAL

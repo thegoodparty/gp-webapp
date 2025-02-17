@@ -1,8 +1,7 @@
-// Just want to point to old api base for old endpoints we want to keep
-const appBase =
-  process.env.NEXT_PUBLIC_OLD_API_BASE || 'https://api-dev.goodparty.org';
+import { OLD_API_ROOT } from 'appEnv';
 
-let base = `${appBase}/api/v1/`;
+// Just want to point to old api base for old endpoints we want to keep
+let base = `${OLD_API_ROOT}/api/v1/`;
 
 const gpApi = {
   campaign: {
@@ -266,20 +265,5 @@ const gpApi = {
     },
   },
 };
-
-// replacing all non authenticated routes with apiBase
-replaceBase(gpApi);
-
-function replaceBase(obj) {
-  Object.keys(obj).forEach((key) => {
-    if (obj[key].url && typeof obj[key].url === 'string') {
-      if (!obj[key].withAuth) {
-        obj[key].url = obj[key].url.replace(appBase, apiBase);
-      }
-    } else if (typeof obj[key] === 'object') {
-      replaceBase(obj[key]);
-    }
-  });
-}
 
 export default gpApi;
