@@ -1,25 +1,8 @@
-let apiBase = process.env.NEXT_PUBLIC_API_BASE; // for server side calls.
-if (!apiBase) {
-  apiBase = 'https://api-dev.goodparty.org';
-}
-
-// CI environment variable is a flag provided by Vercel CI/CD to indicate runtime is during build.
-//   If CI is true, then the API base is set to the NEXT_PUBLIC_API_BASE environment variable since
-//   the Next.js app is currently being built and cannot be talked to, so build requests for static content
-//   data should be directed to the API base, not the Next.js application proxy
-let appBase = Boolean(process.env.CI)
-  ? process.env.NEXT_PUBLIC_API_BASE
-  : process.env.NEXT_PUBLIC_APP_BASE;
+// Just want to point to old api base for old endpoints we want to keep
+const appBase =
+  process.env.NEXT_PUBLIC_OLD_API_BASE || 'https://api-dev.goodparty.org';
 
 let base = `${appBase}/api/v1/`;
-
-if (!appBase) {
-  appBase =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : `https://${process.env.VERCEL_BRANCH_URL}`;
-  base = `${appBase}/api/v1/`;
-}
 
 const gpApi = {
   campaign: {
