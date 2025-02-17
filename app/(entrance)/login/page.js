@@ -12,8 +12,7 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  const user = getServerUser();
-  if (user) {
+  if (await getServerUser()) {
     const { status, slug } = await fetchCampaignStatus();
     if (status === 'candidate') {
       redirect(`/dashboard`);
