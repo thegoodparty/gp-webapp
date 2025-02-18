@@ -1,5 +1,4 @@
 'use client';
-
 import Button from '@shared/buttons/Button';
 import { useUser } from '@shared/hooks/useUser';
 import RenderInputField from '@shared/inputs/RenderInputField';
@@ -61,7 +60,7 @@ export default function OfficeStepForm(props) {
       ...state,
       [key]: value,
     });
-    // Clear error when user types
+    //  Clear error when user types
   };
   let userName = user?.firstName + ' ' + user?.lastName;
   if (adminMode) {
