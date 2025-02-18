@@ -1,6 +1,7 @@
 import Body1 from '@shared/typography/Body1';
 import { GrRadial, GrRadialSelected } from 'react-icons/gr';
 import Body2 from '@shared/typography/Body2';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function RaceCard({
   race,
@@ -8,11 +9,12 @@ export default function RaceCard({
   selected,
   selectCallback,
 }) {
-  const { position } = race;
+  const { position, election } = race;
   if (!position) {
     return null;
   }
   const { name, normalizedPosition } = position;
+  const { electionDay, primaryElectionDate } = election;
 
   const handleKeyDown = (e, race) => {
     if (e.key === 'Enter') {
@@ -37,6 +39,16 @@ export default function RaceCard({
         <div className="ml-3 text-left">
           <Body1>{name}</Body1>
           <Body2>{normalizedPosition?.name || ''}</Body2>
+          <Body2 className="mt-2">
+            Election Date: {dateUsHelper(electionDay)}{' '}
+            {primaryElectionDate ? (
+              <span>
+                | Primary Election Date: {dateUsHelper(primaryElectionDate)}
+              </span>
+            ) : (
+              ''
+            )}
+          </Body2>
         </div>
       </div>
     </div>
