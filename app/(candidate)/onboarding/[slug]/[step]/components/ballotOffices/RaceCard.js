@@ -35,8 +35,8 @@ export default function RaceCard({
           <GrRadial className="min-w-[16px]" />
         )}
         <div className="ml-3 text-left">
-          <Body1>{normalizedPosition?.name || ''}</Body1>
-          <Body2>{name}</Body2>
+          <Body1>{name}</Body1>
+          <Body2>{normalizedPosition?.name || ''}</Body2>
         </div>
       </div>
     </div>
