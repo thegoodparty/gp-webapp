@@ -6,6 +6,7 @@ import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import Body2 from '@shared/typography/Body2';
 import { dateUsHelper } from 'helpers/dateHelper';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function RaceCard({
   race,
@@ -15,29 +16,12 @@ export default function RaceCard({
   inputValue,
 }) {
   const { position, election } = race;
+  const { position, election } = race;
   if (!position) {
     return null;
   }
-  const { name, level } = position;
+  const { name, normalizedPosition } = position;
   const { electionDay, primaryElectionDate } = election;
-
-  let titleLevel = toTitleCase(level);
-  if (titleLevel === 'City') {
-    titleLevel = 'Local';
-  }
-  let pillColor;
-  if (level === 'FEDERAL') {
-    pillColor = 'bg-red-100';
-  }
-  if (level === 'STATE') {
-    pillColor = 'bg-[#33E1B2] bg-opacity-50';
-  }
-  if (level === 'COUNTY') {
-    pillColor = 'bg-[#3ABBEA] bg-opacity-50';
-  }
-  if (level === 'CITY' || level === 'LOCAL') {
-    pillColor = 'bg-[#C985F2] bg-opacity-50';
-  }
 
   const handleKeyDown = (e, race) => {
     if (e.key === 'Enter') {
@@ -84,6 +68,16 @@ export default function RaceCard({
         <div className="ml-3 text-left">
           <Body1>{name}</Body1>
           <Body2>{normalizedPosition?.name || ''}</Body2>
+          <Body2 className="mt-2">
+            Election Date: {dateUsHelper(electionDay)}{' '}
+            {primaryElectionDate ? (
+              <span>
+                | Primary Election Date: {dateUsHelper(primaryElectionDate)}
+              </span>
+            ) : (
+              ''
+            )}
+          </Body2>
         </div>
       </div>
       <div
