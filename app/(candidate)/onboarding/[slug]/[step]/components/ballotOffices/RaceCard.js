@@ -6,6 +6,7 @@ import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import Body2 from '@shared/typography/Body2';
 import { dateUsHelper } from 'helpers/dateHelper';
+import { dateUsHelper } from 'helpers/dateHelper';
 
 export default function RaceCard({
   race,
@@ -14,6 +15,7 @@ export default function RaceCard({
   selectCallback,
   inputValue,
 }) {
+  const { position, election } = race;
   const { position, election } = race;
   if (!position) {
     return null;
