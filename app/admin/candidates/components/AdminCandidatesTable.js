@@ -124,7 +124,6 @@ export default function AdminCandidatesTable({ campaigns }) {
       pathToVictory,
       createdAt,
       updatedAt,
-      teamMembers,
     } = campaign;
 
     const { currentStep, reportedVoterGoals, hubSpotUpdates } = data || {};
@@ -260,7 +259,6 @@ export default function AdminCandidatesTable({ campaigns }) {
       hbProCandidate: pro_candidate,
       hbFilingDeadline: filing_deadline,
       hbOpponents: opponents,
-      teamMembers,
     };
     inputData.push(fields);
     let csvFields = fields;
@@ -291,22 +289,6 @@ export default function AdminCandidatesTable({ campaigns }) {
           {row.original.userName}
         </UserAdminLink>
       ),
-    },
-    {
-      Header: 'Campaign Manager(s)',
-      accessor: 'campaignManagers',
-      Cell: ({ row }) =>
-        Boolean(row.original.teamMembers?.length) && (
-          <ul className="list-none m-0 p-0">
-            {row.original.teamMembers.map((manager) => (
-              <li key={manager.id} className="mb-2">
-                <UserAdminLink className="capitalize" userId={manager.id}>
-                  {getUserFullName(manager)} - {manager.role}
-                </UserAdminLink>
-              </li>
-            ))}
-          </ul>
-        ),
     },
     {
       Header: 'Launch Status',

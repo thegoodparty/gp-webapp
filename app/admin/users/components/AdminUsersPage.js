@@ -68,25 +68,6 @@ export default function AdminUsersPage(props) {
       ),
     },
     {
-      Header: 'Campaign Role(s)',
-      accessor: 'campaigns',
-      Cell: ({ row }) => {
-        return (
-          Boolean(row.original.campaigns?.length) &&
-          row.original.campaigns.map((campaign) => (
-            <a
-              key={campaign.id}
-              className="underline"
-              href={`/admin/campaign-statistics?id=${campaign.id}`}
-            >
-              {campaign.slug} -{' '}
-              <span className="capitalize">{campaign.role}</span>
-            </a>
-          ))
-        );
-      },
-    },
-    {
       Header: 'Last Visit',
       accessor: 'lastVisited',
       sortType: 'datetime',

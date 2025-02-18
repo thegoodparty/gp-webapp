@@ -13,17 +13,13 @@ import Button from '@shared/buttons/Button';
 import { USER_ROLES } from 'helpers/userHelper';
 
 export default function RightSide({ campaignStatus }) {
-  // TODO: campaignRequestPending not releveant anymore?
-  const { campaignRequestPending } = campaignStatus;
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
 
   const pathname = usePathname();
-  const isDashboardPath =
-    pathname?.startsWith('/dashboard') ||
-    pathname?.startsWith('/volunteer-dashboard');
+  const isDashboardPath = pathname?.startsWith('/dashboard');
   const isOnboardingPath = pathname?.startsWith('/onboarding');
 
   const toggleProfile = () => {
@@ -64,8 +60,7 @@ export default function RightSide({ campaignStatus }) {
             toggleCallback={toggleProfile}
             user={user}
           />
-          {!campaignRequestPending &&
-            user?.role !== USER_ROLES.SALES &&
+          {user?.role !== USER_ROLES.SALES &&
             (isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}

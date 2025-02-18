@@ -8,7 +8,6 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
 import H3 from '@shared/typography/H3';
 import DashboardMobile from '../DashboardMobile';
-import VolunteerDashboardMobile from '../VolunteerDashboardMobile';
 import {
   COMMUNITY_LINKS,
   RESOURCES_LINKS,
@@ -30,14 +29,12 @@ const sections = [
 export default function RightSideMobile() {
   const [isOpen, setOpen] = useState(false);
   const [user] = useUser();
-  const [campaignStatus, setCampaignStatus] = useCampaignStatus();
+  const [campaignStatus] = useCampaignStatus();
   const [campaign] = useCampaign();
   const { status, step, slug } = campaignStatus || {};
   const pathname = usePathname();
   const isDashboardPath =
     pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile');
-  const isVolunteerDashboardPath = pathname?.startsWith('/volunteer-dashboard');
-
   let dashboardLink = '/dashboard';
 
   const closeMenu = () => {
@@ -52,7 +49,13 @@ export default function RightSideMobile() {
             isOpen ? 'text-white' : ''
           }`}
         >
-          {!isOpen && user && <ExitToDashboardButton />}
+          {!isOpen && user && (
+            <>
+              <ExitToDashboardButton />
+              <div>
+              </div>
+            </>
+          )}
           <Hamburger
             hideOutline={false}
             toggled={isOpen}
@@ -63,152 +66,104 @@ export default function RightSideMobile() {
         </div>
         <SwipeableDrawer
           open={isOpen}
-          onClose={() => {
-            setOpen(false);
-          }}
+          onClose={() => setOpen(false)}
           anchor="right"
           onOpen={() => {}}
         >
           {user && isDashboardPath ? (
-            <DashboardMobile
-              user={user}
-              pathname={pathname}
-              campaign={campaign}
-            />
+            <DashboardMobile user={user} pathname={pathname} campaign={campaign} />
           ) : (
-            <>
-              {user && isVolunteerDashboardPath ? (
-                <VolunteerDashboardMobile
-                  user={user}
-                  pathname={pathname}
-                  campaign={campaign}
-                  closeCallback={closeMenu}
-                />
-              ) : (
-                <div
-                  className={`flex flex-col w-[270px] bg-primary-dark text-white h-screen relative`}
-                >
+            <div className="flex flex-col w-[270px] bg-primary-dark text-white h-screen relative">
+              <div
+                className={`grow overflow-auto px-4 pt-24 ${
+                  user ? 'pb-36' : 'pb-60'
+                }`}
+              >
+                {user && (
+                  <H3 className="mb-8">
+                    {user.firstName} {user.lastName}
+                  </H3>
+                )}
+                {sections.map((section) => (
                   <div
-                    className={`grow overflow-auto px-4 pt-24 ${
-                      user ? 'pb-36' : 'pb-60'
-                    }`}
+                    key={section.title}
+                    className="border-b border-indigo-400 pb-3 mb-3"
                   >
-                    {user && (
-                      <H3 className="mb-8">
-                        {user.firstName} {user.lastName}
-                      </H3>
-                    )}
-                    {sections.map((section) => (
-                      <div
-                        key={section.title}
-                        className="border-b border-indigo-400 pb-3 mb-3"
+                    <Caption className="py-2">{section.title}</Caption>
+                    {section.links.map((link) => (
+                      <Link
+                        href={link.href}
+                        id={`mobile-nav-${link.id}`}
+                        key={link.id}
+                        className="block no-underline font-medium py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark rounded flex items-center justify-between"
+                        rel={link.external ? 'noopener noreferrer nofollow' : ''}
+                        onClick={closeMenu}
                       >
-                        <Caption className="py-2">{section.title}</Caption>
-                        {section.links.map((link) => (
-                          <Link
-                            href={link.href}
-                            id={`mobile-nav-${link.id}`}
-                            key={link.id}
-                            className="block no-underline font-medium py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark  rounded flex items-center justify-between"
-                            rel={`${
-                              link.external
-                                ? 'noopener noreferrer nofollow'
-                                : ''
-                            }`}
-                            onClick={closeMenu}
-                          >
-                            <div className="flex items-center">
-                              {link.icon}
-                              <div className="ml-3">{link.label}</div>
-                            </div>
-                            {link.external && <FaExternalLinkAlt size={14} />}
-                          </Link>
-                        ))}
-                      </div>
+                        <div className="flex items-center">
+                          {link.icon}
+                          <div className="ml-3">{link.label}</div>
+                        </div>
+                        {link.external && <FaExternalLinkAlt size={14} />}
+                      </Link>
                     ))}
                   </div>
-                  <div className={`w-full h-auto`}>
-                    <div className={`p-6 bg-primary-dark h-auto`}>
-                      {user ? (
-                        <>
-                          {(status === 'candidate' || status === 'manager') && (
-                            <>
-                              {!isDashboardPath && (
-                                <Button
-                                  href={`${dashboardLink}`}
-                                  id="mobile-nav-dashboard"
-                                  onClick={closeMenu}
-                                  color="tertiary"
-                                  size="large"
-                                  className="w-full font-medium focus-visible:outline-white/40"
-                                >
-                                  Dashboard
-                                </Button>
-                              )}
-                            </>
-                          )}
-                          {status === 'volunteer' && (
-                            <Button
-                              href="volunteer-dashboard"
-                              id="mobile-nav-vol-dashboard"
-                              onClick={closeMenu}
-                              color="tertiary"
-                              size="large"
-                              className="w-full font-medium focus-visible:outline-white/40"
-                            >
-                              Dashboard
-                            </Button>
-                          )}
-                          {status === 'onboarding' && (
-                            <Button
-                              href={`/onboarding/${slug}/${step || 1}`}
-                              id="mobile-nav-continue-onboarding"
-                              onClick={closeMenu}
-                              color="tertiary"
-                              size="large"
-                              className="w-full font-medium focus-visible:outline-white/40"
-                            >
-                              Continue Onboarding
-                            </Button>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <Link
-                            href="/login"
-                            onClick={closeMenu}
-                            className="block w-full text-white py-2 mb-2 text-center font-medium"
-                          >
-                            Login
-                          </Link>
-                          <Button
-                            href="/sign-up"
-                            onClick={closeMenu}
-                            size="large"
-                            color="success"
-                            className="w-full text-white text-center font-medium focus-visible:outline-white/40"
-                          >
-                            Sign Up
-                          </Button>
-                          <Button
-                            href="/run-for-office"
-                            className="mt-4 w-full block font-medium focus-visible:outline-white/40"
-                            onClick={closeMenu}
-                            size="large"
-                            color="tertiary"
-                          >
-                            Get Campaign Tools
-                          </Button>
-                        </>
+                ))}
+              </div>
+              <div className="w-full h-auto">
+                <div className="p-6 bg-primary-dark h-auto">
+                  {user ? (
+                    <>
+                      {status === 'candidate' && !isDashboardPath && (
+                        <Button
+                          href={`${dashboardLink}`}
+                          id="mobile-nav-dashboard"
+                          onClick={closeMenu}
+                          color="tertiary"
+                          size="large"
+                          className="w-full font-medium focus-visible:outline-white/40"
+                        >
+                          Dashboard
+                        </Button>
                       )}
-                    </div>
-                  </div>
+                      {status === 'onboarding' && (
+                        <Button
+                          href={`/onboarding/${slug}/${step || 1}`}
+                          id="mobile-nav-continue-onboarding"
+                          onClick={closeMenu}
+                          color="tertiary"
+                          size="large"
+                          className="w-full font-medium focus-visible:outline-white/40"
+                        >
+                          Continue Onboarding
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        onClick={closeMenu}
+                        className="block w-full text-white py-2 mb-2 text-center font-medium"
+                      >
+                        Login
+                      </Link>
+                      <Button
+                        href="/sign-up"
+                        onClick={closeMenu}
+                        size="large"
+                        color="success"
+                        className="w-full text-white text-center font-medium focus-visible:outline-white/40"
+                      >
+                        Sign Up
+                      </Button>
+                    </>
+                  )}
                 </div>
-              )}
-            </>
+              </div>
+            </div>
           )}
         </SwipeableDrawer>
       </div>
     </div>
   );
-}
+} 

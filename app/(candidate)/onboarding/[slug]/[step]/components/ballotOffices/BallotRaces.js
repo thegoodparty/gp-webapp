@@ -19,7 +19,7 @@ const fetchRaces = async (zipcode, level, electionDate) => {
     cleanLevel = 'Local';
   }
 
-  const payload = { zipcode, level: cleanLevel, electionDate };
+  const payload = { zipcode, level: cleanLevel.toUpperCase(), electionDate };
 
   const resp = await clientFetch(apiRoutes.elections.racesByYear, payload);
 

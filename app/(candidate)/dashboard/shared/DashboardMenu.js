@@ -9,15 +9,7 @@ import {
   MdFileOpen,
   MdFolderShared,
   MdLibraryBooks,
-  MdManageAccounts,
 } from 'react-icons/md';
-
-const CAMPAIGN_TEAM_MENU_ITEM = {
-  label: 'Campaign Team',
-  icon: <MdManageAccounts />,
-  link: '/dashboard/team',
-  id: 'campaign-team-dashboard',
-};
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -52,8 +44,6 @@ const DEFAULT_MENU_ITEMS = [
     link: '/dashboard/campaign-details',
     id: 'campaign-details-dashboard',
   },
-
-  CAMPAIGN_TEAM_MENU_ITEM,
   {
     label: 'Free Resources',
     icon: <MdLibraryBooks />,
@@ -69,7 +59,7 @@ const VOTER_RECORDS_MENU_ITEM = {
   icon: <MdFolderShared />,
 };
 
-const getDashboardMenuItems = (campaign, user) => {
+const getDashboardMenuItems = (campaign) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
     const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM);
@@ -96,7 +86,6 @@ export default function DashboardMenu({
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
         const { id, link, icon, label } = item;
-
         return (
           <DashboardMenuItem
             key={label}
