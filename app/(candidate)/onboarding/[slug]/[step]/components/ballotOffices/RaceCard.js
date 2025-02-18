@@ -82,17 +82,8 @@ export default function RaceCard({
           <GrRadial className="min-w-[16px]" />
         )}
         <div className="ml-3 text-left">
-          <Body1>{renderOption(name)}</Body1>
-          <Body2>
-            Election Date: {dateUsHelper(electionDay)}{' '}
-            {primaryElectionDate ? (
-              <span className="ml-2">
-                | Primary Election Date: {dateUsHelper(primaryElectionDate)}
-              </span>
-            ) : (
-              ''
-            )}
-          </Body2>
+          <Body1>{name}</Body1>
+          <Body2>{normalizedPosition?.name || ''}</Body2>
         </div>
       </div>
       <div
