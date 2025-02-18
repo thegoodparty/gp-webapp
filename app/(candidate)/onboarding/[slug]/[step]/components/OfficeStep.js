@@ -179,31 +179,53 @@ export default function OfficeStep(props) {
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
-      <div className="flex items-center flex-col pt-12">
-        <H1 className="text-center">What office are you interested in?</H1>
-
-        <div className="w-full max-w-2xl mt-10">
-          <BallotRaces
+      <div className="flex items-center flex-col">
+        {part === 1 && (
+          <OfficeStepForm
             campaign={campaign}
-            selectedOfficeCallback={handleBallotOffice}
-            selectedOffice={selectedOffice}
-            updateCallback={updateCallback}
-            step={step}
+            handleNextPart={handleNextPart}
+            zip={state.ballotSearch?.zip || campaign.details?.zip}
+            level={state.ballotSearch?.level || ''}
+            electionDate={state.ballotSearch?.electionDate || ''}
           />
-        </div>
-        <div className={`${step ? 'flex justify-end w-full' : ''}`}>
-          <Button
-            size="large"
-            className={{ block: true }}
-            disabled={!canSubmit() || processing}
-            loading={processing}
-            type="submit"
-            onClick={handleSave}
-            {...trackingAttrs}
-          >
-            {step ? 'Next' : 'Save'}
-          </Button>
-        </div>
+        )}
+        {part === 2 && (
+          <>
+            <div className="w-full max-w-2xl mt-10">
+              <BallotRaces
+                campaign={campaign}
+                selectedOfficeCallback={handleBallotOffice}
+                selectedOffice={selectedOffice}
+                updateCallback={updateCallback}
+                step={step}
+                zip={state.ballotSearch.zip}
+                level={state.ballotSearch.level}
+                electionDate={state.ballotSearch.electionDate}
+              />
+            </div>
+            <div className="flex justify-between w-full">
+              <Button
+                size="large"
+                color="neutral"
+                className={{ block: true }}
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+              <Button
+                size="large"
+                className={{ block: true }}
+                disabled={!canSubmit() || processing}
+                loading={processing}
+                type="submit"
+                onClick={handleSave}
+                {...trackingAttrs}
+              >
+                {step ? 'Next' : 'Save'}
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </form>
   );

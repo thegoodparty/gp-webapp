@@ -29,11 +29,12 @@ const fields = [
 ];
 
 export default function OfficeStepForm(props) {
-  const { campaign, handleNextPart } = props;
+  const { campaign, handleNextPart, level, zip, electionDate } = props;
   const [processing, setProcessing] = useState(false);
   const [state, setState] = useState({
-    zip: campaign.details?.zip || '',
-    level: '',
+    zip: zip || '',
+    level: level || '',
+    electionDate: electionDate || '',
   });
   const [user, _] = useUser();
 
