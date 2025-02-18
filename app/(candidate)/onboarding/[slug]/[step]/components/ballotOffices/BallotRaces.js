@@ -18,7 +18,14 @@ import Button from '@shared/buttons/Button';
 
 const fetchRaces = async (zip) => {
   const api = gpApi.ballotData.races;
-  const payload = { zip };
+  let cleanLevel = level;
+  if (level === 'Local/Township/City') {
+    cleanLevel = 'Local';
+  }
+  if (level === 'County/Regional') {
+    cleanLevel = 'County';
+  }
+  const payload = { zip, level: cleanLevel, electionDate };
   return await gpFetch(api, payload, 3600);
 };
 
