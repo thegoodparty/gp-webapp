@@ -74,7 +74,13 @@ export const getUserCookie = (withParse = false) => {
 
   const user = getCookie(userCookieName);
   if (user && withParse) {
-    return JSON.parse(decodeURIComponent(user));
+    try {
+      return JSON.parse(decodeURIComponent(user));
+    } catch (e) {
+      console.error('User cookie parse failed');
+      deleteCookie(userCookieName);
+      return false;
+    }
   }
   if (user) {
     return decodeURIComponent(user);
