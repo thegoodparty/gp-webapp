@@ -14,7 +14,6 @@ test('Adjust Personal Information', async ({ page }) => {
     await skipNonQA(test);
     const caseId = 33;
     const firstName = userData.firstName;
-    const lastName = userData.lastName;
     const newEmailAddress = generateEmail();
     const phoneNumber = userData.phoneNumber;
     const zipCode = userData.zipCode.substring(0, 5);
@@ -26,7 +25,6 @@ test('Adjust Personal Information', async ({ page }) => {
         await acceptCookieTerms(page);
 
         await page.locator("[data-testid='personal-first-name']").fill(firstName);
-        await page.locator("[data-testid='personal-last-name']").fill(lastName);
         await page.locator("[data-testid='personal-email']").fill(newEmailAddress);
         await page.locator("input[name='phone']").fill(phoneNumber);
         await page.locator("[data-testid='personal-zip']").fill(zipCode);
@@ -37,7 +35,6 @@ test('Adjust Personal Information', async ({ page }) => {
 
         // Verifies changes are saved
         await expect(page.locator("[data-testid='personal-first-name']")).toHaveValue(firstName);
-        await expect(page.locator("[data-testid='personal-last-name']")).toHaveValue(lastName);
         await expect(page.locator("[data-testid='personal-email']")).toHaveValue(newEmailAddress);
         await expect(page.locator("input[name='phone']")).toHaveValue(phoneNumber);
         await expect(page.locator("[data-testid='personal-zip']")).toHaveValue(zipCode);

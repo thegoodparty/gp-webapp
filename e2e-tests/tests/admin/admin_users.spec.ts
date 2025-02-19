@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount } from 'helpers/accountHelpers';
+import { loginAccount, testAccountLastName } from 'helpers/accountHelpers';
 import { userData } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
@@ -45,7 +45,7 @@ test('Send candidate invite', async ({page}) => {
     await skipNonQA(test);
 
     const inviteFirstName = userData.firstName;
-    const inviteLastName = userData.lastName;
+    const inviteLastName = testAccountLastName;
     const inviteEmail = userData.email;
 
     try {
@@ -85,7 +85,7 @@ test('Send sales invite', async ({page}) => {
     await skipNonQA(test);
 
     const inviteFirstName = userData.firstName;
-    const inviteLastName = userData.lastName;
+    const inviteLastName = testAccountLastName;
     const inviteEmail = userData.email;
 
     try {
