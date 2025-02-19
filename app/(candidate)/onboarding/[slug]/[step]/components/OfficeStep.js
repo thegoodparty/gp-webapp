@@ -200,7 +200,13 @@ export default function OfficeStep(props) {
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col">
         {part === 1 && (
-          <OfficeStepForm campaign={campaign} handleNextPart={handleNextPart} />
+          <OfficeStepForm
+            campaign={campaign}
+            handleNextPart={handleNextPart}
+            zip={state.ballotSearch?.zip || campaign.details?.zip}
+            level={state.ballotSearch?.level || ''}
+            electionDate={state.ballotSearch?.electionDate || ''}
+          />
         )}
         {part === 2 && (
           <>

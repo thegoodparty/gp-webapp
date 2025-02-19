@@ -15,13 +15,17 @@ import { apiRoutes } from 'gpApi/routes';
 
 const fetchRaces = async (zipcode, level, electionDate) => {
   let cleanLevel = level;
-  if (level === 'Local/Township') {
+  if (level === 'Local/Township/City') {
     cleanLevel = 'Local';
   }
+  if (level === 'County/Regional') {
+    cleanLevel = 'County';
+  }
+  const payload = { zipcode, level: cleanLevel, electionDate };
 
-  const payload = { zipcode, level: cleanLevel.toUpperCase(), electionDate };
-
-  const resp = await clientFetch(apiRoutes.elections.racesByYear, payload);
+  const resp = await clientFetch(apiRoutes.elections.racesByYear, payload, {
+    revalidate: 3600,
+  });
 
   return resp.data;
 };
