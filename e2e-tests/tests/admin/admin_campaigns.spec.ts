@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { expect, test } from '@playwright/test';
 import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount } from 'helpers/accountHelpers';
+import { loginAccount, testAccountLastName } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
@@ -71,7 +71,7 @@ test('Verify admin user can impersonate user', async ({page}) => {
 test('Verify admin user can add/delete campaigns', async ({page}) => {
     const caseId = 74;
     const testFirstName = faker.person.firstName();
-    const testLastName = 'Playwright';
+    const testLastName = testAccountLastName;
     const testEmail = generateEmail();
     const testPhone = `5105${generateTimeStamp().slice(-6)}`;
     const testZipCode = '94066';

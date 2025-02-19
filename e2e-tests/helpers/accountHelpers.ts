@@ -8,6 +8,8 @@ import PDFDocument from 'pdfkit';
 
 const SESSION_FILE = path.resolve(__dirname, '../auth.json');
 
+export const testAccountLastName = 'test';
+
 export async function ensureSession() {
   const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
   const isDevEnv = process.env.BASE_URL === 'https://dev.goodparty.org';
@@ -113,7 +115,7 @@ export async function createAccount(
 ) {
   const loginPageHeader = "Join GoodParty.org";
   const firstName = userData.firstName;
-  const lastName = 'Playwright';
+  const lastName = testAccountLastName;
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'City';
