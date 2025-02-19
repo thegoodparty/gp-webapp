@@ -16,8 +16,11 @@ import Body1 from '@shared/typography/Body1';
 const fetchRaces = async (zip, level, electionDate) => {
   const api = gpApi.ballotData.races;
   let cleanLevel = level;
-  if (level === 'Local/Township') {
+  if (level === 'Local/Township/City') {
     cleanLevel = 'Local';
+  }
+  if (level === 'County/Regional') {
+    cleanLevel = 'County';
   }
   const payload = { zip, level: cleanLevel, electionDate };
   return await gpFetch(api, payload, 3600);

@@ -19,36 +19,27 @@ const fields = [
     label: 'Level',
     type: 'select',
     required: true,
-    options: [
-      'Local/Township',
-      'City',
-      'County',
-      'Regional',
-      'State',
-      'Federal',
-    ],
+    options: ['Local/Township/City', 'County/Regional', 'State', 'Federal'],
   },
   {
     key: 'electionDate',
-    label: 'General Election Date',
+    label: 'General Election Date (Optional)',
     type: 'date',
-    required: true,
   },
 ];
 
 export default function OfficeStepForm(props) {
-  const { campaign, handleNextPart } = props;
+  const { campaign, handleNextPart, level, zip, electionDate } = props;
   const [processing, setProcessing] = useState(false);
   const [state, setState] = useState({
-    zip: campaign.details?.zip || '',
-    level: '',
+    zip: zip || '',
+    level: level || '',
+    electionDate: electionDate || '',
   });
   const [user, _] = useUser();
 
   const canSubmit = () => {
-    return (
-      state.zip && state.level && state.electionDate && validateZip(state.zip)
-    );
+    return state.zip && state.level && validateZip(state.zip);
   };
 
   const handleNext = async () => {
