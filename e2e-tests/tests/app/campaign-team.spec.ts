@@ -21,7 +21,7 @@ test('Displays blank campaign team members page', async ({ page }) => {
         await expect(page.url()).toContain('/dashboard/team');
 
         // Verify campaign team members are displayed
-        await page.getByRole('heading', { name: 'You do not have any team members yet.' })
+        await page.getByRole('heading', { name: 'You do not have any team members yet.' });
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

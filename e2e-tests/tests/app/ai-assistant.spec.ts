@@ -21,7 +21,7 @@ test('Create new conversation', async ({ page }) => {
     try {
         await appNav(page, 'AI Assistant');
 
-        // Verify user is on campaign assistant page
+        // Verify user is on AI assistant page
         await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();
 
         // Create new chat

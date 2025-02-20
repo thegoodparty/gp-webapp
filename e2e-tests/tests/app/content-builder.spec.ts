@@ -16,7 +16,7 @@ test.skip('Generate content with Content Builder', async ({page}) => {
 
     try {
         await loginAccount(page, testAdmin, testAdminPassword);
-        await appNav(page, 'AI Campaign Tool');
+        await appNav(page, 'Content Builder');
 
         // Verify user is on the AI campaign tool page
         await expect(page.getByRole('heading', { name: 'My Content' })).toBeVisible();
