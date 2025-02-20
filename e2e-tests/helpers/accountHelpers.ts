@@ -34,13 +34,10 @@ export async function ensureSession() {
 
   const browser = await chromium.launch();
   const page = await browser.newPage();
-
-  const testZip = '94066';
-  const role = 'San Bruno City Council';
   const password = userData.password;
   const emailAddress = generateEmail();
 
-  await createAccount(page, testZip, role, password, emailAddress);
+  await createAccount(page, undefined, undefined, password, emailAddress);
 
   // Save the storage state (session)
   console.log(`Saving new test account: ${emailAddress} + ${password}1`);
@@ -109,7 +106,7 @@ export async function loginAccount(
 export async function createAccount(
   page,
   zipCode = "94066",
-  role = "San Bruno City Council",
+  role = "San Mateo Union School Board",
   password = userData.password,
   emailAddress = generateEmail()
 ) {
@@ -118,7 +115,7 @@ export async function createAccount(
   const lastName = testAccountLastName;
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
-  const electionLevel = 'City';
+  const electionLevel = 'Local/Township/City';
   const electionDate = '2028-11-10';
 
   await page.goto(`${baseURL}/sign-up`);
@@ -139,8 +136,9 @@ export async function createAccount(
   await acceptCookieTerms(page);
 
   await page.getByText('To pull accurate results,').isVisible();
+  await page.getByLabel('General Election Date (').fill(electionDate);
+  await page.getByLabel('General Election Date (').press('Enter');
   await page.getByRole('combobox').selectOption(electionLevel);
-  await page.getByLabel('General Election Date *').fill(electionDate);
   await page.getByRole('button', { name: 'Next' }).click();
 
   await page.getByText("What office are you interested in?").isVisible();
