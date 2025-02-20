@@ -76,8 +76,8 @@ test('Verify admin user can add/delete campaigns', async ({page}) => {
     const testPhone = `5105${generateTimeStamp().slice(-6)}`;
     const testZipCode = '94066';
     const testParty = 'Independent';
-    const role = "San Bruno City Council";
-    const electionLevel = 'City';
+    const role = "San Mateo Union School Board";
+    const electionLevel = 'Local/Township/City';
     const electionDate = '2028-11-10';
 
     try {
