@@ -6,6 +6,7 @@ import {
   FaTheaterMasks,
   FaToolbox,
   FaUserCircle,
+  FaUserTie,
 } from 'react-icons/fa';
 import { memo, useEffect } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
@@ -13,7 +14,7 @@ import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdFactCheck } from 'react-icons/md';
 import { USER_ROLES, userIsAdmin } from 'helpers/userHelper';
 
 const links = [
@@ -25,7 +26,7 @@ const links = [
   },
 ];
 
-function ProfileDropdown({ open, toggleCallback, user }) {
+function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
   const {
     clear: clearImpersonation,
     token: impersonateToken,
@@ -132,20 +133,39 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               </Link>
             )}
             {userIsAdmin(user) && !impersonating && (
-              <Link
-                href="/admin"
-                className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
-              >
-                <HiOutlineStar />
-                <div className="ml-3">Admin</div>
-              </Link>
+              <>
+                <Link
+                  href="/admin"
+                  className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                >
+                  <HiOutlineStar />
+                  <div className="ml-3">Admin</div>
+                </Link>
+                {isServePath ? (
+                  <Link
+                    href="/dashboard"
+                    className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                  >
+                    <MdFactCheck />
+                    <div className="ml-3">Win</div>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/serve"
+                    className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                  >
+                    <FaUserTie />
+                    <div className="ml-3">Serve</div>
+                  </Link>
+                )}
+              </>
             )}
             {impersonating && (
               <div
                 role="link"
                 tabIndex={0}
                 data-cy="header-link"
-                className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                className="font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
                 onClick={handleStopImpersonate}
                 onKeyDown={(e) => handleEnterPress(e, handleStopImpersonate)}
               >
