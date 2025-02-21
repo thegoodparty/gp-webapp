@@ -1,17 +1,15 @@
 import "dotenv/config";
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { addTestResult } from "helpers/testrailHelper";
-import { getStorybookFrame, validateElements } from "helpers/styleHelpers";
+import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
-
-const styleUrl = 'https://style.goodparty.org';
 
 test("Style Guide - Acknowledgement Question", async ({ page }) => {
     const caseId = 76;
   
     try {
-      await page.goto(styleUrl + '?path=/story/acknowledgements-acknowledgementquestion--default');
+      await page.goto(styleGuideURL + '?path=/story/acknowledgements-acknowledgementquestion--default');
   
       await page.waitForLoadState("networkidle");
   

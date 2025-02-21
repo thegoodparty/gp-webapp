@@ -1,5 +1,7 @@
 import { expect } from "@playwright/test";
 
+export const styleGuideURL = 'https://style.goodparty.org';
+
 export async function getStorybookFrame(page){
     return await page.locator('iframe[title="storybook-preview-iframe"]').contentFrame();
 }
