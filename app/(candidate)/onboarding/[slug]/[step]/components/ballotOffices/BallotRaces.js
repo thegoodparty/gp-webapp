@@ -1,8 +1,6 @@
 'use client';
 import RaceCard from './RaceCard';
-import Sticky from 'react-stickynode';
 import { useEffect, useState } from 'react';
-import ZipChanger from './ZipChanger';
 import { CircularProgress } from '@mui/material';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
@@ -11,12 +9,11 @@ import H3 from '@shared/typography/H3';
 import Modal from '@shared/utils/Modal';
 import CustomOfficeModal from './CustomOfficeModal';
 import { useRouter } from 'next/navigation';
-import H4 from '@shared/typography/H4';
-import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
-import { OfficeSelectionFilters } from 'app/(candidate)/onboarding/[slug]/[step]/components/ballotOffices/OfficeSelectionFilters';
 import Button from '@shared/buttons/Button';
+import H1 from '@shared/typography/H1';
+import Body1 from '@shared/typography/Body1';
 
-const fetchRaces = async (zip) => {
+const fetchRaces = async (zip, level, electionDate) => {
   const api = gpApi.ballotData.races;
   let cleanLevel = level;
   if (level === 'Local/Township/City') {
@@ -36,48 +33,29 @@ export default function BallotRaces(props) {
     selectedOffice,
     step,
     updateCallback,
+    zip,
+    level,
+    electionDate,
   } = props;
-  const [zip, setZip] = useState(campaign.details?.zip);
   const [races, setRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [level, setLevel] = useState('');
-  const [yearFilter, setYearFilter] = useState(null);
   const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [electionYears, setElectionYears] = useState([]);
-  const [collapsedYears, setCollapsedYears] = useState({});
-  const raceCountStart = 0;
-  const numOfRaces = electionYears?.reduce((raceCount, year) => {
-    const nextRaceCount = raceCount + ((races && races[year]?.length) || 0);
-    return nextRaceCount;
-  }, raceCountStart);
+
   const router = useRouter();
 
   useEffect(() => {
-    loadRaces(campaign.details?.zip);
+    loadRaces(zip, level, electionDate);
   }, []);
 
-  useEffect(() => {
-    setCollapsedYears(
-      electionYears.reduce((aggregate, year) => {
-        const nextAggregate = {
-          ...aggregate,
-          [year]: false,
-        };
-        return nextAggregate;
-      }, {}),
-    );
-  }, [electionYears]);
-
-  const loadRaces = async (zip) => {
+  const loadRaces = async (zip, level, electionDate) => {
     if (zip) {
       setLoading(true);
-      const initRaces = await fetchRaces(zip || campaign.details.zip);
+      const initRaces = await fetchRaces(zip, level, electionDate);
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`);
       }
-      setElectionYears(Object.keys(initRaces).sort());
       setRaces(initRaces);
       setLoading(false);
     }
@@ -86,18 +64,6 @@ export default function BallotRaces(props) {
   if (!zip) {
     return <div>No valid zip</div>;
   }
-
-  const handleKeyDown = (e, electionYear) => {
-    if (e.key === 'Enter') {
-      handleYearClick(electionYear);
-    }
-  };
-
-  const handleYearClick = (electionYear) =>
-    setCollapsedYears({
-      ...collapsedYears,
-      [electionYear]: !collapsedYears[electionYear],
-    });
 
   const handleSelect = (race) => {
     if (race?.id === selected?.id) {
@@ -109,57 +75,6 @@ export default function BallotRaces(props) {
     }
   };
 
-  const clearState = () => {
-    setSelected(false);
-    setInputValue('');
-    setLevel('');
-    setYearFilter(null);
-  };
-
-  const handleZipChange = async (newZip) => {
-    if (newZip !== zip) {
-      setZip(newZip);
-      clearState();
-      await loadRaces(newZip);
-      await updateCampaign([{ key: 'details.zip', value: newZip }]);
-    }
-  };
-
-  const filterRace = (race) => {
-    let positionLevel = race.position.level;
-
-    // TODO: move this kind of data-rewrite closer to "source of truth", preferably
-    //  whatever entry point the data is being ingested into our database
-    if (positionLevel === 'CITY') {
-      positionLevel = 'LOCAL';
-    }
-    const raceYear = new Date(race.election.electionDay).getFullYear();
-
-    const isTextFiltered = inputValue
-      ? race.position.name.toLowerCase().includes(inputValue.toLowerCase())
-      : true;
-
-    const isLevelFiltered = level
-      ? level && positionLevel === level.toUpperCase()
-      : true;
-
-    const isYearFiltered = yearFilter
-      ? parseInt(yearFilter) === raceYear
-      : true;
-
-    return isTextFiltered && isLevelFiltered && isYearFiltered;
-  };
-
-  const areFiltersEmpty = !level && !inputValue && !yearFilter;
-  const filtered = areFiltersEmpty
-    ? races
-    : electionYears.reduce(
-        (racesGroupedByYear, year) => ({
-          ...racesGroupedByYear,
-          [year]: races[year]?.filter(filterRace),
-        }),
-        {},
-      );
   const showCustomModal = () => {
     setShowModal(true);
   };
@@ -219,21 +134,12 @@ export default function BallotRaces(props) {
 
   return (
     <section className="mb-2">
-      <ZipChanger
-        zip={zip}
-        updateZipCallback={handleZipChange}
-        count={numOfRaces || 0}
-      />
-      <Sticky top={56} innerZ={10}>
-        <OfficeSelectionFilters
-          electionYears={electionYears}
-          onChange={({ inputValue, level, yearFilter }) => {
-            setInputValue(inputValue);
-            setLevel(level);
-            setYearFilter(yearFilter);
-          }}
-        />
-      </Sticky>
+      <H1 className="text-center">Which office are you running for?</H1>
+      <Body1 className="text-center mt-4">
+        Make sure it matches your candidacy papers from when you filed for
+        office.
+      </Body1>
+
       {loading ? (
         <div className="mt-6 text-center">
           <CircularProgress />
@@ -243,43 +149,16 @@ export default function BallotRaces(props) {
         </div>
       ) : (
         <div className="mt-6">
-          {filtered &&
-            electionYears?.map(
-              (electionYear) =>
-                (!yearFilter ||
-                  (yearFilter && electionYear === yearFilter)) && (
-                  <div key={electionYear}>
-                    <H4
-                      role="button"
-                      tabIndex={0}
-                      className="text-black/60 text-sm mb-2 ml-4 cursor-pointer"
-                      onClick={() => handleYearClick(electionYear)}
-                      onKeyDown={(e) => handleKeyDown(e, electionYear)}
-                    >
-                      {electionYear}
-                      {collapsedYears[electionYear] ? (
-                        <FaChevronRight className="inline-block ml-1" />
-                      ) : (
-                        <FaChevronDown className="inline-block ml-1" />
-                      )}
-                    </H4>
-                    {!collapsedYears[electionYear] &&
-                      filtered[electionYear]
-                        .sort((a, b) =>
-                          a.position.name.localeCompare(b.position.name),
-                        )
-                        .map((race, index) => (
-                          <RaceCard
-                            key={index}
-                            race={race}
-                            selected={race?.id === selected.id}
-                            selectCallback={handleSelect}
-                            inputValue={inputValue}
-                          />
-                        ))}
-                  </div>
-                ),
-            )}
+          {Array.isArray(races) &&
+            races.map((race, index) => (
+              <RaceCard
+                key={index}
+                race={race}
+                selected={race?.id === selected.id}
+                selectCallback={handleSelect}
+                inputValue={inputValue}
+              />
+            ))}
           {!loading && (
             <Button
               onClick={showCustomModal}
