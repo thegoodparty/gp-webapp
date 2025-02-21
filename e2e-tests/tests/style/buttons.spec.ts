@@ -1,17 +1,15 @@
 import "dotenv/config";
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 import { addTestResult } from "helpers/testrailHelper";
-import { getStorybookFrame, validateElements } from "helpers/styleHelpers";
+import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
-
-const styleUrl = 'https://style.goodparty.org';
 
 test("Style Guide - Black Button", async ({ page }) => {
   const caseId = 55;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-blackbutton--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-blackbutton--default');
 
     await page.waitForLoadState("networkidle");
 
@@ -47,7 +45,7 @@ test("Style Guide - Black Outlined Button", async ({ page }) => {
   const caseId = 56;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-blackoutlinedbutton--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-blackoutlinedbutton--default');
 
     await page.waitForLoadState("networkidle");
 
@@ -84,7 +82,7 @@ test("Style Guide - Button", async ({ page }) => {
   const caseId = 57;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-button--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-button--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -161,7 +159,7 @@ test("Style Guide - Error Button", async ({ page }) => {
   const caseId = 58;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-errorbutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-errorbutton--docs');
 
     await page.waitForLoadState("networkidle");
     const frame = await getStorybookFrame(page);
@@ -202,7 +200,7 @@ test("Style Guide - Icon Button", async ({ page }) => {
   const caseId = 59;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-iconbutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-iconbutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -260,7 +258,7 @@ test("Style Guide - Info Button", async ({ page }) => {
   const caseId = 60;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-infobutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-infobutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -300,7 +298,7 @@ test("Style Guide - Pill Button", async ({ page }) => {
   const caseId = 61;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-pill--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-pill--default');
 
     await page.waitForLoadState("networkidle");
 
@@ -335,7 +333,7 @@ test("Style Guide - Pink Button Client", async ({ page }) => {
   const caseId = 62;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-pinkbuttonclient--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-pinkbuttonclient--default');
 
     await page.waitForLoadState("networkidle");
 
@@ -366,7 +364,7 @@ test("Style Guide - Primary Button", async ({ page }) => {
   const caseId = 63;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-primarybutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-primarybutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -406,7 +404,7 @@ test("Style Guide - Purple Button", async ({ page }) => {
   const caseId = 64;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-purplebutton--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-purplebutton--default');
 
     await page.waitForLoadState("networkidle");
 
@@ -436,7 +434,7 @@ test("Style Guide - Question Button", async ({ page }) => {
   const caseId = 65;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-questionbutton--docs');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-questionbutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -460,7 +458,7 @@ test("Style Guide - Secondary Button", async ({ page }) => {
   const caseId = 66;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-secondarybutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-secondarybutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -498,7 +496,7 @@ test("Style Guide - Severity Button", async ({ page }) => {
   const caseId = 67;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-severitybutton--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-severitybutton--default');
 
     await page.waitForLoadState("networkidle");
 
@@ -542,7 +540,7 @@ test("Style Guide - Success Button", async ({ page }) => {
   const caseId = 68;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-successbutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-successbutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -578,7 +576,7 @@ test("Style Guide - Warning Button", async ({ page }) => {
   const caseId = 69;
 
   try {
-    await page.goto(styleUrl + '/?path=/docs/buttons-warningbutton--docs');
+    await page.goto(styleGuideURL + '/?path=/docs/buttons-warningbutton--docs');
 
     await page.waitForLoadState("networkidle");
 
@@ -614,7 +612,7 @@ test("Style Guide - Yellow Button", async ({ page }) => {
   const caseId = 70;
 
   try {
-    await page.goto(styleUrl + '/?path=/story/buttons-yellowbutton--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-yellowbutton--default');
 
     await page.waitForLoadState("networkidle");
 
