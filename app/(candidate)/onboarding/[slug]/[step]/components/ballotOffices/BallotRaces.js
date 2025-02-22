@@ -36,6 +36,7 @@ export default function BallotRaces(props) {
     zip,
     level,
     electionDate,
+    adminMode,
   } = props;
   const [races, setRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -125,7 +126,11 @@ export default function BallotRaces(props) {
         },
         { key: 'details.state', value: updated.details.state },
       ];
-      await updateCampaign(attr);
+      if (adminMode) {
+        await updateCampaign(attr, campaign.slug);
+      } else {
+        await updateCampaign(attr);
+      }
       if (updateCallback) {
         updateCallback();
       }
