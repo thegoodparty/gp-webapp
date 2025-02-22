@@ -29,7 +29,8 @@ const fields = [
 ];
 
 export default function OfficeStepForm(props) {
-  const { campaign, handleNextPart, level, zip, electionDate } = props;
+  const { campaign, handleNextPart, level, zip, electionDate, adminMode } =
+    props;
   const [processing, setProcessing] = useState(false);
   const [state, setState] = useState({
     zip: zip || '',
@@ -61,11 +62,15 @@ export default function OfficeStepForm(props) {
     });
     //  Clear error when user types
   };
+  let userName = user?.firstName + ' ' + user?.lastName;
+  if (adminMode) {
+    userName = '';
+  }
 
   return (
     <>
       <H1 className="text-center">
-        Welcome, {user?.firstName} {user?.lastName}
+        Welcome, {userName}
         <br />
         Let&apos;s look for your office
       </H1>
