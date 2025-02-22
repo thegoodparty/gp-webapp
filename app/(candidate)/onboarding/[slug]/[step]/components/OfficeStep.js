@@ -204,6 +204,7 @@ export default function OfficeStep(props) {
             zip={state.ballotSearch?.zip || campaign.details?.zip}
             level={state.ballotSearch?.level || ''}
             electionDate={state.ballotSearch?.electionDate || ''}
+            adminMode={adminMode}
           />
         )}
         {part === 2 && (
@@ -218,6 +219,7 @@ export default function OfficeStep(props) {
                 zip={state.ballotSearch.zip}
                 level={state.ballotSearch.level}
                 electionDate={state.ballotSearch.electionDate}
+                adminMode={adminMode}
               />
             </div>
             <div className="flex justify-between w-full">
