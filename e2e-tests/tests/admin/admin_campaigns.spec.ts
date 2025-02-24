@@ -96,6 +96,7 @@ test('Verify admin user can add/delete campaigns', async ({page}) => {
         await page.getByText('To pull accurate results,').isVisible();
         await page.getByLabel('Zipcode *').fill(testZipCode);
         await page.getByRole('combobox').selectOption(electionLevel);
+        await page.waitForLoadState('networkidle');
         await page.getByLabel('General Election Date *').fill(electionDate);
         await page.getByRole('button', { name: 'Next' }).click();
         await page.getByText("What office are you interested in?").isVisible();
