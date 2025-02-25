@@ -75,7 +75,7 @@ export async function clientFetch(endpoint, data, options = {}) {
 
   // handling invalid token 498 response
   if (response.status === 498) {
-    deleteUserCookies();
+    throw new Error('Invalid token');
   }
 
   return response;
