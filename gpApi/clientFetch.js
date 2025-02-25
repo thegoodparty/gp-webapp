@@ -1,5 +1,6 @@
 import { compile, parse } from 'path-to-regexp';
 import { API_ROOT, API_VERSION_PREFIX, IS_LOCAL } from 'appEnv';
+import { deleteUserCookies } from 'helpers/cookieHelper';
 
 /**
  * @typedef {Object} ApiEndpoint
@@ -71,6 +72,11 @@ export async function clientFetch(endpoint, data, options = {}) {
     statusText: res.statusText,
     data: isJsonResponse ? await res.json() : await res.text(),
   };
+
+  // handling invalid token 498 response
+  if (response.status === 498) {
+    deleteUserCookies();
+  }
 
   return response;
 }
