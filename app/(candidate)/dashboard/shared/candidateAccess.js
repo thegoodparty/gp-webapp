@@ -7,12 +7,12 @@ import { deleteUserCookies } from 'helpers/cookieHelper';
 export async function fetchCampaignStatus() {
   try {
     const resp = await serverFetch(apiRoutes.campaign.status);
-    return resp.data;
-  } catch (e) {
-    if (e.message === 'Invalid token') {
+    if (resp.status === 498) {
       deleteUserCookies();
       redirect('/logout');
     }
+    return resp.data;
+  } catch (e) {
     console.log('error at fetchCampaignStatus', e);
     return { status: false };
   }
