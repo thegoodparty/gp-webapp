@@ -19,10 +19,14 @@ export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
   const campaign = await fetchUserCampaign();
-  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
+  let candidatePositions = await serverLoadCandidatePosition(campaign.id);
   const topIssues = await serverFetchIssues();
   const user = getServerUser(); // can be removed when door knocking app is not for admins only
-
+  console.log('candidatePositions from serverLoadCandidatePosition was: ', candidatePositions);
+  if (candidatePositions === undefined || candidatePositions === null) {
+    candidatePositions = []
+  }
+  console.log('candidatePositions is now: ', candidatePositions);
   const childProps = {
     pathname: '/dashboard/campaign-details',
     campaign,
