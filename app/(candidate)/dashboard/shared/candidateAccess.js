@@ -8,7 +8,6 @@ export async function fetchCampaignStatus() {
   try {
     const resp = await serverFetch(apiRoutes.campaign.status);
     if (resp.status === 498) {
-      deleteUserCookies();
       redirect('/logout');
     }
     return resp.data;
