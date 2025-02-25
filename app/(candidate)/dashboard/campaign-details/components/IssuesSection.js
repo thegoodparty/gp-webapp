@@ -29,9 +29,11 @@ export default function IssuesSection(props) {
 
   useEffect(() => {
     const combined = [];
-    candidatePositions?.forEach((position) => {
-      combined.push({ ...position, type: 'position' });
-    });
+    if (Array.isArray(candidatePositions)) {
+      candidatePositions?.forEach((position) => {
+        combined.push({ ...position, type: 'position' });
+      });
+    }
     campaign?.details?.customIssues?.forEach((issue) => {
       combined.push({ ...issue, type: 'custom' });
     });
