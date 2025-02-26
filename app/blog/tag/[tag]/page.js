@@ -21,10 +21,22 @@ const fetchArticlesByTag = async (tag) => {
   return resp.data;
 };
 
+const fetchArticleTag = async (tag) => {
+  const payload = {
+    tag,
+  };
+
+  const resp = await serverFetch(apiRoutes.content.articleTag, payload, {
+    revalidate: 1,
+  });
+
+  return resp.data;
+};
+
 export async function generateMetadata({ params }) {
   const { tag } = params;
 
-  const { tagName } = await fetchArticlesByTag(tag);
+  const { tagName } = await fetchArticleTag(tag);
 
   const meta = pageMetaData({
     title: `${tagName} | GoodParty.org Blog`,
@@ -39,7 +51,8 @@ export default async function Page({ params }) {
   if (!tag) {
     notFound();
   }
-  const { tagName, articles } = await fetchArticlesByTag(tag);
+  const { name: tagName } = await fetchArticleTag(tag);
+  const articles = await fetchArticlesByTag(tag);
 
   if (!articles) {
     return null;
