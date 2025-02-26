@@ -38,14 +38,14 @@ export const filterIssues = (value = '', issues) => {
 
 export const saveCandidatePosition = async ({
   description,
-  campaignSlug,
+  campaignId,
   positionId,
   topIssueId,
 }) => {
   try {
     const payload = {
+      id: campaignId,
       description,
-      campaignSlug,
       positionId,
       topIssueId,
       // TODO: remove order once the Sails "input" value for `order` is removed or made optional
@@ -73,7 +73,7 @@ export const deleteCandidatePosition = async (positionId, campaignId) => {
       payload,
     );
   } catch (e) {
-    console.log('error at saveCandidatePosition', e);
+    console.log('error at deleteCandidatePosition', e);
     return false;
   }
 };
@@ -95,7 +95,7 @@ export async function updateCandidatePosition(
     );
     return resp.data;
   } catch (e) {
-    console.log('error at saveCandidatePosition', e);
+    console.log('error at updateCandidatePosition', e);
     return false;
   }
 }

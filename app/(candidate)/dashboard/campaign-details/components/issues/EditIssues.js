@@ -60,7 +60,7 @@ export default function EditIssues(props) {
     } else {
       await saveCandidatePosition({
         description: candidatePosition,
-        campaignSlug: campaign.slug,
+        campaignId: campaign.id,
         positionId: position.id,
         topIssueId: position.topIssue?.id,
         order: maxOrder,

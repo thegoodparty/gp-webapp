@@ -10,7 +10,8 @@ export async function serverLoadCandidatePosition(campaignId) {
       apiRoutes.campaign.campaignPosition.find,
       payload,
     );
-    return resp.data;
+    if (!resp.ok) return [];
+    return resp.data || [];
   } catch (e) {
     console.log('error at serverLoadCandidatePosition', e);
     return false;
@@ -18,8 +19,8 @@ export async function serverLoadCandidatePosition(campaignId) {
 }
 
 export const serverFetchIssues = async () => {
-  const resp = serverFetch(apiRoutes.topIssue.list, undefined, {
+  const resp = await serverFetch(apiRoutes.topIssue.list, undefined, {
     revalidate: 3600,
   });
-  return resp.data;
+  return resp.data || [];
 };
