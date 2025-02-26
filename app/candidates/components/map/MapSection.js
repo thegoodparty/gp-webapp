@@ -55,7 +55,7 @@ export default memo(function MapSection({
     // filter visible campaigns
     if (mapBounds) {
       const visibleCampaigns = campaigns.filter((camp) =>
-        mapBounds.contains(camp.position),
+        mapBounds.contains(camp.globalPosition),
       );
       setVisibleCampaigns(visibleCampaigns);
       return;
@@ -116,7 +116,7 @@ export default memo(function MapSection({
         return null;
       }
 
-      mapRef.current.moveMapWithHistory(campaign.position);
+      mapRef.current.moveMapWithHistory(campaign.globalPosition);
 
       return campaign;
     });
