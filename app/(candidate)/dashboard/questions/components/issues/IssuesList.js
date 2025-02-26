@@ -62,7 +62,7 @@ export default function IssuesList({
     }
     await saveCandidatePosition({
       description: candidatePosition,
-      campaignSlug: campaign.slug,
+      campaignId: campaign.id,
       positionId: position.id,
       topIssueId: issue.id,
     });

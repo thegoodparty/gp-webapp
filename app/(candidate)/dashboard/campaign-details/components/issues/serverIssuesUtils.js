@@ -10,6 +10,7 @@ export async function serverLoadCandidatePosition(campaignId) {
       apiRoutes.campaign.campaignPosition.find,
       payload,
     );
+    if (!resp.ok) return [];
     return resp.data || [];
   } catch (e) {
     console.log('error at serverLoadCandidatePosition', e);
