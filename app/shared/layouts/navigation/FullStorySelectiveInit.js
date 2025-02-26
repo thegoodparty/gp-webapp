@@ -3,14 +3,10 @@
 import { getCookie } from 'helpers/cookieHelper';
 import { useEffect } from 'react';
 
-const USER_RATIO = 1; // asign all users to FullStory
-const GUEST_RATIO = 0.1; // asign 10% of guests to FullStory
-
 export default function FullStorySelectiveInit({ user }) {
   useEffect(() => {
     if (user) {
       fullstoryIdentity(user);
-      selectiveFullStoryTracking(user);
     }
   }, [user]);
 
@@ -37,26 +33,5 @@ export default function FullStorySelectiveInit({ user }) {
         });
       }
     }
-  };
-
-  const selectiveFullStoryTracking = (user) => {
-    if (typeof FS === 'undefined') {
-      return;
-    }
-    if (!user) {
-      FS('shutdown');
-    }
-    /*
-    const random = Math.random();
-    if (!user) {
-      if (random > GUEST_RATIO) {
-        FS.shutdown();
-      }
-    } else {
-      if (random > USER_RATIO) {
-        FS.shutdown();
-      }
-    }
-      */
   };
 }

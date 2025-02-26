@@ -16,6 +16,7 @@ import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Button from '@shared/buttons/Button';
+import { useRouter } from 'next/navigation';
 
 const fields = [
   {
@@ -98,6 +99,7 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { errorSnackbar } = useSnackbar();
   const [_, setUser] = useUser();
+  const router = useRouter();
 
   const enableSubmit = () =>
     isValidEmail(state.email) && isValidPassword(state.password);
@@ -119,8 +121,9 @@ export default function SignUpPage() {
       if (user) {
         await saveToken(token);
         setUser(user);
-        await createCampaign();
+        const redirect = await createCampaign();
         setLoading(false);
+        router.push(redirect);
         return;
       } else {
         errorSnackbar(

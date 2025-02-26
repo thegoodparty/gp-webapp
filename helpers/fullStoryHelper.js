@@ -1,4 +1,4 @@
-import { kebabCase } from 'lodash';
+import { kebabCase } from 'es-toolkit';
 
 export const trackEvent = (name, properties) => {
   try {

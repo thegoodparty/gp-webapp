@@ -5,7 +5,8 @@ export const handleDemoAccountDeletion = (errorSnackbar) => async () => {
   try {
     await deleteDemoCampaign();
     await updateUser();
-    await createCampaign();
+    const redirect = await createCampaign();
+    window.location.href = redirect;
   } catch (e) {
     console.error(e);
     errorSnackbar('Error clearing demo campaign');

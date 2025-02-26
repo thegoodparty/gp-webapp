@@ -1,6 +1,6 @@
 import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
 import Config from '../tailwind.config.js';
-import { pick } from 'lodash';
+import { pick } from 'es-toolkit';
 
 export function renderColorSwatches(...colorKeys) {
   return Object.entries(pick(Config.theme.extend.colors, colorKeys)).map(
