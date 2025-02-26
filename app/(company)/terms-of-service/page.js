@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { FullContentPage } from '@shared/FullContentPage';
-import { fetchContent } from 'helpers/fetchContent';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 const meta = pageMetaData({
   title: 'Terms of Service | GoodParty.org',
@@ -9,6 +9,6 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  const content = await fetchContent('termsOfService');
+  const content = (await fetchContentByType('termsOfService'))[0];
   return <FullContentPage content={content} />;
 }

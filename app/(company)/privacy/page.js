@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { FullContentPage } from '@shared/FullContentPage';
-import { fetchContent } from 'helpers/fetchContent';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 const meta = pageMetaData({
   title: 'Privacy Policy | GoodParty.org',
@@ -11,6 +11,6 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 export default async function Page() {
-  const content = await fetchContent('privacyPage');
+  const content = (await fetchContentByType('privacyPage'))[0];
   return <FullContentPage content={content} />;
 }
