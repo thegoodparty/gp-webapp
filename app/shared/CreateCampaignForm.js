@@ -17,7 +17,7 @@ const createCampaign = async (payload) => {
     if (!user || !user.email) {
       console.error('User not found or missing email');
     } else {
-      payload.adminEmail = user.email;
+      payload.adminUserEmail = user.email;
     }
 
     const resp = await clientFetch(apiRoutes.admin.campaign.create, payload);
