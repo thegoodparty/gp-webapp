@@ -27,7 +27,7 @@ export default async function Page({ params, searchParams }) {
 
   const categories = await fetchContentByType('aiContentCategories', 3600);
   const candidatePositions = await serverLoadCandidatePosition(campaign.id);
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/content',

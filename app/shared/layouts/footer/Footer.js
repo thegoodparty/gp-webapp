@@ -19,7 +19,9 @@ export default function Footer() {
     pathname?.startsWith('/product-tour');
 
   const isProfilePath = pathname?.startsWith('/profile');
-  if (isOnboardingPath || isDashboardPath || isProfilePath) {
+  const isServePath = pathname?.startsWith('/serve');
+
+  if (isOnboardingPath || isDashboardPath || isProfilePath || isServePath) {
     return null;
   }
 

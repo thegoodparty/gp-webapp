@@ -21,6 +21,7 @@ export default function RightSide({ campaignStatus }) {
   const pathname = usePathname();
   const isDashboardPath = pathname?.startsWith('/dashboard');
   const isOnboardingPath = pathname?.startsWith('/onboarding');
+  const isServePath = pathname?.startsWith('/serve');
 
   const toggleProfile = () => {
     closeAll();
@@ -59,6 +60,7 @@ export default function RightSide({ campaignStatus }) {
             open={profileOpen}
             toggleCallback={toggleProfile}
             user={user}
+            isServePath={isServePath}
           />
           {user?.role !== USER_ROLES.SALES &&
             (isDashboardPath ? (
@@ -72,6 +74,7 @@ export default function RightSide({ campaignStatus }) {
                 isDashboardPath={isDashboardPath}
                 closeAll={closeAll}
                 campaignStatus={campaignStatus}
+                isServePath={isServePath}
               />
             ))}
         </>

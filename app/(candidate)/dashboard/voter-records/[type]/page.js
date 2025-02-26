@@ -20,7 +20,7 @@ export default async function Page({ params, searchParams }) {
   const { type } = params;
   await candidateAccess();
 
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
   const campaign = await fetchUserCampaign();
   const canDownload = await fetchCanDownload();
   if (!canDownload) {

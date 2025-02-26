@@ -16,7 +16,7 @@ export default async function Page({ params, searchParams }) {
 
   const campaign = await fetchUserCampaign();
   const candidatePositions = await serverLoadCandidatePosition(campaign.id);
-  const user = getServerUser();
+  const user = await getServerUser();
 
   const childProps = {
     pathname: '/dashboard/upgrade-to-pro',
