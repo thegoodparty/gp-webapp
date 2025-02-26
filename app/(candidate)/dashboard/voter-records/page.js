@@ -27,7 +27,7 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
   const campaign = await fetchUserCampaign();
   if (!campaign?.isPro) {
     return redirect('/dashboard/upgrade-to-pro', 'replace');

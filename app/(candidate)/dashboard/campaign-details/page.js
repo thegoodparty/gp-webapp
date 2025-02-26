@@ -21,7 +21,7 @@ export default async function Page({ params, searchParams }) {
   const campaign = await fetchUserCampaign();
   const candidatePositions = await serverLoadCandidatePosition(campaign.id);
   const topIssues = await serverFetchIssues();
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/campaign-details',
