@@ -2,6 +2,8 @@ import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogPage from './components/BlogPage';
 import { apiFetch } from 'gpApi/apiFetch';
+import { fetchArticleTags } from './shared/fetchArticleTags';
+import { fetchArticlesTitles } from './shared/fetchArticlesTitles';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';

@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogSectionPage from './components/BlogSectionPage';
+import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
@@ -27,7 +29,7 @@ export default async function Page({ params }) {
     notFound();
   }
   const [{ sections, hero, sectionIndex }, tags, titles] = await Promise.all([
-    fetchArticlesBySections(),
+    fetchArticlesBySections(slug),
     fetchArticleTags(),
     fetchArticlesTitles(),
   ]);

@@ -3,6 +3,7 @@ import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
 import { apiFetch } from 'gpApi/apiFetch';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
@@ -45,7 +46,7 @@ export default async function Page({ params }) {
 }
 
 export async function generateStaticParams({ params }) {
-  const articles = await apiFetch('content/type/blogArticleTitles');
+  const articles = await fetchArticlesTitles();
 
   return articles?.map((article) => {
     return {

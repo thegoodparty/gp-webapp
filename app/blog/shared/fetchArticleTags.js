@@ -1,9 +1,5 @@
-import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+import { apiFetch } from 'gpApi/apiFetch';
 
 export const fetchArticleTags = async () => {
-  const resp = await serverFetch(apiRoutes.content.articleTags, undefined, {
-    revalidate: 3600,
-  });
-  return resp.data;
+  return await apiFetch('content/article-tags');
 };
