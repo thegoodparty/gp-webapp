@@ -26,7 +26,7 @@ export default function EmptyState({ campaign }) {
             If you need assistance in the meantime, feel free to contact our
             support team.
           </Body1>
-          <Link href="/pro-consultation">
+          <Link href="/contact">
             <PrimaryButton className="mt-8">Contact Us</PrimaryButton>
           </Link>
         </div>
