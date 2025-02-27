@@ -41,8 +41,13 @@ export default function NotificationSection() {
 
   useEffect(() => {
     if (user && !initialUpdate) {
-      const meta =
-        user.metaData !== '' && user.metaData ? JSON.parse(user.metaData) : {};
+      let meta = {};
+      try {
+        meta = JSON.parse(user.metaData);
+      } catch (error) {
+        console.log('Error parsing user meta', error);
+      }
+
       setState(meta);
       setInitialUpdate(true);
     }

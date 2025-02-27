@@ -165,6 +165,10 @@ export default function OfficeStep(props) {
 
   const handleBallotOffice = async (office) => {
     if (office) {
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSelected, {
+        office: office?.position?.name,
+      });
+
       setState({
         ...state,
         ballotOffice: office,
@@ -178,10 +182,6 @@ export default function OfficeStep(props) {
       });
     }
   };
-
-  trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSelected, {
-    office: office,
-  });
 
   const selectedOffice = campaign.details?.positionId
     ? {

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import { usePathname } from 'next/navigation';
 
 const ProBadge = () => (
   <div
@@ -27,6 +28,7 @@ const ProBadge = () => (
 export const HeaderLogo = () => {
   const [campaign] = useCampaign();
   const [campaignStatusClient] = useCampaignStatus();
+  const pathname = usePathname();
 
   const { isPro } = campaign || {};
   const { status } = campaignStatusClient || {};
@@ -37,7 +39,9 @@ export const HeaderLogo = () => {
         className="flex items-center no-underline"
         href={link}
         id="nav-logo"
-        onClick={() => trackEvent(EVENTS.Navigation.Top.ClickLogo)}
+        onClick={() =>
+          trackEvent(EVENTS.Navigation.Top.ClickLogo, { pathname })
+        }
       >
         <Image
           src="/images/heart-hologram.svg"

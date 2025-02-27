@@ -66,7 +66,6 @@ export default function CompleteStep() {
         size="large"
         className="w-full"
         onClick={handleSave}
-        fullWidth
         {...trackingAttrs}
       >
         {loading ? 'Launching...' : 'View Dashboard'}
