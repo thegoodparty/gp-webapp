@@ -13,6 +13,7 @@ import { handleLogOut } from '@shared/user/handleLogOut';
 import { useSnackbar } from 'helpers/useSnackbar';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 async function deleteAccountCallback(id) {
   try {
@@ -37,6 +38,7 @@ function DeleteAccountButton({ userId }) {
   const { errorSnackbar } = useSnackbar();
 
   async function handleDeleteAccount() {
+    trackEvent(EVENTS.Settings.DeleteAccount.SubmitDelete);
     const msg = await deleteAccountCallback(userId);
     if (msg) {
       errorSnackbar(msg);
@@ -45,7 +47,12 @@ function DeleteAccountButton({ userId }) {
 
   return (
     <div>
-      <div onClick={() => setShowConfirmDelete(true)}>
+      <div
+        onClick={() => {
+          trackEvent(EVENTS.Settings.DeleteAccount.ClickDelete);
+          setShowConfirmDelete(true);
+        }}
+      >
         <ErrorButton variant="outlined">
           <div className="flex items-center">
             <FaTrash />
@@ -55,7 +62,10 @@ function DeleteAccountButton({ userId }) {
       </div>
       <AlertDialog
         open={showConfirmDelete}
-        handleClose={() => setShowConfirmDelete(false)}
+        handleClose={() => {
+          trackEvent(EVENTS.Settings.DeleteAccount.CancelDelete);
+          setShowConfirmDelete(false);
+        }}
         title="Delete Account"
         ariaLabel="Delete Account"
         description="Are you sure you want to delete your account? This cannot be undone."

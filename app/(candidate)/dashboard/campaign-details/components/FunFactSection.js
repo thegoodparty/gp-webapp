@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const fields = [
   {
@@ -50,6 +51,8 @@ export default function FunFactSection(props) {
   const handleSave = async () => {
     if (canSave()) {
       setSaving(true);
+
+      trackEvent(EVENTS.Profile.FunFact.ClickSave);
 
       await updateCampaign([{ key: 'details.funFact', value: state.funFact }]);
       setSaving(false);

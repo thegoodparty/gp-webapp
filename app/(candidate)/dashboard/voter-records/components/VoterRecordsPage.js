@@ -16,6 +16,7 @@ import NeedHelp from './NeedHelp';
 import ViewAudienceFiltersModal from './ViewAudienceFiltersModal';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE'];
 
@@ -112,6 +113,7 @@ export default function VoterRecordsPage(props) {
                   {...props}
                   reloadCampaignCallback={reloadCampaign}
                   campaign={campaign}
+                  buttonPosition="top"
                 />
               </div>
             </div>
@@ -159,6 +161,13 @@ export default function VoterRecordsPage(props) {
                                 )}`
                               : `/dashboard/voter-records/${file.key.toLowerCase()}`
                           }
+                          onClick={() => {
+                            trackEvent(EVENTS.VoterData.ClickDetail, {
+                              type,
+                              file: file.name,
+                              isCustom: file.isCustom,
+                            });
+                          }}
                           className="text-info underline hover:text-info-dark"
                         >
                           {field}
@@ -170,7 +179,12 @@ export default function VoterRecordsPage(props) {
                             <ViewAudienceFiltersModal
                               open={modalFileKey === file.key}
                               file={file}
-                              onOpen={() => setModalFileKey(file.key)}
+                              onOpen={() => {
+                                trackEvent(
+                                  EVENTS.VoterData.FileDetail.ClickInfoIcon,
+                                );
+                                setModalFileKey(file.key);
+                              }}
                               onClose={() => setModalFileKey(null)}
                               className="ml-1 self-center"
                             />
@@ -187,6 +201,7 @@ export default function VoterRecordsPage(props) {
                 {...props}
                 reloadCampaignCallback={reloadCampaign}
                 campaign={campaign}
+                buttonPosition="bottom"
               />
             </div>
           </>

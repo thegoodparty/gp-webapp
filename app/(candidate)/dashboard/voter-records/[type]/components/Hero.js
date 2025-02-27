@@ -7,10 +7,10 @@ import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
 import RecordCount from './RecordCount';
-import Chip from '@shared/utils/Chip';
 import slugify from 'slugify';
 import DownloadFile from './DownloadFile';
 import ViewAudienceFiltersModal from '../../components/ViewAudienceFiltersModal';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function Hero(props) {
   const { type, campaign, fileName, customFile } = props;
@@ -66,8 +66,13 @@ export default function Hero(props) {
               size="large"
               open={modalOpen}
               file={customFile}
-              onOpen={() => setModalOpen(true)}
-              onClose={() => setModalOpen(false)}
+              onOpen={() => {
+                trackEvent(EVENTS.VoterData.FileDetail.ClickViewFilters);
+                setModalOpen(true);
+              }}
+              onClose={() => {
+                setModalOpen(false);
+              }}
             />
           </div>
         )}

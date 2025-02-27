@@ -1,10 +1,10 @@
 import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
 import H3 from '@shared/typography/H3';
 import Overline from '@shared/typography/Overline';
 import Paper from '@shared/utils/Paper';
 import Link from 'next/link';
 import { IoArrowForward } from 'react-icons/io5';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function ScriptCard({ type }) {
   let typeText = '';
@@ -32,7 +32,15 @@ export default function ScriptCard({ type }) {
           When you are done, you can attach that script to this campaign.
         </Body2>
       </div>
-      <Link href="/dashboard/content?showModal=true">
+      <Link
+        href="/dashboard/content?showModal=true"
+        onClick={() => {
+          trackEvent(
+            EVENTS.VoterData.FileDetail.LearnTakeAction.ClickWriteScript,
+            { type },
+          );
+        }}
+      >
         <div className="mt-4 flex items-center justify-end">
           <div className="mr-2">Write Script</div>
           <IoArrowForward />

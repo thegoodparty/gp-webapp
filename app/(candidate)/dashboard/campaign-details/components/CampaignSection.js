@@ -7,6 +7,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { CircularProgress } from '@mui/material';
 import { isValidUrl } from 'helpers/linkhelper';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const fields = [
   {
@@ -83,6 +84,7 @@ export default function CampaignSection(props) {
 
   const handleSave = async () => {
     if (canSave()) {
+      trackEvent(EVENTS.Profile.CampaignDetails.ClickSave);
       setSaving(true);
       const attr = fields.map((field) => {
         return { key: `details.${field.key}`, value: state[field.key] };

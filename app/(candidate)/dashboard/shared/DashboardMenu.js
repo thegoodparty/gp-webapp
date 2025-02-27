@@ -10,6 +10,7 @@ import {
   MdFolderShared,
   MdLibraryBooks,
 } from 'react-icons/md';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -24,12 +25,14 @@ const DEFAULT_MENU_ITEMS = [
     icon: <MdFactCheck />,
     link: '/dashboard',
     id: 'campaign-tracker-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
   },
   {
     label: 'AI Assistant',
     icon: <MdAutoAwesome />,
     link: '/dashboard/campaign-assistant',
     id: 'campaign-assistant-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
   },
   VOTER_DATA_UPGRADE_ITEM,
   {
@@ -37,18 +40,21 @@ const DEFAULT_MENU_ITEMS = [
     icon: <MdFileOpen />,
     link: '/dashboard/content',
     id: 'my-content-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
   },
   {
     label: 'My Profile',
     icon: <MdAccountCircle />,
     link: '/dashboard/campaign-details',
     id: 'campaign-details-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
   },
   {
     label: 'Free Resources',
     icon: <MdLibraryBooks />,
     link: '/blog/section/for-candidates',
     id: 'resources-library',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickFreeResources),
   },
 ];
 
@@ -57,6 +63,7 @@ const VOTER_RECORDS_MENU_ITEM = {
   label: 'Voter Data',
   link: '/dashboard/voter-records',
   icon: <MdFolderShared />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterData),
 };
 
 const getDashboardMenuItems = (campaign) => {
@@ -82,6 +89,11 @@ export default function DashboardMenu({
     if (e.key == 'Enter') handleLogOut(e);
   };
 
+  const handleMenuItemClick = (item) => {
+    item?.onClick();
+    toggleCallback?.();
+  };
+
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
@@ -92,7 +104,7 @@ export default function DashboardMenu({
             id={id}
             link={link}
             icon={icon}
-            onClick={toggleCallback}
+            onClick={() => handleMenuItemClick(item)}
             pathname={pathname}
           >
             {label}

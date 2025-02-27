@@ -4,7 +4,11 @@ import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import { AlertBanner } from '../AlertBanner';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  EVENTS,
+  trackEvent,
+} from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
 
 export default function LogProgress({
@@ -14,8 +18,15 @@ export default function LogProgress({
 }) {
   const [showModal, setShowModal] = useState(false);
 
-  const { key, title, modalTitle, modalSubTitle, modalLabel, infoBanner } =
-    card;
+  const {
+    key,
+    title,
+    modalTitle,
+    modalSubTitle,
+    modalLabel,
+    infoBanner,
+    onLogClick,
+  } = card;
 
   const [value, setValue] = useState(0);
 
@@ -26,10 +37,24 @@ export default function LogProgress({
   const handleSubmit = async () => {
     let newAddition = parseInt(value, 10);
 
+    trackEvent(EVENTS.Dashboard.VoterContact.LogProgress.Add, {
+      key,
+      title,
+      value,
+    });
+
     const newTotal = (reportedVoterGoals[key] || 0) + newAddition;
     updateCountCallback(key, newTotal, newAddition);
     setShowModal(false);
     setValue(0);
+  };
+
+  const handleClose = () => {
+    trackEvent(EVENTS.Dashboard.VoterContact.LogProgress.Exit, {
+      key,
+      title,
+    });
+    setShowModal(false);
   };
 
   const submitTrackingAttrs = useMemo(
@@ -48,6 +73,7 @@ export default function LogProgress({
         color="neutral"
         size="large"
         onClick={() => {
+          onLogClick();
           setShowModal(true);
         }}
         className="log-progress w-full"
@@ -78,7 +104,7 @@ export default function LogProgress({
                 size="large"
                 color="neutral"
                 className=""
-                onClick={() => setShowModal(false)}
+                onClick={handleClose}
               >
                 Cancel
               </Button>

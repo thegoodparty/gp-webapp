@@ -19,6 +19,7 @@ import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-si
 import Overline from '@shared/typography/Overline';
 import { Switch } from '@mui/material';
 import Button from '@shared/buttons/Button';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -82,6 +83,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     doEinCheck(einInputValue, einInputValue);
 
   const handleNextClick = async () => {
+    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext);
     const doCampaignUpdate = async () => {
       setLoadingCampaignUpdate(true);
       await updateCampaign([
@@ -102,6 +104,9 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
   };
 
   const handleSkipEinToggle = (toggleValue) => {
+    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ToggleRequired, {
+      required: toggleValue,
+    });
     setSkipEin(toggleValue);
 
     if (toggleValue === true) {
@@ -147,6 +152,9 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
                   message={COMMITTEE_HELP_MESSAGE}
                   loading={loadingEinCheck}
                   validated={validatedEin}
+                  onTooltipOpen={() => {
+                    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverNameHelp);
+                  }}
                 />
               ),
             }}
@@ -189,6 +197,9 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
           <section className="flex flex-col justify-between mt-4 md:mt-8 md:flex-row">
             <Button
               href="/dashboard/pro-sign-up"
+              onClick={() => {
+                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack);
+              }}
               size="large"
               color="neutral"
               className=" mb-4 md:mb-0"

@@ -17,6 +17,7 @@ import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 import Button from '@shared/buttons/Button';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -182,6 +183,10 @@ export default function ContentEditor({
   };
 
   const handleAdditionalInput = async (additionalPrompt, inputValues) => {
+    trackEvent(EVENTS.ContentBuilder.Editor.SubmitRegenerate, {
+      name: documentName,
+      key,
+    });
     setLoading(true);
     setInitialInputValues(inputValues);
     const chat = [
@@ -240,10 +245,18 @@ export default function ContentEditor({
 
         <div className="flex w-full justify-end items-center justify-items-center">
           {inputFields && (
-            <div className="mr-3" onClick={() => setShowModal(true)}>
+            <div
+              className="mr-3"
+              onClick={() => {
+                trackEvent(EVENTS.ContentBuilder.Editor.ClickRegenerate, {
+                  name: documentName,
+                  key,
+                });
+                setShowModal(true);
+              }}
+            >
               <PrimaryButton size="medium">
                 <div className="flex items-center">
-                  {' '}
                   <MdAutoAwesome className="mr-2" />
                   Regenerate
                 </div>
@@ -263,7 +276,16 @@ export default function ContentEditor({
           </div>
           {/* copy button desktop */}
           <div className="hidden md:block mr-3">
-            <CopyToClipboard text={plan} usePadding={false}>
+            <CopyToClipboard
+              text={plan}
+              usePadding={false}
+              onClick={() => {
+                trackEvent(EVENTS.ContentBuilder.Editor.ClickCopy, {
+                  name: documentName,
+                  key,
+                });
+              }}
+            >
               <PrimaryButton
                 size="medium"
                 className="flex items-center whitespace-nowrap"
@@ -280,6 +302,10 @@ export default function ContentEditor({
           <div
             className="hidden md:block mr-3"
             onClick={() => {
+              trackEvent(EVENTS.ContentBuilder.Editor.ClickTranslate, {
+                name: documentName,
+                key,
+              });
               setShowTranslate(true);
             }}
           >

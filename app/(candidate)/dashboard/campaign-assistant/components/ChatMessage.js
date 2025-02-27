@@ -10,6 +10,7 @@ import { IoMdCheckmark } from 'react-icons/io';
 import { MdOutlineRefresh, MdAutoAwesome } from 'react-icons/md';
 import ChatFeedback from './ChatFeedback';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export default function ChatMessage({ message, type, isLastMessage }) {
   const [copied, setCopied] = useState(false);
@@ -23,10 +24,16 @@ export default function ChatMessage({ message, type, isLastMessage }) {
     console.log('error converting marked', e);
   }
   const handleCopy = () => {
+    trackEvent(EVENTS.AIAssistant.Chat.ClickCopy);
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
     }, 2000);
+  };
+
+  const handleRegenerateClick = () => {
+    trackEvent(EVENTS.AIAssistant.Chat.ClickRegenerate);
+    handleRegenerate();
   };
 
   return (
@@ -57,7 +64,7 @@ export default function ChatMessage({ message, type, isLastMessage }) {
                       <MdOutlineRefresh
                         className="mr-4 cursor-pointer"
                         size={20}
-                        onClick={handleRegenerate}
+                        onClick={handleRegenerateClick}
                       />
                     </>
                   )}

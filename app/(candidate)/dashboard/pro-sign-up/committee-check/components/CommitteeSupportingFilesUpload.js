@@ -8,6 +8,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const FILE_LIMIT_MB = 10;
 
@@ -106,23 +107,40 @@ export const CommitteeSupportingFilesUpload = ({
         error={Boolean(errorMessge)}
         className="cursor-pointer col-span-10 md:col-span-7"
         value={fileInfo?.name || inputValue || ''}
-        onClick={onFileBrowseClick}
+        onClick={() => {
+          trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickUpload, {
+            element: 'field',
+          });
+          onFileBrowseClick();
+        }}
         label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
         helperText={
           errorMessge || `PDF file with size less than ${FILE_LIMIT_MB}MB`
         }
         InputProps={{
-          endAdornment: <InputHelpIcon showOnFocus message={HELP_MESSAGE} />,
+          endAdornment: (
+            <InputHelpIcon
+              showOnFocus
+              message={HELP_MESSAGE}
+              onOpen={() => {
+                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverUploadHelp);
+              }}
+            />
+          ),
         }}
       />
-
       <PrimaryButton
         component="label"
         className="flex items-center justify-center h-[56px] col-span-10 md:col-span-3 md:mt-[5px] md:h-[51px]"
         role={undefined}
         variant="outlined"
-        onClick={onFileBrowseClick}
+        onClick={() => {
+          trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickUpload, {
+            element: 'button',
+          });
+          onFileBrowseClick();
+        }}
         disabled={loadingFileUpload}
         fullWidth
       >

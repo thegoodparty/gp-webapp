@@ -9,6 +9,7 @@ import { updateUser } from 'helpers/userHelper';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const doRedirect = async (currentTimeoutId) => {
   clearTimeout(currentTimeoutId);
@@ -64,7 +65,10 @@ const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
           </p>
           <PrimaryButton
             className="w-full md:w-auto"
-            onClick={() => doRedirect(currentTimeoutId)}
+            onClick={() => {
+              trackEvent(EVENTS.ProUpgrade.PurchaseRedirect.ClickGoToStripe);
+              doRedirect(currentTimeoutId);
+            }}
           >
             Go to Stripe
           </PrimaryButton>

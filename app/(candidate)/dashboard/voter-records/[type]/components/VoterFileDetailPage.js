@@ -23,7 +23,7 @@ export default function VoterFileDetailPage(props) {
 
   return (
     <DashboardLayout {...props}>
-      <BackToAllFiles />
+      <BackToAllFiles type={type} fileName={fileName} />
       <Hero
         type={type}
         campaign={campaign}

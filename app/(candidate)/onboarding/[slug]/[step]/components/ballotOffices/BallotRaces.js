@@ -12,6 +12,7 @@ import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const fetchRaces = async (zipcode, level, electionDate) => {
   let cleanLevel = level;
@@ -84,6 +85,7 @@ export default function BallotRaces(props) {
   };
 
   const showCustomModal = () => {
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickCantSeeOffice);
     setShowModal(true);
   };
 

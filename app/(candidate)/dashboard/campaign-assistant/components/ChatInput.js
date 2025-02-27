@@ -6,6 +6,7 @@ import { GiSandsOfTime } from 'react-icons/gi';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 import { Fab } from '@mui/material';
 import { MdKeyboardArrowUp } from 'react-icons/md';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export default function ChatInput() {
   const { handleNewInput, loading, scrollUp } = useChat();
@@ -15,6 +16,7 @@ export default function ChatInput() {
     if (loading) {
       return;
     }
+    trackEvent(EVENTS.AIAssistant.AskQuestion, { text });
     e.preventDefault();
     setText('');
     await handleNewInput(text);

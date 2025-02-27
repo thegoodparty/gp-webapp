@@ -7,6 +7,7 @@ export const AsyncValidationIcon = ({
   message,
   loading = false,
   validated = null,
+  onTooltipOpen,
 }) =>
   loading ? (
     <CircularProgress size={24} />
@@ -15,5 +16,5 @@ export const AsyncValidationIcon = ({
   ) : validated === false ? (
     <MdCancel className="text-error" size={24} />
   ) : (
-    <InputHelpIcon showOnFocus message={message} />
+    <InputHelpIcon showOnFocus message={message} onOpen={onTooltipOpen} />
   );

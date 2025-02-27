@@ -79,6 +79,10 @@ export default function TemplateList(props) {
                     tabIndex={0}
                     {...trackingAttrs}
                     onClick={() => {
+                      trackEvent(EVENTS.ContentBuilder.SelectTemplate, {
+                        category: category.name,
+                        key: template.key,
+                      });
                       handleClick(template.key);
                     }}
                     onKeyDown={(e) =>

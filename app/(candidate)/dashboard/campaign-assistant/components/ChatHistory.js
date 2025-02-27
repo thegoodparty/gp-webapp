@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { MdMenu } from 'react-icons/md';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
 import { ChatHistoryGroup } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryGroup';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export default function ChatHistory() {
   const { chats } = useChat();
@@ -47,6 +48,7 @@ export default function ChatHistory() {
       <Button
         size="large"
         onClick={() => {
+          trackEvent(EVENTS.AIAssistant.ClickViewChatHistory);
           setOpen(true);
         }}
         className="!px-3 md:!px-6"

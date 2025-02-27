@@ -2,11 +2,11 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
 import { numberFormatter } from 'helpers/numberHelper';
 import { useState } from 'react';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const pathToVictoryExample = {
   averageTurnout: 1370,
@@ -44,6 +44,7 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
       <div
         className="cursor-pointer"
         onClick={() => {
+          trackEvent(EVENTS.Dashboard.PathToVictory.ClickUnderstand);
           setOpen(true);
         }}
       >
@@ -51,6 +52,7 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
       </div>
       <Modal
         closeCallback={() => {
+          trackEvent(EVENTS.Dashboard.PathToVictory.ExitUnderstand);
           setOpen(false);
         }}
         open={open}

@@ -11,6 +11,7 @@ import Button from '@shared/buttons/Button';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 import OfficeStepForm from './OfficeStepForm';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 async function runP2V(slug) {
   try {
@@ -76,6 +77,11 @@ export default function OfficeStep(props) {
       setProcessing(false);
       return;
     }
+
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext, {
+      step,
+    });
+
     const { position, election, id, filingPeriods } = state.ballotOffice;
 
     const attr = [
@@ -173,6 +179,10 @@ export default function OfficeStep(props) {
     }
   };
 
+  trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSelected, {
+    office: office,
+  });
+
   const selectedOffice = campaign.details?.positionId
     ? {
         position: { id: campaign.details.positionId },
@@ -193,6 +203,9 @@ export default function OfficeStep(props) {
   };
 
   const handleBack = () => {
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickBack, {
+      step,
+    });
     setPart(1);
   };
 

@@ -11,6 +11,7 @@ import FullStorySelectiveInit from './FullStorySelectiveInit';
 import NavButton from './NavButton';
 import Button from '@shared/buttons/Button';
 import { USER_ROLES } from 'helpers/userHelper';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function RightSide({ campaignStatus }) {
   const [user] = useUser();
@@ -24,6 +25,9 @@ export default function RightSide({ campaignStatus }) {
   const isServePath = pathname?.startsWith('/serve');
 
   const toggleProfile = () => {
+    if (profileOpen) {
+      trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown);
+    }
     closeAll();
     setProfileOpen(!profileOpen);
   };
@@ -42,6 +46,11 @@ export default function RightSide({ campaignStatus }) {
     return (
       <Button
         href="/"
+        onClick={() =>
+          trackEvent(EVENTS.Onboarding.ClickFinishLater, {
+            pathname: pathname,
+          })
+        }
         id="nav-onboarding-finish-later"
         className="hidden lg:block relative z-[60] font-medium !text-base !py-2"
         variant="text"

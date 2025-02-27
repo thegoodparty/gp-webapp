@@ -7,6 +7,7 @@ import { DemoAccountDeleteDialog } from '@shared/utils/DemoAccountDeleteDialog';
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
 import Link from 'next/link';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const AccountSettingsButton = ({ isPro, isDemo }) => {
   const router = useRouter();
@@ -31,7 +32,11 @@ export const AccountSettingsButton = ({ isPro, isDemo }) => {
     </>
   ) : (
     <div>
-      <Link className="underline" href="/dashboard/pro-sign-up">
+      <Link
+        className="underline"
+        href="/dashboard/pro-sign-up"
+        onClick={() => trackEvent(EVENTS.Settings.Account.ClickUpgrade)}
+      >
         <PrimaryButton>Upgrade Plan</PrimaryButton>
       </Link>
     </div>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const ProBadge = () => (
   <div
@@ -36,6 +37,7 @@ export const HeaderLogo = () => {
         className="flex items-center no-underline"
         href={link}
         id="nav-logo"
+        onClick={() => trackEvent(EVENTS.Navigation.Top.ClickLogo)}
       >
         <Image
           src="/images/heart-hologram.svg"

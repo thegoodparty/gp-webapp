@@ -1,3 +1,4 @@
+import NotificationSection from 'app/(user)/profile/components/NotificationSection';
 import PasswordSection from './PasswordSection';
 import PersonalSection from './PersonalSection';
 import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection';
@@ -8,6 +9,7 @@ export default function ProfilePage(props) {
       <div className="max-w-screen-md mx-auto px-4 pt-4 xl:p-0 xl:pt-4">
         <PersonalSection {...props} />
         <AccountSettingsSection {...props} />
+        <NotificationSection />
         <PasswordSection {...props} />
       </div>
     </div>

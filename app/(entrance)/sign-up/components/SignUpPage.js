@@ -17,6 +17,7 @@ import { clientFetch } from 'gpApi/clientFetch';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Button from '@shared/buttons/Button';
 import { useRouter } from 'next/navigation';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const fields = [
   {
@@ -158,7 +159,11 @@ export default function SignUpPage() {
                 </Body2>
                 <Body2 className="mt-3">
                   Already have an account?{' '}
-                  <Link href="/login" className="underline text-info-main">
+                  <Link
+                    href="/login"
+                    onClick={() => trackEvent(EVENTS.SignUp.ClickLogin)}
+                    className="underline text-info-main"
+                  >
                     Login here.
                   </Link>
                 </Body2>
@@ -198,7 +203,6 @@ export default function SignUpPage() {
                   <Button
                     disabled={loading || !enableSubmit()}
                     type="submit"
-                    fullWidth
                     color="primary"
                     size="large"
                     className="w-full"

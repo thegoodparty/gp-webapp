@@ -5,13 +5,13 @@
  *
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserAvatar from '@shared/user/UserAvatar';
 import ImageUpload from '@shared/utils/ImageUpload';
 import { getUserCookie } from 'helpers/cookieHelper';
 import Body2 from '@shared/typography/Body2';
 import { useUser } from '@shared/hooks/useUser';
-import { CircularProgress } from '@mui/material';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 function ImageSection() {
   const [user, setUser] = useUser();
@@ -41,6 +41,9 @@ function ImageSection() {
         <ImageUpload
           customElement={
             <div
+              onClick={() =>
+                trackEvent(EVENTS.Settings.PersonalInfo.ClickUpload)
+              }
               className={`text-lg py-3 px-6 rounded-lg font-medium bg-primary-dark text-slate-50 inline-block ${
                 loading ? 'bg-primary-light' : 'bg-primary-dark'
               }`}

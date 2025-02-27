@@ -10,7 +10,11 @@ import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
 import ScheduleFlowComplete from './ScheduleFlowComplete';
 import ScheduleFlowImageStep from './ScheduleFlowImageStep';
 import CloseConfirmModal from './CloseConfirmModal';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  EVENTS,
+  trackEvent,
+} from 'helpers/fullStoryHelper';
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
 import { isObjectEqual } from 'helpers/objectHelper';
 
@@ -88,6 +92,9 @@ export default function ScheduleFlow({
   };
 
   const handleCloseConfirm = () => {
+    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Exit, {
+      step: stepName,
+    });
     setConfirmOpen(false);
     setOpen(false);
     handleReset();
@@ -95,6 +102,9 @@ export default function ScheduleFlow({
 
   const handleNext = () => {
     if (state.step >= stepList.length - 1) return;
+    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Next, {
+      step: stepName,
+    });
     setState((prevState) => ({
       ...prevState,
       step: state.step + 1,
@@ -103,7 +113,9 @@ export default function ScheduleFlow({
 
   const handleBack = () => {
     if (state.step <= 0) return;
-
+    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Back, {
+      step: stepName,
+    });
     setState({
       ...state,
       step: state.step - 1,
@@ -115,6 +127,7 @@ export default function ScheduleFlow({
   };
 
   const handleSubmit = async () => {
+    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit);
     const updatedState = {
       ...state,
       type,
@@ -151,6 +164,13 @@ export default function ScheduleFlow({
             role="button"
             tabIndex={0}
             className="mt-4 flex items-center justify-end"
+            onClick={() => {
+              // NOTE: this text link form is only used on the Voter File Detail page
+              trackEvent(
+                EVENTS.VoterData.FileDetail.LearnTakeAction.ClickSchedule,
+                { type },
+              );
+            }}
           >
             <span className="mr-2">Schedule Today</span>
             <IoArrowForward />

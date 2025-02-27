@@ -10,6 +10,7 @@ import NeedHelpSuccess from './NeedHelpSuccess';
 import Button from '@shared/buttons/Button';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export async function sendMessage(type, message) {
   try {
@@ -50,6 +51,7 @@ export default function NeedHelp() {
   };
 
   const handleClose = () => {
+    trackEvent(EVENTS.VoterData.NeedHelp.Exit);
     setOpen(false);
     setLoading(false);
     setShowSuccess(false);
@@ -63,6 +65,10 @@ export default function NeedHelp() {
     if (loading) {
       return;
     }
+    trackEvent(EVENTS.VoterData.NeedHelp.Submit, {
+      type: state.type,
+      hasMessage: !!state.message,
+    });
     setLoading(true);
     await sendMessage(state.type, state.message);
     setShowSuccess(true);
@@ -73,6 +79,7 @@ export default function NeedHelp() {
         size="large"
         color="neutral"
         onClick={() => {
+          trackEvent(EVENTS.VoterData.ClickNeedHelp);
           setOpen(true);
         }}
         className="mr-4 mb-4 md:mb-0 w-full md:w-auto"
@@ -96,6 +103,9 @@ export default function NeedHelp() {
                 displayEmpty
                 required
                 onChange={(e) => {
+                  trackEvent(EVENTS.VoterData.NeedHelp.SelectType, {
+                    type: e.target.value,
+                  });
                   handleChange('type', e.target.value);
                 }}
                 renderValue={(selected) => {
