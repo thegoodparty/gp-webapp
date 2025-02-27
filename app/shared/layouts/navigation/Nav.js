@@ -2,18 +2,10 @@ import LeftSide from './LeftSide';
 import RightSide from './RightSide';
 import RightSideMobile from './RightSideMobile';
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
-import { getServerUser } from 'helpers/userServerHelper';
+
 import Body2 from '@shared/typography/Body2';
-import { fetchCampaignStatus } from 'app/(candidate)/dashboard/shared/candidateAccess';
 
 export default async function Nav() {
-  let campaignStatus = false;
-  const user = await getServerUser();
-  if (user) {
-    campaignStatus = await fetchCampaignStatus();
-    if (campaignStatus instanceof Response) campaignStatus = false;
-  }
-
   return (
     <>
       <div className="fixed w-screen h-14 z-50">
@@ -33,7 +25,7 @@ export default async function Nav() {
               </Body2>
               <LeftSide />
             </div>
-            <RightSide campaignStatus={campaignStatus} />
+            <RightSide />
           </div>
         </div>
       </div>

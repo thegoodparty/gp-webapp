@@ -9,7 +9,7 @@ import Overline from '@shared/typography/Overline';
 
 export default function ShareBlog({ className }) {
   const pathname = usePathname();
-  const appBase = window.location.origin;
+  const appBase = typeof window !== 'undefined' ? window.location.origin : '';
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';
   const encodedUrl = encodeURIComponent(url);

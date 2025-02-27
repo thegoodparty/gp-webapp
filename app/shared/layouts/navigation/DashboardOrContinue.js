@@ -2,14 +2,9 @@
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 import Button from '@shared/buttons/Button';
 
-export default function DashboardOrContinue({
-  closeAll,
-  campaignStatus,
-  isServePath,
-}) {
+export default function DashboardOrContinue({ closeAll, isServePath }) {
   const [campaignStatusClient] = useCampaignStatus();
-  let resolvedStatus = campaignStatusClient || campaignStatus;
-  const { status, slug, step } = resolvedStatus || {};
+  const { status, slug, step } = campaignStatusClient || {};
 
   if (!status) {
     return (

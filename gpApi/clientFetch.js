@@ -1,6 +1,5 @@
 import { compile, parse } from 'path-to-regexp';
 import { API_ROOT, API_VERSION_PREFIX, IS_LOCAL } from 'appEnv';
-import { deleteUserCookies } from 'helpers/cookieHelper';
 
 /**
  * @typedef {Object} ApiEndpoint

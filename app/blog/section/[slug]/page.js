@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogSectionPage from './components/BlogSectionPage';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -40,18 +41,13 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = gpApi.content.contentByKey;
-//   const payload = {
-//     key: 'blogSections',
-//     deleteKey: 'articles',
-//   };
+export async function generateStaticParams({ params }) {
+  const { slug } = params;
+  const { sections } = await fetchArticlesBySections(slug);
 
-//   const { content } = await gpFetch(api, payload);
-
-//   return content?.map((section) => {
-//     return {
-//       slug: section?.fields?.slug,
-//     };
-//   });
-// }
+  return sections?.map((section) => {
+    return {
+      slug: section?.slug,
+    };
+  });
+}

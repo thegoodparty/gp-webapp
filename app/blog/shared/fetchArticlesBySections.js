@@ -1,22 +1,9 @@
-import { serverFetch } from 'gpApi/serverFetch';
-import { apiRoutes } from 'gpApi/routes';
+import { apiFetch } from 'gpApi/apiFetch';
 
 export const fetchArticlesBySections = async (sectionSlug) => {
-  let resp;
   if (sectionSlug) {
-    resp = await serverFetch(
-      apiRoutes.content.blogArticle.getBySection,
-      {
-        sectionSlug,
-      },
-      {
-        revalidate: 3600,
-      },
-    );
+    return await apiFetch(`content/blog-articles-by-section/${sectionSlug}`);
   } else {
-    resp = await serverFetch(apiRoutes.content.getBlogSections, undefined, {
-      revalidate: 3600,
-    });
+    return await apiFetch('content/blog-articles-by-section');
   }
-  return resp.data;
 };

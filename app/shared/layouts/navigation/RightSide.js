@@ -12,7 +12,7 @@ import NavButton from './NavButton';
 import Button from '@shared/buttons/Button';
 import { USER_ROLES } from 'helpers/userHelper';
 
-export default function RightSide({ campaignStatus }) {
+export default function RightSide() {
   const [user] = useUser();
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -73,7 +73,6 @@ export default function RightSide({ campaignStatus }) {
               <DashboardOrContinue
                 isDashboardPath={isDashboardPath}
                 closeAll={closeAll}
-                campaignStatus={campaignStatus}
                 isServePath={isServePath}
               />
             ))}

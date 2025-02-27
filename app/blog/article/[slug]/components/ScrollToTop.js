@@ -6,11 +6,13 @@ import { ArrowUpwardRounded } from '@mui/icons-material';
 export default function ScrollToTop() {
   function handleClick(e) {
     e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    }
   }
 
   return (

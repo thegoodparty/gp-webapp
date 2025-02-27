@@ -2,21 +2,13 @@ import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
-import { serverFetch } from 'gpApi/serverFetch';
-import { apiRoutes } from 'gpApi/routes';
+import { apiFetch } from 'gpApi/apiFetch';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export const fetchArticle = async (slug) => {
-  const resp = await serverFetch(
-    apiRoutes.content.blogArticle.getBySlug,
-    {
-      slug,
-    },
-    {
-      revalidate: 3600,
-    },
-  );
-
-  return resp.data;
+  return await apiFetch(`content/blog-article/${slug}`);
 };
 
 export async function generateMetadata({ params }) {
@@ -52,16 +44,12 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = gpApi.content.contentByKey;
+export async function generateStaticParams({ params }) {
+  const articles = await apiFetch('content/type/blogArticleTitles');
 
-//   const { content } = await gpFetch(api, {
-//     key: 'blogArticles',
-//   });
-
-//   return content?.map((article) => {
-//     return {
-//       slug: article.slug,
-//     };
-//   });
-// }
+  return articles?.map((article) => {
+    return {
+      slug: article?.slug,
+    };
+  });
+}
