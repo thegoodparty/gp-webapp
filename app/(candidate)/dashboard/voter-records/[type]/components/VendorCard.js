@@ -3,8 +3,8 @@ import H3 from '@shared/typography/H3';
 import Chip from '@shared/utils/Chip';
 import Paper from '@shared/utils/Paper';
 import Image from 'next/image';
-import Link from 'next/link';
 import { IoArrowForward } from 'react-icons/io5';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function VendorCard({
   logo,
@@ -33,7 +33,20 @@ export default function VendorCard({
         <Body2 className="text-gray-600 mt-1">{subTitle}</Body2>
         <Body2 className="mt-4">{description}</Body2>
       </div>
-      <a href={url} target="_blank" rel="noopener noreferrer nofollow">
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        onClick={() => {
+          trackEvent(
+            EVENTS.VoterData.FileDetail.RecommendedPartners.ClickReadMore,
+            {
+              name,
+              url,
+            },
+          );
+        }}
+      >
         <div className="mt-4 flex items-center justify-end">
           <div className="mr-2">Read More</div>
           <IoArrowForward />

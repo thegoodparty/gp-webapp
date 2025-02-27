@@ -10,6 +10,7 @@ import {
 } from 'helpers/campaignOfficeFields';
 import { CampaignOfficeInputFields } from 'app/(candidate)/dashboard/shared/CampaignOfficeInputFields';
 import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function OfficeSection(props) {
   const initialState = {};
@@ -27,10 +28,12 @@ export default function OfficeSection(props) {
   }, [campaign]);
 
   const handleEdit = () => {
+    trackEvent(EVENTS.Profile.OfficeDetails.ClickEdit);
     setShowModal(true);
   };
 
   const handleUpdate = async () => {
+    trackEvent(EVENTS.Profile.OfficeDetails.ClickSave);
     const campaign = await getCampaign();
     setCampaign(campaign);
     setShowModal(false);

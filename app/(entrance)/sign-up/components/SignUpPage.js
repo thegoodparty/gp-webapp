@@ -16,6 +16,8 @@ import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import Button from '@shared/buttons/Button';
+import { useRouter } from 'next/navigation';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const fields = [
   {
@@ -98,6 +100,7 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { errorSnackbar } = useSnackbar();
   const [_, setUser] = useUser();
+  const router = useRouter();
 
   const enableSubmit = () =>
     isValidEmail(state.email) && isValidPassword(state.password);
@@ -119,8 +122,9 @@ export default function SignUpPage() {
       if (user) {
         await saveToken(token);
         setUser(user);
-        await createCampaign();
+        const redirect = await createCampaign();
         setLoading(false);
+        router.push(redirect);
         return;
       } else {
         errorSnackbar(
@@ -155,7 +159,11 @@ export default function SignUpPage() {
                 </Body2>
                 <Body2 className="mt-3">
                   Already have an account?{' '}
-                  <Link href="/login" className="underline text-info-main">
+                  <Link
+                    href="/login"
+                    onClick={() => trackEvent(EVENTS.SignUp.ClickLogin)}
+                    className="underline text-info-main"
+                  >
                     Login here.
                   </Link>
                 </Body2>
@@ -195,7 +203,6 @@ export default function SignUpPage() {
                   <Button
                     disabled={loading || !enableSubmit()}
                     type="submit"
-                    fullWidth
                     color="primary"
                     size="large"
                     className="w-full"

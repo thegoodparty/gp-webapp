@@ -18,6 +18,7 @@ import ImageSection from './ImageSection';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 async function refreshUser() {
   try {
@@ -146,6 +147,7 @@ function PersonalSection({ user }) {
   );
 
   const submit = async () => {
+    trackEvent(EVENTS.Settings.PersonalInfo.ClickSave);
     const fields = { ...state };
     if (fields.phone) {
       fields.phone = fields.phone.replace(/\D+/g, '');

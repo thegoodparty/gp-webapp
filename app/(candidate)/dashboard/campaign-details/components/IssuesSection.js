@@ -18,6 +18,7 @@ import AlertDialog from '@shared/utils/AlertDialog';
 import { IoAddSharp } from 'react-icons/io5';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
@@ -41,6 +42,7 @@ export default function IssuesSection(props) {
   }, [candidatePositions, campaign.details?.customIssues]);
 
   const completeCallback = async () => {
+    trackEvent(EVENTS.Profile.TopIssues.SubmitEdit);
     const candidatePositions = await loadCandidatePosition(campaign.id);
     setCandidatePositions(candidatePositions);
     const campaign = await getCampaign();
@@ -50,6 +52,7 @@ export default function IssuesSection(props) {
   };
 
   const handleDeleteConfirmation = async () => {
+    trackEvent(EVENTS.Profile.TopIssues.SubmitDelete);
     const issue = showDeleteConfirmation;
     try {
       if (issue.type === 'custom') {
@@ -83,6 +86,9 @@ export default function IssuesSection(props) {
             size="large"
             href="/dashboard/questions?generate=all"
             className="inline-flex align-center !py-2"
+            onClick={() => {
+              trackEvent(EVENTS.Profile.TopIssues.ClickFinish);
+            }}
           >
             Finish Entering Issues
             <IoAddSharp className="ml-1 inline text-2xl" />
@@ -141,6 +147,7 @@ export default function IssuesSection(props) {
                     className="mr-3"
                     size="medium"
                     onClick={() => {
+                      trackEvent(EVENTS.Profile.TopIssues.ClickEdit);
                       setEditIssuePosition(issue);
                     }}
                   >
@@ -148,13 +155,17 @@ export default function IssuesSection(props) {
                   </PrimaryButton>
                   <SecondaryButton
                     size="medium"
-                    onClick={() => setShowDeleteConfirmation(issue)}
+                    onClick={() => {
+                      trackEvent(EVENTS.Profile.TopIssues.ClickDelete);
+                      setShowDeleteConfirmation(issue);
+                    }}
                   >
                     Delete
                   </SecondaryButton>
                   <AlertDialog
                     open={Boolean(showDeleteConfirmation)}
                     handleClose={() => {
+                      trackEvent(EVENTS.Profile.TopIssues.CancelDelete);
                       setShowDeleteConfirmation(null);
                     }}
                     title="Delete Issue"

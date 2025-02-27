@@ -33,7 +33,8 @@ export default function SetNamePage() {
         deleteCookie('returnUrl');
         window.location.href = returnUrl;
       } else {
-        await createCampaign();
+        const redirect = await createCampaign();
+        window.location.href = redirect;
       }
     } else {
       errorSnackbar('Error creating campaign');

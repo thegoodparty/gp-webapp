@@ -1,6 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Button from '@shared/buttons/Button';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const ExitToDashboardButton = () => {
   const pathname = usePathname();
@@ -12,6 +13,7 @@ export const ExitToDashboardButton = () => {
         variant="outlined"
         size="small"
         className="!py-1 !text-sm"
+        onClick={() => trackEvent(EVENTS.ProUpgrade.ClickExit, { pathname })}
       >
         Exit
       </Button>

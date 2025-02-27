@@ -89,7 +89,8 @@ export async function createCampaign() {
         ]);
         deleteCookie('claimProfile');
       }
-      window.location.href = `/onboarding/${slug}/1`;
+
+      return `/onboarding/${slug}/1`;
     }
   } catch (e) {
     return false;

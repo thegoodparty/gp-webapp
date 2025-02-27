@@ -10,6 +10,7 @@ import PasswordInput from '@shared/inputs/PasswrodInput';
 import DeleteAccountButton from './DeleteAccountButton';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed';
 const CURRENT_PASSWORD_INCORRECT = 'Current password is incorrect';
@@ -91,6 +92,7 @@ function PasswordSection({ user: initUser }) {
   };
 
   const handleSavePassword = () => {
+    trackEvent(EVENTS.Settings.Password.ClickSave);
     if (fieldsValid) {
       doPasswordChange(state.password, state.oldPassword);
     }

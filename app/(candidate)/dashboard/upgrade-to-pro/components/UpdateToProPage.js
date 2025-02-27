@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
 import { useRouter } from 'next/navigation';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const CARD_FREE = {
   backgroundClass: 'lime-400',
@@ -58,6 +59,7 @@ export default function DetailsPage(props) {
     if (demoPersona) {
       setShowDialog(true);
     }
+    trackEvent(EVENTS.ProUpgrade.VoterData.ClickUpgrade);
   };
 
   const handleDialogClose = () => {

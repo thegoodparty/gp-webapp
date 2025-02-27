@@ -9,6 +9,7 @@ import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/C
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Button from '@shared/buttons/Button';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const ProSignUpPage = ({ campaign }) => {
   const [campaignState, setCampaignState] = useState(campaign);
@@ -16,12 +17,16 @@ const ProSignUpPage = ({ campaign }) => {
   const officeFields = campaignOfficeFields(campaignState?.details);
 
   const onSelect = async () => {
+    trackEvent(EVENTS.ProUpgrade.VoterData.SubmitEditOffice);
     const campaign = await getCampaign();
     setCampaignState(campaign);
     setShowModal(false);
   };
 
-  const onClose = () => setShowModal(false);
+  const onClose = () => {
+    trackEvent(EVENTS.ProUpgrade.VoterData.ExitEditOffice);
+    setShowModal(false);
+  };
 
   return (
     <FocusedExperienceWrapper>
@@ -40,12 +45,18 @@ const ProSignUpPage = ({ campaign }) => {
             className="mb-8 w-full"
             variant="outlined"
             size="large"
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              trackEvent(EVENTS.ProUpgrade.VoterData.EditOffice);
+              setShowModal(true);
+            }}
           >
             Edit Office
           </Button>
           <Button
             href="/dashboard/pro-sign-up/committee-check"
+            onClick={() => {
+              trackEvent(EVENTS.ProUpgrade.VoterData.ConfirmOffice);
+            }}
             className="w-full"
             size="large"
           >

@@ -8,15 +8,17 @@ import contentfulHelper from 'helpers/contentfulHelper';
 import H1 from '@shared/typography/H1';
 import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
 import { IoDocumentText } from 'react-icons/io5';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { FaChild } from 'react-icons/fa';
 import Body1 from '@shared/typography/Body1';
-import InfoButton from '@shared/buttons/InfoButton';
 import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
 import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements';
 import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
 import { useRouter } from 'next/navigation';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  EVENTS,
+  trackEvent,
+} from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
 
 const steps = ['1', '2', '3', '4'];
@@ -72,6 +74,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
   };
 
   const handleSave = async () => {
+    trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit);
     if (loading) {
       return;
     }
@@ -96,6 +99,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
   };
 
   const openChat = () => {
+    trackEvent(EVENTS.Onboarding.PledgeStep.ClickAskQuestion);
     window.HubSpotConversations?.widget?.open();
   };
 

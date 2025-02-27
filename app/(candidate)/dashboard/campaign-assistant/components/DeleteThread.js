@@ -3,6 +3,7 @@ import AlertDialog from '@shared/utils/AlertDialog';
 import { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { deleteThread } from './ajaxActions';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export default function DeleteThread({ chat }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -16,11 +17,13 @@ export default function DeleteThread({ chat }) {
 
   const showDelete = (e) => {
     e.stopPropagation();
+    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickMenu);
     setShowAlert(true);
     setShowMenu(false);
   };
 
   const handleDelete = async () => {
+    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickDelete);
     await deleteThread(threadId);
     window.location.reload();
   };

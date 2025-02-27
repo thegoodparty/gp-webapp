@@ -16,6 +16,7 @@ import { handleLogOut } from '@shared/user/handleLogOut';
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
 import { MdAdd, MdFactCheck } from 'react-icons/md';
 import { USER_ROLES, userIsAdmin } from 'helpers/userHelper';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const links = [
   {
@@ -23,6 +24,8 @@ const links = [
     label: 'Settings',
     href: '/profile',
     icon: <FaToolbox />,
+    onClick: () =>
+      trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickSettings),
   },
 ];
 
@@ -64,10 +67,20 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
     window.location.href = '/admin';
   };
 
+  const handleToggle = () => {
+    trackEvent(EVENTS.Navigation.Top.ClickAvatarDropdown);
+    toggleCallback();
+  };
+
+  const handleLogOutClick = (e) => {
+    trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickLogout);
+    handleLogOut(e);
+  };
+
   return (
     <div
       className="ml-2 relative cursor-pointer "
-      onClick={toggleCallback}
+      onClick={handleToggle}
       onKeyDown={handleKeyToggle}
       id="nav-run-dropdown"
     >
@@ -108,6 +121,7 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
                 href={link.href}
                 id={`nav-${link.id}`}
                 key={link.id}
+                onClick={link.onClick}
                 className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
                 rel={`${link.external ? 'noopener noreferrer nofollow' : ''}`}
               >
@@ -178,8 +192,8 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
               tabIndex={0}
               data-cy="header-link"
               className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
-              onClick={handleLogOut}
-              onKeyDown={(e) => handleEnterPress(e, () => handleLogOut(e))}
+              onClick={handleLogOutClick}
+              onKeyDown={(e) => handleEnterPress(e, () => handleLogOutClick(e))}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />

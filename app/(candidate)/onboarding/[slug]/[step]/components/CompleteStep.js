@@ -4,7 +4,11 @@ import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { getUserCookie } from 'helpers/cookieHelper';
-import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  EVENTS,
+  trackEvent,
+} from 'helpers/fullStoryHelper';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
@@ -33,6 +37,8 @@ export default function CompleteStep() {
     setLoading(true);
     successSnackbar('Saving...');
 
+    trackEvent(EVENTS.Onboarding.CompleteStep.ClickGoToDashboard);
+
     const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }];
 
     await updateCampaign(attr);
@@ -60,7 +66,6 @@ export default function CompleteStep() {
         size="large"
         className="w-full"
         onClick={handleSave}
-        fullWidth
         {...trackingAttrs}
       >
         {loading ? 'Launching...' : 'View Dashboard'}

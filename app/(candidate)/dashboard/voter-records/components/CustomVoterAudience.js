@@ -1,14 +1,16 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Checkbox from '@shared/inputs/Checkbox';
 import Body2 from '@shared/typography/Body2';
 import H1 from '@shared/typography/H1';
-import Overline from '@shared/typography/Overline';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { dateUsHelper } from 'helpers/dateHelper';
-import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  trackEvent,
+  EVENTS,
+} from 'helpers/fullStoryHelper';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CustomVoterAudienceFilters from './CustomVoterAudienceFilters';
 
 /*
@@ -71,6 +73,8 @@ export default function CustomVoterAudience({
     return !loading && Object.values(state).some((v) => v);
   };
   const handleSubmit = async () => {
+    trackEvent(EVENTS.VoterData.CustomFile.ClickCreate);
+
     setLoading(true);
 
     const selectedAudience = Object.keys(state).filter((key) => state[key]);

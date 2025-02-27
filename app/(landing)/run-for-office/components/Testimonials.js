@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { times } from 'lodash';
+import { times } from 'es-toolkit/compat';
 import Image from 'next/image';
 import MarketingH3 from '@shared/typography/MarketingH3';
 import Body1 from '@shared/typography/Body1';

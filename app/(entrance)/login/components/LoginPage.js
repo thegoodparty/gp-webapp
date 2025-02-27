@@ -23,6 +23,7 @@ import { useSnackbar } from 'helpers/useSnackbar';
 import { USER_ROLES } from 'helpers/userHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -125,7 +126,11 @@ export default function LoginPage() {
             <H1>Login to GoodParty.org</H1>
             <Body2 className="mt-3">
               Don&apos;t have an account?{' '}
-              <Link href="/sign-up" className="underline text-info">
+              <Link
+                href="/sign-up"
+                onClick={() => trackEvent(EVENTS.SignIn.ClickCreateAccount)}
+                className="underline text-info"
+              >
                 Create an account
               </Link>
             </Body2>
@@ -175,6 +180,7 @@ export default function LoginPage() {
           <div className="mt-5 text-center">
             <Link
               href="/forgot-password"
+              onClick={() => trackEvent(EVENTS.SignIn.ClickForgotPassword)}
               className="text-sm underline"
               data-testid="login-forgot-password-link"
             >
