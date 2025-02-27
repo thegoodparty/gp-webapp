@@ -14,10 +14,7 @@ export default function ShareBlog({ className }) {
   const messageNoUrl = 'Vote different';
   const encodedUrl = encodeURIComponent(url);
 
-  useEffect(() => {
-    console.log(`window?.location.origin =>`, window?.location.origin);
-    setAppBase(window?.location.origin);
-  }, []);
+  useEffect(() => setAppBase(window?.location.origin), []);
 
   const textMessageBody = `${url} ${'\n %0a'} ${'\n %0a'}${messageNoUrl}`;
 
