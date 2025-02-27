@@ -23,7 +23,7 @@ export default async function Page({ params, searchParams }) {
   const topIssues = await serverFetchIssues();
   const user = await getServerUser(); // can be removed when door knocking app is not for admins only
   if (!candidatePositions) {
-    candidatePositions = []
+    candidatePositions = [];
   }
 
   const childProps = {
@@ -31,7 +31,7 @@ export default async function Page({ params, searchParams }) {
     campaign,
     candidatePositions,
     topIssues,
-    pathToVictory: campaign?.pathToVictory,
+    pathToVictory: campaign?.pathToVictory?.data,
     user,
   };
 

@@ -58,7 +58,6 @@ export default function ScheduleFlow({
   campaign,
   isCustom,
   fileName,
-  categories = [],
 }) {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -207,7 +206,6 @@ export default function ScheduleFlow({
           <ScheduleAddScriptFlow
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
-            aiTemplateCategories={categories}
             {...callbackProps}
           />
         )}

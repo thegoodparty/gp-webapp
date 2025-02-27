@@ -52,7 +52,8 @@ export default function DashboardPage({ pathname }) {
   const [_, setUser] = useUser();
   const [campaign, setCampaign] = useState(null);
 
-  const { pathToVictory, goals, details } = campaign || {};
+  const { pathToVictory: p2vObject, goals, details } = campaign || {};
+  const pathToVictory = p2vObject?.data || {};
   const { primaryElectionDate } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
   const [primaryResultState, setPrimaryResultState] = useState({

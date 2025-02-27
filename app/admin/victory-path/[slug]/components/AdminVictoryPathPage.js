@@ -1,7 +1,7 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
@@ -362,7 +362,8 @@ sections.forEach((section) => {
 
 export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
-  let { pathToVictory, details } = campaign;
+  const { pathToVictory: p2vObject, details } = campaign;
+  const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject]);
   const [locations, setLocations] = useState([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
 
