@@ -3,6 +3,8 @@ import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections
 import BlogPage from './components/BlogPage';
 import { serverFetch } from 'gpApi/serverFetch';
 import { apiRoutes } from 'gpApi/routes';
+import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 
 export const fetchTopTags = async () => {
   const payload = {
@@ -21,9 +23,22 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page({ params, searchParams }) {
-  const { sections, hero } = await fetchArticlesBySections();
-  const { tags } = await fetchTopTags();
+export default async function Page() {
+  const [{ sections, hero }, { tags: topTags }, tags, titles] =
+    await Promise.all([
+      fetchArticlesBySections(),
+      fetchTopTags(),
+      fetchArticleTags(),
+      fetchArticlesTitles(),
+    ]);
 
-  return <BlogPage sections={sections} hero={hero} topTags={tags} />;
+  return (
+    <BlogPage
+      sections={sections}
+      hero={hero}
+      topTags={topTags}
+      allTags={tags}
+      articleTitles={titles}
+    />
+  );
 }

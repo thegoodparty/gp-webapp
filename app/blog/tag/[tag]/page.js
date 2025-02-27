@@ -1,9 +1,11 @@
 import { notFound } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchSections } from 'app/blog/shared/fetchSections';
 import BlogTagPage from './components/BlogTagPage';
 import { serverFetch } from 'gpApi/serverFetch';
 import { apiRoutes } from 'gpApi/routes';
+import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
+import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 
 const fetchArticlesByTag = async (tag) => {
   const payload = {
@@ -51,14 +53,18 @@ export default async function Page({ params }) {
   if (!tag) {
     notFound();
   }
-  const { name: tagName } = await fetchArticleTag(tag);
-  const articles = await fetchArticlesByTag(tag);
+  const [{ sections }, { name: tagName }, articles, tags, titles] =
+    await Promise.all([
+      fetchArticlesBySections(),
+      fetchArticleTag(tag),
+      fetchArticlesByTag(tag),
+      fetchArticleTags(),
+      fetchArticlesTitles(),
+    ]);
 
   if (!articles) {
     return null;
   }
-
-  const sections = await fetchSections();
 
   return (
     <BlogTagPage
@@ -66,6 +72,8 @@ export default async function Page({ params }) {
       tagName={tagName}
       tagSlug={tag}
       articles={articles}
+      allTags={tags}
+      articleTitles={titles}
     />
   );
 }
