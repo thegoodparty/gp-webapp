@@ -26,8 +26,12 @@ export default async function Page({ params }) {
   if (!slug) {
     notFound();
   }
+  const [{ sections, hero, sectionIndex }, tags, titles] = await Promise.all([
+    fetchArticlesBySections(),
+    fetchArticleTags(),
+    fetchArticlesTitles(),
+  ]);
 
-  const { sections, hero, sectionIndex } = await fetchArticlesBySections(slug);
   const sectionTitle = sections[sectionIndex].fields.title;
 
   return (
@@ -37,6 +41,8 @@ export default async function Page({ params }) {
       sectionIndex={sectionIndex}
       slug={slug}
       hero={hero}
+      allTags={tags}
+      articleTitles={titles}
     />
   );
 }

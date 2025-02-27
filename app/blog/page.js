@@ -17,9 +17,22 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page({ params, searchParams }) {
-  const { sections, hero } = await fetchArticlesBySections();
-  const { tags } = await fetchTopTags();
+export default async function Page() {
+  const [{ sections, hero }, { tags: topTags }, tags, titles] =
+    await Promise.all([
+      fetchArticlesBySections(),
+      fetchTopTags(),
+      fetchArticleTags(),
+      fetchArticlesTitles(),
+    ]);
 
-  return <BlogPage sections={sections} hero={hero} topTags={tags} />;
+  return (
+    <BlogPage
+      sections={sections}
+      hero={hero}
+      topTags={topTags}
+      allTags={tags}
+      articleTitles={titles}
+    />
+  );
 }
