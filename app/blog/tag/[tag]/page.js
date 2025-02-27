@@ -14,7 +14,7 @@ const fetchArticlesByTag = async (tag) => {
     apiRoutes.content.blogArticle.getByTag,
     payload,
     {
-      revalidate: 1,
+      revalidate: 3600,
     },
   );
 
@@ -27,7 +27,7 @@ const fetchArticleTag = async (tag) => {
   };
 
   const resp = await serverFetch(apiRoutes.content.articleTag, payload, {
-    revalidate: 1,
+    revalidate: 3600,
   });
 
   return resp.data;
@@ -36,7 +36,7 @@ const fetchArticleTag = async (tag) => {
 export async function generateMetadata({ params }) {
   const { tag } = params;
 
-  const { tagName } = await fetchArticleTag(tag);
+  const { name: tagName } = await fetchArticleTag(tag);
 
   const meta = pageMetaData({
     title: `${tagName} | GoodParty.org Blog`,
