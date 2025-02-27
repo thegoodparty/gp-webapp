@@ -1,6 +1,7 @@
-import { apiFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
 import FaqsPage from './components/FaqsPage';
 import pageMetaData from 'helpers/metadataHelper';
+import { apiRoutes } from 'gpApi/routes';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
@@ -13,7 +14,9 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 const fetchContent = async () => {
-  return await apiFetch('content/type/articleCategories');
+  return await unAuthFetch(
+    `${apiRoutes.content.byType.path}/articleCategories`,
+  );
 };
 
 export default async function Page({ params, searchParams }) {

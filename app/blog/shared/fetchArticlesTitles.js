@@ -1,7 +1,5 @@
-import { apiFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { apiRoutes } from 'gpApi/routes';
 
-export const fetchArticlesTitles = async () => {
-  return await apiFetch('content/type/blogArticleTitles');
-
-  return resp.data;
-};
+export const fetchArticlesTitles = async () =>
+  await unAuthFetch(`${apiRoutes.content.byType.path}/blogArticleTitles`);

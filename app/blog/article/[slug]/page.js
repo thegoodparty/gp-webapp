@@ -2,14 +2,17 @@ import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
-import { apiFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import { apiRoutes } from 'gpApi/routes';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
 
 export const fetchArticle = async (slug) => {
-  return await apiFetch(`content/blog-article/${slug}`);
+  return await unAuthFetch(
+    `${apiRoutes.content.blogArticle.getSlug.path}/${slug}`,
+  );
 };
 
 export async function generateMetadata({ params }) {

@@ -1,9 +1,12 @@
-import { apiFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const fetchArticlesBySections = async (sectionSlug) => {
   if (sectionSlug) {
-    return await apiFetch(`content/blog-articles-by-section/${sectionSlug}`);
+    return await unAuthFetch(
+      `${apiRoutes.content.getBlogSections.path}/${sectionSlug}`,
+    );
   } else {
-    return await apiFetch('content/blog-articles-by-section');
+    return await unAuthFetch(apiRoutes.content.getBlogSections.path);
   }
 };

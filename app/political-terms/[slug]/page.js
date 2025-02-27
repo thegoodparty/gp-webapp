@@ -4,10 +4,14 @@ import TermsItemPage from './components/TermsItemPage';
 import DefinedTermSchema from './DefinedTermSchema';
 import pageMetaData from 'helpers/metadataHelper';
 import { notFound } from 'next/navigation';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchGlossaryBySlug = async (slug) => {
   try {
-    return await apiFetch('content/type/glossaryItem/by-slug');
+    return await unAuthFetch(
+      `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
+    );
   } catch (e) {
     return {};
   }

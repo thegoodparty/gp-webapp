@@ -1,15 +1,21 @@
 import TermsHomePage from './components/TermsHomePage';
 import pageMetaData from 'helpers/metadataHelper';
-import { apiFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { apiRoutes } from 'gpApi/routes';
+
 export const revalidate = 3600;
 export const dynamic = 'force-static';
 
 export async function fetchGlossaryByLetter() {
-  return await apiFetch('content/type/glossaryItem/by-letter');
+  return await unAuthFetch(
+    `${apiRoutes.content.byType.path}/glossaryItem/by-letter`,
+  );
 }
 
 const fetchGlossaryByTitle = async () => {
-  return await apiFetch('content/type/glossaryItem/by-slug');
+  return await unAuthFetch(
+    `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
+  );
 };
 
 const meta = pageMetaData({

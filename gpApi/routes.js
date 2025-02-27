@@ -211,6 +211,10 @@ export const apiRoutes = {
       path: '/content/:id',
       method: 'GET',
     },
+    byId: {
+      path: '/content',
+      method: 'GET',
+    },
     glossaryBySlug: {
       path: '/content/type/glossaryItem/by-slug',
       method: 'GET',
@@ -223,8 +227,12 @@ export const apiRoutes = {
       path: '/content/article-tags',
       method: 'GET',
     },
+    byType: {
+      path: '/content/type',
+      method: 'GET',
+    },
     articleTag: {
-      path: '/content/article-tags/:tag',
+      path: '/content/article-tags',
       method: 'GET',
     },
     getBlogSections: {
@@ -234,6 +242,10 @@ export const apiRoutes = {
     blogArticle: {
       getBySlug: {
         path: '/content/blog-article/:slug',
+        method: 'GET',
+      },
+      getSlug: {
+        path: '/content/blog-article',
         method: 'GET',
       },
       getBySection: {

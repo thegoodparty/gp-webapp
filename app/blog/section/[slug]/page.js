@@ -49,9 +49,9 @@ export default async function Page({ params }) {
   );
 }
 
-export async function generateStaticParams({ params }) {
-  const { slug } = params;
-  const { sections } = await fetchArticlesBySections(slug);
+export async function generateStaticParams() {
+  const { sections } = await fetchArticlesBySections();
+  console.log('sections', sections);
 
   return sections?.map((section) => {
     return {
