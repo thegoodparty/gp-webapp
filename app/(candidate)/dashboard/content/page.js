@@ -35,7 +35,7 @@ export default async function Page({ params, searchParams }) {
     prompts,
     templates: promptsRaw,
     categories,
-    pathToVictory: campaign?.pathToVictory,
+    pathToVictory: campaign?.pathToVictory?.data,
     requiresQuestions,
     candidatePositions,
     user,
