@@ -163,7 +163,7 @@ export default function VoterRecordsPage(props) {
                           }
                           onClick={() => {
                             trackEvent(EVENTS.VoterData.ClickDetail, {
-                              type,
+                              type: file.key,
                               file: file.name,
                               isCustom: file.isCustom,
                             });

@@ -66,7 +66,7 @@ const PurchaseRedirectPage = ({ campaign, redirectDelaySecs }) => {
           <PrimaryButton
             className="w-full md:w-auto"
             onClick={() => {
-              trackEvent(EVENTS.ProUpgrade.PurchaseRedirect.ClickGoToStripe);
+              trackEvent(EVENTS.ProUpgrade.ClickGoToStripe);
               doRedirect(currentTimeoutId);
             }}
           >

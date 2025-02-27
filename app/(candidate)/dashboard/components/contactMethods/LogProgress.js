@@ -37,7 +37,7 @@ export default function LogProgress({
   const handleSubmit = async () => {
     let newAddition = parseInt(value, 10);
 
-    trackEvent(EVENTS.Dashboard.VoterContact.LogProgress.Add, {
+    trackEvent(EVENTS.Dashboard.VoterContact.LogProgress.ClickAdd, {
       key,
       title,
       value,

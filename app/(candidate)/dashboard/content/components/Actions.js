@@ -45,7 +45,7 @@ export default function Actions(props) {
               tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
               onClick={() => {
-                trackEvent(EVENTS.ContentBuilder.Editor.OpenActions, {
+                trackEvent(EVENTS.ContentBuilder.OpenKebabMenu, {
                   name: name,
                   slug: slug,
                   key: documentKey,

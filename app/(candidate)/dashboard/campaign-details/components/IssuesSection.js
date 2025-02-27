@@ -18,6 +18,7 @@ import AlertDialog from '@shared/utils/AlertDialog';
 import { IoAddSharp } from 'react-icons/io5';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);

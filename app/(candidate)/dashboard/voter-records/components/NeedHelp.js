@@ -115,13 +115,6 @@ export default function NeedHelp() {
                   return selected;
                 }}
               >
-                renderValue=
-                {(selected) => {
-                  if (selected.length === 0) {
-                    return <div>Select</div>;
-                  }
-                  return selected;
-                }}
                 {types.map((option) => (
                   <MenuItem value={option} key={option}>
                     {option}

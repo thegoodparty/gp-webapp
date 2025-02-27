@@ -16,8 +16,8 @@ export default function ChatInput() {
     if (loading) {
       return;
     }
-    trackEvent(EVENTS.AIAssistant.AskQuestion, { text });
     e.preventDefault();
+    trackEvent(EVENTS.AIAssistant.AskQuestion, { text });
     setText('');
     await handleNewInput(text);
   };

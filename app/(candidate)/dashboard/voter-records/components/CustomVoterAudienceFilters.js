@@ -157,29 +157,29 @@ export default function CustomVoterAudienceFilters({
   const handleChangeAudience = (option, val) => {
     if (readOnly) return;
 
-    if (trackingKey) {
+    if (trackingKey && TRACKING_EVENT_MAP[trackingKey]) {
       // tracking
       if (option.startsWith('audience_')) {
         if (option === 'audience_request') {
-          trackEvent(TRACKING_EVENT_MAP[trackingKey]?.inputRequest);
+          trackEvent(TRACKING_EVENT_MAP[trackingKey].inputRequest);
         } else {
-          trackEvent(TRACKING_EVENT_MAP[trackingKey]?.checkAudience, {
+          trackEvent(TRACKING_EVENT_MAP[trackingKey].checkAudience, {
             option,
             val,
           });
         }
       } else if (option.startsWith('party_')) {
-        trackEvent(TRACKING_EVENT_MAP[trackingKey]?.checkPoliticalParty, {
+        trackEvent(TRACKING_EVENT_MAP[trackingKey].checkPoliticalParty, {
           option,
           val,
         });
       } else if (option.startsWith('age_')) {
-        trackEvent(TRACKING_EVENT_MAP[trackingKey]?.checkAge, {
+        trackEvent(TRACKING_EVENT_MAP[trackingKey].checkAge, {
           option,
           val,
         });
       } else if (option.startsWith('gender_')) {
-        trackEvent(TRACKING_EVENT_MAP[trackingKey]?.checkGender, {
+        trackEvent(TRACKING_EVENT_MAP[trackingKey].checkGender, {
           option,
           val,
         });

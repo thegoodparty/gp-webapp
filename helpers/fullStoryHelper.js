@@ -189,6 +189,7 @@ export const EVENTS = {
       EditOffice: 'Pro Upgrade - Voter Data Page: Edit office',
       SubmitEditOffice: 'Pro Upgrade - Voter Data Page: Submit edit office',
       ConfirmOffice: 'Pro Upgrade - Voter Data Page: Confirm office',
+      ExitEditOffice: 'Pro Upgrade - Voter Data Page: Exit edit office',
     },
     CommitteeCheck: {
       ClickBack: 'Pro Upgrade - Committee Check Page: Click back',

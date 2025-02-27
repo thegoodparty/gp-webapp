@@ -16,8 +16,8 @@ export default function DeleteThread({ chat }) {
   const { name, threadId } = chat;
 
   const showDelete = (e) => {
-    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickMenu);
     e.stopPropagation();
+    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickMenu);
     setShowAlert(true);
     setShowMenu(false);
   };
