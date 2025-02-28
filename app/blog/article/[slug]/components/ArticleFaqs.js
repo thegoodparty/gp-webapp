@@ -12,8 +12,7 @@ async function fetchFaqs() {
   const payload = {
     type: 'blogHome',
   };
-
-  const resp = await fetchContentByType('blogHome');
+  const resp = await serverFetch(apiRoutes.content.getByType, payload);
 
   return resp.data;
 }

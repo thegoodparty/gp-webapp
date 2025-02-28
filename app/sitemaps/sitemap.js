@@ -9,8 +9,7 @@ export const fetchFAQs = async () => {
   const payload = {
     type: 'faqArticle',
   };
-  // const resp = await serverFetch(apiRoutes.content.getByType, payload);
-  const resp = await fetchContentByType('faqArticle');
+  const resp = await serverFetch(apiRoutes.content.getByType, payload);
   return resp.data;
 };
 
@@ -20,12 +19,22 @@ export const fetchGlossaryByTitle = async () => {
 };
 
 const fetchArticles = async () => {
-  const resp = await fetchContentByType('blogArticle');
+  const payload = {
+    type: 'blogArticle',
+  };
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
   return resp.data;
 };
 
 export const fetchSections = async () => {
-  const resp = await fetchContentByType('blogSections');
+  const payload = {
+    type: 'blogSections',
+  };
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
   return resp.data;
 };
 
