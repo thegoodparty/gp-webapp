@@ -26,9 +26,4 @@ export default async function candidateAccess() {
   if (!user) {
     return redirect('/sign-up');
   }
-
-  if (!campaignStatus || campaignStatus.status !== 'candidate') {
-    deleteUserCookies();
-    redirect('/logout');
-  }
 }
