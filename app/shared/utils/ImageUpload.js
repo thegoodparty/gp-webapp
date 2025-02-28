@@ -40,6 +40,7 @@ function ImageUploadWrapper({
     if (file) {
       if (file.size > maxFileSize) {
         setFileSizeError(true);
+        loadingStatusCallback(false);
         return;
       }
       await fileSelectCallback(file, uploadCallback);

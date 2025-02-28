@@ -2,15 +2,11 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import { Fragment, Suspense } from 'react';
 import AdminClientLoad from './AdminClientLoad';
 import LayoutWithAlphabet from './LayoutWithAlphabet';
-import TermSnippet, { termLinkByTitle } from './TermSnippet';
-import Link from 'next/link';
+import TermSnippet from './TermSnippet';
 import TermsSearch from './TermsSearch';
-// import { useTheme, useMediaQuery } from '@mui/material';
 
 export default function TermsHomePage(props) {
-  const { items, activeLetter, glossaryItems, recentGlossaryItems } = props;
-  // const theme = useTheme();
-  // const desktopMode = useMediaQuery(theme.breakpoints.up('md'));
+  const { items, activeLetter, glossaryItems } = props;
 
   return (
     <MaxWidth>
@@ -37,30 +33,6 @@ export default function TermsHomePage(props) {
             <TermsSearch glossaryItems={glossaryItems} />
           </div>
         </div>
-
-        {recentGlossaryItems && recentGlossaryItems.length > 0 ? (
-          <>
-            <div className="text-lg lg:flex pt-4">
-              <h2 className="mb-1 lg:mb-0 lg:basis-1/3">
-                <strong>RECENTLY ADDED TERMS</strong>
-              </h2>
-            </div>
-
-            {recentGlossaryItems.map((item) => (
-              <Fragment key={item}>
-                <Link href={termLinkByTitle(item)} className="block">
-                  <div className="text-lg lg:flex  pt-2 mt-2">
-                    <h2 className="mb-1 lg:mb-0 lg:basis-1/3 underline">
-                      {item}
-                    </h2>
-                  </div>
-                </Link>
-              </Fragment>
-            ))}
-          </>
-        ) : (
-          <></>
-        )}
 
         <LayoutWithAlphabet {...props}>
           {items && items.length > 0 ? (
