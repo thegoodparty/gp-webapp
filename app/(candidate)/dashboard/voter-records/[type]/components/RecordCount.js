@@ -65,7 +65,7 @@ export default function RecordCount(props) {
         setLoading(false);
       }
     } else {
-      setCount(response.count);
+      setCount(response);
       setLoading(false);
     }
   };
