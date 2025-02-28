@@ -38,11 +38,14 @@ export async function clientFetch(endpoint, data, options = {}) {
     headers.Authorization = `Bearer ${serverToken}`;
   }
 
+  const shouldSetJsonContentType =
+    method.toUpperCase() !== 'DELETE' && Boolean(data);
+
   let body;
   if (data instanceof FormData) {
     body = data;
   } else {
-    headers['Content-Type'] = 'application/json';
+    shouldSetJsonContentType && (headers['Content-Type'] = 'application/json');
     body = JSON.stringify(data ?? {}); // to avoid sending empty object
   }
 
