@@ -58,10 +58,7 @@ export async function deleteThread(threadId) {
 export async function chatFeedback(threadId, type, message) {
   try {
     const payload = { threadId, message, type };
-    const resp = await clientFetch(
-      apiRoutes.campaign.ai.chat.feedback,
-      payload,
-    );
+    const resp = await clientFetch(apiRoutes.campaign.chat.feedback, payload);
     return resp.data;
   } catch (e) {
     console.log('error', e);
