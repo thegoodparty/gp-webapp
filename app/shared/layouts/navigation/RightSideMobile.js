@@ -52,8 +52,7 @@ export default function RightSideMobile() {
           {!isOpen && user && (
             <>
               <ExitToDashboardButton />
-              <div>
-              </div>
+              <div></div>
             </>
           )}
           <Hamburger
@@ -71,7 +70,11 @@ export default function RightSideMobile() {
           onOpen={() => {}}
         >
           {user && isDashboardPath ? (
-            <DashboardMobile user={user} pathname={pathname} campaign={campaign} />
+            <DashboardMobile
+              user={user}
+              pathname={pathname}
+              campaign={campaign}
+            />
           ) : (
             <div className="flex flex-col w-[270px] bg-primary-dark text-white h-screen relative">
               <div
@@ -96,7 +99,9 @@ export default function RightSideMobile() {
                         id={`mobile-nav-${link.id}`}
                         key={link.id}
                         className="block no-underline font-medium py-3 whitespace-nowrap text-base px-2 hover:bg-primary-dark-dark rounded flex items-center justify-between"
-                        rel={link.external ? 'noopener noreferrer nofollow' : ''}
+                        rel={
+                          link.external ? 'noopener noreferrer nofollow' : ''
+                        }
                         onClick={closeMenu}
                       >
                         <div className="flex items-center">
@@ -109,7 +114,7 @@ export default function RightSideMobile() {
                   </div>
                 ))}
               </div>
-              <div className="w-full h-auto">
+              <div className="w-full h-auto absolute bottom-0">
                 <div className="p-6 bg-primary-dark h-auto">
                   {user ? (
                     <>
@@ -166,4 +171,4 @@ export default function RightSideMobile() {
       </div>
     </div>
   );
-} 
+}
