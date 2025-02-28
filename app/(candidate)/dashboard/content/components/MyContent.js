@@ -212,9 +212,12 @@ export default function MyContent(props) {
 
   const createAIContent = async ({
     section = '',
-    initialChat = false,
+    initialChat = [],
     initialValues = {},
   }) => {
+    if (initialChat === false) {
+      initialChat = []
+    }
     const { chatResponse, status } = await generateAIContent(
       section,
       initialChat,
