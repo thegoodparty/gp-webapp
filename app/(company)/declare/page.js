@@ -2,7 +2,10 @@ import pageMetaData from 'helpers/metadataHelper';
 import DeclarePage from './components/DeclarePage';
 import { Libre_Baskerville, Tangerine } from 'next/font/google';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const baskerville = Libre_Baskerville({
   weight: ['400', '700'],
@@ -15,8 +18,7 @@ const tangerine = Tangerine({
 });
 
 async function fetchSignatures() {
-  const resp = await serverFetch(apiRoutes.homepage.declarationSignatures.list);
-  return resp.data;
+  return await unAuthFetch(apiRoutes.homepage.declarationSignatures.list.path);
 }
 
 const meta = pageMetaData({

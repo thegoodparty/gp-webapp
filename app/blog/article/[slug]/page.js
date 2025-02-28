@@ -2,9 +2,9 @@ import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
-import { unAuthFetch } from 'gpApi/apiFetch';
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 import { apiRoutes } from 'gpApi/routes';
+import { unAuthFetch } from 'gpApi/apiFetch';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';

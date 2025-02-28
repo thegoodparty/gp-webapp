@@ -2,6 +2,9 @@ import pageMetaData from 'helpers/metadataHelper';
 import { FullContentPage } from '@shared/FullContentPage';
 import { fetchContentByType } from 'helpers/fetchHelper';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Terms of Service | GoodParty.org',
   slug: '/terms-of-service',
