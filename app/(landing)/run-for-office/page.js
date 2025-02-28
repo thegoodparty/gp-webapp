@@ -2,6 +2,9 @@ import pageMetaData from 'helpers/metadataHelper';
 import RunForOfficePage from './components/RunForOfficePage';
 import { fetchContentByType } from 'helpers/fetchHelper';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Campaign Tools',
   description:

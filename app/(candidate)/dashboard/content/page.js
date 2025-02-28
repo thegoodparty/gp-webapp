@@ -6,6 +6,7 @@ import ContentPage from './components/ContentPage';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { getServerUser } from 'helpers/userServerHelper';
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
+
 const meta = pageMetaData({
   title: 'Campaign Content | GoodParty.org',
   description: 'Campaign Content',

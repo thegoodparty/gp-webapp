@@ -1,6 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper';
 import AboutPage from './components/AboutPage';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Our Mission | GoodParty.org',
   description:

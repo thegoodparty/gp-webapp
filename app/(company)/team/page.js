@@ -3,7 +3,10 @@ import pageMetaData from 'helpers/metadataHelper';
 
 import TeamPage from './components/TeamsPage';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+import { fetchContentByType } from 'helpers/fetchHelper';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const meta = pageMetaData({
   title: 'Team | GoodParty.org',
@@ -14,22 +17,9 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 async function fetchTeamMembersAndMilestones() {
-  const api = apiRoutes.content.getByType;
   const [{ data: teamMembers }, { data: teamMilestones }] = await Promise.all([
-    serverFetch(
-      api,
-      {
-        type: 'goodPartyTeamMembers',
-      },
-      { revalidate: 3600 },
-    ),
-    serverFetch(
-      api,
-      {
-        type: 'teamMilestone',
-      },
-      { revalidate: 3600 },
-    ),
+    fetchContentByType('goodPartyTeamMembers'),
+    fetchContentByType('teamMilestones'),
   ]);
   return { teamMembers, teamMilestones };
 }

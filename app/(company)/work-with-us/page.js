@@ -15,6 +15,9 @@ import pageMetaData from 'helpers/metadataHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Work with us | GoodParty.org',
   description:
