@@ -48,7 +48,6 @@ export default async function Page() {
     activeLetter: 'A',
     items: a_items,
     glossaryItems: glossaryItemsArray,
-    recentGlossaryItems: [],
   };
   return <TermsHomePage {...childProps} />;
 }

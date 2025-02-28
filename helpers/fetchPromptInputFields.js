@@ -3,7 +3,7 @@ import { clientFetch } from 'gpApi/clientFetch';
 
 export async function fetchPromptInputFields(subKey) {
   const resp = await clientFetch(
-    apiRoutes.content.contentByType,
+    apiRoutes.content.getByType,
     {
       type: 'promptInputFields',
     },
