@@ -1,3 +1,5 @@
+'use client';
+
 import Body2 from '@shared/typography/Body2';
 import H3 from '@shared/typography/H3';
 import Chip from '@shared/utils/Chip';
