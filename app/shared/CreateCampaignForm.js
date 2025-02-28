@@ -106,7 +106,7 @@ export const CreateCampaignForm = ({}) => {
   };
 
   const handleChooseOfficeComplete = async () => {
-    await sendEmail(newCampaign.user);
+    await sendEmail(newCampaign.userId);
     successSnackbar('Saved');
     setShowOfficeSelectionModal(false);
     setValues(initialValues);

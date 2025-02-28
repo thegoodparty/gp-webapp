@@ -53,7 +53,7 @@ export async function clientFetch(endpoint, data, options = {}) {
     method,
     credentials: 'include',
     mode: 'cors',
-    body: method === 'GET' || method === 'DELETE' ? undefined : body,
+    body: method === 'GET' ? undefined : body,
     ...(shouldCache ? { next: { revalidate } } : { cache: 'no-store' }),
   });
 
