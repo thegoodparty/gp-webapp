@@ -1,20 +1,21 @@
 import TermsHomePage from './components/TermsHomePage';
 import pageMetaData from 'helpers/metadataHelper';
+import { unAuthFetch } from 'gpApi/apiFetch';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function fetchGlossaryByLetter() {
-  const resp = await serverFetch(
-    apiRoutes.content.glossaryByLetter,
-    undefined,
-    { revalidate: 3600 },
+  return await unAuthFetch(
+    `${apiRoutes.content.byType.path}/glossaryItem/by-letter`,
   );
-  return resp.data;
 }
 
 const fetchGlossaryByTitle = async () => {
-  const resp = await serverFetch(apiRoutes.content.glossaryBySlug);
-  return resp.data;
+  return await unAuthFetch(
+    `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
+  );
 };
 
 const meta = pageMetaData({

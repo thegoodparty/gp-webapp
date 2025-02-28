@@ -1,5 +1,5 @@
 'use client';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { IoIosText } from 'react-icons/io';
 import { FaFacebookF, FaTwitter } from 'react-icons/fa';
@@ -9,10 +9,12 @@ import Overline from '@shared/typography/Overline';
 
 export default function ShareBlog({ className }) {
   const pathname = usePathname();
-  const appBase = window.location.origin;
+  const [appBase, setAppBase] = useState('');
   const url = appBase + pathname;
   const messageNoUrl = 'Vote different';
   const encodedUrl = encodeURIComponent(url);
+
+  useEffect(() => setAppBase(window?.location.origin), []);
 
   const textMessageBody = `${url} ${'\n %0a'} ${'\n %0a'}${messageNoUrl}`;
 

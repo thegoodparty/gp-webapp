@@ -5,6 +5,9 @@ import BlogSectionPage from './components/BlogSectionPage';
 import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 export async function generateMetadata({ params }) {
   const { slug } = params;
   const { sections, sectionIndex } = await fetchArticlesBySections(slug);
@@ -26,7 +29,7 @@ export default async function Page({ params }) {
     notFound();
   }
   const [{ sections, hero, sectionIndex }, tags, titles] = await Promise.all([
-    fetchArticlesBySections(),
+    fetchArticlesBySections(slug),
     fetchArticleTags(),
     fetchArticlesTitles(),
   ]);
@@ -44,4 +47,14 @@ export default async function Page({ params }) {
       articleTitles={titles}
     />
   );
+}
+
+export async function generateStaticParams() {
+  const { sections } = await fetchArticlesBySections();
+
+  return sections?.map((section) => {
+    return {
+      slug: section?.slug,
+    };
+  });
 }

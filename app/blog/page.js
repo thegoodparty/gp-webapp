@@ -1,19 +1,15 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogPage from './components/BlogPage';
-import { serverFetch } from 'gpApi/serverFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { fetchArticleTags } from './shared/fetchArticleTags';
+import { fetchArticlesTitles } from './shared/fetchArticlesTitles';
 import { apiRoutes } from 'gpApi/routes';
-import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
-import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export const fetchTopTags = async () => {
-  const payload = {
-    type: 'blogHome',
-  };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  });
-  return resp.data;
+  return await unAuthFetch(`${apiRoutes.content.byType.path}/blogHome`);
 };
 
 const meta = pageMetaData({

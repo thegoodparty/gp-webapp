@@ -4,14 +4,14 @@ import TermsItemPage from './components/TermsItemPage';
 import DefinedTermSchema from './DefinedTermSchema';
 import pageMetaData from 'helpers/metadataHelper';
 import { notFound } from 'next/navigation';
+import { unAuthFetch } from 'gpApi/apiFetch';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
 
 const fetchGlossaryBySlug = async (slug) => {
   try {
-    // TODO: allow querying by slug on backend
-    const resp = await serverFetch(apiRoutes.content.glossaryBySlug);
-    return resp.data[slug];
+    return await unAuthFetch(
+      `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
+    );
   } catch (e) {
     return {};
   }
@@ -66,12 +66,13 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const letters = alphabet;
+export async function generateStaticParams() {
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  const lettersArray = letters.split('');
 
-//   return letters.map((letter) => {
-//     return {
-//       slug: letter,
-//     };
-//   });
-// }
+  return lettersArray.map((letter) => {
+    return {
+      slug: letter,
+    };
+  });
+}

@@ -2,17 +2,14 @@ import { faqArticleRoute, slugify } from 'helpers/articleHelper';
 import { notFound, permanentRedirect } from 'next/navigation';
 import FaqsArticlePage from './components/FaqsArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
+import { unAuthFetch } from 'gpApi/apiFetch';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export const fetchArticle = async (id) => {
-  const resp = await serverFetch(
-    apiRoutes.content.getById,
-    { id },
-    { revalidate: 3600 },
-  );
-
-  return resp.data;
+  return await unAuthFetch(`${apiRoutes.content.byId.path}/${id}`);
 };
 
 export async function generateMetadata({ params }) {
@@ -50,4 +47,21 @@ export default async function Page({ params, searchParams }) {
   };
 
   return <FaqsArticlePage {...childProps} />;
+}
+
+export async function generateStaticParams() {
+  const faqArticles = await unAuthFetch(
+    `${apiRoutes.content.byType.path}/articleCategories`,
+  );
+  let articles = [];
+
+  faqArticles?.forEach((category) => {
+    category?.articles?.forEach((article) => {
+      articles.push({
+        titleId: [slugify(article?.title, true), article?.id],
+      });
+    });
+  });
+
+  return articles;
 }

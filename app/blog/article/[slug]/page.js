@@ -2,21 +2,17 @@ import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
-import { serverFetch } from 'gpApi/serverFetch';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 import { apiRoutes } from 'gpApi/routes';
 
-export const fetchArticle = async (slug) => {
-  const resp = await serverFetch(
-    apiRoutes.content.blogArticle.getBySlug,
-    {
-      slug,
-    },
-    {
-      revalidate: 3600,
-    },
-  );
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
-  return resp.data;
+export const fetchArticle = async (slug) => {
+  return await unAuthFetch(
+    `${apiRoutes.content.blogArticle.getSlug.path}/${slug}`,
+  );
 };
 
 export async function generateMetadata({ params }) {
@@ -52,16 +48,12 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = gpApi.content.contentByKey;
+export async function generateStaticParams({ params }) {
+  const articles = await fetchArticlesTitles();
 
-//   const { content } = await gpFetch(api, {
-//     key: 'blogArticles',
-//   });
-
-//   return content?.map((article) => {
-//     return {
-//       slug: article.slug,
-//     };
-//   });
-// }
+  return articles?.map((article) => {
+    return {
+      slug: article?.slug,
+    };
+  });
+}
