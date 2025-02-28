@@ -1,6 +1,8 @@
-import OptimizeScript from '@shared/scripts/OptimizeScript';
 import InfoSessionPage from './components/InfoSessionPage';
 import pageMetaData from 'helpers/metadataHelper';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const meta = pageMetaData({
   title: 'Book an info session',

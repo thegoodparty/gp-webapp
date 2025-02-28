@@ -6,7 +6,7 @@ import Cta from './Cta';
 import Callout from '@shared/utils/Callout';
 // import StickersCallout from '@shared/utils/StickersCallout';
 
-export default function HomePage(props) {
+export default function HomePage() {
   return (
     <div className="bg-indigo-50">
       <Callout />

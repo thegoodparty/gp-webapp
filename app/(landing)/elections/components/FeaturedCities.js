@@ -56,9 +56,9 @@ const defaultCities = [
 export default function FeaturedCities() {
   const [featuredCities, setFeaturedCities] = useState(defaultCities);
 
-  useEffect(() => {
-    getIpLocation();
-  }, []);
+  // useEffect(() => {
+  //   getIpLocation();
+  // }, []);
 
   const getIpLocation = async () => {
     try {

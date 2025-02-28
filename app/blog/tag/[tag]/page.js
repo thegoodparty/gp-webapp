@@ -1,39 +1,20 @@
 import { notFound } from 'next/navigation';
 import pageMetaData from 'helpers/metadataHelper';
 import BlogTagPage from './components/BlogTagPage';
-import { serverFetch } from 'gpApi/serverFetch';
 import { apiRoutes } from 'gpApi/routes';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import { unAuthFetch } from 'gpApi/apiFetch';
 
-const fetchArticlesByTag = async (tag) => {
-  const payload = {
-    tag,
-  };
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
-  const resp = await serverFetch(
-    apiRoutes.content.blogArticle.getByTag,
-    payload,
-    {
-      revalidate: 3600,
-    },
-  );
+const fetchArticlesByTag = async (tag) =>
+  await unAuthFetch(`${apiRoutes.content.blogArticle.byTag.path}/${tag}`);
 
-  return resp.data;
-};
-
-const fetchArticleTag = async (tag) => {
-  const payload = {
-    tag,
-  };
-
-  const resp = await serverFetch(apiRoutes.content.articleTag, payload, {
-    revalidate: 3600,
-  });
-
-  return resp.data;
-};
+const fetchArticleTag = async (tag) =>
+  await unAuthFetch(`${apiRoutes.content.articleTag.path}/${tag}`);
 
 export async function generateMetadata({ params }) {
   const { tag } = params;
@@ -76,4 +57,14 @@ export default async function Page({ params }) {
       articleTitles={titles}
     />
   );
+}
+
+export async function generateStaticParams() {
+  const tags = await unAuthFetch(apiRoutes.content.articleTag.path);
+
+  return tags?.map((tag) => {
+    return {
+      tag: tag?.slug,
+    };
+  });
 }

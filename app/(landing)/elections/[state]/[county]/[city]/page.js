@@ -6,6 +6,9 @@ import gpFetch from 'gpApi/gpFetch';
 import ElectionsCityPage from './components/ElectionsCityPage';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 export const fetchCity = async (state, county, city) => {
   const api = gpApi.race.byCity;
   const payload = {

@@ -256,6 +256,10 @@ export const apiRoutes = {
         path: '/content/blog-articles-by-tag/:tag',
         method: 'GET',
       },
+      byTag: {
+        path: '/content/blog-articles-by-tag',
+        method: 'GET',
+      },
     },
   },
   topIssue: {

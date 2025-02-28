@@ -1,6 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper';
 import ElectionsPage from './components/ElectionsPage';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Election Research',
   description:
