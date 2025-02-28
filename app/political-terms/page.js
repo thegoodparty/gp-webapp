@@ -37,6 +37,12 @@ export default async function Page() {
   });
   glossaryItemsArray.sort();
 
+  // TODO: reimplement or remove - we dont have recentGlossaryItems atm
+  // const recentGlossaryItemsContent = await fetchContentByKey(
+  //   'recentGlossaryItems',
+  // );
+  // const recentGlossaryItems = recentGlossaryItemsContent.content;
+
   const childProps = {
     activeLetter: 'A',
     items: a_items,
