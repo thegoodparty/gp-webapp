@@ -3,12 +3,14 @@ import { faqArticleRoute } from '../../helpers/articleHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
 import { APP_BASE } from 'appEnv';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 export const fetchFAQs = async () => {
   const payload = {
     type: 'faqArticle',
   };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload);
+  // const resp = await serverFetch(apiRoutes.content.getByType, payload);
+  const resp = await fetchContentByType('faqArticle');
   return resp.data;
 };
 
@@ -21,9 +23,10 @@ const fetchArticles = async () => {
   const payload = {
     type: 'blogArticle',
   };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  });
+  // const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+  //   revalidate: 3600,
+  // });
+  const resp = await fetchContentByType('blogArticle');
   return resp.data;
 };
 
@@ -31,9 +34,10 @@ export const fetchSections = async () => {
   const payload = {
     type: 'blogSections',
   };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  });
+  // const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+  //   revalidate: 3600,
+  // });
+  const resp = await fetchContentByType('blogSections');
   return resp.data;
 };
 

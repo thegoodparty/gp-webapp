@@ -5,6 +5,7 @@ import ElectionPage from './components/ElectionPage';
 import pageMetaData from 'helpers/metadataHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
+import { fetchContentByType } from 'helpers/fetchHelper';
 // import ElectionSchema from './ElectionSchema';
 
 export const fetchCandidate = async (slug) => {
@@ -25,7 +26,8 @@ export const fetchElection = async (slug) => {
     type: 'election',
   };
 
-  const resp = await serverFetch(apiRoutes.content.getByType, payload);
+  //const resp = await serverFetch(apiRoutes.content.getByType, payload);
+  const resp = await fetchContentByType('election');
 
   const elections = resp.data;
 

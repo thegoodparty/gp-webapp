@@ -6,15 +6,18 @@ import IconButton from '@shared/buttons/IconButton';
 import { MdChevronRight } from 'react-icons/md';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 async function fetchFaqs() {
   const payload = {
     type: 'blogHome',
   };
 
-  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  });
+  // const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+  //   revalidate: 3600,
+  // });
+
+  const resp = await fetchContentByType('blogHome');
 
   return resp.data;
 }
