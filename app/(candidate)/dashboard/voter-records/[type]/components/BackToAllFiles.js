@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@shared/buttons/Button';
 import { FaChevronLeft } from 'react-icons/fa';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
