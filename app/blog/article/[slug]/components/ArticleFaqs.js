@@ -11,7 +11,7 @@ async function fetchFaqs() {
   const payload = {
     type: 'blogHome',
   };
-  
+
   const resp = await serverFetch(apiRoutes.content.getByType, payload, {
     revalidate: 3600,
   });
