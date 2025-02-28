@@ -13,10 +13,6 @@ async function fetchFaqs() {
     type: 'blogHome',
   };
 
-  // const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-  //   revalidate: 3600,
-  // });
-
   const resp = await fetchContentByType('blogHome');
 
   return resp.data;
