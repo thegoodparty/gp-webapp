@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { numberFormatter } from 'helpers/numberHelper';
 import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow';
 import Button from '@shared/buttons/Button';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function MethodRow(props) {
   const { method, campaign = {}, pathToVictory = {} } = props;
@@ -20,6 +21,8 @@ export default function MethodRow(props) {
     percText,
     specialCallout,
     showScheduleButton,
+    onCtaClick,
+    onGenerateScriptClick,
   } = method;
   const { isPro } = campaign;
   const { voterContactGoal = 0 } = pathToVictory;
@@ -71,6 +74,7 @@ export default function MethodRow(props) {
                   size="large"
                   variant="outlined"
                   className="w-full flex items-center justify-center generate-script"
+                  onClick={onGenerateScriptClick}
                 >
                   <MdAutoAwesome className="mr-2" />
                   Generate Script
@@ -88,7 +92,11 @@ export default function MethodRow(props) {
                         type={voterFileKey}
                         campaign={campaign}
                         customButton={
-                          <Button size="large" className="w-full !px-3">
+                          <Button
+                            size="large"
+                            className="w-full !px-3"
+                            onClick={onCtaClick}
+                          >
                             {cta}
                           </Button>
                         }
@@ -98,6 +106,7 @@ export default function MethodRow(props) {
                         href={`/dashboard/voter-records/${voterFileKey}`}
                         size="large"
                         className="w-full !px-3"
+                        onClick={onCtaClick}
                       >
                         {cta}
                       </Button>

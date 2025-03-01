@@ -3,7 +3,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import DeleteAction from './DeleteAction';
 import ImpersonateAction from '/app/admin/shared/ImpersonateAction';
 
-export default function Actions({ launched, slug, email }) {
+export default function Actions({ launched, slug, email, id }) {
   const [showMenu, setShowMenu] = useState(false);
   const isLive = launched === 'Live';
 
@@ -31,7 +31,7 @@ export default function Actions({ launched, slug, email }) {
               launched={launched}
             />
 
-            <DeleteAction slug={slug} isLive={isLive} />
+            <DeleteAction id={id} slug={slug} isLive={isLive} />
           </div>
         </>
       )}

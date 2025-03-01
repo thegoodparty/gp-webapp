@@ -2,7 +2,6 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import CampaignAssistantPage from './components/CampaignAssistantPage';
 import { getServerUser } from 'helpers/userServerHelper';
-import { adminAccessOnly } from 'helpers/permissionHelper';
 import candidateAccess from '../shared/candidateAccess';
 
 const meta = pageMetaData({
@@ -15,8 +14,8 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
-  const { campaign } = await fetchUserCampaign();
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
+  const campaign = await fetchUserCampaign();
 
   const childProps = {
     pathname: '/dashboard/campaign-assistant',

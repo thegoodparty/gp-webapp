@@ -2,16 +2,15 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import pageMetaData from 'helpers/metadataHelper';
 import candidateAccess from '../shared/candidateAccess';
 import VoterRecordsPage from './components/VoterRecordsPage';
-import { getServerToken, getServerUser } from 'helpers/userServerHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 export async function fetchCanDownload() {
   try {
-    const api = gpApi.voterData.canDownload;
-    const token = getServerToken();
-    return await gpFetch(api, false, false, token);
+    const resp = await serverFetch(apiRoutes.voters.voterFile.canDownload);
+    return resp.data;
   } catch (e) {
     console.log('error at fetchCanDownload', e);
     return {};
@@ -28,8 +27,8 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
-  const { campaign } = await fetchUserCampaign();
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
+  const campaign = await fetchUserCampaign();
   if (!campaign?.isPro) {
     return redirect('/dashboard/upgrade-to-pro', 'replace');
   }

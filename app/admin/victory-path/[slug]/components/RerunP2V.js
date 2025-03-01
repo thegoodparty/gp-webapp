@@ -1,16 +1,19 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import SuccessButton from '@shared/buttons/SuccessButton';
 import { useState } from 'react';
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 async function rerunP2V(slug) {
   try {
-    const api = gpApi.voterData.pathToVictory;
-    return await gpFetch(api, { slug });
+    const resp = await clientFetch(apiRoutes.campaign.pathToVictory.create, {
+      slug,
+    });
+
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

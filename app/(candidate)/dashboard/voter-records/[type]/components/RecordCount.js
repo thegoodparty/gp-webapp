@@ -1,26 +1,29 @@
 'use client';
 import { useEffect, useState } from 'react';
 import VoterFileTypes from '../../components/VoterFileTypes';
-
 import MarketingH2 from '@shared/typography/MarketingH2';
 import { CircularProgress } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { numberFormatter } from 'helpers/numberHelper';
 import H2 from '@shared/typography/H2';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 let attempts = 0;
 const MAX_ATTEMPTS = 3;
 
 export async function countVoterFile(type, customFilters) {
   try {
-    const api = gpApi.voterData.getVoterFile;
     const payload = {
       type,
-      customFilters: customFilters ? JSON.stringify(customFilters) : undefined,
       countOnly: true,
     };
-    return await gpFetch(api, payload, 3600);
+
+    if (customFilters) {
+      payload.customFilters = JSON.stringify(customFilters);
+    }
+
+    const resp = await clientFetch(apiRoutes.voters.voterFile.get, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -62,7 +65,7 @@ export default function RecordCount(props) {
         setLoading(false);
       }
     } else {
-      setCount(response.count);
+      setCount(response);
       setLoading(false);
     }
   };

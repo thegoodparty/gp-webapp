@@ -1,13 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchCampaigns = async (filters) => {
   try {
-    const api = gpApi.campaign.mapList;
+    const resp = await clientFetch(apiRoutes.campaign.map.list, filters, {
+      revalidate: 3600,
+    });
 
-    return await gpFetch(api, filters, 3600);
+    return resp.data;
   } catch (err) {
     console.log(err);
     return [];
@@ -26,7 +28,7 @@ export const useMapCampaigns = (filters) => {
   }, [filters]);
 
   async function loadCampaigns(filters) {
-    const { campaigns } = await fetchCampaigns(filters);
+    const campaigns = await fetchCampaigns(filters);
     setCampaigns(campaigns || []);
     setIsCampaignsLoading(false);
   }

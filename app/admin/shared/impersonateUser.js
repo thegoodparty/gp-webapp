@@ -1,16 +1,16 @@
 import { setCookie } from 'helpers/cookieHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function handleImpersonateUser(email) {
   try {
-    const api = gpApi.admin.impersonateUser;
     const payload = {
       email,
     };
-    const resp = await gpFetch(api, payload);
-    if (resp?.token) {
-      setCookie('impersonateToken', resp.token);
+    const resp = await clientFetch(apiRoutes.admin.user.impersonate, payload);
+    const token = resp.data?.token;
+    if (token) {
+      setCookie('impersonateToken', token);
       return true;
     }
   } catch (e) {

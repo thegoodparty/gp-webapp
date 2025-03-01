@@ -1,23 +1,24 @@
+'use client';
 import { InputLabel, MenuItem, Select } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
 import Modal from '@shared/utils/Modal';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import NeedHelpSuccess from './NeedHelpSuccess';
 import Button from '@shared/buttons/Button';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export async function sendMessage(type, message) {
   try {
-    const api = gpApi.voterData.helpMessage;
     const payload = {
       type,
       message,
     };
-    return await gpFetch(api, payload);
+    return await clientFetch(apiRoutes.voters.voterFile.helpMessage, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -50,6 +51,7 @@ export default function NeedHelp() {
   };
 
   const handleClose = () => {
+    trackEvent(EVENTS.VoterData.NeedHelp.Exit);
     setOpen(false);
     setLoading(false);
     setShowSuccess(false);
@@ -63,6 +65,10 @@ export default function NeedHelp() {
     if (loading) {
       return;
     }
+    trackEvent(EVENTS.VoterData.NeedHelp.Submit, {
+      type: state.type,
+      hasMessage: !!state.message,
+    });
     setLoading(true);
     await sendMessage(state.type, state.message);
     setShowSuccess(true);
@@ -73,6 +79,7 @@ export default function NeedHelp() {
         size="large"
         color="neutral"
         onClick={() => {
+          trackEvent(EVENTS.VoterData.ClickNeedHelp);
           setOpen(true);
         }}
         className="mr-4 mb-4 md:mb-0 w-full md:w-auto"
@@ -96,6 +103,9 @@ export default function NeedHelp() {
                 displayEmpty
                 required
                 onChange={(e) => {
+                  trackEvent(EVENTS.VoterData.NeedHelp.SelectType, {
+                    type: e.target.value,
+                  });
                   handleChange('type', e.target.value);
                 }}
                 renderValue={(selected) => {
@@ -105,13 +115,6 @@ export default function NeedHelp() {
                   return selected;
                 }}
               >
-                renderValue=
-                {(selected) => {
-                  if (selected.length === 0) {
-                    return <div>Select</div>;
-                  }
-                  return selected;
-                }}
                 {types.map((option) => (
                   <MenuItem value={option} key={option}>
                     {option}

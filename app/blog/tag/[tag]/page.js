@@ -1,23 +1,25 @@
 import { notFound } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import pageMetaData from 'helpers/metadataHelper';
-import { fetchSections } from 'app/blog/shared/fetchSections';
 import BlogTagPage from './components/BlogTagPage';
+import { apiRoutes } from 'gpApi/routes';
+import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
+import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import { unAuthFetch } from 'gpApi/apiFetch';
 
-const fetchArticlesByTag = async (tag) => {
-  const api = gpApi.content.articlesByTag;
-  const payload = {
-    tag,
-  };
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
-  return await gpFetch(api, payload, 1);
-};
+const fetchArticlesByTag = async (tag) =>
+  await unAuthFetch(`${apiRoutes.content.blogArticle.byTag.path}/${tag}`);
+
+const fetchArticleTag = async (tag) =>
+  await unAuthFetch(`${apiRoutes.content.articleTag.path}/${tag}`);
 
 export async function generateMetadata({ params }) {
   const { tag } = params;
 
-  const { tagName } = await fetchArticlesByTag(tag);
+  const { name: tagName } = await fetchArticleTag(tag);
 
   const meta = pageMetaData({
     title: `${tagName} | GoodParty.org Blog`,
@@ -32,13 +34,18 @@ export default async function Page({ params }) {
   if (!tag) {
     notFound();
   }
-  const { tagName, articles } = await fetchArticlesByTag(tag);
+  const [{ sections }, { name: tagName }, articles, tags, titles] =
+    await Promise.all([
+      fetchArticlesBySections(),
+      fetchArticleTag(tag),
+      fetchArticlesByTag(tag),
+      fetchArticleTags(),
+      fetchArticlesTitles(),
+    ]);
 
   if (!articles) {
     return null;
   }
-
-  const { content: sections } = await fetchSections();
 
   return (
     <BlogTagPage
@@ -46,6 +53,18 @@ export default async function Page({ params }) {
       tagName={tagName}
       tagSlug={tag}
       articles={articles}
+      allTags={tags}
+      articleTitles={titles}
     />
   );
+}
+
+export async function generateStaticParams() {
+  const tags = await unAuthFetch(apiRoutes.content.articleTag.path);
+
+  return tags?.map((tag) => {
+    return {
+      tag: tag?.slug,
+    };
+  });
 }

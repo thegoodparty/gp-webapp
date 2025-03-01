@@ -1,6 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper';
 import GetStickersPage from './components/GetStickersPage';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Get your FREE stickers',
   description:

@@ -11,6 +11,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Link from 'next/link';
 import { TermAndTerminationText } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText';
 import { ServiceAgreementSignatureSection } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const ACKNOWLEDGEMENTS = [
   {
@@ -88,7 +89,12 @@ export const ServiceAgreementPage = ({ campaign }) => {
           />
           <div className="flex flex-col justify-between md:flex-row">
             <Link href="/dashboard/pro-sign-up/committee-check">
-              <SecondaryButton className="w-full mb-4 md:mb-0 md:w-auto">
+              <SecondaryButton
+                className="w-full mb-4 md:mb-0 md:w-auto"
+                onClick={() => {
+                  trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickBack);
+                }}
+              >
                 Back
               </SecondaryButton>
             </Link>
@@ -99,6 +105,9 @@ export const ServiceAgreementPage = ({ campaign }) => {
               <PrimaryButton
                 className="w-full md:w-auto"
                 disabled={!allAccepted || !signature}
+                onClick={() => {
+                  trackEvent(EVENTS.ProUpgrade.ServiceAgreement.ClickFinish);
+                }}
               >
                 Finish
               </PrimaryButton>

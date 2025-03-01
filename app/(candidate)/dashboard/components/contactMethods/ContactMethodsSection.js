@@ -11,6 +11,7 @@ import {
   MdShare,
 } from 'react-icons/md';
 import { StyledAlert } from '@shared/alerts/StyledAlert';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const methods = [
   {
@@ -27,6 +28,16 @@ const methods = [
     voterFileKey: 'doorknocking',
     perc: 30,
     percText: 'doors',
+    onCtaClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.DoorKnocking.ClickGetDoorTargets,
+      ),
+    onLogClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.DoorKnocking.ClickLogProgress),
+    onGenerateScriptClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.DoorKnocking.ClickGenerateScript,
+      ),
   },
   {
     key: 'text',
@@ -49,6 +60,14 @@ const methods = [
         for free on your first texting campaign
       </StyledAlert>
     ),
+    onCtaClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.Texting.ClickScheduleTextCampaign,
+      ),
+    onLogClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.Texting.ClickLogProgress),
+    onGenerateScriptClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.Texting.ClickGenerateScript),
   },
   {
     key: 'calls',
@@ -64,6 +83,16 @@ const methods = [
     voterFileKey: 'telemarketing',
     perc: 10,
     percText: 'phone calls',
+    onCtaClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.PhoneBanking.ClickGetPhoneTargets,
+      ),
+    onLogClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.PhoneBanking.ClickLogProgress),
+    onGenerateScriptClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.PhoneBanking.ClickGenerateScript,
+      ),
   },
 
   {
@@ -82,6 +111,10 @@ const methods = [
     comingSoon: true,
     perc: 5,
     percText: 'signs',
+    onLogClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.YardSigns.ClickLogProgress),
+    onGenerateScriptClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.YardSigns.ClickGenerateScript),
   },
 
   {
@@ -98,6 +131,18 @@ const methods = [
     voterFileKey: 'digitalads',
     perc: 10,
     percText: 'digital impressions',
+    onCtaClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.DigitalAdvertising.ClickExploreSmartAds,
+      ),
+    onLogClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.DigitalAdvertising.ClickLogProgress,
+      ),
+    onGenerateScriptClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.DigitalAdvertising.ClickGenerateScript,
+      ),
   },
 
   {
@@ -114,6 +159,12 @@ const methods = [
     voterFileKey: 'directmail',
     perc: 20,
     percText: 'pieces of mail',
+    onCtaClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.DirectMail.ClickGetMailTargets),
+    onLogClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.DirectMail.ClickLogProgress),
+    onGenerateScriptClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.DirectMail.ClickGenerateScript),
   },
 
   {
@@ -129,6 +180,12 @@ const methods = [
     comingSoon: true,
     perc: 10,
     percText: 'conversations',
+    onLogClick: () =>
+      trackEvent(EVENTS.Dashboard.VoterContact.EventsRallies.ClickLogProgress),
+    onGenerateScriptClick: () =>
+      trackEvent(
+        EVENTS.Dashboard.VoterContact.EventsRallies.ClickGenerateScript,
+      ),
   },
 ];
 

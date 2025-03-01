@@ -1,6 +1,4 @@
 'use client';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import PortalPanel from '@shared/layouts/PortalPanel';
@@ -10,6 +8,8 @@ import TextField from '@shared/inputs/TextField';
 import Button from '@shared/buttons/Button';
 import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
 import { getUserCookie } from 'helpers/cookieHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const createCampaign = async (payload) => {
   try {
@@ -17,14 +17,11 @@ const createCampaign = async (payload) => {
     if (!user || !user.email) {
       console.error('User not found or missing email');
     } else {
-      payload.adminEmail = user.email;
+      payload.adminUserEmail = user.email;
     }
 
-    const res = await gpFetch(gpApi.campaign.adminCreate, payload);
-    if (res.campaign) {
-      return res;
-    }
-    return false;
+    const resp = await clientFetch(apiRoutes.admin.campaign.create, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -35,7 +32,11 @@ const sendEmail = async (userId) => {
     const payload = {
       userId,
     };
-    return await gpFetch(gpApi.campaign.adminCreateEmail, payload);
+    const resp = await clientFetch(
+      apiRoutes.authentication.setSetPasswordEmail,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -105,7 +106,7 @@ export const CreateCampaignForm = ({}) => {
   };
 
   const handleChooseOfficeComplete = async () => {
-    await sendEmail(newCampaign.user);
+    await sendEmail(newCampaign.userId);
     successSnackbar('Saved');
     setShowOfficeSelectionModal(false);
     setValues(initialValues);
@@ -119,9 +120,9 @@ export const CreateCampaignForm = ({}) => {
 
   const handleCreateCampaign = async () => {
     successSnackbar('Creating...');
-    const res = await createCampaign(values);
-    if (res) {
-      setNewCampaign(res.campaign);
+    const campaign = await createCampaign(values);
+    if (campaign) {
+      setNewCampaign(campaign);
       successSnackbar('Created!');
     } else {
       errorSnackbar('Error creating campaign. Is this email already in use?');

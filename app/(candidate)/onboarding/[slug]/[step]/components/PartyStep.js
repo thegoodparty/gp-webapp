@@ -1,5 +1,4 @@
 'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import {
@@ -10,8 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useMemo } from 'react';
 import TextField from '@shared/inputs/TextField';
 import Modal from '@shared/utils/Modal';
-import InfoButton from '@shared/buttons/InfoButton';
-import { trackEvent } from 'helpers/fullStoryHelper';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 import RadioList from '@shared/inputs/RadioList';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
@@ -169,6 +167,9 @@ export default function PartyStep(props) {
   };
 
   const handleSave = async () => {
+    trackEvent(EVENTS.Onboarding.PartyStep.ClickSubmit, {
+      step,
+    });
     if (invalidOtherParty()) {
       setShowInvalidModal(true);
       onChangeField('otherParty', '');

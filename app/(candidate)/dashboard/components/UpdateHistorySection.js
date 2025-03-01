@@ -10,6 +10,7 @@ import Overline from '@shared/typography/Overline';
 import H5 from '@shared/typography/H5';
 import { numberFormatter } from 'helpers/numberHelper';
 import H3 from '@shared/typography/H3';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -45,6 +46,16 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
         inputData.push(fields);
       }
     });
+  }
+
+  function handleShowMenu(id) {
+    trackEvent(EVENTS.Dashboard.ActionHistory.ClickMenu, { id });
+    setShowMenu(id);
+  }
+
+  function handleDelete(id) {
+    trackEvent(EVENTS.Dashboard.ActionHistory.ClickDelete, { id });
+    deleteHistoryCallBack(id);
   }
 
   return (
@@ -100,8 +111,8 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
                         fields[data.type]?.title
                       }`}
                       showMenu={showMenu}
-                      setShowMenu={setShowMenu}
-                      deleteHistoryCallBack={deleteHistoryCallBack}
+                      setShowMenu={handleShowMenu}
+                      deleteHistoryCallBack={handleDelete}
                     />
                     <H5 className="ml-3">{fields[data.type]?.title}</H5>
                   </div>

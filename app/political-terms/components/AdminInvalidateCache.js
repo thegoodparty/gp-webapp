@@ -4,12 +4,13 @@ import { getUserCookie } from 'helpers/cookieHelper';
 import { revalidatePage } from 'helpers/cacheHelper';
 import { alphabet } from './LayoutWithAlphabet';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { userIsAdmin } from 'helpers/userHelper';
 
 export default function AdminInvalidateCache() {
   const user = getUserCookie(true);
   const { successSnackbar } = useSnackbar();
 
-  if (!user || !user.isAdmin) {
+  if (!user || !userIsAdmin(user)) {
     return null;
   }
 

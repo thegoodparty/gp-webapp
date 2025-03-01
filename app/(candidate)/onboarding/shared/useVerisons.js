@@ -9,8 +9,8 @@ export default function useVersions() {
   }, []);
 
   const loadVersions = async () => {
-    const res = await fetchCampaignVersions();
-    setVersions(res.versions);
+    const versions = await fetchCampaignVersions();
+    setVersions(versions);
   };
 
   return versions;

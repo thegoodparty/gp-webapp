@@ -1,10 +1,10 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export async function fetchUserClientCampaign() {
   try {
-    const api = gpApi.campaign.get;
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.get);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

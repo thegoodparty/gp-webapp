@@ -4,7 +4,6 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import H2 from '@shared/typography/H2';
 import Modal from '@shared/utils/Modal';
-
 import { useEffect, useState } from 'react';
 import InputFieldsModal from './InputFieldsModal';
 import TemplateList from './TemplatesList';
@@ -16,6 +15,7 @@ import {
 } from 'helpers/buildAiContentSections';
 import { getNewAiContentSectionKey } from 'helpers/getNewAiContentSectionKey';
 import { MdAutoAwesome } from 'react-icons/md';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function NewContentFlow(props) {
   const {
@@ -63,6 +63,10 @@ export default function NewContentFlow(props) {
   };
 
   const handleAdditionalInput = (additionalPrompt, inputValues) => {
+    trackEvent(EVENTS.ContentBuilder.SubmitAdditionalInputs, {
+      fields: inputFields,
+      values: inputValues,
+    });
     const chat = [{ role: 'user', content: additionalPrompt }];
     const key = getNewAiContentSectionKey(sections, selected);
     onSelectCallback(key, chat, inputValues);
@@ -75,6 +79,9 @@ export default function NewContentFlow(props) {
   };
 
   const closeModal = () => {
+    trackEvent(EVENTS.ContentBuilder.CloseAdditionalInputs, {
+      fields: inputFields,
+    });
     setSelected(false);
     setShowModal(false);
     setShowModal2(false);
@@ -89,7 +96,10 @@ export default function NewContentFlow(props) {
     <div>
       <div
         className="mb-7 inline-block new-content-btn"
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          trackEvent(EVENTS.ContentBuilder.ClickGenerate);
+          setShowModal(true);
+        }}
         id="new-content-btn"
       >
         <PrimaryButton>

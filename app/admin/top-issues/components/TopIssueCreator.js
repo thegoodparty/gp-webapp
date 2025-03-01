@@ -1,21 +1,19 @@
 'use client';
 import { useTopIssues } from './UseTopIssuesContext';
-import React, { useState } from 'react';
-import { SVGIconChooser } from './SVGIconChooser';
+import { useState } from 'react';
 import TextField from '@shared/inputs/TextField';
-import gpApi from '../../../../gpApi';
-import gpFetch from '../../../../gpApi/gpFetch';
 import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
-export const createTopIssue = async (name, icon) => {
-  const api = gpApi.admin.topIssues.create;
+export const createTopIssue = async (name) => {
   const payload = {
     name,
-    ...(icon ? { icon } : {}),
   };
-  return await gpFetch(api, payload);
+  const resp = await clientFetch(apiRoutes.topIssue.create, payload);
+  return resp.data;
 };
 
 export const TopIssueCreator = ({}) => {
@@ -23,11 +21,10 @@ export const TopIssueCreator = ({}) => {
   const { successSnackbar } = useSnackbar();
   const [addNewIssue, setAddNewIssue] = useState(false);
   const [topIssueName, setTopIssueName] = useState('');
-  const [svgData, setSvgData] = useState(null);
 
   const handleCreate = async () => {
     successSnackbar('creating issue');
-    setTopIssues([await createTopIssue(topIssueName, svgData), ...topIssues]);
+    setTopIssues([await createTopIssue(topIssueName), ...topIssues]);
     setAddNewIssue(false);
     setTopIssueName('');
   };
@@ -50,7 +47,6 @@ export const TopIssueCreator = ({}) => {
 
       {addNewIssue && (
         <div className="flex mt-4 items-center">
-          <SVGIconChooser svgData={svgData} setSvgData={setSvgData} />
           <TextField
             className="mx-4"
             fullWidth

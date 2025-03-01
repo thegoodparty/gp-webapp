@@ -1,7 +1,4 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
-export const fetchArticlesTitles = async () => {
-  const api = gpApi.content.articlesTitles;
-  return await gpFetch(api, false, 3600);
-};
+export const fetchArticlesTitles = async () =>
+  await fetchContentByType('blogArticleTitles');

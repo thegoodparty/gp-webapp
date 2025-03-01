@@ -9,10 +9,11 @@ import H5 from '@shared/typography/H5';
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { useUser } from '@shared/hooks/useUser';
 import { AccountSettingsButton } from 'app/(user)/profile/components/AccountSettingsButton';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const AccountSettingsSection = () => {
   const [user = {}] = useUser();
-  const userMetaData = JSON.parse(user?.metaData || '{}');
+  const userMetaData = user?.metaData || {};
   const { demoPersona } = userMetaData;
   const [campaign] = useCampaign();
   const { isPro, details = {} } = campaign || {};
@@ -44,7 +45,13 @@ export const AccountSettingsSection = () => {
             <H5> GoodParty.org - {plan} </H5>
             <Body2 className="mt-2 text-gray-600">
               Need help?
-              <Link className="ml-1 underline text-info-main" href="/contact">
+              <Link
+                className="ml-1 underline text-info-main"
+                href="/contact"
+                onClick={() =>
+                  trackEvent(EVENTS.Settings.Account.ClickSendEmail)
+                }
+              >
                 Send us an email.
               </Link>
             </Body2>

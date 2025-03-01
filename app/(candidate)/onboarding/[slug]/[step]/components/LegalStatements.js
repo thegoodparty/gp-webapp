@@ -1,10 +1,15 @@
+import { faqArticleRoute } from 'helpers/articleHelper';
+
 export const LegalStatements = () => (
   <ul>
     <li>
       I will abide by a{' '}
       <a
         className="underline"
-        href="/faqs/what-is-good-partys-minimum-standard-of-civility/66i4vrrlkx1yf8mncqvysb"
+        href={`${faqArticleRoute({
+          title: 'what-is-good-partys-minimum-standard-of-civility',
+          id: '66i4vRRLkX1yf8MnCQvYSb',
+        })}`}
         target="_blank"
       >
         minimum standard of civility

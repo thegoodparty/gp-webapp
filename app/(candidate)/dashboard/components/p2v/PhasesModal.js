@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { BsPersonFillCheck } from 'react-icons/bs';
 import { IoMdMegaphone } from 'react-icons/io';
 import { MdHowToVote } from 'react-icons/md';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const phases = [
   {
@@ -23,6 +24,8 @@ export const phases = [
     timing: '6-12+ months before your election.',
     size: 'Broad, slightly segmented (if at all).',
     link: '/blog/article/setting-the-stage-awareness-phase-of-political-campaigns',
+    onClick: () =>
+      trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.ClickAwareness),
   },
   {
     icon: <BsPersonFillCheck />,
@@ -33,6 +36,8 @@ export const phases = [
     timing: '< 6 months - 6 weeks before your election.',
     size: 'Mid-sized, segmented slightly but not very granular.',
     link: '/blog/article/engaging-voters-contact-phase-of-a-political-campaign',
+    onClick: () =>
+      trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.ClickContact),
   },
   {
     icon: <MdHowToVote />,
@@ -42,6 +47,8 @@ export const phases = [
     timing: 'The last 4-6 weeks leading up to your election.',
     size: 'Small, highly refined and discrete based on tactics.',
     link: '/blog/article/turning-support-into-victory-vote-phase-of-a-political-campaign',
+    onClick: () =>
+      trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.ClickVote),
   },
 ];
 
@@ -54,6 +61,7 @@ export function PhasesModal() {
         variant="text"
         size="medium"
         onClick={() => {
+          trackEvent(EVENTS.Dashboard.PathToVictory.ClickLearnMore);
           setOpen(true);
         }}
       >
@@ -61,6 +69,7 @@ export function PhasesModal() {
       </PrimaryButton>
       <Modal
         closeCallback={() => {
+          trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.Exit);
           setOpen(false);
         }}
         open={open}
@@ -94,6 +103,7 @@ export function PhasesModal() {
                     className="w-full mt-auto"
                     size="large"
                     color="neutral"
+                    onClick={phase.onClick}
                   >
                     Learn More
                   </Button>
@@ -104,7 +114,10 @@ export function PhasesModal() {
           <PrimaryButton
             fullWidth
             className="mt-8"
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.Exit);
+              setOpen(false);
+            }}
           >
             Close
           </PrimaryButton>

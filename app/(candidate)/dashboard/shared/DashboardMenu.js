@@ -1,8 +1,6 @@
 'use client';
 import Link from 'next/link';
-
 import { handleLogOut } from '@shared/user/handleLogOut';
-import useNotifications from '@shared/layouts/navigation/notifications/useNotifications';
 import { DashboardMenuItem } from 'app/(candidate)/dashboard/shared/DashboardMenuItem';
 import {
   MdAccountCircle,
@@ -11,15 +9,8 @@ import {
   MdFileOpen,
   MdFolderShared,
   MdLibraryBooks,
-  MdManageAccounts,
 } from 'react-icons/md';
-
-const CAMPAIGN_TEAM_MENU_ITEM = {
-  label: 'Campaign Team',
-  icon: <MdManageAccounts />,
-  link: '/dashboard/team',
-  id: 'campaign-team-dashboard',
-};
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -34,12 +25,14 @@ const DEFAULT_MENU_ITEMS = [
     icon: <MdFactCheck />,
     link: '/dashboard',
     id: 'campaign-tracker-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDashboard),
   },
   {
     label: 'AI Assistant',
     icon: <MdAutoAwesome />,
     link: '/dashboard/campaign-assistant',
     id: 'campaign-assistant-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickAIAssistant),
   },
   VOTER_DATA_UPGRADE_ITEM,
   {
@@ -47,20 +40,21 @@ const DEFAULT_MENU_ITEMS = [
     icon: <MdFileOpen />,
     link: '/dashboard/content',
     id: 'my-content-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
   },
   {
     label: 'My Profile',
     icon: <MdAccountCircle />,
     link: '/dashboard/campaign-details',
     id: 'campaign-details-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickMyProfile),
   },
-
-  CAMPAIGN_TEAM_MENU_ITEM,
   {
     label: 'Free Resources',
     icon: <MdLibraryBooks />,
     link: '/blog/section/for-candidates',
     id: 'resources-library',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickFreeResources),
   },
 ];
 
@@ -69,9 +63,10 @@ const VOTER_RECORDS_MENU_ITEM = {
   label: 'Voter Data',
   link: '/dashboard/voter-records',
   icon: <MdFolderShared />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterData),
 };
 
-const getDashboardMenuItems = (campaign, user) => {
+const getDashboardMenuItems = (campaign) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
     const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM);
@@ -88,34 +83,29 @@ export default function DashboardMenu({
   user,
   campaign,
 }) {
-  const notifications = useNotifications() || [];
-  const campaignRequestNotifications = notifications.filter((notification) => {
-    const { data = {}, isRead } = notification || {};
-    const { type } = data;
-    return type === 'campaignRequest' && !isRead;
-  });
   const menuItems = getDashboardMenuItems(campaign, user);
 
   const handleEnterPress = (e) => {
     if (e.key == 'Enter') handleLogOut(e);
   };
 
+  const handleMenuItemClick = (item) => {
+    item?.onClick();
+    toggleCallback?.();
+  };
+
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
         const { id, link, icon, label } = item;
-        const notificationDot =
-          Boolean(campaignRequestNotifications?.length) &&
-          item === CAMPAIGN_TEAM_MENU_ITEM;
         return (
           <DashboardMenuItem
             key={label}
             id={id}
             link={link}
             icon={icon}
-            onClick={toggleCallback}
+            onClick={() => handleMenuItemClick(item)}
             pathname={pathname}
-            notificationDot={notificationDot}
           >
             {label}
           </DashboardMenuItem>

@@ -2,8 +2,6 @@
 import RaceCard from './RaceCard';
 import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import Modal from '@shared/utils/Modal';
@@ -12,9 +10,11 @@ import { useRouter } from 'next/navigation';
 import Button from '@shared/buttons/Button';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
-const fetchRaces = async (zip, level, electionDate) => {
-  const api = gpApi.ballotData.races;
+const fetchRaces = async (zipcode, level, electionDate) => {
   let cleanLevel = level;
   if (level === 'Local/Township/City') {
     cleanLevel = 'Local';
@@ -22,8 +22,17 @@ const fetchRaces = async (zip, level, electionDate) => {
   if (level === 'County/Regional') {
     cleanLevel = 'County';
   }
-  const payload = { zip, level: cleanLevel, electionDate };
-  return await gpFetch(api, payload, 3600);
+  const payload = {
+    zipcode,
+    level: cleanLevel,
+    ...(electionDate ? { electionDate } : {}),
+  };
+
+  const resp = await clientFetch(apiRoutes.elections.racesByYear, payload, {
+    revalidate: 3600,
+  });
+
+  return resp.data;
 };
 
 export default function BallotRaces(props) {
@@ -77,6 +86,7 @@ export default function BallotRaces(props) {
   };
 
   const showCustomModal = () => {
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickCantSeeOffice);
     setShowModal(true);
   };
 

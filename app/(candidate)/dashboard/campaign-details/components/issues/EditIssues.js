@@ -60,7 +60,7 @@ export default function EditIssues(props) {
     } else {
       await saveCandidatePosition({
         description: candidatePosition,
-        campaignSlug: campaign.slug,
+        campaignId: campaign.id,
         positionId: position.id,
         topIssueId: position.topIssue?.id,
         order: maxOrder,
@@ -78,9 +78,8 @@ export default function EditIssues(props) {
 
   const loadPositions = async () => {
     await revalidateCandidates();
-    const res = await loadCandidatePosition(campaign.slug);
-    console.log('here', res);
-    setState(res.candidatePositions);
+    const candidatePositions = await loadCandidatePosition(campaign.id);
+    setState(candidatePositions);
   };
 
   const handleCustomIssue = async (candidatePosition, customTitle, order) => {

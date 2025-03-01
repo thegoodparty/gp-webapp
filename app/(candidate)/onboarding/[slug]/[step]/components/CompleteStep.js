@@ -1,21 +1,23 @@
 'use client';
 import PartyAnimation from '@shared/animations/PartyAnimation';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
-import { buildTrackingAttrs, trackEvent } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  EVENTS,
+  trackEvent,
+} from 'helpers/fullStoryHelper';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 async function launchCampaign() {
   try {
-    const api = gpApi.campaign.launch;
-    return await gpFetch(api);
+    return await clientFetch(apiRoutes.campaign.launch);
   } catch (e) {
     console.log('error at launchCampaign', e);
     return false;
@@ -35,11 +37,13 @@ export default function CompleteStep() {
     setLoading(true);
     successSnackbar('Saving...');
 
+    trackEvent(EVENTS.Onboarding.CompleteStep.ClickGoToDashboard);
+
     const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }];
 
     await updateCampaign(attr);
     const res = await launchCampaign();
-    if (res) {
+    if (res.ok) {
       trackEvent('onboarding_complete', { type: 'candidate' });
       window.location.href = '/dashboard';
     } else {
@@ -62,7 +66,6 @@ export default function CompleteStep() {
         size="large"
         className="w-full"
         onClick={handleSave}
-        fullWidth
         {...trackingAttrs}
       >
         {loading ? 'Launching...' : 'View Dashboard'}

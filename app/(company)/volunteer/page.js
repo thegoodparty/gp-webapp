@@ -1,6 +1,8 @@
-import OptimizeScript from '@shared/scripts/OptimizeScript';
 import VolunteerPage from './components/VolunteerPage';
 import pageMetaData from 'helpers/metadataHelper';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const meta = pageMetaData({
   title: 'Get Involved',

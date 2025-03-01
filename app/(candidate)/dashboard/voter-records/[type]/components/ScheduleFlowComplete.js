@@ -4,6 +4,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import { getUserCookie } from 'helpers/cookieHelper';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 import Link from 'next/link';
 
 export default function ScheduleFlowComplete({ resetCallback }) {
@@ -25,7 +26,15 @@ export default function ScheduleFlowComplete({ resetCallback }) {
 
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-3">
-            <Link href="/dashboard">
+            <Link
+              href="/dashboard"
+              onClick={() => {
+                trackEvent(
+                  EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
+                    .Complete.ReturnToDashboard,
+                );
+              }}
+            >
               <PrimaryButton
                 variant="outlined"
                 fullWidth
@@ -36,7 +45,15 @@ export default function ScheduleFlowComplete({ resetCallback }) {
             </Link>
           </div>
           <div className="col-span-6 text-right mt-3">
-            <Link href="/dashboard/voter-records" fullWidth>
+            <Link
+              href="/dashboard/voter-records"
+              onClick={() => {
+                trackEvent(
+                  EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
+                    .Complete.ReturnToVoterFile,
+                );
+              }}
+            >
               <PrimaryButton fullWidth onClick={resetCallback}>
                 Return to Voter File
               </PrimaryButton>

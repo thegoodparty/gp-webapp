@@ -10,17 +10,16 @@ import { useEffect, useState } from 'react';
 import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
 import { useSearchParams } from 'next/navigation';
 import H4 from '@shared/typography/H4';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
 import { CircularProgress } from '@mui/material';
 import Button from '@shared/buttons/Button';
 import Link from 'next/link';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 const fetchCampaigns = async () => {
   try {
-    const api = gpApi.campaign.list;
-
-    return await gpFetch(api);
+    const resp = await clientFetch(apiRoutes.campaign.list);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return { campaigns: [] };
@@ -46,8 +45,8 @@ const CampaignStatisticsPage = (props) => {
 
   const loadCampaigns = async () => {
     setLoading(true);
-    const res = await fetchCampaigns();
-    setCampaigns(res.campaigns);
+    const campaigns = await fetchCampaigns();
+    setCampaigns(campaigns);
     setLoading(false);
   };
 

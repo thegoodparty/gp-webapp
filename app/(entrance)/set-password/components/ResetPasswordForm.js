@@ -2,6 +2,7 @@ import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import Button from '@shared/buttons/Button';
 import PasswordInput from '@shared/inputs/PasswrodInput';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function ResetPasswordForm({
   password,
@@ -14,6 +15,12 @@ export default function ResetPasswordForm({
   createMode,
 }) {
   const showConfirmError = confirmPassword !== '' && !isMatch;
+
+  const handleTrackClick = () => {
+    if (createMode) {
+      trackEvent(EVENTS.SetPassword.ClickGetStarted);
+    }
+  };
 
   return (
     <form noValidate onSubmit={onSubmit}>
@@ -48,6 +55,7 @@ export default function ResetPasswordForm({
         className="w-full mt-8"
         type="submit"
         size="large"
+        onClick={handleTrackClick}
         disabled={!isValid || !isMatch}
       >
         {createMode ? 'Get started' : 'Update password'}

@@ -1,21 +1,17 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { alphabet } from '../components/LayoutWithAlphabet';
 import { fetchGlossaryByLetter } from '../page';
 import TermsHomePage from '../components/TermsHomePage';
 import TermsItemPage from './components/TermsItemPage';
 import DefinedTermSchema from './DefinedTermSchema';
 import pageMetaData from 'helpers/metadataHelper';
 import { notFound } from 'next/navigation';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchGlossaryBySlug = async (slug) => {
   try {
-    const api = gpApi.content.contentByKey;
-    const payload = {
-      key: 'glossaryItems',
-      subValue: slug,
-    };
-    return await gpFetch(api, payload, 3600);
+    return await unAuthFetch(
+      `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
+    );
   } catch (e) {
     return {};
   }
@@ -23,7 +19,7 @@ const fetchGlossaryBySlug = async (slug) => {
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { content } = await fetchGlossaryBySlug(slug);
+  const content = await fetchGlossaryBySlug(slug);
   let meta;
   if (slug.length === 1) {
     meta = pageMetaData({
@@ -54,13 +50,12 @@ export default async function Page({ params }) {
   }
 
   const activeLetter = slug.charAt(0).toUpperCase();
-  const { content } = await fetchGlossaryByLetter();
+  const content = await fetchGlossaryByLetter();
   const items = content[activeLetter] || [];
   if (slug.length === 1) {
     return <TermsHomePage activeLetter={activeLetter} items={items} />;
   }
-  const res = await fetchGlossaryBySlug(slug);
-  const titleContent = res.content;
+  const titleContent = await fetchGlossaryBySlug(slug);
   const childProps = { item: titleContent, slug, activeLetter, items };
 
   return (
@@ -71,12 +66,13 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const letters = alphabet;
+export async function generateStaticParams() {
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  const lettersArray = letters.split('');
 
-//   return letters.map((letter) => {
-//     return {
-//       slug: letter,
-//     };
-//   });
-// }
+  return lettersArray.map((letter) => {
+    return {
+      slug: letter,
+    };
+  });
+}

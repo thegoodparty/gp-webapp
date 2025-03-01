@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
 
+import { API_VERSION_PREFIX } from 'appEnv';
+
 const dbRedirects = {
   '/bz':
     'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_38_bz_stickers_qr_ambassador_7_&utm_content=ambassador_7_&',
@@ -86,7 +88,6 @@ const dbRedirects = {
 
 export default async function middleware(req) {
   const { pathname } = req.nextUrl;
-
   // This is a workaround to pass the pathname to SSR pages
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set('x-pathname', pathname);
@@ -103,11 +104,15 @@ export default async function middleware(req) {
       { status: 301 },
     );
   }
-  const apiRewriteRequest =
-    pathname.startsWith('/api/v1') && !pathname.includes('/entrance/logout');
 
+  const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`);
   if (apiRewriteRequest) {
-    return await handleApiRequestRewrite(req);
+    try {
+      return await handleApiRequestRewrite(req);
+    } catch (error) {
+      console.error('Error in handleApiRequestRewrite', error);
+      throw error;
+    }
   }
 
   return NextResponse.next({
