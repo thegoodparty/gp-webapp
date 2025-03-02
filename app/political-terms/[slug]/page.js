@@ -7,6 +7,9 @@ import { notFound } from 'next/navigation';
 import { unAuthFetch } from 'gpApi/apiFetch';
 import { apiRoutes } from 'gpApi/routes';
 
+export const revalidate = 3600;
+// export const dynamic = 'force-static';
+
 const fetchGlossaryBySlug = async (slug) => {
   try {
     const termsBySlug = await unAuthFetch(
