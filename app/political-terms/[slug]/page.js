@@ -9,9 +9,10 @@ import { apiRoutes } from 'gpApi/routes';
 
 const fetchGlossaryBySlug = async (slug) => {
   try {
-    return await unAuthFetch(
+    const termsBySlug = await unAuthFetch(
       `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
     );
+    return termsBySlug[slug];
   } catch (e) {
     return {};
   }
