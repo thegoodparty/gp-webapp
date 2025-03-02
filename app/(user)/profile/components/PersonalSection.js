@@ -6,8 +6,6 @@
  */
 import { useEffect, useState } from 'react';
 import TextField from '@shared/inputs/TextField';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { isValidEmail } from '@shared/inputs/EmailInput';
 import PhoneInput from '@shared/inputs/PhoneInput';
 import Body2 from '@shared/typography/Body2';
@@ -18,13 +16,14 @@ import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
 import ImageSection from './ImageSection';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 async function refreshUser() {
   try {
-    const api = gpApi.user.refresh;
-
-    const { user } = await gpFetch(api);
-    return user;
+    const resp = await clientFetch(apiRoutes.user.getUser);
+    return resp.data;
   } catch (error) {
     console.log('Error updating user', error);
   }
@@ -102,6 +101,7 @@ function PersonalSection({ user }) {
 
   const refetchUser = async () => {
     const updated = await refreshUser();
+
     setUserState(updated);
   };
 
@@ -147,6 +147,7 @@ function PersonalSection({ user }) {
   );
 
   const submit = async () => {
+    trackEvent(EVENTS.Settings.PersonalInfo.ClickSave);
     const fields = { ...state };
     if (fields.phone) {
       fields.phone = fields.phone.replace(/\D+/g, '');

@@ -1,14 +1,12 @@
 'use client';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import { Autocomplete } from '@mui/material';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import H3 from '@shared/typography/H3';
 import H2 from '@shared/typography/H2';
@@ -20,11 +18,12 @@ import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/Ad
 import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
 import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
-export async function sendVictoryMail(slug) {
+export async function sendVictoryMail(id) {
   try {
-    const api = gpApi.admin.victoryMail;
-    return await gpFetch(api, { slug });
+    return await clientFetch(apiRoutes.admin.campaign.victoryMail, { id });
   } catch (e) {
     console.log('error', e);
     return false;
@@ -363,7 +362,8 @@ sections.forEach((section) => {
 
 export default function AdminVictoryPathPage(props) {
   const [campaign, _, refreshCampaign] = useAdminCampaign();
-  let { pathToVictory, details } = campaign;
+  const { pathToVictory: p2vObject, details } = campaign;
+  const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject]);
   const [locations, setLocations] = useState([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
 
@@ -374,10 +374,12 @@ export default function AdminVictoryPathPage(props) {
 
   async function getVoterLocations(electionType, state) {
     try {
-      const api = gpApi.voterData.locations;
       setLoadingLocations(true);
-      const locationResp = await gpFetch(api, { electionType, state });
-      const items = locationResp?.locations || [];
+      const locationResp = await clientFetch(apiRoutes.voters.locations, {
+        electionType,
+        state,
+      });
+      const items = locationResp?.data || [];
       setLocations(items);
       setLoadingLocations(false);
     } catch (e) {
@@ -603,7 +605,7 @@ export default function AdminVictoryPathPage(props) {
     try {
       // only send mail the first time we update pathToVictory
       if (!pathToVictory) {
-        await sendVictoryMail(campaign.slug);
+        await sendVictoryMail(campaign.id);
       }
       // send only the keys that changed
       let keysToUpdate = [];

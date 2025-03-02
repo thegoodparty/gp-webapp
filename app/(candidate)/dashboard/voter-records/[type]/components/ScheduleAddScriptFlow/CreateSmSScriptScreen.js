@@ -3,6 +3,7 @@ import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import TextField from '@shared/inputs/TextField';
 import { ModalFooter } from '@shared/ModalFooter';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const MAX_SMS_CHAR_COUNT = 1600;
 export const CreateSmSScriptScreen = ({
@@ -13,6 +14,9 @@ export const CreateSmSScriptScreen = ({
   const overLimit = scriptText.length > MAX_SMS_CHAR_COUNT;
 
   const handleOnNext = () => {
+    trackEvent(
+      EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.SubmitAdd,
+    );
     onNext(scriptText);
   };
 

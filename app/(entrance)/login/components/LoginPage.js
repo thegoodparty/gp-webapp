@@ -17,10 +17,13 @@ import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
 import { useUser } from '@shared/hooks/useUser';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import Body2 from '@shared/typography/Body2';
-import SocialLoginButtons from 'app/(entrance)/set-name/components/SocialLoginButtons';
+import SocialLoginButtons from './SocialLoginButtons';
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
 import { USER_ROLES } from 'helpers/userHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
@@ -29,12 +32,12 @@ export const validateZip = (zip) => {
 
 async function login(email, password) {
   try {
-    const api = gpApi.entrance.login;
     const payload = {
       email,
       password,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.authentication.login, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -101,7 +104,9 @@ export default function LoginPage() {
         }
         window.location.href = '/';
       } else {
-        errorSnackbar('The email or password are wrong.');
+        errorSnackbar(
+          'Invalid login. Please check your credentials and try again.',
+        );
       }
     }
   };
@@ -121,7 +126,11 @@ export default function LoginPage() {
             <H1>Login to GoodParty.org</H1>
             <Body2 className="mt-3">
               Don&apos;t have an account?{' '}
-              <Link href="/sign-up" className="underline text-info">
+              <Link
+                href="/sign-up"
+                onClick={() => trackEvent(EVENTS.SignIn.ClickCreateAccount)}
+                className="underline text-info"
+              >
                 Create an account
               </Link>
             </Body2>
@@ -158,13 +167,23 @@ export default function LoginPage() {
               />
             </div>
             <div className="flex justify-center mt-12" onClick={handleSubmit}>
-              <PrimaryButton disabled={!enableSubmit()} type="submit" fullWidth data-testid="login-submit-button">
+              <PrimaryButton
+                disabled={!enableSubmit()}
+                type="submit"
+                fullWidth
+                data-testid="login-submit-button"
+              >
                 Login
               </PrimaryButton>
             </div>
           </form>
           <div className="mt-5 text-center">
-            <Link href="/forgot-password" className="text-sm underline" data-testid="login-forgot-password-link">
+            <Link
+              href="/forgot-password"
+              onClick={() => trackEvent(EVENTS.SignIn.ClickForgotPassword)}
+              className="text-sm underline"
+              data-testid="login-forgot-password-link"
+            >
               Forgot your password?
             </Link>
           </div>

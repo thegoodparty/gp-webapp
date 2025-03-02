@@ -1,8 +1,8 @@
 'use client';
 import { createContext, useEffect, useState } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { getCookie, deleteCookie, setCookie } from 'helpers/cookieHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export const ImpersonateUserContext = createContext({
   user: null,
@@ -45,11 +45,10 @@ export const ImpersonateUserProvider = ({ children }) => {
 
   const impersonate = async (email) => {
     try {
-      const resp = await gpFetch(gpApi.admin.impersonateUser, {
+      const resp = await clientFetch(apiRoutes.admin.user.impersonate, {
         email,
       });
-      const token = resp?.token;
-      const user = resp?.user;
+      const { token, user } = resp.data || {};
       if (token && user) {
         set(token, user);
         return true;

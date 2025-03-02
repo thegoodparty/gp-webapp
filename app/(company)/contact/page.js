@@ -3,6 +3,9 @@ import MaxWidth from '@shared/layouts/MaxWidth';
 import HubSpotForm from '../../shared/utils/HubSpotForm';
 import pageMetaData from 'helpers/metadataHelper';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'Contact | GoodParty.org',
   description: 'Have questions or want to get involved? Contact us.',

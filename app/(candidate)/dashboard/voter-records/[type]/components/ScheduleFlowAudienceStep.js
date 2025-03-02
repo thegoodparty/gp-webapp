@@ -9,6 +9,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { countVoterFile } from './RecordCount';
 import { numberFormatter } from 'helpers/numberHelper';
 import { debounce } from 'helpers/debounceHelper';
+import { TRACKING_KEYS } from '../../components/CustomVoterAudienceFilters';
 
 export default function ScheduleFlowAudienceStep({
   onChangeCallback,
@@ -73,6 +74,7 @@ export default function ScheduleFlowAudienceStep({
         </div>
         <div className="text-left">
           <CustomVoterAudienceFilters
+            trackingKey={TRACKING_KEYS.scheduleCampaign}
             showAudienceRequest
             audience={audience}
             onChangeCallback={handleChangeAudience}

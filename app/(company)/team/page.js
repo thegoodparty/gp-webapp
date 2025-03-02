@@ -2,8 +2,11 @@ import React from 'react';
 import pageMetaData from 'helpers/metadataHelper';
 
 import TeamPage from './components/TeamsPage';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { fetchContentByType } from 'helpers/fetchHelper';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const meta = pageMetaData({
   title: 'Team | GoodParty.org',
@@ -14,34 +17,17 @@ const meta = pageMetaData({
 export const metadata = meta;
 
 async function fetchTeamMembersAndMilestones() {
-  const api = gpApi.content.contentByKey;
-  const [{ content: teamMembers }, { content: teamMilestones }] =
-    await Promise.all([
-      gpFetch(
-        api,
-        {
-          key: 'goodPartyTeamMembers',
-        },
-        3600,
-      ),
-      gpFetch(
-        api,
-        {
-          key: 'teamMilestones',
-        },
-        3600,
-      ),
-    ]);
+  const [{ data: teamMembers }, { data: teamMilestones }] = await Promise.all([
+    fetchContentByType('goodPartyTeamMembers'),
+    fetchContentByType('teamMilestones'),
+  ]);
   return { teamMembers, teamMilestones };
 }
-
-const sortTeamMembers = (teamMembers) =>
-  teamMembers.sort((a, b) => (a.order > b.order ? 1 : -1));
 
 const Page = async () => {
   const { teamMembers, teamMilestones } = await fetchTeamMembersAndMilestones();
   const childProps = {
-    teamMembers: sortTeamMembers(teamMembers),
+    teamMembers,
     teamMilestones,
   };
   return <TeamPage {...childProps} />;

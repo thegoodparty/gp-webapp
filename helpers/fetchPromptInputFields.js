@@ -1,12 +1,14 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 export async function fetchPromptInputFields(subKey) {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'promptInputFields',
-  };
-
-  const { content } = await gpFetch(api, payload, 3600);
+  const resp = await clientFetch(
+    apiRoutes.content.getByType,
+    {
+      type: 'promptInputFields',
+    },
+    { revalidate: 3600 },
+  );
+  const content = resp.data;
   return content[subKey];
 }

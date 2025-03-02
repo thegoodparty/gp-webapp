@@ -16,8 +16,8 @@ export default async function Page() {
   await candidateAccess();
   restrictDemoAccess();
 
-  const { campaign } = await fetchUserCampaign();
-  const user = getServerUser();
+  const campaign = await fetchUserCampaign();
+  const user = await getServerUser();
 
   const childProps = {
     campaign,

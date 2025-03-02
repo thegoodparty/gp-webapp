@@ -21,7 +21,7 @@ export const P2VProSection = () => {
     const value = e.currentTarget.checked;
     setIsPro(value);
     await updateCampaignAdminOnly({
-      slug,
+      id: campaign.id,
       isPro: value,
     });
     await refreshCampaign();

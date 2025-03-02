@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
 import { chatFeedback } from './ajaxActions';
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 export default function ChatFeedback() {
   const { feedback: dbFeedback, threadId } = useChat();
@@ -16,11 +17,13 @@ export default function ChatFeedback() {
   const [type, setType] = useState(dbFeedback?.type);
 
   const handleSubmitNegative = async () => {
+    trackEvent(EVENTS.AIAssistant.Chat.ClickThumbsDown);
     await chatFeedback(threadId, 'negative', feedback);
     setShowModal(false);
   };
 
   const handleSubmitPositive = async () => {
+    trackEvent(EVENTS.AIAssistant.Chat.ClickThumbsUp);
     setType('positive');
     await chatFeedback(threadId, 'positive');
   };

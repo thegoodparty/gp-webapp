@@ -5,6 +5,9 @@ import gpFetch from 'gpApi/gpFetch';
 import { redirect } from 'next/navigation';
 import CandidateSchema from './components/CandidateSchema';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 export const fetchCandidate = async (name, office, bustCache) => {
   const api = gpApi.candidate.find;
   const payload = {

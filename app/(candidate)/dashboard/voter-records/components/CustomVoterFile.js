@@ -7,21 +7,35 @@ import Modal from '@shared/utils/Modal';
 import { useState } from 'react';
 import CustomVoterAudience from './CustomVoterAudience';
 import Button from '@shared/buttons/Button';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import { TRACKING_KEYS } from './CustomVoterAudienceFilters';
 
 const fields = [
   {
     id: 'channel',
     label: 'Channel *',
     options: ['Direct Mail', 'Door Knocking', 'Texting', 'Phone Banking'],
+    onSelect: (channel) =>
+      trackEvent(EVENTS.VoterData.CustomFile.SelectChannel, {
+        channel,
+      }),
   },
   {
     id: 'purpose',
     label: 'Purpose',
     options: ['GOTV', 'Persuasion', 'Voter ID'],
+    onSelect: (purpose) =>
+      trackEvent(EVENTS.VoterData.CustomFile.SelectPurpose, {
+        purpose,
+      }),
   },
 ];
 
-export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
+export default function CustomVoterFile({
+  campaign,
+  reloadCampaignCallback,
+  buttonPosition,
+}) {
   const [open, setOpen] = useState(false);
   const [showAudience, setShowAudience] = useState(false);
 
@@ -52,6 +66,7 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
   };
 
   const handleClose = () => {
+    trackEvent(EVENTS.VoterData.CustomFile.Exit);
     setOpen(false);
     setShowAudience(false);
     setState({
@@ -66,6 +81,9 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
         size="large"
         className="w-full md:w-auto"
         onClick={() => {
+          trackEvent(EVENTS.VoterData.ClickCreateCustom, {
+            position: buttonPosition,
+          });
           setOpen(true);
         }}
       >
@@ -93,6 +111,7 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
                       displayEmpty
                       required
                       onChange={(e) => {
+                        field.onSelect(e.target.value);
                         handleChange(field.id, e.target.value);
                       }}
                     >
@@ -115,6 +134,7 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
                 <PrimaryButton
                   disabled={!canSave()}
                   onClick={() => {
+                    trackEvent(EVENTS.VoterData.CustomFile.ClickNext);
                     setShowAudience(true);
                   }}
                 >
@@ -125,8 +145,10 @@ export default function CustomVoterFile({ campaign, reloadCampaignCallback }) {
           </div>
         ) : (
           <CustomVoterAudience
+            trackingKey={TRACKING_KEYS.customVoterFile}
             campaign={campaign}
             backCallback={() => {
+              trackEvent(EVENTS.VoterData.CustomFile.Audience.ClickBack);
               setShowAudience(false);
             }}
             prevStepValues={state}

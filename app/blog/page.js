@@ -1,15 +1,15 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogPage from './components/BlogPage';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { fetchArticleTags } from './shared/fetchArticleTags';
+import { fetchArticlesTitles } from './shared/fetchArticlesTitles';
+import { fetchContentByType } from 'helpers/fetchHelper';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export const fetchTopTags = async () => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'blogHome',
-  };
-  return await gpFetch(api, payload, 3600);
+  return await fetchContentByType('blogHome');
 };
 
 const meta = pageMetaData({
@@ -19,9 +19,22 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page({ params, searchParams }) {
-  const { sections, hero } = await fetchArticlesBySections();
-  const { content: { tags } = {} } = await fetchTopTags();
+export default async function Page() {
+  const [{ sections, hero }, { tags: topTags }, tags, titles] =
+    await Promise.all([
+      fetchArticlesBySections(),
+      fetchTopTags(),
+      fetchArticleTags(),
+      fetchArticlesTitles(),
+    ]);
 
-  return <BlogPage sections={sections} hero={hero} topTags={tags} />;
+  return (
+    <BlogPage
+      sections={sections}
+      hero={hero}
+      topTags={topTags}
+      allTags={tags}
+      articleTitles={titles}
+    />
+  );
 }

@@ -5,6 +5,7 @@ import { IssuePositionsList } from 'app/(candidate)/dashboard/questions/componen
 import { IssueItemLabel } from 'app/(candidate)/dashboard/questions/components/issues/IssueItemLabel';
 import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons';
 import { CandidatePositionStatement } from 'app/(candidate)/dashboard/questions/components/issues/CandidatePositionStatement';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function IssueItemEditor({
   issue,
@@ -50,7 +51,10 @@ export default function IssueItemEditor({
     setCandidatePosition('');
   };
 
-  const onCancel = () => setEditIssuePosition(null);
+  const onCancel = () => {
+    trackEvent(EVENTS.Profile.TopIssues.CancelEdit);
+    setEditIssuePosition(null);
+  };
 
   return (
     issue &&

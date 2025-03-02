@@ -12,7 +12,6 @@ export default function ScheduleAddScriptFlow({
   onComplete = (scriptKey) => {},
   backCallback,
   campaign,
-  aiTemplateCategories = [],
 }) {
   const [currentScreen, setCurrentScreen] = useState(
     ADD_SCRIPT_FLOW.CHOOSE_FLOW,
@@ -47,7 +46,7 @@ export default function ScheduleAddScriptFlow({
           setAiTemplateKey(aiTemplateKey);
           onNext(ADD_SCRIPT_FLOW.GENERATE_LOADING);
         }}
-        aiTemplateCategories={aiTemplateCategories}
+        campaign={campaign}
       />
     ),
     [ADD_SCRIPT_FLOW.GENERATE_LOADING]: (

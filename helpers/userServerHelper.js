@@ -16,14 +16,16 @@ export const getServerToken = () =>
   determineImpersonateCookieOrNot('token', 'impersonateToken');
 
 export const getServerUser = () => {
-  try {
-    const userJSON = determineImpersonateCookieOrNot('user', 'impersonateUser');
-    if (userJSON && typeof userJSON === 'object') {
-      return userJSON;
+  const userJSON = determineImpersonateCookieOrNot('user', 'impersonateUser');
+  return new Promise((resolve) => {
+    try {
+      if (userJSON && typeof userJSON === 'object') {
+        resolve(userJSON);
+      }
+      resolve(userJSON ? JSON.parse(userJSON) : null);
+    } catch (e) {
+      console.log('Error in getServerUser', e);
+      resolve(null);
     }
-    return userJSON ? JSON.parse(userJSON) : null;
-  } catch (e) {
-    console.log('Error in getServerUser', e);
-    return null;
-  }
+  });
 };

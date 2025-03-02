@@ -33,10 +33,10 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
   }, []);
 
   const getSlug = async () => {
-    const res = await getCampaign();
-    const { candidateSlug } = res.campaign || {};
-    setSlug(candidateSlug);
-    setCampaign(res.campaign);
+    const campaign = await getCampaign();
+    const { slug } = campaign || {};
+    setSlug(slug);
+    setCampaign(campaign);
   };
   return (
     <div className="lg:hidden">
@@ -52,7 +52,6 @@ export default function TopDashboardMenu({ open, toggleCallback, pathname }) {
             pathname={pathname}
             toggleCallback={toggleCallback}
             candidateSlug={slug}
-            pathToVictory={campaign ? campaign.pathToVictory : false}
             campaign={campaign}
           />
         </div>

@@ -6,17 +6,20 @@ import {
 import { useRouter } from 'next/navigation';
 import BallotRaces from './ballotOffices/BallotRaces';
 import { useState, useMemo } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 import OfficeStepForm from './OfficeStepForm';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 async function runP2V(slug) {
   try {
-    const api = gpApi.voterData.pathToVictory;
-    const payload = { slug };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.campaign.pathToVictory.create, {
+      slug,
+    });
+
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -74,6 +77,11 @@ export default function OfficeStep(props) {
       setProcessing(false);
       return;
     }
+
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext, {
+      step,
+    });
+
     const { position, election, id, filingPeriods } = state.ballotOffice;
 
     const attr = [
@@ -157,6 +165,10 @@ export default function OfficeStep(props) {
 
   const handleBallotOffice = async (office) => {
     if (office) {
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSelected, {
+        office: office?.position?.name,
+      });
+
       setState({
         ...state,
         ballotOffice: office,
@@ -191,6 +203,9 @@ export default function OfficeStep(props) {
   };
 
   const handleBack = () => {
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickBack, {
+      step,
+    });
     setPart(1);
   };
 

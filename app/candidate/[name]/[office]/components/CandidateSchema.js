@@ -1,6 +1,6 @@
-import { appBase } from 'gpApi';
 import React from 'react';
 import { JsonLd } from 'react-schemaorg';
+import { APP_BASE } from 'appEnv';
 
 export default function CandidateSchema({ candidate, slug }) {
   const {
@@ -44,7 +44,7 @@ export default function CandidateSchema({ candidate, slug }) {
         address,
         email,
         sameAs,
-        url: `${appBase}/${slug}`,
+        url: `${APP_BASE}/${slug}`,
       }}
     />
   );

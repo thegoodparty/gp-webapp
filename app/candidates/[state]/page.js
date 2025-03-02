@@ -1,19 +1,21 @@
 import pageMetaData from 'helpers/metadataHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import CandidatesPage from '../components/CandidatesPage';
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import { shortToLongState } from 'helpers/statesHelper';
 import { notFound } from 'next/navigation';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchCount = async (state, onlyWinners = false) => {
-  const api = gpApi.campaign.mapCount;
-
-  return await gpFetch(
-    api,
-    { state, results: onlyWinners ? true : undefined },
-    3600,
+  const resp = await serverFetch(
+    apiRoutes.campaign.map.count,
+    {
+      state,
+      results: onlyWinners ? true : undefined,
+    },
+    { revalidate: 3600 },
   );
+  return resp.data;
 };
 
 export async function generateMetadata({ params, searchParams }) {
@@ -34,7 +36,7 @@ export default async function Page({ params, searchParams }) {
     notFound();
   }
   await adminAccessOnly();
-  const { count } = await fetchCount(upperState, true);
+  const count = await fetchCount(upperState, true);
   const childProps = { count, longState, state: upperState, searchParams };
   return <CandidatesPage {...childProps} />;
 }

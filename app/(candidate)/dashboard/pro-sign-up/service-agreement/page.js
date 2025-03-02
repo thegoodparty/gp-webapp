@@ -15,7 +15,7 @@ const Page = async ({ params }) => {
   await candidateAccess();
   restrictDemoAccess();
 
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
 
   const childProps = {
     campaign,

@@ -2,6 +2,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton';
 import H2 from '@shared/typography/H2';
 import Subtitle1 from '@shared/typography/Subtitle1';
 import Link from 'next/link';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export function calcAnswers(campaign, candidatePositions) {
   const totalQuestions = 6;
@@ -68,7 +69,12 @@ export default function QuestionProgress({ campaign, candidatePositions }) {
       </div>
       <div className=" col-span-12 md:col-span-4 lg:col-span-3 ">
         <div className="flex justify-center md:justify-end mt-4 md:mt-0">
-          <Link href={`/dashboard/questions?generate=all`}>
+          <Link
+            href={`/dashboard/questions?generate=all`}
+            onClick={() => {
+              trackEvent(EVENTS.ContentBuilder.ClickContinueQuestions);
+            }}
+          >
             <PrimaryButton>Continue to questions</PrimaryButton>
           </Link>
         </div>

@@ -1,16 +1,16 @@
 'use client';
 import { useState } from 'react';
-import { BsThreeDotsVertical, BsThreeDots } from 'react-icons/bs';
+import { BsThreeDots } from 'react-icons/bs';
 import { Button } from '@mui/material';
-import { FaPencilAlt, FaTrashAlt, FaCopy, FaGlobe } from 'react-icons/fa';
+import { FaPencilAlt, FaTrashAlt, FaGlobe } from 'react-icons/fa';
 import DeleteAction from './DeleteAction';
 // import DuplicateAction from './DuplicateAction';
 import RenameAction from './RenameAction';
 import TranslateAction from './TranslateAction';
 import { kebabToCamel } from '/helpers/stringHelper';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CircularProgress from '@mui/material/CircularProgress';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function Actions(props) {
   let {
@@ -45,6 +45,11 @@ export default function Actions(props) {
               tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
               onClick={() => {
+                trackEvent(EVENTS.ContentBuilder.OpenKebabMenu, {
+                  name: name,
+                  slug: slug,
+                  key: documentKey,
+                });
                 setShowMenu(!showMenu);
               }}
               className="text-xl cursor-pointer mr-10"
@@ -110,6 +115,11 @@ export default function Actions(props) {
             <div className="absolute flex flex-col z-50 right-0 min-w-[270px] h-auto bg-primary-dark text-gray-300 rounded-xl shadow-md transition">
               <Button
                 onClick={() => {
+                  trackEvent(EVENTS.ContentBuilder.KebabMenu.ClickRename, {
+                    name: name,
+                    slug: slug,
+                    key: documentKey,
+                  });
                   setShowRename(true);
                   setShowMenu(false);
                 }}
@@ -158,6 +168,11 @@ export default function Actions(props) {
 
               <Button
                 onClick={() => {
+                  trackEvent(EVENTS.ContentBuilder.KebabMenu.ClickDelete, {
+                    name: name,
+                    slug: slug,
+                    key: documentKey,
+                  });
                   setShowDelete(true);
                   setShowMenu(false);
                 }}

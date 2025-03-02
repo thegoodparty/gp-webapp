@@ -1,6 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper';
 import AdsPage from './components/AdsPage';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'GoodParty.org ADS 2023',
   description:

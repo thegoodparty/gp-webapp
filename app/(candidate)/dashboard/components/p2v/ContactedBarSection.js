@@ -6,6 +6,7 @@ import { numberFormatter } from 'helpers/numberHelper';
 import { BsInfoCircle } from 'react-icons/bs';
 import { AnimatedBar } from './AnimatedBar';
 import { P2vModal } from './P2vModal';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export function ContactedBarSection(props) {
   const { pathToVictory, reportedVoterGoals } = props;
@@ -69,7 +70,12 @@ export function ContactedBarSection(props) {
 
       <P2vModal
         triggerElement={
-          <div className="mt-2 flex justify-center md:justify-end items-center">
+          <div
+            className="mt-2 flex justify-center md:justify-end items-center"
+            onClick={() =>
+              trackEvent(EVENTS.Dashboard.PathToVictory.ClickContactsNeeded)
+            }
+          >
             <Body1>
               <strong>Needed:</strong> {numberFormatter(needed)} voter contacts
             </Body1>

@@ -1,5 +1,5 @@
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../../shared/candidateAccess';
@@ -18,11 +18,10 @@ export default async function Page({ params }) {
   const { slug } = params;
   await candidateAccess();
 
-  const promptsRaw = (await fetchContentByKey('candidateContentPrompts'))
-    .content;
+  const promptsRaw = await fetchContentByType('candidateContentPrompts');
   const prompts = parsePrompts(promptsRaw);
 
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
 
   const childProps = {
     slug,

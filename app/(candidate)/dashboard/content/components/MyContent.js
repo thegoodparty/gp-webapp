@@ -15,7 +15,7 @@ import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
 } from 'helpers/buildAiContentSections';
-import { trackEvent } from 'helpers/fullStoryHelper';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 import { useSnackbar } from 'helpers/useSnackbar';
 
 let aiTotalCount = 0;
@@ -84,6 +84,13 @@ export default function MyContent(props) {
             <Link
               href="/dashboard/content/[slug]"
               as={`/dashboard/content/${row.original.slug}`}
+              onClick={() => {
+                trackEvent(EVENTS.ContentBuilder.ClickContent, {
+                  name: row.original.name,
+                  slug: row.original.slug,
+                  key: row.original.documentKey,
+                });
+              }}
               className="inline-block"
             >
               <div className="flex flex-row items-center font-semibold">
@@ -147,8 +154,7 @@ export default function MyContent(props) {
   ]);
 
   async function getUserCampaign() {
-    const campaignResponse = await getCampaign();
-    const campaignObj = campaignResponse.campaign;
+    const campaignObj = await getCampaign();
     if (campaignObj) {
       setCampaign(campaignObj);
       const campaignPlanObj = campaignObj[AI_CONTENT_SUB_SECTION_KEY];
@@ -206,9 +212,12 @@ export default function MyContent(props) {
 
   const createAIContent = async ({
     section = '',
-    initialChat = false,
+    initialChat = [],
     initialValues = {},
   }) => {
+    if (initialChat === false) {
+      initialChat = []
+    }
     const { chatResponse, status } = await generateAIContent(
       section,
       initialChat,

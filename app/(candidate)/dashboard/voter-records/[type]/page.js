@@ -5,11 +5,10 @@ import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import VoterFileDetailPage from 'app/(candidate)/dashboard/voter-records/[type]/components/VoterFileDetailPage';
 import { fetchCanDownload } from '../page';
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
 import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress';
-
+import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
 const meta = pageMetaData({
   title: 'Voter Data detailed view | GoodParty.org',
   description: 'Voter Data detailed view',
@@ -21,14 +20,14 @@ export default async function Page({ params, searchParams }) {
   const { type } = params;
   await candidateAccess();
 
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
-  const { campaign } = await fetchUserCampaign();
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
+  const campaign = await fetchUserCampaign();
   const canDownload = await fetchCanDownload();
   if (!canDownload) {
     redirect('/dashboard');
   }
 
-  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
 
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
@@ -39,11 +38,11 @@ export default async function Page({ params, searchParams }) {
 
   // TODO: Find out why in the world aren't these booleans just being passed along from the entity in Contentful.
   const requiresQuestions = !hasCompletedQuestions
-    ? (await fetchContentByKey('contentPromptsQuestions', 3600))?.content
+    ? await fetchContentByType('contentPromptsQuestions', 3600)
     : {};
 
   const categories = (
-    await fetchContentByKey('aiContentCategories', 3600)
+    await fetchContentByType('aiContentCategories', 3600)
   )?.content?.map((category = {}) => ({
     ...category,
     templates: setRequiresQuestionsOnTemplates(

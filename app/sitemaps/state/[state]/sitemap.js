@@ -8,8 +8,7 @@ https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { flatStates } from 'helpers/statesHelper';
-
-const appBase = process.env.NEXT_PUBLIC_APP_BASE;
+import { APP_BASE } from 'appEnv';
 
 const fetchState = async (state) => {
   const api = gpApi.race.allStates;
@@ -64,7 +63,7 @@ export default async function sitemap({ id }) {
 
     urls.forEach((url) => {
       mainSitemap.push({
-        url: `${appBase}${url}`,
+        url: `${APP_BASE}${url}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.6,

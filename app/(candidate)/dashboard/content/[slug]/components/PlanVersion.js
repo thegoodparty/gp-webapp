@@ -4,6 +4,7 @@ import { dateWithTime } from 'helpers/dateHelper';
 import { IoIosArrowDown } from 'react-icons/io';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { Button } from '@mui/material';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function PlanVersion({
   versions,
@@ -15,10 +16,19 @@ export default function PlanVersion({
     return null;
   }
 
+  function handleVersionClick(version) {
+    trackEvent(EVENTS.ContentBuilder.Editor.SelectVersion, {
+      name: version?.name,
+      key: version?.key,
+    });
+    updatePlanCallback(version);
+  }
+
   return (
     <div className="flex justify-center relative">
       <div
         onClick={() => {
+          trackEvent(EVENTS.ContentBuilder.Editor.OpenVersionPicker);
           setShowMenu(!showMenu);
         }}
       >
@@ -44,7 +54,7 @@ export default function PlanVersion({
               key="latest"
               onClick={() => {
                 setShowMenu(false);
-                updatePlanCallback(latestVersion);
+                handleVersionClick(latestVersion);
               }}
             >
               <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
@@ -61,7 +71,7 @@ export default function PlanVersion({
                 key={version.date}
                 onClick={() => {
                   setShowMenu(false);
-                  updatePlanCallback(version);
+                  handleVersionClick(version);
                 }}
               >
                 <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">

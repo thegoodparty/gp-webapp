@@ -1,6 +1,6 @@
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export const writeCampaignCustomIssue = async (
   existingIndex = -1,
@@ -38,69 +38,90 @@ export const filterIssues = (value = '', issues) => {
 
 export const saveCandidatePosition = async ({
   description,
-  campaignSlug,
+  campaignId,
   positionId,
   topIssueId,
 }) => {
   try {
-    const api = gpApi.campaign.candidatePosition.create;
     const payload = {
+      id: campaignId,
       description,
-      campaignSlug,
       positionId,
       topIssueId,
       // TODO: remove order once the Sails "input" value for `order` is removed or made optional
       order: 0,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.campaignPosition.create,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at saveCandidatePosition', e);
     return false;
   }
 };
 
-export const deleteCandidatePosition = async (id) => {
+export const deleteCandidatePosition = async (positionId, campaignId) => {
   try {
-    const api = gpApi.campaign.candidatePosition.delete;
     const payload = {
-      id,
+      id: campaignId,
+      positionId,
     };
-    return await gpFetch(api, payload);
+    return await clientFetch(
+      apiRoutes.campaign.campaignPosition.delete,
+      payload,
+    );
   } catch (e) {
-    console.log('error at saveCandidatePosition', e);
+    console.log('error at deleteCandidatePosition', e);
     return false;
   }
 };
 
-export async function updateCandidatePosition(id, description) {
+export async function updateCandidatePosition(
+  positionId,
+  description,
+  campaignId,
+) {
   try {
-    const api = gpApi.campaign.candidatePosition.update;
     const payload = {
-      id,
+      positionId,
       description,
+      id: campaignId,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.campaignPosition.update,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
-    console.log('error at saveCandidatePosition', e);
+    console.log('error at updateCandidatePosition', e);
     return false;
   }
 }
 
-export async function loadCandidatePosition(slug) {
+export async function loadCandidatePosition(campaignId) {
   try {
-    const api = gpApi.campaign.candidatePosition.find;
     const payload = {
-      slug,
+      id: campaignId,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.campaignPosition.find,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at loadCandidatePosition', e);
     return false;
   }
 }
 
-export const fetchIssues = async () =>
-  await gpFetch(gpApi.admin.topIssues.list, false, 3600);
+export const fetchIssues = async () => {
+  const resp = clientFetch(apiRoutes.topIssue.list, undefined, {
+    revalidate: 3600,
+  });
+  return resp.data;
+};
 
 export const findExistingCustomIssueIndex = (
   { details: { customIssues = [] } = {} } = {},

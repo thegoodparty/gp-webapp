@@ -1,10 +1,12 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
-export async function fetchCampaignStatus(serverToken = false) {
+export async function fetchCampaignStatus() {
   try {
-    const api = gpApi.user.campaignStatus;
-    return await gpFetch(api, false, 10, serverToken);
+    const resp = await clientFetch(apiRoutes.campaign.status, undefined, {
+      revalidate: 10,
+    });
+    return resp.data;
   } catch (e) {
     return { status: false };
   }

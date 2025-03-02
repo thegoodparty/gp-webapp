@@ -6,14 +6,15 @@ import gpFetch from 'gpApi/gpFetch';
 import { revalidateCandidates, revalidatePage } from 'helpers/cacheHelper';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
-async function deleteCampaign(slug) {
+async function deleteCampaign(id) {
   try {
-    const api = gpApi.campaign.onboarding.adminDelete;
     const payload = {
-      slug,
+      id,
     };
-    return await gpFetch(api, payload);
+    return await clientFetch(apiRoutes.admin.campaign.delete, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -33,7 +34,7 @@ async function deactivateCandidate(slug) {
   }
 }
 
-export default function DeleteAction({ slug, isLive }) {
+export default function DeleteAction({ id, slug, isLive }) {
   const [showDelete, setShowDelete] = useState(false);
   const { successSnackbar } = useSnackbar();
 
@@ -46,7 +47,7 @@ export default function DeleteAction({ slug, isLive }) {
     } else {
       successSnackbar('Deleting...');
 
-      await deleteCampaign(slug);
+      await deleteCampaign(id);
 
       successSnackbar('Deleted');
     }
