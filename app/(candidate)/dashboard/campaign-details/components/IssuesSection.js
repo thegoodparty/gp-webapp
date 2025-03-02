@@ -18,6 +18,7 @@ import AlertDialog from '@shared/utils/AlertDialog';
 import { IoAddSharp } from 'react-icons/io5';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function IssuesSection(props) {
   const [campaign, setCampaign] = useState(props.campaign);
@@ -29,9 +30,11 @@ export default function IssuesSection(props) {
 
   useEffect(() => {
     const combined = [];
-    candidatePositions?.forEach((position) => {
-      combined.push({ ...position, type: 'position' });
-    });
+    if (Array.isArray(candidatePositions)) {
+      candidatePositions?.forEach((position) => {
+        combined.push({ ...position, type: 'position' });
+      });
+    }
     campaign?.details?.customIssues?.forEach((issue) => {
       combined.push({ ...issue, type: 'custom' });
     });
@@ -39,15 +42,17 @@ export default function IssuesSection(props) {
   }, [candidatePositions, campaign.details?.customIssues]);
 
   const completeCallback = async () => {
-    const res = await loadCandidatePosition(props.campaign.slug);
-    setCandidatePositions(res.candidatePositions);
-    const res2 = await getCampaign();
+    trackEvent(EVENTS.Profile.TopIssues.SubmitEdit);
+    const candidatePositions = await loadCandidatePosition(campaign.id);
+    setCandidatePositions(candidatePositions);
+    const campaign = await getCampaign();
 
     setEditIssuePosition(false);
-    setCampaign(res2.campaign);
+    setCampaign(campaign);
   };
 
   const handleDeleteConfirmation = async () => {
+    trackEvent(EVENTS.Profile.TopIssues.SubmitDelete);
     const issue = showDeleteConfirmation;
     try {
       if (issue.type === 'custom') {
@@ -59,7 +64,7 @@ export default function IssuesSection(props) {
           },
         });
       } else if (issue.id) {
-        await deleteCandidatePosition(issue.id);
+        await deleteCandidatePosition(issue.id, campaign.id);
         setCandidatePositions(
           candidatePositions.filter((position) => position.id !== issue.id),
         );
@@ -81,6 +86,9 @@ export default function IssuesSection(props) {
             size="large"
             href="/dashboard/questions?generate=all"
             className="inline-flex align-center !py-2"
+            onClick={() => {
+              trackEvent(EVENTS.Profile.TopIssues.ClickFinish);
+            }}
           >
             Finish Entering Issues
             <IoAddSharp className="ml-1 inline text-2xl" />
@@ -139,6 +147,7 @@ export default function IssuesSection(props) {
                     className="mr-3"
                     size="medium"
                     onClick={() => {
+                      trackEvent(EVENTS.Profile.TopIssues.ClickEdit);
                       setEditIssuePosition(issue);
                     }}
                   >
@@ -146,13 +155,17 @@ export default function IssuesSection(props) {
                   </PrimaryButton>
                   <SecondaryButton
                     size="medium"
-                    onClick={() => setShowDeleteConfirmation(issue)}
+                    onClick={() => {
+                      trackEvent(EVENTS.Profile.TopIssues.ClickDelete);
+                      setShowDeleteConfirmation(issue);
+                    }}
                   >
                     Delete
                   </SecondaryButton>
                   <AlertDialog
                     open={Boolean(showDeleteConfirmation)}
                     handleClose={() => {
+                      trackEvent(EVENTS.Profile.TopIssues.CancelDelete);
                       setShowDeleteConfirmation(null);
                     }}
                     title="Delete Issue"

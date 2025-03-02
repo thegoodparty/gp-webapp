@@ -10,12 +10,13 @@ import map from 'public/images/elections/map.png';
 import { useEffect, useState } from 'react';
 
 const fetchLocFromIp = async () => {
-  const api = {
-    url: 'https://pro.ip-api.com/json/?fields=status,countryCode,region,city&key=c8O5omxoySWBzAi',
-    method: 'GET',
-  };
-
-  return await gpFetch(api);
+  const resp = await fetch(
+    'https://pro.ip-api.com/json/?fields=status,countryCode,region,city&key=c8O5omxoySWBzAi',
+    {
+      method: 'GET',
+    },
+  );
+  return resp.json();
 };
 
 async function fetchFeatured(city, state) {
@@ -55,9 +56,9 @@ const defaultCities = [
 export default function FeaturedCities() {
   const [featuredCities, setFeaturedCities] = useState(defaultCities);
 
-  useEffect(() => {
-    getIpLocation();
-  }, []);
+  // useEffect(() => {
+  //   getIpLocation();
+  // }, []);
 
   const getIpLocation = async () => {
     try {

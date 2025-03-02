@@ -5,6 +5,7 @@ import RadioList from '@shared/inputs/RadioList';
 import { ModalFooter } from '@shared/ModalFooter';
 import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow';
 import { useState } from 'react';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const ChooseScriptAddFlow = ({
   onBack = () => {},
@@ -14,6 +15,26 @@ export const ChooseScriptAddFlow = ({
   const handleOnNext = () => {
     onNext(selected);
   };
+
+  const handleSelect = (key) => {
+    setSelected(key);
+
+    let eventName;
+    if (key === ADD_SCRIPT_FLOW.SELECT_SMS) {
+      eventName =
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
+          .ClickSaved;
+    } else if (key === ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE) {
+      eventName =
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
+          .ClickGenerate;
+    } else if (key === ADD_SCRIPT_FLOW.CREATE_SMS) {
+      eventName =
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.ClickAdd;
+    }
+    trackEvent(eventName);
+  };
+
   return (
     <>
       <header className="text-center">
@@ -33,7 +54,7 @@ export const ChooseScriptAddFlow = ({
             { key: ADD_SCRIPT_FLOW.CREATE_SMS, label: 'Add your own script' },
           ]}
           selected={selected}
-          selectCallback={setSelected}
+          selectCallback={handleSelect}
         />
       </div>
       <ModalFooter onBack={onBack} onNext={handleOnNext} disabled={!selected} />

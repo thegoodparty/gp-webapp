@@ -1,10 +1,13 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
-export async function fetchContent(key) {
-  const api = gpApi.content.contentByKey;
+export async function fetchContent(type) {
   const payload = {
-    key,
+    type,
   };
-  return await gpFetch(api, payload, 3600);
+
+  const resp = await serverFetch(apiRoutes.content.getById, payload, {
+    revalidate: 3600,
+  });
+  return resp.data;
 }

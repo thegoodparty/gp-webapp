@@ -1,9 +1,9 @@
-import gpApi, { appBase, isProd } from 'gpApi';
+import { IS_PROD } from 'appEnv';
 
 export default async function sitemap(req, res) {
   try {
     let robots;
-    if (isProd) {
+    if (IS_PROD) {
       robots = `User-agent: *
 Disallow: /api
 Disallow: /admin/*

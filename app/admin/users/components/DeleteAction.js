@@ -1,17 +1,15 @@
 'use client';
 import ErrorButton from '@shared/buttons/ErrorButton';
 import AlertDialog from '@shared/utils/AlertDialog';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { revalidatePage } from 'helpers/cacheHelper';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function deleteUser(id) {
   try {
-    const api = gpApi.admin.deleteUser;
-    const payload = { id };
-    return await gpFetch(api, payload);
+    return await clientFetch(apiRoutes.admin.user.delete, { id });
   } catch (e) {
     console.log('error', e);
     return false;

@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Button from '@shared/buttons/Button';
-import Link from 'next/link';
 import MarketingH3 from '@shared/typography/MarketingH3';
 import Body1 from '@shared/typography/Body1';
 

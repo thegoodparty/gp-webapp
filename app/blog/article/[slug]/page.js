@@ -1,24 +1,23 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
 import { redirect } from 'next/navigation';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import { apiRoutes } from 'gpApi/routes';
+import { unAuthFetch } from 'gpApi/apiFetch';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export const fetchArticle = async (slug) => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'blogArticles',
-    subKey: 'slug',
-    subValue: slug,
-  };
-
-  return await gpFetch(api, payload, 3600);
+  return await unAuthFetch(
+    `${apiRoutes.content.blogArticle.getSlug.path}/${slug}`,
+  );
 };
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const { content } = await fetchArticle(slug);
+  const content = await fetchArticle(slug);
 
   const meta = pageMetaData({
     title: `${content?.title} | GoodParty.org`,
@@ -35,7 +34,7 @@ export default async function Page({ params }) {
     redirect('/blog');
   }
 
-  const { content } = await fetchArticle(slug);
+  const content = await fetchArticle(slug);
 
   if (!content) {
     redirect('/blog');
@@ -49,16 +48,12 @@ export default async function Page({ params }) {
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = gpApi.content.contentByKey;
+export async function generateStaticParams({ params }) {
+  const articles = await fetchArticlesTitles();
 
-//   const { content } = await gpFetch(api, {
-//     key: 'blogArticles',
-//   });
-
-//   return content?.map((article) => {
-//     return {
-//       slug: article.slug,
-//     };
-//   });
-// }
+  return articles?.map((article) => {
+    return {
+      slug: article?.slug,
+    };
+  });
+}

@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import { isValidEmail } from '@shared/inputs/EmailInput';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
 import Link from 'next/link';
 import BlackButton from '@shared/buttons/BlackButton';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
 import PinkButtonClient from '@shared/buttons/PinkButtonClient';
 import Image from 'next/image';
-// import ShareCandidate from 'app/candidate/[slug]/components/ShareCandidate';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
+
 export async function subscribeEmail(payload) {
   try {
-    await gpFetch(gpApi.homepage.subscribeEmail, payload);
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
     return true;
   } catch (e) {
     console.log('error', e);

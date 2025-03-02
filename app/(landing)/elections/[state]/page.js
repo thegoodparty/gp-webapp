@@ -6,6 +6,9 @@ import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import { fetchArticle } from 'app/blog/article/[slug]/page';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 export const fetchState = async (state) => {
   const api = gpApi.race.byState;
   const payload = {
@@ -43,7 +46,7 @@ export default async function Page({ params }) {
   ];
   const articles = [];
   for (const slug of articleSlugs) {
-    const { content } = await fetchArticle(slug);
+    const content = await fetchArticle(slug);
     articles.push(content);
   }
 

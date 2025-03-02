@@ -1,13 +1,15 @@
 import { IssuePosition } from 'app/(candidate)/dashboard/questions/components/issues/IssuePosition';
 import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions';
 
-const issueAlreadySelected = (position = {}, candidatePositions = []) =>
-  Boolean(
+const issueAlreadySelected = (position = {}, candidatePositions = []) => {
+  if (!candidatePositions) return false;
+  return Boolean(
     candidatePositions.find(
       ({ position: candidatePosition = {} } = {}) =>
         candidatePosition?.id === position?.id,
     ),
   );
+}
 
 export const IssuePositionsList = ({
   positions,

@@ -1,10 +1,8 @@
 'use client';
 
 import DashboardLayout from '../../shared/DashboardLayout';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import Paper from '@shared/utils/Paper';
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import H2 from '@shared/typography/H2';
 import Body2 from '@shared/typography/Body2';
 import Overline from '@shared/typography/Overline';
@@ -16,17 +14,25 @@ import { slugify } from 'helpers/articleHelper';
 import voterFileTypes from './VoterFileTypes';
 import NeedHelp from './NeedHelp';
 import ViewAudienceFiltersModal from './ViewAudienceFiltersModal';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE'];
 
 export async function fetchVoterFile(type, customFilters) {
   try {
-    const api = gpApi.voterData.getVoterFile;
     const payload = {
       type,
-      customFilters: customFilters ? JSON.stringify(customFilters) : undefined,
     };
-    return await gpFetch(api, payload, false, false, false, true);
+
+    if (customFilters) {
+      payload.customFilters = JSON.stringify(customFilters);
+    }
+
+    return await clientFetch(apiRoutes.voters.voterFile.get, payload, {
+      returnFullResponse: true,
+    });
   } catch (e) {
     console.log('error', e);
     return false;
@@ -35,8 +41,7 @@ export async function fetchVoterFile(type, customFilters) {
 
 async function wakeUp() {
   try {
-    const api = gpApi.voterData.wakeUp;
-    return await gpFetch(api);
+    return await clientFetch(apiRoutes.voters.voterFile.wakeUp);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -85,8 +90,8 @@ export default function VoterRecordsPage(props) {
   }, [campaign]);
 
   const reloadCampaign = async () => {
-    const res = await getCampaign();
-    setCampaign(res.campaign);
+    const campaign = await getCampaign();
+    setCampaign(campaign);
   };
 
   return (
@@ -108,6 +113,7 @@ export default function VoterRecordsPage(props) {
                   {...props}
                   reloadCampaignCallback={reloadCampaign}
                   campaign={campaign}
+                  buttonPosition="top"
                 />
               </div>
             </div>
@@ -155,6 +161,13 @@ export default function VoterRecordsPage(props) {
                                 )}`
                               : `/dashboard/voter-records/${file.key.toLowerCase()}`
                           }
+                          onClick={() => {
+                            trackEvent(EVENTS.VoterData.ClickDetail, {
+                              type: file.key,
+                              file: file.name,
+                              isCustom: file.isCustom,
+                            });
+                          }}
                           className="text-info underline hover:text-info-dark"
                         >
                           {field}
@@ -166,7 +179,12 @@ export default function VoterRecordsPage(props) {
                             <ViewAudienceFiltersModal
                               open={modalFileKey === file.key}
                               file={file}
-                              onOpen={() => setModalFileKey(file.key)}
+                              onOpen={() => {
+                                trackEvent(
+                                  EVENTS.VoterData.FileDetail.ClickInfoIcon,
+                                );
+                                setModalFileKey(file.key);
+                              }}
                               onClose={() => setModalFileKey(null)}
                               className="ml-1 self-center"
                             />
@@ -183,6 +201,7 @@ export default function VoterRecordsPage(props) {
                 {...props}
                 reloadCampaignCallback={reloadCampaign}
                 campaign={campaign}
+                buttonPosition="bottom"
               />
             </div>
           </>

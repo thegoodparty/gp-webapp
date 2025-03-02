@@ -1,6 +1,9 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { LocalElectionsWebinarPage } from './components/LocalElectionsWebinarPage';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'GoodParty.org | Local Elections Academy Webinar',
   description:

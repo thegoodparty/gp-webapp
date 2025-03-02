@@ -1,6 +1,4 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useState } from 'react';
 import Modal from '@shared/utils/Modal';
 import { TextField } from '@mui/material';
@@ -9,16 +7,17 @@ import SecondaryButton from '@shared/buttons/SecondaryButton';
 import H2 from '@shared/typography/H2';
 import H6 from '@shared/typography/H6';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 async function renameContent(key, name) {
   try {
-    const api = gpApi.campaign.ai.rename;
     const payload = {
       key,
       name,
     };
-    const resp = await gpFetch(api, payload);
-    if (resp?.status === 'success') {
+    const resp = await clientFetch(apiRoutes.campaign.ai.rename, payload);
+    if (resp?.ok) {
       return true;
     } else {
       return false;

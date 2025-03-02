@@ -1,10 +1,9 @@
 import { adminAccessOnly } from 'helpers/permissionHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import CampaignStatisticsPage from './components/CampaignStatisticsPage';
-import gpApi from 'gpApi';
-import { getServerToken } from 'helpers/userServerHelper';
-import gpFetch from 'gpApi/gpFetch';
 import { pick } from 'helpers/objectHelper';
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
 
 const stripEmptyFilters = (filters) =>
   Object.keys(filters).reduce((acc, key) => {
@@ -18,9 +17,8 @@ const stripEmptyFilters = (filters) =>
 
 const fetchCampaigns = async (filters) => {
   try {
-    const api = gpApi.campaign.list;
-    const token = getServerToken();
-    return await gpFetch(api, filters, false, token, false);
+    const resp = await serverFetch(apiRoutes.campaign.list, filters);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return { campaigns: [] };
@@ -61,7 +59,7 @@ export default async function Page({ searchParams = {} }) {
   let withParams = false;
   if (!paramsAreEmpty && !Boolean(firehose)) {
     withParams = true;
-    ({ campaigns } = await fetchCampaigns(stripEmptyFilters(initialParams)));
+    campaigns = await fetchCampaigns(stripEmptyFilters(initialParams));
   }
 
   const childProps = {

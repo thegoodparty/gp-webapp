@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { fetchVoterFile } from '../../components/VoterRecordsPage';
-import { trackEvent } from 'helpers/fullStoryHelper';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
 
 export default function DownloadFile(props) {
@@ -12,6 +12,10 @@ export default function DownloadFile(props) {
     if (loading) {
       return;
     }
+    trackEvent(EVENTS.VoterData.FileDetail.ClickDownloadCSV, {
+      type,
+      file: fileName,
+    });
     setLoading(true);
     let response;
     if (isCustom) {

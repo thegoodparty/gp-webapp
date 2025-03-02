@@ -1,9 +1,12 @@
 import { notFound } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import pageMetaData from 'helpers/metadataHelper';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 import BlogSectionPage from './components/BlogSectionPage';
+import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
@@ -25,8 +28,12 @@ export default async function Page({ params }) {
   if (!slug) {
     notFound();
   }
+  const [{ sections, hero, sectionIndex }, tags, titles] = await Promise.all([
+    fetchArticlesBySections(slug),
+    fetchArticleTags(),
+    fetchArticlesTitles(),
+  ]);
 
-  const { sections, hero, sectionIndex } = await fetchArticlesBySections(slug);
   const sectionTitle = sections[sectionIndex].fields.title;
 
   return (
@@ -36,22 +43,18 @@ export default async function Page({ params }) {
       sectionIndex={sectionIndex}
       slug={slug}
       hero={hero}
+      allTags={tags}
+      articleTitles={titles}
     />
   );
 }
 
-// export async function generateStaticParams() {
-//   const api = gpApi.content.contentByKey;
-//   const payload = {
-//     key: 'blogSections',
-//     deleteKey: 'articles',
-//   };
+export async function generateStaticParams() {
+  const { sections } = await fetchArticlesBySections();
 
-//   const { content } = await gpFetch(api, payload);
-
-//   return content?.map((section) => {
-//     return {
-//       slug: section?.fields?.slug,
-//     };
-//   });
-// }
+  return sections?.map((section) => {
+    return {
+      slug: section?.slug,
+    };
+  });
+}

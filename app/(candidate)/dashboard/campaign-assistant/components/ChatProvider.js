@@ -1,6 +1,4 @@
 'use client';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { createContext, useEffect, useRef, useState } from 'react';
 import {
   createInitialChat,
@@ -9,15 +7,17 @@ import {
   regenerateChatThread,
 } from 'app/(candidate)/dashboard/campaign-assistant/components/ajaxActions';
 import { trackEvent } from 'helpers/fullStoryHelper';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function updateChat(threadId, input) {
   try {
-    const api = gpApi.campaign.chat.update;
     const payload = {
       threadId,
       message: input,
     };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.campaign.chat.update, payload);
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

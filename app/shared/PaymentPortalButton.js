@@ -1,9 +1,10 @@
 'use client';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
 import Link from 'next/link';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { useState } from 'react';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const PaymentPortalStyledButton = ({ children, ...restProps }) => (
   <PrimaryButton className="flex items-center" {...restProps}>
@@ -20,9 +21,10 @@ export const PaymentPortalButton = ({
 
   const onClick = async (e) => {
     e.preventDefault();
+    trackEvent(EVENTS.Settings.Account.ClickManageSubscription);
     setLoading(true);
-    const portalResult = await gpFetch(gpApi.payments.createPortalSession);
-    const { redirectUrl: portalRedirectUrl } = portalResult || {};
+    const resp = await clientFetch(apiRoutes.payments.createPortalSession);
+    const { redirectUrl: portalRedirectUrl } = resp.data || {};
     if (!portalRedirectUrl) {
       throw new Error('No portal redirect url found');
     }

@@ -1,9 +1,8 @@
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function scheduleVoterMessagingCampaign(state) {
   try {
-    const api = gpApi.voterData.schedule;
     const payload = {
       ...state,
       date: state.schedule?.date,
@@ -20,12 +19,17 @@ export async function scheduleVoterMessagingCampaign(state) {
       formData.append(key, value);
     }
 
-    // Skipper parser wants files after all other fields
+    // put file after all other fields
     if (payload.image) {
-      formData.append('image', payload.image);
+      formData.append('image', payload.image, payload.image.name);
     }
 
-    return await gpFetch(api, formData, false, undefined, true);
+    const resp = await clientFetch(
+      apiRoutes.voters.voterFile.schedule,
+      formData,
+    );
+
+    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;

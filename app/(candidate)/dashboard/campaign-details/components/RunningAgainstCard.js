@@ -2,6 +2,7 @@ import { useState } from 'react';
 import IconButton from '@shared/buttons/IconButton';
 import { DeleteRounded, EditRounded } from '@mui/icons-material';
 import RunningAgainstForm from './RunningAgainstForm';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function RunningAgainstCard({
   name,
@@ -13,8 +14,24 @@ export default function RunningAgainstCard({
   const [showEdit, setShowEdit] = useState(false);
 
   function handleSave(newValues) {
+    trackEvent(EVENTS.Profile.RunningAgainst.SubmitEdit);
     setShowEdit(false);
     onUpdate(newValues);
+  }
+
+  function handleDelete() {
+    trackEvent(EVENTS.Profile.RunningAgainst.ClickDelete);
+    onDelete();
+  }
+
+  function handleEdit() {
+    trackEvent(EVENTS.Profile.RunningAgainst.ClickEdit);
+    setShowEdit(true);
+  }
+
+  function handleCancel() {
+    trackEvent(EVENTS.Profile.RunningAgainst.CancelEdit);
+    setShowEdit(false);
   }
 
   return (
@@ -31,14 +48,14 @@ export default function RunningAgainstCard({
               title="Delete"
               className="flex items-center"
               color="error"
-              onClick={onDelete}
+              onClick={handleDelete}
             >
               <DeleteRounded />
             </IconButton>
             <IconButton
               title="Edit"
               className="flex items-center"
-              onClick={() => setShowEdit(true)}
+              onClick={handleEdit}
             >
               <EditRounded />
             </IconButton>
@@ -49,7 +66,7 @@ export default function RunningAgainstCard({
           name={name}
           party={party}
           description={description}
-          onCancel={() => setShowEdit(false)}
+          onCancel={handleCancel}
           onSave={handleSave}
         />
       )}

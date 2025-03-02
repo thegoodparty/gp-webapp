@@ -2,19 +2,24 @@ import Image from 'next/image';
 import bgImg from '/public/images/homepage/post-2024.png';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import Button from '@shared/buttons/Button';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import Link from 'next/link';
 import { WINNER_COUNT } from 'app/candidates/page';
+import { serverFetch } from 'gpApi/serverFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 const fetchWinnerCount = async () => {
-  const api = gpApi.campaign.mapCount;
-
-  return await gpFetch(api, { results: true }, 3600);
+  const resp = await serverFetch(
+    apiRoutes.campaign.map.count,
+    {
+      results: true,
+    },
+    { revalidate: 3600 },
+  );
+  return resp.data;
 };
 
 export default async function Hero() {
-  // const { count } = await fetchWinnerCount();
+  // const count = await fetchWinnerCount();
   const count = WINNER_COUNT;
 
   // fallback to hardcoded 3,000+ in case of bad api call

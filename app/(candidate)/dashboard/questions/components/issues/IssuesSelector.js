@@ -13,7 +13,7 @@ export default function IssuesSelector(props) {
   const [candidatePositions, setCandidatePositions] = useCandidatePositions();
 
   const updateCandidatePositions = async () => {
-    const { candidatePositions } = await loadCandidatePosition(campaign.slug);
+    const candidatePositions = await loadCandidatePosition(campaign.id);
     setCandidatePositions(candidatePositions);
     return candidatePositions;
   };

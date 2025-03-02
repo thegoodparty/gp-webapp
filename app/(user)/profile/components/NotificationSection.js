@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import Body2 from '@shared/typography/Body2';
 import H5 from '@shared/typography/H5';
 import { Switch } from '@mui/material';
 import { useUser } from '@shared/hooks/useUser';
 import Paper from '@shared/utils/Paper';
 import H2 from '@shared/typography/H2';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const fields = [
   {
@@ -40,7 +41,13 @@ export default function NotificationSection() {
 
   useEffect(() => {
     if (user && !initialUpdate) {
-      const meta = user.metaData !== '' ? JSON.parse(user.metaData) : {};
+      let meta = {};
+      try {
+        meta = JSON.parse(user.metaData);
+      } catch (error) {
+        console.log('Error parsing user meta', error);
+      }
+
       setState(meta);
       setInitialUpdate(true);
     }
@@ -48,13 +55,10 @@ export default function NotificationSection() {
 
   async function updateUserCallback(updatedMeta) {
     try {
-      const api = gpApi.notification.updatePreferences;
-      const payload = {
-        metaData: JSON.stringify(updatedMeta),
-      };
-
-      const response = await gpFetch(api, payload);
-      const { user } = response;
+      const response = await clientFetch(apiRoutes.user.updateMeta, {
+        meta: updatedMeta,
+      });
+      const user = response.data;
       setUser(user);
     } catch (error) {
       console.log('Error updating user', error);
@@ -66,6 +70,10 @@ export default function NotificationSection() {
       ...state,
       [key]: event.target.checked,
     };
+    trackEvent(EVENTS.Settings.Notifications.ToggleEmail, {
+      email: key,
+      enabled: event.target.checked,
+    });
     setState(updatedState);
     setInitialUpdate(false);
     updateUserCallback(updatedState);

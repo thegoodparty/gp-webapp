@@ -1,5 +1,3 @@
-import gpApi, { appBase } from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import RSS from 'rss';
 import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
 

@@ -10,10 +10,13 @@ import { AiOutlineFlag } from 'react-icons/ai';
 import { FaHandHoldingHeart } from 'react-icons/fa';
 import { HiOutlineScale } from 'react-icons/hi';
 import { SiMinutemailer } from 'react-icons/si';
-
 import Caption from '@shared/typography/Caption';
 import { calcAnswers } from '../../shared/QuestionProgress';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import {
+  buildTrackingAttrs,
+  trackEvent,
+  EVENTS,
+} from 'helpers/fullStoryHelper';
 
 const categoryIcons = {
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,
@@ -79,6 +82,10 @@ export default function TemplateList(props) {
                     tabIndex={0}
                     {...trackingAttrs}
                     onClick={() => {
+                      trackEvent(EVENTS.ContentBuilder.SelectTemplate, {
+                        category: category.name,
+                        key: template.key,
+                      });
                       handleClick(template.key);
                     }}
                     onKeyDown={(e) =>

@@ -17,7 +17,13 @@ import SubscribeBlog from '../shared/SubscribeBlog';
  * @param {BlogPageProps} props
  * @returns
  */
-export default async function BlogPage({ sections, hero, topTags }) {
+export default async function BlogPage({
+  sections,
+  hero,
+  topTags,
+  allTags,
+  articleTitles,
+}) {
   return (
     <BlogWrapper
       sections={sections}
@@ -25,6 +31,8 @@ export default async function BlogPage({ sections, hero, topTags }) {
       pageSubtitle="Insights into politics, running for office, and the latest updates from the independent movement"
       topTags={topTags}
       showBreadcrumbs={false}
+      allTags={allTags}
+      articleTitles={articleTitles}
     >
       {sections?.length > 0 && (
         <div className="border-t-[1px] border-gray-200 pt-16 pb-8">

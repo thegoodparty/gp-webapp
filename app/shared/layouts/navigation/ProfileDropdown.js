@@ -6,6 +6,7 @@ import {
   FaTheaterMasks,
   FaToolbox,
   FaUserCircle,
+  FaUserTie,
 } from 'react-icons/fa';
 import { memo, useEffect } from 'react';
 import { RiLogoutBoxFill } from 'react-icons/ri';
@@ -13,8 +14,9 @@ import { HiOutlineStar } from 'react-icons/hi';
 import UserAvatar from '@shared/user/UserAvatar';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
-import { MdAdd } from 'react-icons/md';
-import { USER_ROLES } from 'helpers/userHelper';
+import { MdAdd, MdFactCheck } from 'react-icons/md';
+import { USER_ROLES, userIsAdmin } from 'helpers/userHelper';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const links = [
   {
@@ -22,10 +24,12 @@ const links = [
     label: 'Settings',
     href: '/profile',
     icon: <FaToolbox />,
+    onClick: () =>
+      trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickSettings),
   },
 ];
 
-function ProfileDropdown({ open, toggleCallback, user }) {
+function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
   const {
     clear: clearImpersonation,
     token: impersonateToken,
@@ -63,10 +67,20 @@ function ProfileDropdown({ open, toggleCallback, user }) {
     window.location.href = '/admin';
   };
 
+  const handleToggle = () => {
+    trackEvent(EVENTS.Navigation.Top.ClickAvatarDropdown);
+    toggleCallback();
+  };
+
+  const handleLogOutClick = (e) => {
+    trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickLogout);
+    handleLogOut(e);
+  };
+
   return (
     <div
       className="ml-2 relative cursor-pointer "
-      onClick={toggleCallback}
+      onClick={handleToggle}
       onKeyDown={handleKeyToggle}
       id="nav-run-dropdown"
     >
@@ -107,6 +121,7 @@ function ProfileDropdown({ open, toggleCallback, user }) {
                 href={link.href}
                 id={`nav-${link.id}`}
                 key={link.id}
+                onClick={link.onClick}
                 className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
                 rel={`${link.external ? 'noopener noreferrer nofollow' : ''}`}
               >
@@ -131,21 +146,40 @@ function ProfileDropdown({ open, toggleCallback, user }) {
                 </div>
               </Link>
             )}
-            {user.isAdmin && !impersonating && (
-              <Link
-                href="/admin"
-                className="no-underline font-medium block py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
-              >
-                <HiOutlineStar />
-                <div className="ml-3">Admin</div>
-              </Link>
+            {userIsAdmin(user) && !impersonating && (
+              <>
+                <Link
+                  href="/admin"
+                  className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                >
+                  <HiOutlineStar />
+                  <div className="ml-3">Admin</div>
+                </Link>
+                {isServePath ? (
+                  <Link
+                    href="/dashboard"
+                    className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                  >
+                    <MdFactCheck />
+                    <div className="ml-3">Win</div>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/serve"
+                    className="no-underline font-medium  py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                  >
+                    <FaUserTie />
+                    <div className="ml-3">Serve</div>
+                  </Link>
+                )}
+              </>
             )}
             {impersonating && (
               <div
                 role="link"
                 tabIndex={0}
                 data-cy="header-link"
-                className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
+                className="font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded hover:text-white flex items-center"
                 onClick={handleStopImpersonate}
                 onKeyDown={(e) => handleEnterPress(e, handleStopImpersonate)}
               >
@@ -158,8 +192,8 @@ function ProfileDropdown({ open, toggleCallback, user }) {
               tabIndex={0}
               data-cy="header-link"
               className="block font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark rounded flex items-center justify-between"
-              onClick={handleLogOut}
-              onKeyDown={(e) => handleEnterPress(e, () => handleLogOut(e))}
+              onClick={handleLogOutClick}
+              onKeyDown={(e) => handleEnterPress(e, () => handleLogOutClick(e))}
             >
               <div className="flex items-center">
                 <RiLogoutBoxFill />

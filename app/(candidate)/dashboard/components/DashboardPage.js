@@ -10,8 +10,6 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import ElectionOver from './ElectionOver';
 import UpdateHistorySection from './UpdateHistorySection';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import EmptyState from './EmptyState';
 import { updateUser } from 'helpers/userHelper';
 import { useUser } from '@shared/hooks/useUser';
@@ -20,11 +18,16 @@ import ContactMethodsSection from './contactMethods/ContactMethodsSection';
 import PrimaryResultModal from './PrimaryResultModal';
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function createUpdateHistory(payload) {
   try {
-    const api = gpApi.campaign.UpdateHistory.create;
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(
+      apiRoutes.campaign.updateHistory.create,
+      payload,
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at createUpdateHistory.', e);
     return {};
@@ -33,8 +36,12 @@ export async function createUpdateHistory(payload) {
 
 export async function fetchUpdateHistory() {
   try {
-    const api = gpApi.campaign.UpdateHistory.list;
-    return await gpFetch(api, false, 3); // 3 seconds cache to prevent multiple calls on load
+    const resp = await clientFetch(
+      apiRoutes.campaign.updateHistory.list,
+      undefined,
+      { revalidate: 3 }, // 3 seconds cache to prevent multiple calls on load
+    );
+    return resp.data;
   } catch (e) {
     console.log('error at fetchUpdateHistory', e);
     return {};
@@ -45,7 +52,8 @@ export default function DashboardPage({ pathname }) {
   const [_, setUser] = useUser();
   const [campaign, setCampaign] = useState(null);
 
-  const { pathToVictory, goals, details } = campaign || {};
+  const { pathToVictory: p2vObject, goals, details } = campaign || {};
+  const pathToVictory = p2vObject?.data || {};
   const { primaryElectionDate } = details || {};
   const [updateHistory, setUpdateHistory] = useState([]);
   const [primaryResultState, setPrimaryResultState] = useState({
@@ -70,8 +78,8 @@ export default function DashboardPage({ pathname }) {
   });
 
   const loadHistory = async () => {
-    const res = await fetchUpdateHistory();
-    setUpdateHistory(res?.updateHistory || []);
+    const updateHistory = await fetchUpdateHistory();
+    setUpdateHistory(updateHistory || []);
   };
 
   // TODO: we're only having to do this, because we're caching the user object in the cookie and
@@ -91,7 +99,7 @@ export default function DashboardPage({ pathname }) {
     loadCampaign();
 
     async function loadCampaign() {
-      const { campaign } = await fetchUserClientCampaign();
+      const campaign = await fetchUserClientCampaign();
       setCampaign(campaign);
 
       const reportedVoterGoals = campaign.data?.reportedVoterGoals;
@@ -145,17 +153,16 @@ export default function DashboardPage({ pathname }) {
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
   const deleteHistoryCallBack = useCallback(async () => {
-    const resp = await getCampaign();
-    if (resp && resp?.campaign) {
-      const campaignObj = resp.campaign;
+    const campaign = await getCampaign();
+    if (campaign) {
       setState({
-        doorKnocking: campaignObj?.data?.reportedVoterGoals?.doorKnocking || 0,
-        calls: campaignObj?.data?.reportedVoterGoals?.calls || 0,
-        digital: campaignObj?.data?.reportedVoterGoals?.digital || 0,
-        directMail: campaignObj?.data?.reportedVoterGoals?.directMail || 0,
-        digitalAds: campaignObj?.data?.reportedVoterGoals?.digitalAds || 0,
-        text: campaignObj?.data?.reportedVoterGoals?.text || 0,
-        events: campaignObj?.data?.reportedVoterGoals?.events || 0,
+        doorKnocking: campaign?.data?.reportedVoterGoals?.doorKnocking || 0,
+        calls: campaign?.data?.reportedVoterGoals?.calls || 0,
+        digital: campaign?.data?.reportedVoterGoals?.digital || 0,
+        directMail: campaign?.data?.reportedVoterGoals?.directMail || 0,
+        digitalAds: campaign?.data?.reportedVoterGoals?.digitalAds || 0,
+        text: campaign?.data?.reportedVoterGoals?.text || 0,
+        events: campaign?.data?.reportedVoterGoals?.events || 0,
       });
     }
 

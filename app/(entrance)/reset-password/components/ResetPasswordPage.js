@@ -1,11 +1,11 @@
 'use client';
 import { useState } from 'react';
-import gpApi from 'gpApi/index.js';
-import gpFetch from 'gpApi/gpFetch.js';
 import ResetPasswordForm from './ResetPasswordForm';
 import CardPageWrapper from '@shared/cards/CardPageWrapper';
 import ResetPasswordSuccess from './ResetPasswordSuccess';
 import { useSnackbar } from 'helpers/useSnackbar';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
 async function resetPassword(email, password, token) {
   try {
@@ -14,7 +14,7 @@ async function resetPassword(email, password, token) {
       password,
       token,
     };
-    await gpFetch(gpApi.entrance.resetPassword, payload);
+    await clientFetch(apiRoutes.authentication.resetPassword, payload);
     return true;
   } catch (e) {
     console.log('error', e);

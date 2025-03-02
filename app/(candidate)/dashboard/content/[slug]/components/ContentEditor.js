@@ -9,14 +9,15 @@ import { MdAutoAwesome, MdOutlineArrowBackIos } from 'react-icons/md';
 import { FaGlobe } from 'react-icons/fa';
 import Actions from '../../components/Actions';
 import { debounce } from '/helpers/debounceHelper';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { LuClipboard } from 'react-icons/lu';
 import CopyToClipboard from '@shared/utils/CopyToClipboard';
 import InputFieldsModal from '../../components/InputFieldsModal';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
 import Button from '@shared/buttons/Button';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   loading: () => (
@@ -118,14 +119,14 @@ export default function ContentEditor({
 
   async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
-      const api = gpApi.campaign.ai.create;
-      return await gpFetch(api, {
+      const resp = await clientFetch(apiRoutes.campaign.ai.create, {
         key,
         regenerate,
         chat,
         editMode,
         inputValues,
       });
+      return resp.data;
     } catch (e) {
       console.log('error', e);
       return false;
@@ -182,6 +183,10 @@ export default function ContentEditor({
   };
 
   const handleAdditionalInput = async (additionalPrompt, inputValues) => {
+    trackEvent(EVENTS.ContentBuilder.Editor.SubmitRegenerate, {
+      name: documentName,
+      key,
+    });
     setLoading(true);
     setInitialInputValues(inputValues);
     const chat = [
@@ -240,10 +245,18 @@ export default function ContentEditor({
 
         <div className="flex w-full justify-end items-center justify-items-center">
           {inputFields && (
-            <div className="mr-3" onClick={() => setShowModal(true)}>
+            <div
+              className="mr-3"
+              onClick={() => {
+                trackEvent(EVENTS.ContentBuilder.Editor.ClickRegenerate, {
+                  name: documentName,
+                  key,
+                });
+                setShowModal(true);
+              }}
+            >
               <PrimaryButton size="medium">
                 <div className="flex items-center">
-                  {' '}
                   <MdAutoAwesome className="mr-2" />
                   Regenerate
                 </div>
@@ -263,7 +276,16 @@ export default function ContentEditor({
           </div>
           {/* copy button desktop */}
           <div className="hidden md:block mr-3">
-            <CopyToClipboard text={plan} usePadding={false}>
+            <CopyToClipboard
+              text={plan}
+              usePadding={false}
+              onClick={() => {
+                trackEvent(EVENTS.ContentBuilder.Editor.ClickCopy, {
+                  name: documentName,
+                  key,
+                });
+              }}
+            >
               <PrimaryButton
                 size="medium"
                 className="flex items-center whitespace-nowrap"
@@ -280,6 +302,10 @@ export default function ContentEditor({
           <div
             className="hidden md:block mr-3"
             onClick={() => {
+              trackEvent(EVENTS.ContentBuilder.Editor.ClickTranslate, {
+                name: documentName,
+                key,
+              });
               setShowTranslate(true);
             }}
           >

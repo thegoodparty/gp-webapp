@@ -3,6 +3,7 @@ import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import { SmsScriptSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsScriptSelect';
 import { ModalFooter } from '@shared/ModalFooter';
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export const SelectSmSScriptScreen = ({
   aiContent,
@@ -10,7 +11,13 @@ export const SelectSmSScriptScreen = ({
   onNext = (scriptKey) => {},
 }) => {
   const [smsScript, setSmsScript] = useState(null);
-  const handleOnNext = () => onNext(smsScript);
+  const handleOnNext = () => {
+    trackEvent(
+      EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.SelectSaved,
+    );
+
+    onNext(smsScript);
+  };
   const onSelect = (key) => setSmsScript(key);
   return (
     <>

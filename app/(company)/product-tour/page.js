@@ -5,6 +5,9 @@ import H3 from '@shared/typography/H3';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Link from 'next/link';
 
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
 const meta = pageMetaData({
   title: 'AI Campaign Manager Product Tour | GoodParty.org',
   description:

@@ -2,19 +2,16 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { getUserCookie } from 'helpers/cookieHelper';
 import Image from 'next/image';
 import { useEffect } from 'react';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
-export async function sendError(message) {
+export async function sendError(payload) {
   try {
-    const api = gpApi.logError;
-    const payload = {
-      message,
-    };
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.logError, payload);
+    return resp.data;
   } catch (e) {
     console.log('error at sendError.', e);
     return false;

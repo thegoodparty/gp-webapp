@@ -12,6 +12,8 @@ export default function BlogSectionPage({
   sectionIndex,
   slug,
   hero,
+  allTags,
+  articleTitles,
 }) {
   const section = sections[sectionIndex];
   const articles = section.articles;
@@ -36,6 +38,8 @@ export default function BlogSectionPage({
       pageTitle={section.fields.title}
       pageSubtitle={section.fields.subtitle}
       pageSlug={slug}
+      allTags={allTags}
+      articleTitles={articleTitles}
     >
       {slug && articles.length > 1 && (
         <div className="border-t border-gray-200 py-16">

@@ -22,8 +22,8 @@ export const GenerateReviewScreen = ({
   useEffect(() => {
     const fetchAiContent = async () => {
       try {
-        const { campaign = {} } = await getCampaign();
-        const { aiContent } = campaign;
+        const campaign = await getCampaign();
+        const { aiContent } = campaign || {};
         if (!aiContent?.[aiScriptKey]) {
           throw new Error(`No aiScriptKey AI content found => ${aiScriptKey}`);
         }

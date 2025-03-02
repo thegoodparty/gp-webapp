@@ -1,41 +1,40 @@
 import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { faqArticleRoute } from '../../helpers/articleHelper';
-
-const appBase = process.env.NEXT_PUBLIC_APP_BASE;
+import { apiRoutes } from 'gpApi/routes';
+import { serverFetch } from 'gpApi/serverFetch';
+import { APP_BASE } from 'appEnv';
 
 export const fetchFAQs = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'faqArticles',
+    type: 'faqArticle',
   };
-  return await gpFetch(api, payload);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload);
+  return resp.data;
 };
 
 export const fetchGlossaryByTitle = async () => {
-  const api = gpApi.content.contentByKey;
-  const payload = {
-    key: 'glossaryItemsByTitle',
-  };
-  return await gpFetch(api, payload);
+  const resp = await serverFetch(apiRoutes.content.glossaryBySlug);
+  return resp.data;
 };
 
 const fetchArticles = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'blogArticles',
+    type: 'blogArticle',
   };
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };
 
 export const fetchSections = async () => {
-  const api = gpApi.content.contentByKey;
   const payload = {
-    key: 'blogSections',
-    deleteKey: 'articles',
+    type: 'blogSections',
   };
-  return await gpFetch(api, payload, 3600);
+  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
+    revalidate: 3600,
+  });
+  return resp.data;
 };
 
 const now = new Date();
@@ -67,20 +66,20 @@ export default async function sitemap() {
 
   staticUrls.forEach((url) => {
     mainSitemap.push({
-      url: `${appBase}${url}`,
+      url: `${APP_BASE}${url}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 1,
     });
   });
+
+  const blogArticles = await fetchArticles();
+  const blogSections = await fetchSections();
+
   try {
-    const blogRes = await fetchArticles();
-    const blogArticles = blogRes.content;
-    const blogSectionsRes = await fetchSections();
-    const blogSections = blogSectionsRes.content;
     blogArticles.forEach((article) => {
       mainSitemap.push({
-        url: `${appBase}/blog/article/${article.slug}`,
+        url: `${APP_BASE}/blog/article/${article.slug}`,
         lastModified: article.publishDate,
         changeFrequency: 'monthly',
         priority: 0.9,
@@ -89,7 +88,7 @@ export default async function sitemap() {
 
     blogSections.forEach((section) => {
       mainSitemap.push({
-        url: `${appBase}/blog/section/${section.fields?.slug}`,
+        url: `${APP_BASE}/blog/section/${section.fields?.slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.9,
@@ -99,11 +98,12 @@ export default async function sitemap() {
     console.log('error at blog SiteMapXML', e);
   }
 
+  const faqArticles = await fetchFAQs();
+
   try {
-    const faqArticles = (await fetchFAQs()).content;
     faqArticles.forEach((article) => {
       mainSitemap.push({
-        url: `${appBase}${faqArticleRoute(article)}`,
+        url: `${APP_BASE}${faqArticleRoute(article)}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,
@@ -114,18 +114,19 @@ export default async function sitemap() {
   }
   alphabet.forEach((letter) => {
     mainSitemap.push({
-      url: `${appBase}/political-terms/${letter}`,
+      url: `${APP_BASE}/political-terms/${letter}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.6,
     });
   });
 
+  const content = await fetchGlossaryByTitle();
+
   try {
-    const { content } = await fetchGlossaryByTitle();
     Object.keys(content).forEach((slug) => {
       mainSitemap.push({
-        url: `${appBase}/political-terms/${slug}`,
+        url: `${APP_BASE}/political-terms/${slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,

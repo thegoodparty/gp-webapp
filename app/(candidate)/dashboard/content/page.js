@@ -1,11 +1,11 @@
-import { fetchContentByKey } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper';
 import pageMetaData from 'helpers/metadataHelper';
 import { camelToSentence } from 'helpers/stringHelper';
 import candidateAccess from '../shared/candidateAccess';
 import ContentPage from './components/ContentPage';
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
 import { getServerUser } from 'helpers/userServerHelper';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
 
 const meta = pageMetaData({
   title: 'Campaign Content | GoodParty.org',
@@ -16,21 +16,19 @@ export const metadata = meta;
 
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
-  const { campaign } = await fetchUserCampaign();
+  const campaign = await fetchUserCampaign();
 
-  const promptsRaw = (await fetchContentByKey('candidateContentPrompts', 3600))
-    .content;
+  const promptsRaw = await fetchContentByType('candidateContentPrompts', 3600);
   const prompts = parsePrompts(promptsRaw);
 
-  const requiresQuestions = (
-    await fetchContentByKey('contentPromptsQuestions', 3600)
-  ).content;
+  const requiresQuestions = await fetchContentByType(
+    'contentPromptsQuestions',
+    3600,
+  );
 
-  const categories = (await fetchContentByKey('aiContentCategories', 3600))
-    .content;
-
-  const { candidatePositions } = await loadCandidatePosition(campaign.slug);
-  const user = getServerUser(); // can be removed when door knocking app is not for admins only
+  const categories = await fetchContentByType('aiContentCategories', 3600);
+  const candidatePositions = await serverLoadCandidatePosition(campaign.id);
+  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
 
   const childProps = {
     pathname: '/dashboard/content',
@@ -38,7 +36,7 @@ export default async function Page({ params, searchParams }) {
     prompts,
     templates: promptsRaw,
     categories,
-    pathToVictory: campaign?.pathToVictory,
+    pathToVictory: campaign?.pathToVictory?.data,
     requiresQuestions,
     candidatePositions,
     user,

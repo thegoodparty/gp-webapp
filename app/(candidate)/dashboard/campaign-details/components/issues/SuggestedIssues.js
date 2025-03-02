@@ -1,17 +1,18 @@
 'use client';
 import H4 from '@shared/typography/H4';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
 import { useEffect, useState } from 'react';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
 
 export async function loadSuggestedIssues(zip) {
   try {
-    const api = gpApi.topIssues.byLocation;
     const payload = {
       zip,
     };
 
-    return await gpFetch(api, payload);
+    const resp = await clientFetch(apiRoutes.topIssue.byLocation, payload);
+
+    return resp.data;
   } catch (e) {
     console.log('error at loadSuggestedIssues', e);
     return false;
@@ -25,7 +26,7 @@ export default function SuggestedIssues({ campaign, suggestedCallback }) {
   }, []);
   const loadIssues = async () => {
     if (campaign?.details?.zip) {
-      const { issues } = await loadSuggestedIssues(campaign.details.zip);
+      const issues = await loadSuggestedIssues(campaign.details.zip);
       setSuggested(issues);
     }
   };

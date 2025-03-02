@@ -79,8 +79,8 @@ const Map = memo(
                 //set to full bounds of campaign markers
                 const fullBounds = new window.google.maps.LatLngBounds();
                 for (const campaign of campaigns) {
-                  if (campaign.position?.lat && campaign.position?.lng)
-                    fullBounds.extend(campaign.position);
+                  if (campaign.globalPosition?.lat && campaign.globalPosition?.lng)
+                    fullBounds.extend(campaign.globalPosition);
                 }
                 mapRef.current.fitBounds(fullBounds);
               } else if (
@@ -180,7 +180,7 @@ const Map = memo(
           const title = `${campaign.firstName} ${campaign.lastName}`;
           const marker = new window.google.maps.Marker({
             optimized: true,
-            position: campaign.position,
+            position: campaign.globalPosition,
             map: mapRef.current,
             title,
             icon: {
@@ -211,8 +211,8 @@ const Map = memo(
           });
 
           // add campaign position to full bounds object
-          if (fitBounds && campaign.position?.lat && campaign.position?.lng)
-            fullBounds.extend(campaign.position);
+          if (fitBounds && campaign.globalPosition?.lat && campaign.globalPosition?.lng)
+            fullBounds.extend(campaign.globalPosition);
 
           return marker;
         });

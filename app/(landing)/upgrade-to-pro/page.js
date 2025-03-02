@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
-// import UpgradeToProPage from './components/ProMeetingPage';
 import pageMetaData from 'helpers/metadataHelper';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 const meta = pageMetaData({
   title: 'Upgrade to Pro',
@@ -13,5 +15,4 @@ export const metadata = meta;
 
 export default async function Page() {
   redirect('/dashboard/upgrade-to-pro');
-  // return <UpgradeToProPage />;
 }

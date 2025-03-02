@@ -8,21 +8,17 @@
 import React, { useState } from 'react';
 import { RiImageAddFill } from 'react-icons/ri';
 import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { clientFetch } from 'gpApi/clientFetch';
 
-async function fileSelectCallback(image, uploadCallback, isUserImage) {
-  let api;
-  if (isUserImage) {
-    api = gpApi.user.uploadAvatar;
-  } else {
-    api = gpApi.candidateApplication.uploadImage;
-  }
+async function fileSelectCallback(image, uploadCallback) {
   const formData = new FormData();
-  formData.append('files[0]', image);
-  const res = await gpFetch(api, formData, 3600, false, true);
-  if (res.success && res.data.files.length > 0) {
-    uploadCallback(`${res.data.baseurl}${res.data.files[0]}`);
+  formData.append('file', image, image.name);
+  const resp = await clientFetch(apiRoutes.user.uploadAvatar, formData, {
+    revalidate: 3600,
+  });
+  if (resp.data?.avatar) {
+    uploadCallback(resp.data.avatar);
   } else {
     uploadCallback(false);
   }
@@ -32,7 +28,6 @@ function ImageUploadWrapper({
   uploadCallback,
   maxFileSize,
   customElement,
-  isUserImage,
   loadingStatusCallback = () => {},
 }) {
   const [fileSizeError, setFileSizeError] = useState(false);
@@ -45,9 +40,10 @@ function ImageUploadWrapper({
     if (file) {
       if (file.size > maxFileSize) {
         setFileSizeError(true);
+        loadingStatusCallback(false);
         return;
       }
-      await fileSelectCallback(file, uploadCallback, isUserImage);
+      await fileSelectCallback(file, uploadCallback);
       loadingStatusCallback(false);
     }
   };

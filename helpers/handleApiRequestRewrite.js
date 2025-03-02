@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
 
-const apiRootUrl = new URL(
-  process.env.NEXT_PUBLIC_API_BASE || 'https://api-dev.goodparty.org',
-);
+import { API_ROOT } from 'appEnv';
+
+const apiRootUrl = new URL(API_ROOT);
 
 const apiRewriteUrl = (ReqNextUrl) => {
   const newUrl = ReqNextUrl.clone();
   newUrl.protocol = apiRootUrl.protocol;
   newUrl.host = apiRootUrl.host;
-  newUrl.pathname = ReqNextUrl.pathname;
+  newUrl.pathname = ReqNextUrl.pathname.replace('/api', '');
   newUrl.search = ReqNextUrl.search;
   return newUrl.toString();
 };
