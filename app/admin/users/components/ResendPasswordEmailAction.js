@@ -2,14 +2,14 @@ import { useState } from 'react';
 import Button from '@shared/buttons/Button';
 import { sendSetPasswordEmail } from './AddUserButton';
 import AlertDialog from '@shared/utils/AlertDialog';
-import { USER_ROLES } from 'helpers/userHelper';
+import { USER_ROLES, userHasRole } from 'helpers/userHelper';
 
 export default function ResendPasswordEmailAction({ user }) {
-  const { id: userId, email, firstName, lastName, role } = user;
+  const { id: userId, email, firstName, lastName } = user;
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // only for sales role users now
-  if (role !== USER_ROLES.SALES) return <></>;
+  if (!userHasRole(user, USER_ROLES.SALES)) return <></>;
 
   function handleClick() {
     setDialogOpen(true);
