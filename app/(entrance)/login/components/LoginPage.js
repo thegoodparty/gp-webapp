@@ -20,7 +20,7 @@ import Body2 from '@shared/typography/Body2';
 import SocialLoginButtons from './SocialLoginButtons';
 import saveToken from 'helpers/saveToken';
 import { useSnackbar } from 'helpers/useSnackbar';
-import { USER_ROLES } from 'helpers/userHelper';
+import { USER_ROLES, userHasRole } from 'helpers/userHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
@@ -87,7 +87,7 @@ export default function LoginPage() {
           return;
         }
 
-        if (user?.role === USER_ROLES.SALES) {
+        if (userHasRole(user, USER_ROLES.SALES)) {
           window.location.href = '/sales/add-campaign';
           return;
         }

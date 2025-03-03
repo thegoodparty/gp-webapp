@@ -15,7 +15,7 @@ import UserAvatar from '@shared/user/UserAvatar';
 import { handleLogOut } from '@shared/user/handleLogOut';
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
 import { MdAdd, MdFactCheck } from 'react-icons/md';
-import { USER_ROLES, userIsAdmin } from 'helpers/userHelper';
+import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 
 const links = [
@@ -132,7 +132,7 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
                 {link.external && <FaExternalLinkAlt size={14} />}
               </Link>
             ))}
-            {user.role === USER_ROLES.SALES && !impersonating && (
+            {userHasRole(user, USER_ROLES.SALES) && !impersonating && (
               <Link
                 href="/sales/add-campaign"
                 className="no-underline font-normal"
