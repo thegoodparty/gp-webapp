@@ -25,6 +25,6 @@ export function userHasRole(user, role) {
 
 export const USER_ROLES = {
   SALES: 'sales',
-  CAMPAIGN: 'campaign',
+  CANDIDATE: 'candidate',
   ADMIN: 'admin',
 };

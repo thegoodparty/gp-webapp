@@ -10,7 +10,7 @@ import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboar
 import FullStorySelectiveInit from './FullStorySelectiveInit';
 import NavButton from './NavButton';
 import Button from '@shared/buttons/Button';
-import { USER_ROLES } from 'helpers/userHelper';
+import { USER_ROLES, userHasRole } from 'helpers/userHelper';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function RightSide() {
@@ -71,7 +71,7 @@ export default function RightSide() {
             user={user}
             isServePath={isServePath}
           />
-          {user?.role !== USER_ROLES.SALES &&
+          {userHasRole(user, USER_ROLES.SALES) &&
             (isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}
