@@ -13,11 +13,7 @@ import { userIsAdmin } from 'helpers/userHelper';
 const buildTableInputData = (users) =>
   users.map((user) => {
     const metaData = user.metaData || {};
-    const userType = userIsAdmin(user.isAdmin)
-      ? 'admin' // TODO: fix this, needs to handle user.roles array now
-      : user.candidate
-      ? 'candidate'
-      : user.role || 'user';
+    const userType = userIsAdmin(user) ? 'admin' : user.roles?.join(', ');
 
     return {
       ...user,

@@ -1,9 +1,8 @@
 import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
-import { USER_ROLES } from 'helpers/userHelper';
+import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
-import { userIsAdmin } from 'helpers/userHelper';
 
 async function checkIsAdmin() {
   try {
@@ -18,7 +17,8 @@ async function checkIsAdmin() {
 
 export const canCreateCampaigns = async () => {
   const user = await getServerUser();
-  if (user?.role !== USER_ROLES.SALES && !user?.isAdmin) {
+
+  if (!userHasRole(user, USER_ROLES.SALES) && !userIsAdmin(user)) {
     redirect('/login');
   }
 };

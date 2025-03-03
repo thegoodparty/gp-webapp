@@ -1,6 +1,7 @@
 'use client';
 
 import { getCookie } from 'helpers/cookieHelper';
+import { userIsAdmin } from 'helpers/userHelper';
 import { useEffect } from 'react';
 
 export default function FullStorySelectiveInit({ user }) {
@@ -21,7 +22,7 @@ export default function FullStorySelectiveInit({ user }) {
     }
     if (userI && userI.email) {
       const domain = userI.email.split('@')[1];
-      if (domain === 'goodparty.org' || userI.isAdmin) {
+      if (domain === 'goodparty.org' || userIsAdmin(userI)) {
         FS('shutdown');
       } else {
         FS('setIdentity', {

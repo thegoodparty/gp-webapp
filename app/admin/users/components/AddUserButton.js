@@ -7,7 +7,7 @@ import Modal from '@shared/utils/Modal';
 import H2 from '@shared/typography/H2';
 import TextField from '@shared/inputs/TextField';
 import { MenuItem, Select } from '@mui/material';
-import { USER_ROLES } from 'helpers/userHelper';
+import { USER_ROLES, userHasRole } from 'helpers/userHelper';
 import { ModalFooter } from '@shared/ModalFooter';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
@@ -77,7 +77,7 @@ export const AddUserButton = ({ onClick = () => {} }) => {
       return;
     }
 
-    if (newUser.role === USER_ROLES.SALES) {
+    if (userHasRole(newUser, USER_ROLES.SALES)) {
       // send set password email
       sendSetPasswordEmail(newUser.id);
     }
