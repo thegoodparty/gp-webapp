@@ -135,15 +135,10 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
             {userHasRole(user, USER_ROLES.SALES) && !impersonating && (
               <Link
                 href="/sales/add-campaign"
-                className="no-underline font-normal"
+                className="no-underline font-medium py-3 whitespace-nowrap text-base px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
               >
-                <div
-                  data-cy="header-link"
-                  className="py-3 whitespace-nowrap text-lg px-4 hover:bg-primary-dark-dark hover:text-white rounded flex items-center"
-                >
-                  <MdAdd />
-                  <div className="ml-3">Add Campaign</div>
-                </div>
+                <MdAdd className="text-lg" />
+                <div className="ml-3">Add Campaign</div>
               </Link>
             )}
             {userIsAdmin(user) && !impersonating && (
