@@ -38,6 +38,10 @@ export const leftMenuItems = [
     label: 'Public Candidates',
     link: '/admin/public-candidates',
   },
+  {
+    label: 'Ecanvasser',
+    link: '/admin/ecanvasser',
+  },
 ];
 
 export default function AdminLeftMenu({ pathname }) {

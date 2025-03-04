@@ -412,4 +412,22 @@ export const apiRoutes = {
     method: 'POST',
     nextApiRoute: true,
   },
+  ecanvasser: {
+    list: {
+      path: '/ecanvasser/list',
+      method: 'GET',
+    },
+    create: {
+      path: '/ecanvasser',
+      method: 'POST',
+    },
+    sync: {
+      path: '/ecanvasser/:campaignId/sync',
+      method: 'POST',
+    },
+    delete: {
+      path: '/ecanvasser/:campaignId',
+      method: 'DELETE',
+    },
+  },
 };
