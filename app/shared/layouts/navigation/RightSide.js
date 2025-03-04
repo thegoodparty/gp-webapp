@@ -71,7 +71,7 @@ export default function RightSide() {
             user={user}
             isServePath={isServePath}
           />
-          {userHasRole(user, USER_ROLES.SALES) &&
+          {!userHasRole(user, USER_ROLES.SALES) &&
             (isDashboardPath ? (
               <TopDashboardMenu
                 open={dashboardOpen}
