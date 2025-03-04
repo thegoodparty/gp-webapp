@@ -3,38 +3,24 @@ import { faqArticleRoute } from '../../helpers/articleHelper';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
 import { APP_BASE } from 'appEnv';
+import { unAuthFetch } from 'gpApi/apiFetch';
+import { fetchContentByType } from 'helpers/fetchHelper';
 
 export const fetchFAQs = async () => {
-  const payload = {
-    type: 'faqArticle',
-  };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload);
-  return resp.data;
+  return await fetchContentByType('faqArticle');
 };
 
 export const fetchGlossaryByTitle = async () => {
-  const resp = await serverFetch(apiRoutes.content.glossaryBySlug);
+  const resp = await unAuthFetch(apiRoutes.content.glossaryBySlug.path);
   return resp.data;
 };
 
 const fetchArticles = async () => {
-  const payload = {
-    type: 'blogArticle',
-  };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  });
-  return resp.data;
+  return await fetchContentByType('blogArticle');
 };
 
 export const fetchSections = async () => {
-  const payload = {
-    type: 'blogSections',
-  };
-  const resp = await serverFetch(apiRoutes.content.getByType, payload, {
-    revalidate: 3600,
-  });
-  return resp.data;
+  return await fetchContentByType('blogSections');
 };
 
 const now = new Date();

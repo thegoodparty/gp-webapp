@@ -13,7 +13,7 @@ import { clientFetch } from 'gpApi/clientFetch';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed';
-const CURRENT_PASSWORD_INCORRECT = 'Current password is incorrect';
+const CURRENT_PASSWORD_INCORRECT = 'Old password is incorrect';
 const INVALID_PASSWORD_MSG = 'Invalid password';
 
 function PasswordSection({ user: initUser }) {
@@ -108,6 +108,9 @@ function PasswordSection({ user: initUser }) {
         <H4>Password</H4>
         <Body2 className="text-indigo-600 mb-6">
           {user?.hasPassword ? 'Change' : 'Create'} your password
+          {errorMessage && (
+            <Body2 className="text-error mt-3">{errorMessage}</Body2>
+          )}
         </Body2>
         <div className="grid grid-cols-12 gap-3">
           <div className="col-span-12 lg:col-span-6">
@@ -120,6 +123,9 @@ function PasswordSection({ user: initUser }) {
                   }}
                   label="Old Password"
                   helperText=""
+                  error={
+                    errorMessage && errorMessage === CURRENT_PASSWORD_INCORRECT
+                  }
                 />
               </div>
             )}
