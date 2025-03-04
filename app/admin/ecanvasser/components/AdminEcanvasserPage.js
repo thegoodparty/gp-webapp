@@ -51,6 +51,15 @@ export default function AdminEcanvasserPage() {
             <Body1>
               You need to create an API key in ecanvasser for each leader and
               add it to a campaign here.
+              <br />
+              <a
+                href="https://support.ecanvasser.com/en/articles/7019426-access-your-api-key"
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-500 underline"
+              >
+                How to get your API key
+              </a>
             </Body1>
           </div>
           <Button
