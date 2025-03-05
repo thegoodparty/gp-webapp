@@ -1,14 +1,12 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify admin user can access admin dashboard', async ({page}) => {
     const caseId = 24;
-    await skipNonQA(test);
-
     const testAdmin = process.env.TEST_USER_ADMIN;
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 

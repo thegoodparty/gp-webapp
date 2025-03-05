@@ -12,12 +12,12 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.48.1",
-    "@types/node": "^22.7.7"
+    "@types/node": "^22.7.7",
+    "dotenv": "^16.4.7"
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
     "axios": "^1.7.7",
-    "dotenv": "^16.4.5",
     "pdfkit": "^0.16.0"
   }
 }

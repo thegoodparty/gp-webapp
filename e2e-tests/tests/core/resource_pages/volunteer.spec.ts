@@ -8,7 +8,8 @@ import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/")
+    await page.goto("/volunteer");
+    await page.waitForLoadState('networkidle');
 });
 
 test('Verify Explore Offices page', async ({ page }) => {
@@ -32,11 +33,6 @@ test('Verify Explore Offices page', async ({ page }) => {
     const volunteerError = /Error submitting your form. Please refresh and try again./
 
     try {
-        await coreNav(page, 'nav-volunteer');
-
-        // Waits for page to load completely
-        await page.waitForLoadState('networkidle');
-
         // Verify page title
         await expect(page).toHaveTitle(pageTitle, { timeout: 5000 });
 

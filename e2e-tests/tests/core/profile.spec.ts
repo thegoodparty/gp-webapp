@@ -1,17 +1,21 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
-import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import { acceptCookieTerms } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 import * as path from 'path';
 
-authFileCheck(test);
+test.use({
+    storageState: 'auth.json',
+});
+
+test.beforeEach(async ({ page }) => {
+    await page.goto('/profile');
+});
 
 test('Adjust Personal Information', async ({ page }) => {
-
-    await skipNonQA(test);
     const caseId = 33;
     const firstName = userData.firstName;
     const newEmailAddress = generateEmail();
@@ -19,8 +23,6 @@ test('Adjust Personal Information', async ({ page }) => {
     const zipCode = userData.zipCode.substring(0, 5);
 
     try {
-        await page.goto('/profile');
-
         // Accept cookie terms (if visible)
         await acceptCookieTerms(page);
 
@@ -49,13 +51,9 @@ test('Adjust Personal Information', async ({ page }) => {
 });
 
 test('Adjust Notification Settings', async ({ page }) => {
-
-    await skipNonQA(test);
     const caseId = 34;
 
     try {
-        await page.goto('/profile');
-
         // Accept cookie terms (if visible)
         await acceptCookieTerms(page);
 
@@ -88,18 +86,13 @@ test('Adjust Notification Settings', async ({ page }) => {
 });
 
 test('Change Account Password', async ({ page }) => {
-
-    await skipNonQA(test);
     const caseId = 35;
-
-      const testAccountPath = path.resolve(__dirname, '../../testAccount.json');
-
+    const testAccountPath = path.resolve(__dirname, '../../testAccount.json');
     const { password } = JSON.parse(
         fs.readFileSync(testAccountPath, 'utf-8')
     );
 
     try {
-        await page.goto('/profile');
 
         // Accept cookie terms (if visible)
         await acceptCookieTerms(page);

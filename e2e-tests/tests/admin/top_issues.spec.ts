@@ -1,23 +1,19 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify admin user can access Top Issues page', async ({page}) => {
     const caseId = 27;
-    await skipNonQA(test);
-
     const testAdmin = process.env.TEST_USER_ADMIN;
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
     try {
         await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
-        await page.goto('/admin');
-        await page.getByRole('button', { name: 'Top Issues' }).isVisible();
-        await page.getByRole('button', { name: 'Top Issues' }).click();
+        await page.goto('/admin/top-issues');
 
         // Add a new issue
         await page.getByRole('button', { name: 'Add a Top Issue' }).click();
@@ -35,6 +31,7 @@ test('Verify admin user can access Top Issues page', async ({page}) => {
         // Verify new issue and position is saved
         await page.getByRole('button', { name: 'Add a position for Test Issue' }).isVisible();
         await page.getByText('Test Position').isVisible();
+        await page.getByText('Test Position').scrollIntoViewIfNeeded();
 
         // Delete issue and position
         await page.locator('div.flex.items-center')

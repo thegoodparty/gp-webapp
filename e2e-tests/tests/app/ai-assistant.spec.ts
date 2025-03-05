@@ -1,26 +1,24 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { appNav } from 'helpers/navHelpers';
-import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const testTopic = 'Campaign Strategy';
 const testTopicChat = /^Can you help me with my campaign strategy\?$/;
 
-authFileCheck(test);
+test.use({
+    storageState: 'auth.json',
+});
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard")
+    await page.goto("/dashboard/campaign-assistant");
+    await page.waitForLoadState('networkidle');
 });
 
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
-    await skipNonQA(test);
-
     try {
-        await appNav(page, 'AI Assistant');
-
         // Verify user is on AI assistant page
         await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();
 
@@ -46,11 +44,7 @@ test('Create new conversation', async ({ page }) => {
 
 test('Delete a conversation', async ({ page }) => {
     const caseId = 37;
-    await skipNonQA(test);
-
     try {
-        await appNav(page, 'AI Assistant');
-
         // Create new chat
         await page.getByRole('button', { name: 'New Chat' }).click();
         await page.getByRole('button', { name: testTopic }).click();
@@ -60,7 +54,6 @@ test('Delete a conversation', async ({ page }) => {
 
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await appNav(page, 'AI Assistant');
 
         // Open history and delete conversation
         await page.getByRole('button', { name: 'View Chat History' }).click();

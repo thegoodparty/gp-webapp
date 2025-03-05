@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { appNav } from 'helpers/navHelpers';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
@@ -11,7 +11,6 @@ const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
 test.skip('Generate content with Content Builder', async ({page}) => {
     const caseId = 40;
-    await skipNonQA(test);
     const testTemplate = 'Launch Email';
 
     try {

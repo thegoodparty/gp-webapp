@@ -1,17 +1,16 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { appNav } from 'helpers/navHelpers';
-import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { generateTimeStamp } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-authFileCheck(test);
+test.use({
+    storageState: 'auth.json',
+});
 
 test.beforeEach(async ({ page }) => {
-    await skipNonQA(test);
-    await page.goto("/dashboard");
-    await appNav(page, 'My Profile');
+    await page.goto("/dashboard/campaign-details");
 });
 
 test('Update Campaign Details', async ({ page }) => {
@@ -61,22 +60,23 @@ test('Update Office Details', async ({ page }) => {
         // Determine current office details and new state to select
         const newOfficeZip = '94080';
         const oldOfficeTitle = await page.getByLabel('Office').inputValue();
-        const electionLevel = 'Local/Township';
+        const electionLevel = 'Local/Township/City';
         const electionDate = '2028-11-10';
+        const electionRole = 'Daly City Clerk';
 
         // Select new office location
         await page.getByRole('button', { name: 'Edit Office Details' }).click();
         await page.getByText('To pull accurate results,').isVisible();
         await page.getByLabel('Zipcode *').fill(newOfficeZip);
         await page.getByRole('combobox').selectOption(electionLevel);
-        await page.getByLabel('General Election Date *').fill(electionDate);
-        await page.getByRole('button', { name: 'Next' }).click();
+        await page.getByLabel('General Election Date (').fill(electionDate);
+        await page.getByLabel('General Election Date (').press('Enter');
 
         // Wait for new office location results
         await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
 
         // Select first local office listing
-        const officeSelection = page.getByRole('button', { name: 'Local School Board' }).first();
+        const officeSelection = page.getByRole('button', { name: electionRole }).first();
         await officeSelection.scrollIntoViewIfNeeded();
         await officeSelection.click();
         await page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
