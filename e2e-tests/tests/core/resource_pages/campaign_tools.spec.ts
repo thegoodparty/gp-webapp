@@ -7,12 +7,11 @@ import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/")
+    await page.goto("/run-for-office")
 });
 
 test('Verify Campaign Tools page', async ({ page }) => {
     const caseId = 4;
-
     const pageTitle = /Campaign Tools/;
     const pageHeader = /Supercharge your local campaign/;
     const pageButtons = [
@@ -28,11 +27,6 @@ test('Verify Campaign Tools page', async ({ page }) => {
     ];
 
     try {
-        await coreNav(page, 'nav-campaign-tools');
-
-        // Waits for page to load completely
-        await page.waitForLoadState('networkidle');
-
         // Verify page title
         await expect(page).toHaveTitle(pageTitle, { timeout: 5000 });
 

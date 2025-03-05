@@ -7,7 +7,8 @@ import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/")
+    await page.goto("/get-a-demo");
+    await page.waitForLoadState('networkidle');
 });
 
 test('Verify Get a Demo page', async ({ page }) => {
@@ -19,11 +20,6 @@ test('Verify Get a Demo page', async ({ page }) => {
     const hubSpotLocator = page.locator(`iframe[title="Book a Meeting"]`);
 
     try {
-        await coreNav(page, 'nav-get-demo');
-
-        // Waits for page to load completely
-        await page.waitForLoadState('networkidle');
-
         // Verify page title
         await expect(page).toHaveTitle(pageTitle, { timeout: 5000 });
 

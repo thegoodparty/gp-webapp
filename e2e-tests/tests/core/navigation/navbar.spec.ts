@@ -6,7 +6,6 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test('Verify Navigation Bar', async ({ page }) => {
   const caseId = 2;
-
   try {
     await page.goto('/');
 

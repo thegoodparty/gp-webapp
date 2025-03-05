@@ -47,15 +47,6 @@ export async function createTestRun(name, caseIds) {
     }
 }
 
-// Helper to skip tests not designed to run outside of QA
-export async function skipNonQA(test) {
-    const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
-    if (!isQAEnv) {
-        test.skip('Only executable in the QA environment');
-        return;
-    }
-}
-
 export async function checkForTestFailures() {
     const TESTRAIL_URL = process.env.TESTRAIL_URL;
     const AUTH = {
@@ -84,14 +75,9 @@ export async function checkForTestFailures() {
 }
 
 export async function authFileCheck(test) {
-    const isQAEnv = process.env.BASE_URL === 'https://qa.goodparty.org';
-    const isDevEnv = process.env.BASE_URL === 'https://dev.goodparty.org';
-    if (!isQAEnv && !isDevEnv) {
-        return;
-    }
     test.use({
         storageState: 'auth.json',
     });
 }
 
-module.exports = { addTestResult, createTestRun, skipNonQA, checkForTestFailures, authFileCheck };
+module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck };

@@ -1,17 +1,17 @@
-import { defineConfig, devices } from "@playwright/test";
-import * as path from 'path';
+import { defineConfig } from "@playwright/test";
+import 'dotenv/config';
 
-const projectEnv = process.env.PROJECT_ENV || "default";
+console.log('BASE_URL from env:', process.env.BASE_URL);
 
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
-  timeout: 180000,
+  timeout: 60000,
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
-  workers: 3,
+  workers: 1,
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],
@@ -21,33 +21,8 @@ export default defineConfig({
     storageState: undefined,
     contextOptions: { viewport: null },
     trace: "on-first-retry",
-  },
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"], baseURL: process.env.BASE_URL },
+    launchOptions: {
+      slowMo: process.env.CI ? 100 : 0,
     },
-    ...(projectEnv === "local"
-      ? [
-          {
-            name: "Local",
-            use: {
-              baseURL: "http://localhost:3000",
-              ...devices["Desktop Chrome"],
-            },
-          },
-        ]
-      : []),
-    ...(projectEnv === "qa"
-      ? [
-          {
-            name: "QA",
-            use: {
-              baseURL: "https://qa.goodparty.org",
-              ...devices["Desktop Chrome"],
-            },
-          },
-        ]
-      : []),
-  ],
+  }
 });

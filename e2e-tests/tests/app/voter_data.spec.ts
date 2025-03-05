@@ -1,27 +1,25 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { appNav } from 'helpers/navHelpers';
-import { addTestResult, authFileCheck, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { upgradeToPro } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-authFileCheck(test);
+test.use({
+    storageState: 'auth.json',
+});
+
+test.beforeEach(async ({ page }) => {
+    await page.goto("/dashboard/voter-records");
+});
 
 test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
     const caseId = 41;
-    await skipNonQA(test);
 
     try {
-        await page.goto("/dashboard")
-        await appNav(page, 'Voter Data');
-
         // Verify user is on voter data (free) page
         await expect(page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' })).toBeVisible();
         await page.getByRole('button', { name: 'Join Pro Today' }).click();
-
-        // Verify office details confirmation page
-        await page.getByRole('heading', { name: 'Please confirm your office details.' }).isVisible();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -34,10 +32,7 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
 test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
     const caseId1 = 42;
     const caseId2 = 43;
-    await skipNonQA(test);
     try {
-        await page.goto("/dashboard")
-        await appNav(page, 'Voter Data');
         await page.waitForLoadState('networkidle');
         await upgradeToPro(page);
         await page.goto('/dashboard/voter-records')

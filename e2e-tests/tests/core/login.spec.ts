@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { coreNav } from 'helpers/navHelpers';
-import { addTestResult, skipNonQA } from 'helpers/testrailHelper';
+import { addTestResult } from 'helpers/testrailHelper';
 import { userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
@@ -44,7 +44,6 @@ test('Verify invalid login credentials error message', async ({ page }) => {
 
 test('Verify user can log in with valid credentials', async ({ page }) => {
     const caseId = 19;
-    await skipNonQA(test);
 
     const testAdmin = process.env.TEST_USER_ADMIN;
     const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;

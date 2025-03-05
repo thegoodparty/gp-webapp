@@ -1,20 +1,17 @@
 import "dotenv/config";
 import { test, expect } from "@playwright/test";
-import { coreNav } from "helpers/navHelpers";
 import { checkButtons } from "helpers/domHelpers";
-import { addTestResult, skipNonQA } from "helpers/testrailHelper";
+import { addTestResult } from "helpers/testrailHelper";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/")
+    await page.goto("/blog");
+    await page.waitForLoadState("networkidle");
 });
 
 test("Verify Blog page", async ({ page }) => {
-  await skipNonQA(test);
-
   const caseId = 12;
-
   const pageTitle = "Blog";
   const pageSubtitle =
     /Insights into politics, running for office, and the latest updates from the independent movement/;
@@ -28,11 +25,6 @@ test("Verify Blog page", async ({ page }) => {
   ];
 
   try {
-    await coreNav(page, "nav-blog");
-
-    // Waits for page to load completely
-    await page.waitForLoadState("networkidle");
-
     // Verify page title
     await expect(page.locator(`h1:has-text("${pageTitle}")`)).toBeVisible({
       timeout: 20000,
@@ -77,11 +69,6 @@ test("Verify Blog filtering", async ({ page }) => {
   const testTopic = "Campaign Finance";
 
   try {
-    await coreNav(page, "nav-blog");
-
-    // Waits for page to load completely
-    await page.waitForLoadState("networkidle");
-
     // Filter blog page by category
     await page
       .locator("nav")
@@ -124,11 +111,6 @@ test("Verify Blog Article page", async ({ page }) => {
   const caseId = 17;
 
   try {
-    await coreNav(page, "nav-blog");
-
-    // Waits for page to load completely
-    await page.waitForLoadState("networkidle");
-
     // Navigate to featured blog article
     await page.locator(`button:has-text("Read More")`).first().click();
     await page.waitForLoadState("networkidle");

@@ -9,18 +9,14 @@ const bannerButton = /Join Now/
 const candidatesButton = /Find Candidates/
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/")
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
 });
 
 test('Verify Homepage', async ({ page }) => {
   const caseId = 1;
 
   try {
-    await page.goto('/');
-    
-    // Waits for page to load completely
-    await page.waitForLoadState('networkidle');
-
     // Verify page title
     await expect(page).toHaveTitle(pageTitle);
 
