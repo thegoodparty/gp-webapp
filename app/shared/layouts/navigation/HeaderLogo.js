@@ -27,11 +27,11 @@ const ProBadge = () => (
 
 export const HeaderLogo = () => {
   const [campaign] = useCampaign();
-  const [campaignStatusClient] = useCampaignStatus();
+  const [campaignStatus] = useCampaignStatus();
   const pathname = usePathname();
 
   const { isPro } = campaign || {};
-  const { status } = campaignStatusClient || {};
+  const { status } = campaignStatus || {};
   const link = status && campaign ? '/dashboard' : '/';
   return (
     <>
