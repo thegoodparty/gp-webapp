@@ -2,8 +2,6 @@ name: Deployment and Playwright Tests
 
 on:
   pull_request:
-    branches:
-      - qa
 
 jobs:
   test:
@@ -24,10 +22,14 @@ jobs:
       - name: Install Vercel CLI
         run: npm install -g vercel
 
+      - name: Link Vercel Project
+        run: |
+          vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope goodparty
+
       - name: Deploy to Vercel
         id: deploy
         run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes
+          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --scope goodparty
 
       - name: Capture Deployment URL
         run: |
