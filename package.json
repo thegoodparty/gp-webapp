@@ -17,7 +17,8 @@
     "lint": "next lint",
     "format": "prettier -c .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "detect-circular-dependencies": "npx madge --circular --warning app"
   },
   "dependencies": {
     "@contentful/rich-text-plain-text-renderer": "^15.12.1",
@@ -49,6 +50,7 @@
     "isbot": "^5.1.1",
     "isomorphic-dompurify": "^2.14.0",
     "libphonenumber-js": "^1.10.14",
+    "madge": "^8.0.0",
     "marked": "^14.1.2",
     "match-sorter": "^6.3.1",
     "next": "14.2.3",
