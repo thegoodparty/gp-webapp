@@ -20,6 +20,16 @@ const fetchAllEcanvasser = async () => {
   }
 };
 
+const syncAllEcanvasser = async () => {
+  try {
+    const resp = await clientFetch(apiRoutes.ecanvasser.syncAll);
+    return resp.data;
+  } catch (e) {
+    console.log('error fetchAllEvanvasser', e);
+    return [];
+  }
+};
+
 export default function AdminEcanvasserPage() {
   const [ecanvassers, setEcanvassers] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -29,6 +39,12 @@ export default function AdminEcanvasserPage() {
   }, []);
 
   const loadAllEcanvassers = async () => {
+    const all = await fetchAllEcanvasser();
+    setEcanvassers(all);
+  };
+
+  const syncAll = async () => {
+    await syncAllEcanvasser();
     const all = await fetchAllEcanvasser();
     setEcanvassers(all);
   };
@@ -62,13 +78,14 @@ export default function AdminEcanvasserPage() {
               </a>
             </Body1>
           </div>
-          <Button
-            color="primary"
-            size="medium"
-            onClick={() => setOpenModal(true)}
-          >
-            Add an API key
-          </Button>
+          <div className="">
+            <Button color="secondary" onClick={syncAll} className="mr-4">
+              Sync All
+            </Button>
+            <Button color="primary" onClick={() => setOpenModal(true)}>
+              Add an API key
+            </Button>
+          </div>
         </div>
         <EcanvasserList ecanvassers={ecanvassers} onUpdate={afterUpdate} />
       </PortalPanel>

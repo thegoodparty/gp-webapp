@@ -54,10 +54,10 @@ export default function EcanvasserCard({ ecanvasser, onUpdate }) {
 
   return (
     <div className="col-span-12 md:col-span-6 lg:col-span-4">
-      <div className="p-4 shadow-md rounded-xl">
+      <div className="p-4 shadow-md rounded-xl border border-gray-200">
         <H3 className="mb-4">{email}</H3>
         {attr.map((attr) => (
-          <div className="grid grid-cols-12 gap-2" key={attr.label}>
+          <div className="grid grid-cols-12 gap-2 mt-2" key={attr.label}>
             <Body2 className="col-span-8 font-semibold">{attr.label}</Body2>
             <Body2 className="col-span-4">
               {attr.value || attr.value === 0
@@ -66,7 +66,7 @@ export default function EcanvasserCard({ ecanvasser, onUpdate }) {
             </Body2>
           </div>
         ))}
-        <div className="mt-2 pt-2 border-t border-gray-200">
+        <div className="mt-4 pt-4 border-t border-gray-200">
           <Body1 className="text-sm text-gray-500">
             Last Sync: {lastSync ? dateWithTime(lastSync) : 'n/a'}
           </Body1>
