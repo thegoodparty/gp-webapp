@@ -99,7 +99,6 @@
     "cross-env": "^7.0.3",
     "eslint-plugin-mdx": "^2.1.0",
     "eslint-plugin-storybook": "^0.6.12",
-    "madge": "^8.0.0",
     "postcss": "^8.4.23",
     "prettier": "^2.7.1",
     "storybook": "7.6.16"
