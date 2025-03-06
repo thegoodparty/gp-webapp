@@ -50,7 +50,6 @@
     "isbot": "^5.1.1",
     "isomorphic-dompurify": "^2.14.0",
     "libphonenumber-js": "^1.10.14",
-    "madge": "^8.0.0",
     "marked": "^14.1.2",
     "match-sorter": "^6.3.1",
     "next": "14.2.3",
@@ -103,6 +102,7 @@
     "eslint-plugin-storybook": "^0.6.12",
     "postcss": "^8.4.23",
     "prettier": "^2.7.1",
-    "storybook": "7.6.16"
+    "storybook": "7.6.16",
+    "madge": "^8.0.0"
   }
 }
