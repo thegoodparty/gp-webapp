@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import SetPasswordForm from './SetPasswordForm';
-import SetPasswordSuccess from './SetPasswordSuccess';
+import ResetPasswordForm from './ResetPasswordForm';
+import ResetPasswordSuccess from './ResetPasswordSuccess';
 import saveToken from 'helpers/saveToken';
 import { setUserCookie } from 'helpers/cookieHelper';
 import { useUser } from '@shared/hooks/useUser';
@@ -24,7 +24,7 @@ async function setPasswordApi(email, password, token) {
     );
     return resp.data;
   } catch (e) {
-    console.error('error', e);
+    console.log('error', e);
     return false;
   }
 }
@@ -89,9 +89,9 @@ export default function FormSection({ email, token }) {
         <Paper>
           <div className="p-4 md:p-6 lg:p-8">
             {resetSuccessful ? (
-              <SetPasswordSuccess />
+              <ResetPasswordSuccess />
             ) : (
-              <SetPasswordForm
+              <ResetPasswordForm
                 password={password}
                 confirmPassword={confirmPassword}
                 isValid={isValid}
@@ -99,6 +99,7 @@ export default function FormSection({ email, token }) {
                 onSubmit={handleSubmit}
                 onPasswordChange={handlePasswordChange}
                 onConfirmPasswordChange={handleConfirmChange}
+                createMode
               />
             )}
           </div>
