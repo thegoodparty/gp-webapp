@@ -21,8 +21,6 @@ import Button from '@shared/buttons/Button';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function IssuesSection(props) {
-  console.log('props: ', props);
-  console.log('props.campaign: ', props.campaign)
   const [campaign, setCampaign] = useState(props.campaign);
   const [candidatePositions, setCandidatePositions] = useCandidatePositions();
   const [combinedIssues, setCombinedIssues] = useState([]);

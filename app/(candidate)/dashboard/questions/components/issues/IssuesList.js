@@ -53,8 +53,6 @@ export default function IssuesList({
     });
 
   const saveCallback = async (position, issue, candidatePosition) => {
-    // if candidate position already exists in this order, delete it
-    //console.log('Campaign is: ', campaign);
     editIssuePosition?.id &&
       (await deleteCandidatePosition(editIssuePosition.id, campaign.id));
 
@@ -72,7 +70,6 @@ export default function IssuesList({
 
   const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
-    console.log('Campaign is: ', campaign);
     if (editIssuePosition?.id) {
       await deleteCandidatePosition(editIssuePosition.id, campaign.id);
     }
