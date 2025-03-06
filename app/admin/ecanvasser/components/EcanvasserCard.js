@@ -30,37 +30,12 @@ const deleteEcanvasser = async (campaignId) => {
 
 export default function EcanvasserCard({ ecanvasser, onUpdate }) {
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    email,
-    appointments,
-    contacts,
-    customFields,
-    documents,
-    efforts,
-    followUps,
-    houses,
-    interactions,
-    surveys,
-    questions,
-    teams,
-    users,
-    lastSync,
-    error,
-  } = ecanvasser;
+  const { email, contacts, houses, interactions, lastSync, error } = ecanvasser;
 
   const attr = [
-    { label: 'Appointments', value: appointments },
     { label: 'Contacts', value: contacts },
-    { label: 'Custom Fields', value: customFields },
-    { label: 'Documents', value: documents },
-    { label: 'Efforts', value: efforts },
-    { label: 'Follow Ups', value: followUps },
     { label: 'Houses', value: houses },
     { label: 'Interactions', value: interactions },
-    { label: 'Surveys', value: surveys },
-    { label: 'Questions', value: questions },
-    { label: 'Teams', value: teams },
-    { label: 'Users', value: users },
   ];
 
   const handleSync = async () => {

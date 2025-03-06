@@ -48,6 +48,7 @@ export default function AddEcanvasser({ open, onClose, createCallback }) {
             onChange={(e) => setEmail(e.target.value)}
             className="my-4"
           />
+          <br />
           <TextField
             label="API Key"
             name="apiKey"
@@ -55,6 +56,7 @@ export default function AddEcanvasser({ open, onClose, createCallback }) {
             onChange={(e) => setApiKey(e.target.value)}
             fullWidth
           />
+          <br />
           <Button
             type="submit"
             className="w-full mt-8"
