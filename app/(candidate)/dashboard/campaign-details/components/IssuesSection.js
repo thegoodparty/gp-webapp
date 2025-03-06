@@ -45,10 +45,10 @@ export default function IssuesSection(props) {
     trackEvent(EVENTS.Profile.TopIssues.SubmitEdit);
     const candidatePositions = await loadCandidatePosition(campaign.id);
     setCandidatePositions(candidatePositions);
-    const campaign = await getCampaign();
+    const updatedCampaign = await getCampaign();
 
     setEditIssuePosition(false);
-    setCampaign(campaign);
+    setCampaign(updatedCampaign);
   };
 
   const handleDeleteConfirmation = async () => {

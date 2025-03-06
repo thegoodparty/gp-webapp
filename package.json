@@ -17,7 +17,8 @@
     "lint": "next lint",
     "format": "prettier -c .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "detect-circular-dependencies": "npx madge --circular --warning app"
   },
   "dependencies": {
     "@contentful/rich-text-plain-text-renderer": "^15.12.1",
@@ -101,6 +102,7 @@
     "eslint-plugin-storybook": "^0.6.12",
     "postcss": "^8.4.23",
     "prettier": "^2.7.1",
-    "storybook": "7.6.16"
+    "storybook": "7.6.16",
+    "madge": "^8.0.0"
   }
 }
