@@ -9,7 +9,7 @@ export const EVENTS = {
     ClickForgotPassword: 'Sign In: Click Forgot Password',
   },
   SetPassword: {
-    ClickGetStarted: 'Set Password: Click Get Started',
+    ClickSetPassword: 'Set Password: Click Set Password',
   },
   Onboarding: {
     ClickFinishLater: 'Onboarding: Click Finish Later',

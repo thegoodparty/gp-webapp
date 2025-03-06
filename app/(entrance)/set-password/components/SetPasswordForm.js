@@ -4,7 +4,7 @@ import Button from '@shared/buttons/Button';
 import PasswordInput from '@shared/inputs/PasswrodInput';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
-export default function ResetPasswordForm({
+export default function SetPasswordForm({
   password,
   confirmPassword,
   isValid,
@@ -12,30 +12,20 @@ export default function ResetPasswordForm({
   onPasswordChange,
   onConfirmPasswordChange,
   onSubmit,
-  createMode,
 }) {
   const showConfirmError = confirmPassword !== '' && !isMatch;
 
   const handleTrackClick = () => {
-    if (createMode) {
-      trackEvent(EVENTS.SetPassword.ClickGetStarted);
-    }
+    trackEvent(EVENTS.SetPassword.ClickSetPassword);
   };
 
   return (
     <form noValidate onSubmit={onSubmit}>
       <hgroup className="text-center">
-        <H1 className="mb-4">Supercharge your campaign</H1>
-        {createMode ? (
-          <Body2 className="mb-8">
-            Please set a password for your new account
-          </Body2>
-        ) : (
-          <Body2 className="mb-8">
-            You have requested to reset your password.
-            <br /> Enter new password below.
-          </Body2>
-        )}
+        <H1 className="mb-4">Set up your account</H1>
+        <Body2 className="mb-8">
+          Please set a password for your free account
+        </Body2>
       </hgroup>
       <PasswordInput
         value={password}
@@ -52,13 +42,13 @@ export default function ResetPasswordForm({
         helperText={showConfirmError && 'Passwords do not match'}
       />
       <Button
-        className="w-full mt-8"
+        className="!block mx-auto mt-8"
         type="submit"
         size="large"
         onClick={handleTrackClick}
         disabled={!isValid || !isMatch}
       >
-        {createMode ? 'Get started' : 'Update password'}
+        Set Password
       </Button>
     </form>
   );
