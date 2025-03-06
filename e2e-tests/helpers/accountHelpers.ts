@@ -223,6 +223,7 @@ export async function deleteAccount(page) {
 
     // Confirm the deletion
     await page.getByRole('button', { name: 'Proceed' }).click();
+    await page.waitForLoadState('networkidle');
 
     // Verify user is logged out
     await expect(page.getByTestId('nav-login')).toBeVisible({ timeout: 10000 });
