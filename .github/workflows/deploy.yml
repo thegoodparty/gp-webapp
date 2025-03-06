@@ -24,7 +24,7 @@ jobs:
 
       - name: Link Vercel Project
         run: |
-          vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope goodparty
+          vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
 
       - name: Deploy to Vercel
         id: deploy
