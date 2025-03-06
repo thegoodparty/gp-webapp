@@ -45,9 +45,9 @@ export async function checkImgAltText(page, imgAltTextArray) {
 
 export async function appNav(page, navSelect, isMobile = false) {
     if(isMobile) {
-        await page.getByTestId("tilt").click();
+        await page.getByTestId("tilt").nth(1).click();
         await page.getByRole('link', { name: navSelect }).click();
-        await page.getByTestId("tilt").click();
+        await page.getByTestId("tilt").nth(1).click();
     } else {
         await page.getByRole('link', { name: navSelect }).click();
     }
