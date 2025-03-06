@@ -427,7 +427,7 @@ export const apiRoutes = {
     },
     syncAll: {
       path: '/ecanvasser/sync-all',
-      method: 'POST',
+      method: 'GET',
     },
     delete: {
       path: '/ecanvasser/:campaignId',
