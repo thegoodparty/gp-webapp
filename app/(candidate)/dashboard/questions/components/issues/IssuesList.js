@@ -74,8 +74,8 @@ export default function IssuesList({
     if (editIssuePosition?.id) {
       await deleteCandidatePosition(editIssuePosition.id, campaign.id);
     }
-    const campaign = await getCampaign();
-    setCampaign(campaign);
+    const updatedCampaign = await getCampaign();
+    setCampaign(updatedCampaign);
 
     nextCallback();
   };
