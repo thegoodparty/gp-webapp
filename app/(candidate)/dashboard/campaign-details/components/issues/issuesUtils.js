@@ -18,13 +18,13 @@ export const writeCampaignCustomIssue = async (
   } else {
     customIssues.push(newCustomIssue);
   }
-  await updateCampaign([{ key: 'details.customIssues', value: customIssues }]);
+  await updateCampaign([{ key: 'details.customIssues', value: customIssues }], undefined, false);
   return customIssues;
 };
 
 export const deleteCustomIssue = async (index, customIssues = []) => {
   customIssues.splice(index, 1);
-  await updateCampaign([{ key: 'details.customIssues', value: customIssues }]);
+  await updateCampaign([{ key: 'details.customIssues', value: customIssues }], undefined, false);
   return [...customIssues];
 };
 

@@ -24,7 +24,7 @@ export default function RunningAgainstSection({
     setIsSaving(true);
     await updateCampaign([
       { key: 'details.runningAgainst', value: runningAgainst },
-    ]);
+    ], undefined, false);
 
     setIsSaving(false);
 

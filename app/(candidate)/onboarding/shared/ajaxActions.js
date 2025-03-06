@@ -6,7 +6,7 @@ import { deleteCookie, getCookie } from 'helpers/cookieHelper';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 
-export async function updateCampaign(attr, slug) {
+export async function updateCampaign(attr, slug, deepMergeUpdate = true) {
   try {
     if (!Array.isArray(attr) && typeof attr === 'object') {
       attr = [attr];
@@ -35,6 +35,7 @@ export async function updateCampaign(attr, slug) {
     const payload = {
       ...updates,
       slug, // admin only
+      deepMergeUpdate // When true, concatenates nested arrays on the backend
     };
     const resp = await clientFetch(apiRoutes.campaign.update, payload);
     return resp.data;

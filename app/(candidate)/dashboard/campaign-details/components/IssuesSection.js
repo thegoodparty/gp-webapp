@@ -21,6 +21,8 @@ import Button from '@shared/buttons/Button';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function IssuesSection(props) {
+  console.log('props: ', props);
+  console.log('props.campaign: ', props.campaign)
   const [campaign, setCampaign] = useState(props.campaign);
   const [candidatePositions, setCandidatePositions] = useCandidatePositions();
   const [combinedIssues, setCombinedIssues] = useState([]);
@@ -45,10 +47,10 @@ export default function IssuesSection(props) {
     trackEvent(EVENTS.Profile.TopIssues.SubmitEdit);
     const candidatePositions = await loadCandidatePosition(campaign.id);
     setCandidatePositions(candidatePositions);
-    const campaign = await getCampaign();
+    const updatedCampaign = await getCampaign();
 
     setEditIssuePosition(false);
-    setCampaign(campaign);
+    setCampaign(updatedCampaign);
   };
 
   const handleDeleteConfirmation = async () => {
