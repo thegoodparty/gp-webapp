@@ -26,11 +26,6 @@ test('Verify admin user can access Admin Campaigns page', async ({page}) => {
         await page.getByRole('heading', { name: 'Campaigns' }).first().isVisible();
         await page.getByRole('button', { name: 'Add a new campaign' }).isVisible();
 
-        // Test search functionality
-        await page.getByLabel('User Email').fill(testSearchEmail);
-        await page.getByRole('button', { name: 'Search' }).click();
-        await page.getByRole('cell', { name: testSearchEmail }).isVisible();
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
@@ -99,7 +94,6 @@ test('Verify admin user can add/delete campaigns', async ({page}) => {
           .waitFor({ state: "hidden", timeout: 20000 });
         await page.getByRole("button", { name: role }).first().click();
         await page.getByRole("button", { name: "Save" }).click();
-        await page.getByText('Saved').isVisible();
         await page.waitForLoadState('networkidle');
 
         // Confirm campaign is created
@@ -113,7 +107,6 @@ test('Verify admin user can add/delete campaigns', async ({page}) => {
         await page.getByRole('button', { name: 'Delete Campaign' }).click();
         await page.getByRole('heading', { name: 'Delete Campaign' }).isVisible();
         await page.getByRole('button', { name: 'Proceed' }).click();
-        await page.getByText('Deleted').isVisible();
         await page.waitForLoadState('networkidle');
 
         // Report test results

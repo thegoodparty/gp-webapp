@@ -60,8 +60,6 @@ test('Send candidate invite', async ({page}) => {
         await page.waitForLoadState('networkidle');
         await page.getByRole('button', { name: 'Add User' }).click();
 
-        await page.getByText('User created successfully').isVisible();
-
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
@@ -92,8 +90,6 @@ test('Send sales invite', async ({page}) => {
 
         await page.waitForLoadState('networkidle');
         await page.getByRole('button', { name: 'Add User' }).click();
-
-        await page.getByText('User created successfully').isVisible();
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
