@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { appNav } from 'helpers/navHelpers';
 import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';

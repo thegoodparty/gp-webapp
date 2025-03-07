@@ -218,11 +218,7 @@ export async function deleteAccount(page) {
     const baseURL = process.env.BASE_URL;
     await page.goto(`${baseURL}/profile`);
     await page.waitForLoadState('networkidle');
-    // Wait for the "Delete Account" button to be visible
-    await page.getByRole('button', { name: 'Delete Account' }).isVisible({ timeout: 10000 });
     await page.getByRole('button', { name: 'Delete Account' }).click();
-
-    // Confirm the deletion
     await page.getByRole('button', { name: 'Proceed' }).click();
     await page.waitForLoadState('networkidle');
 

@@ -34,10 +34,9 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
     const caseId1 = 42;
     const caseId2 = 43;
     try {
-        await page.waitForLoadState('networkidle');
         await upgradeToPro(page);
         await page.goto('/dashboard/voter-records')
-
+        await page.waitForLoadState('networkidle');
         // Verify user is on voter data (pro) page
         await expect(page.getByRole('heading', { name: 'Voter File' })).toBeVisible();
 
@@ -55,6 +54,7 @@ test('Voter Data (Pro) shows Voter File section', async ({ page }) => {
         await expect(page.getByTestId('articleTitle')).toHaveText(/.+/, {timeout: 30000});
 
         await page.goto('/dashboard/voter-records')
+        await page.waitForLoadState('networkidle');
 
         // Verify user is on voter data (pro) page
         await expect(page.getByRole('heading', { name: 'Voter File' })).toBeVisible();
