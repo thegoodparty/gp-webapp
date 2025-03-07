@@ -13,13 +13,13 @@ test.beforeEach(async ({page}) => {
     await loginAccount(page, testAdmin, testAdminPassword);
     await page.waitForLoadState('networkidle');
     await page.goto('/admin/users');
+    await page.waitForLoadState('networkidle');
 });
 
 test('Admin users page', async ({page}) => {
     const caseId = 26;
     try {
         // Verify admin users page
-        await page.waitForLoadState('networkidle');
         await page.getByRole('heading', { name: 'Users' }).isVisible();
 
         await page.getByRole('columnheader', { name: 'Actions' }).isVisible();
