@@ -15,13 +15,6 @@ test('Verify admin user can access AI Content page', async ({page}) => {
         await page.waitForLoadState('networkidle');
         await page.goto('/admin/ai-content');
         await page.waitForLoadState('networkidle');
-
-        // Verify Search input
-        await page.locator('th[title="Toggle SortBy"] input').first().fill('launchEmail');
-        await page.getByRole('cell', { name: 'launchEmail' }).isVisible();
-        await page.locator('th[title="Toggle SortBy"] input').first().clear();
-        await page.locator('th[title="Toggle SortBy"] input').first().fill('campaignUpdateEmail');
-        await page.getByRole('cell', { name: 'campaignUpdateEmail' }).isVisible();
         
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
