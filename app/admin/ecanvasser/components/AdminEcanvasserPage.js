@@ -33,20 +33,25 @@ const syncAllEcanvasser = async () => {
 export default function AdminEcanvasserPage() {
   const [ecanvassers, setEcanvassers] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadAllEcanvassers();
   }, []);
 
   const loadAllEcanvassers = async () => {
+    setLoading(true);
     const all = await fetchAllEcanvasser();
     setEcanvassers(all);
+    setLoading(false);
   };
 
   const syncAll = async () => {
+    setLoading(true);
     await syncAllEcanvasser();
     const all = await fetchAllEcanvasser();
     setEcanvassers(all);
+    setLoading(false);
   };
 
   const afterCreate = async () => {
@@ -79,15 +84,28 @@ export default function AdminEcanvasserPage() {
             </Body1>
           </div>
           <div className="">
-            <Button color="secondary" onClick={syncAll} className="mr-4">
+            <Button
+              color="secondary"
+              onClick={syncAll}
+              className="mr-4"
+              disabled={loading}
+            >
               Sync All
             </Button>
-            <Button color="primary" onClick={() => setOpenModal(true)}>
+            <Button
+              color="primary"
+              onClick={() => setOpenModal(true)}
+              disabled={loading}
+            >
               Add an API key
             </Button>
           </div>
         </div>
-        <EcanvasserList ecanvassers={ecanvassers} onUpdate={afterUpdate} />
+        {loading ? (
+          <div className="text-center mt-8 text-xl">Loading...</div>
+        ) : (
+          <EcanvasserList ecanvassers={ecanvassers} onUpdate={afterUpdate} />
+        )}
       </PortalPanel>
       <AddEcanvasser
         open={openModal}
