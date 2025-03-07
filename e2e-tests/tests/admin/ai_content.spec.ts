@@ -14,6 +14,7 @@ test('Verify admin user can access AI Content page', async ({page}) => {
         await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin/ai-content');
+        await page.waitForLoadState('networkidle');
 
         // Verify Search input
         await page.locator('th[title="Toggle SortBy"] input').first().fill('launchEmail');

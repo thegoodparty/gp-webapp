@@ -14,6 +14,7 @@ test('Verify admin user can access P2V Stats page', async ({page}) => {
         await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin/p2v-stats');
+        await page.waitForLoadState('networkidle');
 
         // Verify P2V Stats page
         await page.getByRole('heading', { name: 'P2V Stats' }).isVisible();

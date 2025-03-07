@@ -14,6 +14,7 @@ test('Verify admin user can access Top Issues page', async ({page}) => {
         await loginAccount(page, testAdmin, testAdminPassword);
         await page.waitForLoadState('networkidle');
         await page.goto('/admin/top-issues');
+        await page.waitForLoadState('networkidle');
 
         // Add a new issue
         await page.getByRole('button', { name: 'Add a Top Issue' }).click();

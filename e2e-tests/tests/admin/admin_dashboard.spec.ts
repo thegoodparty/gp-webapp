@@ -14,6 +14,7 @@ test('Verify admin user can access admin dashboard', async ({page}) => {
         await loginAccount(page, testAdmin, testAdminPassword);
 
         await page.goto('/admin');
+        await page.waitForLoadState('networkidle');
 
         // Verify Admin Dashboard is displayed
         await page.getByRole('heading', { name: 'Admin Dashboard' }).isVisible();
