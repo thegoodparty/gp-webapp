@@ -54,11 +54,12 @@ test('Send candidate invite', async ({page}) => {
         await page.getByLabel('Last Name').fill(inviteLastName);
         await page.getByLabel('Email').fill(inviteEmail);
         await page.getByRole('button', { name: 'Select' }).click();
-        await page.getByRole('option', { name: 'Candidate' }).click();
+        await page.getByRole('option', { name: 'candidate' }).click();
         await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
         await page.waitForLoadState('networkidle');
         await page.getByRole('button', { name: 'Add User' }).click();
+        await page.waitForLoadState('networkidle');
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -90,6 +91,7 @@ test('Send sales invite', async ({page}) => {
 
         await page.waitForLoadState('networkidle');
         await page.getByRole('button', { name: 'Add User' }).click();
+        await page.waitForLoadState('networkidle');
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
