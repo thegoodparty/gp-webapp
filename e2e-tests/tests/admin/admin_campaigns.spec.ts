@@ -2,18 +2,18 @@ import 'dotenv/config';
 import { expect, test } from '@playwright/test';
 import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
-import { loginAccount, testAccountLastName } from 'helpers/accountHelpers';
+import { testAccountLastName } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
-const testAdmin = process.env.TEST_USER_ADMIN;
-const testAdminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
+test.use({
+    storageState: 'admin-auth.json',
+});
+
 const testSearchEmail = 'dustin@goodparty.org';
 
 test.beforeEach(async ({page}) => {
-    await loginAccount(page, testAdmin, testAdminPassword);
-    await page.waitForLoadState('networkidle');
     await page.goto('/admin/campaign-statistics');
     await page.waitForLoadState('networkidle');
 });

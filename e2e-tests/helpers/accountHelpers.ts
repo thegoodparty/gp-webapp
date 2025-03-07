@@ -47,30 +47,69 @@ export async function ensureSession() {
   console.log('New session created and saved.');
 }
 
+export async function ensureAdminSession() {
+  const ADMIN_SESSION_FILE = path.resolve(__dirname, '../admin-auth.json');
+  
+  if (fs.existsSync(ADMIN_SESSION_FILE)) {
+    console.log('Existing admin session found, deleting and creating a new one...');
+    fs.unlinkSync(ADMIN_SESSION_FILE);
+  } else {
+    console.log('No admin session found, creating a new one...');
+  }
+
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  
+  // Use admin credentials from environment variables
+  const adminEmail = process.env.TEST_USER_ADMIN;
+  const adminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPassword) {
+    throw new Error('Admin credentials not found in environment variables');
+  }
+
+  await loginAccount(page, adminEmail, adminPassword);
+
+  // Save the admin storage state (session)
+  console.log(`Saving admin session for: ${adminEmail}`);
+  await page.context().storageState({ path: ADMIN_SESSION_FILE });
+  await browser.close();
+
+  console.log('New admin session created and saved.');
+}
+
 
 export async function cleanupSession() {
   const testAccountPath = path.resolve(__dirname, '../testAccount.json');
+  const ADMIN_SESSION_FILE = path.resolve(__dirname, '../admin-auth.json');
 
-  if (!fs.existsSync(testAccountPath)) {
+    // Clean up admin session if it exists
+    if (fs.existsSync(ADMIN_SESSION_FILE)) {
+      console.log('Cleaning up admin session...');
+      fs.unlinkSync(ADMIN_SESSION_FILE);
+      console.log('Admin session file deleted.');
+    }
+
+   // Clean up regular test account and session if they exist
+   if (fs.existsSync(testAccountPath)) {
+    const { emailAddress, password } = JSON.parse(
+      fs.readFileSync(testAccountPath, 'utf-8')
+    );
+
+    console.log(`Cleaning up test account: ${emailAddress} + ${password}`);
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+
+    await loginAccount(page, emailAddress, password);
+    await deleteAccount(page);
+
+    console.log('Test account deleted.');
+    fs.unlinkSync(SESSION_FILE);
+    fs.unlinkSync(testAccountPath);
+    await browser.close();
+  } else {
     console.log('No test account to clean up.');
-    return;
   }
-
-  const { emailAddress, password } = JSON.parse(
-    fs.readFileSync(testAccountPath, 'utf-8')
-  );
-
-  console.log(`Cleaning up test account: ${emailAddress} + ${password}`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-
-  await loginAccount(page, emailAddress, password);
-  await deleteAccount(page);
-
-  console.log('Test account deleted.');
-  fs.unlinkSync(SESSION_FILE);
-  fs.unlinkSync(testAccountPath);
-  await browser.close();
 }
 
 export async function loginAccount(
