@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav } from 'helpers/navHelpers';
 import { addTestResult } from 'helpers/testrailHelper';
 import { userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
@@ -8,7 +7,8 @@ import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/")
+    await page.goto("/login");
+    await page.waitForLoadState('networkidle');
 });
 
 test('Verify invalid login credentials error message', async ({ page }) => {
@@ -20,8 +20,6 @@ test('Verify invalid login credentials error message', async ({ page }) => {
     const invalidErrorMessage = 'Invalid login. Please check your credentials and try again.';
 
     try {
-        await coreNav(page, 'nav-login');
-
         // Verify user is on login page
         await expect(page.getByText(loginPageHeader)).toBeVisible();
 
