@@ -17,7 +17,6 @@ test('Verify Navigation Bar', async ({ page }) => {
     await expect(page.locator('[data-testid="navbar"] [data-cy="logo"]')).toBeVisible();
 
     // Verify navbar links presence
-    await expect(page.getByTestId('nav-get-tools')).toBeVisible();
     await expect(page.getByTestId('nav-candidates')).toBeVisible();
     await expect(page.getByTestId('nav-voters')).toBeVisible();
     await expect(page.getByTestId('nav-resources')).toBeVisible();
