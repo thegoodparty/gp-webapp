@@ -1,8 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/v1/campaign/election-events",
-      "schedule": "0 16 * * *"
+      "path": "/api/v1/ecanvasser/sync-all",
+      "schedule": "0 4 * * *"
     }
   ]
 }
