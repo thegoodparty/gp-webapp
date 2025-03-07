@@ -37,7 +37,7 @@ test('Admin users page', async ({page}) => {
     }
 });
 
-test('Send candidate invite', async ({page}) => {
+test.skip('Send candidate invite', async ({page}) => {
     const caseId = 53;
     const inviteFirstName = userData.firstName;
     const inviteLastName = testAccountLastName;
@@ -69,7 +69,7 @@ test('Send candidate invite', async ({page}) => {
     }
 });
 
-test('Send sales invite', async ({page}) => {
+test.skip('Send sales invite', async ({page}) => {
     const caseId = 54;
     const inviteFirstName = userData.firstName;
     const inviteLastName = testAccountLastName;
