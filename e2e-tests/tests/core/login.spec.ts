@@ -17,7 +17,7 @@ test('Verify invalid login credentials error message', async ({ page }) => {
     const loginPageHeader = 'Login to GoodParty.org';
     const invalidEmail = userData.email;
     const invalidPassword = userData.password + '1';
-    const invalidErrorMessage = 'The email or password are wrong.';
+    const invalidErrorMessage = 'Invalid login. Please check your credentials and try again.';
 
     try {
         await coreNav(page, 'nav-login');

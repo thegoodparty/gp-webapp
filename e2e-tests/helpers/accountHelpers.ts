@@ -78,9 +78,7 @@ export async function loginAccount(
   emailAddress,
   password
 ) {
-    const baseURL = process.env.BASE_URL || '';
-
-  await page.goto(`${baseURL}/login`);
+  await page.goto(`/login`);
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -215,8 +213,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 
 export async function deleteAccount(page) {
   try {
-    const baseURL = process.env.BASE_URL || '';
-    await page.goto(`${baseURL}/profile`);
+    await page.goto(`/profile`);
     await page.waitForLoadState('networkidle');
     // Wait for the "Delete Account" button to be visible
     await page.getByRole('button', { name: 'Delete Account' }).isVisible({ timeout: 10000 });
