@@ -83,30 +83,21 @@ export async function cleanupSession() {
   const testAccountPath = path.resolve(__dirname, '../testAccount.json');
   const ADMIN_SESSION_FILE = path.resolve(__dirname, '../admin-auth.json');
 
-    // Clean up admin session if it exists
-    if (fs.existsSync(ADMIN_SESSION_FILE)) {
-      console.log('Cleaning up admin session...');
-      fs.unlinkSync(ADMIN_SESSION_FILE);
-      console.log('Admin session file deleted.');
-    }
+  // Clean up admin session if it exists
+  if (fs.existsSync(ADMIN_SESSION_FILE)) {
+    console.log('Cleaning up admin session...');
+    fs.unlinkSync(ADMIN_SESSION_FILE);
+    console.log('Admin session file deleted.');
+  }
 
-   // Clean up regular test account and session if they exist
-   if (fs.existsSync(testAccountPath)) {
-    const { emailAddress, password } = JSON.parse(
-      fs.readFileSync(testAccountPath, 'utf-8')
-    );
-
-    console.log(`Cleaning up test account: ${emailAddress} + ${password}`);
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
-
-    await loginAccount(page, emailAddress, password);
-    await deleteAccount(page);
+  // Clean up regular test account and session if they exist
+  if (fs.existsSync(testAccountPath)) {
+    console.log('Cleaning up test account...');
+    await deleteAccount(); // No need to create browser/page or login
 
     console.log('Test account deleted.');
     fs.unlinkSync(SESSION_FILE);
     fs.unlinkSync(testAccountPath);
-    await browser.close();
   } else {
     console.log('No test account to clean up.');
   }
@@ -252,9 +243,21 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
 }
 
-export async function deleteAccount(page) {
+export async function deleteAccount(page = null) {
   try {
     const baseURL = process.env.BASE_URL;
+    
+    // If no page is provided, create a new browser context with the saved session
+    let shouldCloseBrowser = false;
+    if (!page) {
+      shouldCloseBrowser = true;
+      const browser = await chromium.launch();
+      const context = await browser.newContext({
+        storageState: SESSION_FILE  // Use the saved auth.json session
+      });
+      page = await context.newPage();
+    }
+
     await page.goto(`${baseURL}/profile`);
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Delete Account' }).click();
@@ -264,7 +267,13 @@ export async function deleteAccount(page) {
     // Verify user is logged out
     await expect(page.getByTestId('nav-login')).toBeVisible({ timeout: 10000 });
     await page.context().clearCookies();
-    await page.close();
+    
+    // Only close the browser if we created it in this function
+    if (shouldCloseBrowser) {
+      await page.context().browser().close();
+    } else {
+      await page.close();
+    }
   } catch (error) {
     console.error('Error during deleteAccount:', error);
     throw error;
