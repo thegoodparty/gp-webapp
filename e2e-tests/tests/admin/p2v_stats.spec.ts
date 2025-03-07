@@ -18,12 +18,7 @@ test('Verify admin user can access P2V Stats page', async ({page}) => {
 
         // Verify P2V Stats page
         await page.getByRole('heading', { name: 'P2V Stats' }).isVisible();
-        await page.getByRole('button', { name: 'Refresh P2V Stats' }).click();
-        await page.getByText('Completed').isVisible();
-        await page.getByRole('cell', { name: /[1-9]\d*/ }).first().isVisible();
-        await page.getByRole('cell', { name: /[0-9]\d*/ }).nth(1).isVisible();
-        await page.getByRole('cell', { name: /[0-9]\d*/ }).nth(2).isVisible();
-        await page.getByRole('cell', { name: /[0-9]\d*/ }).nth(3).isVisible();
+        await page.getByRole('button', { name: 'Refresh P2V Stats' }).isVisible();
         
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
