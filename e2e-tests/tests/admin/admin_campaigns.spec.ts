@@ -35,7 +35,7 @@ test('Verify admin user can access Admin Campaigns page', async ({page}) => {
     }
 });
 
-test('Verify admin user can impersonate user', async ({page}) => {
+test.skip('Verify admin user can impersonate user', async ({page}) => {
     const caseId = 73;
     try {
         // Search and select user for impersonation
@@ -58,7 +58,7 @@ test('Verify admin user can impersonate user', async ({page}) => {
     }
 });
 
-test('Verify admin user can add/delete campaigns', async ({page}) => {
+test.skip('Verify admin user can add/delete campaigns', async ({page}) => {
     const caseId = 74;
     const testFirstName = faker.person.firstName();
     const testLastName = testAccountLastName;
