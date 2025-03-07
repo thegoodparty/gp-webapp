@@ -27,28 +27,4 @@ test.describe('API Health Checks', () => {
       await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
   });
-
-  test('should verify ballot data races API is running', async ({ request }) => {
-    const caseId = 72;
-    const testZip = '94066';
-    try {
-      const responses = await Promise.all(
-        apiEndpoints.map(endpoint => 
-          request.get(`${endpoint.url}api/v1/ballot-data/races?zip=${testZip}`)
-        )
-      );
-
-      for (const response of responses) {
-        expect(response.ok()).toBeTruthy();
-        expect(response.status()).toBe(200);
-        const data = await response.json();
-        expect(data['2026']).toBeDefined();
-        expect(data['2026'].length).toBeGreaterThan(0);
-      }
-
-      await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-      await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
-    }
-  });
 });

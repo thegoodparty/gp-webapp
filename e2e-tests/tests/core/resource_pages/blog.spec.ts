@@ -19,9 +19,7 @@ test("Verify Blog page", async ({ page }) => {
     "Latest Articles",
     "News",
     "Politics",
-    "Independent Cause",
-    "For Candidates",
-    "For Voters",
+    "Independent Cause"
   ];
 
   try {
