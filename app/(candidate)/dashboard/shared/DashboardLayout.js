@@ -1,8 +1,8 @@
 'use client';
 import UserSnapScript from '@shared/scripts/UserSnapScript';
 import DashboardMenu from './DashboardMenu';
-import { useUser } from '@shared/hooks/useUser';
 import AlertSection from '../components/AlertSection';
+import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider';
 
 export default function DashboardLayout({
   children,
@@ -12,10 +12,8 @@ export default function DashboardLayout({
   showAlert = true,
   wrapperClassName = '',
 }) {
-  const [user] = useUser();
-
   return (
-    <>
+    <EcanvasserProvider>
       <UserSnapScript />
 
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2">
@@ -23,7 +21,6 @@ export default function DashboardLayout({
           <DashboardMenu
             pathname={pathname}
             pathToVictory={pathToVictory}
-            user={user}
             campaign={campaign}
           />
         </div>
@@ -32,6 +29,6 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-    </>
+    </EcanvasserProvider>
   );
 }

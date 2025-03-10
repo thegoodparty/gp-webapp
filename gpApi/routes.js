@@ -433,5 +433,13 @@ export const apiRoutes = {
       path: '/ecanvasser/:campaignId',
       method: 'DELETE',
     },
+    mine: {
+      path: '/ecanvasser/mine',
+      method: 'GET',
+    },
+    mySummary: {
+      path: '/ecanvasser/mine/summary',
+      method: 'GET',
+    },
   },
 };
