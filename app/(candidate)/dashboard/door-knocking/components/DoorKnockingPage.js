@@ -20,7 +20,7 @@ export default async function DoorKnockingPage(props) {
 
   return (
     <DashboardLayout {...props} showAlert={false}>
-      <div className="grid grid-cols-12 gap-4 pr-4">
+      <div className="grid grid-cols-12 gap-4 lg:pr-2">
         <div className="col-span-12 xl:col-span-7">
           <InteractionsSummary {...childProps} />
           <InteractionsByDay {...childProps} />
