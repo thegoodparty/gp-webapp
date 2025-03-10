@@ -179,17 +179,23 @@ export const EVENTS = {
     },
   },
   ProUpgrade: {
-    ClickExit: 'Pro Upgrade - Click exit top nav',
+    ClickExit: 'Pro Upgrade: Click exit top nav',
+    EditOffice: 'Pro Upgrade: Edit office',
+    SubmitEditOffice: 'Pro Upgrade: Submit edit office',
+    ConfirmOffice: 'Pro Upgrade: Confirm office',
+    ExitEditOffice: 'Pro Upgrade: Exit edit office',
     Banner: {
       ClickUpgrade:
         'Pro Upgrade - Level Up Your Campaign Banner: Click upgrade',
     },
-    VoterData: {
-      ClickUpgrade: 'Pro Upgrade - Voter Data Page: Click upgrade',
-      EditOffice: 'Pro Upgrade - Voter Data Page: Edit office',
-      SubmitEditOffice: 'Pro Upgrade - Voter Data Page: Submit edit office',
-      ConfirmOffice: 'Pro Upgrade - Voter Data Page: Confirm office',
-      ExitEditOffice: 'Pro Upgrade - Voter Data Page: Exit edit office',
+    Modal: {
+      Shown: 'Pro Upgrade - Modal: Modal Shown',
+      Exit: 'Pro Upgrade - Modal: Exit',
+      ClickButton: 'Pro Upgrade - Modal: Click Button',
+    },
+    SplashPage: {
+      ClickUpgrade: 'Pro Upgrade - Splash Page: Click upgrade',
+      Exit: 'Pro Upgrade - Splash Page: Exit',
     },
     CommitteeCheck: {
       ClickBack: 'Pro Upgrade - Committee Check Page: Click back',

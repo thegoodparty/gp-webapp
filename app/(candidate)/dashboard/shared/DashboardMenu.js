@@ -90,7 +90,7 @@ export default function DashboardMenu({
   };
 
   const handleMenuItemClick = (item) => {
-    item?.onClick();
+    item?.onClick?.();
     toggleCallback?.();
   };
 
