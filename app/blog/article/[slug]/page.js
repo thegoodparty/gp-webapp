@@ -65,11 +65,3 @@ export async function generateStaticParams({ params }) {
     };
   });
 }
-
-export async function getStaticProps({ params }) {
-  return {
-    props: {
-      params,
-    },
-  };
-}
