@@ -5,6 +5,7 @@ import Paper from '@shared/utils/Paper';
 import { numberFormatter } from 'helpers/numberHelper';
 
 export default function InteractionsSummary({ summary }) {
+  console.log('summary', summary);
   const { totalInteractions, interactions, averageRating } = summary || {};
   const {
     answered,
@@ -63,7 +64,7 @@ export default function InteractionsSummary({ summary }) {
           >
             <div className="p-3 border rounded-lg border-gray-200 h-full">
               <Caption>{field.label}</Caption>
-              <p className="text-3xl md:text-5xl font-semibold">
+              <p className="text-3xl  xl:text-4xl font-semibold">
                 {field.value || 0}
               </p>
             </div>
