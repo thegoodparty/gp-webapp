@@ -70,7 +70,9 @@ export default function InteractionsSummaryPie({ summary }) {
       value: moved,
       color: interactionsColors.moved,
     },
-  ].filter((field) => field.value > 0); // Only show categories with values
+  ]
+    .filter((field) => field.value > 0)
+    .sort((a, b) => b.value - a.value); // Sort fields by value in descending order
 
   const data = {
     labels: fields.map((field) => field.label),
