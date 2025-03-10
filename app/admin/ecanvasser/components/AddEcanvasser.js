@@ -48,7 +48,7 @@ export default function AddEcanvasser({ open, onClose, createCallback }) {
             onChange={(e) => setEmail(e.target.value)}
             className="my-4"
           />
-          <br />
+          <div className="my-2" />
           <TextField
             label="API Key"
             name="apiKey"
