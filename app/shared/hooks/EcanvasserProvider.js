@@ -14,9 +14,7 @@ export function EcanvasserProvider({ children }) {
         const ecanvasser = await clientFetch(apiRoutes.ecanvasser.mine, null, {
           revalidate: 100,
         });
-        setEcanvasser(
-          ecanvasser?.ok && ecanvasser.ok === false ? null : ecanvasser,
-        );
+        setEcanvasser(ecanvasser?.status === 404 ? null : ecanvasser);
       } catch (e) {
         console.log('error fetching ecanvasser', e);
         setEcanvasser(null);
