@@ -1,3 +1,4 @@
+'use client';
 import Button from '@shared/buttons/Button';
 import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
@@ -8,10 +9,11 @@ import { dateWithTime } from 'helpers/dateHelper';
 import { numberFormatter } from 'helpers/numberHelper';
 import { useState } from 'react';
 
-const syncEcanvasser = async (campaignId) => {
+export const syncEcanvasser = async (campaignId, force = false) => {
   try {
     const payload = {
       campaignId,
+      force,
     };
     const resp = await clientFetch(apiRoutes.ecanvasser.sync, payload);
     return resp.data;
@@ -40,7 +42,7 @@ export default function EcanvasserCard({ ecanvasser, onUpdate }) {
 
   const handleSync = async () => {
     setIsLoading(true);
-    await syncEcanvasser(ecanvasser.campaignId);
+    await syncEcanvasser(ecanvasser.campaignId, true);
     setIsLoading(false);
     onUpdate();
   };

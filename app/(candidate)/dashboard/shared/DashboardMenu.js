@@ -13,6 +13,8 @@ import {
 } from 'react-icons/md';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 import { useEcanvasser } from '@shared/hooks/useEcanvasser';
+import { syncEcanvasser } from 'app/admin/ecanvasser/components/EcanvasserCard';
+import { useEffect } from 'react';
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -97,6 +99,11 @@ export default function DashboardMenu({
   if (ecanvasser) {
     menuItems.push(ECANVASSER_MENU_ITEM);
   }
+  useEffect(() => {
+    if (campaign && ecanvasser) {
+      syncEcanvasser(campaign?.id);
+    }
+  }, [campaign, ecanvasser]);
 
   const handleEnterPress = (e) => {
     if (e.key == 'Enter') handleLogOut(e);
