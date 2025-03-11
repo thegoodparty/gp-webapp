@@ -4,6 +4,7 @@ import DashboardMenu from './DashboardMenu';
 import AlertSection from '../components/AlertSection';
 import ProUpgradeModal from './ProUpgradeModal';
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider';
+import { useUser } from '@shared/hooks/useUser';
 
 export default function DashboardLayout({
   children,
@@ -13,6 +14,8 @@ export default function DashboardLayout({
   showAlert = true,
   wrapperClassName = '',
 }) {
+  const [user] = useUser();
+
   return (
     <EcanvasserProvider>
       <UserSnapScript />
