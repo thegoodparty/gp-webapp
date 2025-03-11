@@ -1,7 +1,7 @@
 import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
-import { redirect } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 import { apiRoutes } from 'gpApi/routes';
 import { unAuthFetch } from 'gpApi/apiFetch';
@@ -19,13 +19,21 @@ export async function generateMetadata({ params }) {
   const { slug } = params;
   const content = await fetchArticle(slug);
 
-  const meta = pageMetaData({
+  if (!content || content?.statusCode === 404) {
+    return pageMetaData({
+      title: 'Not Found | GoodParty.org',
+      description: 'GoodParty.org - Content not found',
+      image: 'https://goodparty.org/images/goodparty-logo.png',
+      slug: '/blog/article/${slug}',
+    });
+  }
+
+  return pageMetaData({
     title: `${content?.title} | GoodParty.org`,
     description: content.summary,
     image: content.mainImage && `https:${content?.mainImage?.url}`,
     slug: `/blog/article/${slug}`,
   });
-  return meta;
 }
 
 export default async function Page({ params }) {
@@ -36,8 +44,8 @@ export default async function Page({ params }) {
 
   const content = await fetchArticle(slug);
 
-  if (!content) {
-    redirect('/blog');
+  if (!content || content?.statusCode === 404) {
+    notFound();
   }
 
   return (

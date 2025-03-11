@@ -9,8 +9,10 @@ import {
   MdFileOpen,
   MdFolderShared,
   MdLibraryBooks,
+  MdSensorDoor,
 } from 'react-icons/md';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useEcanvasser } from '@shared/hooks/useEcanvasser';
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -66,6 +68,14 @@ const VOTER_RECORDS_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterData),
 };
 
+const ECANVASSER_MENU_ITEM = {
+  id: 'door-knocking-dashboard',
+  label: 'Door Knocking',
+  link: '/dashboard/door-knocking',
+  icon: <MdSensorDoor />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
+};
+
 const getDashboardMenuItems = (campaign) => {
   const menuItems = [...DEFAULT_MENU_ITEMS];
   if (campaign?.isPro) {
@@ -80,10 +90,13 @@ export default function DashboardMenu({
   pathname,
   toggleCallback,
   mobileMode,
-  user,
   campaign,
 }) {
-  const menuItems = getDashboardMenuItems(campaign, user);
+  let menuItems = getDashboardMenuItems(campaign);
+  const [ecanvasser] = useEcanvasser();
+  if (ecanvasser) {
+    menuItems.push(ECANVASSER_MENU_ITEM);
+  }
 
   const handleEnterPress = (e) => {
     if (e.key == 'Enter') handleLogOut(e);
