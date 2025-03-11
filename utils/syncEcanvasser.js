@@ -10,7 +10,7 @@ export const syncEcanvasser = async (campaignId, force = false) => {
     const resp = await clientFetch(apiRoutes.ecanvasser.sync, payload);
     return resp.data;
   } catch (e) {
-    console.log('error syncEcanvasser', e);
+    console.error('error syncEcanvasser', e);
     return false;
   }
 };
