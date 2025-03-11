@@ -1,8 +1,6 @@
 import React from 'react';
 import pageMetaData from 'helpers/metadataHelper';
-
 import TeamPage from './components/TeamsPage';
-import { apiRoutes } from 'gpApi/routes';
 import { fetchContentByType } from 'helpers/fetchHelper';
 
 export const revalidate = 3600;
@@ -16,19 +14,13 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-async function fetchTeamMembersAndMilestones() {
-  const [{ data: teamMembers }, { data: teamMilestones }] = await Promise.all([
-    fetchContentByType('goodPartyTeamMembers'),
-    fetchContentByType('teamMilestones'),
-  ]);
-  return { teamMembers, teamMilestones };
+async function fetchTeamMembers() {
+  return await fetchContentByType('goodPartyTeamMembers');
 }
 
 const Page = async () => {
-  const { teamMembers, teamMilestones } = await fetchTeamMembersAndMilestones();
   const childProps = {
-    teamMembers,
-    teamMilestones,
+    teamMembers: await fetchTeamMembers(),
   };
   return <TeamPage {...childProps} />;
 };

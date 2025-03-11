@@ -9,7 +9,5 @@ export const unAuthFetch = async (url, revalidate = 3600) => {
     next: { revalidate },
   });
 
-  const data = await resp.json();
-
-  return data;
+  return await resp.json();
 };
