@@ -8,20 +8,7 @@ import { apiRoutes } from 'gpApi/routes';
 import { dateWithTime } from 'helpers/dateHelper';
 import { numberFormatter } from 'helpers/numberHelper';
 import { useState } from 'react';
-
-export const syncEcanvasser = async (campaignId, force = false) => {
-  try {
-    const payload = {
-      campaignId,
-      force,
-    };
-    const resp = await clientFetch(apiRoutes.ecanvasser.sync, payload);
-    return resp.data;
-  } catch (e) {
-    console.log('error syncEcanvasser', e);
-    return false;
-  }
-};
+import { syncEcanvasser } from 'utils/syncEcanvasser';
 
 const deleteEcanvasser = async (campaignId) => {
   const payload = {

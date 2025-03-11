@@ -2,7 +2,6 @@
 import H2 from '@shared/typography/H2';
 import Caption from '@shared/typography/Caption';
 import Paper from '@shared/utils/Paper';
-import { numberFormatter } from 'helpers/numberHelper';
 
 export default function InteractionsSummary({ summary }) {
   const { totalInteractions, interactions, averageRating } = summary || {};

@@ -8,10 +8,10 @@ import RatingSummary from './RatingSummary';
 import H1 from '@shared/typography/H1';
 import { dateWithTime } from 'helpers/dateHelper';
 import Button from '@shared/buttons/Button';
-import { syncEcanvasser } from 'app/admin/ecanvasser/components/EcanvasserCard';
 import { clientFetch } from 'gpApi/clientFetch';
 import { useEffect, useState } from 'react';
 import Body2 from '@shared/typography/Body2';
+import { syncEcanvasser } from 'utils/syncEcanvasser';
 
 async function fetchEcanvasserSummary() {
   const response = await clientFetch(apiRoutes.ecanvasser.mySummary);

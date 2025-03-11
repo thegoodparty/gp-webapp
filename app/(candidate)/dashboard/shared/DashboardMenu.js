@@ -13,8 +13,8 @@ import {
 } from 'react-icons/md';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 import { useEcanvasser } from '@shared/hooks/useEcanvasser';
-import { syncEcanvasser } from 'app/admin/ecanvasser/components/EcanvasserCard';
 import { useEffect } from 'react';
+import { syncEcanvasser } from 'utils/syncEcanvasser';
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
