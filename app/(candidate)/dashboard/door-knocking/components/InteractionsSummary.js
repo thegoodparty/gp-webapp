@@ -5,7 +5,6 @@ import Paper from '@shared/utils/Paper';
 import { numberFormatter } from 'helpers/numberHelper';
 
 export default function InteractionsSummary({ summary }) {
-  console.log('summary', summary);
   const { totalInteractions, interactions, averageRating } = summary || {};
   const {
     answered,
