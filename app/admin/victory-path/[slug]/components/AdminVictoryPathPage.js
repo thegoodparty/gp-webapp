@@ -266,7 +266,12 @@ const sections = [
         type: 'number',
       },
       { key: 'winNumber', label: 'Win Number', type: 'number', formula: true },
-      { key: 'voterContactGoal', label: 'Voter Contact Goal', type: 'number' },
+      {
+        key: 'voterContactGoal',
+        label: 'Voter Contact Goal',
+        type: 'number',
+        formula: true,
+      },
     ],
   },
 
@@ -483,6 +488,11 @@ export default function AdminVictoryPathPage(props) {
       candidatesPerSeat = state['viability.candidatesPerSeat'];
     }
 
+    let voterContactGoal;
+    if (key === 'projectedTurnout' && winNumber && winNumber > 0) {
+      voterContactGoal = Math.round(winNumber * 5).toFixed(2);
+    }
+
     let score = calculateViabilityScore({
       level: key === 'viability.level' ? val : state['viability.level'],
       isPartisan:
@@ -507,6 +517,7 @@ export default function AdminVictoryPathPage(props) {
       [key]: val,
       winNumber,
       averageTurnoutPercent,
+      voterContactGoal,
       'viability.candidatesPerSeat': candidatesPerSeat,
       'viability.score': score,
     });
@@ -621,7 +632,13 @@ export default function AdminVictoryPathPage(props) {
           value: state[key],
         };
       });
-      attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
+
+      if (state?.projectedTurnout && state.projectedTurnout > 0) {
+        attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
+      } else {
+        errorSnackbar('Projected Turnout is required');
+        return;
+      }
 
       await updateCampaign(attr, campaign.slug);
       successSnackbar('Saved');
