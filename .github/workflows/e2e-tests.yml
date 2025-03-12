@@ -25,11 +25,6 @@ jobs:
       - name: Link Vercel Project
         run: |
           vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
-#
-#      - name: Deploy to Vercel
-#        id: deploy
-#        run: |
-#          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --scope good-party
 
       - name: Capture Deployment URL
         run: |
