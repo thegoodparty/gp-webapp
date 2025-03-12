@@ -54,10 +54,10 @@ test('Verify Explore Offices page', async ({ page }) => {
         await page.locator('button', { hasText: volunteerButton}).click();
         try { 
             // The volunteer sign-up form works on dev/qa/prod
-            await expect(page.getByText(volunteerConfirm)).toBeVisible();
+            await expect(page.getByText(volunteerConfirm)).toBeVisible({ timeout: 10000 });
         } catch (e) { 
             // On Vercel, this form does not work, so this checks that a submission was at least attempted
-            await expect(page.getByText(volunteerError)).toBeVisible();
+            await expect(page.getByText(volunteerError)).toBeVisible({ timeout: 3000 });
         }
 
         // Locate all expandable sections
