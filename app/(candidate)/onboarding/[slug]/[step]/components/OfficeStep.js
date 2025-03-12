@@ -235,6 +235,7 @@ export default function OfficeStep(props) {
                 level={state.ballotSearch.level}
                 electionDate={state.ballotSearch.electionDate}
                 adminMode={adminMode}
+                onBack={handleBack}
               />
             </div>
             <div className="flex justify-between w-full">

@@ -6,6 +6,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
 import Modal from '@shared/utils/Modal';
 import CustomOfficeModal from './CustomOfficeModal';
+import TroubleshootOfficeModal from './TroubleshootOfficeModal';
 import { useRouter } from 'next/navigation';
 import Button from '@shared/buttons/Button';
 import H1 from '@shared/typography/H1';
@@ -13,6 +14,11 @@ import Body1 from '@shared/typography/Body1';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+
+const MODAL_TYPES = {
+  TROUBLESHOOT: 'troubleshoot',
+  CUSTOM: 'custom',
+};
 
 const fetchRaces = async (zipcode, level, electionDate) => {
   let cleanLevel = level;
@@ -46,12 +52,16 @@ export default function BallotRaces(props) {
     level,
     electionDate,
     adminMode,
+    onBack,
   } = props;
   const [races, setRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [modalState, setModalState] = useState({
+    open: false,
+    type: MODAL_TYPES.TROUBLESHOOT,
+  });
 
   const router = useRouter();
 
@@ -66,7 +76,11 @@ export default function BallotRaces(props) {
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`);
       }
-      setRaces(initRaces);
+      setRaces(
+        initRaces.sort((a, b) =>
+          a.election.electionDay.localeCompare(b.election.electionDay),
+        ),
+      );
       setLoading(false);
     }
   };
@@ -85,9 +99,19 @@ export default function BallotRaces(props) {
     }
   };
 
-  const showCustomModal = () => {
+  const showTroubleshootModal = () => {
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickCantSeeOffice);
-    setShowModal(true);
+    setModalState({
+      open: true,
+      type: MODAL_TYPES.TROUBLESHOOT,
+    });
+  };
+
+  const closeModal = () => {
+    setModalState((current) => ({
+      ...current,
+      open: false,
+    }));
   };
 
   const saveCustomOffice = async (updated) => {
@@ -176,7 +200,7 @@ export default function BallotRaces(props) {
             ))}
           {!loading && (
             <Button
-              onClick={showCustomModal}
+              onClick={showTroubleshootModal}
               color="neutral"
               variant="text"
               size="large"
@@ -187,17 +211,25 @@ export default function BallotRaces(props) {
           )}
         </div>
       )}
-      {showModal && (
-        <Modal
-          open
-          closeCallback={() => {
-            setShowModal(false);
-          }}
-        >
-          <CustomOfficeModal
-            campaign={campaign}
-            nextCallback={saveCustomOffice}
-          />
+      {modalState.open && (
+        <Modal open closeCallback={closeModal}>
+          {modalState.type === MODAL_TYPES.CUSTOM ? (
+            <CustomOfficeModal
+              campaign={campaign}
+              nextCallback={saveCustomOffice}
+            />
+          ) : (
+            <TroubleshootOfficeModal
+              onClose={closeModal}
+              onBack={onBack}
+              onEnterCustomOffice={() => {
+                setModalState({
+                  open: true,
+                  type: MODAL_TYPES.CUSTOM,
+                });
+              }}
+            />
+          )}
         </Modal>
       )}
     </section>
