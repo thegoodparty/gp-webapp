@@ -10,10 +10,15 @@ import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 const VIABILITY_SCORE_THRESHOLD = 2;
 const LOCAL_STORAGE_KEY = 'proUpgradeModalDismissedSession';
 const VARIANTS = {
-  One: '1',
-  TwoA: '2A',
-  TwoB: '2B',
-  Three: '3',
+  First: 'First',
+  Second_NonViable: 'Second_NonViable',
+  Second_Viable: 'Second_Viable',
+  Third: 'Third',
+};
+const SESSION_TRIGGERS = {
+  First: 3,
+  Second: 8,
+  Third: 12,
 };
 
 export default function ProUpgradeModal({ campaign, user }) {
@@ -23,7 +28,7 @@ export default function ProUpgradeModal({ campaign, user }) {
 
   const [modalState, setModalState] = useState({
     isOpen: false,
-    variant: VARIANTS.One,
+    variant: VARIANTS.First,
   });
 
   useEffect(() => {
@@ -35,43 +40,56 @@ export default function ProUpgradeModal({ campaign, user }) {
     const parsed = parseInt(localStorage.getItem(LOCAL_STORAGE_KEY));
     const lastDismissedSession = Number.isNaN(parsed) ? 0 : parsed;
 
-    if (sessionCount >= 3 && sessionCount < 8 && lastDismissedSession < 3) {
-      setModalState({
-        isOpen: true,
-        variant: VARIANTS.Three,
-      });
-    } else if (
-      sessionCount >= 8 &&
-      sessionCount < 12 &&
-      lastDismissedSession < 8
+    if (
+      sessionCount >= SESSION_TRIGGERS.First &&
+      sessionCount < SESSION_TRIGGERS.Second &&
+      lastDismissedSession < SESSION_TRIGGERS.First
     ) {
-      setModalState({
-        isOpen: true,
-        variant:
-          viablityScore < VIABILITY_SCORE_THRESHOLD
-            ? VARIANTS.TwoA
-            : VARIANTS.TwoB,
+      // first trigger
+      handleOpen(VARIANTS.First);
+    } else if (
+      sessionCount >= SESSION_TRIGGERS.Second &&
+      sessionCount < SESSION_TRIGGERS.Third &&
+      lastDismissedSession < SESSION_TRIGGERS.Second
+    ) {
+      // second trigger, show differnet content based on viability score
+      handleOpen(
+        viablityScore < VIABILITY_SCORE_THRESHOLD
+          ? VARIANTS.Second_NonViable
+          : VARIANTS.Second_Viable,
+      );
+    } else if (
+      sessionCount >= SESSION_TRIGGERS.Third &&
+      lastDismissedSession < SESSION_TRIGGERS.Third
+    ) {
+      // third trigger
+      handleOpen(VARIANTS.Third);
+    }
+
+    function handleOpen(variant) {
+      trackEvent(EVENTS.ProUpgrade.Modal.Shown, {
+        sessionCount,
+        viablityScore,
+        variant,
       });
-    } else if (sessionCount >= 12 && lastDismissedSession < 12) {
       setModalState({
         isOpen: true,
-        variant: VARIANTS.Three,
+        variant: variant,
       });
     }
   }, [sessionCount, viablityScore, isPro]);
 
-  useEffect(() => {
-    // fire event when modal is shown
-    if (modalState.isOpen) {
-      trackEvent(EVENTS.ProUpgrade.Modal.Shown);
-    }
-  }, [modalState.isOpen]);
-
   // Don't want to show modal if campaign is already pro
   if (isPro) return null;
 
-  function handleClose() {
-    trackEvent(EVENTS.ProUpgrade.Modal.Exit);
+  function handleClose(skipTracking = false) {
+    if (!skipTracking) {
+      trackEvent(EVENTS.ProUpgrade.Modal.Exit, {
+        sessionCount,
+        viablityScore,
+        variant: modalState.variant,
+      });
+    }
     localStorage.setItem(LOCAL_STORAGE_KEY, sessionCount);
     setModalState((current) => ({ ...current, isOpen: false }));
   }
@@ -79,21 +97,28 @@ export default function ProUpgradeModal({ campaign, user }) {
   return (
     <Modal
       open={modalState.isOpen}
-      closeCallback={handleClose}
-      boxClassName="min-w-500"
+      closeCallback={() => handleClose()}
+      boxClassName="min-w-[500px]"
+      preventBackdropClose
+      preventEscClose
     >
       <div className="p-8">
-        <ModalContent variant={modalState.variant} onClose={handleClose} />
+        <ModalContent
+          sessionCount={sessionCount}
+          viablityScore={viablityScore}
+          variant={modalState.variant}
+          onClose={handleClose}
+        />
       </div>
     </Modal>
   );
 }
 
-function ModalContent({ variant, onClose }) {
+function ModalContent({ sessionCount, viablityScore, variant, onClose }) {
   let title, description, items, highlight, cta;
 
   switch (variant) {
-    case VARIANTS.One:
+    case VARIANTS.First:
       title = 'Upgrade to GoodParty.org Pro';
       description =
         'Instant access to voter data and tools to connect with your community:';
@@ -113,7 +138,7 @@ function ModalContent({ variant, onClose }) {
       highlight = 'Start today for just $10/month.';
       cta = 'Upgrade now';
       break;
-    case VARIANTS.TwoA:
+    case VARIANTS.Second_NonViable:
       title = 'Get Pro voter data and tools';
       description = 'Join GoodParty.org Pro today to get:';
       items = [
@@ -133,7 +158,7 @@ function ModalContent({ variant, onClose }) {
       highlight = null;
       cta = 'Upgrade for $10/month';
       break;
-    case VARIANTS.TwoB:
+    case VARIANTS.Second_Viable:
       title = 'Boost your campaign with Pro';
       description = 'Join GoodParty.org Pro today to get:';
       items = [
@@ -145,7 +170,7 @@ function ModalContent({ variant, onClose }) {
       highlight = 'Upgrade today to claim your free benefits.';
       cta = 'Upgrade for $10/month';
       break;
-    case VARIANTS.Three:
+    case VARIANTS.Third:
     default:
       title = 'Win with GoodParty.org Pro!';
       description = 'Winning candidates used Pro tools to:';
@@ -167,8 +192,12 @@ function ModalContent({ variant, onClose }) {
   }
 
   function handleClick() {
-    trackEvent(EVENTS.ProUpgrade.Modal.ClickButton);
-    onClose();
+    trackEvent(EVENTS.ProUpgrade.Modal.ClickButton, {
+      sessionCount,
+      viablityScore,
+      variant,
+    });
+    onClose(true);
   }
 
   return (

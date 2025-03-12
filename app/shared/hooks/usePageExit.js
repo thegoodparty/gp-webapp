@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation';
 export function usePageExit(callback) {
   const pathname = usePathname();
   const isUnloading = useRef(false);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -22,6 +23,12 @@ export function usePageExit(callback) {
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+
+      // Skip the callback on initial mount cleanup
+      if (isInitialMount.current) {
+        isInitialMount.current = false;
+        return;
+      }
 
       // If unmounting but not due to window close, it must be navigation
       if (!isUnloading.current) {

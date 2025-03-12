@@ -344,10 +344,10 @@ export const EVENTS = {
 
 export const trackEvent = (name, properties) => {
   try {
+    console.debug('[TRACKING]', name, properties);
     if (typeof FS === 'undefined') {
       return;
     }
-    console.debug('[TRACKING]', name, properties);
     FS('trackEvent', { name, properties });
   } catch (e) {
     console.log('error tracking FullStory event', e);
