@@ -114,7 +114,7 @@ export default function RightSideMobile() {
                   </div>
                 ))}
               </div>
-              <div className="w-full h-auto absolute bottom-0">
+              <div className="w-full h-auto sticky bottom-0">
                 <div className="p-6 bg-primary-dark h-auto">
                   {user ? (
                     <>

@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import H3 from '@shared/typography/H3';
-import Modal from '@shared/utils/Modal';
-import CustomOfficeModal from './CustomOfficeModal';
+import CantFindRaceModal from './CantFindRaceModal';
 import { useRouter } from 'next/navigation';
 import Button from '@shared/buttons/Button';
 import H1 from '@shared/typography/H1';
@@ -46,12 +45,13 @@ export default function BallotRaces(props) {
     level,
     electionDate,
     adminMode,
+    onBack,
   } = props;
   const [races, setRaces] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [selected, setSelected] = useState(selectedOffice || false);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const router = useRouter();
 
@@ -66,7 +66,11 @@ export default function BallotRaces(props) {
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`);
       }
-      setRaces(initRaces);
+      setRaces(
+        initRaces.sort((a, b) =>
+          a.election.electionDay.localeCompare(b.election.electionDay),
+        ),
+      );
       setLoading(false);
     }
   };
@@ -85,12 +89,16 @@ export default function BallotRaces(props) {
     }
   };
 
-  const showCustomModal = () => {
+  const handleShowModal = () => {
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickCantSeeOffice);
-    setShowModal(true);
+    setShowHelpModal(true);
   };
 
-  const saveCustomOffice = async (updated) => {
+  const handleCloseModal = () => {
+    setShowHelpModal(false);
+  };
+
+  const handleSaveCustomOffice = async (updated) => {
     updated.details.positionId = null;
     updated.details.electionId = null;
     if (step) {
@@ -174,31 +182,24 @@ export default function BallotRaces(props) {
                 inputValue={inputValue}
               />
             ))}
-          {!loading && (
-            <Button
-              onClick={showCustomModal}
-              color="neutral"
-              variant="text"
-              size="large"
-              className="w-full"
-            >
-              I can&apos;t see my position
-            </Button>
-          )}
+          <Button
+            onClick={handleShowModal}
+            color="neutral"
+            variant="text"
+            size="large"
+            className="w-full"
+          >
+            I can&apos;t find my office
+          </Button>
         </div>
       )}
-      {showModal && (
-        <Modal
-          open
-          closeCallback={() => {
-            setShowModal(false);
-          }}
-        >
-          <CustomOfficeModal
-            campaign={campaign}
-            nextCallback={saveCustomOffice}
-          />
-        </Modal>
+      {showHelpModal && (
+        <CantFindRaceModal
+          campaign={campaign}
+          onClose={handleCloseModal}
+          onBack={onBack}
+          onSaveCustomOffice={handleSaveCustomOffice}
+        />
       )}
     </section>
   );

@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import PortalPanel from '@shared/layouts/PortalPanel';
 import H2 from '@shared/typography/H2';
+import H4 from '@shared/typography/H4';
+import Body1 from './typography/Body1';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import TextField from '@shared/inputs/TextField';
 import Button from '@shared/buttons/Button';
@@ -20,8 +22,7 @@ const createCampaign = async (payload) => {
       payload.adminUserEmail = user.email;
     }
 
-    const resp = await clientFetch(apiRoutes.admin.campaign.create, payload);
-    return resp.data;
+    return await clientFetch(apiRoutes.admin.campaign.create, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -32,11 +33,10 @@ const sendEmail = async (userId) => {
     const payload = {
       userId,
     };
-    const resp = await clientFetch(
+    return await clientFetch(
       apiRoutes.authentication.setSetPasswordEmail,
       payload,
     );
-    return resp.data;
   } catch (e) {
     console.log('error', e);
     return false;
@@ -92,6 +92,7 @@ export const CreateCampaignForm = ({}) => {
   const [showOfficeSelectionModal, setShowOfficeSelectionModal] =
     useState(false);
   const [newCampaign, setNewCampaign] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { successSnackbar, errorSnackbar } = useSnackbar();
 
   const onChangeField = (key, value) => {
@@ -106,8 +107,16 @@ export const CreateCampaignForm = ({}) => {
   };
 
   const handleChooseOfficeComplete = async () => {
-    await sendEmail(newCampaign.userId);
-    successSnackbar('Saved');
+    successSnackbar('Office Saved! Sending set password email...');
+
+    const emailResponse = await sendEmail(newCampaign.userId);
+
+    if (emailResponse.ok) {
+      successSnackbar('Email sent!');
+    } else {
+      errorSnackbar('Email failed to send!');
+    }
+
     setShowOfficeSelectionModal(false);
     setValues(initialValues);
     setNewCampaign(null);
@@ -115,18 +124,22 @@ export const CreateCampaignForm = ({}) => {
 
   const disableCreate =
     newCampaign ||
+    isLoading ||
     (values.party === 'Other' && values.otherParty === '') ||
     !fields.every((field) => values[field.key]);
 
   const handleCreateCampaign = async () => {
-    successSnackbar('Creating...');
-    const campaign = await createCampaign(values);
-    if (campaign) {
-      setNewCampaign(campaign);
+    setIsLoading(true);
+    const campaignResponse = await createCampaign(values);
+    if (campaignResponse.ok) {
+      setNewCampaign(campaignResponse.data);
       successSnackbar('Created!');
     } else {
-      errorSnackbar('Error creating campaign. Is this email already in use?');
+      const errorData = campaignResponse.data;
+      console.error('Campaign creation error', errorData);
+      errorSnackbar(`Creation failed: ${errorData?.message}`);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -155,13 +168,34 @@ export const CreateCampaignForm = ({}) => {
       </div>
 
       <div className="my-6">
-        <Button
-          color="primary"
-          onClick={handleCreateCampaign}
-          disabled={disableCreate}
-        >
-          Step 1 - Create Campaign
-        </Button>
+        {newCampaign ? (
+          <Body1>
+            <H4 className="text-success">Campaign created!</H4>
+            <div className="mt-2 flex gap-2">
+              <span>
+                <span className="font-bold">UserId ID:</span>
+                {newCampaign?.userId}
+              </span>
+              <span>
+                <span className="font-bold">Campaign ID:</span>
+                {newCampaign?.id}
+              </span>
+              <span>
+                <span className="font-bold">Campaign Slug:</span>
+                {newCampaign?.slug}
+              </span>
+            </div>
+          </Body1>
+        ) : (
+          <Button
+            color="primary"
+            onClick={handleCreateCampaign}
+            disabled={disableCreate}
+            loading={isLoading}
+          >
+            Step 1 - Create Campaign
+          </Button>
+        )}
       </div>
       <hr />
       <div className="mt-6">

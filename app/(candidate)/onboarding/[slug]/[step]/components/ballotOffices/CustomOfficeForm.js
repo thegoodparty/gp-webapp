@@ -53,7 +53,7 @@ const fields = [
   },
 ];
 
-export default function CustomOfficeModal({ campaign, nextCallback }) {
+export default function CustomOfficeForm({ campaign, onSave }) {
   const [state, setState] = useState({
     state: campaign.details?.state || '',
     office: campaign.details?.office || '',
@@ -97,13 +97,11 @@ export default function CustomOfficeModal({ campaign, nextCallback }) {
       ballotOffice: null,
       electionDate: state.electionDate,
     };
-    console.log('updated', updated);
-    nextCallback(updated);
+    onSave(updated);
   };
 
   return (
-    <div className="max-w-[640px] mx-auto w-[80vw]">
-      <H2 className="text-center">Office Details</H2>
+    <div>
       <Body1 className="my-8">
         Please Note: Make sure your office was not in the list. Manual entry of
         your office details requires our team&apos;s review, which can delay
