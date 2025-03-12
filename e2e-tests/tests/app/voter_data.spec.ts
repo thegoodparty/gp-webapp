@@ -19,8 +19,8 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
 
     try {
         // Verify user is on voter data (free) page
-        await expect(page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' })).toBeVisible();
-        await page.getByRole('button', { name: 'Join Pro Today' }).click();
+        await expect(page.getByRole('heading', { name: 'Why pay more for less?' })).toBeVisible();
+        await page.getByRole('link', { name: 'Start today for just $10/month.' }).click();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
