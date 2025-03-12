@@ -28,7 +28,6 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-#          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
           DEPLOYMENT_URL=$(vercel list --token ${{ secrets.VERCEL_TOKEN }} --project gp-ui --scope good-party --json | jq -r '.[] | select(.state == "READY" and .type == "PR") | .url' | head -n 1)
           echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
