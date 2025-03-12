@@ -12,10 +12,5 @@ export const metadata = meta;
 export default async function Page({ searchParams }) {
   await canCreateCampaigns();
 
-  const childProps = {
-    pathname: '/sales/add-campaign',
-    title: 'Add a new Campaign',
-  };
-
   return <CreateCampaignForm />;
 }
