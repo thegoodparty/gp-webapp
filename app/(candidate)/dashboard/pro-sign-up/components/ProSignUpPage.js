@@ -17,14 +17,14 @@ const ProSignUpPage = ({ campaign }) => {
   const officeFields = campaignOfficeFields(campaignState?.details);
 
   const onSelect = async () => {
-    trackEvent(EVENTS.ProUpgrade.VoterData.SubmitEditOffice);
+    trackEvent(EVENTS.ProUpgrade.SubmitEditOffice);
     const campaign = await getCampaign();
     setCampaignState(campaign);
     setShowModal(false);
   };
 
   const onClose = () => {
-    trackEvent(EVENTS.ProUpgrade.VoterData.ExitEditOffice);
+    trackEvent(EVENTS.ProUpgrade.ExitEditOffice);
     setShowModal(false);
   };
 
@@ -46,7 +46,7 @@ const ProSignUpPage = ({ campaign }) => {
             variant="outlined"
             size="large"
             onClick={() => {
-              trackEvent(EVENTS.ProUpgrade.VoterData.EditOffice);
+              trackEvent(EVENTS.ProUpgrade.EditOffice);
               setShowModal(true);
             }}
           >
@@ -55,7 +55,7 @@ const ProSignUpPage = ({ campaign }) => {
           <Button
             href="/dashboard/pro-sign-up/committee-check"
             onClick={() => {
-              trackEvent(EVENTS.ProUpgrade.VoterData.ConfirmOffice);
+              trackEvent(EVENTS.ProUpgrade.ConfirmOffice);
             }}
             className="w-full"
             size="large"

@@ -7,6 +7,7 @@ import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@shared/inputs/RadioGroup';
 import Checkbox from '@shared/inputs/Checkbox';
+import { ClearRounded } from '@mui/icons-material';
 
 export default function RenderInputField({
   field,
@@ -14,6 +15,18 @@ export default function RenderInputField({
   onChangeCallback,
   error,
 }) {
+  let endAdornments = [];
+  if (field.showResetButton && value) {
+    endAdornments.push(
+      <ClearRounded
+        key="clear"
+        title="Clear input"
+        className="cursor-pointer hover:text-black"
+        onClick={() => onChangeCallback(field.key, '')}
+      />,
+    );
+  }
+
   return (
     <div
       className={`col-span-12 ${field.cols === 6 && 'lg:col-span-6'} ${
@@ -25,6 +38,7 @@ export default function RenderInputField({
         field.type === 'date' ||
         field.type === 'number') && (
         <TextField
+          endAdornments={endAdornments}
           label={field.label}
           name={field.label}
           fullWidth

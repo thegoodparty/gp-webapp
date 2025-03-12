@@ -25,6 +25,7 @@ const fields = [
     key: 'electionDate',
     label: 'General Election Date (Optional)',
     type: 'date',
+    showResetButton: true,
   },
 ];
 
