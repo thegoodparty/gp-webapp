@@ -2,8 +2,9 @@ name: E2E Tests
 
 on:
   deployment_status:
-    environments:
-      - ${{ contains(github.event.deployment_status.environment, 'gp-ui')}}
+    environment:
+      - 'Preview - gp-ui'
+      - 'Production - gp-ui'
 jobs:
   run-e2e-tests:
 #    if: github.event_name == 'deployment_status' && contains(github.event.deployment_status.environment, 'gp-ui') && github.event.deployment_status.state == 'success'
