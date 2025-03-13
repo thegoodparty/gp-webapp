@@ -12,6 +12,7 @@ jobs:
       - name: Print Workflow Trigger Event
         run: |
           echo "Workflow Trigger Event: ${{ toJson(github.event) }}"
+
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
 
