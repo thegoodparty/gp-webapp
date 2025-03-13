@@ -2,10 +2,11 @@ name: E2E Tests
 
 on:
   deployment_status:
-
+    environments:
+      - ${{ contains(github.event.deployment_status.environment, 'gp-ui')}}
 jobs:
   run-e2e-tests:
-    if: github.event_name == 'deployment_status' && contains(github.event.deployment_status.environment, 'gp-ui') && github.event.deployment_status.state == 'success'
+#    if: github.event_name == 'deployment_status' && contains(github.event.deployment_status.environment, 'gp-ui') && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Print Deployment Status
