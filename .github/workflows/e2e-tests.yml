@@ -1,21 +1,19 @@
 name: E2E Tests
 
 on:
-  push
-#  deployment_status:
-#    environment:
-#      - 'Preview - gp-ui'
-#      - 'Production - gp-ui'
+  deployment_status:
+    environment:
+      - 'Preview - gp-ui'
+      - 'Production - gp-ui'
 jobs:
   run-e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Print Workflow Trigger Event
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "Workflow Trigger Event: $GITHUB_CONTEXT"
-          echo "WTF??"
+          echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
 
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
