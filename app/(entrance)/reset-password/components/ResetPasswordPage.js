@@ -14,8 +14,7 @@ async function resetPassword(email, password, token) {
       password,
       token,
     };
-    await clientFetch(apiRoutes.authentication.resetPassword, payload);
-    return true;
+    return await clientFetch(apiRoutes.authentication.resetPassword, payload);
   } catch (e) {
     console.log('error', e);
     return false;
@@ -59,11 +58,11 @@ export default function ResetPasswordPage({ email, token }) {
     if (isValid) {
       const res = await resetPassword(email, password, token);
 
-      if (res) {
+      if (res.ok) {
         setResetSuccessful(true);
         successSnackbar(`Your password has been updated`);
       } else {
-        errorSnackbar(`Error updating password`);
+        errorSnackbar(`Error updating password: ${res.data?.message}`);
       }
     }
   }
