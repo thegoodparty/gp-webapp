@@ -441,5 +441,19 @@ export const apiRoutes = {
       path: '/ecanvasser/mine/summary',
       method: 'GET',
     },
+    surveys: {
+      list: {
+        path: '/ecanvasser/surveys',
+        method: 'GET',
+      },
+      find: {
+        path: '/ecanvasser/survey/:id',
+        method: 'GET',
+      },
+      create: {
+        path: '/ecanvasser/survey',
+        method: 'POST',
+      },
+    },
   },
 };

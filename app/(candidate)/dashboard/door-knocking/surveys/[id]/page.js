@@ -1,13 +1,14 @@
 import pageMetaData from 'helpers/metadataHelper';
-// import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import DoorKnockingSurveysPage from './components/DoorKnockingSurveysPage';
-import candidateAccess from '../../shared/candidateAccess';
+import DoorKnockingSurveyPage from './components/DoorKnockingSurveyPage';
+import candidateAccess from '../../../shared/candidateAccess';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
 
-async function fetchSurveys() {
+async function fetchSurvey(id) {
   try {
-    const resp = await serverFetch(apiRoutes.ecanvasser.surveys.list);
+    const resp = await serverFetch(apiRoutes.ecanvasser.surveys.find, {
+      id,
+    });
     return resp.data;
   } catch (e) {
     console.log('error', e);
@@ -25,11 +26,12 @@ export const metadata = meta;
 export default async function Page({ params, searchParams }) {
   await candidateAccess();
 
-  // const [campaign] = await Promise.all([fetchUserCampaign()]);
-  const surveys = await fetchSurveys();
+  const { id } = params;
+
+  const survey = await fetchSurvey(id);
   const childProps = {
-    surveys,
+    survey,
   };
 
-  return <DoorKnockingSurveysPage {...childProps} />;
+  return <DoorKnockingSurveyPage {...childProps} />;
 }

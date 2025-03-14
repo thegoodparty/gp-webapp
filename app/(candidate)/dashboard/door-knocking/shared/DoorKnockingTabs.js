@@ -1,3 +1,5 @@
+'use client';
+
 import Tabs from '@shared/utils/Tabs';
 import { useRouter } from 'next/navigation';
 
