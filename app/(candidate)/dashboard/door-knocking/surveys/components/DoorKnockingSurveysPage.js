@@ -15,7 +15,7 @@ export default function DoorKnockingSurveysPage(props) {
         </Body2>
       </div>
       <DoorKnockingTabs activeTab={1} />
-      <SurveyList surveys={props.surveys} />
+      <SurveyList {...props} />
     </DashboardLayout>
   );
 }

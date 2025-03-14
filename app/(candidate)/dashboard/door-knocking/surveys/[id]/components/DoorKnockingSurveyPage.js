@@ -85,7 +85,7 @@ export default function DoorKnockingSurveyPage(props) {
         className="my-2 flex items-center text-gray-500 "
       >
         <MdOutlineArrowBack className="mr-2 " />
-        <Body2 className="">Back to All surveys</Body2>
+        <Body2 className="">Back to all surveys</Body2>
       </Link>
       <Paper className="mt-4">
         <SurveyHeader survey={survey} />

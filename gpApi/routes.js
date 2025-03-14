@@ -455,5 +455,11 @@ export const apiRoutes = {
         method: 'POST',
       },
     },
+    teams: {
+      list: {
+        path: '/ecanvasser/teams',
+        method: 'GET',
+      },
+    },
   },
 };
