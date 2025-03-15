@@ -1,4 +1,4 @@
-import SurveyAnimation from '@shared/animations/Survey';
+import SurveyAnimation from '@shared/animations/SurveyAnimation';
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import CreateSurvey from './CreateSurvey';

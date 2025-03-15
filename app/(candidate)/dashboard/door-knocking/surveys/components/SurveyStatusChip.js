@@ -12,7 +12,7 @@ export default function SurveyStatusChip({ survey }) {
         </Chip>
       ) : (
         <Chip className="mt-4 bg-gray-100 text-gray-800">
-          <Body2>Draft</Body2>
+          <Body2>Unpublished</Body2>
         </Chip>
       )}
     </>

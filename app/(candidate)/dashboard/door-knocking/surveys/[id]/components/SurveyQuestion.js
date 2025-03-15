@@ -1,4 +1,5 @@
 import Button from '@shared/buttons/Button';
+import { BsPencilSquare } from 'react-icons/bs';
 
 export default function SurveyQuestion({ question, isEven }) {
   const { name, answer_type, required } = question;
@@ -14,9 +15,7 @@ export default function SurveyQuestion({ question, isEven }) {
         {required ? 'Yes' : 'No'}
       </div>
       <div className="col-span-2 lg:col-span-1">
-        <Button variant="primary" size="small">
-          Edit
-        </Button>
+        <BsPencilSquare />
       </div>
     </div>
   );

@@ -21,10 +21,11 @@ import Button from '@shared/buttons/Button';
 import Link from 'next/link';
 import { FcSurvey } from 'react-icons/fc';
 import Paper from '@shared/utils/Paper';
-import SurveyStatusChip from './SurveyStatusChip';
+import SurveyChips from './SurveyChips';
 
 export default function SurveyCard(props) {
-  const { status, name, description, id } = props.survey;
+  const { survey } = props;
+  const { status, name, description, id } = survey || {};
   return (
     <Link
       href={`/dashboard/door-knocking/surveys/${id}`}
@@ -34,7 +35,7 @@ export default function SurveyCard(props) {
         <FcSurvey size={40} className="block my-4" />
         <H3>{name}</H3>
         <Body2>{description}</Body2>
-        <SurveyStatusChip survey={props.survey} />
+        <SurveyChips survey={survey} />
       </Paper>
     </Link>
   );

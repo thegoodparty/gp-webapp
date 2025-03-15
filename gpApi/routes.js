@@ -454,6 +454,12 @@ export const apiRoutes = {
         path: '/ecanvasser/survey',
         method: 'POST',
       },
+      questions: {
+        create: {
+          path: '/ecanvasser/survey/:id/question',
+          method: 'POST',
+        },
+      },
     },
     teams: {
       list: {
