@@ -459,6 +459,10 @@ export const apiRoutes = {
           path: '/ecanvasser/survey/:id/question',
           method: 'POST',
         },
+        delete: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'DELETE',
+        },
       },
     },
     teams: {

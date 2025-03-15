@@ -45,6 +45,7 @@ export default function SurveyQuestions(props) {
               key={question.id}
               question={question}
               isEven={index % 2 === 0}
+              refreshSurvey={reFetchSurvey}
             />
           ))}
         </div>
