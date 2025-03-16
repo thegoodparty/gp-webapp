@@ -52,6 +52,10 @@ export default function CreateQuestion({ survey, createCallback }) {
     required: false,
   });
 
+  const withOptions =
+    formData.answerFormat === 'Multiple Choice' ||
+    formData.answerFormat === 'Checklist';
+
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -62,10 +66,7 @@ export default function CreateQuestion({ survey, createCallback }) {
       answerFormatId: fields[1].options.indexOf(formData.answerFormat) + 1,
       required: formData.required,
     };
-    if (
-      formData.answerFormat === 'Multiple Choice' ||
-      formData.answerFormat === 'Checklist'
-    ) {
+    if (withOptions) {
       payload.answers = options.map((option) => ({ name: option }));
     }
     const resp = await createQuestion(payload);
@@ -95,10 +96,7 @@ export default function CreateQuestion({ survey, createCallback }) {
     !isLoading &&
     formData.question &&
     formData.answerFormat &&
-    (formData.answerFormat === 'Multiple Choice' ||
-    formData.answerFormat === 'Checklist'
-      ? options.length > 0
-      : true);
+    (withOptions ? options.length > 0 : true);
 
   return (
     <>
@@ -123,8 +121,7 @@ export default function CreateQuestion({ survey, createCallback }) {
               />
             </div>
           ))}
-          {(formData.answerFormat === 'Multiple Choice' ||
-            formData.answerFormat === 'Checklist') && (
+          {withOptions && (
             <div className="my-4 p-4 bg-gray-50 rounded-md">
               <H4 className="mb-2">Add options for {formData.answerFormat}</H4>
               <form onSubmit={handleNewOption} noValidate>
