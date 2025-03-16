@@ -1,13 +1,20 @@
-name: Deployment and Playwright Tests
+name: E2E Tests
 
 on:
-  pull_request:
-
+  deployment_status:
+    environment:
+      - 'Preview - gp-ui'
+      - 'Production - gp-ui'
 jobs:
-  test:
-    name: Playwright Functional Test
+  run-e2e-tests:
     runs-on: ubuntu-latest
     steps:
+      - name: Print Workflow Trigger Event
+        env:
+          GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
+
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
 
@@ -26,14 +33,10 @@ jobs:
         run: |
           vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
 
-      - name: Deploy to Vercel
-        id: deploy
-        run: |
-          vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --scope good-party
-
       - name: Capture Deployment URL
         run: |
-          DEPLOYMENT_URL=$(vercel --token ${{ secrets.VERCEL_TOKEN }} --yes)
+          DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+          echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
       - name: Checkout test-automation Repository
