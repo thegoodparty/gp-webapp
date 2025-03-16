@@ -4,7 +4,6 @@ import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
 import DoorKnockingTabs from '../../shared/DoorKnockingTabs';
 import SurveyList from './SurveyList';
 export default function DoorKnockingSurveysPage(props) {
-  console.log('props', props);
   return (
     <DashboardLayout {...props} showAlert={false}>
       <div>

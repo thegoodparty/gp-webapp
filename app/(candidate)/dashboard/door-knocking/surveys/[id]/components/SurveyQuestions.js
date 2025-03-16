@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import H2 from '@shared/typography/H2';
 import SurveyQuestion from './SurveyQuestion';
-import QuestionAnimation from '@shared/animations/QustionAnimation';
+import QuestionAnimation from '@shared/animations/QuestionAnimation';
 import Body1 from '@shared/typography/Body1';
 import CreateQuestion from './CreateQuestion';
 
