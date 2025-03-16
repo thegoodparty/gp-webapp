@@ -454,6 +454,14 @@ export const apiRoutes = {
         path: '/ecanvasser/survey',
         method: 'POST',
       },
+      update: {
+        path: '/ecanvasser/survey/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/ecanvasser/survey/:id',
+        method: 'DELETE',
+      },
       questions: {
         create: {
           path: '/ecanvasser/survey/:id/question',
@@ -462,6 +470,14 @@ export const apiRoutes = {
         delete: {
           path: '/ecanvasser/survey/question/:questionId',
           method: 'DELETE',
+        },
+        update: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'PUT',
+        },
+        find: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'GET',
         },
       },
     },

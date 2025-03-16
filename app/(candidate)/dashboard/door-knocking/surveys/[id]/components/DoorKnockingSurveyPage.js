@@ -20,7 +20,6 @@ const fetchSurvey = async (id) => {
 
 export default function DoorKnockingSurveyPage(props) {
   const [survey, setSurvey] = useState(props.survey);
-  const { questions } = survey;
 
   const reFetchSurvey = async () => {
     const resp = await fetchSurvey(props.survey.id);

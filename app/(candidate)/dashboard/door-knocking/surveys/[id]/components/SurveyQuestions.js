@@ -43,6 +43,7 @@ export default function SurveyQuestions(props) {
           {questions.map((question, index) => (
             <SurveyQuestion
               key={question.id}
+              survey={survey}
               question={question}
               isEven={index % 2 === 0}
               refreshSurvey={reFetchSurvey}

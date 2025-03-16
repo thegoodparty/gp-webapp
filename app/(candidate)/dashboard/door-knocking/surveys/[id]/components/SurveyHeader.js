@@ -1,7 +1,7 @@
 import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import SurveyChips from '../../components/SurveyChips';
-import CreateQuestion from './CreateQuestion';
+import EditSurvey from './EditSurvey';
 
 export default function SurveyHeader(props) {
   const { survey, reFetchSurvey } = props;
@@ -10,7 +10,7 @@ export default function SurveyHeader(props) {
     <>
       <div className="md:flex justify-between items-center">
         <H1 className="mb-4">{name}</H1>
-        Edit survey
+        <EditSurvey survey={survey} refreshSurvey={reFetchSurvey} />
       </div>
       <Body2 className="mt-2">{description}</Body2>
       <SurveyChips survey={survey} />

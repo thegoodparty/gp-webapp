@@ -1,7 +1,12 @@
-import { BsPencilSquare } from 'react-icons/bs';
 import DeleteQuestion from './DeleteQuestion';
+import EditQuestion from './EditQuestion';
 
-export default function SurveyQuestion({ question, isEven, refreshSurvey }) {
+export default function SurveyQuestion({
+  survey,
+  question,
+  isEven,
+  refreshSurvey,
+}) {
   const { name, answer_type, required, id } = question;
   const rowClass = `grid grid-cols-12 col-span-12 py-3 items-center ${
     isEven ? 'bg-white' : 'bg-gray-50'
@@ -17,7 +22,11 @@ export default function SurveyQuestion({ question, isEven, refreshSurvey }) {
         </div>
         <div className="col-span-2 lg:col-span-1">
           <div className="flex items-center  gap-3">
-            <BsPencilSquare className="cursor-pointer" />
+            <EditQuestion
+              survey={survey}
+              question={question}
+              editCallback={refreshSurvey}
+            />
             <DeleteQuestion question={question} refreshSurvey={refreshSurvey} />
           </div>
         </div>
