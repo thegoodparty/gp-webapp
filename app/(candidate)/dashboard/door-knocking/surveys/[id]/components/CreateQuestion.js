@@ -10,7 +10,7 @@ import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 import TextField from '@shared/inputs/TextField';
 import H4 from '@shared/typography/H4';
-
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
 const createQuestion = async (payload) => {
   const resp = await clientFetch(
     apiRoutes.ecanvasser.surveys.questions.create,
@@ -18,7 +18,8 @@ const createQuestion = async (payload) => {
   );
   return resp.data;
 };
-export default function CreateQuestion({ survey, questionCreated }) {
+export default function CreateQuestion() {
+  const [survey, refreshSurvey] = useEcanvasserSurvey();
   const { id } = survey;
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +72,7 @@ export default function CreateQuestion({ survey, questionCreated }) {
     }
     await createQuestion(payload);
 
-    questionCreated();
+    refreshSurvey();
     setFormData({
       question: '',
       answerFormat: '',

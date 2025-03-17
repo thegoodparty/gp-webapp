@@ -5,6 +5,8 @@ import { MoreMenu } from '@shared/utils/MoreMenu';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 import { useState } from 'react';
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
+
 const updateSurvey = async (payload) => {
   const resp = await clientFetch(apiRoutes.ecanvasser.surveys.update, payload);
   return resp.data;
@@ -17,10 +19,11 @@ const deleteSurvey = async (id) => {
   return resp.data;
 };
 
-export default function EditSurvey({ survey, refreshSurvey }) {
+export default function EditSurvey() {
+  const [survey, refreshSurvey] = useEcanvasserSurvey();
   const [isOpen, setIsOpen] = useState(false);
 
-  const { status } = survey;
+  const { status } = survey || {};
   const menuItems = [];
   const handlePublish = async () => {
     const payload = {

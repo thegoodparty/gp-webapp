@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { clientFetch } from 'gpApi/clientFetch';
 import AlertDialog from '@shared/utils/AlertDialog';
 import { apiRoutes } from 'gpApi/routes';
-
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
 const deleteQuestion = async (questionId) => {
   const resp = await clientFetch(
     apiRoutes.ecanvasser.surveys.questions.delete,
@@ -14,8 +14,9 @@ const deleteQuestion = async (questionId) => {
   return resp.data;
 };
 
-export default function DeleteQuestion({ question, refreshSurvey }) {
+export default function DeleteQuestion({ question }) {
   const { id } = question;
+  const [_, refreshSurvey] = useEcanvasserSurvey();
 
   const [showAlert, setShowAlert] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

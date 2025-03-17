@@ -2,20 +2,18 @@
 import SurveyQuestion from './SurveyQuestion';
 import CreateQuestion from './CreateQuestion';
 import NoQuestionsState from './NoQuestionsState';
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
 
-export default function SurveyQuestions(props) {
-  const { survey, reFetchSurvey } = props;
-  const { questions } = survey;
-  const questionCreated = () => {
-    reFetchSurvey();
-  };
+export default function SurveyQuestions() {
+  const [survey] = useEcanvasserSurvey();
+  const { questions } = survey || {};
 
-  return questions?.length === 0 ? (
-    <NoQuestionsState survey={survey} reFetchSurvey={reFetchSurvey} />
+  return !Array.isArray(questions) || questions?.length === 0 ? (
+    <NoQuestionsState />
   ) : (
     <div className="mt-6 pt-6 border-t border-black/[0.12]">
       <div className="flex justify-end">
-        <CreateQuestion survey={survey} questionCreated={questionCreated} />
+        <CreateQuestion />
       </div>
       <div className="grid grid-cols-12 mt-4">
         <div className="bg-gray-200 grid grid-cols-12 col-span-12 py-4 font-semibold rounded-t-md">
@@ -28,10 +26,8 @@ export default function SurveyQuestions(props) {
           {questions.map((question, index) => (
             <SurveyQuestion
               key={question.id}
-              survey={survey}
               question={question}
               isEven={index % 2 === 0}
-              refreshSurvey={reFetchSurvey}
             />
           ))}
         </div>

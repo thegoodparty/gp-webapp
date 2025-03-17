@@ -4,11 +4,7 @@ import QuestionAnimation from '@shared/animations/QuestionAnimation';
 import Body1 from '@shared/typography/Body1';
 import CreateQuestion from './CreateQuestion';
 
-export default function NoQuestionsState(props) {
-  const { survey, reFetchSurvey } = props;
-  const questionCreated = () => {
-    reFetchSurvey();
-  };
+export default function NoQuestionsState() {
   return (
     <div className="mt-12 flex flex-col items-center justify-center">
       <H2 className="mt-4">No questions to see here quite yet</H2>
@@ -19,7 +15,7 @@ export default function NoQuestionsState(props) {
       <div className="w-96 relative">
         <QuestionAnimation loop />
       </div>
-      <CreateQuestion survey={survey} questionCreated={questionCreated} />
+      <CreateQuestion />
     </div>
   );
 }

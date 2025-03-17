@@ -11,6 +11,7 @@ import { apiRoutes } from 'gpApi/routes';
 import TextField from '@shared/inputs/TextField';
 import H4 from '@shared/typography/H4';
 import { FaPencil } from 'react-icons/fa6';
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
 
 const getQuestion = async (questionId) => {
   const resp = await clientFetch(apiRoutes.ecanvasser.surveys.questions.find, {
@@ -36,8 +37,8 @@ const editQuestion = async (payload) => {
   return resp.data;
 };
 export default function EditQuestion(props) {
-  const { survey, editCallback } = props;
-  const [question, setQuestion] = useState(props.question);
+  const [survey, refreshSurvey] = useEcanvasserSurvey();
+  const [question, setQuestion] = useState(props.question || {});
   const [isOpen, setIsOpen] = useState(false);
 
   const { id: surveyId } = survey;
@@ -78,7 +79,7 @@ export default function EditQuestion(props) {
     }
     await editQuestion(payload);
 
-    editCallback();
+    refreshSurvey();
     setFormData({
       question: '',
     });

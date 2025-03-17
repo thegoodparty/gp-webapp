@@ -4,7 +4,7 @@ import Chip from '@shared/utils/Chip';
 import { TbSignature } from 'react-icons/tb';
 
 export default function SurveySignatureChip({ survey, className = '' }) {
-  const { requires_signature } = survey;
+  const { requires_signature } = survey || {};
   return (
     <>
       {requires_signature ? (

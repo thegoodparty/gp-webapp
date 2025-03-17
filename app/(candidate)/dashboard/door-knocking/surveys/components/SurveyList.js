@@ -14,17 +14,17 @@ const fetchSurveys = async () => {
 export default function SurveyList(props) {
   const [surveys, setSurveys] = useState(props.surveys);
 
-  const reFetchSurveys = async () => {
+  const refreshSurveys = async () => {
     const resp = await fetchSurveys();
     setSurveys(resp);
   };
 
   return !surveys || !Array.isArray(surveys) || surveys.length === 0 ? (
-    <EmptyState teams={props.teams} createCallback={reFetchSurveys} />
+    <EmptyState teams={props.teams} createCallback={refreshSurveys} />
   ) : (
     <>
       <div className="flex justify-end">
-        <CreateSurvey teams={props.teams} createCallback={reFetchSurveys} />
+        <CreateSurvey teams={props.teams} createCallback={refreshSurveys} />
       </div>
       <div className="grid grid-cols-12 gap-4 mt-8">
         {Array.isArray(surveys) &&
