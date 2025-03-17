@@ -13,7 +13,9 @@ const createSurvey = async (payload) => {
   return resp.data;
 };
 export default function CreateSurvey({ teams = [], createCallback }) {
-  const teamOptions = teams.map((team) => team.name);
+  const teamOptions = Array.isArray(teams)
+    ? teams.map((team) => team.name)
+    : [];
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
