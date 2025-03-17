@@ -39,11 +39,16 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
-          # Remove '-styleguide' from the URL if present
-          CLEANED_URL=$(echo "$DEPLOYMENT_URL" | sed 's/-styleguide//')
-          echo "DEPLOYMENT_URL = $CLEANED_URL"
-          echo "BASE_URL=$CLEANED_URL" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            # Use production URL for scheduled runs
+            echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
+          else
+            DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+            # Remove '-styleguide' from the URL if present
+            CLEANED_URL=$(echo "$DEPLOYMENT_URL" | sed 's/-styleguide//')
+            echo "DEPLOYMENT_URL = $CLEANED_URL"
+            echo "BASE_URL=$CLEANED_URL" >> $GITHUB_ENV
+          fi
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
