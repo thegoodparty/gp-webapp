@@ -39,7 +39,7 @@ async function login(email, password) {
     const resp = await clientFetch(apiRoutes.authentication.login, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

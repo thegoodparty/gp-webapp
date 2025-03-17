@@ -28,7 +28,7 @@ async function fetchFeatured(city, state) {
     };
     return await gpFetch(api, payload, 3600);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

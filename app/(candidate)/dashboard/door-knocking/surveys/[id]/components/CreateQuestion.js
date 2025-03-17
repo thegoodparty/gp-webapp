@@ -18,7 +18,7 @@ const createQuestion = async (payload) => {
   );
   return resp.data;
 };
-export default function CreateQuestion({ survey, createCallback }) {
+export default function CreateQuestion({ survey, questionCreated }) {
   const { id } = survey;
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +59,7 @@ export default function CreateQuestion({ survey, createCallback }) {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    let payload = {
+    const payload = {
       id,
       name: formData.question,
       answerFormatName: formData.answerFormat,
@@ -69,9 +69,9 @@ export default function CreateQuestion({ survey, createCallback }) {
     if (withOptions) {
       payload.answers = options.map((option) => ({ name: option }));
     }
-    const resp = await createQuestion(payload);
+    await createQuestion(payload);
 
-    createCallback();
+    questionCreated();
     setFormData({
       question: '',
       answerFormat: '',

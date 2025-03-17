@@ -8,7 +8,7 @@ async function fetchSurveys() {
     const resp = await serverFetch(apiRoutes.ecanvasser.surveys.list);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -18,7 +18,7 @@ async function fetchTeams() {
     const resp = await serverFetch(apiRoutes.ecanvasser.teams.list);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

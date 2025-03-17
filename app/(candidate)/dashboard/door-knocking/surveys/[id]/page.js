@@ -11,7 +11,7 @@ async function fetchSurvey(id) {
     });
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -23,7 +23,7 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page({ params, searchParams }) {
+export default async function Page({ params }) {
   await candidateAccess();
 
   const { id } = params;

@@ -16,7 +16,7 @@ async function deleteCampaign(id) {
     };
     return await clientFetch(apiRoutes.admin.campaign.delete, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -29,7 +29,7 @@ async function deactivateCandidate(slug) {
     };
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

@@ -62,7 +62,7 @@ export default function CreateSurvey({ teams = [], createCallback }) {
     if (formData.team && formData.team !== '') {
       team = teams.find((t) => t.name === formData.team);
     }
-    let payload = {
+    const payload = {
       name: formData.name,
       description: formData.description,
       teamId: team?.id,

@@ -20,7 +20,7 @@ export async function sendMessage(type, message) {
     };
     return await clientFetch(apiRoutes.voters.voterFile.helpMessage, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

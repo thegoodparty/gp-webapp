@@ -25,7 +25,7 @@ export async function sendVictoryMail(id) {
   try {
     return await clientFetch(apiRoutes.admin.campaign.victoryMail, { id });
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -388,7 +388,7 @@ export default function AdminVictoryPathPage(props) {
       setLocations(items);
       setLoadingLocations(false);
     } catch (e) {
-      console.log('error', e);
+      console.error('error', e);
       return false;
     }
   }

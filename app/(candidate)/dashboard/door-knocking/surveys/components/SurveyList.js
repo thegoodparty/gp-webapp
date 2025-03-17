@@ -18,10 +18,10 @@ export default function SurveyList(props) {
     const resp = await fetchSurveys();
     setSurveys(resp);
   };
-  if (!surveys || !Array.isArray(surveys) || surveys?.length === 0) {
-    return <EmptyState teams={props.teams} createCallback={reFetchSurveys} />;
-  }
-  return (
+
+  return !surveys || !Array.isArray(surveys) || surveys.length === 0 ? (
+    <EmptyState teams={props.teams} createCallback={reFetchSurveys} />
+  ) : (
     <>
       <div className="flex justify-end">
         <CreateSurvey teams={props.teams} createCallback={reFetchSurveys} />

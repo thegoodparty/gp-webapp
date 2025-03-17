@@ -1,5 +1,4 @@
 'use client';
-import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
 import Paper from '@shared/utils/Paper';

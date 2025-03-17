@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@shared/buttons/Button';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import Modal from '@shared/utils/Modal';
 import RenderInputField from '@shared/inputs/RenderInputField';
@@ -68,7 +68,7 @@ export default function EditQuestion(props) {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    let payload = {
+    const payload = {
       questionId,
       surveyId,
       name: formData.question,
@@ -76,7 +76,7 @@ export default function EditQuestion(props) {
     if (withOptions) {
       payload.answers = answers.map((option) => ({ name: option.name }));
     }
-    const resp = await editQuestion(payload);
+    await editQuestion(payload);
 
     editCallback();
     setFormData({

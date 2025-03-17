@@ -25,7 +25,7 @@ export async function countVoterFile(type, customFilters) {
     const resp = await clientFetch(apiRoutes.voters.voterFile.get, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
