@@ -42,15 +42,21 @@ jobs:
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             # Use production URL for scheduled runs
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
+            echo "SKIP_TESTS=false" >> $GITHUB_ENV
           else
             DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
-            # Remove '-styleguide' from the URL if present
-            CLEANED_URL=$(echo "$DEPLOYMENT_URL" | sed 's/-styleguide//')
-            echo "DEPLOYMENT_URL = $CLEANED_URL"
-            echo "BASE_URL=$CLEANED_URL" >> $GITHUB_ENV
+            if [[ "$DEPLOYMENT_URL" == *"-styleguide"* ]]; then
+              echo "Skipping tests for styleguide deployment"
+              echo "SKIP_TESTS=true" >> $GITHUB_ENV
+            else
+              echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
+              echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+              echo "SKIP_TESTS=false" >> $GITHUB_ENV
+            fi
           fi
 
       - name: Checkout test-automation Repository
+        if: env.SKIP_TESTS != 'true'
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
@@ -58,12 +64,14 @@ jobs:
           path: test-automation
 
       - name: Install Playwright Dependencies in test-automation Repo
+        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npm install
           npx playwright install --with-deps
 
       - name: Set Test Run Name
+        if: env.SKIP_TESTS != 'true'
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             # Format date as YYYY-MM-DD for scheduled runs
@@ -74,6 +82,7 @@ jobs:
           fi
 
       - name: Run Playwright Tests
+        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npx playwright test
@@ -90,7 +99,7 @@ jobs:
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
       - name: Notify Slack Workflow
-        if: always()
+        if: always() && env.SKIP_TESTS != 'true'
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
