@@ -5,6 +5,10 @@ on:
     environment:
       - 'Preview - gp-ui'
       - 'Production - gp-ui'
+  schedule:
+    # Run at midnight PST (8 AM UTC)
+    - cron: '0 8 * * *'
+
 jobs:
   run-e2e-tests:
     runs-on: ubuntu-latest
@@ -54,13 +58,23 @@ jobs:
           npm install
           npx playwright install --with-deps
 
+      - name: Set Test Run Name
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            # Format date as YYYY-MM-DD for scheduled runs
+            DATE=$(TZ=America/Los_Angeles date '+%Y-%m-%d')
+            echo "TEST_RUN_NAME=[$DATE] Daily Test Run" >> $GITHUB_ENV
+          else
+            echo "TEST_RUN_NAME=Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}" >> $GITHUB_ENV
+          fi
+
       - name: Run Playwright Tests
         run: |
           cd test-automation
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
+          TEST_RUN_NAME: ${{ env.TEST_RUN_NAME }}
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
