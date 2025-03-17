@@ -18,7 +18,7 @@ export default function SurveyList(props) {
     const resp = await fetchSurveys();
     setSurveys(resp);
   };
-  if (!surveys || surveys?.length === 0) {
+  if (!surveys || !Array.isArray(surveys) || surveys?.length === 0) {
     return <EmptyState teams={props.teams} createCallback={reFetchSurveys} />;
   }
   return (
