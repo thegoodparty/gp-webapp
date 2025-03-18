@@ -37,26 +37,31 @@ jobs:
         run: |
           vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
 
+      - name: Wait for Vercel Preview Deployment
+        if: github.event_name == 'deployment_status'
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: waitForVercel
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300  # 5 minutes
+          check_interval: 5
+
       - name: Capture Deployment URL
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             # Use production URL for scheduled runs
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
-            echo "SKIP_TESTS=false" >> $GITHUB_ENV
           else
-            DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
-            if [[ "$DEPLOYMENT_URL" == *"-styleguide"* ]]; then
-              echo "Skipping tests for styleguide deployment"
-              echo "SKIP_TESTS=true" >> $GITHUB_ENV
+            if [[ "${{ github.event_name }}" == "deployment_status" ]]; then
+              DEPLOYMENT_URL="${{ steps.waitForVercel.outputs.url }}"
             else
-              echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
-              echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
-              echo "SKIP_TESTS=false" >> $GITHUB_ENV
+              DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
             fi
+            echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
+            echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           fi
 
       - name: Checkout test-automation Repository
-        if: env.SKIP_TESTS != 'true'
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
@@ -64,14 +69,12 @@ jobs:
           path: test-automation
 
       - name: Install Playwright Dependencies in test-automation Repo
-        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npm install
           npx playwright install --with-deps
 
       - name: Set Test Run Name
-        if: env.SKIP_TESTS != 'true'
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             # Format date as YYYY-MM-DD for scheduled runs
@@ -82,7 +85,6 @@ jobs:
           fi
 
       - name: Run Playwright Tests
-        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npx playwright test
@@ -99,7 +101,7 @@ jobs:
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
       - name: Notify Slack Workflow
-        if: always() && env.SKIP_TESTS != 'true'
+        if: always()
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
