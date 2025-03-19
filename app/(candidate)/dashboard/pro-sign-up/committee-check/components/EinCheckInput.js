@@ -18,7 +18,6 @@ const EIN_HELP_MESSAGE = (
 );
 
 export const EinCheckInput = ({
-  loading = false,
   value = '',
   validated,
   setValidated,
@@ -45,14 +44,12 @@ export const EinCheckInput = ({
       className="mb-3"
       label="EIN Number"
       maxLength={10}
-      disabled={loading}
       value={value}
       onChange={handleOnChange}
       InputProps={{
         endAdornment: (
           <AsyncValidationIcon
             message={EIN_HELP_MESSAGE}
-            loading={loading}
             validated={validated}
             onTooltipOpen={() => {
               trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverEinHelp);

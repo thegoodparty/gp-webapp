@@ -95,7 +95,7 @@ export const CommitteeSupportingFilesUpload = ({
       );
       onUploadSuccess(file.name);
     } catch (e) {
-      console.error('Error uploading file', e);
+      onUploadError(e);
     } finally {
       setLoadingFileUpload(false);
     }
