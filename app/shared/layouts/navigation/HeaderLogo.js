@@ -44,7 +44,7 @@ export const HeaderLogo = () => {
         }
       >
         <Image
-          src="/images/heart-hologram.svg"
+          src="/images/logo/heart.svg"
           data-cy="logo"
           width={30}
           height={24}

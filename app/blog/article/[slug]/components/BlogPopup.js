@@ -33,7 +33,7 @@ export default function BlogPopup() {
     >
       <div className=" w-[90vw] max-w-[420px] mx-auto">
         <Image
-          src="/images/heart-hologram.svg"
+          src="/images/logo/heart.svg"
           alt="GoodParty"
           width={46}
           height={46}

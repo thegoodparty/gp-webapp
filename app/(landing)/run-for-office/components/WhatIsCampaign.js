@@ -20,7 +20,7 @@ export default function WhatIsCampaign() {
             <h2 className="text-3xl lg:text-6xl font-semibold ">
               What is
               <Image
-                src="/images/logo-hologram-white.svg"
+                src="/images/logo/heart.svg"
                 width={88}
                 height={72}
                 alt="gp"
