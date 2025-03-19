@@ -265,7 +265,7 @@ export async function deleteAccount(page = null) {
     await page.waitForLoadState('networkidle');
 
     // Verify user is logged out
-    await expect(page.getByTestId('nav-login')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('Get Campaign Tools')).toBeVisible({ timeout: 10000 });
     await page.context().clearCookies();
     
     // Only close the browser if we created it in this function
