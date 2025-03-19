@@ -11,7 +11,7 @@ export default function CtaBanner({ race }) {
         <div className=" bg-[#F7FCFF] p-12 grid grid-cols-12 gap-6 items-center rounded-3xl relative z-10">
           <div className=" col-span-12 md:col-span-3 lg:col-span-2">
             <Image
-              src="/images/heart-hologram.svg"
+              src="/images/logo/heart.svg"
               alt="GoodParty"
               width={200}
               height={200}

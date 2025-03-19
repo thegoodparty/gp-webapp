@@ -42,7 +42,7 @@ const LocalElectionsHero = () => {
           <h6>
             <Image
               className="inline h-6 w-6 mr-2 align-middle lg:w-10 lg:h-10"
-              src="/images/heart-hologram.svg"
+              src="/images/logo/heart.svg"
               height={40}
               width={40}
               alt="GoodParty.org Logo"
