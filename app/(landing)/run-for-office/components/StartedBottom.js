@@ -10,7 +10,7 @@ export default function StartedBottom() {
       <section className="bg-white text-center py-12 lg:pb-24">
         <Image
           className="inline mb-6"
-          src="/images/logo-hologram-white.svg"
+          src="/images/logo/heart.svg"
           alt="GoodParty"
           width={136}
           height={111}

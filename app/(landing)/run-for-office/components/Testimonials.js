@@ -84,7 +84,7 @@ export default function Testimonials({ testimonials }) {
         Candidates
         <Image
           className="inline align-middle mx-4"
-          src="/images/logo-hologram-white.svg"
+          src="/images/logo/heart.svg"
           alt="heart"
           width={70}
           height={70}
