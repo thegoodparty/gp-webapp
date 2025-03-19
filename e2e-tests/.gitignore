@@ -5,6 +5,7 @@ node_modules/
 /playwright/.cache/
 /screenshots/
 auth.json
+admin-auth.json
 testAccount.json
 playwright-results.json
 /helpers/sample.pdf
