@@ -21,7 +21,7 @@ const AboutHero = () => (
       >
         <div className="col-span-12 mb-8 md:mb-16 xl:mb-0 xl:col-span-6">
           <Image
-            src="/images/logo-hologram-white.svg"
+            src="/images/logo/heart.svg"
             width={81}
             height={66.12}
             alt="GoodParty Logo"

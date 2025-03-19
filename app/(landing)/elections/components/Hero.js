@@ -15,7 +15,7 @@ export default function Hero() {
           </div>
           <div className="col-span-2 lg:col-span-4">
             <Image
-              src="/images/heart-hologram.svg"
+              src="/images/logo/heart.svg"
               alt="GoodParty"
               width={188}
               height={152}

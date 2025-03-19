@@ -13,7 +13,7 @@ export default function Hero() {
             <MarketingH1 className="md:text-8xl">
               Get involved with{' '}
               <Image
-                src="/images/heart-hologram.svg"
+                src="/images/logo/heart.svg"
                 alt="GoodParty"
                 width={64}
                 height={64}
