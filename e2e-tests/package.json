@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
+    "@types/xml2js": "^0.4.14",
     "axios": "^1.7.7",
-    "pdfkit": "^0.16.0"
+    "pdfkit": "^0.16.0",
+    "xml2js": "^0.6.2"
   }
 }

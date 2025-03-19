@@ -1,4 +1,6 @@
 import { expect } from '@playwright/test';
+import axios from 'axios';
+import { parseStringPromise } from 'xml2js';
 
 export async function coreNav(page, navSelect) {
     const navCandidates = ['nav-campaign-tools', 'nav-good-party-pro', 'nav-get-demo', 'nav-voter-data', 'nav-template-library', 'nav-tour', 'nav-explore-offices'];
@@ -51,4 +53,10 @@ export async function appNav(page, navSelect, isMobile = false) {
     } else {
         await page.getByRole('link', { name: navSelect }).click();
     }
+}
+
+export async function getSitemapUrls(sitemapUrl) {
+    const response = await axios.get(sitemapUrl);
+    const data = await parseStringPromise(response.data);
+    return data.urlset.url.map(urlObj => urlObj.loc[0]);
 }
