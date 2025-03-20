@@ -44,15 +44,19 @@ jobs:
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
             echo "SKIP_TESTS=false" >> $GITHUB_ENV
           else
-            DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
-            if [[ "$DEPLOYMENT_URL" == *"-styleguide"* ]]; then
-              echo "Skipping tests for styleguide deployment"
-              echo "SKIP_TESTS=true" >> $GITHUB_ENV
+            # Get all deployment URLs
+            DEPLOYMENT_URLS="${{ github.event.deployment_status.environment_url }}"
+            
+            # Choose the non-styleguide URL (the one containing 'git-')
+            if [[ "$DEPLOYMENT_URLS" == *"git-"* ]]; then
+              DEPLOYMENT_URL=$(echo "$DEPLOYMENT_URLS" | grep "git-" || echo "$DEPLOYMENT_URLS")
             else
-              echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
-              echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
-              echo "SKIP_TESTS=false" >> $GITHUB_ENV
+              DEPLOYMENT_URL="$DEPLOYMENT_URLS"
             fi
+            
+            echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
+            echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+            echo "SKIP_TESTS=false" >> $GITHUB_ENV
           fi
 
       - name: Checkout test-automation Repository
