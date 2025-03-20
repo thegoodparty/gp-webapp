@@ -64,23 +64,45 @@ jobs:
           else
             if [[ "${{ github.event_name }}" == "deployment_status" ]]; then
               # Query Vercel API to get the latest deployment for gp-ui
-              LATEST_DEPLOYMENT=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-                "https://api.vercel.com/v6/deployments?projectId=gp-ui&limit=1&state=READY" | \
-                jq -r '.deployments[0].url')
+              VERCEL_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+                "https://api.vercel.com/v6/deployments?projectId=gp-ui&limit=1&state=READY")
               
-              if [ -n "$LATEST_DEPLOYMENT" ]; then
-                DEPLOYMENT_URL="https://${LATEST_DEPLOYMENT}"
-              else
+              echo "Vercel API Response: $VERCEL_RESPONSE"
+              
+              LATEST_DEPLOYMENT=$(echo $VERCEL_RESPONSE | jq -r '.deployments[0].url')
+              
+              if [ "$LATEST_DEPLOYMENT" = "null" ] || [ -z "$LATEST_DEPLOYMENT" ]; then
                 echo "Error: Could not fetch latest deployment URL"
+                echo "Full Vercel Response:"
+                echo "$VERCEL_RESPONSE" | jq '.'
                 exit 1
               fi
+              
+              DEPLOYMENT_URL="https://${LATEST_DEPLOYMENT}"
             else
               DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+            fi
+            
+            if [ -z "$DEPLOYMENT_URL" ] || [ "$DEPLOYMENT_URL" = "https://null" ]; then
+              echo "Error: Invalid deployment URL"
+              echo "Event name: ${{ github.event_name }}"
+              echo "Event context: ${{ toJson(github.event) }}"
+              exit 1
             fi
             
             echo "Using deployment URL: $DEPLOYMENT_URL"
             echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           fi
+
+      # Add verification step
+      - name: Verify BASE_URL
+        run: |
+          if [ -z "$BASE_URL" ] || [ "$BASE_URL" = "https://null" ]; then
+            echo "Error: BASE_URL is not set correctly"
+            echo "Current BASE_URL: $BASE_URL"
+            exit 1
+          fi
+          echo "Verified BASE_URL: $BASE_URL"
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
