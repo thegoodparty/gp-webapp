@@ -61,52 +61,42 @@ jobs:
           EVENT_NAME="${{ github.event_name }}"
           DEPLOYMENT_URL="${{ github.event.deployment_status.environment_url }}"
           
+          echo "Event Name: $EVENT_NAME"
+          echo "Initial Deployment URL: $DEPLOYMENT_URL"
+          
           if [[ "$EVENT_NAME" == "schedule" ]]; then
-            # Use production URL for scheduled runs
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
           else
-            if [[ "$DEPLOYMENT_URL" != "" ]]; then
-              # Use the deployment URL from the event
+            if [[ -n "$DEPLOYMENT_URL" ]]; then
               echo "Using deployment URL from event: $DEPLOYMENT_URL"
+              echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
             else
-              # Query Vercel API to get the latest deployment for gp-ui
+              echo "No deployment URL found in event, checking Vercel API..."
               VERCEL_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
                 "https://api.vercel.com/v6/deployments?projectId=gp-ui&limit=1&state=READY")
               
-              echo "Vercel API Response: $VERCEL_RESPONSE"
+              LATEST_DEPLOYMENT=$(echo "$VERCEL_RESPONSE" | jq -r '.deployments[0].url')
               
-              LATEST_DEPLOYMENT=$(echo $VERCEL_RESPONSE | jq -r '.deployments[0].url')
-              
-              if [ "$LATEST_DEPLOYMENT" = "null" ] || [ -z "$LATEST_DEPLOYMENT" ]; then
+              if [[ -z "$LATEST_DEPLOYMENT" || "$LATEST_DEPLOYMENT" == "null" ]]; then
                 echo "Error: Could not fetch latest deployment URL"
-                echo "Full Vercel Response:"
+                echo "Vercel API Response:"
                 echo "$VERCEL_RESPONSE" | jq '.'
                 exit 1
               fi
               
               DEPLOYMENT_URL="https://${LATEST_DEPLOYMENT}"
+              echo "Using Vercel API deployment URL: $DEPLOYMENT_URL"
+              echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
             fi
-            
-            if [ -z "$DEPLOYMENT_URL" ] || [ "$DEPLOYMENT_URL" = "https://null" ]; then
-              echo "Error: Invalid deployment URL"
-              echo "Event name: $EVENT_NAME"
-              echo "Event context: ${{ toJson(github.event) }}"
-              exit 1
-            fi
-            
-            echo "Using deployment URL: $DEPLOYMENT_URL"
-            echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           fi
 
-      # Add verification step
       - name: Verify BASE_URL
         run: |
-          if [ -z "$BASE_URL" ] || [ "$BASE_URL" = "https://null" ]; then
-            echo "Error: BASE_URL is not set correctly"
-            echo "Current BASE_URL: $BASE_URL"
+          if [ -z "$BASE_URL" ]; then
+            echo "Error: BASE_URL is not set"
             exit 1
           fi
-          echo "Verified BASE_URL: $BASE_URL"
+          echo "Final BASE_URL: $BASE_URL"
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
