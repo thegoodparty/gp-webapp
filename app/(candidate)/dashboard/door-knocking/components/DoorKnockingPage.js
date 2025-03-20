@@ -12,7 +12,7 @@ import { clientFetch } from 'gpApi/clientFetch';
 import { useState } from 'react';
 import Body2 from '@shared/typography/Body2';
 import { syncEcanvasser } from 'utils/syncEcanvasser';
-
+import DoorKnockingTabs from '../shared/DoorKnockingTabs';
 async function fetchEcanvasserSummary() {
   const response = await clientFetch(apiRoutes.ecanvasser.mySummary);
   return response.data;
@@ -58,7 +58,8 @@ export default function DoorKnockingPage(props) {
           Sync Now
         </Button>
       </div>
-      <div className="grid grid-cols-12 gap-4 lg:pr-2">
+      <DoorKnockingTabs activeTab={0} />
+      <div className="grid grid-cols-12 gap-4 lg:pr-2 mt-4">
         <div className="col-span-12 xl:col-span-7">
           <InteractionsSummary {...childProps} />
           <InteractionsByDay {...childProps} />

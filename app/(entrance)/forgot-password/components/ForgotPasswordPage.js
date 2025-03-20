@@ -15,7 +15,7 @@ async function sendForgotPasswordEmail(email) {
     await clientFetch(apiRoutes.authentication.forgotPassword, payload);
     return true;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

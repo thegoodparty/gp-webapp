@@ -7,7 +7,7 @@ export async function updateCampaignAdminOnly(payload) {
     const resp = await clientFetch(apiRoutes.admin.campaign.update, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

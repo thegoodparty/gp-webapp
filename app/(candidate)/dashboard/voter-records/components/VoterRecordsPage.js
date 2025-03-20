@@ -34,7 +34,7 @@ export async function fetchVoterFile(type, customFilters) {
       returnFullResponse: true,
     });
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -43,7 +43,7 @@ async function wakeUp() {
   try {
     return await clientFetch(apiRoutes.voters.voterFile.wakeUp);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

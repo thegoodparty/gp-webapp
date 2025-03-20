@@ -23,7 +23,7 @@ async function renameContent(key, name) {
       return false;
     }
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
