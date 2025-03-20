@@ -39,7 +39,7 @@ export async function updateCampaign(attr, slug) {
     const resp = await clientFetch(apiRoutes.campaign.update, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -49,7 +49,7 @@ export async function getCampaign() {
     const resp = await clientFetch(apiRoutes.campaign.get);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -102,7 +102,7 @@ export async function updateUserMeta(meta) {
     const resp = await clientFetch(apiRoutes.user.updateMeta, { meta });
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

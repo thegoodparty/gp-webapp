@@ -21,7 +21,7 @@ const fetchCampaigns = async () => {
     const resp = await clientFetch(apiRoutes.campaign.list);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return { campaigns: [] };
   }
 };

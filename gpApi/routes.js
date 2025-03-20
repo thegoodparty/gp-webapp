@@ -441,5 +441,51 @@ export const apiRoutes = {
       path: '/ecanvasser/mine/summary',
       method: 'GET',
     },
+    surveys: {
+      list: {
+        path: '/ecanvasser/surveys',
+        method: 'GET',
+      },
+      find: {
+        path: '/ecanvasser/survey/:id',
+        method: 'GET',
+      },
+      create: {
+        path: '/ecanvasser/survey',
+        method: 'POST',
+      },
+      update: {
+        path: '/ecanvasser/survey/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/ecanvasser/survey/:id',
+        method: 'DELETE',
+      },
+      questions: {
+        create: {
+          path: '/ecanvasser/survey/:id/question',
+          method: 'POST',
+        },
+        delete: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'DELETE',
+        },
+        update: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'PUT',
+        },
+        find: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'GET',
+        },
+      },
+    },
+    teams: {
+      list: {
+        path: '/ecanvasser/teams',
+        method: 'GET',
+      },
+    },
   },
 };

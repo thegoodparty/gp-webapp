@@ -31,7 +31,7 @@ export async function scheduleVoterMessagingCampaign(state) {
 
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

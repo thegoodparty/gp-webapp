@@ -15,7 +15,7 @@ async function reactivate(id) {
     };
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

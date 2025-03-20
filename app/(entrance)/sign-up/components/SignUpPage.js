@@ -83,7 +83,7 @@ async function register(firstName, lastName, email, phone, zip, password) {
     }
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

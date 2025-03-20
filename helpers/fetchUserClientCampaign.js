@@ -6,7 +6,7 @@ export async function fetchUserClientCampaign() {
     const resp = await clientFetch(apiRoutes.campaign.get);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

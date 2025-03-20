@@ -15,7 +15,7 @@ export async function deleteCandidate(path) {
     };
     return await gpFetch(api, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

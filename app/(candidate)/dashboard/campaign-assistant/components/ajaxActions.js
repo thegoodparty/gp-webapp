@@ -6,7 +6,7 @@ export async function fetchChatHistory() {
     const resp = await clientFetch(apiRoutes.campaign.chat.list);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -17,7 +17,7 @@ export async function createInitialChat(message) {
     const resp = await clientFetch(apiRoutes.campaign.chat.create, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -28,7 +28,7 @@ export async function getChatThread({ threadId }) {
     const resp = await clientFetch(apiRoutes.campaign.chat.get, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -39,7 +39,7 @@ export async function regenerateChatThread(threadId) {
     const resp = await clientFetch(apiRoutes.campaign.chat.update, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -50,7 +50,7 @@ export async function deleteThread(threadId) {
     const resp = await clientFetch(apiRoutes.campaign.chat.delete, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -61,7 +61,7 @@ export async function chatFeedback(threadId, type, message) {
     const resp = await clientFetch(apiRoutes.campaign.chat.feedback, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

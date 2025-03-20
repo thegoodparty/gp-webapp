@@ -26,7 +26,7 @@ const createNewUser = async ({ firstName, lastName, email, role }) => {
     }
     return false;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 };
@@ -41,7 +41,7 @@ export const sendSetPasswordEmail = async (userId) => {
       payload,
     );
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 };

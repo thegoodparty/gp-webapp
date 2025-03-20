@@ -20,7 +20,7 @@ const fetchCampaigns = async (filters) => {
     const resp = await serverFetch(apiRoutes.campaign.list, filters);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return { campaigns: [] };
   }
 };
