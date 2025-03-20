@@ -46,6 +46,16 @@ jobs:
           max_timeout: 300  # 5 minutes
           check_interval: 5
 
+      - name: Ensure jq is installed
+        run: |
+          if ! command -v jq &> /dev/null; then
+            echo "jq not found, installing..."
+            sudo apt-get update && sudo apt-get install -y jq
+          else
+            echo "jq is already installed"
+            jq --version
+          fi
+
       - name: Capture Deployment URL
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
@@ -53,11 +63,22 @@ jobs:
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
           else
             if [[ "${{ github.event_name }}" == "deployment_status" ]]; then
-              DEPLOYMENT_URL="${{ steps.waitForVercel.outputs.url }}"
+              # Query Vercel API to get the latest deployment for gp-ui
+              LATEST_DEPLOYMENT=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
+                "https://api.vercel.com/v6/deployments?projectId=gp-ui&limit=1&state=READY" | \
+                jq -r '.deployments[0].url')
+              
+              if [ -n "$LATEST_DEPLOYMENT" ]; then
+                DEPLOYMENT_URL="https://${LATEST_DEPLOYMENT}"
+              else
+                echo "Error: Could not fetch latest deployment URL"
+                exit 1
+              fi
             else
               DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
             fi
-            echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
+            
+            echo "Using deployment URL: $DEPLOYMENT_URL"
             echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
           fi
 
