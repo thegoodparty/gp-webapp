@@ -7,10 +7,10 @@ export default function DoorKnockingSurveysPage(props) {
   return (
     <DashboardLayout {...props} showAlert={false}>
       <div>
-        <H1>Surveys</H1>
+        <H1>Door Knocking Scripts</H1>
         <Body2 className="text-gray-500 mb-4">
-          Found {props.surveys?.length || 0} surveys. Click on a survey to
-          manage it.
+          Found {props.surveys?.length || 0} door knocking scripts. Click on a
+          script to manage it.
         </Body2>
       </div>
       <DoorKnockingTabs activeTab={1} />

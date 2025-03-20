@@ -44,20 +44,29 @@ export default function EditSurvey() {
   };
 
   if (status === 'Live') {
-    menuItems.push({ label: 'Unpublish survey', onClick: handlePublish });
+    menuItems.push({
+      label: 'Unpublish door knocking script',
+      onClick: handlePublish,
+    });
   } else {
-    menuItems.push({ label: 'Publish survey', onClick: handlePublish });
+    menuItems.push({
+      label: 'Publish door knocking script',
+      onClick: handlePublish,
+    });
   }
 
-  menuItems.push({ label: 'Delete survey', onClick: alertBeforeDelete });
+  menuItems.push({
+    label: 'Delete door knocking script',
+    onClick: alertBeforeDelete,
+  });
   return (
     <>
       <MoreMenu menuItems={menuItems} />
       <AlertDialog
         open={isOpen}
         handleClose={() => setIsOpen(false)}
-        title="Delete Survey"
-        description="Are you sure you want to delete this Survey?"
+        title="Delete Door Knocking Script"
+        description="Are you sure you want to delete this Door Knocking Script?"
         handleProceed={handleDelete}
       />
     </>

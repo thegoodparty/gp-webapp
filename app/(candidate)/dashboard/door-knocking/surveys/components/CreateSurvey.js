@@ -89,12 +89,12 @@ export default function CreateSurvey({ teams = [], createCallback }) {
       <Button variant="primary" onClick={() => setIsOpen(true)}>
         <div className="flex items-center">
           <FaPlus className="mr-2" />
-          <div>Create a Survey</div>
+          <div>Create a Door Knocking Script</div>
         </div>
       </Button>
       <Modal open={isOpen} closeCallback={() => setIsOpen(false)}>
         <div className="w-[80vw] max-w-[640px]">
-          <H2 className="mb-6">Create a Survey</H2>
+          <H2 className="mb-6">Create a Door Knocking Script</H2>
           <form>
             {fields.map((field) => (
               <div key={field.name}>
@@ -118,7 +118,7 @@ export default function CreateSurvey({ teams = [], createCallback }) {
                 disabled={!canSubmit}
                 loading={isLoading}
               >
-                Create Survey
+                Create Door Knocking Script
               </Button>
             </div>
           </form>
