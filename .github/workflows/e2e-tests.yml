@@ -58,12 +58,16 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+          EVENT_NAME="${{ github.event_name }}"
+          DEPLOYMENT_URL="${{ github.event.deployment_status.environment_url }}"
+          
+          if [[ "$EVENT_NAME" == "schedule" ]]; then
             # Use production URL for scheduled runs
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
           else
-            if [[ "${{ github.event.deployment_status.environment_url }}" != "" ]]; then
-              DEPLOYMENT_URL="${{ github.event.deployment_status.environment_url }}"
+            if [[ "$DEPLOYMENT_URL" != "" ]]; then
+              # Use the deployment URL from the event
+              echo "Using deployment URL from event: $DEPLOYMENT_URL"
             else
               # Query Vercel API to get the latest deployment for gp-ui
               VERCEL_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
@@ -85,7 +89,7 @@ jobs:
             
             if [ -z "$DEPLOYMENT_URL" ] || [ "$DEPLOYMENT_URL" = "https://null" ]; then
               echo "Error: Invalid deployment URL"
-              echo "Event name: ${{ github.event_name }}"
+              echo "Event name: $EVENT_NAME"
               echo "Event context: ${{ toJson(github.event) }}"
               exit 1
             fi
