@@ -3,7 +3,7 @@
 import Tabs from '@shared/utils/Tabs';
 import { useRouter } from 'next/navigation';
 
-const tabLabels = ['Interactions', 'Surveys'];
+const tabLabels = ['Interactions', 'Door Knocking Scripts'];
 const tabPanels = [<div key="1"></div>, <div key="2"></div>];
 const tabLinks = [
   '/dashboard/door-knocking',

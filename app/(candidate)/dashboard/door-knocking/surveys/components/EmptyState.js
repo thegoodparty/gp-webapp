@@ -9,10 +9,12 @@ export default function EmptyState({ teams = [], createCallback }) {
       <div className="w-96 relative">
         <SurveyAnimation loop />
       </div>
-      <H2 className="text-center">No Surveys to see here quite yet!</H2>
+      <H2 className="text-center">
+        No Door Knocking Scripts to see here quite yet!
+      </H2>
       <Body2 className="text-center mt-2 mb-8">
-        Surveys can be the easiest way to gauge insights &amp; analyze overall
-        trends; find out what your stakeholders really think.
+        Door knocking scripts can be the easiest way to gauge insights &amp;
+        analyze overall trends; find out what your stakeholders really think.
       </Body2>
       <CreateSurvey teams={teams} createCallback={createCallback} />
     </div>
