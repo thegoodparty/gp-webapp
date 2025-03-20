@@ -62,7 +62,9 @@ jobs:
             # Use production URL for scheduled runs
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
           else
-            if [[ "${{ github.event_name }}" == "deployment_status" ]]; then
+            if [[ "${{ github.event.deployment_status.environment_url }}" != "" ]]; then
+              DEPLOYMENT_URL="${{ github.event.deployment_status.environment_url }}"
+            else
               # Query Vercel API to get the latest deployment for gp-ui
               VERCEL_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
                 "https://api.vercel.com/v6/deployments?projectId=gp-ui&limit=1&state=READY")
@@ -79,8 +81,6 @@ jobs:
               fi
               
               DEPLOYMENT_URL="https://${LATEST_DEPLOYMENT}"
-            else
-              DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
             fi
             
             if [ -z "$DEPLOYMENT_URL" ] || [ "$DEPLOYMENT_URL" = "https://null" ]; then
