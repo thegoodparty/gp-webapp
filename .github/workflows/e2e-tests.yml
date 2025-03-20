@@ -37,68 +37,26 @@ jobs:
         run: |
           vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
 
-      - name: Wait for Vercel Preview Deployment
-        if: github.event_name == 'deployment_status'
-        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
-        id: waitForVercel
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 300  # 5 minutes
-          check_interval: 5
-
-      - name: Ensure jq is installed
-        run: |
-          if ! command -v jq &> /dev/null; then
-            echo "jq not found, installing..."
-            sudo apt-get update && sudo apt-get install -y jq
-          else
-            echo "jq is already installed"
-            jq --version
-          fi
-
       - name: Capture Deployment URL
         run: |
-          EVENT_NAME="${{ github.event_name }}"
-          DEPLOYMENT_URL="${{ github.event.deployment_status.environment_url }}"
-          
-          echo "Event Name: $EVENT_NAME"
-          echo "Initial Deployment URL: $DEPLOYMENT_URL"
-          
-          if [[ "$EVENT_NAME" == "schedule" ]]; then
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            # Use production URL for scheduled runs
             echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
+            echo "SKIP_TESTS=false" >> $GITHUB_ENV
           else
-            if [[ -n "$DEPLOYMENT_URL" ]]; then
-              echo "Using deployment URL from event: $DEPLOYMENT_URL"
-              echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+            DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+            if [[ "$DEPLOYMENT_URL" == *"-styleguide"* ]]; then
+              echo "Skipping tests for styleguide deployment"
+              echo "SKIP_TESTS=true" >> $GITHUB_ENV
             else
-              echo "No deployment URL found in event, checking Vercel API..."
-              VERCEL_RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" \
-                "https://api.vercel.com/v6/deployments?projectId=gp-ui&limit=1&state=READY")
-              
-              LATEST_DEPLOYMENT=$(echo "$VERCEL_RESPONSE" | jq -r '.deployments[0].url')
-              
-              if [[ -z "$LATEST_DEPLOYMENT" || "$LATEST_DEPLOYMENT" == "null" ]]; then
-                echo "Error: Could not fetch latest deployment URL"
-                echo "Vercel API Response:"
-                echo "$VERCEL_RESPONSE" | jq '.'
-                exit 1
-              fi
-              
-              DEPLOYMENT_URL="https://${LATEST_DEPLOYMENT}"
-              echo "Using Vercel API deployment URL: $DEPLOYMENT_URL"
+              echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
               echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+              echo "SKIP_TESTS=false" >> $GITHUB_ENV
             fi
           fi
 
-      - name: Verify BASE_URL
-        run: |
-          if [ -z "$BASE_URL" ]; then
-            echo "Error: BASE_URL is not set"
-            exit 1
-          fi
-          echo "Final BASE_URL: $BASE_URL"
-
       - name: Checkout test-automation Repository
+        if: env.SKIP_TESTS != 'true'
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
@@ -106,12 +64,14 @@ jobs:
           path: test-automation
 
       - name: Install Playwright Dependencies in test-automation Repo
+        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npm install
           npx playwright install --with-deps
 
       - name: Set Test Run Name
+        if: env.SKIP_TESTS != 'true'
         run: |
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             # Format date as YYYY-MM-DD for scheduled runs
@@ -122,6 +82,7 @@ jobs:
           fi
 
       - name: Run Playwright Tests
+        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npx playwright test
@@ -138,7 +99,7 @@ jobs:
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
       - name: Notify Slack Workflow
-        if: always()
+        if: always() && env.SKIP_TESTS != 'true'
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
