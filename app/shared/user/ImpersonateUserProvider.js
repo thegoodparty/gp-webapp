@@ -54,7 +54,7 @@ export const ImpersonateUserProvider = ({ children }) => {
         return true;
       }
     } catch (e) {
-      console.log('error', e);
+      console.error('error', e);
     }
     return false;
   };

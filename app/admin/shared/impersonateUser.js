@@ -14,7 +14,7 @@ export async function handleImpersonateUser(email) {
       return true;
     }
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
   }
   return false;
 }

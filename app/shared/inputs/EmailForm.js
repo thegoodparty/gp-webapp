@@ -12,7 +12,7 @@ export async function subscribeEmail(payload) {
     await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
     return true;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

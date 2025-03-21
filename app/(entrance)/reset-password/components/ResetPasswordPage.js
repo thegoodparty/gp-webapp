@@ -16,7 +16,7 @@ async function resetPassword(email, password, token) {
     };
     return await clientFetch(apiRoutes.authentication.resetPassword, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

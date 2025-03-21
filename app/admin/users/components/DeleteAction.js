@@ -11,7 +11,7 @@ async function deleteUser(id) {
   try {
     return await clientFetch(apiRoutes.admin.user.delete, { id });
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
