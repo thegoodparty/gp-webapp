@@ -13,6 +13,7 @@ const fetchSurveys = async () => {
 
 export default function SurveyList(props) {
   const [surveys, setSurveys] = useState(props.surveys);
+  console.log('teams', props.teams);
 
   const refreshSurveys = async () => {
     const resp = await fetchSurveys();
