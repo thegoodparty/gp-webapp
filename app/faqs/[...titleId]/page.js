@@ -2,7 +2,7 @@ import { faqArticleRoute, slugify } from 'helpers/articleHelper';
 import { notFound, permanentRedirect } from 'next/navigation';
 import FaqsArticlePage from './components/FaqsArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
-import { unAuthFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/unAuthFetch';
 import { apiRoutes } from 'gpApi/routes';
 
 export const revalidate = 3600;
