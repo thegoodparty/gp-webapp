@@ -1,4 +1,4 @@
-import { unAuthFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/unAuthFetch';
 import FaqsPage from './components/FaqsPage';
 import pageMetaData from 'helpers/metadataHelper';
 import { apiRoutes } from 'gpApi/routes';

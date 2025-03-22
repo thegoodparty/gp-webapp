@@ -4,7 +4,7 @@ import TermsItemPage from './components/TermsItemPage';
 import DefinedTermSchema from './DefinedTermSchema';
 import pageMetaData from 'helpers/metadataHelper';
 import { notFound } from 'next/navigation';
-import { unAuthFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/unAuthFetch';
 import { apiRoutes } from 'gpApi/routes';
 
 export const revalidate = 3600;

@@ -1,4 +1,4 @@
-import { unAuthFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/unAuthFetch';
 import { apiRoutes } from 'gpApi/routes';
 
 export const fetchArticleTags = async () => {
