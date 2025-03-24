@@ -489,12 +489,12 @@ export const apiRoutes = {
     },
   },
   textMessaging: {
-    create: {
-      path: '/text-campaign',
+    createProject: {
+      path: '/text-campaign/project',
       method: 'POST',
     },
     list: {
-      path: '/text-campaign',
+      path: '/text-campaigns',
       method: 'GET',
     },
   },
