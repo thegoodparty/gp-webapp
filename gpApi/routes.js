@@ -488,4 +488,14 @@ export const apiRoutes = {
       },
     },
   },
+  textMessaging: {
+    create: {
+      path: '/text-campaign',
+      method: 'POST',
+    },
+    list: {
+      path: '/text-campaign',
+      method: 'GET',
+    },
+  },
 };
