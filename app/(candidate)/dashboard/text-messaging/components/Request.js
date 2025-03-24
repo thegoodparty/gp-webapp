@@ -6,17 +6,47 @@ import { dateUsHelper } from 'helpers/dateHelper';
 import { Fragment } from 'react';
 
 export default function TextMessagingRequests({ request }) {
-  const { status, message, date, name, script, audience } = request;
-  const audienceFields = [];
-  Object.keys(audience).forEach((key) => {
-    if (key !== 'audience_request') {
-      audienceFields.push({
-        label: key.replace('_', ' '),
-        value: audience[key],
-      });
-    }
-  });
-  console.log('audienceFields', audienceFields);
+  const {
+    status,
+    message,
+    date,
+    name,
+    script,
+    audience_superVoters,
+    audience_likelyVoters,
+    audience_unreliableVoters,
+    audience_unlikelyVoters,
+    audience_firstTimeVoters,
+    party_independent,
+    party_democrat,
+    party_republican,
+    age_18_25,
+    age_25_35,
+    age_35_50,
+    age_50_plus,
+    gender_male,
+    gender_female,
+    gender_unknown,
+    audience_request,
+  } = request;
+
+  const audienceFields = [
+    { label: 'Super Voters', value: audience_superVoters },
+    { label: 'Likely Voters', value: audience_likelyVoters },
+    { label: 'Unreliable Voters', value: audience_unreliableVoters },
+    { label: 'Unlikely Voters', value: audience_unlikelyVoters },
+    { label: 'First Time Voters', value: audience_firstTimeVoters },
+    { label: 'Independent', value: party_independent },
+    { label: 'Democrat', value: party_democrat },
+    { label: 'Republican', value: party_republican },
+    { label: '18-25', value: age_18_25 },
+    { label: '25-35', value: age_25_35 },
+    { label: '35-50', value: age_35_50 },
+    { label: '50+', value: age_50_plus },
+    { label: 'Male', value: gender_male },
+    { label: 'Female', value: gender_female },
+    { label: 'Unknown', value: gender_unknown },
+  ];
 
   const fields = [
     { label: 'Message', value: message },
@@ -24,7 +54,7 @@ export default function TextMessagingRequests({ request }) {
     { label: 'Script', value: script },
   ];
 
-  const audienceRequest = audience.audience_request;
+  const audienceRequest = audience_request;
 
   return (
     <div className="p-4 border border-gray-200 rounded">
