@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper';
 import DeclarePage from './components/DeclarePage';
 import { Libre_Baskerville, Tangerine } from 'next/font/google';
 import { apiRoutes } from 'gpApi/routes';
-import { unAuthFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/unAuthFetch';
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
@@ -30,7 +30,7 @@ const meta = pageMetaData({
 });
 export const metadata = meta;
 
-export default async function Page(params) {
+export default async function Page() {
   const { signatures } = await fetchSignatures();
   const childProps = {
     signatures: signatures || '',
