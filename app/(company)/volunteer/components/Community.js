@@ -6,9 +6,9 @@ import kierynImg from 'public/images/landing-pages/kieryn.png';
 
 const people = [
   {
-    title: 'Discord superstar',
+    title: 'Community superstar',
     name: 'Sal Davis',
-    desc: "Sal Davis, from Atlanta, stands out in GoodParty.org's Discord server as a founding member who actively recruits other to the community and meaningfully contributes to group discussions. Previously skeptical of politics, she leverages GoodParty.org's community to take positive civic actions, embodying the community's hopeful spirit and commitment to democracy reform.",
+    desc: "Sal Davis, from Atlanta, stands out in GoodParty.org's Community as a founding member who actively recruits other to the community and meaningfully contributes to group discussions. Previously skeptical of politics, she leverages GoodParty.org's community to take positive civic actions, embodying the community's hopeful spirit and commitment to democracy reform.",
     image: salImg,
   },
   {
