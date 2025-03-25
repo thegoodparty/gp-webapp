@@ -29,7 +29,7 @@ export default memo(function CommunitySection() {
                 size="large"
                 className="mr-5 block w-full lg:w-auto"
               >
-                Join the discord
+                Join the community
               </Button>
 
               <Button

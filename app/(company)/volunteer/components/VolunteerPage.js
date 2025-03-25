@@ -1,11 +1,9 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
 import Hero from './Hero';
 import Dissatisfaction from './Dissatisfaction';
 import WhatWillDo from './WhatWillDo';
 import Community from './Community';
 import Benefits from './Benefits';
 import { Suspense } from 'react';
-import JoinDiscord from './JoinDiscord';
 import FromCommunity from './FromCommunity';
 import FAQs from './FAQs';
 import HelpWin from './HelpWin';
@@ -29,9 +27,7 @@ export default function RunForOfficePage() {
         <Suspense>
           <Benefits />
         </Suspense>
-        <Suspense>
-          <JoinDiscord />
-        </Suspense>
+
         <Suspense>
           <FromCommunity />
         </Suspense>
