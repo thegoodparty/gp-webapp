@@ -23,6 +23,7 @@ export default async function BlogPage({
   topTags,
   allTags,
   articleTitles,
+  articlesBySection,
 }) {
   return (
     <BlogWrapper
@@ -39,6 +40,7 @@ export default async function BlogPage({
           <MarketingH5 className="mb-6">Featured Article</MarketingH5>
           <ArticleSnippet article={hero} heroMode section={hero.section} />
           {sections.map((section, index) => {
+            const sectionArticles = articlesBySection[section.fields.slug];
             return (
               <Fragment key={section.id}>
                 <Link
@@ -55,7 +57,7 @@ export default async function BlogPage({
                   </button>
                 </Link>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {section.articles.map((article) => (
+                  {sectionArticles.map((article) => (
                     <ArticleSnippet
                       key={article.id}
                       article={article}

@@ -1,5 +1,5 @@
-import { compile, parse } from 'path-to-regexp';
-import { API_ROOT, API_VERSION_PREFIX, IS_LOCAL } from 'appEnv';
+import { IS_LOCAL } from 'appEnv';
+import { buildUrl } from '@shared/utils/buildUrl';
 
 /**
  * @typedef {Object} ApiEndpoint
@@ -76,72 +76,4 @@ export async function clientFetch(endpoint, data, options = {}) {
   };
 
   return response;
-}
-
-/**
- * Constructs a URL by handling both route and query parameters.
- *
- * @param {string} path - The base URL path which may contain route parameter tokens.
- * @param {Object} data - Data object containing values for route parameters and/or query parameters.
- * @param {string} method - The HTTP method being used.
- * @returns {string} The constructed URL with replaced route parameters and appended query parameters.
- */
-function buildUrl({ path, method, nextApiRoute }, data) {
-  // route params
-  let pathname = handleRouteParams(path, data);
-
-  // query params
-  if ((method === 'GET' || method === 'DELETE') && data) {
-    const params = new URLSearchParams(data);
-    pathname = `${pathname}?${params.toString()}`;
-  }
-
-  if (nextApiRoute) {
-    // Next.js API route, use the /api prefix without version prefix
-    return `/api${pathname}`;
-  }
-
-  // Return a full API URL if running on the server,
-  // otherwise just return the relative path prefixed with /api for proxy
-  const root = typeof window === 'undefined' ? API_ROOT : '/api';
-  return `${root}${API_VERSION_PREFIX}${pathname}`;
-}
-
-/**
- * Replaces route tokens in the URL's pathname using corresponding data values.
- *
- * @param {string} path - The URL containing route tokens.
- * @param {Object|FormData} data - Key-value pairs for token replacement.
- * @returns {string} The URL with tokens replaced.
- */
-function handleRouteParams(path, data) {
-  const { tokens } = parse(path);
-  const hasRouteParams = tokens.some((token) => typeof token !== 'string');
-
-  if (!hasRouteParams || !data) return path;
-
-  // Find tokens that are parameters (objects with name property)
-  const paramTokens = {};
-  tokens.forEach((token) => {
-    if (typeof token === 'object' && token.name) {
-      const paramName = token.name;
-      if (data instanceof FormData) {
-        if (data.has(paramName)) {
-          // Retrieve the param value from FormData.
-          paramTokens[paramName] = String(data.get(paramName));
-          // Remove the used parameter.
-          data.delete(paramName);
-        }
-      } else {
-        // Plain object lookup.
-        if (Object.prototype.hasOwnProperty.call(data, paramName)) {
-          paramTokens[paramName] = String(data[paramName]);
-          delete data[paramName];
-        }
-      }
-    }
-  });
-
-  // Compile the path with the coerced values
-  return compile(path)(paramTokens);
 }

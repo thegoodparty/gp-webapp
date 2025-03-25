@@ -11,11 +11,11 @@ const resourceLinks = [
     imageObjectPosition: 'center 30%',
   },
   {
-    title: 'Discord Community',
+    title: 'GoodParty.org Community',
     imageUrl: '/images/blog/discord-community.png',
     summary:
       'Connect with other independents, and explore opportunities for volunteering and guest posting.',
-    linkUrl: 'https://discord.gg/invite/goodparty',
+    linkUrl: 'https://community.goodparty.org',
     linkTarget: '_blank',
   },
   {
