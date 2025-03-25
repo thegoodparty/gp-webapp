@@ -12,7 +12,10 @@ export default memo(function ShareMap() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const appBase = window.location.origin;
+  const appBase =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location?.origin
+      : 'https://goodparty.org';
   const url = appBase + pathname;
   const encodedUrl = encodeURIComponent(url);
   const messageNoUrl =

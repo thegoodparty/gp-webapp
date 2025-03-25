@@ -16,7 +16,7 @@ const LEADING_ACTIVITIES = [
     icon: <MdOutlineVolunteerActivism />,
     title: 'Volunteers',
     description:
-      'Our volunteers are the backbone of the support we provide for anti-duopoly candidates. Our 1,200 active volunteers congregate in our growing Discord and help fill critical campaign roles for candidates that lack the backing of a major political party.',
+      'Our volunteers are the backbone of the support we provide for anti-duopoly candidates. Our 1,200 active volunteers congregate in our growing Community and help fill critical campaign roles for candidates that lack the backing of a major political party.',
     linkText: 'Join our community',
     href: '/volunteer',
   },

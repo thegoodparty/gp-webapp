@@ -1,6 +1,5 @@
 'use client';
 import { createContext, useCallback, useEffect, useState } from 'react';
-import { FaDiscord } from 'react-icons/fa';
 
 import {
   ConstructionRounded,
@@ -15,6 +14,7 @@ import {
   MailRounded,
   NewspaperRounded,
   ListRounded,
+  Diversity3,
 } from '@mui/icons-material';
 
 import MapIcon from '@mui/icons-material/Map';
@@ -27,7 +27,7 @@ export const RUN_LINKS = [
     href: '/run-for-office',
     icon: <ConstructionRounded />,
     id: 'nav-campaign-tools',
-    dataTestId: 'nav-campaign-tools'
+    dataTestId: 'nav-campaign-tools',
   },
   {
     label: 'GoodParty.org Pro',
@@ -97,7 +97,6 @@ export const COMMUNITY_LINKS = [
     icon: <EventAvailableRounded />,
     id: 'nav-info-session',
     dataTestId: 'nav-info-session',
-
   },
   {
     label: 'Get Stickers',
@@ -107,11 +106,11 @@ export const COMMUNITY_LINKS = [
     dataTestId: 'nav-get-stickers',
   },
   {
-    label: 'Discord',
-    href: 'https://discord.gg/invite/goodparty',
-    icon: <FaDiscord size={24} />,
-    id: 'nav-discord',
-    dataTestId: 'nav-discord',
+    label: 'GoodParty.org Community',
+    href: 'https://community.goodparty.org',
+    icon: <Diversity3 />,
+    id: 'nav-community',
+    dataTestId: 'nav-community',
     external: true,
   },
 ];

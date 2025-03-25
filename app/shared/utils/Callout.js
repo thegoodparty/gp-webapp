@@ -20,7 +20,9 @@ export default function Callout() {
     }
   }, []);
 
-  const trackingAttrs = buildTrackingAttrs('Join Discord Banner Link');
+  const trackingAttrs = buildTrackingAttrs(
+    'Join GoodParty.org Community Banner Link',
+  );
 
   function handleClose() {
     try {
@@ -37,16 +39,18 @@ export default function Callout() {
         <div className="flex w-full bg-lime-400 lg:block border-solid border-b border-zinc-200 p-2 h-full">
           <div className="flex w-full h-14">
             <div className="flex w-full justify-center items-center ">
-              <span className="md:hidden">Join our Discord!</span>
+              <span className="md:hidden">
+                Join our GoodParty.org Community!
+              </span>
               <span className="hidden md:block">
-                Join our Discord community - meet like-minded independents and
-                get involved!
+                Join our GoodParty.org Community - meet like-minded independents
+                and get involved!
               </span>
               <Button
-                id="nav-join-discord"
-                href="https://discord.gg/invite/goodparty"
+                id="nav-join-community"
+                href="https://community.goodparty.org"
                 target="_blank"
-                aria-label="Join our Discord community - meet like-minded independents and get involved!"
+                aria-label="Join our GoodParty.org Community - meet like-minded independents and get involved!"
                 {...trackingAttrs}
                 size="large"
                 className="whitespace-nowrap ml-5 !py-2 border-none"

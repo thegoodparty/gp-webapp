@@ -39,13 +39,13 @@ export default function DiscordSection() {
           <Image alt="" src={user5} width={64} height={64} className="" />
         </div>
         <a
-          href="https://discord.gg/invite/goodparty"
+          href="https://community.goodparty.org"
           target="_blank"
           rel="noopener noreferrer nofollow"
           className="mt-12 inline-block"
           id="ads23-join-discord"
         >
-          <WarningButton>Join our Discord</WarningButton>
+          <WarningButton>Join our GoodParty.org Community</WarningButton>
         </a>
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#DFF265_55%)] h-[calc(100vw*0.09)] w-full" />
