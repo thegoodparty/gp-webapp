@@ -5,7 +5,6 @@ import { TextMessagingProvider } from 'app/shared/hooks/TextMessagingProvider';
 import TextMessagingRequests from './TextMessagingRequests';
 
 export default function TextMessagingPage(props) {
-  console.log('props', props);
   return (
     <TextMessagingProvider textMessaging={props.textMessaging}>
       <DashboardLayout {...props} showAlert={false}>

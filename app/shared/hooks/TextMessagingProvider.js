@@ -15,7 +15,9 @@ export function TextMessagingProvider({
     try {
       const resp = await clientFetch(apiRoutes.textMessaging.list);
 
-      setTextMessaging(resp?.status === 404 ? {} : resp.data);
+      setTextMessaging(
+        resp?.status === 404 || resp.ok === false ? {} : resp.data,
+      );
     } catch (e) {
       console.error('error fetching text messaging', e);
       setTextMessaging({});

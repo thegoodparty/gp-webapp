@@ -5,7 +5,7 @@ import Chip from '@shared/utils/Chip';
 import { dateUsHelper } from 'helpers/dateHelper';
 import { Fragment } from 'react';
 
-export default function TextMessagingRequests({ request }) {
+export default function TextMessagingRequest({ request }) {
   const {
     status,
     message,

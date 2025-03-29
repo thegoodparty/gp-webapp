@@ -1,7 +1,7 @@
 import H2 from '@shared/typography/H2';
 import Paper from '@shared/utils/Paper';
 import { useTextMessaging } from 'app/shared/hooks/useTextMessaging';
-import Request from './Request';
+import TextMessagingRequest from './TextMessagingRequest';
 import Body2 from '@shared/typography/Body2';
 export default function TextMessagingRequests() {
   const [textMessaging] = useTextMessaging();
@@ -19,7 +19,7 @@ export default function TextMessagingRequests() {
               className="col-span-12 md:col-span-6 lg:col-span-4"
               key={request.id}
             >
-              <Request request={request} />
+              <TextMessagingRequest request={request} />
             </div>
           ))
         )}
