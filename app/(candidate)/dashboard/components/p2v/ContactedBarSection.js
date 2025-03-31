@@ -6,24 +6,16 @@ import { numberFormatter } from 'helpers/numberHelper';
 import { BsInfoCircle } from 'react-icons/bs';
 import { AnimatedBar } from './AnimatedBar';
 import { P2vModal } from './P2vModal';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import {
+  getVoterContactsGoal,
+  getVoterContactsTotal,
+} from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
 
 export function ContactedBarSection(props) {
   const { pathToVictory, reportedVoterGoals } = props;
-  const { voterContactGoal, voteGoal } = pathToVictory || {};
-  let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
-
-  const needed = parseInt(resolvedContactGoal, 10);
-  const { doorKnocking, calls, digital, directMail, digitalAds, text, events } =
-    reportedVoterGoals || {};
-  const contacted =
-    (doorKnocking || 0) +
-    (calls || 0) +
-    (digital || 0) +
-    (directMail || 0) +
-    (digitalAds || 0) +
-    (text || 0) +
-    (events || 0);
+  const needed = getVoterContactsGoal(pathToVictory || {});
+  const contacted = getVoterContactsTotal(reportedVoterGoals || {});
 
   const percent = (contacted / needed) * 100;
   let bgColor = 'bg-black';

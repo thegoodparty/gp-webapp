@@ -20,6 +20,7 @@ import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
+import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -232,6 +233,7 @@ export default function DashboardPage({ pathname }) {
 
   return (
     <DashboardLayout {...childProps}>
+      <DashboardHeader reportedVoterGoals={state} />
       {campaign ? (
         <>
           <div>
