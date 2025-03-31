@@ -47,7 +47,7 @@ jobs:
             # Function to get deployment URLs
             get_deployment_url() {
               DEPLOYMENT_URLS="${{ github.event.deployment_status.environment_url }}"
-              if [[ "$DEPLOYMENT_URLS" != *"styleguide"* ]]; then
+              if [[ "$DEPLOYMENT_URLS" != *"styleguide"* && -n "$DEPLOYMENT_URLS" ]]; then
                 echo "$DEPLOYMENT_URLS"
                 return 0
               fi
