@@ -79,7 +79,10 @@ const Map = memo(
                 //set to full bounds of campaign markers
                 const fullBounds = new window.google.maps.LatLngBounds();
                 for (const campaign of campaigns) {
-                  if (campaign.globalPosition?.lat && campaign.globalPosition?.lng)
+                  if (
+                    campaign.globalPosition?.lat &&
+                    campaign.globalPosition?.lng
+                  )
                     fullBounds.extend(campaign.globalPosition);
                 }
                 mapRef.current.fitBounds(fullBounds);
@@ -211,7 +214,11 @@ const Map = memo(
           });
 
           // add campaign position to full bounds object
-          if (fitBounds && campaign.globalPosition?.lat && campaign.globalPosition?.lng)
+          if (
+            fitBounds &&
+            campaign.globalPosition?.lat &&
+            campaign.globalPosition?.lng
+          )
             fullBounds.extend(campaign.globalPosition);
 
           return marker;
@@ -275,7 +282,7 @@ const Map = memo(
                 optimized: true,
                 position,
                 icon: {
-                  url: 'https://assets.goodparty.org/map-cluster-icon-center.png',
+                  url: 'https://assets.goodparty.org/map-cluster-icon-center-new.png',
                   scaledSize: iconSize,
                   labelOrigin: new window.google.maps.Point(
                     iconSize.width / 2,
