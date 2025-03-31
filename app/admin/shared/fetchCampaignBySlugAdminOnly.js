@@ -9,7 +9,7 @@ export async function fetchCampaignBySlugAdminOnly(slug) {
     const resp = await serverFetch(apiRoutes.campaign.findBySlug, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

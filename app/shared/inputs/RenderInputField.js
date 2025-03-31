@@ -155,13 +155,13 @@ export default function RenderInputField({
           {field.groupLabel && (
             <div className="font-bold mb-3">{field.groupLabel}</div>
           )}
-          <div className="flex items-start">
+          <div className="flex items-center">
             <Checkbox
               value={value}
               onChange={(e) => onChangeCallback(field.key, e.target.checked)}
               disabled={field.disabled}
             />
-            <div className="ml-1 pt-1">{field.label}</div>
+            <div className="ml-1 ">{field.label}</div>
           </div>
         </div>
       )}

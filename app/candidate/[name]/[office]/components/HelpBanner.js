@@ -12,7 +12,7 @@ export default function HelpBanner({ candidate }) {
         <div className="flex items-center justify-center md:justify-start">
           <Link href="/">
             <Image
-              src="/images/logo-hologram-white.svg"
+              src="/images/logo/heart.svg"
               alt="GoodParty"
               width={28}
               height={28}

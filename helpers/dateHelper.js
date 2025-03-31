@@ -26,7 +26,7 @@ export const dateUsHelper = (orgDate, monthFormat = 'short') => {
       day: 'numeric',
     }).format(pstDate);
   } catch (err) {
-    console.log('error', err, `orgDate => ${orgDate}`);
+    console.error('error', err, `orgDate => ${orgDate}`);
     return '';
   }
 };

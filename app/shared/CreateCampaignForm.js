@@ -24,7 +24,7 @@ const createCampaign = async (payload) => {
 
     return await clientFetch(apiRoutes.admin.campaign.create, payload);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 };
@@ -38,7 +38,7 @@ const sendEmail = async (userId) => {
       payload,
     );
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 };

@@ -41,7 +41,7 @@ export default function LearnToRun({ stateName }) {
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-12 md:col-span-6">
                 <Image
-                  src="/images/heart-hologram.svg"
+                  src="/images/logo/heart.svg"
                   alt="GoodParty"
                   width={200}
                   height={200}

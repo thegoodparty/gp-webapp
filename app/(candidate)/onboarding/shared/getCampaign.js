@@ -11,7 +11,7 @@ export async function fetchUserCampaignOld() {
     const token = getServerToken();
     return await gpFetch(api, false, false, token);
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }
@@ -21,7 +21,7 @@ export async function fetchUserCampaign() {
     const resp = await serverFetch(apiRoutes.campaign.get);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

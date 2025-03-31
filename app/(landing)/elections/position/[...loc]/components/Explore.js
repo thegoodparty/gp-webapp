@@ -11,7 +11,7 @@ export default function Explore() {
             Explore elections in your community
           </h2>
           <Image
-            src="/images/heart-hologram.svg"
+            src="/images/logo/heart.svg"
             alt="GoodParty"
             width={200}
             height={200}

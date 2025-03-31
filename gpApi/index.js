@@ -10,13 +10,6 @@ const gpApi = {
       method: 'DELETE',
       withAuth: true,
     },
-
-    einCheck: {
-      url: `${base}campaign/ein-check`,
-      method: 'GET',
-      withAuth: true,
-      returnFullResponse: true,
-    },
   },
 
   //

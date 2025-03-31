@@ -4,9 +4,7 @@ import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import Link from 'next/link';
 import TextField from '@shared/inputs/TextField';
-import { useEffect, useState } from 'react';
-import gpFetch from 'gpApi/gpFetch';
-import gpApi from 'gpApi';
+import { useEffect, useState, useCallback } from 'react';
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useRouter } from 'next/navigation';
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon';
@@ -40,7 +38,6 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     campaign?.details?.einNumber || '',
   );
   const [skipEin, setSkipEin] = useState(false);
-  const [loadingEinCheck, setLoadingEinCheck] = useState(false);
   const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
   const [validatedEin, setValidatedEin] = useState(null);
 
@@ -51,33 +48,20 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
     filenameBits[1] || filenameBits[0] || '',
   );
 
-  const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
-  const inputsValid = campaignCommittee && validEINFormat;
+  const doEinCheck = useCallback(async () => {
+    const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
+    const inputsValid = campaignCommittee && validEINFormat;
 
-  const doEinCheck = async () => {
-    if (!inputsValid || loadingEinCheck) {
-      return;
+    if (!inputsValid) {
+      setValidatedEin(null);
+    } else {
+      setValidatedEin(validEINFormat);
     }
-    setLoadingEinCheck(true);
-    const numericalEIN = Number(einInputValue.replace(/[^0-9.]/g, ''));
-    try {
-      const result = await gpFetch(gpApi.campaign.einCheck, {
-        name: einInputValue,
-        ein: numericalEIN,
-      });
-      const { valid } = await result.json();
-      setValidatedEin(valid);
-    } catch (e) {
-      console.error('Request to check EIN failed.');
-      throw e;
-    } finally {
-      setLoadingEinCheck(false);
-    }
-  };
+  }, [einInputValue, campaignCommittee]);
 
   useEffect(() => {
     doEinCheck();
-  }, [campaignCommittee, einInputValue]);
+  }, [doEinCheck]);
 
   const onCampaignCommitteeBlur = () =>
     doEinCheck(einInputValue, einInputValue);
@@ -117,6 +101,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
 
   const onUploadSuccess = (uploadedFilename = '') =>
     uploadedFilename && setUploadedFilename(uploadedFilename);
+
   const onUploadError = (e) => {
     console.error('Error uploading file', e);
     setUploadedFilename('');
@@ -143,14 +128,12 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             className="!mb-4"
             label="Name Of Campaign Committee"
             value={campaignCommittee}
-            disabled={loadingEinCheck}
             onChange={(e) => setCampaignCommittee(e.target.value)}
             onBlur={onCampaignCommitteeBlur}
             InputProps={{
               endAdornment: (
                 <AsyncValidationIcon
                   message={COMMITTEE_HELP_MESSAGE}
-                  loading={loadingEinCheck}
                   validated={validatedEin}
                   onTooltipOpen={() => {
                     trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverNameHelp);
@@ -170,7 +153,6 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
           {!skipEin && (
             <EinCheckInput
               name="ein-number"
-              loading={loadingEinCheck}
               value={einInputValue}
               validated={validatedEin}
               setValidated={setValidatedEin}

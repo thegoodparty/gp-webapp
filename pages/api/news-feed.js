@@ -1,11 +1,11 @@
 import RSS from 'rss';
-import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
+import { fetchArticlesBySection } from 'app/blog/shared/fetchArticlesBySection';
 
 export default async function feed(req, res) {
   try {
-    const { sections, hero, sectionIndex } = await fetchArticlesBySections(
-      'news',
-    );
+    const { news: articles } = await fetchArticlesBySection({
+      sectionSlug: 'news',
+    });
 
     const feed = new RSS({
       title: 'GoodParty.org News Feed',
@@ -16,15 +16,20 @@ export default async function feed(req, res) {
       description:
         'GoodParty.org is a movement bringing together voters and exciting independent candidates that can win.',
     });
-    sections[sectionIndex].articles.forEach((article) => {
-      const { title, id, mainImage, publishDate, slug, summary } = article;
+
+    articles.forEach((article) => {
+      const { title, mainImage, publishDate, slug, summary } = article;
       const url = `https://goodparty.org/blog/article/${slug}`;
       feed.item({
         title,
         description: summary,
         date: publishDate,
         url,
+        link: url,
         guid: url,
+        enclosure: {
+          url: mainImage.url,
+        },
       });
     });
 

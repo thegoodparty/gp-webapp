@@ -32,7 +32,7 @@ export default function Hero() {
             <span>Get your FREE </span>
             <Image
               className=" -rotate-[30deg] ml-3 mr-1"
-              src="/images/heart-hologram.svg"
+              src="/images/logo/heart.svg"
               data-cy="logo"
               width={54}
               height={42}

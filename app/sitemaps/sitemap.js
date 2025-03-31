@@ -1,10 +1,11 @@
 import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
 import { faqArticleRoute } from '../../helpers/articleHelper';
 import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
 import { APP_BASE } from 'appEnv';
-import { unAuthFetch } from 'gpApi/apiFetch';
+import { unAuthFetch } from 'gpApi/unAuthFetch';
 import { fetchContentByType } from 'helpers/fetchHelper';
+import { fetchBlogArticlesList } from 'app/blog/shared/fetchBlogArticlesList';
+import { fetchSections } from 'app/blog/shared/fetchSections';
 
 export const fetchFAQs = async () => {
   return await fetchContentByType('faqArticle');
@@ -13,14 +14,6 @@ export const fetchFAQs = async () => {
 export const fetchGlossaryByTitle = async () => {
   const resp = await unAuthFetch(apiRoutes.content.glossaryBySlug.path);
   return resp.data;
-};
-
-const fetchArticles = async () => {
-  return await fetchContentByType('blogArticle');
-};
-
-export const fetchSections = async () => {
-  return await fetchContentByType('blogSections');
 };
 
 const now = new Date();
@@ -59,7 +52,7 @@ export default async function sitemap() {
     });
   });
 
-  const blogArticles = await fetchArticles();
+  const blogArticles = await fetchBlogArticlesList();
   const blogSections = await fetchSections();
 
   try {

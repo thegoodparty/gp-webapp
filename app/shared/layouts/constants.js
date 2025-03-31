@@ -1,10 +1,5 @@
-import {
-  FaDiscord,
-  FaFacebook,
-  FaInstagram,
-  FaTiktok,
-  FaTwitter,
-} from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTiktok, FaTwitter } from 'react-icons/fa';
+import { HiUserGroup } from 'react-icons/hi';
 
 export const FOOTER_COLUMNS = [
   {
@@ -79,9 +74,9 @@ export const FOOTER_COLUMNS = [
         id: 'footer-campaign-declare',
       },
       {
-        label: 'Discord Community',
-        link: 'https://discord.gg/invite/goodparty',
-        id: 'footer-campaign-discord',
+        label: 'GoodParty.org Community',
+        link: 'https://community.goodparty.org',
+        id: 'footer-campaign-community',
         isExternal: true,
       },
       {
@@ -119,9 +114,9 @@ export const SOCIAL_LINKS = [
     icon: <FaFacebook />,
   },
   {
-    label: 'Discord',
-    link: 'https://discord.gg/invite/goodparty',
+    label: 'GoodParty.org Community',
+    link: 'https://community.goodparty.org',
     isExternal: true,
-    icon: <FaDiscord />,
+    icon: <HiUserGroup />,
   },
 ];

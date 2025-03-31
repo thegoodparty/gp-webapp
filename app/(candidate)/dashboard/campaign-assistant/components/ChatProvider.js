@@ -19,7 +19,7 @@ export async function updateChat(threadId, input) {
     const resp = await clientFetch(apiRoutes.campaign.chat.update, payload);
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

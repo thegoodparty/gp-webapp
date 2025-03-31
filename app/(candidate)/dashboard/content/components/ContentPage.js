@@ -33,7 +33,7 @@ export default function ContentPage(props) {
           <div className="flex items-start">
             <Image
               className="mr-1 mt-0.5"
-              src="/images/heart-hologram.svg"
+              src="/images/logo/heart.svg"
               data-cy="logo"
               width={18}
               height={14}

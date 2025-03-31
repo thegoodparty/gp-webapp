@@ -40,7 +40,7 @@ export default function StickersCallout() {
 
                 <Image
                   className="mx-2 mt-0.5"
-                  src="/images/logo-hologram-white.svg"
+                  src="/images/logo/heart.svg"
                   data-cy="logo"
                   width={24}
                   height={20}

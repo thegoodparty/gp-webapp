@@ -35,7 +35,7 @@ export default function FromCommunity() {
           <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 md:col-span-6 hidden: md:block">
               <Image
-                src="/images/heart-hologram.svg"
+                src="/images/logo/heart.svg"
                 alt="GoodParty"
                 width={250}
                 height={250}

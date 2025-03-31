@@ -12,7 +12,7 @@ async function deleteContent(key) {
     await clientFetch(apiRoutes.campaign.ai.delete, payload);
     return true;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

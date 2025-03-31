@@ -21,7 +21,7 @@ async function runP2V(slug) {
 
     return resp.data;
   } catch (e) {
-    console.log('error', e);
+    console.error('error', e);
     return false;
   }
 }

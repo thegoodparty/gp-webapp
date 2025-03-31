@@ -61,7 +61,7 @@ export default function TeamMembersSection(props) {
             <div className="col-span-12 lg:col-span-1 h-[48px] w-[60px] lg:h-auto lg:w-auto">
               <Image
                 className="mb-4 lg:my-auto w-full"
-                src="/images/logo-hologram-white.svg"
+                src="/images/logo/heart.svg"
                 width={60}
                 height={48}
                 alt="GoodParty Logo"

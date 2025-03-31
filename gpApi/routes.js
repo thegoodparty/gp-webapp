@@ -224,19 +224,11 @@ export const apiRoutes = {
       method: 'GET',
     },
     articleTags: {
-      path: '/content/article-tags',
+      path: '/content/article-tags/:tag',
       method: 'GET',
     },
     byType: {
       path: '/content/type',
-      method: 'GET',
-    },
-    articleTag: {
-      path: '/content/article-tags',
-      method: 'GET',
-    },
-    getBlogSections: {
-      path: '/content/blog-articles-by-section',
       method: 'GET',
     },
     blogArticle: {
@@ -244,20 +236,24 @@ export const apiRoutes = {
         path: '/content/blog-article/:slug',
         method: 'GET',
       },
-      getSlug: {
-        path: '/content/blog-article',
+      getList: {
+        path: '/content/blog-articles',
         method: 'GET',
       },
-      getBySection: {
-        path: '/content/blog-articles-by-section/:sectionSlug',
+      bySection: {
+        path: '/content/blog-articles/by-section/:sectionSlug',
         method: 'GET',
       },
       getByTag: {
         path: '/content/blog-articles-by-tag/:tag',
         method: 'GET',
       },
-      byTag: {
-        path: '/content/blog-articles-by-tag',
+      getSections: {
+        path: '/content/blog-articles/sections',
+        method: 'GET',
+      },
+      getSection: {
+        path: '/content/blog-articles/sections/:sectionSlug',
         method: 'GET',
       },
     },
@@ -440,6 +436,52 @@ export const apiRoutes = {
     mySummary: {
       path: '/ecanvasser/mine/summary',
       method: 'GET',
+    },
+    surveys: {
+      list: {
+        path: '/ecanvasser/surveys',
+        method: 'GET',
+      },
+      find: {
+        path: '/ecanvasser/survey/:id',
+        method: 'GET',
+      },
+      create: {
+        path: '/ecanvasser/survey',
+        method: 'POST',
+      },
+      update: {
+        path: '/ecanvasser/survey/:id',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/ecanvasser/survey/:id',
+        method: 'DELETE',
+      },
+      questions: {
+        create: {
+          path: '/ecanvasser/survey/:id/question',
+          method: 'POST',
+        },
+        delete: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'DELETE',
+        },
+        update: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'PUT',
+        },
+        find: {
+          path: '/ecanvasser/survey/question/:questionId',
+          method: 'GET',
+        },
+      },
+    },
+    teams: {
+      list: {
+        path: '/ecanvasser/teams',
+        method: 'GET',
+      },
     },
   },
 };

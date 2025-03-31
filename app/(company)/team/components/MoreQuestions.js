@@ -9,7 +9,7 @@ const MoreQuestions = () => (
     <section className="mx-auto mt-4 mb-16 max-w-[616px]">
       <Image
         className="mb-4 w-[100px] h-[82px] mx-auto"
-        src="/images/logo-hologram-white.svg"
+        src="/images/logo/heart.svg"
         width={136}
         height={112}
         alt="GoodParty Logo"
