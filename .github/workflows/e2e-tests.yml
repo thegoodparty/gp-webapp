@@ -14,13 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.event.deployment_status.state == 'success' && 
-      github.event.deployment.environment == 'Preview - gp-ui'
+      (github.event.deployment.environment == 'Preview - gp-ui' || github.event.deployment.environment == 'preview-gp-ui')
     steps:
       - name: Print Workflow Trigger Event
         env:
           GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
+          echo "Deployment Status State: ${{ github.event.deployment_status.state }}"
+          echo "Deployment Environment: ${{ github.event.deployment.environment }}"
 
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
