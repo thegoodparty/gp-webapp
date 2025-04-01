@@ -38,17 +38,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          # Get the branch name and clean it
+          BRANCH_NAME=$(echo "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          echo "Branch name: $BRANCH_NAME"
           
           # Function to get latest deployment status
           get_deployment_status() {
             gh api \
-              -H "Accept: application/vnd.github+json" \
-              "/repos/goodparty/gp-ui/deployments" \
-              -q ".[] | select(.ref == \"$BRANCH_NAME\" and .environment == \"Preview - gp-ui\") | .statuses_url" \
+              repos/goodparty/gp-ui/deployments \
+              --jq ".[] | select(.ref == \"$BRANCH_NAME\") | .statuses_url" \
               | head -n1 \
-              | xargs gh api \
-              -q ".[] | select(.state != null) | .state" \
+              | xargs -I {} gh api {} \
+              --jq ".[] | select(.state != null) | .state" \
               | head -n1
           }
           
@@ -77,12 +78,11 @@ jobs:
           
           # Get the deployment URL
           DEPLOYMENT_URL=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            "/repos/goodparty/gp-ui/deployments" \
-            -q ".[] | select(.ref == \"$BRANCH_NAME\" and .environment == \"Preview - gp-ui\") | .statuses_url" \
+            repos/goodparty/gp-ui/deployments \
+            --jq ".[] | select(.ref == \"$BRANCH_NAME\") | .statuses_url" \
             | head -n1 \
-            | xargs gh api \
-            -q ".[] | select(.state == \"success\") | .target_url" \
+            | xargs -I {} gh api {} \
+            --jq ".[] | select(.state == \"success\") | .target_url" \
             | head -n1)
           
           echo "Found gp-ui deployment URL: $DEPLOYMENT_URL"
