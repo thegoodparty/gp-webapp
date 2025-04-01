@@ -3,12 +3,26 @@ name: E2E Tests
 on:
   deployment_status
 jobs:
-  e2e-tests:
+  debug:
     runs-on: ubuntu-latest
-    if: |
-      github.event.deployment.environment == 'Vercel - gp-ui' && 
-      github.event.deployment_status.state == 'success'
     steps:
+      - name: Debug deployment info
+        env:
+          DEPLOYMENT_INFO: ${{ toJSON(github.event.deployment) }}
+          DEPLOYMENT_STATUS_INFO: ${{ toJSON(github.event.deployment_status) }}
+        run: |
+          echo "Deployment Info:"
+          echo "$DEPLOYMENT_INFO"
+          echo "Deployment Status Info:"
+          echo "$DEPLOYMENT_STATUS_INFO"
+
+  e2e-tests:
+    needs: debug
+    runs-on: ubuntu-latest
+    if: contains(github.event.deployment.environment, 'gp-ui')
+    steps:
+      - name: Run tests
+        run: echo "Would run tests here"
       - name: Debug deployment event
         env:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
