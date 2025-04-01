@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from 'react';
 
-export function AnimatedBar({ contacted, needed, bgColor }) {
+export function AnimatedProgressBar({ percent, bgColor }) {
   const [width, setWidth] = useState(0);
   useEffect(() => {
-    const percent = (contacted / needed) * 100;
     if (percent > 100) {
       setWidth(100);
       return;
     }
     setWidth(percent);
-  }, [contacted, needed]);
+  }, [percent]);
 
   return (
     <div className="bg-primary h-2 rounded relative bg-opacity-10 mt-2">

@@ -4,7 +4,7 @@ import MarketingH2 from '@shared/typography/MarketingH2';
 import { AlertBanner } from '../AlertBanner';
 import { numberFormatter } from 'helpers/numberHelper';
 import { BsInfoCircle } from 'react-icons/bs';
-import { AnimatedBar } from './AnimatedBar';
+import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
 import { P2vModal } from './P2vModal';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 import {
@@ -58,7 +58,10 @@ export function ContactedBarSection(props) {
       <Body1 className="text-center md:text-left">
         <strong>Current:</strong> {numberFormatter(contacted)} voters
       </Body1>
-      <AnimatedBar contacted={contacted} needed={needed} bgColor={bgColor} />
+      <AnimatedProgressBar
+        percent={(contacted / needed) * 100}
+        bgColor={bgColor}
+      />
 
       <P2vModal
         triggerElement={

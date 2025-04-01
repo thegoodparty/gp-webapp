@@ -2,7 +2,7 @@
 import { useCampaign } from '@shared/hooks/useCampaign';
 import { CampaignCountdown } from 'app/(candidate)/dashboard/components/CampaignCountdown';
 import { VoterContactsCount } from 'app/(candidate)/dashboard/components/VoterContactsCount';
-import H4 from '@shared/typography/H4';
+import { RemainingTasks } from 'app/(candidate)/dashboard/components/RemainingTasks';
 
 export const DashboardHeader = ({ reportedVoterGoals }) => {
   const [campaign] = useCampaign();
@@ -16,13 +16,9 @@ export const DashboardHeader = ({ reportedVoterGoals }) => {
       <CampaignCountdown electionDate={electionDate} />
       <VoterContactsCount {...{ pathToVictory, reportedVoterGoals }} />
       <RemainingTasks />
+      <CampaignProgress />
     </section>
   );
 };
 
-const RemainingTasks = ({ numOfRemainingTasks = 0 }) => (
-  <H4>
-    You have <strong className="underline">{numOfRemainingTasks} tasks</strong>{' '}
-    you need to complete.
-  </H4>
-);
+const CampaignProgress = () => {};
