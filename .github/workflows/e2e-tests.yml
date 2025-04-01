@@ -36,11 +36,14 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          # Extract the branch name from the deployment URL
-          BRANCH_NAME=$(echo "${{ github.event.deployment_status.environment_url }}" | sed -E 's/.*-([^.]+)\.vercel\.app/\1/')
+          # For preview deployments, the URL follows this pattern
+          if [[ "${{ github.event.deployment_status.environment }}" == "Preview - gp-ui" ]]; then
+            DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          # For production deployments
+          else
+            DEPLOYMENT_URL="https://goodparty.org"
+          fi
           
-          # Construct the gp-ui URL using the same branch
-          DEPLOYMENT_URL="https://gp-ui-git-${BRANCH_NAME}-good-party.vercel.app"
           echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
