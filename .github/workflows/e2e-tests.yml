@@ -6,10 +6,11 @@ on:
       - 'Preview - gp-ui'
       - 'Production - gp-ui'
 jobs:
-  run-e2e-tests:
+  e2e-tests:
     if: |
       github.event.deployment_status.environment == 'Preview - gp-ui' || 
-      github.event.deployment_status.environment == 'Production - gp-ui'
+      github.event.deployment_status.environment == 'Production - gp-ui' &&
+      github.repository == 'thegoodparty/gp-ui'
     runs-on: ubuntu-latest
     steps:
       - name: Print Workflow Trigger Event
