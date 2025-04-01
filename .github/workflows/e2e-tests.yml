@@ -81,8 +81,7 @@ jobs:
 
             if [ $ATTEMPT -gt $MAX_ATTEMPTS ]; then
               echo "Failed to find non-styleguide deployment URL after $MAX_ATTEMPTS attempts"
-              echo "BASE_URL=https://fallback-url.com" >> $GITHUB_ENV  # Add a fallback URL
-              echo "SKIP_TESTS=true" >> $GITHUB_ENV  # Skip tests if URL not found
+              exit 1
             fi
           fi
 
