@@ -1,11 +1,11 @@
 import ArticleSchema from './ArticleSchema';
 import BlogArticlePage from './components/BlogArticlePage';
 import pageMetaData from 'helpers/metadataHelper';
-import { redirect, notFound } from 'next/navigation';
+import { redirect, notFound, permanentRedirect } from 'next/navigation';
 import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
 import { apiRoutes } from 'gpApi/routes';
 import { unAuthFetch } from 'gpApi/unAuthFetch';
-
+import redirectList from './redirectList';
 export const revalidate = 3600;
 export const dynamic = 'force-static';
 
@@ -45,6 +45,9 @@ export default async function Page({ params }) {
   const content = await fetchArticle(slug);
 
   if (!content || content?.statusCode === 404) {
+    if (redirectList.includes(slug)) {
+      permanentRedirect(`/blog`);
+    }
     notFound();
   }
 
