@@ -8,9 +8,7 @@ on:
 jobs:
   run-e2e-tests:
     runs-on: ubuntu-latest
-    if: |
-      github.event.deployment_status.state == 'success' && 
-      endsWith(github.event.deployment.repository, 'gp-ui')
+    if: github.event.deployment_status.state == 'success'
     steps:
       - name: Print Workflow Trigger Event
         env:
