@@ -53,7 +53,7 @@ export default function TasksPage({ pathname, campaign, tasks }) {
                 task={task}
                 isPro={campaign.isPro}
                 daysUntilElection={daysUntilElection}
-                isCompleted={idx === 2}
+                isCompleted={task.isCompleted}
               />
             ))
           ) : (
