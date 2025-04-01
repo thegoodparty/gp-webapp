@@ -45,7 +45,7 @@ export default async function Page({ params }) {
   const content = await fetchArticle(slug);
 
   if (!content || content?.statusCode === 404) {
-    if (redirectList.includes(slug)) {
+    if (redirectList[slug]) {
       permanentRedirect(`/blog`);
     }
     notFound();
