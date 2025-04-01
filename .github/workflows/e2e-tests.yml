@@ -1,52 +1,19 @@
 name: E2E Tests
 
 on:
-  deployment_status
+  deployment_status:
+    environment:
+      - 'Preview - gp-ui'
+      - 'Production - gp-ui'
 jobs:
-  debug:
+  run-e2e-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug deployment info
+      - name: Print Workflow Trigger Event
         env:
-          DEPLOYMENT_INFO: ${{ toJSON(github.event.deployment) }}
-          DEPLOYMENT_STATUS_INFO: ${{ toJSON(github.event.deployment_status) }}
+          GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
         run: |
-          echo "Deployment Info:"
-          echo "$DEPLOYMENT_INFO"
-          echo "Deployment Status Info:"
-          echo "$DEPLOYMENT_STATUS_INFO"
-
-  e2e-tests:
-    needs: debug
-    runs-on: ubuntu-latest
-    if: contains(github.event.deployment.environment, 'gp-ui')
-    steps:
-      - name: Run tests
-        run: echo "Would run tests here"
-      - name: Debug deployment event
-        env:
-          EVENT_CONTEXT: ${{ toJSON(github.event) }}
-        run: echo "$EVENT_CONTEXT"
-      
-      - name: Check if should continue
-        id: check
-        run: |
-          if [[ "${{ github.event.deployment.repository_url }}" == *"/gp-ui" ]]; then
-            echo "Should run tests for gp-ui"
-            echo "should_run=true" >> $GITHUB_OUTPUT
-          else
-            echo "Skipping - not a gp-ui deployment"
-            echo "should_run=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Run remaining steps
-        if: steps.check.outputs.should_run == 'true'
-        run: echo "Continue with the rest of the workflow"
-        - name: Print Workflow Trigger Event
-          env:
-            GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
-          run: |
-            echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
+          echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
 
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
@@ -68,7 +35,11 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+          # Extract the branch name from the deployment URL
+          BRANCH_NAME=$(echo "${{ github.event.deployment_status.environment_url }}" | sed -E 's/.*-([^.]+)\.vercel\.app/\1/')
+          
+          # Construct the gp-ui URL using the same branch
+          DEPLOYMENT_URL="https://gp-ui-git-${BRANCH_NAME}-good-party.vercel.app"
           echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
