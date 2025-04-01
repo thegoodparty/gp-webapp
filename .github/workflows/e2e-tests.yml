@@ -1,13 +1,13 @@
 name: E2E Tests
 
 on:
-  deployment_status:
-    environments:
-      - 'Preview - gp-ui'
-      - 'Production - gp-ui'
+  deployment_status
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
+    if: |
+      github.event.deployment.environment == 'Vercel - gp-ui' && 
+      github.event.deployment_status.state == 'success'
     steps:
       - name: Debug deployment event
         env:
@@ -34,88 +34,88 @@ jobs:
           run: |
             echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
 
-        - name: Check out the repository to the runner
-          uses: actions/checkout@v4
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '16.x'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
 
-        - name: Install Dependencies for gp-webapp
-          run: npm install
+      - name: Install Dependencies for gp-webapp
+        run: npm install
 
-        - name: Install Vercel CLI
-          run: npm install -g vercel
+      - name: Install Vercel CLI
+        run: npm install -g vercel
 
-        - name: Link Vercel Project
-          run: |
-            vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
+      - name: Link Vercel Project
+        run: |
+          vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
 
-        - name: Capture Deployment URL
-          run: |
-            DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
-            echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
-            echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+      - name: Capture Deployment URL
+        run: |
+          DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+          echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
-        - name: Checkout test-automation Repository
-          uses: actions/checkout@v4
-          with:
-            repository: thegoodparty/test-automation
-            token: ${{ secrets.GH_PAT_TEST }}
-            path: test-automation
+      - name: Checkout test-automation Repository
+        uses: actions/checkout@v4
+        with:
+          repository: thegoodparty/test-automation
+          token: ${{ secrets.GH_PAT_TEST }}
+          path: test-automation
 
-        - name: Install Playwright Dependencies in test-automation Repo
-          run: |
-            cd test-automation
-            npm install
-            npx playwright install --with-deps
+      - name: Install Playwright Dependencies in test-automation Repo
+        run: |
+          cd test-automation
+          npm install
+          npx playwright install --with-deps
 
-        - name: Run Playwright Tests
-          run: |
-            cd test-automation
-            npx playwright test
-          env:
-            BASE_URL: ${{ env.BASE_URL }}
-            TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
-            NODE_PATH: ${{ secrets.NODE_PATH }}
-            TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
-            TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
-            TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
-            TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
-            TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
-            TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
-            TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+      - name: Run Playwright Tests
+        run: |
+          cd test-automation
+          npx playwright test
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
+          NODE_PATH: ${{ secrets.NODE_PATH }}
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
+          TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
+          TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+          TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
+          TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
-        - name: Notify Slack Workflow
-          if: always()
-          env:
-            SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
-          run: |
-            # Set STATUS and COLOR based on job status
-            STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
-            COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
-            
-            # Send the Slack notification
-            curl -X POST -H "Content-type: application/json" \
-            --data '{
-              "text": "Playwright Test Results ('"${STATUS}"')",
-              "attachments": [
-                {
-                  "color": "'"${COLOR}"'",
-                  "fields": [
-                    { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
-                    { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
-                    { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
-                  ],
-                  "actions": [
-                    {
-                      "type": "button",
-                      "text": "View Test Runs",
-                      "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
-                      "style": "primary"
-                    }
-                  ]
-                }
-              ]
-            }' $SLACK_WORKFLOW_WEBHOOK
+      - name: Notify Slack Workflow
+        if: always()
+        env:
+          SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
+        run: |
+          # Set STATUS and COLOR based on job status
+          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
+          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
+          
+          # Send the Slack notification
+          curl -X POST -H "Content-type: application/json" \
+          --data '{
+            "text": "Playwright Test Results ('"${STATUS}"')",
+            "attachments": [
+              {
+                "color": "'"${COLOR}"'",
+                "fields": [
+                  { "title": "Branch", "value": "'"${{ github.ref_name }}"'", "short": true },
+                  { "title": "Commit", "value": "'"${{ github.sha }}"'", "short": true },
+                  { "title": "Vercel URL", "value": "'"${{ env.BASE_URL }}"'", "short": true }
+                ],
+                "actions": [
+                  {
+                    "type": "button",
+                    "text": "View Test Runs",
+                    "url": "https://goodparty.testrail.io/index.php?/runs/overview/1",
+                    "style": "primary"
+                  }
+                ]
+              }
+            ]
+          }' $SLACK_WORKFLOW_WEBHOOK
