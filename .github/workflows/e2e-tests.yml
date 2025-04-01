@@ -36,14 +36,19 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          # For preview deployments, the URL follows this pattern
+          # For preview deployments
           if [[ "${{ github.event.deployment_status.environment }}" == "Preview - gp-ui" ]]; then
+            # Use the actual deployment URL from Vercel
             DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
-          # For production deployments
+            echo "Using preview deployment URL: $DEPLOYMENT_URL"
           else
+            # For production deployments
             DEPLOYMENT_URL="https://goodparty.org"
+            echo "Using production URL: $DEPLOYMENT_URL"
           fi
           
+          # Debug output
+          echo "Environment: ${{ github.event.deployment_status.environment }}"
           echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
