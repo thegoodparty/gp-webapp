@@ -34,58 +34,12 @@ jobs:
         run: |
           vercel link --token ${{ secrets.VERCEL_TOKEN }} --yes --project gp-ui --scope good-party
 
-      - name: Wait for gp-ui deployment and capture URL
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Capture Deployment URL
         run: |
-          # Get the branch name and clean it
-          BRANCH_NAME=$(echo "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" | sed 's/[^a-zA-Z0-9._-]/-/g')
-          echo "Branch name: $BRANCH_NAME"
+          # Get the Vercel preview URL directly from the deployment status
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
           
-          # Function to get latest deployment status
-          get_deployment_status() {
-            gh api \
-              repos/goodparty/gp-ui/deployments \
-              --jq ".[] | select(.ref == \"$BRANCH_NAME\") | .statuses_url" \
-              | head -n1 \
-              | xargs -I {} gh api {} \
-              --jq ".[] | select(.state != null) | .state" \
-              | head -n1
-          }
-          
-          # Wait for deployment to complete (timeout after 5 minutes)
-          echo "Waiting for gp-ui deployment to complete..."
-          TIMEOUT=300
-          while [ $TIMEOUT -gt 0 ]; do
-            STATUS=$(get_deployment_status)
-            echo "Current deployment status: $STATUS"
-            
-            if [ "$STATUS" = "success" ]; then
-              break
-            elif [ "$STATUS" = "failure" ] || [ "$STATUS" = "error" ]; then
-              echo "Deployment failed!"
-              exit 1
-            fi
-            
-            sleep 10
-            TIMEOUT=$((TIMEOUT - 10))
-          done
-          
-          if [ $TIMEOUT -le 0 ]; then
-            echo "Timeout waiting for deployment!"
-            exit 1
-          fi
-          
-          # Get the deployment URL
-          DEPLOYMENT_URL=$(gh api \
-            repos/goodparty/gp-ui/deployments \
-            --jq ".[] | select(.ref == \"$BRANCH_NAME\") | .statuses_url" \
-            | head -n1 \
-            | xargs -I {} gh api {} \
-            --jq ".[] | select(.state == \"success\") | .target_url" \
-            | head -n1)
-          
-          echo "Found gp-ui deployment URL: $DEPLOYMENT_URL"
+          echo "Using deployment URL: $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
       - name: Checkout test-automation Repository
