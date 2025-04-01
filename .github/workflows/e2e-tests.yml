@@ -36,26 +36,11 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          # Debug the available variables
-          echo "Environment: ${{ github.event.deployment_status.environment }}"
-          echo "Target URL: ${{ github.event.deployment_status.target_url }}"
-          echo "Environment URL: ${{ github.event.deployment_status.environment_url }}"
+          # Get the Vercel preview URL directly from the deployment status
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
           
-          # For preview deployments
-          if [[ "${{ github.event.deployment_status.environment }}" == "Preview - gp-ui" ]]; then
-            # Get the Vercel preview URL directly from the deployment status
-            DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
-            if [[ -z "$DEPLOYMENT_URL" ]]; then
-              DEPLOYMENT_URL="${{ github.event.deployment_status.environment_url }}"
-            fi
-            echo "Using preview deployment URL: $DEPLOYMENT_URL"
-          else
-            DEPLOYMENT_URL="https://goodparty.org"
-            echo "Using production URL: $DEPLOYMENT_URL"
-          fi
-          
-          echo "Final DEPLOYMENT_URL = $DEPLOYMENT_URL"
-          echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
+          echo "Using deployment URL: $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
       - name: Checkout test-automation Repository
         uses: actions/checkout@v4
