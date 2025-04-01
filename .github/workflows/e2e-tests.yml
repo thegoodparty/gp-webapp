@@ -5,12 +5,9 @@ on:
     environment:
       - 'Preview - gp-ui'
       - 'Production - gp-ui'
-  schedule:
-    # Run at midnight PST (8 AM UTC)
-    - cron: '0 8 * * *'
-
 jobs:
   run-e2e-tests:
+    if: contains(github.event.deployment.repository, 'gp-ui')
     runs-on: ubuntu-latest
     steps:
       - name: Print Workflow Trigger Event
@@ -39,54 +36,11 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            # Use production URL for scheduled runs
-            echo "BASE_URL=https://goodparty.org" >> $GITHUB_ENV
-            echo "SKIP_TESTS=false" >> $GITHUB_ENV
-          else
-            # Function to get deployment URLs
-            get_deployment_url() {
-              DEPLOYMENT_URLS="${{ github.event.deployment_status.environment_url }}"
-              if [[ "$DEPLOYMENT_URLS" != *"styleguide"* && -n "$DEPLOYMENT_URLS" ]]; then
-                echo "$DEPLOYMENT_URLS"
-                return 0
-              fi
-              return 1
-            }
-
-            # Try to get non-styleguide URL with retries
-            MAX_ATTEMPTS=10
-            ATTEMPT=1
-            WAIT_TIME=30
-
-            while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
-              echo "Attempt $ATTEMPT of $MAX_ATTEMPTS to get non-styleguide deployment URL..."
-
-              if DEPLOYMENT_URL=$(get_deployment_url); then
-                echo "Found non-styleguide deployment URL: $DEPLOYMENT_URL"
-                echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
-                echo "SKIP_TESTS=false" >> $GITHUB_ENV
-                break
-              else
-                echo "Deployment URL not found or contains 'styleguide'. Retrying..."
-              fi
-
-              if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
-                echo "Waiting ${WAIT_TIME} seconds before next attempt..."
-                sleep $WAIT_TIME
-              fi
-
-              ATTEMPT=$((ATTEMPT + 1))
-            done
-
-            if [ $ATTEMPT -gt $MAX_ATTEMPTS ]; then
-              echo "Failed to find non-styleguide deployment URL after $MAX_ATTEMPTS attempts"
-              exit 1
-            fi
-          fi
+          DEPLOYMENT_URL=${{ github.event.deployment_status.environment_url }}
+          echo "DEPLOYMENT_URL = $DEPLOYMENT_URL"
+          echo "BASE_URL=$DEPLOYMENT_URL" >> $GITHUB_ENV
 
       - name: Checkout test-automation Repository
-        if: env.SKIP_TESTS != 'true'
         uses: actions/checkout@v4
         with:
           repository: thegoodparty/test-automation
@@ -94,31 +48,18 @@ jobs:
           path: test-automation
 
       - name: Install Playwright Dependencies in test-automation Repo
-        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npm install
           npx playwright install --with-deps
 
-      - name: Set Test Run Name
-        if: env.SKIP_TESTS != 'true'
-        run: |
-          if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            # Format date as YYYY-MM-DD for scheduled runs
-            DATE=$(TZ=America/Los_Angeles date '+%Y-%m-%d')
-            echo "TEST_RUN_NAME=[$DATE] Daily Test Run" >> $GITHUB_ENV
-          else
-            echo "TEST_RUN_NAME=Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}" >> $GITHUB_ENV
-          fi
-
       - name: Run Playwright Tests
-        if: env.SKIP_TESTS != 'true'
         run: |
           cd test-automation
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          TEST_RUN_NAME: ${{ env.TEST_RUN_NAME }}
+          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
@@ -129,7 +70,7 @@ jobs:
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
       - name: Notify Slack Workflow
-        if: always() && env.SKIP_TESTS != 'true'
+        if: always()
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
