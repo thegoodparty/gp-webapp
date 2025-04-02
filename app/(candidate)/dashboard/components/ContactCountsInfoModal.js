@@ -5,8 +5,9 @@ import H1 from '@shared/typography/H1';
 import Body2 from '@shared/typography/Body2';
 import H6 from '@shared/typography/H6';
 import H2 from '@shared/typography/H2';
+import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper';
 
-export const VoterContactCountsModal = ({
+export const ContactCountsInfoModal = ({
   open = true,
   setOpen = () => {},
   pathToVictory = {},
@@ -31,7 +32,7 @@ export const VoterContactCountsModal = ({
         setOpen();
       }}
     >
-      <div className="space-y-6 max-w-2xl mx-auto px-12 py-10">
+      <VoterContactModalWrapper>
         <div className="text-center">
           <H1>Voter contacts needed</H1>
           <Body2 className="mt-4 text-lg">
@@ -79,7 +80,7 @@ export const VoterContactCountsModal = ({
             </li>
           </ol>
         </div>
-      </div>
+      </VoterContactModalWrapper>
     </Modal>
   );
 };

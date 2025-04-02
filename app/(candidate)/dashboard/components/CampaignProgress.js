@@ -9,7 +9,9 @@ import {
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { numberFormatter } from 'helpers/numberHelper';
 import { BsInfoCircle } from 'react-icons/bs';
-import { VoterContactCountsModal } from 'app/(candidate)/dashboard/components/VoterContactCountsModal';
+import { ContactCountsInfoModal } from 'app/(candidate)/dashboard/components/ContactCountsInfoModal';
+import Button from '@shared/buttons/Button';
+import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal';
 
 export const CampaignProgress = ({ pathToVictory, reportedVoterGoals }) => {
   const { needed, contacted } = calculateVoterContactCounts(
@@ -17,12 +19,23 @@ export const CampaignProgress = ({ pathToVictory, reportedVoterGoals }) => {
     reportedVoterGoals,
   );
   const [modalOpen, setModalOpen] = useState(false);
+  const [recordModalOpen, setRecordModalOpen] = useState(false);
 
   const toggleModalOpen = () => setModalOpen(!modalOpen);
+  const toggleRecordModal = () => setRecordModalOpen(!recordModalOpen);
 
   return (
     <Paper className="mb-4">
-      <H2 className="mb-4">Campaign progress</H2>
+      <div className="flex flex-col md:flex-row md:justify-between items-start gap-4 mb-4">
+        <H2>Campaign progress</H2>
+        <Button
+          color="neutral"
+          size="medium"
+          onClick={toggleRecordModal}
+        >
+          Record voter contacts
+        </Button>
+      </div>
       <div className="mb-4">
         <AnimatedProgressBar
           percent={(contacted / needed) * 100}
@@ -33,12 +46,19 @@ export const CampaignProgress = ({ pathToVictory, reportedVoterGoals }) => {
         <Subtitle2>{numberFormatter(contacted)} voters contacted</Subtitle2>
         <Subtitle2 className="flex items-center">
           {numberFormatter(needed)} voter contacts needed
-          <BsInfoCircle className="ml-2 inline" onClick={toggleModalOpen} />
-          <VoterContactCountsModal
+          <BsInfoCircle
+            className="ml-2 inline cursor-pointer"
+            onClick={toggleModalOpen}
+          />
+          <ContactCountsInfoModal
             {...{ pathToVictory, open: modalOpen, setOpen: toggleModalOpen }}
           />
         </Subtitle2>
       </div>
+      <RecordVoterContactsModal
+        open={recordModalOpen}
+        setOpen={setRecordModalOpen}
+      />
     </Paper>
   );
 };
