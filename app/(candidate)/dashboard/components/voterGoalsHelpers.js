@@ -146,3 +146,14 @@ export const getVoterContactsTotal = ({
   (digitalAds || 0) +
   (text || 0) +
   (events || 0);
+
+export const calculateVoterContactCounts = (
+  pathToVictory,
+  reportedVoterGoals,
+) => {
+  console.log(`reportedVoterGoals =>`, reportedVoterGoals);
+  return {
+    needed: getVoterContactsGoal(pathToVictory || {}),
+    contacted: getVoterContactsTotal(reportedVoterGoals || {}),
+  };
+};

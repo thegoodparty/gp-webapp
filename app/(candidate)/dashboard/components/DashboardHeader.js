@@ -3,6 +3,7 @@ import { useCampaign } from '@shared/hooks/useCampaign';
 import { CampaignCountdown } from 'app/(candidate)/dashboard/components/CampaignCountdown';
 import { VoterContactsCount } from 'app/(candidate)/dashboard/components/VoterContactsCount';
 import { RemainingTasks } from 'app/(candidate)/dashboard/components/RemainingTasks';
+import { CampaignProgress } from 'app/(candidate)/dashboard/components/CampaignProgress';
 
 export const DashboardHeader = ({ reportedVoterGoals }) => {
   const [campaign] = useCampaign();
@@ -16,9 +17,7 @@ export const DashboardHeader = ({ reportedVoterGoals }) => {
       <CampaignCountdown electionDate={electionDate} />
       <VoterContactsCount {...{ pathToVictory, reportedVoterGoals }} />
       <RemainingTasks />
-      <CampaignProgress />
+      <CampaignProgress {...{ pathToVictory, reportedVoterGoals }} />
     </section>
   );
 };
-
-const CampaignProgress = () => {};

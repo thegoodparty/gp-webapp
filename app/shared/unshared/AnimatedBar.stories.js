@@ -1,4 +1,7 @@
-import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
+import {
+  ANIMATED_PROGRESS_BAR_SIZES,
+  AnimatedProgressBar,
+} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
 
 export default {
   title: 'Unshared/AnimatedBar',
@@ -7,6 +10,7 @@ export default {
   args: {
     percent: 60,
     bgColor: 'bg-purple-500',
+    size: ANIMATED_PROGRESS_BAR_SIZES.SM,
   },
   render: (args) => {
     return (

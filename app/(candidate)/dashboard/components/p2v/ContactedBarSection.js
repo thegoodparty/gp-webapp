@@ -7,32 +7,27 @@ import { BsInfoCircle } from 'react-icons/bs';
 import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
 import { P2vModal } from './P2vModal';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import {
-  getVoterContactsGoal,
-  getVoterContactsTotal,
-} from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
+import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
 
 export function ContactedBarSection(props) {
   const { pathToVictory, reportedVoterGoals } = props;
-  const needed = getVoterContactsGoal(pathToVictory || {});
-  const contacted = getVoterContactsTotal(reportedVoterGoals || {});
+  const { needed, contacted } = calculateVoterContactCounts(
+    pathToVictory,
+    reportedVoterGoals,
+  );
 
   const percent = (contacted / needed) * 100;
-  let bgColor = 'bg-black';
   let textColor = 'text-black';
   let severity = 'info';
   if (contacted > 0) {
-    bgColor = 'bg-error-main';
     textColor = 'text-error-main';
     severity = 'error';
   }
   if (percent > 20) {
-    bgColor = 'bg-warning-main';
     textColor = 'text-warning-main';
     severity = 'warning';
   }
   if (percent > 75) {
-    bgColor = 'bg-success-main';
     textColor = 'text-success-main';
     severity = 'success';
   }
@@ -55,13 +50,10 @@ export function ContactedBarSection(props) {
           </div>
         )}
       </div>
-      <Body1 className="text-center md:text-left">
+      <Body1 className="text-center md:text-left mb-2">
         <strong>Current:</strong> {numberFormatter(contacted)} voters
       </Body1>
-      <AnimatedProgressBar
-        percent={(contacted / needed) * 100}
-        bgColor={bgColor}
-      />
+      <AnimatedProgressBar percent={(contacted / needed) * 100} />
 
       <P2vModal
         triggerElement={

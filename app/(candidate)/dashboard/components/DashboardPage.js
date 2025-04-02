@@ -49,6 +49,18 @@ export async function fetchUpdateHistory() {
   }
 }
 
+const getFilteredListOfReportedVoterContacts = (reportedVoterGoals) => ({
+  doorKnocking: reportedVoterGoals?.doorKnocking || 0,
+  calls: reportedVoterGoals?.calls || 0,
+  digital: reportedVoterGoals?.digital || 0,
+  directMail: reportedVoterGoals?.directMail || 0,
+  digitalAds: reportedVoterGoals?.digitalAds || 0,
+  text: reportedVoterGoals?.text || 0,
+  events: reportedVoterGoals?.events || 0,
+  robocall: reportedVoterGoals?.robocall || 0,
+  phoneBanking: reportedVoterGoals?.phoneBanking || 0,
+});
+
 export default function DashboardPage({ pathname }) {
   const [_, setUser] = useUser();
   const [campaign, setCampaign] = useState(null);
@@ -104,17 +116,10 @@ export default function DashboardPage({ pathname }) {
       setCampaign(campaign);
 
       const reportedVoterGoals = campaign.data?.reportedVoterGoals;
+      console.log(`Dash page reportedVoterGoals =>`, reportedVoterGoals);
       const storedPrimaryResult = campaign.details?.primaryResult;
 
-      setState({
-        doorKnocking: reportedVoterGoals?.doorKnocking || 0,
-        calls: reportedVoterGoals?.calls || 0,
-        digital: reportedVoterGoals?.digital || 0,
-        directMail: reportedVoterGoals?.directMail || 0,
-        digitalAds: reportedVoterGoals?.digitalAds || 0,
-        text: reportedVoterGoals?.text || 0,
-        events: reportedVoterGoals?.events || 0,
-      });
+      setState(getFilteredListOfReportedVoterContacts(reportedVoterGoals));
 
       setPrimaryResultState({
         modalOpen: false,
@@ -156,28 +161,28 @@ export default function DashboardPage({ pathname }) {
   const deleteHistoryCallBack = useCallback(async () => {
     const campaign = await getCampaign();
     if (campaign) {
-      setState({
-        doorKnocking: campaign?.data?.reportedVoterGoals?.doorKnocking || 0,
-        calls: campaign?.data?.reportedVoterGoals?.calls || 0,
-        digital: campaign?.data?.reportedVoterGoals?.digital || 0,
-        directMail: campaign?.data?.reportedVoterGoals?.directMail || 0,
-        digitalAds: campaign?.data?.reportedVoterGoals?.digitalAds || 0,
-        text: campaign?.data?.reportedVoterGoals?.text || 0,
-        events: campaign?.data?.reportedVoterGoals?.events || 0,
-      });
+      setState(
+        getFilteredListOfReportedVoterContacts(
+          campaign?.data?.reportedVoterGoals,
+        ),
+      );
     }
 
     await loadHistory();
   }, []);
 
+  // TODO: All this campaign state management needs to be moved up into Context and be done through
+  //  a provider. All this prop-drilling and "callback" stuff would then be eliminated.
   const updateCountCallback = useCallback(
     async (key, value, newAddition) => {
+      console.log(`key, value =>`, key, value);
       const newState = {
         ...state,
         [key]: value,
       };
       setState(newState);
 
+      console.log(`newState =>`, newState);
       await updateCampaign([
         { key: 'data.reportedVoterGoals', value: newState },
       ]);

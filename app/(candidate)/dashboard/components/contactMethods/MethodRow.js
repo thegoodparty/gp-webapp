@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { numberFormatter } from 'helpers/numberHelper';
 import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow';
 import Button from '@shared/buttons/Button';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 export default function MethodRow(props) {
   const { method, campaign = {}, pathToVictory = {} } = props;
