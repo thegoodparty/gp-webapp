@@ -1,29 +1,53 @@
+'use client';
 import { useState } from 'react';
 import Modal from '@shared/utils/Modal';
 import H1 from '@shared/typography/H1';
 import TextField from '@shared/inputs/TextField';
 import Button from '@shared/buttons/Button';
 import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+
+const getEditedFields = (formState) =>
+  Object.keys(formState).reduce(
+    (acc, key) => ({
+      ...acc,
+      ...(Boolean(formState[key]) ? { [key]: parseInt(formState[key]) } : {}),
+    }),
+    {},
+  );
+
+const calculateIncrementedFields = (currentFields, editedFields) =>
+  Object.keys(editedFields).reduce(
+    (acc, k) => ({
+      ...acc,
+      [k]: (currentFields[k] || 0) + editedFields[k],
+    }),
+    {},
+  );
 
 export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
-  const [formData, setFormData] = useState({
-    textMessagesSent: '',
-    robocallsSent: '',
-    doorsKnocked: '',
-    callsMade: '',
-    socialPostViews: '',
-    votersMetAtEvents: '',
+  const [_, setRecordVoterGoals] = useVoterContacts();
+  const [formState, setFormState] = useState({
+    text: '',
+    robocall: '',
+    doorKnocking: '',
+    phoneBanking: '',
+    socialMedia: '',
+    events: '',
   });
 
   const handleInputChange = (field) => (e) => {
-    setFormData({
-      ...formData,
+    setFormState({
+      ...formState,
       [field]: e.target.value,
     });
   };
 
   const handleSubmit = () => {
-    // TODO: Handle form submission
+    setRecordVoterGoals((prev) => ({
+      ...prev,
+      ...calculateIncrementedFields(prev, getEditedFields(formState)),
+    }));
     setOpen(false);
   };
 
@@ -40,8 +64,8 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             type="number"
             fullWidth
             placeholder="Enter amount"
-            value={formData.textMessagesSent}
-            onChange={handleInputChange('textMessagesSent')}
+            value={formState.text}
+            onChange={handleInputChange('text')}
           />
 
           <TextField
@@ -49,8 +73,8 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             type="number"
             fullWidth
             placeholder="Enter amount"
-            value={formData.robocallsSent}
-            onChange={handleInputChange('robocallsSent')}
+            value={formState.robocall}
+            onChange={handleInputChange('robocall')}
           />
 
           <TextField
@@ -58,8 +82,8 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             type="number"
             fullWidth
             placeholder="Enter amount"
-            value={formData.doorsKnocked}
-            onChange={handleInputChange('doorsKnocked')}
+            value={formState.doorKnocking}
+            onChange={handleInputChange('doorKnocking')}
           />
 
           <TextField
@@ -67,8 +91,8 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             type="number"
             fullWidth
             placeholder="Enter amount"
-            value={formData.callsMade}
-            onChange={handleInputChange('callsMade')}
+            value={formState.phoneBanking}
+            onChange={handleInputChange('phoneBanking')}
           />
 
           <TextField
@@ -76,8 +100,8 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             type="number"
             fullWidth
             placeholder="Enter amount"
-            value={formData.socialPostViews}
-            onChange={handleInputChange('socialPostViews')}
+            value={formState.socialMedia}
+            onChange={handleInputChange('socialMedia')}
           />
 
           <TextField
@@ -85,8 +109,8 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             type="number"
             fullWidth
             placeholder="Enter amount"
-            value={formData.votersMetAtEvents}
-            onChange={handleInputChange('votersMetAtEvents')}
+            value={formState.events}
+            onChange={handleInputChange('events')}
           />
         </div>
 

@@ -12,6 +12,7 @@ export const getFilteredListOfReportedVoterContacts = (reportedVoterGoals) => ({
   events: reportedVoterGoals?.events || 0,
   robocall: reportedVoterGoals?.robocall || 0,
   phoneBanking: reportedVoterGoals?.phoneBanking || 0,
+  socialMedia: reportedVoterGoals?.socialMedia || 0,
 });
 
 const INITIAL_VOTER_CONTACTS_STATE = {
@@ -45,7 +46,7 @@ export const VoterContactsProvider = ({ children }) => {
   const updateState = useCallback(
     async (next) => {
       const newValues = typeof next === 'function' ? next(state) : next;
-
+      console.log(`newValues =>`, newValues);
       await updateCampaign([
         { key: 'data.reportedVoterGoals', value: newValues },
       ]);
