@@ -7,7 +7,7 @@ import CookiesSnackbar from './CookiesSnackbar';
 import { NavigationProvider } from '@shared/layouts/navigation/NavigationProvider';
 import { UserProvider } from '@shared/user/UserProvider';
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider';
-import { CampaignProvider } from '@shared/user/CampaignProvider';
+import { CampaignProvider } from '@shared/hooks/CampaignProvider';
 import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider';
 
 const PageWrapper = ({ children, hideFooter }) => (

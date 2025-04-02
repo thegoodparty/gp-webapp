@@ -1,3 +1,4 @@
+'use client';
 import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
 import { useState } from 'react';
 import Paper from '@shared/utils/Paper';
@@ -12,8 +13,10 @@ import { BsInfoCircle } from 'react-icons/bs';
 import { ContactCountsInfoModal } from 'app/(candidate)/dashboard/components/ContactCountsInfoModal';
 import Button from '@shared/buttons/Button';
 import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
 
-export const CampaignProgress = ({ pathToVictory, reportedVoterGoals }) => {
+export const CampaignProgress = ({ pathToVictory }) => {
+  const [reportedVoterGoals] = useVoterContacts();
   const { needed, contacted } = calculateVoterContactCounts(
     pathToVictory,
     reportedVoterGoals,
@@ -28,11 +31,7 @@ export const CampaignProgress = ({ pathToVictory, reportedVoterGoals }) => {
     <Paper className="mb-4">
       <div className="flex flex-col md:flex-row md:justify-between items-start gap-4 mb-4">
         <H2>Campaign progress</H2>
-        <Button
-          color="neutral"
-          size="medium"
-          onClick={toggleRecordModal}
-        >
+        <Button color="neutral" size="medium" onClick={toggleRecordModal}>
           Record voter contacts
         </Button>
       </div>

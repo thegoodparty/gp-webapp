@@ -38,8 +38,7 @@ export default function DeleteAction({
     if (deleteResp?.ok) {
       successSnackbar('Deleted');
     }
-    // window.location.reload();
-    await deleteHistoryCallBack();
+    deleteHistoryCallBack(id);
   };
 
   return (

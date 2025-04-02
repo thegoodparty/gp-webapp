@@ -8,9 +8,10 @@ import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/An
 import { P2vModal } from './P2vModal';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
 
-export function ContactedBarSection(props) {
-  const { pathToVictory, reportedVoterGoals } = props;
+export function ContactedBarSection({ pathToVictory }) {
+  const [reportedVoterGoals] = useVoterContacts();
   const { needed, contacted } = calculateVoterContactCounts(
     pathToVictory,
     reportedVoterGoals,

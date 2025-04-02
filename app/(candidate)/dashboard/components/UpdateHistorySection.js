@@ -11,6 +11,7 @@ import H5 from '@shared/typography/H5';
 import { numberFormatter } from 'helpers/numberHelper';
 import H3 from '@shared/typography/H3';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -23,30 +24,31 @@ const fields = {
   events: { title: 'Events Attendance' },
 };
 
-const UpdateHistorySection = memo(function UpdateHistorySection(props) {
+const UpdateHistorySection = memo(function UpdateHistorySection({
+  deleteHistoryCallBack,
+  updateHistory,
+}) {
+  const [_, setReportedVoterGoals] = useVoterContacts();
   const [showMenu, setShowMenu] = useState(0);
 
-  const { deleteHistoryCallBack, updateHistory } = props;
-
-  const inputData = [];
-  if (updateHistory) {
-    updateHistory.map((update) => {
-      if (update.type && update.type !== '') {
-        const fields = {
-          id: update.id,
-          name: update.user?.firstName
-            ? `${update.user.firstName} ${update.user.lastName}`
-            : '',
-          user: update.user,
-          type: update.type,
-          quantity: update.quantity,
-          createdAt: new Date(update.createdAt),
-          updatedAt: new Date(update.updatedAt),
-        };
-        inputData.push(fields);
-      }
-    });
-  }
+  const historyItems = !updateHistory
+    ? []
+    : updateHistory.map((update) => {
+        if (update.type && update.type !== '') {
+          const fields = {
+            id: update.id,
+            name: update.user?.firstName
+              ? `${update.user.firstName} ${update.user.lastName}`
+              : '',
+            user: update.user,
+            type: update.type,
+            quantity: update.quantity,
+            createdAt: new Date(update.createdAt),
+            updatedAt: new Date(update.updatedAt),
+          };
+          return fields;
+        }
+      });
 
   function handleShowMenu(id) {
     trackEvent(EVENTS.Dashboard.ActionHistory.ClickMenu, { id });
@@ -55,7 +57,12 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
 
   function handleDelete(id) {
     trackEvent(EVENTS.Dashboard.ActionHistory.ClickDelete, { id });
-    deleteHistoryCallBack(id);
+    const { type, quantity } = historyItems.find((item) => item.id === id);
+    setReportedVoterGoals((prev) => ({
+      ...prev,
+      [type]: Math.max((prev[type] || 0) - quantity, 0),
+    }));
+    deleteHistoryCallBack();
   }
 
   return (
@@ -65,7 +72,7 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
         <Body2 className="mb-4 text-gray-600">
           View all recorded progress entries for your campaign below.
         </Body2>
-        {inputData.length === 0 ? (
+        {historyItems.length === 0 ? (
           <Paper>
             <div className="flex flex-col justify-center items-center py-4">
               <div className="text-4xl">
@@ -98,7 +105,7 @@ const UpdateHistorySection = memo(function UpdateHistorySection(props) {
               </div>
             </div>
             <div className="grid grid-cols-12 rounded-b-lg">
-              {inputData.map((data, index) => (
+              {historyItems.map((data, index) => (
                 <Fragment key={data.id}>
                   <div
                     className={`col-span-8 md:col-span-4 lg:col-span-3 flex items-center p-2 border-b border-gray-200 ${

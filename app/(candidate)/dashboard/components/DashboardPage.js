@@ -1,13 +1,8 @@
 'use client';
 import DashboardLayout from '../shared/DashboardLayout';
-
 import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper';
 import { useCallback, useEffect, useState } from 'react';
 import { calculateContactGoals } from './voterGoalsHelpers';
-import {
-  getCampaign,
-  updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
 import ElectionOver from './ElectionOver';
 import UpdateHistorySection from './UpdateHistorySection';
 import EmptyState from './EmptyState';
@@ -21,6 +16,8 @@ import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import { clientFetch } from 'gpApi/clientFetch';
 import { apiRoutes } from 'gpApi/routes';
 import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader';
+import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
 
 export async function createUpdateHistory(payload) {
   try {
@@ -49,22 +46,10 @@ export async function fetchUpdateHistory() {
   }
 }
 
-const getFilteredListOfReportedVoterContacts = (reportedVoterGoals) => ({
-  doorKnocking: reportedVoterGoals?.doorKnocking || 0,
-  calls: reportedVoterGoals?.calls || 0,
-  digital: reportedVoterGoals?.digital || 0,
-  directMail: reportedVoterGoals?.directMail || 0,
-  digitalAds: reportedVoterGoals?.digitalAds || 0,
-  text: reportedVoterGoals?.text || 0,
-  events: reportedVoterGoals?.events || 0,
-  robocall: reportedVoterGoals?.robocall || 0,
-  phoneBanking: reportedVoterGoals?.phoneBanking || 0,
-});
-
 export default function DashboardPage({ pathname }) {
   const [_, setUser] = useUser();
+  const [reportedVoterGoals] = useVoterContacts();
   const [campaign, setCampaign] = useState(null);
-
   const { pathToVictory: p2vObject, goals, details } = campaign || {};
   const pathToVictory = p2vObject?.data || {};
   const { primaryElectionDate } = details || {};
@@ -79,16 +64,6 @@ export default function DashboardPage({ pathname }) {
     details?.office?.toLowerCase() === 'other'
       ? details?.otherOffice
       : details?.office;
-
-  const [state, setState] = useState({
-    doorKnocking: 0,
-    calls: 0,
-    digital: 0,
-    directMail: 0,
-    digitalAds: 0,
-    text: 0,
-    events: 0,
-  });
 
   const loadHistory = async () => {
     const updateHistory = await fetchUpdateHistory();
@@ -114,12 +89,7 @@ export default function DashboardPage({ pathname }) {
     async function loadCampaign() {
       const campaign = await fetchUserClientCampaign();
       setCampaign(campaign);
-
-      const reportedVoterGoals = campaign.data?.reportedVoterGoals;
-      console.log(`Dash page reportedVoterGoals =>`, reportedVoterGoals);
       const storedPrimaryResult = campaign.details?.primaryResult;
-
-      setState(getFilteredListOfReportedVoterContacts(reportedVoterGoals));
 
       setPrimaryResultState({
         modalOpen: false,
@@ -158,42 +128,24 @@ export default function DashboardPage({ pathname }) {
   const dateRange = weekRangeFromDate(resolvedDate, weeksUntil.weeks);
   const contactGoals = calculateContactGoals(resolvedContactGoal);
 
-  const deleteHistoryCallBack = useCallback(async () => {
-    const campaign = await getCampaign();
-    if (campaign) {
-      setState(
-        getFilteredListOfReportedVoterContacts(
-          campaign?.data?.reportedVoterGoals,
-        ),
-      );
-    }
-
-    await loadHistory();
-  }, []);
-
   // TODO: All this campaign state management needs to be moved up into Context and be done through
   //  a provider. All this prop-drilling and "callback" stuff would then be eliminated.
+  //  I've done some of it for the `reportedVoterGoals` state, but more needs to be done here.
   const updateCountCallback = useCallback(
-    async (key, value, newAddition) => {
-      console.log(`key, value =>`, key, value);
-      const newState = {
-        ...state,
-        [key]: value,
-      };
-      setState(newState);
-
-      console.log(`newState =>`, newState);
-      await updateCampaign([
-        { key: 'data.reportedVoterGoals', value: newState },
-      ]);
-
+    async (key, newAddition) => {
       await createUpdateHistory({
         type: key,
         quantity: newAddition,
       });
       await loadHistory();
     },
-    [state],
+    [reportedVoterGoals],
+  );
+
+  // TODO: this callback also won't be needed if the UpdateHistory stuff is hoisted into context
+  const deleteHistoryCallBack = useCallback(
+    async () => await loadHistory(),
+    [],
   );
 
   const primaryResultCloseCallback = useCallback((selectedResult) => {
@@ -228,7 +180,6 @@ export default function DashboardPage({ pathname }) {
     pathname,
     contactGoals,
     weeksUntil,
-    reportedVoterGoals: state,
     updateCountCallback,
     dateRange,
     updateHistory,
@@ -237,41 +188,43 @@ export default function DashboardPage({ pathname }) {
   };
 
   return (
-    <DashboardLayout {...childProps}>
-      <DashboardHeader reportedVoterGoals={state} />
-      {campaign ? (
-        <>
-          <div>
-            {contactGoals ? (
-              <>
-                {(weeksUntil.weeks < 0 &&
-                  resolvedDate !== primaryElectionDate) ||
-                primaryResultState.primaryResult === 'lost' ? (
-                  <ElectionOver />
-                ) : (
-                  <>
-                    <P2vSection {...childProps} />
-                    <ContactMethodsSection {...childProps} />
-                    <UpdateHistorySection {...childProps} />
-                  </>
-                )}
-              </>
-            ) : (
-              <EmptyState campaign={campaign} />
+    <VoterContactsProvider>
+      <DashboardLayout {...childProps}>
+        <DashboardHeader />
+        {campaign ? (
+          <>
+            <div>
+              {contactGoals ? (
+                <>
+                  {(weeksUntil.weeks < 0 &&
+                    resolvedDate !== primaryElectionDate) ||
+                  primaryResultState.primaryResult === 'lost' ? (
+                    <ElectionOver />
+                  ) : (
+                    <>
+                      <P2vSection {...childProps} />
+                      <ContactMethodsSection {...childProps} />
+                      <UpdateHistorySection {...childProps} />
+                    </>
+                  )}
+                </>
+              ) : (
+                <EmptyState campaign={campaign} />
+              )}
+            </div>
+            {primaryElectionDate && (
+              <PrimaryResultModal
+                open={primaryResultState.modalOpen}
+                onClose={primaryResultCloseCallback}
+                electionDate={electionDate}
+                officeName={officeName}
+              />
             )}
-          </div>
-          {primaryElectionDate && (
-            <PrimaryResultModal
-              open={primaryResultState.modalOpen}
-              onClose={primaryResultCloseCallback}
-              electionDate={electionDate}
-              officeName={officeName}
-            />
-          )}
-        </>
-      ) : (
-        <LoadingAnimation title="Loading your dashboard" fullPage={false} />
-      )}
-    </DashboardLayout>
+          </>
+        ) : (
+          <LoadingAnimation title="Loading your dashboard" fullPage={false} />
+        )}
+      </DashboardLayout>
+    </VoterContactsProvider>
   );
 }

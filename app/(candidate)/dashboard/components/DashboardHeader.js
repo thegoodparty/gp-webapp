@@ -5,7 +5,7 @@ import { VoterContactsCount } from 'app/(candidate)/dashboard/components/VoterCo
 import { RemainingTasks } from 'app/(candidate)/dashboard/components/RemainingTasks';
 import { CampaignProgress } from 'app/(candidate)/dashboard/components/CampaignProgress';
 
-export const DashboardHeader = ({ reportedVoterGoals }) => {
+export const DashboardHeader = () => {
   const [campaign] = useCampaign();
   const { pathToVictory: p2vObject, details: campaignDetails } = campaign || {};
   const pathToVictory = p2vObject?.data || {};
@@ -15,9 +15,9 @@ export const DashboardHeader = ({ reportedVoterGoals }) => {
   return (
     <section className="mb-6">
       <CampaignCountdown electionDate={electionDate} />
-      <VoterContactsCount {...{ pathToVictory, reportedVoterGoals }} />
+      <VoterContactsCount {...{ pathToVictory }} />
       <RemainingTasks />
-      <CampaignProgress {...{ pathToVictory, reportedVoterGoals }} />
+      <CampaignProgress {...{ pathToVictory }} />
     </section>
   );
 };

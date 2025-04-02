@@ -10,12 +10,10 @@ import {
   trackEvent,
 } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
 
-export default function LogProgress({
-  card,
-  reportedVoterGoals = {},
-  updateCountCallback,
-}) {
+export default function LogProgress({ card, updateCountCallback }) {
+  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts();
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -44,7 +42,11 @@ export default function LogProgress({
     });
 
     const newTotal = (reportedVoterGoals[key] || 0) + newAddition;
-    updateCountCallback(key, newTotal, newAddition);
+    setReportedVoterGoals((prev) => ({
+      ...prev,
+      [key]: newTotal,
+    }));
+    updateCountCallback(key, newAddition);
     setShowModal(false);
     setValue(0);
   };

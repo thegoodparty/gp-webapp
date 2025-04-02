@@ -151,7 +151,6 @@ export const calculateVoterContactCounts = (
   pathToVictory,
   reportedVoterGoals,
 ) => {
-  console.log(`reportedVoterGoals =>`, reportedVoterGoals);
   return {
     needed: getVoterContactsGoal(pathToVictory || {}),
     contacted: getVoterContactsTotal(reportedVoterGoals || {}),
