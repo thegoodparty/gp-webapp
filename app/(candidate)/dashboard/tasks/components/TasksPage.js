@@ -16,8 +16,6 @@ export default function TasksPage({ pathname, campaign, tasks }) {
   const weeksUntilElection = weeksTill(electionDate);
   const daysUntilElection = daysTill(electionDate);
 
-  console.log('daysUntilElection', daysUntilElection);
-  console.log('weeksUntilElection', weeksUntilElection);
   // TODO: what if no election date?
   // TODO: what if no p2v?
   // TODO: what if no tasks? when do tasks get created?

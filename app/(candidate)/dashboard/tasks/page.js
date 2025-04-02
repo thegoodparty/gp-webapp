@@ -28,8 +28,6 @@ export default async function Page() {
   const campaign = await fetchCampaign();
   const tasks = await fetchTasks();
 
-  console.log('tasks', tasks);
-
   return (
     <TasksPage pathname="/dashboard/tasks" campaign={campaign} tasks={tasks} />
   );
