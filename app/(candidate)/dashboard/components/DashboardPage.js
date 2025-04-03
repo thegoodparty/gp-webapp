@@ -13,7 +13,6 @@ import ContactMethodsSection from './contactMethods/ContactMethodsSection';
 import PrimaryResultModal from './PrimaryResultModal';
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
-import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader';
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider';
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider';
 import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
@@ -134,7 +133,6 @@ export default function DashboardPage({ pathname }) {
     <VoterContactsProvider>
       <CampaignUpdateHistoryProvider>
         <DashboardLayout {...childProps}>
-          <DashboardHeader />
           {campaign ? (
             <>
               <div>
