@@ -44,7 +44,7 @@ export default function TasksPage({ pathname, campaign, tasks }) {
 
             <ul className="p-0 mt-4">
               {weeklyTasks.length > 0 ? (
-                weeklyTasks.map((task, idx) => (
+                weeklyTasks.map((task) => (
                   <TaskItem
                     key={task.id}
                     task={task}

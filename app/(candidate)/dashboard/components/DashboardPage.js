@@ -15,11 +15,9 @@ import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign';
 import LoadingAnimation from '@shared/utils/LoadingAnimation';
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider';
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider';
-import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
 
 export default function DashboardPage({ pathname }) {
   const [_, setUser] = useUser();
-  const [updateHistory] = useCampaignUpdateHistory();
   const [campaign, setCampaign] = useState(null);
   const { pathToVictory: p2vObject, goals, details } = campaign || {};
   const pathToVictory = p2vObject?.data || {};
@@ -125,7 +123,6 @@ export default function DashboardPage({ pathname }) {
     contactGoals,
     weeksUntil,
     dateRange,
-    updateHistory,
     pathToVictory,
   };
 
@@ -146,7 +143,7 @@ export default function DashboardPage({ pathname }) {
                       <>
                         <P2vSection {...childProps} />
                         <ContactMethodsSection {...childProps} />
-                        <UpdateHistorySection {...childProps} />
+                        <UpdateHistorySection />
                       </>
                     )}
                   </>
