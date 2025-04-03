@@ -9,7 +9,6 @@ import { useUser } from '@shared/hooks/useUser';
 export default function DashboardLayout({
   children,
   pathname,
-  pathToVictory,
   campaign,
   showAlert = true,
   wrapperClassName = '',
@@ -22,11 +21,7 @@ export default function DashboardLayout({
 
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
         <div className="hidden lg:block">
-          <DashboardMenu
-            pathname={pathname}
-            pathToVictory={pathToVictory}
-            campaign={campaign}
-          />
+          <DashboardMenu pathname={pathname} campaign={campaign} />
         </div>
         <main className={'lg:ml-4 flex-1 ' + wrapperClassName}>
           {campaign && showAlert && <AlertSection campaign={campaign} />}

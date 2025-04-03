@@ -15,6 +15,7 @@ import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 import { useEcanvasser } from '@shared/hooks/useEcanvasser';
 import { useEffect } from 'react';
 import { syncEcanvasser } from 'utils/syncEcanvasser';
+import Image from 'next/image';
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -59,6 +60,22 @@ const DEFAULT_MENU_ITEMS = [
     link: '/blog/section/for-candidates',
     id: 'resources-library',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickFreeResources),
+  },
+  {
+    label: 'Community',
+    icon: (
+      <Image
+        src="/images/logo/heart-white.svg"
+        alt="Community"
+        width={20}
+        height={20}
+        className="opacity-70 hover:opacity-100 transition-opacity"
+      />
+    ),
+    link: 'https://goodpartyorg.circle.so/join?invitation_token=ee5c167c12e1335125a5c8dce7c493e95032deb7-a58159ab-64c4-422a-9396-b6925c225952',
+    target: '_blank',
+    id: 'community-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickCommunity),
   },
 ];
 
@@ -117,7 +134,7 @@ export default function DashboardMenu({
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
-        const { id, link, icon, label } = item;
+        const { id, link, icon, label, target } = item;
         return (
           <DashboardMenuItem
             key={label}
@@ -126,6 +143,7 @@ export default function DashboardMenu({
             icon={icon}
             onClick={() => handleMenuItemClick(item)}
             pathname={pathname}
+            target={target}
           >
             {label}
           </DashboardMenuItem>

@@ -201,6 +201,20 @@ export const apiRoutes = {
       path: '/campaigns/mine/plan-version',
       method: 'GET',
     },
+    tasks: {
+      list: {
+        path: '/campaigns/tasks',
+        method: 'GET',
+      },
+      complete: {
+        path: '/campaigns/tasks/complete/:taskId',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/tasks/:taskId',
+        method: 'DELETE',
+      },
+    },
   },
   content: {
     getByType: {
