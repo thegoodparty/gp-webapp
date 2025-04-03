@@ -13,9 +13,8 @@ import H3 from '@shared/typography/H3';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 import { useVoterContacts } from '@shared/hooks/useVoterContacts';
 import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
 import { segregateItemFromList } from '@shared/utils/segregateItemFromList';
+import { deleteUpdateHistory } from '@shared/utils/campaignUpdateHistoryServices';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -26,14 +25,10 @@ const fields = {
   directMail: { title: 'Direct mail sent' },
   digitalAds: { title: 'Digital ads' },
   events: { title: 'Events Attendance' },
+  robocall: { title: 'Robocalls' },
+  phoneBanking: { title: 'Phone Banking' },
+  socialMedia: { title: 'Social Media Views' },
 };
-
-async function deleteUpdateHistory(id) {
-  const resp = await clientFetch(apiRoutes.campaign.updateHistory.delete, {
-    id,
-  });
-  return resp.data;
-}
 
 const irresponsiblyMassageHistoryItem = (historyItem) => ({
   id: historyItem.id,
@@ -67,7 +62,7 @@ const UpdateHistorySection = memo(function UpdateHistorySection() {
       ({ id: itemId }) => itemId === id,
     );
     await deleteUpdateHistory(id);
-    setUpdateHistory(() => restItems);
+    setUpdateHistory(restItems);
     setReportedVoterGoals(() => ({
       ...reportedVoterGoals,
       [deletedItem.type]: Math.max(

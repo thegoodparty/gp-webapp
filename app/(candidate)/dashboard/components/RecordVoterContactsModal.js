@@ -6,6 +6,12 @@ import TextField from '@shared/inputs/TextField';
 import Button from '@shared/buttons/Button';
 import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper';
 import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
+import {
+  createIrresponsiblyMassagedHistoryItem,
+  createUpdateHistory,
+} from '@shared/utils/campaignUpdateHistoryServices';
+import { useUser } from '@shared/hooks/useUser';
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(
@@ -25,16 +31,20 @@ const calculateIncrementedFields = (currentFields, editedFields) =>
     {},
   );
 
+const INITIAL_FORM_STATE = {
+  text: '',
+  robocall: '',
+  doorKnocking: '',
+  phoneBanking: '',
+  socialMedia: '',
+  events: '',
+};
+
 export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
-  const [_, setRecordVoterGoals] = useVoterContacts();
-  const [formState, setFormState] = useState({
-    text: '',
-    robocall: '',
-    doorKnocking: '',
-    phoneBanking: '',
-    socialMedia: '',
-    events: '',
-  });
+  const [user] = useUser();
+  const [recordedVoterGoals, setRecordedVoterGoals] = useVoterContacts();
+  const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory();
+  const [formState, setFormState] = useState(INITIAL_FORM_STATE);
 
   const handleInputChange = (field) => (e) => {
     setFormState({
@@ -43,11 +53,27 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
     });
   };
 
-  const handleSubmit = () => {
-    setRecordVoterGoals((prev) => ({
-      ...prev,
-      ...calculateIncrementedFields(prev, getEditedFields(formState)),
+  const handleSubmit = async () => {
+    const updatedFields = getEditedFields(formState);
+    const newHistoryItemsData = Object.keys(updatedFields).map((key) => ({
+      type: key,
+      quantity: updatedFields[key],
     }));
+    const newHistoryItems = await Promise.all(
+      newHistoryItemsData.map((item) => createUpdateHistory(item)),
+    );
+
+    setRecordedVoterGoals({
+      ...recordedVoterGoals,
+      ...calculateIncrementedFields(recordedVoterGoals, updatedFields),
+    });
+    setUpdateHistory([
+      ...updateHistory,
+      ...newHistoryItems.map((item) =>
+        createIrresponsiblyMassagedHistoryItem(item, user),
+      ),
+    ]);
+    setFormState({ ...INITIAL_FORM_STATE });
     setOpen(false);
   };
 
@@ -63,6 +89,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             label="Text Messages Sent"
             type="number"
             fullWidth
+            min="0"
             placeholder="Enter amount"
             value={formState.text}
             onChange={handleInputChange('text')}
@@ -72,6 +99,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             label="Robocalls Sent"
             type="number"
             fullWidth
+            min="0"
             placeholder="Enter amount"
             value={formState.robocall}
             onChange={handleInputChange('robocall')}
@@ -81,6 +109,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             label="Doors Knocked"
             type="number"
             fullWidth
+            min="0"
             placeholder="Enter amount"
             value={formState.doorKnocking}
             onChange={handleInputChange('doorKnocking')}
@@ -90,6 +119,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             label="Calls Made"
             type="number"
             fullWidth
+            min="0"
             placeholder="Enter amount"
             value={formState.phoneBanking}
             onChange={handleInputChange('phoneBanking')}
@@ -99,6 +129,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             label="Social Post Views"
             type="number"
             fullWidth
+            min="0"
             placeholder="Enter amount"
             value={formState.socialMedia}
             onChange={handleInputChange('socialMedia')}
@@ -108,6 +139,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             label="Voters Met At Events"
             type="number"
             fullWidth
+            min="0"
             placeholder="Enter amount"
             value={formState.events}
             onChange={handleInputChange('events')}
