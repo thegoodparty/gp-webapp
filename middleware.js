@@ -4,6 +4,11 @@ import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
 import { API_VERSION_PREFIX } from 'appEnv';
 
 const dbRedirects = {
+  '/social': 'https://shor.by/goodpartyorg',
+  '/pricing': '/run-for-office#pricing-section',
+  '/iva': 'https://lp.goodparty.org/iva',
+  '/aa':
+    'https://goodparty.org/candidates/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_oct_1_aa_find_candidates_optin_&utm_content=optin_&',
   '/bz':
     'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_38_bz_stickers_qr_ambassador_7_&utm_content=ambassador_7_&',
   '/bx':
@@ -76,12 +81,8 @@ const dbRedirects = {
     'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_21_bb_stickers_qr_candidates_&utm_content=candidates_&',
   '/ab':
     'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_2_ab_stickers_qr_2_&utm_content=2_&',
-  '/aa':
-    'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_1_aa_stickers_qr_optin_&utm_content=optin_&',
   '/ac':
     'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_3_ac_stickers_qr_3_&utm_content=3_&',
-  '/iva': 'https://lp.goodparty.org/iva',
-  '/pricing': '/run-for-office#pricing-section',
   '/run': '/run-for-office',
   '/elections/senate/me': '/',
 };
