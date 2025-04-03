@@ -2,7 +2,7 @@ name: E2E Tests
 
 on:
   deployment_status:
-    environment:
+    environments:
       - 'Preview - gp-ui'
       - 'Production - gp-ui'
     schedule:
