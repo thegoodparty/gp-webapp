@@ -3,12 +3,19 @@ import { useEffect, useState } from 'react';
 import H1 from '@shared/typography/H1';
 import Body1 from '@shared/typography/Body1';
 import { ModalFooter } from '@shared/ModalFooter';
-import RichEditor from '@shared/utils/RichEditor';
 import {
   getCampaign,
   updateCampaign,
 } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { useSnackbar } from 'helpers/useSnackbar';
+import dynamic from 'next/dynamic';
+
+const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
+  ssr: false,
+  loading: () => (
+    <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
+  ),
+});
 
 export const GenerateReviewScreen = ({
   aiScriptKey = '',
