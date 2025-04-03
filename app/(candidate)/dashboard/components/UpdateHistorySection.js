@@ -12,6 +12,10 @@ import { numberFormatter } from 'helpers/numberHelper';
 import H3 from '@shared/typography/H3';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
 import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { segregateItemFromList } from '@shared/utils/segregateItemFromList';
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -24,46 +28,54 @@ const fields = {
   events: { title: 'Events Attendance' },
 };
 
-const UpdateHistorySection = memo(function UpdateHistorySection({
-  deleteHistoryCallBack,
-  updateHistory,
-}) {
-  const [_, setReportedVoterGoals] = useVoterContacts();
+async function deleteUpdateHistory(id) {
+  const resp = await clientFetch(apiRoutes.campaign.updateHistory.delete, {
+    id,
+  });
+  return resp.data;
+}
+
+const irresponsiblyMassageHistoryItem = (historyItem) => ({
+  id: historyItem.id,
+  name: historyItem.user?.firstName
+    ? `${historyItem.user.firstName} ${historyItem.user.lastName}`
+    : '',
+  user: historyItem.user,
+  type: historyItem.type,
+  quantity: historyItem.quantity,
+  createdAt: new Date(historyItem.createdAt),
+  updatedAt: new Date(historyItem.updatedAt),
+});
+
+const UpdateHistorySection = memo(function UpdateHistorySection() {
+  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts();
+  const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory();
   const [showMenu, setShowMenu] = useState(0);
 
   const historyItems = !updateHistory
     ? []
-    : updateHistory.map((update) => {
-        if (update.type && update.type !== '') {
-          const fields = {
-            id: update.id,
-            name: update.user?.firstName
-              ? `${update.user.firstName} ${update.user.lastName}`
-              : '',
-            user: update.user,
-            type: update.type,
-            quantity: update.quantity,
-            createdAt: new Date(update.createdAt),
-            updatedAt: new Date(update.updatedAt),
-          };
-          return fields;
-        }
-      });
+    : updateHistory.map(irresponsiblyMassageHistoryItem);
 
   function handleShowMenu(id) {
     trackEvent(EVENTS.Dashboard.ActionHistory.ClickMenu, { id });
     setShowMenu(id);
   }
 
-  function handleDelete(id) {
-    trackEvent(EVENTS.Dashboard.ActionHistory.ClickDelete, { id });
-    const { type, quantity } = historyItems.find((item) => item.id === id);
-    setReportedVoterGoals((prev) => ({
-      ...prev,
-      [type]: Math.max((prev[type] || 0) - quantity, 0),
+  const handleDelete = async (id) => {
+    const [deletedItem, restItems] = segregateItemFromList(
+      updateHistory,
+      ({ id: itemId }) => itemId === id,
+    );
+    await deleteUpdateHistory(id);
+    setUpdateHistory(() => restItems);
+    setReportedVoterGoals(() => ({
+      ...reportedVoterGoals,
+      [deletedItem.type]: Math.max(
+        reportedVoterGoals[deletedItem.type] - deletedItem.quantity,
+        0,
+      ),
     }));
-    deleteHistoryCallBack();
-  }
+  };
 
   return (
     <Paper className="mt-12">
@@ -105,23 +117,23 @@ const UpdateHistorySection = memo(function UpdateHistorySection({
               </div>
             </div>
             <div className="grid grid-cols-12 rounded-b-lg">
-              {historyItems.map((data, index) => (
-                <Fragment key={data.id}>
+              {historyItems.map((item, index) => (
+                <Fragment key={item.id}>
                   <div
                     className={`col-span-8 md:col-span-4 lg:col-span-3 flex items-center p-2 border-b border-gray-200 ${
                       index % 2 === 0 ? '' : 'bg-gray-50'
                     } border-l`}
                   >
                     <Actions
-                      {...data}
-                      actionName={`${numberFormatter(data.quantity)} ${
-                        fields[data.type]?.title
+                      {...item}
+                      actionName={`${numberFormatter(item.quantity)} ${
+                        fields[item.type]?.title
                       }`}
                       showMenu={showMenu}
                       setShowMenu={handleShowMenu}
                       deleteHistoryCallBack={handleDelete}
                     />
-                    <H5 className="ml-3">{fields[data.type]?.title}</H5>
+                    <H5 className="ml-3">{fields[item.type]?.title}</H5>
                   </div>
 
                   <div
@@ -129,8 +141,8 @@ const UpdateHistorySection = memo(function UpdateHistorySection({
                       index % 2 === 0 ? '' : 'bg-gray-50'
                     }`}
                   >
-                    <UserAvatar user={data.user} size="small" /> &nbsp;{' '}
-                    {data.name}
+                    <UserAvatar user={item.user} size="small" /> &nbsp;{' '}
+                    {item.name}
                   </div>
 
                   <div
@@ -138,7 +150,7 @@ const UpdateHistorySection = memo(function UpdateHistorySection({
                       index % 2 === 0 ? '' : 'bg-gray-50'
                     }`}
                   >
-                    <H5>{numberFormatter(data.quantity)}</H5>
+                    <H5>{numberFormatter(item.quantity)}</H5>
                   </div>
 
                   <div
@@ -146,7 +158,7 @@ const UpdateHistorySection = memo(function UpdateHistorySection({
                       index % 2 === 0 ? '' : 'bg-gray-50'
                     }`}
                   >
-                    <H5>{dateUsHelper(data.createdAt)}</H5>
+                    <H5>{dateUsHelper(item.createdAt)}</H5>
                   </div>
                 </Fragment>
               ))}

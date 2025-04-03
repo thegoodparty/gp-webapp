@@ -11,9 +11,24 @@ import {
 } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
 import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
+import { clientFetch } from 'gpApi/clientFetch';
+import { apiRoutes } from 'gpApi/routes';
+import { useUser } from '@shared/hooks/useUser';
+import { getUserFullName } from '@shared/utils/getUserFullName';
 
-export default function LogProgress({ card, updateCountCallback }) {
+async function createUpdateHistory(payload) {
+  const resp = await clientFetch(
+    apiRoutes.campaign.updateHistory.create,
+    payload,
+  );
+  return resp.data;
+}
+
+export default function LogProgress({ card }) {
   const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts();
+  const [_, setUpdateHistory] = useCampaignUpdateHistory();
+  const [user] = useUser();
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -41,12 +56,30 @@ export default function LogProgress({ card, updateCountCallback }) {
       value,
     });
 
-    const newTotal = (reportedVoterGoals[key] || 0) + newAddition;
-    setReportedVoterGoals((prev) => ({
+    setReportedVoterGoals({
+      ...reportedVoterGoals,
+      [key]: (reportedVoterGoals[key] || 0) + newAddition,
+    });
+
+    // Create update history entry
+    const newHistoryItem = await createUpdateHistory({
+      type: key,
+      quantity: newAddition,
+    });
+    setUpdateHistory((prev) => [
       ...prev,
-      [key]: newTotal,
-    }));
-    updateCountCallback(key, newAddition);
+      {
+        ...newHistoryItem,
+        // TODO: We have to do this nonsense because this endpoint is still doing
+        //  wonky nonsense w/ putting a poorly formed "user" object on it's response
+        user: {
+          id: user.id,
+          name: getUserFullName(user),
+          ...(user.avatar ? { avatar: user.avatar } : {}),
+        },
+      },
+    ]);
+
     setShowModal(false);
     setValue(0);
   };

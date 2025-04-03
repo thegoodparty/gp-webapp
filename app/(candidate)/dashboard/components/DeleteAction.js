@@ -3,24 +3,6 @@ import AlertDialog from '@shared/utils/AlertDialog';
 import { useState } from 'react';
 import { useSnackbar } from 'helpers/useSnackbar';
 import Button from '@shared/buttons/Button';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-
-async function handleDeleteHistory(id) {
-  try {
-    const payload = {
-      id,
-    };
-    const resp = await clientFetch(
-      apiRoutes.campaign.updateHistory.delete,
-      payload,
-    );
-    return resp;
-  } catch (e) {
-    console.error('error', e);
-  }
-  return false;
-}
 
 export default function DeleteAction({
   id,
@@ -34,11 +16,8 @@ export default function DeleteAction({
   const handleDelete = async () => {
     setShowMenu(0);
     successSnackbar('Deleting...');
-    const deleteResp = await handleDeleteHistory(id);
-    if (deleteResp?.ok) {
-      successSnackbar('Deleted');
-    }
-    deleteHistoryCallBack(id);
+    await deleteHistoryCallBack(id);
+    successSnackbar('Deleted');
   };
 
   return (

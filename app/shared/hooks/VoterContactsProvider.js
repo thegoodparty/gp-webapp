@@ -46,7 +46,6 @@ export const VoterContactsProvider = ({ children }) => {
   const updateState = useCallback(
     async (next) => {
       const newValues = typeof next === 'function' ? next(state) : next;
-      console.log(`newValues =>`, newValues);
       await updateCampaign([
         { key: 'data.reportedVoterGoals', value: newValues },
       ]);
