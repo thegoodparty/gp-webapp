@@ -1,39 +1,39 @@
-'use client';
-import { useTopIssues } from './UseTopIssuesContext';
-import { useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
+'use client'
+import { useTopIssues } from './UseTopIssuesContext'
+import { useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import { FaCaretDown, FaCaretRight } from 'react-icons/fa'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 export const createTopIssue = async (name) => {
   const payload = {
     name,
-  };
-  const resp = await clientFetch(apiRoutes.topIssue.create, payload);
-  return resp.data;
-};
+  }
+  const resp = await clientFetch(apiRoutes.topIssue.create, payload)
+  return resp.data
+}
 
 export const TopIssueCreator = ({}) => {
-  const [topIssues, setTopIssues] = useTopIssues();
-  const { successSnackbar } = useSnackbar();
-  const [addNewIssue, setAddNewIssue] = useState(false);
-  const [topIssueName, setTopIssueName] = useState('');
+  const [topIssues, setTopIssues] = useTopIssues()
+  const { successSnackbar } = useSnackbar()
+  const [addNewIssue, setAddNewIssue] = useState(false)
+  const [topIssueName, setTopIssueName] = useState('')
 
   const handleCreate = async () => {
-    successSnackbar('creating issue');
-    setTopIssues([await createTopIssue(topIssueName), ...topIssues]);
-    setAddNewIssue(false);
-    setTopIssueName('');
-  };
+    successSnackbar('creating issue')
+    setTopIssues([await createTopIssue(topIssueName), ...topIssues])
+    setAddNewIssue(false)
+    setTopIssueName('')
+  }
 
   return (
     <>
       <PrimaryButton
         onClick={() => {
-          setAddNewIssue(!addNewIssue);
+          setAddNewIssue(!addNewIssue)
         }}
         className="font-black align-middle"
       >
@@ -67,5 +67,5 @@ export const TopIssueCreator = ({}) => {
         </div>
       )}
     </>
-  );
-};
+  )
+}

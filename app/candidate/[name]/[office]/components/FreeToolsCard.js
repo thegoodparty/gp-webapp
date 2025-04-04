@@ -1,16 +1,16 @@
-import Body1 from '@shared/typography/Body1';
-import TealButton from './TealButton';
+import Body1 from '@shared/typography/Body1'
+import TealButton from './TealButton'
 import {
   FaArrowRight,
   FaDoorClosed,
   FaMicrophone,
   FaMobileAlt,
   FaPhoneAlt,
-} from 'react-icons/fa';
-import CTA from './CTA';
-import H5 from '@shared/typography/H5';
-import { FaGlobeAmericas } from 'react-icons/fa';
-import MarketingH4 from '@shared/typography/MarketingH4';
+} from 'react-icons/fa'
+import CTA from './CTA'
+import H5 from '@shared/typography/H5'
+import { FaGlobeAmericas } from 'react-icons/fa'
+import MarketingH4 from '@shared/typography/MarketingH4'
 
 const fields = [
   { label: 'SMS', icon: <FaMobileAlt /> },
@@ -19,7 +19,7 @@ const fields = [
   { label: 'Door Knocking', icon: <FaGlobeAmericas /> },
   { label: 'Email Blasts', icon: <FaDoorClosed /> },
   { label: 'Press Releases', icon: <FaMicrophone /> },
-];
+]
 
 export default function FreeToolsCard() {
   return (
@@ -52,5 +52,5 @@ export default function FreeToolsCard() {
         </TealButton>
       </CTA>
     </div>
-  );
+  )
 }

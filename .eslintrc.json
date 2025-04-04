@@ -1,7 +1,8 @@
 {
   "plugins": [
     "react",
-    "unused-imports"
+    "unused-imports",
+    "@stylistic"
   ],
   "extends": [
     "next/core-web-vitals",
@@ -24,6 +25,7 @@
   "rules": {
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
-    "unused-imports/no-unused-imports": "error"
+    "unused-imports/no-unused-imports": "error",
+    "@stylistic/semi": ["error", "never"]
   }
 }

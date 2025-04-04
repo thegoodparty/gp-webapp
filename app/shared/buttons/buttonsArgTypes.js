@@ -72,4 +72,4 @@ export const argTypes = {
       defaultValue: { summary: false },
     },
   },
-};
+}

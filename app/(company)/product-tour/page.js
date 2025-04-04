@@ -1,20 +1,20 @@
-import React from 'react';
-import pageMetaData from 'helpers/metadataHelper';
-import H2 from '@shared/typography/H2';
-import H3 from '@shared/typography/H3';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
+import React from 'react'
+import pageMetaData from 'helpers/metadataHelper'
+import H2 from '@shared/typography/H2'
+import H3 from '@shared/typography/H3'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Link from 'next/link'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'AI Campaign Manager Product Tour | GoodParty.org',
   description:
     "Take a walkthrough of GoodParty.org's flagship product, AI Campaign Manager. Learn how it helps campaigns refine their strategy, track progress, and create content to run efficient and successful campaigns.",
   slug: '/product-tour',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default function Page() {
   return (
@@ -41,5 +41,5 @@ export default function Page() {
         ></iframe>
       </div>
     </>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-'use client';
-import CircularProgress from '@mui/material/CircularProgress';
+'use client'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const SIZES = {
   small: 14,
   medium: 16,
   large: 20,
-};
+}
 
 export default function ButtonLoading({ size = 'medium', className = '' }) {
   return (
@@ -14,5 +14,5 @@ export default function ButtonLoading({ size = 'medium', className = '' }) {
       className={`mr-2 ${className}`}
       color="inherit"
     />
-  );
+  )
 }

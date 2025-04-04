@@ -1,4 +1,4 @@
-import Table from './Table';
+import Table from './Table'
 
 const mockData = {
   columns: [
@@ -130,7 +130,7 @@ const mockData = {
       experience: 14,
     },
   ],
-};
+}
 
 export default {
   title: 'Utils/Table',
@@ -139,6 +139,6 @@ export default {
   args: {
     ...mockData,
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

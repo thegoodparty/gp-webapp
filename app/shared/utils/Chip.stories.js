@@ -1,8 +1,8 @@
-import ChipComponent from './Chip';
-import { FaBeer, FaCoffee } from 'react-icons/fa';
+import ChipComponent from './Chip'
+import { FaBeer, FaCoffee } from 'react-icons/fa'
 
-const Component1 = () => <span key="derp">Default</span>;
-const Component2 = () => <h1 key="dap">Dap</h1>;
+const Component1 = () => <span key="derp">Default</span>
+const Component2 = () => <h1 key="dap">Dap</h1>
 
 export default {
   title: 'Utils/Chip',
@@ -46,21 +46,21 @@ export default {
       },
     },
   },
-};
+}
 
 const Template = (args) => (
   <ChipComponent {...args}>{args.children}</ChipComponent>
-);
+)
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 Default.args = {
   children: <Component1 />,
   className: 'bg-green-100 text-green-800',
-};
+}
 
-export const WithIcon = Template.bind({});
+export const WithIcon = Template.bind({})
 WithIcon.args = {
   label: 'Cheers',
   icon: <FaBeer />,
   className: 'bg-blue-200 text-blue-800',
-};
+}

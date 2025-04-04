@@ -1,6 +1,6 @@
-import { dateUsHelper } from 'helpers/dateHelper';
+import { dateUsHelper } from 'helpers/dateHelper'
 
-const date = dateUsHelper(new Date());
+const date = dateUsHelper(new Date())
 const defaultFileTypes = [
   {
     key: 'full',
@@ -57,10 +57,10 @@ const defaultFileTypes = [
       'All Available Landlines',
     ],
   },
-];
+]
 
 export const getDefaultVoterFileName = (type) =>
   defaultFileTypes.find((file) => file.key.toLowerCase() === type.toLowerCase())
-    ?.fields?.[0];
+    ?.fields?.[0]
 
-export default defaultFileTypes;
+export default defaultFileTypes

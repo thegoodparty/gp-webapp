@@ -1,9 +1,9 @@
-import Button from '@shared/buttons/Button';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { Anton } from 'next/font/google';
-import Image from 'next/image';
+import Button from '@shared/buttons/Button'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { Anton } from 'next/font/google'
+import Image from 'next/image'
 
-const anoton = Anton({ weight: '400', subsets: ['latin'] });
+const anoton = Anton({ weight: '400', subsets: ['latin'] })
 
 export default function Hero() {
   return (
@@ -67,5 +67,5 @@ export default function Hero() {
         </div>
       </div>
     </MaxWidth>
-  );
+  )
 }

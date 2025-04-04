@@ -1,46 +1,46 @@
-'use client';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import TopDashboardMenu from './TopDashboardMenu';
-import Link from 'next/link';
-import ProfileDropdown from './ProfileDropdown';
-import DashboardOrContinue from './DashboardOrContinue';
-import { useUser } from '@shared/hooks/useUser';
-import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
-import FullStorySelectiveInit from './FullStorySelectiveInit';
-import NavButton from './NavButton';
-import Button from '@shared/buttons/Button';
-import { USER_ROLES, userHasRole } from 'helpers/userHelper';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import TopDashboardMenu from './TopDashboardMenu'
+import Link from 'next/link'
+import ProfileDropdown from './ProfileDropdown'
+import DashboardOrContinue from './DashboardOrContinue'
+import { useUser } from '@shared/hooks/useUser'
+import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
+import FullStorySelectiveInit from './FullStorySelectiveInit'
+import NavButton from './NavButton'
+import Button from '@shared/buttons/Button'
+import { USER_ROLES, userHasRole } from 'helpers/userHelper'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function RightSide() {
-  const [user] = useUser();
+  const [user] = useUser()
 
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [dashboardOpen, setDashboardOpen] = useState(false)
 
-  const pathname = usePathname();
-  const isDashboardPath = pathname?.startsWith('/dashboard');
-  const isOnboardingPath = pathname?.startsWith('/onboarding');
-  const isServePath = pathname?.startsWith('/serve');
+  const pathname = usePathname()
+  const isDashboardPath = pathname?.startsWith('/dashboard')
+  const isOnboardingPath = pathname?.startsWith('/onboarding')
+  const isServePath = pathname?.startsWith('/serve')
 
   const toggleProfile = () => {
     if (profileOpen) {
-      trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown);
+      trackEvent(EVENTS.Navigation.Top.AvatarDropdown.CloseDropdown)
     }
-    closeAll();
-    setProfileOpen(!profileOpen);
-  };
+    closeAll()
+    setProfileOpen(!profileOpen)
+  }
 
   const toggleDashboard = () => {
-    closeAll();
-    setDashboardOpen(!dashboardOpen);
-  };
+    closeAll()
+    setDashboardOpen(!dashboardOpen)
+  }
 
   const closeAll = () => {
-    setProfileOpen(false);
-    document.body.style.overflow = 'visible';
-  };
+    setProfileOpen(false)
+    document.body.style.overflow = 'visible'
+  }
 
   if (isOnboardingPath) {
     return (
@@ -57,7 +57,7 @@ export default function RightSide() {
       >
         Finish Later
       </Button>
-    );
+    )
   }
 
   return (
@@ -113,5 +113,5 @@ export default function RightSide() {
       )}
       <FullStorySelectiveInit user={user} />
     </div>
-  );
+  )
 }

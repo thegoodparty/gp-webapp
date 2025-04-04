@@ -1,5 +1,5 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
 
 export default function BrightenSection() {
   return (
@@ -68,5 +68,5 @@ export default function BrightenSection() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

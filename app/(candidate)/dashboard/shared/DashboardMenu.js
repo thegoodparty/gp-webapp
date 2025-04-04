@@ -1,7 +1,7 @@
-'use client';
-import Link from 'next/link';
-import { handleLogOut } from '@shared/user/handleLogOut';
-import { DashboardMenuItem } from 'app/(candidate)/dashboard/shared/DashboardMenuItem';
+'use client'
+import Link from 'next/link'
+import { handleLogOut } from '@shared/user/handleLogOut'
+import { DashboardMenuItem } from 'app/(candidate)/dashboard/shared/DashboardMenuItem'
 import {
   MdAccountCircle,
   MdAutoAwesome,
@@ -10,19 +10,19 @@ import {
   MdFolderShared,
   MdLibraryBooks,
   MdSensorDoor,
-} from 'react-icons/md';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
-import { useEcanvasser } from '@shared/hooks/useEcanvasser';
-import { useEffect } from 'react';
-import { syncEcanvasser } from 'utils/syncEcanvasser';
-import Image from 'next/image';
+} from 'react-icons/md'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { useEcanvasser } from '@shared/hooks/useEcanvasser'
+import { useEffect } from 'react'
+import { syncEcanvasser } from 'utils/syncEcanvasser'
+import Image from 'next/image'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
   icon: <MdFolderShared />,
   link: '/dashboard/upgrade-to-pro',
   id: 'upgrade-pro-dashboard',
-};
+}
 
 const DEFAULT_MENU_ITEMS = [
   {
@@ -77,7 +77,7 @@ const DEFAULT_MENU_ITEMS = [
     id: 'community-dashboard',
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickCommunity),
   },
-];
+]
 
 const VOTER_RECORDS_MENU_ITEM = {
   id: 'voter-records-dashboard',
@@ -85,7 +85,7 @@ const VOTER_RECORDS_MENU_ITEM = {
   link: '/dashboard/voter-records',
   icon: <MdFolderShared />,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickVoterData),
-};
+}
 
 const ECANVASSER_MENU_ITEM = {
   id: 'door-knocking-dashboard',
@@ -93,17 +93,17 @@ const ECANVASSER_MENU_ITEM = {
   link: '/dashboard/door-knocking',
   icon: <MdSensorDoor />,
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
-};
+}
 
 const getDashboardMenuItems = (campaign) => {
-  const menuItems = [...DEFAULT_MENU_ITEMS];
+  const menuItems = [...DEFAULT_MENU_ITEMS]
   if (campaign?.isPro) {
-    const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM);
-    menuItems[index] = VOTER_RECORDS_MENU_ITEM;
+    const index = menuItems.indexOf(VOTER_DATA_UPGRADE_ITEM)
+    menuItems[index] = VOTER_RECORDS_MENU_ITEM
   }
 
-  return menuItems;
-};
+  return menuItems
+}
 
 export default function DashboardMenu({
   pathname,
@@ -111,30 +111,30 @@ export default function DashboardMenu({
   mobileMode,
   campaign,
 }) {
-  let menuItems = getDashboardMenuItems(campaign);
-  const [ecanvasser] = useEcanvasser();
+  let menuItems = getDashboardMenuItems(campaign)
+  const [ecanvasser] = useEcanvasser()
   if (ecanvasser) {
-    menuItems.push(ECANVASSER_MENU_ITEM);
+    menuItems.push(ECANVASSER_MENU_ITEM)
   }
   useEffect(() => {
     if (campaign && ecanvasser) {
-      syncEcanvasser(campaign?.id);
+      syncEcanvasser(campaign?.id)
     }
-  }, [campaign, ecanvasser]);
+  }, [campaign, ecanvasser])
 
   const handleEnterPress = (e) => {
-    if (e.key == 'Enter') handleLogOut(e);
-  };
+    if (e.key == 'Enter') handleLogOut(e)
+  }
 
   const handleMenuItemClick = (item) => {
-    item?.onClick?.();
-    toggleCallback?.();
-  };
+    item?.onClick?.()
+    toggleCallback?.()
+  }
 
   return (
     <div className="w-full lg:w-60 p-2 bg-primary-dark h-full rounded-2xl text-gray-300">
       {menuItems.map((item) => {
-        const { id, link, icon, label, target } = item;
+        const { id, link, icon, label, target } = item
         return (
           <DashboardMenuItem
             key={label}
@@ -147,7 +147,7 @@ export default function DashboardMenu({
           >
             {label}
           </DashboardMenuItem>
-        );
+        )
       })}
       {mobileMode && (
         <div className="mt-4 border-t border-indigo-400 pt-4">
@@ -173,5 +173,5 @@ export default function DashboardMenu({
         </div>
       )}
     </div>
-  );
+  )
 }

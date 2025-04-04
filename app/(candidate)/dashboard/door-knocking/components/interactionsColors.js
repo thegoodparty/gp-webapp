@@ -7,6 +7,6 @@ const interactionsColors = {
   'took-yard-sign': '#0D9488',
   'left-campaign-materials': '#EC4899',
   moved: '#78716C',
-};
+}
 
-export default interactionsColors;
+export default interactionsColors

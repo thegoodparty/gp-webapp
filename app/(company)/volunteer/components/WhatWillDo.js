@@ -1,12 +1,12 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import robImg from 'public/images/landing-pages/rob3.png';
-import creativityImg from 'public/images/landing-pages/creativity.png';
-import friendsImg from 'public/images/landing-pages/friends.png';
-import electoralImg from 'public/images/landing-pages/electoral.png';
-import starImg from 'public/images/landing-pages/star.png';
-import { Fragment } from 'react';
-import Image from 'next/image';
-import CTA from './CTA';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import robImg from 'public/images/landing-pages/rob3.png'
+import creativityImg from 'public/images/landing-pages/creativity.png'
+import friendsImg from 'public/images/landing-pages/friends.png'
+import electoralImg from 'public/images/landing-pages/electoral.png'
+import starImg from 'public/images/landing-pages/star.png'
+import { Fragment } from 'react'
+import Image from 'next/image'
+import CTA from './CTA'
 
 const points = [
   {
@@ -44,7 +44,7 @@ const points = [
       'Join our Fast Action Team — a collective of dedicated volunteers harnessing the collective strength of our movement to support people-powered candidates during their most important election sprints with text banking, phone banking, and other fast forms of remote support.',
     image: electoralImg,
   },
-];
+]
 
 export default function WhatWillDo() {
   return (
@@ -111,5 +111,5 @@ export default function WhatWillDo() {
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_#E0E6EC_54.5%,_#F9FAFB_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
-  );
+  )
 }

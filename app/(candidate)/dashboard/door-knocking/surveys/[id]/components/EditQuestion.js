@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import Button from '@shared/buttons/Button';
-import { FaTrash } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import H2 from '@shared/typography/H2';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import TextField from '@shared/inputs/TextField';
-import H4 from '@shared/typography/H4';
-import { FaPencil } from 'react-icons/fa6';
-import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
+import Button from '@shared/buttons/Button'
+import { FaTrash } from 'react-icons/fa'
+import { useEffect, useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import H2 from '@shared/typography/H2'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import TextField from '@shared/inputs/TextField'
+import H4 from '@shared/typography/H4'
+import { FaPencil } from 'react-icons/fa6'
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey'
 
 const getQuestion = async (questionId) => {
   const resp = await clientFetch(apiRoutes.ecanvasser.surveys.questions.find, {
     questionId,
-  });
-  return resp.data;
-};
+  })
+  return resp.data
+}
 
 const fields = [
   {
@@ -27,81 +27,81 @@ const fields = [
     type: 'text',
     required: true,
   },
-];
+]
 
 const editQuestion = async (payload) => {
   const resp = await clientFetch(
     apiRoutes.ecanvasser.surveys.questions.update,
     payload,
-  );
-  return resp.data;
-};
+  )
+  return resp.data
+}
 export default function EditQuestion(props) {
-  const [survey, refreshSurvey] = useEcanvasserSurvey();
-  const [question, setQuestion] = useState(props.question || {});
-  const [isOpen, setIsOpen] = useState(false);
+  const [survey, refreshSurvey] = useEcanvasserSurvey()
+  const [question, setQuestion] = useState(props.question || {})
+  const [isOpen, setIsOpen] = useState(false)
 
-  const { id: surveyId } = survey;
-  const { id: questionId } = question;
-  const [isLoading, setIsLoading] = useState(false);
-  const [answers, setAnswers] = useState(question.answers || []);
-  const [newAnswer, setNewAnswer] = useState('');
+  const { id: surveyId } = survey
+  const { id: questionId } = question
+  const [isLoading, setIsLoading] = useState(false)
+  const [answers, setAnswers] = useState(question.answers || [])
+  const [newAnswer, setNewAnswer] = useState('')
 
-  const answerFormat = question.answer_type.name;
+  const answerFormat = question.answer_type.name
   const withOptions =
-    answerFormat === 'Multiple choice' || answerFormat === 'Checklist';
+    answerFormat === 'Multiple choice' || answerFormat === 'Checklist'
 
   useEffect(() => {
     if (question.id && withOptions && !question.answers) {
       const fetchQuestion = async () => {
-        const resp = await getQuestion(question.id);
-        setQuestion(resp);
-        setAnswers(resp.answers);
-      };
-      fetchQuestion();
+        const resp = await getQuestion(question.id)
+        setQuestion(resp)
+        setAnswers(resp.answers)
+      }
+      fetchQuestion()
     }
-  }, [question, withOptions]);
+  }, [question, withOptions])
 
   const [formData, setFormData] = useState({
     question: question.name,
-  });
+  })
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     const payload = {
       questionId,
       surveyId,
       name: formData.question,
-    };
-    if (withOptions) {
-      payload.answers = answers.map((option) => ({ name: option.name }));
     }
-    await editQuestion(payload);
+    if (withOptions) {
+      payload.answers = answers.map((option) => ({ name: option.name }))
+    }
+    await editQuestion(payload)
 
-    refreshSurvey();
+    refreshSurvey()
     setFormData({
       question: '',
-    });
-    setAnswers([]);
-    setIsLoading(false);
-    setIsOpen(false);
-  };
+    })
+    setAnswers([])
+    setIsLoading(false)
+    setIsOpen(false)
+  }
 
   const handleNewAnswer = (e) => {
-    e.preventDefault();
-    setAnswers([...answers, { name: newAnswer, id: newAnswer }]);
-    setNewAnswer('');
-  };
+    e.preventDefault()
+    setAnswers([...answers, { name: newAnswer, id: newAnswer }])
+    setNewAnswer('')
+  }
 
   const handleDeleteAnswer = (index) => {
-    setAnswers(answers.filter((_, i) => i !== index));
-  };
+    setAnswers(answers.filter((_, i) => i !== index))
+  }
 
   const canSubmit =
     !isLoading &&
     formData.question &&
-    (withOptions ? answers.length > 0 : true);
+    (withOptions ? answers.length > 0 : true)
 
   return (
     <>
@@ -180,5 +180,5 @@ export default function EditQuestion(props) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

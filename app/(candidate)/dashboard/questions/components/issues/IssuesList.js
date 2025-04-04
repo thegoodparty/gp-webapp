@@ -1,17 +1,17 @@
-'use client';
-import IssueItemEditor from 'app/(candidate)/dashboard/questions/components/issues/IssueItemEditor';
-import { useEffect, useState } from 'react';
-import AddCustomIssue from './AddCustomIssue';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+'use client'
+import IssueItemEditor from 'app/(candidate)/dashboard/questions/components/issues/IssueItemEditor'
+import { useEffect, useState } from 'react'
+import AddCustomIssue from './AddCustomIssue'
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import {
   deleteCandidatePosition,
   filterIssues,
   handleDeleteCustomIssue,
   saveCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import { IssuesSearch } from './IssuesSearch';
-import { IssuesSelectList } from './IssuesSelectList';
-import { AddNewIssueTrigger } from './AddNewIssueTrigger';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
+import { IssuesSearch } from './IssuesSearch'
+import { IssuesSelectList } from './IssuesSelectList'
+import { AddNewIssueTrigger } from './AddNewIssueTrigger'
 
 export default function IssuesList({
   nextCallback,
@@ -21,12 +21,12 @@ export default function IssuesList({
   topIssues,
   setEditIssuePosition,
 }) {
-  const [campaign, setCampaign] = useState(incomingCampaign);
-  const [filterValue, setFilterValue] = useState('');
-  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [campaign, setCampaign] = useState(incomingCampaign)
+  const [filterValue, setFilterValue] = useState('')
+  const [selectedIssue, setSelectedIssue] = useState(null)
   const editingCustomIssue =
-    editIssuePosition && editIssuePosition.type === 'custom';
-  const showSelectList = !selectedIssue;
+    editIssuePosition && editIssuePosition.type === 'custom'
+  const showSelectList = !selectedIssue
 
   useEffect(() => {
     if (editIssuePosition) {
@@ -34,14 +34,14 @@ export default function IssuesList({
         editIssuePosition.type === 'custom'
           ? 'custom'
           : editIssuePosition.topIssue,
-      );
+      )
     }
-  }, [editIssuePosition]);
+  }, [editIssuePosition])
 
   const selectIssueCallback = (issue) => {
-    setSelectedIssue(issue);
-    setFilterValue('');
-  };
+    setSelectedIssue(issue)
+    setFilterValue('')
+  }
 
   const updateCustomIssuesState = (customIssues) =>
     setCampaign({
@@ -50,37 +50,37 @@ export default function IssuesList({
         ...campaign.details,
         customIssues,
       },
-    });
+    })
 
   const saveCallback = async (position, issue, candidatePosition) => {
     // if candidate position already exists in this order, delete it
     editIssuePosition?.id &&
-      (await deleteCandidatePosition(editIssuePosition.id, campaign.id));
+      (await deleteCandidatePosition(editIssuePosition.id, campaign.id))
 
     if (editIssuePosition?.type === 'custom') {
-      updateCustomIssuesState(await handleDeleteCustomIssue(editIssuePosition));
+      updateCustomIssuesState(await handleDeleteCustomIssue(editIssuePosition))
     }
     await saveCandidatePosition({
       description: candidatePosition,
       campaignId: campaign.id,
       positionId: position.id,
       topIssueId: issue.id,
-    });
-    nextCallback();
-  };
+    })
+    nextCallback()
+  }
 
   const handleSaveCustom = async () => {
     // if candidate position already exists in this order, delete it
     if (editIssuePosition?.id) {
-      await deleteCandidatePosition(editIssuePosition.id, campaign.id);
+      await deleteCandidatePosition(editIssuePosition.id, campaign.id)
     }
-    const updatedCampaign = await getCampaign();
-    setCampaign(updatedCampaign);
+    const updatedCampaign = await getCampaign()
+    setCampaign(updatedCampaign)
 
-    nextCallback();
-  };
+    nextCallback()
+  }
 
-  const filteredIssues = filterIssues(filterValue, topIssues);
+  const filteredIssues = filterIssues(filterValue, topIssues)
 
   return (
     <div className=" max-w-3xl mx-auto">
@@ -127,5 +127,5 @@ export default function IssuesList({
           />
         ))}
     </div>
-  );
+  )
 }

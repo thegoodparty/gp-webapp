@@ -1,28 +1,28 @@
-'use client';
+'use client'
 
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import Overline from '@shared/typography/Overline';
-import Paper from '@shared/utils/Paper';
-import Link from 'next/link';
-import { IoArrowForward } from 'react-icons/io5';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import Overline from '@shared/typography/Overline'
+import Paper from '@shared/utils/Paper'
+import Link from 'next/link'
+import { IoArrowForward } from 'react-icons/io5'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function ScriptCard({ type }) {
-  let typeText = '';
+  let typeText = ''
   if (type === 'sms') {
-    typeText = 'text';
+    typeText = 'text'
   }
   if (type === 'telemarketing') {
-    typeText = 'phone banking';
+    typeText = 'phone banking'
   }
 
   if (type === 'doorknocking') {
-    typeText = 'door-knocking';
+    typeText = 'door-knocking'
   }
 
   if (type === 'digitalads') {
-    typeText = 'digital advertising';
+    typeText = 'digital advertising'
   }
   return (
     <Paper className="h-full flex flex-col justify-between">
@@ -40,7 +40,7 @@ export default function ScriptCard({ type }) {
           trackEvent(
             EVENTS.VoterData.FileDetail.LearnTakeAction.ClickWriteScript,
             { type },
-          );
+          )
         }}
       >
         <div className="mt-4 flex items-center justify-end">
@@ -49,5 +49,5 @@ export default function ScriptCard({ type }) {
         </div>
       </Link>
     </Paper>
-  );
+  )
 }

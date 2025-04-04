@@ -1,13 +1,13 @@
-import ImageUpload from './ImageUpload';
+import ImageUpload from './ImageUpload'
 
 export default {
   title: 'Utils/ImageUpload',
   component: ImageUpload,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}
 export const CustomElement = {
   args: {
     customElement: (
@@ -18,4 +18,4 @@ export const CustomElement = {
       </div>
     ),
   },
-};
+}

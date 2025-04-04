@@ -1,5 +1,5 @@
-'use client';
-import Lottie from 'react-lottie-player';
+'use client'
+import Lottie from 'react-lottie-player'
 
 export default function LottieAnimation({
   style = {},
@@ -20,5 +20,5 @@ export default function LottieAnimation({
         {...restProps}
       />
     </div>
-  );
+  )
 }

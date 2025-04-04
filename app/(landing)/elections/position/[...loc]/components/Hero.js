@@ -1,10 +1,10 @@
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import { shortToLongState } from 'helpers/statesHelper';
-import Image from 'next/image';
-import Subtitle2 from '@shared/typography/Subtitle2';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { FaArrowRightLong } from 'react-icons/fa6';
-import Link from 'next/link';
+import Breadcrumbs from '@shared/utils/Breadcrumbs'
+import { shortToLongState } from 'helpers/statesHelper'
+import Image from 'next/image'
+import Subtitle2 from '@shared/typography/Subtitle2'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { FaArrowRightLong } from 'react-icons/fa6'
+import Link from 'next/link'
 
 export default function Hero({
   state,
@@ -17,33 +17,33 @@ export default function Hero({
   loc,
   locationName,
 }) {
-  const stateName = shortToLongState[state.toUpperCase()];
+  const stateName = shortToLongState[state.toUpperCase()]
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
     {
       label: `How to run in ${stateName}`,
       href: `/elections/${state}`,
     },
-  ];
+  ]
   if ((level === 'city' && county) || (level === 'county' && county)) {
-    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`;
+    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
     breadcrumbsLinks.push({
       label: `${locationName} county`,
       href: `/elections/${county.slug}`,
-    });
+    })
   }
   if (level === 'city' && municipality) {
-    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`;
+    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
     breadcrumbsLinks.push({
       label: municipality.name,
       href: `/elections/${municipality.slug}`,
-    });
+    })
   }
   breadcrumbsLinks.push({
     label: normalizedPositionName,
-  });
+  })
 
-  let title = `Run for ${normalizedPositionName} in ${loc}`;
+  let title = `Run for ${normalizedPositionName} in ${loc}`
 
   return (
     <>
@@ -95,5 +95,5 @@ export default function Hero({
         <div className="border-b border-slate-200 mt-5"></div>
       </div>
     </>
-  );
+  )
 }

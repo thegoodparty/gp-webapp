@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import megaphoneImg from 'public/images/landing-pages/megaphone.png';
-import CTA from './CTA';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import megaphoneImg from 'public/images/landing-pages/megaphone.png'
+import CTA from './CTA'
 
 export default function Dissatisfaction() {
   return (
@@ -32,5 +32,5 @@ export default function Dissatisfaction() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

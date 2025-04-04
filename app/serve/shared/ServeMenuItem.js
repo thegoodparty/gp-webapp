@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
 export default function ServeMenuItem({
   id,
@@ -24,5 +24,5 @@ export default function ServeMenuItem({
         </div>
       </Link>
     </>
-  );
+  )
 }

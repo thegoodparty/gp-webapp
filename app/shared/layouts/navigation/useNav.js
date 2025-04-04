@@ -1,10 +1,10 @@
-import { useContext } from 'react';
-import { NavContext } from '@shared/layouts/navigation/NavigationProvider';
+import { useContext } from 'react'
+import { NavContext } from '@shared/layouts/navigation/NavigationProvider'
 
 export const useNav = () => {
-  const context = useContext(NavContext);
+  const context = useContext(NavContext)
   if (!context) {
-    throw new Error('useNav must be used within NavigationProvider');
+    throw new Error('useNav must be used within NavigationProvider')
   }
-  return context;
-};
+  return context
+}

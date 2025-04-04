@@ -1,4 +1,4 @@
-import { JsonLd } from 'react-schemaorg';
+import { JsonLd } from 'react-schemaorg'
 
 export default function JsonLdSchema() {
   return (
@@ -30,5 +30,5 @@ export default function JsonLdSchema() {
         ],
       }}
     />
-  );
+  )
 }

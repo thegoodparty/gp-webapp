@@ -5,5 +5,5 @@ export const VoterContactModalWrapper = ({ children, className = '' }) => {
     >
       {children}
     </div>
-  );
-}; 
+  )
+} 

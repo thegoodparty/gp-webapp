@@ -1,17 +1,17 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Body2 from '@shared/typography/Body2';
-import H1 from '@shared/typography/H1';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { dateUsHelper } from 'helpers/dateHelper';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Body2 from '@shared/typography/Body2'
+import H1 from '@shared/typography/H1'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { dateUsHelper } from 'helpers/dateHelper'
 import {
   buildTrackingAttrs,
   trackEvent,
   EVENTS,
-} from 'helpers/fullStoryHelper';
+} from 'helpers/fullStoryHelper'
 
-import { useState } from 'react';
-import CustomVoterAudienceFilters from './CustomVoterAudienceFilters';
+import { useState } from 'react'
+import CustomVoterAudienceFilters from './CustomVoterAudienceFilters'
 
 /*
  if prevStepValues.purpose is selected preSelect these filters
@@ -49,7 +49,7 @@ const purposeToFilters = {
     age_25_35: true,
     age_35_50: true,
   },
-};
+}
 
 export default function CustomVoterAudience({
   campaign,
@@ -58,27 +58,27 @@ export default function CustomVoterAudience({
   prevStepValues,
 }) {
   // set initial state to all false
-  const [state, setState] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({})
+  const [loading, setLoading] = useState(false)
 
   const handleChangeAudience = (newState) => {
-    setState(newState);
-  };
+    setState(newState)
+  }
 
-  const { office, otherOffice } = campaign?.details;
-  const resolvedOffice = office === 'Other' ? otherOffice : office;
+  const { office, otherOffice } = campaign?.details
+  const resolvedOffice = office === 'Other' ? otherOffice : office
 
   const canSave = () => {
     // return true if at least one option is selected
-    return !loading && Object.values(state).some((v) => v);
-  };
+    return !loading && Object.values(state).some((v) => v)
+  }
   const handleSubmit = async () => {
-    trackEvent(EVENTS.VoterData.CustomFile.ClickCreate);
+    trackEvent(EVENTS.VoterData.CustomFile.ClickCreate)
 
-    setLoading(true);
+    setLoading(true)
 
-    const selectedAudience = Object.keys(state).filter((key) => state[key]);
-    const voterFiles = campaign.data?.customVoterFiles || [];
+    const selectedAudience = Object.keys(state).filter((key) => state[key])
+    const voterFiles = campaign.data?.customVoterFiles || []
     const newFile = {
       filters: selectedAudience,
       channel: prevStepValues.channel,
@@ -86,25 +86,25 @@ export default function CustomVoterAudience({
         prevStepValues.purpose !== '' ? ` - ${prevStepValues.purpose}` : ''
       } - ${dateUsHelper(new Date())}`,
       createdAt: new Date().toDateString(),
-    };
+    }
     if (prevStepValues.purpose) {
-      newFile.purpose = prevStepValues.purpose;
+      newFile.purpose = prevStepValues.purpose
     }
 
-    voterFiles.push(newFile);
+    voterFiles.push(newFile)
     await updateCampaign([
       {
         key: 'data.customVoterFiles',
         value: voterFiles,
       },
-    ]);
-    trackEvent('Custom Voter file created', { newFile });
-    await customCreatedCallback();
-    setState({});
-    setLoading(false);
-  };
+    ])
+    trackEvent('Custom Voter file created', { newFile })
+    await customCreatedCallback()
+    setState({})
+    setLoading(false)
+  }
 
-  const trackingAttrs = buildTrackingAttrs('Create Custom Voter File Button');
+  const trackingAttrs = buildTrackingAttrs('Create Custom Voter File Button')
 
   return (
     <div className="w-[90vw] max-w-5xl p-2 md:p-8">
@@ -132,5 +132,5 @@ export default function CustomVoterAudience({
         </PrimaryButton>
       </div>
     </div>
-  );
+  )
 }

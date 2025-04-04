@@ -1,10 +1,10 @@
-import CTA from './CTA';
-import Image from 'next/image';
-import InfoButton from '@shared/buttons/InfoButton';
-import Link from 'next/link';
+import CTA from './CTA'
+import Image from 'next/image'
+import InfoButton from '@shared/buttons/InfoButton'
+import Link from 'next/link'
 
 export default function HelpBanner({ candidate }) {
-  const { firstName, lastName, office, city, state } = candidate;
+  const { firstName, lastName, office, city, state } = candidate
   return (
     <>
       <div className="fixed z-[1400] top-0 w-screen md:flex justify-between py-2 px-6 items-center bg-primary-dark">
@@ -32,5 +32,5 @@ export default function HelpBanner({ candidate }) {
         </div>
       </div>
     </>
-  );
+  )
 }

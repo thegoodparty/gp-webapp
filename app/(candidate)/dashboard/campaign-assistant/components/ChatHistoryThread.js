@@ -1,17 +1,17 @@
-'use client';
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { MdAutoAwesome } from 'react-icons/md';
-import DeleteThread from './DeleteThread';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+'use client'
+import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { MdAutoAwesome } from 'react-icons/md'
+import DeleteThread from './DeleteThread'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
 
 export default function ChatHistoryThread({ chat, closeDrawer }) {
-  const { loadChatByThreadId } = useChat();
+  const { loadChatByThreadId } = useChat()
   const handleClick = () => {
-    loadChatByThreadId(chat.threadId);
-    closeDrawer();
-  };
+    loadChatByThreadId(chat.threadId)
+    closeDrawer()
+  }
   return (
     <div
       className="py-2 flex justify-between px-3 pb-3 hover:bg-primary-main rounded-md transition-colors cursor-pointer max-w-xs"
@@ -28,5 +28,5 @@ export default function ChatHistoryThread({ chat, closeDrawer }) {
       </div>
       <DeleteThread chat={chat} />
     </div>
-  );
+  )
 }

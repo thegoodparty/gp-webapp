@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import breannaImg from 'public/images/landing-pages/kieryn.png';
-import { BiSolidQuoteAltRight } from 'react-icons/bi';
+import Image from 'next/image'
+import breannaImg from 'public/images/landing-pages/kieryn.png'
+import { BiSolidQuoteAltRight } from 'react-icons/bi'
 
 export default function BreannaBottom() {
   return (
@@ -51,5 +51,5 @@ export default function BreannaBottom() {
         </div>
       </div>
     </div>
-  );
+  )
 }

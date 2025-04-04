@@ -1,5 +1,5 @@
-import { JsonLd } from 'react-schemaorg';
-import { APP_BASE } from 'appEnv';
+import { JsonLd } from 'react-schemaorg'
+import { APP_BASE } from 'appEnv'
 
 export default function PositionSchema({ race, loc }) {
   const {
@@ -16,21 +16,21 @@ export default function PositionSchema({ race, loc }) {
     filingPhoneNumber,
     filingDateEnd,
     municipality,
-  } = race;
-  let locStr = locationName;
+  } = race
+  let locStr = locationName
   if (level === 'local') {
-    locStr += `${municipality?.name}, ${state?.toUpperCase() || ''}`;
+    locStr += `${municipality?.name}, ${state?.toUpperCase() || ''}`
   }
   if (level === 'city') {
-    locStr += ` City, ${state}`;
+    locStr += ` City, ${state}`
   } else if (level === 'county') {
-    locStr += ` County, ${race.state}`;
+    locStr += ` County, ${race.state}`
   } else if (level === 'state') {
-    locStr += ` ${state}`;
+    locStr += ` ${state}`
   }
-  const slug = `elections/position/${loc.join('/')}`;
-  const url = `${APP_BASE}/${slug}`;
-  const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified';
+  const slug = `elections/position/${loc.join('/')}`
+  const url = `${APP_BASE}/${slug}`
+  const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified'
 
   return (
     <JsonLd
@@ -66,5 +66,5 @@ export default function PositionSchema({ race, loc }) {
         url,
       }}
     />
-  );
+  )
 }

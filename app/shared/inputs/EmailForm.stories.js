@@ -1,4 +1,4 @@
-import EmailForm from './EmailForm';
+import EmailForm from './EmailForm'
 
 export default {
   title: 'Inputs/EmailForm',
@@ -13,6 +13,6 @@ export default {
       default: 'Medium',
     },
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

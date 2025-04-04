@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import Modal from './Modal';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import Button from '@shared/buttons/Button';
+import { useState } from 'react'
+import Modal from './Modal'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import Button from '@shared/buttons/Button'
 
 export default {
   title: 'Utils/Modal',
@@ -11,7 +11,7 @@ export default {
   args: {},
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
     return (
       <>
         <Button onClick={() => setOpen(true)}>(open modal)</Button>
@@ -27,8 +27,8 @@ export default {
           </Body1>
         </Modal>
       </>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

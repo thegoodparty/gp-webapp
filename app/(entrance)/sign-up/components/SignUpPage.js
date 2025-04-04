@@ -1,23 +1,23 @@
-'use client';
-import { isValidEmail } from '@shared/inputs/EmailInput.js';
-import PasswordInput from '@shared/inputs/PasswrodInput.js';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { Fragment, useState } from 'react';
-import H1 from '@shared/typography/H1';
-import { isValidPassword } from '@shared/inputs/IsValidPassword';
-import Paper from '@shared/utils/Paper';
-import Body2 from '@shared/typography/Body2';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import Link from 'next/link';
-import { useUser } from '@shared/hooks/useUser';
-import saveToken from 'helpers/saveToken';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import Button from '@shared/buttons/Button';
-import { useRouter } from 'next/navigation';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { isValidEmail } from '@shared/inputs/EmailInput.js'
+import PasswordInput from '@shared/inputs/PasswrodInput.js'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { Fragment, useState } from 'react'
+import H1 from '@shared/typography/H1'
+import { isValidPassword } from '@shared/inputs/IsValidPassword'
+import Paper from '@shared/utils/Paper'
+import Body2 from '@shared/typography/Body2'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import Link from 'next/link'
+import { useUser } from '@shared/hooks/useUser'
+import saveToken from 'helpers/saveToken'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import Button from '@shared/buttons/Button'
+import { useRouter } from 'next/navigation'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const fields = [
   {
@@ -59,12 +59,12 @@ const fields = [
     noBottomMargin: true,
     required: true,
   },
-];
+]
 
 export const validateZip = (zip) => {
-  const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-  return validZip.test(zip);
-};
+  const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
+  return validZip.test(zip)
+}
 
 async function register(firstName, lastName, email, phone, zip, password) {
   try {
@@ -75,16 +75,16 @@ async function register(firstName, lastName, email, phone, zip, password) {
       phone,
       zip,
       password,
-    };
-
-    const resp = await clientFetch(apiRoutes.authentication.register, payload);
-    if (resp.status === 409) {
-      return { exists: true };
     }
-    return resp.data;
+
+    const resp = await clientFetch(apiRoutes.authentication.register, payload)
+    if (resp.status === 409) {
+      return { exists: true }
+    }
+    return resp.data
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -96,18 +96,18 @@ export default function SignUpPage() {
     phone: '',
     zip: '',
     password: '',
-  });
-  const [loading, setLoading] = useState(false);
-  const { errorSnackbar } = useSnackbar();
-  const [_, setUser] = useUser();
-  const router = useRouter();
+  })
+  const [loading, setLoading] = useState(false)
+  const { errorSnackbar } = useSnackbar()
+  const [_, setUser] = useUser()
+  const router = useRouter()
 
   const enableSubmit = () =>
-    isValidEmail(state.email) && isValidPassword(state.password);
+    isValidEmail(state.email) && isValidPassword(state.password)
 
   const handleSubmit = async () => {
-    if (loading) return;
-    setLoading(true);
+    if (loading) return
+    setLoading(true)
 
     if (enableSubmit()) {
       const { user, exists, token } = await register(
@@ -117,32 +117,32 @@ export default function SignUpPage() {
         state.phone,
         state.zip,
         state.password,
-      );
+      )
 
       if (user) {
-        await saveToken(token);
-        setUser(user);
-        const redirect = await createCampaign();
-        setLoading(false);
-        router.push(redirect);
-        return;
+        await saveToken(token)
+        setUser(user)
+        const redirect = await createCampaign()
+        setLoading(false)
+        router.push(redirect)
+        return
       } else {
         errorSnackbar(
           exists
             ? `An account with this email (${state.email}) already exists`
             : 'Error creating account',
-        );
-        setLoading(false);
+        )
+        setLoading(false)
       }
     }
-  };
+  }
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   return (
     <div className="bg-indigo-100">
@@ -172,7 +172,7 @@ export default function SignUpPage() {
               <form
                 noValidate
                 onSubmit={(e) => {
-                  e.preventDefault();
+                  e.preventDefault()
                 }}
                 id="register-page-form"
               >
@@ -217,5 +217,5 @@ export default function SignUpPage() {
         </div>
       </MaxWidth>
     </div>
-  );
+  )
 }

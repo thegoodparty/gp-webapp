@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
 export const DashboardMenuItem = ({
   id,
@@ -26,5 +26,5 @@ export const DashboardMenuItem = ({
         </div>
       </Link>
     </>
-  );
-};
+  )
+}

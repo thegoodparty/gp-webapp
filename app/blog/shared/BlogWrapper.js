@@ -1,14 +1,14 @@
-import { fetchArticleTags } from './fetchArticleTags';
-import { fetchArticlesTitles } from './fetchArticlesTitles';
-import StickersCallout from '@shared/utils/StickersCallout';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import Overline from '@shared/typography/Overline';
-import Body2 from '@shared/typography/Body2';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import ExploreTags from './ExploreTags';
-import MoreResources from './MoreResources';
-import BlogSearch from './BlogSearch';
-import BlogNavLink from './BlogNavLink';
+import { fetchArticleTags } from './fetchArticleTags'
+import { fetchArticlesTitles } from './fetchArticlesTitles'
+import StickersCallout from '@shared/utils/StickersCallout'
+import Breadcrumbs from '@shared/utils/Breadcrumbs'
+import Overline from '@shared/typography/Overline'
+import Body2 from '@shared/typography/Body2'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import ExploreTags from './ExploreTags'
+import MoreResources from './MoreResources'
+import BlogSearch from './BlogSearch'
+import BlogNavLink from './BlogNavLink'
 
 /**
  * @typedef {Object} BlogWrapperProps
@@ -35,15 +35,15 @@ export default async function BlogWrapper({
   allTags,
   articleTitles,
 }) {
-  const tags = allTags || (await fetchArticleTags());
-  const titles = articleTitles || (await fetchArticlesTitles());
+  const tags = allTags || (await fetchArticleTags())
+  const titles = articleTitles || (await fetchArticlesTitles())
 
-  const breadcrumbs = [{ href: '/blog', label: 'Blog' }, { label: pageTitle }];
+  const breadcrumbs = [{ href: '/blog', label: 'Blog' }, { label: pageTitle }]
 
   // ensure sections are ordered correctly
   const sortedSections = sections.sort(
     (a, b) => Number(a.fields?.order) - Number(b.fields?.order),
-  );
+  )
 
   return (
     <>
@@ -101,5 +101,5 @@ export default async function BlogWrapper({
         <MoreResources />
       </div>
     </>
-  );
+  )
 }

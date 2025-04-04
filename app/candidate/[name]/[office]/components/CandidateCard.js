@@ -1,44 +1,44 @@
-import H1 from '@shared/typography/H1';
-import H5 from '@shared/typography/H5';
-import Overline from '@shared/typography/Overline';
-import { FaGlobeAmericas, FaInstagram, FaMapMarkerAlt } from 'react-icons/fa';
+import H1 from '@shared/typography/H1'
+import H5 from '@shared/typography/H5'
+import Overline from '@shared/typography/Overline'
+import { FaGlobeAmericas, FaInstagram, FaMapMarkerAlt } from 'react-icons/fa'
 import {
   FaArrowRight,
   FaFacebookF,
   FaTiktok,
   FaXTwitter,
-} from 'react-icons/fa6';
-import { IoPersonSharp } from 'react-icons/io5';
-import { MdEmail, MdStars, MdVolunteerActivism } from 'react-icons/md';
-import TealButton from './TealButton';
-import StickyCard from './StickyCard';
-import CTA from './CTA';
-import Image from 'next/image';
-import { AiOutlineLinkedin } from 'react-icons/ai';
-import Body2 from '@shared/typography/Body2';
+} from 'react-icons/fa6'
+import { IoPersonSharp } from 'react-icons/io5'
+import { MdEmail, MdStars, MdVolunteerActivism } from 'react-icons/md'
+import TealButton from './TealButton'
+import StickyCard from './StickyCard'
+import CTA from './CTA'
+import Image from 'next/image'
+import { AiOutlineLinkedin } from 'react-icons/ai'
+import Body2 from '@shared/typography/Body2'
 
 function mapSocialIcon(type) {
   //<MdEmail size={20} />
   switch (type) {
     case 'website':
-      return <FaGlobeAmericas size={20} />;
+      return <FaGlobeAmericas size={20} />
     case 'twitter':
-      return <FaXTwitter size={20} />;
+      return <FaXTwitter size={20} />
     case 'facebook':
-      return <FaFacebookF size={20} />;
+      return <FaFacebookF size={20} />
     case 'instagram':
-      return <FaInstagram size={20} />;
+      return <FaInstagram size={20} />
     case 'tiktok':
-      return <FaTiktok size={20} />;
+      return <FaTiktok size={20} />
     case 'linkedin':
-      return <AiOutlineLinkedin size={20} />;
+      return <AiOutlineLinkedin size={20} />
     default:
-      return <FaGlobeAmericas size={20} />;
+      return <FaGlobeAmericas size={20} />
   }
 }
 
 export default function CandidateCard(props) {
-  const { candidate } = props;
+  const { candidate } = props
   const {
     firstName,
     lastName,
@@ -50,13 +50,13 @@ export default function CandidateCard(props) {
     image,
     socialUrls,
     email,
-  } = candidate;
+  } = candidate
 
-  console.log('socialUrls', socialUrls);
+  console.log('socialUrls', socialUrls)
 
-  let partyName = '';
+  let partyName = ''
   if (party === 'Independent') {
-    partyName = 'Non-Partisan Candidate';
+    partyName = 'Non-Partisan Candidate'
   }
 
   return (
@@ -156,5 +156,5 @@ export default function CandidateCard(props) {
         </div>
       </StickyCard>
     </div>
-  );
+  )
 }

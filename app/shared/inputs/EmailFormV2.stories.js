@@ -1,4 +1,4 @@
-import EmailFormV2 from './EmailFormV2';
+import EmailFormV2 from './EmailFormV2'
 
 export default {
   title: 'Inputs/EmailFormV2',
@@ -13,11 +13,11 @@ export default {
       default: 'Medium',
     },
   },
-};
+}
 
-export const Default = {};
+export const Default = {}
 export const PrimaryButton = {
   args: {
     primaryButton: true,
   },
-};
+}

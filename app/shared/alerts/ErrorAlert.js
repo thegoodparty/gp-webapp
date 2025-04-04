@@ -1,5 +1,5 @@
-import { StyledAlert } from '@shared/alerts/StyledAlert';
-import { MdError } from 'react-icons/md';
+import { StyledAlert } from '@shared/alerts/StyledAlert'
+import { MdError } from 'react-icons/md'
 
 export const ErrorAlert = ({ children, className = '', ...restProps }) => (
   <StyledAlert
@@ -10,4 +10,4 @@ export const ErrorAlert = ({ children, className = '', ...restProps }) => (
   >
     {children}
   </StyledAlert>
-);
+)

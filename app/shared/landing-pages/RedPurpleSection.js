@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import bgImg from '/public/images/landing-pages/red-bg.png';
-import bgImgSm from '/public/images/landing-pages/red-bg-small.png';
+import Image from 'next/image'
+import bgImg from '/public/images/landing-pages/red-bg.png'
+import bgImgSm from '/public/images/landing-pages/red-bg-small.png'
 
 export default function RedPurpleSection({ children, withPadding }) {
   return (
@@ -25,5 +25,5 @@ export default function RedPurpleSection({ children, withPadding }) {
       />
       {children}
     </section>
-  );
+  )
 }

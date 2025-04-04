@@ -1,55 +1,55 @@
-'use client';
-import { Drawer } from '@mui/material';
-import Button from '@shared/buttons/Button';
-import H2 from '@shared/typography/H2';
-import Subtitle1 from '@shared/typography/Subtitle1';
-import { useEffect, useState } from 'react';
-import { MdMenu } from 'react-icons/md';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
-import { ChatHistoryGroup } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryGroup';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import { Drawer } from '@mui/material'
+import Button from '@shared/buttons/Button'
+import H2 from '@shared/typography/H2'
+import Subtitle1 from '@shared/typography/Subtitle1'
+import { useEffect, useState } from 'react'
+import { MdMenu } from 'react-icons/md'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
+import { ChatHistoryGroup } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryGroup'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 export default function ChatHistory() {
-  const { chats } = useChat();
-  const [open, setOpen] = useState(false);
-  const [chatsByDate, setChatsByDate] = useState([]);
+  const { chats } = useChat()
+  const [open, setOpen] = useState(false)
+  const [chatsByDate, setChatsByDate] = useState([])
   // split chats to this week, this month and older
 
   useEffect(() => {
-    const thisWeek = [];
-    const thisMonth = [];
-    const older = [];
+    const thisWeek = []
+    const thisMonth = []
+    const older = []
     chats.forEach((chat) => {
-      const updatedAt = new Date(chat.updatedAt);
-      const now = new Date();
-      const diff = now - updatedAt;
-      const diffDays = diff / (1000 * 60 * 60 * 24);
+      const updatedAt = new Date(chat.updatedAt)
+      const now = new Date()
+      const diff = now - updatedAt
+      const diffDays = diff / (1000 * 60 * 60 * 24)
       if (diffDays < 7) {
-        thisWeek.push(chat);
+        thisWeek.push(chat)
       } else if (diffDays < 30) {
-        thisMonth.push(chat);
+        thisMonth.push(chat)
       } else {
-        older.push(chat);
+        older.push(chat)
       }
-    });
+    })
     setChatsByDate([
       { title: 'This Week', chats: thisWeek },
       { title: 'This Month', chats: thisMonth },
       { title: 'Older', chats: older },
-    ]);
-  }, [chats]);
+    ])
+  }, [chats])
 
   const closeDrawer = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <>
       <Button
         size="large"
         onClick={() => {
-          trackEvent(EVENTS.AIAssistant.ClickViewChatHistory);
-          setOpen(true);
+          trackEvent(EVENTS.AIAssistant.ClickViewChatHistory)
+          setOpen(true)
         }}
         className="!px-3 md:!px-6"
       >
@@ -78,5 +78,5 @@ export default function ChatHistory() {
         </div>
       </Drawer>
     </>
-  );
+  )
 }

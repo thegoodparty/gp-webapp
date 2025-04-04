@@ -1,13 +1,13 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { slugify } from 'helpers/articleHelper';
-import { isbot } from 'isbot';
-import Image from 'next/image';
-import map from 'public/images/elections/map.png';
-import { useState } from 'react';
+'use client'
+import Button from '@shared/buttons/Button'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import gpApi from 'gpApi'
+import gpFetch from 'gpApi/gpFetch'
+import { slugify } from 'helpers/articleHelper'
+import { isbot } from 'isbot'
+import Image from 'next/image'
+import map from 'public/images/elections/map.png'
+import { useState } from 'react'
 
 const fetchLocFromIp = async () => {
   const resp = await fetch(
@@ -15,21 +15,21 @@ const fetchLocFromIp = async () => {
     {
       method: 'GET',
     },
-  );
-  return resp.json();
-};
+  )
+  return resp.json()
+}
 
 async function fetchFeatured(city, state) {
   try {
-    const api = gpApi.race.proximity;
+    const api = gpApi.race.proximity
     const payload = {
       city,
       state,
-    };
-    return await gpFetch(api, payload, 3600);
+    }
+    return await gpFetch(api, payload, 3600)
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -52,9 +52,9 @@ const defaultCities = [
     openElections: 44,
     slug: 'ca/san%20diego/san%20diego',
   },
-];
+]
 export default function FeaturedCities() {
-  const [featuredCities, setFeaturedCities] = useState(defaultCities);
+  const [featuredCities, setFeaturedCities] = useState(defaultCities)
 
   // useEffect(() => {
   //   getIpLocation();
@@ -62,29 +62,29 @@ export default function FeaturedCities() {
 
   const getIpLocation = async () => {
     try {
-      const isBot = isbot(navigator.userAgent);
+      const isBot = isbot(navigator.userAgent)
       if (!isBot) {
-        const { region, city, countryCode } = await fetchLocFromIp();
+        const { region, city, countryCode } = await fetchLocFromIp()
 
         if (countryCode !== 'US') {
-          return;
+          return
         }
-        const { cities } = await fetchFeatured(city, region);
+        const { cities } = await fetchFeatured(city, region)
         if (cities && cities.length > 0) {
-          setFeaturedCities(cities);
+          setFeaturedCities(cities)
         }
 
-        console.log('region', region);
-        console.log('city', city);
+        console.log('region', region)
+        console.log('city', city)
       }
     } catch (error) {
-      console.log('error in getIpLocation', error);
+      console.log('error in getIpLocation', error)
     }
-  };
+  }
 
   const link = (city) => {
-    return `/elections/${city.slug}`;
-  };
+    return `/elections/${city.slug}`
+  }
   return (
     <section>
       <div className="-mt-14 md:-mt-36">
@@ -135,5 +135,5 @@ export default function FeaturedCities() {
         </div>
       </div>
     </section>
-  );
+  )
 }

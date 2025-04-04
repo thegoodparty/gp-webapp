@@ -1,27 +1,27 @@
-'use client';
-import { InputLabel, MenuItem, Select } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import TextField from '@shared/inputs/TextField';
-import H1 from '@shared/typography/H1';
-import Modal from '@shared/utils/Modal';
-import { useState } from 'react';
-import NeedHelpSuccess from './NeedHelpSuccess';
-import Button from '@shared/buttons/Button';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import { InputLabel, MenuItem, Select } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import TextField from '@shared/inputs/TextField'
+import H1 from '@shared/typography/H1'
+import Modal from '@shared/utils/Modal'
+import { useState } from 'react'
+import NeedHelpSuccess from './NeedHelpSuccess'
+import Button from '@shared/buttons/Button'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 export async function sendMessage(type, message) {
   try {
     const payload = {
       type,
       message,
-    };
-    return await clientFetch(apiRoutes.voters.voterFile.helpMessage, payload);
+    }
+    return await clientFetch(apiRoutes.voters.voterFile.helpMessage, payload)
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -31,56 +31,56 @@ const types = [
   'Texting',
   'Phone Banking',
   'Digital Advertising',
-];
+]
 
 export default function NeedHelp() {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const [state, setState] = useState({
     type: '',
     message: '',
-  });
+  })
 
   const handleChange = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const handleClose = () => {
-    trackEvent(EVENTS.VoterData.NeedHelp.Exit);
-    setOpen(false);
-    setLoading(false);
-    setShowSuccess(false);
-  };
+    trackEvent(EVENTS.VoterData.NeedHelp.Exit)
+    setOpen(false)
+    setLoading(false)
+    setShowSuccess(false)
+  }
 
   const canSave = () => {
-    return !loading && state.type !== '' && state.message !== '';
-  };
+    return !loading && state.type !== '' && state.message !== ''
+  }
 
   const handleSubmit = async () => {
     if (loading) {
-      return;
+      return
     }
     trackEvent(EVENTS.VoterData.NeedHelp.Submit, {
       type: state.type,
       hasMessage: !!state.message,
-    });
-    setLoading(true);
-    await sendMessage(state.type, state.message);
-    setShowSuccess(true);
-  };
+    })
+    setLoading(true)
+    await sendMessage(state.type, state.message)
+    setShowSuccess(true)
+  }
   return (
     <>
       <Button
         size="large"
         color="neutral"
         onClick={() => {
-          trackEvent(EVENTS.VoterData.ClickNeedHelp);
-          setOpen(true);
+          trackEvent(EVENTS.VoterData.ClickNeedHelp)
+          setOpen(true)
         }}
         className="mr-4 mb-4 md:mb-0 w-full md:w-auto"
       >
@@ -105,14 +105,14 @@ export default function NeedHelp() {
                 onChange={(e) => {
                   trackEvent(EVENTS.VoterData.NeedHelp.SelectType, {
                     type: e.target.value,
-                  });
-                  handleChange('type', e.target.value);
+                  })
+                  handleChange('type', e.target.value)
                 }}
                 renderValue={(selected) => {
                   if (selected.length === 0) {
-                    return <div>Select</div>;
+                    return <div>Select</div>
                   }
-                  return selected;
+                  return selected
                 }}
               >
                 {types.map((option) => (
@@ -151,5 +151,5 @@ export default function NeedHelp() {
         </div>
       </Modal>
     </>
-  );
+  )
 }

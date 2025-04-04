@@ -1,4 +1,4 @@
-import RichEditor from '@shared/inputs/RichEditor';
+import RichEditor from '@shared/inputs/RichEditor'
 
 export default {
   title: 'Unshared/RichEditor',
@@ -13,8 +13,8 @@ export default {
         <strong>(Used in dashboard / campaign plan )</strong>
         <RichEditor {...args} />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

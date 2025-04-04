@@ -1,5 +1,5 @@
-'use client';
-import BaseButtonClient from './BaseButtonClient';
+'use client'
+import BaseButtonClient from './BaseButtonClient'
 
 export default function YellowButtonClient({
   children,
@@ -9,9 +9,9 @@ export default function YellowButtonClient({
   type,
   id,
 }) {
-  const backgroundColor = disabled ? 'rgba(255, 230, 0, 0.3)' : '#FFE600';
-  const textColor = disabled ? '#666' : '#000';
-  const cursor = disabled ? 'not-allowed' : 'pointer';
+  const backgroundColor = disabled ? 'rgba(255, 230, 0, 0.3)' : '#FFE600'
+  const textColor = disabled ? '#666' : '#000'
+  const cursor = disabled ? 'not-allowed' : 'pointer'
 
   return (
     <BaseButtonClient
@@ -23,5 +23,5 @@ export default function YellowButtonClient({
     >
       {children}
     </BaseButtonClient>
-  );
+  )
 }

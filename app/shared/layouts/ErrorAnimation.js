@@ -1,4 +1,4 @@
-import styles from './ErrorAnimation.module.scss';
+import styles from './ErrorAnimation.module.scss'
 export default function ErrorAnimation() {
   return (
     <>
@@ -24,5 +24,5 @@ export default function ErrorAnimation() {
         </div>
       </div>
     </>
-  );
+  )
 }

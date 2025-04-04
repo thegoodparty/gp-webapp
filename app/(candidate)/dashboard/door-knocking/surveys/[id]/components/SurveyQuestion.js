@@ -1,11 +1,11 @@
-import DeleteQuestion from './DeleteQuestion';
-import EditQuestion from './EditQuestion';
+import DeleteQuestion from './DeleteQuestion'
+import EditQuestion from './EditQuestion'
 
 export default function SurveyQuestion({ question, isEven }) {
-  const { name, answer_type, required } = question;
+  const { name, answer_type, required } = question
   const rowClass = `grid grid-cols-12 col-span-12 py-3 items-center ${
     isEven ? 'bg-white' : 'bg-gray-50'
-  }`;
+  }`
 
   return (
     <>
@@ -23,5 +23,5 @@ export default function SurveyQuestion({ question, isEven }) {
         </div>
       </div>
     </>
-  );
+  )
 }

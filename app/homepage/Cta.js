@@ -1,6 +1,6 @@
-'use client';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Button from '@shared/buttons/Button';
+'use client'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Button from '@shared/buttons/Button'
 
 export default function Cta() {
   return (
@@ -22,5 +22,5 @@ export default function Cta() {
         </div>
       </div>
     </MaxWidth>
-  );
+  )
 }

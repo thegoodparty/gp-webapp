@@ -1,6 +1,6 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import SearchLocation from '../shared/SearchLocation';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import SearchLocation from '../shared/SearchLocation'
 
 export default function Hero() {
   return (
@@ -27,5 +27,5 @@ export default function Hero() {
         <div className="h-3"></div>
       </MaxWidth>
     </div>
-  );
+  )
 }

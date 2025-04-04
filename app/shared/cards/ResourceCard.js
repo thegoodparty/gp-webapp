@@ -1,6 +1,6 @@
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import Link from 'next/link';
+import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
+import Link from 'next/link'
 
 export default function ResourceCard({
   title,
@@ -19,5 +19,5 @@ export default function ResourceCard({
         <Body2 className="text-indigo-100 mt-1">{description}</Body2>
       </div>
     </Link>
-  );
+  )
 }

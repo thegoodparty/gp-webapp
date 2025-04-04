@@ -3,5 +3,5 @@ export default function Body2({ children, className = '' }) {
     <div className={`font-normal font-sfpro text-sm ${className}`}>
       {children}
     </div>
-  );
+  )
 }

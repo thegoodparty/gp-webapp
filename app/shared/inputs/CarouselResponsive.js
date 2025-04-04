@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import React, { Component } from 'react';
-import Slider from 'react-slick';
-import Image from 'next/image';
-import './slick.min.css';
-import './slick-theme.min.css';
+import React, { Component } from 'react'
+import Slider from 'react-slick'
+import Image from 'next/image'
+import './slick.min.css'
+import './slick-theme.min.css'
 
 export default class Carousel extends Component {
   render() {
@@ -15,7 +15,7 @@ export default class Carousel extends Component {
       slidesToShow: 1,
       slidesToScroll: 1,
       arrows: false,
-    };
+    }
     return (
       <div className="m-0 w-[450px] md:w-[700px] lg:w-[900px] h-full bg-primary-dark-dark rounded-2xl text-white">
         <Slider {...settings}>
@@ -48,6 +48,6 @@ export default class Carousel extends Component {
           ))}
         </Slider>
       </div>
-    );
+    )
   }
 }

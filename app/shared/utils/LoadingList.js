@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 export default function LoadingList() {
   return (
@@ -43,5 +43,5 @@ export default function LoadingList() {
       </div>
       <span className="sr-only">Loading...</span>
     </div>
-  );
+  )
 }

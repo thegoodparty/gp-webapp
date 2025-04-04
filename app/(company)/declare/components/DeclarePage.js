@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import Signatures from './Signatures';
-import H1 from '@shared/typography/H1';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import Signatures from './Signatures'
+import H1 from '@shared/typography/H1'
 
 export default function DeclarePage({ signatures, baskerville, tangerine }) {
   const content = [
@@ -46,9 +46,9 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
         "It's no wonder that a majority of eligible voters (over 130M Americans), including more than half of Millennials and GenZ, say that neither Republicans, nor Democrats represent them. It's time to declare independence from the corrupt two-party system.",
       type: 'normal',
     },
-  ];
+  ]
 
-  let modalProps = { signatures, tangerine };
+  let modalProps = { signatures, tangerine }
 
   return (
     <MaxWidth>
@@ -85,5 +85,5 @@ export default function DeclarePage({ signatures, baskerville, tangerine }) {
         </div>
       </div>
     </MaxWidth>
-  );
+  )
 }

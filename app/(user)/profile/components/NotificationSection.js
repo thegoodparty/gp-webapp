@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import Body2 from '@shared/typography/Body2';
-import H5 from '@shared/typography/H5';
-import { Switch } from '@mui/material';
-import { useUser } from '@shared/hooks/useUser';
-import Paper from '@shared/utils/Paper';
-import H2 from '@shared/typography/H2';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useState, useEffect } from 'react'
+import Body2 from '@shared/typography/Body2'
+import H5 from '@shared/typography/H5'
+import { Switch } from '@mui/material'
+import { useUser } from '@shared/hooks/useUser'
+import Paper from '@shared/utils/Paper'
+import H2 from '@shared/typography/H2'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const fields = [
   {
@@ -32,36 +32,36 @@ const fields = [
     label: 'Weekly Newsletter',
     subTitle: "Receive GoodParty.org's weekly newsletter.",
   },
-];
+]
 
 export default function NotificationSection() {
-  const [user, setUser] = useUser();
-  const [state, setState] = useState({});
-  const [initialUpdate, setInitialUpdate] = useState(false);
+  const [user, setUser] = useUser()
+  const [state, setState] = useState({})
+  const [initialUpdate, setInitialUpdate] = useState(false)
 
   useEffect(() => {
     if (user && !initialUpdate) {
-      let meta = {};
+      let meta = {}
       try {
-        meta = JSON.parse(user.metaData);
+        meta = JSON.parse(user.metaData)
       } catch (error) {
-        console.log('Error parsing user meta', error);
+        console.log('Error parsing user meta', error)
       }
 
-      setState(meta);
-      setInitialUpdate(true);
+      setState(meta)
+      setInitialUpdate(true)
     }
-  }, [user]);
+  }, [user])
 
   async function updateUserCallback(updatedMeta) {
     try {
       const response = await clientFetch(apiRoutes.user.updateMeta, {
         meta: updatedMeta,
-      });
-      const user = response.data;
-      setUser(user);
+      })
+      const user = response.data
+      setUser(user)
     } catch (error) {
-      console.log('Error updating user', error);
+      console.log('Error updating user', error)
     }
   }
 
@@ -69,15 +69,15 @@ export default function NotificationSection() {
     const updatedState = {
       ...state,
       [key]: event.target.checked,
-    };
+    }
     trackEvent(EVENTS.Settings.Notifications.ToggleEmail, {
       email: key,
       enabled: event.target.checked,
-    });
-    setState(updatedState);
-    setInitialUpdate(false);
-    updateUserCallback(updatedState);
-  };
+    })
+    setState(updatedState)
+    setInitialUpdate(false)
+    updateUserCallback(updatedState)
+  }
 
   return (
     <Paper className="mt-4">
@@ -94,7 +94,7 @@ export default function NotificationSection() {
           <div>
             <Switch
               onChange={(e) => {
-                handleChange(field.key, e);
+                handleChange(field.key, e)
               }}
               //
               checked={state[field.key]}
@@ -112,5 +112,5 @@ export default function NotificationSection() {
         </div>
       ))}
     </Paper>
-  );
+  )
 }

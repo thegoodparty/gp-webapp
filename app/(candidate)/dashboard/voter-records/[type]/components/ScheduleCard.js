@@ -1,17 +1,17 @@
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import Overline from '@shared/typography/Overline';
-import Paper from '@shared/utils/Paper';
-import ScheduleFlow from './ScheduleFlow';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import Overline from '@shared/typography/Overline'
+import Paper from '@shared/utils/Paper'
+import ScheduleFlow from './ScheduleFlow'
 
 export default function ScheduleCard(props) {
-  const { type } = props;
-  let typeText = '';
+  const { type } = props
+  let typeText = ''
   if (type === 'sms') {
-    typeText = 'text';
+    typeText = 'text'
   }
   if (type === 'telemarketing') {
-    typeText = 'phone banking';
+    typeText = 'phone banking'
   }
 
   return (
@@ -29,5 +29,5 @@ export default function ScheduleCard(props) {
       </div>
       <ScheduleFlow {...props} />
     </Paper>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import Overline from '@shared/typography/Overline';
+import Link from 'next/link'
+import Overline from '@shared/typography/Overline'
 
 export default function ArticleTags({ tags }) {
   if (!tags) {
-    return null;
+    return null
   }
   return (
     <div>
@@ -18,5 +18,5 @@ export default function ArticleTags({ tags }) {
         </Link>
       ))}
     </div>
-  );
+  )
 }

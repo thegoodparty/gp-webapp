@@ -1,10 +1,10 @@
-import React from 'react';
-import { JsonLd } from 'react-schemaorg';
+import React from 'react'
+import { JsonLd } from 'react-schemaorg'
 
-import { cmsToPlainText } from '/helpers/contentfulHelper';
+import { cmsToPlainText } from '/helpers/contentfulHelper'
 
 export default function DefinedTermSchema({ item, slug }) {
-  const { title, description } = item;
+  const { title, description } = item
 
   return (
     <JsonLd
@@ -17,5 +17,5 @@ export default function DefinedTermSchema({ item, slug }) {
         url: `https://goodparty.org/political-terms/${slug}`,
       }}
     />
-  );
+  )
 }

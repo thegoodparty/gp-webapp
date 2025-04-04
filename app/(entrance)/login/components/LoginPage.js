@@ -1,122 +1,122 @@
-'use client';
-import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js';
-import PasswordInput from '@shared/inputs/PasswrodInput.js';
-import gpApi from 'gpApi/index.js';
+'use client'
+import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js'
+import PasswordInput from '@shared/inputs/PasswrodInput.js'
+import gpApi from 'gpApi/index.js'
 import {
   deleteCookie,
   getCookie,
   setUserCookie,
-} from 'helpers/cookieHelper.js';
-import Link from 'next/link.js';
-import { Suspense, useState } from 'react';
-import gpFetch from 'gpApi/gpFetch.js';
-import H1 from '@shared/typography/H1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { isValidPassword } from '@shared/inputs/IsValidPassword';
-import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
-import { useUser } from '@shared/hooks/useUser';
-import CardPageWrapper from '@shared/cards/CardPageWrapper';
-import Body2 from '@shared/typography/Body2';
-import SocialLoginButtons from './SocialLoginButtons';
-import saveToken from 'helpers/saveToken';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { USER_ROLES, userHasRole } from 'helpers/userHelper';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+} from 'helpers/cookieHelper.js'
+import Link from 'next/link.js'
+import { Suspense, useState } from 'react'
+import gpFetch from 'gpApi/gpFetch.js'
+import H1 from '@shared/typography/H1'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { isValidPassword } from '@shared/inputs/IsValidPassword'
+import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
+import { useUser } from '@shared/hooks/useUser'
+import CardPageWrapper from '@shared/cards/CardPageWrapper'
+import Body2 from '@shared/typography/Body2'
+import SocialLoginButtons from './SocialLoginButtons'
+import saveToken from 'helpers/saveToken'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { USER_ROLES, userHasRole } from 'helpers/userHelper'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export const validateZip = (zip) => {
-  const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-  return validZip.test(zip);
-};
+  const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
+  return validZip.test(zip)
+}
 
 async function login(email, password) {
   try {
     const payload = {
       email,
       password,
-    };
-    const resp = await clientFetch(apiRoutes.authentication.login, payload);
-    return resp.data;
+    }
+    const resp = await clientFetch(apiRoutes.authentication.login, payload)
+    return resp.data
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
 const getCampaignRequests = async (userId) => {
   try {
-    return await gpFetch(gpApi.campaign.campaignRequests.get, { userId });
+    return await gpFetch(gpApi.campaign.campaignRequests.get, { userId })
   } catch (e) {
-    console.log('error at getCampaignRequests', e);
-    return {};
+    console.log('error at getCampaignRequests', e)
+    return {}
   }
-};
+}
 
 export default function LoginPage() {
   const [state, setState] = useState({
     email: '',
     password: '',
-  });
+  })
 
-  const [_, setUser] = useUser();
-  const { errorSnackbar } = useSnackbar();
+  const [_, setUser] = useUser()
+  const { errorSnackbar } = useSnackbar()
 
   const enableSubmit = () =>
-    isValidEmail(state.email) && isValidPassword(state.password);
+    isValidEmail(state.email) && isValidPassword(state.password)
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      const { user, token } = await login(state.email, state.password);
+      const { user, token } = await login(state.email, state.password)
 
       if (user) {
-        await saveToken(token);
-        setUserCookie(user);
-        setUser(user);
-        const campaignRequests = await getCampaignRequests(user.id);
+        await saveToken(token)
+        setUserCookie(user)
+        setUser(user)
+        const campaignRequests = await getCampaignRequests(user.id)
 
         if (campaignRequests?.length) {
-          window.location.href = '/onboarding/managing/final';
-          return;
+          window.location.href = '/onboarding/managing/final'
+          return
         }
 
-        const returnUrl = getCookie('returnUrl');
+        const returnUrl = getCookie('returnUrl')
         if (returnUrl) {
-          deleteCookie('returnUrl');
-          window.location.href = returnUrl;
-          return;
+          deleteCookie('returnUrl')
+          window.location.href = returnUrl
+          return
         }
 
         if (userHasRole(user, USER_ROLES.SALES)) {
-          window.location.href = '/sales/add-campaign';
-          return;
+          window.location.href = '/sales/add-campaign'
+          return
         }
 
-        const status = await fetchCampaignStatus();
+        const status = await fetchCampaignStatus()
 
         if (status?.status === 'candidate') {
-          window.location.href = '/dashboard';
-          return;
+          window.location.href = '/dashboard'
+          return
         }
         if (status?.status === 'volunteer') {
-          window.location.href = '/volunteer-dashboard';
-          return;
+          window.location.href = '/volunteer-dashboard'
+          return
         }
-        window.location.href = '/';
+        window.location.href = '/'
       } else {
         errorSnackbar(
           'Invalid login. Please check your credentials and try again.',
-        );
+        )
       }
     }
-  };
+  }
 
   const onChangeField = (value, key) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   return (
     <CardPageWrapper>
@@ -139,7 +139,7 @@ export default function LoginPage() {
           <form
             noValidate
             onSubmit={(e) => {
-              e.preventDefault();
+              e.preventDefault()
             }}
             data-cy="email-form"
             id="register-page-form"
@@ -194,5 +194,5 @@ export default function LoginPage() {
         </div>
       </div>
     </CardPageWrapper>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import Image from 'next/image';
-import Link from 'next/link';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function NotFound() {
   return (
@@ -36,5 +36,5 @@ export default function NotFound() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import Body1 from '@shared/typography/Body1';
-import H4 from '@shared/typography/H4';
-import IssuesIcon from './IssuesIcon';
+import Body1 from '@shared/typography/Body1'
+import H4 from '@shared/typography/H4'
+import IssuesIcon from './IssuesIcon'
 
 export default function CandidatePosition({ candidatePosition, previewMode }) {
-  const { topIssue, position, description } = candidatePosition;
+  const { topIssue, position, description } = candidatePosition
   return (
     <div
       key={candidatePosition.id}
@@ -19,5 +19,5 @@ export default function CandidatePosition({ candidatePosition, previewMode }) {
         </Body1>
       </div>
     </div>
-  );
+  )
 }

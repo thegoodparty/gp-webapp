@@ -1,35 +1,35 @@
-import { useState } from 'react';
-import { Autocomplete, InputAdornment } from '@mui/material';
-import { theme } from 'tailwind.config';
-import TextField from '@shared/inputs/TextField';
-import IconButton from '@mui/material/IconButton';
-import { IoCloseSharp } from 'react-icons/io5';
+import { useState } from 'react'
+import { Autocomplete, InputAdornment } from '@mui/material'
+import { theme } from 'tailwind.config'
+import TextField from '@shared/inputs/TextField'
+import IconButton from '@mui/material/IconButton'
+import { IoCloseSharp } from 'react-icons/io5'
 
 const filterOptions = (options, { inputValue }) => {
   if (options && typeof options.filter === 'function') {
     return options.filter((option) => {
-      return option.name.toLowerCase().includes(inputValue.toLowerCase());
-    });
+      return option.name.toLowerCase().includes(inputValue.toLowerCase())
+    })
   }
-};
+}
 
 export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
-  const [value, setValue] = useState(null);
-  const [inputValue, setInputValue] = useState('');
+  const [value, setValue] = useState(null)
+  const [inputValue, setInputValue] = useState('')
 
   const handleInputChange = (event, newInputValue) => {
     // TODO: We REALLY need to figure out why we're updating THREE different states here.
     //  seems like a bad code smell.
-    !newInputValue && setValue(null);
-    setInputValue(newInputValue);
-    onInputChange(newInputValue);
-  };
+    !newInputValue && setValue(null)
+    setInputValue(newInputValue)
+    onInputChange(newInputValue)
+  }
 
   return (
     <Autocomplete
       value={value}
       onChange={(event, newValue) => {
-        setValue(newValue);
+        setValue(newValue)
       }}
       inputValue={inputValue}
       onInputChange={handleInputChange}
@@ -68,5 +68,5 @@ export const IssuesSearch = ({ issues, onInputChange = (v) => {} }) => {
       getOptionLabel={({ name }) => name}
       filterOptions={filterOptions}
     />
-  );
-};
+  )
+}

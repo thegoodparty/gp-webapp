@@ -1,9 +1,9 @@
-'use client';
-import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import Button from '@shared/buttons/Button';
+'use client'
+import React from 'react'
+import Dialog from '@mui/material/Dialog'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
 
 function AlertDialog({
   handleClose,
@@ -19,10 +19,10 @@ function AlertDialog({
 }) {
   const handleCancel = () => {
     if (onCancel && typeof onCancel === 'function') {
-      return onCancel();
+      return onCancel()
     }
-    handleClose();
-  };
+    handleClose()
+  }
 
   return (
     <Dialog
@@ -60,7 +60,7 @@ function AlertDialog({
         </div>
       </div>
     </Dialog>
-  );
+  )
 }
 
-export default AlertDialog;
+export default AlertDialog

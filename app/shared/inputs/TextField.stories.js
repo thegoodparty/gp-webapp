@@ -1,5 +1,5 @@
-import TextField from './TextField';
-import { MdOutlineMailOutline } from 'react-icons/md';
+import TextField from './TextField'
+import { MdOutlineMailOutline } from 'react-icons/md'
 
 export default {
   title: 'Inputs/TextField',
@@ -17,18 +17,18 @@ export default {
       <TextField {...args} InputLabelProps={{ shrink: true }} />
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}
 export const Error = {
   args: {
     error: true,
     endAdornments: ['error'],
     helperText: 'Something is wrong',
   },
-};
+}
 export const CustomIcon = {
   args: {
     endAdornments: [<MdOutlineMailOutline key="1234" />],
   },
-};
+}

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import MuiModal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import { IoIosCloseCircle } from 'react-icons/io';
+import * as React from 'react'
+import MuiModal from '@mui/material/Modal'
+import Box from '@mui/material/Box'
+import { IoIosCloseCircle } from 'react-icons/io'
 
 const style = {
   position: 'absolute',
@@ -18,7 +18,7 @@ const style = {
   maxHeight: '90vh',
   minWidth: 280,
   overflowY: 'auto',
-};
+}
 
 export default function Modal({
   open,
@@ -37,10 +37,10 @@ export default function Modal({
       (reason === 'backdropClick' && preventBackdropClose) ||
       (reason === 'escapeKeyDown' && preventEscClose)
     ) {
-      return;
+      return
     }
-    closeCallback();
-  };
+    closeCallback()
+  }
   return (
     <MuiModal open={open} onClose={handleClose}>
       <div className="bg-blue-400">
@@ -57,5 +57,5 @@ export default function Modal({
         </Box>
       </div>
     </MuiModal>
-  );
+  )
 }

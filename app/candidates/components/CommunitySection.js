@@ -1,9 +1,9 @@
-import Button from '@shared/buttons/Button';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
-import { memo } from 'react';
+import Button from '@shared/buttons/Button'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
+import { memo } from 'react'
 
 export default memo(function CommunitySection() {
   return (
@@ -51,5 +51,5 @@ export default memo(function CommunitySection() {
         </div>
       </MaxWidth>
     </div>
-  );
-});
+  )
+})

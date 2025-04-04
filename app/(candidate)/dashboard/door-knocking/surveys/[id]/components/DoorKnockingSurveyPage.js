@@ -1,12 +1,12 @@
-'use client';
-import Body2 from '@shared/typography/Body2';
-import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
-import Paper from '@shared/utils/Paper';
-import Link from 'next/link';
-import { MdOutlineArrowBack } from 'react-icons/md';
-import SurveyHeader from './SurveyHeader';
-import SurveyQuestions from './SurveyQuestions';
-import { EcanvasserSurveyProvider } from '@shared/hooks/EcanvasserSurveyProvider';
+'use client'
+import Body2 from '@shared/typography/Body2'
+import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
+import Paper from '@shared/utils/Paper'
+import Link from 'next/link'
+import { MdOutlineArrowBack } from 'react-icons/md'
+import SurveyHeader from './SurveyHeader'
+import SurveyQuestions from './SurveyQuestions'
+import { EcanvasserSurveyProvider } from '@shared/hooks/EcanvasserSurveyProvider'
 
 export default function DoorKnockingSurveyPage(props) {
   return (
@@ -25,5 +25,5 @@ export default function DoorKnockingSurveyPage(props) {
         </Paper>
       </DashboardLayout>
     </EcanvasserSurveyProvider>
-  );
+  )
 }

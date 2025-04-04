@@ -1,36 +1,36 @@
-'use client';
+'use client'
 
 
 export const ANIMATED_PROGRESS_BAR_SIZES = {
   SM: 'sm',
   MD: 'md',
   LG: 'lg',
-};
+}
 
 const calculateColor = (percent) => {
-  let bgColor = 'bg-black';
+  let bgColor = 'bg-black'
   if (percent > 0 && percent < 20) {
-    bgColor = 'bg-error-main';
+    bgColor = 'bg-error-main'
   }
   if (percent > 20) {
-    bgColor = 'bg-warning-main';
+    bgColor = 'bg-warning-main'
   }
   if (percent > 75) {
-    bgColor = 'bg-success-main';
+    bgColor = 'bg-success-main'
   }
-  return bgColor;
-};
+  return bgColor
+}
 
 const ANIMATED_PROGRESS_BAR_SIZE_MAP = {
   [ANIMATED_PROGRESS_BAR_SIZES.SM]: 'h-2',
   [ANIMATED_PROGRESS_BAR_SIZES.MD]: 'h-4',
   [ANIMATED_PROGRESS_BAR_SIZES.LG]: 'h-6',
-};
+}
 export function AnimatedProgressBar({
   percent,
   size = ANIMATED_PROGRESS_BAR_SIZES.SM,
 }) {
-  const width = percent > 100 ? 100 : percent < 0 ? 0 : percent;
+  const width = percent > 100 ? 100 : percent < 0 ? 0 : percent
 
   return (
     <div
@@ -43,5 +43,5 @@ export function AnimatedProgressBar({
         style={{ width: `${width}%` }}
       />
     </div>
-  );
+  )
 }

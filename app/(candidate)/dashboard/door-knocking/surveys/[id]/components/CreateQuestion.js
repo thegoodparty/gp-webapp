@@ -1,30 +1,30 @@
-'use client';
+'use client'
 
-import Button from '@shared/buttons/Button';
-import { FaPlus, FaTrash } from 'react-icons/fa';
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import H2 from '@shared/typography/H2';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import TextField from '@shared/inputs/TextField';
-import H4 from '@shared/typography/H4';
-import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
+import Button from '@shared/buttons/Button'
+import { FaPlus, FaTrash } from 'react-icons/fa'
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import H2 from '@shared/typography/H2'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import TextField from '@shared/inputs/TextField'
+import H4 from '@shared/typography/H4'
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey'
 const createQuestion = async (payload) => {
   const resp = await clientFetch(
     apiRoutes.ecanvasser.surveys.questions.create,
     payload,
-  );
-  return resp.data;
-};
+  )
+  return resp.data
+}
 export default function CreateQuestion() {
-  const [survey, refreshSurvey] = useEcanvasserSurvey();
-  const { id } = survey;
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [options, setOptions] = useState([]);
-  const [newOption, setNewOption] = useState('');
+  const [survey, refreshSurvey] = useEcanvasserSurvey()
+  const { id } = survey
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [options, setOptions] = useState([])
+  const [newOption, setNewOption] = useState('')
   const fields = [
     {
       label: 'Question',
@@ -45,20 +45,20 @@ export default function CreateQuestion() {
       ],
       required: true,
     },
-  ];
+  ]
 
   const [formData, setFormData] = useState({
     question: '',
     answerFormat: '',
     required: false,
-  });
+  })
 
   const withOptions =
     formData.answerFormat === 'Multiple Choice' ||
-    formData.answerFormat === 'Checklist';
+    formData.answerFormat === 'Checklist'
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     const payload = {
       id,
@@ -66,38 +66,38 @@ export default function CreateQuestion() {
       answerFormatName: formData.answerFormat,
       answerFormatId: fields[1].options.indexOf(formData.answerFormat) + 1,
       required: formData.required,
-    };
-    if (withOptions) {
-      payload.answers = options.map((option) => ({ name: option }));
     }
-    await createQuestion(payload);
+    if (withOptions) {
+      payload.answers = options.map((option) => ({ name: option }))
+    }
+    await createQuestion(payload)
 
-    refreshSurvey();
+    refreshSurvey()
     setFormData({
       question: '',
       answerFormat: '',
       required: false,
-    });
-    setOptions([]);
-    setIsLoading(false);
-    setIsOpen(false);
-  };
+    })
+    setOptions([])
+    setIsLoading(false)
+    setIsOpen(false)
+  }
 
   const handleNewOption = (e) => {
-    e.preventDefault();
-    setOptions([...options, newOption]);
-    setNewOption('');
-  };
+    e.preventDefault()
+    setOptions([...options, newOption])
+    setNewOption('')
+  }
 
   const handleDeleteOption = (index) => {
-    setOptions(options.filter((_, i) => i !== index));
-  };
+    setOptions(options.filter((_, i) => i !== index))
+  }
 
   const canSubmit =
     !isLoading &&
     formData.question &&
     formData.answerFormat &&
-    (withOptions ? options.length > 0 : true);
+    (withOptions ? options.length > 0 : true)
 
   return (
     <>
@@ -187,5 +187,5 @@ export default function CreateQuestion() {
         </div>
       </Modal>
     </>
-  );
+  )
 }

@@ -4,6 +4,6 @@ export default {
   component: VoteAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

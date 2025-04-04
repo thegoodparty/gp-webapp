@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { AcademyModalSignUpButton } from 'app/(landing)/academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import Image from 'next/image'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { AcademyModalSignUpButton } from 'app/(landing)/academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
 const LocalElectionsHero = () => {
   return (
@@ -75,7 +75,7 @@ const LocalElectionsHero = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default LocalElectionsHero;
+export default LocalElectionsHero

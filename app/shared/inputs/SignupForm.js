@@ -1,22 +1,22 @@
-'use client';
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import { useState } from 'react';
-import PhoneInput from '@shared/inputs/PhoneInput';
-import TextField from '@shared/inputs/TextField';
-import EmailInput from '@shared/inputs/EmailInput';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { Fragment } from 'react';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+'use client'
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { useState } from 'react'
+import PhoneInput from '@shared/inputs/PhoneInput'
+import TextField from '@shared/inputs/TextField'
+import EmailInput from '@shared/inputs/EmailInput'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Fragment } from 'react'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 export async function subscribeEmail(payload) {
   try {
-    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
-    return true;
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
+    return true
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -29,14 +29,14 @@ export default function SignupForm({
   phoneField = true,
   onSuccessCallback = () => {},
 }) {
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [showError, setShowError] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [showForm, setShowForm] = useState(true);
-  const canSubmit = () => isValidEmail(email);
-  const { successSnackbar, errorSnackbar } = useSnackbar();
+  const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [showError, setShowError] = useState(false)
+  const [phone, setPhone] = useState('')
+  const [showForm, setShowForm] = useState(true)
+  const canSubmit = () => isValidEmail(email)
+  const { successSnackbar, errorSnackbar } = useSnackbar()
 
   const fields = [
     {
@@ -46,7 +46,7 @@ export default function SignupForm({
         <TextField
           name="firstName"
           onChange={(e) => {
-            setFirstName(e.target.value);
+            setFirstName(e.target.value)
           }}
           fullWidth
           value={firstName}
@@ -65,7 +65,7 @@ export default function SignupForm({
           size="medium"
           fullWidth
           onChange={(e) => {
-            setLastName(e.target.value);
+            setLastName(e.target.value)
           }}
           value={lastName}
           placeholder="Doe"
@@ -81,7 +81,7 @@ export default function SignupForm({
         <EmailInput
           name="email"
           onChangeCallback={(e) => {
-            setEmail(e.target.value);
+            setEmail(e.target.value)
           }}
           value={email}
           placeholder="jane.doe@email.com"
@@ -91,7 +91,7 @@ export default function SignupForm({
       ),
       required: true,
     },
-  ];
+  ]
 
   if (phoneField) {
     fields.push({
@@ -100,7 +100,7 @@ export default function SignupForm({
       field: (
         <PhoneInput
           onChangeCallback={(phone, isValid) => {
-            setPhone(phone);
+            setPhone(phone)
           }}
           useLabel={false}
           placeholder="(123) 456-7890"
@@ -110,7 +110,7 @@ export default function SignupForm({
         />
       ),
       required: false,
-    });
+    })
   }
 
   const submitForm = async () => {
@@ -123,20 +123,20 @@ export default function SignupForm({
         uri: window.location.href,
         formId,
         pageName,
-      });
+      })
       if (success) {
         successSnackbar('Check your email to learn more', {
           autoHideDuration: null,
-        });
-        onSuccessCallback();
-        setShowForm(false);
+        })
+        onSuccessCallback()
+        setShowForm(false)
       } else {
-        errorSnackbar('An error occurred. Please try again.');
+        errorSnackbar('An error occurred. Please try again.')
       }
     } else {
-      setShowError('Please enter a valid email');
+      setShowError('Please enter a valid email')
     }
-  };
+  }
   return (
     showForm && (
       <form
@@ -168,7 +168,7 @@ export default function SignupForm({
                     </div>
                   </div>
                 </Fragment>
-              );
+              )
             })}
 
             <div className="col-span-12 w-full">
@@ -195,5 +195,5 @@ export default function SignupForm({
         </>
       </form>
     )
-  );
+  )
 }

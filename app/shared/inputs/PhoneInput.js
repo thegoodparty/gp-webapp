@@ -1,28 +1,28 @@
-'use client';
+'use client'
 /**
  *
  * PhoneInput
  *
  */
 
-import React, { useState, useEffect } from 'react';
-import { AsYouType } from 'libphonenumber-js';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import PhoneIcon from '@mui/icons-material/Phone';
-import TextField from '@shared/inputs/TextField';
-import styles from './PhoneInput.module.scss';
+import React, { useState, useEffect } from 'react'
+import { AsYouType } from 'libphonenumber-js'
+import InputAdornment from '@mui/material/InputAdornment'
+import IconButton from '@mui/material/IconButton'
+import PhoneIcon from '@mui/icons-material/Phone'
+import TextField from '@shared/inputs/TextField'
+import styles from './PhoneInput.module.scss'
 
 export const isValidPhone = (phone) => {
   if (!phone) {
-    return false;
+    return false
   }
-  const formattedPhone = phone.replace(/\D/g, '');
+  const formattedPhone = phone.replace(/\D/g, '')
   return (
     formattedPhone.length === 10 ||
     (formattedPhone.length === 11 && formattedPhone.charAt(0) === '1')
-  );
-};
+  )
+}
 
 function PhoneInput({
   value,
@@ -35,48 +35,48 @@ function PhoneInput({
   placeholder,
   useLabel = true,
 }) {
-  const [displayValue, setDisplayValue] = useState('');
-  const [validPhone, setValidPhone] = useState(false);
+  const [displayValue, setDisplayValue] = useState('')
+  const [validPhone, setValidPhone] = useState(false)
 
   useEffect(() => {
-    formatDisplay(value);
-    const isValid = isValidPhone(value);
-    setValidPhone(isValid);
-  }, [value]);
+    formatDisplay(value)
+    const isValid = isValidPhone(value)
+    setValidPhone(isValid)
+  }, [value])
 
   const onChangeValue = async (event) => {
     if (event) {
-      const val = event.target.value;
-      const isValid = isValidPhone(val);
-      formatDisplay(val);
-      onChangeCallback(val.replace(/\D/g, ''), isValid);
+      const val = event.target.value
+      const isValid = isValidPhone(val)
+      formatDisplay(val)
+      onChangeCallback(val.replace(/\D/g, ''), isValid)
     }
-  };
+  }
 
   const formatDisplay = (val) => {
     if (!val) {
-      setDisplayValue('');
-      return '';
+      setDisplayValue('')
+      return ''
     }
-    const formatted = new AsYouType('US').input(val);
+    const formatted = new AsYouType('US').input(val)
     // issue that we can't delete (XXX)
     if (
       val.length === 4 &&
       formatted.length === 5 &&
       formatted.charAt(4) === ')'
     ) {
-      setDisplayValue(val);
+      setDisplayValue(val)
     } else {
-      setDisplayValue(formatted);
+      setDisplayValue(formatted)
     }
-  };
+  }
 
   const onBlurChange = async (event) => {
     if (event) {
-      const val = event.target.value;
-      onBlurCallback(val.replace(/\D/g, ''));
+      const val = event.target.value
+      onBlurCallback(val.replace(/\D/g, ''))
     }
-  };
+  }
 
   return (
     <TextField
@@ -113,7 +113,7 @@ function PhoneInput({
           : {}
       }
     />
-  );
+  )
 }
 
-export default PhoneInput;
+export default PhoneInput

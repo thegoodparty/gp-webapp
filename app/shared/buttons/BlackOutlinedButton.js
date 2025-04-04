@@ -1,6 +1,6 @@
-import React from 'react';
-import styles from './BlackOutlinedButton.module.scss';
-import BaseButton from './BaseButton';
+import React from 'react'
+import styles from './BlackOutlinedButton.module.scss'
+import BaseButton from './BaseButton'
 
 const BlackOutlinedButton = ({
   children,
@@ -23,7 +23,7 @@ const BlackOutlinedButton = ({
     >
       <div className="py-0 px-6">{children}</div>
     </BaseButton>
-  );
-};
+  )
+}
 
-export default BlackOutlinedButton;
+export default BlackOutlinedButton

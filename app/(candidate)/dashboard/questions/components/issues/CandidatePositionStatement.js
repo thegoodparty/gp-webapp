@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField } from '@mui/material'
 
 export const CandidatePositionStatement = ({
   candidatePosition = '',
@@ -15,7 +15,7 @@ export const CandidatePositionStatement = ({
     }}
     value={candidatePosition}
     onChange={(e) => {
-      setCandidatePosition(e.target.value);
+      setCandidatePosition(e.target.value)
     }}
   />
-);
+)

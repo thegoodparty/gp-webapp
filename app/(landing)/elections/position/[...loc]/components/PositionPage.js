@@ -1,37 +1,37 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
+import MaxWidth from '@shared/layouts/MaxWidth'
 
-import Hero from './Hero';
-import PositionDetails from './PositionDetails';
-import CtaBanner from './CtaBanner';
-import PositionFaqs from './PositionFaqs';
-import Tools from 'app/(landing)/elections/components/Tools';
-import LinksSection from 'app/(landing)/elections/shared/LinksSection';
-import Guides from 'app/(landing)/elections/shared/Guides';
-import Explore from './Explore';
-import VwoVariable from './VwoVariable';
+import Hero from './Hero'
+import PositionDetails from './PositionDetails'
+import CtaBanner from './CtaBanner'
+import PositionFaqs from './PositionFaqs'
+import Tools from 'app/(landing)/elections/components/Tools'
+import LinksSection from 'app/(landing)/elections/shared/LinksSection'
+import Guides from 'app/(landing)/elections/shared/Guides'
+import Explore from './Explore'
+import VwoVariable from './VwoVariable'
 
 export default function PositionPage(props) {
-  const { race, otherRaces, articles, county, city, positions } = props;
-  const { level, state, locationName } = race;
-  let loc = locationName;
+  const { race, otherRaces, articles, county, city, positions } = props
+  const { level, state, locationName } = race
+  let loc = locationName
   if (!level || level?.toLowerCase() === 'local') {
     loc = `${
       locationName || race.municipality?.name || ''
-    }, ${race.state?.toUpperCase()}`;
+    }, ${race.state?.toUpperCase()}`
   }
   if (level?.toLowerCase() === 'city') {
-    loc += `, ${state?.toUpperCase()}`;
+    loc += `, ${state?.toUpperCase()}`
   } else if (level?.toLowerCase() === 'county') {
-    loc += ` County, ${state?.toUpperCase()}`;
+    loc += ` County, ${state?.toUpperCase()}`
   } else if (level?.toLowerCase() === 'state') {
   }
 
   const positionLink = (race) => {
     return `/elections/position/${state}/${county ? `${county}/` : ''}${
       city ? `${city}/` : ''
-    }${race.slug}`;
-  };
-  race.loc = loc;
+    }${race.slug}`
+  }
+  race.loc = loc
 
   return (
     <div className="bg-indigo-100">
@@ -56,5 +56,5 @@ export default function PositionPage(props) {
       <Explore />
       <VwoVariable race={race} />
     </div>
-  );
+  )
 }

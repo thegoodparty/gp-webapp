@@ -1,7 +1,7 @@
-import Body1 from '@shared/typography/Body1';
-import { GrRadial, GrRadialSelected } from 'react-icons/gr';
-import Body2 from '@shared/typography/Body2';
-import { dateUsHelper } from 'helpers/dateHelper';
+import Body1 from '@shared/typography/Body1'
+import { GrRadial, GrRadialSelected } from 'react-icons/gr'
+import Body2 from '@shared/typography/Body2'
+import { dateUsHelper } from 'helpers/dateHelper'
 
 export default function RaceCard({
   race,
@@ -9,18 +9,18 @@ export default function RaceCard({
   selected,
   selectCallback,
 }) {
-  const { position, election } = race;
+  const { position, election } = race
   if (!position) {
-    return null;
+    return null
   }
-  const { name, normalizedPosition } = position;
-  const { electionDay, primaryElectionDate } = election;
+  const { name, normalizedPosition } = position
+  const { electionDay, primaryElectionDate } = election
 
   const handleKeyDown = (e, race) => {
     if (e.key === 'Enter') {
-      selectCallback(race);
+      selectCallback(race)
     }
-  };
+  }
 
   return (
     <div
@@ -52,5 +52,5 @@ export default function RaceCard({
         </div>
       </div>
     </div>
-  );
+  )
 }

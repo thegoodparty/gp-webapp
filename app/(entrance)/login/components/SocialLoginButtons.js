@@ -1,57 +1,57 @@
-'use client';
-import { deleteCookie, getCookie } from 'helpers/cookieHelper';
-import { useRouter } from 'next/navigation';
-import GoogleLoginButton from './GoogleLoginButton';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useUser } from '@shared/hooks/useUser';
-import Overline from '@shared/typography/Overline';
-import saveToken from 'helpers/saveToken';
-import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+'use client'
+import { deleteCookie, getCookie } from 'helpers/cookieHelper'
+import { useRouter } from 'next/navigation'
+import GoogleLoginButton from './GoogleLoginButton'
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { useUser } from '@shared/hooks/useUser'
+import Overline from '@shared/typography/Overline'
+import saveToken from 'helpers/saveToken'
+import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 async function login(payload) {
   try {
     const resp = await clientFetch(
       apiRoutes.authentication.socialLogin,
       payload,
-    );
-    return resp.data;
+    )
+    return resp.data
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
 export default function SocialLoginButtons() {
-  const { successSnackbar, errorSnackbar } = useSnackbar();
-  const [_, setUser] = useUser();
-  const router = useRouter();
+  const { successSnackbar, errorSnackbar } = useSnackbar()
+  const [_, setUser] = useUser()
+  const router = useRouter()
 
   const socialLoginCallback = async (socialUser) => {
-    const profile = socialUser._profile;
-    const provider = socialUser._provider;
-    const { email, profilePicURL } = profile;
+    const profile = socialUser._profile
+    const provider = socialUser._provider
+    const { email, profilePicURL } = profile
     // for facebook - get a larger image
-    let socialPic = profilePicURL;
-    let idToken;
+    let socialPic = profilePicURL
+    let idToken
     if (provider === 'facebook') {
       try {
-        idToken = socialUser._token.accessToken;
+        idToken = socialUser._token.accessToken
       } catch (e) {
-        console.log('fb API error');
+        console.log('fb API error')
       }
     } else if (provider === 'google') {
       // for google removing the "=s96-c" at the end of the string returns a large image.
       try {
-        const largeImg = profilePicURL.substring(0, profilePicURL.indexOf('='));
+        const largeImg = profilePicURL.substring(0, profilePicURL.indexOf('='))
         if (largeImg) {
-          socialPic = largeImg;
+          socialPic = largeImg
         }
-        ({ idToken } = socialUser._token);
+        ({ idToken } = socialUser._token)
       } catch (e) {
-        console.log('large image error');
+        console.log('large image error')
       }
     }
 
@@ -60,34 +60,34 @@ export default function SocialLoginButtons() {
       socialPic,
       socialProvider: provider,
       socialToken: idToken,
-    };
+    }
 
-    const { user, token } = await login(payload);
+    const { user, token } = await login(payload)
     if (user) {
-      await saveToken(token);
-      setUser(user);
-      successSnackbar('Welcome back to GoodParty.org!');
-      const returnCookie = getCookie('returnUrl');
+      await saveToken(token)
+      setUser(user)
+      successSnackbar('Welcome back to GoodParty.org!')
+      const returnCookie = getCookie('returnUrl')
       if (returnCookie) {
-        deleteCookie('returnUrl');
-        router.push(returnCookie);
+        deleteCookie('returnUrl')
+        router.push(returnCookie)
       } else {
-        const status = await fetchCampaignStatus();
+        const status = await fetchCampaignStatus()
 
         if (status?.status === 'candidate') {
-          window.location.href = '/dashboard';
-          return;
+          window.location.href = '/dashboard'
+          return
         }
         if (status?.status === 'volunteer') {
-          window.location.href = '/volunteer-dashboard';
-          return;
+          window.location.href = '/volunteer-dashboard'
+          return
         }
-        window.location.href = '/';
+        window.location.href = '/'
       }
     } else {
-      errorSnackbar('Error [loginType] in');
+      errorSnackbar('Error [loginType] in')
     }
-  };
+  }
 
   return (
     <>
@@ -104,5 +104,5 @@ export default function SocialLoginButtons() {
         <GoogleLoginButton loginSuccessCallback={socialLoginCallback} />
       </GoogleOAuthProvider>
     </>
-  );
+  )
 }

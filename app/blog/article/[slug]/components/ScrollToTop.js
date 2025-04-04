@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import Overline from '@shared/typography/Overline';
-import { ArrowUpwardRounded } from '@mui/icons-material';
+import Overline from '@shared/typography/Overline'
+import { ArrowUpwardRounded } from '@mui/icons-material'
 
 export default function ScrollToTop() {
   function handleClick(e) {
-    e.preventDefault();
+    e.preventDefault()
     if (typeof window !== 'undefined') {
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth',
-      });
+      })
     }
   }
 
@@ -27,5 +27,5 @@ export default function ScrollToTop() {
       </span>
       <Overline className="whitespace-nowrap mt-4">Scroll To Top</Overline>
     </a>
-  );
+  )
 }

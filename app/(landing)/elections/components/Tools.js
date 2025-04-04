@@ -1,8 +1,8 @@
-import Button from '@shared/buttons/Button';
-import Body1 from '@shared/typography/Body1';
-import Image from 'next/image';
-import dashboardImg from 'public/images/elections/dashboard.png';
-import helpImg from 'public/images/elections/help.png';
+import Button from '@shared/buttons/Button'
+import Body1 from '@shared/typography/Body1'
+import Image from 'next/image'
+import dashboardImg from 'public/images/elections/dashboard.png'
+import helpImg from 'public/images/elections/help.png'
 
 export default function Tools({ negativeMargin = true }) {
   return (
@@ -93,5 +93,5 @@ export default function Tools({ negativeMargin = true }) {
         </div>
       </div>
     </section>
-  );
+  )
 }

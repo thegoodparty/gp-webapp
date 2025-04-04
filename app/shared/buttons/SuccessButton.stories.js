@@ -1,5 +1,5 @@
-import { argTypes } from './buttonsArgTypes';
-import SuccessButtonComponent from './SuccessButton';
+import { argTypes } from './buttonsArgTypes'
+import SuccessButtonComponent from './SuccessButton'
 
 export default {
   title: 'Buttons/SuccessButton',
@@ -10,22 +10,22 @@ export default {
   },
 
   argTypes: argTypes,
-};
+}
 
 export const Primary = {
   args: {
     variant: 'contained',
   },
-};
+}
 
 export const Outlined = {
   args: {
     variant: 'outlined',
   },
-};
+}
 
 export const Text = {
   args: {
     variant: 'text',
   },
-};
+}

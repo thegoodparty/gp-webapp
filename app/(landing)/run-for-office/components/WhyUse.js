@@ -1,6 +1,6 @@
-import Body1 from '@shared/typography/Body1';
-import MarketingH3 from '@shared/typography/MarketingH3';
-import Overline from '@shared/typography/Overline';
+import Body1 from '@shared/typography/Body1'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import Overline from '@shared/typography/Overline'
 
 export default function WhyUse() {
   const vanityMetrics = [
@@ -22,7 +22,7 @@ export default function WhyUse() {
       description:
         'Active non-partisan and independent candidates on the platform in all 50 states.',
     },
-  ];
+  ]
 
   return (
     <section className="bg-primary-dark text-white pt-16 px-8 pb-24 text-center">
@@ -47,5 +47,5 @@ export default function WhyUse() {
         ))}
       </div>
     </section>
-  );
+  )
 }

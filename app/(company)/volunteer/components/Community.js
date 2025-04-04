@@ -1,8 +1,8 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import salImg from 'public/images/landing-pages/sal-davis.png';
-import victoriaImg from 'public/images/landing-pages/victoria2.png';
-import kierynImg from 'public/images/landing-pages/kieryn.png';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import salImg from 'public/images/landing-pages/sal-davis.png'
+import victoriaImg from 'public/images/landing-pages/victoria2.png'
+import kierynImg from 'public/images/landing-pages/kieryn.png'
 
 const people = [
   {
@@ -23,7 +23,7 @@ const people = [
     desc: "From McPherson, Kansas, Kieryn significantly impacted over 313 Nashville voters through phone, text, and social media outreach. Inspired by finding GoodParty.org on TikTok, Kieran is now running for office, exemplifying GoodParty.org's civic values.",
     image: kierynImg,
   },
-];
+]
 
 export default function Community() {
   return (
@@ -53,5 +53,5 @@ export default function Community() {
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
-  );
+  )
 }

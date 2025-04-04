@@ -1,31 +1,31 @@
-'use client';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Button from '@shared/buttons/Button';
+'use client'
+import { IoIosCloseCircle } from 'react-icons/io'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import Button from '@shared/buttons/Button'
 
 export default function StickersCallout() {
-  const [showCallout, setShowCallout] = useState(true);
+  const [showCallout, setShowCallout] = useState(true)
 
   useEffect(() => {
     try {
-      const callout = localStorage.getItem('sticker-callout');
+      const callout = localStorage.getItem('sticker-callout')
       if (callout) {
-        setShowCallout(false);
+        setShowCallout(false)
       }
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  }, []);
+  }, [])
 
   const handleClose = () => {
     try {
-      localStorage.setItem('callout4thJuly', true);
-      setShowCallout(false);
+      localStorage.setItem('callout4thJuly', true)
+      setShowCallout(false)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
 
   return (
     showCallout && (
@@ -68,5 +68,5 @@ export default function StickersCallout() {
         </div>
       </div>
     )
-  );
+  )
 }

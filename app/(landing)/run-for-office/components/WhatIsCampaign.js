@@ -1,15 +1,15 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import RunCampaignButton from './RunCampaignButton';
-import Link from 'next/link';
-import WhiteButton from './WhiteButton';
-import doorKnockingImg from 'public/images/run-for-office/door-knocking.png';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import RunCampaignButton from './RunCampaignButton'
+import Link from 'next/link'
+import WhiteButton from './WhiteButton'
+import doorKnockingImg from 'public/images/run-for-office/door-knocking.png'
 
 const points = [
   { large: '300+', small: 'Candidates supported' },
   { large: '25%', small: 'Win rate in 2023' },
   { large: '50+', small: 'Years of campaign expertise' },
-];
+]
 
 export default function WhatIsCampaign() {
   return (
@@ -66,5 +66,5 @@ export default function WhatIsCampaign() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

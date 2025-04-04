@@ -1,9 +1,9 @@
-import LisaBottom from 'app/(landing)/get-a-demo/components/LisaBottom';
-import Image from 'next/image';
-import peopleImg from 'public/images/landing-pages/info-people.png';
-import starImg from 'public/images/landing-pages/star.png';
-import { Suspense } from 'react';
-import CalendarIframe from './CalendarIframe';
+import LisaBottom from 'app/(landing)/get-a-demo/components/LisaBottom'
+import Image from 'next/image'
+import peopleImg from 'public/images/landing-pages/info-people.png'
+import starImg from 'public/images/landing-pages/star.png'
+import { Suspense } from 'react'
+import CalendarIframe from './CalendarIframe'
 
 const points = [
   {
@@ -21,7 +21,7 @@ const points = [
     subTitle:
       "How we'll give you 1-on-1 support throughout your campaign, payment details, and getting started with GoodParty.org Pro.",
   },
-];
+]
 
 export default function ProConsultationPage() {
   return (
@@ -78,5 +78,5 @@ export default function ProConsultationPage() {
         </Suspense>
       </div>
     </div>
-  );
+  )
 }

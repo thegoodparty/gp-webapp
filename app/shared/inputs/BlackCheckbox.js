@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './BlackCheckbox.module.scss';
+import React from 'react'
+import styles from './BlackCheckbox.module.scss'
 
 function BlackCheckbox({
   value = false,
@@ -16,7 +16,7 @@ function BlackCheckbox({
       className={styles.input}
       {...props}
     />
-  );
+  )
 }
 
-export default BlackCheckbox;
+export default BlackCheckbox

@@ -1,11 +1,11 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { Fragment } from 'react';
-import { termLink } from './TermSnippet';
-import { slugify } from 'helpers/articleHelper';
-import Link from 'next/link';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { Fragment } from 'react'
+import { termLink } from './TermSnippet'
+import { slugify } from 'helpers/articleHelper'
+import Link from 'next/link'
 
 export default function TermsByLetter(props) {
-  const { items, activeLetter, glossaryItems, recentGlossaryItems } = props;
+  const { items, activeLetter, glossaryItems, recentGlossaryItems } = props
 
   return (
     <MaxWidth>
@@ -32,5 +32,5 @@ export default function TermsByLetter(props) {
         )}
       </div>
     </MaxWidth>
-  );
+  )
 }

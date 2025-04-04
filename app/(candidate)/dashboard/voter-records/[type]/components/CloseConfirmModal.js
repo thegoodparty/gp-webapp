@@ -1,7 +1,7 @@
-import Button from '@shared/buttons/Button';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import Modal from '@shared/utils/Modal';
+import Button from '@shared/buttons/Button'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import Modal from '@shared/utils/Modal'
 
 export default function CloseConfirmModal({ open, onConfirm, onCancel }) {
   return (
@@ -22,5 +22,5 @@ export default function CloseConfirmModal({ open, onConfirm, onCancel }) {
         </div>
       </div>
     </Modal>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-'use client';
-import React, { forwardRef } from 'react';
+'use client'
+import React, { forwardRef } from 'react'
 
 const HiddenFileUploadInputRender = ({ onChange, ...restProps }, ref) => {
   const handleFileInputOnChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
     if (!file) {
-      return;
+      return
     }
-    const reader = new FileReader();
-    reader.onloadend = () => onChange(reader.result, file);
-    reader.readAsText(file);
-  };
+    const reader = new FileReader()
+    reader.onloadend = () => onChange(reader.result, file)
+    reader.readAsText(file)
+  }
 
   return (
     <input
@@ -20,7 +20,7 @@ const HiddenFileUploadInputRender = ({ onChange, ...restProps }, ref) => {
       onChange={handleFileInputOnChange}
       {...restProps}
     />
-  );
-};
+  )
+}
 
-export const HiddenFileUploadInput = forwardRef(HiddenFileUploadInputRender);
+export const HiddenFileUploadInput = forwardRef(HiddenFileUploadInputRender)

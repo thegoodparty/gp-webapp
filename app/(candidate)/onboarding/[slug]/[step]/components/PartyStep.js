@@ -1,18 +1,18 @@
-'use client';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
+'use client'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
 import {
   onboardingStep,
   updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useRouter } from 'next/navigation';
-import { useState, useMemo } from 'react';
-import TextField from '@shared/inputs/TextField';
-import Modal from '@shared/utils/Modal';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
-import RadioList from '@shared/inputs/RadioList';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
-import Button from '@shared/buttons/Button';
+} from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { useRouter } from 'next/navigation'
+import { useState, useMemo } from 'react'
+import TextField from '@shared/inputs/TextField'
+import Modal from '@shared/utils/Modal'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import RadioList from '@shared/inputs/RadioList'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import Button from '@shared/buttons/Button'
 
 const options = [
   { key: 'independent', label: 'Independent' },
@@ -22,7 +22,7 @@ const options = [
   { key: 'libertarian', label: 'Libertarian' },
   { key: 'green', label: 'Green Party' },
   { key: 'nonpartisan', label: 'Nonpartisan' },
-];
+]
 
 const invalidOptions = [
   'democrat',
@@ -124,16 +124,16 @@ const invalidOptions = [
   'republican supporter',
   'rep activist',
   'republican activist',
-];
+]
 
 export default function PartyStep(props) {
-  const { campaign, step } = props;
-  const router = useRouter();
+  const { campaign, step } = props
+  const router = useRouter()
   const [state, setState] = useState({
     party: campaign?.details?.party || '',
     otherParty: campaign?.details?.otherParty || '',
-  });
-  const [showInvalidModal, setShowInvalidModal] = useState(false);
+  })
+  const [showInvalidModal, setShowInvalidModal] = useState(false)
   const trackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Onboarding Next Button', {
@@ -142,7 +142,7 @@ export default function PartyStep(props) {
         otherParty: state.otherParty,
       }),
     [step, state.party, state.otherParty],
-  );
+  )
 
   const onChangeField = (key, value) => {
     if (key === 'otherParty' && value !== '') {
@@ -150,47 +150,47 @@ export default function PartyStep(props) {
         ...state,
         otherParty: value,
         party: '',
-      });
+      })
     } else {
       setState({
         ...state,
         [key]: value,
-      });
+      })
     }
-  };
+  }
 
   const canSubmit = () => {
     if (state.party !== '' && state.otherParty !== '') {
-      return false;
+      return false
     }
-    return state.party !== '' || state.otherParty !== '';
-  };
+    return state.party !== '' || state.otherParty !== ''
+  }
 
   const handleSave = async () => {
     trackEvent(EVENTS.Onboarding.PartyStep.ClickSubmit, {
       step,
-    });
+    })
     if (invalidOtherParty()) {
-      setShowInvalidModal(true);
-      onChangeField('otherParty', '');
+      setShowInvalidModal(true)
+      onChangeField('otherParty', '')
       trackEvent('Invalid Party', {
         party: state.party,
-      });
-      return;
+      })
+      return
     }
     if (canSubmit) {
-      const currentStep = onboardingStep(campaign, step);
-      const attr = [{ key: 'data.currentStep', value: currentStep }];
+      const currentStep = onboardingStep(campaign, step)
+      const attr = [{ key: 'data.currentStep', value: currentStep }]
       if (state.otherParty === '') {
-        attr.push({ key: 'details.party', value: state.party });
+        attr.push({ key: 'details.party', value: state.party })
       } else {
-        attr.push({ key: 'details.otherParty', value: state.otherParty });
+        attr.push({ key: 'details.otherParty', value: state.otherParty })
       }
 
-      await updateCampaign(attr);
-      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+      await updateCampaign(attr)
+      router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     }
-  };
+  }
 
   const invalidOtherParty = () => {
     return (
@@ -198,8 +198,8 @@ export default function PartyStep(props) {
       state.party === 'democrat' ||
       (state.otherParty !== '' &&
         invalidOptions.includes(state.otherParty.toLowerCase()))
-    );
-  };
+    )
+  }
 
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
@@ -265,5 +265,5 @@ export default function PartyStep(props) {
         </Modal>
       )}
     </form>
-  );
+  )
 }

@@ -1,21 +1,21 @@
-import Body1 from '@shared/typography/Body1';
-import { kFormatter, numberFormatter } from 'helpers/numberHelper';
-import TealButton from './TealButton';
-import { FaArrowRight } from 'react-icons/fa';
-import Overline from '@shared/typography/Overline';
-import CTA from './CTA';
-import MarketingH4 from '@shared/typography/MarketingH4';
+import Body1 from '@shared/typography/Body1'
+import { kFormatter, numberFormatter } from 'helpers/numberHelper'
+import TealButton from './TealButton'
+import { FaArrowRight } from 'react-icons/fa'
+import Overline from '@shared/typography/Overline'
+import CTA from './CTA'
+import MarketingH4 from '@shared/typography/MarketingH4'
 
 export default function TargetCard(props) {
-  const { candidate } = props;
-  const { p2vData } = candidate;
+  const { candidate } = props
+  const { p2vData } = candidate
 
-  const { office, city, state } = candidate;
+  const { office, city, state } = candidate
 
-  const { republicans, democrats, indies, totalRegisteredVoters } = p2vData;
-  let textSize = 'text-4xl';
+  const { republicans, democrats, indies, totalRegisteredVoters } = p2vData
+  let textSize = 'text-4xl'
   if (totalRegisteredVoters > 999999) {
-    textSize = 'text-3xl';
+    textSize = 'text-3xl'
   }
   return (
     <div className="border border-gray-700 p-6 rounded-2xl h-full  flex flex-col justify-between">
@@ -74,5 +74,5 @@ export default function TargetCard(props) {
         </TealButton>
       </CTA>
     </div>
-  );
+  )
 }

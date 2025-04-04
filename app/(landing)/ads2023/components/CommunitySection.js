@@ -1,11 +1,11 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import img from 'public/images/landing-pages/community.png';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import img from 'public/images/landing-pages/community.png'
 
-import Body1 from '@shared/typography/Body1';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
+import Body1 from '@shared/typography/Body1'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import WarningButton from '@shared/buttons/WarningButton'
+import Link from 'next/link'
 
 export default function CommunitySection() {
   return (
@@ -48,5 +48,5 @@ export default function CommunitySection() {
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
-  );
+  )
 }

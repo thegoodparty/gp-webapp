@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import H5 from '@shared/typography/H5';
-import Modal from '@shared/utils/Modal';
-import { getUserCookie, setCookie } from 'helpers/cookieHelper';
-import { trackEvent } from 'helpers/fullStoryHelper';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import H5 from '@shared/typography/H5'
+import Modal from '@shared/utils/Modal'
+import { getUserCookie, setCookie } from 'helpers/cookieHelper'
+import { trackEvent } from 'helpers/fullStoryHelper'
+import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import {
   MdOutlineRadioButtonChecked,
   MdOutlineRadioButtonUnchecked,
-} from 'react-icons/md';
+} from 'react-icons/md'
 
 const options = [
   {
@@ -33,49 +33,49 @@ const options = [
     label: 'Learn more about GoodParty.org',
     description: 'See why and how we help independents run, win and serve.',
   },
-];
+]
 
 export default function CTA({ children, id }) {
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const router = useRouter();
-  const pathname = usePathname();
+  const [open, setOpen] = useState(false)
+  const [selected, setSelected] = useState(null)
+  const router = useRouter()
+  const pathname = usePathname()
   const handleOpen = () => {
-    setOpen(true);
-    trackEvent('candidate CTA clicked', { id });
-  };
+    setOpen(true)
+    trackEvent('candidate CTA clicked', { id })
+  }
 
   const handleClose = () => {
-    setSelected(null);
-    setOpen(false);
-    trackEvent('candidate CTA cancelled', { id });
-  };
+    setSelected(null)
+    setOpen(false)
+    trackEvent('candidate CTA cancelled', { id })
+  }
 
   const handleNext = () => {
-    trackEvent('candidate CTA selected', { id, selected });
-    setOpen(false);
+    trackEvent('candidate CTA selected', { id, selected })
+    setOpen(false)
 
     switch (selected) {
       case 'claim':
-        const path = pathname.replace('/candidate/', '');
-        setCookie('claimProfile', path);
-        const user = getUserCookie();
+        const path = pathname.replace('/candidate/', '')
+        setCookie('claimProfile', path)
+        const user = getUserCookie()
         if (user) {
-          router.push('/dashboard');
+          router.push('/dashboard')
         } else {
-          router.push('/run-for-office');
+          router.push('/run-for-office')
         }
-        break;
+        break
       case 'help':
-        router.push('/info-session');
-        break;
+        router.push('/info-session')
+        break
       case 'learnMore':
-        router.push('/');
-        break;
+        router.push('/')
+        break
       default:
-        break;
+        break
     }
-  };
+  }
   return (
     <>
       <div onClick={handleOpen} id={id}>
@@ -98,7 +98,7 @@ export default function CTA({ children, id }) {
                   : 'border-gray-400'
               }`}
               onClick={() => {
-                setSelected(option.id);
+                setSelected(option.id)
               }}
             >
               <div className="pt-1">
@@ -123,5 +123,5 @@ export default function CTA({ children, id }) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

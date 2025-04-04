@@ -1,4 +1,4 @@
-import LoadMoreWrapper from 'app/blog/shared/LoadMoreWrapper';
+import LoadMoreWrapper from 'app/blog/shared/LoadMoreWrapper'
 
 export default {
   title: 'Unshared/LoadMoreWrapper',
@@ -34,8 +34,8 @@ export default {
           </p>
         </LoadMoreWrapper>
       </>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

@@ -1,5 +1,5 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
 
 export const IssueEditorButtons = ({
   disableSave = false,
@@ -17,4 +17,4 @@ export const IssueEditorButtons = ({
       </SecondaryButton>
     )}
   </>
-);
+)

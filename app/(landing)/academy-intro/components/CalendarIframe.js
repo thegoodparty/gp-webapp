@@ -6,5 +6,5 @@ export default function CalendarIframe() {
       height="620"
       title="Book a Meeting"
     />
-  );
+  )
 }

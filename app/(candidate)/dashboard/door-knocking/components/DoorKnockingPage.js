@@ -1,43 +1,43 @@
-'use client';
-import DashboardLayout from '../../shared/DashboardLayout';
-import InteractionsSummary from './InteractionsSummary';
-import { apiRoutes } from 'gpApi/routes';
-import InteractionsSummaryPie from './InteractionsSummaryPie';
-import InteractionsByDay from './InteractionsByDay';
-import RatingSummary from './RatingSummary';
-import H1 from '@shared/typography/H1';
-import { dateWithTime } from 'helpers/dateHelper';
-import Button from '@shared/buttons/Button';
-import { clientFetch } from 'gpApi/clientFetch';
-import { useState } from 'react';
-import Body2 from '@shared/typography/Body2';
-import { syncEcanvasser } from 'utils/syncEcanvasser';
-import DoorKnockingTabs from '../shared/DoorKnockingTabs';
+'use client'
+import DashboardLayout from '../../shared/DashboardLayout'
+import InteractionsSummary from './InteractionsSummary'
+import { apiRoutes } from 'gpApi/routes'
+import InteractionsSummaryPie from './InteractionsSummaryPie'
+import InteractionsByDay from './InteractionsByDay'
+import RatingSummary from './RatingSummary'
+import H1 from '@shared/typography/H1'
+import { dateWithTime } from 'helpers/dateHelper'
+import Button from '@shared/buttons/Button'
+import { clientFetch } from 'gpApi/clientFetch'
+import { useState } from 'react'
+import Body2 from '@shared/typography/Body2'
+import { syncEcanvasser } from 'utils/syncEcanvasser'
+import DoorKnockingTabs from '../shared/DoorKnockingTabs'
 async function fetchEcanvasserSummary() {
-  const response = await clientFetch(apiRoutes.ecanvasser.mySummary);
-  return response.data;
+  const response = await clientFetch(apiRoutes.ecanvasser.mySummary)
+  return response.data
 }
 
 export default function DoorKnockingPage(props) {
-  const [summary, setSummary] = useState(props.summary);
-  const [isSynching, setIsSynching] = useState(false);
+  const [summary, setSummary] = useState(props.summary)
+  const [isSynching, setIsSynching] = useState(false)
 
   const fetchSummary = async () => {
-    const data = await fetchEcanvasserSummary();
-    setSummary(data);
-  };
+    const data = await fetchEcanvasserSummary()
+    setSummary(data)
+  }
 
   const childProps = {
     ...props,
     summary,
-  };
+  }
 
   const handleSync = async () => {
-    setIsSynching(true);
-    await syncEcanvasser(props.campaign.id, true);
-    fetchSummary();
-    setIsSynching(false);
-  };
+    setIsSynching(true)
+    await syncEcanvasser(props.campaign.id, true)
+    fetchSummary()
+    setIsSynching(false)
+  }
 
   return (
     <DashboardLayout {...props} showAlert={false}>
@@ -70,5 +70,5 @@ export default function DoorKnockingPage(props) {
         </div>
       </div>
     </DashboardLayout>
-  );
+  )
 }

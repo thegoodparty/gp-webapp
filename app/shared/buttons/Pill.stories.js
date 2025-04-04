@@ -1,4 +1,4 @@
-import Pill from './Pill';
+import Pill from './Pill'
 
 export default {
   title: 'Buttons/Pill',
@@ -13,6 +13,6 @@ export default {
       </Pill>
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

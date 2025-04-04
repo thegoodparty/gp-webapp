@@ -1,23 +1,23 @@
-'use client';
+'use client'
 
-import Button from '@shared/buttons/Button';
-import { FaPlus } from 'react-icons/fa';
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import H2 from '@shared/typography/H2';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
+import Button from '@shared/buttons/Button'
+import { FaPlus } from 'react-icons/fa'
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import H2 from '@shared/typography/H2'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 const createSurvey = async (payload) => {
-  const resp = await clientFetch(apiRoutes.ecanvasser.surveys.create, payload);
-  return resp.data;
-};
+  const resp = await clientFetch(apiRoutes.ecanvasser.surveys.create, payload)
+  return resp.data
+}
 export default function CreateSurvey({ teams = [], createCallback }) {
   const teamOptions = Array.isArray(teams)
     ? teams.map((team) => team.name)
-    : [];
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+    : []
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const fields = [
     {
@@ -45,7 +45,7 @@ export default function CreateSurvey({ teams = [], createCallback }) {
       key: 'requiresSignature',
       type: 'checkbox',
     },
-  ];
+  ]
 
   const [formData, setFormData] = useState({
     name: '',
@@ -53,14 +53,14 @@ export default function CreateSurvey({ teams = [], createCallback }) {
     team: '',
     status: 'Unpublished',
     requiresSignature: false,
-  });
+  })
 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
-    let team;
+    let team
     if (formData.team && formData.team !== '') {
-      team = teams.find((t) => t.name === formData.team);
+      team = teams.find((t) => t.name === formData.team)
     }
     const payload = {
       name: formData.name,
@@ -68,21 +68,21 @@ export default function CreateSurvey({ teams = [], createCallback }) {
       teamId: team?.id,
       status: formData.status === 'Published' ? 'Live' : 'Not Live',
       requiresSignature: formData.requiresSignature,
-    };
-    await createSurvey(payload);
-    createCallback();
+    }
+    await createSurvey(payload)
+    createCallback()
     setFormData({
       name: '',
       description: '',
       team: '',
       status: 'Unpublished',
       requiresSignature: false,
-    });
+    })
 
-    setIsLoading(false);
-    setIsOpen(false);
-  };
-  const canSubmit = !isLoading && formData.name && formData.description;
+    setIsLoading(false)
+    setIsOpen(false)
+  }
+  const canSubmit = !isLoading && formData.name && formData.description
 
   return (
     <>
@@ -125,5 +125,5 @@ export default function CreateSurvey({ teams = [], createCallback }) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

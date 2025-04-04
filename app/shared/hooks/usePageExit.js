@@ -1,6 +1,6 @@
-'use client';
-import { useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+'use client'
+import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 /**
  * Hook that detects when a user leaves a page and how they left
@@ -9,34 +9,34 @@ import { usePathname } from 'next/navigation';
  *                             - false: user navigated to another page
  */
 export function usePageExit(callback) {
-  const pathname = usePathname();
-  const isUnloading = useRef(false);
-  const isInitialMount = useRef(true);
+  const pathname = usePathname()
+  const isUnloading = useRef(false)
+  const isInitialMount = useRef(true)
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      isUnloading.current = true;
-      callback(true); // true = window close
-    };
+      isUnloading.current = true
+      callback(true) // true = window close
+    }
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('beforeunload', handleBeforeUnload)
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('beforeunload', handleBeforeUnload)
 
       // Skip the callback on initial mount cleanup
       if (isInitialMount.current) {
-        isInitialMount.current = false;
-        return;
+        isInitialMount.current = false
+        return
       }
 
       // If unmounting but not due to window close, it must be navigation
       if (!isUnloading.current) {
-        callback(false); // false = navigation
+        callback(false) // false = navigation
       }
 
       // Reset flag
-      isUnloading.current = false;
-    };
-  }, [callback, pathname]);
+      isUnloading.current = false
+    }
+  }, [callback, pathname])
 }

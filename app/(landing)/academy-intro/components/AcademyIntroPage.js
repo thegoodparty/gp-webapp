@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import jarobImg from 'public/images/landing-pages/jarob.png';
-import starImg from 'public/images/landing-pages/star.png';
-import BreannaBottom from './BreannaBottom';
-import { Suspense } from 'react';
-import CalendarIframe from './CalendarIframe';
+import Image from 'next/image'
+import jarobImg from 'public/images/landing-pages/jarob.png'
+import starImg from 'public/images/landing-pages/star.png'
+import BreannaBottom from './BreannaBottom'
+import { Suspense } from 'react'
+import CalendarIframe from './CalendarIframe'
 
 const points = [
   {
@@ -21,7 +21,7 @@ const points = [
     subTitle:
       "We'll discuss available cohort start dates and lock down your spot.",
   },
-];
+]
 
 export default function AcademyIntroPage() {
   return (
@@ -79,5 +79,5 @@ export default function AcademyIntroPage() {
         </Suspense>
       </div>
     </div>
-  );
+  )
 }

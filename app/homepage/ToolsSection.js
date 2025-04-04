@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import Carousel from '@shared/inputs/Carousel';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import softwareImg from '/public/images/homepage/software.png';
-import Button from '@shared/buttons/Button';
+import Image from 'next/image'
+import Carousel from '@shared/inputs/Carousel'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import softwareImg from '/public/images/homepage/software.png'
+import Button from '@shared/buttons/Button'
 
 const sections = [
   {
@@ -29,7 +29,7 @@ const sections = [
       'As an Indie candidate without a party organization it meant a lot to me to have someone working hard to help me reach younger voters.',
     img: '/images/homepage/anne.jpg',
   },
-];
+]
 
 export default function ToolsSection() {
   return (
@@ -117,5 +117,5 @@ export default function ToolsSection() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

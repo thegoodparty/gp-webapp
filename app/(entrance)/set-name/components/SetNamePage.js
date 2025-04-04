@@ -1,52 +1,52 @@
-'use client';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { useState } from 'react';
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import H1 from '@shared/typography/H1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import TextField from '@shared/inputs/TextField';
-import { deleteCookie, getCookie } from 'helpers/cookieHelper';
-import { updateUser } from 'helpers/userHelper';
-import { useSnackbar } from 'helpers/useSnackbar';
+'use client'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { useState } from 'react'
+import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import H1 from '@shared/typography/H1'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import TextField from '@shared/inputs/TextField'
+import { deleteCookie, getCookie } from 'helpers/cookieHelper'
+import { updateUser } from 'helpers/userHelper'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function SetNamePage() {
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
     processing: false,
-  });
-  const { errorSnackbar } = useSnackbar();
+  })
+  const { errorSnackbar } = useSnackbar()
 
   const enableSubmit = () =>
-    !state.processing && state.firstName !== '' && state.lastName !== '';
+    !state.processing && state.firstName !== '' && state.lastName !== ''
 
   const handleSubmit = async () => {
     if (enableSubmit()) {
-      setState({ ...state, processing: true });
+      setState({ ...state, processing: true })
       await updateUser({
         firstName: state.firstName,
         lastName: state.lastName,
-      });
+      })
 
-      const returnUrl = getCookie('returnUrl');
+      const returnUrl = getCookie('returnUrl')
       if (returnUrl) {
-        deleteCookie('returnUrl');
-        window.location.href = returnUrl;
+        deleteCookie('returnUrl')
+        window.location.href = returnUrl
       } else {
-        const redirect = await createCampaign();
-        window.location.href = redirect;
+        const redirect = await createCampaign()
+        window.location.href = redirect
       }
     } else {
-      errorSnackbar('Error creating campaign');
+      errorSnackbar('Error creating campaign')
     }
-  };
+  }
 
   const onChangeField = (value, key) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   return (
     <MaxWidth>
@@ -58,7 +58,7 @@ export default function SetNamePage() {
             <form
               noValidate
               onSubmit={(e) => {
-                e.preventDefault();
+                e.preventDefault()
               }}
               id="set-name-page-form"
             >
@@ -95,5 +95,5 @@ export default function SetNamePage() {
         </div>
       </div>
     </MaxWidth>
-  );
+  )
 }

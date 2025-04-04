@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { dateUsHelper } from 'helpers/dateHelper';
-import Modal from '@shared/utils/Modal';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import RadioList from '@shared/inputs/RadioList';
-import Button from '@shared/buttons/Button';
-import PartyAnimation from '@shared/animations/PartyAnimation';
-import { useSnackbarState } from '@shared/utils/Snackbar';
+import { useState } from 'react'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { dateUsHelper } from 'helpers/dateHelper'
+import Modal from '@shared/utils/Modal'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import RadioList from '@shared/inputs/RadioList'
+import Button from '@shared/buttons/Button'
+import PartyAnimation from '@shared/animations/PartyAnimation'
+import { useSnackbarState } from '@shared/utils/Snackbar'
 
 function WonMessage({ electionDate }) {
   return (
@@ -20,7 +20,7 @@ function WonMessage({ electionDate }) {
         Let&apos;s prepare for the upcoming challenge!
       </Body2>
     </>
-  );
+  )
 }
 
 function LostMessage() {
@@ -37,7 +37,7 @@ function LostMessage() {
         GoodParty.org candidates to continue making an impact.
       </Body2>
     </>
-  );
+  )
 }
 
 export default function PrimaryResultModal({
@@ -46,43 +46,43 @@ export default function PrimaryResultModal({
   electionDate,
   onClose,
 }) {
-  const snackbarState = useSnackbarState();
-  const [primaryResult, setPrimaryResult] = useState(null);
+  const snackbarState = useSnackbarState()
+  const [primaryResult, setPrimaryResult] = useState(null)
   const [requestState, setRequestState] = useState({
     loading: false,
     error: false,
-  });
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  })
+  const [formSubmitted, setFormSubmitted] = useState(false)
 
   const options = [
     { key: 'won', label: 'I won my race' },
     { key: 'lost', label: 'I did not win my race' },
-  ];
+  ]
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     setRequestState({
       loading: true,
       error: false,
-    });
+    })
 
     try {
       await updateCampaign([
         { key: 'details.primaryResult', value: primaryResult },
-      ]);
+      ])
 
-      setFormSubmitted(true);
-      setRequestState({ loading: false, error: false });
+      setFormSubmitted(true)
+      setRequestState({ loading: false, error: false })
     } catch (e) {
-      console.error('Error submiting Primary Result:', e);
+      console.error('Error submiting Primary Result:', e)
       snackbarState.set({
         isOpen: true,
         message: 'Failed to submit election result.',
         isError: true,
-      });
+      })
 
-      setRequestState({ loading: false, error: true });
+      setRequestState({ loading: false, error: true })
     }
   }
 
@@ -161,5 +161,5 @@ export default function PrimaryResultModal({
         </div>
       )}
     </Modal>
-  );
+  )
 }

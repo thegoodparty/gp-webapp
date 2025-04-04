@@ -1,5 +1,5 @@
-import { MdStar } from 'react-icons/md';
-import IconButton, { COLOR_CLASSES, SIZE_CLASSES } from './IconButton';
+import { MdStar } from 'react-icons/md'
+import IconButton, { COLOR_CLASSES, SIZE_CLASSES } from './IconButton'
 
 const argTypes = {
   size: {
@@ -44,7 +44,7 @@ const argTypes = {
       defaultValue: { summary: false },
     },
   },
-};
+}
 
 export default {
   title: 'Buttons/IconButton',
@@ -55,60 +55,60 @@ export default {
   },
 
   argTypes: argTypes,
-};
+}
 
 export const Primary = {
   args: {
     size: 'medium',
     color: 'primary',
   },
-};
+}
 
 export const Secondary = {
   args: {
     size: 'medium',
     color: 'secondary',
   },
-};
+}
 
 export const Tertiary = {
   args: {
     size: 'medium',
     color: 'tertiary',
   },
-};
+}
 
 export const Error = {
   args: {
     size: 'medium',
     color: 'error',
   },
-};
+}
 
 export const Warning = {
   args: {
     size: 'medium',
     color: 'warning',
   },
-};
+}
 
 export const Info = {
   args: {
     size: 'medium',
     color: 'info',
   },
-};
+}
 
 export const Success = {
   args: {
     size: 'medium',
     color: 'success',
   },
-};
+}
 
 export const Neutral = {
   args: {
     size: 'medium',
     color: 'neutral',
   },
-};
+}

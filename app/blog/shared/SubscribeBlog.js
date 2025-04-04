@@ -1,6 +1,6 @@
-import EmailFormV2 from '@shared/inputs/EmailFormV2';
-import Body1 from '@shared/typography/Body1';
-import MarketingH5 from '@shared/typography/MarketingH5';
+import EmailFormV2 from '@shared/inputs/EmailFormV2'
+import Body1 from '@shared/typography/Body1'
+import MarketingH5 from '@shared/typography/MarketingH5'
 
 export default function SubscribeBlog({ className }) {
   return (
@@ -24,5 +24,5 @@ export default function SubscribeBlog({ className }) {
         primaryButton
       />
     </div>
-  );
+  )
 }

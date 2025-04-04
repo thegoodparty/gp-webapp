@@ -1,9 +1,9 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import H1 from '@shared/typography/H1';
-import { RiFolderForbidLine } from 'react-icons/ri';
-import TrackCantDownload from './TrackCantDownload';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
+import H1 from '@shared/typography/H1'
+import { RiFolderForbidLine } from 'react-icons/ri'
+import TrackCantDownload from './TrackCantDownload'
 
 export default function CantDownload(props) {
   return (
@@ -34,5 +34,5 @@ export default function CantDownload(props) {
       </div>
       <TrackCantDownload {...props} />
     </div>
-  );
+  )
 }

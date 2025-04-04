@@ -1,10 +1,10 @@
-import SadFaceAnimation from './SadFaceAnimation';
+import SadFaceAnimation from './SadFaceAnimation'
 
 export default {
   title: 'Animations/SadFaceAnimation',
   component: SadFaceAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

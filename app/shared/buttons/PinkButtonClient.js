@@ -1,5 +1,5 @@
-'use client';
-import BaseButtonClient from './BaseButtonClient';
+'use client'
+import BaseButtonClient from './BaseButtonClient'
 
 export default function PinkButtonClient({
   children,
@@ -20,5 +20,5 @@ export default function PinkButtonClient({
     >
       {children}
     </BaseButtonClient>
-  );
+  )
 }

@@ -1,32 +1,32 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
-import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign';
-import pageMetaData from 'helpers/metadataHelper';
-import { redirect } from 'next/navigation';
-import OnboardingPage from './components/OnboardingPage';
-import { fetchContentByType } from 'helpers/fetchHelper';
+import getCampaign from 'app/(candidate)/onboarding/shared/getCampaign'
+import pageMetaData from 'helpers/metadataHelper'
+import { redirect } from 'next/navigation'
+import OnboardingPage from './components/OnboardingPage'
+import { fetchContentByType } from 'helpers/fetchHelper'
 
 const meta = pageMetaData({
   title: 'Candidate Onboarding | GoodParty.org',
   description: 'Candidate Onboarding.',
   slug: '/onboarding',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page({ params }) {
-  const { slug, step } = params;
-  const campaign = await getCampaign(params);
+  const { slug, step } = params
+  const campaign = await getCampaign(params)
 
-  const totalSteps = 4;
+  const totalSteps = 4
 
-  let stepInt = step ? parseInt(step, 10) : 1;
+  let stepInt = step ? parseInt(step, 10) : 1
   if (Number.isNaN(stepInt) || stepInt < 1 || stepInt > totalSteps) {
-    redirect(`/onboarding/${slug}/1`);
+    redirect(`/onboarding/${slug}/1`)
   }
 
-  let pledge;
+  let pledge
   if (stepInt === 3) {
-    pledge = await fetchContentByType('pledge');
+    pledge = await fetchContentByType('pledge')
   }
 
   const childProps = {
@@ -34,6 +34,6 @@ export default async function Page({ params }) {
     campaign,
     totalSteps,
     pledge,
-  };
-  return <OnboardingPage {...childProps} />;
+  }
+  return <OnboardingPage {...childProps} />
 }

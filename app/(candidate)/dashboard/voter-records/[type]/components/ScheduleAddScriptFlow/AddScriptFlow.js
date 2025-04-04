@@ -6,4 +6,4 @@ export const ADD_SCRIPT_FLOW = {
   GENERATE_REVIEW: 'generate-review',
   DO_SMS_GENERATE: 'generate',
   CREATE_SMS: 'create',
-};
+}

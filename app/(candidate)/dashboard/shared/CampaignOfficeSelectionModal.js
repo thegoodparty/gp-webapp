@@ -1,5 +1,5 @@
-import Modal from '@shared/utils/Modal';
-import OfficeStep from 'app/(candidate)/onboarding/[slug]/[step]/components/OfficeStep';
+import Modal from '@shared/utils/Modal'
+import OfficeStep from 'app/(candidate)/onboarding/[slug]/[step]/components/OfficeStep'
 
 export const CampaignOfficeSelectionModal = ({
   campaign = { details: {} },
@@ -19,4 +19,4 @@ export const CampaignOfficeSelectionModal = ({
       adminMode={adminMode}
     />
   </Modal>
-);
+)

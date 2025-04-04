@@ -1,7 +1,7 @@
-import H2 from '@shared/typography/H2';
+import H2 from '@shared/typography/H2'
 
 export default function RaceModal({ race }) {
-  const { position } = race;
+  const { position } = race
 
   const data = [
     { label: 'Description', value: position.description },
@@ -9,7 +9,7 @@ export default function RaceModal({ race }) {
       label: 'Eligibility requirements',
       value: position.eligibilityRequirements,
     },
-  ];
+  ]
 
   return (
     <div className="">
@@ -21,5 +21,5 @@ export default function RaceModal({ race }) {
         </div>
       ))}
     </div>
-  );
+  )
 }

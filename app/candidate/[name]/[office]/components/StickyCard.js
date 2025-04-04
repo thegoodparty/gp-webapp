@@ -1,23 +1,23 @@
-'use client';
-import { useEffect, useState } from 'react';
-import Sticky from 'react-stickynode';
+'use client'
+import { useEffect, useState } from 'react'
+import Sticky from 'react-stickynode'
 
 export default function StickyCard({ children }) {
-  const [winWidth, setWinWidth] = useState(1200);
+  const [winWidth, setWinWidth] = useState(1200)
   useEffect(() => {
     const handleResize = () => {
-      setWinWidth(window.innerWidth);
-    };
+      setWinWidth(window.innerWidth)
+    }
 
     if (window) {
-      setWinWidth(window.innerWidth);
-      window.addEventListener('resize', handleResize);
+      setWinWidth(window.innerWidth)
+      window.addEventListener('resize', handleResize)
     }
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   return (
     <Sticky
@@ -27,5 +27,5 @@ export default function StickyCard({ children }) {
     >
       {children}
     </Sticky>
-  );
+  )
 }

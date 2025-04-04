@@ -97,6 +97,7 @@
     "@storybook/nextjs": "7.6.16",
     "@storybook/react": "7.6.16",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@stylistic/eslint-plugin": "^3.1.0",
     "autoprefixer": "^10.4.14",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",

@@ -1,11 +1,11 @@
-import { Fragment } from 'react';
-import BlogWrapper from 'app/blog/shared/BlogWrapper';
-import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import SubscribeBlog from 'app/blog/shared/SubscribeBlog';
-import LoadMoreWrapper from 'app/blog/shared/LoadMoreWrapper';
+import { Fragment } from 'react'
+import BlogWrapper from 'app/blog/shared/BlogWrapper'
+import ArticleSnippet from 'app/blog/shared/ArticleSnippet'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import SubscribeBlog from 'app/blog/shared/SubscribeBlog'
+import LoadMoreWrapper from 'app/blog/shared/LoadMoreWrapper'
 
-export const FIRST_PAGE_SIZE = 15;
+export const FIRST_PAGE_SIZE = 15
 
 export default function BlogSectionPage({
   sections,
@@ -16,8 +16,8 @@ export default function BlogSectionPage({
   allTags,
   articleTitles,
 }) {
-  const firstPageArticles = articles.slice(0, FIRST_PAGE_SIZE);
-  const loadMoreArticles = articles.slice(FIRST_PAGE_SIZE);
+  const firstPageArticles = articles.slice(0, FIRST_PAGE_SIZE)
+  const loadMoreArticles = articles.slice(FIRST_PAGE_SIZE)
 
   function renderArticles(items, showSubscribe) {
     return items.map((item, index) => (
@@ -27,7 +27,7 @@ export default function BlogSectionPage({
           <SubscribeBlog className="col-span-1 lg:col-span-3" />
         )}
       </Fragment>
-    ));
+    ))
   }
 
   return (
@@ -57,5 +57,5 @@ export default function BlogSectionPage({
         </div>
       )}
     </BlogWrapper>
-  );
+  )
 }

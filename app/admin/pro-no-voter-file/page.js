@@ -1,8 +1,8 @@
-import { adminAccessOnly } from 'helpers/permissionHelper';
-import pageMetaData from 'helpers/metadataHelper';
-import ProNoVoterPage from './components/ProNoVoterPage';
-import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+import { adminAccessOnly } from 'helpers/permissionHelper'
+import pageMetaData from 'helpers/metadataHelper'
+import ProNoVoterPage from './components/ProNoVoterPage'
+import { apiRoutes } from 'gpApi/routes'
+import { serverFetch } from 'gpApi/serverFetch'
 
 async function fetchCampaignsNoVoter() {
   try {
@@ -12,10 +12,10 @@ async function fetchCampaignsNoVoter() {
       {
         revalidate: 10,
       },
-    );
-    return resp.data;
+    )
+    return resp.data
   } catch (e) {
-    return { campaigns: [] };
+    return { campaigns: [] }
   }
 }
 
@@ -23,14 +23,14 @@ const meta = pageMetaData({
   title: 'Pro users without voter file | GoodParty.org',
   description: 'Pro users without voter file',
   slug: '/admin/pro-no-voter-file',
-});
-export const metadata = meta;
-export const maxDuration = 60;
+})
+export const metadata = meta
+export const maxDuration = 60
 
 export default async function Page() {
-  await adminAccessOnly();
+  await adminAccessOnly()
 
-  const campaigns = await fetchCampaignsNoVoter();
-  const childProps = { campaigns };
-  return <ProNoVoterPage {...childProps} />;
+  const campaigns = await fetchCampaignsNoVoter()
+  const childProps = { campaigns }
+  return <ProNoVoterPage {...childProps} />
 }

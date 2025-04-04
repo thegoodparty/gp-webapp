@@ -1,33 +1,33 @@
-'use client';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { useEffect, useState } from 'react';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
-import Button from '@shared/buttons/Button';
+'use client'
+import { IoIosCloseCircle } from 'react-icons/io'
+import { useEffect, useState } from 'react'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import Button from '@shared/buttons/Button'
 
 export default function Callout() {
-  const [showCallout, setShowCallout] = useState(true);
+  const [showCallout, setShowCallout] = useState(true)
 
   useEffect(() => {
     try {
-      const callout = localStorage.getItem('callout');
+      const callout = localStorage.getItem('callout')
       if (callout) {
-        setShowCallout(false);
+        setShowCallout(false)
       }
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  }, []);
+  }, [])
 
   const trackingAttrs = buildTrackingAttrs(
     'Join GoodParty.org Community Banner Link',
-  );
+  )
 
   function handleClose() {
     try {
-      localStorage.setItem('callout', true);
-      setShowCallout(false);
+      localStorage.setItem('callout', true)
+      setShowCallout(false)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
@@ -67,5 +67,5 @@ export default function Callout() {
         </div>
       </div>
     )
-  );
+  )
 }

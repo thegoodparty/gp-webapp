@@ -1,8 +1,8 @@
-import { MdArrowForward } from 'react-icons/md';
-import { HopeHeader } from './HopeHeader';
-import { HopeStat } from './HopeStat';
-import { HopeChange } from './HopeChange';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import { MdArrowForward } from 'react-icons/md'
+import { HopeHeader } from './HopeHeader'
+import { HopeStat } from './HopeStat'
+import { HopeChange } from './HopeChange'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 const HOPE_STATS = [
   {
@@ -26,7 +26,7 @@ const HOPE_STATS = [
       </>
     ),
   },
-];
+]
 
 const HOPE_CHANGES = [
   {
@@ -62,7 +62,7 @@ const HOPE_CHANGES = [
     href: '/elections',
     buttonText: 'For voters',
   },
-];
+]
 
 const HopeSection = () => (
   <section
@@ -106,6 +106,6 @@ const HopeSection = () => (
       </div>
     </MaxWidth>
   </section>
-);
+)
 
-export default HopeSection;
+export default HopeSection

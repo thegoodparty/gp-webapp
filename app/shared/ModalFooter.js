@@ -1,5 +1,5 @@
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
 
 export const ModalFooter = ({
   onBack = () => {},
@@ -27,5 +27,5 @@ export const ModalFooter = ({
         </PrimaryButton>
       </div>
     </footer>
-  );
-};
+  )
+}

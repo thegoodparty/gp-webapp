@@ -1,7 +1,7 @@
-import { MdChevronRight } from 'react-icons/md';
-import { TbSlash } from 'react-icons/tb';
-import { JsonLd } from 'react-schemaorg';
-import clsx from 'clsx';
+import { MdChevronRight } from 'react-icons/md'
+import { TbSlash } from 'react-icons/tb'
+import { JsonLd } from 'react-schemaorg'
+import clsx from 'clsx'
 
 /**
  * @typedef {Object} BreadcrumbProps
@@ -23,7 +23,7 @@ export default function Breadcrumbs({
   wrapText = false,
   className,
 }) {
-  const schema = [];
+  const schema = []
   links.forEach((link, index) => {
     schema.push({
       '@type': 'ListItem',
@@ -32,10 +32,10 @@ export default function Breadcrumbs({
         '@id': link.href, // || router.asPath,
         name: link.label,
       },
-    });
-  });
+    })
+  })
 
-  const DelimiterComponent = delimiter === 'slash' ? TbSlash : MdChevronRight;
+  const DelimiterComponent = delimiter === 'slash' ? TbSlash : MdChevronRight
 
   return (
     <div
@@ -86,5 +86,5 @@ export default function Breadcrumbs({
         </ol>
       </nav>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { FaCirclePlay } from 'react-icons/fa6';
+import { FaCirclePlay } from 'react-icons/fa6'
 
 const cards = [
   {
@@ -26,27 +26,27 @@ const cards = [
     cta: 'Read More',
     link: '#',
   },
-];
+]
 
 function readMoreLink(type) {
   if (type === 'sms') {
-    return '/blog/tag/smsmms-messaging';
+    return '/blog/tag/smsmms-messaging'
   }
-  return '#';
+  return '#'
 }
 
 export default function LearnAction(props) {
-  const { type, isCustom } = props;
+  const { type, isCustom } = props
   if (isCustom) {
-    return null;
+    return null
   }
-  const readLink = readMoreLink(type);
-  cards[2].link = readLink;
+  const readLink = readMoreLink(type)
+  cards[2].link = readLink
   return (
     <>
       <div className=" bg-neutral-background border border-slate-300 h-[420px] rounded-2xl flex justify-center items-center">
         <FaCirclePlay size={120} className="text-neutral" />
       </div>
     </>
-  );
+  )
 }

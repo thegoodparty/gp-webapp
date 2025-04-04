@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { subscribeEmail } from '@shared/inputs/EmailForm';
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import { isValidPhone } from '@shared/inputs/PhoneInput';
-import Body1 from '@shared/typography/Body1';
-import H3 from '@shared/typography/H3';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import { getUserCookie } from 'helpers/cookieHelper';
-import { useEffect, useState } from 'react';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { subscribeEmail } from '@shared/inputs/EmailForm'
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
+import Body1 from '@shared/typography/Body1'
+import H3 from '@shared/typography/H3'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import { getUserCookie } from 'helpers/cookieHelper'
+import { useEffect, useState } from 'react'
 
 const fields = [
   {
@@ -41,33 +41,33 @@ const fields = [
     type: 'checkbox',
     columns: 12,
   },
-];
+]
 export default function HeroForm() {
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false)
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
     phone: '',
     email: '',
-  });
+  })
 
   useEffect(() => {
-    const user = getUserCookie(true);
+    const user = getUserCookie(true)
     if (user) {
       setState({
         ...state,
         email: user.email || '',
         phone: user.phone || '',
-      });
+      })
     }
-  }, []);
+  }, [])
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const canSubmit = () => {
     return (
@@ -75,12 +75,12 @@ export default function HeroForm() {
       state.lastName !== '' &&
       isValidEmail(state.email) &&
       (state.phone === '' || isValidPhone(state.phone))
-    );
-  };
+    )
+  }
 
   const handleSubmit = async () => {
     if (!canSubmit()) {
-      return;
+      return
     }
     const payload = {
       ...state,
@@ -88,15 +88,15 @@ export default function HeroForm() {
       uri: window.location.href,
       pageName: 'ads2023',
       formId: 'c7d78873-1ed0-4202-ab01-76577e57352c',
-    };
-
-    const res = await subscribeEmail(payload);
-    if (res) {
-      setSubmitSuccess('success');
-    } else {
-      setSubmitSuccess('error');
     }
-  };
+
+    const res = await subscribeEmail(payload)
+    if (res) {
+      setSubmitSuccess('success')
+    } else {
+      setSubmitSuccess('error')
+    }
+  }
   return (
     <div className="pt-20 pb-9 ">
       {submitSuccess === 'success' ? (
@@ -141,5 +141,5 @@ export default function HeroForm() {
         </form>
       )}
     </div>
-  );
+  )
 }

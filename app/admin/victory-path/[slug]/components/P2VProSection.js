@@ -1,31 +1,31 @@
-import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
-import { useState } from 'react';
-import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly';
-import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection';
-import Checkbox from '@shared/inputs/Checkbox';
-import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
-import Link from 'next/link';
-import { MdDelete, MdOpenInNew } from 'react-icons/md';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
+import { useState } from 'react'
+import { updateCampaignAdminOnly } from 'app/admin/shared/updateCampaignAdminOnly'
+import { P2VSection } from 'app/admin/victory-path/[slug]/components/P2VSection'
+import Checkbox from '@shared/inputs/Checkbox'
+import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
+import Link from 'next/link'
+import { MdDelete, MdOpenInNew } from 'react-icons/md'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 const supportingDocsRootUrl =
-  'https://ein-supporting-documents.s3.us-west-2.amazonaws.com/';
+  'https://ein-supporting-documents.s3.us-west-2.amazonaws.com/'
 
 export const P2VProSection = () => {
-  const [campaign = {}, _, refreshCampaign] = useAdminCampaign();
-  const { slug = '', details = {} } = campaign;
-  const [isPro, setIsPro] = useState(campaign.isPro || false);
+  const [campaign = {}, _, refreshCampaign] = useAdminCampaign()
+  const { slug = '', details = {} } = campaign
+  const [isPro, setIsPro] = useState(campaign.isPro || false)
 
   const onChangeIsPro = async (e) => {
-    const value = e.currentTarget.checked;
-    setIsPro(value);
+    const value = e.currentTarget.checked
+    setIsPro(value)
     await updateCampaignAdminOnly({
       id: campaign.id,
       isPro: value,
-    });
-    await refreshCampaign();
-  };
+    })
+    await refreshCampaign()
+  }
 
   const onDeleteSupportingDocument = async () => {
     await updateCampaign(
@@ -36,9 +36,9 @@ export const P2VProSection = () => {
         },
       ],
       slug,
-    );
-    await refreshCampaign();
-  };
+    )
+    await refreshCampaign()
+  }
 
   return (
     <P2VSection title="Pro Plan Information">
@@ -81,5 +81,5 @@ export const P2VProSection = () => {
         )}
       </div>
     </P2VSection>
-  );
-};
+  )
+}

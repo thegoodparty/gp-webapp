@@ -1,17 +1,17 @@
-'use client';
-import H2 from '@shared/typography/H2';
-import Caption from '@shared/typography/Caption';
-import Paper from '@shared/utils/Paper';
+'use client'
+import H2 from '@shared/typography/H2'
+import Caption from '@shared/typography/Caption'
+import Paper from '@shared/utils/Paper'
 
 export default function InteractionsSummary({ summary }) {
-  const { totalInteractions, interactions, averageRating } = summary || {};
+  const { totalInteractions, interactions, averageRating } = summary || {}
   const {
     answered,
     'call-back': callBack,
     refused,
     'not-home': notHome,
     inaccessible: inaccessible,
-  } = interactions || {};
+  } = interactions || {}
 
   const fields = [
     {
@@ -50,7 +50,7 @@ export default function InteractionsSummary({ summary }) {
           : 0
       }%`,
     },
-  ];
+  ]
   return (
     <Paper className="md:p-6">
       <H2 className="mb-8">Interactions Summary</H2>
@@ -70,7 +70,7 @@ export default function InteractionsSummary({ summary }) {
         ))}
       </div>
     </Paper>
-  );
+  )
 }
 /* example summary
 {

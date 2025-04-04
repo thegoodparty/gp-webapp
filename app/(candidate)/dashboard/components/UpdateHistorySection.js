@@ -1,20 +1,20 @@
-'use client';
-import UserAvatar from '@shared/user/UserAvatar';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { Fragment, memo, useState } from 'react';
-import Actions from './Actions';
-import Paper from '@shared/utils/Paper';
-import H2 from '@shared/typography/H2';
-import Body2 from '@shared/typography/Body2';
-import Overline from '@shared/typography/Overline';
-import H5 from '@shared/typography/H5';
-import { numberFormatter } from 'helpers/numberHelper';
-import H3 from '@shared/typography/H3';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import { useVoterContacts } from '@shared/hooks/useVoterContacts';
-import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
-import { segregateItemFromList } from '@shared/utils/segregateItemFromList';
-import { deleteUpdateHistory } from '@shared/utils/campaignUpdateHistoryServices';
+'use client'
+import UserAvatar from '@shared/user/UserAvatar'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { Fragment, memo, useState } from 'react'
+import Actions from './Actions'
+import Paper from '@shared/utils/Paper'
+import H2 from '@shared/typography/H2'
+import Body2 from '@shared/typography/Body2'
+import Overline from '@shared/typography/Overline'
+import H5 from '@shared/typography/H5'
+import { numberFormatter } from 'helpers/numberHelper'
+import H3 from '@shared/typography/H3'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
+import { segregateItemFromList } from '@shared/utils/segregateItemFromList'
+import { deleteUpdateHistory } from '@shared/utils/campaignUpdateHistoryServices'
 
 const fields = {
   doorKnocking: { title: 'Doors knocked' },
@@ -28,7 +28,7 @@ const fields = {
   robocall: { title: 'Robocalls' },
   phoneBanking: { title: 'Phone Banking' },
   socialMedia: { title: 'Social Media Views' },
-};
+}
 
 const irresponsiblyMassageHistoryItem = (historyItem) => ({
   id: historyItem.id,
@@ -40,37 +40,37 @@ const irresponsiblyMassageHistoryItem = (historyItem) => ({
   quantity: historyItem.quantity,
   createdAt: new Date(historyItem.createdAt),
   updatedAt: new Date(historyItem.updatedAt),
-});
+})
 
 const UpdateHistorySection = memo(function UpdateHistorySection() {
-  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts();
-  const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory();
-  const [showMenu, setShowMenu] = useState(0);
+  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts()
+  const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory()
+  const [showMenu, setShowMenu] = useState(0)
 
   const historyItems = !updateHistory
     ? []
-    : updateHistory.map(irresponsiblyMassageHistoryItem);
+    : updateHistory.map(irresponsiblyMassageHistoryItem)
 
   function handleShowMenu(id) {
-    trackEvent(EVENTS.Dashboard.ActionHistory.ClickMenu, { id });
-    setShowMenu(id);
+    trackEvent(EVENTS.Dashboard.ActionHistory.ClickMenu, { id })
+    setShowMenu(id)
   }
 
   const handleDelete = async (id) => {
     const [deletedItem, restItems] = segregateItemFromList(
       updateHistory,
       ({ id: itemId }) => itemId === id,
-    );
-    await deleteUpdateHistory(id);
-    setUpdateHistory(restItems);
+    )
+    await deleteUpdateHistory(id)
+    setUpdateHistory(restItems)
     setReportedVoterGoals(() => ({
       ...reportedVoterGoals,
       [deletedItem.type]: Math.max(
         reportedVoterGoals[deletedItem.type] - deletedItem.quantity,
         0,
       ),
-    }));
-  };
+    }))
+  }
 
   return (
     <Paper className="mt-12">
@@ -162,7 +162,7 @@ const UpdateHistorySection = memo(function UpdateHistorySection() {
         )}
       </div>
     </Paper>
-  );
-});
+  )
+})
 
-export default UpdateHistorySection;
+export default UpdateHistorySection

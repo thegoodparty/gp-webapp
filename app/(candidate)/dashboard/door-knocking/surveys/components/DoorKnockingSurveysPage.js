@@ -1,8 +1,8 @@
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
-import DoorKnockingTabs from '../../shared/DoorKnockingTabs';
-import SurveyList from './SurveyList';
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
+import DoorKnockingTabs from '../../shared/DoorKnockingTabs'
+import SurveyList from './SurveyList'
 export default function DoorKnockingSurveysPage(props) {
   return (
     <DashboardLayout {...props} showAlert={false}>
@@ -16,5 +16,5 @@ export default function DoorKnockingSurveysPage(props) {
       <DoorKnockingTabs activeTab={1} />
       <SurveyList {...props} />
     </DashboardLayout>
-  );
+  )
 }

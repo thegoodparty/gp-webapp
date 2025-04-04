@@ -1,12 +1,12 @@
-'use client';
-import SurveyQuestion from './SurveyQuestion';
-import CreateQuestion from './CreateQuestion';
-import NoQuestionsState from './NoQuestionsState';
-import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
+'use client'
+import SurveyQuestion from './SurveyQuestion'
+import CreateQuestion from './CreateQuestion'
+import NoQuestionsState from './NoQuestionsState'
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey'
 
 export default function SurveyQuestions() {
-  const [survey] = useEcanvasserSurvey();
-  const { questions } = survey || {};
+  const [survey] = useEcanvasserSurvey()
+  const { questions } = survey || {}
 
   return !Array.isArray(questions) || questions?.length === 0 ? (
     <NoQuestionsState />
@@ -33,5 +33,5 @@ export default function SurveyQuestions() {
         </div>
       </div>
     </div>
-  );
+  )
 }

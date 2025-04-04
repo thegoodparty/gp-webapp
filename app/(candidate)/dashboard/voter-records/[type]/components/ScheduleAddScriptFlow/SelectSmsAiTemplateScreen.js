@@ -1,26 +1,26 @@
-'use client';
-import { getAiSmsTemplatesFromCategories } from 'helpers/getAiSmsTemplatesFromCategories';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import { ModalFooter } from '@shared/ModalFooter';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { SmsTemplateSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsTemplateSelect';
-import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+'use client'
+import { getAiSmsTemplatesFromCategories } from 'helpers/getAiSmsTemplatesFromCategories'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import { ModalFooter } from '@shared/ModalFooter'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { SmsTemplateSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsTemplateSelect'
+import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { calcAnswers } from 'app/(candidate)/dashboard/shared/QuestionProgress'
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
 
 export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
-  const candidatePositions = await loadCandidatePosition(campaign.id);
+  const candidatePositions = await loadCandidatePosition(campaign.id)
 
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
     candidatePositions,
-  );
+  )
 
-  const hasCompletedQuestions = answeredQuestions >= totalQuestions;
+  const hasCompletedQuestions = answeredQuestions >= totalQuestions
 
   // TODO: Find out why in the world aren't these booleans just being passed along from the entity in Contentful.
   const requiresQuestions = !hasCompletedQuestions
@@ -35,7 +35,7 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
           },
         )
       ).data
-    : {};
+    : {}
 
   const resp = await clientFetch(
     apiRoutes.content.getByType,
@@ -45,7 +45,7 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
     {
       revalidate: cacheTime,
     },
-  );
+  )
 
   return resp.data.map((category = {}) => ({
     ...category,
@@ -53,7 +53,7 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
       category.templates,
       requiresQuestions,
     ),
-  }));
+  }))
 }
 
 export const SelectSmsAiTemplateScreen = ({
@@ -61,26 +61,26 @@ export const SelectSmsAiTemplateScreen = ({
   onBack = () => {},
   onNext = (scriptKey) => {},
 }) => {
-  const [selectedTemplateKey, setSelectedTemplateKey] = useState('');
-  const [templates, setTemplates] = useState([]);
+  const [selectedTemplateKey, setSelectedTemplateKey] = useState('')
+  const [templates, setTemplates] = useState([])
   const selectedTemplate = templates.find(
     ({ key }) => key === selectedTemplateKey,
-  );
+  )
 
   useEffect(() => {
     async function loadCategories() {
-      const categories = await fetchAiContentCategories(campaign);
+      const categories = await fetchAiContentCategories(campaign)
 
-      const templates = getAiSmsTemplatesFromCategories(categories);
-      setTemplates(templates);
+      const templates = getAiSmsTemplatesFromCategories(categories)
+      setTemplates(templates)
     }
 
-    loadCategories();
-  }, []);
+    loadCategories()
+  }, [])
 
   const handleOnNext = () => {
-    onNext(selectedTemplateKey);
-  };
+    onNext(selectedTemplateKey)
+  }
 
   return (
     <>
@@ -117,5 +117,5 @@ export const SelectSmsAiTemplateScreen = ({
         }
       />
     </>
-  );
-};
+  )
+}

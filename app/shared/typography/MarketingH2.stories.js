@@ -1,4 +1,4 @@
-import H2Component from './MarketingH2';
+import H2Component from './MarketingH2'
 
 export default {
   title: 'Typography/Marketing/H2',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Header 2 Text',
   },
-};
+}
 
-export const MarketingH2 = {};
+export const MarketingH2 = {}

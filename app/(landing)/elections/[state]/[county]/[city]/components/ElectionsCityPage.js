@@ -1,14 +1,14 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { shortToLongState } from 'helpers/statesHelper';
-import RacesSection from '../../../../shared/RacesSection';
-import LearnToRun from '../../../../shared/LearnToRun';
-import Guides from '../../../../shared/Guides';
-import Hero from '../../../components/Hero';
-import CityFacts from './CityFacts';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { shortToLongState } from 'helpers/statesHelper'
+import RacesSection from '../../../../shared/RacesSection'
+import LearnToRun from '../../../../shared/LearnToRun'
+import Guides from '../../../../shared/Guides'
+import Hero from '../../../components/Hero'
+import CityFacts from './CityFacts'
 
 export default function ElectionsCountyPage(props) {
-  const { state, municipality, races, articles, county } = props;
-  const stateName = shortToLongState[state.toUpperCase()];
+  const { state, municipality, races, articles, county } = props
+  const stateName = shortToLongState[state.toUpperCase()]
 
   return (
     <div className="bg-indigo-50 pb-20">
@@ -22,5 +22,5 @@ export default function ElectionsCountyPage(props) {
       <LearnToRun stateName={stateName} />
       <Guides articles={articles} />
     </div>
-  );
+  )
 }

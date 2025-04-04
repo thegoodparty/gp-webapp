@@ -1,16 +1,16 @@
-'use client';
-import Hero from './Hero';
-import MapSection from './map/MapSection';
-import InfoSection from './InfoSection';
-import FacesSection from './FacesSection';
-import '@shared/inputs/slick.min.css';
-import '@shared/inputs/slick-theme.min.css';
-import CommunitySection from './CommunitySection';
-import { useState } from 'react';
-import UserSnapScript from '@shared/scripts/UserSnapScript';
-import Script from 'next/script';
+'use client'
+import Hero from './Hero'
+import MapSection from './map/MapSection'
+import InfoSection from './InfoSection'
+import FacesSection from './FacesSection'
+import '@shared/inputs/slick.min.css'
+import '@shared/inputs/slick-theme.min.css'
+import CommunitySection from './CommunitySection'
+import { useState } from 'react'
+import UserSnapScript from '@shared/scripts/UserSnapScript'
+import Script from 'next/script'
 
-const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8';
+const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'
 
 export default function CandidatesPage({
   count,
@@ -18,15 +18,15 @@ export default function CandidatesPage({
   longState,
   state,
 }) {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false)
 
   return (
     <>
       <Script
         src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`}
         onReady={() => {
-          console.log('maps loaded');
-          setIsLoaded(true);
+          console.log('maps loaded')
+          setIsLoaded(true)
         }}
       />
       <Hero count={count} longState={longState} />
@@ -41,5 +41,5 @@ export default function CandidatesPage({
       <CommunitySection />
       <UserSnapScript />
     </>
-  );
+  )
 }

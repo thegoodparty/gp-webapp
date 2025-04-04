@@ -1,13 +1,13 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { dateUsHelper } from 'helpers/dateHelper';
-import Overline from '@shared/typography/Overline';
-import MarketingH4 from '@shared/typography/MarketingH4';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Body1 from '@shared/typography/Body1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import clsx from 'clsx';
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { dateUsHelper } from 'helpers/dateHelper'
+import Overline from '@shared/typography/Overline'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Body1 from '@shared/typography/Body1'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import clsx from 'clsx'
 
 /**
  * @typedef {Object} ArticleSnippetProps
@@ -30,11 +30,11 @@ export default function ArticleSnippet({
   // target = false, NOTE: does not seem to be used anywhere, default false value throws error when being applied to Link.target prop
 }) {
   if (!article) {
-    return null;
+    return null
   }
 
-  const { title, mainImage, publishDate, summary, slug } = article;
-  const sectionName = section?.fields?.title;
+  const { title, mainImage, publishDate, summary, slug } = article
+  const sectionName = section?.fields?.title
 
   return (
     <Link
@@ -100,5 +100,5 @@ export default function ArticleSnippet({
         </div>
       </article>
     </Link>
-  );
+  )
 }

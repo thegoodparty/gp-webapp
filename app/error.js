@@ -1,41 +1,41 @@
-'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { getUserCookie } from 'helpers/cookieHelper';
-import Image from 'next/image';
-import { useEffect } from 'react';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import Link from 'next/link';
+'use client'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { getUserCookie } from 'helpers/cookieHelper'
+import Image from 'next/image'
+import { useEffect } from 'react'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import Link from 'next/link'
 
 export async function sendError(payload) {
   try {
-    const resp = await clientFetch(apiRoutes.logError, payload);
-    return resp.data;
+    const resp = await clientFetch(apiRoutes.logError, payload)
+    return resp.data
   } catch (e) {
-    console.log('error at sendError.', e);
-    return false;
+    console.log('error at sendError.', e)
+    return false
   }
 }
 
 export default function Error({ error }) {
   useEffect(() => {
-    logError();
+    logError()
     if (error?.message?.startsWith('Loading chunk')) {
-      window.location.reload();
+      window.location.reload()
     }
-  }, [error]);
+  }, [error])
 
   const logError = async () => {
-    const user = getUserCookie(true);
+    const user = getUserCookie(true)
     await sendError({
       message: error?.message,
       url: window.location.href,
       userEmail: user?.email,
       userAgent: window?.navigator?.userAgent,
-    });
-  };
+    })
+  }
   return (
     <div className="min-h-[calc(100vh-56px)] flex flex-col items-center justify-center px-3 lg:px-5">
       <div className="grid grid-cols-12 gap-4 items-center justify-center">
@@ -65,5 +65,5 @@ export default function Error({ error }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

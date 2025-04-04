@@ -1,5 +1,5 @@
-import LottieAnimation from './LottieAnimation';
-import * as data from './vote.json';
+import LottieAnimation from './LottieAnimation'
+import * as data from './vote.json'
 export default function VoteAnimation(props) {
-  return <LottieAnimation animationData={data} {...props} />;
+  return <LottieAnimation animationData={data} {...props} />
 }

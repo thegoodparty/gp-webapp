@@ -1,4 +1,4 @@
-import AlertDialog from '@shared/utils/AlertDialog';
+import AlertDialog from '@shared/utils/AlertDialog'
 
 export const DemoAccountDeleteDialog = ({
   open,
@@ -13,4 +13,4 @@ export const DemoAccountDeleteDialog = ({
     description="Are you sure you want to upgrade your account? All demo campaign data will be lost."
     handleProceed={handleProceed}
   />
-);
+)

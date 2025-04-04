@@ -4,8 +4,8 @@
  *
  */
 
-import React from 'react';
-import styles from './Why.module.scss';
+import React from 'react'
+import styles from './Why.module.scss'
 
 const points = [
   'Be part of a mission to solve the biggest problem of our time – fixing our democracy, so all other problems can be solved.',
@@ -21,7 +21,7 @@ const points = [
   '100% coverage of health, dental, and vision benefits for you and your dependents.',
 
   'We encourage you to take time off to recharge and have an unlimited PTO (sick and vacation) policy. This is a marathon, not a sprint. We believe a work-life balance is needed to get there.',
-];
+]
 
 function Why() {
   return (
@@ -34,7 +34,7 @@ function Why() {
         </div>
       ))}
     </section>
-  );
+  )
 }
 
-export default Why;
+export default Why
