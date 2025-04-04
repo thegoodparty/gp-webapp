@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import CustomVoterAudienceFilters from '../../components/CustomVoterAudienceFilters';
-import { useEffect, useState, useMemo } from 'react';
-import { countVoterFile } from './RecordCount';
-import { numberFormatter } from 'helpers/numberHelper';
-import { debounce } from 'helpers/debounceHelper';
-import { TRACKING_KEYS } from '../../components/CustomVoterAudienceFilters';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import CustomVoterAudienceFilters from '../../components/CustomVoterAudienceFilters'
+import { useEffect, useState, useMemo } from 'react'
+import { countVoterFile } from './RecordCount'
+import { numberFormatter } from 'helpers/numberHelper'
+import { debounce } from 'helpers/debounceHelper'
+import { TRACKING_KEYS } from '../../components/CustomVoterAudienceFilters'
 
 export default function ScheduleFlowAudienceStep({
   onChangeCallback,
@@ -20,37 +20,37 @@ export default function ScheduleFlowAudienceStep({
   audience,
   isCustom,
 }) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
-  );
+  )
 
   useEffect(() => {
-    if (!hasValues) return;
+    if (!hasValues) return
 
     debounce(async () => {
       const selectedAudience = Object.keys(audience).filter(
         (key) => audience[key] === true,
-      );
+      )
       const res = await countVoterFile(isCustom ? 'custom' : type, {
         filters: selectedAudience,
-      });
+      })
 
-      setCount(res);
-    }, 300);
-  }, [audience, isCustom, type, hasValues]);
+      setCount(res)
+    }, 300)
+  }, [audience, isCustom, type, hasValues])
 
   const handleChangeAudience = (newState) => {
-    onChangeCallback('audience', newState);
-  };
+    onChangeCallback('audience', newState)
+  }
 
-  let isTel = type === 'telemarketing';
-  let price = 0.03;
+  let isTel = type === 'telemarketing'
+  let price = 0.03
   if (type === 'telemarketing') {
-    price = 0.04;
+    price = 0.04
     if (withVoicemail) {
-      price = 0.055;
+      price = 0.055
     }
   }
 
@@ -92,5 +92,5 @@ export default function ScheduleFlowAudienceStep({
         </div>
       </div>
     </div>
-  );
+  )
 }

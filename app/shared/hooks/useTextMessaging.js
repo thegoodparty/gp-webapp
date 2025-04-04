@@ -1,10 +1,10 @@
-'use client';
-import { useContext } from 'react';
-import { TextMessagingContext } from './TextMessagingProvider';
+'use client'
+import { useContext } from 'react'
+import { TextMessagingContext } from './TextMessagingProvider'
 
 export const useTextMessaging = () => {
   const [textMessaging, refreshTextMessaging] =
-    useContext(TextMessagingContext);
+    useContext(TextMessagingContext)
 
-  return [textMessaging, refreshTextMessaging];
-};
+  return [textMessaging, refreshTextMessaging]
+}

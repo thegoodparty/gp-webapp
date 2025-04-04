@@ -1,9 +1,9 @@
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import H5 from '@shared/typography/H5';
-import Chip from '@shared/utils/Chip';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { Fragment } from 'react';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import H5 from '@shared/typography/H5'
+import Chip from '@shared/utils/Chip'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { Fragment } from 'react'
 
 export default function TextMessagingRequest({ request }) {
   const {
@@ -28,7 +28,7 @@ export default function TextMessagingRequest({ request }) {
     gender_female,
     gender_unknown,
     audience_request,
-  } = request;
+  } = request
 
   const audienceFields = [
     { label: 'Super Voters', value: audience_superVoters },
@@ -46,15 +46,15 @@ export default function TextMessagingRequest({ request }) {
     { label: 'Male', value: gender_male },
     { label: 'Female', value: gender_female },
     { label: 'Unknown', value: gender_unknown },
-  ];
+  ]
 
   const fields = [
     { label: 'Message', value: message },
     { label: 'Date', value: date ? dateUsHelper(date) : '' },
     { label: 'Script', value: script },
-  ];
+  ]
 
-  const audienceRequest = audience_request;
+  const audienceRequest = audience_request
 
   return (
     <div className="p-4 border border-gray-200 rounded">
@@ -81,5 +81,5 @@ export default function TextMessagingRequest({ request }) {
         <Body2 className="mb-1">Audience Request: {audienceRequest}</Body2>
       )}
     </div>
-  );
+  )
 }
