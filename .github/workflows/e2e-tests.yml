@@ -10,7 +10,51 @@ on:
     - cron: '0 8 * * *'
     
 jobs:
+  create-test-run:
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
+    outputs:
+      test_run_id: ${{ steps.create-run.outputs.test_run_id }}
+    steps:
+      - name: Checkout test-automation Repository
+        uses: actions/checkout@v4
+        with:
+          repository: thegoodparty/test-automation
+          token: ${{ secrets.GH_PAT_TEST }}
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Create Test Run
+        id: create-run
+        run: |
+          # Create a test run using the TestRail API
+          node -e "
+            const { createTestRun } = require('./helpers/testrailHelper');
+            const testRunName = 'Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}';
+            const testCaseIds = [1, 4, 5, 7, 8, /* ... all your test case IDs ... */];
+            
+            async function createRun() {
+              const runId = await createTestRun(testRunName, testCaseIds);
+              console.log('::set-output name=test_run_id::' + runId);
+            }
+            
+            createRun();
+          "
+        env:
+          TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
+          TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
+          TESTRAIL_PROJECT_ID: ${{ secrets.TESTRAIL_PROJECT_ID }}
+          TESTRAIL_URL: ${{ secrets.TESTRAIL_URL }}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+
   run-e2e-tests:
+    needs: create-test-run
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'
     strategy:
@@ -69,6 +113,8 @@ jobs:
           cd test-automation
           npx playwright test --shard ${{ matrix.shard }}
         env:
+          CI: true
+          TEST_RUN_ID: ${{ needs.create-test-run.outputs.test_run_id }}
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
