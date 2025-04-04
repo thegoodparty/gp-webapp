@@ -82,16 +82,6 @@ export default function ToolsSection() {
           </div>
           <div className="col-span-12 mt-20 justify-self-center">
             <Carousel sections={sections} />
-
-            <div className="flex justify-end mt-20 mr-3 z-50">
-              <Image
-                src="/images/homepage/hex.svg"
-                width="90"
-                height="90"
-                className="ml-12"
-                alt="GoodParty.org"
-              />
-            </div>
           </div>
         </div>
       </MaxWidth>
