@@ -127,21 +127,32 @@ export function calculateAccumulatedByWeek(contactGoals) {
   return accumulatedTotal;
 }
 
-export function calculateOnTrack({
-  contactGoals,
-  weeksUntil,
-  reportedVoterGoals,
-}) {
-  const { weeks } = weeksUntil;
-  const { doorKnocking, calls, digital } = reportedVoterGoals;
-  const accumulatedTotal = calculateAccumulated(weeks, contactGoals) || {};
+export const getVoterContactsGoal = ({ voterContactGoal, voteGoal }) =>
+  parseInt(voterContactGoal ?? voteGoal * 5, 10);
 
-  const doorsOnTrack = doorKnocking >= accumulatedTotal.doorKnocking;
-  const callsOnTrack = calls >= accumulatedTotal.calls;
-  const digitalOnTrack = digital >= accumulatedTotal.digital;
+export const getVoterContactsTotal = ({
+  doorKnocking,
+  calls,
+  digital,
+  directMail,
+  digitalAds,
+  text,
+  events,
+}) =>
+  (doorKnocking || 0) +
+  (calls || 0) +
+  (digital || 0) +
+  (directMail || 0) +
+  (digitalAds || 0) +
+  (text || 0) +
+  (events || 0);
+
+export const calculateVoterContactCounts = (
+  pathToVictory,
+  reportedVoterGoals,
+) => {
   return {
-    doorsOnTrack,
-    callsOnTrack,
-    digitalOnTrack,
+    needed: getVoterContactsGoal(pathToVictory || {}),
+    contacted: getVoterContactsTotal(reportedVoterGoals || {}),
   };
-}
+};

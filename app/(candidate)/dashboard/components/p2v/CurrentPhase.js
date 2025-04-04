@@ -1,7 +1,4 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
 import H4 from '@shared/typography/H4';
 import { BsFillPersonCheckFill } from 'react-icons/bs';
 import { phases, PhasesModal } from './PhasesModal';

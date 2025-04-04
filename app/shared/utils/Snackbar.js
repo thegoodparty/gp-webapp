@@ -25,7 +25,6 @@ export default function Snackbar() {
 
   const { isOpen, message, isError, autoHideDuration } = snackbarState;
   const handleClose = (event, reason) => {
-    console.log('reason', reason);
     if (reason === 'clickaway') {
       return;
     }
