@@ -1,8 +1,6 @@
 import Button from '@shared/buttons/Button';
-import WarningButton from '@shared/buttons/WarningButton';
 import Body1 from '@shared/typography/Body1';
 import Image from 'next/image';
-import Link from 'next/link';
 import dashboardImg from 'public/images/elections/dashboard.png';
 import helpImg from 'public/images/elections/help.png';
 

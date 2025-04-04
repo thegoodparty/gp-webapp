@@ -1,7 +1,4 @@
 import H2 from '@shared/typography/H2';
-import H3 from '@shared/typography/H3';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { FaCalendarAlt, FaCheck, FaMoneyBill } from 'react-icons/fa';
 
 export default function RaceModal({ race }) {
   const { position } = race;

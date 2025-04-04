@@ -1,4 +1,3 @@
-import Chip from '@shared/utils/Chip';
 import { dateUsHelper } from 'helpers/dateHelper';
 
 const date = dateUsHelper(new Date());

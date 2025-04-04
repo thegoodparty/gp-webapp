@@ -1,5 +1,4 @@
 import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
 import { kFormatter, numberFormatter } from 'helpers/numberHelper';
 import TealButton from './TealButton';
 import { FaArrowRight } from 'react-icons/fa';

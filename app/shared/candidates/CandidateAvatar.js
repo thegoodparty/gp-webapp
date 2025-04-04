@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import { candidateColor } from '/helpers/candidateHelper';
 import { RxPerson } from 'react-icons/rx';
 
 export default function CandidateAvatar({ candidate, priority = false }) {

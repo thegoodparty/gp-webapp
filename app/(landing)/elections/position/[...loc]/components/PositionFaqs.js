@@ -1,5 +1,4 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import { dateUsHelper } from 'helpers/dateHelper';
 import PositionFaq from './PositionFaq';
 import { Fragment } from 'react';
 

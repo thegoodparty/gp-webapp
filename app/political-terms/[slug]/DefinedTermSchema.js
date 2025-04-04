@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { JsonLd } from 'react-schemaorg';
 
 import { cmsToPlainText } from '/helpers/contentfulHelper';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { subscribeEmail } from '@shared/inputs/EmailForm';
 import { isValidEmail } from '@shared/inputs/EmailInput';

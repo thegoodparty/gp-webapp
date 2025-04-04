@@ -3,7 +3,6 @@ import Image from 'next/image';
 import img from 'public/images/landing-pages/community.png';
 
 import Body1 from '@shared/typography/Body1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import WarningButton from '@shared/buttons/WarningButton';
 import Link from 'next/link';

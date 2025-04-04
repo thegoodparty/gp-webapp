@@ -1,6 +1,5 @@
 'use client';
 import H2 from '@shared/typography/H2';
-import Caption from '@shared/typography/Caption';
 import Paper from '@shared/utils/Paper';
 import { numberFormatter } from 'helpers/numberHelper';
 import { Doughnut } from 'react-chartjs-2';

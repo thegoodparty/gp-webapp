@@ -5,7 +5,6 @@ import {
   RiCloudWindyLine,
   RiCurrencyLine,
   RiEmotionLaughFill,
-  RiEmotionLaughLine,
   RiGovernmentLine,
   RiHeartsLine,
   RiHomeHeartLine,

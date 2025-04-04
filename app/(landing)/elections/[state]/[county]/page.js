@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import { notFound, redirect, permanentRedirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionsCountyPage from './components/ElectionsCountyPage';

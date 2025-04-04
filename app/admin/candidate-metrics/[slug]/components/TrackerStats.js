@@ -1,7 +1,6 @@
 'use client';
 
 import H2 from '@shared/typography/H2';
-import { calculateContactGoals } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
 import { numberFormatter } from 'helpers/numberHelper';
 import { FaBullhorn } from 'react-icons/fa';
 import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';

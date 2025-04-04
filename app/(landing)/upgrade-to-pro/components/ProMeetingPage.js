@@ -3,7 +3,6 @@ import Image from 'next/image';
 import peopleImg from 'public/images/landing-pages/info-people.png';
 import starImg from 'public/images/landing-pages/star.png';
 import { Suspense } from 'react';
-import CalendarIframe from './CalendarIframe';
 import HubSpotForm from '@shared/utils/HubSpotForm';
 
 const points = [

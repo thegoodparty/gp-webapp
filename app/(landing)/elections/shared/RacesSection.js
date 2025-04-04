@@ -1,7 +1,5 @@
 import Subtitle2 from '@shared/typography/Subtitle2';
 import Race from './Race';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
 
 export default function RacesSection({ races }) {
   if (!races || races.length === 0) {

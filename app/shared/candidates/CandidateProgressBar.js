@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { IoIosCheckmark } from 'react-icons/io';
-import { useHookstate } from '@hookstate/core';
 
 import { numberFormatter } from '/helpers/numberHelper';
 import { candidateColor } from '/helpers/candidateHelper';

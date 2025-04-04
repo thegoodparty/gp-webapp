@@ -1,6 +1,4 @@
 'use client';
-import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import { IoIosCloseCircle } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper';

@@ -1,5 +1,4 @@
 import MaxWidth from '@shared/layouts/MaxWidth';
-import { slugify } from 'helpers/articleHelper';
 import { shortToLongState } from 'helpers/statesHelper';
 import Hero from './Hero';
 import LinksSection from '../../shared/LinksSection';

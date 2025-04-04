@@ -1,4 +1,3 @@
-import SurveyAnimation from './SurveyAnimation';
 
 export default {
   title: 'Animations/SurveyAnimation',

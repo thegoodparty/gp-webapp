@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './BlackOutlinedButton.module.scss';
 import BaseButton from './BaseButtonClient';
 
 const BlackOutlinedButtonClient = ({

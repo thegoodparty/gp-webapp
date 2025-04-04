@@ -30,9 +30,9 @@ export default function NotFound() {
             It seems the page has decided to join one of the two major parties,
             and therefore no longer meets the standards of GoodParty.org.
           </Body1>
-          <a href="/">
+          <Link href="/">
             <PrimaryButton>Back to our homepage</PrimaryButton>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

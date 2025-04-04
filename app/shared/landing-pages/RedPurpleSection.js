@@ -1,9 +1,6 @@
 import Image from 'next/image';
 import bgImg from '/public/images/landing-pages/red-bg.png';
 import bgImgSm from '/public/images/landing-pages/red-bg-small.png';
-import expertImg from '/public/images/landing-pages/expert.png';
-import expertImgSm from '/public/images/landing-pages/expert-small.png';
-import EmailFormBanner from '@shared/inputs/EmailFormBanner';
 
 export default function RedPurpleSection({ children, withPadding }) {
   return (

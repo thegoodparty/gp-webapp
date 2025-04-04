@@ -1,4 +1,3 @@
-import { Primary } from '@shared/buttons/ErrorButton.stories';
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import ArticleSnippet from 'app/blog/shared/ArticleSnippet';

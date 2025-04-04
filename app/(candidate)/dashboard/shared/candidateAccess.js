@@ -2,7 +2,6 @@ import { getServerUser } from 'helpers/userServerHelper';
 import { redirect } from 'next/navigation';
 import { apiRoutes } from 'gpApi/routes';
 import { serverFetch } from 'gpApi/serverFetch';
-import { deleteUserCookies } from 'helpers/cookieHelper';
 
 export async function fetchCampaignStatus() {
   try {

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import TeamHero from 'app/(company)/team/components/TeamHero';
 import TeamMembersSection from 'app/(company)/team/components/TeamMembersSection';
 import OurImpact from 'app/(company)/team/components/OurImpact';

@@ -1,4 +1,4 @@
-import Button, { COLOR_CLASSES, SIZE_CLASSES, VARIANT_CLASSES } from './Button';
+import Button, { COLOR_CLASSES, SIZE_CLASSES } from './Button';
 
 const argTypes = {
   size: {

@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import Image from 'next/image';
 import Button from '@shared/buttons/Button';
 import { DeleteRounded, CropRounded } from '@mui/icons-material';
 

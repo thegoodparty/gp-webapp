@@ -2,7 +2,6 @@
 
 import PrimaryButton from '@shared/buttons/PrimaryButton';
 import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Body1 from '@shared/typography/Body1';
 import Body2 from '@shared/typography/Body2';
 import H2 from '@shared/typography/H2';
 import H5 from '@shared/typography/H5';

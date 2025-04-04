@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 
 export const ANIMATED_PROGRESS_BAR_SIZES = {
   SM: 'sm',

@@ -12,7 +12,6 @@ import { dateColumnSort } from 'helpers/dateColumnSort';
 import { IS_VERIFIED_OPTIONS_REVERSED } from '../../victory-path/[slug]/components/is-verified-options.constant';
 import { CANDIDATE_TIERS_REVERSED } from '../../victory-path/[slug]/components/candidate-tiers.constant';
 import { FaExternalLinkAlt } from 'react-icons/fa';
-import { getUserFullName } from '@shared/utils/getUserFullName';
 import { UserAdminLink } from 'app/admin/shared/UserAdminLink';
 
 const getDateCellContents = (origDate) => {

@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper';
 import { shortToLongState } from 'helpers/statesHelper';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import gpApi from 'gpApi';
 import gpFetch from 'gpApi/gpFetch';
 import ElectionsCityPage from './components/ElectionsCityPage';

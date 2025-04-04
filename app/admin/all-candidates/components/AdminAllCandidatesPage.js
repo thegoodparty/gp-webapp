@@ -5,10 +5,8 @@ import AdminWrapper from 'app/admin/shared/AdminWrapper';
 import { partyResolver } from 'helpers/candidateHelper';
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { dateUsHelper } from 'helpers/dateHelper';
 import Actions from './Actions';
 import WarningButton from '@shared/buttons/WarningButton';
-import { MdVisibilityOff } from 'react-icons/md';
 import Table from '@shared/utils/Table';
 
 export default function AdminAllCandidatesPage(props) {

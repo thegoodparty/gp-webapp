@@ -1,5 +1,3 @@
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
 import { FaCirclePlay } from 'react-icons/fa6';
 
 const cards = [

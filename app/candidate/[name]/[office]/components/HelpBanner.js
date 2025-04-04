@@ -1,4 +1,3 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
 import CTA from './CTA';
 import Image from 'next/image';
 import InfoButton from '@shared/buttons/InfoButton';

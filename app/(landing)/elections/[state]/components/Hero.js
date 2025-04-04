@@ -3,7 +3,6 @@ import SearchLocation from '../../shared/SearchLocation';
 import Breadcrumbs from '@shared/utils/Breadcrumbs';
 import { shortToLongState } from 'helpers/statesHelper';
 import Image from 'next/image';
-import H2 from '@shared/typography/H2';
 import Subtitle2 from '@shared/typography/Subtitle2';
 import { slugify } from 'helpers/articleHelper';
 

@@ -1,7 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import WarningButton from '@shared/buttons/WarningButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
 import Carousel from '@shared/inputs/Carousel';
 import MaxWidth from '@shared/layouts/MaxWidth';
 import softwareImg from '/public/images/homepage/software.png';

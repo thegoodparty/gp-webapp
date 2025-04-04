@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import RenderInputField from '@shared/inputs/RenderInputField';
 import { flatStates } from 'helpers/statesHelper';
-import H2 from '@shared/typography/H2';
 import Body1 from '@shared/typography/Body1';
 import {
   dateFromNonStandardUSFormatString,

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 import { apiRoutes } from 'gpApi/routes';
 import { clientFetch } from 'gpApi/clientFetch';
+import Link from 'next/link';
 
 export async function sendError(payload) {
   try {
@@ -57,9 +58,9 @@ export default function Error({ error }) {
             Something went wrong. Our engineers are blaming the
             two-party-system.
           </Body1>
-          <a href="/">
+          <Link href="/">
             <PrimaryButton>Back to our homepage</PrimaryButton>
-          </a>
+          </Link>
           <div className="text-sm italic mt-12">{error?.message}</div>
         </div>
       </div>

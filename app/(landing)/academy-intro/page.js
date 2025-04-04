@@ -1,4 +1,3 @@
-import OptimizeScript from '@shared/scripts/OptimizeScript';
 import AcademyIntroPage from './components/AcademyIntroPage';
 import pageMetaData from 'helpers/metadataHelper';
 

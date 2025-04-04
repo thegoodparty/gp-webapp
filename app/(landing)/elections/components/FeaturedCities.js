@@ -7,7 +7,7 @@ import { slugify } from 'helpers/articleHelper';
 import { isbot } from 'isbot';
 import Image from 'next/image';
 import map from 'public/images/elections/map.png';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const fetchLocFromIp = async () => {
   const resp = await fetch(

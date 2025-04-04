@@ -4,7 +4,6 @@ import Tab from '@mui/material/Tab';
 
 import SecondaryButton from '@shared/buttons/SecondaryButton';
 import { useState } from 'react';
-import { slugify } from 'helpers/articleHelper';
 
 export default function Tabs({
   tabLabels = [],

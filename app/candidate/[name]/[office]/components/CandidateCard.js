@@ -1,4 +1,3 @@
-import Body1 from '@shared/typography/Body1';
 import H1 from '@shared/typography/H1';
 import H5 from '@shared/typography/H5';
 import Overline from '@shared/typography/Overline';
