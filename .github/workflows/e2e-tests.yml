@@ -27,17 +27,24 @@ jobs:
               "include_all": true
             }')
           
-          # Extract the run ID and set it as output
           run_id=$(echo $response | jq -r '.id')
           echo "Run ID from response: $run_id"
           
           if [ -n "$run_id" ]; then
             echo "test_run_id=$run_id" >> "$GITHUB_OUTPUT"
+            # Create a file with the test run ID that can be shared
+            echo "$run_id" > test_run_id.txt
             echo "Created test run with ID: $run_id"
           else
             echo "Error creating test run. Response: $response"
             exit 1
           fi
+
+      - name: Upload test run ID
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-run-id
+          path: test_run_id.txt
 
   run-e2e-tests:
     needs: create-test-run
@@ -94,15 +101,26 @@ jobs:
           npm install
           npx playwright install --with-deps
 
+      - name: Download test run ID
+        uses: actions/download-artifact@v3
+        with:
+          name: test-run-id
+
+      - name: Set test run ID
+        run: |
+          TEST_RUN_ID=$(cat test_run_id.txt)
+          echo "TEST_RUN_ID=$TEST_RUN_ID" >> $GITHUB_ENV
+
       - name: Run Playwright Tests
         run: |
           cd test-automation
+          echo "Using test run ID: $TEST_RUN_ID"
           echo "CI=$CI"
-          echo "TEST_RUN_ID=${{ needs.create-test-run.outputs.test_run_id }}"
+          echo "TEST_RUN_ID=${{ env.TEST_RUN_ID }}"
           npx playwright test --shard ${{ matrix.shard }}
         env:
           CI: "true"
-          TEST_RUN_ID: "${{ needs.create-test-run.outputs.test_run_id }}"
+          TEST_RUN_ID: ${{ env.TEST_RUN_ID }}
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
