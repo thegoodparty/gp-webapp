@@ -27,13 +27,13 @@ jobs:
               "include_all": true
             }')
           
-          # Extract the run ID from the response and make it visible in logs
-          echo "Response from TestRail: $response"
+          # Extract the run ID and set it as output
           run_id=$(echo $response | jq -r '.id')
+          echo "Run ID from response: $run_id"
           
           if [ -n "$run_id" ]; then
+            echo "test_run_id=$run_id" >> "$GITHUB_OUTPUT"
             echo "Created test run with ID: $run_id"
-            echo "test_run_id=$run_id" >> $GITHUB_OUTPUT
           else
             echo "Error creating test run. Response: $response"
             exit 1
@@ -98,11 +98,11 @@ jobs:
         run: |
           cd test-automation
           echo "CI=$CI"
-          echo "TEST_RUN_ID=$TEST_RUN_ID"
+          echo "TEST_RUN_ID=${{ needs.create-test-run.outputs.test_run_id }}"
           npx playwright test --shard ${{ matrix.shard }}
         env:
           CI: "true"
-          TEST_RUN_ID: ${{ needs.create-test-run.outputs.test_run_id }}
+          TEST_RUN_ID: "${{ needs.create-test-run.outputs.test_run_id }}"
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
