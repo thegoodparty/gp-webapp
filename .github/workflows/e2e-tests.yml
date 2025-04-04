@@ -15,12 +15,8 @@ jobs:
     if: github.event.deployment_status.state == 'success'
     strategy:
       matrix:
-        test_files: 
-          - test-automation/tests/core/**/*.spec.ts
-          - test-automation/tests/app/**/*.spec.ts
-          - test-automation/tests/api/**/*.spec.ts
-          - test-automation/tests/admin/**/*.spec.ts
-          - test-automation/tests/style/**/*.spec.ts
+        shard: [1/4, 2/4, 3/4, 4/4]
+      fail-fast: false
     
     steps:
       - name: Print Workflow Trigger Event
@@ -71,7 +67,7 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test ${{ matrix.test_files }}
+          npx playwright test --shard ${{ matrix.shard }}
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
