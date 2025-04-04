@@ -13,6 +13,21 @@ jobs:
   run-e2e-tests:
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'
+    strategy:
+      matrix:
+        include:
+          - shard: 1
+            test_files: test-automation/tests/core/**/*.spec.ts
+          - shard: 2
+            test_files: 
+              - test-automation/tests/app/**/*.spec.ts
+              - test-automation/tests/api/**/*.spec.ts
+          - shard: 3
+            test_files: 
+              - test-automation/tests/admin/**/*.spec.ts
+              - test-automation/tests/style/**/*.spec.ts
+      fail-fast: false    # Continue running other shards if one fails
+    
     steps:
       - name: Print Workflow Trigger Event
         env:
@@ -62,10 +77,10 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test
+          npx playwright test ${{ matrix.test_files }}
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
+          TEST_RUN_NAME: "Playwright Test Run - Shard ${{ matrix.shard }} - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
