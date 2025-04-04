@@ -31,14 +31,7 @@ export function AnimatedProgressBar({
   percent,
   size = ANIMATED_PROGRESS_BAR_SIZES.SM,
 }) {
-  const [width, setWidth] = useState(0);
-  useEffect(() => {
-    if (percent > 100) {
-      setWidth(100);
-      return;
-    }
-    setWidth(percent);
-  }, [percent]);
+  const width = percent > 100 ? 100 : percent < 0 ? 0 : percent;
 
   return (
     <div
