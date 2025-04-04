@@ -1,4 +1,4 @@
-import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner';
+import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
 
 export const PendingProSubscriptionAlert = () => (
   <AlertBanner
@@ -8,4 +8,4 @@ export const PendingProSubscriptionAlert = () => (
         'Please be patient while we process your subscription. You will receive an email confirmation once your subscription is active.',
     }}
   />
-);
+)

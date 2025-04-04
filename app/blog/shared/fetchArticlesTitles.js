@@ -1,4 +1,4 @@
-import { fetchContentByType } from 'helpers/fetchHelper';
+import { fetchContentByType } from 'helpers/fetchHelper'
 
 export const fetchArticlesTitles = async () =>
-  await fetchContentByType('blogArticleTitles');
+  await fetchContentByType('blogArticleTitles')

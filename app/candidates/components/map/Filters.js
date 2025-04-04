@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { Select } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
-import Checkbox from '@shared/inputs/Checkbox';
-import TextField from '@shared/inputs/TextField';
-import { debounce } from 'helpers/debounceHelper';
-import { states } from 'helpers/statesHelper';
+import { Select } from '@mui/material'
+import { memo, useEffect, useState } from 'react'
+import Checkbox from '@shared/inputs/Checkbox'
+import TextField from '@shared/inputs/TextField'
+import { debounce } from 'helpers/debounceHelper'
+import { states } from 'helpers/statesHelper'
 
 const partyOptions = [
   { key: 'independent', label: 'Independent' },
@@ -13,7 +13,7 @@ const partyOptions = [
   { key: 'forward', label: 'Forward Party' },
   { key: 'green', label: 'Green Party' },
   { key: 'nonpartisan', label: 'Nonpartisan' },
-];
+]
 
 const levelOptions = [
   { key: 'LOCAL', label: 'Local' },
@@ -21,25 +21,25 @@ const levelOptions = [
   { key: 'COUNTY', label: 'County' },
   { key: 'STATE', label: 'State' },
   { key: 'FEDERAL', label: 'Federal' },
-];
+]
 
 export default memo(function Filters({ filters, onChangeFilters, campaigns }) {
-  const [officeOptions, setOfficeOptions] = useState([]);
-  const [name, setName] = useState(filters.name || ''); // Initialize with filter state
+  const [officeOptions, setOfficeOptions] = useState([])
+  const [name, setName] = useState(filters.name || '') // Initialize with filter state
 
   useEffect(() => {
     if (!campaigns || campaigns.length === 0) {
-      return;
+      return
     }
-    const allOffices = campaigns.map((campaign) => campaign.normalizedOffice);
-    const offices = [...new Set(allOffices)]; // dedupe
-    setOfficeOptions(offices);
-  }, [campaigns]);
+    const allOffices = campaigns.map((campaign) => campaign.normalizedOffice)
+    const offices = [...new Set(allOffices)] // dedupe
+    setOfficeOptions(offices)
+  }, [campaigns])
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
-    debounce(onChangeFilters, 500, 'name', e.target.value);
-  };
+    setName(e.target.value)
+    debounce(onChangeFilters, 500, 'name', e.target.value)
+  }
 
   return (
     <div className="md:w-[400px] lg:w-[500px] bg-white">
@@ -128,5 +128,5 @@ export default memo(function Filters({ filters, onChangeFilters, campaigns }) {
         />
       </div>
     </div>
-  );
-});
+  )
+})

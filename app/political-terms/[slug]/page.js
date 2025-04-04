@@ -1,82 +1,82 @@
-import { fetchGlossaryByLetter } from '../page';
-import TermsHomePage from '../components/TermsHomePage';
-import TermsItemPage from './components/TermsItemPage';
-import DefinedTermSchema from './DefinedTermSchema';
-import pageMetaData from 'helpers/metadataHelper';
-import { notFound } from 'next/navigation';
-import { unAuthFetch } from 'gpApi/unAuthFetch';
-import { apiRoutes } from 'gpApi/routes';
+import { fetchGlossaryByLetter } from '../page'
+import TermsHomePage from '../components/TermsHomePage'
+import TermsItemPage from './components/TermsItemPage'
+import DefinedTermSchema from './DefinedTermSchema'
+import pageMetaData from 'helpers/metadataHelper'
+import { notFound } from 'next/navigation'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
+import { apiRoutes } from 'gpApi/routes'
 
-export const revalidate = 3600;
+export const revalidate = 3600
 // export const dynamic = 'force-static';
 
 const fetchGlossaryBySlug = async (slug) => {
   try {
     const termsBySlug = await unAuthFetch(
       `${apiRoutes.content.byType.path}/glossaryItem/by-slug`,
-    );
-    return termsBySlug[slug];
+    )
+    return termsBySlug[slug]
   } catch (e) {
-    return {};
+    return {}
   }
-};
+}
 
 export async function generateMetadata({ params }) {
-  const { slug } = params;
-  const content = await fetchGlossaryBySlug(slug);
-  let meta;
+  const { slug } = params
+  const content = await fetchGlossaryBySlug(slug)
+  let meta
   if (slug.length === 1) {
     meta = pageMetaData({
       title: `Political Terms - ${slug.toUpperCase()} | GoodParty.org`,
       description:
         'Political terms and definitions, elevate your political game with our easy to use political database at GoodParty.org',
       slug: `/political-terms/${slug}`,
-    });
+    })
   } else {
     if (!content) {
-      notFound();
+      notFound()
     }
-    const title = content?.title;
+    const title = content?.title
     meta = pageMetaData({
       title: `${title} Meaning & Definition | GoodParty.org`,
       description: `${title} meaning and definition. Find 100's of terms related to the US political system at GoodParty.org!`,
       slug: `/political-terms/${slug}`,
-    });
+    })
   }
-  return meta;
+  return meta
 }
 
 export default async function Page({ params }) {
-  const { slug } = params;
+  const { slug } = params
 
   if (!slug) {
-    notFound();
+    notFound()
   }
 
-  const activeLetter = slug.charAt(0).toUpperCase();
-  const content = await fetchGlossaryByLetter();
-  const items = content[activeLetter] || [];
+  const activeLetter = slug.charAt(0).toUpperCase()
+  const content = await fetchGlossaryByLetter()
+  const items = content[activeLetter] || []
   if (slug.length === 1) {
-    return <TermsHomePage activeLetter={activeLetter} items={items} />;
+    return <TermsHomePage activeLetter={activeLetter} items={items} />
   }
-  const titleContent = await fetchGlossaryBySlug(slug);
-  const childProps = { item: titleContent, slug, activeLetter, items };
+  const titleContent = await fetchGlossaryBySlug(slug)
+  const childProps = { item: titleContent, slug, activeLetter, items }
 
   return (
     <>
       <TermsItemPage {...childProps} />
       <DefinedTermSchema {...childProps} />
     </>
-  );
+  )
 }
 
 export async function generateStaticParams() {
-  const letters = 'abcdefghijklmnopqrstuvwxyz';
-  const lettersArray = letters.split('');
+  const letters = 'abcdefghijklmnopqrstuvwxyz'
+  const lettersArray = letters.split('')
 
   return lettersArray.map((letter) => {
     return {
       slug: letter,
-    };
-  });
+    }
+  })
 }

@@ -1,4 +1,4 @@
-import TabsComponent from './Tabs';
+import TabsComponent from './Tabs'
 
 export default {
   title: 'Utils/Tabs',
@@ -43,6 +43,6 @@ export default {
       },
     },
   },
-};
+}
 
-export const Tabs = {};
+export const Tabs = {}

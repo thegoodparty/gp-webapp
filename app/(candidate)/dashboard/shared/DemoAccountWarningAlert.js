@@ -1,18 +1,18 @@
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner';
-import { DemoAccountDeleteDialog } from '@shared/utils/DemoAccountDeleteDialog';
-import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
-import { useSnackbar } from 'helpers/useSnackbar';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
+import { DemoAccountDeleteDialog } from '@shared/utils/DemoAccountDeleteDialog'
+import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 export const DemoAccountWarningAlert = () => {
-  const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
-  const { errorSnackbar } = useSnackbar();
+  const router = useRouter()
+  const [showModal, setShowModal] = useState(false)
+  const { errorSnackbar } = useSnackbar()
 
   const handleDemoAlertButtonOnClick = () => {
-    setShowModal(true);
-  };
+    setShowModal(true)
+  }
 
   return (
     <>
@@ -29,5 +29,5 @@ export const DemoAccountWarningAlert = () => {
         handleProceed={handleDemoAccountDeletion(errorSnackbar, router)}
       />
     </>
-  );
-};
+  )
+}

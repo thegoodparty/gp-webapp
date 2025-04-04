@@ -1,34 +1,34 @@
-'use client';
-import { useEffect, useState } from 'react';
-import SignupForm from '@shared/inputs/SignupForm';
-import Image from 'next/image';
-import { setCookie, getCookie } from 'helpers/cookieHelper.js';
-import Modal from '@shared/utils/Modal';
+'use client'
+import { useEffect, useState } from 'react'
+import SignupForm from '@shared/inputs/SignupForm'
+import Image from 'next/image'
+import { setCookie, getCookie } from 'helpers/cookieHelper.js'
+import Modal from '@shared/utils/Modal'
 
-const POPUP_DELAY = 20000;
+const POPUP_DELAY = 20000
 export default function BlogPopup() {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   const handleOpenModal = () => {
-    setShowModal(true);
-  };
+    setShowModal(true)
+  }
 
   useEffect(() => {
-    const cookie = getCookie('blogPopup');
+    const cookie = getCookie('blogPopup')
     if (!cookie || cookie !== 'closed') {
-      const timer = setTimeout(handleOpenModal, POPUP_DELAY);
+      const timer = setTimeout(handleOpenModal, POPUP_DELAY)
       return () => {
-        clearTimeout(timer);
-      };
+        clearTimeout(timer)
+      }
     }
-  }, []);
+  }, [])
 
   return (
     <Modal
       open={showModal}
       closeCallback={() => {
-        setShowModal(false);
-        setCookie('blogPopup', 'closed', 1);
+        setShowModal(false)
+        setCookie('blogPopup', 'closed', 1)
       }}
     >
       <div className=" w-[90vw] max-w-[420px] mx-auto">
@@ -51,11 +51,11 @@ export default function BlogPopup() {
           horizontal={false}
           phoneField={false}
           onSuccessCallback={() => {
-            setShowModal(false);
-            setCookie('blogPopup', 'closed', 1);
+            setShowModal(false)
+            setCookie('blogPopup', 'closed', 1)
           }}
         />
       </div>
     </Modal>
-  );
+  )
 }

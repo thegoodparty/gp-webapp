@@ -1,8 +1,7 @@
-import { Primary } from '@shared/buttons/ErrorButton.stories';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
-import Link from 'next/link';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import ArticleSnippet from 'app/blog/shared/ArticleSnippet'
+import Link from 'next/link'
 
 export default function Guides({ articles }) {
   return (
@@ -27,5 +26,5 @@ export default function Guides({ articles }) {
         </Link>
       </MaxWidth>
     </section>
-  );
+  )
 }

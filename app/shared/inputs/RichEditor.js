@@ -1,33 +1,33 @@
-'use client';
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.bubble.css';
+'use client'
+import React, { useState, useEffect } from 'react'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.bubble.css'
 
 export default function RichEditor({
   initialText = '',
   onChangeCallback = () => {},
 }) {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState('')
   useEffect(() => {
     if (content !== initialText && initialText !== null) {
-      setContent(initialText);
+      setContent(initialText)
     }
-  }, [initialText]);
+  }, [initialText])
 
   const handleChange = (value) => {
     if (value) {
-      setContent(value);
-      onChangeCallback(value);
+      setContent(value)
+      onChangeCallback(value)
     }
-  };
+  }
 
   const handleBlur = (previousRange, source, editor) => {
-    const value = editor.getHTML();
+    const value = editor.getHTML()
     if (value) {
-      setContent(value);
-      onChangeCallback(value, 1);
+      setContent(value)
+      onChangeCallback(value, 1)
     }
-  };
+  }
 
   return (
     <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base">
@@ -38,5 +38,5 @@ export default function RichEditor({
         onBlur={handleBlur}
       />
     </div>
-  );
+  )
 }

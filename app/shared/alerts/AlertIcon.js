@@ -1,16 +1,16 @@
-import { MdCheckCircle, MdError, MdInfo, MdWarning } from 'react-icons/md';
+import { MdCheckCircle, MdError, MdInfo, MdWarning } from 'react-icons/md'
 
 export const AlertIcon = ({ severity, className }) => {
   switch (severity) {
     case 'error':
-      return <MdError className={className} />;
+      return <MdError className={className} />
     case 'info':
-      return <MdInfo className={className} />;
+      return <MdInfo className={className} />
     case 'warning':
-      return <MdWarning className={className} />;
+      return <MdWarning className={className} />
     case 'success':
-      return <MdCheckCircle className={className} />;
+      return <MdCheckCircle className={className} />
     default:
-      return null;
+      return null
   }
-};
+}

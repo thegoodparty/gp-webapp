@@ -1,24 +1,24 @@
-'use client';
-import { useEffect, useState } from 'react';
-import PositionsSelector from './PositionsAutocomplete';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import { IoMdClose } from 'react-icons/io';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+'use client'
+import { useEffect, useState } from 'react'
+import PositionsSelector from './PositionsAutocomplete'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import { IoMdClose } from 'react-icons/io'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
 
 const initialState = {
   position: '',
   text: '',
   customTitle: '',
-};
+}
 
 export default function CandidateIssueSelector({
   positions,
   onSaveCallback,
   suggested,
 }) {
-  const [state, setState] = useState(initialState);
-  const [showCustom, setShowCustom] = useState(false);
+  const [state, setState] = useState(initialState)
+  const [showCustom, setShowCustom] = useState(false)
 
   useEffect(() => {
     if (suggested) {
@@ -26,31 +26,31 @@ export default function CandidateIssueSelector({
         position: '',
         text: '',
         customTitle: suggested,
-      });
-      setShowCustom(true);
+      })
+      setShowCustom(true)
     }
-  }, [suggested]);
+  }, [suggested])
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const onChangePositions = (position) => {
-    onChangeField('position', position);
-  };
+    onChangeField('position', position)
+  }
 
   const handleSave = () => {
-    onSaveCallback(state.position, state.text, state.customTitle);
-    reset();
-  };
+    onSaveCallback(state.position, state.text, state.customTitle)
+    reset()
+  }
 
   const reset = () => {
-    setState(initialState);
-    setShowCustom(false);
-  };
+    setState(initialState)
+    setShowCustom(false)
+  }
 
   // const addCustom = () => {
   //   const updated = [
@@ -75,7 +75,7 @@ export default function CandidateIssueSelector({
               <IoMdClose
                 className="ml-2 cursor-pointer"
                 onClick={() => {
-                  onChangeField('position', false);
+                  onChangeField('position', false)
                 }}
               />
             </div>
@@ -91,7 +91,7 @@ export default function CandidateIssueSelector({
                 <div
                   className="mt-3 text-right"
                   onClick={() => {
-                    reset();
+                    reset()
                   }}
                 >
                   <Body1 className="underline cursor-pointer">
@@ -102,7 +102,7 @@ export default function CandidateIssueSelector({
                 <div
                   className="mt-3 text-right"
                   onClick={() => {
-                    setShowCustom(true);
+                    setShowCustom(true)
                   }}
                 >
                   <Body1 className="underline cursor-pointer">
@@ -122,7 +122,7 @@ export default function CandidateIssueSelector({
                 fullWidth
                 value={state.customTitle}
                 onChange={(e) => {
-                  onChangeField('customTitle', e.target.value);
+                  onChangeField('customTitle', e.target.value)
                 }}
               />
             </div>
@@ -138,7 +138,7 @@ export default function CandidateIssueSelector({
               fullWidth
               value={state.text}
               onChange={(e) => {
-                onChangeField('text', e.target.value);
+                onChangeField('text', e.target.value)
               }}
             />
             <div className="text-right mt-4">
@@ -179,5 +179,5 @@ export default function CandidateIssueSelector({
         ))} */}
       </div>
     </>
-  );
+  )
 }

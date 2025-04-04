@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import { Select } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import { useMemo, useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import { Select } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
 
 const partyOptions = [
   'Independent',
@@ -12,7 +12,7 @@ const partyOptions = [
   'Libertarian Party',
   'Forward Party',
   'Other',
-];
+]
 
 export default function RunningAgainstForm({
   name = '',
@@ -22,34 +22,34 @@ export default function RunningAgainstForm({
   onCancel,
   className = '',
 }) {
-  const [state, setState] = useState({ name, party, description });
+  const [state, setState] = useState({ name, party, description })
   const isNew = useMemo(
     () => name === '' && party === '' && description === '',
     [name, party, description],
-  );
+  )
   const canSave = useMemo(
     () => state.name != '' && state.party != '' && state.description != '',
     [state],
-  );
+  )
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
-    onSave(state);
+    onSave(state)
 
     // reset state
-    if (isNew) setState({ name, party, description });
+    if (isNew) setState({ name, party, description })
   }
 
   function handleCancel() {
-    onCancel();
+    onCancel()
   }
 
   function handleChangeField(fieldName, fieldValue) {
     setState((current) => ({
       ...current,
       [fieldName]: fieldValue,
-    }));
+    }))
   }
 
   return (
@@ -60,7 +60,7 @@ export default function RunningAgainstForm({
         required
         value={state.name}
         onChange={(e) => {
-          handleChangeField('name', e.target.value);
+          handleChangeField('name', e.target.value)
         }}
       />
       <div className="mt-6">
@@ -72,7 +72,7 @@ export default function RunningAgainstForm({
           required
           variant="outlined"
           onChange={(e) => {
-            handleChangeField('party', e.target.value);
+            handleChangeField('party', e.target.value)
           }}
         >
           <option value="">Select Opponent Party</option>
@@ -94,7 +94,7 @@ export default function RunningAgainstForm({
           required
           value={state.description}
           onChange={(e) => {
-            handleChangeField('description', e.target.value);
+            handleChangeField('description', e.target.value)
           }}
         />
       </div>
@@ -108,5 +108,5 @@ export default function RunningAgainstForm({
         </PrimaryButton>
       </div>
     </form>
-  );
+  )
 }

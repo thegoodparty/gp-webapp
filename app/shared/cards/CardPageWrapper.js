@@ -1,5 +1,5 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Paper from '@shared/utils/Paper';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Paper from '@shared/utils/Paper'
 
 export default function CardPageWrapper({ children }) {
   return (
@@ -14,5 +14,5 @@ export default function CardPageWrapper({ children }) {
         </div>
       </MaxWidth>
     </div>
-  );
+  )
 }

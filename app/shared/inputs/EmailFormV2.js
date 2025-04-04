@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import { useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { useState } from 'react'
+import { FaCheck } from 'react-icons/fa'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 export async function subscribeEmail(payload) {
   try {
-    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
-    return true;
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
+    return true
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -27,11 +27,11 @@ const EmailFormV2 = ({
   primaryButton = false,
   className,
 }) => {
-  const [email, setEmail] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [email, setEmail] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
 
-  const canSubmit = () => isValidEmail(email);
+  const canSubmit = () => isValidEmail(email)
 
   const submitForm = async () => {
     if (canSubmit()) {
@@ -40,26 +40,26 @@ const EmailFormV2 = ({
         uri: window.location.href,
         formId,
         pageName,
-      });
+      })
 
       if (window.dataLayer) {
         window.dataLayer.push({
           event: labelId,
           'hs-form-guid': formId,
           'hs-form-name': labelId,
-        });
+        })
       }
 
       if (success) {
-        setSuccess(true);
-        setShowError(false);
+        setSuccess(true)
+        setShowError(false)
       } else {
-        setShowError('An error occurred. Please try again.');
+        setShowError('An error occurred. Please try again.')
       }
     } else {
-      setShowError('Please enter a valid email');
+      setShowError('Please enter a valid email')
     }
-  };
+  }
   return (
     <form
       className={className}
@@ -85,7 +85,7 @@ const EmailFormV2 = ({
               type="email"
               name="email"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setEmail(e.target.value)
               }}
               value={email}
               placeholder={placeholder}
@@ -128,7 +128,7 @@ const EmailFormV2 = ({
         </>
       )}
     </form>
-  );
-};
+  )
+}
 
-export default EmailFormV2;
+export default EmailFormV2

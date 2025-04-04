@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
 export const ExpertCard = ({ name, role, desc, img: { src, alt } }) => (
   <div className="expert-card last:mb-0">
@@ -13,4 +13,4 @@ export const ExpertCard = ({ name, role, desc, img: { src, alt } }) => (
     <h6 className="text-sm mb-6 md:text-xl">{role}</h6>
     <p className="text-sm leading-7 text-neutral-main">{desc}</p>
   </div>
-);
+)

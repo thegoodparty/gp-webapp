@@ -1,10 +1,10 @@
-import PinkButtonClient from './PinkButtonClient';
+import PinkButtonClient from './PinkButtonClient'
 
 export default {
   title: 'Buttons/PinkButtonClient',
   component: PinkButtonClient,
   tags: ['autodocs'],
   args: { children: 'Pink Button Client' },
-};
+}
 
-export const Default = {};
+export const Default = {}

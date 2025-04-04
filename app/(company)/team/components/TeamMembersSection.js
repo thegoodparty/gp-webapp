@@ -1,32 +1,32 @@
-'use client';
-import { useState } from 'react';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { TeamMemberCards } from 'app/(company)/team/components/TeamMemberCards';
-import Image from 'next/image';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
-import MaxWidth from '@shared/layouts/MaxWidth';
+'use client'
+import { useState } from 'react'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { TeamMemberCards } from 'app/(company)/team/components/TeamMemberCards'
+import Image from 'next/image'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Link from 'next/link'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 export default function TeamMembersSection(props) {
-  const { teamMembers } = props;
-  const [selected, setSelected] = useState({});
-  const [flipAll, setFlipAll] = useState(false);
+  const { teamMembers } = props
+  const [selected, setSelected] = useState({})
+  const [flipAll, setFlipAll] = useState(false)
 
   const handleSelected = (index) =>
     setSelected({
       ...selected,
       [index]: !selected[index],
-    });
+    })
 
   const handleFlipAll = (e) => {
-    e.preventDefault();
-    const all = {};
+    e.preventDefault()
+    const all = {}
     teamMembers.forEach((member, index) => {
-      all[index] = !flipAll;
-    });
-    setSelected(all);
-    setFlipAll(!flipAll);
-  };
+      all[index] = !flipAll
+    })
+    setSelected(all)
+    setFlipAll(!flipAll)
+  }
 
   return (
     <section className="bg-primary-background">
@@ -83,5 +83,5 @@ export default function TeamMembersSection(props) {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

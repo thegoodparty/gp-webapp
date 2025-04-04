@@ -1,4 +1,4 @@
-import Button from '@shared/buttons/Button';
+import Button from '@shared/buttons/Button'
 
 export default function NavButton({ children, className = '', ...restProps }) {
   return (
@@ -12,5 +12,5 @@ export default function NavButton({ children, className = '', ...restProps }) {
     >
       {children}
     </Button>
-  );
+  )
 }

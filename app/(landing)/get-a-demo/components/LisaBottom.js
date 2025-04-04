@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import lisaImg from 'public/images/landing-pages/lisa.png';
-import { BiSolidQuoteAltRight } from 'react-icons/bi';
+import Image from 'next/image'
+import lisaImg from 'public/images/landing-pages/lisa.png'
+import { BiSolidQuoteAltRight } from 'react-icons/bi'
 
 export default function LisaBottom() {
   return (
@@ -50,5 +50,5 @@ export default function LisaBottom() {
         </div>
       </div>
     </div>
-  );
+  )
 }

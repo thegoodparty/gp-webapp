@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import FileDropZone from './FileDropZone';
-import { useState } from 'react';
+import Image from 'next/image'
+import FileDropZone from './FileDropZone'
+import { useState } from 'react'
 
 export default {
   title: 'Inputs/FileDropZone',
@@ -9,9 +9,9 @@ export default {
   args: {},
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(null)
 
-    const fileUrl = file && URL.createObjectURL(file);
+    const fileUrl = file && URL.createObjectURL(file)
 
     return (
       <div className="flex flex-col gap-3 items-start">
@@ -24,8 +24,8 @@ export default {
           </>
         )}
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

@@ -1,30 +1,30 @@
-'use client';
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import { TextField } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import H2 from '@shared/typography/H2';
-import H6 from '@shared/typography/H6';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
+'use client'
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import { TextField } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import H2 from '@shared/typography/H2'
+import H6 from '@shared/typography/H6'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 async function renameContent(key, name) {
   try {
     const payload = {
       key,
       name,
-    };
-    const resp = await clientFetch(apiRoutes.campaign.ai.rename, payload);
+    }
+    const resp = await clientFetch(apiRoutes.campaign.ai.rename, payload)
     if (resp?.ok) {
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -37,23 +37,23 @@ export default function RenameAction({
   documentName = '',
 }) {
   // const [showRename, setShowRename] = useState(false);
-  const [newName, setNewName] = useState('');
-  const { successSnackbar, errorSnackbar } = useSnackbar();
+  const [newName, setNewName] = useState('')
+  const { successSnackbar, errorSnackbar } = useSnackbar()
 
   const handleRename = async (key, name) => {
-    const renameResp = await renameContent(key, name);
+    const renameResp = await renameContent(key, name)
     if (renameResp === true) {
-      successSnackbar('Renamed document');
+      successSnackbar('Renamed document')
       if (tableVersion === true) {
-        window.location.href = '/dashboard/content';
+        window.location.href = '/dashboard/content'
       } else {
-        setDocumentName(newName);
+        setDocumentName(newName)
       }
     } else {
-      errorSnackbar('Error renaming document');
+      errorSnackbar('Error renaming document')
     }
-    setShowRename(false);
-  };
+    setShowRename(false)
+  }
 
   return (
     <>
@@ -72,13 +72,13 @@ export default function RenameAction({
             defaultValue={documentName ? documentName : ''}
             fullWidth
             onChange={(e) => {
-              setNewName(e.target.value);
+              setNewName(e.target.value)
             }}
           />
           <div className="mt-16 flex w-full justify-end">
             <div
               onClick={() => {
-                setShowRename(false);
+                setShowRename(false)
               }}
             >
               <SecondaryButton>Cancel</SecondaryButton>
@@ -86,7 +86,7 @@ export default function RenameAction({
             <div
               className="ml-3"
               onClick={() => {
-                handleRename(documentKey, newName);
+                handleRename(documentKey, newName)
               }}
             >
               <PrimaryButton
@@ -99,5 +99,5 @@ export default function RenameAction({
         </div>
       </Modal>
     </>
-  );
+  )
 }

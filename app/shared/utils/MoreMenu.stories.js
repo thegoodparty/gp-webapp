@@ -1,4 +1,4 @@
-import { MoreMenu } from './MoreMenu';
+import { MoreMenu } from './MoreMenu'
 
 export default {
   title: 'Utils/MoreMenu',
@@ -11,6 +11,6 @@ export default {
       { label: 'Item Three' },
     ],
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

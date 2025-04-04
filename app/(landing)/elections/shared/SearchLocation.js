@@ -1,38 +1,38 @@
-'use client';
+'use client'
 
-import { InputAdornment, Select } from '@mui/material';
-import H2 from '@shared/typography/H2';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { slugify } from 'helpers/articleHelper';
-import { states } from 'helpers/statesHelper';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
-import Button from '@shared/buttons/Button';
+import { InputAdornment, Select } from '@mui/material'
+import H2 from '@shared/typography/H2'
+import gpApi from 'gpApi'
+import gpFetch from 'gpApi/gpFetch'
+import { slugify } from 'helpers/articleHelper'
+import { states } from 'helpers/statesHelper'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
+import Button from '@shared/buttons/Button'
 
 const fetchState = async (state) => {
-  const api = gpApi.race.byState;
+  const api = gpApi.race.byState
   const payload = {
     state,
-  };
+  }
 
-  return await gpFetch(api, payload, 3600);
-};
+  return await gpFetch(api, payload, 3600)
+}
 
 const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty;
+  const api = gpApi.race.byCounty
   const payload = {
     state,
     county,
-  };
+  }
 
-  return await gpFetch(api, payload, 3600);
-};
+  return await gpFetch(api, payload, 3600)
+}
 
 const nameCompare = ({ name: aName }, { name: bName }) =>
-  aName.localeCompare(bName);
+  aName.localeCompare(bName)
 
 export default function SearchLocation({ withHeader = false, initialState }) {
   const [state, setState] = useState({
@@ -41,45 +41,45 @@ export default function SearchLocation({ withHeader = false, initialState }) {
     municipality: '',
     countyOptions: [],
     munOptions: [],
-  });
+  })
 
-  const router = useRouter();
+  const router = useRouter()
 
   const onChangeState = async (stateName) => {
-    const { counties } = await fetchState(stateName);
+    const { counties } = await fetchState(stateName)
     setState({
       ...state,
       state: stateName,
       countyOptions: counties,
-    });
-  };
+    })
+  }
 
   const onChangeCounty = async (countyName) => {
-    const { municipalities } = await fetchCounty(state.state, countyName);
+    const { municipalities } = await fetchCounty(state.state, countyName)
     setState({
       ...state,
       county: countyName,
       munOptions: municipalities,
-    });
-  };
+    })
+  }
 
   const onChangeMun = (munName) => {
-    setState({ ...state, municipality: munName });
-  };
+    setState({ ...state, municipality: munName })
+  }
 
   const handleSubmit = () => {
     if (state.state === '') {
-      return;
+      return
     }
-    let url = `/elections/${slugify(state.state, true)}`;
+    let url = `/elections/${slugify(state.state, true)}`
     if (state.county !== '') {
-      url += `/${slugify(state.county, true)}`;
+      url += `/${slugify(state.county, true)}`
     }
     if (state.county !== '' && state.municipality !== '') {
-      url += `/${slugify(state.municipality, true)}`;
+      url += `/${slugify(state.municipality, true)}`
     }
-    router.push(url);
-  };
+    router.push(url)
+  }
 
   return (
     <div>
@@ -98,8 +98,8 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             label=" state "
             variant="outlined"
             onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget);
-              return onChangeState(e.target.value);
+              fireGTMButtonClickEvent(e.currentTarget)
+              return onChangeState(e.target.value)
             }}
             sx={{ backgroundColor: 'white' }}
             startAdornment={
@@ -135,8 +135,8 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             label=" "
             disabled={state.state === '' || state.countyOptions.length === 0}
             onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget);
-              return onChangeCounty(e.target.value);
+              fireGTMButtonClickEvent(e.currentTarget)
+              return onChangeCounty(e.target.value)
             }}
             startAdornment={
               // Placing the icon as startAdornment
@@ -177,8 +177,8 @@ export default function SearchLocation({ withHeader = false, initialState }) {
             label=" "
             disabled={state.county === '' || state.munOptions.length === 0}
             onChange={(e) => {
-              fireGTMButtonClickEvent(e.currentTarget);
-              return onChangeMun(e.target.value);
+              fireGTMButtonClickEvent(e.currentTarget)
+              return onChangeMun(e.target.value)
             }}
             startAdornment={
               // Placing the icon as startAdornment
@@ -222,5 +222,5 @@ export default function SearchLocation({ withHeader = false, initialState }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,15 +1,14 @@
-'use client';
+'use client'
 
 import {
   InputAdornment,
   TextField as MuiTextField,
-  TextFieldProps as MuiTextFieldProps,
-} from '@mui/material';
-import { ErrorOutlineRounded } from '@mui/icons-material';
+} from '@mui/material'
+import { ErrorOutlineRounded } from '@mui/icons-material'
 
 const ADORNMENTS = {
   error: <ErrorOutlineRounded className="text-red" />,
-};
+}
 
 /**
  * @typedef {Object} TextFieldProps
@@ -43,5 +42,5 @@ export default function TextField({ endAdornments, ...restProps }) {
       }}
       {...restProps}
     />
-  );
+  )
 }

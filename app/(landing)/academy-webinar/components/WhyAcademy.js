@@ -1,9 +1,9 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
-import WarningButton from '@shared/buttons/WarningButton';
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
+import WarningButton from '@shared/buttons/WarningButton'
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
 const icons = [
   {
@@ -50,7 +50,7 @@ const icons = [
       </>
     ),
   },
-];
+]
 
 export default function WhyAcademy({ content }) {
   return (
@@ -81,5 +81,5 @@ export default function WhyAcademy({ content }) {
         </MaxWidth>
       </div>
     </>
-  );
+  )
 }

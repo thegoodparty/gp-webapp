@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import Button from '@shared/buttons/Button';
-import Overline from '@shared/typography/Overline';
-import EmailInput from '@shared/inputs/EmailInput';
+import Link from 'next/link'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
+import Overline from '@shared/typography/Overline'
+import EmailInput from '@shared/inputs/EmailInput'
 
 export default function ForgotPasswordForm({
   email,
@@ -11,7 +11,7 @@ export default function ForgotPasswordForm({
   onEmailChange,
   onSubmit,
 }) {
-  const showError = email !== '' && !isValid;
+  const showError = email !== '' && !isValid
 
   return (
     <form noValidate onSubmit={onSubmit}>
@@ -55,5 +55,5 @@ export default function ForgotPasswordForm({
         Back to Login
       </Button>
     </form>
-  );
+  )
 }

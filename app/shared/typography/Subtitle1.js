@@ -3,5 +3,5 @@ export default function Subtitle1({ children, className = '' }) {
     <div className={`font-normal font-sfpro text-base ${className}`}>
       {children}
     </div>
-  );
+  )
 }

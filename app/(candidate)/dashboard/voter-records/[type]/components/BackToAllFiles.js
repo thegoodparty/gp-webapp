@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import Button from '@shared/buttons/Button';
-import { FaChevronLeft } from 'react-icons/fa';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import Button from '@shared/buttons/Button'
+import { FaChevronLeft } from 'react-icons/fa'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function BackToAllFiles({ type, fileName }) {
   return (
@@ -15,12 +15,12 @@ export default function BackToAllFiles({ type, fileName }) {
           trackEvent(EVENTS.VoterData.FileDetail.ClickBack, {
             type,
             file: fileName,
-          });
+          })
         }}
       >
         <FaChevronLeft />
         <div className="ml-2">Back to All Voter Files</div>
       </Button>
     </>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import { FaCity, FaPeopleGroup, FaPeopleRoof } from 'react-icons/fa6';
-import { MdOutlineWorkOff } from 'react-icons/md';
-import { SlWallet } from 'react-icons/sl';
-import { TbHomeShare } from 'react-icons/tb';
-import { numberFormatter } from 'helpers/numberHelper';
+import { FaCity, FaPeopleGroup, FaPeopleRoof } from 'react-icons/fa6'
+import { MdOutlineWorkOff } from 'react-icons/md'
+import { SlWallet } from 'react-icons/sl'
+import { TbHomeShare } from 'react-icons/tb'
+import { numberFormatter } from 'helpers/numberHelper'
 
 export default function CountyFacts({ county }) {
-  if (!county) return null;
+  if (!county) return null
   const {
     city_largest,
     population,
@@ -13,7 +13,7 @@ export default function CountyFacts({ county }) {
     income_household_median,
     unemployment_rate,
     home_value,
-  } = county;
+  } = county
 
   const fields = [
     { label: 'Largest city', value: city_largest, icon: <FaCity /> },
@@ -43,7 +43,7 @@ export default function CountyFacts({ county }) {
       isNumber: true,
       isMoney: true,
     },
-  ];
+  ]
 
   return (
     <section className="bg-primary-dark py-14 md:py-20  mt-12 md:mt-20">
@@ -73,5 +73,5 @@ export default function CountyFacts({ county }) {
         </div>
       </div>
     </section>
-  );
+  )
 }

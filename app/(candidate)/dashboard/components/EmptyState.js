@@ -1,13 +1,13 @@
-import WandAnimation from '@shared/animations/WandAnimation';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H3 from '@shared/typography/H3';
-import Paper from '@shared/utils/Paper';
-import Link from 'next/link';
+import WandAnimation from '@shared/animations/WandAnimation'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H3 from '@shared/typography/H3'
+import Paper from '@shared/utils/Paper'
+import Link from 'next/link'
 
 export default function EmptyState({ campaign }) {
-  const { office, otherOffice } = campaign?.details || {};
-  const resolvedOffice = office === 'Other' ? otherOffice : office;
+  const { office, otherOffice } = campaign?.details || {}
+  const resolvedOffice = office === 'Other' ? otherOffice : office
   return (
     <Paper>
       <div className="p-4 md:py-8 lg:py-12 flex items-center justify-center">
@@ -32,5 +32,5 @@ export default function EmptyState({ campaign }) {
         </div>
       </div>
     </Paper>
-  );
+  )
 }

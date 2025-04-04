@@ -1,10 +1,10 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import levelImg from 'public/images/landing-pages/levelup.png';
-import networkingImg from 'public/images/landing-pages/networking.png';
-import perksImg from 'public/images/landing-pages/perks.png';
-import impactImg from 'public/images/landing-pages/impact.png';
-import CTA from './CTA';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import levelImg from 'public/images/landing-pages/levelup.png'
+import networkingImg from 'public/images/landing-pages/networking.png'
+import perksImg from 'public/images/landing-pages/perks.png'
+import impactImg from 'public/images/landing-pages/impact.png'
+import CTA from './CTA'
 
 const points = [
   {
@@ -27,7 +27,7 @@ const points = [
     desc: "We won't waste your time. Take simple, meaningful actions that will put our country back on track.",
     image: impactImg,
   },
-];
+]
 
 export default function Benefits() {
   return (
@@ -57,5 +57,5 @@ export default function Benefits() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

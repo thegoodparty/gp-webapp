@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import ButtonLoading from './ButtonLoading';
+import Link from 'next/link'
+import ButtonLoading from './ButtonLoading'
 
 export const COLOR_CLASSES = {
   primary:
@@ -20,7 +20,7 @@ export const COLOR_CLASSES = {
   // WIP: only contained style for now
   white:
     'text-black bg-white hover:[&:not([disabled])]:bg-[#d6d6d6] focus-visible:outline-white/40 active:outline-white/40',
-};
+}
 
 const OUTLINED_COLOR_CLASSES = {
   primary:
@@ -38,7 +38,7 @@ const OUTLINED_COLOR_CLASSES = {
     'text-success-dark !border-success-main/50 hover:[&:not([disabled])]:bg-success-main/[0.08] focus-visible:!bg-success-main/[0.12] active:!bg-success-main/[0.12]',
   neutral:
     'text-neutral-dark !border-neutral-main/60 hover:[&:not([disabled])]:bg-neutral-main/[0.16] focus-visible:!bg-neutral-main/[0.24] active:!bg-neutral-main/[0.24]',
-};
+}
 
 const TEXT_COLOR_CLASSES = {
   primary:
@@ -56,19 +56,19 @@ const TEXT_COLOR_CLASSES = {
     'text-success-dark hover:[&:not([disabled])]:bg-success-main/[0.08] focus-visible:!bg-success-main/[0.12] active:!bg-success-main/[0.12]',
   neutral:
     'text-neutral-dark hover:[&:not([disabled])]:bg-neutral-main/[0.16] focus-visible:!bg-neutral-main/[0.24] active:!bg-neutral-main/[0.24]',
-};
+}
 
 export const VARIANT_CLASSES = {
   contained: COLOR_CLASSES,
   outlined: OUTLINED_COLOR_CLASSES,
   text: TEXT_COLOR_CLASSES,
-};
+}
 
 export const SIZE_CLASSES = {
   small: 'text-xs py-2 px-3',
   medium: 'text-sm py-[10px] px-4',
   large: 'text-base py-3 px-6 leading-6',
-};
+}
 
 /**
  * @typedef {Object} ButtonProps
@@ -116,20 +116,20 @@ export default function Button({
   ...restProps
 }) {
   let baseClasses =
-    'rounded-lg text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors no-underline outline-offset-0 inline-block';
+    'rounded-lg text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors no-underline outline-offset-0 inline-block'
 
-  if (variant !== 'text') baseClasses += ' border-2 border-transparent ';
+  if (variant !== 'text') baseClasses += ' border-2 border-transparent '
 
   if (variant === 'contained')
-    baseClasses += ' outline outline-4 outline-transparent';
+    baseClasses += ' outline outline-4 outline-transparent'
 
-  const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.contained;
-  const colorClasses = variantClasses[color] || variantClasses.primary;
-  const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium;
+  const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.contained
+  const colorClasses = variantClasses[color] || variantClasses.primary
+  const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium
 
   const compiledClassName = `${baseClasses} ${sizeClasses} ${colorClasses} ${
     className || ''
-  }`;
+  }`
 
   // render a disabled button instead of link if disabled = true
   if (href && !disabled) {
@@ -139,13 +139,13 @@ export default function Button({
         <a href={href} className={compiledClassName} {...restProps}>
           {children}
         </a>
-      );
+      )
     }
     return (
       <Link href={href} className={compiledClassName} {...restProps}>
         {children}
       </Link>
-    );
+    )
   }
 
   return (
@@ -161,5 +161,5 @@ export default function Button({
 
       {children}
     </button>
-  );
+  )
 }

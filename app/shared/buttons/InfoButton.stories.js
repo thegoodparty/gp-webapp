@@ -1,5 +1,5 @@
-import { argTypes } from './buttonsArgTypes';
-import InfoButtonComponent from './InfoButton';
+import { argTypes } from './buttonsArgTypes'
+import InfoButtonComponent from './InfoButton'
 
 export default {
   title: 'Buttons/InfoButton',
@@ -10,22 +10,22 @@ export default {
   },
 
   argTypes: argTypes,
-};
+}
 
 export const Primary = {
   args: {
     variant: 'contained',
   },
-};
+}
 
 export const Outlined = {
   args: {
     variant: 'outlined',
   },
-};
+}
 
 export const Text = {
   args: {
     variant: 'text',
   },
-};
+}

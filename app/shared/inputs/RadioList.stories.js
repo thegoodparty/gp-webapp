@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import RadioList from './RadioList';
+import { useState } from 'react'
+import RadioList from './RadioList'
 
 export default {
   title: 'Inputs/RadioList',
@@ -14,10 +14,10 @@ export default {
   },
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [value, setValue] = useState();
+    const [value, setValue] = useState()
 
-    return <RadioList {...args} selected={value} selectCallback={setValue} />;
+    return <RadioList {...args} selected={value} selectCallback={setValue} />
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

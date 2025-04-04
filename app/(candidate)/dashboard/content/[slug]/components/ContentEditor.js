@@ -1,33 +1,33 @@
-'use client';
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import PlanVersion from './PlanVersion';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import LoadingContent from './LoadingContent';
-import BlackButton from '@shared/buttons/BlackButton';
-import { MdAutoAwesome, MdOutlineArrowBackIos } from 'react-icons/md';
-import { FaGlobe } from 'react-icons/fa';
-import Actions from '../../components/Actions';
-import { debounce } from '/helpers/debounceHelper';
-import { LuClipboard } from 'react-icons/lu';
-import CopyToClipboard from '@shared/utils/CopyToClipboard';
-import InputFieldsModal from '../../components/InputFieldsModal';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
-import Button from '@shared/buttons/Button';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import PlanVersion from './PlanVersion'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import LoadingContent from './LoadingContent'
+import BlackButton from '@shared/buttons/BlackButton'
+import { MdAutoAwesome, MdOutlineArrowBackIos } from 'react-icons/md'
+import { FaGlobe } from 'react-icons/fa'
+import Actions from '../../components/Actions'
+import { debounce } from '/helpers/debounceHelper'
+import { LuClipboard } from 'react-icons/lu'
+import CopyToClipboard from '@shared/utils/CopyToClipboard'
+import InputFieldsModal from '../../components/InputFieldsModal'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields'
+import Button from '@shared/buttons/Button'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
   loading: () => (
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
   ),
-});
+})
 
-let aiCount = 0;
-let aiTotalCount = 0;
+let aiCount = 0
+let aiTotalCount = 0
 
 export default function ContentEditor({
   section = '',
@@ -36,87 +36,87 @@ export default function ContentEditor({
   updateVersionsCallback,
   subSectionKey = 'aiContent',
 }) {
-  const [plan, setPlan] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [regenerating, setRegenerating] = useState(false);
-  const [isFailed, setIsFailed] = useState(false);
-  const [documentName, setDocumentName] = useState('Untitled Document');
-  const [saved, setSaved] = useState('Saved');
-  const [inputFields, setInputFields] = useState([]);
-  const [initialInputValues, setInitialInputValues] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [showTranslate, setShowTranslate] = useState(false);
+  const [plan, setPlan] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [regenerating, setRegenerating] = useState(false)
+  const [isFailed, setIsFailed] = useState(false)
+  const [documentName, setDocumentName] = useState('Untitled Document')
+  const [saved, setSaved] = useState('Saved')
+  const [inputFields, setInputFields] = useState([])
+  const [initialInputValues, setInitialInputValues] = useState({})
+  const [showModal, setShowModal] = useState(false)
+  const [showTranslate, setShowTranslate] = useState(false)
 
-  const campaignPlan = campaign.aiContent;
-  const key = section;
+  const campaignPlan = campaign.aiContent
+  const key = section
 
   useEffect(() => {
     if (campaignPlan && campaignPlan[key]) {
-      setPlan(campaignPlan[key].content);
-      setDocumentName(campaignPlan[key].name);
-      setLoading(false);
-      setRegenerating(false);
-      loadInputFields();
-      loadInputValues();
+      setPlan(campaignPlan[key].content)
+      setDocumentName(campaignPlan[key].name)
+      setLoading(false)
+      setRegenerating(false)
+      loadInputFields()
+      loadInputValues()
     }
-  }, [campaignPlan]);
+  }, [campaignPlan])
 
   const loadInputFields = async () => {
-    const keyNoDigits = key.replace(/\d+$/, '');
-    const content = await fetchPromptInputFields(keyNoDigits);
+    const keyNoDigits = key.replace(/\d+$/, '')
+    const content = await fetchPromptInputFields(keyNoDigits)
     if (content) {
-      setInputFields(content);
+      setInputFields(content)
     } else {
-      setInputFields([]);
+      setInputFields([])
     }
-  };
+  }
 
   const loadInputValues = async () => {
     if (campaignPlan[key]?.inputValues) {
-      setInitialInputValues(campaignPlan[key].inputValues);
+      setInitialInputValues(campaignPlan[key].inputValues)
     }
-  };
+  }
 
   const handleEdit = async (editedPlan, debounceTime = 5000) => {
-    setPlan(editedPlan);
+    setPlan(editedPlan)
     if (campaignPlan[key].content != plan) {
-      debounce(handleTypingComplete, debounceTime);
+      debounce(handleTypingComplete, debounceTime)
     }
-  };
+  }
 
   // Function to be called when the user has finished typing
   const handleTypingComplete = async () => {
-    await handleSave();
-  };
+    await handleSave()
+  }
 
   const handleSave = async () => {
-    setSaved('Saving...');
+    setSaved('Saving...')
 
-    let existingName;
-    let existingInputs = {};
+    let existingName
+    let existingInputs = {}
     if (campaign.aiContent && campaign.aiContent[key]) {
-      existingName = campaign.aiContent[key].name;
-      existingInputs = campaign.aiContent[key].inputValues;
+      existingName = campaign.aiContent[key].name
+      existingInputs = campaign.aiContent[key].inputValues
     }
 
-    let now = new Date();
-    let updatedAt = now.valueOf();
+    let now = new Date()
+    let updatedAt = now.valueOf()
 
     const newVal = {
       name: existingName ? existingName : key,
       updatedAt,
       inputValues: existingInputs,
       content: plan,
-    };
+    }
 
-    await updateCampaign([{ key: `aiContent.${key}`, value: newVal }]);
-    setSaved('Saved');
-  };
+    await updateCampaign([{ key: `aiContent.${key}`, value: newVal }])
+    setSaved('Saved')
+  }
 
   const updatePlanCallback = (version) => {
-    setPlan(version.text);
-    setInitialInputValues(version.inputValues);
-  };
+    setPlan(version.text)
+    setInitialInputValues(version.inputValues)
+  }
 
   async function generateAI(key, regenerate, chat, editMode, inputValues = {}) {
     try {
@@ -126,11 +126,11 @@ export default function ContentEditor({
         chat,
         editMode,
         inputValues,
-      });
-      return resp.data;
+      })
+      return resp.data
     } catch (e) {
-      console.error('error', e);
-      return false;
+      console.error('error', e)
+      return false
     }
   }
 
@@ -140,17 +140,17 @@ export default function ContentEditor({
     editMode,
     inputValues = {},
   ) => {
-    aiCount++;
-    aiTotalCount++;
+    aiCount++
+    aiTotalCount++
     if (aiTotalCount >= 100) {
       //fail
       setPlan(
         'Failed to generate a campaign plan. Please contact us for help.',
-      );
-      setLoading(false);
-      setRegenerating(false);
-      setIsFailed(true);
-      return;
+      )
+      setLoading(false)
+      setRegenerating(false)
+      setIsFailed(true)
+      return
     }
 
     const { chatResponse, status } = await generateAI(
@@ -159,61 +159,61 @@ export default function ContentEditor({
       chat,
       editMode,
       inputValues,
-    );
+    )
     if (!chatResponse && status === 'processing') {
       if (aiCount < 40) {
         setTimeout(async () => {
-          await createInitialAI();
-        }, 5000);
+          await createInitialAI()
+        }, 5000)
       } else {
         //something went wrong, we are stuck in a loop. reCreate the response
-        console.log('regenerating');
-        aiCount = 0;
-        createInitialAI(true);
+        console.log('regenerating')
+        aiCount = 0
+        createInitialAI(true)
       }
     } else {
-      aiCount = 0;
+      aiCount = 0
       if (status === 'completed') {
-        setPlan(chatResponse.content);
-        await updateVersionsCallback();
-        setLoading(false);
-        setRegenerating(false);
-        setSaved('Saved');
+        setPlan(chatResponse.content)
+        await updateVersionsCallback()
+        setLoading(false)
+        setRegenerating(false)
+        setSaved('Saved')
       }
     }
-  };
+  }
 
   const handleAdditionalInput = async (additionalPrompt, inputValues) => {
     trackEvent(EVENTS.ContentBuilder.Editor.SubmitRegenerate, {
       name: documentName,
       key,
-    });
-    setLoading(true);
-    setInitialInputValues(inputValues);
+    })
+    setLoading(true)
+    setInitialInputValues(inputValues)
     const chat = [
       // the re-generate does not need the context of the old plan.
       // { role: 'system', content: plan },
       { role: 'user', content: additionalPrompt },
-    ];
-    await createInitialAI(true, chat, true, inputValues);
+    ]
+    await createInitialAI(true, chat, true, inputValues)
 
-    setShowModal(false);
-  };
+    setShowModal(false)
+  }
 
   const handleTranslate = async (language) => {
-    setLoading(true);
-    setInitialInputValues([]);
+    setLoading(true)
+    setInitialInputValues([])
     const chat = [
       { role: 'system', content: plan },
       {
         role: 'user',
         content: 'Please translate the above text to: ' + language,
       },
-    ];
-    await createInitialAI(true, chat, true, [{ language: language }]);
+    ]
+    await createInitialAI(true, chat, true, [{ language: language }])
 
-    setShowModal(false);
-  };
+    setShowModal(false)
+  }
 
   return (
     <div>
@@ -252,8 +252,8 @@ export default function ContentEditor({
                 trackEvent(EVENTS.ContentBuilder.Editor.ClickRegenerate, {
                   name: documentName,
                   key,
-                });
-                setShowModal(true);
+                })
+                setShowModal(true)
               }}
             >
               <PrimaryButton size="medium">
@@ -284,7 +284,7 @@ export default function ContentEditor({
                 trackEvent(EVENTS.ContentBuilder.Editor.ClickCopy, {
                   name: documentName,
                   key,
-                });
+                })
               }}
             >
               <PrimaryButton
@@ -306,8 +306,8 @@ export default function ContentEditor({
               trackEvent(EVENTS.ContentBuilder.Editor.ClickTranslate, {
                 name: documentName,
                 key,
-              });
-              setShowTranslate(true);
+              })
+              setShowTranslate(true)
             }}
           >
             <PrimaryButton
@@ -400,5 +400,5 @@ export default function ContentEditor({
         inputValues={initialInputValues}
       />
     </div>
-  );
+  )
 }

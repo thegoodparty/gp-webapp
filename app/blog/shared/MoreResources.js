@@ -1,5 +1,5 @@
-import MarketingH3 from '@shared/typography/MarketingH3';
-import ArticleCard from './ArticleCard';
+import MarketingH3 from '@shared/typography/MarketingH3'
+import ArticleCard from './ArticleCard'
 
 const resourceLinks = [
   {
@@ -25,7 +25,7 @@ const resourceLinks = [
       'Explore our collection of definitions to help you understand political terms and jargon.',
     linkUrl: '/political-terms',
   },
-];
+]
 
 /**
  * Component to render "More Resources" section on Blog list views
@@ -42,5 +42,5 @@ export default function MoreResources() {
         ))}
       </div>
     </>
-  );
+  )
 }

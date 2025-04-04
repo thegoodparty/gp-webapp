@@ -1,11 +1,11 @@
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import { P2vModal } from './P2vModal';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import { P2vModal } from './P2vModal'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 export function P2vTitle(props) {
-  const trackingAttrs = buildTrackingAttrs('Understanding P2V Button');
+  const trackingAttrs = buildTrackingAttrs('Understanding P2V Button')
 
   return (
     <div className="lg:flex justify-between">
@@ -27,5 +27,5 @@ export function P2vTitle(props) {
         />
       </div>
     </div>
-  );
+  )
 }

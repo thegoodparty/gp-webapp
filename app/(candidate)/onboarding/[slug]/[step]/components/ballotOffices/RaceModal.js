@@ -1,10 +1,7 @@
-import H2 from '@shared/typography/H2';
-import H3 from '@shared/typography/H3';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { FaCalendarAlt, FaCheck, FaMoneyBill } from 'react-icons/fa';
+import H2 from '@shared/typography/H2'
 
 export default function RaceModal({ race }) {
-  const { position } = race;
+  const { position } = race
 
   const data = [
     { label: 'Description', value: position.description },
@@ -12,7 +9,7 @@ export default function RaceModal({ race }) {
       label: 'Eligibility requirements',
       value: position.eligibilityRequirements,
     },
-  ];
+  ]
 
   return (
     <div className="">
@@ -24,5 +21,5 @@ export default function RaceModal({ race }) {
         </div>
       ))}
     </div>
-  );
+  )
 }

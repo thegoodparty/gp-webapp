@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Checkbox, FormControlLabel } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { subscribeEmail } from '@shared/inputs/EmailForm';
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import { isValidPhone } from '@shared/inputs/PhoneInput';
-import Body1 from '@shared/typography/Body1';
-import H3 from '@shared/typography/H3';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import { getUserCookie } from 'helpers/cookieHelper';
-import { useEffect, useState } from 'react';
+import { Checkbox } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { subscribeEmail } from '@shared/inputs/EmailForm'
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { isValidPhone } from '@shared/inputs/PhoneInput'
+import Body1 from '@shared/typography/Body1'
+import H3 from '@shared/typography/H3'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import { getUserCookie } from 'helpers/cookieHelper'
+import { useEffect, useState } from 'react'
 
 const fields = [
   {
@@ -36,34 +36,34 @@ const fields = [
     required: true,
     type: 'email',
   },
-];
+]
 export default function HeroForm() {
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false)
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
     phone: '',
     email: '',
     forOffice: false,
-  });
+  })
 
   useEffect(() => {
-    const user = getUserCookie(true);
+    const user = getUserCookie(true)
     if (user) {
       setState({
         ...state,
         email: user.email || '',
         phone: user.phone || '',
-      });
+      })
     }
-  }, []);
+  }, [])
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const canSubmit = () => {
     return (
@@ -71,21 +71,21 @@ export default function HeroForm() {
       state.lastName !== '' &&
       isValidEmail(state.email) &&
       isValidPhone(state.phone)
-    );
-  };
+    )
+  }
 
   const handleSubmit = async () => {
     if (!canSubmit()) {
-      return;
+      return
     }
     const payload = {
       ...state,
       uri: window.location.href,
       pageName: 'ads2023',
       formId: 'c7d78873-1ed0-4202-ab01-76577e57352c',
-    };
+    }
 
-    delete payload.forOffice;
+    delete payload.forOffice
     if (state.forOffice) {
       payload.additionalFields = JSON.stringify([
         {
@@ -93,15 +93,15 @@ export default function HeroForm() {
           value: 'yes',
           objectTypeId: '0-1',
         },
-      ]);
+      ])
     }
-    const res = await subscribeEmail(payload);
+    const res = await subscribeEmail(payload)
     if (res) {
-      setSubmitSuccess('success');
+      setSubmitSuccess('success')
     } else {
-      setSubmitSuccess('error');
+      setSubmitSuccess('error')
     }
-  };
+  }
   return (
     <div className="pt-5 pb-9 px-7 bg-secondary-light rounded-3xl relative z-20">
       <h2 className="font-outfit text-5xl font-medium mb-10">
@@ -130,7 +130,7 @@ export default function HeroForm() {
             <Checkbox
               value={state.forOffice}
               onChange={(e) => {
-                onChangeField('forOffice', e.target.checked);
+                onChangeField('forOffice', e.target.checked)
               }}
             />
             <span>I&apos;m interested in running for office</span>
@@ -152,5 +152,5 @@ export default function HeroForm() {
         </form>
       )}
     </div>
-  );
+  )
 }

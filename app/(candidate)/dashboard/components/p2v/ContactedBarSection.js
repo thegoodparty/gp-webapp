@@ -1,36 +1,36 @@
-import Body1 from '@shared/typography/Body1';
-import H2 from '@shared/typography/H2';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import { AlertBanner } from '../AlertBanner';
-import { numberFormatter } from 'helpers/numberHelper';
-import { BsInfoCircle } from 'react-icons/bs';
-import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
-import { P2vModal } from './P2vModal';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
-import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+import Body1 from '@shared/typography/Body1'
+import H2 from '@shared/typography/H2'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import { AlertBanner } from '../AlertBanner'
+import { numberFormatter } from 'helpers/numberHelper'
+import { BsInfoCircle } from 'react-icons/bs'
+import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
+import { P2vModal } from './P2vModal'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 
 export function ContactedBarSection({ pathToVictory }) {
-  const [reportedVoterGoals] = useVoterContacts();
+  const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
     pathToVictory,
     reportedVoterGoals,
-  );
+  )
 
-  const percent = (contacted / needed) * 100;
-  let textColor = 'text-black';
-  let severity = 'info';
+  const percent = (contacted / needed) * 100
+  let textColor = 'text-black'
+  let severity = 'info'
   if (contacted > 0) {
-    textColor = 'text-error-main';
-    severity = 'error';
+    textColor = 'text-error-main'
+    severity = 'error'
   }
   if (percent > 20) {
-    textColor = 'text-warning-main';
-    severity = 'warning';
+    textColor = 'text-warning-main'
+    severity = 'warning'
   }
   if (percent > 75) {
-    textColor = 'text-success-main';
-    severity = 'success';
+    textColor = 'text-success-main'
+    severity = 'success'
   }
 
   return (
@@ -73,5 +73,5 @@ export function ContactedBarSection({ pathToVictory }) {
         pathToVictory={pathToVictory}
       />
     </div>
-  );
+  )
 }

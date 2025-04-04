@@ -1,32 +1,32 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import IconButton from '@shared/buttons/IconButton';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import ArticleCard from 'app/blog/shared/ArticleCard';
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import { useState } from 'react'
+import IconButton from '@shared/buttons/IconButton'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import ArticleCard from 'app/blog/shared/ArticleCard'
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 3
 
 export default function RelatedArticles({ articles }) {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0)
 
-  if (!articles || articles.length <= 0) return null;
+  if (!articles || articles.length <= 0) return null
 
-  const hasPages = articles.length > PAGE_SIZE;
-  const lastPage = Math.floor((articles.length - 1) / PAGE_SIZE);
-  const startIndex = currentPage * PAGE_SIZE;
+  const hasPages = articles.length > PAGE_SIZE
+  const lastPage = Math.floor((articles.length - 1) / PAGE_SIZE)
+  const startIndex = currentPage * PAGE_SIZE
 
   function incrementPage() {
-    const nextPage = currentPage < lastPage ? currentPage + 1 : lastPage;
+    const nextPage = currentPage < lastPage ? currentPage + 1 : lastPage
 
-    setCurrentPage(nextPage);
+    setCurrentPage(nextPage)
   }
 
   function decrementPage() {
-    const nextPage = currentPage > 0 ? currentPage - 1 : 0;
+    const nextPage = currentPage > 0 ? currentPage - 1 : 0
 
-    setCurrentPage(nextPage);
+    setCurrentPage(nextPage)
   }
 
   return (
@@ -66,5 +66,5 @@ export default function RelatedArticles({ articles }) {
         </div>
       )}
     </div>
-  );
+  )
 }

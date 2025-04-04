@@ -1,6 +1,6 @@
 export function calculateContactGoals(total) {
   if (!total) {
-    return false;
+    return false
   }
   const totals = {
     week12: parseInt((total * 2.7) / 100, 10),
@@ -15,19 +15,19 @@ export function calculateContactGoals(total) {
     week3: parseInt((total * 10.81) / 100, 10),
     week2: parseInt((total * 13.51) / 100, 10),
     week1: parseInt((total * 13.51) / 100, 10),
-  };
+  }
 
-  const totalGoals = {};
+  const totalGoals = {}
   Object.keys(totals).forEach((week) => {
     totalGoals[week] = {
       total: totals[week],
       doorKnocking: parseInt(totals[week] * 0.2),
       calls: parseInt(totals[week] * 0.35),
       digital: parseInt(totals[week] * 0.45),
-    };
-  });
+    }
+  })
 
-  return totalGoals;
+  return totalGoals
 }
 
 export function calculateAccumulated(weeks, contactGoals) {
@@ -35,18 +35,18 @@ export function calculateAccumulated(weeks, contactGoals) {
     doorKnocking: 0,
     calls: 0,
     digital: 0,
-  };
+  }
   if (weeks > 12) {
-    return contactGoals.week12;
+    return contactGoals.week12
   }
   for (let i = 0; i < 13 - weeks; i++) {
-    const key = `week${12 - i}`;
-    accumulatedTotal.doorKnocking += contactGoals[key]?.doorKnocking || 0;
-    accumulatedTotal.calls += contactGoals[key]?.calls || 0;
-    accumulatedTotal.digital += contactGoals[key]?.digital || 0;
+    const key = `week${12 - i}`
+    accumulatedTotal.doorKnocking += contactGoals[key]?.doorKnocking || 0
+    accumulatedTotal.calls += contactGoals[key]?.calls || 0
+    accumulatedTotal.digital += contactGoals[key]?.digital || 0
   }
 
-  return accumulatedTotal;
+  return accumulatedTotal
 }
 
 export function calculateAccumulatedByWeek(contactGoals) {
@@ -111,24 +111,24 @@ export function calculateAccumulatedByWeek(contactGoals) {
       calls: 0,
       digital: 0,
     },
-  };
-
-  for (let i = 0; i < 11; i++) {
-    const key = `week${11 - i}`;
-    const prevKey = `week${12 - i}`;
-    accumulatedTotal[key].doorKnocking =
-      contactGoals[key].doorKnocking + accumulatedTotal[prevKey].doorKnocking;
-    accumulatedTotal[key].calls =
-      contactGoals[key].calls + accumulatedTotal[prevKey].calls;
-    accumulatedTotal[key].digital =
-      contactGoals[key].digital + accumulatedTotal[prevKey].digital;
   }
 
-  return accumulatedTotal;
+  for (let i = 0; i < 11; i++) {
+    const key = `week${11 - i}`
+    const prevKey = `week${12 - i}`
+    accumulatedTotal[key].doorKnocking =
+      contactGoals[key].doorKnocking + accumulatedTotal[prevKey].doorKnocking
+    accumulatedTotal[key].calls =
+      contactGoals[key].calls + accumulatedTotal[prevKey].calls
+    accumulatedTotal[key].digital =
+      contactGoals[key].digital + accumulatedTotal[prevKey].digital
+  }
+
+  return accumulatedTotal
 }
 
 export const getVoterContactsGoal = ({ voterContactGoal, voteGoal }) =>
-  parseInt(voterContactGoal ?? voteGoal * 5, 10);
+  parseInt(voterContactGoal ?? voteGoal * 5, 10)
 
 export const getVoterContactsTotal = ({
   doorKnocking,
@@ -145,7 +145,7 @@ export const getVoterContactsTotal = ({
   (directMail || 0) +
   (digitalAds || 0) +
   (text || 0) +
-  (events || 0);
+  (events || 0)
 
 export const calculateVoterContactCounts = (
   pathToVictory,
@@ -154,5 +154,5 @@ export const calculateVoterContactCounts = (
   return {
     needed: getVoterContactsGoal(pathToVictory || {}),
     contacted: getVoterContactsTotal(reportedVoterGoals || {}),
-  };
-};
+  }
+}

@@ -1,9 +1,9 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal'
 
-import Image from 'next/image';
+import Image from 'next/image'
 
 export default function ElectionOver() {
   return (
@@ -23,5 +23,5 @@ export default function ElectionOver() {
         btn={<PrimaryButton>Contact us for a debrief</PrimaryButton>}
       />
     </section>
-  );
+  )
 }

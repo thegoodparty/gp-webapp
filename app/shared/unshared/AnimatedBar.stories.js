@@ -1,7 +1,7 @@
 import {
   ANIMATED_PROGRESS_BAR_SIZES,
   AnimatedProgressBar,
-} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
+} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
 
 export default {
   title: 'Unshared/AnimatedBar',
@@ -21,8 +21,8 @@ export default {
         <AnimatedProgressBar {...args} percent={40} bgColor="bg-orange-500" />
         <AnimatedProgressBar {...args} percent={20} bgColor="bg-red-500" />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

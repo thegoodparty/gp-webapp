@@ -1,31 +1,31 @@
-'use client';
-import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
-import { useState } from 'react';
-import Paper from '@shared/utils/Paper';
-import H2 from '@shared/typography/H2';
+'use client'
+import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers'
+import { useState } from 'react'
+import Paper from '@shared/utils/Paper'
+import H2 from '@shared/typography/H2'
 import {
   ANIMATED_PROGRESS_BAR_SIZES,
   AnimatedProgressBar,
-} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar';
-import Subtitle2 from '@shared/typography/Subtitle2';
-import { numberFormatter } from 'helpers/numberHelper';
-import { BsInfoCircle } from 'react-icons/bs';
-import { ContactCountsInfoModal } from 'app/(candidate)/dashboard/components/ContactCountsInfoModal';
-import Button from '@shared/buttons/Button';
-import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal';
-import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
+import Subtitle2 from '@shared/typography/Subtitle2'
+import { numberFormatter } from 'helpers/numberHelper'
+import { BsInfoCircle } from 'react-icons/bs'
+import { ContactCountsInfoModal } from 'app/(candidate)/dashboard/components/ContactCountsInfoModal'
+import Button from '@shared/buttons/Button'
+import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 
 export const CampaignProgress = ({ pathToVictory }) => {
-  const [reportedVoterGoals] = useVoterContacts();
+  const [reportedVoterGoals] = useVoterContacts()
   const { needed, contacted } = calculateVoterContactCounts(
     pathToVictory,
     reportedVoterGoals,
-  );
-  const [modalOpen, setModalOpen] = useState(false);
-  const [recordModalOpen, setRecordModalOpen] = useState(false);
+  )
+  const [modalOpen, setModalOpen] = useState(false)
+  const [recordModalOpen, setRecordModalOpen] = useState(false)
 
-  const toggleModalOpen = () => setModalOpen(!modalOpen);
-  const toggleRecordModal = () => setRecordModalOpen(!recordModalOpen);
+  const toggleModalOpen = () => setModalOpen(!modalOpen)
+  const toggleRecordModal = () => setRecordModalOpen(!recordModalOpen)
 
   return (
     <Paper className="mb-4">
@@ -59,5 +59,5 @@ export const CampaignProgress = ({ pathToVictory }) => {
         setOpen={setRecordModalOpen}
       />
     </Paper>
-  );
-};
+  )
+}

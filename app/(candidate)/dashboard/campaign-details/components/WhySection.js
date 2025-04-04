@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import H3 from '@shared/typography/H3';
-import Body1 from '@shared/typography/Body1';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import { useEffect, useState } from 'react';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { CircularProgress } from '@mui/material';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import H3 from '@shared/typography/H3'
+import Body1 from '@shared/typography/Body1'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import { useEffect, useState } from 'react'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { CircularProgress } from '@mui/material'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const fields = [
   {
@@ -19,66 +19,66 @@ const fields = [
     type: 'text',
     rows: 10,
   },
-];
+]
 
 export default function WhySection(props) {
-  const initialState = {};
+  const initialState = {}
   fields.forEach((field) => {
-    initialState[field.key] = '';
-  });
-  const [state, setState] = useState(initialState);
-  const [saving, setSaving] = useState(false);
-  const { campaign } = props;
+    initialState[field.key] = ''
+  })
+  const [state, setState] = useState(initialState)
+  const [saving, setSaving] = useState(false)
+  const { campaign } = props
   useEffect(() => {
     if (campaign?.details) {
-      const newState = {};
+      const newState = {}
       if (typeof campaign.details.pastExperience === 'string') {
-        newState.pastExperience = campaign.details.pastExperience || '';
+        newState.pastExperience = campaign.details.pastExperience || ''
       } else if (typeof campaign.details.pastExperience === 'object') {
         newState.pastExperience = `Achievements: ${
           campaign.details.pastExperience.achievements || ''
         }\nResponsibilities: ${
           campaign.details.pastExperience.responsibility || ''
-        }\nSkills: ${campaign.details.pastExperience.skills || ''}`;
+        }\nSkills: ${campaign.details.pastExperience.skills || ''}`
       } else {
-        newState.pastExperience = '';
+        newState.pastExperience = ''
       }
 
-      setState(newState);
+      setState(newState)
     }
-  }, [campaign]);
+  }, [campaign])
   const canSave = () => {
-    let able = true;
+    let able = true
     fields.forEach((field) => {
       if (field.required && state[field.key] === '') {
-        able = false;
+        able = false
       }
-    });
-    return able;
-  };
+    })
+    return able
+  }
 
   const handleSave = async () => {
     if (canSave()) {
-      setSaving(true);
+      setSaving(true)
 
-      trackEvent(EVENTS.Profile.Why.ClickSave);
+      trackEvent(EVENTS.Profile.Why.ClickSave)
 
       await updateCampaign([
         {
           key: 'details.pastExperience',
           value: state.pastExperience,
         },
-      ]);
-      setSaving(false);
+      ])
+      setSaving(false)
     }
-  };
+  }
 
   const onChangeField = (key, val) => {
     setState({
       ...state,
       [key]: val,
-    });
-  };
+    })
+  }
 
   return (
     <section className="border-t pt-6 border-gray-600">
@@ -113,5 +113,5 @@ export default function WhySection(props) {
         )}
       </div>
     </section>
-  );
+  )
 }

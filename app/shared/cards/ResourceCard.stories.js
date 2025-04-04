@@ -1,4 +1,4 @@
-import ResourceCardComponent from './ResourceCard';
+import ResourceCardComponent from './ResourceCard'
 
 export default {
   title: 'Cards/ResourceCard',
@@ -29,10 +29,10 @@ export default {
       },
     },
   },
-};
+}
 
 export const ResourceCard = {
   args: {
     icon: false,
   },
-};
+}

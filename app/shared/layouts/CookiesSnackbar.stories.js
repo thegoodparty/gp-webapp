@@ -1,4 +1,4 @@
-import CookiesSnackbar from './CookiesSnackbar';
+import CookiesSnackbar from './CookiesSnackbar'
 
 export default {
   title: 'Layouts/CookiesSnackbar',
@@ -12,6 +12,6 @@ export default {
       <CookiesSnackbar />
     </>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

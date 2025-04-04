@@ -1,4 +1,4 @@
-import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
+import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im'
 
 export const IssuePosition = ({
   position,
@@ -23,7 +23,7 @@ export const IssuePosition = ({
         ${disabled ? 'text-neutral' : ''}
       `}
     onClick={() => {
-      !disabled && handleSelectPosition(position);
+      !disabled && handleSelectPosition(position)
     }}
   >
     {selected ? (
@@ -33,4 +33,4 @@ export const IssuePosition = ({
     )}
     {position.name} {disabled ? '(Previously Selected)' : ''}
   </div>
-);
+)

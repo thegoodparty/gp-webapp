@@ -1,13 +1,13 @@
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { Alert, AlertTitle } from '@mui/material';
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { Alert, AlertTitle } from '@mui/material'
 import {
   CreateRounded,
   CalendarMonthRounded,
   RocketLaunchRounded,
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
 const SMS_CONTENT = [
   {
@@ -25,7 +25,7 @@ const SMS_CONTENT = [
     title: 'Launch',
     text: "We'll contact you to help refine your script and pay your invoice. Your campaign will launch on your scheduled date.",
   },
-];
+]
 
 export default function ScheduleFlowInstructions({
   type,
@@ -33,7 +33,7 @@ export default function ScheduleFlowInstructions({
   closeCallback,
 }) {
   // Only has content for SMS campaigns right now
-  if (type !== 'sms') return null;
+  if (type !== 'sms') return null
 
   return (
     <div className="p-4">
@@ -62,5 +62,5 @@ export default function ScheduleFlowInstructions({
         <PrimaryButton onClick={nextCallback}>Next</PrimaryButton>
       </div>
     </div>
-  );
+  )
 }

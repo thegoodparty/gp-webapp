@@ -1,20 +1,20 @@
-'use client';
-import WarningButton from '@shared/buttons/WarningButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import H2 from '@shared/typography/H2';
-import { revalidateCandidates } from 'helpers/cacheHelper';
-import { useState } from 'react';
-import CandidateIssueSelector from './CandidateIssueSelector';
-import EditCandidatePosition from './EditCandidatePosition';
-import { combinePositions } from './IssuesList';
-import { Draggable } from 'react-drag-reorder';
-import LoadingAnimation from '@shared/utils/LoadingAnimation';
-import SuggestedIssues from './SuggestedIssues';
+'use client'
+import WarningButton from '@shared/buttons/WarningButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import H2 from '@shared/typography/H2'
+import { revalidateCandidates } from 'helpers/cacheHelper'
+import { useState } from 'react'
+import CandidateIssueSelector from './CandidateIssueSelector'
+import EditCandidatePosition from './EditCandidatePosition'
+import { combinePositions } from './IssuesList'
+import { Draggable } from 'react-drag-reorder'
+import LoadingAnimation from '@shared/utils/LoadingAnimation'
+import SuggestedIssues from './SuggestedIssues'
 import {
   loadCandidatePosition,
   saveCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
 
 export default function EditIssues(props) {
   const {
@@ -26,20 +26,20 @@ export default function EditIssues(props) {
     saveCallback,
     hideTitle = false,
     noDrag = false,
-  } = props;
+  } = props
 
-  const combined = combinePositions(candidatePositions, campaign?.customIssues);
-  const [state, setState] = useState(combined);
-  const [saving, setSaving] = useState(false);
-  const [showAdd, setShowAdd] = useState(false);
-  const [suggested, setSuggested] = useState(false);
+  const combined = combinePositions(candidatePositions, campaign?.customIssues)
+  const [state, setState] = useState(combined)
+  const [saving, setSaving] = useState(false)
+  const [showAdd, setShowAdd] = useState(false)
+  const [suggested, setSuggested] = useState(false)
 
   const Wrapper = ({ children, onPosChange }) => {
     if (isStaged || noDrag) {
-      return <div>{children}</div>;
+      return <div>{children}</div>
     }
-    return <Draggable onPosChange={onPosChange}>{children}</Draggable>;
-  };
+    return <Draggable onPosChange={onPosChange}>{children}</Draggable>
+  }
 
   const onAddPosition = async (
     position,
@@ -47,16 +47,16 @@ export default function EditIssues(props) {
     customTitle,
     order,
   ) => {
-    let maxOrder = order;
+    let maxOrder = order
     if (state?.length > 0) {
       //last element should have the max order;
-      const last = state[state.length - 1];
+      const last = state[state.length - 1]
       if (last.order >= order) {
-        maxOrder = last.order + 1;
+        maxOrder = last.order + 1
       }
     }
     if (customTitle !== '') {
-      await handleCustomIssue(candidatePosition, customTitle, maxOrder);
+      await handleCustomIssue(candidatePosition, customTitle, maxOrder)
     } else {
       await saveCandidatePosition({
         description: candidatePosition,
@@ -64,89 +64,89 @@ export default function EditIssues(props) {
         positionId: position.id,
         topIssueId: position.topIssue?.id,
         order: maxOrder,
-      });
-      await loadPositions();
-      await revalidateCandidates();
+      })
+      await loadPositions()
+      await revalidateCandidates()
       // }
     }
-  };
-  const remainingSlotsCount = Math.max(0, 3 - (state?.length || 0));
-  const remainingSlots = [];
+  }
+  const remainingSlotsCount = Math.max(0, 3 - (state?.length || 0))
+  const remainingSlots = []
   for (let i = 0; i < remainingSlotsCount; i++) {
-    remainingSlots.push(i + 1);
+    remainingSlots.push(i + 1)
   }
 
   const loadPositions = async () => {
-    await revalidateCandidates();
-    const candidatePositions = await loadCandidatePosition(campaign.id);
-    setState(candidatePositions);
-  };
+    await revalidateCandidates()
+    const candidatePositions = await loadCandidatePosition(campaign.id)
+    setState(candidatePositions)
+  }
 
   const handleCustomIssue = async (candidatePosition, customTitle, order) => {
-    let entity = isStaged && campaign ? campaign : candidate;
-    let customIssues = entity.customIssues || [];
+    let entity = isStaged && campaign ? campaign : candidate
+    let customIssues = entity.customIssues || []
 
     customIssues.push({
       title: customTitle,
       position: candidatePosition,
       order,
-    });
+    })
     await saveCallback({
       ...entity,
       customIssues,
-    });
-    await revalidateCandidates();
-    window.location.reload();
-  };
+    })
+    await revalidateCandidates()
+    window.location.reload()
+  }
 
   const handlePosChange = async (currentPos, newPos) => {
     if (currentPos !== newPos) {
-      setSaving(true);
-      await handleReorderSave(state[currentPos], newPos);
-      await handleReorderSave(state[newPos], currentPos);
+      setSaving(true)
+      await handleReorderSave(state[currentPos], newPos)
+      await handleReorderSave(state[newPos], currentPos)
       if (state?.length === 3) {
-        const indexes = [0, 1, 2];
-        indexes.splice(currentPos, 1);
-        indexes.splice(newPos, 1);
-        const missingIndex = indexes[0];
-        await handleReorderSave(state[missingIndex], state[missingIndex].order);
+        const indexes = [0, 1, 2]
+        indexes.splice(currentPos, 1)
+        indexes.splice(newPos, 1)
+        const missingIndex = indexes[0]
+        await handleReorderSave(state[missingIndex], state[missingIndex].order)
       }
-      await revalidateCandidates();
-      window.location.reload();
+      await revalidateCandidates()
+      window.location.reload()
     }
-  };
+  }
 
   const handleReorderSave = async (pos, newOrder) => {
     if (pos.isCustom) {
-      await handleCustomReorder(pos, newOrder);
+      await handleCustomReorder(pos, newOrder)
     } else {
-      await updateCandidatePosition(pos.id, newOrder);
+      await updateCandidatePosition(pos.id, newOrder)
     }
-  };
+  }
 
   const handleCustomReorder = async (pos, newOrder) => {
-    let customIssues = candidate.customIssues;
-    let index;
+    let customIssues = candidate.customIssues
+    let index
     for (let i = 0; i < customIssues?.length; i++) {
       if (customIssues[i].position === pos.description) {
-        index = i;
-        break;
+        index = i
+        break
       }
     }
     if (typeof index !== 'undefined') {
-      customIssues[index].order = newOrder;
+      customIssues[index].order = newOrder
       await saveCallback({
         ...candidate,
         customIssues,
-      });
-      await revalidateCandidates();
+      })
+      await revalidateCandidates()
     }
-  };
+  }
 
   const handleSuggested = (issue) => {
-    setShowAdd(true);
-    setSuggested(issue);
-  };
+    setShowAdd(true)
+    setSuggested(issue)
+  }
   return (
     <div>
       {!hideTitle && <H1>Add 3 Issues</H1>}
@@ -206,7 +206,7 @@ export default function EditIssues(props) {
                             candidatePosition,
                             customTitle,
                             num + (state?.length || 0),
-                          );
+                          )
                         }}
                       />
                     </div>
@@ -222,5 +222,5 @@ export default function EditIssues(props) {
         </>
       )}
     </div>
-  );
+  )
 }

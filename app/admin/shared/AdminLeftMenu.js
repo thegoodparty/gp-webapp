@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
 export const leftMenuItems = [
   {
@@ -42,7 +42,7 @@ export const leftMenuItems = [
     label: 'Ecanvasser',
     link: '/admin/ecanvasser',
   },
-];
+]
 
 export default function AdminLeftMenu({ pathname }) {
   return (
@@ -62,5 +62,5 @@ export default function AdminLeftMenu({ pathname }) {
         </Link>
       ))}
     </div>
-  );
+  )
 }

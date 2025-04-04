@@ -1,40 +1,40 @@
-import pageMetaData from 'helpers/metadataHelper';
-import { shortToLongState } from 'helpers/statesHelper';
-import { notFound, redirect, permanentRedirect } from 'next/navigation';
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import ElectionsCountyPage from './components/ElectionsCountyPage';
-import { fetchArticle } from 'app/blog/article/[slug]/page';
+import pageMetaData from 'helpers/metadataHelper'
+import { shortToLongState } from 'helpers/statesHelper'
+import { notFound, permanentRedirect } from 'next/navigation'
+import gpApi from 'gpApi'
+import gpFetch from 'gpApi/gpFetch'
+import ElectionsCountyPage from './components/ElectionsCountyPage'
+import { fetchArticle } from 'app/blog/article/[slug]/page'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 export const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty;
+  const api = gpApi.race.byCounty
   const payload = {
     state,
     county,
-  };
+  }
 
-  return await gpFetch(api, payload, 3600);
-};
+  return await gpFetch(api, payload, 3600)
+}
 
 const fetchPosition = async (id) => {
-  const api = gpApi.race.byRace;
+  const api = gpApi.race.byRace
   const payload = {
     id,
-  };
+  }
 
-  return await gpFetch(api, payload, 0);
-};
+  return await gpFetch(api, payload, 0)
+}
 
-const year = new Date().getFullYear();
+const year = new Date().getFullYear()
 
 export async function generateMetadata({ params }) {
-  const { state } = params;
+  const { state } = params
   if (state.length === 2) {
-    const stateName = shortToLongState[state.toUpperCase()];
-    const { county } = await fetchCounty(state, params.county);
+    const stateName = shortToLongState[state.toUpperCase()]
+    const { county } = await fetchCounty(state, params.county)
 
     const meta = pageMetaData({
       title: `Run for Office in ${
@@ -44,54 +44,54 @@ export async function generateMetadata({ params }) {
         county?.county || 'a'
       } county, ${stateName} and tips for launching a successful campaign.`,
       slug: `/elections/${state}/${params.county}`,
-    });
-    return meta;
+    })
+    return meta
   }
 }
 
 export default async function Page({ params }) {
-  const { state } = params;
+  const { state } = params
   if (
     !state ||
     (state.length === 2 && !shortToLongState[state.toUpperCase()])
   ) {
-    notFound();
+    notFound()
   }
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
-  ];
-  const articles = [];
+  ]
+  const articles = []
   for (const slug of articleSlugs) {
-    const content = await fetchArticle(slug);
-    articles.push(content);
+    const content = await fetchArticle(slug)
+    articles.push(content)
   }
   if (state.length > 2) {
     // state is the slug, county is the id
-    const { race } = await fetchPosition(params.county); // this is the id
+    const { race } = await fetchPosition(params.county) // this is the id
     if (!race) {
-      notFound();
+      notFound()
     }
-    const { county, municipality, state } = race;
-    let url = `/elections/position/`;
+    const { county, municipality, state } = race
+    let url = `/elections/position/`
     if (!county && !municipality) {
-      url += `${state.toLowerCase()}/`;
+      url += `${state.toLowerCase()}/`
     }
     if (county) {
-      url += `${county.slug}/`;
+      url += `${county.slug}/`
     } else if (municipality) {
-      url += `${municipality.slug}/`;
+      url += `${municipality.slug}/`
     }
-    url += race.positionSlug;
+    url += race.positionSlug
 
-    permanentRedirect(url);
+    permanentRedirect(url)
   }
 
   const { municipalities, races, county } = await fetchCounty(
     state,
     params.county,
-  );
+  )
 
   const childProps = {
     state,
@@ -99,7 +99,7 @@ export default async function Page({ params }) {
     races,
     county,
     articles,
-  };
+  }
 
-  return <ElectionsCountyPage {...childProps} />;
+  return <ElectionsCountyPage {...childProps} />
 }

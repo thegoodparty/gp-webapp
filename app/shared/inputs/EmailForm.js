@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import { useState } from 'react';
-import { FaCheck } from 'react-icons/fa';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { useState } from 'react'
+import { FaCheck } from 'react-icons/fa'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 export async function subscribeEmail(payload) {
   try {
-    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
-    return true;
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
+    return true
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -24,11 +24,11 @@ export default function EmailForm({
   labelId,
   submitButtonId,
 }) {
-  const [email, setEmail] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [email, setEmail] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
 
-  const canSubmit = () => isValidEmail(email);
+  const canSubmit = () => isValidEmail(email)
 
   const submitForm = async () => {
     if (canSubmit()) {
@@ -37,26 +37,26 @@ export default function EmailForm({
         uri: window.location.href,
         formId,
         pageName,
-      });
+      })
 
       if (window.dataLayer) {
         window.dataLayer.push({
           event: labelId,
           'hs-form-guid': formId,
           'hs-form-name': labelId,
-        });
+        })
       }
 
       if (success) {
-        setSuccess(true);
-        setShowError(false);
+        setSuccess(true)
+        setShowError(false)
       } else {
-        setShowError('An error occurred. Please try again.');
+        setShowError('An error occurred. Please try again.')
       }
     } else {
-      setShowError('Please enter a valid email');
+      setShowError('Please enter a valid email')
     }
-  };
+  }
   return (
     <form
       className="pt-5"
@@ -82,7 +82,7 @@ export default function EmailForm({
               type="email"
               name="email"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setEmail(e.target.value)
               }}
               value={email}
               placeholder="Email"
@@ -110,5 +110,5 @@ export default function EmailForm({
         </>
       )}
     </form>
-  );
+  )
 }

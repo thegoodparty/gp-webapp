@@ -1,10 +1,10 @@
-import Paper from '@shared/utils/Paper';
-import VendorCard from './VendorCard';
-import H2 from '@shared/typography/H2';
-import Body2 from '@shared/typography/Body2';
+import Paper from '@shared/utils/Paper'
+import VendorCard from './VendorCard'
+import H2 from '@shared/typography/H2'
+import Body2 from '@shared/typography/Body2'
 
 function vendorsByType(type) {
-  let vendors;
+  let vendors
   if (type === 'directmail') {
     vendors = [
       {
@@ -24,7 +24,7 @@ function vendorsByType(type) {
           'Our political direct mail templates are field tested and professionally designed to have a profound impact on voters, and propel your campaign to victory.',
         label: 'Progressive-Leaning',
       },
-    ];
+    ]
   }
   if (type === 'doorknocking') {
     vendors = [
@@ -53,7 +53,7 @@ function vendorsByType(type) {
           "Whether you're running for local office, organizing a community initiative, running a membership organization, or targeting donors, Universe has the outreach tools you need - all linked to a single, easy-to-search supporter database",
         label: 'Progressive-Leaning',
       },
-    ];
+    ]
   }
 
   if (type === 'digitalads') {
@@ -82,18 +82,18 @@ function vendorsByType(type) {
         description:
           "Speed of campaign planning and execution makes all the difference in a political advertising campaign. With StackAdapt's multi-channel programmatic platform, you can reach voters across all of their channels and devices, capturing their attention when and where they're consuming content.",
       },
-    ];
+    ]
   }
-  return vendors;
+  return vendors
 }
 
 export default function VendorCards(props) {
-  const { type } = props;
+  const { type } = props
 
-  const vendors = vendorsByType(type);
+  const vendors = vendorsByType(type)
 
   if (!vendors) {
-    return null;
+    return null
   }
 
   return (
@@ -110,5 +110,5 @@ export default function VendorCards(props) {
         ))}
       </div>
     </Paper>
-  );
+  )
 }

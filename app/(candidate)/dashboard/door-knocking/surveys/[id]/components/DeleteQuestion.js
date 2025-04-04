@@ -1,38 +1,38 @@
-import { BsTrash } from 'react-icons/bs';
-import { useState } from 'react';
-import { clientFetch } from 'gpApi/clientFetch';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { apiRoutes } from 'gpApi/routes';
-import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey';
+import { BsTrash } from 'react-icons/bs'
+import { useState } from 'react'
+import { clientFetch } from 'gpApi/clientFetch'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { apiRoutes } from 'gpApi/routes'
+import { useEcanvasserSurvey } from '@shared/hooks/useEcanvasserSurvey'
 const deleteQuestion = async (questionId) => {
   const resp = await clientFetch(
     apiRoutes.ecanvasser.surveys.questions.delete,
     {
       questionId,
     },
-  );
-  return resp.data;
-};
+  )
+  return resp.data
+}
 
 export default function DeleteQuestion({ question }) {
-  const { id } = question;
-  const [_, refreshSurvey] = useEcanvasserSurvey();
+  const { id } = question
+  const [_, refreshSurvey] = useEcanvasserSurvey()
 
-  const [showAlert, setShowAlert] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [showAlert, setShowAlert] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
-      await deleteQuestion(id);
-      refreshSurvey();
-      setShowAlert(false);
+      setIsDeleting(true)
+      await deleteQuestion(id)
+      refreshSurvey()
+      setShowAlert(false)
     } catch (error) {
-      console.log('Error deleting question', error);
+      console.log('Error deleting question', error)
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   return (
     <>
@@ -52,5 +52,5 @@ export default function DeleteQuestion({ question }) {
         loading={isDeleting}
       />
     </>
-  );
+  )
 }

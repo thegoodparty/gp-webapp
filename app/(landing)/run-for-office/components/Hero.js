@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import Body1 from '@shared/typography/Body1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import heroImg from 'public/images/run-for-office/run-hero.png';
-import Button from '@shared/buttons/Button';
+import Image from 'next/image'
+import Body1 from '@shared/typography/Body1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import heroImg from 'public/images/run-for-office/run-hero.png'
+import Button from '@shared/buttons/Button'
 
 export default function Hero() {
   return (
@@ -51,5 +51,5 @@ export default function Hero() {
         />
       </div>
     </section>
-  );
+  )
 }

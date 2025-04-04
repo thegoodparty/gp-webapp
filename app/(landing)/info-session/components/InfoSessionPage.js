@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import peopleImg from 'public/images/landing-pages/info-people.png';
-import starImg from 'public/images/landing-pages/star.png';
-import BreannaBottom from './BreannaBottom';
-import { Suspense } from 'react';
-import CalendarIframe from './CalendarIframe';
+import Image from 'next/image'
+import peopleImg from 'public/images/landing-pages/info-people.png'
+import starImg from 'public/images/landing-pages/star.png'
+import BreannaBottom from './BreannaBottom'
+import { Suspense } from 'react'
+import CalendarIframe from './CalendarIframe'
 
 const points = [
   {
@@ -20,7 +20,7 @@ const points = [
     title: 'Next steps',
     subTitle: "We'll bring you into our community and get you plugged in.",
   },
-];
+]
 
 export default function InfoSessionPage() {
   return (
@@ -81,5 +81,5 @@ export default function InfoSessionPage() {
         </Suspense>
       </div>
     </div>
-  );
+  )
 }

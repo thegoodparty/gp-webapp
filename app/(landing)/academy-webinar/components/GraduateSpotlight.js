@@ -1,12 +1,12 @@
-import MarketingH2 from '@shared/typography/MarketingH2';
-import VictoriaImg from 'public/images/landing-pages/victoria.png';
-import BreannaImg from 'public/images/landing-pages/breanna.png';
-import CarlosImg from 'public/images/landing-pages/carlos.png';
-import Image from 'next/image';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import MarketingH2 from '@shared/typography/MarketingH2'
+import VictoriaImg from 'public/images/landing-pages/victoria.png'
+import BreannaImg from 'public/images/landing-pages/breanna.png'
+import CarlosImg from 'public/images/landing-pages/carlos.png'
+import Image from 'next/image'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Link from 'next/link'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
 const graduates = [
   {
@@ -27,21 +27,21 @@ const graduates = [
     img: VictoriaImg,
     link: '/blog/article/race-update-victoria-masika',
   },
-];
+]
 
 export default function GraduateSpotlight({ title, cta }) {
   const header = title ? (
     title
   ) : (
     <MarketingH2 className="text-center mb-16">Graduate spotlight</MarketingH2>
-  );
+  )
   const ctaButton = cta ? (
     cta
   ) : (
     <AcademyModalSignUpButton>
       <PrimaryButton id="spotlight-cta">Sign up for free</PrimaryButton>
     </AcademyModalSignUpButton>
-  );
+  )
   return (
     <section className="my-20">
       <MaxWidth>
@@ -78,5 +78,5 @@ export default function GraduateSpotlight({ title, cta }) {
         <div className="mt-16 flex justify-center">{ctaButton}</div>
       </MaxWidth>
     </section>
-  );
+  )
 }

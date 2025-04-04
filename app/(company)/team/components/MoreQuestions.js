@@ -1,8 +1,8 @@
-import Image from 'next/image';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Link from 'next/link';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import Image from 'next/image'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Link from 'next/link'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 const MoreQuestions = () => (
   <MaxWidth>
@@ -30,6 +30,6 @@ const MoreQuestions = () => (
       </div>
     </section>
   </MaxWidth>
-);
+)
 
-export default MoreQuestions;
+export default MoreQuestions

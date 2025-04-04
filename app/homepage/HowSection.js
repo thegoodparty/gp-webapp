@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import softwareImg from '/public/images/homepage/software.png';
-import genzImg from '/public/images/homepage/genz.png';
-import mapImg from '/public/images/homepage/map.png';
-import Button from '@shared/buttons/Button';
+import Image from 'next/image'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import softwareImg from '/public/images/homepage/software.png'
+import genzImg from '/public/images/homepage/genz.png'
+import mapImg from '/public/images/homepage/map.png'
+import Button from '@shared/buttons/Button'
 
 export default function HowSection() {
   return (
@@ -160,5 +160,5 @@ export default function HowSection() {
         </div>
       </div>
     </MaxWidth>
-  );
+  )
 }

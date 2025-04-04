@@ -1,14 +1,14 @@
-'use client';
-import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { getUserCookie } from 'helpers/cookieHelper';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import Link from 'next/link';
+'use client'
+import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { getUserCookie } from 'helpers/cookieHelper'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import Link from 'next/link'
 
 export default function ScheduleFlowComplete({ resetCallback }) {
-  const user = getUserCookie(true);
+  const user = getUserCookie(true)
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
@@ -32,7 +32,7 @@ export default function ScheduleFlowComplete({ resetCallback }) {
                 trackEvent(
                   EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
                     .Complete.ReturnToDashboard,
-                );
+                )
               }}
             >
               <PrimaryButton
@@ -51,7 +51,7 @@ export default function ScheduleFlowComplete({ resetCallback }) {
                 trackEvent(
                   EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign
                     .Complete.ReturnToVoterFile,
-                );
+                )
               }}
             >
               <PrimaryButton fullWidth onClick={resetCallback}>
@@ -62,5 +62,5 @@ export default function ScheduleFlowComplete({ resetCallback }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
 
 export const buttonOnClickHandler = (onClick) => (e) => {
-  fireGTMButtonClickEvent(e.currentTarget);
+  fireGTMButtonClickEvent(e.currentTarget)
   if (onClick) {
-    return onClick(e);
+    return onClick(e)
   }
-};
+}

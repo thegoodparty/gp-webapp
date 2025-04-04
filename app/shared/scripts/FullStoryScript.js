@@ -1,4 +1,4 @@
-import Script from 'next/script';
+import Script from 'next/script'
 
 export default function FullStoryScript() {
   return (
@@ -33,5 +33,5 @@ export default function FullStoryScript() {
         `,
       }}
     />
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import useVersions from 'app/(candidate)/onboarding/shared/useVerisons';
-import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection';
-import { useState } from 'react';
+import { fetchCampaignVersions } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import useVersions from 'app/(candidate)/onboarding/shared/useVerisons'
+import CampaignPlanSection from 'app/(candidate)/onboarding/[slug]/campaign-plan/components/CampaignPlanSection'
+import { useState } from 'react'
 
 const sections = [
   {
@@ -46,16 +46,16 @@ const sections = [
     title: 'Mobilizing voters & volunteers',
     icon: '/images/dashboard/mobilizing-icon.svg',
   },
-];
+]
 
 export default function AiContent({ campaign }) {
-  const versions = useVersions();
-  const [updatedVersions, setUpdatedVersions] = useState(false);
+  const versions = useVersions()
+  const [updatedVersions, setUpdatedVersions] = useState(false)
 
   const updateVersionsCallback = async () => {
-    const versions = await fetchCampaignVersions();
-    setUpdatedVersions(versions);
-  };
+    const versions = await fetchCampaignVersions()
+    setUpdatedVersions(versions)
+  }
 
   return (
     <div>
@@ -69,5 +69,5 @@ export default function AiContent({ campaign }) {
         />
       ))}
     </div>
-  );
+  )
 }

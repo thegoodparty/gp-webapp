@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import Button from '@shared/buttons/Button';
-import MarketingH3 from '@shared/typography/MarketingH3';
-import Body1 from '@shared/typography/Body1';
+import Image from 'next/image'
+import Button from '@shared/buttons/Button'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import Body1 from '@shared/typography/Body1'
 
 export default function StartedBottom() {
   return (
@@ -44,5 +44,5 @@ export default function StartedBottom() {
         </div>
       </section>
     </>
-  );
+  )
 }

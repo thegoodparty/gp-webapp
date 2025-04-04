@@ -1,10 +1,10 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import img from 'public/images/landing-pages/change.png';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import img from 'public/images/landing-pages/change.png'
 
-import Body1 from '@shared/typography/Body1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal';
+import Body1 from '@shared/typography/Body1'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import ScheduleModal from 'app/(candidate)/onboarding/shared/ScheduleModal'
 
 export default function VolunteerSection() {
   return (
@@ -46,5 +46,5 @@ export default function VolunteerSection() {
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
-  );
+  )
 }

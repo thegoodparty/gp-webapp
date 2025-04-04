@@ -1,18 +1,18 @@
-'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Modal from '@shared/utils/Modal';
-import Image from 'next/image';
-import { memo, useState } from 'react';
-import { BiSolidHappy } from 'react-icons/bi';
-import { FaHeart } from 'react-icons/fa';
-import { MdPeople } from 'react-icons/md';
-import { RiMedal2Fill } from 'react-icons/ri';
+'use client'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Modal from '@shared/utils/Modal'
+import Image from 'next/image'
+import { memo, useState } from 'react'
+import { BiSolidHappy } from 'react-icons/bi'
+import { FaHeart } from 'react-icons/fa'
+import { MdPeople } from 'react-icons/md'
+import { RiMedal2Fill } from 'react-icons/ri'
 
 const cards = [
   {
@@ -93,10 +93,10 @@ const cards = [
       </>
     ),
   },
-];
+]
 
 export default memo(function InfoSection() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
   return (
     <div className="bg-indigo-100 py-8 lg:py-16">
       <MaxWidth>
@@ -132,7 +132,7 @@ export default memo(function InfoSection() {
               <PrimaryButton
                 fullWidth
                 onClick={() => {
-                  setModalOpen(card);
+                  setModalOpen(card)
                 }}
               >
                 Learn More
@@ -155,5 +155,5 @@ export default memo(function InfoSection() {
         </div>
       </Modal>
     </div>
-  );
-});
+  )
+})

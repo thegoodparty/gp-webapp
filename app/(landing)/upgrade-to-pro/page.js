@@ -1,8 +1,8 @@
-import { redirect } from 'next/navigation';
-import pageMetaData from 'helpers/metadataHelper';
+import { redirect } from 'next/navigation'
+import pageMetaData from 'helpers/metadataHelper'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'Upgrade to Pro',
@@ -10,9 +10,9 @@ const meta = pageMetaData({
 
   slug: '/pro-consultation',
   image: 'https://assets.goodparty.org/get-a-demo.png',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page() {
-  redirect('/dashboard/upgrade-to-pro');
+  redirect('/dashboard/upgrade-to-pro')
 }

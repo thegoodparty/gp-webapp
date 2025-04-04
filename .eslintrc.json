@@ -1,4 +1,9 @@
 {
+  "plugins": [
+    "react",
+    "unused-imports",
+    "@stylistic"
+  ],
   "extends": [
     "next/core-web-vitals",
     "plugin:storybook/recommended",
@@ -11,5 +16,16 @@
     // optional, if you want to disable language mapper, set it to `false`
     // if you want to override the default language mapper inside, you can provide your own
     "mdx/language-mapper": {}
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "unused-imports/no-unused-imports": "error",
+    "@stylistic/semi": ["error", "never"]
   }
 }

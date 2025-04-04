@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { dateUsHelper } from 'helpers/dateHelper';
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import contentfulHelper from 'helpers/contentfulHelper';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { dateUsHelper } from 'helpers/dateHelper'
+import CmsContentWrapper from '@shared/content/CmsContentWrapper'
+import contentfulHelper from 'helpers/contentfulHelper'
 
 export const FullContentPage = ({ content = {} }) => (
   <MaxWidth>
@@ -21,4 +21,4 @@ export const FullContentPage = ({ content = {} }) => (
       </CmsContentWrapper>
     </div>
   </MaxWidth>
-);
+)

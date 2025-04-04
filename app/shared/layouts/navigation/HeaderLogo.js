@@ -1,10 +1,10 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useCampaign } from '@shared/hooks/useCampaign';
-import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import { usePathname } from 'next/navigation';
+'use client'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { usePathname } from 'next/navigation'
 
 const ProBadge = () => (
   <div
@@ -23,16 +23,16 @@ const ProBadge = () => (
   >
     PRO
   </div>
-);
+)
 
 export const HeaderLogo = () => {
-  const [campaign] = useCampaign();
-  const [campaignStatus] = useCampaignStatus();
-  const pathname = usePathname();
+  const [campaign] = useCampaign()
+  const [campaignStatus] = useCampaignStatus()
+  const pathname = usePathname()
 
-  const { isPro } = campaign || {};
-  const { status } = campaignStatus || {};
-  const link = status && campaign ? '/dashboard' : '/';
+  const { isPro } = campaign || {}
+  const { status } = campaignStatus || {}
+  const link = status && campaign ? '/dashboard' : '/'
   return (
     <>
       <Link
@@ -54,5 +54,5 @@ export const HeaderLogo = () => {
         {isPro && <ProBadge />}
       </Link>
     </>
-  );
-};
+  )
+}

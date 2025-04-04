@@ -1,6 +1,6 @@
-import HelpBanner from './HelpBanner';
-import CandidateCard from './CandidateCard';
-import ContentSection from './ContentSection';
+import HelpBanner from './HelpBanner'
+import CandidateCard from './CandidateCard'
+import ContentSection from './ContentSection'
 
 export default function CandidatePage(props) {
   return (
@@ -14,5 +14,5 @@ export default function CandidatePage(props) {
         <div>&nbsp;</div>
       </div>
     </div>
-  );
+  )
 }

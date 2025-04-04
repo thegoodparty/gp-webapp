@@ -1,4 +1,4 @@
-import { MenuItem, Select } from '@mui/material';
+import { MenuItem, Select } from '@mui/material'
 
 const DEFAULT_SMS_SCRIPTS = [
   'why',
@@ -11,20 +11,20 @@ const DEFAULT_SMS_SCRIPTS = [
   'pathToVictory',
   'campaignPlanAttempts',
   'generationStatus',
-];
+]
 
 export const getSmsScriptSelectOptions = (aiContent) => {
-  let nonDefaultScripts = aiContent || {};
+  let nonDefaultScripts = aiContent || {}
   // filter default scripts nonDefaultScripts is an object
   DEFAULT_SMS_SCRIPTS.forEach((script) => {
-    delete nonDefaultScripts[script];
-  });
-  let arr = [];
+    delete nonDefaultScripts[script]
+  })
+  let arr = []
   for (const [key, value] of Object.entries(nonDefaultScripts)) {
-    arr.push({ key, ...value });
+    arr.push({ key, ...value })
   }
-  return arr.sort((a, b) => b.updatedAt - a.updatedAt);
-};
+  return arr.sort((a, b) => b.updatedAt - a.updatedAt)
+}
 
 export const SmsScriptSelect = ({
   aiContent,
@@ -32,8 +32,8 @@ export const SmsScriptSelect = ({
   onSelect = (key) => {},
 }) => {
   const handleOnChange = (e) => {
-    onSelect(e.target.value);
-  };
+    onSelect(e.target.value)
+  }
   return (
     <Select
       value={selectedKey || ''}
@@ -52,5 +52,5 @@ export const SmsScriptSelect = ({
           </MenuItem>
         ))}
     </Select>
-  );
-};
+  )
+}

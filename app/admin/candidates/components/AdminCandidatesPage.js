@@ -1,7 +1,7 @@
-'use client';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import AdminCandidatesTable from './AdminCandidatesTable';
+'use client'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import AdminCandidatesTable from './AdminCandidatesTable'
 
 export default function AdminCandidatesPage(props) {
   return (
@@ -10,5 +10,5 @@ export default function AdminCandidatesPage(props) {
         <AdminCandidatesTable {...props} />
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

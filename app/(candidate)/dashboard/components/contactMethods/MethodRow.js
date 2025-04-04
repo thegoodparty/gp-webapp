@@ -1,14 +1,14 @@
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import { MdLock, MdAutoAwesome } from 'react-icons/md';
-import LogProgress from './LogProgress';
-import Link from 'next/link';
-import { numberFormatter } from 'helpers/numberHelper';
-import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow';
-import Button from '@shared/buttons/Button';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import { MdLock, MdAutoAwesome } from 'react-icons/md'
+import LogProgress from './LogProgress'
+import Link from 'next/link'
+import { numberFormatter } from 'helpers/numberHelper'
+import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow'
+import Button from '@shared/buttons/Button'
 
 export default function MethodRow(props) {
-  const { method, campaign = {}, pathToVictory = {} } = props;
+  const { method, campaign = {}, pathToVictory = {} } = props
   const {
     title,
     description,
@@ -22,19 +22,19 @@ export default function MethodRow(props) {
     showScheduleButton,
     onCtaClick,
     onGenerateScriptClick,
-  } = method;
-  const { isPro } = campaign;
-  const { voterContactGoal = 0 } = pathToVictory;
-  const perNumber = numberFormatter((voterContactGoal * perc) / 100);
+  } = method
+  const { isPro } = campaign
+  const { voterContactGoal = 0 } = pathToVictory
+  const perNumber = numberFormatter((voterContactGoal * perc) / 100)
 
   // Check campaign viability to show special callout
-  const hbViability = campaign.data?.hubSpotUpdates?.final_viability_rating;
+  const hbViability = campaign.data?.hubSpotUpdates?.final_viability_rating
   const showSpecialCallout =
     specialCallout &&
     typeof hbViability === 'string' &&
     ['has a chance', 'likely to win', 'frontrunner'].includes(
       hbViability.toLowerCase(),
-    );
+    )
 
   return (
     <div className="border border-gray-200 p-4 rounded-lg mt-4">
@@ -133,5 +133,5 @@ export default function MethodRow(props) {
         <div className="hidden 2xl:block mt-4">{specialCallout}</div>
       )}
     </div>
-  );
+  )
 }

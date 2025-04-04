@@ -1,32 +1,32 @@
-'use client';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { deleteThread } from './ajaxActions';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { useState } from 'react'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { deleteThread } from './ajaxActions'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 export default function DeleteThread({ chat }) {
-  const [showMenu, setShowMenu] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showMenu, setShowMenu] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
   const toggleShow = (e) => {
-    e.stopPropagation();
-    setShowMenu(!showMenu);
-  };
+    e.stopPropagation()
+    setShowMenu(!showMenu)
+  }
 
-  const { name, threadId } = chat;
+  const { name, threadId } = chat
 
   const showDelete = (e) => {
-    e.stopPropagation();
-    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickMenu);
-    setShowAlert(true);
-    setShowMenu(false);
-  };
+    e.stopPropagation()
+    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickMenu)
+    setShowAlert(true)
+    setShowMenu(false)
+  }
 
   const handleDelete = async () => {
-    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickDelete);
-    await deleteThread(threadId);
-    window.location.reload();
-  };
+    trackEvent(EVENTS.AIAssistant.ChatHistory.ClickDelete)
+    await deleteThread(threadId)
+    window.location.reload()
+  }
   return (
     <div className="relative">
       <BsThreeDotsVertical
@@ -52,7 +52,7 @@ export default function DeleteThread({ chat }) {
       <AlertDialog
         open={showAlert}
         handleClose={() => {
-          setShowAlert(false);
+          setShowAlert(false)
         }}
         redButton={false}
         title="Delete Chat"
@@ -61,5 +61,5 @@ export default function DeleteThread({ chat }) {
         proceedLabel="Delete"
       />
     </div>
-  );
+  )
 }

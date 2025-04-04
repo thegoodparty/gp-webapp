@@ -1,27 +1,27 @@
-'use client';
-import { createContext, useEffect, useState } from 'react';
-import { getUserCookie, setUserCookie } from 'helpers/cookieHelper';
+'use client'
+import { createContext, useEffect, useState } from 'react'
+import { getUserCookie, setUserCookie } from 'helpers/cookieHelper'
 
-export const UserContext = createContext([null, (updated) => {}]);
+export const UserContext = createContext([null, (updated) => {}])
 
 export const UserProvider = ({ children }) => {
-  const [userState, setUserState] = useState(null);
+  const [userState, setUserState] = useState(null)
 
   useEffect(() => {
-    const cookieUser = getUserCookie(true);
+    const cookieUser = getUserCookie(true)
     if (cookieUser && cookieUser?.id) {
-      setUserState(cookieUser);
+      setUserState(cookieUser)
     }
-  }, []);
+  }, [])
 
   const setUser = (updated) => {
-    setUserCookie(updated);
-    setUserState(updated);
-  };
+    setUserCookie(updated)
+    setUserState(updated)
+  }
 
   return (
     <UserContext.Provider value={[userState, setUser]}>
       {children}
     </UserContext.Provider>
-  );
-};
+  )
+}

@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import styles from './Homepage.module.scss';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import Image from 'next/image'
+import styles from './Homepage.module.scss'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 export default function FactsSection() {
   return (
@@ -95,5 +95,5 @@ export default function FactsSection() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import ListItemComponent from './ListItem';
+import ListItemComponent from './ListItem'
 
 export default {
   title: 'Utils/ListItem',
@@ -29,6 +29,6 @@ export default {
       },
     },
   },
-};
+}
 
-export const ListItem = {};
+export const ListItem = {}

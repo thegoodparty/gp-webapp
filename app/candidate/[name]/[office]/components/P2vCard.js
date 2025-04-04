@@ -1,16 +1,16 @@
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import { numberFormatter } from 'helpers/numberHelper';
-import TealButton from './TealButton';
-import { FaArrowRight } from 'react-icons/fa';
-import CTA from './CTA';
-import MarketingH4 from '@shared/typography/MarketingH4';
+import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
+import { numberFormatter } from 'helpers/numberHelper'
+import TealButton from './TealButton'
+import { FaArrowRight } from 'react-icons/fa'
+import CTA from './CTA'
+import MarketingH4 from '@shared/typography/MarketingH4'
 
 export default function P2vCard(props) {
-  const { candidate } = props;
-  const { office, city, state } = candidate;
-  const { p2vData } = candidate;
-  const { projectedTurnout } = p2vData || {};
+  const { candidate } = props
+  const { office, city, state } = candidate
+  const { p2vData } = candidate
+  const { projectedTurnout } = p2vData || {}
 
   return (
     <div className="border border-gray-700 p-6 rounded-2xl h-full flex flex-col justify-between">
@@ -79,5 +79,5 @@ export default function P2vCard(props) {
         </TealButton>
       </CTA>
     </div>
-  );
+  )
 }

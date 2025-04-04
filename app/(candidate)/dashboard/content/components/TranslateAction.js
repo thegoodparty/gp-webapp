@@ -1,20 +1,20 @@
-'use client';
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import { Select, MenuItem } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import H2 from '@shared/typography/H2';
-import H5 from '@shared/typography/H5';
-import H6 from '@shared/typography/H6';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import { Select, MenuItem } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import H2 from '@shared/typography/H2'
+import H5 from '@shared/typography/H5'
+import H6 from '@shared/typography/H6'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function TranslateAction({
   showTranslate,
   setShowTranslate,
   handleTranslateCallback,
 }) {
-  const [newLanguage, setNewLanguage] = useState('spanish');
+  const [newLanguage, setNewLanguage] = useState('spanish')
 
   return (
     <>
@@ -37,7 +37,7 @@ export default function TranslateAction({
             defaultValue={'Spanish'}
             fullWidth
             onChange={(e) => {
-              setNewLanguage(e.target.value);
+              setNewLanguage(e.target.value)
             }}
           >
             <MenuItem value="Spanish">Spanish</MenuItem>
@@ -50,7 +50,7 @@ export default function TranslateAction({
           <div className="mt-16 flex w-full justify-end">
             <div
               onClick={() => {
-                setShowTranslate(false);
+                setShowTranslate(false)
               }}
             >
               <SecondaryButton>Cancel</SecondaryButton>
@@ -58,11 +58,11 @@ export default function TranslateAction({
             <div
               className="ml-3"
               onClick={() => {
-                setShowTranslate(false);
+                setShowTranslate(false)
                 trackEvent(EVENTS.ContentBuilder.Editor.SubmitTranslate, {
                   language: newLanguage,
-                });
-                handleTranslateCallback(newLanguage);
+                })
+                handleTranslateCallback(newLanguage)
               }}
             >
               <PrimaryButton
@@ -75,5 +75,5 @@ export default function TranslateAction({
         </div>
       </Modal>
     </>
-  );
+  )
 }

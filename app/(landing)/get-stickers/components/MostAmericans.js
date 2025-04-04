@@ -1,7 +1,7 @@
-import Button from '@shared/buttons/Button';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import Image from 'next/image';
+import Button from '@shared/buttons/Button'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import Image from 'next/image'
 
 export default function MostAmericans() {
   return (
@@ -88,5 +88,5 @@ export default function MostAmericans() {
         </MaxWidth>
       </section>
     </>
-  );
+  )
 }

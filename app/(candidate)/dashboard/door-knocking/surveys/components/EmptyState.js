@@ -1,7 +1,7 @@
-import SurveyAnimation from '@shared/animations/SurveyAnimation';
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import CreateSurvey from './CreateSurvey';
+import SurveyAnimation from '@shared/animations/SurveyAnimation'
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import CreateSurvey from './CreateSurvey'
 
 export default function EmptyState({ teams = [], createCallback }) {
   return (
@@ -18,5 +18,5 @@ export default function EmptyState({ teams = [], createCallback }) {
       </Body2>
       <CreateSurvey teams={teams} createCallback={createCallback} />
     </div>
-  );
+  )
 }

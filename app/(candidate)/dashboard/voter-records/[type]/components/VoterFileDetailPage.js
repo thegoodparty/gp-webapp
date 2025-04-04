@@ -1,25 +1,25 @@
-import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout';
-import BackToAllFiles from './BackToAllFiles';
-import Hero from './Hero';
-import Paper from '@shared/utils/Paper';
-import ActionCards from './ActionCards';
-import { getDefaultVoterFileName } from '../../components/VoterFileTypes';
-import VendorCards from './VendorCards';
-import { slugify } from 'helpers/articleHelper';
-import H2 from '@shared/typography/H2';
-import Body2 from '@shared/typography/Body2';
+import DashboardLayout from 'app/(candidate)/dashboard/shared/DashboardLayout'
+import BackToAllFiles from './BackToAllFiles'
+import Hero from './Hero'
+import Paper from '@shared/utils/Paper'
+import ActionCards from './ActionCards'
+import { getDefaultVoterFileName } from '../../components/VoterFileTypes'
+import VendorCards from './VendorCards'
+import { slugify } from 'helpers/articleHelper'
+import H2 from '@shared/typography/H2'
+import Body2 from '@shared/typography/Body2'
 
 const getCustomVoterFile = (customVoterFiles = [], type) =>
   customVoterFiles.find(
     (file) => `custom-${slugify(file.name, true)}` === type,
-  );
+  )
 
 export default function VoterFileDetailPage(props) {
-  const { type, campaign, isCustom } = props;
+  const { type, campaign, isCustom } = props
   const customFile = isCustom
     ? getCustomVoterFile(campaign.data?.customVoterFiles, type)
-    : null;
-  const fileName = isCustom ? customFile?.name : getDefaultVoterFileName(type);
+    : null
+  const fileName = isCustom ? customFile?.name : getDefaultVoterFileName(type)
 
   return (
     <DashboardLayout {...props}>
@@ -43,5 +43,5 @@ export default function VoterFileDetailPage(props) {
         </>
       )}
     </DashboardLayout>
-  );
+  )
 }

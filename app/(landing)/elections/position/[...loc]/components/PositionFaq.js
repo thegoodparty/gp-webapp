@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
+import { useState } from 'react'
+import { FaPlus } from 'react-icons/fa'
 
 export default function PositionFaq({ q, a }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
     <div className="mb-1 text-white">
       <div
@@ -12,7 +12,7 @@ export default function PositionFaq({ q, a }) {
           open ? 'bg-indigo-600' : ''
         }`}
         onClick={() => {
-          setOpen(!open);
+          setOpen(!open)
         }}
       >
         <div>{q}</div>
@@ -26,5 +26,5 @@ export default function PositionFaq({ q, a }) {
         {a}
       </div>
     </div>
-  );
+  )
 }

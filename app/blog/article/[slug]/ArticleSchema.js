@@ -1,5 +1,5 @@
-import { JsonLd } from 'react-schemaorg';
-import { cmsToPlainText } from '/helpers/contentfulHelper';
+import { JsonLd } from 'react-schemaorg'
+import { cmsToPlainText } from '/helpers/contentfulHelper'
 
 export default function ArticleSchema({ article }) {
   const {
@@ -12,7 +12,7 @@ export default function ArticleSchema({ article }) {
     title,
     slug,
     summary,
-  } = article;
+  } = article
 
   return (
     <JsonLd
@@ -36,5 +36,5 @@ export default function ArticleSchema({ article }) {
         description: summary,
       }}
     />
-  );
+  )
 }

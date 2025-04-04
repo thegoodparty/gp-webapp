@@ -13,5 +13,5 @@ export default function MaxWidth({
     >
       {children}
     </div>
-  );
+  )
 }

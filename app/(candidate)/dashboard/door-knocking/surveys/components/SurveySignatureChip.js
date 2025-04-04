@@ -1,10 +1,10 @@
-import Body2 from '@shared/typography/Body2';
+import Body2 from '@shared/typography/Body2'
 
-import Chip from '@shared/utils/Chip';
-import { TbSignature } from 'react-icons/tb';
+import Chip from '@shared/utils/Chip'
+import { TbSignature } from 'react-icons/tb'
 
 export default function SurveySignatureChip({ survey, className = '' }) {
-  const { requires_signature } = survey || {};
+  const { requires_signature } = survey || {}
   return (
     <>
       {requires_signature ? (
@@ -23,5 +23,5 @@ export default function SurveySignatureChip({ survey, className = '' }) {
         </Chip>
       )}
     </>
-  );
+  )
 }

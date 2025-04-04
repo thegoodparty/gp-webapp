@@ -1,8 +1,8 @@
-'use client';
-import { InfoAlert } from '@shared/alerts/InfoAlert';
-import H4 from '@shared/typography/H4';
-import Body2 from '@shared/typography/Body2';
-import { dateUSClientLocaleHelper } from 'helpers/dateHelper';
+'use client'
+import { InfoAlert } from '@shared/alerts/InfoAlert'
+import H4 from '@shared/typography/H4'
+import Body2 from '@shared/typography/Body2'
+import { dateUSClientLocaleHelper } from 'helpers/dateHelper'
 
 export const SubscriptionPendingCancellationAlert = ({
   subscriptionCancelAt,
@@ -18,4 +18,4 @@ export const SubscriptionPendingCancellationAlert = ({
       </div>
     </div>
   </InfoAlert>
-);
+)

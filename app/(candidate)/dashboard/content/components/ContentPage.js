@@ -1,30 +1,30 @@
-'use client';
-import { useEffect, useState } from 'react';
-import DashboardLayout from '../../shared/DashboardLayout';
-import TitleSection from '../../shared/TitleSection';
-import ContentTutorial from './ContentTutorial';
-import MyContent from './MyContent';
-import { getCookie } from 'helpers/cookieHelper';
-import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+'use client'
+import { useEffect, useState } from 'react'
+import DashboardLayout from '../../shared/DashboardLayout'
+import TitleSection from '../../shared/TitleSection'
+import ContentTutorial from './ContentTutorial'
+import MyContent from './MyContent'
+import { getCookie } from 'helpers/cookieHelper'
+import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 
 export default function ContentPage(props) {
-  const [forceOpenModal, setForceOpenModal] = useState(false);
+  const [forceOpenModal, setForceOpenModal] = useState(false)
   // check the query for showModal and then force modal
-  const searchParams = useSearchParams();
-  const modalParam = searchParams.get('showModal');
+  const searchParams = useSearchParams()
+  const modalParam = searchParams.get('showModal')
   useEffect(() => {
     if (modalParam) {
-      setForceOpenModal(true);
+      setForceOpenModal(true)
     }
-  }, [modalParam]);
+  }, [modalParam])
 
   const newContentCallback = () => {
-    setForceOpenModal(true);
-  };
-  const cookie = getCookie('tutorial-content');
+    setForceOpenModal(true)
+  }
+  const cookie = getCookie('tutorial-content')
   const shouldShowTutorial =
-    !cookie && !props.campaign?.aiContent && !forceOpenModal;
+    !cookie && !props.campaign?.aiContent && !forceOpenModal
   return (
     <DashboardLayout {...props}>
       <TitleSection
@@ -55,5 +55,5 @@ export default function ContentPage(props) {
         <ContentTutorial newContentCallback={newContentCallback} />
       )}
     </DashboardLayout>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import LottieAnimation from './LottieAnimation';
-import * as animationData from 'app/shared/animations/gears.json';
+import LottieAnimation from './LottieAnimation'
+import * as animationData from 'app/shared/animations/gears.json'
 export default function GearsAnimation(props) {
   return (
     <LottieAnimation
@@ -10,5 +10,5 @@ export default function GearsAnimation(props) {
       animationData={animationData}
       {...props}
     />
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
 export default function BlogNavLink({
   children,
@@ -10,7 +10,7 @@ export default function BlogNavLink({
     ? 'text-white bg-purple-500 hover:bg-purple-700'
     : whiteStyle
     ? 'bg-white hover:bg-indigo-200 border-[1px] border-indigo-300/[0.6]'
-    : 'bg-indigo-200 hover:bg-indigo-300';
+    : 'bg-indigo-200 hover:bg-indigo-300'
 
   return (
     <Link
@@ -19,5 +19,5 @@ export default function BlogNavLink({
     >
       {children}
     </Link>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import QuestionAnimation from './QuestionAnimation';
+import QuestionAnimation from './QuestionAnimation'
 
 export default {
   title: 'Animations/QuestionAnimation',
   component: QuestionAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

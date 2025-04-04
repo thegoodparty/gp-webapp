@@ -1,10 +1,10 @@
-import VoteAnimation from './VoteAnimation';
+import VoteAnimation from './VoteAnimation'
 
 export default {
   title: 'Animations/VoteAnimation',
   component: VoteAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

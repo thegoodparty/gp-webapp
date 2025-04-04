@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import { useState } from 'react';
-import { FaArrowRight, FaCheck } from 'react-icons/fa';
-import { subscribeEmail } from './EmailForm';
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import { useState } from 'react'
+import { FaArrowRight, FaCheck } from 'react-icons/fa'
+import { subscribeEmail } from './EmailForm'
 
 export default function EmailFormBanner({ pageName, formId }) {
-  const [email, setEmail] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [email, setEmail] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
 
-  const canSubmit = () => isValidEmail(email);
+  const canSubmit = () => isValidEmail(email)
 
   const submitForm = async () => {
     if (canSubmit()) {
@@ -19,17 +19,17 @@ export default function EmailFormBanner({ pageName, formId }) {
         uri: window.location.href,
         formId,
         pageName,
-      });
+      })
       if (success) {
-        setSuccess(true);
-        setShowError(false);
+        setSuccess(true)
+        setShowError(false)
       } else {
-        setShowError('An error occurred. Please try again.');
+        setShowError('An error occurred. Please try again.')
       }
     } else {
-      setShowError('Please enter a valid email');
+      setShowError('Please enter a valid email')
     }
-  };
+  }
   return (
     <>
       <form
@@ -48,7 +48,7 @@ export default function EmailFormBanner({ pageName, formId }) {
               type="email"
               name="email"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setEmail(e.target.value)
               }}
               value={email}
               placeholder="john@email.com"
@@ -72,5 +72,5 @@ export default function EmailFormBanner({ pageName, formId }) {
         </div>
       )}
     </>
-  );
+  )
 }

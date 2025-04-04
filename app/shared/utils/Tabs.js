@@ -1,10 +1,9 @@
-'use client';
-import MuiTabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+'use client'
+import MuiTabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
 
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { useState } from 'react';
-import { slugify } from 'helpers/articleHelper';
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { useState } from 'react'
 
 export default function Tabs({
   tabLabels = [],
@@ -18,23 +17,23 @@ export default function Tabs({
   size = 'medium',
   changeCallback = () => {},
 }) {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(0)
 
   const handleChange = (event, newValue) => {
     if (activeTab !== false) {
-      changeCallback(newValue);
+      changeCallback(newValue)
       //controlled
     } else {
-      setValue(newValue);
+      setValue(newValue)
     }
-  };
+  }
 
   const isSelected = (index) => {
     if (activeTab !== false) {
-      return activeTab === index;
+      return activeTab === index
     }
-    return value === index;
-  };
+    return value === index
+  }
   return (
     <div className={`w-full ${orientation === 'vertical' ? 'flex' : ''}`}>
       <div className={` relative  ${!centered ? 'flex items-center' : ''} `}>
@@ -84,5 +83,5 @@ export default function Tabs({
         </div>
       ))}
     </div>
-  );
+  )
 }

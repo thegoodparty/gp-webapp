@@ -1,8 +1,8 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import Image from 'next/image';
-import Link from 'next/link';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function NotFound() {
   return (
@@ -30,11 +30,11 @@ export default function NotFound() {
             It seems the page has decided to join one of the two major parties,
             and therefore no longer meets the standards of GoodParty.org.
           </Body1>
-          <a href="/">
+          <Link href="/">
             <PrimaryButton>Back to our homepage</PrimaryButton>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
-  );
+  )
 }

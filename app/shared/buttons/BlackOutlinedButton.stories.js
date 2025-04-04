@@ -1,5 +1,5 @@
-import BlackOutlinedButton from './BlackOutlinedButton';
-import BlackOutlinedButtonClient from './BlackOutlinedButtonClient';
+import BlackOutlinedButton from './BlackOutlinedButton'
+import BlackOutlinedButtonClient from './BlackOutlinedButtonClient'
 
 export default {
   title: 'Buttons/BlackOutlinedButton',
@@ -14,6 +14,6 @@ export default {
       </BlackOutlinedButtonClient>
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

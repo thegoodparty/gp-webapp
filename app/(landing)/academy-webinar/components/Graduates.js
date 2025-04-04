@@ -1,13 +1,13 @@
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
-import VictoriaImg from 'public/images/landing-pages/victoria.png';
-import BreannaImg from 'public/images/landing-pages/breanna.png';
-import CarlosImg from 'public/images/landing-pages/carlos.png';
-import MapImg from 'public/images/landing-pages/map.png';
-import Body1 from '@shared/typography/Body1';
-import { BiSolidQuoteAltRight } from 'react-icons/bi';
-import WarningButton from '@shared/buttons/WarningButton';
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
+import VictoriaImg from 'public/images/landing-pages/victoria.png'
+import BreannaImg from 'public/images/landing-pages/breanna.png'
+import CarlosImg from 'public/images/landing-pages/carlos.png'
+import MapImg from 'public/images/landing-pages/map.png'
+import Body1 from '@shared/typography/Body1'
+import { BiSolidQuoteAltRight } from 'react-icons/bi'
+import WarningButton from '@shared/buttons/WarningButton'
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
 const graduates = [
   {
@@ -25,7 +25,7 @@ const graduates = [
     img: CarlosImg,
     desc: 'As you go through life and get older and realize the people in charge are not doing a great job… then you start to question, Okay well, why not me then?',
   },
-];
+]
 
 export default function Graduates({ content }) {
   return (
@@ -120,5 +120,5 @@ export default function Graduates({ content }) {
         </div>
       </section>
     </div>
-  );
+  )
 }

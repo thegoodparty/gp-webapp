@@ -1,9 +1,9 @@
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import { slugify } from 'helpers/articleHelper';
-import { dateUsHelper } from 'helpers/dateHelper';
-import Link from 'next/link';
-import { FaArrowRightLong } from 'react-icons/fa6';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import { slugify } from 'helpers/articleHelper'
+import { dateUsHelper } from 'helpers/dateHelper'
+import Link from 'next/link'
+import { FaArrowRightLong } from 'react-icons/fa6'
 
 export default function Race({ race }) {
   const {
@@ -14,20 +14,20 @@ export default function Race({ race }) {
     state,
     county,
     city,
-  } = race;
-  const slug = slugify(normalizedPositionName, true);
-  let color = '';
-  let locationSlug = state?.toLowerCase();
+  } = race
+  const slug = slugify(normalizedPositionName, true)
+  let color = ''
+  let locationSlug = state?.toLowerCase()
   if (county) {
-    locationSlug += `/${county}`;
+    locationSlug += `/${county}`
   }
   if (city) {
-    locationSlug += `/${city}`;
+    locationSlug += `/${city}`
   }
   if (level === 'state') {
-    color = '#F5FFFC';
+    color = '#F5FFFC'
   } else if (level === 'county') {
-    color = '#3ABBEA';
+    color = '#3ABBEA'
   }
   return (
     <Link
@@ -65,5 +65,5 @@ export default function Race({ race }) {
         </div>
       </div>
     </Link>
-  );
+  )
 }

@@ -1,15 +1,15 @@
-import ReadMoreCard from './ReadMoreCard';
-import ScheduleCard from './ScheduleCard';
-import ScriptCard from './ScriptCard';
+import ReadMoreCard from './ReadMoreCard'
+import ScheduleCard from './ScheduleCard'
+import ScriptCard from './ScriptCard'
 
 function cardsByType(type, props) {
-  let cards = [];
+  let cards = []
   if (type === 'sms' || type === 'telemarketing') {
     cards = [
       <ScriptCard {...props} key="card1" />,
       <ScheduleCard {...props} key="card2" />,
       <ReadMoreCard {...props} key="card3" />,
-    ];
+    ]
   }
   if (
     type === 'directmail' ||
@@ -19,18 +19,18 @@ function cardsByType(type, props) {
     cards = [
       <ScriptCard {...props} key="card1" />,
       <ReadMoreCard {...props} key="card3" />,
-    ];
+    ]
   }
-  return cards;
+  return cards
 }
 
 export default function ActionCards(props) {
-  const { type, isCustom } = props;
+  const { type, isCustom } = props
   if (isCustom) {
-    return null;
+    return null
   }
 
-  const cards = cardsByType(type, props);
+  const cards = cardsByType(type, props)
 
   return (
     <div className="mt-4 grid grid-cols-12 gap-4">
@@ -45,5 +45,5 @@ export default function ActionCards(props) {
         </div>
       ))}
     </div>
-  );
+  )
 }

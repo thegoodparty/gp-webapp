@@ -1,10 +1,10 @@
-import LoadingDotsAnimation from './LoadingDotsAnimation';
+import LoadingDotsAnimation from './LoadingDotsAnimation'
 
 export default {
   title: 'Animations/LoadingDotsAnimation',
   component: LoadingDotsAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

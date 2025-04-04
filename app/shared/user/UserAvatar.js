@@ -1,23 +1,23 @@
-import React from 'react';
-import { MdPerson } from 'react-icons/md';
+import React from 'react'
+import { MdPerson } from 'react-icons/md'
 
 function UserAvatar({ user, size = 'small', ...restProps }) {
-  const className = restProps?.className || '';
+  const className = restProps?.className || ''
   if (!user) {
-    return <></>;
+    return <></>
   }
-  const { firstName, lastName } = user;
+  const { firstName, lastName } = user
   const initials = `${firstName?.charAt(0).toUpperCase() || ''}${
     lastName?.charAt(0).toUpperCase() || ''
-  }`;
-  let sizeClass = 'h-8 w-8';
-  let fontSizeClass = 'text-xl';
+  }`
+  let sizeClass = 'h-8 w-8'
+  let fontSizeClass = 'text-xl'
   if (size === 'large') {
-    fontSizeClass = 'text-3xl';
-    sizeClass = 'h-12 w-12';
+    fontSizeClass = 'text-3xl'
+    sizeClass = 'h-12 w-12'
   } else if (size === 'smaller') {
-    sizeClass = 'h-6 w-6';
-    fontSizeClass = 'text-lg';
+    sizeClass = 'h-6 w-6'
+    fontSizeClass = 'text-lg'
   }
 
   return (
@@ -35,7 +35,7 @@ function UserAvatar({ user, size = 'small', ...restProps }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default UserAvatar;
+export default UserAvatar

@@ -1,5 +1,5 @@
-import { FaFacebook, FaInstagram, FaTiktok, FaTwitter } from 'react-icons/fa';
-import { HiUserGroup } from 'react-icons/hi';
+import { FaFacebook, FaInstagram, FaTiktok, FaTwitter } from 'react-icons/fa'
+import { HiUserGroup } from 'react-icons/hi'
 
 export const FOOTER_COLUMNS = [
   {
@@ -86,7 +86,7 @@ export const FOOTER_COLUMNS = [
       },
     ],
   },
-];
+]
 
 export const SOCIAL_LINKS = [
   {
@@ -119,4 +119,4 @@ export const SOCIAL_LINKS = [
     isExternal: true,
     icon: <HiUserGroup />,
   },
-];
+]

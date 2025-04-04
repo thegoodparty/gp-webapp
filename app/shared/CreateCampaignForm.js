@@ -1,47 +1,47 @@
-'use client';
-import { useState } from 'react';
-import { useSnackbar } from 'helpers/useSnackbar';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import H2 from '@shared/typography/H2';
-import H4 from '@shared/typography/H4';
-import Body1 from './typography/Body1';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import TextField from '@shared/inputs/TextField';
-import Button from '@shared/buttons/Button';
-import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
-import { getUserCookie } from 'helpers/cookieHelper';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+'use client'
+import { useState } from 'react'
+import { useSnackbar } from 'helpers/useSnackbar'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import H2 from '@shared/typography/H2'
+import H4 from '@shared/typography/H4'
+import Body1 from './typography/Body1'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import TextField from '@shared/inputs/TextField'
+import Button from '@shared/buttons/Button'
+import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal'
+import { getUserCookie } from 'helpers/cookieHelper'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 const createCampaign = async (payload) => {
   try {
-    const user = getUserCookie(true);
+    const user = getUserCookie(true)
     if (!user || !user.email) {
-      console.error('User not found or missing email');
+      console.error('User not found or missing email')
     } else {
-      payload.adminUserEmail = user.email;
+      payload.adminUserEmail = user.email
     }
 
-    return await clientFetch(apiRoutes.admin.campaign.create, payload);
+    return await clientFetch(apiRoutes.admin.campaign.create, payload)
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
-};
+}
 const sendEmail = async (userId) => {
   try {
     const payload = {
       userId,
-    };
+    }
     return await clientFetch(
       apiRoutes.authentication.setSetPasswordEmail,
       payload,
-    );
+    )
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
-};
+}
 const fields = [
   {
     key: 'firstName',
@@ -81,66 +81,66 @@ const fields = [
       'Other',
     ],
   },
-];
+]
 export const initialValues = fields.reduce((acc, field) => {
-  acc[field.key] = '';
-  return acc;
-}, {});
+  acc[field.key] = ''
+  return acc
+}, {})
 
 export const CreateCampaignForm = ({}) => {
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(initialValues)
   const [showOfficeSelectionModal, setShowOfficeSelectionModal] =
-    useState(false);
-  const [newCampaign, setNewCampaign] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { successSnackbar, errorSnackbar } = useSnackbar();
+    useState(false)
+  const [newCampaign, setNewCampaign] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const { successSnackbar, errorSnackbar } = useSnackbar()
 
   const onChangeField = (key, value) => {
     setValues({
       ...values,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const openOfficeSelectionModal = () => {
-    setShowOfficeSelectionModal(true);
-  };
+    setShowOfficeSelectionModal(true)
+  }
 
   const handleChooseOfficeComplete = async () => {
-    successSnackbar('Office Saved! Sending set password email...');
+    successSnackbar('Office Saved! Sending set password email...')
 
-    const emailResponse = await sendEmail(newCampaign.userId);
+    const emailResponse = await sendEmail(newCampaign.userId)
 
     if (emailResponse.ok) {
-      successSnackbar('Email sent!');
+      successSnackbar('Email sent!')
     } else {
-      errorSnackbar('Email failed to send!');
+      errorSnackbar('Email failed to send!')
     }
 
-    setShowOfficeSelectionModal(false);
-    setValues(initialValues);
-    setNewCampaign(null);
-  };
+    setShowOfficeSelectionModal(false)
+    setValues(initialValues)
+    setNewCampaign(null)
+  }
 
   const disableCreate =
     newCampaign ||
     isLoading ||
     (values.party === 'Other' && values.otherParty === '') ||
-    !fields.every((field) => values[field.key]);
+    !fields.every((field) => values[field.key])
 
   const handleCreateCampaign = async () => {
-    setIsLoading(true);
-    const campaignResponse = await createCampaign(values);
+    setIsLoading(true)
+    const campaignResponse = await createCampaign(values)
     if (campaignResponse.ok) {
-      setNewCampaign(campaignResponse.data);
-      successSnackbar('Created!');
+      setNewCampaign(campaignResponse.data)
+      successSnackbar('Created!')
     } else {
-      const errorData = campaignResponse.data;
-      console.error('Campaign creation error', errorData);
-      errorSnackbar(`Creation failed: ${errorData?.message}`);
+      const errorData = campaignResponse.data
+      console.error('Campaign creation error', errorData)
+      errorSnackbar(`Creation failed: ${errorData?.message}`)
     }
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
 
   return (
     <PortalPanel color="#2CCDB0">
@@ -217,5 +217,5 @@ export const CreateCampaignForm = ({}) => {
         />
       )}
     </PortalPanel>
-  );
-};
+  )
+}

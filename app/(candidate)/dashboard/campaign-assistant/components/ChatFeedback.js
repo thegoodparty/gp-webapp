@@ -1,32 +1,32 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import Modal from '@shared/utils/Modal';
-import { useState } from 'react';
-import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io';
-import { chatFeedback } from './ajaxActions';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import Button from '@shared/buttons/Button'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import Modal from '@shared/utils/Modal'
+import { useState } from 'react'
+import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io'
+import { chatFeedback } from './ajaxActions'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 export default function ChatFeedback() {
-  const { feedback: dbFeedback, threadId } = useChat();
-  const [showModal, setShowModal] = useState(false);
-  const [feedback, setFeedback] = useState('');
-  const [type, setType] = useState(dbFeedback?.type);
+  const { feedback: dbFeedback, threadId } = useChat()
+  const [showModal, setShowModal] = useState(false)
+  const [feedback, setFeedback] = useState('')
+  const [type, setType] = useState(dbFeedback?.type)
 
   const handleSubmitNegative = async () => {
-    trackEvent(EVENTS.AIAssistant.Chat.ClickThumbsDown);
-    await chatFeedback(threadId, 'negative', feedback);
-    setShowModal(false);
-  };
+    trackEvent(EVENTS.AIAssistant.Chat.ClickThumbsDown)
+    await chatFeedback(threadId, 'negative', feedback)
+    setShowModal(false)
+  }
 
   const handleSubmitPositive = async () => {
-    trackEvent(EVENTS.AIAssistant.Chat.ClickThumbsUp);
-    setType('positive');
-    await chatFeedback(threadId, 'positive');
-  };
+    trackEvent(EVENTS.AIAssistant.Chat.ClickThumbsUp)
+    setType('positive')
+    await chatFeedback(threadId, 'positive')
+  }
 
   return (
     <div className="flex items-center">
@@ -43,8 +43,8 @@ export default function ChatFeedback() {
           type === 'negative' ? 'bg-indigo-700 bg-opacity-10' : ''
         }`}
         onClick={() => {
-          setShowModal(true);
-          setType('negative');
+          setShowModal(true)
+          setType('negative')
         }}
       >
         <IoMdThumbsDown size={18} />
@@ -84,5 +84,5 @@ export default function ChatFeedback() {
         </div>
       </Modal>
     </div>
-  );
+  )
 }

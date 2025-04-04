@@ -1,5 +1,5 @@
-import Overline from '@shared/typography/Overline';
-import ChatHistoryThread from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryThread';
+import Overline from '@shared/typography/Overline'
+import ChatHistoryThread from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryThread'
 
 export const ChatHistoryGroup = ({
   title = '',
@@ -23,5 +23,5 @@ export const ChatHistoryGroup = ({
         </div>
       )}
     </>
-  );
-};
+  )
+}

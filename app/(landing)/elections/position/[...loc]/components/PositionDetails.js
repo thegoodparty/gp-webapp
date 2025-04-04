@@ -1,6 +1,6 @@
-import Body1 from '@shared/typography/Body1';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { PositionsListItem } from './PositionsListItem';
+import Body1 from '@shared/typography/Body1'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { PositionsListItem } from './PositionsListItem'
 
 function processAndSort(strings) {
   try {
@@ -8,24 +8,24 @@ function processAndSort(strings) {
       .map((s) => {
         let label = '',
           number = 0,
-          original = s;
+          original = s
         if (s.includes(' - District ')) {
-          label = 'District';
-          number = parseInt(s.split(' - District ')[1], 10);
+          label = 'District'
+          number = parseInt(s.split(' - District ')[1], 10)
         } else if (s.includes(' - Office ')) {
-          label = 'Office';
-          number = parseInt(s.split(' - Office ')[1], 10);
+          label = 'Office'
+          number = parseInt(s.split(' - Office ')[1], 10)
         } else {
-          return { original, sortKey: Infinity }; // Keep original and set sort key to ensure it goes to the end
+          return { original, sortKey: Infinity } // Keep original and set sort key to ensure it goes to the end
         }
-        return { label, number, sortKey: number, original };
+        return { label, number, sortKey: number, original }
       })
       .sort((a, b) => a.sortKey - b.sortKey)
       .map((item) =>
         item.label ? `${item.label} ${item.number}` : item.original,
-      );
+      )
   } catch (e) {
-    return strings;
+    return strings
   }
 }
 
@@ -40,9 +40,9 @@ export default function PositionDetails({ race, positions }) {
     salary,
     positionDescription,
     eligibilityRequirements,
-  } = race;
-  const term = frequency.match(/\d+/g);
-  const cleanPositions = processAndSort(positions);
+  } = race
+  const term = frequency.match(/\d+/g)
+  const cleanPositions = processAndSort(positions)
   return (
     <section className="grid grid-cols-12 gap-4 mt-6 md:mt-12">
       <div className="col-span-12 md:col-span-6 text-lg md:text-2xl font-medium">
@@ -87,5 +87,5 @@ export default function PositionDetails({ race, positions }) {
         <Body1 className="mt-6">{eligibilityRequirements || 'N/A'}</Body1>
       </div>
     </section>
-  );
+  )
 }

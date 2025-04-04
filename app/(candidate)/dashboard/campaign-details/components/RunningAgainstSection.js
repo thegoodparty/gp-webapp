@@ -1,57 +1,57 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import H3 from '@shared/typography/H3';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import RunningAgainstForm from './RunningAgainstForm';
-import RunningAgainstCard from './RunningAgainstCard';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useState } from 'react'
+import H3 from '@shared/typography/H3'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import RunningAgainstForm from './RunningAgainstForm'
+import RunningAgainstCard from './RunningAgainstCard'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function RunningAgainstSection({
   campaign,
   nextCallback,
   header,
 }) {
-  const [isSaving, setIsSaving] = useState(false);
-  const [showNew, setShowNew] = useState(false);
+  const [isSaving, setIsSaving] = useState(false)
+  const [showNew, setShowNew] = useState(false)
   const [runningAgainst, setRunningAgainst] = useState(
     campaign?.details?.runningAgainst || [],
-  );
+  )
 
   const handleSave = async () => {
-    trackEvent(EVENTS.Profile.RunningAgainst.ClickSave);
-    setIsSaving(true);
+    trackEvent(EVENTS.Profile.RunningAgainst.ClickSave)
+    setIsSaving(true)
     await updateCampaign([
       { key: 'details.runningAgainst', value: runningAgainst },
-    ]);
+    ])
 
-    setIsSaving(false);
+    setIsSaving(false)
 
     if (nextCallback) {
-      nextCallback();
+      nextCallback()
     } else {
-      window.location.reload();
+      window.location.reload()
     }
-  };
+  }
 
   const handleDelete = (index) => {
-    setRunningAgainst((current) => current.toSpliced(index, 1));
-  };
+    setRunningAgainst((current) => current.toSpliced(index, 1))
+  }
 
   const handleUpdate = (index, newValues) => {
-    setShowNew(false);
+    setShowNew(false)
     setRunningAgainst((current) => {
-      const runningAgainst = [...current];
+      const runningAgainst = [...current]
 
       if (typeof index === 'number') {
-        runningAgainst[index] = newValues;
+        runningAgainst[index] = newValues
       } else {
-        runningAgainst.push(newValues);
+        runningAgainst.push(newValues)
       }
-      return runningAgainst;
-    });
-  };
+      return runningAgainst
+    })
+  }
 
   return (
     <section className={` pt-6  ${header ? '' : 'border-t  border-gray-600'}`}>
@@ -65,27 +65,27 @@ export default function RunningAgainstSection({
             onDelete={() => handleDelete(index)}
             onUpdate={(newValues) => handleUpdate(index, newValues)}
           />
-        );
+        )
       })}
 
       <div className="my-6 border rounded-xl p-4 border-gray-300 flex justify-between">
         {showNew ? (
           <RunningAgainstForm
             onCancel={() => {
-              trackEvent(EVENTS.Profile.RunningAgainst.CancelAddNew);
-              setShowNew(false);
+              trackEvent(EVENTS.Profile.RunningAgainst.CancelAddNew)
+              setShowNew(false)
             }}
             onSave={(newValues) => {
-              trackEvent(EVENTS.Profile.RunningAgainst.SubmitAddNew);
-              handleUpdate(null, newValues);
+              trackEvent(EVENTS.Profile.RunningAgainst.SubmitAddNew)
+              handleUpdate(null, newValues)
             }}
           />
         ) : (
           <PrimaryButton
             size="medium"
             onClick={() => {
-              trackEvent(EVENTS.Profile.RunningAgainst.ClickAddNew);
-              setShowNew(true);
+              trackEvent(EVENTS.Profile.RunningAgainst.ClickAddNew)
+              setShowNew(true)
             }}
           >
             Add New Opponent
@@ -103,5 +103,5 @@ export default function RunningAgainstSection({
         </PrimaryButton>
       </div>
     </section>
-  );
+  )
 }
