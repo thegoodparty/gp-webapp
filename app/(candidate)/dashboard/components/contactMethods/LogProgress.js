@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Modal from '@shared/utils/Modal';
 import TextField from '@shared/inputs/TextField';
 import H1 from '@shared/typography/H1';
@@ -10,12 +10,18 @@ import {
   trackEvent,
 } from 'helpers/fullStoryHelper';
 import Button from '@shared/buttons/Button';
+import { useVoterContacts } from '@shared/hooks/useVoterContacts';
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
+import { useUser } from '@shared/hooks/useUser';
+import {
+  createIrresponsiblyMassagedHistoryItem,
+  createUpdateHistory,
+} from '@shared/utils/campaignUpdateHistoryServices';
 
-export default function LogProgress({
-  card,
-  reportedVoterGoals = {},
-  updateCountCallback,
-}) {
+export default function LogProgress({ card }) {
+  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts();
+  const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory();
+  const [user] = useUser();
   const [showModal, setShowModal] = useState(false);
 
   const {
@@ -43,8 +49,21 @@ export default function LogProgress({
       value,
     });
 
-    const newTotal = (reportedVoterGoals[key] || 0) + newAddition;
-    updateCountCallback(key, newTotal, newAddition);
+    setReportedVoterGoals({
+      ...reportedVoterGoals,
+      [key]: (reportedVoterGoals[key] || 0) + newAddition,
+    });
+
+    const newHistoryItem = await createUpdateHistory({
+      type: key,
+      quantity: newAddition,
+    });
+
+    setUpdateHistory([
+      ...updateHistoryItems,
+      createIrresponsiblyMassagedHistoryItem(newHistoryItem, user),
+    ]);
+
     setShowModal(false);
     setValue(0);
   };
@@ -96,6 +115,7 @@ export default function LogProgress({
               value={value}
               fullWidth
               type="number"
+              min="0"
               required
             />
 
