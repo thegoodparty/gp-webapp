@@ -20,6 +20,7 @@ import { apiRoutes } from 'gpApi/routes';
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
+  ssr: false,
   loading: () => (
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
   ),
