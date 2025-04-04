@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { TermAndTerminationText } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText';
 import { ServiceAgreementSignatureSection } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 
 const ACKNOWLEDGEMENTS = [
   {
@@ -37,6 +38,8 @@ export const ServiceAgreementPage = ({ campaign }) => {
     ...ACKNOWLEDGEMENTS,
   ]);
   const allAccepted = acknowledgements.every((ack) => ack.accepted);
+  const [campaignStatus] = useCampaignStatus();
+  const { isVerified } = campaignStatus || {};
 
   const onAcknowledge = (index) => (accepted) => {
     setAcknowledgements([
@@ -48,6 +51,10 @@ export const ServiceAgreementPage = ({ campaign }) => {
       ...acknowledgements.slice(index + 1),
     ]);
   };
+
+  const backLink = isVerified
+    ? '/dashboard/pro-sign-up/'
+    : '/dashboard/pro-sign-up/committee-check';
 
   return (
     <FocusedExperienceWrapper>
@@ -88,7 +95,7 @@ export const ServiceAgreementPage = ({ campaign }) => {
             }}
           />
           <div className="flex flex-col justify-between md:flex-row">
-            <Link href="/dashboard/pro-sign-up/committee-check">
+            <Link href={backLink}>
               <SecondaryButton
                 className="w-full mb-4 md:mb-0 md:w-auto"
                 onClick={() => {

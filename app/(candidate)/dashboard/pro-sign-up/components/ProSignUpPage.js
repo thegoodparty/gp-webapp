@@ -10,10 +10,14 @@ import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
 import Button from '@shared/buttons/Button';
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
 
 const ProSignUpPage = ({ campaign }) => {
   const [campaignState, setCampaignState] = useState(campaign);
   const [showModal, setShowModal] = useState(false);
+  const [campaignStatus] = useCampaignStatus();
+  const { isVerified } = campaignStatus || {};
+
   const officeFields = campaignOfficeFields(campaignState?.details);
 
   const onSelect = async () => {
@@ -27,6 +31,10 @@ const ProSignUpPage = ({ campaign }) => {
     trackEvent(EVENTS.ProUpgrade.ExitEditOffice);
     setShowModal(false);
   };
+
+  const confirmedLink = isVerified
+    ? '/dashboard/pro-sign-up/service-agreement'
+    : '/dashboard/pro-sign-up/committee-check';
 
   return (
     <FocusedExperienceWrapper>
@@ -53,7 +61,7 @@ const ProSignUpPage = ({ campaign }) => {
             Edit Office
           </Button>
           <Button
-            href="/dashboard/pro-sign-up/committee-check"
+            href={confirmedLink}
             onClick={() => {
               trackEvent(EVENTS.ProUpgrade.ConfirmOffice);
             }}
