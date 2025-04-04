@@ -21,7 +21,6 @@ jobs:
           - test-automation/tests/api/**/*.spec.ts
           - test-automation/tests/admin/**/*.spec.ts
           - test-automation/tests/style/**/*.spec.ts
-      fail-fast: false    # Continue running other shards if one fails
     
     steps:
       - name: Print Workflow Trigger Event
