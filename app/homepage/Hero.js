@@ -1,48 +1,51 @@
-import Image from 'next/image'
-import bgImg from '/public/images/homepage/home-hero.png'
-import MaxWidth from '@shared/layouts/MaxWidth'
-import Button from '@shared/buttons/Button'
-import Link from 'next/link'
-import { WINNER_COUNT } from 'app/candidates/page'
+import Image from 'next/image';
+import bgImg from '/public/images/homepage/home-hero.png';
+import MaxWidth from '@shared/layouts/MaxWidth';
+import Button from '@shared/buttons/Button';
+import Link from 'next/link';
+import { WINNER_COUNT } from 'app/candidates/page';
+import Body1 from '@shared/typography/Body1';
 
 export default async function Hero() {
-  const count = WINNER_COUNT
+  const count = WINNER_COUNT;
 
   return (
-    <MaxWidth>
-      <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-20 bg-indigo-50 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0">
-        <div className="col-span-12 lg:col-span-6">
-          <h1 className="text-4xl leading-tight font-semibold xs:font-bold md:text-5xl md:leading-tight xl:text-6xl xl:leading-snug">
-            We empowered {count} Independent wins in 2024 🎉
-          </h1>
-          <h2 className="text-lg font-sfpro font-normal leading-6 mt-8">
-            GoodParty.org is empowering civic heroes to run, win, and serve as
-            independent representatives for their communities.
-          </h2>
-          <h3 className="text-lg font-sfpro font-normal leading-6 mt-6">
-            See where candidates won their elections in 2024 to transform civic
-            leadership.
-          </h3>
-          <Button
-            href="/candidates"
-            size="large"
-            className="mt-8 w-full md:w-auto"
-          >
-            Meet the Winners
-          </Button>
+    <div className="bg-[linear-gradient(129deg,rgba(26,255,255,0.3)_-76.28%,rgba(252,248,243,0.15)_88.96%)]">
+      <MaxWidth>
+        <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-20 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0 ">
+          <div className="col-span-12 lg:col-span-6">
+            <h1 className="text-4xl leading-tight font-semibold  md:text-5xl  xl:text-6xl ">
+              We empower independents to run, win and serve!
+            </h1>
+            <Body1 className="mt-8">
+              See how our campaign platforms empowers you with:
+              <ul className="list-disc list-inside">
+                <li>Personalized Voter Data</li>
+                <li>Voter Outreach Tools</li>
+                <li>Customized content and marketing services</li>
+              </ul>
+            </Body1>
+            <Button
+              href="/sign-up"
+              size="large"
+              className="mt-8 w-full md:w-auto"
+            >
+              Learn how
+            </Button>
+          </div>
+          <div className="col-span-12 lg:col-span-6 relative h-full">
+            <Link href="/candidates" title="winners">
+              <Image
+                src={bgImg}
+                sizes="50vw"
+                className="object-contain object-right-top"
+                alt=""
+                priority
+              />
+            </Link>
+          </div>
         </div>
-        <div className="col-span-12 lg:col-span-6 relative h-full">
-          <Link href="/candidates" title="winners">
-            <Image
-              src={bgImg}
-              sizes="50vw"
-              className="object-contain object-right-top"
-              alt=""
-              priority
-            />
-          </Link>
-        </div>
-      </div>
-    </MaxWidth>
-  )
+      </MaxWidth>
+    </div>
+  );
 }
