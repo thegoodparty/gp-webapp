@@ -9,12 +9,14 @@ import {
   MdFileOpen,
   MdFolderShared,
   MdLibraryBooks,
+  MdMessage,
   MdSensorDoor,
 } from 'react-icons/md'
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
 import { useEffect } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
+import { userIsAdmin } from 'helpers/userHelper'
 import Image from 'next/image'
 
 const VOTER_DATA_UPGRADE_ITEM = {
@@ -95,6 +97,15 @@ const ECANVASSER_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickDoorKnocking),
 }
 
+// admin user only
+const TEXTING_MENU_ITEM = {
+  id: 'text-messaging-dashboard',
+  label: 'Text Messaging',
+  link: '/dashboard/text-messaging',
+  icon: <MdMessage />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
+}
+
 const getDashboardMenuItems = (campaign) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
   if (campaign?.isPro) {
@@ -121,6 +132,9 @@ export default function DashboardMenu({
       syncEcanvasser(campaign?.id)
     }
   }, [campaign, ecanvasser])
+  if (userIsAdmin(user)) {
+    menuItems.push(TEXTING_MENU_ITEM)
+  }
 
   const handleEnterPress = (e) => {
     if (e.key == 'Enter') handleLogOut(e)

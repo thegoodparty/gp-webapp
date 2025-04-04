@@ -37,7 +37,7 @@ export default function ScheduleFlowAudienceStep({
         filters: selectedAudience,
       })
 
-      setCount(res?.count)
+      setCount(res)
     }, 300)
   }, [audience, isCustom, type, hasValues])
 

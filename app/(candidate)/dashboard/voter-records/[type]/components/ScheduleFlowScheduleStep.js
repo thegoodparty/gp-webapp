@@ -51,7 +51,7 @@ export default function ScheduleFlowScheduleStep({
   const handleNext = async () => {
     const resp = await submitCallback()
 
-    if (resp.ok === false) {
+    if (resp.ok === false || resp.errors) {
       errorSnackbar('Failed to submit request.')
       return
     }

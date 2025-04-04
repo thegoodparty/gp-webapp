@@ -34,7 +34,7 @@ const fields = [
       { key: 'age_18_25', label: '18-25' },
       { key: 'age_25_35', label: '25-35' },
       { key: 'age_35_50', label: '35-50' },
-      { key: 'age_50+', label: '50+' },
+      { key: 'age_50_plus', label: '50+' },
     ],
   },
   {
