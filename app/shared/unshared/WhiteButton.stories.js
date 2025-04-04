@@ -1,4 +1,4 @@
-import WhiteButton from 'app/(landing)/run-for-office/components/WhiteButton';
+import WhiteButton from 'app/(landing)/run-for-office/components/WhiteButton'
 
 export default {
   title: 'Unshared/WhiteButton',
@@ -14,8 +14,8 @@ export default {
         <br />
         <WhiteButton {...args} />
       </>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

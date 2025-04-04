@@ -1,8 +1,8 @@
-import BlackButton from '@shared/buttons/BlackButton';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import Link from 'next/link';
-import { leftMenuItems } from '../shared/AdminLeftMenu';
-import AdminWrapper from '../shared/AdminWrapper';
+import BlackButton from '@shared/buttons/BlackButton'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import Link from 'next/link'
+import { leftMenuItems } from '../shared/AdminLeftMenu'
+import AdminWrapper from '../shared/AdminWrapper'
 
 export default function AdminPage(props) {
   return (
@@ -21,5 +21,5 @@ export default function AdminPage(props) {
         </div>
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

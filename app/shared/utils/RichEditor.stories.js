@@ -1,4 +1,4 @@
-import RichEditor from './RichEditor';
+import RichEditor from './RichEditor'
 
 export default {
   title: 'Utils/RichEditor',
@@ -7,6 +7,6 @@ export default {
   args: {
     initialText: 'Some initial text to edit',
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

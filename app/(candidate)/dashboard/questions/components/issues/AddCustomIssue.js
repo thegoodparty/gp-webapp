@@ -1,12 +1,12 @@
-'use client';
-import TextField from '@shared/inputs/TextField';
-import { useState } from 'react';
-import { FaChevronLeft } from 'react-icons/fa';
+'use client'
+import TextField from '@shared/inputs/TextField'
+import { useState } from 'react'
+import { FaChevronLeft } from 'react-icons/fa'
 import {
   findExistingCustomIssueIndex,
   writeCampaignCustomIssue,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
+import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons'
 
 export default function AddCustomIssue({
   selectIssueCallback,
@@ -15,7 +15,7 @@ export default function AddCustomIssue({
   editIssuePosition,
   setEditIssuePosition,
 }) {
-  const editingCustomIssue = editIssuePosition?.type === 'custom';
+  const editingCustomIssue = editIssuePosition?.type === 'custom'
 
   const [existingIndex] = useState(
     findExistingCustomIssueIndex(
@@ -23,34 +23,34 @@ export default function AddCustomIssue({
       editIssuePosition,
       selectIssueCallback,
     ),
-  );
+  )
 
   const [title, setTitle] = useState(
     editingCustomIssue ? editIssuePosition.title : '',
-  );
+  )
   const [position, setPosition] = useState(
     editingCustomIssue ? editIssuePosition.position : '',
-  );
-  const saveAllowed = title !== '' && position !== '';
+  )
+  const saveAllowed = title !== '' && position !== ''
 
   const handleAnotherIssue = () => {
-    selectIssueCallback(false);
-  };
+    selectIssueCallback(false)
+  }
 
   const handleSave = async () => {
     if (!saveAllowed) {
-      return;
+      return
     }
     const updatedCustomIssues = await writeCampaignCustomIssue(
       existingIndex,
       title,
       position,
       campaign.details.customIssues || [],
-    );
-    await saveCallback(updatedCustomIssues);
-  };
+    )
+    await saveCallback(updatedCustomIssues)
+  }
 
-  const onCancel = () => setEditIssuePosition(null);
+  const onCancel = () => setEditIssuePosition(null)
 
   return (
     <>
@@ -71,7 +71,7 @@ export default function AddCustomIssue({
               shrink: true,
             }}
             onChange={(e) => {
-              setTitle(e.target.value);
+              setTitle(e.target.value)
             }}
           />
         </div>
@@ -87,7 +87,7 @@ export default function AddCustomIssue({
               shrink: true,
             }}
             onChange={(e) => {
-              setPosition(e.target.value);
+              setPosition(e.target.value)
             }}
           />
         </div>
@@ -101,5 +101,5 @@ export default function AddCustomIssue({
         </div>
       </>
     </>
-  );
+  )
 }

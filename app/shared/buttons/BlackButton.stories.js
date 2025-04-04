@@ -1,5 +1,5 @@
-import BlackButton from './BlackButton';
-import BlackButtonClient from './BlackButtonClient';
+import BlackButton from './BlackButton'
+import BlackButtonClient from './BlackButtonClient'
 
 export default {
   title: 'Buttons/BlackButton',
@@ -12,6 +12,6 @@ export default {
       <BlackButtonClient {...args}>Black Button Client</BlackButtonClient>
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

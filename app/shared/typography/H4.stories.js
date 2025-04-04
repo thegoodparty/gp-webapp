@@ -1,4 +1,4 @@
-import H4Component from './H4';
+import H4Component from './H4'
 
 export default {
   title: 'Typography/H4',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Header 4 Text',
   },
-};
+}
 
-export const H4 = {};
+export const H4 = {}

@@ -1,5 +1,5 @@
-import SecondaryButtonComponent from './SecondaryButton';
-import { argTypes } from './buttonsArgTypes';
+import SecondaryButtonComponent from './SecondaryButton'
+import { argTypes } from './buttonsArgTypes'
 
 export default {
   title: 'Buttons/SecondaryButton',
@@ -10,22 +10,22 @@ export default {
   },
 
   argTypes: argTypes,
-};
+}
 
 export const Primary = {
   args: {
     variant: 'contained',
   },
-};
+}
 
 export const Outlined = {
   args: {
     variant: 'outlined',
   },
-};
+}
 
 export const Text = {
   args: {
     variant: 'text',
   },
-};
+}

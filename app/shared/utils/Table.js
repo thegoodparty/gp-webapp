@@ -1,5 +1,5 @@
-'use client';
-import React, { useMemo, useEffect } from 'react';
+'use client'
+import React, { useMemo, useEffect } from 'react'
 import {
   useTable,
   useSortBy,
@@ -7,21 +7,21 @@ import {
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
-} from 'react-table';
-import styles from './Table.module.scss';
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
-import { matchSorter } from 'match-sorter';
+} from 'react-table'
+import styles from './Table.module.scss'
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
+import { matchSorter } from 'match-sorter'
 
 function GlobalFilter({
   preGlobalFilteredRows,
   globalFilter,
   setGlobalFilter,
 }) {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = React.useState(globalFilter);
+  const count = preGlobalFilteredRows.length
+  const [value, setValue] = React.useState(globalFilter)
   const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 200);
+    setGlobalFilter(value || undefined)
+  }, 200)
 
   return (
     <span>
@@ -29,36 +29,36 @@ function GlobalFilter({
       <input
         value={value || ''}
         onChange={(e) => {
-          setValue(e.target.value);
-          onChange(e.target.value);
+          setValue(e.target.value)
+          onChange(e.target.value)
         }}
         placeholder={`${count} records...`}
         style={{ fontSize: '1.1rem', border: '0' }}
       />
     </span>
-  );
+  )
 }
 
 function DefaultColumnFilter({
   column: { filterValue, preFilteredRows, setFilter },
 }) {
-  const count = preFilteredRows.length;
+  const count = preFilteredRows.length
   return (
     <input
       value={filterValue || ''}
       onChange={(e) => {
-        setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+        setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
       placeholder={`Search ${count} records...`}
     />
-  );
+  )
 }
 
 function fuzzyTextFilterFn(rows, id, filterValue) {
-  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] })
 }
 
-fuzzyTextFilterFn.autoRemove = (val) => !val;
+fuzzyTextFilterFn.autoRemove = (val) => !val
 
 export default function Table({
   columns,
@@ -73,26 +73,26 @@ export default function Table({
       fuzzyText: filterColumns ? fuzzyTextFilterFn : undefined,
       text: (rows, id, filterValue) => {
         return rows.filter((row) => {
-          const rowValue = row.values[id];
+          const rowValue = row.values[id]
           return rowValue !== undefined
             ? String(rowValue)
                 .toLowerCase()
                 .startsWith(String(filterValue).toLowerCase())
-            : true;
-        });
+            : true
+        })
       },
     }),
     [filterColumns],
-  );
+  )
 
   const defaultColumn = useMemo(
     () => ({
       Filter: filterColumns ? DefaultColumnFilter : undefined,
     }),
     [filterColumns],
-  );
+  )
 
-  const initialFilters = useMemo(() => defaultFilters, []);
+  const initialFilters = useMemo(() => defaultFilters, [])
 
   const initialState = useMemo(
     () => ({
@@ -101,7 +101,7 @@ export default function Table({
       filters: initialFilters,
     }),
     [initialSortById],
-  );
+  )
 
   const {
     getTableProps,
@@ -130,13 +130,13 @@ export default function Table({
     useGlobalFilter,
     useSortBy,
     usePagination,
-  );
+  )
 
   useEffect(() => {
     if (!pagination) {
-      setPageSize(10000);
+      setPageSize(10000)
     }
-  }, [pagination, setPageSize]);
+  }, [pagination, setPageSize])
 
   return (
     <div className={styles.wrapper}>
@@ -179,7 +179,7 @@ export default function Table({
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, i) => {
-            prepareRow(row);
+            prepareRow(row)
             return (
               <tr key={i} {...row.getRowProps()}>
                 {row.cells.map(
@@ -191,7 +191,7 @@ export default function Table({
                     ),
                 )}
               </tr>
-            );
+            )
           })}
         </tbody>
       </table>
@@ -225,8 +225,8 @@ export default function Table({
                 type="number"
                 defaultValue={pageIndex + 1}
                 onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                  gotoPage(page);
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  gotoPage(page)
                 }}
               />
             </span>
@@ -259,5 +259,5 @@ export default function Table({
         </div>
       )}
     </div>
-  );
+  )
 }

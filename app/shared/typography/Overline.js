@@ -6,5 +6,5 @@ export default function Overline({ children, className = '', ...rest }) {
     >
       {children}
     </div>
-  );
+  )
 }

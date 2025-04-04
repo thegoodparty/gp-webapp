@@ -11,7 +11,7 @@ export const impactStats = [
     stat: '2,290+',
     description: 'Volunteers nationwide',
   },
-];
+]
 
 export const ImpactStats = () => (
   <div className="grid grid-cols-3 gap-0 text-right">
@@ -25,6 +25,6 @@ export const ImpactStats = () => (
       </div>
     ))}
   </div>
-);
+)
 
-export default ImpactStats;
+export default ImpactStats

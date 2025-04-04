@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { useState, useRef } from 'react';
-import { CameraAltRounded } from '@mui/icons-material';
-import { useSnackbarState } from '@shared/utils/Snackbar';
-import Overline from '@shared/typography/Overline';
+import { useState, useRef } from 'react'
+import { CameraAltRounded } from '@mui/icons-material'
+import { useSnackbarState } from '@shared/utils/Snackbar'
+import Overline from '@shared/typography/Overline'
 
 // TODO: add more file types
 const ACCEPTED_FILE_TYPES = {
   image: ['image/png', 'image/jpeg', 'image/gif'],
-};
+}
 
 /**
  * @typedef {Object} FileDropZoneProps
@@ -29,82 +29,82 @@ export default function FileDropZone({
   onChange,
   className = '',
 }) {
-  const snackbarState = useSnackbarState();
+  const snackbarState = useSnackbarState()
   const [{ isDragging, cannotDrop }, setState] = useState({
     isDragging: false,
     cannotDrop: false,
-  });
-  const inputRef = useRef(null);
+  })
+  const inputRef = useRef(null)
 
   function handleDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
 
-    const [item] = e.dataTransfer.items;
+    const [item] = e.dataTransfer.items
 
     if (!cannotDrop) {
-      const file = item.getAsFile();
+      const file = item.getAsFile()
 
       if (file.size <= maxSize) {
-        onChange(file);
+        onChange(file)
       } else {
-        notifyError('File size too large');
+        notifyError('File size too large')
       }
     } else {
-      notifyError('Invalid file type');
+      notifyError('Invalid file type')
     }
 
     setState({
       isDragging: false,
       cannotDrop: false,
-    });
+    })
   }
 
   function handleFileInput(e) {
-    const [file] = e.target.files;
+    const [file] = e.target.files
 
     if (file.size <= maxSize) {
-      onChange(file);
+      onChange(file)
     } else {
-      notifyError('File size too large');
-      return false;
+      notifyError('File size too large')
+      return false
     }
   }
 
   function handleDragOver(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   function handleDragEnter(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault()
+    e.stopPropagation()
 
-    const [item] = e.dataTransfer.items;
+    const [item] = e.dataTransfer.items
 
     if (item.kind === 'file' && fileTypes.includes(item.type)) {
       // acceptable file
       setState({
         isDragging: true,
         cannotDrop: false,
-      });
+      })
     } else {
       // Invalid item or file type
       setState({
         isDragging: false,
         cannotDrop: true,
-      });
+      })
     }
   }
 
   function handleDragLeave(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    setState({ isDragging: false, cannotDrop: false });
+    e.preventDefault()
+    e.stopPropagation()
+    setState({ isDragging: false, cannotDrop: false })
   }
 
   function handleClick(e) {
-    inputRef.current.click();
+    inputRef.current.click()
   }
 
   function notifyError(msg) {
@@ -112,7 +112,7 @@ export default function FileDropZone({
       isOpen: true,
       message: msg,
       isError: true,
-    }));
+    }))
   }
 
   return (
@@ -145,5 +145,5 @@ export default function FileDropZone({
         onChange={handleFileInput}
       />
     </div>
-  );
+  )
 }

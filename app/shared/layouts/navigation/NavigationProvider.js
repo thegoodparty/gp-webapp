@@ -1,6 +1,5 @@
-'use client';
-import { createContext, useCallback, useEffect, useState } from 'react';
-import { FaDiscord } from 'react-icons/fa';
+'use client'
+import { createContext, useCallback, useEffect, useState } from 'react'
 
 import {
   ConstructionRounded,
@@ -15,11 +14,12 @@ import {
   MailRounded,
   NewspaperRounded,
   ListRounded,
-} from '@mui/icons-material';
+  Diversity3,
+} from '@mui/icons-material'
 
-import MapIcon from '@mui/icons-material/Map';
+import MapIcon from '@mui/icons-material/Map'
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation'
 
 export const RUN_LINKS = [
   {
@@ -27,7 +27,7 @@ export const RUN_LINKS = [
     href: '/run-for-office',
     icon: <ConstructionRounded />,
     id: 'nav-campaign-tools',
-    dataTestId: 'nav-campaign-tools'
+    dataTestId: 'nav-campaign-tools',
   },
   {
     label: 'GoodParty.org Pro',
@@ -74,7 +74,7 @@ export const RUN_LINKS = [
     id: 'nav-explore-offices',
     dataTestId: 'nav-explore-offices',
   },
-];
+]
 
 export const COMMUNITY_LINKS = [
   {
@@ -97,7 +97,6 @@ export const COMMUNITY_LINKS = [
     icon: <EventAvailableRounded />,
     id: 'nav-info-session',
     dataTestId: 'nav-info-session',
-
   },
   {
     label: 'Get Stickers',
@@ -107,14 +106,14 @@ export const COMMUNITY_LINKS = [
     dataTestId: 'nav-get-stickers',
   },
   {
-    label: 'Discord',
-    href: 'https://discord.gg/invite/goodparty',
-    icon: <FaDiscord size={24} />,
-    id: 'nav-discord',
-    dataTestId: 'nav-discord',
+    label: 'GoodParty.org Community',
+    href: 'https://community.goodparty.org',
+    icon: <Diversity3 />,
+    id: 'nav-community',
+    dataTestId: 'nav-community',
     external: true,
   },
-];
+]
 export const RESOURCES_LINKS = [
   {
     label: 'Blog',
@@ -130,7 +129,7 @@ export const RESOURCES_LINKS = [
     id: 'nav-glossary',
     dataTestId: 'nav-glossary',
   },
-];
+]
 const DROPDOWNS = [
   {
     id: 'nav-candidates',
@@ -150,32 +149,32 @@ const DROPDOWNS = [
     dataTestId: 'nav-resources',
     links: RESOURCES_LINKS,
   },
-];
-const INITIAL_OPEN_STATES = Array(DROPDOWNS.length).fill(false);
+]
+const INITIAL_OPEN_STATES = Array(DROPDOWNS.length).fill(false)
 
 export const NavContext = createContext({
   dropdowns: DROPDOWNS,
   openStates: INITIAL_OPEN_STATES,
   toggle: () => {},
   closeAll: () => {},
-});
+})
 
 export const NavigationProvider = ({ children }) => {
-  const [openStates, setOpenStates] = useState(INITIAL_OPEN_STATES);
-  const pathname = usePathname();
+  const [openStates, setOpenStates] = useState(INITIAL_OPEN_STATES)
+  const pathname = usePathname()
 
   const closeAll = useCallback(
     () => setOpenStates(INITIAL_OPEN_STATES),
     [setOpenStates],
-  );
+  )
 
   const makeNewOpenStates = (index) => [
     ...openStates.slice(0, index).fill(false),
     !openStates[index],
     ...openStates.slice(index + 1).fill(false),
-  ];
+  ]
 
-  useEffect(closeAll, [pathname]);
+  useEffect(closeAll, [pathname])
 
   return (
     <NavContext.Provider
@@ -183,12 +182,12 @@ export const NavigationProvider = ({ children }) => {
         dropdowns: DROPDOWNS,
         openStates,
         toggle: (index) => () => {
-          setOpenStates(makeNewOpenStates(index));
+          setOpenStates(makeNewOpenStates(index))
         },
         closeAll,
       }}
     >
       {children}
     </NavContext.Provider>
-  );
-};
+  )
+}

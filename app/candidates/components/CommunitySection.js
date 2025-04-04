@@ -1,11 +1,9 @@
-import Button from '@shared/buttons/Button';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
-import Link from 'next/link';
-import { memo } from 'react';
+import Button from '@shared/buttons/Button'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
+import { memo } from 'react'
 
 export default memo(function CommunitySection() {
   return (
@@ -29,7 +27,7 @@ export default memo(function CommunitySection() {
                 size="large"
                 className="mr-5 block w-full lg:w-auto"
               >
-                Join the discord
+                Join the community
               </Button>
 
               <Button
@@ -53,5 +51,5 @@ export default memo(function CommunitySection() {
         </div>
       </MaxWidth>
     </div>
-  );
-});
+  )
+})

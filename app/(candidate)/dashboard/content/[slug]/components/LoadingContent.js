@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
 export default function LoadingContent({
   title = 'Your content is generating...',
@@ -19,5 +19,5 @@ export default function LoadingContent({
         </div>
       </div>
     </div>
-  );
+  )
 }

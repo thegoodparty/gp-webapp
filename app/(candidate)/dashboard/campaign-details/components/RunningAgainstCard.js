@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import IconButton from '@shared/buttons/IconButton';
-import { DeleteRounded, EditRounded } from '@mui/icons-material';
-import RunningAgainstForm from './RunningAgainstForm';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useState } from 'react'
+import IconButton from '@shared/buttons/IconButton'
+import { DeleteRounded, EditRounded } from '@mui/icons-material'
+import RunningAgainstForm from './RunningAgainstForm'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function RunningAgainstCard({
   name,
@@ -11,27 +11,27 @@ export default function RunningAgainstCard({
   onDelete,
   onUpdate,
 }) {
-  const [showEdit, setShowEdit] = useState(false);
+  const [showEdit, setShowEdit] = useState(false)
 
   function handleSave(newValues) {
-    trackEvent(EVENTS.Profile.RunningAgainst.SubmitEdit);
-    setShowEdit(false);
-    onUpdate(newValues);
+    trackEvent(EVENTS.Profile.RunningAgainst.SubmitEdit)
+    setShowEdit(false)
+    onUpdate(newValues)
   }
 
   function handleDelete() {
-    trackEvent(EVENTS.Profile.RunningAgainst.ClickDelete);
-    onDelete();
+    trackEvent(EVENTS.Profile.RunningAgainst.ClickDelete)
+    onDelete()
   }
 
   function handleEdit() {
-    trackEvent(EVENTS.Profile.RunningAgainst.ClickEdit);
-    setShowEdit(true);
+    trackEvent(EVENTS.Profile.RunningAgainst.ClickEdit)
+    setShowEdit(true)
   }
 
   function handleCancel() {
-    trackEvent(EVENTS.Profile.RunningAgainst.CancelEdit);
-    setShowEdit(false);
+    trackEvent(EVENTS.Profile.RunningAgainst.CancelEdit)
+    setShowEdit(false)
   }
 
   return (
@@ -71,5 +71,5 @@ export default function RunningAgainstCard({
         />
       )}
     </div>
-  );
+  )
 }

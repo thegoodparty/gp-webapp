@@ -1,12 +1,12 @@
-import OnboardingLayout from 'app/(candidate)/onboarding/shared/OnboardingLayout';
-import PartyStep from './PartyStep';
-import OfficeStep from './OfficeStep';
-import PledgeStep from './PledgeStep';
-import UserSnapScript from '@shared/scripts/UserSnapScript';
-import CompleteStep from './CompleteStep';
+import OnboardingLayout from 'app/(candidate)/onboarding/shared/OnboardingLayout'
+import PartyStep from './PartyStep'
+import OfficeStep from './OfficeStep'
+import PledgeStep from './PledgeStep'
+import UserSnapScript from '@shared/scripts/UserSnapScript'
+import CompleteStep from './CompleteStep'
 
 export default function OnboardingPage(props) {
-  const { step } = props;
+  const { step } = props
   return (
     <OnboardingLayout {...props}>
       <div className="max-w-screen-sm mx-auto px-4 xl:p-0 ">
@@ -17,5 +17,5 @@ export default function OnboardingPage(props) {
       </div>
       <UserSnapScript />
     </OnboardingLayout>
-  );
+  )
 }

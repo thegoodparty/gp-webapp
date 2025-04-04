@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import { dateUsHelper } from 'helpers/dateHelper';
-import H4 from '@shared/typography/H4';
-import Body2 from '@shared/typography/Body2';
+import Image from 'next/image'
+import { dateUsHelper } from 'helpers/dateHelper'
+import H4 from '@shared/typography/H4'
+import Body2 from '@shared/typography/Body2'
 
 /**
  * @typedef {Object} BlogAuthorProps
@@ -51,5 +51,5 @@ export default function BlogAuthor({
         </Body2>
       </div>
     </div>
-  );
+  )
 }

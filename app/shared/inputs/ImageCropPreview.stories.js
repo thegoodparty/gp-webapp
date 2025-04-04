@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import ImageCropPreview from './ImageCropPreview';
+import { useState } from 'react'
+import ImageCropPreview from './ImageCropPreview'
 
 export default {
   title: 'Inputs/ImageCropPreview',
@@ -8,7 +8,7 @@ export default {
   args: {},
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(null)
 
     return (
       <div className="max-w-[400px]">
@@ -28,8 +28,8 @@ export default {
           />
         )}
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

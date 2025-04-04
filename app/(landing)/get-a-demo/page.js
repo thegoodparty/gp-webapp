@@ -1,8 +1,8 @@
-import GetDemoPage from './components/GetDemoPage';
-import pageMetaData from 'helpers/metadataHelper';
+import GetDemoPage from './components/GetDemoPage'
+import pageMetaData from 'helpers/metadataHelper'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'Book a Demo',
@@ -11,9 +11,9 @@ const meta = pageMetaData({
 
   slug: '/get-a-demo',
   image: 'https://assets.goodparty.org/get-a-demo.png',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page(params) {
-  return <GetDemoPage />;
+  return <GetDemoPage />
 }

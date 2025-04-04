@@ -1,18 +1,18 @@
-'use client';
-import ErrorButton from '@shared/buttons/ErrorButton';
-import InfoButton from '@shared/buttons/InfoButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import H2 from '@shared/typography/H2';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { revalidateCandidates } from 'helpers/cacheHelper';
-import { useState } from 'react';
+'use client'
+import ErrorButton from '@shared/buttons/ErrorButton'
+import InfoButton from '@shared/buttons/InfoButton'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import H2 from '@shared/typography/H2'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { revalidateCandidates } from 'helpers/cacheHelper'
+import { useState } from 'react'
 import {
   deleteCandidatePosition,
   updateCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import { useSnackbar } from 'helpers/useSnackbar';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function EditCandidatePosition({
   candidatePosition,
@@ -23,94 +23,94 @@ export default function EditCandidatePosition({
   candidate,
   saveCallback,
 }) {
-  const [edit, setEdit] = useState(false);
-  const [description, setDescription] = useState(candidatePosition.description);
-  const [showAlert, setShowAlert] = useState(false);
-  const { errorSnackbar } = useSnackbar();
+  const [edit, setEdit] = useState(false)
+  const [description, setDescription] = useState(candidatePosition.description)
+  const [showAlert, setShowAlert] = useState(false)
+  const { errorSnackbar } = useSnackbar()
 
   const handleDelete = async () => {
     if (candidatePosition.isCustom) {
-      await handleDeleteCustom();
+      await handleDeleteCustom()
     } else {
       const deleteResp = await deleteCandidatePosition(
         candidatePosition.id,
         campaign.id,
-      );
+      )
       if (!deleteResp || deleteResp.ok === false) {
         errorSnackbar(
           'Error deleting item. Please report an issue on the Feedback sidebar.',
-        );
+        )
       }
-      updatePositionsCallback();
+      updatePositionsCallback()
     }
-    setShowAlert(false);
-  };
+    setShowAlert(false)
+  }
 
   const handleDeleteCustom = async () => {
-    let customIssues = campaign.details.customIssues || [];
-    let index;
+    let customIssues = campaign.details.customIssues || []
+    let index
     for (let i = 0; i < customIssues.length; i++) {
       if (
         customIssues[i].order === candidatePosition.order &&
         customIssues[i].position === candidatePosition.description
       ) {
-        index = i;
-        break;
+        index = i
+        break
       }
     }
     if (typeof index !== 'undefined') {
-      customIssues.splice(index, 1);
+      customIssues.splice(index, 1)
       await saveCallback({
         ...campaign,
         customIssues,
-      });
-      await revalidateCandidates();
-      window.location.reload();
+      })
+      await revalidateCandidates()
+      window.location.reload()
     }
-  };
+  }
 
   const handleSave = async () => {
     if (candidatePosition.isCustom) {
-      await handleEditCustom();
+      await handleEditCustom()
     } else {
       const updateResp = await updateCandidatePosition(
         candidatePosition.id,
         description,
         campaign.id,
-      );
+      )
       if (!updateResp || updateResp === false) {
         errorSnackbar(
           'Error saving item. Please report an issue on the Feedback sidebar.',
-        );
-        await updatePositionsCallback();
+        )
+        await updatePositionsCallback()
       }
     }
-    setEdit(false);
-  };
+    setEdit(false)
+  }
 
   const handleEditCustom = async () => {
-    let entity = isStaged && campaign ? campaign : candidate;
-    let customIssues = entity.customIssues || [];
-    let index;
+    let entity = isStaged && campaign ? campaign : candidate
+    let customIssues = entity.customIssues || []
+    let index
     for (let i = 0; i < customIssues.length; i++) {
       if (
         customIssues[i].order === candidatePosition.order &&
         customIssues[i].position === candidatePosition.description
       ) {
-        index = i;
-        break;
+        index = i
+        break
       }
     }
     if (typeof index !== 'undefined') {
-      customIssues[index].position = description;
+      customIssues[index].position = description
       await saveCallback({
         ...entity,
         customIssues,
-      });
-      await revalidateCandidates();
-      window.location.reload();
+      })
+      await revalidateCandidates()
+      window.location.reload()
     }
-  };
+  }
 
   return (
     <div
@@ -132,14 +132,14 @@ export default function EditCandidatePosition({
             fullWidth
             value={description}
             onChange={(e) => {
-              setDescription(e.target.value);
+              setDescription(e.target.value)
             }}
           />
           <div className="text-right mt-4">
             <div
               className="mr-2 inline-block"
               onClick={() => {
-                setEdit(false);
+                setEdit(false)
               }}
             >
               <ErrorButton size="medium">Cancel</ErrorButton>
@@ -161,14 +161,14 @@ export default function EditCandidatePosition({
           <div
             className="mr-2 inline-block"
             onClick={() => {
-              setShowAlert(true);
+              setShowAlert(true)
             }}
           >
             <ErrorButton size="small">Delete</ErrorButton>
           </div>
           <div
             onClick={() => {
-              setEdit(true);
+              setEdit(true)
             }}
             className="inline-block"
           >
@@ -188,5 +188,5 @@ export default function EditCandidatePosition({
         redButton={false}
       />
     </div>
-  );
+  )
 }

@@ -1,13 +1,13 @@
-'use client';
-import { getUserCookie } from 'helpers/cookieHelper';
-import { trackEvent } from 'helpers/fullStoryHelper';
-import Script from 'next/script';
-import { useEffect } from 'react';
+'use client'
+import { getUserCookie } from 'helpers/cookieHelper'
+import { trackEvent } from 'helpers/fullStoryHelper'
+import Script from 'next/script'
+import { useEffect } from 'react'
 
 export default function UserSnapScript() {
   useEffect(() => {
     window.onUsersnapLoad = function (api) {
-      const user = getUserCookie(true);
+      const user = getUserCookie(true)
 
       api.init({
         custom: {
@@ -16,28 +16,28 @@ export default function UserSnapScript() {
             ? `${user.firstName} ${user.lastName}`
             : 'visitor',
         },
-      });
+      })
 
       api.on('beforeSubmit', ({ values, api }) => {
         try {
           if (typeof FS !== 'undefined') {
             const fullstoryUrl = FS('getSession', {
               format: 'url.now',
-            });
-            api.setValue('custom', { ...values.custom, fullstoryUrl });
+            })
+            api.setValue('custom', { ...values.custom, fullstoryUrl })
           }
         } catch (e) {
           // no op
         }
-      });
+      })
 
       api.on('submit', () => {
         trackEvent('usersnap_submission', {
           isVisitor: !user?.email,
-        });
-      });
-    };
-  }, []);
+        })
+      })
+    }
+  }, [])
   return (
     <Script
       strategy="afterInteractive"
@@ -54,5 +54,5 @@ export default function UserSnapScript() {
     `,
       }}
     />
-  );
+  )
 }

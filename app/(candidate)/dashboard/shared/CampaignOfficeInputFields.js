@@ -1,6 +1,6 @@
-import { OFFICE_INPUT_FIELDS } from 'helpers/campaignOfficeFields';
-import TextField from '@shared/inputs/TextField';
-import { dateUsHelper } from 'helpers/dateHelper';
+import { OFFICE_INPUT_FIELDS } from 'helpers/campaignOfficeFields'
+import TextField from '@shared/inputs/TextField'
+import { dateUsHelper } from 'helpers/dateHelper'
 
 export const CampaignOfficeInputFields = ({
   values,
@@ -30,4 +30,4 @@ export const CampaignOfficeInputFields = ({
         fullWidth
       />
     </div>
-  ));
+  ))

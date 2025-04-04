@@ -1,7 +1,7 @@
-import H4 from '@shared/typography/H4';
-import Body2 from '@shared/typography/Body2';
-import { StyledAlert } from '@shared/alerts/StyledAlert';
-import Button from '@shared/buttons/Button';
+import H4 from '@shared/typography/H4'
+import Body2 from '@shared/typography/Body2'
+import { StyledAlert } from '@shared/alerts/StyledAlert'
+import Button from '@shared/buttons/Button'
 
 export const AlertBanner = ({
   title,
@@ -35,4 +35,4 @@ export const AlertBanner = ({
       )}
     </div>
   </StyledAlert>
-);
+)

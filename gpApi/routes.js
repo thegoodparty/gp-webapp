@@ -201,6 +201,20 @@ export const apiRoutes = {
       path: '/campaigns/mine/plan-version',
       method: 'GET',
     },
+    tasks: {
+      list: {
+        path: '/campaigns/tasks',
+        method: 'GET',
+      },
+      complete: {
+        path: '/campaigns/tasks/complete/:taskId',
+        method: 'PUT',
+      },
+      delete: {
+        path: '/campaigns/tasks/:taskId',
+        method: 'DELETE',
+      },
+    },
   },
   content: {
     getByType: {
@@ -224,19 +238,11 @@ export const apiRoutes = {
       method: 'GET',
     },
     articleTags: {
-      path: '/content/article-tags',
+      path: '/content/article-tags/:tag',
       method: 'GET',
     },
     byType: {
       path: '/content/type',
-      method: 'GET',
-    },
-    articleTag: {
-      path: '/content/article-tags',
-      method: 'GET',
-    },
-    getBlogSections: {
-      path: '/content/blog-articles-by-section',
       method: 'GET',
     },
     blogArticle: {
@@ -244,20 +250,24 @@ export const apiRoutes = {
         path: '/content/blog-article/:slug',
         method: 'GET',
       },
-      getSlug: {
-        path: '/content/blog-article',
+      getList: {
+        path: '/content/blog-articles',
         method: 'GET',
       },
-      getBySection: {
-        path: '/content/blog-articles-by-section/:sectionSlug',
+      bySection: {
+        path: '/content/blog-articles/by-section/:sectionSlug',
         method: 'GET',
       },
       getByTag: {
         path: '/content/blog-articles-by-tag/:tag',
         method: 'GET',
       },
-      byTag: {
-        path: '/content/blog-articles-by-tag',
+      getSections: {
+        path: '/content/blog-articles/sections',
+        method: 'GET',
+      },
+      getSection: {
+        path: '/content/blog-articles/sections/:sectionSlug',
         method: 'GET',
       },
     },

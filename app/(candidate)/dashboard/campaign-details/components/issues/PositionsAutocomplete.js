@@ -1,37 +1,37 @@
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@shared/inputs/TextField';
+import React, { useState } from 'react'
+import Autocomplete from '@mui/material/Autocomplete'
+import TextField from '@shared/inputs/TextField'
 
-import H5 from '@shared/typography/H5';
-import { Paper } from '@mui/material';
-import { RiSearch2Line } from 'react-icons/ri';
+import H5 from '@shared/typography/H5'
+import { Paper } from '@mui/material'
+import { RiSearch2Line } from 'react-icons/ri'
 
 const comparePositions = (a, b) => {
   if (!a?.topIssue) {
-    return -1;
+    return -1
   }
   if (!b?.topIssue) {
-    return 1;
+    return 1
   }
-  return a.topIssue?.name.localeCompare(b.topIssue?.name);
-};
+  return a.topIssue?.name.localeCompare(b.topIssue?.name)
+}
 
 export default function PositionsAutocomplete({ positions, updateCallback }) {
-  const sorted = positions.sort(comparePositions);
-  const [inputValue, setInputValue] = useState('');
+  const sorted = positions.sort(comparePositions)
+  const [inputValue, setInputValue] = useState('')
 
   const addPosition = (position) => {
-    updateCallback(position);
-  };
+    updateCallback(position)
+  }
 
   return (
     <div>
       <Autocomplete
         options={sorted}
         groupBy={(option) => {
-          return option.topIssue?.name;
+          return option.topIssue?.name
         }}
         getOptionLabel={(option) => option?.name}
         fullWidth
@@ -54,9 +54,9 @@ export default function PositionsAutocomplete({ positions, updateCallback }) {
           </div>
         )}
         onChange={(event, item) => {
-          addPosition(item);
+          addPosition(item)
         }}
       />
     </div>
-  );
+  )
 }

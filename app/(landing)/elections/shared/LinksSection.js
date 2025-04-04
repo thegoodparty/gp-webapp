@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
 export default function LinksSection({ entities, linkFunc, title }) {
   return (
@@ -18,5 +18,5 @@ export default function LinksSection({ entities, linkFunc, title }) {
           ))}
       </div>
     </section>
-  );
+  )
 }

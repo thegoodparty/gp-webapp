@@ -1,11 +1,11 @@
-import DashboardLayout from '../../shared/DashboardLayout';
-import CampaignSection from './CampaignSection';
-import FunFactSection from './FunFactSection';
-import IssuesSection from './IssuesSection';
-import OfficeSection from './OfficeSection';
-import RunningAgainstSection from './RunningAgainstSection';
-import WhySection from './WhySection';
-import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider';
+import DashboardLayout from '../../shared/DashboardLayout'
+import CampaignSection from './CampaignSection'
+import FunFactSection from './FunFactSection'
+import IssuesSection from './IssuesSection'
+import OfficeSection from './OfficeSection'
+import RunningAgainstSection from './RunningAgainstSection'
+import WhySection from './WhySection'
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
 
 export default function DetailsPage(props) {
   return (
@@ -21,5 +21,5 @@ export default function DetailsPage(props) {
         </div>
       </CandidatePositionsProvider>
     </DashboardLayout>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import contentfulHelper from 'helpers/contentfulHelper';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
+import CmsContentWrapper from '@shared/content/CmsContentWrapper'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import contentfulHelper from 'helpers/contentfulHelper'
+import Breadcrumbs from '@shared/utils/Breadcrumbs'
 
 export default function FaqsArticlePage({ article }) {
   const breadcrumbsLinks = [
@@ -13,7 +13,7 @@ export default function FaqsArticlePage({ article }) {
     {
       label: `${article.category?.fields?.name ?? ''} - ${article.title}`,
     },
-  ];
+  ]
 
   return (
     <MaxWidth>
@@ -29,5 +29,5 @@ export default function FaqsArticlePage({ article }) {
       </CmsContentWrapper>
       <div className="h-12"></div>
     </MaxWidth>
-  );
+  )
 }

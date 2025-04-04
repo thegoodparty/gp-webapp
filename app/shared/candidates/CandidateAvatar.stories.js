@@ -1,4 +1,4 @@
-import CandidateAvatar from './CandidateAvatar';
+import CandidateAvatar from './CandidateAvatar'
 
 export default {
   title: 'Candidates/CandidateAvatar',
@@ -11,9 +11,9 @@ export default {
       image: 'https://i.pravatar.cc/100?u=goodparty123',
     },
   },
-};
+}
 
-export const Default = {};
+export const Default = {}
 
 export const Empty = {
   args: {
@@ -22,4 +22,4 @@ export const Empty = {
       lastName: 'Doe',
     },
   },
-};
+}

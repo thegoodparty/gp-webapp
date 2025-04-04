@@ -1,10 +1,10 @@
-import Body1 from '@shared/typography/Body1';
-import MarketingH4 from '@shared/typography/MarketingH4';
-import Overline from '@shared/typography/Overline';
-import DescriptionLabel from './DescriptionLabel';
+import Body1 from '@shared/typography/Body1'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import Overline from '@shared/typography/Overline'
+import DescriptionLabel from './DescriptionLabel'
 
 export default function AboutCard(props) {
-  const { candidate } = props;
+  const { candidate } = props
   const {
     firstName,
     lastName,
@@ -15,7 +15,7 @@ export default function AboutCard(props) {
     previouslyInOffice,
     priorRoles,
     yearsInOffice,
-  } = candidate;
+  } = candidate
 
   const descLabels = [
     { title: 'Job history', description: jobHistory },
@@ -23,7 +23,7 @@ export default function AboutCard(props) {
     { title: 'Military Service', description: militaryService },
     { title: 'Previously In Office', description: previouslyInOffice },
     { title: 'Total Years In Office', description: yearsInOffice },
-  ];
+  ]
 
   return (
     <section className="bg-primary-dark border border-gray-700 p-6 rounded-2xl h-full">
@@ -56,5 +56,5 @@ export default function AboutCard(props) {
         </>
       )}
     </section>
-  );
+  )
 }

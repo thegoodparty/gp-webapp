@@ -1,23 +1,23 @@
-import contentfulHelper from 'helpers/contentfulHelper';
-import Image from 'next/image';
-import Banner from './Banner';
-import ShareBlog from 'app/blog/shared/ShareBlog';
-import BlogPopup from './BlogPopup';
-import ArticleTags from './ArticleTags';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import Overline from '@shared/typography/Overline';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import BlogAuthor from './BlogAuthor';
-import BlogAuthorFooter from './BlogAuthorFooter';
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import ArticleFaqs from './ArticleFaqs';
-import ScrollToTop from './ScrollToTop';
-import RelatedArticles from './RelatedArticles';
-import Link from 'next/link';
-import { MdOpenInNew } from 'react-icons/md';
-import IconButton from '@shared/buttons/IconButton';
-import Body1 from '@shared/typography/Body1';
-import HighlightedContent from './HighlightedContent';
+import contentfulHelper from 'helpers/contentfulHelper'
+import Image from 'next/image'
+import Banner from './Banner'
+import ShareBlog from 'app/blog/shared/ShareBlog'
+import BlogPopup from './BlogPopup'
+import ArticleTags from './ArticleTags'
+import Breadcrumbs from '@shared/utils/Breadcrumbs'
+import Overline from '@shared/typography/Overline'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import BlogAuthor from './BlogAuthor'
+import BlogAuthorFooter from './BlogAuthorFooter'
+import CmsContentWrapper from '@shared/content/CmsContentWrapper'
+import ArticleFaqs from './ArticleFaqs'
+import ScrollToTop from './ScrollToTop'
+import RelatedArticles from './RelatedArticles'
+import Link from 'next/link'
+import { MdOpenInNew } from 'react-icons/md'
+import IconButton from '@shared/buttons/IconButton'
+import Body1 from '@shared/typography/Body1'
+import HighlightedContent from './HighlightedContent'
 
 export default async function BlogArticlePage({ article }) {
   const {
@@ -36,9 +36,9 @@ export default async function BlogArticlePage({ article }) {
     endHighlight,
     relatedArticles,
     references,
-  } = article;
-  const sectionSlug = section?.fields?.slug;
-  const sectionTitle = section?.fields?.title;
+  } = article
+  const sectionSlug = section?.fields?.slug
+  const sectionTitle = section?.fields?.title
   const breadcrumbs = [
     { href: '/blog', label: 'Blog' },
     {
@@ -46,7 +46,7 @@ export default async function BlogArticlePage({ article }) {
       label: sectionTitle,
     },
     { label: title },
-  ];
+  ]
 
   return (
     <>
@@ -154,5 +154,5 @@ export default async function BlogArticlePage({ article }) {
       </article>
       {relatedArticles && <RelatedArticles articles={relatedArticles} />}
     </>
-  );
+  )
 }

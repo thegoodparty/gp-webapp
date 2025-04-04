@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import TextField from './TextField';
-import { isValidEmail } from 'helpers/validations';
+import { useState } from 'react'
+import TextField from './TextField'
+import { isValidEmail } from 'helpers/validations'
 
 // NOTE: leaving export here for now to not break existing imports
-export { isValidEmail };
+export { isValidEmail }
 
 export default function EmailInput({
   value,
@@ -19,18 +19,18 @@ export default function EmailInput({
   newCallbackSignature = false,
   ...restProps
 }) {
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(true)
 
   function handleChange(e) {
-    const newValue = e.target.value;
-    const emailValid = isValidEmail(newValue);
+    const newValue = e.target.value
+    const emailValid = isValidEmail(newValue)
 
-    setIsValid(emailValid);
+    setIsValid(emailValid)
 
     if (newCallbackSignature) {
-      onChangeCallback(newValue, emailValid);
+      onChangeCallback(newValue, emailValid)
     } else {
-      onChangeCallback(e);
+      onChangeCallback(e)
     }
   }
 
@@ -59,5 +59,5 @@ export default function EmailInput({
     }}
       {...restProps}
     />
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
-import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { FaChevronDown } from 'react-icons/fa';
-import { OpenInNewRounded } from '@mui/icons-material';
-import { memo } from 'react';
+'use client'
+import Link from 'next/link'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { FaChevronDown } from 'react-icons/fa'
+import { OpenInNewRounded } from '@mui/icons-material'
+import { memo } from 'react'
 
 function NavDropdown({
   open,
@@ -65,7 +65,7 @@ function NavDropdown({
         </>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default memo(NavDropdown);
+export default memo(NavDropdown)

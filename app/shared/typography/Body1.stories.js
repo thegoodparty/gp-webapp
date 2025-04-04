@@ -1,4 +1,4 @@
-import Body1Component from './Body1';
+import Body1Component from './Body1'
 
 export default {
   title: 'Typography/Body1',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Element text',
   },
-};
+}
 
-export const Body1 = {};
+export const Body1 = {}

@@ -50,6 +50,7 @@ export const EVENTS = {
       ClickMyProfile: 'Navigation - Dashboard: Click My Profile',
       ClickCampaignTeam: 'Navigation - Dashboard: Click Campaign Team',
       ClickFreeResources: 'Navigation - Dashboard: Click Free Resources',
+      ClickCommunity: 'Navigation - Dashboard: Click Community',
     },
   },
   Dashboard: {

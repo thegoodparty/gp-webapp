@@ -1,7 +1,7 @@
-import Body1 from '@shared/typography/Body1';
-import H2 from '@shared/typography/H2';
+import Body1 from '@shared/typography/Body1'
+import H2 from '@shared/typography/H2'
 
-const { MdAnalytics, MdPeople, MdAutoAwesome } = require('react-icons/md');
+const { MdAnalytics, MdPeople, MdAutoAwesome } = require('react-icons/md')
 
 const cards = [
   {
@@ -22,7 +22,7 @@ const cards = [
       "Save time and multiply your campaign's output with AI trained on dozens of carefully honed templates, from press releases to endorsement pitches.",
     icon: <MdAutoAwesome size={32} />,
   },
-];
+]
 
 export default function InfoCardsSection() {
   return (
@@ -40,5 +40,5 @@ export default function InfoCardsSection() {
         </div>
       ))}
     </section>
-  );
+  )
 }

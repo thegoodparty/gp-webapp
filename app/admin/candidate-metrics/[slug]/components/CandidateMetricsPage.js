@@ -1,20 +1,20 @@
-import CandidateAvatar from '@shared/candidates/CandidateAvatar';
-import H3 from '@shared/typography/H3';
-import UpdateHistorySection from 'app/(candidate)/dashboard/components/UpdateHistorySection';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import UpdateHistoryChart from './UpdateHistoryChart';
-import TrackerStats from './TrackerStats';
-import H1 from '@shared/typography/H1';
-import AiContentTotals from './AiContentTotals';
+import CandidateAvatar from '@shared/candidates/CandidateAvatar'
+import H3 from '@shared/typography/H3'
+import UpdateHistorySection from 'app/(candidate)/dashboard/components/UpdateHistorySection'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import UpdateHistoryChart from './UpdateHistoryChart'
+import TrackerStats from './TrackerStats'
+import H1 from '@shared/typography/H1'
+import AiContentTotals from './AiContentTotals'
 
 export default function CandidateMetricsPage(props) {
-  const { campaign, updateHistory } = props;
+  const { campaign, updateHistory } = props
   if (!campaign) {
-    return null;
+    return null
   }
 
-  const { firstName, lastName } = campaign.details || {};
-  const { image } = campaign;
+  const { firstName, lastName } = campaign.details || {}
+  const { image } = campaign
 
   return (
     <AdminWrapper {...props}>
@@ -47,5 +47,5 @@ export default function CandidateMetricsPage(props) {
         </div>
       </div>
     </AdminWrapper>
-  );
+  )
 }

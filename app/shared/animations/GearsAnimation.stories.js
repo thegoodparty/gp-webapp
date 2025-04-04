@@ -1,10 +1,10 @@
-import GearsAnimation from './GearsAnimation';
+import GearsAnimation from './GearsAnimation'
 
 export default {
   title: 'Animations/GearsAnimation',
   component: GearsAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

@@ -1,11 +1,11 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { FaChevronLeft } from 'react-icons/fa';
-import { IssuePositionsList } from 'app/(candidate)/dashboard/questions/components/issues/IssuePositionsList';
-import { IssueItemLabel } from 'app/(candidate)/dashboard/questions/components/issues/IssueItemLabel';
-import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons';
-import { CandidatePositionStatement } from 'app/(candidate)/dashboard/questions/components/issues/CandidatePositionStatement';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { useEffect, useState } from 'react'
+import { FaChevronLeft } from 'react-icons/fa'
+import { IssuePositionsList } from 'app/(candidate)/dashboard/questions/components/issues/IssuePositionsList'
+import { IssueItemLabel } from 'app/(candidate)/dashboard/questions/components/issues/IssueItemLabel'
+import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons'
+import { CandidatePositionStatement } from 'app/(candidate)/dashboard/questions/components/issues/CandidatePositionStatement'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function IssueItemEditor({
   issue,
@@ -14,47 +14,47 @@ export default function IssueItemEditor({
   editIssuePosition,
   setEditIssuePosition = (v) => {},
 }) {
-  const { name, positions } = issue;
-  const [selectedPosition, setSelectedPosition] = useState(null);
-  const [candidatePosition, setCandidatePosition] = useState('');
-  const saveAllowed = candidatePosition !== '' && selectedPosition;
+  const { name, positions } = issue
+  const [selectedPosition, setSelectedPosition] = useState(null)
+  const [candidatePosition, setCandidatePosition] = useState('')
+  const saveAllowed = candidatePosition !== '' && selectedPosition
 
   useEffect(() => {
     if (editIssuePosition?.topIssue?.id === issue.id) {
-      setSelectedPosition(editIssuePosition.position);
-      setCandidatePosition(editIssuePosition.description);
+      setSelectedPosition(editIssuePosition.position)
+      setCandidatePosition(editIssuePosition.description)
     }
-  }, [editIssuePosition]);
+  }, [editIssuePosition])
 
   if (!issue || issue.positions?.length === 0) {
-    return null;
+    return null
   }
 
   const handleSelectPosition = (position) => {
     if (selectedPosition?.id === position.id) {
-      setSelectedPosition(null);
+      setSelectedPosition(null)
     } else {
-      setSelectedPosition(position);
+      setSelectedPosition(position)
     }
-  };
+  }
 
   const handleSave = () => {
     if (!saveAllowed) {
-      return;
+      return
     }
-    saveCallback(selectedPosition, issue, candidatePosition);
-  };
+    saveCallback(selectedPosition, issue, candidatePosition)
+  }
 
   const handleAnotherIssue = () => {
-    selectIssueCallback(null);
-    setSelectedPosition(null);
-    setCandidatePosition('');
-  };
+    selectIssueCallback(null)
+    setSelectedPosition(null)
+    setCandidatePosition('')
+  }
 
   const onCancel = () => {
-    trackEvent(EVENTS.Profile.TopIssues.CancelEdit);
-    setEditIssuePosition(null);
-  };
+    trackEvent(EVENTS.Profile.TopIssues.CancelEdit)
+    setEditIssuePosition(null)
+  }
 
   return (
     issue &&
@@ -96,5 +96,5 @@ export default function IssueItemEditor({
         </div>
       </>
     )
-  );
+  )
 }

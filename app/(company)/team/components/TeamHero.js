@@ -1,5 +1,5 @@
-import EmailForm from '@shared/inputs/EmailForm';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import EmailForm from '@shared/inputs/EmailForm'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 export default function TeamHero() {
   return (
@@ -22,5 +22,5 @@ export default function TeamHero() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

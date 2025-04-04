@@ -1,60 +1,60 @@
-'use client';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import MarketingH4 from '@shared/typography/MarketingH4';
-import Image from 'next/image';
-import WinnerFilters from './WinnerFilters';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { memo, useEffect, useState } from 'react';
-import FilteredWinnerList from './FilteredWinnerList';
-import { useMapCampaigns } from '@shared/hooks/useMapCampaigns';
+'use client'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import Image from 'next/image'
+import WinnerFilters from './WinnerFilters'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { memo, useEffect, useState } from 'react'
+import FilteredWinnerList from './FilteredWinnerList'
+import { useMapCampaigns } from '@shared/hooks/useMapCampaigns'
 
-const WINNER_FILTER = { results: true };
+const WINNER_FILTER = { results: true }
 
 export default memo(function WinnerListSection() {
-  const { campaigns: allCampaigns } = useMapCampaigns(WINNER_FILTER);
-  const [campaigns, setCampaigns] = useState([]);
-  const [offices, setOffices] = useState([]);
+  const { campaigns: allCampaigns } = useMapCampaigns(WINNER_FILTER)
+  const [campaigns, setCampaigns] = useState([])
+  const [offices, setOffices] = useState([])
 
   useEffect(() => {
-    const allOffices = allCampaigns.map((campaign) => campaign.office);
-    const offices = [...new Set(allOffices)]; // dedupe
+    const allOffices = allCampaigns.map((campaign) => campaign.office)
+    const offices = [...new Set(allOffices)] // dedupe
 
-    setCampaigns(allCampaigns);
-    setOffices(offices);
-  }, [allCampaigns]);
+    setCampaigns(allCampaigns)
+    setOffices(offices)
+  }, [allCampaigns])
 
   const [filters, setFilters] = useState({
     state: '',
     office: '',
     level: '',
-  });
+  })
 
   const onChangeFilters = (newFilters) => {
-    setFilters(newFilters);
+    setFilters(newFilters)
 
     const filteredCampaigns = allCampaigns.filter((campaign) => {
-      const { state, office, level } = newFilters;
+      const { state, office, level } = newFilters
 
       const stateMatch =
         typeof state === 'string' && state !== ''
           ? campaign.state === state
-          : true;
+          : true
       const officeMatch =
         typeof office === 'string' && office !== ''
           ? campaign.office === office
-          : true;
+          : true
       const levelMatch =
         typeof level === 'string' && level !== ''
           ? campaign.ballotLevel === level
-          : true;
+          : true
 
       if (stateMatch && officeMatch && levelMatch) {
-        return campaign;
+        return campaign
       }
-    });
+    })
 
-    setCampaigns(filteredCampaigns);
-  };
+    setCampaigns(filteredCampaigns)
+  }
 
   return (
     <div className="py-8 px-4 lg:p-16">
@@ -85,5 +85,5 @@ export default memo(function WinnerListSection() {
         <FilteredWinnerList campaigns={campaigns} />
       </MaxWidth>
     </div>
-  );
-});
+  )
+})

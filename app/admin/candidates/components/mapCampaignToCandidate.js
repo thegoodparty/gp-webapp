@@ -1,6 +1,6 @@
 export default function mapCampaignToCandidate(campaign) {
   if (!campaign) {
-    return false;
+    return false
   }
   const {
     slug,
@@ -23,7 +23,7 @@ export default function mapCampaignToCandidate(campaign) {
     endorsements,
     launchStatus,
     lastVisited,
-  } = campaign;
+  } = campaign
   const {
     firstName,
     lastName,
@@ -43,12 +43,12 @@ export default function mapCampaignToCandidate(campaign) {
     pledged,
     knowRun,
     primaryElectionDate,
-  } = details || {};
-  const { slogan, aboutMe, why } = campaignPlan || {};
+  } = details || {}
+  const { slogan, aboutMe, why } = campaignPlan || {}
 
-  const { electionDate } = goals || {};
+  const { electionDate } = goals || {}
 
-  const { voteGoal, voterProjection } = pathToVictory || {};
+  const { voteGoal, voterProjection } = pathToVictory || {}
   return {
     slug,
     firstName,
@@ -89,5 +89,5 @@ export default function mapCampaignToCandidate(campaign) {
     electionDate,
     pledged,
     knowRun,
-  };
+  }
 }

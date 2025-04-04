@@ -1,13 +1,13 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import WarningButton from '@shared/buttons/WarningButton'
+import Link from 'next/link'
 
 const Wrapper = ({ children, color, ...props }) => {
   if (color === 'primary') {
-    return <PrimaryButton {...props}>{children}</PrimaryButton>;
+    return <PrimaryButton {...props}>{children}</PrimaryButton>
   }
-  return <WarningButton {...props}>{children}</WarningButton>;
-};
+  return <WarningButton {...props}>{children}</WarningButton>
+}
 
 export default function RunCampaignButton({
   fullWidth,
@@ -21,5 +21,5 @@ export default function RunCampaignButton({
         <div className=" tracking-wide">{label}</div>
       </Wrapper>
     </Link>
-  );
+  )
 }

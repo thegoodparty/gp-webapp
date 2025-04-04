@@ -1,8 +1,8 @@
-'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import TextField from '@shared/inputs/TextField';
-import H1 from '@shared/typography/H1';
-import { isValidUrl } from 'helpers/linkhelper';
+'use client'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import TextField from '@shared/inputs/TextField'
+import H1 from '@shared/typography/H1'
+import { isValidUrl } from 'helpers/linkhelper'
 
 export default function Website({
   value,
@@ -11,17 +11,17 @@ export default function Website({
   campaignKey,
 }) {
   const handleSave = () => {
-    if (!canSave()) return;
+    if (!canSave()) return
 
-    saveCallback([`details.${campaignKey}`], [value]);
-  };
+    saveCallback([`details.${campaignKey}`], [value])
+  }
   const canSave = () => {
-    return isValidUrl(value);
-  };
+    return isValidUrl(value)
+  }
 
   const handleSkip = () => {
-    saveCallback([`details.${campaignKey}`], ['skipped']);
-  };
+    saveCallback([`details.${campaignKey}`], ['skipped'])
+  }
   return (
     <div className="max-w-xl m-auto">
       <form noValidate onSubmit={(e) => e.preventDefault()}>
@@ -35,7 +35,7 @@ export default function Website({
           }}
           value={value}
           onChange={(e) => {
-            onChangeCallback(campaignKey, e.target.value);
+            onChangeCallback(campaignKey, e.target.value)
           }}
           helperText="Please provide a full url starting with http"
         />
@@ -55,5 +55,5 @@ export default function Website({
         Skip for now
       </div>
     </div>
-  );
+  )
 }

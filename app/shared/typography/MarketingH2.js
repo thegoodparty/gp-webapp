@@ -9,11 +9,11 @@
  * @returns
  */
 export default function MarketingH2({ children, asH1, className = '' }) {
-  const Component = asH1 === true ? 'h1' : 'h2';
+  const Component = asH1 === true ? 'h1' : 'h2'
 
   return (
     <Component className={`font-medium text-4xl md:text-6xl ${className}`} data-testid="articleTitle">
       {children}
     </Component>
-  );
+  )
 }

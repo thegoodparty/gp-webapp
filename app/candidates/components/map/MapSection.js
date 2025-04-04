@@ -1,15 +1,15 @@
-'use client';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import Map from './Map';
-import Results from './Results';
-import Filters from './Filters';
-import CampaignPreview from './CampaignPreview';
-import WinnerListSection from '../winners/WinnerListSection';
-import { useMapCampaigns } from '@shared/hooks/useMapCampaigns';
-import ShareMap from './ShareMap';
-import { useRouter } from 'next/navigation';
-import { isObjectEqual } from 'helpers/objectHelper';
-import { CircularProgress } from '@mui/material';
+'use client'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import Map from './Map'
+import Results from './Results'
+import Filters from './Filters'
+import CampaignPreview from './CampaignPreview'
+import WinnerListSection from '../winners/WinnerListSection'
+import { useMapCampaigns } from '@shared/hooks/useMapCampaigns'
+import ShareMap from './ShareMap'
+import { useRouter } from 'next/navigation'
+import { isObjectEqual } from 'helpers/objectHelper'
+import { CircularProgress } from '@mui/material'
 
 export default memo(function MapSection({
   isLoaded,
@@ -17,11 +17,11 @@ export default memo(function MapSection({
   searchParams,
   count,
 }) {
-  const router = useRouter();
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const [visibleCampaigns, setVisibleCampaigns] = useState(null);
-  const [mapBounds, setMapBounds] = useState();
-  const mapRef = useRef(null);
+  const router = useRouter()
+  const [selectedCampaign, setSelectedCampaign] = useState(null)
+  const [visibleCampaigns, setVisibleCampaigns] = useState(null)
+  const [mapBounds, setMapBounds] = useState()
+  const mapRef = useRef(null)
   const [filters, setFilters] = useState({
     party: searchParams?.party || '',
     state: state || searchParams?.state || '',
@@ -29,8 +29,8 @@ export default memo(function MapSection({
     results: searchParams?.results ? searchParams?.results === 'true' : true, // default to filter for winners
     office: searchParams?.office || '',
     name: searchParams?.name || '',
-  });
-  const { campaigns, isCampaignsLoading: loading } = useMapCampaigns(filters);
+  })
+  const { campaigns, isCampaignsLoading: loading } = useMapCampaigns(filters)
 
   useEffect(() => {
     setFilters((currentFilters) => {
@@ -43,96 +43,96 @@ export default memo(function MapSection({
           : currentFilters.results,
         office: searchParams?.office || currentFilters.office,
         name: searchParams?.name || currentFilters.name,
-      };
+      }
 
       return isObjectEqual(currentFilters, searchParamFilters)
         ? currentFilters
-        : searchParamFilters;
-    });
-  }, [searchParams, state]);
+        : searchParamFilters
+    })
+  }, [searchParams, state])
 
   useEffect(() => {
     // filter visible campaigns
     if (mapBounds) {
       const visibleCampaigns = campaigns.filter((camp) =>
         mapBounds.contains(camp.globalPosition),
-      );
-      setVisibleCampaigns(visibleCampaigns);
-      return;
+      )
+      setVisibleCampaigns(visibleCampaigns)
+      return
     }
 
-    setVisibleCampaigns(null);
-  }, [campaigns, mapBounds]);
+    setVisibleCampaigns(null)
+  }, [campaigns, mapBounds])
 
   const onChangeFilters = useCallback(
     (key, val) => {
       setFilters((currentFilters) => {
         // return same filter object if no filters values changed
         if (currentFilters[key] === val) {
-          return currentFilters;
+          return currentFilters
         }
 
         const updatedFilters = {
           ...searchParams,
           ...currentFilters,
           [key]: val,
-        };
+        }
 
         // add the filters to the url query only if they are not empty
         const query = Object.entries(updatedFilters).reduce(
           (acc, [key, val]) => {
             if (val) {
-              acc[key] = val;
+              acc[key] = val
             }
-            return acc;
+            return acc
           },
           {},
-        );
+        )
 
-        const queryString = new URLSearchParams(query);
+        const queryString = new URLSearchParams(query)
         router.push(`?${queryString.toString()}`, {
           scroll: false,
           shallow: true,
-        });
+        })
 
-        return updatedFilters;
-      });
+        return updatedFilters
+      })
     },
     [router, searchParams],
-  );
+  )
 
   const onChangeMapBounds = useCallback((bounds) => {
-    setMapBounds(bounds);
-  }, []);
+    setMapBounds(bounds)
+  }, [])
 
   const onSelectCampaign = useCallback((campaign) => {
-    if (!mapRef.current) return;
+    if (!mapRef.current) return
 
     setSelectedCampaign((currentSelected) => {
       if (
         !campaign ||
         (currentSelected && currentSelected.slug === campaign.slug)
       ) {
-        return null;
+        return null
       }
 
-      mapRef.current.moveMapWithHistory(campaign.globalPosition);
+      mapRef.current.moveMapWithHistory(campaign.globalPosition)
 
-      return campaign;
-    });
-  }, []);
+      return campaign
+    })
+  }, [])
 
   const onClusterClick = useCallback((cluster) => {
-    if (!mapRef.current) return;
+    if (!mapRef.current) return
 
-    mapRef.current.moveMapWithHistory(cluster.bounds);
-  }, []);
+    mapRef.current.moveMapWithHistory(cluster.bounds)
+  }, [])
 
   const onZoomOut = useCallback(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current) return
 
-    mapRef.current.moveMapWithHistory('full');
-  }, []);
+    mapRef.current.moveMapWithHistory('full')
+  }, [])
 
   return (
     <>
@@ -184,5 +184,5 @@ export default memo(function MapSection({
       </div>
       <WinnerListSection />
     </>
-  );
-});
+  )
+})

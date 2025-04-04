@@ -1,4 +1,4 @@
-import TealButton from 'app/candidate/[name]/[office]/components/TealButton';
+import TealButton from 'app/candidate/[name]/[office]/components/TealButton'
 
 export default {
   title: 'Unshared/TealButton',
@@ -10,8 +10,8 @@ export default {
         <strong>(Used in candidate pages)</strong>
         <TealButton {...args}>Teal Button</TealButton>
       </>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

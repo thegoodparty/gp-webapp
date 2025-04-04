@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import { kFormatter } from 'helpers/numberHelper';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import { kFormatter } from 'helpers/numberHelper'
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
 // import styles from './GoalsChart.module.scss';
 
-const COLORS = ['#DEE1E9', '#242D3D'];
-const COLORS_OVER = ['#44F1A7', '#0EB66F'];
+const COLORS = ['#DEE1E9', '#242D3D']
+const COLORS_OVER = ['#44F1A7', '#0EB66F']
 
 export default function ProgressPie({ total, progress }) {
-  let overMode = total - progress < 0;
+  let overMode = total - progress < 0
 
-  let data;
+  let data
   if (overMode) {
     data = [
       { name: 'Total', value: total },
       { name: 'So Far', value: total / 5 },
-    ];
+    ]
   } else {
     data = [
       { name: 'Total', value: total - progress },
       { name: 'So Far', value: progress },
-    ];
+    ]
   }
 
   return (
@@ -71,5 +71,5 @@ export default function ProgressPie({ total, progress }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

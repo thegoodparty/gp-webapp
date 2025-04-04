@@ -1,33 +1,33 @@
-'use client';
-import Link from 'next/link';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { useEffect, useState } from 'react';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
-import Button from '@shared/buttons/Button';
+'use client'
+import { IoIosCloseCircle } from 'react-icons/io'
+import { useEffect, useState } from 'react'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import Button from '@shared/buttons/Button'
 
 export default function Callout() {
-  const [showCallout, setShowCallout] = useState(true);
+  const [showCallout, setShowCallout] = useState(true)
 
   useEffect(() => {
     try {
-      const callout = localStorage.getItem('callout');
+      const callout = localStorage.getItem('callout')
       if (callout) {
-        setShowCallout(false);
+        setShowCallout(false)
       }
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  }, []);
+  }, [])
 
-  const trackingAttrs = buildTrackingAttrs('Join Discord Banner Link');
+  const trackingAttrs = buildTrackingAttrs(
+    'Join GoodParty.org Community Banner Link',
+  )
 
   function handleClose() {
     try {
-      localStorage.setItem('callout', true);
-      setShowCallout(false);
+      localStorage.setItem('callout', true)
+      setShowCallout(false)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
@@ -37,16 +37,18 @@ export default function Callout() {
         <div className="flex w-full bg-lime-400 lg:block border-solid border-b border-zinc-200 p-2 h-full">
           <div className="flex w-full h-14">
             <div className="flex w-full justify-center items-center ">
-              <span className="md:hidden">Join our Discord!</span>
+              <span className="md:hidden">
+                Join our GoodParty.org Community!
+              </span>
               <span className="hidden md:block">
-                Join our Discord community - meet like-minded independents and
-                get involved!
+                Join our GoodParty.org Community - meet like-minded independents
+                and get involved!
               </span>
               <Button
-                id="nav-join-discord"
-                href="https://discord.gg/invite/goodparty"
+                id="nav-join-community"
+                href="https://community.goodparty.org"
                 target="_blank"
-                aria-label="Join our Discord community - meet like-minded independents and get involved!"
+                aria-label="Join our GoodParty.org Community - meet like-minded independents and get involved!"
                 {...trackingAttrs}
                 size="large"
                 className="whitespace-nowrap ml-5 !py-2 border-none"
@@ -65,5 +67,5 @@ export default function Callout() {
         </div>
       </div>
     )
-  );
+  )
 }

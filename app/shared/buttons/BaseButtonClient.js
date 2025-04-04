@@ -1,4 +1,4 @@
-'use client';
+'use client'
 const BaseButton = ({
   children,
   style,
@@ -19,7 +19,7 @@ const BaseButton = ({
     >
       {children}
     </button>
-  );
-};
+  )
+}
 
-export default BaseButton;
+export default BaseButton

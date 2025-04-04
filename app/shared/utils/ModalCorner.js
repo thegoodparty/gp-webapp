@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import MuiModal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { useMediaQuery } from '@mui/material';
+import * as React from 'react'
+import MuiModal from '@mui/material/Modal'
+import Box from '@mui/material/Box'
+import { IoIosCloseCircle } from 'react-icons/io'
+import { useMediaQuery } from '@mui/material'
 
 export default function ModalCorner({
   open,
@@ -15,10 +15,10 @@ export default function ModalCorner({
 }) {
   const handleClose = (e, reason) => {
     if (reason === 'backdropClick' && preventBackdropClose) {
-      return;
+      return
     }
-    closeCallback();
-  };
+    closeCallback()
+  }
 
   const styleMobile = {
     position: 'absolute',
@@ -33,7 +33,7 @@ export default function ModalCorner({
     outline: 'none',
     maxHeight: '90vh',
     overflowY: 'auto',
-  };
+  }
 
   let styleDesktop = {
     position: 'absolute',
@@ -48,9 +48,9 @@ export default function ModalCorner({
     outline: 'none',
     maxHeight: '90vh',
     overflowY: 'auto',
-  };
+  }
 
-  const desktopMode = useMediaQuery('(min-width: 768px)');
+  const desktopMode = useMediaQuery('(min-width: 768px)')
   return (
     <MuiModal open={open} onClose={handleClose}>
       <div className="bg-blue-400">
@@ -65,5 +65,5 @@ export default function ModalCorner({
         </Box>
       </div>
     </MuiModal>
-  );
+  )
 }

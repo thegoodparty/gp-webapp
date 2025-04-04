@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import img from 'public/images/landing-pages/ads-hero.jpg';
-import HeroForm from './HeroForm';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import img from 'public/images/landing-pages/ads-hero.jpg'
+import HeroForm from './HeroForm'
 
 export default function HeroSection() {
   return (
@@ -42,5 +42,5 @@ export default function HeroSection() {
         <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#0D1528_55%)] h-[calc(100vw*0.09)] w-full" />
       </div>
     </section>
-  );
+  )
 }

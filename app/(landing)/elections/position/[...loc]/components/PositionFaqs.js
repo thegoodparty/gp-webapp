@@ -1,7 +1,6 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { dateUsHelper } from 'helpers/dateHelper';
-import PositionFaq from './PositionFaq';
-import { Fragment } from 'react';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import PositionFaq from './PositionFaq'
+import { Fragment } from 'react'
 
 export default function PositionFaqs({ race }) {
   const {
@@ -15,18 +14,18 @@ export default function PositionFaqs({ race }) {
     isPrimary,
     partisanType,
     loc,
-  } = race;
-  const term = frequency.match(/\d+/g);
+  } = race
+  const term = frequency.match(/\d+/g)
 
-  let runOffPrimary = '';
+  let runOffPrimary = ''
   if (!isRunoff && !isPrimary) {
-    runOffPrimary = `The next election for ${normalizedPositionName} does not include a primary or runoff election.`;
+    runOffPrimary = `The next election for ${normalizedPositionName} does not include a primary or runoff election.`
   } else if (isRunoff && isPrimary) {
-    runOffPrimary = `The next election for ${normalizedPositionName} includes both a primary and runoff election.`;
+    runOffPrimary = `The next election for ${normalizedPositionName} includes both a primary and runoff election.`
   } else if (isRunoff && !isPrimary) {
-    runOffPrimary = `The next election for ${normalizedPositionName}  includes a primary, but not a runoff election.`;
+    runOffPrimary = `The next election for ${normalizedPositionName}  includes a primary, but not a runoff election.`
   } else if (!isRunoff && isPrimary) {
-    runOffPrimary = `The next election for ${normalizedPositionName}  includes a runoff, but not a primary election.`;
+    runOffPrimary = `The next election for ${normalizedPositionName}  includes a runoff, but not a primary election.`
   }
 
   const faqs = [
@@ -66,7 +65,7 @@ export default function PositionFaqs({ race }) {
       q: `Is there a primary or runoff election for this office?`,
       a: runOffPrimary,
     },
-  ];
+  ]
   return (
     <section className="py-12 bg-primary-dark text-white">
       <MaxWidth>
@@ -78,5 +77,5 @@ export default function PositionFaqs({ race }) {
         ))}
       </MaxWidth>
     </section>
-  );
+  )
 }

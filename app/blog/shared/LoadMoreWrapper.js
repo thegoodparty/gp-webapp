@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { useState } from 'react'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
 
 /**
  * Wraps content to hide displaying it behind a button click
  */
 export default function LoadMoreWrapper({ children, className }) {
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(false)
 
   return (
     <div className={className}>
@@ -21,5 +21,5 @@ export default function LoadMoreWrapper({ children, className }) {
       </PrimaryButton>
       <div className={showMore ? 'block' : 'hidden'}>{children}</div>
     </div>
-  );
+  )
 }

@@ -5,5 +5,5 @@ export default function HighlightedContent({ children, className = '' }) {
     >
       {children}
     </div>
-  );
+  )
 }

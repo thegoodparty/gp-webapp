@@ -1,9 +1,9 @@
-'use client';
-import React, { useState } from 'react';
-import { HiArrowNarrowRight } from 'react-icons/hi';
-import MaxWidth from '@shared/layouts/MaxWidth';
+'use client'
+import React, { useState } from 'react'
+import { HiArrowNarrowRight } from 'react-icons/hi'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
-import styles from './Values.module.scss';
+import styles from './Values.module.scss'
 
 const cards = [
   {
@@ -36,16 +36,16 @@ const cards = [
     back: 'Fun and joy is what makes life worth living. We celebrate each other, take pride in ourselves and what we are building, and commit to spreading GoodParty.org every which way possible.',
     color: '#F8593F',
   },
-];
+]
 
 function Values() {
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useState({})
   const handleSelected = (index) => {
     setSelected({
       ...selected,
       [index]: !selected[index],
-    });
-  };
+    })
+  }
   return (
     <div className={styles.wrapper}>
       <MaxWidth>
@@ -79,7 +79,7 @@ function Values() {
         </div>
       </MaxWidth>
     </div>
-  );
+  )
 }
 
-export default Values;
+export default Values

@@ -1,4 +1,4 @@
-import { ExpertCard } from './ExpertCard';
+import { ExpertCard } from './ExpertCard'
 
 const EXPERTS = [
   {
@@ -28,7 +28,7 @@ const EXPERTS = [
       alt: 'Rich Horner',
     },
   },
-];
+]
 
 const CampaignExperts = () => (
   <div className="bg-primary-dark text-white text-center py-8 px-20 align-center">
@@ -44,6 +44,6 @@ const CampaignExperts = () => (
       ))}
     </div>
   </div>
-);
+)
 
-export default CampaignExperts;
+export default CampaignExperts

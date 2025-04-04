@@ -8,5 +8,5 @@ export default function Paper({ children, className, ...rest }) {
     >
       {children}
     </div>
-  );
+  )
 }

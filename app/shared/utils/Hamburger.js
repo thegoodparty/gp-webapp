@@ -1,4 +1,4 @@
-import { Burger } from 'hamburger-react/dist-esm/Burger';
+import { Burger } from 'hamburger-react/dist-esm/Burger'
 
 // NOTE: copy/pasted from https://github.com/cyntler/hamburger-react/blob/master/src/Burger.tsx
 // to be able to change the onKeyUp handler to onKeyDown, was preventing keyboard presses from closing menu
@@ -72,5 +72,5 @@ export default function Hamburger(props) {
         </div>
       )}
     />
-  );
+  )
 }

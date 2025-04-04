@@ -1,60 +1,68 @@
-import { notFound } from 'next/navigation';
-import pageMetaData from 'helpers/metadataHelper';
-import { fetchArticlesBySections } from 'app/blog/shared/fetchArticlesBySections';
-import BlogSectionPage from './components/BlogSectionPage';
-import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags';
-import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles';
+import { notFound } from 'next/navigation'
+import pageMetaData from 'helpers/metadataHelper'
+import { fetchArticlesBySection } from 'app/blog/shared/fetchArticlesBySection'
+import BlogSectionPage from './components/BlogSectionPage'
+import { fetchArticleTags } from 'app/blog/shared/fetchArticleTags'
+import { fetchArticlesTitles } from 'app/blog/shared/fetchArticlesTitles'
+import { fetchSections } from 'app/blog/shared/fetchSections'
+import { fetchSection } from 'app/blog/shared/fetchSection'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 export async function generateMetadata({ params }) {
-  const { slug } = params;
-  const { sections, sectionIndex } = await fetchArticlesBySections(slug);
-
-  const sectionTitle = sections[sectionIndex]?.fields?.title || '';
+  const { slug } = params
+  const section = await fetchSection(slug)
+  const sectionTitle = section?.fields?.title || ''
 
   const meta = pageMetaData({
     title: `${sectionTitle} | GoodParty.org Blog`,
     description: `Good Part Blog ${sectionTitle} Section`,
     slug: `/blog/section/${slug}`,
-  });
-  return meta;
+  })
+  return meta
 }
 
 export default async function Page({ params }) {
-  const { slug } = params;
+  const { slug } = params
 
   if (!slug) {
-    notFound();
+    notFound()
   }
-  const [{ sections, hero, sectionIndex }, tags, titles] = await Promise.all([
-    fetchArticlesBySections(slug),
+  const [{ [slug]: articles }, tags, titles, sections] = await Promise.all([
+    fetchArticlesBySection({ sectionSlug: slug }),
     fetchArticleTags(),
     fetchArticlesTitles(),
-  ]);
+    fetchSections(),
+  ])
 
-  const sectionTitle = sections[sectionIndex].fields.title;
+  const hero = articles[0]
+  const currentSection = sections.find(({ fields }) => fields.slug === slug)
+
+  const sectionTitle = currentSection.fields.title
 
   return (
     <BlogSectionPage
       sections={sections}
+      articles={articles.filter(
+        (article) => article.contentId !== hero.contentId,
+      )}
       sectionTitle={sectionTitle}
-      sectionIndex={sectionIndex}
+      currentSection={currentSection}
       slug={slug}
       hero={hero}
       allTags={tags}
       articleTitles={titles}
     />
-  );
+  )
 }
 
 export async function generateStaticParams() {
-  const { sections } = await fetchArticlesBySections();
+  const sections = await fetchSections()
 
-  return sections?.map((section) => {
+  return sections?.map(({ section }) => {
     return {
       slug: section?.slug,
-    };
-  });
+    }
+  })
 }

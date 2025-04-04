@@ -1,17 +1,17 @@
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import Paper from '@shared/utils/Paper';
-import { FaDoorClosed, FaMapSigns, FaPhone } from 'react-icons/fa';
-import MethodRow from './MethodRow';
-import { memo } from 'react';
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import Paper from '@shared/utils/Paper'
+import { FaDoorClosed, FaMapSigns, FaPhone } from 'react-icons/fa'
+import MethodRow from './MethodRow'
+import { memo } from 'react'
 import {
   MdEmail,
   MdOutlinePhoneIphone,
   MdPeopleAlt,
   MdShare,
-} from 'react-icons/md';
-import { StyledAlert } from '@shared/alerts/StyledAlert';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+} from 'react-icons/md'
+import { StyledAlert } from '@shared/alerts/StyledAlert'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const methods = [
   {
@@ -187,7 +187,7 @@ const methods = [
         EVENTS.Dashboard.VoterContact.EventsRallies.ClickGenerateScript,
       ),
   },
-];
+]
 
 const ContactMethodsSection = memo(function ContactMethodsSection(props) {
   return (
@@ -198,6 +198,6 @@ const ContactMethodsSection = memo(function ContactMethodsSection(props) {
         <MethodRow key={method.key} method={method} {...props} />
       ))}
     </Paper>
-  );
-});
-export default ContactMethodsSection;
+  )
+})
+export default ContactMethodsSection

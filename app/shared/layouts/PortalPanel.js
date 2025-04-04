@@ -18,5 +18,5 @@ export default function PortalPanel({ children, color, smWhite, ...props }) {
       )}
       {children}
     </div>
-  );
+  )
 }

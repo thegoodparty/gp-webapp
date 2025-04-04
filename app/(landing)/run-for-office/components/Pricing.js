@@ -1,30 +1,30 @@
-import { IoMdCheckmark } from 'react-icons/io';
-import MarketingH3 from '@shared/typography/MarketingH3';
-import MarketingH4 from '@shared/typography/MarketingH4';
-import Body1 from '@shared/typography/Body1';
-import Button from '@shared/buttons/Button';
+import { IoMdCheckmark } from 'react-icons/io'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import Body1 from '@shared/typography/Body1'
+import Button from '@shared/buttons/Button'
 
 const points1 = [
   'AI Campaign Content',
   'Campaign progress tracker',
   'Path to Victory report',
   'Consultation with a campaign managing',
-  'Discord community',
+  'GoodParty.org Community',
   'GoodParty.org Academy',
-];
+]
 
 const points2 = [
   'Voter data and records',
   'Dedicated support',
   'Peer-to-peer texting and calling platform',
-];
+]
 
 function PricingCard({ heading, subheading, price, points, color }) {
-  const bgColor = color === 'lime' ? 'bg-lime-400' : 'bg-white';
+  const bgColor = color === 'lime' ? 'bg-lime-400' : 'bg-white'
   const bulletColor =
     color === 'lime'
       ? 'bg-primary-main text-white'
-      : 'bg-lime-400 border-black/[0.12]';
+      : 'bg-lime-400 border-black/[0.12]'
 
   return (
     <div className={`flex flex-col p-6 md:p-12 rounded-md ${bgColor}`}>
@@ -50,7 +50,7 @@ function PricingCard({ heading, subheading, price, points, color }) {
         Get Started
       </Button>
     </div>
-  );
+  )
 }
 
 export default function Pricing() {
@@ -78,5 +78,5 @@ export default function Pricing() {
         />
       </div>
     </section>
-  );
+  )
 }

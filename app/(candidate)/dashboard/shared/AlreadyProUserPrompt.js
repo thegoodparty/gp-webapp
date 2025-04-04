@@ -1,7 +1,7 @@
-import H1 from '@shared/typography/H1';
-import H2 from '@shared/typography/H2';
-import Link from 'next/link';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import H1 from '@shared/typography/H1'
+import H2 from '@shared/typography/H2'
+import Link from 'next/link'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
 
 export const AlreadyProUserPrompt = () => (
   <>
@@ -13,4 +13,4 @@ export const AlreadyProUserPrompt = () => (
       <SecondaryButton className="">Go Back to your Dashboard</SecondaryButton>
     </Link>
   </>
-);
+)

@@ -1,4 +1,4 @@
-import OverlineComponent from './Overline';
+import OverlineComponent from './Overline'
 
 export default {
   title: 'Typography/Overline',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Overline Text',
   },
-};
+}
 
-export const Overline = {};
+export const Overline = {}

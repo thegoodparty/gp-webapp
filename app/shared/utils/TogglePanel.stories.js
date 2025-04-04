@@ -1,4 +1,4 @@
-import TogglePanelComponent from './TogglePanel';
+import TogglePanelComponent from './TogglePanel'
 
 export default {
   title: 'Utils/TogglePanel',
@@ -29,6 +29,6 @@ export default {
       },
     },
   },
-};
+}
 
-export const TogglePanel = {};
+export const TogglePanel = {}

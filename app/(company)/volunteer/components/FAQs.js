@@ -1,5 +1,5 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import TogglePanel from '@shared/utils/TogglePanel';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import TogglePanel from '@shared/utils/TogglePanel'
 
 const faqs = [
   {
@@ -35,10 +35,6 @@ const faqs = [
     a: "Not at all. We understand that getting involved in the political world can be intimidating and feel very gatekeep-y. GoodParty.org is actually the ideal place for someone tiptoeing into civic engagement for the first time, and we'll make you feel welcome.",
   },
   {
-    q: "I've never used Discord - can I get involved via email or text?",
-    a: "Yes! We have separate email and text options for volunteers who prefer to get information about opportunities to get involved that way. That said, our Discord is really worth checking out. It's a vibrant community built around fun, respectful discourse and people who want to make people matter more than money - just like you! If you want a walkthrough of how to use Discord, check out this video.",
-  },
-  {
     q: "Isn't politics super boring and toxic?",
     a: "Not here! GoodParty.org was created exactly because politics is so messed up and unrewarding. We are all about bringing the party to politics and not just talking about things but actually creating results and growing our movement. We're here to change politics, for good and want to have fun doing it!",
   },
@@ -50,7 +46,7 @@ const faqs = [
     q: "I have more questions that aren't answered here! Who can answer them?",
     a: 'Grab a drink with us, and a full-time team member will get your questions answered! Sign up here to grab a virtual drink with one of our community leaders. These are full-time members of our team who know everything there is to know about GoodParty.org and the best ways to get you plugged in!',
   },
-];
+]
 
 export default function FAQs() {
   return (
@@ -64,5 +60,5 @@ export default function FAQs() {
         ))}
       </MaxWidth>
     </section>
-  );
+  )
 }

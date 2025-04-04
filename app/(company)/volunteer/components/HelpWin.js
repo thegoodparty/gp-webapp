@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import winImg from 'public/images/landing-pages/win.png';
-import Button from '@shared/buttons/Button';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import winImg from 'public/images/landing-pages/win.png'
+import Button from '@shared/buttons/Button'
 
 export default function HelpWin() {
   return (
@@ -40,5 +40,5 @@ export default function HelpWin() {
         </MaxWidth>
       </section>
     </>
-  );
+  )
 }

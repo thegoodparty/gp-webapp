@@ -1,5 +1,5 @@
-import { FaChevronRight } from 'react-icons/fa6';
-import { IssueItemLabel } from './IssueItemLabel';
+import { FaChevronRight } from 'react-icons/fa6'
+import { IssueItemLabel } from './IssueItemLabel'
 
 export const IssueSelectItem = ({
   issue = {},
@@ -19,7 +19,7 @@ export const IssueSelectItem = ({
       hover:bg-tertiary-background
     `}
     onClick={() => {
-      handleSelectIssue(issue);
+      handleSelectIssue(issue)
     }}
   >
     <IssueItemLabel
@@ -28,4 +28,4 @@ export const IssueSelectItem = ({
     />
     <FaChevronRight size={14} />
   </div>
-);
+)

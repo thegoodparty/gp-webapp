@@ -1,51 +1,51 @@
-'use client';
-import ErrorButton from '@shared/buttons/ErrorButton';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { revalidatePage } from 'helpers/cacheHelper';
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import { useSnackbar } from 'helpers/useSnackbar';
+'use client'
+import ErrorButton from '@shared/buttons/ErrorButton'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { revalidatePage } from 'helpers/cacheHelper'
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function BustCacheButton({ name, description, paths }) {
-  const [showBustCache, setShowBustCache] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [customPath, setCustomPath] = useState('');
+  const [showBustCache, setShowBustCache] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [customPath, setCustomPath] = useState('')
   const handleOpenModal = () => {
-    setShowModal(true);
-  };
-  const { successSnackbar, errorSnackbar } = useSnackbar();
+    setShowModal(true)
+  }
+  const { successSnackbar, errorSnackbar } = useSnackbar()
 
   const handleBustCache = async () => {
-    successSnackbar(`Busting Cache: ${description}...`);
+    successSnackbar(`Busting Cache: ${description}...`)
 
-    let success = false;
+    let success = false
     if (customPath === '') {
       for (const path of paths) {
-        const revalidateResp = await revalidatePage(path);
+        const revalidateResp = await revalidatePage(path)
         if (revalidateResp?.revalidated) {
-          success = true;
+          success = true
         } else {
-          success = false;
+          success = false
         }
       }
     } else {
-      const revalidateResp = await revalidatePage(customPath);
+      const revalidateResp = await revalidatePage(customPath)
       if (revalidateResp?.revalidated) {
-        success = true;
+        success = true
       } else {
-        success = false;
+        success = false
       }
-      setCustomPath('');
+      setCustomPath('')
     }
 
-    setShowBustCache(false);
+    setShowBustCache(false)
 
     if (success) {
-      successSnackbar(`Cached Busted: ${description}`);
+      successSnackbar(`Cached Busted: ${description}`)
     } else {
-      errorSnackbar(`Error Busting Cache: ${description}`);
+      errorSnackbar(`Error Busting Cache: ${description}`)
     }
-  };
+  }
 
   return (
     <>
@@ -53,9 +53,9 @@ export default function BustCacheButton({ name, description, paths }) {
         className="my-3"
         onClick={() => {
           if (name === 'custom path') {
-            handleOpenModal();
+            handleOpenModal()
           } else {
-            setShowBustCache(true);
+            setShowBustCache(true)
           }
         }}
       >
@@ -66,7 +66,7 @@ export default function BustCacheButton({ name, description, paths }) {
       <AlertDialog
         open={showBustCache}
         handleClose={() => {
-          setShowBustCache(false);
+          setShowBustCache(false)
         }}
         title="Bust Cache?"
         description={`Are you sure you want to: ${description} ?`}
@@ -77,7 +77,7 @@ export default function BustCacheButton({ name, description, paths }) {
       <Modal
         open={showModal}
         closeCallback={() => {
-          setShowModal(false);
+          setShowModal(false)
         }}
       >
         <h2 className="text-2xl font-black my-6">Enter the path to bust.</h2>
@@ -86,8 +86,8 @@ export default function BustCacheButton({ name, description, paths }) {
           type="text"
           placeholder="/candidate/[slug]"
           onChange={(e) => {
-            const path = e.target.value;
-            setCustomPath(path);
+            const path = e.target.value
+            setCustomPath(path)
           }}
         />
         <div onClick={handleBustCache}>
@@ -97,5 +97,5 @@ export default function BustCacheButton({ name, description, paths }) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

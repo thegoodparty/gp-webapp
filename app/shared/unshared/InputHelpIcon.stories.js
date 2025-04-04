@@ -1,4 +1,4 @@
-import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon';
+import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon'
 
 export default {
   title: 'Unshared/InputHelpIcon',
@@ -13,8 +13,8 @@ export default {
         <strong>(Used in upgrade to pro pages)</strong>
         <InputHelpIcon {...args} />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

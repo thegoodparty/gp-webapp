@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { times } from 'es-toolkit/compat';
-import Image from 'next/image';
-import MarketingH3 from '@shared/typography/MarketingH3';
-import Body1 from '@shared/typography/Body1';
-import H3 from '@shared/typography/H3';
-import Subtitle2 from '@shared/typography/Subtitle2';
-import Button from '@shared/buttons/Button';
-import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import { useEffect, useState } from 'react'
+import { times } from 'es-toolkit/compat'
+import Image from 'next/image'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import Body1 from '@shared/typography/Body1'
+import H3 from '@shared/typography/H3'
+import Subtitle2 from '@shared/typography/Subtitle2'
+import Button from '@shared/buttons/Button'
+import { MdArrowBack, MdArrowForward } from 'react-icons/md'
 
-const LG_PAGE_SIZE = 3;
-const MD_PAGE_SIZE = 2;
-const SM_PAGE_SIZE = 1;
-const LG_MIN = 1024;
-const MD_MIN = 768;
+const LG_PAGE_SIZE = 3
+const MD_PAGE_SIZE = 2
+const SM_PAGE_SIZE = 1
+const LG_MIN = 1024
+const MD_MIN = 768
 
 function PageDot({ pageNum, isSelected, onClick }) {
   return (
@@ -26,56 +26,56 @@ function PageDot({ pageNum, isSelected, onClick }) {
         isSelected ? 'bg-primary-main' : 'bg-black/[0.38]'
       }`}
     ></span>
-  );
+  )
 }
 
 export default function Testimonials({ testimonials }) {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(SM_PAGE_SIZE);
+  const [currentPage, setCurrentPage] = useState(0)
+  const [pageSize, setPageSize] = useState(SM_PAGE_SIZE)
 
   useEffect(() => {
     function handleResize() {
-      const windowWidth = window.innerWidth;
+      const windowWidth = window.innerWidth
       const newPageSize =
         windowWidth > LG_MIN
           ? LG_PAGE_SIZE
           : windowWidth <= MD_MIN
           ? SM_PAGE_SIZE
-          : MD_PAGE_SIZE;
+          : MD_PAGE_SIZE
 
       if (pageSize !== newPageSize) {
-        setPageSize(newPageSize);
-        setCurrentPage(0);
+        setPageSize(newPageSize)
+        setCurrentPage(0)
       }
     }
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize)
 
-    handleResize();
+    handleResize()
 
-    return () => window.removeEventListener('resize', handleResize);
-  }, [pageSize]);
+    return () => window.removeEventListener('resize', handleResize)
+  }, [pageSize])
 
-  if (!testimonials || testimonials.length <= 0) return null;
+  if (!testimonials || testimonials.length <= 0) return null
 
-  const hasPages = testimonials.length > pageSize;
-  const lastPage = Math.floor((testimonials.length - 1) / pageSize);
-  const startIndex = currentPage * pageSize;
+  const hasPages = testimonials.length > pageSize
+  const lastPage = Math.floor((testimonials.length - 1) / pageSize)
+  const startIndex = currentPage * pageSize
 
   function incrementPage() {
-    const nextPage = currentPage < lastPage ? currentPage + 1 : lastPage;
+    const nextPage = currentPage < lastPage ? currentPage + 1 : lastPage
 
-    setCurrentPage(nextPage);
+    setCurrentPage(nextPage)
   }
 
   function decrementPage() {
-    const nextPage = currentPage > 0 ? currentPage - 1 : 0;
+    const nextPage = currentPage > 0 ? currentPage - 1 : 0
 
-    setCurrentPage(nextPage);
+    setCurrentPage(nextPage)
   }
 
   function goToPage(pageNum) {
-    if (pageNum >= 0 && pageNum <= lastPage) setCurrentPage(pageNum);
+    if (pageNum >= 0 && pageNum <= lastPage) setCurrentPage(pageNum)
   }
 
   return (
@@ -157,5 +157,5 @@ export default function Testimonials({ testimonials }) {
         )}
       </div>
     </section>
-  );
+  )
 }

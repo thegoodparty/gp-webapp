@@ -1,8 +1,8 @@
-import InfoButton from '@shared/buttons/InfoButton';
-import WarningButtonNew from '@shared/buttons/WarningButtonNew';
-import ErrorButton from '@shared/buttons/ErrorButton';
-import SuccessButton from '@shared/buttons/SuccessButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import InfoButton from '@shared/buttons/InfoButton'
+import WarningButtonNew from '@shared/buttons/WarningButtonNew'
+import ErrorButton from '@shared/buttons/ErrorButton'
+import SuccessButton from '@shared/buttons/SuccessButton'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
 
 export const SeverityButton = ({
   children,
@@ -10,22 +10,22 @@ export const SeverityButton = ({
   severity = 'info',
   ...restProps
 }) => {
-  let ButtonComponent = <></>;
+  let ButtonComponent = <></>
   switch (severity) {
     case 'info':
-      ButtonComponent = InfoButton;
-      break;
+      ButtonComponent = InfoButton
+      break
     case 'warning':
-      ButtonComponent = WarningButtonNew;
-      break;
+      ButtonComponent = WarningButtonNew
+      break
     case 'error':
-      ButtonComponent = ErrorButton;
-      break;
+      ButtonComponent = ErrorButton
+      break
     case 'success':
-      ButtonComponent = SuccessButton;
-      break;
+      ButtonComponent = SuccessButton
+      break
     default:
-      ButtonComponent = PrimaryButton;
+      ButtonComponent = PrimaryButton
   }
   return (
     <ButtonComponent
@@ -51,5 +51,5 @@ export const SeverityButton = ({
     >
       {children}
     </ButtonComponent>
-  );
-};
+  )
+}

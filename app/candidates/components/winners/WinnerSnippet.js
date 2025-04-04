@@ -1,12 +1,12 @@
-import Body1 from '@shared/typography/Body1';
-import H4 from '@shared/typography/H4';
-import Image from 'next/image';
-import { useState } from 'react';
-import { IoPersonSharp } from 'react-icons/io5';
+import Body1 from '@shared/typography/Body1'
+import H4 from '@shared/typography/H4'
+import Image from 'next/image'
+import { useState } from 'react'
+import { IoPersonSharp } from 'react-icons/io5'
 
 export default function WinnerSnippet({ campaign }) {
-  const { firstName, lastName, office, state, avatar } = campaign;
-  const [imageError, setImageError] = useState(false);
+  const { firstName, lastName, office, state, avatar } = campaign
+  const [imageError, setImageError] = useState(false)
   return (
     <div className="border border-slate-300 rounded-2xl p-6 flex">
       {!imageError && avatar ? (
@@ -33,5 +33,5 @@ export default function WinnerSnippet({ campaign }) {
         </Body1>
       </div>
     </div>
-  );
+  )
 }

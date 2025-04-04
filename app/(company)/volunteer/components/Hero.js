@@ -1,8 +1,8 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import MarketingH1 from '@shared/typography/MarketingH1';
-import Image from 'next/image';
-import HeroForm from './HeroForm';
-import heroImg from 'public/images/landing-pages/volunteer-hero.png';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import MarketingH1 from '@shared/typography/MarketingH1'
+import Image from 'next/image'
+import HeroForm from './HeroForm'
+import heroImg from 'public/images/landing-pages/volunteer-hero.png'
 
 export default function Hero() {
   return (
@@ -32,5 +32,5 @@ export default function Hero() {
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#E0E6EC_55%)] h-[calc(100vw*0.09)] w-full md:-mt-40" />
       <div className="h-20 md:h-40 bg-indigo-200"></div>
     </>
-  );
+  )
 }

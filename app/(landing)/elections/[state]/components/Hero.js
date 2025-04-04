@@ -1,11 +1,10 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import SearchLocation from '../../shared/SearchLocation';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import { shortToLongState } from 'helpers/statesHelper';
-import Image from 'next/image';
-import H2 from '@shared/typography/H2';
-import Subtitle2 from '@shared/typography/Subtitle2';
-import { slugify } from 'helpers/articleHelper';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import SearchLocation from '../../shared/SearchLocation'
+import Breadcrumbs from '@shared/utils/Breadcrumbs'
+import { shortToLongState } from 'helpers/statesHelper'
+import Image from 'next/image'
+import Subtitle2 from '@shared/typography/Subtitle2'
+import { slugify } from 'helpers/articleHelper'
 
 export default function Hero({
   state,
@@ -15,44 +14,44 @@ export default function Hero({
   level,
   municipality,
 }) {
-  const stateName = shortToLongState[state.toUpperCase()];
+  const stateName = shortToLongState[state.toUpperCase()]
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
     {
       label: `How to run in ${stateName}`,
     },
-  ];
+  ]
   if (level === 'county') {
-    breadcrumbsLinks[1].href = `/elections/${state}`;
+    breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
       label: county?.county_full || '',
-    });
+    })
   }
 
   if (level === 'city') {
-    breadcrumbsLinks[1].href = `/elections/${state}`;
+    breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
       label: `${municipality.county_name} county`,
       href: `/elections/${state}/${slugify(municipality.county_name, true)}`,
-    });
+    })
     breadcrumbsLinks.push({
       label: municipality.city,
-    });
+    })
   }
-  let title = '';
-  let subTitle = '';
+  let title = ''
+  let subTitle = ''
   if (level === 'state') {
-    title = `Run for ${stateName} state office`;
-    subTitle = `${stateName} state elections`;
+    title = `Run for ${stateName} state office`
+    subTitle = `${stateName} state elections`
   } else if (level === 'county') {
     title = `Run for ${
       county?.county_full || 'a county'
-    }, ${state.toUpperCase()} office`;
-    subTitle = `${county?.county_full || 'county'} elections`;
+    }, ${state.toUpperCase()} office`
+    subTitle = `${county?.county_full || 'county'} elections`
   } else if (level === 'city') {
-    const cityName = `${municipality?.city}`;
-    title = `Run for ${cityName || 'a'} city office`;
-    subTitle = `${cityName || ''} city elections`;
+    const cityName = `${municipality?.city}`
+    title = `Run for ${cityName || 'a'} city office`
+    subTitle = `${cityName || ''} city elections`
   }
   return (
     <>
@@ -117,5 +116,5 @@ export default function Hero({
         </MaxWidth>
       </div>
     </>
-  );
+  )
 }

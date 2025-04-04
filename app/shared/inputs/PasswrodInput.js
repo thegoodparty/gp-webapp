@@ -1,9 +1,9 @@
-'use client';
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import TextField from './TextField';
-import { RemoveRedEyeRounded, VisibilityOffRounded } from '@mui/icons-material';
-import { isValidPassword } from './IsValidPassword';
+'use client'
+import React, { useState } from 'react'
+import IconButton from '@mui/material/IconButton'
+import TextField from './TextField'
+import { RemoveRedEyeRounded, VisibilityOffRounded } from '@mui/icons-material'
+import { isValidPassword } from './IsValidPassword'
 
 export default function PasswordInput({
   onChangeCallback,
@@ -17,20 +17,20 @@ export default function PasswordInput({
   error,
   ...restProps
 }) {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+  const [showPassword, setShowPassword] = useState(false)
+  const [isValid, setIsValid] = useState(true)
 
   const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   const handleChangePassword = (event) => {
-    const pwd = event.target.value;
-    const pwdValid = isValidPassword(pwd);
+    const pwd = event.target.value
+    const pwdValid = isValidPassword(pwd)
 
-    setIsValid(pwdValid);
-    onChangeCallback(pwd, pwdValid);
-  };
+    setIsValid(pwdValid)
+    onChangeCallback(pwd, pwdValid)
+  }
 
   return (
     <TextField
@@ -65,5 +65,5 @@ export default function PasswordInput({
       }}
       {...restProps}
     />
-  );
+  )
 }

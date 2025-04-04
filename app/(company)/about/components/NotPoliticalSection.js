@@ -1,7 +1,5 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
-import { IncludedPartiesList } from './IncludedPartiesList';
-import Button from '@shared/buttons/Button';
+import { IncludedPartiesList } from './IncludedPartiesList'
+import Button from '@shared/buttons/Button'
 
 const LearnAboutOurTeamButton = ({ className, ...restProps }) => (
   <Button
@@ -12,7 +10,7 @@ const LearnAboutOurTeamButton = ({ className, ...restProps }) => (
   >
     Learn about our team
   </Button>
-);
+)
 
 const NotPoliticalSection = () => (
   <section
@@ -46,6 +44,6 @@ const NotPoliticalSection = () => (
       </div>
     </div>
   </section>
-);
+)
 
-export default NotPoliticalSection;
+export default NotPoliticalSection

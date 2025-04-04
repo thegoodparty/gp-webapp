@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material';
+import { Paper } from '@mui/material'
 
 export const FocusedExperienceWrapper = ({
   className = '',
@@ -18,4 +18,4 @@ export const FocusedExperienceWrapper = ({
       </div>
     </div>
   </div>
-);
+)

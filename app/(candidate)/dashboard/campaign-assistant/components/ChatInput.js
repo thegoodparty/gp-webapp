@@ -1,26 +1,26 @@
-'use client';
-import TextField from '@shared/inputs/TextField';
-import { MdSend } from 'react-icons/md';
-import { useState } from 'react';
-import { GiSandsOfTime } from 'react-icons/gi';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
-import { Fab } from '@mui/material';
-import { MdKeyboardArrowUp } from 'react-icons/md';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import TextField from '@shared/inputs/TextField'
+import { MdSend } from 'react-icons/md'
+import { useState } from 'react'
+import { GiSandsOfTime } from 'react-icons/gi'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
+import { Fab } from '@mui/material'
+import { MdKeyboardArrowUp } from 'react-icons/md'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 export default function ChatInput() {
-  const { handleNewInput, loading, scrollUp } = useChat();
-  const [text, setText] = useState('');
+  const { handleNewInput, loading, scrollUp } = useChat()
+  const [text, setText] = useState('')
 
   const onSubmit = async (e) => {
     if (loading) {
-      return;
+      return
     }
-    e.preventDefault();
-    trackEvent(EVENTS.AIAssistant.AskQuestion, { text });
-    setText('');
-    await handleNewInput(text);
-  };
+    e.preventDefault()
+    trackEvent(EVENTS.AIAssistant.AskQuestion, { text })
+    setText('')
+    await handleNewInput(text)
+  }
 
   return (
     <div className="w-full max-w-[960px] px-4 pb-6 self-center relative">
@@ -37,7 +37,7 @@ export default function ChatInput() {
           value={text}
           disabled={loading}
           onChange={(e) => {
-            setText(e.target.value);
+            setText(e.target.value)
           }}
           InputProps={{
             endAdornment: loading ? <GiSandsOfTime size={20} /> : <MdSend />,
@@ -79,5 +79,5 @@ export default function ChatInput() {
         />
       </form>
     </div>
-  );
+  )
 }

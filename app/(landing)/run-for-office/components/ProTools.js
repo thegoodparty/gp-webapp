@@ -1,11 +1,11 @@
-import { BsArrowUpRightCircleFill } from 'react-icons/bs';
-import Link from 'next/link';
-import { slugify } from 'helpers/articleHelper';
-import MarketingH3 from '@shared/typography/MarketingH3';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Body1 from '@shared/typography/Body1';
-import { MdFolderShared, MdPhonelinkRing, MdGroup } from 'react-icons/md';
-import Body2 from '@shared/typography/Body2';
+import { BsArrowUpRightCircleFill } from 'react-icons/bs'
+import Link from 'next/link'
+import { slugify } from 'helpers/articleHelper'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Body1 from '@shared/typography/Body1'
+import { MdFolderShared, MdPhonelinkRing, MdGroup } from 'react-icons/md'
+import Body2 from '@shared/typography/Body2'
 
 const cards = [
   {
@@ -26,7 +26,7 @@ const cards = [
     content:
       'Dedicated support from our team of experts as thought partners on your campaign.',
   },
-];
+]
 
 export default function ProTools() {
   return (
@@ -61,5 +61,5 @@ export default function ProTools() {
         ))}
       </div>
     </section>
-  );
+  )
 }

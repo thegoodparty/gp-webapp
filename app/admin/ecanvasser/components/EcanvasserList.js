@@ -1,4 +1,4 @@
-import EcanvasserCard from './EcanvasserCard';
+import EcanvasserCard from './EcanvasserCard'
 
 export default function EcanvasserList({ ecanvassers, onUpdate }) {
   return (
@@ -12,5 +12,5 @@ export default function EcanvasserList({ ecanvassers, onUpdate }) {
           />
         ))}
     </div>
-  );
+  )
 }

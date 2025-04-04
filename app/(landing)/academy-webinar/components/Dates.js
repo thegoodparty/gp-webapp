@@ -1,14 +1,14 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Link from 'next/link';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Link from 'next/link'
 
 const dates = [
   'Thursday, December 14th, 2023 @ 9am PST',
   'Friday, December 15th, 2023 @ 10am PST',
   'Wednesday, December 20th, 2023 @ 1pm PST',
   'More dates coming soon!',
-];
+]
 
 export default function Dates({ content }) {
   return (
@@ -38,5 +38,5 @@ export default function Dates({ content }) {
         ))}
       </div>
     </MaxWidth>
-  );
+  )
 }

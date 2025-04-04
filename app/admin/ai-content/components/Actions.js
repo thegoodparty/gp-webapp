@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import DeleteAction from './DeleteAction';
-import ImpersonateAction from '/app/admin/shared/ImpersonateAction';
+import { useState } from 'react'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import DeleteAction from './DeleteAction'
+import ImpersonateAction from '/app/admin/shared/ImpersonateAction'
 
 export default function Actions({ launched, slug, email, id }) {
-  const [showMenu, setShowMenu] = useState(false);
-  const isLive = launched === 'Live';
+  const [showMenu, setShowMenu] = useState(false)
+  const isLive = launched === 'Live'
 
   return (
     <div className="flex justify-center relative">
       <BsThreeDotsVertical
         onClick={() => {
-          setShowMenu(!showMenu);
+          setShowMenu(!showMenu)
         }}
         className=" text-xl cursor-pointer"
       />
@@ -20,7 +20,7 @@ export default function Actions({ launched, slug, email, id }) {
           <div
             className="fixed h-screen w-screen top-14 left-0"
             onClick={() => {
-              setShowMenu(false);
+              setShowMenu(false)
             }}
           />
 
@@ -36,5 +36,5 @@ export default function Actions({ launched, slug, email, id }) {
         </>
       )}
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { IssueSelectItem } from './IssueSelectItem';
+import { IssueSelectItem } from './IssueSelectItem'
 
 export const IssuesSelectList = ({ issues = [], handleSelectIssue = () => {} }) =>
   issues.map((issue) => (
@@ -7,4 +7,4 @@ export const IssuesSelectList = ({ issues = [], handleSelectIssue = () => {} }) 
       issue={issue}
       handleSelectIssue={handleSelectIssue}
     />
-  ));
+  ))

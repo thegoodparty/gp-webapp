@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-sync-scripts */
-import { Outfit } from 'next/font/google';
-import localFont from 'next/font/local';
-import Script from 'next/script';
-import PageWrapper from './shared/layouts/PageWrapper';
-import './globals.css';
-import VwoScript from '@shared/scripts/VwoScript';
-import FullStoryScript from '@shared/scripts/FullStoryScript';
-import { APP_BASE, IS_PROD } from 'appEnv';
+import { Outfit } from 'next/font/google'
+import localFont from 'next/font/local'
+import Script from 'next/script'
+import PageWrapper from './shared/layouts/PageWrapper'
+import './globals.css'
+import VwoScript from '@shared/scripts/VwoScript'
+import FullStoryScript from '@shared/scripts/FullStoryScript'
+import { APP_BASE, IS_PROD } from 'appEnv'
 
-const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' });
+const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
 const sfPro = localFont({
   subsets: ['latin'],
@@ -37,7 +37,7 @@ const sfPro = localFont({
   formatHint: 'woff2',
   variable: '--sfpro-font',
   display: 'swap',
-});
+})
 
 export const metadata = {
   applicationName: 'GoodParty',
@@ -45,7 +45,7 @@ export const metadata = {
   title: 'GoodParty.org | Empowering independents to run, win and serve.',
   description:
     "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",
-};
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -112,5 +112,5 @@ export default function RootLayout({ children }) {
         src="//js.hs-scripts.com/21589597.js"
       />
     </html>
-  );
+  )
 }

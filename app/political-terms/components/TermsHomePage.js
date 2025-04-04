@@ -1,12 +1,12 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { Fragment, Suspense } from 'react';
-import AdminClientLoad from './AdminClientLoad';
-import LayoutWithAlphabet from './LayoutWithAlphabet';
-import TermSnippet from './TermSnippet';
-import TermsSearch from './TermsSearch';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { Fragment, Suspense } from 'react'
+import AdminClientLoad from './AdminClientLoad'
+import LayoutWithAlphabet from './LayoutWithAlphabet'
+import TermSnippet from './TermSnippet'
+import TermsSearch from './TermsSearch'
 
 export default function TermsHomePage(props) {
-  const { items, activeLetter, glossaryItems } = props;
+  const { items, activeLetter, glossaryItems } = props
 
   return (
     <MaxWidth>
@@ -54,5 +54,5 @@ export default function TermsHomePage(props) {
         </Suspense>
       </div>
     </MaxWidth>
-  );
+  )
 }

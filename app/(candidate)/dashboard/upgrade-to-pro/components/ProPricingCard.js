@@ -1,8 +1,8 @@
 import {
   CheckOutlined,
   RemoveCircleOutlineOutlined,
-} from '@mui/icons-material';
-import H3 from '@shared/typography/H3';
+} from '@mui/icons-material'
+import H3 from '@shared/typography/H3'
 
 export const ProPricingCard = ({
   title,
@@ -37,5 +37,5 @@ export const ProPricingCard = ({
         {sub && <div className="text-xs italic font-light mt-2">{sub}</div>}
       </footer>
     </div>
-  );
-};
+  )
+}

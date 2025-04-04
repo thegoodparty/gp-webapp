@@ -1,40 +1,40 @@
-'use client';
-import { useState, useEffect } from 'react';
-import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation';
-import Body2 from '@shared/typography/Body2';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+'use client'
+import { useState, useEffect } from 'react'
+import LoadingDotsAnimation from '@shared/animations/LoadingDotsAnimation'
+import Body2 from '@shared/typography/Body2'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
 
 const messages = [
   'Reading your campaign data and strategies...',
   'Analyzing voter behavior and election trends...',
   'Scanning voter demographics to optimize outreach...',
   "Processing your campaign's performance metrics...",
-];
+]
 
 export default function LoadingChatAnimation() {
-  const { loading, scrollDown } = useChat();
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [fade, setFade] = useState(true);
+  const { loading, scrollDown } = useChat()
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
+  const [fade, setFade] = useState(true)
 
   useEffect(() => {
-    if (!loading) return;
+    if (!loading) return
 
     const messageInterval = setInterval(() => {
-      setFade(false); // Trigger fade-out
-      scrollDown();
+      setFade(false) // Trigger fade-out
+      scrollDown()
       setTimeout(() => {
         setCurrentMessageIndex(
           (prevIndex) => (prevIndex + 1) % messages.length,
-        );
-        setFade(true); // Trigger fade-in after message change
-      }, 500); // Adjust for fade-out duration
-    }, 3000); // Change message every 3 seconds
+        )
+        setFade(true) // Trigger fade-in after message change
+      }, 500) // Adjust for fade-out duration
+    }, 3000) // Change message every 3 seconds
 
-    return () => clearInterval(messageInterval);
-  }, [loading]);
+    return () => clearInterval(messageInterval)
+  }, [loading])
 
   if (!loading) {
-    return null;
+    return null
   }
 
   return (
@@ -51,5 +51,5 @@ export default function LoadingChatAnimation() {
         {messages[currentMessageIndex]}
       </Body2>
     </div>
-  );
+  )
 }

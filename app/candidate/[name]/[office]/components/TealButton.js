@@ -6,5 +6,5 @@ export default function TealButton({ children, ...restProps }) {
     >
       {children}
     </div>
-  );
+  )
 }

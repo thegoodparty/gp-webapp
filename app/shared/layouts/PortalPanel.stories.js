@@ -1,6 +1,6 @@
-import H1 from '@shared/typography/H1';
-import PortalPanel from './PortalPanel';
-import Body1 from '@shared/typography/Body1';
+import H1 from '@shared/typography/H1'
+import PortalPanel from './PortalPanel'
+import Body1 from '@shared/typography/Body1'
 
 export default {
   title: 'Layouts/PortalPanel',
@@ -27,6 +27,6 @@ export default {
       </Body1>
     </PortalPanel>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

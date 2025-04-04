@@ -1,8 +1,8 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
-import votersImg from '/public/images/homepage-jan23/homepage-voters.png';
-import PurpleButton from '@shared/buttons/PurpleButton';
-import Link from 'next/link';
+import votersImg from '/public/images/homepage-jan23/homepage-voters.png'
+import PurpleButton from '@shared/buttons/PurpleButton'
+import Link from 'next/link'
 
 export default function ForVoters() {
   return (
@@ -39,5 +39,5 @@ export default function ForVoters() {
         </div>
       </div>
     </div>
-  );
+  )
 }

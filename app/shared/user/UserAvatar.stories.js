@@ -1,4 +1,4 @@
-import UserAvatar from './UserAvatar';
+import UserAvatar from './UserAvatar'
 
 export default {
   title: 'User/UserAvatar',
@@ -18,9 +18,9 @@ export default {
       <UserAvatar {...args} size="smaller" />
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}
 export const WithImage = {
   args: {
     user: {
@@ -29,7 +29,7 @@ export const WithImage = {
       avatar: 'https://i.pravatar.cc/100?u=goodparty123',
     },
   },
-};
+}
 export const WithInitials = {
   args: {
     user: {
@@ -38,4 +38,4 @@ export const WithInitials = {
       avatar: null,
     },
   },
-};
+}

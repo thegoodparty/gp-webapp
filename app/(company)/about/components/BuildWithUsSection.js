@@ -1,4 +1,4 @@
-import { BuildWithUsGridItems } from './BuildWithUsGridItems';
+import { BuildWithUsGridItems } from './BuildWithUsGridItems'
 
 const BuildWithUsHeaderAndBlurb = () => (
   <div className="xl:col-span-2">
@@ -9,10 +9,10 @@ const BuildWithUsHeaderAndBlurb = () => (
     </h2>
     <p className="text-xl font-medium leading-7 mb-8 md:max-w-[466px] md:text-2xl leading-8">
       Ready to join the movement? Support candidates, run for office or join our
-      Discord community of like-minded individuals.
+      community of like-minded individuals.
     </p>
   </div>
-);
+)
 
 const BuildWithUsSection = () => (
   <section
@@ -40,6 +40,6 @@ const BuildWithUsSection = () => (
       </div>
     </div>
   </section>
-);
+)
 
-export default BuildWithUsSection;
+export default BuildWithUsSection

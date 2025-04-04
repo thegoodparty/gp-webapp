@@ -1,19 +1,19 @@
-'use client';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import Tooltip from '@mui/material/Tooltip';
-import Table from '@shared/utils/Table';
-import { useMemo } from 'react';
-import { formatToPhone } from 'helpers/numberHelper';
-import { dateUsHelper, dateWithTime } from 'helpers/dateHelper';
-import Actions from './Actions';
-import { AddUserButton } from 'app/admin/users/components/AddUserButton';
-import { userIsAdmin } from 'helpers/userHelper';
+'use client'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import Tooltip from '@mui/material/Tooltip'
+import Table from '@shared/utils/Table'
+import { useMemo } from 'react'
+import { formatToPhone } from 'helpers/numberHelper'
+import { dateUsHelper, dateWithTime } from 'helpers/dateHelper'
+import Actions from './Actions'
+import { AddUserButton } from 'app/admin/users/components/AddUserButton'
+import { userIsAdmin } from 'helpers/userHelper'
 
 const buildTableInputData = (users) =>
   users.map((user) => {
-    const metaData = user.metaData || {};
-    const userType = userIsAdmin(user) ? 'admin' : user.roles?.join(', ');
+    const metaData = user.metaData || {}
+    const userType = userIsAdmin(user) ? 'admin' : user.roles?.join(', ')
 
     return {
       ...user,
@@ -21,15 +21,15 @@ const buildTableInputData = (users) =>
       lastVisited: metaData?.lastVisited && new Date(metaData?.lastVisited),
       createdAt: user.createdAt && new Date(user.createdAt),
       campaigns: user.campaigns || [],
-    };
-  });
+    }
+  })
 
 export default function AdminUsersPage(props) {
-  const users = props.users || [];
-  const { defaultFilters = [] } = props;
-  const inputData = buildTableInputData(users);
+  const users = props.users || []
+  const { defaultFilters = [] } = props
+  const inputData = buildTableInputData(users)
 
-  const data = useMemo(() => inputData);
+  const data = useMemo(() => inputData)
 
   let columns = useMemo(() => [
     {
@@ -37,7 +37,7 @@ export default function AdminUsersPage(props) {
       collapse: true,
       accessor: 'actions',
       Cell: ({ row }) => {
-        return <Actions user={row.original} />;
+        return <Actions user={row.original} />
       },
     },
 
@@ -49,7 +49,7 @@ export default function AdminUsersPage(props) {
           <>
             {row.original.firstName} {row.original.lastName}
           </>
-        );
+        )
       },
     },
 
@@ -71,7 +71,7 @@ export default function AdminUsersPage(props) {
         return row.original.lastVisited &&
           row.original.lastVisited?.toString() !== 'Invalid Date'
           ? dateWithTime(row.original.lastVisited)
-          : 'n/a';
+          : 'n/a'
       },
     },
 
@@ -82,7 +82,7 @@ export default function AdminUsersPage(props) {
       Cell: ({ row }) => {
         return row.original.createdAt?.toString() !== 'Invalid Date'
           ? dateUsHelper(row.original.createdAt)
-          : 'n/a';
+          : 'n/a'
       },
     },
 
@@ -114,7 +114,7 @@ export default function AdminUsersPage(props) {
       accessor: 'id',
       hide: true,
     },
-  ]);
+  ])
 
   return (
     <AdminWrapper {...props}>
@@ -132,5 +132,5 @@ export default function AdminUsersPage(props) {
         />
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

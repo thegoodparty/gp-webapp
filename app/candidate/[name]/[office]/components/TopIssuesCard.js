@@ -1,12 +1,12 @@
-import MarketingH4 from '@shared/typography/MarketingH4';
-import Overline from '@shared/typography/Overline';
-import DescriptionLabel from './DescriptionLabel';
+import MarketingH4 from '@shared/typography/MarketingH4'
+import Overline from '@shared/typography/Overline'
+import DescriptionLabel from './DescriptionLabel'
 
 export default function TopIssuesCard(props) {
-  const { candidate } = props;
-  const { topIssues } = candidate;
+  const { candidate } = props
+  const { topIssues } = candidate
   if (!topIssues || topIssues.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -22,5 +22,5 @@ export default function TopIssuesCard(props) {
         />
       ))}
     </section>
-  );
+  )
 }

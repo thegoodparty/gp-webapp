@@ -1,4 +1,4 @@
-import { FormControl, MenuItem, Select } from '@mui/material';
+import { FormControl, MenuItem, Select } from '@mui/material'
 
 export const CandidateFieldSelect = ({
   value,
@@ -14,4 +14,4 @@ export const CandidateFieldSelect = ({
       ))}
     </Select>
   </FormControl>
-);
+)

@@ -1,4 +1,4 @@
-import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner';
+import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
 
 export const CompleteProSignUpAlert = () => (
   <AlertBanner
@@ -10,4 +10,4 @@ export const CompleteProSignUpAlert = () => (
       actionText: 'Continue',
     }}
   />
-);
+)

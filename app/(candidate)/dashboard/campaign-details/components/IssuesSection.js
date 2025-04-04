@@ -1,59 +1,59 @@
-'use client';
-import H3 from '@shared/typography/H3';
-import IssuesSelector from '../../questions/components/issues/IssuesSelector';
-import { useEffect, useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import { MdCheckBox } from 'react-icons/md';
-import H4 from '@shared/typography/H4';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions';
+'use client'
+import H3 from '@shared/typography/H3'
+import IssuesSelector from '../../questions/components/issues/IssuesSelector'
+import { useEffect, useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import { MdCheckBox } from 'react-icons/md'
+import H4 from '@shared/typography/H4'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions'
 import {
   deleteCandidatePosition,
   handleDeleteCustomIssue,
   loadCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { IoAddSharp } from 'react-icons/io5';
-import { useSnackbar } from 'helpers/useSnackbar';
-import Button from '@shared/buttons/Button';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { IoAddSharp } from 'react-icons/io5'
+import { useSnackbar } from 'helpers/useSnackbar'
+import Button from '@shared/buttons/Button'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function IssuesSection(props) {
-  const [campaign, setCampaign] = useState(props.campaign);
-  const [candidatePositions, setCandidatePositions] = useCandidatePositions();
-  const [combinedIssues, setCombinedIssues] = useState([]);
-  const [editIssuePosition, setEditIssuePosition] = useState(false);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(null);
-  const { errorSnackbar } = useSnackbar();
+  const [campaign, setCampaign] = useState(props.campaign)
+  const [candidatePositions, setCandidatePositions] = useCandidatePositions()
+  const [combinedIssues, setCombinedIssues] = useState([])
+  const [editIssuePosition, setEditIssuePosition] = useState(false)
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(null)
+  const { errorSnackbar } = useSnackbar()
 
   useEffect(() => {
-    const combined = [];
+    const combined = []
     if (Array.isArray(candidatePositions)) {
       candidatePositions?.forEach((position) => {
-        combined.push({ ...position, type: 'position' });
-      });
+        combined.push({ ...position, type: 'position' })
+      })
     }
     campaign?.details?.customIssues?.forEach((issue) => {
-      combined.push({ ...issue, type: 'custom' });
-    });
-    setCombinedIssues(combined);
-  }, [candidatePositions, campaign.details?.customIssues]);
+      combined.push({ ...issue, type: 'custom' })
+    })
+    setCombinedIssues(combined)
+  }, [candidatePositions, campaign.details?.customIssues])
 
   const completeCallback = async () => {
-    trackEvent(EVENTS.Profile.TopIssues.SubmitEdit);
-    const candidatePositions = await loadCandidatePosition(campaign.id);
-    setCandidatePositions(candidatePositions);
-    const updatedCampaign = await getCampaign();
+    trackEvent(EVENTS.Profile.TopIssues.SubmitEdit)
+    const candidatePositions = await loadCandidatePosition(campaign.id)
+    setCandidatePositions(candidatePositions)
+    const updatedCampaign = await getCampaign()
 
-    setEditIssuePosition(false);
-    setCampaign(updatedCampaign);
-  };
+    setEditIssuePosition(false)
+    setCampaign(updatedCampaign)
+  }
 
   const handleDeleteConfirmation = async () => {
-    trackEvent(EVENTS.Profile.TopIssues.SubmitDelete);
-    const issue = showDeleteConfirmation;
+    trackEvent(EVENTS.Profile.TopIssues.SubmitDelete)
+    const issue = showDeleteConfirmation
     try {
       if (issue.type === 'custom') {
         setCampaign({
@@ -62,20 +62,20 @@ export default function IssuesSection(props) {
             ...campaign.details,
             customIssues: await handleDeleteCustomIssue(issue, campaign),
           },
-        });
+        })
       } else if (issue.id) {
-        await deleteCandidatePosition(issue.id, campaign.id);
+        await deleteCandidatePosition(issue.id, campaign.id)
         setCandidatePositions(
           candidatePositions.filter((position) => position.id !== issue.id),
-        );
+        )
       } else {
-        throw new Error('issue malformed, cannot delete.', issue);
+        throw new Error('issue malformed, cannot delete.', issue)
       }
     } catch (e) {
-      errorSnackbar('Could not delete issue');
+      errorSnackbar('Could not delete issue')
     }
-    setShowDeleteConfirmation(null);
-  };
+    setShowDeleteConfirmation(null)
+  }
 
   return (
     <section className="border-t pt-6 border-gray-600">
@@ -87,7 +87,7 @@ export default function IssuesSection(props) {
             href="/dashboard/questions?generate=all"
             className="inline-flex align-center !py-2"
             onClick={() => {
-              trackEvent(EVENTS.Profile.TopIssues.ClickFinish);
+              trackEvent(EVENTS.Profile.TopIssues.ClickFinish)
             }}
           >
             Finish Entering Issues
@@ -147,8 +147,8 @@ export default function IssuesSection(props) {
                     className="mr-3"
                     size="medium"
                     onClick={() => {
-                      trackEvent(EVENTS.Profile.TopIssues.ClickEdit);
-                      setEditIssuePosition(issue);
+                      trackEvent(EVENTS.Profile.TopIssues.ClickEdit)
+                      setEditIssuePosition(issue)
                     }}
                   >
                     Edit
@@ -156,8 +156,8 @@ export default function IssuesSection(props) {
                   <SecondaryButton
                     size="medium"
                     onClick={() => {
-                      trackEvent(EVENTS.Profile.TopIssues.ClickDelete);
-                      setShowDeleteConfirmation(issue);
+                      trackEvent(EVENTS.Profile.TopIssues.ClickDelete)
+                      setShowDeleteConfirmation(issue)
                     }}
                   >
                     Delete
@@ -165,8 +165,8 @@ export default function IssuesSection(props) {
                   <AlertDialog
                     open={Boolean(showDeleteConfirmation)}
                     handleClose={() => {
-                      trackEvent(EVENTS.Profile.TopIssues.CancelDelete);
-                      setShowDeleteConfirmation(null);
+                      trackEvent(EVENTS.Profile.TopIssues.CancelDelete)
+                      setShowDeleteConfirmation(null)
                     }}
                     title="Delete Issue"
                     description="Are you sure you want to delete this Issue?"
@@ -179,5 +179,5 @@ export default function IssuesSection(props) {
         </>
       )}
     </section>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-'use client';
-import IssuesList from './IssuesList';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
+'use client'
+import IssuesList from './IssuesList'
+import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions'
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
 
 export default function IssuesSelector(props) {
   const {
@@ -9,30 +9,30 @@ export default function IssuesSelector(props) {
     updatePositionsCallback = async (v) => {},
     campaign,
     editIssuePosition,
-  } = props;
-  const [candidatePositions, setCandidatePositions] = useCandidatePositions();
+  } = props
+  const [candidatePositions, setCandidatePositions] = useCandidatePositions()
 
   const updateCandidatePositions = async () => {
-    const candidatePositions = await loadCandidatePosition(campaign.id);
-    setCandidatePositions(candidatePositions);
-    return candidatePositions;
-  };
+    const candidatePositions = await loadCandidatePosition(campaign.id)
+    setCandidatePositions(candidatePositions)
+    return candidatePositions
+  }
 
   const combinedIssuedCount =
     (candidatePositions?.length || 0) +
-    (campaign?.details?.customIssues?.length || 0);
-  const issueNum = combinedIssuedCount + 1;
+    (campaign?.details?.customIssues?.length || 0)
+  const issueNum = combinedIssuedCount + 1
 
   const nextCallback = async () => {
-    await updatePositionsCallback(await updateCandidatePositions());
+    await updatePositionsCallback(await updateCandidatePositions())
     if (completeCallback >= 3) {
-      await completeCallback('issues');
+      await completeCallback('issues')
     }
-  };
+  }
 
   const prompt = editIssuePosition
     ? 'Choose An Issue'
-    : `Choose Issue #${issueNum}`;
+    : `Choose Issue #${issueNum}`
 
   return (
     <div>
@@ -46,5 +46,5 @@ export default function IssuesSelector(props) {
         editIssuePosition={editIssuePosition}
       />
     </div>
-  );
+  )
 }

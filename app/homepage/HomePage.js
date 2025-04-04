@@ -1,9 +1,9 @@
-import Hero from './Hero';
-import FactsSection from './FactsSection';
-import HowSection from './HowSection';
-import ToolsSection from './ToolsSection';
-import Cta from './Cta';
-import Callout from '@shared/utils/Callout';
+import Hero from './Hero'
+import FactsSection from './FactsSection'
+import HowSection from './HowSection'
+import ToolsSection from './ToolsSection'
+import Cta from './Cta'
+import Callout from '@shared/utils/Callout'
 // import StickersCallout from '@shared/utils/StickersCallout';
 
 export default function HomePage() {
@@ -24,5 +24,5 @@ export default function HomePage() {
 
       <Cta />
     </div>
-  );
+  )
 }

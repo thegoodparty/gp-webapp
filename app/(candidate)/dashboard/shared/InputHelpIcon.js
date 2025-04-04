@@ -1,8 +1,8 @@
-import { InputAdornment } from '@mui/material';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import { MdInfo } from 'react-icons/md';
-import React from 'react';
+import { InputAdornment } from '@mui/material'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import { MdInfo } from 'react-icons/md'
+import React from 'react'
 
 export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }) => (
   <InputAdornment position="end">
@@ -16,4 +16,4 @@ export const InputHelpIcon = ({ message, showOnFocus = false, onOpen }) => (
       </IconButton>
     </Tooltip>
   </InputAdornment>
-);
+)

@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import H2 from '@shared/typography/H2';
-import Modal from '@shared/utils/Modal';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
-import { useEffect, useMemo, useState } from 'react';
-import TextField from '@shared/inputs/TextField';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import H2 from '@shared/typography/H2'
+import Modal from '@shared/utils/Modal'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { useEffect, useMemo, useState } from 'react'
+import TextField from '@shared/inputs/TextField'
 
 export default function InputFieldsModal({
   onSelectCallback,
@@ -15,7 +15,7 @@ export default function InputFieldsModal({
   inputValues,
   selected,
 }) {
-  const [inputState, setInputState] = useState({});
+  const [inputState, setInputState] = useState({})
 
   const trackingAttrs = useMemo(
     () =>
@@ -23,56 +23,56 @@ export default function InputFieldsModal({
         key: selected,
       }),
     [selected],
-  );
+  )
 
   useEffect(() => {
     if (inputValues) {
-      setInputState(inputValues);
+      setInputState(inputValues)
     }
-  }, [inputValues]);
+  }, [inputValues])
 
   const onChangeField = (key, value) => {
     setInputState({
       ...inputState,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const handleCreate = () => {
     if (!canCreate) {
-      return;
+      return
     }
-    let additionalPrompt = 'additional info:\n';
-    let inputValues = {};
+    let additionalPrompt = 'additional info:\n'
+    let inputValues = {}
     inputFields.forEach((field) => {
-      additionalPrompt += `${field.title}: ${inputState[field.title]}\n`;
-      inputValues[field.title] = inputState[field.title];
-    });
+      additionalPrompt += `${field.title}: ${inputState[field.title]}\n`
+      inputValues[field.title] = inputState[field.title]
+    })
 
     additionalPrompt += inputState.hasOwnProperty('Additional instructions')
       ? inputState['Additional instructions']
-      : '';
+      : ''
 
     inputValues['Additional instructions'] = inputState.hasOwnProperty(
       'Additional instructions',
     )
       ? inputState['Additional instructions']
-      : '';
+      : ''
 
-    onSelectCallback(additionalPrompt, inputValues);
-    closeModalCallback();
-    setInputState({});
-  };
+    onSelectCallback(additionalPrompt, inputValues)
+    closeModalCallback()
+    setInputState({})
+  }
 
   const canCreate = () => {
     for (let i = 0; i < inputFields.length; i++) {
-      const field = inputFields[i];
+      const field = inputFields[i]
       if (!inputState[field.title] || inputState[field.title] === '') {
-        return false;
+        return false
       }
     }
-    return true;
-  };
+    return true
+  }
 
   return (
     <Modal
@@ -101,7 +101,7 @@ export default function InputFieldsModal({
                   : ''
               }
               onChange={(e) => {
-                onChangeField(field.title, e.target.value);
+                onChangeField(field.title, e.target.value)
               }}
             />
           </div>
@@ -120,7 +120,7 @@ export default function InputFieldsModal({
               : ''
           }
           onChange={(e) => {
-            onChangeField('Additional instructions', e.target.value);
+            onChangeField('Additional instructions', e.target.value)
           }}
         />
         <div className="flex justify-center mt-6">
@@ -130,5 +130,5 @@ export default function InputFieldsModal({
         </div>
       </div>
     </Modal>
-  );
+  )
 }

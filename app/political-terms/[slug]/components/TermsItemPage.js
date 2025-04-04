@@ -1,13 +1,13 @@
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Breadcrumbs from '@shared/utils/Breadcrumbs';
-import contentfulHelper from 'helpers/contentfulHelper';
-import TermsByLetter from '../../components/TermsByLetter';
-import Banner from '/app/blog/article/[slug]/components/Banner';
-import Button from '@shared/buttons/Button';
+import CmsContentWrapper from '@shared/content/CmsContentWrapper'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Breadcrumbs from '@shared/utils/Breadcrumbs'
+import contentfulHelper from 'helpers/contentfulHelper'
+import TermsByLetter from '../../components/TermsByLetter'
+import Banner from '/app/blog/article/[slug]/components/Banner'
+import Button from '@shared/buttons/Button'
 
 export default function TermsItemPage({ item, items, activeLetter }) {
-  const letter = activeLetter;
+  const letter = activeLetter
   const breadcrumbsLinks = [
     { href: '/', label: 'GoodParty.org' },
 
@@ -22,7 +22,7 @@ export default function TermsItemPage({ item, items, activeLetter }) {
     {
       label: item ? item.title : 'Not found',
     },
-  ];
+  ]
   if (!item) {
     return (
       <MaxWidth>
@@ -32,10 +32,10 @@ export default function TermsItemPage({ item, items, activeLetter }) {
           </h1>
         </div>
       </MaxWidth>
-    );
+    )
   }
-  const { title, description, cta, ctaLink, banner } = item;
-  const isAbsolute = ctaLink && ctaLink.startsWith('http');
+  const { title, description, cta, ctaLink, banner } = item
+  const isAbsolute = ctaLink && ctaLink.startsWith('http')
   return (
     <MaxWidth>
       <div className="mt-2">
@@ -82,5 +82,5 @@ export default function TermsItemPage({ item, items, activeLetter }) {
         />
       )}
     </MaxWidth>
-  );
+  )
 }

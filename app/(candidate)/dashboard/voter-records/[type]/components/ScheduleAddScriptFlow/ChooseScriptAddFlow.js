@@ -1,39 +1,39 @@
-'use client';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import RadioList from '@shared/inputs/RadioList';
-import { ModalFooter } from '@shared/ModalFooter';
-import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow';
-import { useState } from 'react';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import RadioList from '@shared/inputs/RadioList'
+import { ModalFooter } from '@shared/ModalFooter'
+import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow'
+import { useState } from 'react'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export const ChooseScriptAddFlow = ({
   onBack = () => {},
   onNext = (choiceKey = '') => {},
 }) => {
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState()
   const handleOnNext = () => {
-    onNext(selected);
-  };
+    onNext(selected)
+  }
 
   const handleSelect = (key) => {
-    setSelected(key);
+    setSelected(key)
 
-    let eventName;
+    let eventName
     if (key === ADD_SCRIPT_FLOW.SELECT_SMS) {
       eventName =
         EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
-          .ClickSaved;
+          .ClickSaved
     } else if (key === ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE) {
       eventName =
         EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
-          .ClickGenerate;
+          .ClickGenerate
     } else if (key === ADD_SCRIPT_FLOW.CREATE_SMS) {
       eventName =
-        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.ClickAdd;
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.ClickAdd
     }
-    trackEvent(eventName);
-  };
+    trackEvent(eventName)
+  }
 
   return (
     <>
@@ -59,5 +59,5 @@ export const ChooseScriptAddFlow = ({
       </div>
       <ModalFooter onBack={onBack} onNext={handleOnNext} disabled={!selected} />
     </>
-  );
-};
+  )
+}

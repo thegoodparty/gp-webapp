@@ -1,31 +1,31 @@
-'use client';
+'use client'
 /**
  *
  * PersonalSection
  *
  */
-import { useEffect, useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import PhoneInput from '@shared/inputs/PhoneInput';
-import Body2 from '@shared/typography/Body2';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateUser } from 'helpers/userHelper';
-import { useUser } from '@shared/hooks/useUser';
-import Paper from '@shared/utils/Paper';
-import H2 from '@shared/typography/H2';
-import ImageSection from './ImageSection';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useEffect, useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import PhoneInput from '@shared/inputs/PhoneInput'
+import Body2 from '@shared/typography/Body2'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { updateUser } from 'helpers/userHelper'
+import { useUser } from '@shared/hooks/useUser'
+import Paper from '@shared/utils/Paper'
+import H2 from '@shared/typography/H2'
+import ImageSection from './ImageSection'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 async function refreshUser() {
   try {
-    const resp = await clientFetch(apiRoutes.user.getUser);
-    return resp.data;
+    const resp = await clientFetch(apiRoutes.user.getUser)
+    return resp.data
   } catch (error) {
-    console.log('Error updating user', error);
+    console.log('Error updating user', error)
   }
 }
 
@@ -73,50 +73,50 @@ export const USER_SETTING_FIELDS = [
     required: true,
     dataTestid: 'personal-zip',
   },
-];
+]
 
 // TODO: stop prop-drilling down the user object. Use the useUser hook instead
 function PersonalSection({ user }) {
-  const [_, setUserState] = useUser();
-  const [saving, setSaving] = useState(false);
+  const [_, setUserState] = useUser()
+  const [saving, setSaving] = useState(false)
 
-  const updatedState = {};
+  const updatedState = {}
   if (user) {
     USER_SETTING_FIELDS.forEach((field) => {
-      updatedState[field.key] = user[field.key] || field.initialValue;
-    });
+      updatedState[field.key] = user[field.key] || field.initialValue
+    })
   }
-  const [state, setState] = useState(updatedState);
-  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const [state, setState] = useState(updatedState)
+  const [isPhoneValid, setIsPhoneValid] = useState(true)
 
   useEffect(() => {
-    refetchUser();
-  }, []);
+    refetchUser()
+  }, [])
 
   useEffect(() => {
     if (!state.email) {
-      setState(user);
+      setState(user)
     }
-  }, [user]);
+  }, [user])
 
   const refetchUser = async () => {
-    const updated = await refreshUser();
+    const updated = await refreshUser()
 
-    setUserState(updated);
-  };
+    setUserState(updated)
+  }
 
   async function updateUserCallback(updatedFields) {
     try {
-      setUserState(await updateUser(updatedFields));
+      setUserState(await updateUser(updatedFields))
       updatedFields.zip &&
         (await updateCampaign([
           {
             key: 'details.zip',
             value: updatedFields.zip,
           },
-        ]));
+        ]))
     } catch (error) {
-      console.log('Error updating user', error);
+      console.log('Error updating user', error)
     }
   }
 
@@ -124,17 +124,17 @@ function PersonalSection({ user }) {
     setState({
       ...state,
       [key]: val,
-    });
-  };
+    })
+  }
 
   const cancel = () => {
-    const updatedState = {};
+    const updatedState = {}
     USER_SETTING_FIELDS.forEach((field) => {
-      updatedState[field.key] = user[field.key] || field.initialValue;
-    });
-    setState(updatedState);
-    setIsPhoneValid(true);
-  };
+      updatedState[field.key] = user[field.key] || field.initialValue
+    })
+    setState(updatedState)
+    setIsPhoneValid(true)
+  }
 
   // TODO: This should only be true if the user has made changes
   const canSave = !(
@@ -144,18 +144,18 @@ function PersonalSection({ user }) {
     (state.email === '' && state.phone === '') ||
     (state.email !== '' && !isValidEmail(state.email)) ||
     (state.zip !== '' && state.zip.length !== 5)
-  );
+  )
 
   const submit = async () => {
-    trackEvent(EVENTS.Settings.PersonalInfo.ClickSave);
-    const fields = { ...state };
+    trackEvent(EVENTS.Settings.PersonalInfo.ClickSave)
+    const fields = { ...state }
     if (fields.phone) {
-      fields.phone = fields.phone.replace(/\D+/g, '');
+      fields.phone = fields.phone.replace(/\D+/g, '')
     }
-    setSaving(true);
-    await updateUserCallback(fields);
-    setSaving(false);
-  };
+    setSaving(true)
+    await updateUserCallback(fields)
+    setSaving(false)
+  }
 
   return (
     <Paper className="mt-4">
@@ -178,8 +178,8 @@ function PersonalSection({ user }) {
                   <PhoneInput
                     value={state[field.key]}
                     onChangeCallback={(phone, isValid) => {
-                      onChangeField(field.key, phone);
-                      setIsPhoneValid(isValid);
+                      onChangeField(field.key, phone)
+                      setIsPhoneValid(isValid)
                     }}
                     hideIcon
                     shrink
@@ -217,7 +217,7 @@ function PersonalSection({ user }) {
         </div>
       </form>
     </Paper>
-  );
+  )
 }
 
-export default PersonalSection;
+export default PersonalSection

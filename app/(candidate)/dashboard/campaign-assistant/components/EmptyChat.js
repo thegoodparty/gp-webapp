@@ -1,8 +1,8 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import Body2 from '@shared/typography/Body2';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
-import { MdAutoAwesome } from 'react-icons/md';
+'use client'
+import Button from '@shared/buttons/Button'
+import Body2 from '@shared/typography/Body2'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
+import { MdAutoAwesome } from 'react-icons/md'
 
 const prompts = [
   {
@@ -22,14 +22,14 @@ const prompts = [
     label: 'Writing Content',
     prompt: 'I need help writing content.',
   },
-];
+]
 
 export default function EmptyChat() {
-  const { handleNewInput } = useChat();
+  const { handleNewInput } = useChat()
 
   const handleClick = (prompt) => {
-    handleNewInput(prompt.prompt);
-  };
+    handleNewInput(prompt.prompt)
+  }
   return (
     <div className="text-center w-full h-full flex items-center justify-center">
       <div>
@@ -54,5 +54,5 @@ export default function EmptyChat() {
         </div>
       </div>
     </div>
-  );
+  )
 }

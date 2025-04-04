@@ -1,11 +1,10 @@
-import { AiOutlineHeart } from 'react-icons/ai';
-import { LuGraduationCap, LuPartyPopper } from 'react-icons/lu';
+import { AiOutlineHeart } from 'react-icons/ai'
+import { LuGraduationCap, LuPartyPopper } from 'react-icons/lu'
 import {
   RiBuildingLine,
   RiCloudWindyLine,
   RiCurrencyLine,
   RiEmotionLaughFill,
-  RiEmotionLaughLine,
   RiGovernmentLine,
   RiHeartsLine,
   RiHomeHeartLine,
@@ -17,64 +16,64 @@ import {
   RiTornadoLine,
   RiTrainLine,
   RiUserSearchLine,
-} from 'react-icons/ri';
-import { TbDrone } from 'react-icons/tb';
+} from 'react-icons/ri'
+import { TbDrone } from 'react-icons/tb'
 
 export default function IssuesIcon({ issueName = '' }) {
-  const name = issueName.toLowerCase().trim();
+  const name = issueName.toLowerCase().trim()
   if (name === 'transportation') {
-    return <RiTrainLine />;
+    return <RiTrainLine />
   }
   if (name === 'electoral reform') {
-    return <RiGovernmentLine />;
+    return <RiGovernmentLine />
   }
   if (name === 'housing') {
-    return <RiHomeHeartLine />;
+    return <RiHomeHeartLine />
   }
   if (name === 'education') {
-    return <LuGraduationCap />;
+    return <LuGraduationCap />
   }
   if (name === 'environment') {
-    return <RiCloudWindyLine />;
+    return <RiCloudWindyLine />
   }
   if (name === 'public safety') {
-    return <RiShieldCheckLine />;
+    return <RiShieldCheckLine />
   }
   if (name === 'urban planning and smart growth') {
-    return <RiBuildingLine />;
+    return <RiBuildingLine />
   }
   if (name === 'economic development') {
-    return <RiCurrencyLine />;
+    return <RiCurrencyLine />
   }
   if (name === 'government transparency') {
-    return <RiUserSearchLine />;
+    return <RiUserSearchLine />
   }
   if (name === 'parks and rec') {
-    return <RiLandscapeLine />;
+    return <RiLandscapeLine />
   }
   if (name === 'community health and wellness') {
-    return <RiMentalHealthLine />;
+    return <RiMentalHealthLine />
   }
   if (name === 'cultural diversity and inclusion') {
-    return <RiHeartsLine />;
+    return <RiHeartsLine />
   }
   if (name === 'aging and senior services') {
-    return <RiPlantLine />;
+    return <RiPlantLine />
   }
   if (name === 'quality of life') {
-    return <RiEmotionLaughFill />;
+    return <RiEmotionLaughFill />
   }
   if (name === 'emergency preparedness') {
-    return <RiTornadoLine />;
+    return <RiTornadoLine />
   }
   if (name === 'police accountability') {
-    return <RiPoliceCarLine />;
+    return <RiPoliceCarLine />
   }
   if (name === 'arts and culture') {
-    return <LuPartyPopper />;
+    return <LuPartyPopper />
   }
   if (name === 'technology and innovation') {
-    return <TbDrone />;
+    return <TbDrone />
   }
-  return <AiOutlineHeart />;
+  return <AiOutlineHeart />
 }

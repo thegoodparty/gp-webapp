@@ -1,16 +1,16 @@
-'use client';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { useState } from 'react';
-import { isValidEmail } from 'helpers/validations';
-import Button from '@shared/buttons/Button';
-import Modal from '@shared/utils/Modal';
-import H2 from '@shared/typography/H2';
-import TextField from '@shared/inputs/TextField';
-import { MenuItem, Select } from '@mui/material';
-import { USER_ROLES, userHasRole } from 'helpers/userHelper';
-import { ModalFooter } from '@shared/ModalFooter';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+'use client'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { useState } from 'react'
+import { isValidEmail } from 'helpers/validations'
+import Button from '@shared/buttons/Button'
+import Modal from '@shared/utils/Modal'
+import H2 from '@shared/typography/H2'
+import TextField from '@shared/inputs/TextField'
+import { MenuItem, Select } from '@mui/material'
+import { USER_ROLES, userHasRole } from 'helpers/userHelper'
+import { ModalFooter } from '@shared/ModalFooter'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 const createNewUser = async ({ firstName, lastName, email, role }) => {
   try {
@@ -19,77 +19,77 @@ const createNewUser = async ({ firstName, lastName, email, role }) => {
       lastName,
       email,
       roles: [role],
-    });
-    const user = resp.data;
+    })
+    const user = resp.data
     if (user) {
-      return user;
+      return user
     }
-    return false;
+    return false
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
-};
+}
 
 export const sendSetPasswordEmail = async (userId) => {
   try {
     const payload = {
       userId,
-    };
+    }
     return await clientFetch(
       apiRoutes.authentication.setSetPasswordEmail,
       payload,
-    );
+    )
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
-};
+}
 
 export const AddUserButton = ({ onClick = () => {} }) => {
-  const { successSnackbar, errorSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [role, setRole] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const { successSnackbar, errorSnackbar } = useSnackbar()
+  const [loading, setLoading] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [role, setRole] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
 
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const openModal = () => setModalOpen(true)
+  const closeModal = () => setModalOpen(false)
 
   const handleOnClick = () => {
-    openModal();
-    onClick();
-  };
+    openModal()
+    onClick()
+  }
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setLoading(true)
     const newUser = await createNewUser({
       firstName,
       lastName,
       email,
       role,
-    });
-    setLoading(false);
+    })
+    setLoading(false)
     if (!newUser) {
-      errorSnackbar('Error creating new user');
-      return;
+      errorSnackbar('Error creating new user')
+      return
     }
 
     if (userHasRole(newUser, USER_ROLES.SALES)) {
       // send set password email
-      sendSetPasswordEmail(newUser.id);
+      sendSetPasswordEmail(newUser.id)
     }
-    successSnackbar('User created successfully');
-    closeModal();
-    window.location.reload();
-  };
+    successSnackbar('User created successfully')
+    closeModal()
+    window.location.reload()
+  }
 
-  const emailIsValid = email !== '' && isValidEmail(email);
+  const emailIsValid = email !== '' && isValidEmail(email)
 
   const formValid =
-    emailIsValid && role !== '' && firstName !== '' && lastName !== '';
+    emailIsValid && role !== '' && firstName !== '' && lastName !== ''
 
   return (
     <>
@@ -143,5 +143,5 @@ export const AddUserButton = ({ onClick = () => {} }) => {
         />
       </Modal>
     </>
-  );
-};
+  )
+}

@@ -1,7 +1,7 @@
-import { LuPartyPopper } from 'react-icons/lu';
-import { MdOutlineVolunteerActivism } from 'react-icons/md';
-import { RiTeamLine } from 'react-icons/ri';
-import { LeadingActivityCard } from 'app/(company)/team/components/LeadingActivityCard';
+import { LuPartyPopper } from 'react-icons/lu'
+import { MdOutlineVolunteerActivism } from 'react-icons/md'
+import { RiTeamLine } from 'react-icons/ri'
+import { LeadingActivityCard } from 'app/(company)/team/components/LeadingActivityCard'
 
 const LEADING_ACTIVITIES = [
   {
@@ -16,7 +16,7 @@ const LEADING_ACTIVITIES = [
     icon: <MdOutlineVolunteerActivism />,
     title: 'Volunteers',
     description:
-      'Our volunteers are the backbone of the support we provide for anti-duopoly candidates. Our 1,200 active volunteers congregate in our growing Discord and help fill critical campaign roles for candidates that lack the backing of a major political party.',
+      'Our volunteers are the backbone of the support we provide for anti-duopoly candidates. Our 1,200 active volunteers congregate in our growing Community and help fill critical campaign roles for candidates that lack the backing of a major political party.',
     linkText: 'Join our community',
     href: '/volunteer',
   },
@@ -28,7 +28,7 @@ const LEADING_ACTIVITIES = [
     linkText: 'Join our team',
     href: '/work-with-us',
   },
-];
+]
 export const LeadingActivityCards = () => (
   <div className="grid grid-cols-3 gap-4">
     {LEADING_ACTIVITIES.map((activity, key) => {
@@ -36,7 +36,7 @@ export const LeadingActivityCards = () => (
         <div className="col-span-3 lg:col-span-1" key={key}>
           <LeadingActivityCard {...activity} />
         </div>
-      );
+      )
     })}
   </div>
-);
+)
