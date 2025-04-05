@@ -42,7 +42,7 @@ jobs:
       - name: Upload test run ID
         uses: actions/upload-artifact@v4
         with:
-          name: test-run-id
+          name: testrunid
           path: testRunId.txt
           retention-days: 1
 
@@ -104,7 +104,7 @@ jobs:
       - name: Download test run ID
         uses: actions/download-artifact@v4
         with:
-          name: test-run-id
+          name: testrunid
           path: test-automation
 
       - name: Set test run ID
