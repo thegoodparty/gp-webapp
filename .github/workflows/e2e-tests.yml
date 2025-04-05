@@ -28,10 +28,7 @@ jobs:
           node-version: '16.x'
 
       - name: Install Dependencies
-        run: |
-          cd test-automation
-          npm install
-          npx playwright install --with-deps
+        run: npm install && npx playwright install --with-deps
 
       - name: Run Global Setup
         id: global-setup
@@ -80,10 +77,7 @@ jobs:
           node-version: '16.x'
 
       - name: Install Dependencies
-        run: |
-          cd test-automation
-          npm install
-          npx playwright install --with-deps
+        run: npm install && npx playwright install --with-deps
 
       - name: Download test artifacts
         uses: actions/download-artifact@v4
