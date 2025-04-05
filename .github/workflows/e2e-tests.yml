@@ -31,7 +31,8 @@ jobs:
           echo "Run ID from response: $run_id"
           
           if [ -n "$run_id" ]; then
-            echo "$run_id" > test_run_id.txt
+            echo "test_run_id=$run_id" >> $GITHUB_OUTPUT
+            echo "$run_id" > testRunId.txt
             echo "Created test run with ID: $run_id"
           else
             echo "Error creating test run. Response: $response"
@@ -103,10 +104,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: test-run-id
+          path: test-automation
 
       - name: Set test run ID
         run: |
+          cd test-automation
           TEST_RUN_ID=$(cat test_run_id.txt)
+          echo "Test run ID from file: $TEST_RUN_ID"
           echo "TEST_RUN_ID=$TEST_RUN_ID" >> $GITHUB_ENV
 
       - name: Run Playwright Tests
