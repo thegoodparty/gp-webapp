@@ -49,15 +49,13 @@ export default async function Hero() {
             </Button>
           </div>
           <div className="col-span-12 lg:col-span-6 relative h-full">
-            <Link href="/candidates" title="winners">
-              <Image
-                src={bgImg}
-                sizes="50vw"
-                className="object-contain object-right-top"
-                alt=""
-                priority
-              />
-            </Link>
+            <Image
+              src={bgImg}
+              sizes="50vw"
+              className="object-contain object-right-top"
+              alt="Win and serve"
+              priority
+            />
           </div>
         </div>
       </MaxWidth>

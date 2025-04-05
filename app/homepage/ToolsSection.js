@@ -74,7 +74,7 @@ export default function ToolsSection() {
                 src={dialogImg}
                 sizes="100vw"
                 className="object-contain object-top"
-                alt=""
+                alt="What would you like to do?"
               />
             </div>
           </div>

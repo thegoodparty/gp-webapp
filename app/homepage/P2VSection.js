@@ -51,7 +51,7 @@ export default function P2VSection() {
                   src={voterDataImg}
                   sizes="100vw"
                   className="object-contain"
-                  alt=""
+                  alt="Voter data"
                 />
               </div>
             </div>
@@ -64,7 +64,7 @@ export default function P2VSection() {
                   src={voterDatabaseImg}
                   sizes="100vw"
                   className="object-contain"
-                  alt=""
+                  alt="Voter database"
                 />
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function P2VSection() {
                   src={voterOutreachImg}
                   sizes="100vw"
                   className="object-contain"
-                  alt=""
+                  alt="Voter outreach"
                 />
               </div>
             </div>{' '}
