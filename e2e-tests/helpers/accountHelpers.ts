@@ -228,19 +228,60 @@ export async function createAccount(
     await page.getByRole("button", { name: "I Agree" }).click();
     await page.getByRole("button", { name: "I Agree" }).click();
     await page.getByRole("button", { name: "I Agree" }).click();
+
+    console.log('Clicking final submit button...');
     await page.getByRole("button", { name: "Submit" }).click();
 
-    console.log('Waiting for dashboard...');
-    await page.getByText("View Dashboard").click();
+    // Wait for navigation after submit
+    console.log('Waiting for navigation after submit...');
     await page.waitForLoadState('networkidle', { timeout: 30000 });
 
-    // Verify we're on the dashboard
-    const dashboardVisible = await page.getByText("View Dashboard").isVisible({ timeout: 30000 });
-    if (!dashboardVisible) {
+    // Check if we're on the dashboard or if we need to click "View Dashboard"
+    console.log('Checking current page state...');
+    const currentUrl = page.url();
+    console.log('Current URL after submit:', currentUrl);
+
+    // If we're not already on the dashboard, try to click the "View Dashboard" button
+    if (!currentUrl.includes('/dashboard')) {
+      console.log('Not on dashboard yet, looking for View Dashboard button...');
+      try {
+        await page.getByText("View Dashboard").click({ timeout: 30000 });
+        await page.waitForLoadState('networkidle', { timeout: 30000 });
+      } catch (error) {
+        console.log('Could not find View Dashboard button, checking current state...');
+        console.log('Current URL:', page.url());
+        console.log('Page content:', await page.content());
+        throw new Error('Failed to navigate to dashboard after signup');
+      }
+    }
+
+    // Final verification that we're on the dashboard
+    console.log('Verifying dashboard access...');
+    const dashboardElements = [
+      page.getByText("View Dashboard"),
+      page.getByText("Campaign Dashboard"),
+      page.getByText("My Campaign")
+    ];
+
+    let dashboardFound = false;
+    for (const element of dashboardElements) {
+      try {
+        if (await element.isVisible({ timeout: 5000 })) {
+          dashboardFound = true;
+          console.log('Found dashboard element:', await element.textContent());
+          break;
+        }
+      } catch (error) {
+        // Continue checking other elements
+      }
+    }
+
+    if (!dashboardFound) {
       console.log('Current URL:', page.url());
       console.log('Page content:', await page.content());
-      throw new Error('Failed to reach dashboard after signup');
+      throw new Error('Failed to verify dashboard access after signup');
     }
+
     console.log('Account creation completed successfully');
   } catch (error) {
     console.error('Error during account creation:', error);
