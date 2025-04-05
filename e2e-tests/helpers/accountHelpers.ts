@@ -110,7 +110,7 @@ export async function loginAccount(
 ) {
     const baseURL = process.env.BASE_URL;
 
-  await page.goto(`${baseURL}/login`);
+  await page.goto(`${baseURL}/login`, {waitUntil: "load"});
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -258,7 +258,7 @@ export async function deleteAccount(page = null) {
       page = await context.newPage();
     }
 
-    await page.goto(`${baseURL}/profile`);
+    await page.goto(`${baseURL}/profile`, {waitUntil: "load"});
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Delete Account' }).click();
     await page.getByRole('button', { name: 'Proceed' }).click();
