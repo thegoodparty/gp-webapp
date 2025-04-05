@@ -39,7 +39,7 @@ jobs:
         id: global-setup
         run: |
           cd test-automation
-          npx ts-node globalSetup.js
+          NODE_OPTIONS=--experimental-specifier-resolution=node npx ts-node --project tsconfig.json globalSetup.ts
         env:
           CI: "true"
           BASE_URL: ${{ env.BASE_URL }}
