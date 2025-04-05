@@ -1,17 +1,17 @@
-'use client';
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import H1 from '@shared/typography/H1';
-import TextField from '@shared/inputs/TextField';
-import Button from '@shared/buttons/Button';
-import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper';
-import { useVoterContacts } from '@shared/hooks/useVoterContacts';
-import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory';
+'use client'
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import H1 from '@shared/typography/H1'
+import TextField from '@shared/inputs/TextField'
+import Button from '@shared/buttons/Button'
+import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
 import {
   createIrresponsiblyMassagedHistoryItem,
   createUpdateHistory,
-} from '@shared/utils/campaignUpdateHistoryServices';
-import { useUser } from '@shared/hooks/useUser';
+} from '@shared/utils/campaignUpdateHistoryServices'
+import { useUser } from '@shared/hooks/useUser'
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(
@@ -20,7 +20,7 @@ const getEditedFields = (formState) =>
       ...(Boolean(formState[key]) ? { [key]: parseInt(formState[key]) } : {}),
     }),
     {},
-  );
+  )
 
 const calculateIncrementedFields = (currentFields, editedFields) =>
   Object.keys(editedFields).reduce(
@@ -29,7 +29,7 @@ const calculateIncrementedFields = (currentFields, editedFields) =>
       [k]: (currentFields[k] || 0) + editedFields[k],
     }),
     {},
-  );
+  )
 
 const INITIAL_FORM_STATE = {
   text: '',
@@ -38,44 +38,44 @@ const INITIAL_FORM_STATE = {
   phoneBanking: '',
   socialMedia: '',
   events: '',
-};
+}
 
 export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
-  const [user] = useUser();
-  const [recordedVoterGoals, setRecordedVoterGoals] = useVoterContacts();
-  const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory();
-  const [formState, setFormState] = useState(INITIAL_FORM_STATE);
+  const [user] = useUser()
+  const [recordedVoterGoals, setRecordedVoterGoals] = useVoterContacts()
+  const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory()
+  const [formState, setFormState] = useState(INITIAL_FORM_STATE)
 
   const handleInputChange = (field) => (e) => {
     setFormState({
       ...formState,
       [field]: e.target.value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async () => {
-    const updatedFields = getEditedFields(formState);
+    const updatedFields = getEditedFields(formState)
     const newHistoryItemsData = Object.keys(updatedFields).map((key) => ({
       type: key,
       quantity: updatedFields[key],
-    }));
+    }))
     const newHistoryItems = await Promise.all(
       newHistoryItemsData.map((item) => createUpdateHistory(item)),
-    );
+    )
 
     setRecordedVoterGoals({
       ...recordedVoterGoals,
       ...calculateIncrementedFields(recordedVoterGoals, updatedFields),
-    });
+    })
     setUpdateHistory([
       ...updateHistory,
       ...newHistoryItems.map((item) =>
         createIrresponsiblyMassagedHistoryItem(item, user),
       ),
-    ]);
-    setFormState({ ...INITIAL_FORM_STATE });
-    setOpen(false);
-  };
+    ])
+    setFormState({ ...INITIAL_FORM_STATE })
+    setOpen(false)
+  }
 
   return (
     <Modal open={open} closeCallback={() => setOpen(false)}>
@@ -158,5 +158,5 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
         </div>
       </VoterContactModalWrapper>
     </Modal>
-  );
-};
+  )
+}

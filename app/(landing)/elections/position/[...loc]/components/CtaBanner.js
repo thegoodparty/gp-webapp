@@ -1,9 +1,9 @@
-import WarningButton from '@shared/buttons/WarningButton';
-import Image from 'next/image';
-import Link from 'next/link';
+import WarningButton from '@shared/buttons/WarningButton'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function CtaBanner({ race }) {
-  const { normalizedPositionName } = race;
+  const { normalizedPositionName } = race
   return (
     <section className="py-12 relative">
       <div className="absolute h-1/2 w-full top-1/2 bg-primary-dark"></div>
@@ -35,5 +35,5 @@ export default function CtaBanner({ race }) {
         </div>
       </div>
     </section>
-  );
+  )
 }

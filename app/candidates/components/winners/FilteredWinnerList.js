@@ -1,12 +1,12 @@
-import Slider from 'react-slick';
+import Slider from 'react-slick'
 
-import WinnerSnippet from './WinnerSnippet';
-import H5 from '@shared/typography/H5';
-import { numberFormatter } from 'helpers/numberHelper';
-import { useEffect, useState } from 'react';
+import WinnerSnippet from './WinnerSnippet'
+import H5 from '@shared/typography/H5'
+import { numberFormatter } from 'helpers/numberHelper'
+import { useEffect, useState } from 'react'
 
 function CustomArrow(props) {
-  const { className, style, onClick } = props;
+  const { className, style, onClick } = props
   return (
     <div
       role="button"
@@ -16,7 +16,7 @@ function CustomArrow(props) {
       onClick={onClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick(e)}
     />
-  );
+  )
 }
 
 const settings = {
@@ -48,9 +48,9 @@ const settings = {
   ),
   afterChange: (index) => {
     // handles limiting the number of pagination dots that are visible at once
-    const currentDot = document.querySelector('.slick-dots .slick-active');
-    const dotWrapper = currentDot.parentElement.parentElement;
-    const padding = currentDot.offsetWidth * 1.5;
+    const currentDot = document.querySelector('.slick-dots .slick-active')
+    const dotWrapper = currentDot.parentElement.parentElement
+    const padding = currentDot.offsetWidth * 1.5
 
     if (
       currentDot.offsetLeft >
@@ -60,30 +60,30 @@ const settings = {
       const scrollTarget = Math.max(
         0,
         currentDot.offsetLeft - dotWrapper.clientWidth / 2,
-      );
+      )
 
       dotWrapper.scrollTo({
         left: scrollTarget,
         behavior: 'smooth',
-      });
+      })
     }
   },
-};
+}
 
 export default function FilteredWinnerList({ campaigns }) {
   // split campaigns to and array of arrays each has 9 campaigns max
-  const [splitCampaigns, setSplitCampaigns] = useState([]);
+  const [splitCampaigns, setSplitCampaigns] = useState([])
   useEffect(() => {
     const split = campaigns.reduce((acc, campaign, index) => {
-      const i = Math.floor(index / 9);
+      const i = Math.floor(index / 9)
       if (!acc[i]) {
-        acc[i] = [];
+        acc[i] = []
       }
-      acc[i].push(campaign);
-      return acc;
-    }, []);
-    setSplitCampaigns(split);
-  }, [campaigns]);
+      acc[i].push(campaign)
+      return acc
+    }, [])
+    setSplitCampaigns(split)
+  }, [campaigns])
 
   return (
     <div className="pb-4">
@@ -102,5 +102,5 @@ export default function FilteredWinnerList({ campaigns }) {
         ))}
       </Slider>
     </div>
-  );
+  )
 }

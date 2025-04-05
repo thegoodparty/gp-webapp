@@ -1,11 +1,10 @@
-'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import TextField from '@shared/inputs/TextField';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import H3 from '@shared/typography/H3';
-import { useState } from 'react';
+'use client'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import H3 from '@shared/typography/H3'
+import { useState } from 'react'
 
 const fields = [
   {
@@ -19,7 +18,7 @@ const fields = [
     title: 'Past achievements related to',
   },
   { key: 'skills', label: 'Skills', title: 'Skills related to' },
-];
+]
 
 export default function PastExperience({
   value,
@@ -31,28 +30,28 @@ export default function PastExperience({
     responsibility: value?.responsibility || '',
     achievements: value?.achievements || '',
     skills: value?.skills || '',
-  });
+  })
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
   const handleSave = () => {
-    if (!canSave()) return;
-    saveCallback([`details.${campaignKey}`], [state]);
-  };
+    if (!canSave()) return
+    saveCallback([`details.${campaignKey}`], [state])
+  }
 
   const canSave = () => {
     return (
       state.responsibility !== '' &&
       state.achievements !== '' &&
       state.skills !== ''
-    );
-  };
+    )
+  }
   const office =
-    campaign.details.otherOffice || campaign.office || 'your office';
+    campaign.details.otherOffice || campaign.office || 'your office'
   return (
     <div className="max-w-xl m-auto">
       <form noValidate onSubmit={(e) => e.preventDefault()}>
@@ -77,7 +76,7 @@ export default function PastExperience({
               }}
               value={state[field.key]}
               onChange={(e) => {
-                onChangeField(field.key, e.target.value);
+                onChangeField(field.key, e.target.value)
               }}
             />
           </div>
@@ -90,5 +89,5 @@ export default function PastExperience({
         </div>
       </form>
     </div>
-  );
+  )
 }

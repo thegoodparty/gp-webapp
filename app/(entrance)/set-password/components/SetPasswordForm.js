@@ -1,8 +1,8 @@
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import Button from '@shared/buttons/Button';
-import PasswordInput from '@shared/inputs/PasswrodInput';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
+import PasswordInput from '@shared/inputs/PasswrodInput'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function SetPasswordForm({
   password,
@@ -13,11 +13,11 @@ export default function SetPasswordForm({
   onConfirmPasswordChange,
   onSubmit,
 }) {
-  const showConfirmError = confirmPassword !== '' && !isMatch;
+  const showConfirmError = confirmPassword !== '' && !isMatch
 
   const handleTrackClick = () => {
-    trackEvent(EVENTS.SetPassword.ClickSetPassword);
-  };
+    trackEvent(EVENTS.SetPassword.ClickSetPassword)
+  }
 
   return (
     <form noValidate onSubmit={onSubmit}>
@@ -51,5 +51,5 @@ export default function SetPasswordForm({
         Set Password
       </Button>
     </form>
-  );
+  )
 }

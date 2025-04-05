@@ -10,4 +10,4 @@ export const FooterExternalLink = ({ link, label, id }) => (
   >
     {label}
   </a>
-);
+)

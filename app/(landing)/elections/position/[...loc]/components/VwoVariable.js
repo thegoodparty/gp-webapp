@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
 export default function VwoVariable({ race }) {
-  const { normalizedPositionName } = race;
+  const { normalizedPositionName } = race
   useEffect(() => {
-    window.positionName = normalizedPositionName;
-  }, [normalizedPositionName]);
-  return null;
+    window.positionName = normalizedPositionName
+  }, [normalizedPositionName])
+  return null
 }

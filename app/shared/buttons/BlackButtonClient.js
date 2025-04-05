@@ -1,5 +1,5 @@
-'use client';
-import BaseButtonClient from './BaseButtonClient';
+'use client'
+import BaseButtonClient from './BaseButtonClient'
 
 const BlackButtonClient = ({
   children,
@@ -9,8 +9,8 @@ const BlackButtonClient = ({
   type,
   className,
 }) => {
-  const backgroundColor = disabled ? '#b9b9b9' : '#000';
-  const cursor = disabled ? 'not-allowed' : 'pointer';
+  const backgroundColor = disabled ? '#b9b9b9' : '#000'
+  const cursor = disabled ? 'not-allowed' : 'pointer'
 
   return (
     <BaseButtonClient
@@ -22,7 +22,7 @@ const BlackButtonClient = ({
     >
       {children}
     </BaseButtonClient>
-  );
-};
+  )
+}
 
-export default BlackButtonClient;
+export default BlackButtonClient

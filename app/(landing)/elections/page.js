@@ -1,8 +1,8 @@
-import pageMetaData from 'helpers/metadataHelper';
-import ElectionsPage from './components/ElectionsPage';
+import pageMetaData from 'helpers/metadataHelper'
+import ElectionsPage from './components/ElectionsPage'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'Election Research',
@@ -11,9 +11,9 @@ const meta = pageMetaData({
 
   slug: '/elections',
   image: 'https://assets.goodparty.org/elections.png',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page(params) {
-  return <ElectionsPage />;
+  return <ElectionsPage />
 }

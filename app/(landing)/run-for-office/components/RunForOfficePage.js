@@ -1,12 +1,12 @@
-import Hero from './Hero';
-import KeyFeatures from './KeyFeatures';
-import Pricing from './Pricing';
-import ProTools from './ProTools';
-import StartedBottom from './StartedBottom';
-import Testimonials from './Testimonials';
-import WhyUse from './WhyUse';
-import Image from 'next/image';
-import gradientImg from 'public/images/run-for-office/gradients.png';
+import Hero from './Hero'
+import KeyFeatures from './KeyFeatures'
+import Pricing from './Pricing'
+import ProTools from './ProTools'
+import StartedBottom from './StartedBottom'
+import Testimonials from './Testimonials'
+import WhyUse from './WhyUse'
+import Image from 'next/image'
+import gradientImg from 'public/images/run-for-office/gradients.png'
 
 export default function RunForOfficePage({ testimonials }) {
   return (
@@ -33,5 +33,5 @@ export default function RunForOfficePage({ testimonials }) {
       <Testimonials testimonials={testimonials} />
       <StartedBottom />
     </div>
-  );
+  )
 }

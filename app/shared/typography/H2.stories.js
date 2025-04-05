@@ -1,4 +1,4 @@
-import H2Component from './H2';
+import H2Component from './H2'
 
 export default {
   title: 'Typography/H2',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Header 2 Text',
   },
-};
+}
 
-export const H2 = {};
+export const H2 = {}

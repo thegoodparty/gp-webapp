@@ -1,26 +1,26 @@
-'use client';
+'use client'
 /**
  *
  * ImageUploadWrapper
  *
  */
 
-import React, { useState } from 'react';
-import { RiImageAddFill } from 'react-icons/ri';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+import React, { useState } from 'react'
+import { RiImageAddFill } from 'react-icons/ri'
+import BlackButtonClient from '@shared/buttons/BlackButtonClient'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 async function fileSelectCallback(image, uploadCallback) {
-  const formData = new FormData();
-  formData.append('file', image, image.name);
+  const formData = new FormData()
+  formData.append('file', image, image.name)
   const resp = await clientFetch(apiRoutes.user.uploadAvatar, formData, {
     revalidate: 3600,
-  });
+  })
   if (resp.data?.avatar) {
-    uploadCallback(resp.data.avatar);
+    uploadCallback(resp.data.avatar)
   } else {
-    uploadCallback(false);
+    uploadCallback(false)
   }
 }
 
@@ -30,23 +30,23 @@ function ImageUploadWrapper({
   customElement,
   loadingStatusCallback = () => {},
 }) {
-  const [fileSizeError, setFileSizeError] = useState(false);
+  const [fileSizeError, setFileSizeError] = useState(false)
 
   const handleUploadImage = async (img) => {
-    loadingStatusCallback(true);
-    setFileSizeError(false);
-    const node = document.getElementById('file-uploader');
-    const file = node.files ? node.files[0] : false;
+    loadingStatusCallback(true)
+    setFileSizeError(false)
+    const node = document.getElementById('file-uploader')
+    const file = node.files ? node.files[0] : false
     if (file) {
       if (file.size > maxFileSize) {
-        setFileSizeError(true);
-        loadingStatusCallback(false);
-        return;
+        setFileSizeError(true)
+        loadingStatusCallback(false)
+        return
       }
-      await fileSelectCallback(file, uploadCallback);
-      loadingStatusCallback(false);
+      await fileSelectCallback(file, uploadCallback)
+      loadingStatusCallback(false)
     }
-  };
+  }
 
   return (
     <>
@@ -79,7 +79,7 @@ function ImageUploadWrapper({
         </div>
       )}
     </>
-  );
+  )
 }
 
-export default ImageUploadWrapper;
+export default ImageUploadWrapper

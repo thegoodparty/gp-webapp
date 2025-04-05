@@ -1,5 +1,5 @@
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
 
 const KickTheTires = () => (
   <section className="bg-secondary text-center px-4 pt-8 pb-20">
@@ -17,6 +17,6 @@ const KickTheTires = () => (
       </PrimaryButton>
     </AcademyModalSignUpButton>
   </section>
-);
+)
 
-export default KickTheTires;
+export default KickTheTires

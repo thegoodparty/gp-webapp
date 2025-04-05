@@ -1,42 +1,42 @@
-'use client';
-import { useState } from 'react';
-import { passwordRegex, updateUser } from 'helpers/userHelper';
-import H4 from '@shared/typography/H4';
-import Body2 from '@shared/typography/Body2';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Paper from '@shared/utils/Paper';
-import H2 from '@shared/typography/H2';
-import PasswordInput from '@shared/inputs/PasswrodInput';
-import DeleteAccountButton from './DeleteAccountButton';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { useState } from 'react'
+import { passwordRegex, updateUser } from 'helpers/userHelper'
+import H4 from '@shared/typography/H4'
+import Body2 from '@shared/typography/Body2'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Paper from '@shared/utils/Paper'
+import H2 from '@shared/typography/H2'
+import PasswordInput from '@shared/inputs/PasswrodInput'
+import DeleteAccountButton from './DeleteAccountButton'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
-const PASSWORD_REQUEST_FAILED = 'Password request failed';
-const CURRENT_PASSWORD_INCORRECT = 'Old password is incorrect';
-const INVALID_PASSWORD_MSG = 'Invalid password';
+const PASSWORD_REQUEST_FAILED = 'Password request failed'
+const CURRENT_PASSWORD_INCORRECT = 'Old password is incorrect'
+const INVALID_PASSWORD_MSG = 'Invalid password'
 
 function PasswordSection({ user: initUser }) {
-  const [user, setUser] = useState(initUser);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [user, setUser] = useState(initUser)
+  const [loading, setLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [passwordChangeSuccessful, setPasswordChangeSuccessful] =
-    useState(false);
+    useState(false)
 
   const initialState = {
     oldPassword: '',
     password: '',
-  };
-  const [state, setState] = useState(initialState);
+  }
+  const [state, setState] = useState(initialState)
 
   const onChangeField = (key, val) => {
-    setErrorMessage(null);
-    setPasswordChangeSuccessful(false);
+    setErrorMessage(null)
+    setPasswordChangeSuccessful(false)
     setState({
       ...state,
       [key]: val,
-    });
-  };
+    })
+  }
 
   const fieldsValid =
     (user &&
@@ -50,53 +50,53 @@ function PasswordSection({ user: initUser }) {
       state.oldPassword.length > 7 &&
       state.password.match(passwordRegex) &&
       state.password.length > 7) ||
-    (!user.hasPassword && state.password !== '' && state.password.length > 7);
+    (!user.hasPassword && state.password !== '' && state.password.length > 7)
 
   const reset = () => {
-    setState(initialState);
-  };
+    setState(initialState)
+  }
 
   const handleReqResult = async (result) => {
     if (result.ok) {
-      setErrorMessage(null);
-      setPasswordChangeSuccessful(true);
-      setUser(await updateUser());
-      reset();
+      setErrorMessage(null)
+      setPasswordChangeSuccessful(true)
+      setUser(await updateUser())
+      reset()
     } else {
-      const reason = await result.data;
-      setPasswordChangeSuccessful(false);
+      const reason = await result.data
+      setPasswordChangeSuccessful(false)
       setErrorMessage(
         result.status === 401 && reason.message === INVALID_PASSWORD_MSG
           ? CURRENT_PASSWORD_INCORRECT
           : PASSWORD_REQUEST_FAILED,
-      );
+      )
     }
-  };
+  }
 
   const doPasswordChange = async () => {
-    const { password, oldPassword } = state;
-    setLoading(true);
+    const { password, oldPassword } = state
+    setLoading(true)
     try {
       const result = await clientFetch(apiRoutes.user.changePassword, {
         id: user.id,
         newPassword: password,
         oldPassword,
-      });
+      })
 
-      await handleReqResult(result);
+      await handleReqResult(result)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSavePassword = () => {
-    trackEvent(EVENTS.Settings.Password.ClickSave);
+    trackEvent(EVENTS.Settings.Password.ClickSave)
     if (fieldsValid) {
-      doPasswordChange(state.password, state.oldPassword);
+      doPasswordChange(state.password, state.oldPassword)
     }
-  };
+  }
 
   return (
     <Paper className="mt-4">
@@ -119,7 +119,7 @@ function PasswordSection({ user: initUser }) {
                 <PasswordInput
                   value={state.oldPassword}
                   onChangeCallback={(pwd) => {
-                    onChangeField('oldPassword', pwd);
+                    onChangeField('oldPassword', pwd)
                   }}
                   label="Old Password"
                   helperText=""
@@ -137,7 +137,7 @@ function PasswordSection({ user: initUser }) {
             <PasswordInput
               value={state.password}
               onChangeCallback={(pwd) => {
-                onChangeField('password', pwd);
+                onChangeField('password', pwd)
               }}
               label="New Password"
             />
@@ -169,7 +169,7 @@ function PasswordSection({ user: initUser }) {
         </div>
       </form>
     </Paper>
-  );
+  )
 }
 
-export default PasswordSection;
+export default PasswordSection

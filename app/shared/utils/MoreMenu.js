@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { MdMoreVert } from 'react-icons/md';
-import { Menu, MenuItem } from '@mui/material';
+import { useState } from 'react'
+import { MdMoreVert } from 'react-icons/md'
+import { Menu, MenuItem } from '@mui/material'
 
 export const MoreMenu = ({ onClose = (menuItem) => {}, menuItems = [] }) => {
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const showMenu = Boolean(menuAnchor);
+  const [menuAnchor, setMenuAnchor] = useState(null)
+  const showMenu = Boolean(menuAnchor)
 
   const handleMenuAnchorClick = ({ currentTarget }) => {
-    setMenuAnchor(currentTarget);
-  };
+    setMenuAnchor(currentTarget)
+  }
 
   const handleMenuClose = (menuItem) => {
-    setMenuAnchor(null);
-    onClose(menuItem);
-  };
+    setMenuAnchor(null)
+    onClose(menuItem)
+  }
 
   return (
     <>
@@ -43,21 +43,21 @@ export const MoreMenu = ({ onClose = (menuItem) => {}, menuItems = [] }) => {
         }}
       >
         {menuItems.map((menuItem, index) => {
-          const { onClick = () => {}, label = '', ...rest } = menuItem;
+          const { onClick = () => {}, label = '', ...rest } = menuItem
           return (
             <MenuItem
               key={index}
               onClick={() => {
-                handleMenuClose();
-                onClick();
+                handleMenuClose()
+                onClick()
               }}
               {...rest}
             >
               {label}
             </MenuItem>
-          );
+          )
         })}
       </Menu>
     </>
-  );
-};
+  )
+}

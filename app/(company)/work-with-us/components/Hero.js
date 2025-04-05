@@ -4,9 +4,9 @@
  *
  */
 
-import React from 'react';
+import React from 'react'
 
-import styles from './Hero.module.scss';
+import styles from './Hero.module.scss'
 
 function Hero() {
   return (
@@ -33,7 +33,7 @@ function Hero() {
         you’re up for, check out the roles we&apos;re looking to fill right now!
       </div>
     </section>
-  );
+  )
 }
 
-export default Hero;
+export default Hero

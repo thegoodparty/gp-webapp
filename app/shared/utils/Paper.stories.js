@@ -1,6 +1,6 @@
-import H1 from '@shared/typography/H1';
-import Paper from './Paper';
-import Body1 from '@shared/typography/Body1';
+import H1 from '@shared/typography/H1'
+import Paper from './Paper'
+import Body1 from '@shared/typography/Body1'
 
 export default {
   title: 'Utils/Paper',
@@ -23,6 +23,6 @@ export default {
       </>
     ),
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

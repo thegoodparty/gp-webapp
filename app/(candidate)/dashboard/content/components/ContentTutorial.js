@@ -1,11 +1,11 @@
-'use client';
-import 'intro.js/introjs.css';
-import './ContentTutorial.css';
-import { Steps } from 'intro.js-react';
-import { useEffect, useRef, useState } from 'react';
-import H2 from '@shared/typography/H2';
-import Body1 from '@shared/typography/Body1';
-import { setCookie } from 'helpers/cookieHelper';
+'use client'
+import 'intro.js/introjs.css'
+import './ContentTutorial.css'
+import { Steps } from 'intro.js-react'
+import { useEffect, useRef, useState } from 'react'
+import H2 from '@shared/typography/H2'
+import Body1 from '@shared/typography/Body1'
+import { setCookie } from 'helpers/cookieHelper'
 
 const steps = [
   {
@@ -56,45 +56,45 @@ const steps = [
       </div>
     ),
   },
-];
+]
 
 export default function ContentTutorial({ newContentCallback }) {
-  const stepsRef = useRef(null);
-  const [enabled, setEnabled] = useState(false);
+  const stepsRef = useRef(null)
+  const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
-    setEnabled(true);
-  }, []);
+    setEnabled(true)
+  }, [])
 
   const onExit = () => {
-    setCookie('tutorial-content', true);
-  };
+    setCookie('tutorial-content', true)
+  }
 
   const onComplete = () => {
-    document.getElementById('template-card-pressRelease').click();
-  };
+    document.getElementById('template-card-pressRelease').click()
+  }
 
   const handleChange = (nextStepIndex) => {
     if (nextStepIndex === 2) {
-      newContentCallback();
+      newContentCallback()
     }
-  };
+  }
   const onBeforeChange = (nextStepIndex) => {
-    stepsRef.current.updateStepElement(nextStepIndex);
+    stepsRef.current.updateStepElement(nextStepIndex)
     setTimeout(() => {
       if (nextStepIndex === 0) {
-        const backButton = document.querySelector('.introjs-prevbutton');
+        const backButton = document.querySelector('.introjs-prevbutton')
         if (backButton) {
-          backButton.style.display = 'none';
+          backButton.style.display = 'none'
         }
       } else {
-        const backButton = document.querySelector('.introjs-prevbutton');
+        const backButton = document.querySelector('.introjs-prevbutton')
         if (backButton) {
-          backButton.style.display = 'inline-block';
+          backButton.style.display = 'inline-block'
         }
       }
-    }, 1); // Short delay to ensure DOM elements are updated
-  };
+    }, 1) // Short delay to ensure DOM elements are updated
+  }
 
   return (
     <div>
@@ -113,5 +113,5 @@ export default function ContentTutorial({ newContentCallback }) {
         ref={stepsRef}
       />
     </div>
-  );
+  )
 }

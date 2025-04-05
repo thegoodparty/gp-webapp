@@ -15,16 +15,16 @@ survey example
     }
 */
 
-import H3 from '@shared/typography/H3';
-import Body2 from '@shared/typography/Body2';
-import Link from 'next/link';
-import { FcSurvey } from 'react-icons/fc';
-import Paper from '@shared/utils/Paper';
-import SurveyChips from './SurveyChips';
+import H3 from '@shared/typography/H3'
+import Body2 from '@shared/typography/Body2'
+import Link from 'next/link'
+import { FcSurvey } from 'react-icons/fc'
+import Paper from '@shared/utils/Paper'
+import SurveyChips from './SurveyChips'
 
 export default function SurveyCard(props) {
-  const { survey } = props;
-  const { name, description, id } = survey || {};
+  const { survey } = props
+  const { name, description, id } = survey || {}
   return (
     <Link
       href={`/dashboard/door-knocking/surveys/${id}`}
@@ -37,5 +37,5 @@ export default function SurveyCard(props) {
         <SurveyChips survey={survey} />
       </Paper>
     </Link>
-  );
+  )
 }

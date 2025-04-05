@@ -1,5 +1,5 @@
-import UserSnapScript from '@shared/scripts/UserSnapScript';
-import ServeMenu from './ServeMenu';
+import UserSnapScript from '@shared/scripts/UserSnapScript'
+import ServeMenu from './ServeMenu'
 
 export default function ServeLayout({ children, pathname }) {
   return (
@@ -12,5 +12,5 @@ export default function ServeLayout({ children, pathname }) {
         <main className="lg:ml-6 flex-1">{children}</main>
       </div>
     </>
-  );
+  )
 }

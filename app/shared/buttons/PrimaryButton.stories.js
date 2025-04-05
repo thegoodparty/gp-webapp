@@ -1,5 +1,5 @@
-import { argTypes } from './buttonsArgTypes';
-import PrimaryButtonComponent from './PrimaryButton';
+import { argTypes } from './buttonsArgTypes'
+import PrimaryButtonComponent from './PrimaryButton'
 
 export default {
   title: 'Buttons/PrimaryButton',
@@ -10,22 +10,22 @@ export default {
   },
 
   argTypes,
-};
+}
 
 export const Primary = {
   args: {
     variant: 'contained',
   },
-};
+}
 
 export const Outlined = {
   args: {
     variant: 'outlined',
   },
-};
+}
 
 export const Text = {
   args: {
     variant: 'text',
   },
-};
+}

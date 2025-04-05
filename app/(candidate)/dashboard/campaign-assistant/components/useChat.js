@@ -1,14 +1,14 @@
-'use client';
-import { useContext } from 'react';
+'use client'
+import { useContext } from 'react'
 
-import { ChatContext } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatProvider';
+import { ChatContext } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatProvider'
 
 const useChat = () => {
-  const context = useContext(ChatContext);
+  const context = useContext(ChatContext)
   if (!context) {
-    throw new Error('useChat must be used within ChatContextProvider');
+    throw new Error('useChat must be used within ChatContextProvider')
   }
-  return context;
-};
+  return context
+}
 
-export default useChat;
+export default useChat

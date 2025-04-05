@@ -1,6 +1,5 @@
-import React from 'react';
-import styles from './BlackOutlinedButton.module.scss';
-import BaseButton from './BaseButtonClient';
+import React from 'react'
+import BaseButton from './BaseButtonClient'
 
 const BlackOutlinedButtonClient = ({
   children,
@@ -30,7 +29,7 @@ const BlackOutlinedButtonClient = ({
     >
       {children}
     </BaseButton>
-  );
-};
+  )
+}
 
-export default BlackOutlinedButtonClient;
+export default BlackOutlinedButtonClient

@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import H4 from '@shared/typography/H4';
-import Image from 'next/image';
-import { useState } from 'react';
-import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import H4 from '@shared/typography/H4'
+import Image from 'next/image'
+import { useState } from 'react'
+import { FiChevronUp, FiChevronDown } from 'react-icons/fi'
 
 export default function TogglePanel({
   icon,
@@ -16,13 +16,13 @@ export default function TogglePanel({
   openCallback,
   ...restProps
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const toggleOpen = () => {
-    setOpen(!open);
+    setOpen(!open)
     if (openCallback) {
-      openCallback(!open);
+      openCallback(!open)
     }
-  };
+  }
 
   /*
         <div
@@ -79,5 +79,5 @@ export default function TogglePanel({
         </div>
       )}
     </>
-  );
+  )
 }

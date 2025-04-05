@@ -1,5 +1,5 @@
-import Body1 from '@shared/typography/Body1';
-import IssuesSelector from './IssuesSelector';
+import Body1 from '@shared/typography/Body1'
+import IssuesSelector from './IssuesSelector'
 
 export default function AddIssues(props) {
   return (
@@ -14,5 +14,5 @@ export default function AddIssues(props) {
       </Body1>
       <IssuesSelector {...props} />
     </div>
-  );
+  )
 }

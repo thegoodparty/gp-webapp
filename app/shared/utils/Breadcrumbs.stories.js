@@ -1,4 +1,4 @@
-import Breadcrumbs from './Breadcrumbs';
+import Breadcrumbs from './Breadcrumbs'
 
 export default {
   title: 'Utils/Breadcrumbs',
@@ -12,7 +12,7 @@ export default {
       { label: 'How to Get Involved With Political Activism.' },
     ],
   },
-};
+}
 
-export const Default = {};
-export const ChevronDelimiter = { args: { delimiter: 'chevron' } };
+export const Default = {}
+export const ChevronDelimiter = { args: { delimiter: 'chevron' } }

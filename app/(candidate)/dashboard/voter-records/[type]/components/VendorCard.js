@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import Chip from '@shared/utils/Chip';
-import Paper from '@shared/utils/Paper';
-import Image from 'next/image';
-import { IoArrowForward } from 'react-icons/io5';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import Chip from '@shared/utils/Chip'
+import Paper from '@shared/utils/Paper'
+import Image from 'next/image'
+import { IoArrowForward } from 'react-icons/io5'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function VendorCard({
   logo,
@@ -46,7 +46,7 @@ export default function VendorCard({
               name,
               url,
             },
-          );
+          )
         }}
       >
         <div className="mt-4 flex items-center justify-end">
@@ -55,5 +55,5 @@ export default function VendorCard({
         </div>
       </a>
     </Paper>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import ProConsultationPage from './components/ProConsultationPage';
-import pageMetaData from 'helpers/metadataHelper';
+import ProConsultationPage from './components/ProConsultationPage'
+import pageMetaData from 'helpers/metadataHelper'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'GoodParty.org Pro Consultation',
@@ -10,9 +10,9 @@ const meta = pageMetaData({
 
   slug: '/pro-consultation',
   image: 'https://assets.goodparty.org/get-a-demo.png',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page() {
-  return <ProConsultationPage />;
+  return <ProConsultationPage />
 }

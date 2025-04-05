@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import H3 from '@shared/typography/H3';
-import H5 from '@shared/typography/H5';
-import { BsMegaphone } from 'react-icons/bs';
-import { FiShare2 } from 'react-icons/fi';
-import { GrMicrophone } from 'react-icons/gr';
-import { GoPeople } from 'react-icons/go';
-import { AiOutlineFlag } from 'react-icons/ai';
-import { FaHandHoldingHeart } from 'react-icons/fa';
-import { HiOutlineScale } from 'react-icons/hi';
-import { SiMinutemailer } from 'react-icons/si';
-import Caption from '@shared/typography/Caption';
-import { calcAnswers } from '../../shared/QuestionProgress';
+import H3 from '@shared/typography/H3'
+import H5 from '@shared/typography/H5'
+import { BsMegaphone } from 'react-icons/bs'
+import { FiShare2 } from 'react-icons/fi'
+import { GrMicrophone } from 'react-icons/gr'
+import { GoPeople } from 'react-icons/go'
+import { AiOutlineFlag } from 'react-icons/ai'
+import { FaHandHoldingHeart } from 'react-icons/fa'
+import { HiOutlineScale } from 'react-icons/hi'
+import { SiMinutemailer } from 'react-icons/si'
+import Caption from '@shared/typography/Caption'
+import { calcAnswers } from '../../shared/QuestionProgress'
 import {
   buildTrackingAttrs,
   trackEvent,
   EVENTS,
-} from 'helpers/fullStoryHelper';
+} from 'helpers/fullStoryHelper'
 
 const categoryIcons = {
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,
@@ -29,7 +29,7 @@ const categoryIcons = {
   'Endorsements & Partnerships': (
     <FaHandHoldingHeart className="text-red-400" />
   ),
-};
+}
 
 export default function TemplateList(props) {
   const {
@@ -39,7 +39,7 @@ export default function TemplateList(props) {
     requiresQuestions,
     campaign,
     candidatePositions,
-  } = props;
+  } = props
 
   const handleClick = (key) => {
     if (requiresQuestions[key]) {
@@ -47,15 +47,15 @@ export default function TemplateList(props) {
       const { answeredQuestions, totalQuestions } = calcAnswers(
         campaign,
         candidatePositions,
-      );
+      )
 
       if (answeredQuestions >= totalQuestions) {
-        onSelectCallback(key);
+        onSelectCallback(key)
       }
     } else {
-      onSelectCallback(key);
+      onSelectCallback(key)
     }
-  };
+  }
 
   return (
     <>
@@ -70,7 +70,7 @@ export default function TemplateList(props) {
                   category: category.name,
                   key: template.key,
                 },
-              );
+              )
 
               return (
                 <div
@@ -85,8 +85,8 @@ export default function TemplateList(props) {
                       trackEvent(EVENTS.ContentBuilder.SelectTemplate, {
                         category: category.name,
                         key: template.key,
-                      });
-                      handleClick(template.key);
+                      })
+                      handleClick(template.key)
                     }}
                     onKeyDown={(e) =>
                       e.key === 'Enter' && handleClick(template.key)
@@ -117,11 +117,11 @@ export default function TemplateList(props) {
                     </Caption>
                   )}
                 </div>
-              );
+              )
             })}
           </div>
         </div>
       ))}
     </>
-  );
+  )
 }

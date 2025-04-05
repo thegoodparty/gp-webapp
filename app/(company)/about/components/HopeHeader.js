@@ -7,4 +7,4 @@ export const HopeHeader = ({ children, className, ...restProps }) => (
   >
     {children}
   </h2>
-);
+)

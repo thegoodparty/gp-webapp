@@ -1,19 +1,18 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { slugify } from 'helpers/articleHelper';
-import { shortToLongState } from 'helpers/statesHelper';
-import Hero from './Hero';
-import LinksSection from '../../shared/LinksSection';
-import RacesSection from '../../shared/RacesSection';
-import LearnToRun from '../../shared/LearnToRun';
-import Guides from '../../shared/Guides';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { shortToLongState } from 'helpers/statesHelper'
+import Hero from './Hero'
+import LinksSection from '../../shared/LinksSection'
+import RacesSection from '../../shared/RacesSection'
+import LearnToRun from '../../shared/LearnToRun'
+import Guides from '../../shared/Guides'
 
 export default function ElectionsStatePage(props) {
-  const { state, childEntity, races, articles } = props;
-  const stateName = shortToLongState[state.toUpperCase()];
+  const { state, childEntity, races, articles } = props
+  const stateName = shortToLongState[state.toUpperCase()]
 
   const countyLink = (county) => {
-    return `/elections/${county.slug}`;
-  };
+    return `/elections/${county.slug}`
+  }
   return (
     <div className="bg-indigo-50 pb-20">
       <Hero {...props} color1="#3EE996" color2="#31D3C8" level="state" />
@@ -32,5 +31,5 @@ export default function ElectionsStatePage(props) {
       <LearnToRun stateName={stateName} />
       <Guides articles={articles} />
     </div>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import H2 from '@shared/typography/H2';
-import Subtitle1 from '@shared/typography/Subtitle1';
-import Link from 'next/link';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import H2 from '@shared/typography/H2'
+import Subtitle1 from '@shared/typography/Subtitle1'
+import Link from 'next/link'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export function calcAnswers(campaign, candidatePositions) {
-  const totalQuestions = 6;
-  let answeredQuestions = 0;
+  const totalQuestions = 6
+  let answeredQuestions = 0
   const {
     customIssues,
     occupation,
@@ -14,41 +14,41 @@ export function calcAnswers(campaign, candidatePositions) {
     pastExperience,
     website,
     runningAgainst,
-  } = campaign?.details || {};
+  } = campaign?.details || {}
   const issuesCount =
-    (customIssues?.length || 0) + candidatePositions?.length || 0;
+    (customIssues?.length || 0) + candidatePositions?.length || 0
   if (campaign?.details) {
     if (occupation) {
-      answeredQuestions++;
+      answeredQuestions++
     }
     if (funFact) {
-      answeredQuestions++;
+      answeredQuestions++
     }
     if (pastExperience) {
-      answeredQuestions++;
+      answeredQuestions++
     }
     if (issuesCount >= 3) {
-      answeredQuestions++;
+      answeredQuestions++
     }
     if (website) {
-      answeredQuestions++;
+      answeredQuestions++
     }
     if (runningAgainst) {
-      answeredQuestions++;
+      answeredQuestions++
     }
   }
-  return { answeredQuestions, totalQuestions };
+  return { answeredQuestions, totalQuestions }
 }
 
 export default function QuestionProgress({ campaign, candidatePositions }) {
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
     candidatePositions,
-  );
+  )
 
-  const progress = (answeredQuestions * 100) / totalQuestions;
+  const progress = (answeredQuestions * 100) / totalQuestions
   if (answeredQuestions === totalQuestions) {
-    return null;
+    return null
   }
 
   return (
@@ -72,7 +72,7 @@ export default function QuestionProgress({ campaign, candidatePositions }) {
           <Link
             href={`/dashboard/questions?generate=all`}
             onClick={() => {
-              trackEvent(EVENTS.ContentBuilder.ClickContinueQuestions);
+              trackEvent(EVENTS.ContentBuilder.ClickContinueQuestions)
             }}
           >
             <PrimaryButton>Continue to questions</PrimaryButton>
@@ -80,5 +80,5 @@ export default function QuestionProgress({ campaign, candidatePositions }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

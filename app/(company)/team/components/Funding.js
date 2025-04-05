@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
+import Image from 'next/image'
+import Link from 'next/link'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
 
 const Funding = () => (
   <section className="font-medium">
@@ -64,6 +64,6 @@ const Funding = () => (
       </div>
     </div>
   </section>
-);
+)
 
-export default Funding;
+export default Funding

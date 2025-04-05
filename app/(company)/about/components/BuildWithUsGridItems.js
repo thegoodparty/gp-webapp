@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import { BuildWithUsCard } from './BuildWithUsCard';
+import Image from 'next/image'
+import { BuildWithUsCard } from './BuildWithUsCard'
 
 const BUILD_WITH_US_CARDS = [
   {
@@ -23,7 +23,7 @@ const BUILD_WITH_US_CARDS = [
     href: '/volunteer',
     linkText: 'Volunteer with us',
   },
-];
+]
 
 const BuildWithUsImage = ({ src, alt, className }) => (
   <Image
@@ -35,7 +35,7 @@ const BuildWithUsImage = ({ src, alt, className }) => (
     height={300}
     width={300}
   />
-);
+)
 
 export const BuildWithUsGridItems = () => (
   <>
@@ -52,4 +52,4 @@ export const BuildWithUsGridItems = () => (
       alt="Build With Us Person 2"
     />
   </>
-);
+)

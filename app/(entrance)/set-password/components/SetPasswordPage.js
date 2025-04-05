@@ -1,5 +1,5 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import FormSection from './FormSection';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import FormSection from './FormSection'
 
 export default function SetPasswordPage({ email, token }) {
   return (
@@ -8,5 +8,5 @@ export default function SetPasswordPage({ email, token }) {
         <FormSection email={email} token={token} />
       </MaxWidth>
     </div>
-  );
+  )
 }

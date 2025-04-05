@@ -1,8 +1,8 @@
-import PortalPanel from '@shared/layouts/PortalPanel';
-import H1 from '@shared/typography/H1';
-import H3 from '@shared/typography/H3';
-import AdminCandidatesTable from 'app/admin/candidates/components/AdminCandidatesTable';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
+import PortalPanel from '@shared/layouts/PortalPanel'
+import H1 from '@shared/typography/H1'
+import H3 from '@shared/typography/H3'
+import AdminCandidatesTable from 'app/admin/candidates/components/AdminCandidatesTable'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
 
 export default function ProNoVoterPage(props) {
   return (
@@ -17,5 +17,5 @@ export default function ProNoVoterPage(props) {
         <AdminCandidatesTable {...props} />
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

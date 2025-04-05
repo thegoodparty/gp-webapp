@@ -1,11 +1,11 @@
-import Body2 from '@shared/typography/Body2';
-import H2 from '@shared/typography/H2';
-import H3 from '@shared/typography/H3';
-import { WINNER_COUNT } from 'app/candidates/page';
-import { numberFormatter } from 'helpers/numberHelper';
-import Image from 'next/image';
+import Body2 from '@shared/typography/Body2'
+import H2 from '@shared/typography/H2'
+import H3 from '@shared/typography/H3'
+import { WINNER_COUNT } from 'app/candidates/page'
+import { numberFormatter } from 'helpers/numberHelper'
+import Image from 'next/image'
 
-const { MdAnalytics, MdPeople, MdAutoAwesome } = require('react-icons/md');
+const { MdAnalytics, MdPeople, MdAutoAwesome } = require('react-icons/md')
 
 const cards = [
   {
@@ -32,7 +32,7 @@ const cards = [
     location: 'Hay Springs, NE',
     image: 'https://assets.goodparty.org/set-password/lucas.jpg',
   },
-];
+]
 
 export default function WinnersSection() {
   return (
@@ -66,5 +66,5 @@ export default function WinnersSection() {
         ))}
       </div>
     </section>
-  );
+  )
 }

@@ -1,28 +1,26 @@
-import Hero from './Hero';
-import FactsSection from './FactsSection';
-import HowSection from './HowSection';
-import ToolsSection from './ToolsSection';
-import Cta from './Cta';
-import Callout from '@shared/utils/Callout';
-// import StickersCallout from '@shared/utils/StickersCallout';
+import Hero from './Hero'
+import FactsSection from './FactsSection'
+import P2VSection from './P2VSection'
+import ToolsSection from './ToolsSection'
+import Cta from './Cta'
+import { SlantSection } from '@shared/landing-pages/SlantSection'
 
 export default function HomePage() {
   return (
     <div className="bg-indigo-50">
-      <Callout />
-      {/* <StickersCallout /> */}
-
       <Hero />
-
-      <div className="bg-[linear-gradient(-172deg,_#F9FAFB_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full" />
       <FactsSection />
-      <div className="bg-[linear-gradient(-172deg,_#0D1528_54.5%,_#F9FAFB_55%)] h-[calc(100vw*.17)] w-full" />
-      <HowSection />
-      <div className="bg-[linear-gradient(-172deg,_#F9FAFB_54.5%,_#0D1528_55%)] h-[calc(100vw*.17)] w-full" />
+      <P2VSection />
+      <SlantSection
+        colors={['#FCF8F3', '#0D1528', '#0D1528']}
+        reverseDirection
+      />
       <ToolsSection />
-      <div className="bg-[linear-gradient(-172deg,_#0D1528_54.5%,_#F9FAFB_55%)] h-[calc(100vw*.17)] w-full" />
-
+      <SlantSection
+        colors={['#0D1528', '#FCF8F3', '#FCF8F3']}
+        reverseDirection
+      />
       <Cta />
     </div>
-  );
+  )
 }

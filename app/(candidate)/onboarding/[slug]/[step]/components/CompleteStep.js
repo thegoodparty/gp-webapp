@@ -1,56 +1,56 @@
-'use client';
-import PartyAnimation from '@shared/animations/PartyAnimation';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { getUserCookie } from 'helpers/cookieHelper';
+'use client'
+import PartyAnimation from '@shared/animations/PartyAnimation'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { getUserCookie } from 'helpers/cookieHelper'
 import {
   buildTrackingAttrs,
   EVENTS,
   trackEvent,
-} from 'helpers/fullStoryHelper';
-import { useState } from 'react';
-import { useSnackbar } from 'helpers/useSnackbar';
-import Button from '@shared/buttons/Button';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
+} from 'helpers/fullStoryHelper'
+import { useState } from 'react'
+import { useSnackbar } from 'helpers/useSnackbar'
+import Button from '@shared/buttons/Button'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 async function launchCampaign() {
   try {
-    return await clientFetch(apiRoutes.campaign.launch);
+    return await clientFetch(apiRoutes.campaign.launch)
   } catch (e) {
-    console.log('error at launchCampaign', e);
-    return false;
+    console.log('error at launchCampaign', e)
+    return false
   }
 }
 
 export default function CompleteStep() {
-  const [loading, setLoading] = useState(false);
-  const user = getUserCookie(true);
-  const { successSnackbar, errorSnackbar } = useSnackbar();
-  const trackingAttrs = buildTrackingAttrs('Onboarding Complete Button');
+  const [loading, setLoading] = useState(false)
+  const user = getUserCookie(true)
+  const { successSnackbar, errorSnackbar } = useSnackbar()
+  const trackingAttrs = buildTrackingAttrs('Onboarding Complete Button')
 
   const handleSave = async () => {
     if (loading) {
-      return;
+      return
     }
-    setLoading(true);
-    successSnackbar('Saving...');
+    setLoading(true)
+    successSnackbar('Saving...')
 
-    trackEvent(EVENTS.Onboarding.CompleteStep.ClickGoToDashboard);
+    trackEvent(EVENTS.Onboarding.CompleteStep.ClickGoToDashboard)
 
-    const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }];
+    const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }]
 
-    await updateCampaign(attr);
-    const res = await launchCampaign();
+    await updateCampaign(attr)
+    const res = await launchCampaign()
     if (res.ok) {
-      trackEvent('onboarding_complete', { type: 'candidate' });
-      window.location.href = '/dashboard';
+      trackEvent('onboarding_complete', { type: 'candidate' })
+      window.location.href = '/dashboard'
     } else {
-      setLoading(false);
-      errorSnackbar('Error launching your campaign');
+      setLoading(false)
+      errorSnackbar('Error launching your campaign')
     }
-  };
+  }
 
   return (
     <div className="text-center">
@@ -71,5 +71,5 @@ export default function CompleteStep() {
         {loading ? 'Launching...' : 'View Dashboard'}
       </Button>
     </div>
-  );
+  )
 }

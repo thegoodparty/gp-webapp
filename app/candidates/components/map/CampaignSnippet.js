@@ -1,8 +1,8 @@
-import H3 from '@shared/typography/H3';
-import { memo, useState } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
-import Subtitle2 from '@shared/typography/Subtitle2';
-import Image from 'next/image';
+import H3 from '@shared/typography/H3'
+import { memo, useState } from 'react'
+import { FaUserCircle } from 'react-icons/fa'
+import Subtitle2 from '@shared/typography/Subtitle2'
+import Image from 'next/image'
 
 export default memo(function CampaignSnippet({
   campaign,
@@ -17,23 +17,23 @@ export default memo(function CampaignSnippet({
     state,
     didWin,
     data: { hubSpotUpdates } = {},
-  } = campaign;
-  const [imageError, setImageError] = useState(false); // State to track image load errors
+  } = campaign
+  const [imageError, setImageError] = useState(false) // State to track image load errors
 
   function handleKeyPress(e, campaign) {
     if (e.key == 'Enter') {
-      onSelectCampaign(campaign);
+      onSelectCampaign(campaign)
     }
   }
 
   const electionResults = hubSpotUpdates?.election_results
     ? /won/i.test(hubSpotUpdates?.election_results)
-    : didWin;
+    : didWin
 
   const electionStatus =
     typeof electionResults === 'boolean' && electionResults
       ? 'Elected'
-      : 'Running';
+      : 'Running'
 
   return (
     <div className="mx-4 my-2">
@@ -46,7 +46,7 @@ export default memo(function CampaignSnippet({
             : 'bg-white'
         }`}
         onClick={() => {
-          onSelectCampaign(campaign);
+          onSelectCampaign(campaign)
         }}
         onKeyDown={(e) => handleKeyPress(e, campaign)}
       >
@@ -78,5 +78,5 @@ export default memo(function CampaignSnippet({
         </div>
       </div>
     </div>
-  );
-});
+  )
+})

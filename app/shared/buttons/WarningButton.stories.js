@@ -1,5 +1,5 @@
-import { argTypes } from './buttonsArgTypes';
-import WarningButtonComponent from './WarningButton';
+import { argTypes } from './buttonsArgTypes'
+import WarningButtonComponent from './WarningButton'
 
 export default {
   title: 'Buttons/WarningButton',
@@ -10,22 +10,22 @@ export default {
   },
 
   argTypes: argTypes,
-};
+}
 
 export const Primary = {
   args: {
     variant: 'contained',
   },
-};
+}
 
 export const Outlined = {
   args: {
     variant: 'outlined',
   },
-};
+}
 
 export const Text = {
   args: {
     variant: 'text',
   },
-};
+}

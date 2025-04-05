@@ -1,21 +1,21 @@
-'use client';
-import { useState } from 'react';
-import Occupation from './Occupation';
+'use client'
+import { useState } from 'react'
+import Occupation from './Occupation'
 import {
   getCampaign,
   updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
-import FunFact from './FunFact';
-import PastExperience from './PastExperience';
-import AddIssues from './issues/AddIssues';
-import RunningAgainstSection from 'app/(candidate)/dashboard/campaign-details/components/RunningAgainstSection';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import Website from './Website';
-import Done from './Done';
-import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider';
-import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils';
-import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
+} from 'app/(candidate)/onboarding/shared/ajaxActions'
+import FunFact from './FunFact'
+import PastExperience from './PastExperience'
+import AddIssues from './issues/AddIssues'
+import RunningAgainstSection from 'app/(candidate)/dashboard/campaign-details/components/RunningAgainstSection'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import Website from './Website'
+import Done from './Done'
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
+import { loadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/issuesUtils'
+import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper'
 
 export const flows = {
   all: [
@@ -40,10 +40,10 @@ export const flows = {
   ],
   pathToVictory: ['occupation', 'funFact', 'pastExperience', 'issues'],
   mobilizing: ['occupation', 'funFact', 'pastExperience', 'issues'],
-};
+}
 export default function QuestionsPage(props) {
-  const { generate, candidatePositions: initCandidatePositions } = props;
-  const [campaign, setCampaign] = useState(props.campaign);
+  const { generate, candidatePositions: initCandidatePositions } = props
+  const [campaign, setCampaign] = useState(props.campaign)
   const [answers, setAnswers] = useState({
     occupation: '',
     funFact: '',
@@ -51,29 +51,29 @@ export default function QuestionsPage(props) {
     issues: '',
     website: '',
     candidatePositions: initCandidatePositions,
-  });
+  })
 
-  const flow = flows[generate];
-  let nextStep = 0;
+  const flow = flows[generate]
+  let nextStep = 0
   const combinedIssuedCount =
     (answers.candidatePositions?.length || 0) +
-    (campaign?.details?.customIssues?.length || 0);
+    (campaign?.details?.customIssues?.length || 0)
 
   for (let i = 0; i < flow.length; i++) {
-    nextStep = i;
+    nextStep = i
     if (flow[i] === 'issues') {
       if (combinedIssuedCount < 3) {
-        break;
+        break
       }
     } else if (flow[i] === 'runningAgainst') {
       if (!campaign?.details?.runningAgainst) {
-        break;
+        break
       }
     } else if (!campaign?.details || !campaign.details[flow[i]]) {
-      break;
+      break
     }
     if (i === flow.length - 1) {
-      nextStep = i + 1;
+      nextStep = i + 1
     }
   }
 
@@ -81,40 +81,40 @@ export default function QuestionsPage(props) {
     setAnswers({
       ...answers,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const handleSave = async (keys, values) => {
     const attr = keys.map((key, i) => {
-      return { key: keys[0], value: values[i] };
-    });
-    const campaign = await updateCampaign(attr);
-    setCampaign(campaign);
-  };
+      return { key: keys[0], value: values[i] }
+    })
+    const campaign = await updateCampaign(attr)
+    setCampaign(campaign)
+  }
 
   const handleComplete = async (type = false) => {
-    const campaign = await getCampaign();
-    setCampaign(campaign);
+    const campaign = await getCampaign()
+    setCampaign(campaign)
     if (type === 'issues') {
-      const candidatePositions = await loadCandidatePosition(campaign.id);
-      onChangeField('candidatePositions', candidatePositions);
-      const campaign = await getCampaign();
-      setCampaign(campaign);
+      const candidatePositions = await loadCandidatePosition(campaign.id)
+      onChangeField('candidatePositions', candidatePositions)
+      const campaign = await getCampaign()
+      setCampaign(campaign)
     }
-  };
-  let nextKey;
+  }
+  let nextKey
   if (nextStep < flow.length) {
-    nextKey = flow[nextStep];
+    nextKey = flow[nextStep]
   } else {
-    nextKey = 'done';
+    nextKey = 'done'
   }
 
   const updatePositionsCallback = async (freshCandidatePositions) => {
-    const campaign = await getCampaign();
+    const campaign = await getCampaign()
 
-    onChangeField('candidatePositions', freshCandidatePositions);
-    setCampaign(campaign);
-  };
+    onChangeField('candidatePositions', freshCandidatePositions)
+    setCampaign(campaign)
+  }
 
   return (
     <FocusedExperienceWrapper>
@@ -188,5 +188,5 @@ export default function QuestionsPage(props) {
       )}
       {nextKey === 'done' && <Done />}
     </FocusedExperienceWrapper>
-  );
+  )
 }

@@ -1,67 +1,67 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { useState, useEffect } from 'react';
-import AddEcanvasser from './AddEcanvasser';
-import EcanvasserList from './EcanvasserList';
+'use client'
+import Button from '@shared/buttons/Button'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { useState, useEffect } from 'react'
+import AddEcanvasser from './AddEcanvasser'
+import EcanvasserList from './EcanvasserList'
 
 const fetchAllEcanvasser = async () => {
   try {
-    const resp = await clientFetch(apiRoutes.ecanvasser.list);
-    return resp.data;
+    const resp = await clientFetch(apiRoutes.ecanvasser.list)
+    return resp.data
   } catch (e) {
-    console.log('error fetchAllEvanvasser', e);
-    return [];
+    console.log('error fetchAllEvanvasser', e)
+    return []
   }
-};
+}
 
 const syncAllEcanvasser = async () => {
   try {
-    const resp = await clientFetch(apiRoutes.ecanvasser.syncAll);
-    return resp.data;
+    const resp = await clientFetch(apiRoutes.ecanvasser.syncAll)
+    return resp.data
   } catch (e) {
-    console.log('error fetchAllEvanvasser', e);
-    return [];
+    console.log('error fetchAllEvanvasser', e)
+    return []
   }
-};
+}
 
 export default function AdminEcanvasserPage() {
-  const [ecanvassers, setEcanvassers] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [ecanvassers, setEcanvassers] = useState([])
+  const [openModal, setOpenModal] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    loadAllEcanvassers();
-  }, []);
+    loadAllEcanvassers()
+  }, [])
 
   const loadAllEcanvassers = async () => {
-    setLoading(true);
-    const all = await fetchAllEcanvasser();
-    setEcanvassers(all);
-    setLoading(false);
-  };
+    setLoading(true)
+    const all = await fetchAllEcanvasser()
+    setEcanvassers(all)
+    setLoading(false)
+  }
 
   const syncAll = async () => {
-    setLoading(true);
-    await syncAllEcanvasser();
-    const all = await fetchAllEcanvasser();
-    setEcanvassers(all);
-    setLoading(false);
-  };
+    setLoading(true)
+    await syncAllEcanvasser()
+    const all = await fetchAllEcanvasser()
+    setEcanvassers(all)
+    setLoading(false)
+  }
 
   const afterCreate = async () => {
-    await loadAllEcanvassers();
-    setOpenModal(false);
-  };
+    await loadAllEcanvassers()
+    setOpenModal(false)
+  }
 
   const afterUpdate = async () => {
-    await loadAllEcanvassers();
-  };
+    await loadAllEcanvassers()
+  }
 
   return (
     <AdminWrapper>
@@ -113,5 +113,5 @@ export default function AdminEcanvasserPage() {
         createCallback={afterCreate}
       />
     </AdminWrapper>
-  );
+  )
 }

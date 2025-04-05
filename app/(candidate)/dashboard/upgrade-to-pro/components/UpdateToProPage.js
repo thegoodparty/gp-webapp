@@ -1,18 +1,18 @@
-'use client';
-import DashboardLayout from '../../shared/DashboardLayout';
-import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import Button from '@shared/buttons/Button';
-import { ProPricingCard } from 'app/(candidate)/dashboard/upgrade-to-pro/components/ProPricingCard';
-import { useUser } from '@shared/hooks/useUser';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { useState } from 'react';
-import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion';
-import { useRouter } from 'next/navigation';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import { usePageExit } from '@shared/hooks/usePageExit';
+'use client'
+import DashboardLayout from '../../shared/DashboardLayout'
+import { CandidatePositionsProvider } from 'app/(candidate)/dashboard/campaign-details/components/issues/CandidatePositionsProvider'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
+import { ProPricingCard } from 'app/(candidate)/dashboard/upgrade-to-pro/components/ProPricingCard'
+import { useUser } from '@shared/hooks/useUser'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { useState } from 'react'
+import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion'
+import { useRouter } from 'next/navigation'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { usePageExit } from '@shared/hooks/usePageExit'
 
 const CARD_DIY = {
   title: 'DIY @ Election Board',
@@ -24,7 +24,7 @@ const CARD_DIY = {
   ],
   price: 'Free',
   sub: 'Cumbersome experience',
-};
+}
 
 const CARD_PRO = {
   title: 'GoodParty.org',
@@ -38,7 +38,7 @@ const CARD_PRO = {
   price: '$10/month',
   sub: 'Unlimited Records',
   primaryCard: true,
-};
+}
 
 const CARD_COMPETITORS = {
   title: 'Our Competitors',
@@ -51,32 +51,32 @@ const CARD_COMPETITORS = {
   ],
   price: '$200+',
   sub: 'Based on 10,000 records',
-};
+}
 
 export default function DetailsPage(props) {
-  const [user] = useUser();
-  const router = useRouter();
-  const { metaData: userMetaData } = user || {};
-  const { demoPersona } = userMetaData || {};
-  const [showDialog, setShowDialog] = useState(false);
-  const { errorSnackbar } = useSnackbar();
+  const [user] = useUser()
+  const router = useRouter()
+  const { metaData: userMetaData } = user || {}
+  const { demoPersona } = userMetaData || {}
+  const [showDialog, setShowDialog] = useState(false)
+  const { errorSnackbar } = useSnackbar()
 
   usePageExit(() => {
-    trackEvent(EVENTS.ProUpgrade.SplashPage.Exit);
-  });
+    trackEvent(EVENTS.ProUpgrade.SplashPage.Exit)
+  })
 
   const handleJoinProOnClick = () => {
     if (demoPersona) {
-      e.preventDefault();
-      e.stopPropagation();
-      setShowDialog(true);
+      e.preventDefault()
+      e.stopPropagation()
+      setShowDialog(true)
     }
-    trackEvent(EVENTS.ProUpgrade.SplashPage.ClickUpgrade);
-  };
+    trackEvent(EVENTS.ProUpgrade.SplashPage.ClickUpgrade)
+  }
 
   const handleDialogClose = () => {
-    setShowDialog(false);
-  };
+    setShowDialog(false)
+  }
 
   return (
     <DashboardLayout {...props}>
@@ -123,5 +123,5 @@ export default function DetailsPage(props) {
         </div>
       </CandidatePositionsProvider>
     </DashboardLayout>
-  );
+  )
 }

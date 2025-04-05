@@ -1,15 +1,15 @@
-'use client';
-import { InputAdornment } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import Checkbox from '@shared/inputs/Checkbox';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Overline from '@shared/typography/Overline';
-import { numberFormatter } from 'helpers/numberHelper';
-import { AiFillDollarCircle } from 'react-icons/ai';
+'use client'
+import { InputAdornment } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Checkbox from '@shared/inputs/Checkbox'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Overline from '@shared/typography/Overline'
+import { numberFormatter } from 'helpers/numberHelper'
+import { AiFillDollarCircle } from 'react-icons/ai'
 
 export default function ScheduleFlowBudgetStep({
   value,
@@ -20,12 +20,12 @@ export default function ScheduleFlowBudgetStep({
   closeCallback,
   type,
 }) {
-  const isTel = type === 'telemarketing';
-  let price = 0.035;
+  const isTel = type === 'telemarketing'
+  let price = 0.035
   if (type === 'telemarketing') {
-    price = 0.04;
+    price = 0.04
     if (voicemailValue) {
-      price = 0.055;
+      price = 0.055
     }
   }
   return (
@@ -53,7 +53,7 @@ export default function ScheduleFlowBudgetStep({
           <div className="my-6 p-2 bg-info-background flex items-center justify-center">
             <Checkbox
               onChange={(e) => {
-                onChangeCallback('voicemail', e.target.checked);
+                onChangeCallback('voicemail', e.target.checked)
               }}
               value={voicemailValue}
               checked={!!voicemailValue}
@@ -101,5 +101,5 @@ export default function ScheduleFlowBudgetStep({
         </div>
       </div>
     </div>
-  );
+  )
 }

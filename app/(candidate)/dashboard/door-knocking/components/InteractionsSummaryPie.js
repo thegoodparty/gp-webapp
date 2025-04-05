@@ -1,23 +1,22 @@
-'use client';
-import H2 from '@shared/typography/H2';
-import Caption from '@shared/typography/Caption';
-import Paper from '@shared/utils/Paper';
-import { numberFormatter } from 'helpers/numberHelper';
-import { Doughnut } from 'react-chartjs-2';
+'use client'
+import H2 from '@shared/typography/H2'
+import Paper from '@shared/utils/Paper'
+import { numberFormatter } from 'helpers/numberHelper'
+import { Doughnut } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
   Legend,
   CategoryScale,
-} from 'chart.js';
-import { Fragment } from 'react';
-import interactionsColors from './interactionsColors';
+} from 'chart.js'
+import { Fragment } from 'react'
+import interactionsColors from './interactionsColors'
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale)
 
 export default function InteractionsSummaryPie({ summary }) {
-  const { totalInteractions, interactions } = summary || {};
+  const { totalInteractions, interactions } = summary || {}
   const {
     answered,
     'call-back': callBack,
@@ -27,7 +26,7 @@ export default function InteractionsSummaryPie({ summary }) {
     'took-yard-sign': tookYardSign,
     'left-campaign-materials': leftCampaignMaterials,
     moved,
-  } = interactions || {};
+  } = interactions || {}
 
   const fields = [
     {
@@ -72,7 +71,7 @@ export default function InteractionsSummaryPie({ summary }) {
     },
   ]
     .filter((field) => field.value > 0)
-    .sort((a, b) => b.value - a.value); // Sort fields by value in descending order
+    .sort((a, b) => b.value - a.value) // Sort fields by value in descending order
 
   const data = {
     labels: fields.map((field) => field.label),
@@ -82,16 +81,16 @@ export default function InteractionsSummaryPie({ summary }) {
         backgroundColor: fields.map((field) => field.color),
       },
     ],
-  };
+  }
 
   const options = {
     plugins: {
       tooltip: {
         callbacks: {
           label: (context) => {
-            const value = context.raw;
-            const percentage = ((value / totalInteractions) * 100).toFixed(1);
-            return `${context.label}: ${percentage}% (${value})`;
+            const value = context.raw
+            const percentage = ((value / totalInteractions) * 100).toFixed(1)
+            return `${context.label}: ${percentage}% (${value})`
           },
         },
       },
@@ -101,7 +100,7 @@ export default function InteractionsSummaryPie({ summary }) {
     },
     responsive: true,
     maintainAspectRatio: true,
-  };
+  }
 
   return (
     <Paper className="md:p-6">
@@ -150,5 +149,5 @@ export default function InteractionsSummaryPie({ summary }) {
         </div>
       </div>
     </Paper>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import Image from 'next/image';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import Image from 'next/image'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 const IsNowYourTime = () => (
   <MaxWidth>
@@ -44,6 +44,6 @@ const IsNowYourTime = () => (
       </div>
     </section>
   </MaxWidth>
-);
+)
 
-export default IsNowYourTime;
+export default IsNowYourTime

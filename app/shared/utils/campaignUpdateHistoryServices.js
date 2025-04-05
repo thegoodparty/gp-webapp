@@ -1,20 +1,20 @@
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { getUserFullName } from '@shared/utils/getUserFullName';
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { getUserFullName } from '@shared/utils/getUserFullName'
 
 export async function deleteUpdateHistory(id) {
   const resp = await clientFetch(apiRoutes.campaign.updateHistory.delete, {
     id,
-  });
-  return resp.data;
+  })
+  return resp.data
 }
 
 export async function createUpdateHistory(payload) {
   const resp = await clientFetch(
     apiRoutes.campaign.updateHistory.create,
     payload,
-  );
-  return resp.data;
+  )
+  return resp.data
 }
 
 export const createIrresponsiblyMassagedHistoryItem = (historyItem, user) => ({
@@ -26,4 +26,4 @@ export const createIrresponsiblyMassagedHistoryItem = (historyItem, user) => ({
     name: getUserFullName(user),
     ...(user.avatar ? { avatar: user.avatar } : {}),
   },
-});
+})

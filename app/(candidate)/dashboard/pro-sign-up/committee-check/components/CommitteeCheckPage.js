@@ -1,23 +1,23 @@
-'use client';
-import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import Link from 'next/link';
-import TextField from '@shared/inputs/TextField';
-import { useEffect, useState, useCallback } from 'react';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useRouter } from 'next/navigation';
-import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon';
+'use client'
+import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Link from 'next/link'
+import TextField from '@shared/inputs/TextField'
+import { useEffect, useState, useCallback } from 'react'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { useRouter } from 'next/navigation'
+import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon'
 import {
   EIN_PATTERN_FULL,
   EinCheckInput,
-} from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput';
-import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
-import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload';
-import Overline from '@shared/typography/Overline';
-import { Switch } from '@mui/material';
-import Button from '@shared/buttons/Button';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+} from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
+import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt'
+import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/CommitteeSupportingFilesUpload'
+import Overline from '@shared/typography/Overline'
+import { Switch } from '@mui/material'
+import Button from '@shared/buttons/Button'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>
@@ -27,49 +27,49 @@ const COMMITTEE_HELP_MESSAGE = (
     <br />
     Use the same committee name when you filed for office.
   </span>
-);
+)
 
 const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
-  const router = useRouter();
+  const router = useRouter()
   const [campaignCommittee, setCampaignCommittee] = useState(
     campaign?.details?.campaignCommittee || '',
-  );
+  )
   const [einInputValue, setEinInputValue] = useState(
     campaign?.details?.einNumber || '',
-  );
-  const [skipEin, setSkipEin] = useState(false);
-  const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false);
-  const [validatedEin, setValidatedEin] = useState(null);
+  )
+  const [skipEin, setSkipEin] = useState(false)
+  const [loadingCampaignUpdate, setLoadingCampaignUpdate] = useState(false)
+  const [validatedEin, setValidatedEin] = useState(null)
 
   // We need to do this to determine if file was uploaded in the root bucket, or in a subfolder
   const filenameBits =
-    campaign?.details?.einSupportingDocument?.split('/') || [];
+    campaign?.details?.einSupportingDocument?.split('/') || []
   const [uploadedFilename, setUploadedFilename] = useState(
     filenameBits[1] || filenameBits[0] || '',
-  );
+  )
 
   const doEinCheck = useCallback(async () => {
-    const validEINFormat = EIN_PATTERN_FULL.test(einInputValue);
-    const inputsValid = campaignCommittee && validEINFormat;
+    const validEINFormat = EIN_PATTERN_FULL.test(einInputValue)
+    const inputsValid = campaignCommittee && validEINFormat
 
     if (!inputsValid) {
-      setValidatedEin(null);
+      setValidatedEin(null)
     } else {
-      setValidatedEin(validEINFormat);
+      setValidatedEin(validEINFormat)
     }
-  }, [einInputValue, campaignCommittee]);
+  }, [einInputValue, campaignCommittee])
 
   useEffect(() => {
-    doEinCheck();
-  }, [doEinCheck]);
+    doEinCheck()
+  }, [doEinCheck])
 
   const onCampaignCommitteeBlur = () =>
-    doEinCheck(einInputValue, einInputValue);
+    doEinCheck(einInputValue, einInputValue)
 
   const handleNextClick = async () => {
-    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext);
+    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickNext)
     const doCampaignUpdate = async () => {
-      setLoadingCampaignUpdate(true);
+      setLoadingCampaignUpdate(true)
       await updateCampaign([
         {
           key: 'details.einNumber',
@@ -79,36 +79,36 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
           key: 'details.validatedEin',
           value: validatedEin,
         },
-      ]);
-      router.push('/dashboard/pro-sign-up/service-agreement');
-      setLoadingCampaignUpdate(false);
-    };
+      ])
+      router.push('/dashboard/pro-sign-up/service-agreement')
+      setLoadingCampaignUpdate(false)
+    }
 
-    doCampaignUpdate();
-  };
+    doCampaignUpdate()
+  }
 
   const handleSkipEinToggle = (toggleValue) => {
     trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ToggleRequired, {
       required: toggleValue,
-    });
-    setSkipEin(toggleValue);
+    })
+    setSkipEin(toggleValue)
 
     if (toggleValue === true) {
-      setEinInputValue('');
-      setValidatedEin(null);
+      setEinInputValue('')
+      setValidatedEin(null)
     }
-  };
+  }
 
   const onUploadSuccess = (uploadedFilename = '') =>
-    uploadedFilename && setUploadedFilename(uploadedFilename);
+    uploadedFilename && setUploadedFilename(uploadedFilename)
 
   const onUploadError = (e) => {
-    console.error('Error uploading file', e);
-    setUploadedFilename('');
-  };
+    console.error('Error uploading file', e)
+    setUploadedFilename('')
+  }
 
   const nextDisabled =
-    !((validatedEin || skipEin) && uploadedFilename) || loadingCampaignUpdate;
+    !((validatedEin || skipEin) && uploadedFilename) || loadingCampaignUpdate
 
   return (
     <FocusedExperienceWrapper>
@@ -136,7 +136,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
                   message={COMMITTEE_HELP_MESSAGE}
                   validated={validatedEin}
                   onTooltipOpen={() => {
-                    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverNameHelp);
+                    trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverNameHelp)
                   }}
                 />
               ),
@@ -180,7 +180,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
             <Button
               href="/dashboard/pro-sign-up"
               onClick={() => {
-                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack);
+                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickBack)
               }}
               size="large"
               color="neutral"
@@ -199,7 +199,7 @@ const CommitteeCheckPage = ({ campaign = { details: {} } }) => {
         </>
       )}
     </FocusedExperienceWrapper>
-  );
-};
+  )
+}
 
-export default CommitteeCheckPage;
+export default CommitteeCheckPage

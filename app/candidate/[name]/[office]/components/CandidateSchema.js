@@ -1,6 +1,6 @@
-import React from 'react';
-import { JsonLd } from 'react-schemaorg';
-import { APP_BASE } from 'appEnv';
+import React from 'react'
+import { JsonLd } from 'react-schemaorg'
+import { APP_BASE } from 'appEnv'
 
 export default function CandidateSchema({ candidate, slug }) {
   const {
@@ -13,20 +13,20 @@ export default function CandidateSchema({ candidate, slug }) {
     image,
     socialUrls,
     email,
-  } = candidate;
+  } = candidate
 
-  let sameAs = [];
+  let sameAs = []
   if (socialUrls) {
-    sameAs = socialUrls.map((url) => url.url);
+    sameAs = socialUrls.map((url) => url.url)
   }
 
   const address = {
     '@type': 'PostalAddress',
     addressRegion: state,
-  };
+  }
 
   if (city) {
-    address.addressLocality = city;
+    address.addressLocality = city
   }
 
   return (
@@ -47,5 +47,5 @@ export default function CandidateSchema({ candidate, slug }) {
         url: `${APP_BASE}/${slug}`,
       }}
     />
-  );
+  )
 }

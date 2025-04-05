@@ -1,4 +1,4 @@
-import Button from '@shared/buttons/Button';
+import Button from '@shared/buttons/Button'
 
 export const FooterButtonLink = ({ link, id, label, buttonStyle }) => (
   <Button
@@ -9,4 +9,4 @@ export const FooterButtonLink = ({ link, id, label, buttonStyle }) => (
   >
     {label}
   </Button>
-);
+)

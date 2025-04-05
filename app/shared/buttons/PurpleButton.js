@@ -1,4 +1,4 @@
-import BaseButton from './BaseButton';
+import BaseButton from './BaseButton'
 
 const PurpleButton = ({ children, style = {}, ...props }) => {
   return (
@@ -15,7 +15,7 @@ const PurpleButton = ({ children, style = {}, ...props }) => {
     >
       {children}
     </BaseButton>
-  );
-};
+  )
+}
 
-export default PurpleButton;
+export default PurpleButton

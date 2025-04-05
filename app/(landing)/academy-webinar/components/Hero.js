@@ -1,9 +1,9 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import MarketingH1 from '@shared/typography/MarketingH1';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Image from 'next/image';
-import webinarImg from 'public/images/landing-pages/webinar-hero.png';
-import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import MarketingH1 from '@shared/typography/MarketingH1'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Image from 'next/image'
+import webinarImg from 'public/images/landing-pages/webinar-hero.png'
+import { AcademyModalSignUpButton } from '../../academy/components/AcademySignUpModal/AcademyModalSignUpButton'
 
 const Hero = ({ content }) => (
   <MaxWidth>
@@ -29,5 +29,5 @@ const Hero = ({ content }) => (
       </div>
     </div>
   </MaxWidth>
-);
-export default Hero;
+)
+export default Hero

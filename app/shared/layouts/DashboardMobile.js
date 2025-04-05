@@ -1,5 +1,5 @@
-import H3 from '@shared/typography/H3';
-import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu';
+import H3 from '@shared/typography/H3'
+import DashboardMenu from 'app/(candidate)/dashboard/shared/DashboardMenu'
 
 export default function DashboardMobile({ user, pathname, campaign }) {
   return (
@@ -9,5 +9,5 @@ export default function DashboardMobile({ user, pathname, campaign }) {
       </H3>
       <DashboardMenu pathname={pathname} mobileMode campaign={campaign} />
     </div>
-  );
+  )
 }

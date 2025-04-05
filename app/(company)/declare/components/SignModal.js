@@ -1,11 +1,11 @@
-'use client';
-import Modal from '@shared/utils/Modal';
-import { useState } from 'react';
-import PinkButtonClient from '@shared/buttons/PinkButtonClient';
-import SignForm from './SignForm';
+'use client'
+import Modal from '@shared/utils/Modal'
+import { useState } from 'react'
+import PinkButtonClient from '@shared/buttons/PinkButtonClient'
+import SignForm from './SignForm'
 
 export default function SignModal({ tangerine, setSigner }) {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
 
   return (
     <>
@@ -39,5 +39,5 @@ export default function SignModal({ tangerine, setSigner }) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

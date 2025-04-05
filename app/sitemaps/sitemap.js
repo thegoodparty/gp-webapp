@@ -1,25 +1,25 @@
-import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet';
-import { faqArticleRoute } from '../../helpers/articleHelper';
-import { apiRoutes } from 'gpApi/routes';
-import { APP_BASE } from 'appEnv';
-import { unAuthFetch } from 'gpApi/unAuthFetch';
-import { fetchContentByType } from 'helpers/fetchHelper';
-import { fetchBlogArticlesList } from 'app/blog/shared/fetchBlogArticlesList';
-import { fetchSections } from 'app/blog/shared/fetchSections';
+import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet'
+import { faqArticleRoute } from '../../helpers/articleHelper'
+import { apiRoutes } from 'gpApi/routes'
+import { APP_BASE } from 'appEnv'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
+import { fetchContentByType } from 'helpers/fetchHelper'
+import { fetchBlogArticlesList } from 'app/blog/shared/fetchBlogArticlesList'
+import { fetchSections } from 'app/blog/shared/fetchSections'
 
 export const fetchFAQs = async () => {
-  return await fetchContentByType('faqArticle');
-};
+  return await fetchContentByType('faqArticle')
+}
 
 export const fetchGlossaryByTitle = async () => {
-  const resp = await unAuthFetch(apiRoutes.content.glossaryBySlug.path);
-  return resp.data;
-};
+  const resp = await unAuthFetch(apiRoutes.content.glossaryBySlug.path)
+  return resp.data
+}
 
-const now = new Date();
+const now = new Date()
 
 export default async function sitemap() {
-  const mainSitemap = [];
+  const mainSitemap = []
   const staticUrls = [
     '/',
     '/about',
@@ -41,7 +41,7 @@ export default async function sitemap() {
     '/blog',
     '/ads2023',
     '/elections',
-  ];
+  ]
 
   staticUrls.forEach((url) => {
     mainSitemap.push({
@@ -49,11 +49,11 @@ export default async function sitemap() {
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 1,
-    });
-  });
+    })
+  })
 
-  const blogArticles = await fetchBlogArticlesList();
-  const blogSections = await fetchSections();
+  const blogArticles = await fetchBlogArticlesList()
+  const blogSections = await fetchSections()
 
   try {
     blogArticles.forEach((article) => {
@@ -62,8 +62,8 @@ export default async function sitemap() {
         lastModified: article.publishDate,
         changeFrequency: 'monthly',
         priority: 0.9,
-      });
-    });
+      })
+    })
 
     blogSections.forEach((section) => {
       mainSitemap.push({
@@ -71,13 +71,13 @@ export default async function sitemap() {
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.9,
-      });
-    });
+      })
+    })
   } catch (e) {
-    console.log('error at blog SiteMapXML', e);
+    console.log('error at blog SiteMapXML', e)
   }
 
-  const faqArticles = await fetchFAQs();
+  const faqArticles = await fetchFAQs()
 
   try {
     faqArticles.forEach((article) => {
@@ -86,10 +86,10 @@ export default async function sitemap() {
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,
-      });
-    });
+      })
+    })
   } catch (e) {
-    console.log('error at faqs SiteMapXML', e);
+    console.log('error at faqs SiteMapXML', e)
   }
   alphabet.forEach((letter) => {
     mainSitemap.push({
@@ -97,10 +97,10 @@ export default async function sitemap() {
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.6,
-    });
-  });
+    })
+  })
 
-  const content = await fetchGlossaryByTitle();
+  const content = await fetchGlossaryByTitle()
 
   try {
     Object.keys(content).forEach((slug) => {
@@ -109,11 +109,11 @@ export default async function sitemap() {
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.7,
-      });
-    });
+      })
+    })
   } catch (e) {
-    console.log('error at glossary SiteMapXML', e);
+    console.log('error at glossary SiteMapXML', e)
   }
 
-  return mainSitemap;
+  return mainSitemap
 }

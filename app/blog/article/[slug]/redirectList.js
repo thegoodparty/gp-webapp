@@ -65,6 +65,6 @@ const redirectList = {
   'volunteer-spotlight-join-goodparty-org-design-team': true,
   'volunteer-spotlight-join--goodparty-org-voter-outreach-team': true,
   'guide-voter-registration-durham': true,
-};
+}
 
-export default redirectList;
+export default redirectList

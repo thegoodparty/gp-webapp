@@ -1,15 +1,15 @@
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import { slugify } from 'helpers/articleHelper';
-import contentfulHelper from 'helpers/contentfulHelper';
-import { TermTitleLink } from './TermTitleLink';
+import CmsContentWrapper from '@shared/content/CmsContentWrapper'
+import { slugify } from 'helpers/articleHelper'
+import contentfulHelper from 'helpers/contentfulHelper'
+import { TermTitleLink } from './TermTitleLink'
 
-export const termLink = (term) => termLinkByTitle(term?.title);
+export const termLink = (term) => termLinkByTitle(term?.title)
 
 export const termLinkByTitle = (title) =>
-  `/political-terms/${slugify(title, true)}`;
+  `/political-terms/${slugify(title, true)}`
 
 export default function TermSnippet({ item, last }) {
-  const { title, description } = item;
+  const { title, description } = item
 
   return (
     <div
@@ -33,5 +33,5 @@ export default function TermSnippet({ item, last }) {
         <CmsContentWrapper>{contentfulHelper(description)}</CmsContentWrapper>
       </div>
     </div>
-  );
+  )
 }

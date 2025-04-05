@@ -1,31 +1,31 @@
-'use client';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import { useState } from 'react';
-import { validateZip } from 'app/(entrance)/login/components/LoginPage';
-import Modal from '@shared/utils/Modal';
-import H2 from '@shared/typography/H2';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
+'use client'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import { useState } from 'react'
+import { validateZip } from 'app/(entrance)/login/components/LoginPage'
+import Modal from '@shared/utils/Modal'
+import H2 from '@shared/typography/H2'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
 
 export default function ZipChanger({ zip, updateZipCallback, count }) {
-  const [editMode, setEditMode] = useState(false);
-  const [updatedZip, setUpdatedZip] = useState(zip);
-  const isValid = validateZip(updatedZip);
+  const [editMode, setEditMode] = useState(false)
+  const [updatedZip, setUpdatedZip] = useState(zip)
+  const isValid = validateZip(updatedZip)
 
   const handleToggle = async () => {
     if (!editMode) {
-      setEditMode(true);
+      setEditMode(true)
     } else {
       if (isValid) {
-        setEditMode(false);
-        await updateZipCallback(updatedZip);
+        setEditMode(false)
+        await updateZipCallback(updatedZip)
       }
     }
-  };
+  }
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') handleToggle();
-  };
+    if (e.key === 'Enter') handleToggle()
+  }
 
   return (
     <div className="">
@@ -47,7 +47,7 @@ export default function ZipChanger({ zip, updateZipCallback, count }) {
           value={updatedZip}
           fullWidth
           onChange={(e) => {
-            setUpdatedZip(e.target.value);
+            setUpdatedZip(e.target.value)
           }}
           error={!isValid}
         />
@@ -58,5 +58,5 @@ export default function ZipChanger({ zip, updateZipCallback, count }) {
         </div>
       </Modal>
     </div>
-  );
+  )
 }

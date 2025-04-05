@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Body2 from '@shared/typography/Body2';
-import H4 from '@shared/typography/H4';
+import Image from 'next/image'
+import Body2 from '@shared/typography/Body2'
+import H4 from '@shared/typography/H4'
 
 /**
  * @typedef {Object} BlogAuthorProps
@@ -38,5 +38,5 @@ export default function BlogAuthorFooter({ name, imageUrl, summary }) {
         <Body2 className="text-gray-600">{summary}</Body2>
       </div>
     </div>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-'use client';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { useState } from 'react';
-import { useSnackbar } from 'helpers/useSnackbar';
-import Button from '@shared/buttons/Button';
+'use client'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { useState } from 'react'
+import { useSnackbar } from 'helpers/useSnackbar'
+import Button from '@shared/buttons/Button'
 
 export default function DeleteAction({
   id,
@@ -10,22 +10,22 @@ export default function DeleteAction({
   deleteHistoryCallBack,
   description,
 }) {
-  const [showDelete, setShowDelete] = useState(false);
-  const { successSnackbar } = useSnackbar();
+  const [showDelete, setShowDelete] = useState(false)
+  const { successSnackbar } = useSnackbar()
 
   const handleDelete = async () => {
-    setShowMenu(0);
-    successSnackbar('Deleting...');
-    await deleteHistoryCallBack(id);
-    successSnackbar('Deleted');
-  };
+    setShowMenu(0)
+    successSnackbar('Deleting...')
+    await deleteHistoryCallBack(id)
+    successSnackbar('Deleted')
+  }
 
   return (
     <>
       <div className="my-3">
         <Button
           onClick={() => {
-            setShowDelete(true);
+            setShowDelete(true)
           }}
           size="small"
           color="error"
@@ -37,7 +37,7 @@ export default function DeleteAction({
       <AlertDialog
         open={showDelete}
         handleClose={() => {
-          setShowDelete(false);
+          setShowDelete(false)
         }}
         redButton={false}
         title="Delete Campaign Action"
@@ -46,5 +46,5 @@ export default function DeleteAction({
         proceedLabel="Delete"
       />
     </>
-  );
+  )
 }

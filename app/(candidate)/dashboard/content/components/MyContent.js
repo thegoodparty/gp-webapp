@@ -1,24 +1,24 @@
-'use client';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { camelToKebab } from 'helpers/stringHelper';
-import { useEffect, useMemo, useState } from 'react';
-import Table from '@shared/utils/Table';
-import Actions from './Actions';
-import { dateWithTime } from 'helpers/dateHelper';
-import Link from 'next/link';
-import { IoDocumentText } from 'react-icons/io5';
-import LoadingList from '@shared/utils/LoadingList';
-import { debounce } from '/helpers/debounceHelper';
-import NewContentFlow from './NewContentFlow';
-import { generateAIContent } from 'helpers/generateAIContent';
+'use client'
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { camelToKebab } from 'helpers/stringHelper'
+import { useEffect, useMemo, useState } from 'react'
+import Table from '@shared/utils/Table'
+import Actions from './Actions'
+import { dateWithTime } from 'helpers/dateHelper'
+import Link from 'next/link'
+import { IoDocumentText } from 'react-icons/io5'
+import LoadingList from '@shared/utils/LoadingList'
+import { debounce } from '/helpers/debounceHelper'
+import NewContentFlow from './NewContentFlow'
+import { generateAIContent } from 'helpers/generateAIContent'
 import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
-} from 'helpers/buildAiContentSections';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
-import { useSnackbar } from 'helpers/useSnackbar';
+} from 'helpers/buildAiContentSections'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { useSnackbar } from 'helpers/useSnackbar'
 
-let aiTotalCount = 0;
+let aiTotalCount = 0
 const excludedKeys = [
   'why',
   'aboutMe',
@@ -27,48 +27,48 @@ const excludedKeys = [
   'communicationsStrategy',
   'messageBox',
   'mobilizing',
-];
+]
 
 export default function MyContent(props) {
-  const [loading, setLoading] = useState(true);
-  const [section, setSection] = useState('');
-  const [sections, setSections] = useState(undefined);
-  const [initialChat, setInitialChat] = useState(false);
-  const [initialValues, setInitialValues] = useState({});
-  const [campaign, setCampaign] = useState(undefined);
-  const [campaignPlan, setCampaignPlan] = useState(undefined);
-  const [jobStarting, setJobStarting] = useState(false);
-  const { errorSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(true)
+  const [section, setSection] = useState('')
+  const [sections, setSections] = useState(undefined)
+  const [initialChat, setInitialChat] = useState(false)
+  const [initialValues, setInitialValues] = useState({})
+  const [campaign, setCampaign] = useState(undefined)
+  const [campaignPlan, setCampaignPlan] = useState(undefined)
+  const [jobStarting, setJobStarting] = useState(false)
+  const { errorSnackbar } = useSnackbar()
 
-  let tableVersion = true;
+  let tableVersion = true
 
   const onSelectPrompt = (key, additionalPrompts, inputValues) => {
-    setJobStarting(true);
-    trackEvent('ai_content_generation_start', { key });
+    setJobStarting(true)
+    trackEvent('ai_content_generation_start', { key })
     if (additionalPrompts) {
-      setInitialChat(additionalPrompts);
+      setInitialChat(additionalPrompts)
     }
     if (inputValues) {
-      setInitialValues(inputValues);
+      setInitialValues(inputValues)
     }
-    setSection(key);
-  };
+    setSection(key)
+  }
 
-  let data = [];
+  let data = []
   if (sections) {
     Object.keys(sections).forEach((key) => {
-      const section = sections[key];
+      const section = sections[key]
       if (excludedKeys.includes(key) || !section.name) {
-        return;
+        return
       }
       data.push({
         name: section.name,
         updatedAt: new Date(section.updatedAt),
         slug: camelToKebab(key),
         documentKey: key,
-      });
-    });
-    data.sort((a, b) => a.updatedAt - b.updatedAt);
+      })
+    })
+    data.sort((a, b) => a.updatedAt - b.updatedAt)
   }
 
   const columns = useMemo(() => [
@@ -89,7 +89,7 @@ export default function MyContent(props) {
                   name: row.original.name,
                   slug: row.original.slug,
                   key: row.original.documentKey,
-                });
+                })
               }}
               className="inline-block"
             >
@@ -98,7 +98,7 @@ export default function MyContent(props) {
                 <div className="ml-3">{row.original.name}</div>
               </div>
             </Link>
-          );
+          )
         } else {
           return (
             // do not show link for documents that are processing.
@@ -106,26 +106,26 @@ export default function MyContent(props) {
               <IoDocumentText className="ml-3 text-md shrink-0" />
               <div className="ml-3">{row.original.name}</div>
             </div>
-          );
+          )
         }
       },
     },
     {
       Header: 'Last Modified',
       accessor: (data) => {
-        return data.updatedAt ? new Date(data.updatedAt) : new Date();
+        return data.updatedAt ? new Date(data.updatedAt) : new Date()
       },
       sortType: 'datetime',
       Cell: ({ row }) => {
-        let updatedAt;
+        let updatedAt
         if (row.original.updatedAt) {
-          updatedAt = dateWithTime(row.original.updatedAt);
+          updatedAt = dateWithTime(row.original.updatedAt)
           if (updatedAt === undefined || updatedAt === 'Invalid Date') {
-            const now = new Date();
-            updatedAt = dateWithTime(now);
+            const now = new Date()
+            updatedAt = dateWithTime(now)
           }
         }
-        return updatedAt;
+        return updatedAt
       },
     },
     {
@@ -147,53 +147,53 @@ export default function MyContent(props) {
             row.original.updatedAt && row.original.updatedAt != 'Invalid Date'
               ? undefined
               : 'processing',
-        };
-        return <Actions {...actionProps} />;
+        }
+        return <Actions {...actionProps} />
       },
     },
-  ]);
+  ])
 
   async function getUserCampaign() {
-    const campaignObj = await getCampaign();
+    const campaignObj = await getCampaign()
     if (campaignObj) {
-      setCampaign(campaignObj);
-      const campaignPlanObj = campaignObj[AI_CONTENT_SUB_SECTION_KEY];
-      setCampaignPlan(campaignPlanObj);
+      setCampaign(campaignObj)
+      const campaignPlanObj = campaignObj[AI_CONTENT_SUB_SECTION_KEY]
+      setCampaignPlan(campaignPlanObj)
       const [sectionsObj, jobsProcessing] = buildAiContentSections(
         campaignObj,
         AI_CONTENT_SUB_SECTION_KEY,
-      );
-      setSections(sectionsObj);
-      setLoading(false);
+      )
+      setSections(sectionsObj)
+      setLoading(false)
 
       if (jobsProcessing) {
-        handleJobProcessing();
+        handleJobProcessing()
       }
     }
   }
 
   const handleJobProcessing = () => {
-    aiTotalCount++;
-    debounce(getUserCampaign, 10000);
+    aiTotalCount++
+    debounce(getUserCampaign, 10000)
 
     if (aiTotalCount >= 100) {
       //fail
       errorSnackbar(
         'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
-      );
-      setLoading(false);
-      setIsFailed(true);
-      return;
+      )
+      setLoading(false)
+      setIsFailed(true)
+      return
     }
-  };
+  }
 
   useEffect(() => {
-    initCampaign();
-  }, []);
+    initCampaign()
+  }, [])
 
   const initCampaign = async () => {
-    await getUserCampaign();
-  };
+    await getUserCampaign()
+  }
 
   useEffect(() => {
     if (
@@ -206,9 +206,9 @@ export default function MyContent(props) {
         section,
         initialChat,
         initialValues,
-      });
+      })
     }
-  }, [campaignPlan, section]);
+  }, [campaignPlan, section])
 
   const createAIContent = async ({
     section = '',
@@ -222,24 +222,24 @@ export default function MyContent(props) {
       section,
       initialChat,
       initialValues,
-    );
+    )
 
     if (!chatResponse && status === 'processing') {
       if (jobStarting === true) {
-        await getUserCampaign();
-        setJobStarting(false);
-        setInitialChat(false);
+        await getUserCampaign()
+        setJobStarting(false)
+        setInitialChat(false)
       }
     } else {
-      setJobStarting(false);
-      setLoading(false);
-      setInitialChat(false);
+      setJobStarting(false)
+      setLoading(false)
+      setInitialChat(false)
       //fail
       errorSnackbar(
         'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
-      );
+      )
     }
-  };
+  }
 
   return (
     <div>
@@ -266,5 +266,5 @@ export default function MyContent(props) {
         </>
       )}
     </div>
-  );
+  )
 }

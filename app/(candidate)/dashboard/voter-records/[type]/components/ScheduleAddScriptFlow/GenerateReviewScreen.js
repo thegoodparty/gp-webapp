@@ -1,65 +1,65 @@
-'use client';
-import { useEffect, useState } from 'react';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import { ModalFooter } from '@shared/ModalFooter';
+'use client'
+import { useEffect, useState } from 'react'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import { ModalFooter } from '@shared/ModalFooter'
 import {
   getCampaign,
   updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { useSnackbar } from 'helpers/useSnackbar';
-import dynamic from 'next/dynamic';
+} from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { useSnackbar } from 'helpers/useSnackbar'
+import dynamic from 'next/dynamic'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,
   loading: () => (
     <p className="p-4 text-center text-2xl font-bold">Loading Editor...</p>
   ),
-});
+})
 
 export const GenerateReviewScreen = ({
   aiScriptKey = '',
   onBack = () => {},
   onNext = (scriptKey) => {},
 }) => {
-  const { errorSnackbar } = useSnackbar();
-  const [aiContent, setAiContent] = useState({});
-  const [saving, setSaving] = useState(false);
+  const { errorSnackbar } = useSnackbar()
+  const [aiContent, setAiContent] = useState({})
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     const fetchAiContent = async () => {
       try {
-        const campaign = await getCampaign();
-        const { aiContent } = campaign || {};
+        const campaign = await getCampaign()
+        const { aiContent } = campaign || {}
         if (!aiContent?.[aiScriptKey]) {
-          throw new Error(`No aiScriptKey AI content found => ${aiScriptKey}`);
+          throw new Error(`No aiScriptKey AI content found => ${aiScriptKey}`)
         }
-        setAiContent(aiContent[aiScriptKey]);
+        setAiContent(aiContent[aiScriptKey])
       } catch (e) {
-        console.error('error fetching aiContent for review => ', e);
-        errorSnackbar('Error fetching AI-generated content');
+        console.error('error fetching aiContent for review => ', e)
+        errorSnackbar('Error fetching AI-generated content')
       }
-    };
-    fetchAiContent();
-  }, []);
+    }
+    fetchAiContent()
+  }, [])
 
   const handleOnNext = async () => {
-    setSaving(true);
+    setSaving(true)
     try {
       await updateCampaign([
         {
           key: `aiContent.${aiScriptKey}`,
           value: aiContent,
         },
-      ]);
-      onNext(aiScriptKey);
+      ])
+      onNext(aiScriptKey)
     } catch (e) {
-      console.error('Error updating campaign with AI content => ', e);
-      errorSnackbar('Error saving AI-generated content');
+      console.error('Error updating campaign with AI content => ', e)
+      errorSnackbar('Error saving AI-generated content')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   return (
     <>
@@ -73,7 +73,7 @@ export const GenerateReviewScreen = ({
         <RichEditor
           initialText={aiContent?.content}
           onChangeCallback={(content) => {
-            setAiContent({ ...aiContent, content });
+            setAiContent({ ...aiContent, content })
           }}
           useOnChange
         />
@@ -88,5 +88,5 @@ export const GenerateReviewScreen = ({
         }}
       />
     </>
-  );
-};
+  )
+}

@@ -5,22 +5,22 @@ on production the path is https://www.goodparty.org/sitemaps/candidates/ca/sitem
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 */
 
-import gpApi from 'gpApi';
-import gpFetch from 'gpApi/gpFetch';
-import { flatStates } from 'helpers/statesHelper';
+import gpApi from 'gpApi'
+import gpFetch from 'gpApi/gpFetch'
+import { flatStates } from 'helpers/statesHelper'
 
-import { APP_BASE } from 'appEnv';
+import { APP_BASE } from 'appEnv'
 
 const fetchCandidates = async (state) => {
-  const api = gpApi.candidate.list;
+  const api = gpApi.candidate.list
   const payload = {
     state,
-  };
+  }
 
-  return await gpFetch(api, payload, 3600);
-};
+  return await gpFetch(api, payload, 3600)
+}
 
-const now = new Date();
+const now = new Date()
 
 export async function generateSitemaps() {
   // Fetch the total number of products and calculate the number of sitemaps needed
@@ -28,22 +28,22 @@ export async function generateSitemaps() {
   return flatStates.map((state, index) => {
     return {
       id: index,
-    };
-  });
+    }
+  })
 }
 
 export default async function sitemap({ id }) {
   try {
-    const state = flatStates[id].toLocaleLowerCase();
-    const { candidates } = await fetchCandidates(state);
+    const state = flatStates[id].toLocaleLowerCase()
+    const { candidates } = await fetchCandidates(state)
 
-    const mainSitemap = [];
-    const urls = [];
+    const mainSitemap = []
+    const urls = []
     // state url
 
     candidates.forEach((slug) => {
-      urls.push(`/candidate/${slug}`);
-    });
+      urls.push(`/candidate/${slug}`)
+    })
 
     urls.forEach((url) => {
       mainSitemap.push({
@@ -51,10 +51,10 @@ export default async function sitemap({ id }) {
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.9,
-      });
-    });
-    return mainSitemap;
+      })
+    })
+    return mainSitemap
   } catch (e) {
-    return [];
+    return []
   }
 }

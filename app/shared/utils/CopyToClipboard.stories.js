@@ -1,5 +1,5 @@
-import CopyToClipboard from './CopyToClipboard';
-import Snackbar from './Snackbar';
+import CopyToClipboard from './CopyToClipboard'
+import Snackbar from './Snackbar'
 
 export default {
   title: 'Utils/CopyToClipboard',
@@ -15,6 +15,6 @@ export default {
       <CopyToClipboard {...args} />
     </>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

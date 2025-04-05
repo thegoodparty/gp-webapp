@@ -1,4 +1,4 @@
-import { faqArticleRoute } from 'helpers/articleHelper';
+import { faqArticleRoute } from 'helpers/articleHelper'
 
 export const LegalStatements = () => (
   <ul>
@@ -39,4 +39,4 @@ export const LegalStatements = () => (
       </a>
     </li>
   </ul>
-);
+)

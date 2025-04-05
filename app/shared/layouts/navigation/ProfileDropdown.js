@@ -1,5 +1,5 @@
-'use client';
-import Link from 'next/link';
+'use client'
+import Link from 'next/link'
 import {
   FaChevronDown,
   FaExternalLinkAlt,
@@ -7,16 +7,16 @@ import {
   FaToolbox,
   FaUserCircle,
   FaUserTie,
-} from 'react-icons/fa';
-import { memo, useEffect } from 'react';
-import { RiLogoutBoxFill } from 'react-icons/ri';
-import { HiOutlineStar } from 'react-icons/hi';
-import UserAvatar from '@shared/user/UserAvatar';
-import { handleLogOut } from '@shared/user/handleLogOut';
-import { useImpersonateUser } from '@shared/hooks/useImpersonateUser';
-import { MdAdd, MdFactCheck } from 'react-icons/md';
-import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+} from 'react-icons/fa'
+import { memo, useEffect } from 'react'
+import { RiLogoutBoxFill } from 'react-icons/ri'
+import { HiOutlineStar } from 'react-icons/hi'
+import UserAvatar from '@shared/user/UserAvatar'
+import { handleLogOut } from '@shared/user/handleLogOut'
+import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
+import { MdAdd, MdFactCheck } from 'react-icons/md'
+import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 const links = [
   {
@@ -27,55 +27,55 @@ const links = [
     onClick: () =>
       trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickSettings),
   },
-];
+]
 
 function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
   const {
     clear: clearImpersonation,
     token: impersonateToken,
     user: impersonateUser,
-  } = useImpersonateUser();
-  const impersonating = impersonateToken && impersonateUser;
+  } = useImpersonateUser()
+  const impersonating = impersonateToken && impersonateUser
 
   useEffect(() => {
     if (user) {
-      hubspotIntegration(user);
+      hubspotIntegration(user)
     }
-  }, [user]);
+  }, [user])
 
   const hubspotIntegration = (user) => {
-    var _hsq = (window._hsq = window._hsq || []);
+    var _hsq = (window._hsq = window._hsq || [])
     _hsq.push([
       'identify',
       {
         email: user.email,
         name: `${user.name} ${user.lastName}`,
       },
-    ]);
-  };
+    ])
+  }
 
   const handleEnterPress = (e, cb) => {
-    if (e.key == 'Enter') cb();
-  };
+    if (e.key == 'Enter') cb()
+  }
 
   const handleKeyToggle = (e) => {
-    if (e.key == 'Enter' || (e.key == 'Escape' && open)) toggleCallback();
-  };
+    if (e.key == 'Enter' || (e.key == 'Escape' && open)) toggleCallback()
+  }
 
   const handleStopImpersonate = () => {
-    clearImpersonation();
-    window.location.href = '/admin';
-  };
+    clearImpersonation()
+    window.location.href = '/admin'
+  }
 
   const handleToggle = () => {
-    trackEvent(EVENTS.Navigation.Top.ClickAvatarDropdown);
-    toggleCallback();
-  };
+    trackEvent(EVENTS.Navigation.Top.ClickAvatarDropdown)
+    toggleCallback()
+  }
 
   const handleLogOutClick = (e) => {
-    trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickLogout);
-    handleLogOut(e);
-  };
+    trackEvent(EVENTS.Navigation.Top.AvatarDropdown.ClickLogout)
+    handleLogOut(e)
+  }
 
   return (
     <div
@@ -201,7 +201,7 @@ function ProfileDropdown({ open, toggleCallback, user, isServePath }) {
         </>
       ) : null}
     </div>
-  );
+  )
 }
 
-export default memo(ProfileDropdown);
+export default memo(ProfileDropdown)

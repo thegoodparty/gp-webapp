@@ -1,6 +1,6 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import SearchLocation from 'app/(landing)/elections/shared/SearchLocation';
-import Image from 'next/image';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import SearchLocation from 'app/(landing)/elections/shared/SearchLocation'
+import Image from 'next/image'
 
 export default function Explore() {
   return (
@@ -23,5 +23,5 @@ export default function Explore() {
         <SearchLocation />
       </MaxWidth>
     </section>
-  );
+  )
 }

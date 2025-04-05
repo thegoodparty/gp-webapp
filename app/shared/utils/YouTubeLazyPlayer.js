@@ -1,8 +1,8 @@
-'use client';
-import React from 'react';
-import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+'use client'
+import React from 'react'
+import LiteYouTubeEmbed from 'react-lite-youtube-embed'
 
-import styles from './YouTubeLazyPlayer.module.scss';
+import styles from './YouTubeLazyPlayer.module.scss'
 
 export default function YouTubeLazyPlayer({
   id,
@@ -10,12 +10,12 @@ export default function YouTubeLazyPlayer({
   height = 'auto',
 }) {
   if (!id) {
-    return <></>;
+    return <></>
   }
 
   return (
     <div className={styles.wrapper}>
       <LiteYouTubeEmbed id={id} params={params} height={height} />
     </div>
-  );
+  )
 }

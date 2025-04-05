@@ -1,36 +1,36 @@
-'use client';
+'use client'
 
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import Overline from '@shared/typography/Overline';
-import Paper from '@shared/utils/Paper';
-import Link from 'next/link';
-import { IoArrowForward } from 'react-icons/io5';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import Overline from '@shared/typography/Overline'
+import Paper from '@shared/utils/Paper'
+import Link from 'next/link'
+import { IoArrowForward } from 'react-icons/io5'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function ReadMoreCard({ type }) {
-  let link = '#';
-  let typeText = '';
+  let link = '#'
+  let typeText = ''
   if (type === 'sms') {
-    typeText = 'texting';
-    link = '/blog/tag/smsmms-messaging';
+    typeText = 'texting'
+    link = '/blog/tag/smsmms-messaging'
   }
   if (type === 'telemarketing') {
-    link = '/blog/tag/phone-banking';
-    typeText = 'phone banking';
+    link = '/blog/tag/phone-banking'
+    typeText = 'phone banking'
   }
   if (type === 'directmail') {
-    link = '/blog/tag/direct-mail';
-    typeText = 'direct mail';
+    link = '/blog/tag/direct-mail'
+    typeText = 'direct mail'
   }
   if (type === 'doorknocking') {
-    link = '/blog/tag/door-to-door-canvassing';
-    typeText = 'door knocking';
+    link = '/blog/tag/door-to-door-canvassing'
+    typeText = 'door knocking'
   }
 
   if (type === 'digitalads') {
-    link = '/blog/tag/social-media';
-    typeText = 'digital advertising';
+    link = '/blog/tag/social-media'
+    typeText = 'digital advertising'
   }
 
   return (
@@ -51,7 +51,7 @@ export default function ReadMoreCard({ type }) {
             {
               type,
             },
-          );
+          )
         }}
       >
         <div className="mt-4 flex items-center justify-end">
@@ -60,5 +60,5 @@ export default function ReadMoreCard({ type }) {
         </div>
       </Link>
     </Paper>
-  );
+  )
 }

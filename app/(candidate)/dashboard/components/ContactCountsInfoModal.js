@@ -1,11 +1,11 @@
-import { numberFormatter } from 'helpers/numberHelper';
-import Modal from '@shared/utils/Modal';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import H6 from '@shared/typography/H6';
-import H2 from '@shared/typography/H2';
-import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper';
+import { numberFormatter } from 'helpers/numberHelper'
+import Modal from '@shared/utils/Modal'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import H6 from '@shared/typography/H6'
+import H2 from '@shared/typography/H2'
+import { VoterContactModalWrapper } from '../shared/VoterContactModalWrapper'
 
 export const ContactCountsInfoModal = ({
   open = true,
@@ -17,19 +17,19 @@ export const ContactCountsInfoModal = ({
     projectedTurnout,
     voterContactGoal,
     winNumber,
-  } = pathToVictory;
+  } = pathToVictory
   const turnoutPerc = numberFormatter(
     totalRegisteredVoters
       ? (projectedTurnout / totalRegisteredVoters) * 100
       : 0,
-  );
+  )
 
   return (
     <Modal
       open={open}
       closeCallback={() => {
-        trackEvent(EVENTS.Dashboard.PathToVictory.ExitUnderstand);
-        setOpen();
+        trackEvent(EVENTS.Dashboard.PathToVictory.ExitUnderstand)
+        setOpen()
       }}
     >
       <VoterContactModalWrapper>
@@ -82,5 +82,5 @@ export const ContactCountsInfoModal = ({
         </div>
       </VoterContactModalWrapper>
     </Modal>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
 const PartyLogo = ({ logoFileName, name }) => (
   <Image
@@ -8,7 +8,7 @@ const PartyLogo = ({ logoFileName, name }) => (
     alt={name}
     src={logoFileName}
   />
-);
+)
 const PARTIES = [
   { name: 'Forward Party', logoFileName: 'fwd-logo.png' },
   { name: 'Alliance Party', logoFileName: 'alliance-logo.png' },
@@ -16,7 +16,7 @@ const PARTIES = [
   { name: 'Green Party', logoFileName: 'green-logo.png' },
   { name: 'Reform Party', logoFileName: 'reform-logo.png' },
   { name: 'Working Families Party', logoFileName: 'wfp-logo.png' },
-];
+]
 export const IncludedPartiesList = () => (
   <div
     className="bg-white
@@ -37,4 +37,4 @@ export const IncludedPartiesList = () => (
       </div>
     ))}
   </div>
-);
+)

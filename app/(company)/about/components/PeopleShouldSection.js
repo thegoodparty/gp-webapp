@@ -61,6 +61,6 @@ const PeopleShouldSection = () => (
       </div>
     </div>
   </section>
-);
+)
 
-export default PeopleShouldSection;
+export default PeopleShouldSection

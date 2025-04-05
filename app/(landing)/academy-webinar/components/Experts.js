@@ -1,9 +1,9 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
-import JaredImg from 'public/images/landing-pages/expert-jared.png';
-import RobImg from 'public/images/landing-pages/expert-rob.png';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
+import JaredImg from 'public/images/landing-pages/expert-jared.png'
+import RobImg from 'public/images/landing-pages/expert-rob.png'
 
 const experts = [
   {
@@ -18,7 +18,7 @@ const experts = [
     desc: "Rob has nearly 20 years of experience running and winning over 150 electoral, legislative, and ballot campaigns. He has organized everything from local races to presidential campaigns, helped pioneer deep-canvassing during the marriage equality movement, and helped build RepresentUs' volunteer network from the ground up. Rob also led several successful ballot measure efforts as the National Field Director at RepresentUs.",
     img: RobImg,
   },
-];
+]
 
 export default function Experts() {
   return (
@@ -53,5 +53,5 @@ export default function Experts() {
       </div>
       <div className="bg-[linear-gradient(176deg,_#0D1528_54.5%,_rgba(0,0,0,0)_55%)] h-[calc(100vw*0.09)] w-full" />
     </>
-  );
+  )
 }

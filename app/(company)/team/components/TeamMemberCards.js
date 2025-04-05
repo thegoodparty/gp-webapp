@@ -1,5 +1,5 @@
-import styles from 'app/(company)/team/components/Team.module.scss';
-import { TeamMemberCard } from 'app/(company)/team/components/TeamMemberCard';
+import styles from 'app/(company)/team/components/Team.module.scss'
+import { TeamMemberCard } from 'app/(company)/team/components/TeamMemberCard'
 
 export const TeamMemberCards = ({
   teamMembers,
@@ -62,5 +62,5 @@ export const TeamMemberCards = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}

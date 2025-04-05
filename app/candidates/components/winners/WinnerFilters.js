@@ -1,10 +1,10 @@
-'use client';
-import { Select } from '@mui/material';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { states } from 'helpers/statesHelper';
-import { useState } from 'react';
+'use client'
+import { Select } from '@mui/material'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { states } from 'helpers/statesHelper'
+import { useState } from 'react'
 
-const stateOptions = states;
+const stateOptions = states
 
 const levelOptions = [
   { key: 'LOCAL', label: 'Local' },
@@ -12,21 +12,21 @@ const levelOptions = [
   { key: 'COUNTY', label: 'County' },
   { key: 'STATE', label: 'State' },
   { key: 'FEDERAL', label: 'Federal' },
-];
+]
 
 export default function WinnerFilters({ filters, onChangeFilters, offices }) {
-  const [localFilters, setLocalFlters] = useState(filters);
+  const [localFilters, setLocalFlters] = useState(filters)
 
   const handleLocalChange = (key, val) => {
     setLocalFlters((current) => ({
       ...current,
       [key]: val,
-    }));
-  };
+    }))
+  }
 
   const handleSubmitChanges = () => {
-    onChangeFilters(localFilters);
-  };
+    onChangeFilters(localFilters)
+  }
 
   return (
     <div className="grid grid-cols-12 gap-4  mb-12 lg:mb-24">
@@ -95,5 +95,5 @@ export default function WinnerFilters({ filters, onChangeFilters, offices }) {
         </PrimaryButton>
       </div>
     </div>
-  );
+  )
 }

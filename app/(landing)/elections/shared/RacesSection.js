@@ -1,11 +1,9 @@
-import Subtitle2 from '@shared/typography/Subtitle2';
-import Race from './Race';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Link from 'next/link';
+import Subtitle2 from '@shared/typography/Subtitle2'
+import Race from './Race'
 
 export default function RacesSection({ races }) {
   if (!races || races.length === 0) {
-    return <section>No elections to show for this location</section>;
+    return <section>No elections to show for this location</section>
   }
   return (
     <section>
@@ -28,5 +26,5 @@ export default function RacesSection({ races }) {
         </div>
       ))}
     </section>
-  );
+  )
 }

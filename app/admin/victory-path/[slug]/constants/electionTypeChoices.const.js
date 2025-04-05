@@ -159,4 +159,4 @@ export const ELECTION_TYPE_CHOICES = [
   },
   { id: 'Unified_School_District', title: 'Unified School District' },
   { id: 'Unified_School_SubDistrict', title: 'Unified School SubDistrict' },
-];
+]

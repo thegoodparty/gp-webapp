@@ -1,6 +1,6 @@
-import CardPageWrapper from '@shared/cards/CardPageWrapper';
+import CardPageWrapper from '@shared/cards/CardPageWrapper'
 
 export default function OnboardingLayout(props) {
-  const { children, step } = props;
-  return <CardPageWrapper>{children}</CardPageWrapper>;
+  const { children, step } = props
+  return <CardPageWrapper>{children}</CardPageWrapper>
 }

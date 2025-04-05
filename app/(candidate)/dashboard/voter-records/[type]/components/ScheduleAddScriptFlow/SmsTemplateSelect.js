@@ -1,11 +1,11 @@
-import { MenuItem, Select } from '@mui/material';
+import { MenuItem, Select } from '@mui/material'
 
 export const SmsTemplateSelect = ({
   templates = [],
   selected = '',
   onChange = (itemKey) => {},
 }) => {
-  const handleOnChange = (e) => onChange(e.target.value);
+  const handleOnChange = (e) => onChange(e.target.value)
   return (
     <Select
       value={selected || ''}
@@ -30,5 +30,5 @@ export const SmsTemplateSelect = ({
         </MenuItem>
       ))}
     </Select>
-  );
-};
+  )
+}

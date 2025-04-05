@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar';
-import { MdTask } from 'react-icons/md';
-import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody';
-import { ErrorAlert } from '@shared/alerts/ErrorAlert';
-import TextField from '@shared/inputs/TextField';
+import { useEffect, useRef, useState } from 'react'
+import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar'
+import { MdTask } from 'react-icons/md'
+import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody'
+import { ErrorAlert } from '@shared/alerts/ErrorAlert'
+import TextField from '@shared/inputs/TextField'
 
 export const ServiceAgreementSignatureSection = ({
   show,
@@ -11,15 +11,15 @@ export const ServiceAgreementSignatureSection = ({
   onChange = () => {},
   disableScrollTo = false,
 }) => {
-  const [scrolledTo, setScrolledTo] = useState(disableScrollTo);
-  const titleBarRef = useRef(null);
+  const [scrolledTo, setScrolledTo] = useState(disableScrollTo)
+  const titleBarRef = useRef(null)
 
   useEffect(() => {
     if (show && !scrolledTo && titleBarRef.current) {
-      titleBarRef.current.scrollIntoView({ behavior: 'smooth' });
-      setScrolledTo(true);
+      titleBarRef.current.scrollIntoView({ behavior: 'smooth' })
+      setScrolledTo(true)
     }
-  }, [show]);
+  }, [show])
   return (
     <>
       <AcknowledgementTitleBar
@@ -51,5 +51,5 @@ export const ServiceAgreementSignatureSection = ({
         />
       </AcknowledgementQuestionBody>
     </>
-  );
-};
+  )
+}

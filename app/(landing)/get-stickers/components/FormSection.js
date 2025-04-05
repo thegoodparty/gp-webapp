@@ -1,5 +1,5 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import HubSpotForm from '@shared/utils/HubSpotForm';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import HubSpotForm from '@shared/utils/HubSpotForm'
 
 export default function FormSection() {
   return (
@@ -13,5 +13,5 @@ export default function FormSection() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

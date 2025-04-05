@@ -1,5 +1,5 @@
-import YellowButton from './YellowButton';
-import YellowButtonClient from './YellowButtonClient';
+import YellowButton from './YellowButton'
+import YellowButtonClient from './YellowButtonClient'
 
 export default {
   title: 'Buttons/YellowButton',
@@ -12,6 +12,6 @@ export default {
       <YellowButtonClient {...args}>Yellow Button Client</YellowButtonClient>
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

@@ -1,11 +1,11 @@
-import DashboardLayout from '../../shared/DashboardLayout';
-import ChatHistory from './ChatHistory';
-import Chat from './Chat';
-import ChatInput from './ChatInput';
-import CreateNewChat from './CreateNewChat';
-import { ChatProvider } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatProvider';
-import H2 from '@shared/typography/H2';
-import Paper from '@shared/utils/Paper';
+import DashboardLayout from '../../shared/DashboardLayout'
+import ChatHistory from './ChatHistory'
+import Chat from './Chat'
+import ChatInput from './ChatInput'
+import CreateNewChat from './CreateNewChat'
+import { ChatProvider } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatProvider'
+import H2 from '@shared/typography/H2'
+import Paper from '@shared/utils/Paper'
 
 const CampaignAssistantPage = (props) => (
   <DashboardLayout {...props} wrapperClassName="w-full" showAlert={false}>
@@ -24,6 +24,6 @@ const CampaignAssistantPage = (props) => (
       </Paper>
     </ChatProvider>
   </DashboardLayout>
-);
+)
 
-export default CampaignAssistantPage;
+export default CampaignAssistantPage

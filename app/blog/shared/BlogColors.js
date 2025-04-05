@@ -4,4 +4,4 @@ export const colors = [
   'bg-teal-400',
   'bg-violet-400',
   'bg-rose-700',
-];
+]

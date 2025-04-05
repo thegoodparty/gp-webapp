@@ -1,28 +1,28 @@
-import Body1 from '@shared/typography/Body1';
-import MarketingH4 from '@shared/typography/MarketingH4';
-import { faqArticleRoute } from 'helpers/articleHelper';
-import Link from 'next/link';
-import IconButton from '@shared/buttons/IconButton';
-import { MdChevronRight } from 'react-icons/md';
-import { apiRoutes } from 'gpApi/routes';
-import { serverFetch } from 'gpApi/serverFetch';
+import Body1 from '@shared/typography/Body1'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import { faqArticleRoute } from 'helpers/articleHelper'
+import Link from 'next/link'
+import IconButton from '@shared/buttons/IconButton'
+import { MdChevronRight } from 'react-icons/md'
+import { apiRoutes } from 'gpApi/routes'
+import { serverFetch } from 'gpApi/serverFetch'
 
 async function fetchFaqs() {
   const payload = {
     type: 'blogHome',
-  };
+  }
 
   const resp = await serverFetch(apiRoutes.content.getByType, payload, {
     revalidate: 3600,
-  });
+  })
 
-  return resp.data;
+  return resp.data
 }
 
 export default async function ArticleFaqs() {
-  const { faqs } = await fetchFaqs();
+  const { faqs } = await fetchFaqs()
 
-  if (!faqs || faqs.length <= 0) return null;
+  if (!faqs || faqs.length <= 0) return null
 
   return (
     <>
@@ -53,5 +53,5 @@ export default async function ArticleFaqs() {
         ))}
       </ul>
     </>
-  );
+  )
 }

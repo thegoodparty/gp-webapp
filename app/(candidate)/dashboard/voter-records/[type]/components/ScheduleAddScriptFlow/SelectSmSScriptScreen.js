@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import { SmsScriptSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsScriptSelect';
-import { ModalFooter } from '@shared/ModalFooter';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useState } from 'react'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import { SmsScriptSelect } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/SmsScriptSelect'
+import { ModalFooter } from '@shared/ModalFooter'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export const SelectSmSScriptScreen = ({
   aiContent,
   onBack = () => {},
   onNext = (scriptKey) => {},
 }) => {
-  const [smsScript, setSmsScript] = useState(null);
+  const [smsScript, setSmsScript] = useState(null)
   const handleOnNext = () => {
     trackEvent(
       EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.SelectSaved,
-    );
+    )
 
-    onNext(smsScript);
-  };
-  const onSelect = (key) => setSmsScript(key);
+    onNext(smsScript)
+  }
+  const onSelect = (key) => setSmsScript(key)
   return (
     <>
       <header className="text-center">
@@ -39,5 +39,5 @@ export const SelectSmSScriptScreen = ({
         nextText="Submit"
       />
     </>
-  );
-};
+  )
+}

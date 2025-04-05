@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
-import Button from '@shared/buttons/Button';
-import IconButton from '@shared/buttons/IconButton';
-import Modal from '@shared/utils/Modal';
-import CustomVoterAudienceFilters from './CustomVoterAudienceFilters';
-import H2 from '@shared/typography/H2';
-import Body1 from '@shared/typography/Body1';
-import { InfoRounded } from '@mui/icons-material';
+import { useMemo } from 'react'
+import Button from '@shared/buttons/Button'
+import IconButton from '@shared/buttons/IconButton'
+import Modal from '@shared/utils/Modal'
+import CustomVoterAudienceFilters from './CustomVoterAudienceFilters'
+import H2 from '@shared/typography/H2'
+import Body1 from '@shared/typography/Body1'
+import { InfoRounded } from '@mui/icons-material'
 
 export default function ViewAudienceFiltersModal({
   open,
@@ -21,11 +21,11 @@ export default function ViewAudienceFiltersModal({
       file == null || file.filters == null
         ? null
         : file.filters.reduce((acc, filterKey) => {
-            acc[filterKey] = true;
-            return acc;
+            acc[filterKey] = true
+            return acc
           }, {}),
     [file],
-  );
+  )
 
   return (
     <>
@@ -68,5 +68,5 @@ export default function ViewAudienceFiltersModal({
         )}
       </Modal>
     </>
-  );
+  )
 }

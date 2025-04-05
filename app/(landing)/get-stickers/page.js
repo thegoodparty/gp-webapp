@@ -1,8 +1,8 @@
-import pageMetaData from 'helpers/metadataHelper';
-import GetStickersPage from './components/GetStickersPage';
+import pageMetaData from 'helpers/metadataHelper'
+import GetStickersPage from './components/GetStickersPage'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'Get your FREE stickers',
@@ -11,9 +11,9 @@ const meta = pageMetaData({
 
   slug: '/get-stickers',
   image: 'https://assets.goodparty.org/landing/stickers3.png',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page(params) {
-  return <GetStickersPage />;
+  return <GetStickersPage />
 }

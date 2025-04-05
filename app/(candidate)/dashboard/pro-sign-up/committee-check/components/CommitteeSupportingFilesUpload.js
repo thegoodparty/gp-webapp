@@ -1,45 +1,45 @@
-import { useRef, useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { CircularProgress } from '@mui/material';
-import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput';
-import { useCampaign } from '@shared/hooks/useCampaign';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+import { useRef, useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { CircularProgress } from '@mui/material'
+import { HiddenFileUploadInput } from '@shared/inputs/HiddenFileUploadInput'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
-const FILE_LIMIT_MB = 10;
+const FILE_LIMIT_MB = 10
 
-const EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX = `ein-support-documents`;
+const EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX = `ein-support-documents`
 
 const HELP_MESSAGE =
-  'A campaign filing document is the official document you filed with your election agency (e.g., Secretary of State or Board of Elections) to declare your candidacy. Common names include Statement of Candidacy, Declaration of Candidacy, or Certificate of Nomination.';
+  'A campaign filing document is the official document you filed with your election agency (e.g., Secretary of State or Board of Elections) to declare your candidacy. Common names include Statement of Candidacy, Declaration of Candidacy, or Certificate of Nomination.'
 
 const getEinSupportDocumentFolderName = (id, slug) =>
-  `${id}-${slug}-${EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX}`;
+  `${id}-${slug}-${EIN_SUPPORT_DOCUMENT_FOLDERNAME_POSTFIX}`
 
 const uploadFileToS3 = async (file, bucket) => {
-  const { name: fileName, type: fileType } = file;
+  const { name: fileName, type: fileType } = file
 
   const resp = await clientFetch(apiRoutes.user.files.generateSignedUploadUrl, {
     fileType,
     fileName,
     bucket,
-  });
+  })
 
-  const { signedUploadUrl } = resp.data;
-  const formData = new FormData();
-  formData.append('document', file, fileName);
+  const { signedUploadUrl } = resp.data
+  const formData = new FormData()
+  formData.append('document', file, fileName)
   return await fetch(signedUploadUrl, {
     method: 'PUT',
     headers: {
       'Content-Type': fileType,
     },
     body: formData,
-  });
-};
+  })
+}
 
 export const CommitteeSupportingFilesUpload = ({
   campaign = {},
@@ -47,42 +47,42 @@ export const CommitteeSupportingFilesUpload = ({
   onUploadSuccess = () => {},
   onUploadError = (e) => {},
 }) => {
-  const [authenticatedCampaign = {}] = useCampaign();
-  const campaignId = campaign?.id || authenticatedCampaign?.id;
-  const campaignSlug = campaign?.slug || authenticatedCampaign?.slug;
-  const fileInputRef = useRef(null);
-  const [fileInfo, setFileInfo] = useState(null);
-  const [loadingFileUpload, setLoadingFileUpload] = useState(false);
-  const [errorMessge, setErrorMessage] = useState('');
+  const [authenticatedCampaign = {}] = useCampaign()
+  const campaignId = campaign?.id || authenticatedCampaign?.id
+  const campaignSlug = campaign?.slug || authenticatedCampaign?.slug
+  const fileInputRef = useRef(null)
+  const [fileInfo, setFileInfo] = useState(null)
+  const [loadingFileUpload, setLoadingFileUpload] = useState(false)
+  const [errorMessge, setErrorMessage] = useState('')
 
   const onFileBrowseClick = () => {
-    fileInputRef.current.click();
-  };
+    fileInputRef.current.click()
+  }
 
   const handleFileChoose = async (fileData, file) => {
-    setErrorMessage(``);
-    const fileSizeMb = file?.size / 1e6;
+    setErrorMessage(``)
+    const fileSizeMb = file?.size / 1e6
     if (fileSizeMb > FILE_LIMIT_MB) {
       setErrorMessage(
         `File size of ${fileSizeMb.toFixed(
           2,
         )}MB is larger than ${FILE_LIMIT_MB}MB limit`,
-      );
-      onUploadError(new Error('File size too large'));
-      return;
+      )
+      onUploadError(new Error('File size too large'))
+      return
     }
-    setLoadingFileUpload(true);
-    setFileInfo(file);
+    setLoadingFileUpload(true)
+    setFileInfo(file)
 
     try {
       const bucketFolderName = getEinSupportDocumentFolderName(
         campaignId,
         campaignSlug,
-      );
-      const bucket = `ein-supporting-documents/${bucketFolderName}`;
-      const result = await uploadFileToS3(file, bucket);
+      )
+      const bucket = `ein-supporting-documents/${bucketFolderName}`
+      const result = await uploadFileToS3(file, bucket)
       if (!result?.ok) {
-        throw new Error('Failed to upload file to S3');
+        throw new Error('Failed to upload file to S3')
       }
       await updateCampaign(
         [
@@ -92,14 +92,14 @@ export const CommitteeSupportingFilesUpload = ({
           },
         ],
         campaignSlug,
-      );
-      onUploadSuccess(file.name);
+      )
+      onUploadSuccess(file.name)
     } catch (e) {
-      onUploadError(e);
+      onUploadError(e)
     } finally {
-      setLoadingFileUpload(false);
+      setLoadingFileUpload(false)
     }
-  };
+  }
 
   return (
     <div className="grid grid-cols-10 gap-6 align-center mt-4">
@@ -110,8 +110,8 @@ export const CommitteeSupportingFilesUpload = ({
         onClick={() => {
           trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickUpload, {
             element: 'field',
-          });
-          onFileBrowseClick();
+          })
+          onFileBrowseClick()
         }}
         label="Upload Campaign Filing Document"
         disabled={loadingFileUpload}
@@ -124,7 +124,7 @@ export const CommitteeSupportingFilesUpload = ({
               showOnFocus
               message={HELP_MESSAGE}
               onOpen={() => {
-                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverUploadHelp);
+                trackEvent(EVENTS.ProUpgrade.CommitteeCheck.HoverUploadHelp)
               }}
             />
           ),
@@ -138,8 +138,8 @@ export const CommitteeSupportingFilesUpload = ({
         onClick={() => {
           trackEvent(EVENTS.ProUpgrade.CommitteeCheck.ClickUpload, {
             element: 'button',
-          });
-          onFileBrowseClick();
+          })
+          onFileBrowseClick()
         }}
         disabled={loadingFileUpload}
         fullWidth
@@ -155,5 +155,5 @@ export const CommitteeSupportingFilesUpload = ({
         />
       </PrimaryButton>
     </div>
-  );
-};
+  )
+}

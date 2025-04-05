@@ -1,9 +1,9 @@
-import LeftSide from './LeftSide';
-import RightSide from './RightSide';
-import RightSideMobile from './RightSideMobile';
-import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo';
+import LeftSide from './LeftSide'
+import RightSide from './RightSide'
+import RightSideMobile from './RightSideMobile'
+import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo'
 
-import Body2 from '@shared/typography/Body2';
+import Body2 from '@shared/typography/Body2'
 
 export default async function Nav() {
   return (
@@ -32,5 +32,5 @@ export default async function Nav() {
       <RightSideMobile />
       <div className="h-14 relative">&nbsp;</div>
     </>
-  );
+  )
 }

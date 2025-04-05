@@ -1,45 +1,45 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import Body1 from '@shared/typography/Body1';
-import Body2 from '@shared/typography/Body2';
-import H3 from '@shared/typography/H3';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { dateWithTime } from 'helpers/dateHelper';
-import { numberFormatter } from 'helpers/numberHelper';
-import { useState } from 'react';
-import { syncEcanvasser } from 'utils/syncEcanvasser';
+'use client'
+import Button from '@shared/buttons/Button'
+import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
+import H3 from '@shared/typography/H3'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { dateWithTime } from 'helpers/dateHelper'
+import { numberFormatter } from 'helpers/numberHelper'
+import { useState } from 'react'
+import { syncEcanvasser } from 'utils/syncEcanvasser'
 
 const deleteEcanvasser = async (campaignId) => {
   const payload = {
     campaignId,
-  };
-  return await clientFetch(apiRoutes.ecanvasser.delete, payload);
-};
+  }
+  return await clientFetch(apiRoutes.ecanvasser.delete, payload)
+}
 
 export default function EcanvasserCard({ ecanvasser, onUpdate }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const { email, contacts, houses, interactions, lastSync, error } = ecanvasser;
+  const [isLoading, setIsLoading] = useState(false)
+  const { email, contacts, houses, interactions, lastSync, error } = ecanvasser
 
   const attr = [
     { label: 'Contacts', value: contacts },
     { label: 'Houses', value: houses },
     { label: 'Interactions', value: interactions },
-  ];
+  ]
 
   const handleSync = async () => {
-    setIsLoading(true);
-    await syncEcanvasser(ecanvasser.campaignId, true);
-    setIsLoading(false);
-    onUpdate();
-  };
+    setIsLoading(true)
+    await syncEcanvasser(ecanvasser.campaignId, true)
+    setIsLoading(false)
+    onUpdate()
+  }
 
   const handleDelete = async () => {
-    setIsLoading(true);
-    await deleteEcanvasser(ecanvasser.campaignId);
-    setIsLoading(false);
-    onUpdate();
-  };
+    setIsLoading(true)
+    await deleteEcanvasser(ecanvasser.campaignId)
+    setIsLoading(false)
+    onUpdate()
+  }
 
   return (
     <div className="col-span-12 md:col-span-6 lg:col-span-4">
@@ -82,5 +82,5 @@ export default function EcanvasserCard({ ecanvasser, onUpdate }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

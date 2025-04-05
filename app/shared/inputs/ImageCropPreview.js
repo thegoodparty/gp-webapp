@@ -1,54 +1,53 @@
-'use client';
+'use client'
 
-import { useState, useEffect, useRef } from 'react';
-import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
-import Image from 'next/image';
-import Button from '@shared/buttons/Button';
-import { DeleteRounded, CropRounded } from '@mui/icons-material';
+import { useState, useEffect, useRef } from 'react'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
+import Button from '@shared/buttons/Button'
+import { DeleteRounded, CropRounded } from '@mui/icons-material'
 
 export default function ImageCropPreview({ file, onCrop, onClear }) {
-  const imgRef = useRef(null);
-  const [imgUrl, setImgUrl] = useState();
-  const [loading, setLoading] = useState(true);
-  const [showCrop, setShowCrop] = useState(false);
+  const imgRef = useRef(null)
+  const [imgUrl, setImgUrl] = useState()
+  const [loading, setLoading] = useState(true)
+  const [showCrop, setShowCrop] = useState(false)
   const [crop, setCrop] = useState({
     unit: '%',
     x: 25,
     y: 25,
     width: 50,
     height: 50,
-  });
+  })
 
   useEffect(() => {
     if (file) {
-      setLoading(true);
-      const reader = new FileReader();
+      setLoading(true)
+      const reader = new FileReader()
 
       reader.addEventListener('load', () => {
-        setImgUrl(reader.result);
-        setLoading(false);
-      });
-      reader.readAsDataURL(file);
+        setImgUrl(reader.result)
+        setLoading(false)
+      })
+      reader.readAsDataURL(file)
     }
-  }, [file]);
+  }, [file])
 
   async function handleCropComplete() {
-    const image = imgRef.current;
+    const image = imgRef.current
 
     if (crop && image) {
-      const canvas = new OffscreenCanvas(300, 300);
+      const canvas = new OffscreenCanvas(300, 300)
 
-      const scaleX = image.naturalWidth / image.width;
-      const scaleY = image.naturalHeight / image.height;
-      const ctx = canvas.getContext('2d');
-      const pixelRatio = window.devicePixelRatio;
-      canvas.width = crop.width * pixelRatio * scaleX;
-      canvas.height = crop.height * pixelRatio * scaleY;
+      const scaleX = image.naturalWidth / image.width
+      const scaleY = image.naturalHeight / image.height
+      const ctx = canvas.getContext('2d')
+      const pixelRatio = window.devicePixelRatio
+      canvas.width = crop.width * pixelRatio * scaleX
+      canvas.height = crop.height * pixelRatio * scaleY
 
       if (ctx) {
-        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-        ctx.imageSmoothingQuality = 'high';
+        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0)
+        ctx.imageSmoothingQuality = 'high'
 
         ctx.drawImage(
           image,
@@ -60,16 +59,16 @@ export default function ImageCropPreview({ file, onCrop, onClear }) {
           0,
           crop.width * scaleX,
           crop.height * scaleY,
-        );
+        )
       }
 
       const newFile = new File(
         [await canvas.convertToBlob({ type: file.type })],
         file.name,
         { type: file.type },
-      );
-      setShowCrop(false);
-      onCrop(newFile);
+      )
+      setShowCrop(false)
+      onCrop(newFile)
     }
   }
 
@@ -128,5 +127,5 @@ export default function ImageCropPreview({ file, onCrop, onClear }) {
         </>
       )}
     </>
-  );
+  )
 }

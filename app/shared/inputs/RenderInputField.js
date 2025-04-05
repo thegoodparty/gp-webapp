@@ -1,13 +1,13 @@
-'use client';
-import TextField from '@shared/inputs/TextField';
-import EmailInput from '@shared/inputs/EmailInput';
-import PhoneInput from '@shared/inputs/PhoneInput';
-import Select from '@mui/material/Select';
-import Radio from '@mui/material/Radio';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import RadioGroup from '@shared/inputs/RadioGroup';
-import Checkbox from '@shared/inputs/Checkbox';
-import { ClearRounded } from '@mui/icons-material';
+'use client'
+import TextField from '@shared/inputs/TextField'
+import EmailInput from '@shared/inputs/EmailInput'
+import PhoneInput from '@shared/inputs/PhoneInput'
+import Select from '@mui/material/Select'
+import Radio from '@mui/material/Radio'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import RadioGroup from '@shared/inputs/RadioGroup'
+import Checkbox from '@shared/inputs/Checkbox'
+import { ClearRounded } from '@mui/icons-material'
 
 export default function RenderInputField({
   field,
@@ -15,7 +15,7 @@ export default function RenderInputField({
   onChangeCallback,
   error,
 }) {
-  let endAdornments = [];
+  let endAdornments = []
   if (field.showResetButton && value) {
     endAdornments.push(
       <ClearRounded
@@ -24,7 +24,7 @@ export default function RenderInputField({
         className="cursor-pointer hover:text-black"
         onClick={() => onChangeCallback(field.key, '')}
       />,
-    );
+    )
   }
 
   return (
@@ -82,7 +82,7 @@ export default function RenderInputField({
           value={value}
           required={field.required}
           onChangeCallback={(phone, isValid) => {
-            onChangeCallback(field.key, phone);
+            onChangeCallback(field.key, phone)
           }}
           hideIcon
           shrink
@@ -166,5 +166,5 @@ export default function RenderInputField({
         </div>
       )}
     </div>
-  );
+  )
 }

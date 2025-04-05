@@ -1,8 +1,8 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Body1 from '@shared/typography/Body1';
-import { MdArrowForward } from 'react-icons/md';
+import Link from 'next/link'
+import Image from 'next/image'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Body1 from '@shared/typography/Body1'
+import { MdArrowForward } from 'react-icons/md'
 
 export default function ArticleCard({
   title,
@@ -46,5 +46,5 @@ export default function ArticleCard({
         )}
       </div>
     </Link>
-  );
+  )
 }

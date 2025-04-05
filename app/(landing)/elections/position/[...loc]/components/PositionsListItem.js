@@ -1,11 +1,11 @@
-'use client';
-import { useState } from 'react';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { SlArrowDown, SlArrowRight } from 'react-icons/sl';
+'use client'
+import { useState } from 'react'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { SlArrowDown, SlArrowRight } from 'react-icons/sl'
 
 export const PositionsListItem = ({ positions = [] }) => {
-  const [expandPositions, setExpandPositions] = useState(false);
-  const enableShowMore = positions.length > 5;
+  const [expandPositions, setExpandPositions] = useState(false)
+  const enableShowMore = positions.length > 5
   return (
     <li className="leading-loose">
       Positions:{' '}
@@ -34,5 +34,5 @@ export const PositionsListItem = ({ positions = [] }) => {
         {enableShowMore && !expandPositions && <span>...</span>}
       </span>
     </li>
-  );
-};
+  )
+}

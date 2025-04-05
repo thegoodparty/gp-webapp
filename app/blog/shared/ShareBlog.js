@@ -1,29 +1,29 @@
-'use client';
-import { Fragment, useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { IoIosText } from 'react-icons/io';
-import { FaFacebookF, FaTwitter } from 'react-icons/fa';
-import { MdEmail } from 'react-icons/md';
-import { AiOutlineLink } from 'react-icons/ai';
-import Overline from '@shared/typography/Overline';
+'use client'
+import { Fragment, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { IoIosText } from 'react-icons/io'
+import { FaFacebookF, FaTwitter } from 'react-icons/fa'
+import { MdEmail } from 'react-icons/md'
+import { AiOutlineLink } from 'react-icons/ai'
+import Overline from '@shared/typography/Overline'
 
 export default function ShareBlog({ className }) {
-  const pathname = usePathname();
-  const [appBase, setAppBase] = useState('');
-  const url = appBase + pathname;
-  const messageNoUrl = 'Vote different';
-  const encodedUrl = encodeURIComponent(url);
+  const pathname = usePathname()
+  const [appBase, setAppBase] = useState('')
+  const url = appBase + pathname
+  const messageNoUrl = 'Vote different'
+  const encodedUrl = encodeURIComponent(url)
 
-  useEffect(() => setAppBase(window?.location.origin), []);
+  useEffect(() => setAppBase(window?.location.origin), [])
 
-  const textMessageBody = `${url} ${'\n %0a'} ${'\n %0a'}${messageNoUrl}`;
+  const textMessageBody = `${url} ${'\n %0a'} ${'\n %0a'}${messageNoUrl}`
 
-  const emailSubject = 'Check this out';
-  const emailBody = `${messageNoUrl}%0D%0A%0D%0A${encodedUrl}%0D%0A%0D%0A GoodParty.org%0D%0AFree software for free elections`;
+  const emailSubject = 'Check this out'
+  const emailBody = `${messageNoUrl}%0D%0A%0D%0A${encodedUrl}%0D%0A%0D%0A GoodParty.org%0D%0AFree software for free elections`
 
-  let hash = '#GoodParty';
-  const hashQueryTwitter = hash ? `&hashtags=${hash}` : '';
-  const hashQueryFacebook = hash ? `&hashtag=${hash}` : '';
+  let hash = '#GoodParty'
+  const hashQueryTwitter = hash ? `&hashtags=${hash}` : ''
+  const hashQueryFacebook = hash ? `&hashtag=${hash}` : ''
 
   const channels = [
     {
@@ -51,7 +51,7 @@ export default function ShareBlog({ className }) {
       icon: <FaTwitter className="text-xl" />,
       link: `https://twitter.com/share?url=${encodedUrl}&text=${messageNoUrl}${hashQueryTwitter}`,
     },
-  ];
+  ]
 
   return (
     <div className={`mb-8 ${className}`} data-testid="shareBlog">
@@ -72,5 +72,5 @@ export default function ShareBlog({ className }) {
         </Fragment>
       ))}
     </div>
-  );
+  )
 }

@@ -1,63 +1,63 @@
-'use client';
+'use client'
 
-import DashboardLayout from '../../shared/DashboardLayout';
-import Paper from '@shared/utils/Paper';
-import { Fragment, useEffect, useState } from 'react';
-import H2 from '@shared/typography/H2';
-import Body2 from '@shared/typography/Body2';
-import Overline from '@shared/typography/Overline';
-import CustomVoterFile from './CustomVoterFile';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import CantDownload from './CantDownload';
-import Link from 'next/link';
-import { slugify } from 'helpers/articleHelper';
-import voterFileTypes from './VoterFileTypes';
-import NeedHelp from './NeedHelp';
-import ViewAudienceFiltersModal from './ViewAudienceFiltersModal';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import DashboardLayout from '../../shared/DashboardLayout'
+import Paper from '@shared/utils/Paper'
+import { Fragment, useEffect, useState } from 'react'
+import H2 from '@shared/typography/H2'
+import Body2 from '@shared/typography/Body2'
+import Overline from '@shared/typography/Overline'
+import CustomVoterFile from './CustomVoterFile'
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import CantDownload from './CantDownload'
+import Link from 'next/link'
+import { slugify } from 'helpers/articleHelper'
+import voterFileTypes from './VoterFileTypes'
+import NeedHelp from './NeedHelp'
+import ViewAudienceFiltersModal from './ViewAudienceFiltersModal'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
-const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE'];
+const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE']
 
 export async function fetchVoterFile(type, customFilters) {
   try {
     const payload = {
       type,
-    };
+    }
 
     if (customFilters) {
-      payload.customFilters = JSON.stringify(customFilters);
+      payload.customFilters = JSON.stringify(customFilters)
     }
 
     return await clientFetch(apiRoutes.voters.voterFile.get, payload, {
       returnFullResponse: true,
-    });
+    })
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
 async function wakeUp() {
   try {
-    return await clientFetch(apiRoutes.voters.voterFile.wakeUp);
+    return await clientFetch(apiRoutes.voters.voterFile.wakeUp)
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
 export default function VoterRecordsPage(props) {
-  const [campaign, setCampaign] = useState(props.campaign);
-  const [modalFileKey, setModalFileKey] = useState(null);
+  const [campaign, setCampaign] = useState(props.campaign)
+  const [modalFileKey, setModalFileKey] = useState(null)
 
   const addCustomVoterFiles = () => {
     if (
       campaign.data?.customVoterFiles &&
       campaign.data?.customVoterFiles.length > 0
     ) {
-      let updatedFiles = [...voterFileTypes];
+      let updatedFiles = [...voterFileTypes]
 
       campaign.data?.customVoterFiles.forEach((file, i) => {
         updatedFiles.push({
@@ -71,28 +71,28 @@ export default function VoterRecordsPage(props) {
             'Custom Voter File',
           ],
           filters: file.filters,
-        });
-      });
-      return updatedFiles;
+        })
+      })
+      return updatedFiles
     }
-    return voterFileTypes;
-  };
-  const withCustom = addCustomVoterFiles();
-  const [voterFiles, setVoterFiles] = useState(withCustom);
+    return voterFileTypes
+  }
+  const withCustom = addCustomVoterFiles()
+  const [voterFiles, setVoterFiles] = useState(withCustom)
 
   useEffect(() => {
-    wakeUp();
-  }, []);
+    wakeUp()
+  }, [])
 
   useEffect(() => {
-    const updatedFiles = addCustomVoterFiles();
-    setVoterFiles(updatedFiles);
-  }, [campaign]);
+    const updatedFiles = addCustomVoterFiles()
+    setVoterFiles(updatedFiles)
+  }, [campaign])
 
   const reloadCampaign = async () => {
-    const campaign = await getCampaign();
-    setCampaign(campaign);
-  };
+    const campaign = await getCampaign()
+    setCampaign(campaign)
+  }
 
   return (
     <DashboardLayout {...props}>
@@ -166,7 +166,7 @@ export default function VoterRecordsPage(props) {
                               type: file.key,
                               file: file.name,
                               isCustom: file.isCustom,
-                            });
+                            })
                           }}
                           className="text-info underline hover:text-info-dark"
                         >
@@ -182,8 +182,8 @@ export default function VoterRecordsPage(props) {
                               onOpen={() => {
                                 trackEvent(
                                   EVENTS.VoterData.FileDetail.ClickInfoIcon,
-                                );
-                                setModalFileKey(file.key);
+                                )
+                                setModalFileKey(file.key)
                               }}
                               onClose={() => setModalFileKey(null)}
                               className="ml-1 self-center"
@@ -210,5 +210,5 @@ export default function VoterRecordsPage(props) {
         )}
       </Paper>
     </DashboardLayout>
-  );
+  )
 }

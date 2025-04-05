@@ -1,27 +1,27 @@
-import React from 'react';
-import Link from 'next/link';
+import React from 'react'
+import Link from 'next/link'
 import {
   candidateColor,
   candidateRoute,
   partyRace,
-} from '/helpers/candidateHelper';
-import BlackButton from '../buttons/BlackButton';
-import CandidateAvatar from './CandidateAvatar';
-import CandidateProgressBar from './CandidateProgressBar';
+} from '/helpers/candidateHelper'
+import BlackButton from '../buttons/BlackButton'
+import CandidateAvatar from './CandidateAvatar'
+import CandidateProgressBar from './CandidateProgressBar'
 
-const MAX_POSITIONS = 6;
+const MAX_POSITIONS = 6
 
 export default function CandidateCard({ candidate, withFollowButton = false }) {
   if (!candidate) {
-    return <></>;
+    return <></>
   }
-  const { firstName, lastName, positions, followers, support } = candidate;
+  const { firstName, lastName, positions, followers, support } = candidate
 
-  const brightColor = candidateColor(candidate);
-  let topPositions = positions;
+  const brightColor = candidateColor(candidate)
+  let topPositions = positions
 
   if (positions && positions.length > MAX_POSITIONS) {
-    topPositions = positions.slice(0, MAX_POSITIONS);
+    topPositions = positions.slice(0, MAX_POSITIONS)
   }
 
   const WrapperElement = ({ children }) => {
@@ -33,7 +33,7 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
         >
           {children}
         </div>
-      );
+      )
     }
     return (
       <Link
@@ -46,8 +46,8 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
       >
         {children}
       </Link>
-    );
-  };
+    )
+  }
 
   return (
     <WrapperElement>
@@ -105,5 +105,5 @@ export default function CandidateCard({ candidate, withFollowButton = false }) {
         </div>
       </div>
     </WrapperElement>
-  );
+  )
 }

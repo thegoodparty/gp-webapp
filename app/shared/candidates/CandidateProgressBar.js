@@ -1,11 +1,10 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { IoIosCheckmark } from 'react-icons/io';
-import { useHookstate } from '@hookstate/core';
+'use client'
+import React, { useState, useEffect } from 'react'
+import { IoIosCheckmark } from 'react-icons/io'
 
-import { numberFormatter } from '/helpers/numberHelper';
-import { candidateColor } from '/helpers/candidateHelper';
-import { daysTill } from '/helpers/dateHelper';
+import { numberFormatter } from '/helpers/numberHelper'
+import { candidateColor } from '/helpers/candidateHelper'
+import { daysTill } from '/helpers/dateHelper'
 // import { followOffsetState } from 'app/candidate/[slug]/components/Header/FollowButton';
 
 const CandidateProgressBar = ({
@@ -23,64 +22,64 @@ const CandidateProgressBar = ({
     likelyVoters,
     didWin,
     votesReceived,
-  } = candidate;
-  const followOffset = 0; // useHookstate(followOffsetState);
-  const offsetFollow = 0;
+  } = candidate
+  const followOffset = 0 // useHookstate(followOffsetState);
+  const offsetFollow = 0
 
-  let people = overrideFollowers ? likelyVoters : peopleSoFar;
-  people += offsetFollow;
-  const color = candidateColor(candidate);
-  const days = daysTill(raceDate);
+  let people = overrideFollowers ? likelyVoters : peopleSoFar
+  people += offsetFollow
+  const color = candidateColor(candidate)
+  const days = daysTill(raceDate)
 
-  const [barWidth, setBarWidth] = useState(0);
-  const [isRendered, setIsRendered] = useState(false);
-  const weeksToElection = Math.ceil(days / 7);
+  const [barWidth, setBarWidth] = useState(0)
+  const [isRendered, setIsRendered] = useState(false)
+  const weeksToElection = Math.ceil(days / 7)
 
-  let progress = 0;
-  let realPerc = 0;
+  let progress = 0
+  let realPerc = 0
   if (votesNeeded && votesNeeded !== 0) {
-    progress = Math.floor((100 * people) / votesNeeded);
-    realPerc = Math.floor((100 * people) / votesNeeded);
+    progress = Math.floor((100 * people) / votesNeeded)
+    realPerc = Math.floor((100 * people) / votesNeeded)
   }
 
   if (!progress) {
-    progress = 50;
+    progress = 50
   } else if (progress > 100) {
-    progress = 100;
+    progress = 100
   } else if (progress < 50) {
-    progress = 50;
+    progress = 50
   }
 
-  const daysTillElection = daysTill(raceDate);
+  const daysTillElection = daysTill(raceDate)
 
-  let raceDone = false;
+  let raceDone = false
   if (raceDate) {
     if (daysTillElection < 0) {
-      raceDone = true;
+      raceDone = true
     }
   }
 
   if (raceDone && votesReceived && votesNeeded !== 0) {
-    progress = (votesReceived * 100) / votesNeeded;
+    progress = (votesReceived * 100) / votesNeeded
     if (progress > 100) {
-      progress = 100;
+      progress = 100
     }
   }
 
   useEffect(() => {
     if (withAnimation && !isRendered) {
       setTimeout(() => {
-        setBarWidth(50);
-      }, 100);
+        setBarWidth(50)
+      }, 100)
 
       setTimeout(() => {
-        setBarWidth(progress);
-      }, 2000);
+        setBarWidth(progress)
+      }, 2000)
     } else {
-      setBarWidth(progress);
+      setBarWidth(progress)
     }
-    setIsRendered(true);
-  }, [votesNeeded]);
+    setIsRendered(true)
+  }, [votesNeeded])
 
   let achievementIcon = (
     <img
@@ -88,54 +87,54 @@ const CandidateProgressBar = ({
       src="/images/icons/achievement.svg"
       alt="achievement"
     />
-  );
+  )
   let achievementText = (
     <div>
       {firstName} {lastName} has <strong>{numberFormatter(realPerc)}%</strong>{' '}
       of the votes needed to win this race
     </div>
-  );
+  )
   if (raceDone && didWin === 'Yes') {
     achievementIcon = (
       <span className="text-xl mr-2" role="img" aria-label="Party">
         🎉️
       </span>
-    );
+    )
     const resultPerc =
       votesNeeded && votesNeeded !== 0
         ? (votesReceived * 100) / votesNeeded
-        : 0;
+        : 0
     achievementText = (
       <div>
         {firstName} {lastName} received{' '}
         <strong>{numberFormatter(resultPerc)}%</strong> of the votes needed and
         won this election!
       </div>
-    );
+    )
   } else if (raceDone && didWin === 'No') {
     achievementIcon = (
       <span className="text-xl mr-2" role="img" aria-label="Ballot Box">
         🗳️
       </span>
-    );
+    )
     const resultPerc =
       votesNeeded && votesNeeded !== 0
         ? (votesReceived * 100) / votesNeeded
-        : 0;
+        : 0
     achievementText = (
       <div>
         {firstName} {lastName} received{' '}
         <strong>{numberFormatter(resultPerc)}%</strong> of the votes needed and
         did not win this election
       </div>
-    );
+    )
   } else if (raceDone) {
     achievementIcon = (
       <span className="text-xl mr-2" role="img" aria-label="Ballot Box">
         🗳️
       </span>
-    );
-    achievementText = <div>Election ended, awaiting results...</div>;
+    )
+    achievementText = <div>Election ended, awaiting results...</div>
   }
   return (
     <div>
@@ -253,7 +252,7 @@ const CandidateProgressBar = ({
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CandidateProgressBar;
+export default CandidateProgressBar

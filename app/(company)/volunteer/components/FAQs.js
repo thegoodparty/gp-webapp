@@ -1,5 +1,5 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import TogglePanel from '@shared/utils/TogglePanel';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import TogglePanel from '@shared/utils/TogglePanel'
 
 const faqs = [
   {
@@ -46,7 +46,7 @@ const faqs = [
     q: "I have more questions that aren't answered here! Who can answer them?",
     a: 'Grab a drink with us, and a full-time team member will get your questions answered! Sign up here to grab a virtual drink with one of our community leaders. These are full-time members of our team who know everything there is to know about GoodParty.org and the best ways to get you plugged in!',
   },
-];
+]
 
 export default function FAQs() {
   return (
@@ -60,5 +60,5 @@ export default function FAQs() {
         ))}
       </MaxWidth>
     </section>
-  );
+  )
 }

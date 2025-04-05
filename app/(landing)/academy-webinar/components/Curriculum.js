@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
 
 const weeks = [
   {
@@ -19,7 +19,7 @@ const weeks = [
     title: 'Running, winning, and serving',
     desc: "Campaigns are both art and science. We'll help you devise the tactics and messaging you'll use to reach voters and offer advice about how to be a strong representative for your community.",
   },
-];
+]
 
 export default function Curriculum() {
   return (
@@ -51,5 +51,5 @@ export default function Curriculum() {
         ))}
       </div>
     </MaxWidth>
-  );
+  )
 }

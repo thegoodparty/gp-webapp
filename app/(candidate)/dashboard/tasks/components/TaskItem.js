@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import Button from '@shared/buttons/Button';
-import Body2 from '@shared/typography/Body2';
+import { useState } from 'react'
+import Button from '@shared/buttons/Button'
+import Body2 from '@shared/typography/Body2'
 import {
   CheckRounded,
   LockRounded,
   OpenInNewRounded,
-} from '@mui/icons-material';
-import TaskCheck from './TaskCheck';
-import H4 from '@shared/typography/H4';
+} from '@mui/icons-material'
+import TaskCheck from './TaskCheck'
+import H4 from '@shared/typography/H4'
 
 // NOTE: copied from CampaignTaskType enum in gp-api
 const TASK_TYPES = {
@@ -16,7 +16,7 @@ const TASK_TYPES = {
   doorKnocking: 'door-knocking',
   phoneBanking: 'phone-banking',
   link: 'link',
-};
+}
 
 export default function TaskItem({
   task,
@@ -24,7 +24,7 @@ export default function TaskItem({
   isPro,
   isCompleted,
 }) {
-  const [checked, setChecked] = useState(isCompleted);
+  const [checked, setChecked] = useState(isCompleted)
 
   const {
     id: taskId,
@@ -36,38 +36,38 @@ export default function TaskItem({
     week,
     deadline,
     link,
-  } = task;
+  } = task
 
   const handleAction = () => {
     if (proRequired && !isPro) {
       // TODO: direct to pro upgrade
-      return;
+      return
     }
 
     switch (flowType) {
       case TASK_TYPES.texting:
         // TODO: implement texting flow
-        console.log('texting flow');
-        break;
+        console.log('texting flow')
+        break
       case TASK_TYPES.robocall:
         // TODO: implement robocall flow
-        console.log('robocall flow');
-        break;
+        console.log('robocall flow')
+        break
       case TASK_TYPES.doorKnocking:
         // TODO: implement door knocking flow
-        console.log('door knocking flow');
-        break;
+        console.log('door knocking flow')
+        break
       case TASK_TYPES.phoneBanking:
         // TODO: implement phone banking flow
-        console.log('phone banking flow');
-        break;
+        console.log('phone banking flow')
+        break
       default:
-        console.warn('Unknown task type:', flowType);
+        console.warn('Unknown task type:', flowType)
     }
-  };
+  }
 
-  const isExternalLink = flowType === TASK_TYPES.link;
-  const isExpired = daysUntilElection < deadline;
+  const isExternalLink = flowType === TASK_TYPES.link
+  const isExpired = daysUntilElection < deadline
 
   return (
     <li className="flex gap-4 p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
@@ -107,5 +107,5 @@ export default function TaskItem({
         </Button>
       )}
     </li>
-  );
+  )
 }

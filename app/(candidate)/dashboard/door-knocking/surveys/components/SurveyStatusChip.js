@@ -1,9 +1,9 @@
-import Body2 from '@shared/typography/Body2';
+import Body2 from '@shared/typography/Body2'
 
-import Chip from '@shared/utils/Chip';
-import { MdPublish } from 'react-icons/md';
+import Chip from '@shared/utils/Chip'
+import { MdPublish } from 'react-icons/md'
 export default function SurveyStatusChip({ survey }) {
-  const { status } = survey || {};
+  const { status } = survey || {}
   return (
     <>
       {status === 'Live' ? (
@@ -16,5 +16,5 @@ export default function SurveyStatusChip({ survey }) {
         </Chip>
       )}
     </>
-  );
+  )
 }

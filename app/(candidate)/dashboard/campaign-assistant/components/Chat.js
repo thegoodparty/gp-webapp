@@ -1,19 +1,19 @@
-'use client';
-import { useEffect } from 'react';
-import ChatMessage from './ChatMessage';
-import EmptyChat from './EmptyChat';
-import LoadingChatAnimation from './LoadingChatAnimation';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
+'use client'
+import { useEffect } from 'react'
+import ChatMessage from './ChatMessage'
+import EmptyChat from './EmptyChat'
+import LoadingChatAnimation from './LoadingChatAnimation'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
 
 export default function Chat() {
-  const { chat, shouldType, loadInitialChats, scrollingThreadRef } = useChat();
+  const { chat, shouldType, loadInitialChats, scrollingThreadRef } = useChat()
 
   useEffect(() => {
     const initialLoad = async () => {
-      await loadInitialChats();
-    };
-    initialLoad();
-  }, []);
+      await loadInitialChats()
+    }
+    initialLoad()
+  }, [])
 
   return (
     <div ref={scrollingThreadRef} className="flex-grow overflow-auto px-4">
@@ -35,5 +35,5 @@ export default function Chat() {
         <LoadingChatAnimation />
       </div>
     </div>
-  );
+  )
 }

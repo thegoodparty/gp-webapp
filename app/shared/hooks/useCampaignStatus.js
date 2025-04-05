@@ -1,4 +1,4 @@
-import { useContext } from 'react';
-import { CampaignStatusContext } from '@shared/user/CampaignStatusProvider';
+import { useContext } from 'react'
+import { CampaignStatusContext } from '@shared/user/CampaignStatusProvider'
 
-export const useCampaignStatus = () => useContext(CampaignStatusContext);
+export const useCampaignStatus = () => useContext(CampaignStatusContext)

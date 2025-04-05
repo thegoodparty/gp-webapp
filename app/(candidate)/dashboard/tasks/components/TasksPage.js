@@ -1,21 +1,21 @@
-'use client';
-import { InfoOutlined } from '@mui/icons-material';
-import Tooltip from '@mui/material/Tooltip';
-import DashboardLayout from '../../shared/DashboardLayout';
-import TaskItem from './TaskItem';
-import H2 from '@shared/typography/H2';
-import H4 from '@shared/typography/H4';
-import Body2 from '@shared/typography/Body2';
-import { dateUsHelper, daysTill, weeksTill } from 'helpers/dateHelper';
-import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider';
-import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider';
-import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader';
+'use client'
+import { InfoOutlined } from '@mui/icons-material'
+import Tooltip from '@mui/material/Tooltip'
+import DashboardLayout from '../../shared/DashboardLayout'
+import TaskItem from './TaskItem'
+import H2 from '@shared/typography/H2'
+import H4 from '@shared/typography/H4'
+import Body2 from '@shared/typography/Body2'
+import { dateUsHelper, daysTill, weeksTill } from 'helpers/dateHelper'
+import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
+import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
+import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader'
 
 export default function TasksPage({ pathname, campaign, tasks }) {
-  const electionDate = campaign.details.electionDate;
+  const electionDate = campaign.details.electionDate
 
-  const weeksUntilElection = weeksTill(electionDate);
-  const daysUntilElection = daysTill(electionDate);
+  const weeksUntilElection = weeksTill(electionDate)
+  const daysUntilElection = daysTill(electionDate)
 
   // TODO: what if no election date?
   // TODO: what if no p2v?
@@ -24,7 +24,7 @@ export default function TasksPage({ pathname, campaign, tasks }) {
   // TODO: make sure the weeksUntil and task filter logic is correct (might be off by 1)
   const weeklyTasks = tasks.filter(
     (task) => task.week === weeksUntilElection.weeks,
-  );
+  )
 
   return (
     <VoterContactsProvider>
@@ -63,5 +63,5 @@ export default function TasksPage({ pathname, campaign, tasks }) {
         </DashboardLayout>
       </CampaignUpdateHistoryProvider>
     </VoterContactsProvider>
-  );
+  )
 }

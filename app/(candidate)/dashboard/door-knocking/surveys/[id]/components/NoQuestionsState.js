@@ -1,8 +1,8 @@
-'use client';
-import H2 from '@shared/typography/H2';
-import QuestionAnimation from '@shared/animations/QuestionAnimation';
-import Body1 from '@shared/typography/Body1';
-import CreateQuestion from './CreateQuestion';
+'use client'
+import H2 from '@shared/typography/H2'
+import QuestionAnimation from '@shared/animations/QuestionAnimation'
+import Body1 from '@shared/typography/Body1'
+import CreateQuestion from './CreateQuestion'
 
 export default function NoQuestionsState() {
   return (
@@ -17,5 +17,5 @@ export default function NoQuestionsState() {
       </div>
       <CreateQuestion />
     </div>
-  );
+  )
 }

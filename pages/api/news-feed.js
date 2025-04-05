@@ -1,11 +1,11 @@
-import RSS from 'rss';
-import { fetchArticlesBySection } from 'app/blog/shared/fetchArticlesBySection';
+import RSS from 'rss'
+import { fetchArticlesBySection } from 'app/blog/shared/fetchArticlesBySection'
 
 export default async function feed(req, res) {
   try {
     const { news: articles } = await fetchArticlesBySection({
       sectionSlug: 'news',
-    });
+    })
 
     const feed = new RSS({
       title: 'GoodParty.org News Feed',
@@ -15,11 +15,11 @@ export default async function feed(req, res) {
       language: 'en',
       description:
         'GoodParty.org is a movement bringing together voters and exciting independent candidates that can win.',
-    });
+    })
 
     articles.forEach((article) => {
-      const { title, mainImage, publishDate, slug, summary } = article;
-      const url = `https://goodparty.org/blog/article/${slug}`;
+      const { title, mainImage, publishDate, slug, summary } = article
+      const url = `https://goodparty.org/blog/article/${slug}`
       feed.item({
         title,
         description: summary,
@@ -30,15 +30,15 @@ export default async function feed(req, res) {
         enclosure: {
           url: mainImage.url,
         },
-      });
-    });
+      })
+    })
 
     res.writeHead(200, {
       'Content-Type': 'application/xml',
-    });
-    return res.end(feed.xml({ indent: true }));
+    })
+    return res.end(feed.xml({ indent: true }))
   } catch (e) {
-    console.log('error at generateSiteMapXML', e);
-    return '';
+    console.log('error at generateSiteMapXML', e)
+    return ''
   }
 }

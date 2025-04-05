@@ -1,19 +1,19 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { AnimatedEllipsis } from '@shared/utils/AnimatedEllipsis';
+'use client'
+import { useEffect, useState } from 'react'
+import { AnimatedEllipsis } from '@shared/utils/AnimatedEllipsis'
 
 export default function HubSpotForm({
   formId,
   gtmName = '',
   renderFormDelay = 0,
 }) {
-  const [formReady, setFormReady] = useState(false);
+  const [formReady, setFormReady] = useState(false)
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://js.hsforms.net/forms/v2.js';
-    script.async = false;
+    const script = document.createElement('script')
+    script.src = 'https://js.hsforms.net/forms/v2.js'
+    script.async = false
 
-    document.body.appendChild(script);
+    document.body.appendChild(script)
     script.addEventListener('load', () => {
       if (window.hbspt) {
         window.hbspt.forms.create({
@@ -27,21 +27,21 @@ export default function HubSpotForm({
                 event: gtmName,
                 'hs-form-guid': formId,
                 'hs-form-name': gtmName,
-              });
+              })
             } else {
-              console.log('no data layer');
+              console.log('no data layer')
             }
           },
           onFormReady: () => {
             if (renderFormDelay) {
-              return setTimeout(() => setFormReady(true), renderFormDelay);
+              return setTimeout(() => setFormReady(true), renderFormDelay)
             }
-            setFormReady(true);
+            setFormReady(true)
           },
-        });
+        })
       }
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <>
@@ -53,5 +53,5 @@ export default function HubSpotForm({
       )}
       <div id="hubspotForm" className={formReady ? '' : 'hidden'}></div>
     </>
-  );
+  )
 }

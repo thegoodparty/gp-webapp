@@ -1,12 +1,12 @@
-import H4 from '@shared/typography/H4';
-import CandidatePosition from './CandidatePosition';
+import H4 from '@shared/typography/H4'
+import CandidatePosition from './CandidatePosition'
 
 export const combinePositions = (candidatePositions, customPositions) => {
   if (!candidatePositions && !customPositions) {
-    return [];
+    return []
   }
   if (!customPositions || customPositions.length === 0) {
-    return candidatePositions;
+    return candidatePositions
   }
   const transformed = customPositions.map((pos) => {
     return {
@@ -15,24 +15,24 @@ export const combinePositions = (candidatePositions, customPositions) => {
       isCustom: true,
       position: { name: pos.title },
       topIssue: { name: 'custom' },
-    };
-  });
-  let combined;
+    }
+  })
+  let combined
   if (!candidatePositions) {
-    combined = [...transformed];
+    combined = [...transformed]
   } else {
-    combined = [...candidatePositions, ...transformed];
+    combined = [...candidatePositions, ...transformed]
   }
   const sorted = combined.sort((a, b) => {
-    return a.order - b.order;
-  });
+    return a.order - b.order
+  })
 
   sorted.forEach((item, index) => {
-    item.order = index;
-  });
+    item.order = index
+  })
 
-  return sorted;
-};
+  return sorted
+}
 
 export default function IssuesList({
   candidatePositions,
@@ -42,10 +42,10 @@ export default function IssuesList({
   let positions = combinePositions(
     candidatePositions,
     candidate.details.customIssues,
-  );
+  )
 
   if (previewMode) {
-    positions = positions.slice(0, 3);
+    positions = positions.slice(0, 3)
   }
 
   return (
@@ -63,5 +63,5 @@ export default function IssuesList({
         />
       ))}
     </div>
-  );
+  )
 }

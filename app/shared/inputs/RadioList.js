@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { Fragment } from 'react';
-import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md';
+import { Fragment } from 'react'
+import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md'
 
 // options: [{ key: string, label: string }]
 
 export default function RadioList({ options, selected, selectCallback }) {
   function handleKeyPress(e, option) {
     if (e.key === 'Enter' || e.key === ' ') {
-      selectCallback(option.key);
+      selectCallback(option.key)
     }
   }
 
@@ -44,5 +44,5 @@ export default function RadioList({ options, selected, selectCallback }) {
         </Fragment>
       ))}
     </>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import NotificationSection from 'app/(user)/profile/components/NotificationSection';
-import PasswordSection from './PasswordSection';
-import PersonalSection from './PersonalSection';
-import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection';
+import NotificationSection from 'app/(user)/profile/components/NotificationSection'
+import PasswordSection from './PasswordSection'
+import PersonalSection from './PersonalSection'
+import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSettingsSection'
 
 export default function ProfilePage(props) {
   return (
@@ -13,5 +13,5 @@ export default function ProfilePage(props) {
         <PasswordSection {...props} />
       </div>
     </div>
-  );
+  )
 }

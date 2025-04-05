@@ -1,5 +1,5 @@
-'use client';
-import { forwardRef } from 'react';
+'use client'
+import { forwardRef } from 'react'
 
 const AcknowledgementTitleBar = ({ emoticon, title }, ref) => (
   <div
@@ -9,6 +9,6 @@ const AcknowledgementTitleBar = ({ emoticon, title }, ref) => (
     {emoticon || <></>}
     <div>{title}</div>
   </div>
-);
+)
 
-export default forwardRef(AcknowledgementTitleBar);
+export default forwardRef(AcknowledgementTitleBar)

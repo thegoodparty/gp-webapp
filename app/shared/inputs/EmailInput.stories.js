@@ -1,5 +1,5 @@
-import EmailInput from './EmailInput';
-import { useState } from 'react';
+import EmailInput from './EmailInput'
+import { useState } from 'react'
 
 export default {
   title: 'Inputs/EmailInput',
@@ -11,7 +11,7 @@ export default {
   },
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [value, setValue] = useState();
+    const [value, setValue] = useState()
 
     return (
       <div class="flex flex-col gap-3 items-start">
@@ -39,8 +39,8 @@ export default {
           onChangeCallback={setValue}
         />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

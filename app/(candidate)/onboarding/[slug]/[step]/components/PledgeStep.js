@@ -1,33 +1,33 @@
-'use client';
-import { useState, useMemo } from 'react';
+'use client'
+import { useState, useMemo } from 'react'
 import {
   onboardingStep,
   updateCampaign,
-} from 'app/(candidate)/onboarding/shared/ajaxActions';
-import contentfulHelper from 'helpers/contentfulHelper';
-import H1 from '@shared/typography/H1';
-import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6';
-import { IoDocumentText } from 'react-icons/io5';
-import { FaChild } from 'react-icons/fa';
-import Body1 from '@shared/typography/Body1';
-import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion';
-import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements';
-import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations';
-import { useRouter } from 'next/navigation';
+} from 'app/(candidate)/onboarding/shared/ajaxActions'
+import contentfulHelper from 'helpers/contentfulHelper'
+import H1 from '@shared/typography/H1'
+import { FaFlagUsa, FaPeopleGroup } from 'react-icons/fa6'
+import { IoDocumentText } from 'react-icons/io5'
+import { FaChild } from 'react-icons/fa'
+import Body1 from '@shared/typography/Body1'
+import { AcknowledgementQuestion } from '@shared/acknowledgements/AcknowledgementQuestion'
+import { LegalStatements } from 'app/(candidate)/onboarding/[slug]/[step]/components/LegalStatements'
+import { useHubSpotConversations } from '@shared/hooks/useHubSpotConversations'
+import { useRouter } from 'next/navigation'
 import {
   buildTrackingAttrs,
   EVENTS,
   trackEvent,
-} from 'helpers/fullStoryHelper';
-import Button from '@shared/buttons/Button';
+} from 'helpers/fullStoryHelper'
+import Button from '@shared/buttons/Button'
 
-const steps = ['1', '2', '3', '4'];
+const steps = ['1', '2', '3', '4']
 const emoticons = [
   <FaChild key="1" className="mr-2" />,
   <FaPeopleGroup key="2" className="mr-2" />,
   <FaFlagUsa key="3" className="mr-2" />,
   <IoDocumentText key="4" className="mr-2" />,
-];
+]
 
 export default function PledgeStep({ campaign, pledge, step }) {
   let initialState = {
@@ -35,7 +35,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
     pledged2: campaign.details?.pledged2 || false,
     pledged3: campaign.details?.pledged3 || false,
     pledged4: campaign.details?.pledged4 || false,
-  };
+  }
 
   if (campaign?.details?.pledged) {
     initialState = {
@@ -44,24 +44,24 @@ export default function PledgeStep({ campaign, pledge, step }) {
       pledged2: true,
       pledged3: true,
       pledged4: true,
-    };
+    }
   }
-  const [state, setState] = useState(initialState);
-  const [loading, setLoading] = useState(false);
-  const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations();
-  const router = useRouter();
+  const [state, setState] = useState(initialState)
+  const [loading, setLoading] = useState(false)
+  const { widgetLoaded: hubSpotWidgetLoaded } = useHubSpotConversations()
+  const router = useRouter()
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Onboarding Next Button', { step }),
     [step],
-  );
+  )
 
   if (!pledge) {
-    return null;
+    return null
   }
 
   const pledgeContents = steps.map((step) =>
     contentfulHelper(pledge[`content${step}`]),
-  );
+  )
 
   const canSave = () => {
     return (
@@ -70,38 +70,38 @@ export default function PledgeStep({ campaign, pledge, step }) {
       state.pledged2 &&
       state.pledged3 &&
       state.pledged4
-    );
-  };
+    )
+  }
 
   const handleSave = async () => {
-    trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit);
+    trackEvent(EVENTS.Onboarding.PledgeStep.ClickSubmit)
     if (loading) {
-      return;
+      return
     }
-    setLoading(true);
-    const currentStep = onboardingStep(campaign, step);
+    setLoading(true)
+    const currentStep = onboardingStep(campaign, step)
     const pledged =
-      state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4;
+      state.pledged1 && state.pledged2 && state.pledged3 && state.pledged4
     const attr = [
       { key: 'data.currentStep', value: currentStep },
       { key: 'details.pledged', value: pledged },
-    ];
+    ]
 
-    await updateCampaign(attr);
-    router.push(`/onboarding/${campaign.slug}/${step + 1}`);
-  };
+    await updateCampaign(attr)
+    router.push(`/onboarding/${campaign.slug}/${step + 1}`)
+  }
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const openChat = () => {
-    trackEvent(EVENTS.Onboarding.PledgeStep.ClickAskQuestion);
-    window.HubSpotConversations?.widget?.open();
-  };
+    trackEvent(EVENTS.Onboarding.PledgeStep.ClickAskQuestion)
+    window.HubSpotConversations?.widget?.open()
+  }
 
   return (
     <div>
@@ -128,7 +128,7 @@ export default function PledgeStep({ campaign, pledge, step }) {
             show: step === '1' || state[`pledged${index}`],
             acknowledged: state[`pledged${step}`],
             onAcknowledge: (value) => {
-              onChangeField(`pledged${step}`, value);
+              onChangeField(`pledged${step}`, value)
             },
             buttonTexts: ['I Agree', 'Agreed'],
             emoticon: emoticons[index],
@@ -161,5 +161,5 @@ export default function PledgeStep({ campaign, pledge, step }) {
         </Button>
       </div>
     </div>
-  );
+  )
 }

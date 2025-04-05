@@ -1,15 +1,15 @@
-import { states } from 'helpers/statesHelper';
-import Hero from './Hero';
-import FeaturedCities from './FeaturedCities';
-import LinksSection from '../shared/LinksSection';
-import Tools from './Tools';
-import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight';
-import Button from '@shared/buttons/Button';
+import { states } from 'helpers/statesHelper'
+import Hero from './Hero'
+import FeaturedCities from './FeaturedCities'
+import LinksSection from '../shared/LinksSection'
+import Tools from './Tools'
+import GraduateSpotlight from 'app/(landing)/academy-webinar/components/GraduateSpotlight'
+import Button from '@shared/buttons/Button'
 
 export default function ElectionsPage() {
   const divisionLink = (state) => {
-    return `/elections/${state.abbreviation.toLowerCase()}`;
-  };
+    return `/elections/${state.abbreviation.toLowerCase()}`
+  }
   return (
     <div className="bg-indigo-50 pb-14">
       <Hero />
@@ -49,5 +49,5 @@ export default function ElectionsPage() {
         />
       </div>
     </div>
-  );
+  )
 }

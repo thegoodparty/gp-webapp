@@ -1,14 +1,14 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Body1 from '@shared/typography/Body1';
-import H2 from '@shared/typography/H2';
+'use client'
+import Button from '@shared/buttons/Button'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Body1 from '@shared/typography/Body1'
+import H2 from '@shared/typography/H2'
 
-import MarketingH2 from '@shared/typography/MarketingH2';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Image from 'next/image';
-import { memo } from 'react';
-import Slider from 'react-slick';
+import MarketingH2 from '@shared/typography/MarketingH2'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Image from 'next/image'
+import { memo } from 'react'
+import Slider from 'react-slick'
 const cards = [
   {
     name: 'Eric Faulkner',
@@ -67,7 +67,7 @@ const cards = [
     image: 'https://assets.goodparty.org/map-search/alicia.jpg',
     link: '/blog/article/meet-alicia-arellano-candidate-miami-dade-community-council',
   },
-];
+]
 
 const settings = {
   dots: false,
@@ -77,7 +77,7 @@ const settings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
-};
+}
 
 export default memo(function FacesSection() {
   return (
@@ -120,5 +120,5 @@ export default memo(function FacesSection() {
         </div>
       </MaxWidth>
     </div>
-  );
-});
+  )
+})

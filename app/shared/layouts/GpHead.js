@@ -1,8 +1,8 @@
-import React from 'react';
-import { APP_BASE } from 'appEnv';
+import React from 'react'
+import { APP_BASE } from 'appEnv'
 
 function GpHead({ title, description, image, slug = '/' }) {
-  const canonical = APP_BASE + slug;
+  const canonical = APP_BASE + slug
   return (
     <>
       <title>{title}</title>
@@ -28,7 +28,7 @@ function GpHead({ title, description, image, slug = '/' }) {
       />
       <link rel="canonical" href={canonical} />
     </>
-  );
+  )
 }
 
-export default GpHead;
+export default GpHead

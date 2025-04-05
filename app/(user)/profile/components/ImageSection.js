@@ -1,32 +1,32 @@
-'use client';
+'use client'
 /**
  *
  * ImageSection
  *
  */
 
-import { useEffect, useState } from 'react';
-import UserAvatar from '@shared/user/UserAvatar';
-import ImageUpload from '@shared/utils/ImageUpload';
-import { getUserCookie } from 'helpers/cookieHelper';
-import Body2 from '@shared/typography/Body2';
-import { useUser } from '@shared/hooks/useUser';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useEffect, useState } from 'react'
+import UserAvatar from '@shared/user/UserAvatar'
+import ImageUpload from '@shared/utils/ImageUpload'
+import { getUserCookie } from 'helpers/cookieHelper'
+import Body2 from '@shared/typography/Body2'
+import { useUser } from '@shared/hooks/useUser'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 function ImageSection() {
-  const [user, setUser] = useUser();
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useUser()
+  const [loading, setLoading] = useState(false)
 
-  const [uploadedImage, setUploadedImage] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(false)
 
-  let updatedUser = uploadedImage ? { avatar: uploadedImage } : user;
+  let updatedUser = uploadedImage ? { avatar: uploadedImage } : user
 
   useEffect(() => {
     if (uploadedImage) {
-      const updated = getUserCookie(true);
-      setUser(updated);
+      const updated = getUserCookie(true)
+      setUser(updated)
     }
-  }, [uploadedImage]);
+  }, [uploadedImage])
 
   return (
     <div className="flex mb-8">
@@ -58,7 +58,7 @@ function ImageSection() {
         <Body2 className="mt-2">File size less than 1mb. JPG or PNG.</Body2>
       </div>
     </div>
-  );
+  )
 }
 
-export default ImageSection;
+export default ImageSection

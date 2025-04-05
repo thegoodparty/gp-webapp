@@ -1,26 +1,26 @@
-'use client';
+'use client'
 
-import { memo } from 'react';
-import { IoClose } from 'react-icons/io5';
+import { memo } from 'react'
+import { IoClose } from 'react-icons/io5'
 import {
   MdBeenhere,
   MdCalendarMonth,
   MdGroupWork,
   MdLocationOn,
   MdWorkHistory,
-} from 'react-icons/md';
+} from 'react-icons/md'
 
-import Image from 'next/image';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Body1 from '@shared/typography/Body1';
-import { dateUsHelper } from 'helpers/dateHelper';
+import Image from 'next/image'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Body1 from '@shared/typography/Body1'
+import { dateUsHelper } from 'helpers/dateHelper'
 
 export default memo(function CampaignPreview({
   selectedCampaign,
   onSelectCampaign,
 }) {
   if (!selectedCampaign) {
-    return null;
+    return null
   }
 
   const {
@@ -35,14 +35,14 @@ export default memo(function CampaignPreview({
     electionDate,
     didWin,
     data: { hubSpotUpdates } = {},
-  } = selectedCampaign;
+  } = selectedCampaign
 
   const primaryResults = hubSpotUpdates?.primary_election_result
     ? /won/i.test(hubSpotUpdates?.primary_election_result)
-    : null;
+    : null
   const electionResults = hubSpotUpdates?.election_results
     ? /won/i.test(hubSpotUpdates?.election_results)
-    : didWin;
+    : didWin
 
   return (
     <div className="absolute top-0 p-4 md:p-0 left-4 w-[calc(100vw-32px)]   md:left-[416px] lg:left-[516px] md:w-[320px]   md:shadow md:mt-4  rounded-2xl z-50">
@@ -51,7 +51,7 @@ export default memo(function CampaignPreview({
           <div
             className="cursor-pointer text-gray-600"
             onClick={() => {
-              onSelectCampaign(false);
+              onSelectCampaign(false)
             }}
           >
             <IoClose size={24} />
@@ -125,5 +125,5 @@ export default memo(function CampaignPreview({
         </div>
       </div>
     </div>
-  );
-});
+  )
+})

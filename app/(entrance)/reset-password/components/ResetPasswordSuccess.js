@@ -1,8 +1,7 @@
-import Link from 'next/link';
-import Button from '@shared/buttons/Button';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import { CheckRounded } from '@mui/icons-material';
+import Button from '@shared/buttons/Button'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import { CheckRounded } from '@mui/icons-material'
 
 export default function ResetPasswordSuccess() {
   return (
@@ -21,5 +20,5 @@ export default function ResetPasswordSuccess() {
         Return to GoodParty.org
       </Button>
     </>
-  );
+  )
 }

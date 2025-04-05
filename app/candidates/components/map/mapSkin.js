@@ -122,6 +122,6 @@ const mapSkin = [
       },
     ],
   },
-];
+]
 
-export default mapSkin;
+export default mapSkin

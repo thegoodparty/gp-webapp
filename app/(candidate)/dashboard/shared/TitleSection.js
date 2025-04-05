@@ -1,6 +1,6 @@
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import Image from 'next/image';
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import Image from 'next/image'
 
 export default function TitleSection({
   title,
@@ -21,5 +21,5 @@ export default function TitleSection({
         )}
       </div>
     </div>
-  );
+  )
 }

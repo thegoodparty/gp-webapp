@@ -1,5 +1,5 @@
-import { Alert } from '@mui/material';
-import { AlertIcon } from '@shared/alerts/AlertIcon';
+import { Alert } from '@mui/material'
+import { AlertIcon } from '@shared/alerts/AlertIcon'
 
 const containerClasses = [
   {
@@ -20,14 +20,14 @@ const containerClasses = [
     error: '[&&]:bg-error-background',
     success: '[&&]:bg-success-background',
   },
-];
+]
 
 const iconClasses = {
   info: '[&&]:text-info-dark',
   warning: '[&&]:text-warning-dark',
   error: '[&&]:text-error-dark',
   success: '[&&]:text-success-dark',
-};
+}
 
 export const StyledAlert = ({
   children,
@@ -37,7 +37,7 @@ export const StyledAlert = ({
 }) => {
   const compiledContainerClasses = containerClasses
     .map((containerClass) => containerClass[severity])
-    .join(' ');
+    .join(' ')
 
   return (
     <Alert
@@ -65,5 +65,5 @@ export const StyledAlert = ({
     >
       {children}
     </Alert>
-  );
-};
+  )
+}

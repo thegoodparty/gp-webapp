@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Button from '@shared/buttons/Button';
-import Body2 from '@shared/typography/Body2';
-import H1 from '@shared/typography/H1';
-import H3 from '@shared/typography/H3';
-import H6 from '@shared/typography/H6';
-import Overline from '@shared/typography/Overline';
-import Modal from '@shared/utils/Modal';
-import Paper from '@shared/utils/Paper';
-import { useState } from 'react';
-import { BsPersonFillCheck } from 'react-icons/bs';
-import { IoMdMegaphone } from 'react-icons/io';
-import { MdHowToVote } from 'react-icons/md';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Button from '@shared/buttons/Button'
+import Body2 from '@shared/typography/Body2'
+import H1 from '@shared/typography/H1'
+import H3 from '@shared/typography/H3'
+import H6 from '@shared/typography/H6'
+import Overline from '@shared/typography/Overline'
+import Modal from '@shared/utils/Modal'
+import Paper from '@shared/utils/Paper'
+import { useState } from 'react'
+import { BsPersonFillCheck } from 'react-icons/bs'
+import { IoMdMegaphone } from 'react-icons/io'
+import { MdHowToVote } from 'react-icons/md'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export const phases = [
   {
@@ -50,10 +50,10 @@ export const phases = [
     onClick: () =>
       trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.ClickVote),
   },
-];
+]
 
 export function PhasesModal() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   return (
     <>
@@ -61,16 +61,16 @@ export function PhasesModal() {
         variant="text"
         size="medium"
         onClick={() => {
-          trackEvent(EVENTS.Dashboard.PathToVictory.ClickLearnMore);
-          setOpen(true);
+          trackEvent(EVENTS.Dashboard.PathToVictory.ClickLearnMore)
+          setOpen(true)
         }}
       >
         Learn More
       </PrimaryButton>
       <Modal
         closeCallback={() => {
-          trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.Exit);
-          setOpen(false);
+          trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.Exit)
+          setOpen(false)
         }}
         open={open}
       >
@@ -115,8 +115,8 @@ export function PhasesModal() {
             fullWidth
             className="mt-8"
             onClick={() => {
-              trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.Exit);
-              setOpen(false);
+              trackEvent(EVENTS.Dashboard.PathToVictory.LearnMore.Exit)
+              setOpen(false)
             }}
           >
             Close
@@ -124,5 +124,5 @@ export function PhasesModal() {
         </div>
       </Modal>
     </>
-  );
+  )
 }

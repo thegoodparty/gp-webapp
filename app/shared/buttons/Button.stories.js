@@ -1,4 +1,4 @@
-import Button, { COLOR_CLASSES, SIZE_CLASSES, VARIANT_CLASSES } from './Button';
+import Button, { COLOR_CLASSES, SIZE_CLASSES } from './Button'
 
 const argTypes = {
   size: {
@@ -54,7 +54,7 @@ const argTypes = {
       defaultValue: { summary: false },
     },
   },
-};
+}
 
 export default {
   title: 'Buttons/Button',
@@ -103,67 +103,67 @@ export default {
       </Button>
     </div>
   ),
-};
+}
 
 export const Primary = {
   args: {
     size: 'medium',
     color: 'primary',
   },
-};
+}
 
 export const Secondary = {
   args: {
     size: 'medium',
     color: 'secondary',
   },
-};
+}
 
 export const Tertiary = {
   args: {
     size: 'medium',
     color: 'tertiary',
   },
-};
+}
 
 export const Error = {
   args: {
     size: 'medium',
     color: 'error',
   },
-};
+}
 
 export const Warning = {
   args: {
     size: 'medium',
     color: 'warning',
   },
-};
+}
 
 export const Info = {
   args: {
     size: 'medium',
     color: 'info',
   },
-};
+}
 
 export const Success = {
   args: {
     size: 'medium',
     color: 'success',
   },
-};
+}
 
 export const Neutral = {
   args: {
     size: 'medium',
     color: 'neutral',
   },
-};
+}
 
 export const White = {
   args: {
     size: 'medium',
     color: 'white',
   },
-};
+}

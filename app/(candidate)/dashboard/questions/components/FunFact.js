@@ -1,8 +1,8 @@
-'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
+'use client'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
 
 export default function FunFact({
   value,
@@ -11,14 +11,14 @@ export default function FunFact({
   campaignKey,
 }) {
   const handleSave = () => {
-    if (!canSave()) return;
+    if (!canSave()) return
 
-    saveCallback([`details.${campaignKey}`], [value]);
-  };
+    saveCallback([`details.${campaignKey}`], [value])
+  }
 
   const canSave = () => {
-    return value !== '';
-  };
+    return value !== ''
+  }
   return (
     <div className="max-w-xl m-auto">
       <form noValidate onSubmit={(e) => e.preventDefault()}>
@@ -39,7 +39,7 @@ export default function FunFact({
             }}
             value={value}
             onChange={(e) => {
-              onChangeCallback(campaignKey, e.target.value);
+              onChangeCallback(campaignKey, e.target.value)
             }}
           />
           <div className="flex justify-center mt-10" onClick={handleSave}>
@@ -50,5 +50,5 @@ export default function FunFact({
         </div>
       </form>
     </div>
-  );
+  )
 }

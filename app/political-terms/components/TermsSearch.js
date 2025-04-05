@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { termLinkByTitle } from './TermSnippet';
-import { Autocomplete, TextField, InputAdornment } from '@mui/material';
-import { FaSearch } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-import styles from './TermsSearch.module.scss';
+import { termLinkByTitle } from './TermSnippet'
+import { Autocomplete, TextField, InputAdornment } from '@mui/material'
+import { FaSearch } from 'react-icons/fa'
+import { useRouter } from 'next/navigation'
+import styles from './TermsSearch.module.scss'
 
 export default function TermsSearch(props) {
-  const { glossaryItems } = props;
-  const router = useRouter();
+  const { glossaryItems } = props
+  const router = useRouter()
 
   return (
     <div className={styles.wrapper}>
@@ -32,7 +32,7 @@ export default function TermsSearch(props) {
           )}
           onChange={(event, item) => {
             if (item != undefined && item != '') {
-              router.push(termLinkByTitle(item));
+              router.push(termLinkByTitle(item))
             }
           }}
         />
@@ -40,5 +40,5 @@ export default function TermsSearch(props) {
         <></>
       )}
     </div>
-  );
+  )
 }

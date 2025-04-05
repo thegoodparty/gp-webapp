@@ -1,10 +1,10 @@
-import Checkbox from '@shared/inputs/Checkbox';
-import TextField from '@shared/inputs/TextField';
-import Body2 from '@shared/typography/Body2';
-import Overline from '@shared/typography/Overline';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import Checkbox from '@shared/inputs/Checkbox'
+import TextField from '@shared/inputs/TextField'
+import Body2 from '@shared/typography/Body2'
+import Overline from '@shared/typography/Overline'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 const fields = [
   {
@@ -34,7 +34,7 @@ const fields = [
       { key: 'age_18_25', label: '18-25' },
       { key: 'age_25_35', label: '25-35' },
       { key: 'age_35_50', label: '35-50' },
-      { key: 'age_50+', label: '50+' },
+      { key: 'age_50_plus', label: '50+' },
     ],
   },
   {
@@ -45,7 +45,7 @@ const fields = [
       { key: 'gender_unknown', label: 'Unknown' },
     ],
   },
-];
+]
 
 /*
  if prevStepValues.purpose is selected preSelect these filters
@@ -86,12 +86,12 @@ const purposeToFilters = {
     age_35_50: true,
     audience_request: '',
   },
-};
+}
 
 export const TRACKING_KEYS = {
   scheduleCampaign: 'scheduleCampaign',
   customVoterFile: 'customVoterFile',
-};
+}
 
 const TRACKING_EVENT_MAP = {
   scheduleCampaign: {
@@ -117,7 +117,7 @@ const TRACKING_EVENT_MAP = {
     checkAge: EVENTS.VoterData.CustomFile.Audience.CheckAge,
     checkGender: EVENTS.VoterData.CustomFile.Audience.CheckGender,
   },
-};
+}
 
 export default function CustomVoterAudienceFilters({
   audience,
@@ -142,57 +142,57 @@ export default function CustomVoterAudienceFilters({
     age_35_50: false,
     audience_request: '',
     ...audience,
-  });
+  })
 
-  const { purpose } = prevStepValues || {};
+  const { purpose } = prevStepValues || {}
 
   useEffect(() => {
     if (purpose) {
-      const newState = purposeToFilters[purpose];
-      setState(newState);
-      onChangeCallback(newState);
+      const newState = purposeToFilters[purpose]
+      setState(newState)
+      onChangeCallback(newState)
     }
-  }, [purpose]);
+  }, [purpose])
 
   const handleChangeAudience = (option, val) => {
-    if (readOnly) return;
+    if (readOnly) return
 
     if (trackingKey && TRACKING_EVENT_MAP[trackingKey]) {
       // tracking
       if (option.startsWith('audience_')) {
         if (option === 'audience_request') {
-          trackEvent(TRACKING_EVENT_MAP[trackingKey].inputRequest);
+          trackEvent(TRACKING_EVENT_MAP[trackingKey].inputRequest)
         } else {
           trackEvent(TRACKING_EVENT_MAP[trackingKey].checkAudience, {
             option,
             val,
-          });
+          })
         }
       } else if (option.startsWith('party_')) {
         trackEvent(TRACKING_EVENT_MAP[trackingKey].checkPoliticalParty, {
           option,
           val,
-        });
+        })
       } else if (option.startsWith('age_')) {
         trackEvent(TRACKING_EVENT_MAP[trackingKey].checkAge, {
           option,
           val,
-        });
+        })
       } else if (option.startsWith('gender_')) {
         trackEvent(TRACKING_EVENT_MAP[trackingKey].checkGender, {
           option,
           val,
-        });
+        })
       }
     }
 
     const newState = {
       ...state,
       [option]: val,
-    };
-    setState(newState);
-    onChangeCallback(newState);
-  };
+    }
+    setState(newState)
+    onChangeCallback(newState)
+  }
 
   return (
     <div className="mt-8 grid grid-cols-12 gap-4">
@@ -207,7 +207,7 @@ export default function CustomVoterAudienceFilters({
               <Checkbox
                 label={<Body2>{option.label}</Body2>}
                 onChange={(e) => {
-                  handleChangeAudience(option.key, e.target.checked);
+                  handleChangeAudience(option.key, e.target.checked)
                 }}
                 checked={state[option.key] ?? false}
                 color="secondary"
@@ -232,5 +232,5 @@ export default function CustomVoterAudienceFilters({
         ></TextField>
       )}
     </div>
-  );
+  )
 }

@@ -1,25 +1,23 @@
-'use client';
+'use client'
 
-import PortalPanel from '@shared/layouts/PortalPanel';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { partyResolver } from 'helpers/candidateHelper';
-import { useMemo } from 'react';
-import Link from 'next/link';
-import { dateUsHelper } from 'helpers/dateHelper';
-import Actions from './Actions';
-import WarningButton from '@shared/buttons/WarningButton';
-import { MdVisibilityOff } from 'react-icons/md';
-import Table from '@shared/utils/Table';
+import PortalPanel from '@shared/layouts/PortalPanel'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import { partyResolver } from 'helpers/candidateHelper'
+import { useMemo } from 'react'
+import Link from 'next/link'
+import Actions from './Actions'
+import WarningButton from '@shared/buttons/WarningButton'
+import Table from '@shared/utils/Table'
 
 export default function AdminAllCandidatesPage(props) {
-  const { candidates } = props;
-  console.log('candidates', candidates);
+  const { candidates } = props
+  console.log('candidates', candidates)
 
-  const inputData = [];
+  const inputData = []
   if (candidates) {
     candidates.map((candidateObj) => {
-      const { data, isActive } = candidateObj;
-      const candidate = JSON.parse(data);
+      const { data, isActive } = candidateObj
+      const candidate = JSON.parse(data)
       const fields = {
         id: candidateObj.id,
         isActive: candidateObj.isActive,
@@ -28,11 +26,11 @@ export default function AdminAllCandidatesPage(props) {
         lastName: candidate.lastName,
         party: partyResolver(candidate.party),
         campaignOnboardingSlug: candidate.campaignOnboardingSlug,
-      };
-      inputData.push(fields);
-    });
+      }
+      inputData.push(fields)
+    })
   }
-  const data = useMemo(() => inputData);
+  const data = useMemo(() => inputData)
 
   const columns = useMemo(() => [
     {
@@ -40,7 +38,7 @@ export default function AdminAllCandidatesPage(props) {
       collapse: true,
       accessor: 'actions',
       Cell: ({ row }) => {
-        return <Actions {...row.original} />;
+        return <Actions {...row.original} />
       },
     },
 
@@ -53,7 +51,7 @@ export default function AdminAllCandidatesPage(props) {
       Header: 'Is Active',
       accessor: 'isActive',
       Cell: ({ row }) => {
-        return <div>{row.original.isActive ? 'yes' : 'no'}</div>;
+        return <div>{row.original.isActive ? 'yes' : 'no'}</div>
       },
     },
     {
@@ -74,7 +72,7 @@ export default function AdminAllCandidatesPage(props) {
       Header: 'Party',
       accessor: 'party',
     },
-  ]);
+  ])
 
   return (
     <AdminWrapper {...props}>
@@ -91,5 +89,5 @@ export default function AdminAllCandidatesPage(props) {
         <Table columns={columns} data={data} />
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

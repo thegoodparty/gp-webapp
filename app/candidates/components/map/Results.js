@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { memo } from 'react';
-import CampaignSnippet from './CampaignSnippet';
-import H5 from '@shared/typography/H5';
-import H3 from '@shared/typography/H3';
-import Body1 from '@shared/typography/Body1';
-import Button from '@shared/buttons/Button';
-import { useUser } from '@shared/hooks/useUser';
-import { ZoomOutMapRounded } from '@mui/icons-material';
-import { numberFormatter } from 'helpers/numberHelper';
+import { memo } from 'react'
+import CampaignSnippet from './CampaignSnippet'
+import H5 from '@shared/typography/H5'
+import H3 from '@shared/typography/H3'
+import Body1 from '@shared/typography/Body1'
+import Button from '@shared/buttons/Button'
+import { useUser } from '@shared/hooks/useUser'
+import { ZoomOutMapRounded } from '@mui/icons-material'
+import { numberFormatter } from 'helpers/numberHelper'
 
 export default memo(function Results({
   campaigns,
@@ -18,10 +18,10 @@ export default memo(function Results({
   selectedCampaign,
   onZoomOut,
 }) {
-  const user = useUser();
+  const user = useUser()
 
-  const totalCandidates = Math.max(totalNumCampaigns, count) || 0;
-  const viewingSubset = campaigns.length < totalCandidates;
+  const totalCandidates = Math.max(totalNumCampaigns, count) || 0
+  const viewingSubset = campaigns.length < totalCandidates
 
   return (
     <div className="md:w-[400px] lg:w-[500px] h-80  md:h-[calc(100vh-56px-298px)] border-r border-gray-300 bg-indigo-100 flex flex-col">
@@ -73,5 +73,5 @@ export default memo(function Results({
         )}
       </div>
     </div>
-  );
-});
+  )
+})
