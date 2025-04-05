@@ -32,6 +32,11 @@ export async function ensureSession() {
   const emailAddress = generateEmail();
 
   await createAccount(page, undefined, undefined, password, emailAddress);
+  await browser.close();
+  const loginBrowser = await chromium.launch();
+  const loginPage = await loginBrowser.newPage();
+
+  await loginAccount(loginPage, emailAddress, password);
 
   // Save the storage state (session)
   console.log(`Saving new test account: ${emailAddress} + ${password}`);
