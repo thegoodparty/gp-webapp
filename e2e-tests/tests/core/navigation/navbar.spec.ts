@@ -7,7 +7,7 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 test.skip('Verify Navigation Bar', async ({ page }) => {
   const caseId = 2;
   try {
-    await page.goto('/');
+    await page.goto('/', {waitUntil: "commit"});
     await page.waitForLoadState('networkidle');
 
     // Verify navbar presence

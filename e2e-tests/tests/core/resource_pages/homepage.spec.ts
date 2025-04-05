@@ -9,7 +9,7 @@ const bannerButton = /Join Now/
 const candidatesButton = /Find Candidates/
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', {waitUntil: "commit"});
   await page.waitForLoadState('networkidle');
 });
 

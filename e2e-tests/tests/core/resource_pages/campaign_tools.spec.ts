@@ -7,7 +7,7 @@ import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/run-for-office")
+    await page.goto("/run-for-office", {waitUntil: "commit"})
 });
 
 test('Verify Campaign Tools page', async ({ page }) => {
