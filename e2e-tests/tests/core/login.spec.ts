@@ -7,7 +7,7 @@ import { loginAccount } from 'helpers/accountHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/login", {waitUntil: "commit"});
+    await page.goto("/login", {waitUntil: "networkidle"});
 });
 
 test('Verify invalid login credentials error message', async ({ page }) => {

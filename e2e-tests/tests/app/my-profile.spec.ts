@@ -10,7 +10,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-details", {waitUntil: "commit"});
+    await page.goto("/dashboard/campaign-details", {waitUntil: "networkidle"});
 });
 
 test('Update Campaign Details', async ({ page }) => {

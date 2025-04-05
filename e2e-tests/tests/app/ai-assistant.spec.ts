@@ -12,30 +12,39 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-assistant", {waitUntil: "commit"});
+    await page.goto("/dashboard/campaign-assistant", {
+        waitUntil: "networkidle"
+    });
+        await expect(page).toHaveURL(/.*\/dashboard\/campaign-assistant/);
 });
 
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
     try {
-        // Verify user is on AI assistant page
-        await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible({
+            timeout: 10000
+        });
 
-        // Create new chat
-        await page.getByRole('button', { name: 'New Chat' }).click();
-        await page.getByRole('button', { name: testTopic }).click();
+        // Create new chat 
+        const newChatButton = page.getByRole('button', { name: 'New Chat' });
+        await expect(newChatButton).toBeVisible();
+        await newChatButton.click();
+        
+        const topicButton = page.getByRole('button', { name: testTopic });
+        await expect(topicButton).toBeVisible();
+        await topicButton.click();
 
-        // Wait for response to generate
         await page.waitForLoadState('networkidle');
-
-        // Verify conversation window
-        await page.locator('div').filter({ hasText: testTopicChat }).first().isVisible();
-        await page.locator('.font-normal > div:nth-child(2)').isVisible({timeout: 20000});
+        
+        const chatElement = page.locator('div').filter({ hasText: testTopicChat }).first();
+        await expect(chatElement).toBeVisible({ timeout: 10000 });
+        
+        const responseElement = page.locator('.font-normal > div:nth-child(2)');
+        await expect(responseElement).toBeVisible({ timeout: 20000 });
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-
         // Report test results
         await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
     }
