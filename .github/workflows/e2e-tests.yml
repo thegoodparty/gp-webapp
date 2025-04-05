@@ -31,7 +31,6 @@ jobs:
           echo "Run ID from response: $run_id"
           
           if [ -n "$run_id" ]; then
-            echo "test_run_id=$run_id" >> "$GITHUB_OUTPUT"
             # Create a file with the test run ID that can be shared
             echo "$run_id" > test_run_id.txt
             echo "Created test run with ID: $run_id"
