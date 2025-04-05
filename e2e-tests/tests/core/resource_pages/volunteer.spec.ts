@@ -20,13 +20,12 @@ test('Verify Explore Offices page', async ({ page }) => {
     const pageButtons = [
         'Start taking action',
         'Get Involved',
-        'Join our Discord',
         'Schedule info session'
     ];
     const pageImgAltText = [
         'megaphone', 'Whatever you can do!', 'Help with your creativity!', 
         'Connect and make friends', 'Real action = real electoral results', 'Sal Davis', 
-        'Terry Vo', 'Kieryn McCann', 'Level up', 'Networking', 'Fun perks', 'Real Impact', 'discord', 'GoodParty'
+        'Terry Vo', 'Kieryn McCann', 'Level up', 'Networking', 'Fun perks', 'Real Impact', 'GoodParty'
     ];
     const volunteerButton = /Start taking action/
     const volunteerConfirm = /Thank you! we will be in touch soon./
