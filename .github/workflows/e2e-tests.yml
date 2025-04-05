@@ -110,7 +110,7 @@ jobs:
       - name: Set test run ID
         run: |
           cd test-automation
-          TEST_RUN_ID=$(cat test_run_id.txt)
+          TEST_RUN_ID=$(cat testRunId.txt)
           echo "Test run ID from file: $TEST_RUN_ID"
           echo "TEST_RUN_ID=$TEST_RUN_ID" >> $GITHUB_ENV
 
