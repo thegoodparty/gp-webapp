@@ -34,7 +34,7 @@ test('Update Campaign Details', async ({ page }) => {
         await page.locator('section').filter({ hasText: 'Campaign Details' }).getByRole('button').click();
 
         // Refresh page
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.reload({ waitUntil: 'networkidle' });
 
         // Confirm new campaign details are saved
         await expect(page.getByPlaceholder('Campaign Committee')).toHaveValue(newCampaignCommittee);
