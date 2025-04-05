@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { BsArrowUpRightCircleFill } from 'react-icons/bs';
+import Link from 'next/link'
+import { BsArrowUpRightCircleFill } from 'react-icons/bs'
 
 export const LeadingActivityCard = ({
   icon,
@@ -21,4 +21,4 @@ export const LeadingActivityCard = ({
       {linkText}
     </Link>
   </div>
-);
+)

@@ -1,10 +1,9 @@
-import LisaBottom from 'app/(landing)/get-a-demo/components/LisaBottom';
-import Image from 'next/image';
-import peopleImg from 'public/images/landing-pages/info-people.png';
-import starImg from 'public/images/landing-pages/star.png';
-import { Suspense } from 'react';
-import CalendarIframe from './CalendarIframe';
-import HubSpotForm from '@shared/utils/HubSpotForm';
+import LisaBottom from 'app/(landing)/get-a-demo/components/LisaBottom'
+import Image from 'next/image'
+import peopleImg from 'public/images/landing-pages/info-people.png'
+import starImg from 'public/images/landing-pages/star.png'
+import { Suspense } from 'react'
+import HubSpotForm from '@shared/utils/HubSpotForm'
 
 const points = [
   {
@@ -22,7 +21,7 @@ const points = [
     subTitle:
       'Get monthly 1-on-1 support for your campaign from our team of campaign managers and dedicated customer support.',
   },
-];
+]
 
 export default function UpgradeToProPage() {
   return (
@@ -79,5 +78,5 @@ export default function UpgradeToProPage() {
         </Suspense>
       </div>
     </div>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import WandAnimation from './WandAnimation';
+import WandAnimation from './WandAnimation'
 
 export default {
   title: 'Animations/WandAnimation',
   component: WandAnimation,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

@@ -1,45 +1,45 @@
-'use client';
-import Hamburger from '@shared/utils/Hamburger';
-import { useState } from 'react';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import Caption from '@shared/typography/Caption';
-import Link from 'next/link';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { usePathname } from 'next/navigation';
-import H3 from '@shared/typography/H3';
-import DashboardMobile from '../DashboardMobile';
+'use client'
+import Hamburger from '@shared/utils/Hamburger'
+import { useState } from 'react'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+import Caption from '@shared/typography/Caption'
+import Link from 'next/link'
+import { FaExternalLinkAlt } from 'react-icons/fa'
+import { usePathname } from 'next/navigation'
+import H3 from '@shared/typography/H3'
+import DashboardMobile from '../DashboardMobile'
 import {
   COMMUNITY_LINKS,
   RESOURCES_LINKS,
   RUN_LINKS,
-} from '@shared/layouts/navigation/NavigationProvider';
-import { useUser } from '@shared/hooks/useUser';
-import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
-import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton';
-import Button from '@shared/buttons/Button';
-import { useCampaign } from '@shared/hooks/useCampaign';
+} from '@shared/layouts/navigation/NavigationProvider'
+import { useUser } from '@shared/hooks/useUser'
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
+import { ExitToDashboardButton } from '@shared/layouts/navigation/ExitToDashboardButton'
+import Button from '@shared/buttons/Button'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 // TODO: define these labels in the same place as we do the larger-screen navigation sections
 const sections = [
   { title: 'For Candidates', links: RUN_LINKS },
   { title: 'For Voters', links: COMMUNITY_LINKS },
   { title: 'Resources', links: RESOURCES_LINKS },
-];
+]
 
 export default function RightSideMobile() {
-  const [isOpen, setOpen] = useState(false);
-  const [user] = useUser();
-  const [campaignStatus] = useCampaignStatus();
-  const [campaign] = useCampaign();
-  const { status, step, slug } = campaignStatus || {};
-  const pathname = usePathname();
+  const [isOpen, setOpen] = useState(false)
+  const [user] = useUser()
+  const [campaignStatus] = useCampaignStatus()
+  const [campaign] = useCampaign()
+  const { status, step, slug } = campaignStatus || {}
+  const pathname = usePathname()
   const isDashboardPath =
-    pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile');
-  let dashboardLink = '/dashboard';
+    pathname?.startsWith('/dashboard') || pathname?.startsWith('/profile')
+  let dashboardLink = '/dashboard'
 
   const closeMenu = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <div className="lg:hidden">
@@ -170,5 +170,5 @@ export default function RightSideMobile() {
         </SwipeableDrawer>
       </div>
     </div>
-  );
+  )
 }

@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import Button from '@shared/buttons/Button';
-import { sendSetPasswordEmail } from './AddUserButton';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { USER_ROLES, userHasRole } from 'helpers/userHelper';
+import { useState } from 'react'
+import Button from '@shared/buttons/Button'
+import { sendSetPasswordEmail } from './AddUserButton'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 
 export default function ResendPasswordEmailAction({ user }) {
-  const { id: userId, email, firstName, lastName } = user;
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { id: userId, email, firstName, lastName } = user
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   // only for sales role users now
-  if (!userHasRole(user, USER_ROLES.SALES)) return <></>;
+  if (!userHasRole(user, USER_ROLES.SALES)) return <></>
 
   function handleClick() {
-    setDialogOpen(true);
+    setDialogOpen(true)
   }
 
   function handleProceed() {
-    sendSetPasswordEmail(userId);
-    setDialogOpen(false);
+    sendSetPasswordEmail(userId)
+    setDialogOpen(false)
   }
 
   return (
@@ -35,7 +35,7 @@ export default function ResendPasswordEmailAction({ user }) {
       <AlertDialog
         open={dialogOpen}
         handleClose={() => {
-          setDialogOpen(false);
+          setDialogOpen(false)
         }}
         redButton={false}
         title="Resend Set Password Email"
@@ -43,5 +43,5 @@ export default function ResendPasswordEmailAction({ user }) {
         handleProceed={handleProceed}
       />
     </>
-  );
+  )
 }

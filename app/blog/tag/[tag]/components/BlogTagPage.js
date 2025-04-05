@@ -1,7 +1,7 @@
-import BlogWrapper from 'app/blog/shared/BlogWrapper';
-import ArticleSnippet from 'app/blog/shared/ArticleSnippet';
-import LoadMoreWrapper from 'app/blog/shared/LoadMoreWrapper';
-import { FIRST_PAGE_SIZE } from 'app/blog/section/[slug]/components/BlogSectionPage';
+import BlogWrapper from 'app/blog/shared/BlogWrapper'
+import ArticleSnippet from 'app/blog/shared/ArticleSnippet'
+import LoadMoreWrapper from 'app/blog/shared/LoadMoreWrapper'
+import { FIRST_PAGE_SIZE } from 'app/blog/section/[slug]/components/BlogSectionPage'
 
 export default function BlogTagPage({
   sections,
@@ -11,8 +11,8 @@ export default function BlogTagPage({
   allTags,
   articleTitles,
 }) {
-  const firstPageArticles = articles.slice(0, FIRST_PAGE_SIZE);
-  const loadMoreArticles = articles.slice(FIRST_PAGE_SIZE);
+  const firstPageArticles = articles.slice(0, FIRST_PAGE_SIZE)
+  const loadMoreArticles = articles.slice(FIRST_PAGE_SIZE)
 
   return (
     <BlogWrapper
@@ -40,5 +40,5 @@ export default function BlogTagPage({
         )}
       </div>
     </BlogWrapper>
-  );
+  )
 }

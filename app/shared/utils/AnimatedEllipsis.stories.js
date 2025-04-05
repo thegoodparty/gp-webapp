@@ -1,10 +1,10 @@
-import { AnimatedEllipsis } from './AnimatedEllipsis';
+import { AnimatedEllipsis } from './AnimatedEllipsis'
 
 export default {
   title: 'Utils/AnimatedEllipsis',
   component: AnimatedEllipsis,
   tags: ['autodocs'],
   args: {},
-};
+}
 
-export const Default = {};
+export const Default = {}

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
 export const alphabet = [
   'a',
@@ -27,7 +27,7 @@ export const alphabet = [
   'x',
   'y',
   'z',
-];
+]
 
 export default function LayoutWithAlphabet({ activeLetter = 'A', children }) {
   return (
@@ -51,5 +51,5 @@ export default function LayoutWithAlphabet({ activeLetter = 'A', children }) {
       </div>
       <div className="pl-4 lg:pl-0 lg:mt-16">{children}</div>
     </div>
-  );
+  )
 }

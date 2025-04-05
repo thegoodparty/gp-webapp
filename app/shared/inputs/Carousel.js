@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import React from 'react';
-import Slider from 'react-slick';
-import Image from 'next/image';
-import './slick.min.css';
-import './slick-theme.min.css';
+import React from 'react'
+import Slider from 'react-slick'
+import Image from 'next/image'
+import './slick.min.css'
+import './slick-theme.min.css'
 
 export default function Carousel(props) {
   const settings = {
@@ -14,10 +14,10 @@ export default function Carousel(props) {
     slidesToShow: 1,
     slidesToScroll: 1,
     arrows: false,
-  };
-  const { sections } = props;
+  }
+  const { sections } = props
   return (
-    <div className="m-0 w-[350px] md:w-[700px] lg:w-[900px] h-[425px] md:h-[350px] lg:[300px] bg-primary-dark-dark rounded-2xl text-white">
+    <div className="m-0 w-[90vw] max-w-screen-xl h-[425px] md:h-[350px] lg:[300px] bg-primary-dark-dark rounded-2xl text-white">
       <Slider {...settings}>
         {sections.map((section, index) => (
           <div key={section.name}>
@@ -51,5 +51,5 @@ export default function Carousel(props) {
         ))}
       </Slider>
     </div>
-  );
+  )
 }

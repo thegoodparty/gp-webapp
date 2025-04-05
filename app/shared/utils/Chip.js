@@ -7,5 +7,5 @@ export default function Chip({ children, icon, label, className, ...rest }) {
       {icon ?? null}
       <div className="ml-1 text-xs">{label || children}</div>
     </div>
-  );
+  )
 }

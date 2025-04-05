@@ -1,4 +1,4 @@
-import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner';
+import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
 
 export default {
   title: 'Unshared/AlertBanner',
@@ -18,8 +18,8 @@ export default {
         <AlertBanner {...args} severity="warning" />
         <AlertBanner {...args} severity="error" />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

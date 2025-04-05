@@ -1,16 +1,16 @@
-'use client';
-import { useState } from 'react';
-import { BsThreeDots } from 'react-icons/bs';
-import { Button } from '@mui/material';
-import { FaPencilAlt, FaTrashAlt, FaGlobe } from 'react-icons/fa';
-import DeleteAction from './DeleteAction';
+'use client'
+import { useState } from 'react'
+import { BsThreeDots } from 'react-icons/bs'
+import { Button } from '@mui/material'
+import { FaPencilAlt, FaTrashAlt, FaGlobe } from 'react-icons/fa'
+import DeleteAction from './DeleteAction'
 // import DuplicateAction from './DuplicateAction';
-import RenameAction from './RenameAction';
-import TranslateAction from './TranslateAction';
-import { kebabToCamel } from '/helpers/stringHelper';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import CircularProgress from '@mui/material/CircularProgress';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import RenameAction from './RenameAction'
+import TranslateAction from './TranslateAction'
+import { kebabToCamel } from '/helpers/stringHelper'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import CircularProgress from '@mui/material/CircularProgress'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function Actions(props) {
   let {
@@ -24,15 +24,15 @@ export default function Actions(props) {
     handleTranslateCallback,
     showTranslate,
     setShowTranslate,
-  } = props;
+  } = props
 
-  const [showMenu, setShowMenu] = useState(false);
-  const [showRename, setShowRename] = useState(false);
-  const [showDuplicate, setShowDuplicate] = useState(false);
-  const [showDelete, setShowDelete] = useState(false);
+  const [showMenu, setShowMenu] = useState(false)
+  const [showRename, setShowRename] = useState(false)
+  const [showDuplicate, setShowDuplicate] = useState(false)
+  const [showDelete, setShowDelete] = useState(false)
 
   if (tableVersion === false) {
-    documentKey = kebabToCamel(slug);
+    documentKey = kebabToCamel(slug)
   }
 
   return (
@@ -49,8 +49,8 @@ export default function Actions(props) {
                   name: name,
                   slug: slug,
                   key: documentKey,
-                });
-                setShowMenu(!showMenu);
+                })
+                setShowMenu(!showMenu)
               }}
               className="text-xl cursor-pointer mr-10"
             />
@@ -64,7 +64,7 @@ export default function Actions(props) {
             tabIndex={0}
             onKeyDown={(e) => e.key === 'Enter' && setShowMenu(!showMenu)}
             onClick={() => {
-              setShowMenu(!showMenu);
+              setShowMenu(!showMenu)
             }}
             className="mr-10 hidden md:block"
           >
@@ -76,7 +76,7 @@ export default function Actions(props) {
             <div
               className="ml-3 md:hidden"
               onClick={() => {
-                setShowMenu(!showMenu);
+                setShowMenu(!showMenu)
               }}
             >
               <SecondaryButton size="medium">
@@ -89,7 +89,7 @@ export default function Actions(props) {
 
             <div
               onClick={() => {
-                setShowMenu(!showMenu);
+                setShowMenu(!showMenu)
               }}
               div
               className="ml-5 hidden md:block"
@@ -108,7 +108,7 @@ export default function Actions(props) {
             <div
               className="fixed h-screen w-screen top-14 left-0"
               onClick={() => {
-                setShowMenu(false);
+                setShowMenu(false)
               }}
             />
 
@@ -119,9 +119,9 @@ export default function Actions(props) {
                     name: name,
                     slug: slug,
                     key: documentKey,
-                  });
-                  setShowRename(true);
-                  setShowMenu(false);
+                  })
+                  setShowRename(true)
+                  setShowMenu(false)
                 }}
               >
                 <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
@@ -135,8 +135,8 @@ export default function Actions(props) {
               <div className="md:hidden">
                 <Button
                   onClick={() => {
-                    setShowTranslate(true);
-                    setShowMenu(false);
+                    setShowTranslate(true)
+                    setShowMenu(false)
                   }}
                 >
                   <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
@@ -172,9 +172,9 @@ export default function Actions(props) {
                     name: name,
                     slug: slug,
                     key: documentKey,
-                  });
-                  setShowDelete(true);
-                  setShowMenu(false);
+                  })
+                  setShowDelete(true)
+                  setShowMenu(false)
                 }}
               >
                 <span className="text-red-400 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
@@ -216,5 +216,5 @@ export default function Actions(props) {
         setShowDelete={setShowDelete}
       />
     </>
-  );
+  )
 }

@@ -1,20 +1,19 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { slugify } from 'helpers/articleHelper';
-import { shortToLongState } from 'helpers/statesHelper';
-import LinksSection from '../../../shared/LinksSection';
-import RacesSection from '../../../shared/RacesSection';
-import LearnToRun from '../../../shared/LearnToRun';
-import Guides from '../../../shared/Guides';
-import Hero from '../../components/Hero';
-import CountyFacts from './CountyFacts';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { shortToLongState } from 'helpers/statesHelper'
+import LinksSection from '../../../shared/LinksSection'
+import RacesSection from '../../../shared/RacesSection'
+import LearnToRun from '../../../shared/LearnToRun'
+import Guides from '../../../shared/Guides'
+import Hero from '../../components/Hero'
+import CountyFacts from './CountyFacts'
 
 export default function ElectionsCountyPage(props) {
-  const { state, childEntities, races, articles, county } = props;
-  const stateName = shortToLongState[state.toUpperCase()];
+  const { state, childEntities, races, articles, county } = props
+  const stateName = shortToLongState[state.toUpperCase()]
 
   const cityLink = (city) => {
-    return `/elections/${city.slug}`;
-  };
+    return `/elections/${city.slug}`
+  }
   return (
     <div className="bg-indigo-50 pb-20">
       <Hero {...props} color1="#2AC8E2" color2="#6a9de2" level="county" />
@@ -35,5 +34,5 @@ export default function ElectionsCountyPage(props) {
       <LearnToRun stateName={stateName} />
       <Guides articles={articles} />
     </div>
-  );
+  )
 }

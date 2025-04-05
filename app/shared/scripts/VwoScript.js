@@ -1,4 +1,4 @@
-import Script from 'next/script';
+import Script from 'next/script'
 
 export default function VwoScript() {
   return (
@@ -19,5 +19,5 @@ export default function VwoScript() {
         `,
       }}
     />
-  );
+  )
 }

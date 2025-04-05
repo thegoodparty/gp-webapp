@@ -1,6 +1,6 @@
-import H3 from '@shared/typography/H3';
-import CardPageWrapper from './CardPageWrapper';
-import Body1 from '@shared/typography/Body1';
+import H3 from '@shared/typography/H3'
+import CardPageWrapper from './CardPageWrapper'
+import Body1 from '@shared/typography/Body1'
 
 export default {
   title: 'Cards/CardPageWrapper',
@@ -21,6 +21,6 @@ export default {
       </>
     ),
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

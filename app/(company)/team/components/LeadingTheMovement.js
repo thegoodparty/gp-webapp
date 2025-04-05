@@ -1,4 +1,4 @@
-import { LeadingActivityCards } from 'app/(company)/team/components/LeadingActivityCards';
+import { LeadingActivityCards } from 'app/(company)/team/components/LeadingActivityCards'
 
 const LeadingTheMovement = () => (
   <section className="py-8 lg:py-24">
@@ -9,6 +9,6 @@ const LeadingTheMovement = () => (
     </h2>
     <LeadingActivityCards />
   </section>
-);
+)
 
-export default LeadingTheMovement;
+export default LeadingTheMovement

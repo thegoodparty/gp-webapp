@@ -1,7 +1,7 @@
-'use client';
-import H2 from '@shared/typography/H2';
-import Paper from '@shared/utils/Paper';
-import { Bar } from 'react-chartjs-2';
+'use client'
+import H2 from '@shared/typography/H2'
+import Paper from '@shared/utils/Paper'
+import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,7 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from 'chart.js'
 
 ChartJS.register(
   CategoryScale,
@@ -19,7 +19,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-);
+)
 
 const ratingColors = {
   unrated: '#94A3B8', // gray
@@ -28,23 +28,23 @@ const ratingColors = {
   3: '#FB923C', // light orange
   4: '#86EFAC', // light green
   5: '#22C55E', // green
-};
+}
 
 export default function RatingSummary({ summary }) {
-  const { groupedRatings } = summary || {};
+  const { groupedRatings } = summary || {}
 
   const processChartData = () => {
-    if (!groupedRatings) return null;
+    if (!groupedRatings) return null
 
     // Define the order of ratings we want to display
-    const ratingOrder = ['unrated', '1', '2', '3', '4', '5'];
+    const ratingOrder = ['unrated', '1', '2', '3', '4', '5']
 
     const labels = ratingOrder.map((rating) =>
       rating === 'unrated'
         ? 'Unrated'
         : `${rating} Star${rating !== '1' ? 's' : ''}`,
-    );
-    const data = ratingOrder.map((rating) => groupedRatings[rating] || 0);
+    )
+    const data = ratingOrder.map((rating) => groupedRatings[rating] || 0)
 
     return {
       labels,
@@ -56,8 +56,8 @@ export default function RatingSummary({ summary }) {
           borderRadius: 4,
         },
       ],
-    };
-  };
+    }
+  }
 
   const options = {
     plugins: {
@@ -78,9 +78,9 @@ export default function RatingSummary({ summary }) {
       },
     },
     maintainAspectRatio: false,
-  };
+  }
 
-  const chartData = processChartData();
+  const chartData = processChartData()
 
   return (
     <Paper className="md:p-6 mt-4">
@@ -89,5 +89,5 @@ export default function RatingSummary({ summary }) {
         {chartData && <Bar options={options} data={chartData} />}
       </div>
     </Paper>
-  );
+  )
 }

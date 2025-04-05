@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import peopleImg from 'public/images/landing-pages/info-people.png';
-import starImg from 'public/images/landing-pages/star.png';
-import LisaBottom from './LisaBottom';
-import { Suspense } from 'react';
-import CalendarIframe from './CalendarIframe';
+import Image from 'next/image'
+import peopleImg from 'public/images/landing-pages/info-people.png'
+import starImg from 'public/images/landing-pages/star.png'
+import LisaBottom from './LisaBottom'
+import { Suspense } from 'react'
+import CalendarIframe from './CalendarIframe'
 
 const points = [
   {
@@ -21,7 +21,7 @@ const points = [
     subTitle:
       "We'll talk about key milestones in your campaign, how to start using the tools effectively, and the continued support we offer from our team and volunteers.",
   },
-];
+]
 
 export default function GetDemoPage() {
   return (
@@ -79,5 +79,5 @@ export default function GetDemoPage() {
         </Suspense>
       </div>
     </div>
-  );
+  )
 }

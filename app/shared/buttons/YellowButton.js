@@ -1,4 +1,4 @@
-import BaseButton from './BaseButton';
+import BaseButton from './BaseButton'
 
 const YellowButton = ({ children, style = {} }) => {
   return (
@@ -12,7 +12,7 @@ const YellowButton = ({ children, style = {} }) => {
     >
       {children}
     </BaseButton>
-  );
-};
+  )
+}
 
-export default YellowButton;
+export default YellowButton

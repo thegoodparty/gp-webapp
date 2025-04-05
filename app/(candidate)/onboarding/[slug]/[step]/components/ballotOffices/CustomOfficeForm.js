@@ -1,14 +1,13 @@
-'use client';
-import { useState } from 'react';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import { flatStates } from 'helpers/statesHelper';
-import H2 from '@shared/typography/H2';
-import Body1 from '@shared/typography/Body1';
+'use client'
+import { useState } from 'react'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import { flatStates } from 'helpers/statesHelper'
+import Body1 from '@shared/typography/Body1'
 import {
   dateFromNonStandardUSFormatString,
   isSameDay,
-} from 'helpers/dateHelper';
-import Button from '@shared/buttons/Button';
+} from 'helpers/dateHelper'
+import Button from '@shared/buttons/Button'
 
 const fields = [
   {
@@ -51,7 +50,7 @@ const fields = [
     required: true,
     noPastDates: true,
   },
-];
+]
 
 export default function CustomOfficeForm({ campaign, onSave }) {
   const [state, setState] = useState({
@@ -63,31 +62,31 @@ export default function CustomOfficeForm({ campaign, onSave }) {
     city: campaign.details?.city || '',
     ballotOffice: campaign.details?.ballotOffice || false,
     electionDate: campaign.details?.electionDate || '',
-  });
-  const now = new Date();
-  const selectedDate = dateFromNonStandardUSFormatString(state['electionDate']);
+  })
+  const now = new Date()
+  const selectedDate = dateFromNonStandardUSFormatString(state['electionDate'])
   const error =
-    state.electionDate && !isSameDay(selectedDate, now) && selectedDate < now;
+    state.electionDate && !isSameDay(selectedDate, now) && selectedDate < now
 
   const disableSubmit =
     state.state === '' ||
     state.office === '' ||
     state.officeTermLength === '' ||
     state.electionDate === '' ||
-    error;
+    error
 
   const onChange = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-  };
+    })
+  }
 
   const handleSave = async () => {
     if (disableSubmit) {
-      return;
+      return
     }
-    const updated = campaign;
+    const updated = campaign
 
     updated.details = {
       ...campaign.details,
@@ -96,9 +95,9 @@ export default function CustomOfficeForm({ campaign, onSave }) {
       electionId: null,
       ballotOffice: null,
       electionDate: state.electionDate,
-    };
-    onSave(updated);
-  };
+    }
+    onSave(updated)
+  }
 
   return (
     <div>
@@ -123,5 +122,5 @@ export default function CustomOfficeForm({ campaign, onSave }) {
         </Button>
       </div>
     </div>
-  );
+  )
 }

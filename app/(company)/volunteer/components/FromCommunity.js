@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import CTA from './CTA';
-import kierynImg from 'public/images/landing-pages/kieryn-small.png';
-import lisaImg from 'public/images/landing-pages/lisa.png';
-import desyiahImg from 'public/images/landing-pages/desyiah.png';
-import { BiSolidQuoteAltRight } from 'react-icons/bi';
+import Image from 'next/image'
+import CTA from './CTA'
+import kierynImg from 'public/images/landing-pages/kieryn-small.png'
+import lisaImg from 'public/images/landing-pages/lisa.png'
+import desyiahImg from 'public/images/landing-pages/desyiah.png'
+import { BiSolidQuoteAltRight } from 'react-icons/bi'
 
 const cards = [
   {
@@ -24,7 +24,7 @@ const cards = [
     name: 'Desyiah L., Colorado',
     image: desyiahImg,
   },
-];
+]
 
 export default function FromCommunity() {
   return (
@@ -88,5 +88,5 @@ export default function FromCommunity() {
       <div className="hidden md:block bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#F9FAFB_55%)] h-[calc(100vw*0.09)] w-full -mt-64" />
       <div className="hidden md:block h-64 bg-indigo-50"></div>
     </section>
-  );
+  )
 }

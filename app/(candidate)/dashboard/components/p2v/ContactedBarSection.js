@@ -1,48 +1,36 @@
-import Body1 from '@shared/typography/Body1';
-import H2 from '@shared/typography/H2';
-import MarketingH2 from '@shared/typography/MarketingH2';
-import { AlertBanner } from '../AlertBanner';
-import { numberFormatter } from 'helpers/numberHelper';
-import { BsInfoCircle } from 'react-icons/bs';
-import { AnimatedBar } from './AnimatedBar';
-import { P2vModal } from './P2vModal';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import Body1 from '@shared/typography/Body1'
+import H2 from '@shared/typography/H2'
+import MarketingH2 from '@shared/typography/MarketingH2'
+import { AlertBanner } from '../AlertBanner'
+import { numberFormatter } from 'helpers/numberHelper'
+import { BsInfoCircle } from 'react-icons/bs'
+import { AnimatedProgressBar } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
+import { P2vModal } from './P2vModal'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 
-export function ContactedBarSection(props) {
-  const { pathToVictory, reportedVoterGoals } = props;
-  const { voterContactGoal, voteGoal } = pathToVictory || {};
-  let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
+export function ContactedBarSection({ pathToVictory }) {
+  const [reportedVoterGoals] = useVoterContacts()
+  const { needed, contacted } = calculateVoterContactCounts(
+    pathToVictory,
+    reportedVoterGoals,
+  )
 
-  const needed = parseInt(resolvedContactGoal, 10);
-  const { doorKnocking, calls, digital, directMail, digitalAds, text, events } =
-    reportedVoterGoals || {};
-  const contacted =
-    (doorKnocking || 0) +
-    (calls || 0) +
-    (digital || 0) +
-    (directMail || 0) +
-    (digitalAds || 0) +
-    (text || 0) +
-    (events || 0);
-
-  const percent = (contacted / needed) * 100;
-  let bgColor = 'bg-black';
-  let textColor = 'text-black';
-  let severity = 'info';
+  const percent = (contacted / needed) * 100
+  let textColor = 'text-black'
+  let severity = 'info'
   if (contacted > 0) {
-    bgColor = 'bg-error-main';
-    textColor = 'text-error-main';
-    severity = 'error';
+    textColor = 'text-error-main'
+    severity = 'error'
   }
   if (percent > 20) {
-    bgColor = 'bg-warning-main';
-    textColor = 'text-warning-main';
-    severity = 'warning';
+    textColor = 'text-warning-main'
+    severity = 'warning'
   }
   if (percent > 75) {
-    bgColor = 'bg-success-main';
-    textColor = 'text-success-main';
-    severity = 'success';
+    textColor = 'text-success-main'
+    severity = 'success'
   }
 
   return (
@@ -63,10 +51,10 @@ export function ContactedBarSection(props) {
           </div>
         )}
       </div>
-      <Body1 className="text-center md:text-left">
+      <Body1 className="text-center md:text-left mb-2">
         <strong>Current:</strong> {numberFormatter(contacted)} voters
       </Body1>
-      <AnimatedBar contacted={contacted} needed={needed} bgColor={bgColor} />
+      <AnimatedProgressBar percent={(contacted / needed) * 100} />
 
       <P2vModal
         triggerElement={
@@ -85,5 +73,5 @@ export function ContactedBarSection(props) {
         pathToVictory={pathToVictory}
       />
     </div>
-  );
+  )
 }

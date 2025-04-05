@@ -1,10 +1,10 @@
-import pageMetaData from 'helpers/metadataHelper';
-import CandidatesPage from '../components/CandidatesPage';
-import { adminAccessOnly } from 'helpers/permissionHelper';
-import { shortToLongState } from 'helpers/statesHelper';
-import { notFound } from 'next/navigation';
-import { serverFetch } from 'gpApi/serverFetch';
-import { apiRoutes } from 'gpApi/routes';
+import pageMetaData from 'helpers/metadataHelper'
+import CandidatesPage from '../components/CandidatesPage'
+import { adminAccessOnly } from 'helpers/permissionHelper'
+import { shortToLongState } from 'helpers/statesHelper'
+import { notFound } from 'next/navigation'
+import { serverFetch } from 'gpApi/serverFetch'
+import { apiRoutes } from 'gpApi/routes'
 
 const fetchCount = async (state, onlyWinners = false) => {
   const resp = await serverFetch(
@@ -14,9 +14,9 @@ const fetchCount = async (state, onlyWinners = false) => {
       results: onlyWinners ? true : undefined,
     },
     { revalidate: 3600 },
-  );
-  return resp.data;
-};
+  )
+  return resp.data
+}
 
 export async function generateMetadata({ params, searchParams }) {
   const meta = pageMetaData({
@@ -24,19 +24,19 @@ export async function generateMetadata({ params, searchParams }) {
     description:
       'Find independent, people-powered, and anti-corruption candidates running for office in your area. Search by office type, name, party affiliation, and more.',
     slug: `/candidates`,
-  });
-  return meta;
+  })
+  return meta
 }
 
 export default async function Page({ params, searchParams }) {
-  const { state } = params;
-  const upperState = state.toUpperCase();
-  const longState = shortToLongState[upperState];
+  const { state } = params
+  const upperState = state.toUpperCase()
+  const longState = shortToLongState[upperState]
   if (!longState) {
-    notFound();
+    notFound()
   }
-  await adminAccessOnly();
-  const count = await fetchCount(upperState, true);
-  const childProps = { count, longState, state: upperState, searchParams };
-  return <CandidatesPage {...childProps} />;
+  await adminAccessOnly()
+  const count = await fetchCount(upperState, true)
+  const childProps = { count, longState, state: upperState, searchParams }
+  return <CandidatesPage {...childProps} />
 }

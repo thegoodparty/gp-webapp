@@ -1,22 +1,28 @@
-import { useState, useMemo } from 'react';
-import Modal from '@shared/utils/Modal';
-import TextField from '@shared/inputs/TextField';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import { AlertBanner } from '../AlertBanner';
+import { useMemo, useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import TextField from '@shared/inputs/TextField'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import { AlertBanner } from '../AlertBanner'
 import {
   buildTrackingAttrs,
   EVENTS,
   trackEvent,
-} from 'helpers/fullStoryHelper';
-import Button from '@shared/buttons/Button';
+} from 'helpers/fullStoryHelper'
+import Button from '@shared/buttons/Button'
+import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import { useCampaignUpdateHistory } from '@shared/hooks/useCampaignUpdateHistory'
+import { useUser } from '@shared/hooks/useUser'
+import {
+  createIrresponsiblyMassagedHistoryItem,
+  createUpdateHistory,
+} from '@shared/utils/campaignUpdateHistoryServices'
 
-export default function LogProgress({
-  card,
-  reportedVoterGoals = {},
-  updateCountCallback,
-}) {
-  const [showModal, setShowModal] = useState(false);
+export default function LogProgress({ card }) {
+  const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts()
+  const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
+  const [user] = useUser()
+  const [showModal, setShowModal] = useState(false)
 
   const {
     key,
@@ -26,36 +32,49 @@ export default function LogProgress({
     modalLabel,
     infoBanner,
     onLogClick,
-  } = card;
+  } = card
 
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(0)
 
   const onChangeField = (val) => {
-    setValue(val);
-  };
+    setValue(val)
+  }
 
   const handleSubmit = async () => {
-    let newAddition = parseInt(value, 10);
+    let newAddition = parseInt(value, 10)
 
     trackEvent(EVENTS.Dashboard.VoterContact.LogProgress.ClickAdd, {
       key,
       title,
       value,
-    });
+    })
 
-    const newTotal = (reportedVoterGoals[key] || 0) + newAddition;
-    updateCountCallback(key, newTotal, newAddition);
-    setShowModal(false);
-    setValue(0);
-  };
+    setReportedVoterGoals({
+      ...reportedVoterGoals,
+      [key]: (reportedVoterGoals[key] || 0) + newAddition,
+    })
+
+    const newHistoryItem = await createUpdateHistory({
+      type: key,
+      quantity: newAddition,
+    })
+
+    setUpdateHistory([
+      ...updateHistoryItems,
+      createIrresponsiblyMassagedHistoryItem(newHistoryItem, user),
+    ])
+
+    setShowModal(false)
+    setValue(0)
+  }
 
   const handleClose = () => {
     trackEvent(EVENTS.Dashboard.VoterContact.LogProgress.Exit, {
       key,
       title,
-    });
-    setShowModal(false);
-  };
+    })
+    setShowModal(false)
+  }
 
   const submitTrackingAttrs = useMemo(
     () =>
@@ -65,7 +84,7 @@ export default function LogProgress({
         value,
       }),
     [key, title, value],
-  );
+  )
 
   return (
     <div className="">
@@ -73,8 +92,8 @@ export default function LogProgress({
         color="neutral"
         size="large"
         onClick={() => {
-          onLogClick();
-          setShowModal(true);
+          onLogClick()
+          setShowModal(true)
         }}
         className="log-progress w-full"
       >
@@ -96,6 +115,7 @@ export default function LogProgress({
               value={value}
               fullWidth
               type="number"
+              min="0"
               required
             />
 
@@ -121,5 +141,5 @@ export default function LogProgress({
         </Modal>
       ) : null}
     </div>
-  );
+  )
 }

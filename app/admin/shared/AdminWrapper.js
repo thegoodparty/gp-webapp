@@ -1,5 +1,5 @@
-import AdminLeftMenu from './AdminLeftMenu';
-import UserSnapScript from '@shared/scripts/UserSnapScript';
+import AdminLeftMenu from './AdminLeftMenu'
+import UserSnapScript from '@shared/scripts/UserSnapScript'
 
 export default function AdminWrapper({ children, pathname, title }) {
   return (
@@ -16,5 +16,5 @@ export default function AdminWrapper({ children, pathname, title }) {
       </div>
       <UserSnapScript />
     </div>
-  );
+  )
 }

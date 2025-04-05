@@ -1,5 +1,5 @@
-import { PersonRounded } from '@mui/icons-material';
-import { AcknowledgementQuestion } from './AcknowledgementQuestion';
+import { PersonRounded } from '@mui/icons-material'
+import { AcknowledgementQuestion } from './AcknowledgementQuestion'
 
 export default {
   title: 'Acknowledgements/AcknowledgementQuestion',
@@ -37,9 +37,9 @@ I pledge I will NOT pay membership dues to or otherwise engage in fundraising fo
       },
     },
   },
-};
+}
 
-export const Default = {};
+export const Default = {}
 
 // export const Primary = {
 //   args: {

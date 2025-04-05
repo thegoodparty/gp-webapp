@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import Modal from '@shared/utils/Modal';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import Button from '@shared/buttons/Button';
-import CustomOfficeForm from './CustomOfficeForm';
+import { useState } from 'react'
+import Modal from '@shared/utils/Modal'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import Button from '@shared/buttons/Button'
+import CustomOfficeForm from './CustomOfficeForm'
 
 const STEPS = {
   TROUBLESHOOT: 'troubleshoot',
   SET_CUSTOM_OFFICE: 'set-custom-office',
-};
+}
 
 export default function CantFindRaceModal({
   campaign,
@@ -16,7 +16,7 @@ export default function CantFindRaceModal({
   onBack,
   onSaveCustomOffice,
 }) {
-  const [step, setStep] = useState(STEPS.TROUBLESHOOT);
+  const [step, setStep] = useState(STEPS.TROUBLESHOOT)
 
   return (
     <Modal open closeCallback={onClose}>
@@ -73,5 +73,5 @@ export default function CantFindRaceModal({
         )}
       </div>
     </Modal>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import Table from '@shared/utils/Table';
-import { useMemo } from 'react';
-import BustCacheButton from './BustCacheButton';
+'use client'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import Table from '@shared/utils/Table'
+import { useMemo } from 'react'
+import BustCacheButton from './BustCacheButton'
 
 export default function AdminUsersPage(props) {
   const inputData = [
@@ -47,9 +47,9 @@ export default function AdminUsersPage(props) {
       description: 'Invalidate custom path',
       paths: [],
     },
-  ];
+  ]
 
-  const data = useMemo(() => inputData);
+  const data = useMemo(() => inputData)
 
   let columns = useMemo(() => [
     {
@@ -65,10 +65,10 @@ export default function AdminUsersPage(props) {
       collapse: true,
       accessor: 'actions',
       Cell: ({ row }) => {
-        return <BustCacheButton {...row.original} />;
+        return <BustCacheButton {...row.original} />
       },
     },
-  ]);
+  ])
 
   return (
     <AdminWrapper {...props}>
@@ -82,5 +82,5 @@ export default function AdminUsersPage(props) {
         />
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

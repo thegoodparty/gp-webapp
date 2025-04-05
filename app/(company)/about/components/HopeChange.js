@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import Button from '@shared/buttons/Button';
+import Image from 'next/image'
+import Button from '@shared/buttons/Button'
 
 const HopeChangeCard = ({ children }) => (
   <section
@@ -16,7 +16,7 @@ const HopeChangeCard = ({ children }) => (
   >
     <div className="relative h-full">{children}</div>
   </section>
-);
+)
 
 export const HopeChange = ({
   image = {
@@ -48,4 +48,4 @@ export const HopeChange = ({
       {buttonText}
     </Button>
   </HopeChangeCard>
-);
+)

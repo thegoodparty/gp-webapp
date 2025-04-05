@@ -1,5 +1,5 @@
-import ImpactStats from 'app/(company)/team/components/ImpactStats';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import ImpactStats from 'app/(company)/team/components/ImpactStats'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 const OurImpact = () => (
   <section className="bg-primary-main px-4 py-8 font-medium text-primary-contrast lg:p-24">
@@ -23,6 +23,6 @@ const OurImpact = () => (
       </div>
     </MaxWidth>
   </section>
-);
+)
 
-export default OurImpact;
+export default OurImpact

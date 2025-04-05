@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import EmailFormV2 from '@shared/inputs/EmailFormV2';
-import MaxWidth from '@shared/layouts/MaxWidth';
+import Image from 'next/image'
+import EmailFormV2 from '@shared/inputs/EmailFormV2'
+import MaxWidth from '@shared/layouts/MaxWidth'
 
 const AboutHero = () => (
   <section
@@ -61,6 +61,6 @@ const AboutHero = () => (
       </div>
     </MaxWidth>
   </section>
-);
+)
 
-export default AboutHero;
+export default AboutHero

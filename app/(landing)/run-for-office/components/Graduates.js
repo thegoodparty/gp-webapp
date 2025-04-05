@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Link from 'next/link';
-import terryImg from 'public/images/run-for-office/terry.png';
-import certifiedImg from 'public/images/run-for-office/certified.png';
-import martyImg from 'public/images/run-for-office/marty.png';
+import Image from 'next/image'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Link from 'next/link'
+import terryImg from 'public/images/run-for-office/terry.png'
+import certifiedImg from 'public/images/run-for-office/certified.png'
+import martyImg from 'public/images/run-for-office/marty.png'
 
 const graduates = [
   {
@@ -27,7 +27,7 @@ const graduates = [
     link: '/blog/article/case-study-terry-vo-win',
     cta: 'Read more about Terry Vo',
   },
-];
+]
 
 export default function Graduates() {
   return (
@@ -64,5 +64,5 @@ export default function Graduates() {
         </div>
       </MaxWidth>
     </section>
-  );
+  )
 }

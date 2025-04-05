@@ -1,6 +1,6 @@
-import H1 from '@shared/typography/H1';
-import { faqArticleRoute } from 'helpers/articleHelper';
-import Link from 'next/link';
+import H1 from '@shared/typography/H1'
+import { faqArticleRoute } from 'helpers/articleHelper'
+import Link from 'next/link'
 
 export default function Categories({ content }) {
   return (
@@ -35,5 +35,5 @@ export default function Categories({ content }) {
           </div>
         ))}
     </div>
-  );
+  )
 }

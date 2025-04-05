@@ -1,16 +1,16 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Tabs from '@shared/utils/Tabs';
-import H3 from '@shared/typography/H3';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { ArrowBackIos } from '@mui/icons-material';
-import Link from 'next/link';
-import DOMPurify from 'isomorphic-dompurify';
+'use client'
+import React, { useEffect, useState } from 'react'
+import Tabs from '@shared/utils/Tabs'
+import H3 from '@shared/typography/H3'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { ArrowBackIos } from '@mui/icons-material'
+import Link from 'next/link'
+import DOMPurify from 'isomorphic-dompurify'
 
 function JobPage({ job }) {
-  const [jobId, setJobId] = useState(null);
-  const [tab, setTab] = useState(0);
+  const [jobId, setJobId] = useState(null)
+  const [tab, setTab] = useState(0)
 
   const labels = [
     <div
@@ -27,16 +27,16 @@ function JobPage({ job }) {
     >
       <div className="ml-2 font-medium text-xs lg:text-base">Application</div>
     </div>,
-  ];
+  ]
 
   const TABS_ENUM = {
     overview: 0,
     application: 1,
-  };
+  }
 
   const changeTabCallback = (index) => {
-    setTab(index);
-  };
+    setTab(index)
+  }
   const panels = [
     <div key="1">
       {job && job?.descriptionHtml && DOMPurify && (
@@ -51,9 +51,9 @@ function JobPage({ job }) {
             <div
               className="pt-10 mb-6"
               onClick={() => {
-                setTab(TABS_ENUM.application);
+                setTab(TABS_ENUM.application)
                 // scroll to the top of the page
-                window.scrollTo(0, 0);
+                window.scrollTo(0, 0)
               }}
             >
               <PrimaryButton>Apply for this Job</PrimaryButton>
@@ -65,21 +65,21 @@ function JobPage({ job }) {
     <div key="2">
       <div id="ashby_embed" className="max-w-lg" />
     </div>,
-  ];
+  ]
 
   useEffect(() => {
     if (!window.ashbyJobsOptions) {
-      const script = document.createElement('script');
-      script.src = 'https://jobs.ashbyhq.com/goodparty/embed?version=2';
-      document.body.appendChild(script);
+      const script = document.createElement('script')
+      script.src = 'https://jobs.ashbyhq.com/goodparty/embed?version=2'
+      document.body.appendChild(script)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (job) {
-      setJobId(job.id);
+      setJobId(job.id)
     }
-  }, [job]);
+  }, [job])
 
   useEffect(() => {
     window.__Ashby = {
@@ -108,8 +108,8 @@ function JobPage({ job }) {
         // customCssUrl:
         //   'https://www.ashbyhq.com/job_board_example_css/application-form-only.css',
       },
-    };
-  }, [jobId]);
+    }
+  }, [jobId])
 
   return (
     <MaxWidth>
@@ -137,9 +137,9 @@ function JobPage({ job }) {
         changeCallback={changeTabCallback}
       />
     </MaxWidth>
-  );
+  )
 }
 
-JobPage.propTypes = {};
+JobPage.propTypes = {}
 
-export default JobPage;
+export default JobPage

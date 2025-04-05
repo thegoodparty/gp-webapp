@@ -1,13 +1,13 @@
-'use client';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import TextField from '@shared/inputs/TextField';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper';
-import { useState, useMemo } from 'react';
-import { getDefaultVoterFileName } from '../../components/VoterFileTypes';
-import { useSnackbar } from 'helpers/useSnackbar';
+'use client'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import TextField from '@shared/inputs/TextField'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { useState, useMemo } from 'react'
+import { getDefaultVoterFileName } from '../../components/VoterFileTypes'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function ScheduleFlowScheduleStep({
   onChangeCallback,
@@ -18,52 +18,52 @@ export default function ScheduleFlowScheduleStep({
   type,
   schedule,
 }) {
-  const { errorSnackbar, successSnackbar } = useSnackbar();
+  const { errorSnackbar, successSnackbar } = useSnackbar()
   const [state, setState] = useState(
     schedule || {
       date: '',
       message: '',
     },
-  );
+  )
 
   const resolvedFileName = useMemo(
     () => (fileName ? fileName : getDefaultVoterFileName(type)),
     [fileName, type],
-  );
+  )
 
   const trackingAttrs = useMemo(
     () =>
       buildTrackingAttrs('Schedule Contact Campaign Submit Button', { type }),
     [type],
-  );
+  )
 
   const onChangeField = (key, value) => {
     const newState = {
       ...state,
       [key]: value,
-    };
-    setState(newState);
-    onChangeCallback('schedule', newState);
-  };
+    }
+    setState(newState)
+    onChangeCallback('schedule', newState)
+  }
 
-  const canSubmit = () => state.date != '' && state.message != '';
+  const canSubmit = () => state.date != '' && state.message != ''
 
   const handleNext = async () => {
-    const resp = await submitCallback();
+    const resp = await submitCallback()
 
-    if (resp.ok === false) {
-      errorSnackbar('Failed to submit request.');
-      return;
+    if (resp.ok === false || resp.errors) {
+      errorSnackbar('Failed to submit request.')
+      return
     }
 
-    successSnackbar('Request submitted successfully.');
-    nextCallback();
-  };
-  const isTel = type === 'telemarketing';
-  const today = new Date();
-  const futureDate = new Date(today);
-  futureDate.setDate(today.getDate() + 3);
-  const minDate = futureDate.toISOString().split('T')[0];
+    successSnackbar('Request submitted successfully.')
+    nextCallback()
+  }
+  const isTel = type === 'telemarketing'
+  const today = new Date()
+  const futureDate = new Date(today)
+  futureDate.setDate(today.getDate() + 3)
+  const minDate = futureDate.toISOString().split('T')[0]
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
@@ -87,7 +87,7 @@ export default function ScheduleFlowScheduleStep({
             required
             value={state.date}
             onChange={(e) => {
-              onChangeField('date', e.target.value);
+              onChangeField('date', e.target.value)
             }}
             InputLabelProps={{
               shrink: true,
@@ -107,7 +107,7 @@ export default function ScheduleFlowScheduleStep({
             required
             value={state.message}
             onChange={(e) => {
-              onChangeField('message', e.target.value);
+              onChangeField('message', e.target.value)
             }}
           />
         </div>
@@ -128,5 +128,5 @@ export default function ScheduleFlowScheduleStep({
         </div>
       </div>
     </div>
-  );
+  )
 }

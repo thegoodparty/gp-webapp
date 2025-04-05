@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import { usePathname } from 'next/navigation';
-import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns';
-import { useMemo } from 'react';
-import NavButton from './NavButton';
+import { usePathname } from 'next/navigation'
+import { NavDropdowns } from '@shared/layouts/navigation/NavDropdowns'
+import { useMemo } from 'react'
+import NavButton from './NavButton'
 
 // list of paths to hide marketing nav
-const HIDE_NAV_PATHS = ['/onboarding', '/dashboard', '/profile', '/serve'];
+const HIDE_NAV_PATHS = ['/onboarding', '/dashboard', '/profile', '/serve']
 
 export default function LeftSide() {
-  const pathname = usePathname();
+  const pathname = usePathname()
   const shouldHideNav = useMemo(
     () => HIDE_NAV_PATHS.some((path) => pathname?.startsWith(path)),
     [pathname],
-  );
+  )
 
   if (shouldHideNav) {
-    return null;
+    return null
   }
 
   return (
@@ -28,5 +28,5 @@ export default function LeftSide() {
         </span>
       </NavButton>
     </div>
-  );
+  )
 }

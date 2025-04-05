@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import H2 from '@shared/typography/H2';
-import H3 from '@shared/typography/H3';
-import { dateUsHelper } from 'helpers/dateHelper';
-import { numberFormatter } from 'helpers/numberHelper';
-import { Fragment } from 'react';
+import H2 from '@shared/typography/H2'
+import H3 from '@shared/typography/H3'
+import { dateUsHelper } from 'helpers/dateHelper'
+import { numberFormatter } from 'helpers/numberHelper'
+import { Fragment } from 'react'
 
 export default function AiContentTotals(props) {
-  const { campaign } = props;
-  const { aiContent } = campaign;
+  const { campaign } = props
+  const { aiContent } = campaign
   if (!aiContent) {
-    return <div className="my-4 text-xl">No AI Content</div>;
+    return <div className="my-4 text-xl">No AI Content</div>
   }
-  const total = Object.keys(aiContent).length;
+  const total = Object.keys(aiContent).length
   return (
     <div className="">
       <div className="relative bg-[conic-gradient(at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-blue-800 h-48 rounded-lg flex items-center justify-center flex-col text-center shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]">
@@ -34,5 +34,5 @@ export default function AiContentTotals(props) {
         ))}
       </div>
     </div>
-  );
+  )
 }

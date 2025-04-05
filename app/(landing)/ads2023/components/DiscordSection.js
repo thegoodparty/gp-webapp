@@ -1,13 +1,13 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import img from 'public/images/landing-pages/discord.png';
-import user1 from 'public/images/landing-pages/discord-user1.png';
-import user2 from 'public/images/landing-pages/discord-user2.png';
-import user3 from 'public/images/landing-pages/discord-user3.png';
-import user4 from 'public/images/landing-pages/discord-user4.png';
-import user5 from 'public/images/landing-pages/discord-user5.png';
-import H2 from '@shared/typography/H2';
-import WarningButton from '@shared/buttons/WarningButton';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import img from 'public/images/landing-pages/discord.png'
+import user1 from 'public/images/landing-pages/discord-user1.png'
+import user2 from 'public/images/landing-pages/discord-user2.png'
+import user3 from 'public/images/landing-pages/discord-user3.png'
+import user4 from 'public/images/landing-pages/discord-user4.png'
+import user5 from 'public/images/landing-pages/discord-user5.png'
+import H2 from '@shared/typography/H2'
+import WarningButton from '@shared/buttons/WarningButton'
 
 export default function DiscordSection() {
   return (
@@ -50,5 +50,5 @@ export default function DiscordSection() {
       </MaxWidth>
       <div className="bg-[linear-gradient(176deg,_rgba(0,0,0,0)_54.5%,_#DFF265_55%)] h-[calc(100vw*0.09)] w-full" />
     </section>
-  );
+  )
 }

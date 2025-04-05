@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import RenderInputField from './RenderInputField';
+import { useState } from 'react'
+import RenderInputField from './RenderInputField'
 
 const textField = {
   type: 'text',
   label: 'Text Field',
   placeholder: 'Put some text here',
   helperText: 'Some helper text',
-};
+}
 
 export default {
   title: 'Inputs/RenderInputField',
@@ -17,9 +17,9 @@ export default {
   },
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [value, setValue] = useState();
+    const [value, setValue] = useState()
 
-    const handleChange = (_k, v) => setValue(v);
+    const handleChange = (_k, v) => setValue(v)
 
     return (
       <div className="flex flex-col gap-3 items-start">
@@ -49,11 +49,11 @@ export default {
           {...{ ...args, field: { ...args?.field, disabled: true } }}
         />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}
 
 export const Multiline = {
   args: {
@@ -62,7 +62,7 @@ export const Multiline = {
       rows: 3,
     },
   },
-};
+}
 
 export const Date = {
   args: {
@@ -72,7 +72,7 @@ export const Date = {
       helperText: 'Some helper text',
     },
   },
-};
+}
 
 export const Number = {
   args: {
@@ -83,7 +83,7 @@ export const Number = {
       placeholder: 'Put number here',
     },
   },
-};
+}
 
 export const Email = {
   args: {
@@ -93,7 +93,7 @@ export const Email = {
       placeholder: 'Enter your email',
     },
   },
-};
+}
 
 export const Phone = {
   args: {
@@ -103,7 +103,7 @@ export const Phone = {
       placeholder: 'Enter phone number',
     },
   },
-};
+}
 
 export const Radio = {
   args: {
@@ -112,7 +112,7 @@ export const Radio = {
       label: 'Radio Field',
     },
   },
-};
+}
 
 export const Checkbox = {
   args: {
@@ -121,7 +121,7 @@ export const Checkbox = {
       label: 'Checkbox Field',
     },
   },
-};
+}
 
 export const Select = {
   args: {
@@ -131,4 +131,4 @@ export const Select = {
       options: ['Option One', 'Option Two', 'Option Three'],
     },
   },
-};
+}

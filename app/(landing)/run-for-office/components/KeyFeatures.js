@@ -1,13 +1,13 @@
-import Image from 'next/image';
-import contentImg from 'public/images/run-for-office/my-content.png';
-import trackerImg from 'public/images/run-for-office/campaign-tracker.png';
-import expertsImg from 'public/images/run-for-office/experts.png';
-import mapImg from 'public/images/run-for-office/map.png';
-import MarketingH3 from '@shared/typography/MarketingH3';
-import Body1 from '@shared/typography/Body1';
-import MarketingH4 from '@shared/typography/MarketingH4';
-import Button from '@shared/buttons/Button';
-import { MdArrowForward } from 'react-icons/md';
+import Image from 'next/image'
+import contentImg from 'public/images/run-for-office/my-content.png'
+import trackerImg from 'public/images/run-for-office/campaign-tracker.png'
+import expertsImg from 'public/images/run-for-office/experts.png'
+import mapImg from 'public/images/run-for-office/map.png'
+import MarketingH3 from '@shared/typography/MarketingH3'
+import Body1 from '@shared/typography/Body1'
+import MarketingH4 from '@shared/typography/MarketingH4'
+import Button from '@shared/buttons/Button'
+import { MdArrowForward } from 'react-icons/md'
 
 function CardWrapper({ children, className }) {
   return (
@@ -18,7 +18,7 @@ function CardWrapper({ children, className }) {
     >
       {children}
     </div>
-  );
+  )
 }
 
 function CTALink({ id, href = '/sign-up' }) {
@@ -32,7 +32,7 @@ function CTALink({ id, href = '/sign-up' }) {
       Get Started
       <MdArrowForward className="text-2xl" />
     </Button>
-  );
+  )
 }
 
 export default function KeyFeatures() {
@@ -122,5 +122,5 @@ export default function KeyFeatures() {
         </div>
       </div>
     </section>
-  );
+  )
 }

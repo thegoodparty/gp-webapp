@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import H3 from '@shared/typography/H3';
-import Body1 from '@shared/typography/Body1';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import { useEffect, useState } from 'react';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { CircularProgress } from '@mui/material';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import H3 from '@shared/typography/H3'
+import Body1 from '@shared/typography/Body1'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import { useEffect, useState } from 'react'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { CircularProgress } from '@mui/material'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const fields = [
   {
@@ -19,52 +19,52 @@ const fields = [
     type: 'text',
     rows: 8,
   },
-];
+]
 
 export default function FunFactSection(props) {
-  const initialState = {};
+  const initialState = {}
   fields.forEach((field) => {
-    initialState[field.key] = '';
-  });
-  const [state, setState] = useState(initialState);
-  const [saving, setSaving] = useState(false);
-  const { campaign } = props;
+    initialState[field.key] = ''
+  })
+  const [state, setState] = useState(initialState)
+  const [saving, setSaving] = useState(false)
+  const { campaign } = props
   useEffect(() => {
     if (campaign?.details) {
-      const newState = {};
+      const newState = {}
       fields.forEach((field) => {
-        newState[field.key] = campaign.details[field.key] || '';
-      });
-      setState(newState);
+        newState[field.key] = campaign.details[field.key] || ''
+      })
+      setState(newState)
     }
-  }, [campaign]);
+  }, [campaign])
   const canSave = () => {
-    let able = true;
+    let able = true
     fields.forEach((field) => {
       if (field.required && state[field.key] === '') {
-        able = false;
+        able = false
       }
-    });
-    return able;
-  };
+    })
+    return able
+  }
 
   const handleSave = async () => {
     if (canSave()) {
-      setSaving(true);
+      setSaving(true)
 
-      trackEvent(EVENTS.Profile.FunFact.ClickSave);
+      trackEvent(EVENTS.Profile.FunFact.ClickSave)
 
-      await updateCampaign([{ key: 'details.funFact', value: state.funFact }]);
-      setSaving(false);
+      await updateCampaign([{ key: 'details.funFact', value: state.funFact }])
+      setSaving(false)
     }
-  };
+  }
 
   const onChangeField = (key, val) => {
     setState({
       ...state,
       [key]: val,
-    });
-  };
+    })
+  }
 
   return (
     <section className="border-t pt-6 border-gray-600">
@@ -99,5 +99,5 @@ export default function FunFactSection(props) {
         )}
       </div>
     </section>
-  );
+  )
 }

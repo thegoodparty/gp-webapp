@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import H2 from '@shared/typography/H2';
-import Modal from '@shared/utils/Modal';
-import { useEffect, useState } from 'react';
-import InputFieldsModal from './InputFieldsModal';
-import TemplateList from './TemplatesList';
-import QuestionProgress, { calcAnswers } from '../../shared/QuestionProgress';
-import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import H2 from '@shared/typography/H2'
+import Modal from '@shared/utils/Modal'
+import { useEffect, useState } from 'react'
+import InputFieldsModal from './InputFieldsModal'
+import TemplateList from './TemplatesList'
+import QuestionProgress, { calcAnswers } from '../../shared/QuestionProgress'
+import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields'
 import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
-} from 'helpers/buildAiContentSections';
-import { getNewAiContentSectionKey } from 'helpers/getNewAiContentSectionKey';
-import { MdAutoAwesome } from 'react-icons/md';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+} from 'helpers/buildAiContentSections'
+import { getNewAiContentSectionKey } from 'helpers/getNewAiContentSectionKey'
+import { MdAutoAwesome } from 'react-icons/md'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function NewContentFlow(props) {
   const {
@@ -25,80 +25,80 @@ export default function NewContentFlow(props) {
     requiresQuestions,
     candidatePositions,
     forceOpenModal,
-  } = props;
+  } = props
   const [sections] = buildAiContentSections(
     campaign,
     AI_CONTENT_SUB_SECTION_KEY,
-  );
-  const [showModal, setShowModal] = useState(false);
-  const [showModal2, setShowModal2] = useState(false);
-  const [selected, setSelected] = useState('');
-  const [inputFields, setInputFields] = useState([]);
+  )
+  const [showModal, setShowModal] = useState(false)
+  const [showModal2, setShowModal2] = useState(false)
+  const [selected, setSelected] = useState('')
+  const [inputFields, setInputFields] = useState([])
 
   useEffect(() => {
     if (selected !== '') {
-      onSelectPrompt();
+      onSelectPrompt()
     }
-  }, [selected]);
+  }, [selected])
 
   // used from tutorial
   useEffect(() => {
     if (forceOpenModal) {
-      setShowModal(true);
+      setShowModal(true)
     }
-  }, [forceOpenModal]);
+  }, [forceOpenModal])
 
   const onSelectPrompt = async () => {
     if (selected !== '') {
-      const content = await fetchPromptInputFields(selected);
+      const content = await fetchPromptInputFields(selected)
       if (!content) {
-        const key = getNewAiContentSectionKey(sections, selected);
-        onSelectCallback(key);
+        const key = getNewAiContentSectionKey(sections, selected)
+        onSelectCallback(key)
       } else {
-        setInputFields(content);
-        setShowModal2(true);
+        setInputFields(content)
+        setShowModal2(true)
       }
-      setShowModal(false);
+      setShowModal(false)
     }
-  };
+  }
 
   const handleAdditionalInput = (additionalPrompt, inputValues) => {
     trackEvent(EVENTS.ContentBuilder.SubmitAdditionalInputs, {
       fields: inputFields,
       values: inputValues,
-    });
-    const chat = [{ role: 'user', content: additionalPrompt }];
-    const key = getNewAiContentSectionKey(sections, selected);
-    onSelectCallback(key, chat, inputValues);
-    setShowModal2(false);
-    setInputFields([]);
-  };
+    })
+    const chat = [{ role: 'user', content: additionalPrompt }]
+    const key = getNewAiContentSectionKey(sections, selected)
+    onSelectCallback(key, chat, inputValues)
+    setShowModal2(false)
+    setInputFields([])
+  }
 
   const handelSelect = (key) => {
-    setSelected(key);
-  };
+    setSelected(key)
+  }
 
   const closeModal = () => {
     trackEvent(EVENTS.ContentBuilder.CloseAdditionalInputs, {
       fields: inputFields,
-    });
-    setSelected(false);
-    setShowModal(false);
-    setShowModal2(false);
-  };
+    })
+    setSelected(false)
+    setShowModal(false)
+    setShowModal2(false)
+  }
 
   const { answeredQuestions, totalQuestions } = calcAnswers(
     campaign,
     candidatePositions,
-  );
+  )
 
   return (
     <div>
       <div
         className="mb-7 inline-block new-content-btn"
         onClick={() => {
-          trackEvent(EVENTS.ContentBuilder.ClickGenerate);
-          setShowModal(true);
+          trackEvent(EVENTS.ContentBuilder.ClickGenerate)
+          setShowModal(true)
         }}
         id="new-content-btn"
       >
@@ -140,5 +140,5 @@ export default function NewContentFlow(props) {
         inputFields={inputFields}
       />
     </div>
-  );
+  )
 }

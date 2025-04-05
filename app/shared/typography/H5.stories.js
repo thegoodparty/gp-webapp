@@ -1,4 +1,4 @@
-import H5Component from './H5';
+import H5Component from './H5'
 
 export default {
   title: 'Typography/H5',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Header 5 Text',
   },
-};
+}
 
-export const H5 = {};
+export const H5 = {}

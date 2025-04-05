@@ -1,32 +1,32 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import { FaCheck, FaEdit } from 'react-icons/fa';
-import { FaXmark } from 'react-icons/fa6';
-import IconButton from '@mui/material/IconButton';
-import { updateTopIssue } from './TopIssuesList';
-import { useTopIssues } from './UseTopIssuesContext';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { SvgIconImage } from './SvgIconImage';
+import { useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import { FaCheck, FaEdit } from 'react-icons/fa'
+import { FaXmark } from 'react-icons/fa6'
+import IconButton from '@mui/material/IconButton'
+import { updateTopIssue } from './TopIssuesList'
+import { useTopIssues } from './UseTopIssuesContext'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { SvgIconImage } from './SvgIconImage'
 
 const insertItemInArray = (arr, item, placement) => [
   ...arr.slice(0, placement),
   item,
   ...arr.slice(placement + 1),
-];
+]
 
 export const TopIssueDisplay = ({ issue }) => {
-  const [topIssues, setTopIssues] = useTopIssues();
-  const [editTopIssueId, setEditTopIssueId] = useState(null);
-  const [editTopIssueName, setEditTopIssueName] = useState(null);
-  const [editTopIssueIcon, setEditTopIssueIcon] = useState(null);
+  const [topIssues, setTopIssues] = useTopIssues()
+  const [editTopIssueId, setEditTopIssueId] = useState(null)
+  const [editTopIssueName, setEditTopIssueName] = useState(null)
+  const [editTopIssueIcon, setEditTopIssueIcon] = useState(null)
 
   const handleClearIssueEdit = () => {
-    setEditTopIssueId(null);
-    setEditTopIssueName(null);
-    setEditTopIssueIcon(null);
-  };
+    setEditTopIssueId(null)
+    setEditTopIssueName(null)
+    setEditTopIssueIcon(null)
+  }
 
   return editTopIssueId === issue.id ? (
     <>
@@ -49,16 +49,16 @@ export const TopIssueDisplay = ({ issue }) => {
               id: editTopIssueId,
               name: editTopIssueName,
               icon: editTopIssueIcon,
-            };
-            await updateTopIssue(updateIssue);
+            }
+            await updateTopIssue(updateIssue)
             setTopIssues(
               insertItemInArray(
                 topIssues,
                 updateIssue,
                 topIssues.findIndex(({ id }) => id === issue.id),
               ),
-            );
-            handleClearIssueEdit();
+            )
+            handleClearIssueEdit()
           }}
           className={{ 'mr-2': true }}
         >
@@ -86,13 +86,13 @@ export const TopIssueDisplay = ({ issue }) => {
       <IconButton
         size="small"
         onClick={() => {
-          setEditTopIssueId(issue.id);
-          setEditTopIssueName(issue.name);
-          setEditTopIssueIcon(issue.icon);
+          setEditTopIssueId(issue.id)
+          setEditTopIssueName(issue.name)
+          setEditTopIssueIcon(issue.icon)
         }}
       >
         <FaEdit />
       </IconButton>
     </>
-  );
-};
+  )
+}

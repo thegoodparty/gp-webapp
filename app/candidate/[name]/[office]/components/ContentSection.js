@@ -1,13 +1,13 @@
-import AboutCard from './AboutCard';
-import FreeToolsCard from './FreeToolsCard';
-import OfficeCard from './OfficeCard';
-import P2vCard from './P2vCard';
-import TargetCard from './TargetCard';
-import TopIssuesCard from './TopIssuesCard';
+import AboutCard from './AboutCard'
+import FreeToolsCard from './FreeToolsCard'
+import OfficeCard from './OfficeCard'
+import P2vCard from './P2vCard'
+import TargetCard from './TargetCard'
+import TopIssuesCard from './TopIssuesCard'
 
 export default function ContentSection(props) {
-  const { candidate } = props;
-  const { p2vData } = candidate;
+  const { candidate } = props
+  const { p2vData } = candidate
   return (
     <div className="grid grid-cols-12 gap-4 mb-4 pt-5">
       {p2vData ? (
@@ -32,5 +32,5 @@ export default function ContentSection(props) {
         <TopIssuesCard {...props} />
       </div>
     </div>
-  );
+  )
 }

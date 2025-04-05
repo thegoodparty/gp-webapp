@@ -1,38 +1,38 @@
-'use client';
-import RaceCard from './RaceCard';
-import { useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import H3 from '@shared/typography/H3';
-import CantFindRaceModal from './CantFindRaceModal';
-import { useRouter } from 'next/navigation';
-import Button from '@shared/buttons/Button';
-import H1 from '@shared/typography/H1';
-import Body1 from '@shared/typography/Body1';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import RaceCard from './RaceCard'
+import { useEffect, useState } from 'react'
+import { CircularProgress } from '@mui/material'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import H3 from '@shared/typography/H3'
+import CantFindRaceModal from './CantFindRaceModal'
+import { useRouter } from 'next/navigation'
+import Button from '@shared/buttons/Button'
+import H1 from '@shared/typography/H1'
+import Body1 from '@shared/typography/Body1'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const fetchRaces = async (zipcode, level, electionDate) => {
-  let cleanLevel = level;
+  let cleanLevel = level
   if (level === 'Local/Township/City') {
-    cleanLevel = 'Local';
+    cleanLevel = 'Local'
   }
   if (level === 'County/Regional') {
-    cleanLevel = 'County';
+    cleanLevel = 'County'
   }
   const payload = {
     zipcode,
     level: cleanLevel,
     ...(electionDate ? { electionDate } : {}),
-  };
+  }
 
   const resp = await clientFetch(apiRoutes.elections.racesByYear, payload, {
     revalidate: 3600,
-  });
+  })
 
-  return resp.data;
-};
+  return resp.data
+}
 
 export default function BallotRaces(props) {
   const {
@@ -46,65 +46,65 @@ export default function BallotRaces(props) {
     electionDate,
     adminMode,
     onBack,
-  } = props;
-  const [races, setRaces] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [selected, setSelected] = useState(selectedOffice || false);
-  const [loading, setLoading] = useState(false);
-  const [showHelpModal, setShowHelpModal] = useState(false);
+  } = props
+  const [races, setRaces] = useState(false)
+  const [inputValue, setInputValue] = useState('')
+  const [selected, setSelected] = useState(selectedOffice || false)
+  const [loading, setLoading] = useState(false)
+  const [showHelpModal, setShowHelpModal] = useState(false)
 
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
-    loadRaces(zip, level, electionDate);
-  }, []);
+    loadRaces(zip, level, electionDate)
+  }, [])
 
   const loadRaces = async (zip, level, electionDate) => {
     if (zip) {
-      setLoading(true);
-      const initRaces = await fetchRaces(zip, level, electionDate);
+      setLoading(true)
+      const initRaces = await fetchRaces(zip, level, electionDate)
       if (!initRaces) {
-        throw new Error(`Couldn't fetch races for zip ${zip}`);
+        throw new Error(`Couldn't fetch races for zip ${zip}`)
       }
       setRaces(
         initRaces.sort((a, b) =>
           a.election.electionDay.localeCompare(b.election.electionDay),
         ),
-      );
-      setLoading(false);
+      )
+      setLoading(false)
     }
-  };
+  }
 
   if (!zip) {
-    return <div>No valid zip</div>;
+    return <div>No valid zip</div>
   }
 
   const handleSelect = (race) => {
     if (race?.id === selected?.id) {
-      setSelected(false);
-      selectedOfficeCallback(false);
+      setSelected(false)
+      selectedOfficeCallback(false)
     } else {
-      setSelected(race);
-      selectedOfficeCallback(race);
+      setSelected(race)
+      selectedOfficeCallback(race)
     }
-  };
+  }
 
   const handleShowModal = () => {
-    trackEvent(EVENTS.Onboarding.OfficeStep.ClickCantSeeOffice);
-    setShowHelpModal(true);
-  };
+    trackEvent(EVENTS.Onboarding.OfficeStep.ClickCantSeeOffice)
+    setShowHelpModal(true)
+  }
 
   const handleCloseModal = () => {
-    setShowHelpModal(false);
-  };
+    setShowHelpModal(false)
+  }
 
   const handleSaveCustomOffice = async (updated) => {
-    updated.details.positionId = null;
-    updated.details.electionId = null;
+    updated.details.positionId = null
+    updated.details.electionId = null
     if (step) {
       updated.currentStep = campaign.currentStep
         ? Math.max(campaign.currentStep, step)
-        : step;
+        : step
 
       const attr = [
         { key: 'data.currentStep', value: updated.currentStep },
@@ -123,9 +123,9 @@ export default function BallotRaces(props) {
           value: updated.details.officeTermLength,
         },
         { key: 'details.state', value: updated.details.state },
-      ];
-      await updateCampaign(attr);
-      router.push(`/onboarding/${campaign.slug}/${step + 1}`);
+      ]
+      await updateCampaign(attr)
+      router.push(`/onboarding/${campaign.slug}/${step + 1}`)
     } else {
       const attr = [
         { key: 'details.otherOffice', value: '' },
@@ -143,17 +143,17 @@ export default function BallotRaces(props) {
           value: updated.details.officeTermLength,
         },
         { key: 'details.state', value: updated.details.state },
-      ];
+      ]
       if (adminMode) {
-        await updateCampaign(attr, campaign.slug);
+        await updateCampaign(attr, campaign.slug)
       } else {
-        await updateCampaign(attr);
+        await updateCampaign(attr)
       }
       if (updateCallback) {
-        updateCallback();
+        updateCallback()
       }
     }
-  };
+  }
 
   return (
     <section className="mb-2">
@@ -202,5 +202,5 @@ export default function BallotRaces(props) {
         />
       )}
     </section>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-'use client';
-import CmsContentWrapper from '@shared/content/CmsContentWrapper';
-import { FaCheck } from 'react-icons/fa';
-import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar';
-import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody';
-import { useEffect, useRef, useState } from 'react';
-import Button from '@shared/buttons/Button';
+'use client'
+import CmsContentWrapper from '@shared/content/CmsContentWrapper'
+import { FaCheck } from 'react-icons/fa'
+import AcknowledgementTitleBar from '@shared/acknowledgements/AcknowledgementTitleBar'
+import { AcknowledgementQuestionBody } from '@shared/acknowledgements/AcknowledgementQuestionBody'
+import { useEffect, useRef, useState } from 'react'
+import Button from '@shared/buttons/Button'
 
 export const AcknowledgementQuestion = ({
   emoticon = <></>,
@@ -16,15 +16,15 @@ export const AcknowledgementQuestion = ({
   onAcknowledge = () => {},
   disableScrollTo = false,
 }) => {
-  const [scrolledTo, setScrolledTo] = useState(disableScrollTo);
-  const titleBarRef = useRef(null);
+  const [scrolledTo, setScrolledTo] = useState(disableScrollTo)
+  const titleBarRef = useRef(null)
 
   useEffect(() => {
     if (show && !scrolledTo && titleBarRef.current) {
-      titleBarRef.current.scrollIntoView({ behavior: 'smooth' });
-      setScrolledTo(true);
+      titleBarRef.current.scrollIntoView({ behavior: 'smooth' })
+      setScrolledTo(true)
     }
-  }, [show]);
+  }, [show])
 
   return (
     <>
@@ -36,7 +36,7 @@ export const AcknowledgementQuestion = ({
           {acknowledged ? (
             <Button
               onClick={() => {
-                onAcknowledge(false);
+                onAcknowledge(false)
               }}
               className="flex items-center"
               size="large"
@@ -48,7 +48,7 @@ export const AcknowledgementQuestion = ({
           ) : (
             <Button
               onClick={() => {
-                onAcknowledge(true);
+                onAcknowledge(true)
               }}
               size="large"
             >
@@ -58,5 +58,5 @@ export const AcknowledgementQuestion = ({
         </div>
       </AcknowledgementQuestionBody>
     </>
-  );
-};
+  )
+}

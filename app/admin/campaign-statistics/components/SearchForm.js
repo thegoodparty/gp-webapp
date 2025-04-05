@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { flatStates } from 'helpers/statesHelper';
-import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
-import Body2 from '@shared/typography/Body2';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { flatStates } from 'helpers/statesHelper'
+import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject'
+import Body2 from '@shared/typography/Body2'
 
 const formFields = [
   {
@@ -64,20 +64,20 @@ const formFields = [
     label: 'General Election Date End',
     type: 'date',
   },
-];
+]
 
 export default function SearchForm({ show = true }) {
-  const router = useRouter();
+  const router = useRouter()
   const [formState, setFormState] = useState(
     URLSearchParamsToObject(useSearchParams()),
-  );
+  )
 
   const onChangeField = (key, val) => {
     setFormState({
       ...formState,
       [key]: val,
-    });
-  };
+    })
+  }
 
   const {
     primaryElectionDateStart,
@@ -85,39 +85,39 @@ export default function SearchForm({ show = true }) {
     generalElectionDateStart,
     generalElectionDateEnd,
     state,
-  } = formState;
+  } = formState
   const invalidPrimaryDates =
     primaryElectionDateStart !== '' &&
     primaryElectionDateEnd !== '' &&
-    new Date(primaryElectionDateStart) > new Date(primaryElectionDateEnd);
+    new Date(primaryElectionDateStart) > new Date(primaryElectionDateEnd)
   const invalidGeneralDates =
     generalElectionDateStart !== '' &&
     generalElectionDateEnd !== '' &&
-    new Date(generalElectionDateStart) > new Date(generalElectionDateEnd);
-  const invalidState = state && !flatStates.includes(state);
+    new Date(generalElectionDateStart) > new Date(generalElectionDateEnd)
+  const invalidState = state && !flatStates.includes(state)
   const noFiltersSet = Object.values(formState).every(
     (val) => val === '' || val === undefined,
-  );
+  )
   const formValid =
     !(invalidPrimaryDates || invalidGeneralDates || invalidState) ||
-    noFiltersSet;
+    noFiltersSet
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const searchParams = new URLSearchParams();
+    e.preventDefault()
+    const searchParams = new URLSearchParams()
 
     Object.keys(formState).forEach((key) => {
       if (formState[key] !== undefined && formState[key] !== '') {
-        searchParams.append(key, formState[key]);
+        searchParams.append(key, formState[key])
       }
-    });
+    })
 
     router.push(
       noFiltersSet
         ? `?firehose=true`
         : `?${searchParams.toString().replace('firehose=true&', '')}`,
-    );
-  };
+    )
+  }
 
   return (
     <form
@@ -154,5 +154,5 @@ export default function SearchForm({ show = true }) {
         </div>
       </div>
     </form>
-  );
+  )
 }

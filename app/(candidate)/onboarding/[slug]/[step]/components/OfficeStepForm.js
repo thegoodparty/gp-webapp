@@ -1,11 +1,11 @@
-'use client';
-import Button from '@shared/buttons/Button';
-import { useUser } from '@shared/hooks/useUser';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { validateZip } from 'app/(entrance)/sign-up/components/SignUpPage';
-import { Fragment, useState } from 'react';
+'use client'
+import Button from '@shared/buttons/Button'
+import { useUser } from '@shared/hooks/useUser'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { validateZip } from 'app/(entrance)/sign-up/components/SignUpPage'
+import { Fragment, useState } from 'react'
 
 const fields = [
   {
@@ -27,45 +27,45 @@ const fields = [
     type: 'date',
     showResetButton: true,
   },
-];
+]
 
 export default function OfficeStepForm(props) {
   const { campaign, handleNextPart, level, zip, electionDate, adminMode } =
-    props;
-  const [processing, setProcessing] = useState(false);
+    props
+  const [processing, setProcessing] = useState(false)
   const [state, setState] = useState({
     zip: zip || '',
     level: level || '',
     electionDate: electionDate || '',
-  });
-  const [user, _] = useUser();
+  })
+  const [user, _] = useUser()
 
   const canSubmit = () => {
-    return state.zip && state.level && validateZip(state.zip);
-  };
+    return state.zip && state.level && validateZip(state.zip)
+  }
 
   const handleNext = async () => {
-    setProcessing(true);
+    setProcessing(true)
 
     if (!canSubmit()) {
-      setProcessing(false);
-      return;
+      setProcessing(false)
+      return
     }
 
-    handleNextPart(state.zip, state.level, state.electionDate);
-    setProcessing(false);
-  };
+    handleNextPart(state.zip, state.level, state.electionDate)
+    setProcessing(false)
+  }
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
+    })
     //  Clear error when user types
-  };
-  let userName = user?.firstName + ' ' + user?.lastName;
+  }
+  let userName = user?.firstName + ' ' + user?.lastName
   if (adminMode) {
-    userName = '';
+    userName = ''
   }
 
   return (
@@ -102,5 +102,5 @@ export default function OfficeStepForm(props) {
         </Button>
       </div>
     </>
-  );
+  )
 }

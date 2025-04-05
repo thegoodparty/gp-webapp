@@ -1,32 +1,39 @@
-'use client';
-import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import { campaignOfficeFields } from 'helpers/campaignOfficeFields';
-import { useState } from 'react';
-import { CampaignOfficeInputFields } from 'app/(candidate)/dashboard/shared/CampaignOfficeInputFields';
-import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal';
-import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt';
-import Button from '@shared/buttons/Button';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import { campaignOfficeFields } from 'helpers/campaignOfficeFields'
+import { useState } from 'react'
+import { CampaignOfficeInputFields } from 'app/(candidate)/dashboard/shared/CampaignOfficeInputFields'
+import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/CampaignOfficeSelectionModal'
+import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt'
+import Button from '@shared/buttons/Button'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 
 const ProSignUpPage = ({ campaign }) => {
-  const [campaignState, setCampaignState] = useState(campaign);
-  const [showModal, setShowModal] = useState(false);
-  const officeFields = campaignOfficeFields(campaignState?.details);
+  const [campaignState, setCampaignState] = useState(campaign)
+  const [showModal, setShowModal] = useState(false)
+  const [campaignStatus] = useCampaignStatus()
+  const { isVerified } = campaignStatus || {}
+  const officeFields = campaignOfficeFields(campaignState?.details)
 
   const onSelect = async () => {
-    trackEvent(EVENTS.ProUpgrade.SubmitEditOffice);
-    const campaign = await getCampaign();
-    setCampaignState(campaign);
-    setShowModal(false);
-  };
+    trackEvent(EVENTS.ProUpgrade.SubmitEditOffice)
+    const campaign = await getCampaign()
+    setCampaignState(campaign)
+    setShowModal(false)
+  }
 
   const onClose = () => {
-    trackEvent(EVENTS.ProUpgrade.ExitEditOffice);
-    setShowModal(false);
-  };
+    trackEvent(EVENTS.ProUpgrade.ExitEditOffice)
+    setShowModal(false)
+  }
+
+  const confirmedLink = isVerified
+    ? '/dashboard/pro-sign-up/service-agreement'
+    : '/dashboard/pro-sign-up/committee-check'
 
   return (
     <FocusedExperienceWrapper>
@@ -46,16 +53,16 @@ const ProSignUpPage = ({ campaign }) => {
             variant="outlined"
             size="large"
             onClick={() => {
-              trackEvent(EVENTS.ProUpgrade.EditOffice);
-              setShowModal(true);
+              trackEvent(EVENTS.ProUpgrade.EditOffice)
+              setShowModal(true)
             }}
           >
             Edit Office
           </Button>
           <Button
-            href="/dashboard/pro-sign-up/committee-check"
+            href={confirmedLink}
             onClick={() => {
-              trackEvent(EVENTS.ProUpgrade.ConfirmOffice);
+              trackEvent(EVENTS.ProUpgrade.ConfirmOffice)
             }}
             className="w-full"
             size="large"
@@ -71,7 +78,7 @@ const ProSignUpPage = ({ campaign }) => {
         </>
       )}
     </FocusedExperienceWrapper>
-  );
-};
+  )
+}
 
-export default ProSignUpPage;
+export default ProSignUpPage

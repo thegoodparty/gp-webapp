@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import { useMemo, useState } from 'react';
-import Paper from '@shared/utils/Paper';
-import VoterFileTypes from '../../components/VoterFileTypes';
-import H2 from '@shared/typography/H2';
-import Body2 from '@shared/typography/Body2';
-import Overline from '@shared/typography/Overline';
-import RecordCount from './RecordCount';
-import slugify from 'slugify';
-import DownloadFile from './DownloadFile';
-import ViewAudienceFiltersModal from '../../components/ViewAudienceFiltersModal';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import { useMemo, useState } from 'react'
+import Paper from '@shared/utils/Paper'
+import VoterFileTypes from '../../components/VoterFileTypes'
+import H2 from '@shared/typography/H2'
+import Body2 from '@shared/typography/Body2'
+import Overline from '@shared/typography/Overline'
+import RecordCount from './RecordCount'
+import slugify from 'slugify'
+import DownloadFile from './DownloadFile'
+import ViewAudienceFiltersModal from '../../components/ViewAudienceFiltersModal'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function Hero(props) {
-  const { type, campaign, fileName, customFile } = props;
-  const [modalOpen, setModalOpen] = useState();
+  const { type, campaign, fileName, customFile } = props
+  const [modalOpen, setModalOpen] = useState()
   const voterFileTypes = useMemo(() => {
-    const dupedFileTypes = [...VoterFileTypes];
+    const dupedFileTypes = [...VoterFileTypes]
 
     if (
       campaign.data?.customVoterFiles &&
@@ -35,20 +35,20 @@ export default function Hero(props) {
             file.purpose || '',
             'Custom Voter File',
           ],
-        });
-      });
+        })
+      })
     }
 
-    return dupedFileTypes;
-  }, [campaign.data?.customVoterFiles]);
+    return dupedFileTypes
+  }, [campaign.data?.customVoterFiles])
 
-  const fileByKey = {};
+  const fileByKey = {}
   voterFileTypes.forEach((file) => {
-    fileByKey[file.key.toLowerCase()] = file;
-  });
+    fileByKey[file.key.toLowerCase()] = file
+  })
 
-  const file = fileByKey[type];
-  const { isCustom, index } = file || {};
+  const file = fileByKey[type]
+  const { isCustom, index } = file || {}
 
   return (
     <Paper className="mt-4">
@@ -67,11 +67,11 @@ export default function Hero(props) {
               open={modalOpen}
               file={customFile}
               onOpen={() => {
-                trackEvent(EVENTS.VoterData.FileDetail.ClickViewFilters);
-                setModalOpen(true);
+                trackEvent(EVENTS.VoterData.FileDetail.ClickViewFilters)
+                setModalOpen(true)
               }}
               onClose={() => {
-                setModalOpen(false);
+                setModalOpen(false)
               }}
             />
           </div>
@@ -87,5 +87,5 @@ export default function Hero(props) {
         </div>
       </div>
     </Paper>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import Modal from '@shared/utils/Modal';
-import { numberFormatter } from 'helpers/numberHelper';
-import { useState } from 'react';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import Modal from '@shared/utils/Modal'
+import { numberFormatter } from 'helpers/numberHelper'
+import { useState } from 'react'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 const pathToVictoryExample = {
   averageTurnout: 1370,
@@ -21,22 +21,22 @@ const pathToVictoryExample = {
   totalRegisteredVoters: 3222,
   voterContactGoal: '3535.00',
   winNumber: '707.00',
-};
+}
 
 export function P2vModal({ triggerElement, pathToVictory = {} }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const {
     totalRegisteredVoters,
     projectedTurnout,
     voterContactGoal,
     winNumber,
-  } = pathToVictory;
-  let turnoutPerc = 0;
+  } = pathToVictory
+  let turnoutPerc = 0
   if (totalRegisteredVoters !== 0) {
     turnoutPerc = numberFormatter(
       (projectedTurnout / totalRegisteredVoters) * 100,
-    );
+    )
   }
 
   return (
@@ -44,16 +44,16 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
       <div
         className="cursor-pointer"
         onClick={() => {
-          trackEvent(EVENTS.Dashboard.PathToVictory.ClickUnderstand);
-          setOpen(true);
+          trackEvent(EVENTS.Dashboard.PathToVictory.ClickUnderstand)
+          setOpen(true)
         }}
       >
         {triggerElement}
       </div>
       <Modal
         closeCallback={() => {
-          trackEvent(EVENTS.Dashboard.PathToVictory.ExitUnderstand);
-          setOpen(false);
+          trackEvent(EVENTS.Dashboard.PathToVictory.ExitUnderstand)
+          setOpen(false)
         }}
         open={open}
       >
@@ -140,5 +140,5 @@ export function P2vModal({ triggerElement, pathToVictory = {} }) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

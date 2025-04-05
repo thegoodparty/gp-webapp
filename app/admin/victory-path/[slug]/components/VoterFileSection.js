@@ -1,8 +1,8 @@
-import RerunP2V from './RerunP2V';
-import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
+import RerunP2V from './RerunP2V'
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
 
 export default function VoterFileSection() {
-  const [campaign] = useAdminCampaign();
+  const [campaign] = useAdminCampaign()
 
   return (
     <div className="bg-indigo-50 rounded border border-slate-300 p-4 my-12">
@@ -32,5 +32,5 @@ export default function VoterFileSection() {
         {campaign?.details?.raceId ? <RerunP2V /> : null}
       </div>
     </div>
-  );
+  )
 }

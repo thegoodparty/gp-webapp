@@ -1,7 +1,7 @@
-'use client';
-import { useContext } from 'react';
-import { MapContext } from './MapSection';
-import { Marker, MarkerClusterer } from '@react-google-maps/api';
+'use client'
+import { useContext } from 'react'
+import { MapContext } from './MapSection'
+import { Marker, MarkerClusterer } from '@react-google-maps/api'
 
 const clusterStyles = [
   {
@@ -18,10 +18,10 @@ const clusterStyles = [
     textColor: 'white', // Text color for the cluster count
     textSize: 12, // Text size for the cluster count
   },
-];
+]
 
 export default function Markers() {
-  const { campaigns, onSelectCampaign } = useContext(MapContext);
+  const { campaigns, onSelectCampaign } = useContext(MapContext)
 
   return (
     <MarkerClusterer
@@ -42,11 +42,11 @@ export default function Markers() {
               scaledSize: new window.google.maps.Size(50, 50),
             }}
             onClick={() => {
-              onSelectCampaign(marker);
+              onSelectCampaign(marker)
             }}
           />
         ))
       }
     </MarkerClusterer>
-  );
+  )
 }

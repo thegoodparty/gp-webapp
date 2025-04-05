@@ -1,4 +1,4 @@
-import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon';
+import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon'
 
 export default {
   title: 'Unshared/AsyncValidationIcon',
@@ -17,8 +17,8 @@ export default {
         <p>Validate Failed</p>
         <AsyncValidationIcon {...args} validated={false} />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

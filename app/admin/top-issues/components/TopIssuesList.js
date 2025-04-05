@@ -1,81 +1,81 @@
-'use client';
-import { useState } from 'react';
-import { BsArrowRightShort } from 'react-icons/bs';
-import { FaCaretDown, FaCaretRight, FaEdit, FaTrash } from 'react-icons/fa';
-import TextField from '@shared/inputs/TextField';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { TopIssueDisplay } from './TopIssueDisplay';
-import { useTopIssues } from './UseTopIssuesContext';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+'use client'
+import { useState } from 'react'
+import { BsArrowRightShort } from 'react-icons/bs'
+import { FaCaretDown, FaCaretRight, FaEdit, FaTrash } from 'react-icons/fa'
+import TextField from '@shared/inputs/TextField'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { TopIssueDisplay } from './TopIssueDisplay'
+import { useTopIssues } from './UseTopIssuesContext'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 const createPositionCallback = async (name, topIssueId) => {
-  const payload = { name, topIssueId };
-  const resp = await clientFetch(apiRoutes.topIssue.position.create, payload);
-  return resp.data;
-};
+  const payload = { name, topIssueId }
+  const resp = await clientFetch(apiRoutes.topIssue.position.create, payload)
+  return resp.data
+}
 
 const deletePositionCallback = async (id) => {
-  const payload = { id };
-  const resp = await clientFetch(apiRoutes.topIssue.position.delete, payload);
-  return resp.data;
-};
+  const payload = { id }
+  const resp = await clientFetch(apiRoutes.topIssue.position.delete, payload)
+  return resp.data
+}
 
 const deleteTopIssueCallback = async (id) => {
-  const payload = { id };
-  const resp = await clientFetch(apiRoutes.topIssue.delete, payload);
-  return resp.data;
-};
+  const payload = { id }
+  const resp = await clientFetch(apiRoutes.topIssue.delete, payload)
+  return resp.data
+}
 
 const editPositionCallback = async (id, name) => {
-  const payload = { id, name };
-  const resp = await clientFetch(apiRoutes.topIssue.position.update, payload);
-  return resp.data;
-};
+  const payload = { id, name }
+  const resp = await clientFetch(apiRoutes.topIssue.position.update, payload)
+  return resp.data
+}
 
 export const updateTopIssue = async (issue) => {
-  const resp = await clientFetch(apiRoutes.topIssue.update, issue);
-  return resp.data;
-};
+  const resp = await clientFetch(apiRoutes.topIssue.update, issue)
+  return resp.data
+}
 
 export default function TopIssuesList() {
-  const [topIssues, setTopIssues] = useTopIssues();
-  const [addNewPosition, setAddNewPosition] = useState(false);
-  const [editPosition, setEditPosition] = useState(false);
-  const [positionName, setPositionName] = useState('');
-  const [showPositionDeleteAlert, setShowPositionDeleteAlert] = useState(false);
-  const [showIssueDeleteAlert, setShowIssueDeleteAlert] = useState(false);
-  const { successSnackbar } = useSnackbar();
+  const [topIssues, setTopIssues] = useTopIssues()
+  const [addNewPosition, setAddNewPosition] = useState(false)
+  const [editPosition, setEditPosition] = useState(false)
+  const [positionName, setPositionName] = useState('')
+  const [showPositionDeleteAlert, setShowPositionDeleteAlert] = useState(false)
+  const [showIssueDeleteAlert, setShowIssueDeleteAlert] = useState(false)
+  const { successSnackbar } = useSnackbar()
   const savePosition = async (id) => {
-    successSnackbar('Saving...');
-    await createPositionCallback(positionName, id);
-    setAddNewPosition(false);
-    setPositionName('');
-    window.location.reload();
-  };
+    successSnackbar('Saving...')
+    await createPositionCallback(positionName, id)
+    setAddNewPosition(false)
+    setPositionName('')
+    window.location.reload()
+  }
 
   const savePositionEdit = async () => {
-    successSnackbar('Saving...');
-    await editPositionCallback(editPosition.id, editPosition.name);
-    setEditPosition(false);
-    window.location.reload();
-  };
+    successSnackbar('Saving...')
+    await editPositionCallback(editPosition.id, editPosition.name)
+    setEditPosition(false)
+    window.location.reload()
+  }
 
   const handleDeletePosition = async () => {
-    successSnackbar('Deleting...');
-    await deletePositionCallback(showPositionDeleteAlert);
-    setShowPositionDeleteAlert(false);
-    window.location.reload();
-  };
+    successSnackbar('Deleting...')
+    await deletePositionCallback(showPositionDeleteAlert)
+    setShowPositionDeleteAlert(false)
+    window.location.reload()
+  }
 
   const handleDeleteIssue = async () => {
-    successSnackbar('Deleting...');
-    await deleteTopIssueCallback(showIssueDeleteAlert);
-    setTopIssues(topIssues.filter(({ id }) => id !== showIssueDeleteAlert));
-    setShowIssueDeleteAlert(false);
-  };
+    successSnackbar('Deleting...')
+    await deleteTopIssueCallback(showIssueDeleteAlert)
+    setTopIssues(topIssues.filter(({ id }) => id !== showIssueDeleteAlert))
+    setShowIssueDeleteAlert(false)
+  }
 
   return (
     <div>
@@ -88,7 +88,7 @@ export default function TopIssuesList() {
             <div className="flex items-center">
               <PrimaryButton
                 onClick={() => {
-                  setAddNewPosition(addNewPosition ? false : issue.id);
+                  setAddNewPosition(addNewPosition ? false : issue.id)
                 }}
               >
                 Add a position for {issue.name}&nbsp;
@@ -101,7 +101,7 @@ export default function TopIssuesList() {
               <div
                 className="text-red-600 inline-block ml-4 bg-stone-300 rounded-full p-4 w-12 h-12 text-center cursor-pointer"
                 onClick={() => {
-                  setShowIssueDeleteAlert(issue.id);
+                  setShowIssueDeleteAlert(issue.id)
                 }}
               >
                 <FaTrash />
@@ -125,7 +125,7 @@ export default function TopIssuesList() {
                 <PrimaryButton
                   disabled={positionName === ''}
                   onClick={() => {
-                    savePosition(issue.id);
+                    savePosition(issue.id)
                   }}
                 >
                   Save New Position
@@ -164,7 +164,7 @@ export default function TopIssuesList() {
                   {position.name}
                   <div
                     onClick={() => {
-                      setShowPositionDeleteAlert(position.id);
+                      setShowPositionDeleteAlert(position.id)
                     }}
                     className="text-red-600 inline-flex ml-4 bg-stone-300 rounded-full p-1  items-center justify-center w-6 h-6 text-xs text-center cursor-pointer"
                   >
@@ -173,7 +173,7 @@ export default function TopIssuesList() {
                   <div
                     className="text-red-600 inline-flex ml-4 bg-stone-300 rounded-full p-1  items-center justify-center w-6 h-6 text-xs text-center cursor-pointer"
                     onClick={() => {
-                      setEditPosition(position);
+                      setEditPosition(position)
                     }}
                   >
                     <FaEdit />
@@ -203,5 +203,5 @@ export default function TopIssuesList() {
         handleProceed={handleDeleteIssue}
       />
     </div>
-  );
+  )
 }

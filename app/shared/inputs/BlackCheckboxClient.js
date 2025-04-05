@@ -1,6 +1,6 @@
-'use client';
-import React from 'react';
-import styles from './BlackCheckbox.module.scss';
+'use client'
+import React from 'react'
+import styles from './BlackCheckbox.module.scss'
 
 function BlackCheckboxClient({ value = false, disabled = false, ...props }) {
   return (
@@ -11,7 +11,7 @@ function BlackCheckboxClient({ value = false, disabled = false, ...props }) {
       className={styles.checkbox}
       {...props}
     />
-  );
+  )
 }
 
-export default BlackCheckboxClient;
+export default BlackCheckboxClient

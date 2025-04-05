@@ -1,4 +1,4 @@
-import CaptionComponent from './Caption';
+import CaptionComponent from './Caption'
 
 export default {
   title: 'Typography/Caption',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Element text',
   },
-};
+}
 
-export const Caption = {};
+export const Caption = {}

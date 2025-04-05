@@ -1,10 +1,10 @@
-'use client';
-import UserSnapScript from '@shared/scripts/UserSnapScript';
-import DashboardMenu from './DashboardMenu';
-import AlertSection from '../components/AlertSection';
-import ProUpgradeModal from './ProUpgradeModal';
-import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider';
-import { useUser } from '@shared/hooks/useUser';
+'use client'
+import UserSnapScript from '@shared/scripts/UserSnapScript'
+import DashboardMenu from './DashboardMenu'
+import AlertSection from '../components/AlertSection'
+import ProUpgradeModal from './ProUpgradeModal'
+import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
+import { useUser } from '@shared/hooks/useUser'
 
 export default function DashboardLayout({
   children,
@@ -13,7 +13,7 @@ export default function DashboardLayout({
   showAlert = true,
   wrapperClassName = '',
 }) {
-  const [user] = useUser();
+  const [user] = useUser()
 
   return (
     <EcanvasserProvider>
@@ -30,5 +30,5 @@ export default function DashboardLayout({
         </main>
       </div>
     </EcanvasserProvider>
-  );
+  )
 }

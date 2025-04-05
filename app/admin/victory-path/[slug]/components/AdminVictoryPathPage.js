@@ -1,33 +1,33 @@
-'use client';
-import PortalPanel from '@shared/layouts/PortalPanel';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import { useEffect, useState, useMemo } from 'react';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions';
-import RenderInputField from '@shared/inputs/RenderInputField';
-import TextField from '@shared/inputs/TextField';
-import { Autocomplete } from '@mui/material';
-import { revalidatePage } from 'helpers/cacheHelper';
-import H3 from '@shared/typography/H3';
-import H2 from '@shared/typography/H2';
-import H4 from '@shared/typography/H4';
-import { dateUsHelper } from 'helpers/dateHelper';
-import Checkbox from '@shared/inputs/Checkbox';
-import VoterFileSection from './VoterFileSection';
-import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection';
-import { useAdminCampaign } from '@shared/hooks/useAdminCampaign';
-import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection';
-import { useSnackbar } from 'helpers/useSnackbar';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
-import { ELECTION_TYPE_CHOICES } from '../constants/electionTypeChoices.const';
+'use client'
+import PortalPanel from '@shared/layouts/PortalPanel'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import { useEffect, useState, useMemo } from 'react'
+import BlackButtonClient from '@shared/buttons/BlackButtonClient'
+import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import RenderInputField from '@shared/inputs/RenderInputField'
+import TextField from '@shared/inputs/TextField'
+import { Autocomplete } from '@mui/material'
+import { revalidatePage } from 'helpers/cacheHelper'
+import H3 from '@shared/typography/H3'
+import H2 from '@shared/typography/H2'
+import H4 from '@shared/typography/H4'
+import { dateUsHelper } from 'helpers/dateHelper'
+import Checkbox from '@shared/inputs/Checkbox'
+import VoterFileSection from './VoterFileSection'
+import AdditionalFieldsSection from 'app/admin/victory-path/[slug]/components/AdditionalFieldsSection'
+import { useAdminCampaign } from '@shared/hooks/useAdminCampaign'
+import { P2VProSection } from 'app/admin/victory-path/[slug]/components/P2VProSection'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
+import { ELECTION_TYPE_CHOICES } from '../constants/electionTypeChoices.const'
 
 export async function sendVictoryMail(id) {
   try {
-    return await clientFetch(apiRoutes.admin.campaign.victoryMail, { id });
+    return await clientFetch(apiRoutes.admin.campaign.victoryMail, { id })
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -180,58 +180,58 @@ const sections = [
       },
     ],
   },
-];
+]
 
-const initialState = {};
-const keys = [];
-const keyTypes = {};
+const initialState = {}
+const keys = []
+const keyTypes = {}
 
 sections.forEach((section) => {
   section.fields.forEach((field) => {
-    keyTypes[field.key] = field.type;
+    keyTypes[field.key] = field.type
     if (field.initialValue) {
-      initialState[field.key] = field.initialValue;
+      initialState[field.key] = field.initialValue
     } else {
       if (field.type === 'number') {
-        initialState[field.key] = 0;
+        initialState[field.key] = 0
       } else {
-        initialState[field.key] = '';
+        initialState[field.key] = ''
       }
     }
-    keys.push(field.key);
-  });
-});
+    keys.push(field.key)
+  })
+})
 
 export default function AdminVictoryPathPage(props) {
-  const [campaign, _, refreshCampaign] = useAdminCampaign();
-  const { pathToVictory: p2vObject, details } = campaign;
-  const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject]);
-  const [locations, setLocations] = useState([]);
-  const [loadingLocations, setLoadingLocations] = useState(false);
+  const [campaign, _, refreshCampaign] = useAdminCampaign()
+  const { pathToVictory: p2vObject, details } = campaign
+  const pathToVictory = useMemo(() => p2vObject?.data || {}, [p2vObject])
+  const [locations, setLocations] = useState([])
+  const [loadingLocations, setLoadingLocations] = useState(false)
 
   const [state, setState] = useState({
     ...initialState,
     ...pathToVictory,
-  });
+  })
 
   async function getVoterLocations(electionType, state) {
     try {
-      setLoadingLocations(true);
+      setLoadingLocations(true)
       const locationResp = await clientFetch(apiRoutes.voters.locations, {
         electionType,
         state,
-      });
-      const items = locationResp?.data || [];
-      setLocations(items);
-      setLoadingLocations(false);
+      })
+      const items = locationResp?.data || []
+      setLocations(items)
+      setLoadingLocations(false)
     } catch (e) {
-      console.error('error', e);
-      return false;
+      console.error('error', e)
+      return false
     }
   }
 
   function isNumeric(str) {
-    return !isNaN(str) && !isNaN(parseFloat(str));
+    return !isNaN(str) && !isNaN(parseFloat(str))
   }
 
   useEffect(() => {
@@ -243,27 +243,27 @@ export default function AdminVictoryPathPage(props) {
       campaign.details?.state !== '' &&
       campaign.details?.state !== null
     ) {
-      console.log(`getting voter locations for ${state.electionType}`);
-      getVoterLocations(state.electionType, campaign.details?.state);
+      console.log(`getting voter locations for ${state.electionType}`)
+      getVoterLocations(state.electionType, campaign.details?.state)
     }
-  }, [state.electionType, campaign.details?.state]);
+  }, [state.electionType, campaign.details?.state])
 
   const [notNeeded, setNotNeeded] = useState(
     pathToVictory?.p2vNotNeeded || false,
-  );
-  const { successSnackbar, errorSnackbar } = useSnackbar();
+  )
+  const { successSnackbar, errorSnackbar } = useSnackbar()
 
   useEffect(() => {
     if (!state.winNumber || !state.averageTurnoutPercent) {
-      let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
+      let winNumber = Math.round(state.projectedTurnout * 0.51 || 0)
       let averageTurnoutPercent = Math.round(
         (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
-      );
+      )
       setState((state) => ({
         ...state,
         winNumber,
         averageTurnoutPercent,
-      }));
+      }))
     }
   }, [
     state.winNumber,
@@ -271,68 +271,68 @@ export default function AdminVictoryPathPage(props) {
     state.averageTurnout,
     state.projectedTurnout,
     state.totalRegisteredVoters,
-  ]);
+  ])
 
   useEffect(() => {
     if (pathToVictory?.viability) {
       for (let key in pathToVictory.viability) {
-        let value = pathToVictory.viability[key];
+        let value = pathToVictory.viability[key]
         if (value === 'true' || value === 'false') {
-          value = value === 'true';
+          value = value === 'true'
         } else if (value !== '' && isNumeric(value)) {
-          value = parseFloat(value);
+          value = parseFloat(value)
         }
-        pathToVictory[`viability.${key}`] = value;
+        pathToVictory[`viability.${key}`] = value
       }
     }
     setState((prevState) => {
       return {
         ...prevState,
         ...pathToVictory,
-      };
-    });
-  }, [pathToVictory]);
+      }
+    })
+  }, [pathToVictory])
 
   const onChangeField = (key, value) => {
-    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0);
+    let winNumber = Math.round(state.projectedTurnout * 0.51 || 0)
     let averageTurnoutPercent = Math.round(
       (state.averageTurnout / state.totalRegisteredVoters) * 100 || 0,
-    );
+    )
 
     if (key === 'averageTurnout') {
       averageTurnoutPercent = Math.round(
         (value / state.totalRegisteredVoters) * 100,
-      );
+      )
     }
 
     if (key === 'totalRegisteredVoters') {
-      averageTurnoutPercent = Math.round((state.averageTurnout / value) * 100);
+      averageTurnoutPercent = Math.round((state.averageTurnout / value) * 100)
     }
 
-    let val = value;
+    let val = value
     if (keyTypes[key] === 'number' && value !== '') {
-      val = parseFloat(value);
+      val = parseFloat(value)
     } else if (keyTypes[key] === 'select' && value !== '') {
       if (value === 'true' || value === 'false') {
-        val = value === 'true';
+        val = value === 'true'
       }
     } else {
-      val = value;
+      val = value
     }
 
-    let candidatesPerSeat;
+    let candidatesPerSeat
     if (key === 'viability.seats' && value > 0) {
-      candidatesPerSeat = Math.ceil(state['viability.candidates'] / value);
+      candidatesPerSeat = Math.ceil(state['viability.candidates'] / value)
     } else if (key === 'viability.candidates' && value > 0) {
-      candidatesPerSeat = Math.ceil(value / state['viability.seats']);
+      candidatesPerSeat = Math.ceil(value / state['viability.seats'])
     } else {
-      candidatesPerSeat = state['viability.candidatesPerSeat'];
+      candidatesPerSeat = state['viability.candidatesPerSeat']
     }
 
-    let voterContactGoal;
+    let voterContactGoal
     if (key === 'projectedTurnout') {
-      winNumber = Math.round(value * 0.51 || 0);
-      voterContactGoal = Math.round(winNumber * 5);
+      winNumber = Math.round(value * 0.51 || 0)
+      voterContactGoal = Math.round(winNumber * 5)
     }
 
     let score = calculateViabilityScore({
@@ -350,9 +350,9 @@ export default function AdminVictoryPathPage(props) {
           ? parseInt(val)
           : state['viability.candidates'],
       candidatesPerSeat,
-    });
+    })
 
-    console.debug('saving key', key, 'value', val, 'typeof', typeof val);
+    console.debug('saving key', key, 'value', val, 'typeof', typeof val)
 
     setState({
       ...state,
@@ -362,23 +362,23 @@ export default function AdminVictoryPathPage(props) {
       voterContactGoal,
       'viability.candidatesPerSeat': candidatesPerSeat,
       'viability.score': score,
-    });
-  };
+    })
+  }
 
   const onChangeLocation = async (key, value) => {
     setState({
       ...state,
       [key]: value,
-    });
-    let attr = [];
-    attr.push({ key: 'pathToVictory.electionLocation', value });
+    })
+    let attr = []
+    attr.push({ key: 'pathToVictory.electionLocation', value })
     attr.push({
       key: 'pathToVictory.electionType',
       value: state['electionType'],
-    });
-    await updateCampaign(attr, campaign.slug);
-    successSnackbar('Saved Election Location.');
-  };
+    })
+    await updateCampaign(attr, campaign.slug)
+    successSnackbar('Saved Election Location.')
+  }
 
   const onChangeElectionType = async (key, value) => {
     // we only want to update the election type if the location set
@@ -387,8 +387,8 @@ export default function AdminVictoryPathPage(props) {
       ...state,
       [key]: value,
       ['electionLocation']: '',
-    });
-  };
+    })
+  }
 
   const calculateViabilityScore = (viability) => {
     const {
@@ -398,105 +398,105 @@ export default function AdminVictoryPathPage(props) {
       isUncontested,
       candidates,
       candidatesPerSeat,
-    } = viability;
+    } = viability
 
-    let score = 0;
+    let score = 0
     if (level) {
       if (level === 'city' || level === 'local') {
-        score += 1;
+        score += 1
       } else if (viability.level === 'county') {
-        score += 1;
+        score += 1
       } else if (viability.level === 'state') {
-        score += 0.5;
+        score += 0.5
       }
     }
 
-    console.log('typeof isPartisan', typeof isPartisan);
+    console.log('typeof isPartisan', typeof isPartisan)
     if (typeof isPartisan === 'boolean') {
       if (isPartisan) {
-        score += 0.25;
+        score += 0.25
       } else {
-        score += 1;
+        score += 1
       }
     }
 
     if (typeof isIncumbent === 'boolean') {
       if (isIncumbent) {
-        score += 1;
+        score += 1
       } else {
-        score += 0.5;
+        score += 0.5
       }
     }
 
     if (typeof isUncontested === 'boolean') {
       if (isUncontested) {
-        score += 5;
-        return score;
+        score += 5
+        return score
       }
     }
 
     if (typeof candidates === 'number') {
       if (candidates > 0) {
         if (candidatesPerSeat <= 2) {
-          score += 0.75;
+          score += 0.75
         } else if (candidatesPerSeat === 3) {
-          score += 0.5;
+          score += 0.5
         } else if (candidatesPerSeat >= 4) {
-          score += 0.25;
+          score += 0.25
         }
       } else {
-        score += 0.25;
+        score += 0.25
       }
     }
 
-    return score;
-  };
+    return score
+  }
 
   const save = async () => {
-    successSnackbar('Saving...');
+    successSnackbar('Saving...')
 
     try {
       // only send mail the first time we update pathToVictory
       if (!pathToVictory) {
-        await sendVictoryMail(campaign.id);
+        await sendVictoryMail(campaign.id)
       }
       // send only the keys that changed
-      let keysToUpdate = [];
+      let keysToUpdate = []
       if (pathToVictory) {
-        keysToUpdate = keys.filter((key) => state[key] != pathToVictory[key]);
+        keysToUpdate = keys.filter((key) => state[key] != pathToVictory[key])
       } else {
-        keysToUpdate = keys;
+        keysToUpdate = keys
       }
 
       let attr = keysToUpdate.map((key) => {
         return {
           key: `pathToVictory.${key}`,
           value: state[key],
-        };
-      });
+        }
+      })
 
       if (state?.projectedTurnout && state.projectedTurnout > 0) {
-        attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' });
+        attr.push({ key: 'pathToVictory.p2vStatus', value: 'Complete' })
       } else {
-        errorSnackbar('Projected Turnout is required');
-        return;
+        errorSnackbar('Projected Turnout is required')
+        return
       }
 
-      await updateCampaign(attr, campaign.slug);
-      successSnackbar('Saved');
-      await revalidatePage('/admin/victory-path/[slug]');
-      window.location.reload();
+      await updateCampaign(attr, campaign.slug)
+      successSnackbar('Saved')
+      await revalidatePage('/admin/victory-path/[slug]')
+      window.location.reload()
     } catch (e) {
-      console.log('error in p2v save', e);
-      errorSnackbar('Error saving campaign');
+      console.log('error in p2v save', e)
+      errorSnackbar('Error saving campaign')
     }
-  };
+  }
 
   const office =
-    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office;
+    details?.office === 'Other' ? `${details?.otherOffice}` : details?.office
 
   const handleNotNeeded = async (e) => {
-    setNotNeeded(e.target.checked);
+    setNotNeeded(e.target.checked)
 
     await updateCampaign(
       [
@@ -506,9 +506,9 @@ export default function AdminVictoryPathPage(props) {
         },
       ],
       campaign.slug,
-    );
-    await refreshCampaign();
-  };
+    )
+    await refreshCampaign()
+  }
 
   return (
     <AdminWrapper {...props}>
@@ -568,7 +568,7 @@ export default function AdminVictoryPathPage(props) {
                             onChangeElectionType(
                               field.key,
                               value ? value.id : null,
-                            );
+                            )
                           }}
                           renderInput={(params) => (
                             <TextField
@@ -592,7 +592,7 @@ export default function AdminVictoryPathPage(props) {
                             options={locations}
                             value={state[field.key]}
                             onChange={(e, value) => {
-                              onChangeLocation(field.key, value);
+                              onChangeLocation(field.key, value)
                             }}
                             renderInput={(params) => (
                               <TextField
@@ -650,5 +650,5 @@ export default function AdminVictoryPathPage(props) {
         </div>
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

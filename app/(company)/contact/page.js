@@ -1,17 +1,17 @@
-import { Suspense } from 'react';
-import MaxWidth from '@shared/layouts/MaxWidth';
-import HubSpotForm from '../../shared/utils/HubSpotForm';
-import pageMetaData from 'helpers/metadataHelper';
+import { Suspense } from 'react'
+import MaxWidth from '@shared/layouts/MaxWidth'
+import HubSpotForm from '../../shared/utils/HubSpotForm'
+import pageMetaData from 'helpers/metadataHelper'
 
-export const revalidate = 3600;
-export const dynamic = 'force-static';
+export const revalidate = 3600
+export const dynamic = 'force-static'
 
 const meta = pageMetaData({
   title: 'Contact | GoodParty.org',
   description: 'Have questions or want to get involved? Contact us.',
   slug: '/contact',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default function Page() {
   return (
@@ -40,5 +40,5 @@ export default function Page() {
         </div>
       </div>
     </MaxWidth>
-  );
+  )
 }

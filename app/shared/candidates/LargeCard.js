@@ -4,24 +4,24 @@
  *
  */
 
-import React from 'react';
-import Link from 'next/link';
+import React from 'react'
+import Link from 'next/link'
 
 import {
   candidateColor,
   partyRace,
   candidateRoute,
-} from 'helpers/candidateHelper';
+} from 'helpers/candidateHelper'
 
-import BlackButton from '../buttons/BlackButton';
-import CandidateProgressBar from './CandidateProgressBar';
-import CandidateAvatar from './CandidateAvatar';
+import BlackButton from '../buttons/BlackButton'
+import CandidateProgressBar from './CandidateProgressBar'
+import CandidateAvatar from './CandidateAvatar'
 
-const MAX_POSITIONS = 6;
+const MAX_POSITIONS = 6
 
 export default function LargeCard({ candidate, priority = false }) {
   if (!candidate) {
-    return <></>;
+    return <></>
   }
   const {
     firstName,
@@ -36,20 +36,20 @@ export default function LargeCard({ candidate, priority = false }) {
     didWin,
     followers,
     support,
-  } = candidate;
+  } = candidate
 
-  const brightColor = candidateColor(candidate);
-  let topPositions = positions;
+  const brightColor = candidateColor(candidate)
+  let topPositions = positions
 
   if (positions && positions.length > MAX_POSITIONS) {
-    topPositions = positions.slice(0, MAX_POSITIONS);
+    topPositions = positions.slice(0, MAX_POSITIONS)
   }
 
-  const showCard = hometown || occupation || funFact;
+  const showCard = hometown || occupation || funFact
 
-  let thisWeek = 0;
+  let thisWeek = 0
   if (followers) {
-    thisWeek = followers.thisWeek + (support ? support.thisWeek : 0);
+    thisWeek = followers.thisWeek + (support ? support.thisWeek : 0)
   }
 
   return (
@@ -170,5 +170,5 @@ export default function LargeCard({ candidate, priority = false }) {
         </div>
       </div>
     </Link>
-  );
+  )
 }

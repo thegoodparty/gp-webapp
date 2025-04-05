@@ -1,4 +1,4 @@
-import H3Component from './MarketingH3';
+import H3Component from './MarketingH3'
 
 export default {
   title: 'Typography/Marketing/H3',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Header 3 Text',
   },
-};
+}
 
-export const MarketingH3 = {};
+export const MarketingH3 = {}

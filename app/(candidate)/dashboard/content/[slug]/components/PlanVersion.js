@@ -1,35 +1,35 @@
-'use client';
-import { useState } from 'react';
-import { dateWithTime } from 'helpers/dateHelper';
-import { IoIosArrowDown } from 'react-icons/io';
-import SecondaryButton from '@shared/buttons/SecondaryButton';
-import { Button } from '@mui/material';
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper';
+'use client'
+import { useState } from 'react'
+import { dateWithTime } from 'helpers/dateHelper'
+import { IoIosArrowDown } from 'react-icons/io'
+import SecondaryButton from '@shared/buttons/SecondaryButton'
+import { Button } from '@mui/material'
+import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
 export default function PlanVersion({
   versions,
   updatePlanCallback,
   latestVersion,
 }) {
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState(false)
   if (!versions) {
-    return null;
+    return null
   }
 
   function handleVersionClick(version) {
     trackEvent(EVENTS.ContentBuilder.Editor.SelectVersion, {
       name: version?.name,
       key: version?.key,
-    });
-    updatePlanCallback(version);
+    })
+    updatePlanCallback(version)
   }
 
   return (
     <div className="flex justify-center relative">
       <div
         onClick={() => {
-          trackEvent(EVENTS.ContentBuilder.Editor.OpenVersionPicker);
-          setShowMenu(!showMenu);
+          trackEvent(EVENTS.ContentBuilder.Editor.OpenVersionPicker)
+          setShowMenu(!showMenu)
         }}
       >
         <SecondaryButton size="medium">
@@ -45,7 +45,7 @@ export default function PlanVersion({
           <div
             className="fixed h-screen w-screen top-14 left-0"
             onClick={() => {
-              setShowMenu(false);
+              setShowMenu(false)
             }}
           />
 
@@ -53,8 +53,8 @@ export default function PlanVersion({
             <Button
               key="latest"
               onClick={() => {
-                setShowMenu(false);
-                handleVersionClick(latestVersion);
+                setShowMenu(false)
+                handleVersionClick(latestVersion)
               }}
             >
               <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
@@ -70,8 +70,8 @@ export default function PlanVersion({
               <Button
                 key={version.date}
                 onClick={() => {
-                  setShowMenu(false);
-                  handleVersionClick(version);
+                  setShowMenu(false)
+                  handleVersionClick(version)
                 }}
               >
                 <span className="text-gray-300 hover:text-slate-50 no-underline font-normal normal-case hover:bg-primary-dark-dark w-full rounded-xl p-3">
@@ -90,5 +90,5 @@ export default function PlanVersion({
         </>
       )}
     </div>
-  );
+  )
 }

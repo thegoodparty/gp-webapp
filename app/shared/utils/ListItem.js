@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import H4 from '@shared/typography/H4';
-import { useState } from 'react';
-import { FaChevronRight } from 'react-icons/fa';
+import H4 from '@shared/typography/H4'
+import { useState } from 'react'
+import { FaChevronRight } from 'react-icons/fa'
 
 export default function ListItem({
   variant = 'list',
@@ -11,13 +11,13 @@ export default function ListItem({
   children,
   ...restProps
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
     <div className="mb-6">
       <div
         className="flex items-center cursor-pointer"
         onClick={() => {
-          setOpen(!open);
+          setOpen(!open)
         }}
         {...restProps}
       >
@@ -37,5 +37,5 @@ export default function ListItem({
         </div>
       )}
     </div>
-  );
+  )
 }

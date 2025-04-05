@@ -2,14 +2,14 @@ import {
   CheckCircleOutlineRounded,
   CircleOutlined,
   TaskAltRounded,
-} from '@mui/icons-material';
+} from '@mui/icons-material'
 
 export default function TaskCheck({ checked, onClick }) {
   const handleClick = () => {
     if (!checked) {
-      onClick();
+      onClick()
     }
-  };
+  }
 
   return (
     <span onClick={handleClick} className="group">
@@ -22,5 +22,5 @@ export default function TaskCheck({ checked, onClick }) {
         <TaskAltRounded className="text-indigo-400" />
       )}
     </span>
-  );
+  )
 }

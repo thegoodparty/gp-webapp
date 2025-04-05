@@ -1,4 +1,4 @@
-import Checkbox from './Checkbox';
+import Checkbox from './Checkbox'
 
 export default {
   title: 'Inputs/Checkbox',
@@ -12,6 +12,6 @@ export default {
       default: 'Medium',
     },
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

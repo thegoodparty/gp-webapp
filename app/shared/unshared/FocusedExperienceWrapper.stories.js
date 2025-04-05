@@ -1,6 +1,6 @@
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper';
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { FocusedExperienceWrapper } from 'app/(candidate)/dashboard/shared/FocusedExperienceWrapper'
 
 export default {
   title: 'Unshared/FocusedExperienceWrapper',
@@ -35,8 +35,8 @@ export default {
           </Body1>
         </FocusedExperienceWrapper>
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

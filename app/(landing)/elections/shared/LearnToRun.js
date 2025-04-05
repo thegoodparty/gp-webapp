@@ -1,14 +1,14 @@
-import MarketingH2 from '@shared/typography/MarketingH2';
-import Image from 'next/image';
+import MarketingH2 from '@shared/typography/MarketingH2'
+import Image from 'next/image'
 
-import VictoriaImg from 'public/images/landing-pages/victoria.png';
-import TerryImg from 'public/images/landing-pages/terry-c.png';
-import CarlosImg from 'public/images/landing-pages/carlos.png';
-import Body1 from '@shared/typography/Body1';
-import { BiSolidQuoteAltRight } from 'react-icons/bi';
-import WarningButton from '@shared/buttons/WarningButton';
-import Link from 'next/link';
-import Body2 from '@shared/typography/Body2';
+import VictoriaImg from 'public/images/landing-pages/victoria.png'
+import TerryImg from 'public/images/landing-pages/terry-c.png'
+import CarlosImg from 'public/images/landing-pages/carlos.png'
+import Body1 from '@shared/typography/Body1'
+import { BiSolidQuoteAltRight } from 'react-icons/bi'
+import WarningButton from '@shared/buttons/WarningButton'
+import Link from 'next/link'
+import Body2 from '@shared/typography/Body2'
 
 const graduates = [
   {
@@ -29,7 +29,7 @@ const graduates = [
     desc: 'As you go through life and get older and realize the people in charge are not doing a great job… then you start to question, Okay well, why not me then?',
     run: 'Ran for Metro Council Election',
   },
-];
+]
 
 export default function LearnToRun({ stateName }) {
   return (
@@ -112,5 +112,5 @@ export default function LearnToRun({ stateName }) {
         </section>
       </div>
     </div>
-  );
+  )
 }

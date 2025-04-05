@@ -1,6 +1,6 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import Image from 'next/image';
-import Graduates from './Graduates';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import Image from 'next/image'
+import Graduates from './Graduates'
 
 export default function GreatSuccess() {
   return (
@@ -50,5 +50,5 @@ export default function GreatSuccess() {
         </MaxWidth>
       </div>
     </section>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { Autocomplete, TextField, InputAdornment } from '@mui/material';
-import { SearchRounded } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
-import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent';
+import { Autocomplete, TextField, InputAdornment } from '@mui/material'
+import { SearchRounded } from '@mui/icons-material'
+import { useRouter } from 'next/navigation'
+import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
 
 /**
  * @typedef {Object} BlogSearchProps
@@ -16,9 +16,9 @@ import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent
  */
 
 export default function BlogSearch({ blogItems }) {
-  const router = useRouter();
+  const router = useRouter()
 
-  if (!blogItems || blogItems.length <= 0) return null;
+  if (!blogItems || blogItems.length <= 0) return null
 
   return (
     <div className="w-full md:w-[715px] lg:w-auto mt-2 lg:mt-0">
@@ -64,12 +64,12 @@ export default function BlogSearch({ blogItems }) {
         onChange={(event, item) => {
           fireGTMButtonClickEvent({
             id: 'blog-search',
-          });
+          })
           if (item != undefined && item != '') {
-            router.push('/blog/article/' + item.slug);
+            router.push('/blog/article/' + item.slug)
           }
         }}
       />
     </div>
-  );
+  )
 }

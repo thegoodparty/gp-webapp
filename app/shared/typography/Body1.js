@@ -6,5 +6,5 @@ export default function Body1({ children, className = '', style = {} }) {
     >
       {children}
     </div>
-  );
+  )
 }

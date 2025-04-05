@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { deleteTokenCookie } from 'helpers/tokenCookie';
+import { NextResponse } from 'next/server'
+import { deleteTokenCookie } from 'helpers/tokenCookie'
 
 export const DELETE = async () =>
-  deleteTokenCookie(new NextResponse({ message: 'deleted' }, { status: 200 }));
+  deleteTokenCookie(new NextResponse({ message: 'deleted' }, { status: 200 }))

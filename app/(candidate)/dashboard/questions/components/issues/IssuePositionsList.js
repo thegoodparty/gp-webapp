@@ -1,14 +1,14 @@
-import { IssuePosition } from 'app/(candidate)/dashboard/questions/components/issues/IssuePosition';
-import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions';
+import { IssuePosition } from 'app/(candidate)/dashboard/questions/components/issues/IssuePosition'
+import { useCandidatePositions } from 'app/(candidate)/dashboard/campaign-details/components/issues/useCandidatePositions'
 
 const issueAlreadySelected = (position = {}, candidatePositions = []) => {
-  if (!candidatePositions) return false;
+  if (!candidatePositions) return false
   return Boolean(
     candidatePositions.find(
       ({ position: candidatePosition = {} } = {}) =>
         candidatePosition?.id === position?.id,
     ),
-  );
+  )
 }
 
 export const IssuePositionsList = ({
@@ -16,10 +16,10 @@ export const IssuePositionsList = ({
   selectedPosition = {},
   handleSelectPosition = (v) => {},
 }) => {
-  const [candidatePositions] = useCandidatePositions();
+  const [candidatePositions] = useCandidatePositions()
 
   return positions.map((position = {}) => {
-    const selected = selectedPosition?.id === position.id;
+    const selected = selectedPosition?.id === position.id
     return (
       <IssuePosition
         key={position.id}
@@ -30,6 +30,6 @@ export const IssuePositionsList = ({
           issueAlreadySelected(position, candidatePositions) && !selected
         }
       />
-    );
-  });
-};
+    )
+  })
+}

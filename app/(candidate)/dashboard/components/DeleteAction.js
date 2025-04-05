@@ -1,26 +1,8 @@
-'use client';
-import AlertDialog from '@shared/utils/AlertDialog';
-import { useState } from 'react';
-import { useSnackbar } from 'helpers/useSnackbar';
-import Button from '@shared/buttons/Button';
-import { clientFetch } from 'gpApi/clientFetch';
-import { apiRoutes } from 'gpApi/routes';
-
-async function handleDeleteHistory(id) {
-  try {
-    const payload = {
-      id,
-    };
-    const resp = await clientFetch(
-      apiRoutes.campaign.updateHistory.delete,
-      payload,
-    );
-    return resp;
-  } catch (e) {
-    console.error('error', e);
-  }
-  return false;
-}
+'use client'
+import AlertDialog from '@shared/utils/AlertDialog'
+import { useState } from 'react'
+import { useSnackbar } from 'helpers/useSnackbar'
+import Button from '@shared/buttons/Button'
 
 export default function DeleteAction({
   id,
@@ -28,26 +10,22 @@ export default function DeleteAction({
   deleteHistoryCallBack,
   description,
 }) {
-  const [showDelete, setShowDelete] = useState(false);
-  const { successSnackbar } = useSnackbar();
+  const [showDelete, setShowDelete] = useState(false)
+  const { successSnackbar } = useSnackbar()
 
   const handleDelete = async () => {
-    setShowMenu(0);
-    successSnackbar('Deleting...');
-    const deleteResp = await handleDeleteHistory(id);
-    if (deleteResp?.ok) {
-      successSnackbar('Deleted');
-    }
-    // window.location.reload();
-    await deleteHistoryCallBack();
-  };
+    setShowMenu(0)
+    successSnackbar('Deleting...')
+    await deleteHistoryCallBack(id)
+    successSnackbar('Deleted')
+  }
 
   return (
     <>
       <div className="my-3">
         <Button
           onClick={() => {
-            setShowDelete(true);
+            setShowDelete(true)
           }}
           size="small"
           color="error"
@@ -59,7 +37,7 @@ export default function DeleteAction({
       <AlertDialog
         open={showDelete}
         handleClose={() => {
-          setShowDelete(false);
+          setShowDelete(false)
         }}
         redButton={false}
         title="Delete Campaign Action"
@@ -68,5 +46,5 @@ export default function DeleteAction({
         proceedLabel="Delete"
       />
     </>
-  );
+  )
 }

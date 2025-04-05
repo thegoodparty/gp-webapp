@@ -1,6 +1,6 @@
-'use client';
-import InlineSVG from 'react-inlinesvg';
-import React from 'react';
+'use client'
+import InlineSVG from 'react-inlinesvg'
+import React from 'react'
 
 export const DynamicSVGIcon = ({ svgData, className }) => (
   <InlineSVG
@@ -9,4 +9,4 @@ export const DynamicSVGIcon = ({ svgData, className }) => (
       className ? ` ${className}` : ''
     }`}
   />
-);
+)

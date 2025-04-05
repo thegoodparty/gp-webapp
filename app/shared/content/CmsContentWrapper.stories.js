@@ -1,4 +1,4 @@
-import CmsContentWrapper from './CmsContentWrapper';
+import CmsContentWrapper from './CmsContentWrapper'
 
 const content = (
   <>
@@ -27,7 +27,7 @@ const content = (
       assets, such as office equipment.{' '}
     </p>
   </>
-);
+)
 
 export default {
   title: 'Content/CmsContentWrapper',
@@ -36,6 +36,6 @@ export default {
   args: {
     children: content,
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

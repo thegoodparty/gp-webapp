@@ -1,40 +1,40 @@
-'use client';
-import Body2 from '@shared/typography/Body2';
-import { marked } from 'marked';
-import Typewriter from 'typewriter-effect';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { FaRegCopy } from 'react-icons/fa';
-import { useState } from 'react';
-import Subtitle2 from '@shared/typography/Subtitle2';
-import { IoMdCheckmark } from 'react-icons/io';
-import { MdOutlineRefresh, MdAutoAwesome } from 'react-icons/md';
-import ChatFeedback from './ChatFeedback';
-import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat';
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper';
+'use client'
+import Body2 from '@shared/typography/Body2'
+import { marked } from 'marked'
+import Typewriter from 'typewriter-effect'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { FaRegCopy } from 'react-icons/fa'
+import { useState } from 'react'
+import Subtitle2 from '@shared/typography/Subtitle2'
+import { IoMdCheckmark } from 'react-icons/io'
+import { MdOutlineRefresh, MdAutoAwesome } from 'react-icons/md'
+import ChatFeedback from './ChatFeedback'
+import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
 export default function ChatMessage({ message, type, isLastMessage }) {
-  const [copied, setCopied] = useState(false);
-  const { handleRegenerate, finishTyping } = useChat();
-  let { content, role } = message;
+  const [copied, setCopied] = useState(false)
+  const { handleRegenerate, finishTyping } = useChat()
+  let { content, role } = message
   try {
     if (role === 'assistant') {
-      content = marked(content);
+      content = marked(content)
     }
   } catch (e) {
-    console.log('error converting marked', e);
+    console.log('error converting marked', e)
   }
   const handleCopy = () => {
-    trackEvent(EVENTS.AIAssistant.Chat.ClickCopy);
-    setCopied(true);
+    trackEvent(EVENTS.AIAssistant.Chat.ClickCopy)
+    setCopied(true)
     setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
+      setCopied(false)
+    }, 2000)
+  }
 
   const handleRegenerateClick = () => {
-    trackEvent(EVENTS.AIAssistant.Chat.ClickRegenerate);
-    handleRegenerate();
-  };
+    trackEvent(EVENTS.AIAssistant.Chat.ClickRegenerate)
+    handleRegenerate()
+  }
 
   return (
     <div className={`flex py-2 px-4 ${role === 'user' ? 'justify-end' : ''}`}>
@@ -51,7 +51,7 @@ export default function ChatMessage({ message, type, isLastMessage }) {
                   typewriter
                     .typeString(content)
                     .callFunction(finishTyping)
-                    .start();
+                    .start()
                 }}
               />
             ) : (
@@ -96,5 +96,5 @@ export default function ChatMessage({ message, type, isLastMessage }) {
         </div>
       )}
     </div>
-  );
+  )
 }

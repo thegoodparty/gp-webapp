@@ -1,23 +1,23 @@
-'use client';
-import { useState, useEffect } from 'react';
-import SignModal from './SignModal';
+'use client'
+import { useState, useEffect } from 'react'
+import SignModal from './SignModal'
 
 export default function Signatures({ signatures, tangerine }) {
-  let [signer, setSigner] = useState('');
-  let modalProps = { tangerine, setSigner };
+  let [signer, setSigner] = useState('')
+  let modalProps = { tangerine, setSigner }
 
   useEffect(() => {
     try {
       if (localStorage.getItem('signature') != null) {
-        const signature = localStorage.getItem('signature');
+        const signature = localStorage.getItem('signature')
         if (signature && !signatures.includes(signature)) {
-          setSigner(signature);
+          setSigner(signature)
         }
       }
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  }, [signatures]);
+  }, [signatures])
 
   return (
     <>
@@ -43,5 +43,5 @@ export default function Signatures({ signatures, tangerine }) {
         ... And more!
       </div>
     </>
-  );
+  )
 }

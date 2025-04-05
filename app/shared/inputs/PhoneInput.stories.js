@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import PhoneInput from './PhoneInput';
+import { useState } from 'react'
+import PhoneInput from './PhoneInput'
 
 export default {
   title: 'Inputs/PhoneInput',
@@ -10,7 +10,7 @@ export default {
   },
   render: (args) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [value, setValue] = useState();
+    const [value, setValue] = useState()
 
     return (
       <div class="flex flex-col gap-3 items-start">
@@ -45,8 +45,8 @@ export default {
           onChangeCallback={setValue}
         />
       </div>
-    );
+    )
   },
-};
+}
 
-export const Default = {};
+export const Default = {}

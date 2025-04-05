@@ -1,7 +1,7 @@
-import MaxWidth from '@shared/layouts/MaxWidth';
-import { numberFormatter } from 'helpers/numberHelper';
-import Image from 'next/image';
-import { memo } from 'react';
+import MaxWidth from '@shared/layouts/MaxWidth'
+import { numberFormatter } from 'helpers/numberHelper'
+import Image from 'next/image'
+import { memo } from 'react'
 
 export default memo(function Hero({ count = 0, longState }) {
   return (
@@ -25,5 +25,5 @@ export default memo(function Hero({ count = 0, longState }) {
         </h1>
       </MaxWidth>
     </div>
-  );
-});
+  )
+})

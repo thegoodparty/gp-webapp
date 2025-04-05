@@ -3,24 +3,24 @@
  * GoalsChart
  *
  */
-'use client';
+'use client'
 
-import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import React from 'react'
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
-import styles from './GoalsChart.module.scss';
+import styles from './GoalsChart.module.scss'
 
-const RADIAN = Math.PI / 180;
+const RADIAN = Math.PI / 180
 const renderCustomizedLabel = (props) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, index } = props;
+  const { cx, cy, innerRadius, outerRadius, startAngle, index } = props
 
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const radiusPlus = radius + 20;
-  const x = cx + radiusPlus * Math.cos(-startAngle * RADIAN);
-  const y = cy + radiusPlus * Math.sin(-startAngle * RADIAN);
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+  const radiusPlus = radius + 20
+  const x = cx + radiusPlus * Math.cos(-startAngle * RADIAN)
+  const y = cy + radiusPlus * Math.sin(-startAngle * RADIAN)
 
-  const xBase = cx + radius * Math.cos(-startAngle * RADIAN);
-  const yBase = cy + radius * Math.sin(-startAngle * RADIAN);
+  const xBase = cx + radius * Math.cos(-startAngle * RADIAN)
+  const yBase = cy + radius * Math.sin(-startAngle * RADIAN)
 
   return (
     <>
@@ -37,45 +37,45 @@ const renderCustomizedLabel = (props) => {
         </foreignObject>
       </g> */}
     </>
-  );
-};
+  )
+}
 
 export function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return result
     ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16),
       }
-    : null;
+    : null
 }
 
 function GoalsChart({ candidate, color, additionalVotes = 0 }) {
-  let { voterProjection, voteGoal, finalVotes } = candidate;
-  voteGoal = voteGoal || 100;
-  let voters = additionalVotes + (voterProjection || 0);
+  let { voterProjection, voteGoal, finalVotes } = candidate
+  voteGoal = voteGoal || 100
+  let voters = additionalVotes + (voterProjection || 0)
 
   if (finalVotes && finalVotes > 0) {
-    voters = finalVotes;
+    voters = finalVotes
   }
 
-  const cappedLikely = voters > voteGoal ? voteGoal : voters;
+  const cappedLikely = voters > voteGoal ? voteGoal : voters
 
   const data = [
     { name: 'To Win', value: voteGoal - cappedLikely },
     { name: 'So Far', value: cappedLikely },
-  ];
-  let perc = voteGoal !== 0 ? parseInt((voters * 100) / voteGoal, 10) : 0;
+  ]
+  let perc = voteGoal !== 0 ? parseInt((voters * 100) / voteGoal, 10) : 0
   if (perc > 100) {
-    perc = 100;
+    perc = 100
   }
 
-  const rgb = hexToRgb(color);
-  let COLORS = ['#D4DBE4', color];
+  const rgb = hexToRgb(color)
+  let COLORS = ['#D4DBE4', color]
   if (rgb) {
     // COLORS = [`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5)`, color];
-    COLORS = ['#D4DBE4', color];
+    COLORS = ['#D4DBE4', color]
   }
 
   return (
@@ -119,7 +119,7 @@ function GoalsChart({ candidate, color, additionalVotes = 0 }) {
         </div>
       </div> */}
     </div>
-  );
+  )
 }
 
-export default GoalsChart;
+export default GoalsChart

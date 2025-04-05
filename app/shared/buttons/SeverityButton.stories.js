@@ -1,4 +1,4 @@
-import { SeverityButton } from './SeverityButton';
+import { SeverityButton } from './SeverityButton'
 
 export default {
   title: 'Buttons/SeverityButton',
@@ -19,6 +19,6 @@ export default {
       </SeverityButton>
     </div>
   ),
-};
+}
 
-export const Default = {};
+export const Default = {}

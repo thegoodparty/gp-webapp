@@ -1,10 +1,9 @@
-'use client';
+'use client'
 
-import H2 from '@shared/typography/H2';
-import { calculateContactGoals } from 'app/(candidate)/dashboard/components/voterGoalsHelpers';
-import { numberFormatter } from 'helpers/numberHelper';
-import { FaBullhorn } from 'react-icons/fa';
-import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri';
+import H2 from '@shared/typography/H2'
+import { numberFormatter } from 'helpers/numberHelper'
+import { FaBullhorn } from 'react-icons/fa'
+import { RiDoorOpenLine, RiPhoneLine } from 'react-icons/ri'
 
 const cards = [
   {
@@ -22,17 +21,17 @@ const cards = [
     title: 'Online impressions',
     icon: <FaBullhorn size={36} className="opacity-20 mb-3" />,
   },
-];
+]
 
 export default function TrackerStats(props) {
-  const { campaign } = props;
-  const { reportedVoterGoals, pathToVictory } = campaign;
+  const { campaign } = props
+  const { reportedVoterGoals, pathToVictory } = campaign
   if (!reportedVoterGoals) {
-    return <div className="my-4 text-xl">No reported voter goals</div>;
+    return <div className="my-4 text-xl">No reported voter goals</div>
   }
 
-  const { voterContactGoal, voteGoal } = pathToVictory || {};
-  let resolvedContactGoal = voterContactGoal ?? voteGoal * 5;
+  const { voterContactGoal, voteGoal } = pathToVictory || {}
+  let resolvedContactGoal = voterContactGoal ?? voteGoal * 5
 
   return (
     <div className="grid grid-cols-12 gap-6">
@@ -60,5 +59,5 @@ export default function TrackerStats(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

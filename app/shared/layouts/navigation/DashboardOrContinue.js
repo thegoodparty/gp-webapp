@@ -1,10 +1,10 @@
-'use client';
-import { useCampaignStatus } from '@shared/hooks/useCampaignStatus';
-import Button from '@shared/buttons/Button';
+'use client'
+import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
+import Button from '@shared/buttons/Button'
 
 export default function DashboardOrContinue({ closeAll, isServePath }) {
-  const [campaignStatus] = useCampaignStatus();
-  const { status, slug, step } = campaignStatus || {};
+  const [campaignStatus] = useCampaignStatus()
+  const { status, slug, step } = campaignStatus || {}
 
   if (!status) {
     return (
@@ -17,7 +17,7 @@ export default function DashboardOrContinue({ closeAll, isServePath }) {
       >
         Continue Setup
       </Button>
-    );
+    )
   }
 
   return (
@@ -43,5 +43,5 @@ export default function DashboardOrContinue({ closeAll, isServePath }) {
         </Button>
       )}
     </div>
-  );
+  )
 }

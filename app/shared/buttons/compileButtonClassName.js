@@ -1,15 +1,15 @@
-import clsx from 'clsx';
+import clsx from 'clsx'
 
 export const compileButtonClassName = (baseClass, className) => {
-  let result = clsx(baseClass);
+  let result = clsx(baseClass)
 
   if (className) {
     if (typeof className === 'string') {
-      result += ` ${className}`;
+      result += ` ${className}`
     } else {
-      result += ` ${clsx(className)}`;
+      result += ` ${clsx(className)}`
     }
   }
 
-  return result;
-};
+  return result
+}

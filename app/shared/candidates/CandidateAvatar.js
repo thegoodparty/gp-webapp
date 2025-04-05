@@ -1,10 +1,9 @@
-import React from 'react';
-import Image from 'next/image';
-import { candidateColor } from '/helpers/candidateHelper';
-import { RxPerson } from 'react-icons/rx';
+import React from 'react'
+import Image from 'next/image'
+import { RxPerson } from 'react-icons/rx'
 
 export default function CandidateAvatar({ candidate, priority = false }) {
-  const { firstName, lastName, image } = candidate;
+  const { firstName, lastName, image } = candidate
   // const brightColor = candidateColor(candidate);
 
   return (
@@ -25,5 +24,5 @@ export default function CandidateAvatar({ candidate, priority = false }) {
         )}
       </div>
     </div>
-  );
+  )
 }

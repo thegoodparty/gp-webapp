@@ -1,22 +1,22 @@
-'use client';
-import Modal from '@shared/utils/Modal';
-import { useMemo, useState } from 'react';
-import { IoArrowForward } from 'react-icons/io5';
-import ScheduleFlowInstructions from './ScheduleFlowInstructions';
-import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep';
-import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep';
-import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ScheduleAddScriptFlow';
-import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep';
-import ScheduleFlowComplete from './ScheduleFlowComplete';
-import ScheduleFlowImageStep from './ScheduleFlowImageStep';
-import CloseConfirmModal from './CloseConfirmModal';
+'use client'
+import Modal from '@shared/utils/Modal'
+import { useMemo, useState } from 'react'
+import { IoArrowForward } from 'react-icons/io5'
+import ScheduleFlowInstructions from './ScheduleFlowInstructions'
+import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep'
+import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep'
+import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ScheduleAddScriptFlow'
+import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep'
+import ScheduleFlowComplete from './ScheduleFlowComplete'
+import ScheduleFlowImageStep from './ScheduleFlowImageStep'
+import CloseConfirmModal from './CloseConfirmModal'
 import {
   buildTrackingAttrs,
   EVENTS,
   trackEvent,
-} from 'helpers/fullStoryHelper';
-import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign';
-import { isObjectEqual } from 'helpers/objectHelper';
+} from 'helpers/fullStoryHelper'
+import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
+import { isObjectEqual } from 'helpers/objectHelper'
 
 const STEPS_BY_TYPE = {
   sms: [
@@ -29,7 +29,7 @@ const STEPS_BY_TYPE = {
     'complete',
   ],
   telemarketing: ['budget', 'audience', 'script', 'schedule', 'complete'],
-};
+}
 
 const DEFAULT_STATE = {
   step: 0,
@@ -38,7 +38,7 @@ const DEFAULT_STATE = {
   audience: {},
   script: false,
   image: undefined,
-};
+}
 
 /**
  * @typedef {Object} ScheduleFlowProps
@@ -59,85 +59,85 @@ export default function ScheduleFlow({
   isCustom,
   fileName,
 }) {
-  const [open, setOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [state, setState] = useState(DEFAULT_STATE);
-  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type]);
-  const stepName = stepList[state.step];
+  const [open, setOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [state, setState] = useState(DEFAULT_STATE)
+  const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
+  const stepName = stepList[state.step]
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
-  );
+  )
 
   const handleChange = (key, value) => {
     setState((prevState) => ({
       ...prevState,
       [key]: value,
-    }));
-  };
+    }))
+  }
 
   const handleClose = () => {
     if (isObjectEqual(state, DEFAULT_STATE) || stepName === 'complete') {
-      handleCloseConfirm();
-      return;
+      handleCloseConfirm()
+      return
     }
 
-    setConfirmOpen(true);
-  };
+    setConfirmOpen(true)
+  }
 
   const handleCloseCancel = () => {
-    setConfirmOpen(false);
-  };
+    setConfirmOpen(false)
+  }
 
   const handleCloseConfirm = () => {
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Exit, {
       step: stepName,
-    });
-    setConfirmOpen(false);
-    setOpen(false);
-    handleReset();
-  };
+    })
+    setConfirmOpen(false)
+    setOpen(false)
+    handleReset()
+  }
 
   const handleNext = () => {
-    if (state.step >= stepList.length - 1) return;
+    if (state.step >= stepList.length - 1) return
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Next, {
       step: stepName,
-    });
+    })
     setState((prevState) => ({
       ...prevState,
       step: state.step + 1,
-    }));
-  };
+    }))
+  }
 
   const handleBack = () => {
-    if (state.step <= 0) return;
+    if (state.step <= 0) return
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Back, {
       step: stepName,
-    });
+    })
     setState({
       ...state,
       step: state.step - 1,
-    });
-  };
+    })
+  }
 
   const handleReset = () => {
-    setState(DEFAULT_STATE);
-  };
+    setState(DEFAULT_STATE)
+  }
 
   const handleSubmit = async () => {
-    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit);
+    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit)
     const updatedState = {
       ...state,
       type,
-    };
-    return await scheduleVoterMessagingCampaign(updatedState);
-  };
+    }
+    return await scheduleVoterMessagingCampaign(updatedState)
+  }
 
   const handleAddScriptOnComplete = (scriptKeyOrText) => {
-    handleChange('script', scriptKeyOrText);
-    handleNext();
-  };
+    handleChange('script', scriptKeyOrText)
+    handleNext()
+  }
 
   const callbackProps = {
     onChangeCallback: handleChange,
@@ -146,7 +146,7 @@ export default function ScheduleFlow({
     backCallback: handleBack,
     submitCallback: handleSubmit,
     resetCallback: handleReset,
-  };
+  }
 
   return (
     <>
@@ -168,7 +168,7 @@ export default function ScheduleFlow({
               trackEvent(
                 EVENTS.VoterData.FileDetail.LearnTakeAction.ClickSchedule,
                 { type },
-              );
+              )
             }}
           >
             <span className="mr-2">Schedule Today</span>
@@ -223,5 +223,5 @@ export default function ScheduleFlow({
         {stepName === 'complete' && <ScheduleFlowComplete {...callbackProps} />}
       </Modal>
     </>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import PortalPanel from '@shared/layouts/PortalPanel';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import DeleteCandidate from './DeleteCandidate';
+import PortalPanel from '@shared/layouts/PortalPanel'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import DeleteCandidate from './DeleteCandidate'
 
 export default function PublicCandidates() {
   return (
@@ -23,5 +23,5 @@ export default function PublicCandidates() {
         <DeleteCandidate />
       </PortalPanel>
     </AdminWrapper>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import TextField from '@shared/inputs/TextField';
-import { Select } from '@mui/material';
+import { useState } from 'react'
+import TextField from '@shared/inputs/TextField'
+import { Select } from '@mui/material'
 
 export const OfficeSelectionFilters = ({ electionYears = [], onChange }) => {
-  const [inputValue, setInputValue] = useState('');
-  const [level, setLevel] = useState('');
-  const [yearFilter, setYearFilter] = useState(null);
+  const [inputValue, setInputValue] = useState('')
+  const [level, setLevel] = useState('')
+  const [yearFilter, setYearFilter] = useState(null)
 
   return (
     <div className="bg-white pt-4 pb-2">
@@ -16,12 +16,12 @@ export const OfficeSelectionFilters = ({ electionYears = [], onChange }) => {
             value={inputValue}
             fullWidth
             onChange={(e) => {
-              setInputValue(e.currentTarget.value);
+              setInputValue(e.currentTarget.value)
               onChange({
                 inputValue: e.currentTarget.value,
                 level,
                 yearFilter,
-              });
+              })
             }}
           />
         </div>
@@ -34,12 +34,12 @@ export const OfficeSelectionFilters = ({ electionYears = [], onChange }) => {
             fullWidth
             value={level}
             onChange={(e) => {
-              setLevel(e.currentTarget.value);
+              setLevel(e.currentTarget.value)
               onChange({
                 inputValue,
                 level: e.currentTarget.value,
                 yearFilter,
-              });
+              })
             }}
           >
             <option value="">Election Level</option>
@@ -59,12 +59,12 @@ export const OfficeSelectionFilters = ({ electionYears = [], onChange }) => {
             fullWidth
             value={yearFilter}
             onChange={(e) => {
-              setYearFilter(e.currentTarget.value);
+              setYearFilter(e.currentTarget.value)
               onChange({
                 inputValue,
                 level,
                 yearFilter: e.currentTarget.value,
-              });
+              })
             }}
           >
             <option value="">Year</option>
@@ -77,5 +77,5 @@ export const OfficeSelectionFilters = ({ electionYears = [], onChange }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

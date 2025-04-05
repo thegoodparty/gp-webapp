@@ -1,5 +1,5 @@
-import Button from '@shared/buttons/Button';
-import { FaCirclePlus } from 'react-icons/fa6';
+import Button from '@shared/buttons/Button'
+import { FaCirclePlus } from 'react-icons/fa6'
 
 export const AddNewIssueTrigger = ({ onClick }) => (
   <Button
@@ -10,4 +10,4 @@ export const AddNewIssueTrigger = ({ onClick }) => (
     <FaCirclePlus />
     <div className="ml-2">Add a new issue…</div>
   </Button>
-);
+)

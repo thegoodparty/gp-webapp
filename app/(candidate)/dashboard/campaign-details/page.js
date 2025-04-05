@@ -1,29 +1,29 @@
-import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign';
-import pageMetaData from 'helpers/metadataHelper';
-import candidateAccess from '../shared/candidateAccess';
-import DetailsPage from './components/DetailsPage';
-import { getServerUser } from 'helpers/userServerHelper';
+import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
+import pageMetaData from 'helpers/metadataHelper'
+import candidateAccess from '../shared/candidateAccess'
+import DetailsPage from './components/DetailsPage'
+import { getServerUser } from 'helpers/userServerHelper'
 import {
   serverFetchIssues,
   serverLoadCandidatePosition,
-} from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils';
+} from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
 
 const meta = pageMetaData({
   title: 'campaign Details | GoodParty.org',
   description: 'Campaign Details',
   slug: '/dashboard/campaign-details',
-});
-export const metadata = meta;
+})
+export const metadata = meta
 
 export default async function Page({ params, searchParams }) {
-  await candidateAccess();
+  await candidateAccess()
 
-  const campaign = await fetchUserCampaign();
-  let candidatePositions = await serverLoadCandidatePosition(campaign.id);
-  const topIssues = await serverFetchIssues();
-  const user = await getServerUser(); // can be removed when door knocking app is not for admins only
+  const campaign = await fetchUserCampaign()
+  let candidatePositions = await serverLoadCandidatePosition(campaign.id)
+  const topIssues = await serverFetchIssues()
+  const user = await getServerUser() // can be removed when door knocking app is not for admins only
   if (!candidatePositions) {
-    candidatePositions = [];
+    candidatePositions = []
   }
 
   const childProps = {
@@ -33,7 +33,7 @@ export default async function Page({ params, searchParams }) {
     topIssues,
     pathToVictory: campaign?.pathToVictory?.data,
     user,
-  };
+  }
 
-  return <DetailsPage {...childProps} />;
+  return <DetailsPage {...childProps} />
 }

@@ -1,7 +1,7 @@
-import H1 from '@shared/typography/H1';
-import Body2 from '@shared/typography/Body2';
-import Button from '@shared/buttons/Button';
-import PasswordInput from '@shared/inputs/PasswrodInput';
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
+import Button from '@shared/buttons/Button'
+import PasswordInput from '@shared/inputs/PasswrodInput'
 
 export default function ResetPasswordForm({
   password,
@@ -12,7 +12,7 @@ export default function ResetPasswordForm({
   onConfirmPasswordChange,
   onSubmit,
 }) {
-  const showConfirmError = confirmPassword !== '' && !isMatch;
+  const showConfirmError = confirmPassword !== '' && !isMatch
 
   return (
     <form noValidate onSubmit={onSubmit}>
@@ -46,5 +46,5 @@ export default function ResetPasswordForm({
         Update Password
       </Button>
     </form>
-  );
+  )
 }

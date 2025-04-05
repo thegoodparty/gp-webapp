@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import DeleteAction from './DeleteAction';
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import DeleteAction from './DeleteAction'
 
 export default function Actions({
   id,
@@ -10,13 +9,13 @@ export default function Actions({
   actionName,
 }) {
   function handleKeyDown(e, id) {
-    const isEnterOrSpace = e.key === 'Enter' || e.key === ' ';
-    const isEsc = e.key === 'Escape';
+    const isEnterOrSpace = e.key === 'Enter' || e.key === ' '
+    const isEsc = e.key === 'Escape'
 
     if (!showMenu && isEnterOrSpace) {
-      setShowMenu(id);
+      setShowMenu(id)
     } else if (showMenu && (isEnterOrSpace || isEsc)) {
-      setShowMenu(false);
+      setShowMenu(false)
     }
   }
   return (
@@ -25,7 +24,7 @@ export default function Actions({
         role="button"
         tabIndex={0}
         onClick={() => {
-          setShowMenu(id);
+          setShowMenu(id)
         }}
         onKeyDown={(e) => handleKeyDown(e, id)}
         className=" text-xl cursor-pointer"
@@ -35,7 +34,7 @@ export default function Actions({
           <div
             className="fixed h-screen w-screen top-14 left-0"
             onClick={() => {
-              setShowMenu(false);
+              setShowMenu(false)
             }}
           />
           <div
@@ -60,5 +59,5 @@ export default function Actions({
         <> </>
       )}
     </div>
-  );
+  )
 }

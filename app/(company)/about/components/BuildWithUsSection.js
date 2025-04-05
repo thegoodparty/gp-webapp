@@ -1,4 +1,4 @@
-import { BuildWithUsGridItems } from './BuildWithUsGridItems';
+import { BuildWithUsGridItems } from './BuildWithUsGridItems'
 
 const BuildWithUsHeaderAndBlurb = () => (
   <div className="xl:col-span-2">
@@ -12,7 +12,7 @@ const BuildWithUsHeaderAndBlurb = () => (
       community of like-minded individuals.
     </p>
   </div>
-);
+)
 
 const BuildWithUsSection = () => (
   <section
@@ -40,6 +40,6 @@ const BuildWithUsSection = () => (
       </div>
     </div>
   </section>
-);
+)
 
-export default BuildWithUsSection;
+export default BuildWithUsSection

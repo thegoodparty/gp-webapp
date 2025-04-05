@@ -1,8 +1,8 @@
-'use client';
-import React from 'react';
-import { BsChatDots } from 'react-icons/bs';
-import LinearProgress from '@mui/material/LinearProgress';
-import Image from 'next/image';
+'use client'
+import React from 'react'
+import { BsChatDots } from 'react-icons/bs'
+import LinearProgress from '@mui/material/LinearProgress'
+import Image from 'next/image'
 
 const LoadingAnimation = ({ label, fullPage = true, title }) => (
   <div
@@ -45,6 +45,6 @@ const LoadingAnimation = ({ label, fullPage = true, title }) => (
       </div>
     </div>
   </div>
-);
+)
 
-export default LoadingAnimation;
+export default LoadingAnimation

@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import MarketingH5 from '@shared/typography/MarketingH5';
+import { useParams } from 'next/navigation'
+import Link from 'next/link'
+import MarketingH5 from '@shared/typography/MarketingH5'
 
 export default function ExploreTags({ tags }) {
-  const { tag: selectedTag } = useParams();
+  const { tag: selectedTag } = useParams()
 
-  if (!Array.isArray(tags)) return null;
+  if (!Array.isArray(tags)) return null
 
   return (
     <div className="px-12 py-8 rounded-xl bg-indigo-100">
@@ -28,5 +28,5 @@ export default function ExploreTags({ tags }) {
         ))}
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import clsx from 'clsx'
 
 export const COLOR_CLASSES = {
   primary:
@@ -16,16 +16,16 @@ export const COLOR_CLASSES = {
     'text-success-dark hover:bg-green-500/[0.08] focus-visible:bg-green-500/[0.3] active:bg-green-500/[0.3]',
   neutral:
     'text-neutral-dark hover:bg-indigo-300/[0.16] focus-visible:bg-indigo-300/[0.4] active:bg-indigo-300/[0.4]',
-};
+}
 
 export const SIZE_CLASSES = {
   small: 'p-1',
   medium: 'p-2 ',
   large: 'p-3',
-};
+}
 
 const BASE_CLASSES =
-  'rounded-full text-3xl text-center bg-transparent disabled:opacity-50 disabled:hover:bg-transparent';
+  'rounded-full text-3xl text-center bg-transparent disabled:opacity-50 disabled:hover:bg-transparent'
 
 /**
  * @typedef {Object} IconButtonProps
@@ -53,8 +53,8 @@ export default function IconButton({
   className,
   ...restProps
 }) {
-  const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium;
-  const colorClasses = COLOR_CLASSES[color] || COLOR_CLASSES.primary;
+  const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium
+  const colorClasses = COLOR_CLASSES[color] || COLOR_CLASSES.primary
 
   return (
     <button
@@ -63,5 +63,5 @@ export default function IconButton({
     >
       {children}
     </button>
-  );
+  )
 }

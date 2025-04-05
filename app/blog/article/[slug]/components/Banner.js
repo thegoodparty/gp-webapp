@@ -1,7 +1,7 @@
-import Button from '@shared/buttons/Button';
-import Body1 from '@shared/typography/Body1';
-import MarketingH5 from '@shared/typography/MarketingH5';
-import Image from 'next/image';
+import Button from '@shared/buttons/Button'
+import Body1 from '@shared/typography/Body1'
+import MarketingH5 from '@shared/typography/MarketingH5'
+import Image from 'next/image'
 
 export default function Banner({ banner, idIndex = '1' }) {
   const {
@@ -12,10 +12,10 @@ export default function Banner({ banner, idIndex = '1' }) {
     smallImage,
     largeImage,
     bannerClassName,
-  } = banner;
+  } = banner
 
-  const isExternalLink = buttonLink?.startsWith('http');
-  const bannerId = `${bannerClassName || 'banner-id'}-${idIndex}`;
+  const isExternalLink = buttonLink?.startsWith('http')
+  const bannerId = `${bannerClassName || 'banner-id'}-${idIndex}`
 
   return (
     <div
@@ -73,5 +73,5 @@ export default function Banner({ banner, idIndex = '1' }) {
         )}
       </div>
     </div>
-  );
+  )
 }

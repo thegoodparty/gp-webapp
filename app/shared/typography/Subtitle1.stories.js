@@ -1,4 +1,4 @@
-import Subtitle1Component from './Subtitle1';
+import Subtitle1Component from './Subtitle1'
 
 export default {
   title: 'Typography/Subtitle1',
@@ -6,6 +6,6 @@ export default {
   args: {
     children: 'Element text',
   },
-};
+}
 
-export const Subtitle1 = {};
+export const Subtitle1 = {}

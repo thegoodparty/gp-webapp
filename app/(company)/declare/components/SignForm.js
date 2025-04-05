@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { isValidEmail } from '@shared/inputs/EmailInput';
-import Link from 'next/link';
-import BlackButton from '@shared/buttons/BlackButton';
-import BlackButtonClient from '@shared/buttons/BlackButtonClient';
-import PinkButtonClient from '@shared/buttons/PinkButtonClient';
-import Image from 'next/image';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+import { useState } from 'react'
+import { isValidEmail } from '@shared/inputs/EmailInput'
+import Link from 'next/link'
+import BlackButton from '@shared/buttons/BlackButton'
+import BlackButtonClient from '@shared/buttons/BlackButtonClient'
+import PinkButtonClient from '@shared/buttons/PinkButtonClient'
+import Image from 'next/image'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 export async function subscribeEmail(payload) {
   try {
-    await clientFetch(apiRoutes.homepage.subscribeEmail, payload);
-    return true;
+    await clientFetch(apiRoutes.homepage.subscribeEmail, payload)
+    return true
   } catch (e) {
-    console.error('error', e);
-    return false;
+    console.error('error', e)
+    return false
   }
 }
 
@@ -28,14 +28,14 @@ export default function SignatureForm({
   tangerine,
   setSigner,
 }) {
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [showShare, setShowShare] = useState(false);
+  const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [showShare, setShowShare] = useState(false)
 
-  const canSubmit = () => isValidEmail(email);
+  const canSubmit = () => isValidEmail(email)
 
   const submitForm = async () => {
     if (canSubmit()) {
@@ -46,33 +46,33 @@ export default function SignatureForm({
         uri: window.location.href,
         formId,
         pageName,
-      });
+      })
 
       if (window.dataLayer) {
         window.dataLayer.push({
           event: labelId,
           'hs-form-guid': formId,
           'hs-form-name': labelId,
-        });
+        })
       }
 
       if (success) {
-        setSuccess(true);
-        setShowError(false);
-        const signature = `${firstName} ${lastName}, `;
-        setSigner(signature);
+        setSuccess(true)
+        setShowError(false)
+        const signature = `${firstName} ${lastName}, `
+        setSigner(signature)
         try {
-          localStorage.setItem('signature', signature);
+          localStorage.setItem('signature', signature)
         } catch (e) {
-          console.log(e);
+          console.log(e)
         }
       } else {
-        setShowError('An error occurred. Please try again.');
+        setShowError('An error occurred. Please try again.')
       }
     } else {
-      setShowError('Please enter a valid email');
+      setShowError('Please enter a valid email')
     }
-  };
+  }
   return (
     <form
       className="pt-1"
@@ -141,7 +141,7 @@ export default function SignatureForm({
               maxLength={35}
               name="firstName"
               onChange={(e) => {
-                setFirstName(e.target.value);
+                setFirstName(e.target.value)
               }}
               value={firstName}
               placeholder="First Name"
@@ -153,7 +153,7 @@ export default function SignatureForm({
               maxLength={35}
               name="lastName"
               onChange={(e) => {
-                setLastName(e.target.value);
+                setLastName(e.target.value)
               }}
               value={lastName}
               placeholder="Last Name"
@@ -164,7 +164,7 @@ export default function SignatureForm({
               type="email"
               name="email"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setEmail(e.target.value)
               }}
               value={email}
               placeholder="Email"
@@ -189,5 +189,5 @@ export default function SignatureForm({
         </>
       )}
     </form>
-  );
+  )
 }

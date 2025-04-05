@@ -7,5 +7,5 @@ export default function WhiteButton({ label, fullWidth }) {
     >
       {label}
     </button>
-  );
+  )
 }

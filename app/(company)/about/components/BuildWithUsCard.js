@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { BsFillArrowUpRightCircleFill } from 'react-icons/bs';
+import Link from 'next/link'
+import { BsFillArrowUpRightCircleFill } from 'react-icons/bs'
 
 export const BuildWithUsCard = ({ header, blurb, href, linkText }) => (
   <section
@@ -26,4 +26,4 @@ export const BuildWithUsCard = ({ header, blurb, href, linkText }) => (
       </Link>
     </div>
   </section>
-);
+)

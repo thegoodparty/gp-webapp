@@ -1,13 +1,13 @@
-'use client';
-import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation';
-import PrimaryButton from '@shared/buttons/PrimaryButton';
-import Body1 from '@shared/typography/Body1';
-import H1 from '@shared/typography/H1';
-import { getUserCookie } from 'helpers/cookieHelper';
-import Link from 'next/link';
+'use client'
+import CheckmarkAnimation from '@shared/animations/CheckmarkAnimation'
+import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Body1 from '@shared/typography/Body1'
+import H1 from '@shared/typography/H1'
+import { getUserCookie } from 'helpers/cookieHelper'
+import Link from 'next/link'
 
 export default function NeedHelpSuccess({ closeCallback }) {
-  const user = getUserCookie(true);
+  const user = getUserCookie(true)
   return (
     <div className="text-center">
       <H1>Request Submitted</H1>
@@ -38,5 +38,5 @@ export default function NeedHelpSuccess({ closeCallback }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

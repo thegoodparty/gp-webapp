@@ -1,54 +1,54 @@
-'use client';
+'use client'
 
-import PortalPanel from '@shared/layouts/PortalPanel';
-import H2 from '@shared/typography/H2';
-import AdminWrapper from 'app/admin/shared/AdminWrapper';
-import SearchForm from './SearchForm';
-import AdminCandidatesTable from 'app/admin/candidates/components/AdminCandidatesTable';
-import { FiChevronRight } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
-import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject';
-import { useSearchParams } from 'next/navigation';
-import H4 from '@shared/typography/H4';
-import { CircularProgress } from '@mui/material';
-import Button from '@shared/buttons/Button';
-import Link from 'next/link';
-import { apiRoutes } from 'gpApi/routes';
-import { clientFetch } from 'gpApi/clientFetch';
+import PortalPanel from '@shared/layouts/PortalPanel'
+import H2 from '@shared/typography/H2'
+import AdminWrapper from 'app/admin/shared/AdminWrapper'
+import SearchForm from './SearchForm'
+import AdminCandidatesTable from 'app/admin/candidates/components/AdminCandidatesTable'
+import { FiChevronRight } from 'react-icons/fi'
+import { useEffect, useState } from 'react'
+import { URLSearchParamsToObject } from 'helpers/URLSearchParamsToObject'
+import { useSearchParams } from 'next/navigation'
+import H4 from '@shared/typography/H4'
+import { CircularProgress } from '@mui/material'
+import Button from '@shared/buttons/Button'
+import Link from 'next/link'
+import { apiRoutes } from 'gpApi/routes'
+import { clientFetch } from 'gpApi/clientFetch'
 
 const fetchCampaigns = async () => {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.list);
-    return resp.data;
+    const resp = await clientFetch(apiRoutes.campaign.list)
+    return resp.data
   } catch (e) {
-    console.error('error', e);
-    return { campaigns: [] };
+    console.error('error', e)
+    return { campaigns: [] }
   }
-};
+}
 
 const CampaignStatisticsPage = (props) => {
-  const { fireHose } = props;
-  const [campaigns, setCampaigns] = useState(props.campaigns);
-  const [showForm, setShowForm] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const { fireHose } = props
+  const [campaigns, setCampaigns] = useState(props.campaigns)
+  const [showForm, setShowForm] = useState(true)
+  const [loading, setLoading] = useState(false)
   const searchParamsAreEmpty = !Object.keys(
     URLSearchParamsToObject(useSearchParams()),
-  ).length;
+  ).length
 
   useEffect(() => {
     if (fireHose) {
-      loadCampaigns();
+      loadCampaigns()
     } else {
-      setCampaigns(props.campaigns);
+      setCampaigns(props.campaigns)
     }
-  }, [fireHose, props.campaigns]);
+  }, [fireHose, props.campaigns])
 
   const loadCampaigns = async () => {
-    setLoading(true);
-    const campaigns = await fetchCampaigns();
-    setCampaigns(campaigns);
-    setLoading(false);
-  };
+    setLoading(true)
+    const campaigns = await fetchCampaigns()
+    setCampaigns(campaigns)
+    setLoading(false)
+  }
 
   return (
     <AdminWrapper {...props}>
@@ -96,7 +96,7 @@ const CampaignStatisticsPage = (props) => {
         )}
       </PortalPanel>
     </AdminWrapper>
-  );
-};
+  )
+}
 
-export default CampaignStatisticsPage;
+export default CampaignStatisticsPage
