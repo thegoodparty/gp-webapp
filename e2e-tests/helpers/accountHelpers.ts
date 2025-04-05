@@ -10,7 +10,6 @@ export const testAccountLastName = 'test';
 
 export async function ensureSession() {
   const SESSION_FILE = path.resolve(__dirname, '../auth.json');
-  const baseURL = process.env.BASE_URL || '';
 
   if (fs.existsSync(SESSION_FILE)) {
     console.log('Existing session found, deleting and creating a new one...');
@@ -32,40 +31,20 @@ export async function ensureSession() {
   const password = userData.password + '1';
   const emailAddress = generateEmail();
 
-  try {
-    console.log('Creating new test account...');
-    await createAccount(page, undefined, undefined, password, emailAddress);
+  await createAccount(page, undefined, undefined, password, emailAddress);
 
-    // Verify the account was created by checking if we're logged in
-    console.log('Verifying account creation...');
-    await page.goto(`${baseURL}/profile`, { waitUntil: 'networkidle' });
-    const isLoggedIn = await page.locator("[data-testid='personal-first-name']").isVisible();
-    if (!isLoggedIn) {
-      throw new Error('Failed to verify account creation - not logged in after signup');
-    }
+  // Save the storage state (session)
+  console.log(`Saving new test account: ${emailAddress} + ${password}`);
+  await page.context().storageState({ path: SESSION_FILE });
+  await browser.close();
 
-    // Save the storage state (session)
-    console.log(`Saving new test account: ${emailAddress} + ${password}`);
-    await page.context().storageState({ path: SESSION_FILE });
+  // Save account details for cleanup
+  fs.writeFileSync(
+    path.resolve(__dirname, '../testAccount.json'),
+    JSON.stringify({ emailAddress, password: password })
+  );
 
-    // Verify the session file was created
-    if (!fs.existsSync(SESSION_FILE)) {
-      throw new Error('Session file was not created successfully');
-    }
-
-    // Save account details for cleanup
-    fs.writeFileSync(
-      path.resolve(__dirname, '../testAccount.json'),
-      JSON.stringify({ emailAddress, password: password })
-    );
-
-    console.log('New session created and saved successfully');
-  } catch (error) {
-    console.error('Error during session creation:', error);
-    throw error;
-  } finally {
-    await browser.close();
-  }
+  console.log('New session created and saved.');
 }
 
 export async function ensureAdminSession() {
@@ -157,138 +136,52 @@ export async function createAccount(
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'Local/Township/City';
 
-  console.log('Starting account creation process...');
-  console.log(`Using baseURL: ${baseURL}`);
+  await page.goto(`${baseURL}/sign-up`, { waitUntil: "networkidle" });
 
-  try {
-    // Navigate to sign-up page with retry
-    let retryCount = 0;
-    const maxRetries = 3;
-    while (retryCount < maxRetries) {
-      try {
-        console.log(`Attempting to navigate to sign-up page (attempt ${retryCount + 1})...`);
-        await page.goto(`${baseURL}/sign-up`, {
-          waitUntil: "networkidle",
-          timeout: 30000
-        });
-        break;
-      } catch (error) {
-        retryCount++;
-        if (retryCount === maxRetries) throw error;
-        console.log(`Navigation attempt ${retryCount} failed, retrying...`);
-        await page.waitForTimeout(2000);
-      }
-    }
-    console.log('Successfully navigated to sign-up page');
+  // Verify user is on login page
+  await expect(page.getByText(loginPageHeader)).toBeVisible();
 
-    // Verify user is on login page
-    console.log('Waiting for sign-up page header...');
-    await expect(page.getByText(loginPageHeader)).toBeVisible({ timeout: 30000 });
-    console.log('Verified sign-up page header');
+  // Fill in sign up page
+  await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
+  await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
+  await page.getByRole("textbox", { name: "email" }).fill(emailAddress);
+  await page.getByRole("textbox", { name: "phone" }).fill(phoneNumber);
+  await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
+  await page.getByRole("textbox", { name: "password" }).fill(password + "1");
+  await page.getByRole("button", { name: "Join" }).click();
 
-    // Fill in sign up page
-    console.log('Filling sign-up form...');
-    await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
-    await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
-    await page.getByRole("textbox", { name: "email" }).fill(emailAddress);
-    await page.getByRole("textbox", { name: "phone" }).fill(phoneNumber);
-    await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
-    await page.getByRole("textbox", { name: "password" }).fill(password + "1");
-    console.log('Form filled, clicking Join button...');
-    await page.getByRole("button", { name: "Join" }).click();
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
 
-    // Accept cookie terms (if visible)
-    console.log('Checking for cookie terms...');
-    await acceptCookieTerms(page);
+  await page.getByText('To pull accurate results,').isVisible();
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('combobox').selectOption(electionLevel);
+  await page.getByRole('button', { name: 'Next' }).click();
 
-    console.log('Waiting for election level selection...');
-    await page.getByText('To pull accurate results,').isVisible({ timeout: 30000 });
-    await page.waitForLoadState('networkidle');
-    await page.getByRole('combobox').selectOption(electionLevel);
-    await page.getByRole('button', { name: 'Next' }).click();
-
-    console.log('Selecting office...');
-    await page.getByText("What office are you interested in?").isVisible({ timeout: 30000 });
-    await page
-      .getByRole("progressbar")
-      .waitFor({ state: "hidden", timeout: 30000 });
-    await page.getByRole("button", { name: role }).first().click();
-    await page.getByRole("button", { name: "Next" }).click();
-
-    console.log('Setting campaign name...');
-    await page
-      .getByText("How will your campaign appear on the ballot?")
-      .isVisible({ timeout: 30000 });
-    await page.getByLabel("Other").fill("Test");
-    await page.getByRole("button", { name: "Next" }).click();
-
-    // Agree to GoodParty.org Terms
-    console.log('Accepting terms...');
-    await page.getByRole("button", { name: "I Agree" }).click();
-    await page.getByRole("button", { name: "I Agree" }).click();
-    await page.getByRole("button", { name: "I Agree" }).click();
-    await page.getByRole("button", { name: "I Agree" }).click();
-
-    console.log('Clicking final submit button...');
-    await page.getByRole("button", { name: "Submit" }).click();
-
-    // Wait for navigation after submit
-    console.log('Waiting for navigation after submit...');
-    await page.waitForLoadState('networkidle', { timeout: 30000 });
-
-    // Check if we're on the dashboard or if we need to click "View Dashboard"
-    console.log('Checking current page state...');
-    const currentUrl = page.url();
-    console.log('Current URL after submit:', currentUrl);
-
-    // If we're not already on the dashboard, try to click the "View Dashboard" button
-    if (!currentUrl.includes('/dashboard')) {
-      console.log('Not on dashboard yet, looking for View Dashboard button...');
-      try {
-        await page.getByText("View Dashboard").click({ timeout: 30000 });
-        await page.waitForLoadState('networkidle', { timeout: 30000 });
-      } catch (error) {
-        console.log('Could not find View Dashboard button, checking current state...');
-        console.log('Current URL:', page.url());
-        console.log('Page content:', await page.content());
-        throw new Error('Failed to navigate to dashboard after signup');
-      }
-    }
-
-    // Final verification that we're on the dashboard
-    console.log('Verifying dashboard access...');
-    const dashboardElements = [
-      page.getByText("View Dashboard"),
-      page.getByText("Campaign Dashboard"),
-      page.getByText("My Campaign")
-    ];
-
-    let dashboardFound = false;
-    for (const element of dashboardElements) {
-      try {
-        if (await element.isVisible({ timeout: 5000 })) {
-          dashboardFound = true;
-          console.log('Found dashboard element:', await element.textContent());
-          break;
-        }
-      } catch (error) {
-        // Continue checking other elements
-      }
-    }
-
-    if (!dashboardFound) {
-      console.log('Current URL:', page.url());
-      console.log('Page content:', await page.content());
-      throw new Error('Failed to verify dashboard access after signup');
-    }
-
-    console.log('Account creation completed successfully');
-  } catch (error) {
-    console.error('Error during account creation:', error);
-    console.log('Current URL:', page.url());
-    console.log('Page content:', await page.content());
-    throw error;
-  }
+  await page.getByText("What office are you interested in?").isVisible();
+  await page
+    .getByRole("progressbar")
+    .waitFor({ state: "hidden", timeout: 20000 });
+  await page.getByRole("button", { name: role }).first().click();
+  await page.getByRole("button", { name: "Next" }).click();
+  await page
+    .getByText("How will your campaign appear on the ballot?")
+    .isVisible();
+  await page.getByLabel("Other").fill("Test");
+  await page.getByRole("button", { name: "Next" }).click();
+  // Agree to GoodParty.org Terms
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole('button', { name: 'Agreed' }).isVisible();
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole('button', { name: 'Agreed' }).nth(1).isVisible();
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole('button', { name: 'Agreed' }).nth(2).isVisible();
+  await page.getByRole("button", { name: "I Agree" }).click();
+  await page.getByRole('button', { name: 'Agreed' }).nth(3).isVisible();
+  await page.getByRole("button", { name: "Submit" }).click();
+  await page.waitForLoadState('networkidle');
+  await page.getByText("View Dashboard").click();
+  await page.waitForLoadState('networkidle');
 }
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
