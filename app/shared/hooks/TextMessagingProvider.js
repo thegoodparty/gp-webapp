@@ -8,8 +8,10 @@ export const TextMessagingContext = createContext([{}, () => {}])
 export function TextMessagingProvider({
   children,
   textMessaging: initialTextMessaging,
+  compliance: initialCompliance,
 }) {
   const [textMessaging, setTextMessaging] = useState(initialTextMessaging)
+  const [compliance, setCompliance] = useState(initialCompliance)
 
   const refreshTextMessaging = async () => {
     try {
@@ -26,7 +28,7 @@ export function TextMessagingProvider({
 
   return (
     <TextMessagingContext.Provider
-      value={[textMessaging, refreshTextMessaging]}
+      value={[textMessaging, refreshTextMessaging, compliance, setCompliance]}
     >
       {children}
     </TextMessagingContext.Provider>
