@@ -6,11 +6,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import PDFDocument from 'pdfkit';
 
-const SESSION_FILE = path.resolve(__dirname, '../auth.json');
-
 export const testAccountLastName = 'test';
 
 export async function ensureSession() {
+  const SESSION_FILE = path.resolve(__dirname, '../auth.json');
+
   if (fs.existsSync(SESSION_FILE)) {
     console.log('Existing session found, deleting and creating a new one...');
     
@@ -78,10 +78,10 @@ export async function ensureAdminSession() {
   console.log('New admin session created and saved.');
 }
 
-
 export async function cleanupSession() {
   const testAccountPath = path.resolve(__dirname, '../testAccount.json');
   const ADMIN_SESSION_FILE = path.resolve(__dirname, '../admin-auth.json');
+  const SESSION_FILE = path.resolve(__dirname, '../auth.json');
 
   // Clean up admin session if it exists
   if (fs.existsSync(ADMIN_SESSION_FILE)) {
@@ -243,7 +243,8 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 
 export async function deleteAccount(page = null) {
   const baseURL = process.env.BASE_URL;
-  
+  const SESSION_FILE = path.resolve(__dirname, '../auth.json');
+
   // If no page is provided, create a new browser context with the saved session
   let shouldCloseBrowser = false;
   if (!page) {
