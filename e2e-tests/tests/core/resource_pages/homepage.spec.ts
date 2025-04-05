@@ -10,7 +10,6 @@ const candidatesButton = /Find Candidates/
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/', {waitUntil: "commit"});
-  await page.waitForLoadState('networkidle');
 });
 
 test('Verify Homepage', async ({ page }) => {

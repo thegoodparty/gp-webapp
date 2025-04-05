@@ -7,7 +7,6 @@ const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/get-a-demo", {waitUntil: "commit"});
-    await page.waitForLoadState('networkidle');
 });
 
 test('Verify Get a Demo page', async ({ page }) => {

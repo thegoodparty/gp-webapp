@@ -11,7 +11,6 @@ test.use({
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/voter-records", {waitUntil: "commit"});
-    await page.waitForLoadState('networkidle');
 });
 
 test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
