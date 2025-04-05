@@ -63,7 +63,7 @@ export default function ToolsSection() {
                   id="candidates_academy"
                   color="neutral"
                 >
-                  Learn how to run
+                  Talk to an expert
                 </Button>
               </div>
             </div>
