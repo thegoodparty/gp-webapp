@@ -78,7 +78,7 @@ export default function P2VSection() {
             <div className="col-span-12 md:col-span-5 justify-self-center md:justify-self-start items-start lg:pr-10 mb-5 w-full">
               <div className="md:pl-[70px]">
                 <h3 className="text-[32px] mt-2 text-start font-medium leading-10">
-                  Build a targeted lists of winnable voters.
+                  Build a targeted list of winnable voters.
                 </h3>
                 <Body1 className="mt-2">
                   Use voter database filters like age, party affiliations, and
