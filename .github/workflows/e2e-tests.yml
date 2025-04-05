@@ -43,7 +43,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-run-id
-          path: test_run_id.txt
+          path: testRunId.txt
+          retention-days: 1
 
   run-e2e-tests:
     needs: create-test-run
