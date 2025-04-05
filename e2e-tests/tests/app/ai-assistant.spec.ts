@@ -12,7 +12,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-assistant");
+    await page.goto("/dashboard/campaign-assistant", {waitUntil: "load"});
     await page.waitForLoadState('networkidle');
 });
 

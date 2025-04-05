@@ -10,7 +10,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-details");
+    await page.goto("/dashboard/campaign-details", {waitUntil: "load"});
 });
 
 test('Update Campaign Details', async ({ page }) => {
