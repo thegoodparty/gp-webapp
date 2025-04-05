@@ -31,7 +31,6 @@ jobs:
           echo "Run ID from response: $run_id"
           
           if [ -n "$run_id" ]; then
-            # Create a file with the test run ID that can be shared
             echo "$run_id" > test_run_id.txt
             echo "Created test run with ID: $run_id"
           else
@@ -51,7 +50,7 @@ jobs:
     if: github.event.deployment_status.state == 'success'
     strategy:
       matrix:
-        shard: [1/4, 2/4, 3/4, 4/4]
+        shard: [0, 1, 2, 3]
       fail-fast: false
     
     steps:
@@ -122,6 +121,8 @@ jobs:
           TEST_RUN_ID: ${{ env.TEST_RUN_ID }}
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
+          TEST_WORKER_INDEX: ${{ matrix.shard }}
+          TEST_WORKERS_COUNT: 4
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
