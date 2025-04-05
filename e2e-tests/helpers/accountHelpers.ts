@@ -156,8 +156,6 @@ export async function createAccount(
 
   await page.getByText('To pull accurate results,').isVisible();
   await page.waitForLoadState('networkidle');
-  await page.getByLabel('General Election Date (').fill(electionDate);
-  await page.getByLabel('General Election Date (').press('Enter');
   await page.getByRole('combobox').selectOption(electionLevel);
   await page.getByRole('button', { name: 'Next' }).click();
 
