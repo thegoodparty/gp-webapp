@@ -8,7 +8,7 @@ import Body1 from '@shared/typography/Body1'
 
 export default function P2VSection() {
   return (
-    <div className="bg-cream-500 px-2 py-16">
+    <div className="bg-cream-500 px-2 py-8 lg:py-16">
       <MaxWidth>
         <div className="bg-white rounded-3xl p-8">
           <h2 className="text-center text-3xl font-semibold  md:text-4xl  xl:text-5xl mb-16">
