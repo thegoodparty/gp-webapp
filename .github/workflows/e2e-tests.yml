@@ -118,9 +118,8 @@ jobs:
         run: |
           cd test-automation
           echo "Using test run ID: $TEST_RUN_ID"
-          echo "CI=$CI"
-          echo "TEST_RUN_ID=${{ env.TEST_RUN_ID }}"
-          npx playwright test --shard ${{ matrix.shard }}
+          echo "Running shard ${{ matrix.shard }}/4"
+          npx playwright test --shard=${{ matrix.shard }}/4 --reporter=list
         env:
           CI: "true"
           TEST_RUN_ID: ${{ env.TEST_RUN_ID }}
