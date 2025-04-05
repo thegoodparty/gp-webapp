@@ -258,7 +258,7 @@ export async function deleteAccount(page = null) {
       page = await context.newPage();
     }
 
-    await page.goto(`${baseURL}/profile`, {waitUntil: "commit"});
+    await page.goto(`${baseURL}/profile`, {waitUntil: "networkidle"});
     await page.getByRole('button', { name: 'Delete Account' }).click();
     await page.getByRole('button', { name: 'Proceed' }).click();
 
