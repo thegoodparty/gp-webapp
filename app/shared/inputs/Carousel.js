@@ -17,7 +17,7 @@ export default function Carousel(props) {
   }
   const { sections } = props
   return (
-    <div className="m-0 w-[350px] md:w-[700px] lg:w-[900px] h-[425px] md:h-[350px] lg:[300px] bg-primary-dark-dark rounded-2xl text-white">
+    <div className="m-0 w-[90vw] max-w-screen-xl h-[425px] md:h-[350px] lg:[300px] bg-primary-dark-dark rounded-2xl text-white">
       <Slider {...settings}>
         {sections.map((section, index) => (
           <div key={section.name}>

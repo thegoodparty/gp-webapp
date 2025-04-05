@@ -1,97 +1,44 @@
-import Image from 'next/image'
-import styles from './Homepage.module.scss'
 import MaxWidth from '@shared/layouts/MaxWidth'
+import H6 from '@shared/typography/H6'
+import { MdEmojiEvents, MdFolderShared, MdGroups } from 'react-icons/md'
+
+const items = [
+  {
+    icon: <MdFolderShared />,
+    title: 'Level the playing field with voter data and analytics.',
+  },
+  {
+    icon: <MdEmojiEvents />,
+    title: 'Get a custom strategy and plan to win your campaign.',
+  },
+  {
+    icon: <MdGroups />,
+    title: 'Access powerful campaign outreach tools to win voters.',
+  },
+]
 
 export default function FactsSection() {
   return (
-    <section className="bg-primary-dark h-auto pt-20 pb-40">
+    <section className="bg-blue-50 h-auto py-16">
       <MaxWidth>
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-12 lg:col-span-6 pb-5">
-            <div className="flex flex-col items-center justify-center">
-              <Image
-                src="/images/homepage/progress.svg"
-                sizes="100vw"
-                height={140}
-                width={220}
-                className="object-cover"
-                alt=""
-              />
+        <h2 className="text-center text-3xl font-semibold  md:text-4xl  xl:text-5xl mb-16">
+          GoodParty.org has already empowered 3,400+ Independents to run and
+          win... without deep pockets.
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className={`pr-8 ${
+                index !== 2
+                  ? 'border-b md:border-b-0 pb-8 md:pb-0 md:border-r border-black/60'
+                  : ''
+              }`}
+            >
+              <div className="text-4xl mb-4">{item.icon}</div>
+              <H6>{item.title}</H6>
             </div>
-            <div className="text-center pb-5 w-full">
-              <div className={`text-slate-50 p-3 ${styles.matrix2}`}>
-                <span className="text-[80px] font-semibold">3</span>&nbsp;
-                <span className="text-[50px] font-normal pr-2 pl-2">
-                  out of
-                </span>
-                &nbsp;
-                <span className="text-[80px] font-semibold">4</span>
-              </div>
-              <div className="text-[32px] font-semibold">
-                <span className="text-gray-200">Americans want</span>&nbsp;
-                <span className="text-secondary-light">more</span>&nbsp;
-              </div>
-              <div className="text-[32px] font-semibold">
-                <span className="text-secondary-light">choices</span>&nbsp;
-                <span className="text-gray-200">in politics</span>
-              </div>
-            </div>
-          </div>
-          <div className="col-span-12 lg:col-span-6">
-            <div className="flex flex-col items-center justify-center">
-              <Image
-                src="/images/homepage/pie.svg"
-                sizes="100vw"
-                height={140}
-                width={140}
-                className="object-cover"
-                alt="Pie"
-              />
-            </div>
-            <div className="text-center w-full">
-              <div
-                className={`text-[80px] font-semibold text-slate-50 p-3 ${styles.matrix2}`}
-              >
-                52%
-              </div>
-              <div className="text-[32px] font-semibold">
-                <span className="text-gray-200">of</span>&nbsp;
-                <span className="text-[#847AFF]">Gen Z</span>&nbsp;
-                <span className="text-gray-200">and Millennials</span>&nbsp;
-              </div>
-              <div className="text-[32px] font-semibold">
-                <span className="text-gray-200">identify as an</span>&nbsp;
-                <span className="text-[#847AFF]">independent</span>&nbsp;
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-12 gap-3 mt-20">
-          <div className="col-span-12">
-            <div className="flex flex-col items-center">
-              <Image
-                src="/images/homepage/heart.svg"
-                sizes="100vw"
-                height={178}
-                width={270}
-                className="object-cover"
-                alt="GP"
-              />
-            </div>
-            <div className="text-[32px] font-semibold text-center w-full">
-              <div className="text-gray-200">
-                GoodParty.org is a movement bringing together
-              </div>
-              <div className="text-gray-200">
-                <span className="text-red-400">voters</span>&nbsp;and
-                exciting&nbsp;
-                <span className="text-red-400">
-                  independent candidates&nbsp;
-                </span>
-                that&nbsp;<span className="text-red-400">can win</span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </MaxWidth>
     </section>
