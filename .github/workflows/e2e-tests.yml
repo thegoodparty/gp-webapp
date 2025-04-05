@@ -21,6 +21,7 @@ jobs:
         with:
           repository: thegoodparty/test-automation
           token: ${{ secrets.GH_PAT_TEST }}
+          path: test-automation
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -28,11 +29,15 @@ jobs:
           node-version: '16.x'
 
       - name: Install Dependencies
-        run: npm install && npx playwright install --with-deps
+        run: |
+          cd test-automation
+          npm install
+          npx playwright install --with-deps
 
       - name: Run Global Setup
         id: global-setup
         run: |
+          cd test-automation
           node -r ts-node/register globalSetup.js
         env:
           CI: "true"
@@ -132,6 +137,7 @@ jobs:
 
       - name: Run Global Teardown
         run: |
+          cd test-automation
           node -r ts-node/register globalTeardown.js
         env:
           CI: "true"
