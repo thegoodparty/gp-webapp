@@ -13,10 +13,10 @@ export async function ensureSession() {
 
   if (fs.existsSync(SESSION_FILE)) {
     console.log('Existing session found, deleting and creating a new one...');
-    
+
     // Remove the existing session file
     fs.unlinkSync(SESSION_FILE);
-    
+
     // Remove account details file, if it exists
     const accountFile = path.resolve(__dirname, '../testAccount.json');
     if (fs.existsSync(accountFile)) {
@@ -31,25 +31,44 @@ export async function ensureSession() {
   const password = userData.password + '1';
   const emailAddress = generateEmail();
 
-  await createAccount(page, undefined, undefined, password, emailAddress);
+  try {
+    console.log('Creating new test account...');
+    await createAccount(page, undefined, undefined, password, emailAddress);
 
-  // Save the storage state (session)
-  console.log(`Saving new test account: ${emailAddress} + ${password}`);
-  await page.context().storageState({ path: SESSION_FILE });
-  await browser.close();
+    // Verify the account was created by checking if we're logged in
+    await page.goto('/profile', { waitUntil: 'networkidle' });
+    const isLoggedIn = await page.locator("[data-testid='personal-first-name']").isVisible();
+    if (!isLoggedIn) {
+      throw new Error('Failed to verify account creation - not logged in after signup');
+    }
 
-  // Save account details for cleanup
-  fs.writeFileSync(
-    path.resolve(__dirname, '../testAccount.json'),
-    JSON.stringify({ emailAddress, password: password})
-  );
+    // Save the storage state (session)
+    console.log(`Saving new test account: ${emailAddress} + ${password}`);
+    await page.context().storageState({ path: SESSION_FILE });
 
-  console.log('New session created and saved.');
+    // Verify the session file was created
+    if (!fs.existsSync(SESSION_FILE)) {
+      throw new Error('Session file was not created successfully');
+    }
+
+    // Save account details for cleanup
+    fs.writeFileSync(
+      path.resolve(__dirname, '../testAccount.json'),
+      JSON.stringify({ emailAddress, password: password })
+    );
+
+    console.log('New session created and saved successfully');
+  } catch (error) {
+    console.error('Error during session creation:', error);
+    throw error;
+  } finally {
+    await browser.close();
+  }
 }
 
 export async function ensureAdminSession() {
   const ADMIN_SESSION_FILE = path.resolve(__dirname, '../admin-auth.json');
-  
+
   if (fs.existsSync(ADMIN_SESSION_FILE)) {
     console.log('Existing admin session found, deleting and creating a new one...');
     fs.unlinkSync(ADMIN_SESSION_FILE);
@@ -59,7 +78,7 @@ export async function ensureAdminSession() {
 
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  
+
   // Use admin credentials from environment variables
   const adminEmail = process.env.TEST_USER_ADMIN;
   const adminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
@@ -108,9 +127,9 @@ export async function loginAccount(
   emailAddress,
   password
 ) {
-    const baseURL = process.env.BASE_URL;
+  const baseURL = process.env.BASE_URL;
 
-  await page.goto(`${baseURL}/login`, {waitUntil: "networkidle"});
+  await page.goto(`${baseURL}/login`, { waitUntil: "networkidle" });
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -136,7 +155,7 @@ export async function createAccount(
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'Local/Township/City';
 
-  await page.goto(`${baseURL}/sign-up`, {waitUntil: "networkidle"});
+  await page.goto(`${baseURL}/sign-up`, { waitUntil: "networkidle" });
 
   // Verify user is on login page
   await expect(page.getByText(loginPageHeader)).toBeVisible();
@@ -184,7 +203,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   const testCardNumber = "4242424242424242";
   const phoneNumber = generatePhone();
 
-  await page.goto("/dashboard/upgrade-to-pro", {waitUntil: "commit"});
+  await page.goto("/dashboard/upgrade-to-pro", { waitUntil: "commit" });
 
   // Waits for page to load completely
   await page.waitForLoadState('networkidle');
@@ -210,7 +229,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 
   // Wait for the PDF file to be written
   await new Promise((resolve) => writeStream.on('finish', resolve));
-  
+
   // Upload the PDF file
   const fileInput = page.locator("button input[type='file']");
   await fileInput.setInputFiles(pdfPath);
@@ -227,7 +246,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 
   // Pay for pro through Stripe
   await page.getByLabel('Email').fill(userData.email);
-  await page.getByTestId('product-summary-product-image', {timeout: 10000}).isVisible();
+  await page.getByTestId('product-summary-product-image', { timeout: 10000 }).isVisible();
   await page.getByTestId('card-accordion-item').click();
   await page.getByPlaceholder('1234 1234 1234').fill(testCardNumber);
   await page.getByPlaceholder('MM / YY').fill('12/28');
@@ -257,18 +276,18 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Navigating to profile page...');
-  await page.goto(`${baseURL}/profile`, {waitUntil: "networkidle"});
-  
+  await page.goto(`${baseURL}/profile`, { waitUntil: "networkidle" });
+
   // Wait for profile page to load completely
   await page.waitForLoadState('domcontentloaded');
   await page.waitForLoadState('networkidle');
-  
+
   console.log('Looking for Delete Account button...');
   // Wait for and click Delete Account button with a longer timeout
   const deleteButton = page.getByRole('button', { name: 'Delete Account' });
   await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
   await deleteButton.click();
-  
+
   console.log('Looking for Proceed button...');
   // Wait for and click Proceed button
   const proceedButton = page.getByRole('button', { name: 'Proceed' });
@@ -279,13 +298,13 @@ export async function deleteAccount(page = null) {
   console.log('Verifying logout...');
   await expect(page.getByText('Get Campaign Tools')).toBeVisible({ timeout: 30000 });
   await page.context().clearCookies();
-  
+
   // Only close the browser if we created it in this function
   if (shouldCloseBrowser) {
     await page.context().browser().close();
   } else {
     await page.close();
   }
-  
+
   console.log('Account deletion completed successfully');
 }
