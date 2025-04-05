@@ -29,7 +29,7 @@ export default async function Hero() {
               to run, win and serve!
             </h1>
             <Body1 className="mt-8">
-              See how our campaign platforms empowers you with:
+              See how our campaign platform empowers you with:
               <ul className="list-disc list-inside">
                 <li>Personalized Voter Data</li>
                 <li>Voter Outreach Tools</li>
