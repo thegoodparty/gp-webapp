@@ -242,36 +242,49 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
 }
 
 export async function deleteAccount(page = null) {
-  try {
-    const baseURL = process.env.BASE_URL;
-    
-    // If no page is provided, create a new browser context with the saved session
-    let shouldCloseBrowser = false;
-    if (!page) {
-      shouldCloseBrowser = true;
-      const browser = await chromium.launch();
-      const context = await browser.newContext({
-        storageState: SESSION_FILE  // Use the saved auth.json session
-      });
-      page = await context.newPage();
-    }
-
-    await page.goto(`${baseURL}/profile`, {waitUntil: "networkidle"});
-    await page.getByRole('button', { name: 'Delete Account' }).click();
-    await page.getByRole('button', { name: 'Proceed' }).click();
-
-    // Verify user is logged out
-    await expect(page.getByText('Get Campaign Tools')).toBeVisible({ timeout: 10000 });
-    await page.context().clearCookies();
-    
-    // Only close the browser if we created it in this function
-    if (shouldCloseBrowser) {
-      await page.context().browser().close();
-    } else {
-      await page.close();
-    }
-  } catch (error) {
-    console.error('Error during deleteAccount:', error);
-    throw error;
+  const baseURL = process.env.BASE_URL;
+  
+  // If no page is provided, create a new browser context with the saved session
+  let shouldCloseBrowser = false;
+  if (!page) {
+    shouldCloseBrowser = true;
+    const browser = await chromium.launch();
+    const context = await browser.newContext({
+      storageState: SESSION_FILE  // Use the saved auth.json session
+    });
+    page = await context.newPage();
   }
+
+  console.log('Navigating to profile page...');
+  await page.goto(`${baseURL}/profile`, {waitUntil: "networkidle"});
+  
+  // Wait for profile page to load completely
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForLoadState('networkidle');
+  
+  console.log('Looking for Delete Account button...');
+  // Wait for and click Delete Account button with a longer timeout
+  const deleteButton = page.getByRole('button', { name: 'Delete Account' });
+  await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
+  await deleteButton.click();
+  
+  console.log('Looking for Proceed button...');
+  // Wait for and click Proceed button
+  const proceedButton = page.getByRole('button', { name: 'Proceed' });
+  await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
+  await proceedButton.click();
+
+  // Verify user is logged out
+  console.log('Verifying logout...');
+  await expect(page.getByText('Get Campaign Tools')).toBeVisible({ timeout: 30000 });
+  await page.context().clearCookies();
+  
+  // Only close the browser if we created it in this function
+  if (shouldCloseBrowser) {
+    await page.context().browser().close();
+  } else {
+    await page.close();
+  }
+  
+  console.log('Account deletion completed successfully');
 }

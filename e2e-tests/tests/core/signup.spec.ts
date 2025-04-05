@@ -12,7 +12,7 @@ test('Onboarding', async ({page}) => {
     const caseId = 18;
     // Test verifies that registration was successful during global setup phase
     try {
-        await page.goto('/profile', {waitUntil: "commit"});
+        await page.goto('/profile', {waitUntil: "networkidle"});
         await page.locator("[data-testid='personal-first-name']").isVisible();
 
         // Report test results

@@ -12,7 +12,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/profile', {waitUntil: "commit"});
+    await page.goto('/profile', {waitUntil: "networkidle"});
 });
 
 test('Adjust Personal Information', async ({ page }) => {

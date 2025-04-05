@@ -13,7 +13,7 @@ test.describe('Mobile viewport tests - App pages', () => {
     test('Verify app pages in mobile view', async ({ page }) => {
         const caseId = 75;
         try {
-            await page.goto("/dashboard", {waitUntil: "commit"})
+            await page.goto("/dashboard", {waitUntil: "networkidle"})
             // Verify AI assistant page
             await appNav(page, 'AI Assistant', true);
             await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();

@@ -3,8 +3,8 @@ import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
 import { getSitemapUrls } from '../../helpers/navHelpers';
 import { addTestResult } from '@testrailHelper';
-import * as fs from "fs";
-const runId = fs.readFileSync("testRunId.txt", "utf-8");
+import * as fs from 'fs';
+const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.describe('Sitemap Tests', () => {
   const BASE_URL = process.env.BASE_URL;
