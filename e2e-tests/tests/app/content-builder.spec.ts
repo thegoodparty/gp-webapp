@@ -15,7 +15,6 @@ test.skip('Generate content with Content Builder', async ({page}) => {
     try {
         await loginAccount(page, testAdmin, testAdminPassword);
         await page.goto('/dashboard/content', {waitUntil: "commit"});
-        await page.waitForLoadState('networkidle');
 
         // Verify user is on the AI campaign tool page
         await expect(page.getByRole('heading', { name: 'My Content' })).toBeVisible();

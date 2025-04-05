@@ -13,7 +13,6 @@ test('Onboarding', async ({page}) => {
     // Test verifies that registration was successful during global setup phase
     try {
         await page.goto('/profile', {waitUntil: "commit"});
-        await page.waitForLoadState('networkidle');
         await page.locator("[data-testid='personal-first-name']").isVisible();
 
         // Report test results

@@ -13,7 +13,6 @@ test.use({
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/campaign-assistant", {waitUntil: "commit"});
-    await page.waitForLoadState('networkidle');
 });
 
 test('Create new conversation', async ({ page }) => {
