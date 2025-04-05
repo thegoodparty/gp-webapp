@@ -28,20 +28,20 @@ export async function ensureSession() {
 
   const browser = await chromium.launch();
   const page = await browser.newPage();
-  const password = userData.password;
+  const password = userData.password + '1';
   const emailAddress = generateEmail();
 
   await createAccount(page, undefined, undefined, password, emailAddress);
 
   // Save the storage state (session)
-  console.log(`Saving new test account: ${emailAddress} + ${password}1`);
+  console.log(`Saving new test account: ${emailAddress} + ${password}`);
   await page.context().storageState({ path: SESSION_FILE });
   await browser.close();
 
   // Save account details for cleanup
   fs.writeFileSync(
     path.resolve(__dirname, '../testAccount.json'),
-    JSON.stringify({ emailAddress, password: password + '1' })
+    JSON.stringify({ emailAddress, password: password})
   );
 
   console.log('New session created and saved.');
@@ -110,7 +110,7 @@ export async function loginAccount(
 ) {
     const baseURL = process.env.BASE_URL;
 
-  await page.goto(`${baseURL}/login`, {waitUntil: "commit"});
+  await page.goto(`${baseURL}/login`, {waitUntil: "networkidle"});
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -136,7 +136,7 @@ export async function createAccount(
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'Local/Township/City';
 
-  await page.goto(`${baseURL}/sign-up`, {waitUntil: "commit"});
+  await page.goto(`${baseURL}/sign-up`, {waitUntil: "networkidle"});
 
   // Verify user is on login page
   await expect(page.getByText(loginPageHeader)).toBeVisible();
