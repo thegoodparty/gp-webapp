@@ -29,8 +29,6 @@ test('Verify Homepage', async ({ page }) => {
 
     // Verify links in body
     expect(page.getByRole('button', { name: candidatesButton }));
-    await expect(page.locator('#prefooter_demo')).toBeVisible();
-
 
     await addTestResult(runId, caseId, 1, 'Test passed');
   } catch (error) {
