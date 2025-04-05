@@ -180,8 +180,9 @@ export async function createAccount(
   await page.getByRole('button', { name: 'Agreed' }).nth(3).isVisible();
   await page.getByRole("button", { name: "Submit" }).click();
   await page.waitForLoadState('networkidle');
-  await page.getByText("View Dashboard").click();
+  await page.getByRole('button', { name: 'View Dashboard' }).click();
   await page.waitForLoadState('networkidle');
+  await page.getByRole('link', { name: 'Dashboard' }).isVisible();
 }
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
