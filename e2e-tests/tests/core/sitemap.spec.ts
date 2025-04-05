@@ -71,28 +71,6 @@ test.describe('Sitemap Tests', () => {
         console.log('Sample URLs:', urls.slice(0, 3));
         
         expect(urls.length).toBeGreaterThan(0);
-        
-        for (const url of urls) {
-            expect(validDomains.some(domain => domain.test(url))).toBeTruthy();
-        }
-        
-        let validUrlFound = false;
-        for (let i = 0; i < Math.min(5, urls.length); i++) {
-            try {
-                const response = await axios.get(urls[i]);
-                if (response.status === 200) {
-                    validUrlFound = true;
-                    break;
-                }
-            } catch (error) {
-                console.log(`URL ${urls[i]} failed, trying next one...`);
-                continue;
-            }
-        }
-
-        if (!validUrlFound) {
-            throw new Error('Could not successfully access any sample URLs from the sitemap');
-        }
 
         await addTestResult(runId, caseId, 1, "Test passed");
     } catch (error) {

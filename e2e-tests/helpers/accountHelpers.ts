@@ -137,7 +137,7 @@ export async function createAccount(
   const electionLevel = 'Local/Township/City';
   const electionDate = '2028-11-10';
 
-  await page.goto(`${baseURL}/sign-up`);
+  await page.goto(`${baseURL}/sign-up`, {waitUntil: "commit"});
 
   // Verify user is on login page
   await expect(page.getByText(loginPageHeader)).toBeVisible();
@@ -259,10 +259,8 @@ export async function deleteAccount(page = null) {
     }
 
     await page.goto(`${baseURL}/profile`, {waitUntil: "commit"});
-    await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Delete Account' }).click();
     await page.getByRole('button', { name: 'Proceed' }).click();
-    await page.waitForLoadState('networkidle');
 
     // Verify user is logged out
     await expect(page.getByText('Get Campaign Tools')).toBeVisible({ timeout: 10000 });
