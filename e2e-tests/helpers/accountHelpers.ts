@@ -10,6 +10,7 @@ export const testAccountLastName = 'test';
 
 export async function ensureSession() {
   const SESSION_FILE = path.resolve(__dirname, '../auth.json');
+  const baseURL = process.env.BASE_URL || '';
 
   if (fs.existsSync(SESSION_FILE)) {
     console.log('Existing session found, deleting and creating a new one...');
@@ -36,7 +37,8 @@ export async function ensureSession() {
     await createAccount(page, undefined, undefined, password, emailAddress);
 
     // Verify the account was created by checking if we're logged in
-    await page.goto('/profile', { waitUntil: 'networkidle' });
+    console.log('Verifying account creation...');
+    await page.goto(`${baseURL}/profile`, { waitUntil: 'networkidle' });
     const isLoggedIn = await page.locator("[data-testid='personal-first-name']").isVisible();
     if (!isLoggedIn) {
       throw new Error('Failed to verify account creation - not logged in after signup');
