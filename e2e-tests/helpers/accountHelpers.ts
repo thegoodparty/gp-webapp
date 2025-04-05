@@ -125,7 +125,7 @@ export async function loginAccount(
 export async function createAccount(
   page,
   zipCode = "94066",
-  role = "San Mateo Union School Board",
+  role = "South San Francisco City Clerk",
   password = userData.password,
   emailAddress = generateEmail()
 ) {
