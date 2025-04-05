@@ -17,12 +17,16 @@ export default defineConfig({
     ["json", { outputFile: "test-results/playwright-results.json" }],
   ],
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:4000/", // Fallback to default URL if not provided
+    baseURL: process.env.BASE_URL || "http://localhost:4000/",
     storageState: undefined,
-    contextOptions: { viewport: null },
+    contextOptions: {
+      viewport: null,
+      ignoreHTTPSErrors: true,
+    },
     trace: "on-first-retry",
     launchOptions: {
       slowMo: process.env.CI ? 100 : 0,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     },
   }
 });
