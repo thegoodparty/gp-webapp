@@ -7,28 +7,26 @@ import Body1 from '@shared/typography/Body1'
 
 const sections = [
   {
-    name: 'Peter H. - Independent',
-    title: 'Social Impact Consultant',
-    subtitle: 'GoodParty.org Academy Graduate',
+    name: 'Adam Khosroabadi - Independent',
+    title: 'Milwaukie, OR City Council',
     description:
-      "My takeaway was “I could probably shake that many hands!” it's within reach, I could represent my community, my neighborhood. It's not a moonshot.",
-    img: '/images/homepage/peter.jpg',
+      "With the AI tools on the platform, the voter list, and the data, being able to go Pro for 10 bucks was just a no-brainer. Without you guys texting, I don't know if I would have won this race.",
+    img: '/images/homepage/adam.jpg',
+  },
+
+  {
+    name: 'Joseph Faulkner - Independent',
+    title: 'Fayetteville, TN Alderman',
+    description:
+      "I've been putting in work for probably two years now, but you also have to have data. The help from GoodParty.org put me over the edge.",
+    img: '/images/homepage/joseph.jpg',
   },
   {
-    name: 'Chaz M. - Independent',
-    title: 'Firefighter',
-    subtitle: 'GoodParty.org Academy Graduate',
+    title: 'West Hollywood, CA City Council',
+    name: 'William Seegmille - Independent',
     description:
-      "With where GoodParty.org's AI is today, you could [run for office] today… my aha moment was how powerful the software is. And it's free!",
-    img: '/images/homepage/chaz.jpg',
-  },
-  {
-    title: 'Former candidate for Maine House ',
-    name: 'Anne G. - Independent',
-    subtitle: 'GoodParty.org Certified',
-    description:
-      'As an Indie candidate without a party organization it meant a lot to me to have someone working hard to help me reach younger voters.',
-    img: '/images/homepage/anne.jpg',
+      'GoodParty.org provides invaluable training, practical tools, and expert support that gives independent candidates an edge.',
+    img: '/images/homepage/william.jpg',
   },
 ]
 
