@@ -157,48 +157,97 @@ export async function createAccount(
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'Local/Township/City';
 
-  await page.goto(`${baseURL}/sign-up`, { waitUntil: "networkidle" });
+  console.log('Starting account creation process...');
+  console.log(`Using baseURL: ${baseURL}`);
 
-  // Verify user is on login page
-  await expect(page.getByText(loginPageHeader)).toBeVisible();
+  try {
+    // Navigate to sign-up page with retry
+    let retryCount = 0;
+    const maxRetries = 3;
+    while (retryCount < maxRetries) {
+      try {
+        console.log(`Attempting to navigate to sign-up page (attempt ${retryCount + 1})...`);
+        await page.goto(`${baseURL}/sign-up`, {
+          waitUntil: "networkidle",
+          timeout: 30000
+        });
+        break;
+      } catch (error) {
+        retryCount++;
+        if (retryCount === maxRetries) throw error;
+        console.log(`Navigation attempt ${retryCount} failed, retrying...`);
+        await page.waitForTimeout(2000);
+      }
+    }
+    console.log('Successfully navigated to sign-up page');
 
-  // Fill in sign up page
-  await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
-  await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
-  await page.getByRole("textbox", { name: "email" }).fill(emailAddress);
-  await page.getByRole("textbox", { name: "phone" }).fill(phoneNumber);
-  await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
-  await page.getByRole("textbox", { name: "password" }).fill(password + "1");
-  await page.getByRole("button", { name: "Join" }).click();
+    // Verify user is on login page
+    console.log('Waiting for sign-up page header...');
+    await expect(page.getByText(loginPageHeader)).toBeVisible({ timeout: 30000 });
+    console.log('Verified sign-up page header');
 
-  // Accept cookie terms (if visible)
-  await acceptCookieTerms(page);
+    // Fill in sign up page
+    console.log('Filling sign-up form...');
+    await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
+    await page.getByRole("textbox", { name: "Last Name" }).fill(lastName);
+    await page.getByRole("textbox", { name: "email" }).fill(emailAddress);
+    await page.getByRole("textbox", { name: "phone" }).fill(phoneNumber);
+    await page.getByRole("textbox", { name: "Zip Code" }).fill(zipCode);
+    await page.getByRole("textbox", { name: "password" }).fill(password + "1");
+    console.log('Form filled, clicking Join button...');
+    await page.getByRole("button", { name: "Join" }).click();
 
-  await page.getByText('To pull accurate results,').isVisible();
-  await page.waitForLoadState('networkidle');
-  await page.getByRole('combobox').selectOption(electionLevel);
-  await page.getByRole('button', { name: 'Next' }).click();
+    // Accept cookie terms (if visible)
+    console.log('Checking for cookie terms...');
+    await acceptCookieTerms(page);
 
-  await page.getByText("What office are you interested in?").isVisible();
-  await page
-    .getByRole("progressbar")
-    .waitFor({ state: "hidden", timeout: 20000 });
-  await page.getByRole("button", { name: role }).first().click();
-  await page.getByRole("button", { name: "Next" }).click();
-  await page
-    .getByText("How will your campaign appear on the ballot?")
-    .isVisible();
-  await page.getByLabel("Other").fill("Test");
-  await page.getByRole("button", { name: "Next" }).click();
-  // Agree to GoodParty.org Terms
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole("button", { name: "I Agree" }).click();
-  await page.getByRole("button", { name: "Submit" }).click();
+    console.log('Waiting for election level selection...');
+    await page.getByText('To pull accurate results,').isVisible({ timeout: 30000 });
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('combobox').selectOption(electionLevel);
+    await page.getByRole('button', { name: 'Next' }).click();
 
-  await page.getByText("View Dashboard").click();
-  await page.waitForLoadState('networkidle');
+    console.log('Selecting office...');
+    await page.getByText("What office are you interested in?").isVisible({ timeout: 30000 });
+    await page
+      .getByRole("progressbar")
+      .waitFor({ state: "hidden", timeout: 30000 });
+    await page.getByRole("button", { name: role }).first().click();
+    await page.getByRole("button", { name: "Next" }).click();
+
+    console.log('Setting campaign name...');
+    await page
+      .getByText("How will your campaign appear on the ballot?")
+      .isVisible({ timeout: 30000 });
+    await page.getByLabel("Other").fill("Test");
+    await page.getByRole("button", { name: "Next" }).click();
+
+    // Agree to GoodParty.org Terms
+    console.log('Accepting terms...');
+    await page.getByRole("button", { name: "I Agree" }).click();
+    await page.getByRole("button", { name: "I Agree" }).click();
+    await page.getByRole("button", { name: "I Agree" }).click();
+    await page.getByRole("button", { name: "I Agree" }).click();
+    await page.getByRole("button", { name: "Submit" }).click();
+
+    console.log('Waiting for dashboard...');
+    await page.getByText("View Dashboard").click();
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
+
+    // Verify we're on the dashboard
+    const dashboardVisible = await page.getByText("View Dashboard").isVisible({ timeout: 30000 });
+    if (!dashboardVisible) {
+      console.log('Current URL:', page.url());
+      console.log('Page content:', await page.content());
+      throw new Error('Failed to reach dashboard after signup');
+    }
+    console.log('Account creation completed successfully');
+  } catch (error) {
+    console.error('Error during account creation:', error);
+    console.log('Current URL:', page.url());
+    console.log('Page content:', await page.content());
+    throw error;
+  }
 }
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
