@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { coreNav } from 'helpers/navHelpers';
 import { userData } from 'helpers/dataHelpers';
 import { checkButtons, checkImgAltText } from "helpers/domHelpers";
 import { addTestResult } from 'helpers/testrailHelper';
@@ -8,7 +7,7 @@ import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/volunteer");
+    await page.goto("/volunteer", {waitUntil: "commit"});
     await page.waitForLoadState('networkidle');
 });
 

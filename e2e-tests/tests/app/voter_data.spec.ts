@@ -10,7 +10,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/voter-records", {waitUntil: "load"});
+    await page.goto("/dashboard/voter-records", {waitUntil: "commit"});
     await page.waitForLoadState('networkidle');
 });
 
@@ -34,7 +34,7 @@ test.skip('Upgrade user to Pro', async ({ page }) => {
     const caseId = 42;
     try {
         await upgradeToPro(page);
-        await page.goto('/dashboard/voter-records')
+        await page.goto('/dashboard/voter-records', {waitUntil: "commit"})
         await page.waitForLoadState('networkidle');
         // Verify user is on voter data (pro) page
         await expect(page.getByRole('heading', { name: 'Voter File' })).toBeVisible();

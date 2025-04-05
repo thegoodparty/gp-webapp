@@ -9,7 +9,7 @@ test("Style Guide - ImageCropPreview Styling", async ({ page }) => {
   const caseId = 77;
 
   try {
-    await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default');
+    await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default', {waitUntil: "commit"});
 
     await page.waitForLoadState("networkidle");
 
@@ -44,7 +44,7 @@ test("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
     const caseId = 78;
   
     try {
-      await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default');
+      await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default', {waitUntil: "commit"});
   
       await page.waitForLoadState("networkidle");
   
@@ -72,7 +72,7 @@ test("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
     const caseId = 79;
   
     try {
-        await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default');
+        await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default', {waitUntil: "commit"});
     
         await page.waitForLoadState("networkidle");
     

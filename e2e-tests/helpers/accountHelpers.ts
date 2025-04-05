@@ -110,7 +110,7 @@ export async function loginAccount(
 ) {
     const baseURL = process.env.BASE_URL;
 
-  await page.goto(`${baseURL}/login`, {waitUntil: "load"});
+  await page.goto(`${baseURL}/login`, {waitUntil: "commit"});
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -186,7 +186,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   const testCardNumber = "4242424242424242";
   const phoneNumber = generatePhone();
 
-  await page.goto("/dashboard/upgrade-to-pro");
+  await page.goto("/dashboard/upgrade-to-pro", {waitUntil: "commit"});
 
   // Waits for page to load completely
   await page.waitForLoadState('networkidle');
@@ -258,7 +258,7 @@ export async function deleteAccount(page = null) {
       page = await context.newPage();
     }
 
-    await page.goto(`${baseURL}/profile`, {waitUntil: "load"});
+    await page.goto(`${baseURL}/profile`, {waitUntil: "commit"});
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Delete Account' }).click();
     await page.getByRole('button', { name: 'Proceed' }).click();

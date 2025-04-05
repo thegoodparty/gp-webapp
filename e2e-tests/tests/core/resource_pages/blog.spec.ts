@@ -6,7 +6,7 @@ import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/blog");
+    await page.goto("/blog", {waitUntil: "commit"});
     await page.waitForLoadState("networkidle");
 });
 

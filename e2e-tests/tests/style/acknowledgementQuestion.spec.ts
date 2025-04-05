@@ -9,7 +9,7 @@ test("Style Guide - Acknowledgement Question", async ({ page }) => {
     const caseId = 76;
   
     try {
-      await page.goto(styleGuideURL + '?path=/story/acknowledgements-acknowledgementquestion--default');
+      await page.goto(styleGuideURL + '?path=/story/acknowledgements-acknowledgementquestion--default', {waitUntil: "commit"});
   
       await page.waitForLoadState("networkidle");
   

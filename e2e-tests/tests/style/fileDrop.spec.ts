@@ -10,7 +10,7 @@ test("Style Guide - File Drop Styling Test", async ({ page }) => {
     const caseId = 80;
   
     try {
-      await page.goto(styleGuideURL + '/?path=/story/inputs-filedropzone--default');
+      await page.goto(styleGuideURL + '/?path=/story/inputs-filedropzone--default', {waitUntil: "commit"});
   
       await page.waitForLoadState("networkidle");
   
@@ -40,7 +40,7 @@ test("Style Guide - File Drop File Test", async ({ page }) => {
     const caseId = 81;
   
     try {
-      await page.goto(styleGuideURL + '/?path=/story/inputs-filedropzone--default');
+      await page.goto(styleGuideURL + '/?path=/story/inputs-filedropzone--default', {waitUntil: "commit"});
       await page.waitForLoadState("networkidle");
   
       const frame = await getStorybookFrame(page);

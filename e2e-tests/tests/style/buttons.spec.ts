@@ -9,7 +9,7 @@ test("Style Guide - Black Button", async ({ page }) => {
   const caseId = 55;
 
   try {
-    await page.goto(styleGuideURL + '/?path=/story/buttons-blackbutton--default');
+    await page.goto(styleGuideURL + '/?path=/story/buttons-blackbutton--default', {waitUntil: "commit"});
 
     await page.waitForLoadState("networkidle");
 
