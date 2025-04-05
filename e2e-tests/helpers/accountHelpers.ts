@@ -135,7 +135,6 @@ export async function createAccount(
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'Local/Township/City';
-  const electionDate = '2028-11-10';
 
   await page.goto(`${baseURL}/sign-up`, {waitUntil: "commit"});
 
