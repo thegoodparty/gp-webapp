@@ -2,13 +2,9 @@ import Image from 'next/image'
 import bgImg from '/public/images/homepage/home-hero.png'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import Button from '@shared/buttons/Button'
-import Link from 'next/link'
-import { WINNER_COUNT } from 'app/candidates/page'
 import Body1 from '@shared/typography/Body1'
 
 export default async function Hero() {
-  const count = WINNER_COUNT
-
   return (
     <div className="bg-[linear-gradient(129deg,rgba(26,255,255,0.3)_-76.28%,rgba(252,248,243,0.15)_88.96%)]">
       <MaxWidth>
