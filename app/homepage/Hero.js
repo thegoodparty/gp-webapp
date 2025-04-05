@@ -14,8 +14,23 @@ export default async function Hero() {
       <MaxWidth>
         <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-20 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0 ">
           <div className="col-span-12 lg:col-span-6">
-            <h1 className="text-4xl leading-tight font-semibold  md:text-5xl  xl:text-6xl ">
-              We empower independents to run, win and serve!
+            <h1 className="text-4xl leading-tight font-semibold  md:text-5xl  xl:text-6xl">
+              We{' '}
+              <Image
+                src="/images/homepage/text-empower.svg"
+                width="130"
+                height="35"
+                alt="empower"
+                className="inline-block md:w-[200px] xl:w-[250px]"
+              />{' '}
+              <Image
+                src="/images/homepage/text-independents.svg"
+                width="195"
+                height="35"
+                alt="independents"
+                className="inline-block md:w-[300px] xl:w-[375px]"
+              />{' '}
+              to run, win and serve!
             </h1>
             <Body1 className="mt-8">
               See how our campaign platforms empowers you with:
