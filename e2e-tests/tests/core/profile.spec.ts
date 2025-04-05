@@ -12,7 +12,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/profile');
+    await page.goto('/profile', {waitUntil: "load"});
 });
 
 test('Adjust Personal Information', async ({ page }) => {

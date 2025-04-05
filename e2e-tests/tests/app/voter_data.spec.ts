@@ -10,7 +10,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/voter-records");
+    await page.goto("/dashboard/voter-records", {waitUntil: "load"});
     await page.waitForLoadState('networkidle');
 });
 
