@@ -75,6 +75,16 @@ jobs:
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
+      - name: Upload test results
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: playwright-results
+            path: |
+              test-automation/test-results/
+              test-automation/playwright-report/
+            retention-days: 30
+
       - name: Notify Slack Workflow
         if: always()
         env:
