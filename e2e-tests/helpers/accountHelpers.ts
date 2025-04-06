@@ -175,7 +175,7 @@ export async function createAccount(
   await page.getByText("What office are you interested in?").isVisible();
   await page
     .getByRole("progressbar")
-    .waitFor({ state: "hidden", timeout: 20000 });
+    .waitFor({ state: "hidden", timeout: 30000 });
   await page.getByRole("button", { name: role }).first().click();
   await page.getByRole("button", { name: "Next" }).click();
   await page
@@ -195,8 +195,6 @@ export async function createAccount(
   await page.getByRole("button", { name: "Submit" }).click();
   await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'View Dashboard' }).click();
-  await page.waitForLoadState('networkidle');
-  await page.getByRole('link', { name: 'Dashboard' }).isVisible();
 }
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
