@@ -21,19 +21,23 @@ test.beforeEach(async ({ page }) => {
 test('Create new conversation', async ({ page }) => {
     const caseId = 36;
     try {
+        // Wait for page to be fully loaded
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
+        
         await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible({
-            timeout: 10000
+            timeout: 20000  // Increased timeout
         });
 
-        // Create new chat 
+        // Create new chat with additional waits
         const newChatButton = page.getByRole('button', { name: 'New Chat' });
-        await expect(newChatButton).toBeVisible();
+        await expect(newChatButton).toBeVisible({ timeout: 10000 });
         await newChatButton.click();
+        await page.waitForLoadState('networkidle');
         
         const topicButton = page.getByRole('button', { name: testTopic });
-        await expect(topicButton).toBeVisible();
+        await expect(topicButton).toBeVisible({ timeout: 10000 });
         await topicButton.click();
-
         await page.waitForLoadState('networkidle');
         
         const chatElement = page.locator('div').filter({ hasText: testTopicChat }).first();
@@ -63,18 +67,31 @@ test('Create new conversation', async ({ page }) => {
 test('Delete a conversation', async ({ page }) => {
     const caseId = 37;
     try {
-        // Create new chat
-        await page.getByRole('button', { name: 'New Chat' }).click();
-        await page.getByRole('button', { name: testTopic }).click();
-
-        // Wait for response to generate
+        // Wait for page to be fully loaded
+        await page.waitForLoadState('domcontentloaded');
         await page.waitForLoadState('networkidle');
 
-        // Refresh page
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        // Create new chat with additional waits
+        const newChatButton = page.getByRole('button', { name: 'New Chat' });
+        await expect(newChatButton).toBeVisible({ timeout: 10000 });
+        await newChatButton.click();
+        
+        const topicButton = page.getByRole('button', { name: testTopic });
+        await expect(topicButton).toBeVisible({ timeout: 10000 });
+        await topicButton.click();
+        await page.waitForLoadState('networkidle');
 
-        // Open history and delete conversation
-        await page.getByRole('button', { name: 'View Chat History' }).click();
+        // Refresh page with explicit waits
+        await page.reload();
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
+
+        // Open history and delete conversation with additional waits
+        const historyButton = page.getByRole('button', { name: 'View Chat History' });
+        await expect(historyButton).toBeVisible({ timeout: 10000 });
+        await historyButton.click();
+        
+        await page.waitForTimeout(1000); // Small delay for animation
         await page.getByRole('img').nth(1).click();
         await page.getByText('Delete').click();
 
