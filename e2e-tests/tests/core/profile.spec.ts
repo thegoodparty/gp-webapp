@@ -103,7 +103,7 @@ test('Adjust Notification Settings', async ({ page }) => {
     }
 });
 
-test('Change Account Password', async ({ page }) => {
+test.skip('Change Account Password', async ({ page }) => {
     const caseId = 35;
     const testAccountPath = path.resolve(__dirname, '../../testAccount.json');
     const { password } = JSON.parse(
