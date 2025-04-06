@@ -36,8 +36,18 @@ export async function ensureSession() {
 
   await loginAccount(loginPage, emailAddress, password);
 
+  // Create test-results directory if it doesn't exist
+  const screenshotDir = path.resolve(__dirname, '../test-results');
+  if (!fs.existsSync(screenshotDir)) {
+    fs.mkdirSync(screenshotDir, { recursive: true });
+  }
+  
+  const screenshotPath = path.resolve(screenshotDir, 'account-creation.png');
+
   // Save the storage state (session)
   console.log(`Saving new test account: ${emailAddress} + ${password}`);
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+  
   await page.context().storageState({ path: SESSION_FILE });
   await browser.close();
 
