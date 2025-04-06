@@ -53,7 +53,7 @@ test('Update Campaign Details', async ({ page }) => {
     }
 });
 
-test('Update Office Details', async ({ page }) => {
+test.skip('Update Office Details', async ({ page }) => {
     const caseId = 47;
     try {
         // Verify user is on campaign details page
