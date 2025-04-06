@@ -162,10 +162,21 @@ export async function createAccount(
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
 
-  await page.getByText('To pull accurate results,').isVisible();
-  await page.waitForLoadState('networkidle');
-  await page.getByRole('combobox').selectOption(electionLevel);
-  await page.getByRole('button', { name: 'Next' }).click();
+  try {
+    await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
+    await page.waitForLoadState('networkidle', { timeout: 60000 });
+    await page.getByRole('combobox').selectOption(electionLevel);
+    await page.getByRole('button', { name: 'Next' }).click();
+  } catch (error) {
+    console.log('Initial attempt failed, trying Back/Next navigation...');
+    await page.getByRole('button', { name: 'Back' }).click();
+    await page.waitForTimeout(1000);
+    await page.getByRole('button', { name: 'Next' }).click();
+    await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
+    await page.waitForLoadState('networkidle', { timeout: 60000 });
+    await page.getByRole('combobox').selectOption(electionLevel);
+    await page.getByRole('button', { name: 'Next' }).click();
+  }
 
   await page.getByText("What office are you interested in?").isVisible();
   await page
