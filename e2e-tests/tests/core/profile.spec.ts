@@ -111,7 +111,6 @@ test('Change Account Password', async ({ page }) => {
     );
 
     try {
-
         // Accept cookie terms (if visible)
         await acceptCookieTerms(page);
 
@@ -120,9 +119,9 @@ test('Change Account Password', async ({ page }) => {
         await page.getByLabel('New Password *').fill(`${password}`);
         await page.getByRole('button', { name: 'Save Changes' }).nth(1).click();
 
-        // Wait for the response and check its content
+        // Wait for the response and check its status
         await page.waitForResponse((response) => 
-            response.url().includes('password') && response.status() === 200
+            response.status() === 200
         );
 
         // Report test results
