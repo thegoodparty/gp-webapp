@@ -3,7 +3,6 @@ import NeedHelpAnimation from '@shared/animations/NeedHelpAnimation'
 import Button from '@shared/buttons/Button'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
-import Body2 from '@shared/typography/Body2'
 import H2 from '@shared/typography/H2'
 import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
@@ -12,9 +11,9 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+
 export default function EINStep() {
   const [campaign] = useCampaign()
-  console.log('campaign', campaign)
   const [einNumber, setEinNumber] = useState(campaign?.details?.einNumber)
   const [validatedEin, setValidatedEin] = useState(null)
   const [loading, setLoading] = useState(false)
