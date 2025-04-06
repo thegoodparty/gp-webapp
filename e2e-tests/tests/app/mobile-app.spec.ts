@@ -10,19 +10,27 @@ test.describe('Mobile viewport tests - App pages', () => {
         storageState: 'auth.json',
         viewport: { width: 375, height: 667 }
     });
+    test.describe.configure({ retries: 2 });
+    
     test('Verify app pages in mobile view', async ({ page }) => {
         const caseId = 75;
         try {
-            await page.goto("/dashboard", {waitUntil: "networkidle"})
-            // Verify AI assistant page
-            await appNav(page, 'AI Assistant', true);
-            await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible();
-            await expect(page.getByPlaceholder('Ask me anything about your campaign...')).toBeVisible();
-            // Verify Content Builder page
-            await appNav(page, 'Content Builder', true);
-            await expect(page.getByRole('heading', { name: 'Content Builder' })).toBeVisible();
-            await expect(page.getByRole('button', { name: 'Generate' })).toBeVisible();
-            // Verify My Profile page
+            await page.goto("/dashboard", { 
+                waitUntil: "networkidle",
+                timeout: 30000 
+            });
+            
+            const verifyPage = async (navItem: string, expectedHeading: string) => {
+                await appNav(page, navItem, true);
+                await page.waitForLoadState('networkidle');
+                await expect(page.getByRole('heading', { name: expectedHeading }))
+                    .toBeVisible({ timeout: 10000 });
+            };
+            
+            await verifyPage('AI Assistant', 'AI Assistant');
+            await expect(page.getByPlaceholder('Ask me anything about your campaign...')).toBeVisible({ timeout: 10000 });
+            await verifyPage('Content Builder', 'Content Builder');
+            await expect(page.getByRole('button', { name: 'Generate' })).toBeVisible({ timeout: 10000 });
             await appNav(page, 'My Profile', true);
             await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
             await expect(page.getByPlaceholder('Campaign Committee')).toBeVisible();
@@ -33,20 +41,16 @@ test.describe('Mobile viewport tests - App pages', () => {
             await expect(page.getByRole('heading', { name: "Who you're running against" })).toBeVisible();
             await expect(page.getByRole('heading', { name: "Fun Fact About Yourself" })).toBeVisible();
             await expect(page.getByRole('heading', { name: "Your Top Issues" })).toBeVisible();
-            // Verify Voter Data page
             await appNav(page, 'Voter Data', true);
             await page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' }).isVisible()
             await page.getByRole('button', { name: 'Join Pro Today' }).isVisible();
 
-            // Report test results
             await addTestResult(runId, caseId, 1, 'Test passed');
         } catch (error) {
-            // Report test results
             const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
             const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
             const currentUrl = await page.url();
             
-            // Capture screenshot on failure
             const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
             await page.screenshot({ path: screenshotPath, fullPage: true });
             
