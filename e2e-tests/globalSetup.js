@@ -19,13 +19,12 @@ module.exports = async () => {
   console.log(`Test run created with ID: ${testRunId}`);
 
   try {
-    console.log('Creating test user session...');
-    await ensureSession();
-    console.log('Test user session created successfully');
-
     console.log('Creating admin session...');
     await ensureAdminSession();
     console.log('Admin session created successfully');
+    console.log('Creating test user session...');
+    await ensureSession();
+    console.log('Test user session created successfully');
   } catch (error) {
     console.error('Error during session setup:', error);
     throw error;
