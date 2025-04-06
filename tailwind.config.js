@@ -1,4 +1,4 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 const COLORS = {
   black: '#000000',
@@ -122,7 +122,10 @@ const COLORS = {
     800: '#075184',
     900: '#043B6D',
   },
-};
+  cream: {
+    500: '#FCF8F3',
+  },
+}
 
 module.exports = {
   content: [
@@ -250,7 +253,11 @@ module.exports = {
           ...COLORS.cyan,
           DEFAULT: COLORS.cyan[500],
         },
+        cream: {
+          ...COLORS.cream,
+          DEFAULT: COLORS.cream[500],
+        },
       },
     },
   },
-};
+}

@@ -18,6 +18,7 @@ import { useEffect } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
 import { userIsAdmin } from 'helpers/userHelper'
 import Image from 'next/image'
+import { useUser } from '@shared/hooks/useUser'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -123,6 +124,7 @@ export default function DashboardMenu({
   campaign,
 }) {
   let menuItems = getDashboardMenuItems(campaign)
+  const [user] = useUser()
   const [ecanvasser] = useEcanvasser()
   if (ecanvasser) {
     menuItems.push(ECANVASSER_MENU_ITEM)

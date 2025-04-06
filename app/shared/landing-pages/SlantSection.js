@@ -27,7 +27,7 @@ export const SlantSection = ({
       {children}
       {colors[1] && (
         <div
-          className={`h-[calc(100vw*0.09)] w-full`}
+          className={`h-[calc(100vw*0.03)] w-full`}
           style={{
             background: `linear-gradient(${direction}deg, ${colors[1]} 54.5%, ${colors[2]} 55%)`,
           }}
