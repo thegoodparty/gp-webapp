@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import axios from 'axios';
 import * as fs from 'fs';
-
+import * as TestRail from '@dlenroc/testrail';
+import { Readable } from 'stream';
 const TESTRAIL_URL = process.env.TESTRAIL_URL;
 const AUTH = {
     username: process.env.TESTRAIL_USERNAME,
@@ -11,23 +12,38 @@ const AUTH = {
 const testResultStatuses = [];
 
 // Helper to post results to TestRail
-export async function addTestResult(runId, caseId, statusId, comment = '') {
+export async function addTestResult(runId: string, caseId: number, statusId: number, comment: string, screenshotPath?: string) {
+    const api = new TestRail({
+        host: process.env.TESTRAIL_URL || 'https://goodparty.testrail.io',
+        username: process.env.TESTRAIL_USERNAME,
+        password: process.env.TESTRAIL_PASSWORD,
+    });
+
     try {
-        const response = await axios.post(
-            `${TESTRAIL_URL}/index.php?/api/v2/add_result_for_case/${runId}/${caseId}`,
-            { status_id: statusId, comment: comment },
-            { auth: AUTH }
-        );
-        console.log(`Successfully updated TestRail case ID ${caseId} with status ${statusId}`);
+        // First get the test ID for this case in this run
+        const tests = await api.getTests(parseInt(runId));
+        const test = tests.find(t => t.case_id === caseId);
+        if (!test) {
+            throw new Error(`Could not find test for case ${caseId} in run ${runId}`);
+        }
 
-        // Store the status ID for tracking
-        testResultStatuses.push(statusId);
+        // Add the test result
+        const result = await api.addResult(test.id, {
+            status_id: statusId,
+            comment: comment
+        });
 
-        return response.data;
+        // If there's a screenshot, attach it to the result
+        if (screenshotPath && fs.existsSync(screenshotPath)) {
+            const fileStream = fs.createReadStream(screenshotPath);
+            const attachment = {
+                name: `screenshot-${Date.now()}.png`,
+                value: fileStream
+            };
+            await api.addAttachmentToResult(result.id, attachment);
+        }
     } catch (error) {
-        console.error(`Failed to update TestRail case ID ${caseId}:`, error.message);
-        testResultStatuses.push(5); 
-        throw error;
+        console.error('Error adding test result to TestRail:', error);
     }
 }
 

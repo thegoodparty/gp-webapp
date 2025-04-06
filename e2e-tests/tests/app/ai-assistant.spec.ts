@@ -54,9 +54,13 @@ test('Create new conversation', async ({ page }) => {
         const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
         await page.screenshot({ path: screenshotPath, fullPage: true });
         
-        await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}. 
-        Screenshot saved to: ${screenshotPath}
-        Error: ${error.stack}`);
+        await addTestResult(
+            runId, 
+            caseId, 
+            5, 
+            `Test failed (${testrailUrl}) at page ${currentUrl}. Error: ${error.stack}`,
+            screenshotPath
+        );
     }
 });
 
