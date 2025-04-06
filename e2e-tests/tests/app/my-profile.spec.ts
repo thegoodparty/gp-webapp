@@ -85,7 +85,7 @@ test('Update Office Details', async ({ page }) => {
         await page.getByRole('button', { name: 'Save' }).click();
 
         // Confirm new office details
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         await page.reload({ waitUntil: 'domcontentloaded' });
         const newOfficeTitle = await page.getByLabel('Office').inputValue();
         await expect(oldOfficeTitle).not.toEqual(newOfficeTitle);
