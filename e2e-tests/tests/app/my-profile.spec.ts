@@ -63,7 +63,6 @@ test('Update Office Details', async ({ page }) => {
         const newOfficeZip = '94080';
         const oldOfficeTitle = await page.getByLabel('Office').inputValue();
         const electionLevel = 'Local/Township/City';
-        const electionDate = '2028-11-10';
         const electionRole = 'Daly City Clerk';
 
         // Select new office location
@@ -71,8 +70,7 @@ test('Update Office Details', async ({ page }) => {
         await page.getByText('To pull accurate results,').isVisible();
         await page.getByLabel('Zipcode *').fill(newOfficeZip);
         await page.getByRole('combobox').selectOption(electionLevel);
-        await page.getByLabel('General Election Date (').fill(electionDate);
-        await page.getByLabel('General Election Date (').press('Enter');
+        await page.getByRole('button', { name: 'Next' }).click();
 
         // Wait for new office location results
         await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
@@ -85,8 +83,6 @@ test('Update Office Details', async ({ page }) => {
         await page.getByRole('button', { name: 'Save' }).click();
 
         // Confirm new office details
-        await page.waitForLoadState('domcontentloaded');
-        await page.reload({ waitUntil: 'domcontentloaded' });
         const newOfficeTitle = await page.getByLabel('Office').inputValue();
         await expect(oldOfficeTitle).not.toEqual(newOfficeTitle);
         await expect(await page.getByLabel('Office').inputValue()).toBe(newOfficeTitle);
