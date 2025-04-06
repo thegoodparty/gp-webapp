@@ -43,6 +43,13 @@ test.skip('Generate content with Content Builder', async ({page}) => {
         const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
         const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
         const currentUrl = await page.url();
-        await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}: ${error.stack}`);
+        
+        // Capture screenshot on failure
+        const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
+        await page.screenshot({ path: screenshotPath, fullPage: true });
+        
+        await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}. 
+        Screenshot saved to: ${screenshotPath}
+        Error: ${error.stack}`);
     }
 });
