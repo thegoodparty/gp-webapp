@@ -32,9 +32,7 @@ export async function ensureSession() {
   const emailAddress = generateEmail();
 
   await createAccount(page, undefined, undefined, password, emailAddress);
-  await browser.close();
-  const loginBrowser = await chromium.launch();
-  const loginPage = await loginBrowser.newPage();
+  const loginPage = await browser.newPage();
 
   await loginAccount(loginPage, emailAddress, password);
 
