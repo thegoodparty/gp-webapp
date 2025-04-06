@@ -32,11 +32,6 @@ export async function ensureSession() {
   const emailAddress = generateEmail();
 
   await createAccount(page, undefined, undefined, password, emailAddress);
-  const loginPage = await browser.newPage();
-
-  await loginAccount(loginPage, emailAddress, password);
-  await page.waitForLoadState('networkidle');
-  
   // Create test-results directory if it doesn't exist
   const screenshotDir = path.resolve(__dirname, '../test-results');
   if (!fs.existsSync(screenshotDir)) {
@@ -45,7 +40,7 @@ export async function ensureSession() {
   
   // Take screenshot after successful login, when we're sure the page is stable
   const screenshotPath = path.resolve(screenshotDir, 'account-creation.png');
-  await loginPage.screenshot({ path: screenshotPath, fullPage: true });
+  await page.screenshot({ path: screenshotPath, fullPage: true });
 
   // Save the storage state (session)
   console.log(`Saving new test account: ${emailAddress} + ${password}`);
