@@ -2,12 +2,12 @@ name: E2E Tests
 
 on:
   deployment_status:
-    environment:
-      - 'Preview - gp-ui'
-      - 'Production - gp-ui'
-    schedule:
+  schedule:
     # Run at midnight PST (8 AM UTC)
     - cron: '0 8 * * *'
+  environment:
+    - 'Preview - gp-ui'
+    - 'Production - gp-ui'
     
 jobs:
   run-e2e-tests:
