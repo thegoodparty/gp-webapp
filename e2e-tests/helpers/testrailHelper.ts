@@ -32,19 +32,24 @@ export async function addTestResult(runId, caseId, statusId, comment = '') {
 }
 
 // Helper to create a new test run
-export async function createTestRun(name, caseIds) {
-    try {
-        const response = await axios.post(
-            `${TESTRAIL_URL}/index.php?/api/v2/add_run/${process.env.TESTRAIL_PROJECT_ID}`,
-            { name, include_all: false, case_ids: caseIds },
-            { auth: AUTH }
-        );
-        console.log(`Test run created with ID: ${response.data.id}`);
-        return response.data.id;
-    } catch (error) {
-        console.error('Error creating TestRail test run:', error.message);
-        throw error;
-    }
+export async function createTestRun(name: string, caseIds: number[], baseUrl: string) {
+    const description = `Test Environment URL: ${baseUrl}\n\nAutomated test run created at ${new Date().toISOString()}`;
+    
+    const response = await axios.post(
+        `${TESTRAIL_URL}/index.php?/api/v2/add_run/${process.env.TESTRAIL_PROJECT_ID}`,
+        {
+            name: name,
+            include_all: false,
+            case_ids: caseIds,
+            description: description
+        },
+        {
+            auth: AUTH
+        }
+    );
+    
+    console.log(`Test run created with ID: ${response.data.id}`);
+    return response.data.id;
 }
 
 export async function checkForTestFailures() {
@@ -70,7 +75,7 @@ export async function checkForTestFailures() {
         console.log('All tests passed successfully.');
     } catch (error) {
         console.error('Error while checking TestRail results:', error.message);
-        process.exit(1); // Exit with non-zero code if there’s an error
+        process.exit(1); // Exit with non-zero code if there's an error
     }
 }
 
