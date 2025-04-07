@@ -22,11 +22,11 @@ const sections = [
     img: '/images/homepage/joseph.jpg',
   },
   {
-    title: 'West Hollywood, CA City Council',
-    name: 'William Seegmille - Independent',
+    title: 'Justice of the Peace, North Las Vegas, NV',
+    name: 'Jonathan Cooper - Independent',
     description:
-      'GoodParty.org provides invaluable training, practical tools, and expert support that gives independent candidates an edge.',
-    img: '/images/homepage/william.jpg',
+      "You guys absolutely were a game changer to me. I would not have even known what a voter data file was if I had not gotten connected with GoodParty.org very early on. I'm just overjoyed and happy that you guys were in my corner.",
+    img: '/images/homepage/jonathan.jpg',
   },
 ]
 
