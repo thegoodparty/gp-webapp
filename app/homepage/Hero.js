@@ -18,6 +18,7 @@ export default async function Hero() {
                 height="35"
                 alt="empower"
                 className="inline-block md:w-[200px] xl:w-[250px]"
+                priority
               />{' '}
               <Image
                 src="/images/homepage/text-independents.svg"
@@ -25,6 +26,7 @@ export default async function Hero() {
                 height="35"
                 alt="independents"
                 className="inline-block md:w-[300px] xl:w-[375px]"
+                priority
               />{' '}
               to run, win and serve!
             </h1>
