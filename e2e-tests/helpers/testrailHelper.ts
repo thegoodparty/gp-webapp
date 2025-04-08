@@ -91,7 +91,6 @@ export async function handleTestFailure(page: Page, runId: string, caseId: numbe
         // Check if page is still connected
         if (!page.isClosed()) {
             // Capture screenshot on failure
-            await page.waitForTimeout(2000); // Increased timeout
             const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
             await page.screenshot({ path: screenshotPath, fullPage: true }).catch(screenshotError => {
                 console.error('Failed to capture screenshot:', screenshotError);
