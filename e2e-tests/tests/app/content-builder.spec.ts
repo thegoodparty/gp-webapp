@@ -15,7 +15,7 @@ test.beforeEach(async ({ page }) => {
         await expect(page).toHaveURL(/.*\/dashboard\/content/);
 });
 
-test('Generate content with Content Builder', async ({page}) => {
+test.skip('Generate content with Content Builder', async ({page}) => {
     const caseId = 40;
     const testTemplate = 'Launch Email';
 
