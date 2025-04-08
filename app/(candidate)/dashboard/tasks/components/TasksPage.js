@@ -7,7 +7,7 @@ import TaskItem from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
-import { dateUsHelper, daysTill } from 'helpers/dateHelper'
+import { dateUsHelper, daysTill, weeksTill } from 'helpers/dateHelper'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader'
@@ -105,6 +105,8 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
     }
   }
 
+  const { weeks, days } = weeksTill(electionDate)
+
   return (
     <VoterContactsProvider>
       <CampaignUpdateHistoryProvider>
@@ -113,9 +115,14 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
           <div className="mx-auto bg-white rounded-xl p-6 mt-8">
             <H2>
               Tasks for this week
-              {/* <Tooltip title={}>
-                <InfoOutlined className="text-base ml-1" />
-              </Tooltip> */}
+              <Tooltip
+                placement="right"
+                title={`${weeks} week${weeks === 1 ? '' : 's'} and ${days} day${
+                  days === 1 ? '' : 's'
+                } until election.`}
+              >
+                <InfoOutlined className="!text-base ml-1" />
+              </Tooltip>
             </H2>
             <Body2 className="!font-outfit mt-1">
               Election day: {dateUsHelper(electionDate)}
