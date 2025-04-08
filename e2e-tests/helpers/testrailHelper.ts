@@ -87,18 +87,40 @@ export async function authFileCheck(test) {
 }
 
 export async function handleTestFailure(page: Page, runId: string, caseId: number, error: Error) {
-    // Capture screenshot on failure
-    await page.waitForTimeout(1000);
-    const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
-    await page.screenshot({ path: screenshotPath, fullPage: true });
+    try {
+        // Check if page is still connected
+        if (!page.isClosed()) {
+            // Capture screenshot on failure
+            await page.waitForTimeout(2000); // Increased timeout
+            const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
+            await page.screenshot({ path: screenshotPath, fullPage: true }).catch(screenshotError => {
+                console.error('Failed to capture screenshot:', screenshotError);
+            });
 
-    // Report test results
-    const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
-    const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
-    const currentUrl = await page.url();
-    await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}. 
-    Screenshot saved to: ${screenshotPath}
-    Error: ${error.stack}`);
+            // Get current URL (if page is still available)
+            let currentUrl = 'URL not available';
+            try {
+                currentUrl = await page.url();
+            } catch (urlError) {
+                console.error('Failed to get current URL:', urlError);
+            }
+
+            // Report test results
+            const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
+            const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
+            await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}. 
+            Error: ${error.stack}`);
+        } else {
+            console.error('Page was already closed when attempting to capture failure');
+            await addTestResult(runId, caseId, 5, `Test failed but screenshot couldn't be captured - browser was closed. 
+            Error: ${error.stack}`);
+        }
+    } catch (handlingError) {
+        console.error('Error during failure handling:', handlingError);
+        // Ensure the test failure is still reported even if screenshot fails
+        await addTestResult(runId, caseId, 5, `Test failed with error: ${error.stack}
+        Additional error during failure handling: ${handlingError.message}`);
+    }
 }
 
 module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure };
