@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test } from "@playwright/test";
-import { addTestResult } from "helpers/testrailHelper";
+import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
@@ -51,11 +51,6 @@ test("Style Guide - Acknowledgement Question", async ({ page }) => {
   
       await addTestResult(runId, caseId, 1, "Test passed");
     } catch (error) {
-      await addTestResult(
-        runId,
-        caseId,
-        5,
-        `Test failed: ${error.stack}`
-      );
+      await handleTestFailure(page, runId, caseId, error);
     }
   });

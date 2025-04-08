@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import axios from 'axios';
 import * as fs from 'fs';
+import { Page } from '@playwright/test';
 
 const TESTRAIL_URL = process.env.TESTRAIL_URL;
 const AUTH = {
@@ -85,4 +86,18 @@ export async function authFileCheck(test) {
     });
 }
 
-module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck };
+export async function handleTestFailure(page: Page, runId: string, caseId: number, error: Error) {
+    const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
+    const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
+    const currentUrl = await page.url();
+    
+    // Capture screenshot on failure
+    const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+    
+    await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}. 
+    Screenshot saved to: ${screenshotPath}
+    Error: ${error.stack}`);
+}
+
+module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure };
