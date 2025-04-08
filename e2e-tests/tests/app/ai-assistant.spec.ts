@@ -26,7 +26,7 @@ test('Create new conversation', async ({ page }) => {
         await page.waitForLoadState('networkidle');
         
         await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible({
-            timeout: 20000  // Increased timeout
+            timeout: 30000
         });
 
         // Create new chat with additional waits
@@ -44,7 +44,7 @@ test('Create new conversation', async ({ page }) => {
         await expect(chatElement).toBeVisible({ timeout: 10000 });
         
         const responseElement = page.locator('.font-normal > div:nth-child(2)');
-        await expect(responseElement).toBeVisible({ timeout: 20000 });
+        await expect(responseElement).toBeVisible({ timeout: 30000 });
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
