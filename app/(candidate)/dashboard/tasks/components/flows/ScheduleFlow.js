@@ -5,7 +5,7 @@ import { IoArrowForward } from 'react-icons/io5'
 import ScheduleFlowInstructions from './ScheduleFlowInstructions'
 import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep'
 import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep'
-import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ScheduleAddScriptFlow'
+import ScheduleAddScriptFlow from './ScheduleAddScriptFlow/ScheduleAddScriptFlow'
 import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep'
 import ScheduleFlowComplete from './ScheduleFlowComplete'
 import ScheduleFlowImageStep from './ScheduleFlowImageStep'
@@ -13,7 +13,7 @@ import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { TASK_TYPES } from 'app/(candidate)/dashboard/tasks/constants/tasks.const'
+import { TASK_TYPES } from '../../constants/tasks.const'
 
 const STEPS_BY_TYPE = {
   [TASK_TYPES.texting]: [

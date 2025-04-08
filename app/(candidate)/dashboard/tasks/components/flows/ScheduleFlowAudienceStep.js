@@ -4,12 +4,13 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import CustomVoterAudienceFilters from '../../components/CustomVoterAudienceFilters'
+import CustomVoterAudienceFilters, {
+  TRACKING_KEYS,
+} from 'app/(candidate)/dashboard/voter-records/components/CustomVoterAudienceFilters'
 import { useEffect, useState, useMemo } from 'react'
-import { countVoterFile } from './RecordCount'
+import { countVoterFile } from 'app/(candidate)/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
-import { TRACKING_KEYS } from '../../components/CustomVoterAudienceFilters'
 
 export default function ScheduleFlowAudienceStep({
   onChangeCallback,

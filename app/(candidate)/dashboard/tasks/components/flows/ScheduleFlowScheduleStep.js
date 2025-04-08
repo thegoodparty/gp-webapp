@@ -6,7 +6,7 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 import { useState, useMemo } from 'react'
-import { getDefaultVoterFileName } from '../../components/VoterFileTypes'
+import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function ScheduleFlowScheduleStep({

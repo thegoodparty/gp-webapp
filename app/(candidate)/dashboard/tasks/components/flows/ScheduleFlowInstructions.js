@@ -8,7 +8,7 @@ import {
   CalendarMonthRounded,
   RocketLaunchRounded,
 } from '@mui/icons-material'
-import { TASK_TYPES } from 'app/(candidate)/dashboard/tasks/constants/tasks.const'
+import { TASK_TYPES } from '../../constants/tasks.const'
 
 const SMS_CONTENT = [
   {

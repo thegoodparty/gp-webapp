@@ -4,7 +4,7 @@ import { MdLock, MdAutoAwesome } from 'react-icons/md'
 import LogProgress from './LogProgress'
 import Link from 'next/link'
 import { numberFormatter } from 'helpers/numberHelper'
-import ScheduleFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleFlow'
+import ScheduleFlow from '../../tasks/components/flows/ScheduleFlow'
 import Button from '@shared/buttons/Button'
 
 export default function MethodRow(props) {

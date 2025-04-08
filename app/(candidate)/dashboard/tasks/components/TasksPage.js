@@ -20,7 +20,7 @@ import {
   VARIANTS,
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
-import ScheduleFlow from '../../voter-records/[type]/components/ScheduleFlow'
+import ScheduleFlow from './flows/ScheduleFlow'
 import {
   TASK_TYPE_HEADINGS,
   TASK_TYPE_LABELS,
