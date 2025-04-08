@@ -1,5 +1,4 @@
 'use client'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import { CampaignCountdown } from 'app/(candidate)/dashboard/components/CampaignCountdown'
 import { VoterContactsCount } from 'app/(candidate)/dashboard/components/VoterContactsCount'
 import { RemainingTasks } from 'app/(candidate)/dashboard/components/RemainingTasks'
