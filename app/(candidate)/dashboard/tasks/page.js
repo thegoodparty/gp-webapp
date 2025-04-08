@@ -10,11 +10,16 @@ const fetchCampaign = async () => {
 }
 
 const fetchTasks = async () => {
-  const resp = await serverFetch(apiRoutes.campaign.tasks.list)
+  const currentDate = new Date().toISOString().split('T')[0]
+
+  const resp = await serverFetch(apiRoutes.campaign.tasks.list, {
+    date: currentDate,
+  })
   return resp.data
 }
 
 const meta = pageMetaData({
+  // TODO update when this replaces dashboard home
   title: 'Campaign Tasks | GoodParty.org',
   description: 'Campaign Tasks',
   slug: '/dashboard/tasks',

@@ -10,15 +10,21 @@ import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep'
 import ScheduleFlowComplete from './ScheduleFlowComplete'
 import ScheduleFlowImageStep from './ScheduleFlowImageStep'
 import CloseConfirmModal from './CloseConfirmModal'
-import {
-  buildTrackingAttrs,
-  EVENTS,
-  trackEvent,
-} from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
+import { TASK_TYPES } from 'app/(candidate)/dashboard/tasks/constants/tasks.const'
 
 const STEPS_BY_TYPE = {
+  [TASK_TYPES.texting]: [
+    'intro',
+    'budget',
+    'audience',
+    'script',
+    'image',
+    'schedule',
+    'complete',
+  ],
   sms: [
     'intro',
     'budget',
@@ -53,13 +59,15 @@ const DEFAULT_STATE = {
  * @param {ScheduleFlowProps} props
  */
 export default function ScheduleFlow({
+  forceOpen = false,
   type,
   customButton,
   campaign,
   isCustom,
   fileName,
+  onClose,
 }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [state, setState] = useState(DEFAULT_STATE)
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
@@ -97,6 +105,7 @@ export default function ScheduleFlow({
     setConfirmOpen(false)
     setOpen(false)
     handleReset()
+    onClose?.()
   }
 
   const handleNext = () => {
