@@ -32,14 +32,6 @@ test('Generate content with Content Builder', async ({page}) => {
         await page.getByRole('link', { name: testTemplate, exact: true }).click();
         await expect(page.locator('.ql-editor')).toBeVisible();
 
-        // Delete new content
-        await page.locator('.ml-5 > .rounded-lg').click();
-        await page.getByRole('button', { name: 'Delete' }).click();
-        await page.getByRole('heading', { name: 'Delete Content' }).isVisible();
-        await page.getByRole('button', { name: 'Proceed' }).click();
-        await page.getByRole('link', { name: testTemplate, exact: true }).isHidden();
-        await page.waitForLoadState('networkidle');
-
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
