@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test } from "@playwright/test";
-import { addTestResult } from "helpers/testrailHelper";
+import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
@@ -32,12 +32,7 @@ test("Style Guide - Black Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -69,12 +64,7 @@ test("Style Guide - Black Outlined Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -151,7 +141,7 @@ test("Style Guide - Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);
   }
 });
 
@@ -186,13 +176,7 @@ test("Style Guide - Error Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -244,12 +228,7 @@ test("Style Guide - Icon Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -285,12 +264,7 @@ test("Style Guide - Info Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -320,12 +294,7 @@ test("Style Guide - Pill Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -350,12 +319,7 @@ test("Style Guide - Pink Button Client", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -391,12 +355,7 @@ test("Style Guide - Primary Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -421,12 +380,7 @@ test("Style Guide - Purple Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(
-      runId,
-      caseId,
-      5,
-      `Test failed: ${error.stack}`
-    );
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -450,7 +404,7 @@ test("Style Guide - Question Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -488,7 +442,7 @@ test("Style Guide - Secondary Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -532,7 +486,7 @@ test("Style Guide - Severity Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -568,7 +522,7 @@ test("Style Guide - Success Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -604,7 +558,7 @@ test("Style Guide - Warning Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
 
@@ -636,6 +590,6 @@ test("Style Guide - Yellow Button", async ({ page }) => {
 
     await addTestResult(runId, caseId, 1, "Test passed");
   } catch (error) {
-    await addTestResult(runId, caseId, 5, `Test failed: ${error.stack}`);
+    await handleTestFailure(page, runId, caseId, error);    
   }
 });
