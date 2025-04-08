@@ -177,12 +177,8 @@ export async function createAccount(
     await page.getByRole('combobox').selectOption(electionLevel);
     await page.getByRole('button', { name: 'Next' }).click();
   }
-
   await page.getByText("What office are you interested in?").isVisible();
-  await page
-    .getByRole("progressbar")
-    .waitFor({ state: "hidden", timeout: 30000 });
-  await page.getByRole("button", { name: role }).first().click();
+  await page.getByRole("button", { name: role, timeout: 30000 }).first().click();
   await page.getByRole("button", { name: "Next" }).click();
   await page
     .getByText("How will your campaign appear on the ballot?")
