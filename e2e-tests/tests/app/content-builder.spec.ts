@@ -21,7 +21,7 @@ test('Generate content with Content Builder', async ({page}) => {
 
     try {
         // Verify user is on the AI campaign tool page
-        await expect(page.getByRole('heading', { name: 'My Content' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Content Builder' })).toBeVisible();
 
         // Generate new content
         await page.getByRole('button', { name: 'Generate' }).click();
