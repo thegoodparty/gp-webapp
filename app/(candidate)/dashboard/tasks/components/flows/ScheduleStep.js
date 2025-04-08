@@ -9,7 +9,7 @@ import { useState, useMemo } from 'react'
 import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 
-export default function ScheduleFlowScheduleStep({
+export default function ScheduleStep({
   onChangeCallback,
   nextCallback,
   backCallback,

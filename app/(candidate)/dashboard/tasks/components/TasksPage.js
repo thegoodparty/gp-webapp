@@ -20,12 +20,8 @@ import {
   VARIANTS,
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
-import ScheduleFlow from './flows/ScheduleFlow'
-import {
-  TASK_TYPE_HEADINGS,
-  TASK_TYPE_LABELS,
-  TASK_TYPES,
-} from '../constants/tasks.const'
+import ScheduleFlow from './flows/TaskFlow'
+import { TASK_TYPES } from '../constants/tasks.const'
 
 export default function TasksPage({ pathname, campaign, tasks = [] }) {
   const [completedTaskIds, setCompletedTaskIds] = useState(
@@ -152,8 +148,6 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
             <LogTaskModal
               onSubmit={handleCompleteSubmit}
               onClose={handleCompleteCancel}
-              modalTitle={TASK_TYPE_HEADINGS[completeModalTask.flowType]}
-              modalLabel={TASK_TYPE_LABELS[completeModalTask.flowType]}
               flowType={completeModalTask.flowType}
             />
           )}

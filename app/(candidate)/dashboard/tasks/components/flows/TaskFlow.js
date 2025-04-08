@@ -2,40 +2,18 @@
 import Modal from '@shared/utils/Modal'
 import { useMemo, useState } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
-import ScheduleFlowInstructions from './ScheduleFlowInstructions'
-import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep'
-import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep'
-import ScheduleAddScriptFlow from './ScheduleAddScriptFlow/ScheduleAddScriptFlow'
-import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep'
-import ScheduleFlowComplete from './ScheduleFlowComplete'
-import ScheduleFlowImageStep from './ScheduleFlowImageStep'
+import InstructionsStep from './InstructionsStep'
+import BudgetStep from './BudgetStep'
+import AudienceStep from './AudienceStep'
+import AddScriptStep from './AddScriptStep/AddScriptStep'
+import ScheduleStep from './ScheduleStep'
+import FlowComplete from './FlowComplete'
+import ImageStep from './ImageStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { TASK_TYPES } from '../../constants/tasks.const'
-
-const STEPS_BY_TYPE = {
-  [TASK_TYPES.texting]: [
-    'intro',
-    'budget',
-    'audience',
-    'script',
-    'image',
-    'schedule',
-    'complete',
-  ],
-  sms: [
-    'intro',
-    'budget',
-    'audience',
-    'script',
-    'image',
-    'schedule',
-    'complete',
-  ],
-  telemarketing: ['budget', 'audience', 'script', 'schedule', 'complete'],
-}
+import { STEPS, STEPS_BY_TYPE } from '../../constants/tasks.const'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -47,7 +25,7 @@ const DEFAULT_STATE = {
 }
 
 /**
- * @typedef {Object} ScheduleFlowProps
+ * @typedef {Object} TaskFlowProps
  * @property {string} type
  * @property {React.ReactElement} customButton Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
@@ -56,9 +34,9 @@ const DEFAULT_STATE = {
  */
 
 /**
- * @param {ScheduleFlowProps} props
+ * @param {TaskFlowProps} props
  */
-export default function ScheduleFlow({
+export default function TaskFlow({
   forceOpen = false,
   type,
   customButton,
@@ -191,19 +169,19 @@ export default function ScheduleFlow({
         onConfirm={handleCloseConfirm}
       />
       <Modal open={open} closeCallback={handleClose}>
-        {stepName === 'intro' && (
-          <ScheduleFlowInstructions type={type} {...callbackProps} />
+        {stepName === STEPS.intro && (
+          <InstructionsStep type={type} {...callbackProps} />
         )}
-        {stepName === 'budget' && (
-          <ScheduleFlowBudgetStep
+        {stepName === STEPS.budget && (
+          <BudgetStep
             type={type}
             value={state.budget}
             voicemailValue={state.voicemail}
             {...callbackProps}
           />
         )}
-        {stepName === 'audience' && (
-          <ScheduleFlowAudienceStep
+        {stepName === STEPS.audience && (
+          <AudienceStep
             type={type}
             withVoicemail={!!state.voicemail}
             audience={state.audience}
@@ -211,25 +189,25 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {stepName === 'script' && (
-          <ScheduleAddScriptFlow
+        {stepName === STEPS.script && (
+          <AddScriptStep
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
             {...callbackProps}
           />
         )}
-        {stepName === 'image' && (
-          <ScheduleFlowImageStep image={state.image} {...callbackProps} />
+        {stepName === STEPS.image && (
+          <ImageStep image={state.image} {...callbackProps} />
         )}
-        {stepName === 'schedule' && (
-          <ScheduleFlowScheduleStep
+        {stepName === STEPS.schedule && (
+          <ScheduleStep
             schedule={state.schedule}
             type={type}
             fileName={fileName}
             {...callbackProps}
           />
         )}
-        {stepName === 'complete' && <ScheduleFlowComplete {...callbackProps} />}
+        {stepName === STEPS.complete && <FlowComplete {...callbackProps} />}
       </Modal>
     </>
   )

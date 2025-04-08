@@ -3,7 +3,7 @@ import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import RadioList from '@shared/inputs/RadioList'
 import { ModalFooter } from '@shared/ModalFooter'
-import { ADD_SCRIPT_FLOW } from './AddScriptFlow'
+import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { useState } from 'react'
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 

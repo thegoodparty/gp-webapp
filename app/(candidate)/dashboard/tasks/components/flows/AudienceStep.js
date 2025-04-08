@@ -12,7 +12,7 @@ import { countVoterFile } from 'app/(candidate)/dashboard/voter-records/[type]/c
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
 
-export default function ScheduleFlowAudienceStep({
+export default function AudienceStep({
   onChangeCallback,
   nextCallback,
   backCallback,

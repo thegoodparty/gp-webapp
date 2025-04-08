@@ -28,7 +28,7 @@ const SMS_CONTENT = [
   },
 ]
 
-export default function ScheduleFlowInstructions({
+export default function InstructionsStep({
   type,
   nextCallback,
   closeCallback,

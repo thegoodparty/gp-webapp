@@ -1,14 +1,14 @@
 'use client'
 import { useState } from 'react'
 import { ChooseScriptAddFlow } from './ChooseScriptAddFlow'
-import { ADD_SCRIPT_FLOW } from './AddScriptFlow'
+import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { SelectSmSScriptScreen } from './SelectSmSScriptScreen'
 import { CreateSmSScriptScreen } from './CreateSmSScriptScreen'
 import { SelectSmsAiTemplateScreen } from './SelectSmsAiTemplateScreen'
 import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
 
-export default function ScheduleAddScriptFlow({
+export default function AddScriptStep({
   onComplete = (scriptKey) => {},
   backCallback,
   campaign,
