@@ -87,14 +87,15 @@ export async function authFileCheck(test) {
 }
 
 export async function handleTestFailure(page: Page, runId: string, caseId: number, error: Error) {
+    // Capture screenshot on failure
+    await page.waitForTimeout(1000);
+    const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+
+    // Report test results
     const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
     const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
     const currentUrl = await page.url();
-    
-    // Capture screenshot on failure
-    const screenshotPath = `test-results/failures/test-${caseId}-${Date.now()}.png`;
-    await page.screenshot({ path: screenshotPath, fullPage: true });
-    
     await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}. 
     Screenshot saved to: ${screenshotPath}
     Error: ${error.stack}`);
