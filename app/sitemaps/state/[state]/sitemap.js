@@ -50,15 +50,15 @@ export default async function sitemap({ id }) {
     })
 
     stateRaces.forEach((race) => {
-      urls.push(`/elections/${race.slug}`)
+      urls.push(`/elections/position/${race.slug}`)
     })
 
     countyRaces.forEach((race) => {
-      urls.push(`/elections/${race.slug}`)
+      urls.push(`/elections/position/${race.slug}`)
     })
 
     cityRaces.forEach((race) => {
-      urls.push(`/elections/${race.slug}`)
+      urls.push(`/elections/position/${race.slug}`)
     })
 
     urls.forEach((url) => {
