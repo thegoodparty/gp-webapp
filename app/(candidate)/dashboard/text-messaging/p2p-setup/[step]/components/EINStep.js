@@ -58,7 +58,7 @@ export default function EINStep() {
             setValidated={setValidatedEin}
           />
         </div>
-        <div className="mt-2 flex justify-center">
+        <div className="mt-4 flex">
           <Link href="/dashboard/text-messaging">
             <Button color="neutral" className="mr-4">
               Back

@@ -15,7 +15,7 @@ export default function TextMessagingPage(props) {
           <H1>Text Messaging</H1>
         </div>
         {!props.compliance && <NoCompliance />}
-        <TextMessagingRequests />
+        {/* <TextMessagingRequests /> */}
       </DashboardLayout>
     </TextMessagingProvider>
   )
