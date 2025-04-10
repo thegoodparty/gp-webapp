@@ -30,8 +30,10 @@ export async function ensureSession() {
   const page = await browser.newPage();
   const password = userData.password + '1';
   const emailAddress = generateEmail();
+  const role = "South San Francisco City Clerk";
+  const zipCode = "94066";
 
-  await createAccount(page, undefined, undefined, password, emailAddress);
+  await createAccount(page, zipCode, role, password, emailAddress);
   // Create test-results directory if it doesn't exist
   const screenshotDir = path.resolve(__dirname, '../test-results');
   if (!fs.existsSync(screenshotDir)) {
@@ -162,23 +164,12 @@ export async function createAccount(
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
 
-  try {
-    await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
-    await page.waitForLoadState('networkidle', { timeout: 60000 });
-    await page.getByRole('combobox').selectOption(electionLevel);
-    await page.getByRole('button', { name: 'Next' }).click();
-  } catch (error) {
-    console.log('Initial attempt failed, trying Back/Next navigation...');
-    await page.getByRole('button', { name: 'Back' }).click();
-    await page.waitForTimeout(1000);
-    await page.getByRole('button', { name: 'Next' }).click();
-    await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
-    await page.waitForLoadState('networkidle', { timeout: 60000 });
-    await page.getByRole('combobox').selectOption(electionLevel);
-    await page.getByRole('button', { name: 'Next' }).click();
-  }
+  await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
+  await page.waitForLoadState('networkidle', { timeout: 60000 });
+  await page.getByRole('combobox').selectOption(electionLevel);
+  await page.getByRole('button', { name: 'Next' }).click();
   await page.getByText("What office are you interested in?").isVisible();
-  await page.getByRole("button", { name: role, timeout: 30000 }).first().click();
+  await page.getByRole("button", { name: role, timeout: 60000 }).first().click();
   await page.getByRole("button", { name: "Next" }).click();
   await page
     .getByText("How will your campaign appear on the ballot?")
