@@ -36,7 +36,7 @@ export const SelectSmSScriptScreen = ({
         onBack={onBack}
         onNext={handleOnNext}
         disabled={!smsScript}
-        nextText="Submit"
+        nextText="Select"
       />
     </>
   )

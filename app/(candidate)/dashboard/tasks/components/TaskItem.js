@@ -8,7 +8,6 @@ export default function TaskItem({
   task,
   daysUntilElection,
   isPro,
-  isCompleted,
   onCheck,
   onAction,
 }) {
@@ -22,6 +21,7 @@ export default function TaskItem({
     week,
     deadline,
     link,
+    completed,
   } = task
 
   const handleAction = () => {
@@ -36,20 +36,20 @@ export default function TaskItem({
   const isExpired = daysUntilElection < deadline
 
   return (
-    <li className="flex gap-4 p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
-      <div className="mt-1">
-        <TaskCheck checked={isCompleted} onClick={handleCheck} />
+    <li className="flex items-center gap-4 p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
+      <div className="mt-1 self-start">
+        <TaskCheck checked={completed} onClick={handleCheck} />
       </div>
-      <div className={`flex-grow ${isCompleted ? 'text-indigo-400' : ''}`}>
+      <div className={`flex-grow ${completed ? 'text-indigo-400' : ''}`}>
         <H4 className="mb-1">{title}</H4>
         <Body2>{description}</Body2>
       </div>
-      {isExpired ? (
+      {isExpired && !completed ? (
         <Button
+          onClick={handleAction}
           size="medium"
           color="neutral"
           className="flex items-center"
-          disabled
         >
           <LockRounded className="mr-1 text-base" />
           No Longer Available
@@ -59,11 +59,11 @@ export default function TaskItem({
           href={isExternalLink ? link : undefined}
           onClick={isExternalLink ? undefined : handleAction}
           size="medium"
-          color={isCompleted ? 'success' : 'secondary'}
-          disabled={isCompleted}
+          color={completed ? 'success' : 'secondary'}
+          disabled={completed}
           className="flex items-center"
         >
-          {isCompleted ? (
+          {completed ? (
             <CheckRounded className="mr-1 text-base" />
           ) : (
             proRequired && !isPro && <LockRounded className="mr-1 text-base" />

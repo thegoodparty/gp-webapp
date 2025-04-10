@@ -81,6 +81,7 @@
     "react-to-print": "^2.14.12",
     "recharts": "^2.8.0",
     "rss": "^1.2.2",
+    "sanitize-html": "^2.14.0",
     "sass": "^1.56.0",
     "sharp": "^0.31.3",
     "slick-carousel": "^1.8.1",

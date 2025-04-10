@@ -3,24 +3,26 @@ import Modal from '@shared/utils/Modal'
 import { useMemo, useState } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
 import InstructionsStep from './InstructionsStep'
-import BudgetStep from './BudgetStep'
 import AudienceStep from './AudienceStep'
 import AddScriptStep from './AddScriptStep/AddScriptStep'
 import ScheduleStep from './ScheduleStep'
-import FlowComplete from './FlowComplete'
 import ImageStep from './ImageStep'
+import DownloadStep from './DownloadStep'
+import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../constants/tasks.const'
+import sanitizeHtml from 'sanitize-html'
 
 const DEFAULT_STATE = {
   step: 0,
-  budget: false,
+  budget: 0,
   voicemail: undefined,
   audience: {},
   script: false,
+  scriptText: '',
   image: undefined,
 }
 
@@ -50,7 +52,7 @@ export default function TaskFlow({
   const [state, setState] = useState(DEFAULT_STATE)
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
   const stepName = stepList[state.step]
-
+  const isLastStep = state.step >= stepList.length - 1
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
@@ -64,7 +66,7 @@ export default function TaskFlow({
   }
 
   const handleClose = () => {
-    if (isObjectEqual(state, DEFAULT_STATE) || stepName === 'complete') {
+    if (isObjectEqual(state, DEFAULT_STATE) || isLastStep) {
       handleCloseConfirm()
       return
     }
@@ -87,7 +89,10 @@ export default function TaskFlow({
   }
 
   const handleNext = () => {
-    if (state.step >= stepList.length - 1) return
+    if (isLastStep) {
+      handleCloseConfirm()
+      return
+    }
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Next, {
       step: stepName,
     })
@@ -123,6 +128,16 @@ export default function TaskFlow({
 
   const handleAddScriptOnComplete = (scriptKeyOrText) => {
     handleChange('script', scriptKeyOrText)
+
+    const content = campaign.aiContent?.[scriptKeyOrText]?.content
+    const scriptText = content
+      ? sanitizeHtml(content, {
+          allowedTags: [],
+          allowedAttributes: {},
+        })
+      : scriptKeyOrText
+
+    handleChange('scriptText', scriptText)
     handleNext()
   }
 
@@ -172,14 +187,7 @@ export default function TaskFlow({
         {stepName === STEPS.intro && (
           <InstructionsStep type={type} {...callbackProps} />
         )}
-        {stepName === STEPS.budget && (
-          <BudgetStep
-            type={type}
-            value={state.budget}
-            voicemailValue={state.voicemail}
-            {...callbackProps}
-          />
-        )}
+
         {stepName === STEPS.audience && (
           <AudienceStep
             type={type}
@@ -207,7 +215,15 @@ export default function TaskFlow({
             {...callbackProps}
           />
         )}
-        {stepName === STEPS.complete && <FlowComplete {...callbackProps} />}
+        {stepName === STEPS.download && (
+          <DownloadStep
+            type={type}
+            scriptText={state.scriptText}
+            audience={state.audience}
+            {...callbackProps}
+          />
+        )}
+        {stepName === STEPS.socialPost && <SocialPostStep {...callbackProps} />}
       </Modal>
     </>
   )

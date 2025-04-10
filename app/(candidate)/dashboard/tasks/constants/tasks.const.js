@@ -5,12 +5,20 @@ export const TASK_TYPES = {
   doorKnocking: 'door-knocking',
   phoneBanking: 'phone-banking',
   socialMedia: 'social-media',
-  events: 'events',
+  event: 'event',
+  education: 'education',
+}
+
+// Legacy types, these were based on voter file types
+// TODO: remove these once we replace old dashboard view with new task flow
+export const LEGACY_TASK_TYPES = {
+  sms: 'sms',
+  telemarketing: 'telemarketing',
 }
 
 export const STEPS = {
   intro: 'intro',
-  budget: 'budget',
+  budget: 'budget', // Not used right now
   audience: 'audience',
   script: 'script',
   image: 'image',
@@ -23,19 +31,16 @@ export const STEPS = {
 export const STEPS_BY_TYPE = {
   [TASK_TYPES.texting]: [
     STEPS.intro,
-    STEPS.budget,
     STEPS.audience,
     STEPS.script,
     STEPS.image,
     STEPS.schedule,
-    STEPS.complete,
   ],
   [TASK_TYPES.robocall]: [
     STEPS.intro,
     STEPS.audience,
     STEPS.script,
     STEPS.schedule,
-    STEPS.complete,
   ],
   [TASK_TYPES.doorKnocking]: [
     STEPS.intro,
@@ -50,23 +55,11 @@ export const STEPS_BY_TYPE = {
     STEPS.download,
   ],
   [TASK_TYPES.socialMedia]: [STEPS.intro, STEPS.script, STEPS.socialPost],
-
-  // Legacy types, these are based on voter file types
-  sms: [
-    STEPS.intro,
-    STEPS.budget,
-    STEPS.audience,
-    STEPS.script,
-    STEPS.image,
-    STEPS.schedule,
-    STEPS.complete,
-  ],
-  telemarketing: [
-    STEPS.intro,
-    STEPS.budget,
-    STEPS.audience,
-    STEPS.script,
-    STEPS.schedule,
-    STEPS.complete,
-  ],
 }
+
+// TODO: remove these once we replace old dashboard view with new task flow
+// legacy type "sms" uses the same steps as "texting"
+STEPS_BY_TYPE[LEGACY_TASK_TYPES.sms] = STEPS_BY_TYPE[TASK_TYPES.texting]
+// legacy type "telemarketing" uses the same steps as "robocall"
+STEPS_BY_TYPE[LEGACY_TASK_TYPES.telemarketing] =
+  STEPS_BY_TYPE[TASK_TYPES.robocall]

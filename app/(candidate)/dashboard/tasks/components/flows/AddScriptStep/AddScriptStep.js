@@ -36,7 +36,10 @@ export default function AddScriptStep({
       <SelectSmSScriptScreen
         aiContent={campaign.aiContent}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
-        onNext={(scriptKey) => onComplete(scriptKey)}
+        onNext={(scriptKey) => {
+          setAiScriptKey(scriptKey)
+          onNext(ADD_SCRIPT_FLOW.GENERATE_REVIEW)
+        }}
       />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE]: (
@@ -66,7 +69,7 @@ export default function AddScriptStep({
     [ADD_SCRIPT_FLOW.GENERATE_REVIEW]: (
       <GenerateReviewScreen
         aiScriptKey={aiScriptKey}
-        onBack={() => onBack(ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE)}
+        onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={() => onComplete(aiScriptKey)}
       />
     ),
