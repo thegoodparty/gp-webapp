@@ -2,17 +2,16 @@
 import { useState } from 'react'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
-import CopyToClipboard from '@shared/utils/CopyToClipboard'
 import { TASK_TYPES } from '../../constants/tasks.const'
 import { fetchVoterFile } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
-import { LuClipboard } from 'react-icons/lu'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { format } from 'date-fns'
+import CopyScriptButton from '../CopyScriptButton'
 
 const DOOR_KNOCKING_BLOG_URL =
-  'https://www.goodparty.org/blog/articles/door-knocking-campaigns'
+  'https://goodparty.org/blog/tag/door-to-door-canvassing'
 const PHONE_BANKING_BLOG_URL =
-  'https://www.goodparty.org/blog/articles/phone-banking-campaigns'
+  'https://goodparty.org/blog/article/political-campaigns-phone-banking'
 
 export default function DownloadStep({
   type,
@@ -62,12 +61,7 @@ export default function DownloadStep({
     <div className="p-4 min-w-[500px]">
       <H1 className="text-center mb-8">Download your materials</H1>
       <div className="flex flex-col gap-4 items-center">
-        <CopyToClipboard text={scriptText}>
-          <Button size="large" color="secondary" className="flex items-center">
-            <LuClipboard className="mr-2" />
-            Copy Script
-          </Button>
-        </CopyToClipboard>
+        <CopyScriptButton scriptText={scriptText} />
         <Button
           size="large"
           color="secondary"
@@ -77,7 +71,7 @@ export default function DownloadStep({
         >
           Download voter list
         </Button>
-        <Button href={blogUrl} size="large" color="neutral">
+        <Button href={blogUrl} target="_blank" size="large" color="neutral">
           Read more on our blog
         </Button>
 

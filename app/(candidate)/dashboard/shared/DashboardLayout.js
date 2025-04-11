@@ -4,7 +4,7 @@ import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
 import { useUser } from '@shared/hooks/useUser'
-import { ProUpgradePrompt } from './ProUpgradeModal'
+import { ProUpgradePrompt } from './ProUpgradePrompt'
 
 export default function DashboardLayout({
   children,
