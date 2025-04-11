@@ -12,6 +12,10 @@ on:
 jobs:
   run-e2e-tests:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     if: github.event.deployment_status.state == 'success'
     steps:
       - name: Print Workflow Trigger Event
@@ -63,7 +67,7 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test
+          npx playwright test --shard=${{ matrix.shard }}/3
         env:
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
@@ -76,16 +80,18 @@ jobs:
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
 
+  notify-slack:
+    needs: run-e2e-tests
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
       - name: Notify Slack Workflow
-        if: always()
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
-          # Set STATUS and COLOR based on job status
-          STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
-          COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
+          STATUS=$(if [[ "${{ needs.run-e2e-tests.result }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
+          COLOR=$(if [[ "${{ needs.run-e2e-tests.result }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
           
-          # Send the Slack notification
           curl -X POST -H "Content-type: application/json" \
           --data '{
             "text": "Playwright Test Results ('"${STATUS}"')",
