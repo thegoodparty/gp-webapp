@@ -10,7 +10,8 @@ import CopyScriptButton from '../CopyScriptButton'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
-const PHONE_BANKING_BLOG_URL = 'https://goodparty.org/blog/tag/phone-banking'
+const PHONE_BANKING_BLOG_URL =
+  'https://goodparty.org/blog/article/political-campaigns-phone-banking'
 
 export default function DownloadStep({
   type,
