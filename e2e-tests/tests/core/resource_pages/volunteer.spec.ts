@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
     await page.goto("/volunteer", {waitUntil: "commit"});
 });
 
-test('Verify Explore Offices page', async ({ page }) => {
+test('Verify For Voters / Volunteer page', async ({ page }) => {
     const caseId = 8;
 
     const pageTitle = /Get Involved/;
@@ -49,13 +49,7 @@ test('Verify Explore Offices page', async ({ page }) => {
         await page.locator("input[name='email']").fill(userData.email);
         await page.locator("input[type='checkbox']").click();
         await page.locator('button', { hasText: volunteerButton}).click();
-        try { 
-            // The volunteer sign-up form works on dev/qa/prod
-            await expect(page.getByText(volunteerConfirm)).toBeVisible({ timeout: 10000 });
-        } catch (e) { 
-            // On Vercel, this form does not work, so this checks that a submission was at least attempted
-            await expect(page.getByText(volunteerError)).toBeVisible({ timeout: 3000 });
-        }
+        await expect(page.getByText(volunteerConfirm)).toBeVisible({ timeout: 30000 });
 
         // Locate all expandable sections
         const expandables = page.getByTestId('faq-expandable');

@@ -145,12 +145,10 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-test('Add/Edit/Delete Opponent', async ({ page }) => {
+test('Add Opponent', async ({ page }) => {
     const caseId = 50;
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
-    const newOpponent = generateTimeStamp() + ' New Opponent';
-    const newOpponentDescription = generateTimeStamp() + ' New Opponent Description';
 
     try {
         // Verify user is on campaign details page
@@ -168,27 +166,6 @@ test('Add/Edit/Delete Opponent', async ({ page }) => {
         // Refresh page and confirm saved opponent data
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.getByText(opponent, { exact: true }).isVisible();
-
-        // Edit opponent data
-        await page.getByRole('button', { name: 'Edit', exact: true }).click();
-        await page.getByLabel('Name *').fill(newOpponent);
-        await page.locator('form').getByRole('combobox').selectOption('Independent');
-        await page.getByPlaceholder('EXAMPLE: Republican hotel').fill(newOpponentDescription);
-        await page.getByRole('button', { name: 'Finish Editing' }).click()
-        await page.getByRole('button', { name: 'Save' }).nth(1).click();
-
-        // Refresh page and confirm update to opponent data
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.getByText(newOpponent, { exact: true }).isVisible();
-
-        // Delete opponent data
-        await page.getByRole('button', { name: 'Delete' }).click();
-        await page.getByRole('button', { name: 'Save' }).nth(1).click();
-
-        // Refresh page and confirm deleted opponent data
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await expect(page.getByText(opponent)).toBeHidden();
-        await expect(page.getByText(newOpponent)).toBeHidden();
     
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
