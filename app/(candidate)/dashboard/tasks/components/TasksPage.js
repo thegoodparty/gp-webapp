@@ -15,24 +15,24 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import LogTaskModal from './LogTaskModal'
+import DeadlineModal from './flows/DeadlineModal'
 import {
   ProUpgradeModal,
   VARIANTS,
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
-import ScheduleFlow from '../../voter-records/[type]/components/ScheduleFlow'
-import {
-  TASK_TYPE_HEADINGS,
-  TASK_TYPE_LABELS,
-  TASK_TYPES,
-} from '../constants/tasks.const'
+import TaskFlow from './flows/TaskFlow'
+import { TASK_TYPES } from '../constants/tasks.const'
 
-export default function TasksPage({ pathname, campaign, tasks = [] }) {
-  const [completedTaskIds, setCompletedTaskIds] = useState(
-    campaign.completedTaskIds,
-  )
+export default function TasksPage({
+  pathname,
+  campaign,
+  tasks: tasksProp = [],
+}) {
+  const [tasks, setTasks] = useState(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
+  const [deadlineModalTask, setDeadlineModalTask] = useState(null)
   const [showFlowModal, setShowFlowModal] = useState(null)
   const { errorSnackbar } = useSnackbar()
 
@@ -44,10 +44,9 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
   // TODO: what if no election date?
   // TODO: what if no p2v?
   async function handleCheckClick(task) {
-    // TODO: connect skipCount to whatever actual field will be
-    const { id: taskId, skipCount } = task
+    const { id: taskId, skipVoterCount } = task
 
-    if (skipCount) {
+    if (skipVoterCount) {
       completeTask(taskId)
     } else {
       setCompleteModalTask(task)
@@ -64,32 +63,23 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
   }
 
   const handleActionClick = (task) => {
-    const { flowType, proRequired } = task
+    const { flowType, proRequired, deadline } = task
 
     if (proRequired && !campaign.isPro) {
       setShowProUpgradeModal(true)
       return
     }
 
-    switch (flowType) {
-      case TASK_TYPES.texting:
-        setShowFlowModal(TASK_TYPES.texting)
-        break
-      case TASK_TYPES.robocall:
-        // TODO: implement robocall flow
-        console.log('robocall flow')
-        break
-      case TASK_TYPES.doorKnocking:
-        // TODO: implement door knocking flow
-        console.log('door knocking flow')
-        break
-      case TASK_TYPES.phoneBanking:
-        // TODO: implement phone banking flow
-        console.log('phone banking flow')
-        break
-      default:
-        console.warn('Unknown task type:', flowType)
-        setShowFlowModal(null)
+    if (deadline && daysUntilElection < deadline) {
+      setDeadlineModalTask(task)
+      return
+    }
+
+    if (Object.values(TASK_TYPES).includes(flowType)) {
+      setShowFlowModal(flowType)
+    } else {
+      console.error('Unknown flow type:', flowType)
+      setShowFlowModal(null)
     }
   }
 
@@ -99,7 +89,17 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
     })
 
     if (resp.ok) {
-      setCompletedTaskIds((currentIds) => [...currentIds, taskId])
+      const updatedTask = resp.data
+      setTasks((currentTasks) => {
+        const taskIndex = currentTasks.findIndex((task) => task.id === taskId)
+        if (taskIndex !== -1) {
+          currentTasks.splice(taskIndex, 1, updatedTask)
+          return [...currentTasks]
+        } else {
+          // Shouldn't happen
+          console.error('Completed task not found')
+        }
+      })
     } else {
       errorSnackbar('Failed to complete task')
     }
@@ -136,7 +136,6 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
                     task={task}
                     isPro={campaign.isPro}
                     daysUntilElection={daysUntilElection}
-                    isCompleted={completedTaskIds?.includes(task.id)}
                     onCheck={handleCheckClick}
                     onAction={handleActionClick}
                   />
@@ -152,9 +151,13 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
             <LogTaskModal
               onSubmit={handleCompleteSubmit}
               onClose={handleCompleteCancel}
-              modalTitle={TASK_TYPE_HEADINGS[completeModalTask.flowType]}
-              modalLabel={TASK_TYPE_LABELS[completeModalTask.flowType]}
               flowType={completeModalTask.flowType}
+            />
+          )}
+          {deadlineModalTask && (
+            <DeadlineModal
+              deadline={deadlineModalTask?.deadline}
+              onClose={() => setDeadlineModalTask(null)}
             />
           )}
           <ProUpgradeModal
@@ -167,7 +170,7 @@ export default function TasksPage({ pathname, campaign, tasks = [] }) {
             onClose={() => setShowProUpgradeModal(false)}
           />
           {showFlowModal && (
-            <ScheduleFlow
+            <TaskFlow
               forceOpen
               type={showFlowModal}
               campaign={campaign}

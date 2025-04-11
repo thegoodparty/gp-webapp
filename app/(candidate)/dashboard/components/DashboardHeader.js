@@ -5,17 +5,12 @@ import { RemainingTasks } from 'app/(candidate)/dashboard/components/RemainingTa
 import { CampaignProgress } from 'app/(candidate)/dashboard/components/CampaignProgress'
 
 export const DashboardHeader = ({ campaign, tasks = [] }) => {
-  const {
-    pathToVictory: p2vObject,
-    details: campaignDetails,
-    completedTaskIds,
-  } = campaign || {}
+  const { pathToVictory: p2vObject, details: campaignDetails } = campaign || {}
   const pathToVictory = p2vObject?.data || {}
   const { electionDate: electionDateStr } = campaignDetails || {}
   const electionDate = new Date(electionDateStr)
 
-  // TODO: this is wrong! need to calculate completed tasks for current week
-  const numOfRemainingTasks = tasks.length - (completedTaskIds?.length || 0)
+  const numOfRemainingTasks = tasks.filter((task) => !task.completed).length
 
   return (
     <section className="mb-6">

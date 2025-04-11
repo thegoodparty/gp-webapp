@@ -2,52 +2,32 @@
 import Modal from '@shared/utils/Modal'
 import { useMemo, useState } from 'react'
 import { IoArrowForward } from 'react-icons/io5'
-import ScheduleFlowInstructions from './ScheduleFlowInstructions'
-import ScheduleFlowBudgetStep from './ScheduleFlowBudgetStep'
-import ScheduleFlowAudienceStep from './ScheduleFlowAudienceStep'
-import ScheduleAddScriptFlow from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/ScheduleAddScriptFlow'
-import ScheduleFlowScheduleStep from './ScheduleFlowScheduleStep'
-import ScheduleFlowComplete from './ScheduleFlowComplete'
-import ScheduleFlowImageStep from './ScheduleFlowImageStep'
+import InstructionsStep from './InstructionsStep'
+import AudienceStep from './AudienceStep'
+import AddScriptStep from './AddScriptStep/AddScriptStep'
+import ScheduleStep from './ScheduleStep'
+import ImageStep from './ImageStep'
+import DownloadStep from './DownloadStep'
+import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { TASK_TYPES } from 'app/(candidate)/dashboard/tasks/constants/tasks.const'
-
-const STEPS_BY_TYPE = {
-  [TASK_TYPES.texting]: [
-    'intro',
-    'budget',
-    'audience',
-    'script',
-    'image',
-    'schedule',
-    'complete',
-  ],
-  sms: [
-    'intro',
-    'budget',
-    'audience',
-    'script',
-    'image',
-    'schedule',
-    'complete',
-  ],
-  telemarketing: ['budget', 'audience', 'script', 'schedule', 'complete'],
-}
+import { STEPS, STEPS_BY_TYPE } from '../../constants/tasks.const'
+import sanitizeHtml from 'sanitize-html'
 
 const DEFAULT_STATE = {
   step: 0,
-  budget: false,
+  budget: 0,
   voicemail: undefined,
   audience: {},
   script: false,
+  scriptText: '',
   image: undefined,
 }
 
 /**
- * @typedef {Object} ScheduleFlowProps
+ * @typedef {Object} TaskFlowProps
  * @property {string} type
  * @property {React.ReactElement} customButton Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
@@ -56,9 +36,9 @@ const DEFAULT_STATE = {
  */
 
 /**
- * @param {ScheduleFlowProps} props
+ * @param {TaskFlowProps} props
  */
-export default function ScheduleFlow({
+export default function TaskFlow({
   forceOpen = false,
   type,
   customButton,
@@ -72,7 +52,7 @@ export default function ScheduleFlow({
   const [state, setState] = useState(DEFAULT_STATE)
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
   const stepName = stepList[state.step]
-
+  const isLastStep = state.step >= stepList.length - 1
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
@@ -86,7 +66,7 @@ export default function ScheduleFlow({
   }
 
   const handleClose = () => {
-    if (isObjectEqual(state, DEFAULT_STATE) || stepName === 'complete') {
+    if (isObjectEqual(state, DEFAULT_STATE) || isLastStep) {
       handleCloseConfirm()
       return
     }
@@ -109,7 +89,10 @@ export default function ScheduleFlow({
   }
 
   const handleNext = () => {
-    if (state.step >= stepList.length - 1) return
+    if (isLastStep) {
+      handleCloseConfirm()
+      return
+    }
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Next, {
       step: stepName,
     })
@@ -145,6 +128,16 @@ export default function ScheduleFlow({
 
   const handleAddScriptOnComplete = (scriptKeyOrText) => {
     handleChange('script', scriptKeyOrText)
+
+    const content = campaign.aiContent?.[scriptKeyOrText]?.content
+    const scriptText = content
+      ? sanitizeHtml(content, {
+          allowedTags: [],
+          allowedAttributes: {},
+        })
+      : scriptKeyOrText
+
+    handleChange('scriptText', scriptText)
     handleNext()
   }
 
@@ -191,19 +184,12 @@ export default function ScheduleFlow({
         onConfirm={handleCloseConfirm}
       />
       <Modal open={open} closeCallback={handleClose}>
-        {stepName === 'intro' && (
-          <ScheduleFlowInstructions type={type} {...callbackProps} />
+        {stepName === STEPS.intro && (
+          <InstructionsStep type={type} {...callbackProps} />
         )}
-        {stepName === 'budget' && (
-          <ScheduleFlowBudgetStep
-            type={type}
-            value={state.budget}
-            voicemailValue={state.voicemail}
-            {...callbackProps}
-          />
-        )}
-        {stepName === 'audience' && (
-          <ScheduleFlowAudienceStep
+
+        {stepName === STEPS.audience && (
+          <AudienceStep
             type={type}
             withVoicemail={!!state.voicemail}
             audience={state.audience}
@@ -211,25 +197,33 @@ export default function ScheduleFlow({
             {...callbackProps}
           />
         )}
-        {stepName === 'script' && (
-          <ScheduleAddScriptFlow
+        {stepName === STEPS.script && (
+          <AddScriptStep
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
             {...callbackProps}
           />
         )}
-        {stepName === 'image' && (
-          <ScheduleFlowImageStep image={state.image} {...callbackProps} />
+        {stepName === STEPS.image && (
+          <ImageStep image={state.image} {...callbackProps} />
         )}
-        {stepName === 'schedule' && (
-          <ScheduleFlowScheduleStep
+        {stepName === STEPS.schedule && (
+          <ScheduleStep
             schedule={state.schedule}
             type={type}
             fileName={fileName}
             {...callbackProps}
           />
         )}
-        {stepName === 'complete' && <ScheduleFlowComplete {...callbackProps} />}
+        {stepName === STEPS.download && (
+          <DownloadStep
+            type={type}
+            scriptText={state.scriptText}
+            audience={state.audience}
+            {...callbackProps}
+          />
+        )}
+        {stepName === STEPS.socialPost && <SocialPostStep {...callbackProps} />}
       </Modal>
     </>
   )

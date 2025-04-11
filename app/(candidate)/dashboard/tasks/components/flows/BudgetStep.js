@@ -11,7 +11,7 @@ import Overline from '@shared/typography/Overline'
 import { numberFormatter } from 'helpers/numberHelper'
 import { AiFillDollarCircle } from 'react-icons/ai'
 
-export default function ScheduleFlowBudgetStep({
+export default function BudgetStep({
   value,
   voicemailValue,
   onChangeCallback,

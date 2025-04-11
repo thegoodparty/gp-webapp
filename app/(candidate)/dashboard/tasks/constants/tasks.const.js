@@ -5,23 +5,61 @@ export const TASK_TYPES = {
   doorKnocking: 'door-knocking',
   phoneBanking: 'phone-banking',
   socialMedia: 'social-media',
-  events: 'events',
+  event: 'event',
+  education: 'education',
 }
 
-export const TASK_TYPE_HEADINGS = {
-  [TASK_TYPES.texting]: 'How many text messages did you schedule?',
-  [TASK_TYPES.robocall]: 'How many robocalls did you schedule?',
-  [TASK_TYPES.doorKnocking]: 'How many doors did you knock?',
-  [TASK_TYPES.phoneBanking]: 'How many calls did you make?',
-  [TASK_TYPES.socialMedia]: 'How views did your post get?',
-  [TASK_TYPES.events]: 'How many voters did you meet?',
+// Legacy types, these were based on voter file types
+// TODO: remove these once we replace old dashboard view with new task flow
+export const LEGACY_TASK_TYPES = {
+  sms: 'sms',
+  telemarketing: 'telemarketing',
 }
 
-export const TASK_TYPE_LABELS = {
-  [TASK_TYPES.texting]: 'Text Messages Scheduled',
-  [TASK_TYPES.robocall]: 'Robocalls Scheduled',
-  [TASK_TYPES.doorKnocking]: 'Doors Knocked',
-  [TASK_TYPES.phoneBanking]: 'Calls Made',
-  [TASK_TYPES.socialMedia]: 'Social Post Views',
-  [TASK_TYPES.events]: 'Voters Met',
+export const STEPS = {
+  intro: 'intro',
+  budget: 'budget', // Not used right now
+  audience: 'audience',
+  script: 'script',
+  image: 'image',
+  schedule: 'schedule',
+  complete: 'complete',
+  download: 'download',
+  socialPost: 'socialPost',
 }
+
+export const STEPS_BY_TYPE = {
+  [TASK_TYPES.texting]: [
+    STEPS.intro,
+    STEPS.audience,
+    STEPS.script,
+    STEPS.image,
+    STEPS.schedule,
+  ],
+  [TASK_TYPES.robocall]: [
+    STEPS.intro,
+    STEPS.audience,
+    STEPS.script,
+    STEPS.schedule,
+  ],
+  [TASK_TYPES.doorKnocking]: [
+    STEPS.intro,
+    STEPS.audience,
+    STEPS.script,
+    STEPS.download,
+  ],
+  [TASK_TYPES.phoneBanking]: [
+    STEPS.intro,
+    STEPS.audience,
+    STEPS.script,
+    STEPS.download,
+  ],
+  [TASK_TYPES.socialMedia]: [STEPS.intro, STEPS.script, STEPS.socialPost],
+}
+
+// TODO: remove these once we replace old dashboard view with new task flow
+// legacy type "sms" uses the same steps as "texting"
+STEPS_BY_TYPE[LEGACY_TASK_TYPES.sms] = STEPS_BY_TYPE[TASK_TYPES.texting]
+// legacy type "telemarketing" uses the same steps as "robocall"
+STEPS_BY_TYPE[LEGACY_TASK_TYPES.telemarketing] =
+  STEPS_BY_TYPE[TASK_TYPES.robocall]
