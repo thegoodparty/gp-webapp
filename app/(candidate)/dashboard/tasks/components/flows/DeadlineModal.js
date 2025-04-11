@@ -3,9 +3,9 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
 
-const SUPPORT_EMAIL = 'support@goodparty.org'
+const SUPPORT_EMAIL = 'politics@goodparty.org'
 
-export default function DeadlineModal({ deadline, onClose }) {
+export default function DeadlineModal({ type, deadline, onClose }) {
   return (
     <Modal open={true} closeCallback={onClose}>
       <div className="p-6 text-center">
@@ -17,8 +17,14 @@ export default function DeadlineModal({ deadline, onClose }) {
         </Body1>
 
         <div className="flex justify-center gap-4">
-          <Button size="large" color="neutral" onClick={onClose}>
-            Ok
+          <Button
+            href={`mailto:${SUPPORT_EMAIL}?subject=Last minute ${type} request`}
+            target="_blank"
+            size="large"
+            color="neutral"
+            onClick={onClose}
+          >
+            Email our team
           </Button>
         </div>
       </div>

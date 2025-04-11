@@ -37,7 +37,7 @@ export default function SocialPostStep({ scriptText, closeCallback }) {
             <FacebookLogo /> Facebook
           </Button>
           <Button
-            href="https://www.x.com/"
+            href="https://x.com/compose/post"
             target="_blank"
             className="flex items-center gap-2 min-w-[190px]"
             variant="text"

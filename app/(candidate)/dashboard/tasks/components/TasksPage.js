@@ -156,7 +156,8 @@ export default function TasksPage({
           )}
           {deadlineModalTask && (
             <DeadlineModal
-              deadline={deadlineModalTask?.deadline}
+              type={deadlineModalTask.flowType}
+              deadline={deadlineModalTask.deadline}
               onClose={() => setDeadlineModalTask(null)}
             />
           )}
