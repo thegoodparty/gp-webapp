@@ -223,7 +223,9 @@ export default function TaskFlow({
             {...callbackProps}
           />
         )}
-        {stepName === STEPS.socialPost && <SocialPostStep {...callbackProps} />}
+        {stepName === STEPS.socialPost && (
+          <SocialPostStep scriptText={state.scriptText} {...callbackProps} />
+        )}
       </Modal>
     </>
   )

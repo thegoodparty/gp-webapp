@@ -105,6 +105,7 @@ export const SIZE_CLASSES = {
 
 export default function Button({
   href,
+  target,
   nativeLink = false,
   size = 'medium',
   variant = 'contained',
@@ -136,13 +137,23 @@ export default function Button({
     if (nativeLink) {
       // use native <a> tag if nativeLink = true
       return (
-        <a href={href} className={compiledClassName} {...restProps}>
+        <a
+          href={href}
+          target={target}
+          className={compiledClassName}
+          {...restProps}
+        >
           {children}
         </a>
       )
     }
     return (
-      <Link href={href} className={compiledClassName} {...restProps}>
+      <Link
+        href={href}
+        target={target}
+        className={compiledClassName}
+        {...restProps}
+      >
         {children}
       </Link>
     )
