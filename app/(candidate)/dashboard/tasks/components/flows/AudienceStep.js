@@ -60,7 +60,7 @@ export default function AudienceStep({
     type === TASK_TYPES.robocall
   ) {
     price = withVoicemail ? CALL_W_VOICEMAIL_PRICE : CALL_PRICE
-  } else if (type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.texting) {
+  } else if (type === LEGACY_TASK_TYPES.sms || type === TASK_TYPES.text) {
     price = TEXT_PRICE
   }
 

@@ -1,11 +1,11 @@
 // NOTE: copied from CampaignTaskType enum in gp-api
 export const TASK_TYPES = {
-  texting: 'texting',
+  text: 'text',
   robocall: 'robocall',
-  doorKnocking: 'door-knocking',
-  phoneBanking: 'phone-banking',
-  socialMedia: 'social-media',
-  event: 'event',
+  doorKnocking: 'doorKnocking',
+  phoneBanking: 'phoneBanking',
+  socialMedia: 'socialMedia',
+  events: 'events',
   education: 'education',
 }
 
@@ -29,7 +29,7 @@ export const STEPS = {
 }
 
 export const STEPS_BY_TYPE = {
-  [TASK_TYPES.texting]: [
+  [TASK_TYPES.text]: [
     STEPS.intro,
     STEPS.audience,
     STEPS.script,
@@ -59,7 +59,7 @@ export const STEPS_BY_TYPE = {
 
 // TODO: remove these once we replace old dashboard view with new task flow
 // legacy type "sms" uses the same steps as "texting"
-STEPS_BY_TYPE[LEGACY_TASK_TYPES.sms] = STEPS_BY_TYPE[TASK_TYPES.texting]
+STEPS_BY_TYPE[LEGACY_TASK_TYPES.sms] = STEPS_BY_TYPE[TASK_TYPES.text]
 // legacy type "telemarketing" uses the same steps as "robocall"
 STEPS_BY_TYPE[LEGACY_TASK_TYPES.telemarketing] =
   STEPS_BY_TYPE[TASK_TYPES.robocall]

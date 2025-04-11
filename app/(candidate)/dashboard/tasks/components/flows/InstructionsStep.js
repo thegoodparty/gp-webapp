@@ -3,7 +3,7 @@ import { TASK_TYPES, LEGACY_TASK_TYPES } from '../../constants/tasks.const'
 import Button from '@shared/buttons/Button'
 
 const INSTRUCTIONS_BY_TYPE = {
-  [TASK_TYPES.texting]: [
+  [TASK_TYPES.text]: [
     'Select target audience',
     'Develop your script',
     'Attach your image',
@@ -36,7 +36,7 @@ const INSTRUCTIONS_BY_TYPE = {
 // TODO: remove these once we replace old dashboard view with new task flow
 // legacy type "sms" uses the same instructions as "texting"
 INSTRUCTIONS_BY_TYPE[LEGACY_TASK_TYPES.sms] =
-  INSTRUCTIONS_BY_TYPE[TASK_TYPES.texting]
+  INSTRUCTIONS_BY_TYPE[TASK_TYPES.text]
 // legacy type "telemarketing" uses the same instructions as "robocall"
 INSTRUCTIONS_BY_TYPE[LEGACY_TASK_TYPES.telemarketing] =
   INSTRUCTIONS_BY_TYPE[TASK_TYPES.robocall]
