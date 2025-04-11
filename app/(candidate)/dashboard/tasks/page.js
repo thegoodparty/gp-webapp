@@ -26,17 +26,12 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
-export default async function Page({ searchParams }) {
+export default async function Page() {
+  /* TODO: remove admin access once feature is released */
+  await adminAccessOnly()
+
   const campaign = await fetchCampaign()
   const tasks = await fetchTasks()
-
-  /* ------------------------------------------------------------ */
-  /* TODO: remove when feature is ready for release!!!!!!! */
-  await adminAccessOnly()
-  if (searchParams?.dt) {
-    campaign.details.electionDate = searchParams.dt
-  }
-  /* ------------------------------------------------------------ */
 
   return (
     <TasksPage pathname="/dashboard/tasks" campaign={campaign} tasks={tasks} />
