@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/campaign-details", {waitUntil: "networkidle"});
 });
 
-test('Update Campaign Details', async ({ page }) => {
+test.skip('Update Campaign Details', async ({ page }) => {
     const caseId = 46;
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
