@@ -57,6 +57,7 @@ export default function TaskItem({
       ) : (
         <Button
           href={isExternalLink ? link : undefined}
+          target="_blank"
           onClick={isExternalLink ? undefined : handleAction}
           size="medium"
           color={completed ? 'success' : 'secondary'}
