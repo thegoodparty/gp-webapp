@@ -1,13 +1,11 @@
 'use client'
 import { useState } from 'react'
-import { InfoOutlined } from '@mui/icons-material'
-import Tooltip from '@mui/material/Tooltip'
 import DashboardLayout from '../../shared/DashboardLayout'
 import TaskItem from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
-import { dateUsHelper, daysTill, weeksTill } from 'helpers/dateHelper'
+import { dateUsHelper } from 'helpers/dateHelper'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader'
@@ -23,6 +21,7 @@ import {
 } from '../../shared/ProUpgradeModal'
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../constants/tasks.const'
+import { differenceInDays } from 'date-fns'
 
 export default function TasksPage({
   pathname,
@@ -39,7 +38,7 @@ export default function TasksPage({
   const electionDate = campaign.details.electionDate
   const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
 
-  const daysUntilElection = daysTill(electionDate)
+  const daysUntilElection = differenceInDays(electionDate, new Date())
 
   // TODO: what if no election date?
   // TODO: what if no p2v?
@@ -105,25 +104,13 @@ export default function TasksPage({
     }
   }
 
-  const { weeks, days } = weeksTill(electionDate)
-
   return (
     <VoterContactsProvider>
       <CampaignUpdateHistoryProvider>
         <DashboardLayout pathname={pathname} campaign={campaign}>
           <DashboardHeader campaign={campaign} tasks={tasks} />
           <div className="mx-auto bg-white rounded-xl p-6 mt-8">
-            <H2>
-              Tasks for this week
-              <Tooltip
-                placement="right"
-                title={`${weeks} week${weeks === 1 ? '' : 's'} and ${days} day${
-                  days === 1 ? '' : 's'
-                } until election.`}
-              >
-                <InfoOutlined className="!text-base ml-1" />
-              </Tooltip>
-            </H2>
+            <H2>Tasks for this week</H2>
             <Body2 className="!font-outfit mt-1">
               Election day: {dateUsHelper(electionDate)}
             </Body2>

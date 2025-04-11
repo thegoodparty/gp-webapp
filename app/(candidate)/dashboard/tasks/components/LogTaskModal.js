@@ -13,7 +13,7 @@ import {
 import { TASK_TYPES } from '../constants/tasks.const'
 
 export const TASK_TYPE_HEADINGS = {
-  [TASK_TYPES.texting]: 'How many text messages did you schedule?',
+  [TASK_TYPES.text]: 'How many text messages did you schedule?',
   [TASK_TYPES.robocall]: 'How many robocalls did you schedule?',
   [TASK_TYPES.doorKnocking]: 'How many doors did you knock?',
   [TASK_TYPES.phoneBanking]: 'How many calls did you make?',
@@ -22,7 +22,7 @@ export const TASK_TYPE_HEADINGS = {
 }
 
 export const TASK_TYPE_LABELS = {
-  [TASK_TYPES.texting]: 'Text Messages Scheduled',
+  [TASK_TYPES.text]: 'Text Messages Scheduled',
   [TASK_TYPES.robocall]: 'Robocalls Scheduled',
   [TASK_TYPES.doorKnocking]: 'Doors Knocked',
   [TASK_TYPES.phoneBanking]: 'Calls Made',
