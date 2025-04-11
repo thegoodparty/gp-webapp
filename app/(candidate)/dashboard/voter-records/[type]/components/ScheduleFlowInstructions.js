@@ -8,6 +8,7 @@ import {
   CalendarMonthRounded,
   RocketLaunchRounded,
 } from '@mui/icons-material'
+import { TASK_TYPES } from 'app/(candidate)/dashboard/tasks/constants/tasks.const'
 
 const SMS_CONTENT = [
   {
@@ -33,7 +34,7 @@ export default function ScheduleFlowInstructions({
   closeCallback,
 }) {
   // Only has content for SMS campaigns right now
-  if (type !== 'sms') return null
+  if (type !== 'sms' && type !== TASK_TYPES.texting) return null
 
   return (
     <div className="p-4">
