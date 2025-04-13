@@ -2,9 +2,9 @@
 import UserSnapScript from '@shared/scripts/UserSnapScript'
 import DashboardMenu from './DashboardMenu'
 import AlertSection from '../components/AlertSection'
-import ProUpgradeModal from './ProUpgradeModal'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
 import { useUser } from '@shared/hooks/useUser'
+import { ProUpgradePrompt } from './ProUpgradePrompt'
 
 export default function DashboardLayout({
   children,
@@ -25,7 +25,7 @@ export default function DashboardLayout({
         </div>
         <main className={'lg:ml-4 flex-1 ' + wrapperClassName}>
           {campaign && showAlert && <AlertSection campaign={campaign} />}
-          <ProUpgradeModal campaign={campaign} user={user} />
+          <ProUpgradePrompt campaign={campaign} user={user} />
           {children}
         </main>
       </div>
