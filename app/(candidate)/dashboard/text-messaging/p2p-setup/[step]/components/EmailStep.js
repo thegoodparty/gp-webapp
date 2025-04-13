@@ -52,9 +52,9 @@ export default function EmailStep() {
           ,john@johnsmithforcouncil.org)
           <br />
           <br />
-          <strong>Why:</strong> Needed to validate ownership of the candidate's
-          website domain and receive the Campaign Verify PIN. Carriers require a
-          domain-matching email for authenticity.
+          <strong>Why:</strong> Needed to validate ownership of the
+          candidate&apos;s website domain and receive the Campaign Verify PIN.
+          Carriers require a domain-matching email for authenticity.
         </Body1>
         <div className="max-w-xl">
           <EmailInput
@@ -85,7 +85,7 @@ export default function EmailStep() {
             <Body1 className="mt-2">
               Creating an email address like john@johnsmithforcouncil.org for
               your site involves setting up a custom email address using your
-              domain name. Here's a step-by-step guide:
+              domain name. Here&apos;s a step-by-step guide:
             </Body1>
 
             <ol className="mt-2 list-decimal list-inside">
@@ -118,7 +118,7 @@ export default function EmailStep() {
                   </li>
                   <li>
                     Verify domain ownership: Your provider will give you a DNS
-                    record to add to your domain registrar's DNS settings
+                    record to add to your domain registrar&apos;s DNS settings
                     (usually a TXT record). Go to your domain registrar, find
                     the DNS settings, and add the provided record.
                   </li>
@@ -129,8 +129,8 @@ export default function EmailStep() {
                 <ul>
                   <li>
                     Your email hosting provider will provide the necessary MX
-                    records. Go to your domain registrar's DNS settings and add
-                    the MX records provided by your email host.
+                    records. Go to your domain registrar&apos;s DNS settings and
+                    add the MX records provided by your email host.
                   </li>
                 </ul>
               </li>
@@ -148,8 +148,8 @@ export default function EmailStep() {
                 <strong>Access Your Email</strong>
                 <ul>
                   <li>
-                    Use your provider's email client (e.g., Gmail, Outlook, Zoho
-                    Mail). Alternatively, configure it in third-party email
+                    Use your provider&apos;s email client (e.g., Gmail, Outlook,
+                    Zoho Mail). Alternatively, configure it in third-party email
                     clients like: Microsoft Outlook Apple Mail Thunderbird Use
                     the incoming and outgoing mail server settings provided by
                     your email host.

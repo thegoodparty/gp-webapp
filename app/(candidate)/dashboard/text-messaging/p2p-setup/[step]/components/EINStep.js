@@ -72,9 +72,9 @@ export default function EINStep() {
       <Paper className="mt-8">
         <div className="flex justify-between">
           <div>
-            <H3>I don't have an EIN</H3>
+            <H3>I don&apos;t have an EIN</H3>
             <Body1 className="mt-2">
-              If you don't have an EIN,{' '}
+              If you don&apos;t have an EIN,{' '}
               <a
                 href="https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number"
                 target="_blank"
