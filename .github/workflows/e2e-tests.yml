@@ -34,6 +34,12 @@ jobs:
           ec2-instance-type: t3.large
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
+          aws-resource-tags: >
+            [
+              {"Key": "Name", "Value": "github-runner"},
+              {"Key": "AutoDelete", "Value": "true"},
+              {"Key": "CreatedBy", "Value": "GithubAction"}
+            ]
           pre-runner-script: |
             #!/bin/bash
             # Disable system logging
@@ -179,8 +185,10 @@ jobs:
           }' $SLACK_WORKFLOW_WEBHOOK
 
   stop-runner:
-    name: Stop EC2 Runner
-    needs: [start-runner, run-e2e-tests]
+    name: Stop self-hosted EC2 runner
+    needs:
+      - start-runner
+      - run-e2e-tests
     runs-on: ubuntu-latest
     if: always()
     steps:
