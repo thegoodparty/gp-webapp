@@ -36,12 +36,14 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
             #!/bin/bash
-            # Create and mount a dedicated volume for Playwright
-            sudo dd if=/dev/zero of=/playwright.img bs=1M count=20480
-            sudo mkfs.ext4 /playwright.img
-            sudo mkdir -p /mnt/playwright
-            sudo mount -o loop /playwright.img /mnt/playwright
-            sudo chmod 777 /mnt/playwright
+            # Create RAM disk for runner diagnostics
+            sudo mkdir -p /mnt/runner_diag
+            sudo mount -t tmpfs -o size=8G tmpfs /mnt/runner_diag
+            
+            # Move and link diagnostic directory
+            sudo mv /actions-runner/_diag/* /mnt/runner_diag/ 2>/dev/null || true
+            sudo rm -rf /actions-runner/_diag
+            sudo ln -s /mnt/runner_diag /actions-runner/_diag
             
             # Install Docker
             sudo apt-get update
@@ -57,16 +59,12 @@ jobs:
             #!/bin/bash
             sudo docker run --rm \
               -v $(pwd):/work \
-              -v /mnt/playwright:/ms-playwright \
-              -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
               -w /work \
+              --log-driver none \
               mcr.microsoft.com/playwright:v1.42.1-jammy "$@"
             EOF
             
             sudo chmod +x /usr/local/bin/run-in-playwright
-            
-            # Make the script available to the runner
-            echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bashrc
 
       - name: Show disk usage before cleanup
         run: df -h
