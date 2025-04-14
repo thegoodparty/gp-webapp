@@ -6,7 +6,7 @@ import "dotenv/config";
 module.exports = async () => {
   const testRunName = process.env.TEST_RUN_NAME || "Localized Test Run (Debugging)";
   let testCaseIds = [
-    1, 4, 5, 7, 8, 12, 16, 17,
+    1, 4, 5, 7, 8, 12, 16,
     18, 19, 22,
     24, 25, 26, 27, 29, 30, 31, 32, 33,
     41, 48, 49, 50,

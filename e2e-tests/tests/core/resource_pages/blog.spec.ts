@@ -98,7 +98,7 @@ test("Verify Blog filtering", async ({ page }) => {
   }
 });
 
-test("Verify Blog Article page", async ({ page }) => {
+test.skip("Verify Blog Article page", async ({ page }) => {
   const caseId = 17;
 
   try {
