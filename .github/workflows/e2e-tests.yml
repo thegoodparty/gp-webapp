@@ -32,12 +32,6 @@ jobs:
           github-token: ${{ secrets.GH_PAT }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
           ec2-instance-type: t3.large
-          aws-resource-tags: >
-            [
-              {"Key": "Name", "Value": "github-runner"},
-              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
-            ]
-          runner-root-volume-size: 30
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
 
