@@ -36,11 +36,30 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
             #!/bin/bash
+            # Setup larger log directory
+            sudo mkdir -p /mnt/logs
+            sudo mount -t tmpfs -o size=10G tmpfs /mnt/logs
+            sudo mkdir -p /mnt/logs/runner
+            sudo ln -sf /mnt/logs/runner /actions-runner/_diag
+            
             # Install Docker
             sudo apt-get update
             sudo apt-get install -y docker.io
             sudo systemctl start docker
             sudo systemctl enable docker
+            
+            # Configure Docker storage driver and log options
+            sudo tee /etc/docker/daemon.json > /dev/null <<EOF
+            {
+              "storage-driver": "overlay2",
+              "log-driver": "json-file",
+              "log-opts": {
+                "max-size": "10m",
+                "max-file": "3"
+              }
+            }
+            EOF
+            sudo systemctl restart docker
             
             # Pull Playwright Docker image
             sudo docker pull mcr.microsoft.com/playwright:v1.42.1-jammy
@@ -48,7 +67,14 @@ jobs:
             # Create a script to run tests in Docker
             cat << 'EOF' > /usr/local/bin/run-in-playwright
             #!/bin/bash
-            sudo docker run --rm -v $(pwd):/work -w /work mcr.microsoft.com/playwright:v1.42.1-jammy "$@"
+            sudo docker run --rm \
+              -v $(pwd):/work \
+              -v /mnt/logs:/logs \
+              -w /work \
+              --log-driver json-file \
+              --log-opt max-size=10m \
+              --log-opt max-file=3 \
+              mcr.microsoft.com/playwright:v1.42.1-jammy "$@"
             EOF
             
             sudo chmod +x /usr/local/bin/run-in-playwright
