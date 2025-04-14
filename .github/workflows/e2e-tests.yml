@@ -34,34 +34,27 @@ jobs:
           ec2-instance-type: t3.large
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
-          aws-resource-tags: >
-            [{"Key": "Name", "Value": "github-runner"}]
           pre-runner-script: |
             #!/bin/bash
-            # Update package list
+            # Install Docker
             sudo apt-get update
+            sudo apt-get install -y docker.io
+            sudo systemctl start docker
+            sudo systemctl enable docker
             
-            # Install Playwright system dependencies
-            sudo apt-get install -y \
-              libatk1.0-0 \
-              libatk-bridge2.0-0 \
-              libcups2 \
-              libxcomposite1 \
-              libxdamage1 \
-              libxfixes3 \
-              libxrandr2 \
-              libgbm1 \
-              libpango-1.0-0 \
-              libcairo2 \
-              libasound2 \
-              libatspi2.0-0
+            # Pull Playwright Docker image
+            sudo docker pull mcr.microsoft.com/playwright:v1.42.1-jammy
             
-            # Install Node.js and npm if needed
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-            sudo apt-get install -y nodejs
+            # Create a script to run tests in Docker
+            cat << 'EOF' > /usr/local/bin/run-in-playwright
+            #!/bin/bash
+            sudo docker run --rm -v $(pwd):/work -w /work mcr.microsoft.com/playwright:v1.42.1-jammy "$@"
+            EOF
             
-            # Install Playwright globally
-            sudo npm install -g playwright
+            sudo chmod +x /usr/local/bin/run-in-playwright
+            
+            # Make the script available to the runner
+            echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bashrc
 
       - name: Show disk usage before cleanup
         run: df -h
