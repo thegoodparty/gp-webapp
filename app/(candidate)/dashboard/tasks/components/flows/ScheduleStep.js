@@ -1,15 +1,14 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import TextField from '@shared/inputs/TextField'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 import { useState, useMemo } from 'react'
-import { getDefaultVoterFileName } from '../../components/VoterFileTypes'
+import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
+import Button from '@shared/buttons/Button'
 
-export default function ScheduleFlowScheduleStep({
+export default function ScheduleStep({
   onChangeCallback,
   nextCallback,
   backCallback,
@@ -25,6 +24,7 @@ export default function ScheduleFlowScheduleStep({
       message: '',
     },
   )
+  const [isLoading, setIsLoading] = useState(false)
 
   const resolvedFileName = useMemo(
     () => (fileName ? fileName : getDefaultVoterFileName(type)),
@@ -49,6 +49,7 @@ export default function ScheduleFlowScheduleStep({
   const canSubmit = () => state.date != '' && state.message != ''
 
   const handleNext = async () => {
+    setIsLoading(true)
     const resp = await submitCallback()
 
     if (resp.ok === false || resp.errors) {
@@ -57,6 +58,7 @@ export default function ScheduleFlowScheduleStep({
     }
 
     successSnackbar('Request submitted successfully.')
+    setIsLoading(false)
     nextCallback()
   }
   const isTel = type === 'telemarketing'
@@ -114,16 +116,21 @@ export default function ScheduleFlowScheduleStep({
 
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-6">
-            <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
+            <Button size="large" color="neutral" onClick={backCallback}>
+              Back
+            </Button>
           </div>
           <div className="col-span-6 text-right mt-6">
-            <PrimaryButton
+            <Button
+              loading={isLoading}
+              size="large"
+              color="secondary"
               onClick={handleNext}
-              disabled={!canSubmit()}
+              disabled={!canSubmit() || isLoading}
               {...trackingAttrs}
             >
-              Submit
-            </PrimaryButton>
+              Schedule
+            </Button>
           </div>
         </div>
       </div>
