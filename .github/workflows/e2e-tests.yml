@@ -31,30 +31,26 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PAT }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: t3.xlarge
+          ec2-instance-type: m5d.large  # Instance type with NVMe SSD
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
+          aws-resource-tags: >
+            [
+              {"Key": "Name", "Value": "github-runner"},
+              {"Key": "Type", "Value": "Temporary"}
+            ]
           pre-runner-script: |
             #!/bin/bash
-            # Clean up GitHub runner workspace
-            sudo rm -rf /actions-runner/_work/_tool
-            sudo rm -rf /actions-runner/_work/_temp
-            sudo rm -rf /actions-runner/_diag
+            # Mount instance store volume
+            sudo mkfs -t xfs /dev/nvme1n1
+            sudo mkdir -p /mnt/runner
+            sudo mount /dev/nvme1n1 /mnt/runner
+            sudo mkdir -p /mnt/runner/actions-runner
+            sudo mv /actions-runner/* /mnt/runner/actions-runner/
+            sudo rm -rf /actions-runner
+            sudo ln -s /mnt/runner/actions-runner /actions-runner
             
-            # Clean system space
-            sudo apt-get clean
-            sudo rm -rf /var/lib/apt/lists/*
-            sudo rm -rf /usr/share/dotnet
-            sudo rm -rf /usr/local/lib/android
-            sudo rm -rf /opt/ghc
-            sudo rm -rf /opt/hostedtoolcache
-            
-            # Clear Docker (if installed)
-            if command -v docker &> /dev/null; then
-                docker system prune -af
-            fi
-            
-            # Update and install dependencies
+            # Install dependencies
             sudo apt-get update
             sudo apt-get install -y ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
 
