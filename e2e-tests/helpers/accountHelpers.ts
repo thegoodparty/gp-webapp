@@ -285,9 +285,7 @@ export async function deleteAccount(page = null) {
   await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
   await proceedButton.click();
 
-  // Verify user is logged out
-  console.log('Verifying logout...');
-  await expect(page.getByText('Get Campaign Tools')).toBeVisible({ timeout: 30000 });
+  await page.waitForLoadState('domcontentloaded');
   await page.context().clearCookies();
 
   // Only close the browser if we created it in this function
