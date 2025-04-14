@@ -7,7 +7,7 @@ import { getUserCookie } from 'helpers/cookieHelper'
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import Link from 'next/link'
 
-export default function ScheduleFlowComplete({ resetCallback }) {
+export default function FlowComplete({ resetCallback }) {
   const user = getUserCookie(true)
   return (
     <div className="p-4 w-[80vw] max-w-xl">

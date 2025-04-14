@@ -74,6 +74,19 @@ const COLORS = {
     800: '#161F31',
     900: '#0D1528',
   },
+  yellow: {
+    50: '#FFFADF',
+    100: '#FFF1C9',
+    200: '#FFEDBA',
+    300: '#FFE291',
+    400: '#FFE06C',
+    500: '#FFD759',
+    600: '#FFC523',
+    700: '#DBA219',
+    800: '#B78211',
+    900: '#93640B',
+    950: '#A4F06',
+  },
   lime: {
     50: '#FEFFF2',
     100: '#FCFEE0',
@@ -158,11 +171,11 @@ module.exports = {
           contrast: COLORS.white,
         },
         secondary: {
-          DEFAULT: COLORS.lime[500],
-          dark: COLORS.lime[700],
-          main: COLORS.lime[500],
-          light: COLORS.lime[300],
-          background: COLORS.lime[50],
+          DEFAULT: COLORS.yellow[600],
+          dark: COLORS.yellow[700],
+          main: COLORS.yellow[600],
+          light: COLORS.yellow[300],
+          background: COLORS.yellow[50],
           contrast: COLORS.black,
         },
         tertiary: {
@@ -256,6 +269,10 @@ module.exports = {
         cream: {
           ...COLORS.cream,
           DEFAULT: COLORS.cream[500],
+        },
+        yellow: {
+          ...COLORS.yellow,
+          DEFAULT: COLORS.yellow[600],
         },
       },
     },

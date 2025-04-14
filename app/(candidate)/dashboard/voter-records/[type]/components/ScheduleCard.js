@@ -2,7 +2,7 @@ import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import Overline from '@shared/typography/Overline'
 import Paper from '@shared/utils/Paper'
-import ScheduleFlow from './ScheduleFlow'
+import ScheduleFlow from 'app/(candidate)/dashboard/tasks/components/flows/TaskFlow'
 
 export default function ScheduleCard(props) {
   const { type } = props
