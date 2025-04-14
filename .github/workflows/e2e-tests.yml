@@ -36,18 +36,27 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
             #!/bin/bash
-            # Clean up space first
+            # Clean up GitHub runner workspace
+            sudo rm -rf /actions-runner/_work/_tool
+            sudo rm -rf /actions-runner/_work/_temp
+            sudo rm -rf /actions-runner/_diag
+            
+            # Clean system space
             sudo apt-get clean
             sudo rm -rf /var/lib/apt/lists/*
             sudo rm -rf /usr/share/dotnet
             sudo rm -rf /usr/local/lib/android
             sudo rm -rf /opt/ghc
+            sudo rm -rf /opt/hostedtoolcache
+            
+            # Clear Docker (if installed)
+            if command -v docker &> /dev/null; then
+                docker system prune -af
+            fi
+            
             # Update and install dependencies
             sudo apt-get update
             sudo apt-get install -y ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
-            # Install Node.js if needed
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-            sudo apt-get install -y nodejs
 
   run-e2e-tests:
     needs: start-runner
