@@ -31,13 +31,7 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PAT }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: t3.large
-          runner-root-volume-size: 100
-          aws-resource-tags: >
-            [
-              {"Key": "Name", "Value": "github-runner"},
-              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
-            ]
+          ec2-instance-type: t3.xlarge
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
