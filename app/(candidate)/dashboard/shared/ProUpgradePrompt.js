@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 import { VARIANTS, ProUpgradeModal } from './ProUpgradeModal'
+import { VIABILITY_SCORE_THRESHOLD } from './ProUpgradeModal'
 
 const LOCAL_STORAGE_KEY = 'proUpgradeModalDismissedSession'
 const SESSION_TRIGGERS = {
