@@ -29,7 +29,7 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: start
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
           ec2-instance-type: t3.large
           subnet-id: ${{ secrets.SUBNET_ID }}
@@ -42,6 +42,23 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
+            # Test network connectivity
+            echo "Testing GitHub connectivity..."
+            curl -v https://api.github.com/
+            
+            echo "Testing runner registration..."
+            # Increase registration timeout
+            export RUNNER_REGISTRATION_TIMEOUT=600
+            
+            # Enable runner script debugging
+            export RUNNER_DEBUG=1
+            export ACTIONS_RUNNER_DEBUG=true
+            
+            # Test DNS resolution
+            echo "Testing DNS resolution..."
+            nslookup github.com
+            nslookup api.github.com
+            
             # Disable system logging
             sudo systemctl stop rsyslog
             sudo systemctl disable rsyslog
@@ -203,6 +220,6 @@ jobs:
         uses: machulav/ec2-github-runner@v2
         with:
           mode: stop
-          github-token: ${{ secrets.GH_PAT }}
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           label: ${{ needs.start-runner.outputs.label }}
           ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
