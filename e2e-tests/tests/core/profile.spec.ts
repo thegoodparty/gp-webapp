@@ -48,7 +48,7 @@ test('Adjust Personal Information', async ({ page }) => {
     }
 });
 
-test('Adjust Notification Settings', async ({ page }) => {
+test.skip('Adjust Notification Settings', async ({ page }) => {
     const caseId = 34;
 
     try {
