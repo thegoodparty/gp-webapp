@@ -36,30 +36,18 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
             #!/bin/bash
-            # Setup larger log directory
-            sudo mkdir -p /mnt/logs
-            sudo mount -t tmpfs -o size=10G tmpfs /mnt/logs
-            sudo mkdir -p /mnt/logs/runner
-            sudo ln -sf /mnt/logs/runner /actions-runner/_diag
+            # Create and mount a dedicated volume for Playwright
+            sudo dd if=/dev/zero of=/playwright.img bs=1M count=20480
+            sudo mkfs.ext4 /playwright.img
+            sudo mkdir -p /mnt/playwright
+            sudo mount -o loop /playwright.img /mnt/playwright
+            sudo chmod 777 /mnt/playwright
             
             # Install Docker
             sudo apt-get update
             sudo apt-get install -y docker.io
             sudo systemctl start docker
             sudo systemctl enable docker
-            
-            # Configure Docker storage driver and log options
-            sudo tee /etc/docker/daemon.json > /dev/null <<EOF
-            {
-              "storage-driver": "overlay2",
-              "log-driver": "json-file",
-              "log-opts": {
-                "max-size": "10m",
-                "max-file": "3"
-              }
-            }
-            EOF
-            sudo systemctl restart docker
             
             # Pull Playwright Docker image
             sudo docker pull mcr.microsoft.com/playwright:v1.42.1-jammy
@@ -69,11 +57,9 @@ jobs:
             #!/bin/bash
             sudo docker run --rm \
               -v $(pwd):/work \
-              -v /mnt/logs:/logs \
+              -v /mnt/playwright:/ms-playwright \
+              -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
               -w /work \
-              --log-driver json-file \
-              --log-opt max-size=10m \
-              --log-opt max-file=3 \
               mcr.microsoft.com/playwright:v1.42.1-jammy "$@"
             EOF
             
