@@ -42,7 +42,39 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
-            # Test network connectivity
+            # Test network connectivity with verbose output
+            echo "Testing GitHub connectivity..."
+            curl -v https://api.github.com/ 2>&1
+            echo "Curl exit code: $?"
+            
+            echo "Testing runner registration..."
+            # Increase registration timeout
+            export RUNNER_REGISTRATION_TIMEOUT=600
+            
+            # Enable runner script debugging
+            export RUNNER_DEBUG=1
+            export ACTIONS_RUNNER_DEBUG=true
+            
+            # Test DNS resolution
+            echo "Testing DNS resolution..."
+            dig github.com
+            dig api.github.com
+            
+            # Check if we can reach GitHub's runner registration endpoint
+            echo "Testing runner registration endpoint..."
+            curl -v -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runners/registration-token 2>&1
+            
+            # Print network information
+            echo "Network configuration:"
+            ip addr
+            ip route
+            cat /etc/resolv.conf
+            
+            # Test outbound connectivity
+            echo "Testing outbound connectivity..."
+            nc -zv github.com 443 2>&1
+            nc -zv api.github.com 443 2>&1
+            
             echo "Testing GitHub connectivity..."
             curl -v https://api.github.com/
             
