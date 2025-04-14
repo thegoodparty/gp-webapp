@@ -8,7 +8,7 @@ export default async function Hero() {
   return (
     <div className="bg-[linear-gradient(129deg,rgba(26,255,255,0.3)_-76.28%,rgba(252,248,243,0.15)_88.96%)]">
       <MaxWidth>
-        <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-20 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0 ">
+        <div className="grid grid-cols-12 gap-4 lg:gap-8 md:justify-items-center pt-10 lg:pt-20 items-stretch sm:p-8 md:px-10 lg:p-16 xl:px-0 ">
           <div className="col-span-12 lg:col-span-6">
             <h1 className="text-4xl leading-tight font-semibold  md:text-5xl  xl:text-6xl">
               We{' '}
