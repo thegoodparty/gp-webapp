@@ -36,55 +36,31 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
             #!/bin/bash
-            # Clean up logs
-            sudo find /var/log -type f -delete
-            sudo rm -rf /var/log/journal/*
-            sudo systemctl restart systemd-journald
+            # Disable system logging
+            sudo systemctl stop rsyslog
+            sudo systemctl disable rsyslog
+            sudo systemctl stop systemd-journald
+            sudo systemctl disable systemd-journald
             
-            # Set up log rotation for GitHub runner
-            sudo tee /etc/logrotate.d/github-runner > /dev/null << 'EOF'
-            /actions-runner/_diag/*.log {
-              size 10M
-              rotate 3
-              missingok
-              notifempty
-              compress
-              delaycompress
-              copytruncate
-            }
-            EOF
+            # Clear existing logs
+            sudo rm -rf /var/log/*
+            sudo rm -rf /actions-runner/_diag/*
             
-            # Install Docker
-            sudo apt-get update
-            sudo apt-get install -y docker.io
-            sudo systemctl start docker
+            # Install Docker with minimal logging
+            sudo apt-get update -qq > /dev/null 2>&1
+            sudo apt-get install -y -qq docker.io > /dev/null 2>&1
             
             # Configure Docker logging
             sudo tee /etc/docker/daemon.json > /dev/null << 'EOF'
             {
-              "log-driver": "json-file",
-              "log-opts": {
-                "max-size": "10m",
-                "max-file": "3"
-              }
+              "log-driver": "none"
             }
             EOF
-            sudo systemctl restart docker
             
-            # Pull Playwright Docker image
-            sudo docker pull mcr.microsoft.com/playwright:v1.42.1-jammy
+            sudo systemctl start docker > /dev/null 2>&1
             
-            # Create a script to run tests in Docker
-            cat << 'EOF' > /usr/local/bin/run-in-playwright
-            #!/bin/bash
-            sudo docker run --rm \
-              -v $(pwd):/work \
-              -w /work \
-              --log-driver none \
-              mcr.microsoft.com/playwright:v1.42.1-jammy "$@"
-            EOF
-            
-            sudo chmod +x /usr/local/bin/run-in-playwright
+            # Pull Playwright Docker image silently
+            sudo docker pull -q mcr.microsoft.com/playwright:v1.42.1-jammy > /dev/null 2>&1
 
       - name: Show disk usage before cleanup
         run: df -h
