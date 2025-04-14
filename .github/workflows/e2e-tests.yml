@@ -36,20 +36,40 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           pre-runner-script: |
             #!/bin/bash
-            # Create RAM disk for runner diagnostics
-            sudo mkdir -p /mnt/runner_diag
-            sudo mount -t tmpfs -o size=8G tmpfs /mnt/runner_diag
+            # Clean up logs
+            sudo find /var/log -type f -delete
+            sudo rm -rf /var/log/journal/*
+            sudo systemctl restart systemd-journald
             
-            # Move and link diagnostic directory
-            sudo mv /actions-runner/_diag/* /mnt/runner_diag/ 2>/dev/null || true
-            sudo rm -rf /actions-runner/_diag
-            sudo ln -s /mnt/runner_diag /actions-runner/_diag
+            # Set up log rotation for GitHub runner
+            sudo tee /etc/logrotate.d/github-runner > /dev/null << 'EOF'
+            /actions-runner/_diag/*.log {
+              size 10M
+              rotate 3
+              missingok
+              notifempty
+              compress
+              delaycompress
+              copytruncate
+            }
+            EOF
             
             # Install Docker
             sudo apt-get update
             sudo apt-get install -y docker.io
             sudo systemctl start docker
-            sudo systemctl enable docker
+            
+            # Configure Docker logging
+            sudo tee /etc/docker/daemon.json > /dev/null << 'EOF'
+            {
+              "log-driver": "json-file",
+              "log-opts": {
+                "max-size": "10m",
+                "max-file": "3"
+              }
+            }
+            EOF
+            sudo systemctl restart docker
             
             # Pull Playwright Docker image
             sudo docker pull mcr.microsoft.com/playwright:v1.42.1-jammy
