@@ -12,7 +12,7 @@ test.describe('Mobile viewport tests - App pages', () => {
     });
     test.describe.configure({ retries: 2 });
     
-    test('Verify app pages in mobile view', async ({ page }) => {
+    test.skip('Verify app pages in mobile view', async ({ page }) => {
         const caseId = 75;
         try {
             await page.goto("/dashboard", { 

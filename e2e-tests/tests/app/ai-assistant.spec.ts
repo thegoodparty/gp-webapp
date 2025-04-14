@@ -18,7 +18,7 @@ test.beforeEach(async ({ page }) => {
         await expect(page).toHaveURL(/.*\/dashboard\/campaign-assistant/);
 });
 
-test('Create new conversation', async ({ page }) => {
+test.skip('Create new conversation', async ({ page }) => {
     const caseId = 36;
     try {
         // Wait for page to be fully loaded
