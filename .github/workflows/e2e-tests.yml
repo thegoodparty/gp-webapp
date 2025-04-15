@@ -31,14 +31,53 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: t3.xlarge
+          ec2-instance-type: c6gd.large
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
-          root-volume-size: 80
           aws-resource-tags: >
             [
               {"Key": "Name", "Value": "github-runner"}
             ]
+          user-data: |
+            #!/bin/bash
+            # Update system
+            apt-get update
+            apt-get upgrade -y
+
+            # Install essential build tools and dependencies
+            apt-get install -y \
+                docker.io \
+                git \
+                curl \
+                wget \
+                jq \
+                unzip \
+                build-essential \
+                software-properties-common
+
+            # Install Node.js 16
+            curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+            apt-get install -y nodejs
+
+            # Install Playwright dependencies
+            apt-get install -y \
+                libnss3 \
+                libnspr4 \
+                libatk1.0-0 \
+                libatk-bridge2.0-0 \
+                libcups2 \
+                libdrm2 \
+                libxkbcommon0 \
+                libxcomposite1 \
+                libxdamage1 \
+                libxfixes3 \
+                libxrandr2 \
+                libgbm1 \
+                libasound2
+
+            # Clean up
+            apt-get clean
+            apt-get autoremove -y
 
       - name: Clean up and prepare workspace
         run: |
@@ -71,6 +110,26 @@ jobs:
           sudo growpart /dev/root 1 || true
           sudo resize2fs /dev/root || true
           df -h
+
+      - name: Setup NVMe storage
+        run: |
+          # List available NVMe devices
+          lsblk
+          
+          # Create mount point
+          sudo mkdir -p /mnt/nvme
+          
+          # Format and mount the NVMe drive (adjust device name as needed)
+          sudo mkfs -t xfs /dev/nvme1n1 || true
+          sudo mount /dev/nvme1n1 /mnt/nvme || true
+          
+          # Set permissions
+          sudo chown -R $USER:$USER /mnt/nvme
+          
+          # Move working directory to NVMe storage
+          mkdir -p /mnt/nvme/workspace
+          echo "RUNNER_TEMP=/mnt/nvme/workspace" >> $GITHUB_ENV
+          echo "RUNNER_WORKSPACE=/mnt/nvme/workspace" >> $GITHUB_ENV
 
   run-e2e-tests:
     needs: start-runner
