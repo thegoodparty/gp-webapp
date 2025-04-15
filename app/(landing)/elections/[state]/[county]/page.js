@@ -67,11 +67,11 @@ export default async function Page({ params }) {
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const articles = []
-  for (const slug of articleSlugs) {
-    const content = await fetchArticle(slug)
-    articles.push(content)
-  }
+
+  const articles = await Promise.all(
+    articleSlugs.map((slug) => fetchArticle(slug)),
+  )
+
   if (state.length > 2) {
     // state is the slug, county is the id
     const { race } = await fetchPosition(params.county) // this is the id

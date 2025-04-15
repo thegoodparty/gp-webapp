@@ -4,7 +4,6 @@ import Breadcrumbs from '@shared/utils/Breadcrumbs'
 import { shortToLongState } from 'helpers/statesHelper'
 import Image from 'next/image'
 import Subtitle2 from '@shared/typography/Subtitle2'
-import { slugify } from 'helpers/articleHelper'
 
 export default function Hero({
   state,
@@ -13,6 +12,7 @@ export default function Hero({
   color2,
   level,
   municipality,
+  parent,
 }) {
   const stateName = shortToLongState[state.toUpperCase()]
   const breadcrumbsLinks = [
@@ -31,8 +31,8 @@ export default function Hero({
   if (level === 'city') {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: `${municipality.countyName} county`,
-      href: `/elections/${state}/${slugify(municipality.countyName, true)}`,
+      label: `${parent.name} county`,
+      href: `/elections/${parent.slug}`,
     })
     breadcrumbsLinks.push({
       label: municipality.name,

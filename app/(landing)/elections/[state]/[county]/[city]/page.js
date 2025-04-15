@@ -15,6 +15,7 @@ export const fetchCity = async (state, county, city) => {
     slug: `${state}/${county}/${city}`,
     includeChildren: true,
     includeRaces: true,
+    includeParent: true,
   }
 
   const res = await gpFetch(api, payload, 3600)
@@ -50,7 +51,7 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const { children, Races: races } = place
+  const { Races: races, parent } = place
   place.children = null
   place.races = null
 
@@ -59,11 +60,9 @@ export default async function Page({ params }) {
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const articles = []
-  for (const slug of articleSlugs) {
-    const content = await fetchArticle(slug)
-    articles.push(content)
-  }
+  const articles = await Promise.all(
+    articleSlugs.map((slug) => fetchArticle(slug)),
+  )
 
   const childProps = {
     state,
@@ -71,6 +70,7 @@ export default async function Page({ params }) {
     races,
     county,
     articles,
+    parent,
   }
 
   return <ElectionsCityPage {...childProps} />
