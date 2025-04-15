@@ -36,23 +36,19 @@ jobs:
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           aws-resource-tags: >
             [
-              {"Key": "Name", "Value": "github-runner"},
-              {"Key": "AutoDelete", "Value": "true"},
-              {"Key": "CreatedBy", "Value": "GithubAction"}
+              {"Key": "Name", "Value": "github-runner"}
             ]
-          pre-runner-script: |
-            #!/bin/bash
-            # Remove existing diagnostic directory
-            sudo rm -rf /actions-runner/_diag
-            
-            # Create diagnostic directory as a symlink to /dev/null
-            sudo ln -sf /dev/null /actions-runner/_diag
-            
-            # In case symlink doesn't work, make it a mount point
-            if [ ! -L /actions-runner/_diag ]; then
-              sudo mkdir -p /actions-runner/_diag
-              sudo mount -t tmpfs -o size=1M,mode=777 tmpfs /actions-runner/_diag
-            fi
+          block-device-mappings: >
+            [
+              {
+                "DeviceName": "/dev/xvda",
+                "Ebs": {
+                  "VolumeSize": 30,
+                  "VolumeType": "gp3",
+                  "DeleteOnTermination": true
+                }
+              }
+            ]
 
       - name: Show disk usage before cleanup
         run: df -h
