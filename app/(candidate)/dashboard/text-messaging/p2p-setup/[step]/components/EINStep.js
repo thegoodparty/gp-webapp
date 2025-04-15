@@ -12,17 +12,26 @@ import { useRouter } from 'next/navigation'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
 import { BiLinkExternal } from 'react-icons/bi'
 import Body2 from '@shared/typography/Body2'
+import TextField from '@shared/inputs/TextField'
+import { useUser } from '@shared/hooks/useUser'
 
 export default function EINStep() {
   const [campaign] = useCampaign()
+  const [user] = useUser()
   const [einNumber, setEinNumber] = useState(campaign?.details?.einNumber)
+  const [einName, setEinName] = useState(campaign?.details?.einName)
+  const [einAddress, setEinAddress] = useState(campaign?.details?.einAddress)
   const [validatedEin, setValidatedEin] = useState(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     setEinNumber(campaign?.details?.einNumber)
-  }, [campaign])
+    setEinName(
+      campaign?.details?.einName || `${user?.firstName} ${user?.lastName}`,
+    )
+    setEinAddress(campaign?.details?.einAddress)
+  }, [campaign, user])
 
   const handleEinChange = (value) => {
     setEinNumber(value)
@@ -36,11 +45,20 @@ export default function EINStep() {
         key: 'details.einNumber',
         value: einNumber,
       },
+      {
+        key: 'details.einName',
+        value: einName,
+      },
+      {
+        key: 'details.einAddress',
+        value: einAddress,
+      },
     ])
     router.push('/dashboard/text-messaging/p2p-setup/website')
   }
 
-  const canSubmit = !loading && einNumber && einNumber.length === 10
+  const canSubmit =
+    !loading && einNumber && einNumber.length === 10 && einName && einAddress
 
   return (
     <>
@@ -60,6 +78,26 @@ export default function EINStep() {
             validated={validatedEin}
             setValidated={setValidatedEin}
           />
+          <div className="mt-4">
+            <TextField
+              label="Name (Should be the same as the EIN name)"
+              value={einName}
+              onChange={(e) => setEinName(e.target.value)}
+              fullWidth
+              required
+              name="Name"
+            />
+          </div>
+          <div className="mt-6">
+            <TextField
+              label="Address (Should be the same as the EIN address)"
+              value={einAddress}
+              onChange={(e) => setEinAddress(e.target.value)}
+              fullWidth
+              required
+              name="Address"
+            />
+          </div>
           <StyledAlert severity="info" className="flex items-center my-4">
             <div className="flex items-center justify-between pr-4">
               <Body2>Don&apos;t have an EIN? Apply for one today.</Body2>
