@@ -31,7 +31,7 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: t3.large
+          ec2-instance-type: t3.xlarge
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           aws-resource-tags: >
@@ -39,36 +39,33 @@ jobs:
               {"Key": "Name", "Value": "github-runner"}
             ]
 
-      - name: Show disk usage before cleanup
-        run: df -h
-          
       - name: Clean up and remove unused packages
         run: |
-          # Free up disk space
-          sudo rm -rf /usr/share/dotnet
+          # Show initial disk space
+          df -h
+          
+          # Stop and remove all docker containers/images first
+          sudo docker system prune -af || true
+          
+          # Remove large packages and caches
+          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mono-.*' '^php.*' || true
+          sudo apt-get remove -y '^google-cloud-sdk.*' '^azure-cli.*' || true
+          
+          # Clear all caches
+          sudo rm -rf /var/cache/*
+          sudo rm -rf /root/.cache/*
+          sudo rm -rf /home/runner/.cache/*
+          
+          # Remove development tools and SDKs
           sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache
-          sudo rm -rf ~/.npm
-          sudo rm -rf /usr/local/share/powershell
-          sudo rm -rf /usr/local/share/chromium
-          sudo rm -rf /usr/local/share/firefox
-          sudo rm -rf /usr/local/.pytest_cache
-          sudo rm -rf /var/lib/docker/overlay2
-          sudo docker system prune -af
           
-          # Clear apt cache
+          # Clean apt
           sudo apt-get clean
           sudo apt-get autoremove -y
           sudo rm -rf /var/lib/apt/lists/*
-          
-          # Remove swap
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          
-          # Expand available disk space by removing large unnecessary files
-          sudo find /var/log -type f -delete
-          sudo find /tmp -type f -delete
           
           # Show disk space after cleanup
           df -h
