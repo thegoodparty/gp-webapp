@@ -121,7 +121,7 @@ export const SelectSmsAiTemplateScreen = ({
             <section className="text-center">
               <div className="mb-4">
                 <Body1>
-                  Recommended script:{' '}
+                  Recommended Template:{' '}
                   <span className="font-bold">{defaultTemplate.name}</span>
                 </Body1>
               </div>
@@ -130,7 +130,7 @@ export const SelectSmsAiTemplateScreen = ({
                   color="neutral"
                   onClick={() => setShowManualSelect(true)}
                 >
-                  Select Different Script
+                  Select Different Template
                 </Button>
               </div>
             </section>
