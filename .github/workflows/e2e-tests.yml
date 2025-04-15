@@ -31,9 +31,10 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: t3.2xlarge  # Increased instance size
+          ec2-instance-type: t3.xlarge
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
+          root-volume-size: 80
           aws-resource-tags: >
             [
               {"Key": "Name", "Value": "github-runner"}
@@ -45,7 +46,6 @@ jobs:
           df -h
           
           # Aggressive cleanup
-          sudo docker system prune -af
           sudo apt-get clean
           sudo apt-get autoremove -y
           sudo rm -rf /var/lib/apt/lists/*
