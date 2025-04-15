@@ -42,6 +42,17 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
+            # Disable runner diagnostics completely
+            echo "DISABLE_RUNNER_DIAGNOSTIC_LOGGING=true" >> /actions-runner/.env
+            echo "RUNNER_DIAGNOSTICS_TRACE=0" >> /actions-runner/.env
+            echo "RUNNER_DIAGNOSTICS=0" >> /actions-runner/.env
+            
+            # Remove diagnostic directory completely
+            sudo rm -rf /actions-runner/_diag
+            
+            # Prevent recreation of diagnostic directory
+            sudo touch /actions-runner/_diag
+            sudo chmod 444 /actions-runner/_diag
             
             # Create RAM disk for all volatile directories
             sudo mkdir -p /mnt/ramdisk
