@@ -43,54 +43,9 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
-            # Modify runner configuration to disable diagnostics
-            sudo sed -i 's/"RUNNER_DIAGNOSTIC":.*/"RUNNER_DIAGNOSTIC":false,/' /actions-runner/.runner
-            
-            # Create empty diagnostic directory that can't be written to
-            sudo rm -rf /actions-runner/_diag
-            sudo mkdir -p /actions-runner/_diag
-            sudo chattr +i /actions-runner/_diag  # Make directory immutable
-            
-            # Show current disk space
-            df -h /
-            
-            # Create RAM disk for all volatile directories
-            sudo mkdir -p /mnt/ramdisk
-            sudo mount -t tmpfs -o size=4G tmpfs /mnt/ramdisk
-            
-            # Move and redirect volatile directories
-            sudo mkdir -p /mnt/ramdisk/tmp
-            sudo mkdir -p /mnt/ramdisk/var_log
-            sudo mkdir -p /mnt/ramdisk/runner_diag
-            
-            # Backup and redirect /tmp
-            sudo mv /tmp/* /mnt/ramdisk/tmp/ 2>/dev/null || true
-            sudo rm -rf /tmp
-            sudo ln -s /mnt/ramdisk/tmp /tmp
-            
-            # Backup and redirect /var/log
-            sudo mv /var/log/* /mnt/ramdisk/var_log/ 2>/dev/null || true
-            sudo rm -rf /var/log
-            sudo ln -s /mnt/ramdisk/var_log /var/log
-            
-            # Redirect runner diagnostics
-            sudo mkdir -p /actions-runner/_diag
-            sudo rm -rf /actions-runner/_diag/*
-            sudo ln -sf /mnt/ramdisk/runner_diag /actions-runner/_diag
-            
-            # Disable system logging
-            sudo systemctl stop rsyslog || true
-            sudo systemctl stop systemd-journald || true
-            
-            # Clear Docker space
+            # Simple disk cleanup only
+            sudo rm -rf /tmp/*
             sudo docker system prune -af
-            
-            # Show disk space
-            df -h
-            
-            # Install required packages silently
-            sudo apt-get update -qq > /dev/null 2>&1
-            sudo apt-get install -y -qq curl wget > /dev/null 2>&1
 
       - name: Show disk usage before cleanup
         run: df -h
