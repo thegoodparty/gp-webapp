@@ -42,29 +42,30 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
-            # Test network connectivity with verbose output
+            set -x  # Enable debug mode
+            
+            # Check AWS connectivity and permissions
+            echo "Testing AWS connectivity..."
+            aws sts get-caller-identity
+            aws ec2 describe-instances --instance-ids $(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+            
+            # Check GitHub connectivity
             echo "Testing GitHub connectivity..."
-            curl -v https://api.github.com/ 2>&1
-            echo "Curl exit code: $?"
+            TOKEN="${GITHUB_TOKEN}"
+            REPO="${GITHUB_REPOSITORY}"
             
-            echo "Testing runner registration..."
-            # Increase registration timeout
-            export RUNNER_REGISTRATION_TIMEOUT=600
+            # Test GitHub API access with token
+            echo "Testing GitHub API access..."
+            curl -v -H "Authorization: token ${TOKEN}" \
+                 -H "Accept: application/vnd.github.v3+json" \
+                 https://api.github.com/repos/${REPO}
             
-            # Enable runner script debugging
-            export RUNNER_DEBUG=1
-            export ACTIONS_RUNNER_DEBUG=true
+            # Print instance metadata
+            echo "Instance metadata:"
+            curl -v http://169.254.169.254/latest/meta-data/local-ipv4
+            curl -v http://169.254.169.254/latest/meta-data/public-ipv4 || echo "No public IP"
             
-            # Test DNS resolution
-            echo "Testing DNS resolution..."
-            dig github.com
-            dig api.github.com
-            
-            # Check if we can reach GitHub's runner registration endpoint
-            echo "Testing runner registration endpoint..."
-            curl -v -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runners/registration-token 2>&1
-            
-            # Print network information
+            # Print network config
             echo "Network configuration:"
             ip addr
             ip route
@@ -72,50 +73,12 @@ jobs:
             
             # Test outbound connectivity
             echo "Testing outbound connectivity..."
-            nc -zv github.com 443 2>&1
-            nc -zv api.github.com 443 2>&1
+            nc -zv github.com 443
+            nc -zv api.github.com 443
             
-            echo "Testing GitHub connectivity..."
-            curl -v https://api.github.com/
-            
-            echo "Testing runner registration..."
-            # Increase registration timeout
-            export RUNNER_REGISTRATION_TIMEOUT=600
-            
-            # Enable runner script debugging
-            export RUNNER_DEBUG=1
-            export ACTIONS_RUNNER_DEBUG=true
-            
-            # Test DNS resolution
-            echo "Testing DNS resolution..."
-            nslookup github.com
-            nslookup api.github.com
-            
-            # Disable system logging
-            sudo systemctl stop rsyslog
-            sudo systemctl disable rsyslog
-            sudo systemctl stop systemd-journald
-            sudo systemctl disable systemd-journald
-            
-            # Clear existing logs
-            sudo rm -rf /var/log/*
-            sudo rm -rf /actions-runner/_diag/*
-            
-            # Install Docker with minimal logging
-            sudo apt-get update -qq > /dev/null 2>&1
-            sudo apt-get install -y -qq docker.io > /dev/null 2>&1
-            
-            # Configure Docker logging
-            sudo tee /etc/docker/daemon.json > /dev/null << 'EOF'
-            {
-              "log-driver": "none"
-            }
-            EOF
-            
-            sudo systemctl start docker > /dev/null 2>&1
-            
-            # Pull Playwright Docker image silently
-            sudo docker pull -q mcr.microsoft.com/playwright:v1.42.1-jammy > /dev/null 2>&1
+            # Print environment variables (excluding sensitive data)
+            echo "Environment variables:"
+            env | grep -v -i "key\|token\|secret"
 
       - name: Show disk usage before cleanup
         run: df -h
