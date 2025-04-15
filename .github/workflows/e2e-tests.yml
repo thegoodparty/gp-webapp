@@ -42,13 +42,17 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
-            # Set up a background process to keep the Worker log file small
-            (while true; do
-              if [ -f /actions-runner/_diag/Worker_*.log ]; then
-                truncate -s 1M /actions-runner/_diag/Worker_*.log
-              fi
-              sleep 1
-            done) &
+            # Remove existing diagnostic directory
+            sudo rm -rf /actions-runner/_diag
+            
+            # Create diagnostic directory as a symlink to /dev/null
+            sudo ln -sf /dev/null /actions-runner/_diag
+            
+            # In case symlink doesn't work, make it a mount point
+            if [ ! -L /actions-runner/_diag ]; then
+              sudo mkdir -p /actions-runner/_diag
+              sudo mount -t tmpfs -o size=1M,mode=777 tmpfs /actions-runner/_diag
+            fi
 
       - name: Show disk usage before cleanup
         run: df -h
