@@ -145,7 +145,7 @@ jobs:
         run: |
           cd test-automation
           npm install
-          npx playwright install
+          npx playwright install --with-deps
 
       - name: Run Playwright Tests
         run: |
