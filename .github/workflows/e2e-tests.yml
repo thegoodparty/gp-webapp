@@ -42,43 +42,44 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
-            set -x  # Enable debug mode
             
-            # Check AWS connectivity and permissions
-            echo "Testing AWS connectivity..."
-            aws sts get-caller-identity
-            aws ec2 describe-instances --instance-ids $(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+            # Create RAM disk for all volatile directories
+            sudo mkdir -p /mnt/ramdisk
+            sudo mount -t tmpfs -o size=4G tmpfs /mnt/ramdisk
             
-            # Check GitHub connectivity
-            echo "Testing GitHub connectivity..."
-            TOKEN="${GITHUB_TOKEN}"
-            REPO="${GITHUB_REPOSITORY}"
+            # Move and redirect volatile directories
+            sudo mkdir -p /mnt/ramdisk/tmp
+            sudo mkdir -p /mnt/ramdisk/var_log
+            sudo mkdir -p /mnt/ramdisk/runner_diag
             
-            # Test GitHub API access with token
-            echo "Testing GitHub API access..."
-            curl -v -H "Authorization: token ${TOKEN}" \
-                 -H "Accept: application/vnd.github.v3+json" \
-                 https://api.github.com/repos/${REPO}
+            # Backup and redirect /tmp
+            sudo mv /tmp/* /mnt/ramdisk/tmp/ 2>/dev/null || true
+            sudo rm -rf /tmp
+            sudo ln -s /mnt/ramdisk/tmp /tmp
             
-            # Print instance metadata
-            echo "Instance metadata:"
-            curl -v http://169.254.169.254/latest/meta-data/local-ipv4
-            curl -v http://169.254.169.254/latest/meta-data/public-ipv4 || echo "No public IP"
+            # Backup and redirect /var/log
+            sudo mv /var/log/* /mnt/ramdisk/var_log/ 2>/dev/null || true
+            sudo rm -rf /var/log
+            sudo ln -s /mnt/ramdisk/var_log /var/log
             
-            # Print network config
-            echo "Network configuration:"
-            ip addr
-            ip route
-            cat /etc/resolv.conf
+            # Redirect runner diagnostics
+            sudo mkdir -p /actions-runner/_diag
+            sudo rm -rf /actions-runner/_diag/*
+            sudo ln -sf /mnt/ramdisk/runner_diag /actions-runner/_diag
             
-            # Test outbound connectivity
-            echo "Testing outbound connectivity..."
-            nc -zv github.com 443
-            nc -zv api.github.com 443
+            # Disable system logging
+            sudo systemctl stop rsyslog || true
+            sudo systemctl stop systemd-journald || true
             
-            # Print environment variables (excluding sensitive data)
-            echo "Environment variables:"
-            env | grep -v -i "key\|token\|secret"
+            # Clear Docker space
+            sudo docker system prune -af
+            
+            # Show disk space
+            df -h
+            
+            # Install required packages silently
+            sudo apt-get update -qq > /dev/null 2>&1
+            sudo apt-get install -y -qq curl wget > /dev/null 2>&1
 
       - name: Show disk usage before cleanup
         run: df -h
