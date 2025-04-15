@@ -46,6 +46,7 @@ export default function TaskFlow({
   isCustom,
   fileName,
   onClose,
+  defaultAiTemplateId,
 }) {
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -201,6 +202,7 @@ export default function TaskFlow({
           <AddScriptStep
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
+            defaultAiTemplateId={defaultAiTemplateId}
             {...callbackProps}
           />
         )}

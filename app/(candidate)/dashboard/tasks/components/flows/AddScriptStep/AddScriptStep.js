@@ -12,6 +12,7 @@ export default function AddScriptStep({
   onComplete = (scriptKey) => {},
   backCallback,
   campaign,
+  defaultAiTemplateId,
 }) {
   const [currentScreen, setCurrentScreen] = useState(
     ADD_SCRIPT_FLOW.CHOOSE_FLOW,
@@ -44,6 +45,7 @@ export default function AddScriptStep({
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE]: (
       <SelectSmsAiTemplateScreen
+        defaultAiTemplateId={defaultAiTemplateId}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(aiTemplateKey) => {
           setAiTemplateKey(aiTemplateKey)

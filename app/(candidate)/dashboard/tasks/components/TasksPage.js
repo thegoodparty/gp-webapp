@@ -32,7 +32,7 @@ export default function TasksPage({
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
-  const [showFlowModal, setShowFlowModal] = useState(null)
+  const [flowModalTask, setFlowModalTask] = useState(null)
   const { errorSnackbar } = useSnackbar()
 
   const electionDate = campaign.details.electionDate
@@ -43,9 +43,10 @@ export default function TasksPage({
   // TODO: what if no election date?
   // TODO: what if no p2v?
   async function handleCheckClick(task) {
-    const { id: taskId, skipVoterCount } = task
+    const { id: taskId, type } = task
 
-    if (skipVoterCount) {
+    // skip voter counts for education tasks
+    if (type === TASK_TYPES.education) {
       completeTask(taskId)
     } else {
       setCompleteModalTask(task)
@@ -75,10 +76,10 @@ export default function TasksPage({
     }
 
     if (Object.values(TASK_TYPES).includes(flowType)) {
-      setShowFlowModal(flowType)
+      setFlowModalTask(task)
     } else {
       console.error('Unknown flow type:', flowType)
-      setShowFlowModal(null)
+      setFlowModalTask(null)
     }
   }
 
@@ -157,12 +158,13 @@ export default function TasksPage({
             }
             onClose={() => setShowProUpgradeModal(false)}
           />
-          {showFlowModal && (
+          {flowModalTask && (
             <TaskFlow
               forceOpen
-              type={showFlowModal}
+              type={flowModalTask.flowType}
               campaign={campaign}
-              onClose={() => setShowFlowModal(null)}
+              onClose={() => setFlowModalTask(null)}
+              defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
             />
           )}
         </DashboardLayout>
