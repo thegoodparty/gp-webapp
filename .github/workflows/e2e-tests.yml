@@ -34,6 +34,7 @@ jobs:
           ec2-instance-type: t3.large
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
+          timeout-minutes: 10
           aws-resource-tags: >
             [
               {"Key": "Name", "Value": "github-runner"},
