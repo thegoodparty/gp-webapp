@@ -1,16 +1,17 @@
 'use client'
-import NeedHelpAnimation from '@shared/animations/NeedHelpAnimation'
 import Button from '@shared/buttons/Button'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
-import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
 import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { StyledAlert } from '@shared/alerts/StyledAlert'
+import { BiLinkExternal } from 'react-icons/bi'
+import Body2 from '@shared/typography/Body2'
 
 export default function EINStep() {
   const [campaign] = useCampaign()
@@ -43,12 +44,14 @@ export default function EINStep() {
 
   return (
     <>
-      <Paper className="mt-8">
-        <H2>EIN (Employer Identification Number)</H2>
+      <Paper className="mt-8 max-w-4xl mx-auto">
+        <H2>EIN - Employer Identification Number</H2>
         <Body1 className="mb-8 mt-2">
-          EIN is required to register a political brand with The Campaign
-          Registry (TCR). All political entities must have a valid EIN to
-          initiate the compliance process.
+          An EIN is required to register a political brand with The Campaign
+          Registry (TCR).
+          <br />
+          All political entities must have a valid EIN to initiate the
+          compliance process.
         </Body1>
         <div className="max-w-xl">
           <EinCheckInput
@@ -57,37 +60,30 @@ export default function EINStep() {
             validated={validatedEin}
             setValidated={setValidatedEin}
           />
+          <StyledAlert severity="info" className="flex items-center my-4">
+            <div className="flex items-center justify-between pr-4">
+              <Body2>Don&apos;t have an EIN? Apply for one today.</Body2>
+              <a
+                href="https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number"
+                target="_blank"
+                rel="noreferrer"
+                className="underline flex items-center gap-2"
+              >
+                <Body2>Apply for an EIN</Body2>
+                <BiLinkExternal />
+              </a>
+            </div>
+          </StyledAlert>
         </div>
-        <div className="mt-4 flex">
+        <div className="mt-8 flex justify-between">
           <Link href="/dashboard/text-messaging">
             <Button color="neutral" className="mr-4">
               Back
             </Button>
           </Link>
-          <Button onClick={handleNext} disabled={!canSubmit}>
+          <Button onClick={handleNext} disabled={!canSubmit} color="secondary">
             {loading ? 'Loading...' : 'Next'}
           </Button>
-        </div>
-      </Paper>
-      <Paper className="mt-8">
-        <div className="flex justify-between">
-          <div>
-            <H3>I don&apos;t have an EIN</H3>
-            <Body1 className="mt-2">
-              If you don&apos;t have an EIN,{' '}
-              <a
-                href="https://www.irs.gov/businesses/small-businesses-self-employed/get-an-employer-identification-number"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                you can apply for one here
-              </a>
-            </Body1>
-          </div>
-          <div className="w-48 lg:w-96 relative">
-            <NeedHelpAnimation />
-          </div>
         </div>
       </Paper>
     </>
