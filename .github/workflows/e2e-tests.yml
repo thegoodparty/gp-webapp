@@ -34,7 +34,6 @@ jobs:
           ec2-instance-type: t3.large
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
-          timeout-minutes: 10
           aws-resource-tags: >
             [
               {"Key": "Name", "Value": "github-runner"},
@@ -43,9 +42,27 @@ jobs:
             ]
           pre-runner-script: |
             #!/bin/bash
-            # Simple disk cleanup only
-            sudo rm -rf /tmp/*
-            sudo docker system prune -af
+            # Install logrotate if not present
+            sudo apt-get update -qq && sudo apt-get install -y -qq logrotate
+
+            # Configure logrotate for GitHub runner logs
+            sudo tee /etc/logrotate.d/github-runner << 'EOF'
+            /actions-runner/_diag/*.log {
+              size 10M
+              rotate 2
+              missingok
+              notifempty
+              compress
+              copytruncate
+              create 0644 root root
+            }
+            EOF
+
+            # Force logrotate to run immediately
+            sudo logrotate -f /etc/logrotate.d/github-runner
+
+            # Clean up any existing large log files
+            sudo find /actions-runner/_diag -type f -name "*.log" -size +10M -delete
 
       - name: Show disk usage before cleanup
         run: df -h
