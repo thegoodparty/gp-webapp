@@ -44,22 +44,41 @@ jobs:
           
       - name: Clean up and remove unused packages
         run: |
-          sudo apt-get clean
-          sudo apt-get autoremove -y
-          sudo rm -rf /var/lib/apt/lists/*
+          # Free up disk space
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache
-          docker system prune --all --volumes --force || true
-          npm cache clean --force || true
+          sudo rm -rf ~/.npm
+          sudo rm -rf /usr/local/share/powershell
+          sudo rm -rf /usr/local/share/chromium
+          sudo rm -rf /usr/local/share/firefox
+          sudo rm -rf /usr/local/.pytest_cache
+          sudo rm -rf /var/lib/docker/overlay2
+          sudo docker system prune -af
+          
+          # Clear apt cache
+          sudo apt-get clean
+          sudo apt-get autoremove -y
+          sudo rm -rf /var/lib/apt/lists/*
+          
+          # Remove swap
           sudo swapoff -a
           sudo rm -f /swapfile
+          
+          # Expand available disk space by removing large unnecessary files
+          sudo find /var/log -type f -delete
+          sudo find /tmp -type f -delete
+          
+          # Show disk space after cleanup
           df -h
 
-      - name: Show disk usage after cleanup
-        run: df -h
-          
+      # Add disk space to root volume
+      - name: Extend root volume
+        run: |
+          sudo growpart /dev/root 1 || true
+          sudo resize2fs /dev/root || true
+          df -h
 
   run-e2e-tests:
     needs: start-runner
