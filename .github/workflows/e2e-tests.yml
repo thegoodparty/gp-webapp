@@ -38,17 +38,6 @@ jobs:
             [
               {"Key": "Name", "Value": "github-runner"}
             ]
-          block-device-mappings: >
-            [
-              {
-                "DeviceName": "/dev/xvda",
-                "Ebs": {
-                  "VolumeSize": 30,
-                  "VolumeType": "gp3",
-                  "DeleteOnTermination": true
-                }
-              }
-            ]
 
       - name: Show disk usage before cleanup
         run: df -h
@@ -69,27 +58,6 @@ jobs:
     runs-on: ${{ needs.start-runner.outputs.label }}
     if: github.event.deployment_status.state == 'success'
     steps:
-      - name: Free disk space
-        run: |
-          # Show initial space
-          df -h
-          
-          # Remove unnecessary large packages
-          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mono-.*' '^mysql-.*' '^php-.*'
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          
-          # Remove large directories we don't need
-          sudo rm -rf /usr/share/dotnet/
-          sudo rm -rf /usr/local/lib/android/
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache
-          
-          # Clear npm cache
-          npm cache clean --force
-          
-          # Show space after cleanup
-          df -h
 
       - name: Disk usage before installation
         run: df -h
@@ -137,7 +105,8 @@ jobs:
         run: |
           cd test-automation
           npm install
-          npx playwright install --with-deps
+          npx playwright install
+          npx playwright install-deps 
 
       - name: Run Playwright Tests
         run: |
