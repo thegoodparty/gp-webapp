@@ -38,36 +38,44 @@ jobs:
             [
               {"Key": "Name", "Value": "github-runner"}
             ]
+          block-device-mappings: >
+            [
+              {
+                "DeviceName": "/dev/sda1",
+                "Ebs": {
+                  "VolumeSize": 40,
+                  "VolumeType": "gp3",
+                  "DeleteOnTermination": true
+                }
+              }
+            ]
 
       - name: Clean up and remove unused packages
         run: |
           # Show initial disk space
           df -h
           
-          # Stop and remove all docker containers/images first
-          sudo docker system prune -af || true
+          # Create and mount new workspace directory
+          sudo mkdir -p /workspace
+          sudo mount /dev/sda1 /workspace || true
+          sudo chmod 777 /workspace
           
-          # Remove large packages and caches
-          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mono-.*' '^php.*' || true
-          sudo apt-get remove -y '^google-cloud-sdk.*' '^azure-cli.*' || true
+          # Move GitHub workspace to new volume
+          sudo rsync -av $GITHUB_WORKSPACE/ /workspace/
+          export GITHUB_WORKSPACE=/workspace
+          cd /workspace
           
-          # Clear all caches
-          sudo rm -rf /var/cache/*
-          sudo rm -rf /root/.cache/*
-          sudo rm -rf /home/runner/.cache/*
-          
-          # Remove development tools and SDKs
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache
-          
-          # Clean apt
+          # Aggressive cleanup
+          sudo docker system prune -af
           sudo apt-get clean
           sudo apt-get autoremove -y
           sudo rm -rf /var/lib/apt/lists/*
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache
           
-          # Show disk space after cleanup
+          # Show final space
           df -h
 
       # Add disk space to root volume
