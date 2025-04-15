@@ -31,7 +31,7 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
-          ec2-instance-type: c6gd.large
+          ec2-instance-type: c6gd.xlarge
           subnet-id: ${{ secrets.SUBNET_ID }}
           security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
           aws-resource-tags: >
