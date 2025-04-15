@@ -1,10 +1,7 @@
 'use client'
-import NeedHelpAnimation from '@shared/animations/NeedHelpAnimation'
 import Button from '@shared/buttons/Button'
 import { useCampaign } from '@shared/hooks/useCampaign'
-import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
-import H3 from '@shared/typography/H3'
 import Paper from '@shared/utils/Paper'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
@@ -12,6 +9,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TextField from '@shared/inputs/TextField'
 import { isValidUrl } from 'helpers/linkhelper'
+import Body2 from '@shared/typography/Body2'
+import H4 from '@shared/typography/H4'
 export default function WebsiteStep() {
   const [campaign] = useCampaign()
   const [website, setWebsite] = useState(campaign?.details?.website)
@@ -41,13 +40,15 @@ export default function WebsiteStep() {
 
   return (
     <>
-      <Paper className="mt-8">
+      <Paper className="mt-8 max-w-4xl mx-auto">
         <H2>Compliant Candidate Website</H2>
-        <Body1 className="mb-8 mt-2">
-          live website that includes opt-in forms with SMS disclaimers, optional
-          phone number fields, and a linked privacy policy. This page must
-          represent the candidate and comply with 10DLC messaging rules.
-        </Body1>
+        <Body2 className="mb-8 mt-2">
+          Your website must be active and include opt-in forms with SMS
+          disclaimers, optional phone number fields, and a linked privacy
+          policy.
+          <br />
+          Your website must comply with the 10DLC messaging rules.
+        </Body2>
         <div className="max-w-xl">
           <TextField
             required
@@ -63,116 +64,65 @@ export default function WebsiteStep() {
             helperText="Please provide a full url starting with http"
           />
         </div>
-        <div className="mt-2 flex justify-center">
+        <div className="mt-4 p-4 border rounded-md border-black/10">
+          <H4>Compliance Checklist</H4>
+          <Body2>Your website must:</Body2>
+          <Body2>
+            <ol className="mt-4 list-decimal list-inside">
+              <li className="mb-2">
+                Represents your political or nonprofit brand authentically
+              </li>
+              <li className="mb-2">
+                Allow users to provide their phone number to recieve updates
+              </li>
+              <li className="mb-2">Have an optional phone number field</li>
+              <li className="mb-2">Include an SMS disclaimer on every form</li>
+              <li className="mb-2">
+                Have a link to a privacy policy that explicitly states how text
+                opt-in data is handled
+              </li>
+            </ol>
+          </Body2>
+        </div>
+        <div className="mt-4 p-4 border rounded-md border-black/10">
+          <H4>Required SMS Disclaimer for Opt-In Forms</H4>
+          <Body2>
+            Use the following SMS opt-in disclaimer on every form you use that
+            collect phone numbers:{' '}
+          </Body2>
+          <Body2>
+            <i>
+              By providing your phone number and checking the box, you consent
+              to receive text message updates. Msg & data rates may apply. Msg
+              frequency may vary. Messaging may include donation requests. Reply
+              “STOP” to opt-out & “HELP” for help. [Link to Privacy Policy]
+            </i>
+            <br />
+            <br />
+            <strong>Checkbox Requirement:</strong> I consent to receive text
+            updates.
+            <br />
+            <br />
+            And the below language in your Privacy Policy:
+            <br />
+            <br />
+            <i>
+              <strong>Text Message Opt-In Information:</strong> We will not
+              share or sell your text messaging opt-in data, consent, or
+              associated personal information with any third parties, unless
+              mandated by law.
+            </i>
+          </Body2>
+        </div>
+        <div className="mt-8 flex justify-between">
           <Link href="/dashboard/text-messaging/p2p-setup/ein">
             <Button color="neutral" className="mr-4">
               Back
             </Button>
           </Link>
-          <Button onClick={handleNext} disabled={!canSubmit}>
+          <Button onClick={handleNext} disabled={!canSubmit} color="secondary">
             {loading ? 'Loading...' : 'Next'}
           </Button>
-        </div>
-      </Paper>
-      <Paper className="mt-8">
-        <div className="flex justify-between">
-          <div>
-            <H3>Compliant Website Checklist:</H3>
-            <ol className="mt-2 list-decimal list-inside">
-              <li>
-                The website represents your{' '}
-                <strong>political or nonprofit brand</strong> authentically
-                authentically
-              </li>
-              <li>
-                <strong>All forms must allow users to </strong>provide their
-                phone number to receive updates
-              </li>
-              <li>
-                The <strong>phone number field must be optional</strong> (not
-                mandatory)
-              </li>
-              <li>
-                Any form <strong>must include an SMS disclaimer</strong>{' '}
-                (consent, frequency, opt-out info)
-              </li>
-              <li>
-                Disclaimer <strong>must link to a Privacy Policy</strong> that
-                <strong>
-                  {' '}
-                  explicitly states how text opt-in data is handled
-                </strong>
-              </li>
-            </ol>
-            <Body1 className="mt-4">
-              Privacy Policy with Compliant Language:{' '}
-              <a
-                href="https://go.rc-link.info/sample-privacy-policy"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                View Here
-              </a>
-            </Body1>
-            <Body1 className="mt-2">
-              Example of a Compliant Website:{' '}
-              <a
-                href="https://sample10dlc.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                https://sample10dlc.com/
-              </a>
-            </Body1>
-            <Body1 className="mt-2">
-              Get a compliant website in 24 hours for $500:{' '}
-              <a
-                href="https://sample10dlc.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="underline"
-              >
-                Request New Build
-              </a>
-            </Body1>
-            <H3 className="mb-2 mt-8">
-              Required SMS Disclaimer for Opt-In Forms
-            </H3>
-            <Body1 className="mt-2">
-              Your website must include the following SMS opt-in disclaimer on
-              every form that collects phone numbers.
-              <br />
-              <br />
-              <i>
-                By providing your phone number and checking the box, you consent
-                to receive text message updates. Msg & data rates may apply. Msg
-                frequency may vary. Messaging may include donation requests.
-                Reply “STOP” to opt-out & “HELP” for help. [Link to Privacy
-                Policy]
-              </i>
-              <br />
-              <br />
-              <strong>Checkbox Requirement:</strong> I consent to receive text
-              updates.
-              <br />
-              <br />
-              <br />
-              And the below language in your Privacy Policy:
-              <br />
-              <br />
-              <i>
-                <strong>Text Message Opt-In Information:</strong> We will not
-                share or sell your text messaging opt-in data, consent, or
-                associated personal information with any third parties, unless
-                mandated by law.
-              </i>
-            </Body1>
-          </div>
-          <div className="w-48 lg:w-96 relative">
-            <NeedHelpAnimation />
-          </div>
         </div>
       </Paper>
     </>

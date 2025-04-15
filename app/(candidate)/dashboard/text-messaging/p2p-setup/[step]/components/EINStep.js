@@ -116,7 +116,7 @@ export default function EINStep() {
         <div className="mt-8 flex justify-between">
           <Link href="/dashboard/text-messaging">
             <Button color="neutral" className="mr-4">
-              Back
+              Exit
             </Button>
           </Link>
           <Button onClick={handleNext} disabled={!canSubmit} color="secondary">
