@@ -13,19 +13,20 @@ import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent
 import Button from '@shared/buttons/Button'
 
 const fetchState = async (state) => {
-  const api = gpApi.race.byState
+  const api = gpApi.elections.places
   const payload = {
-    state,
+    slug: state.toLowerCase(),
+    includeChildren: true,
   }
 
   return await gpFetch(api, payload, 3600)
 }
 
 const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty
+  const api = gpApi.elections.places
   const payload = {
-    state,
-    county,
+    slug: `${state.toLowerCase()}/${slugify(county, true)}`,
+    includeChildren: true,
   }
 
   return await gpFetch(api, payload, 3600)
@@ -46,20 +47,21 @@ export default function SearchLocation({ withHeader = false, initialState }) {
   const router = useRouter()
 
   const onChangeState = async (stateName) => {
-    const { counties } = await fetchState(stateName)
+    console.log('stateName', stateName)
+    const { children } = await fetchState(stateName)
     setState({
       ...state,
       state: stateName,
-      countyOptions: counties,
+      countyOptions: children,
     })
   }
 
   const onChangeCounty = async (countyName) => {
-    const { municipalities } = await fetchCounty(state.state, countyName)
+    const { children } = await fetchCounty(state.state, countyName)
     setState({
       ...state,
       county: countyName,
-      munOptions: municipalities,
+      munOptions: children,
     })
   }
 

@@ -10,12 +10,17 @@ export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export const fetchState = async (state) => {
-  const api = gpApi.race.byState
+  const api = gpApi.elections.places
   const payload = {
-    state,
+    slug: state,
+    includeChildren: true,
+    includeRaces: true,
   }
-
-  return await gpFetch(api, payload, 3600)
+  const res = await gpFetch(api, payload, 3600)
+  if (Array.isArray(res)) {
+    return res[0]
+  }
+  return {}
 }
 
 const year = new Date().getFullYear()
@@ -38,7 +43,10 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const { counties, races } = await fetchState(state)
+  const { children, Races: races } = await fetchState(state)
+  console.log('children', children)
+  console.log('races', races)
+
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
     'turning-passion-into-action-campaign-launch',
@@ -52,7 +60,7 @@ export default async function Page({ params }) {
 
   const childProps = {
     state,
-    childEntity: counties,
+    childEntity: children,
     races,
     articles,
   }

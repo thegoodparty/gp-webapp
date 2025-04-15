@@ -10,9 +10,9 @@ export default function CityFacts({ city, county }) {
   const {
     population,
     density,
-    income_household_median,
-    unemployment_rate,
-    home_value,
+    incomeHouseholdMedian,
+    unemploymentRate,
+    homeValue,
     county_name,
   } = city
   const fields = [
@@ -23,22 +23,26 @@ export default function CityFacts({ city, county }) {
       icon: <FaPeopleGroup />,
       isNumber: true,
     },
-    { label: 'Density', value: `${density} per Sq KM`, icon: <FaPeopleRoof /> },
+    {
+      label: 'Density',
+      value: `${density ? numberFormatter(density) : ''} per Sq KM`,
+      icon: <FaPeopleRoof />,
+    },
     {
       label: 'Median income',
-      value: income_household_median,
+      value: incomeHouseholdMedian,
       icon: <SlWallet />,
       isNumber: true,
     },
     {
       label: 'Unemployment rate',
-      value: unemployment_rate,
+      value: unemploymentRate,
       icon: <MdOutlineWorkOff />,
       isPercent: true,
     },
     {
       label: 'Home Value',
-      value: home_value,
+      value: homeValue,
       icon: <TbHomeShare />,
       isNumber: true,
       isMoney: true,
@@ -53,22 +57,28 @@ export default function CityFacts({ city, county }) {
         </h3>
         <div className="grid grid-cols-12 gap-4">
           {fields.map((field) => (
-            <div
-              key={field.label}
-              className="col-span-6 md:col-span-4 flex flex-col items-center"
-            >
-              <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-[#897AF1] to-[#C985F2] flex items-center justify-center text-3xl md:text-5xl text-primary">
-                {field.icon}
-              </div>
-              <div className="mt-4 text-center">
-                <div className="text-2xl font-semibold">{field.label}</div>
-                <div className="text-lg text-slate-200 mt-2 mb-10">
-                  {field.isMoney ? '$' : ''}
-                  {field.isNumber ? numberFormatter(field.value) : field.value}
-                  {field.isPercent ? '%' : ''}
+            <>
+              {field.value && (
+                <div
+                  key={field.label}
+                  className="col-span-6 md:col-span-4 flex flex-col items-center"
+                >
+                  <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-[#897AF1] to-[#C985F2] flex items-center justify-center text-3xl md:text-5xl text-primary">
+                    {field.icon}
+                  </div>
+                  <div className="mt-4 text-center">
+                    <div className="text-2xl font-semibold">{field.label}</div>
+                    <div className="text-lg text-slate-200 mt-2 mb-10">
+                      {field.isMoney ? '$' : ''}
+                      {field.isNumber
+                        ? numberFormatter(field.value)
+                        : field.value}
+                      {field.isPercent ? '%' : ''}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+              )}
+            </>
           ))}
         </div>
       </div>

@@ -38,6 +38,12 @@ const gpApi = {
       withAuth: true,
     },
   },
+  elections: {
+    places: {
+      url: `${electionBase}places`,
+      method: 'GET',
+    },
+  },
 
   race: {
     byState: {

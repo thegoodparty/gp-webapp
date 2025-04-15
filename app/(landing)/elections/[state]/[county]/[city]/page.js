@@ -10,14 +10,18 @@ export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export const fetchCity = async (state, county, city) => {
-  const api = gpApi.race.byCity
+  const api = gpApi.elections.places
   const payload = {
-    state,
-    county,
-    city,
+    slug: `${state}/${county}/${city}`,
+    includeChildren: true,
+    includeRaces: true,
   }
 
-  return await gpFetch(api, payload, 3600)
+  const res = await gpFetch(api, payload, 3600)
+  if (Array.isArray(res)) {
+    return res[0]
+  }
+  return {}
 }
 
 const year = new Date().getFullYear()
@@ -25,11 +29,11 @@ const year = new Date().getFullYear()
 export async function generateMetadata({ params }) {
   const { state, county, city } = params
   const stateName = shortToLongState[state.toUpperCase()]
-  const { municipality, races } = await fetchCity(state, county, city)
+  const place = await fetchCity(state, county, city)
 
   const meta = pageMetaData({
-    title: `Run for Office in ${municipality.city}, ${stateName} ${year}`,
-    description: `Learn about opportunities to run for office in ${municipality.city}, ${stateName} and a helpful tips for a successful campaign.`,
+    title: `Run for Office in ${place.name}, ${stateName} ${year}`,
+    description: `Learn about opportunities to run for office in ${place.name}, ${stateName} and a helpful tips for a successful campaign.`,
     slug: `/elections/${state}/${county}/${city}`,
   })
   return meta
@@ -41,10 +45,14 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const { municipality, races } = await fetchCity(state, county, city)
-  if (!municipality) {
+  const place = await fetchCity(state, county, city)
+  if (!place) {
     notFound()
   }
+
+  const { children, Races: races } = place
+  place.children = null
+  place.races = null
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
@@ -59,7 +67,7 @@ export default async function Page({ params }) {
 
   const childProps = {
     state,
-    municipality,
+    municipality: place,
     races,
     county,
     articles,

@@ -24,18 +24,18 @@ export default function Hero({
   if (level === 'county') {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: county?.county_full || '',
+      label: county?.name || '',
     })
   }
 
   if (level === 'city') {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: `${municipality.county_name} county`,
-      href: `/elections/${state}/${slugify(municipality.county_name, true)}`,
+      label: `${municipality.countyName} county`,
+      href: `/elections/${state}/${slugify(municipality.countyName, true)}`,
     })
     breadcrumbsLinks.push({
-      label: municipality.city,
+      label: municipality.name,
     })
   }
   let title = ''
@@ -45,11 +45,11 @@ export default function Hero({
     subTitle = `${stateName} state elections`
   } else if (level === 'county') {
     title = `Run for ${
-      county?.county_full || 'a county'
+      county?.name || 'a county'
     }, ${state.toUpperCase()} office`
-    subTitle = `${county?.county_full || 'county'} elections`
+    subTitle = `${county?.name || 'county'} elections`
   } else if (level === 'city') {
-    const cityName = `${municipality?.city}`
+    const cityName = `${municipality?.name}`
     title = `Run for ${cityName || 'a'} city office`
     subTitle = `${cityName || ''} city elections`
   }

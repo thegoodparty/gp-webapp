@@ -10,13 +10,18 @@ export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty
+  const api = gpApi.elections.places
   const payload = {
-    state,
-    county,
+    slug: `${state}/${county}`,
+    includeChildren: true,
+    includeRaces: true,
   }
 
-  return await gpFetch(api, payload, 3600)
+  const res = await gpFetch(api, payload, 3600)
+  if (Array.isArray(res)) {
+    return res[0]
+  }
+  return {}
 }
 
 const fetchPosition = async (id) => {
@@ -34,14 +39,14 @@ export async function generateMetadata({ params }) {
   const { state } = params
   if (state.length === 2) {
     const stateName = shortToLongState[state.toUpperCase()]
-    const { county } = await fetchCounty(state, params.county)
+    const county = await fetchCounty(state, params.county)
 
     const meta = pageMetaData({
       title: `Run for Office in ${
-        county?.county || 'a'
+        county?.name || 'a'
       } county, ${stateName} ${year}`,
       description: `Learn about available opportunities to run for office in ${
-        county?.county || 'a'
+        county?.name || 'a'
       } county, ${stateName} and tips for launching a successful campaign.`,
       slug: `/elections/${state}/${params.county}`,
     })
@@ -88,14 +93,14 @@ export default async function Page({ params }) {
     permanentRedirect(url)
   }
 
-  const { municipalities, races, county } = await fetchCounty(
-    state,
-    params.county,
-  )
+  const county = await fetchCounty(state, params.county)
+  const { children, Races: races } = county
+  county.children = null
+  county.races = null
 
   const childProps = {
     state,
-    childEntities: municipalities,
+    childEntities: children,
     races,
     county,
     articles,
