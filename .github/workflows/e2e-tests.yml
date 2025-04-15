@@ -38,46 +38,6 @@ jobs:
             [
               {"Key": "Name", "Value": "github-runner"}
             ]
-          user-data: |
-            #!/bin/bash
-            # Update system
-            apt-get update
-            apt-get upgrade -y
-
-            # Install essential build tools and dependencies
-            apt-get install -y \
-                docker.io \
-                git \
-                curl \
-                wget \
-                jq \
-                unzip \
-                build-essential \
-                software-properties-common
-
-            # Install Node.js 16
-            curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-            apt-get install -y nodejs
-
-            # Install Playwright dependencies
-            apt-get install -y \
-                libnss3 \
-                libnspr4 \
-                libatk1.0-0 \
-                libatk-bridge2.0-0 \
-                libcups2 \
-                libdrm2 \
-                libxkbcommon0 \
-                libxcomposite1 \
-                libxdamage1 \
-                libxfixes3 \
-                libxrandr2 \
-                libgbm1 \
-                libasound2
-
-            # Clean up
-            apt-get clean
-            apt-get autoremove -y
 
       - name: Clean up and prepare workspace
         run: |
