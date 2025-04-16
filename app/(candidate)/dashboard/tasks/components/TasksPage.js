@@ -110,7 +110,7 @@ export default function TasksPage({
       <CampaignUpdateHistoryProvider>
         <DashboardLayout pathname={pathname} campaign={campaign}>
           <DashboardHeader campaign={campaign} tasks={tasks} />
-          <div className="mx-auto bg-white rounded-xl p-6 mt-8">
+          <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
             <H2>Tasks for this week</H2>
             <Body2 className="!font-outfit mt-1">
               Election day: {dateUsHelper(electionDate)}

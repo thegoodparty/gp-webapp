@@ -127,10 +127,11 @@ export default function TaskFlow({
     return await scheduleVoterMessagingCampaign(updatedState)
   }
 
-  const handleAddScriptOnComplete = (scriptKeyOrText) => {
+  const handleAddScriptOnComplete = (scriptKeyOrText, scriptContent) => {
     handleChange('script', scriptKeyOrText)
 
-    const content = campaign.aiContent?.[scriptKeyOrText]?.content
+    const content =
+      scriptContent ?? campaign.aiContent?.[scriptKeyOrText]?.content
     const scriptText = content
       ? sanitizeHtml(content, {
           allowedTags: [],

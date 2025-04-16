@@ -3,10 +3,9 @@ import { useState } from 'react'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../constants/tasks.const'
-import { fetchVoterFile } from 'app/(candidate)/dashboard/voter-records/components/VoterRecordsPage'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { format } from 'date-fns'
 import CopyScriptButton from '../CopyScriptButton'
+import { voterFileDownload } from 'helpers/voterFileDownload'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -31,29 +30,13 @@ export default function DownloadStep({
     const selectedAudience = Object.keys(audience).filter(
       (key) => audience[key] === true,
     )
-    const res = await fetchVoterFile(type, {
-      filters: selectedAudience,
-    })
 
-    if (res.ok) {
-      // Read the response as Blob
-      const blob = await res.blob()
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute(
-        'download',
-        `${type}-${format(new Date(), 'yyyy-MM-dd')}.csv`,
-      )
-      document.body.appendChild(link)
-      link.click()
-
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(link)
-    } else {
+    try {
+      await voterFileDownload(type, selectedAudience)
+    } catch (error) {
       errorSnackbar('Error downloading voter file')
     }
+
     setDownloading(false)
   }
 

@@ -36,20 +36,22 @@ export default function TaskItem({
   const isExpired = daysUntilElection < deadline
 
   return (
-    <li className="flex items-center gap-4 p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
-      <div className="mt-1 self-start">
-        <TaskCheck checked={completed} onClick={handleCheck} />
-      </div>
-      <div className={`flex-grow ${completed ? 'text-indigo-400' : ''}`}>
-        <H4 className="mb-1">{title}</H4>
-        <Body2>{description}</Body2>
+    <li className="flex flex-col sm:flex-row items-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
+      <div className="flex items-center gap-x-2 gap-y-4 w-full sm:w-auto">
+        <div className="mt-1 self-start">
+          <TaskCheck checked={completed} onClick={handleCheck} />
+        </div>
+        <div className={`${completed ? 'text-indigo-400' : ''}`}>
+          <H4 className="mb-1">{title}</H4>
+          <Body2>{description}</Body2>
+        </div>
       </div>
       {isExpired && !completed ? (
         <Button
           onClick={handleAction}
           size="medium"
           color="neutral"
-          className="flex items-center"
+          className="flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
         >
           <LockRounded className="mr-1 text-base" />
           No Longer Available
@@ -62,7 +64,7 @@ export default function TaskItem({
           size="medium"
           color={completed ? 'success' : 'secondary'}
           disabled={completed}
-          className="flex items-center"
+          className="flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
         >
           {completed ? (
             <CheckRounded className="mr-1 text-base" />

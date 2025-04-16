@@ -1,7 +1,6 @@
 'use client'
 import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers'
 import { useState } from 'react'
-import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
 import {
   ANIMATED_PROGRESS_BAR_SIZES,
@@ -9,11 +8,11 @@ import {
 } from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
 import Subtitle2 from '@shared/typography/Subtitle2'
 import { numberFormatter } from 'helpers/numberHelper'
-import { BsInfoCircle } from 'react-icons/bs'
 import { ContactCountsInfoModal } from 'app/(candidate)/dashboard/components/ContactCountsInfoModal'
 import Button from '@shared/buttons/Button'
 import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
+import { InfoOutlined } from '@mui/icons-material'
 
 export const CampaignProgress = ({ pathToVictory }) => {
   const [reportedVoterGoals] = useVoterContacts()
@@ -28,7 +27,7 @@ export const CampaignProgress = ({ pathToVictory }) => {
   const toggleRecordModal = () => setRecordModalOpen(!recordModalOpen)
 
   return (
-    <Paper className="mb-4">
+    <div className="mb-4 mx-auto bg-white rounded-xl p-6">
       <div className="flex flex-col md:flex-row md:justify-between items-start gap-4 mb-4">
         <H2>Campaign progress</H2>
         <Button color="neutral" size="medium" onClick={toggleRecordModal}>
@@ -43,12 +42,12 @@ export const CampaignProgress = ({ pathToVictory }) => {
       </div>
       <div className="flex flex-col md:flex-row md:justify-between">
         <Subtitle2>{numberFormatter(contacted)} voters contacted</Subtitle2>
-        <Subtitle2 className="flex items-center">
+        <Subtitle2
+          onClick={toggleModalOpen}
+          className="flex items-center cursor-pointer"
+        >
           {numberFormatter(needed)} voter contacts needed
-          <BsInfoCircle
-            className="ml-2 inline cursor-pointer"
-            onClick={toggleModalOpen}
-          />
+          <InfoOutlined className="ml-2 !text-base" />
           <ContactCountsInfoModal
             {...{ pathToVictory, open: modalOpen, setOpen: toggleModalOpen }}
           />
@@ -58,6 +57,6 @@ export const CampaignProgress = ({ pathToVictory }) => {
         open={recordModalOpen}
         setOpen={setRecordModalOpen}
       />
-    </Paper>
+    </div>
   )
 }

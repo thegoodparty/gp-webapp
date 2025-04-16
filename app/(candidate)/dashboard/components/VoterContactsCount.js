@@ -18,8 +18,9 @@ export const VoterContactsCount = ({ pathToVictory }) => {
       </strong>{' '}
       out of{' '}
       <strong>
-        {numberFormatter(getVoterContactsGoal(pathToVictory))} needed to win.
+        {numberFormatter(getVoterContactsGoal(pathToVictory))} needed to win
       </strong>
+      .
     </H4>
   )
 }

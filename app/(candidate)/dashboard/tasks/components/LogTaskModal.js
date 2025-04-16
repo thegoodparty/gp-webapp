@@ -17,7 +17,7 @@ export const TASK_TYPE_HEADINGS = {
   [TASK_TYPES.robocall]: 'How many robocalls did you schedule?',
   [TASK_TYPES.doorKnocking]: 'How many doors did you knock?',
   [TASK_TYPES.phoneBanking]: 'How many calls did you make?',
-  [TASK_TYPES.socialMedia]: 'How views did your post get?',
+  [TASK_TYPES.socialMedia]: 'How manyviews did your post get?',
   [TASK_TYPES.events]: 'How many voters did you meet?',
 }
 
@@ -37,7 +37,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
   const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
   const [user] = useUser()
 
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState()
 
   const onChangeField = (val) => {
     setValue(val)
@@ -79,6 +79,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
               type="number"
               min="0"
               required
+              autoFocus
             />
 
             <div className="flex justify-center items-center mt-6">

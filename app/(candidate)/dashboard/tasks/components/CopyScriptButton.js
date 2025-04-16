@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Button from '@shared/buttons/Button'
 import CopyToClipboard from '@shared/utils/CopyToClipboard'
-import { CheckRounded, ContentPasteRounded } from '@mui/icons-material'
+import { CheckRounded, ContentCopyRounded } from '@mui/icons-material'
 
 export default function CopyScriptButton({ scriptText }) {
   const [copied, setCopied] = useState(false)
@@ -21,7 +21,7 @@ export default function CopyScriptButton({ scriptText }) {
         {copied ? (
           <CheckRounded className="mr-2" />
         ) : (
-          <ContentPasteRounded className="mr-2" />
+          <ContentCopyRounded className="mr-2" />
         )}
         Copy Script
       </Button>

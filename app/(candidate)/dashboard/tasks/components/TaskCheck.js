@@ -12,7 +12,7 @@ export default function TaskCheck({ checked, onClick }) {
   }
 
   return (
-    <span onClick={handleClick} className="group">
+    <span onClick={handleClick} className="group cursor-pointer">
       {!checked ? (
         <>
           <CircleOutlined className="group-hover:hidden" />
