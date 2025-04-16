@@ -51,36 +51,23 @@ test("Verify Blog page", async ({ page }) => {
 
 test("Verify Blog filtering", async ({ page }) => {
   const caseId = 16;
-  const categoryButtons = [
-    "Latest Articles",
-    "News",
-    "Politics",
-    "Independent Cause",
-    "For Candidates",
-    "For Voters",
-  ];
   const topicsHeader = "Explore all Topics";
-  const testTopic = "Campaign Finance";
 
   try {
     // Filter blog page by category
     await page
-      .locator("nav")
-      .locator(`a:has-text("${categoryButtons[1]}")`)
+      .locator('a').filter({ hasText: /^News$/ })
       .click();
 
     // Verify user redirected to category page
     await expect(page).toHaveURL(
-      new RegExp(`/section/${categoryButtons[1]}`, "i"),
+      new RegExp(`/section/news`, "i"),
       { timeout: 10000 }
     );
 
     // Filter blog page by topic
     await page
-      .locator(
-        `div:has(h5:has-text("${topicsHeader}")) a:has-text("${testTopic}")`
-      )
-      .first()
+      .getByRole('link', { name: 'Campaign Finance' })
       .click();
 
     // Verify user redirected to topic page
