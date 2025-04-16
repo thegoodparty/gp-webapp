@@ -1,10 +1,9 @@
 'use client'
-
 import { getCookie, setCookie } from 'helpers/cookieHelper'
 import { useEffect, useState } from 'react'
 import { isbot } from 'isbot'
 import { MdClose } from 'react-icons/md'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
+import Button from '../buttons/Button'
 
 export default function CookiesSnackbar() {
   const [showBanner, setShowBanner] = useState(false)
@@ -31,15 +30,16 @@ export default function CookiesSnackbar() {
         <span className="text-xs">
           By continuing to browse this site, you consent to the use of cookies.
         </span>
-        <SecondaryButton
-          className="ml-6 flex items-center inline"
+        <Button
+          className="ml-6 flex items-center inline self-center"
+          color="white"
           onClick={handleAccept}
           size="medium"
           dataTestId={'cookie-accept-btn'}
         >
           Close
           <MdClose className="ml-2 text-xl" />
-        </SecondaryButton>
+        </Button>
       </div>
     </div>
   )
