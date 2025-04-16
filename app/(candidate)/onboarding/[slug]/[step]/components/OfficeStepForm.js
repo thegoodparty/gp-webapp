@@ -25,26 +25,18 @@ const fields = [
     type: 'text',
     required: true,
   },
-  {
-    key: 'electionDate',
-    label: 'General Election Date (Optional)',
-    type: 'date',
-    showResetButton: true,
-  },
 ]
 
 export default function OfficeStepForm({
   onChange,
   level,
   zip,
-  electionDate,
   adminMode,
 }) {
   const [state, setState] = useState({
     zip: zip || '',
     level: level || '',
     fuzzyFilter: '',
-    electionDate: electionDate || '',
   })
   const [user, _] = useUser()
 

@@ -211,7 +211,6 @@ export default function OfficeStep(props) {
           onChange={updateState}
           zip={ballotSearch?.zip || campaign.details?.zip}
           level={ballotSearch?.level || ''}
-          electionDate={ballotSearch?.electionDate || ''}
           adminMode={adminMode}
         />
         <>
@@ -224,7 +223,6 @@ export default function OfficeStep(props) {
               step={step}
               zip={ballotSearch?.zip || campaign.details?.zip}
               level={ballotSearch?.level}
-              electionDate={ballotSearch?.electionDate}
               adminMode={adminMode}
               onBack={handleBack}
               fuzzyFilter={ballotSearch?.fuzzyFilter}

@@ -24,7 +24,7 @@ const FUSE_OPTIONS = {
   isCaseSensitive: false,
 }
 
-const fetchRaces = async (zipcode, level, electionDate) => {
+const fetchRaces = async (zipcode, level) => {
   const cleanLevel =
     level === 'Local/Township/City'
       ? 'Local'
@@ -39,7 +39,6 @@ const fetchRaces = async (zipcode, level, electionDate) => {
           level: cleanLevel,
         }
       : {}),
-    ...(electionDate ? { electionDate } : {}),
   }
 
   const resp = await clientFetch(apiRoutes.elections.racesByYear, payload, {
@@ -70,7 +69,6 @@ export default function BallotRaces({
   updateCallback,
   zip,
   level,
-  electionDate,
   adminMode,
   onBack,
   fuzzyFilter,
@@ -86,8 +84,8 @@ export default function BallotRaces({
   const router = useRouter()
 
   useEffect(() => {
-    loadRaces(zip, level, electionDate)
-  }, [zip, level, electionDate])
+    loadRaces(zip, level)
+  }, [zip, level])
 
   useEffect(() => {
     if (Array.isArray(races)) {
@@ -112,10 +110,10 @@ export default function BallotRaces({
     }
   }, [fuzzyFilter, fuse, races])
 
-  const loadRaces = async (zip, level, electionDate) => {
+  const loadRaces = async (zip, level) => {
     if (zip) {
       setLoading(true)
-      const initRaces = await fetchRaces(zip, level, electionDate)
+      const initRaces = await fetchRaces(zip, level)
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`)
       }
