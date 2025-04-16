@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Modal from '@shared/utils/Modal'
 import TextField from '@shared/inputs/TextField'
 import H1 from '@shared/typography/H1'
@@ -11,13 +11,14 @@ import {
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { TASK_TYPES } from '../constants/tasks.const'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 export const TASK_TYPE_HEADINGS = {
   [TASK_TYPES.text]: 'How many text messages did you schedule?',
   [TASK_TYPES.robocall]: 'How many robocalls did you schedule?',
   [TASK_TYPES.doorKnocking]: 'How many doors did you knock?',
   [TASK_TYPES.phoneBanking]: 'How many calls did you make?',
-  [TASK_TYPES.socialMedia]: 'How manyviews did your post get?',
+  [TASK_TYPES.socialMedia]: 'How many views did your post get?',
   [TASK_TYPES.events]: 'How many voters did you meet?',
 }
 
@@ -36,8 +37,12 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
   const [reportedVoterGoals, setReportedVoterGoals] = useVoterContacts()
   const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
   const [user] = useUser()
-
   const [value, setValue] = useState()
+
+  const trackingAttrs = useMemo(
+    () => buildTrackingAttrs('Log Task Contacts', { type: flowType, value }),
+    [flowType, value],
+  )
 
   const onChangeField = (val) => {
     setValue(val)
@@ -88,6 +93,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
                 color="secondary"
                 onClick={handleSubmit}
                 disabled={value <= 0}
+                {...trackingAttrs}
               >
                 Save
               </Button>

@@ -1,6 +1,6 @@
 'use client'
 import { calculateVoterContactCounts } from 'app/(candidate)/dashboard/components/voterGoalsHelpers'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import H2 from '@shared/typography/H2'
 import {
   ANIMATED_PROGRESS_BAR_SIZES,
@@ -13,6 +13,7 @@ import Button from '@shared/buttons/Button'
 import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import { InfoOutlined } from '@mui/icons-material'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 export const CampaignProgress = ({ pathToVictory }) => {
   const [reportedVoterGoals] = useVoterContacts()
@@ -26,11 +27,26 @@ export const CampaignProgress = ({ pathToVictory }) => {
   const toggleModalOpen = () => setModalOpen(!modalOpen)
   const toggleRecordModal = () => setRecordModalOpen(!recordModalOpen)
 
+  const infoTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Info Contacts Needed'),
+    [],
+  )
+
+  const recordTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Record Voter Contacts'),
+    [],
+  )
+
   return (
     <div className="mb-4 mx-auto bg-white rounded-xl p-6">
       <div className="flex flex-col md:flex-row md:justify-between items-start gap-4 mb-4">
         <H2>Campaign progress</H2>
-        <Button color="neutral" size="medium" onClick={toggleRecordModal}>
+        <Button
+          color="neutral"
+          size="medium"
+          onClick={toggleRecordModal}
+          {...recordTrackingAttrs}
+        >
           Record voter contacts
         </Button>
       </div>
@@ -45,6 +61,7 @@ export const CampaignProgress = ({ pathToVictory }) => {
         <Subtitle2
           onClick={toggleModalOpen}
           className="flex items-center cursor-pointer"
+          {...infoTrackingAttrs}
         >
           {numberFormatter(needed)} voter contacts needed
           <InfoOutlined className="ml-2 !text-base" />

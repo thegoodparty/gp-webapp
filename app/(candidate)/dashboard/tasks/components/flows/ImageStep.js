@@ -1,17 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import 'react-image-crop/dist/ReactCrop.css'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import FileDropZone from '@shared/inputs/FileDropZone'
 import ImageCropPreview from '@shared/inputs/ImageCropPreview'
-import { trackEvent } from 'helpers/fullStoryHelper'
+import { trackEvent, buildTrackingAttrs } from 'helpers/fullStoryHelper'
 import Button from '@shared/buttons/Button'
 
 const MAX_FILE_SIZE = 500000
 
 export default function ImageStep({
+  type,
   image,
   onChangeCallback,
   nextCallback,
@@ -19,6 +20,11 @@ export default function ImageStep({
 }) {
   const [file, setFile] = useState(image)
   const fileTooLarge = file?.size > MAX_FILE_SIZE
+
+  const trackingAttrs = useMemo(
+    () => buildTrackingAttrs('Next Image', { type }),
+    [type],
+  )
 
   function handleOnChange(newFile) {
     setFile(newFile)
@@ -66,6 +72,7 @@ export default function ImageStep({
           color="secondary"
           disabled={!file || fileTooLarge}
           onClick={nextCallback}
+          {...trackingAttrs}
         >
           Next
         </Button>

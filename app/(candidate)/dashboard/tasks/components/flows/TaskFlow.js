@@ -182,6 +182,7 @@ export default function TaskFlow({
       </div>
       <CloseConfirmModal
         open={confirmOpen}
+        type={type}
         onCancel={handleCloseCancel}
         onConfirm={handleCloseConfirm}
       />
@@ -208,7 +209,7 @@ export default function TaskFlow({
           />
         )}
         {stepName === STEPS.image && (
-          <ImageStep image={state.image} {...callbackProps} />
+          <ImageStep type={type} image={state.image} {...callbackProps} />
         )}
         {stepName === STEPS.schedule && (
           <ScheduleStep
@@ -227,7 +228,11 @@ export default function TaskFlow({
           />
         )}
         {stepName === STEPS.socialPost && (
-          <SocialPostStep scriptText={state.scriptText} {...callbackProps} />
+          <SocialPostStep
+            type={type}
+            scriptText={state.scriptText}
+            {...callbackProps}
+          />
         )}
       </Modal>
     </>

@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
 import { voterFileDownload } from 'helpers/voterFileDownload'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -24,6 +25,26 @@ export default function DownloadStep({
     type === TASK_TYPES.doorKnocking
       ? DOOR_KNOCKING_BLOG_URL
       : PHONE_BANKING_BLOG_URL
+
+  const downloadTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Download Voter List', { type }),
+    [type],
+  )
+
+  const copyTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Copy Script', { type }),
+    [type],
+  )
+
+  const blogTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Read Blog', { type }),
+    [type],
+  )
+
+  const returnTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Return to Dashboard', { type }),
+    [type],
+  )
 
   async function handleDownload() {
     setDownloading(true)
@@ -44,17 +65,27 @@ export default function DownloadStep({
     <div className="p-4 min-w-[500px]">
       <H1 className="text-center mb-8">Download your materials</H1>
       <div className="flex flex-col gap-4 items-center">
-        <CopyScriptButton scriptText={scriptText} />
+        <CopyScriptButton
+          scriptText={scriptText}
+          trackingAttrs={copyTrackingAttrs}
+        />
         <Button
           size="large"
           color="secondary"
           onClick={handleDownload}
           disabled={downloading}
           loading={downloading}
+          {...downloadTrackingAttrs}
         >
           Download voter list
         </Button>
-        <Button href={blogUrl} target="_blank" size="large" color="neutral">
+        <Button
+          href={blogUrl}
+          target="_blank"
+          size="large"
+          color="neutral"
+          {...blogTrackingAttrs}
+        >
           Read more on our blog
         </Button>
 
@@ -64,6 +95,7 @@ export default function DownloadStep({
           variant="text"
           className="mt-8"
           onClick={closeCallback}
+          {...returnTrackingAttrs}
         >
           Return to Dashboard
         </Button>
