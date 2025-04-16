@@ -3,11 +3,11 @@ import { APP_BASE } from 'appEnv'
 
 export default function PositionSchema({ race, loc }) {
   const {
-    level,
+    positionLevel,
     normalizedPositionName,
     positionDescription,
-    locationName,
-    electionDay,
+    Place,
+    electionDate,
     eligibilityRequirements,
     state,
     salary,
@@ -15,22 +15,19 @@ export default function PositionSchema({ race, loc }) {
     filingOfficeAddress,
     filingPhoneNumber,
     filingDateEnd,
-    municipality,
   } = race
-  let locStr = locationName
-  if (level === 'local') {
-    locStr += `${municipality?.name}, ${state?.toUpperCase() || ''}`
+  let locStr = Place?.name || ''
+  if (positionLevel?.toLowerCase() === 'local') {
+    locStr += `, ${state?.toUpperCase() || ''}`
   }
-  if (level === 'city') {
+  if (positionLevel?.toLowerCase() === 'city') {
     locStr += ` City, ${state}`
-  } else if (level === 'county') {
-    locStr += ` County, ${race.state}`
-  } else if (level === 'state') {
-    locStr += ` ${state}`
+  } else if (positionLevel?.toLowerCase() === 'county') {
+    locStr += ` County, ${state}`
   }
   const slug = `elections/position/${loc.join('/')}`
   const url = `${APP_BASE}/${slug}`
-  const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified'
+  const baseSalary = salary ? `${salary.match(/\d+/g)}` : 'Not Specified'
 
   return (
     <JsonLd
@@ -51,18 +48,17 @@ export default function PositionSchema({ race, loc }) {
           '@type': 'Place',
           address: {
             '@type': 'PostalAddress',
-            addressLocality: locationName,
+            addressLocality: Place?.name,
             addressRegion: state,
             telephone: filingPhoneNumber,
           },
         },
         employmentType: 'Elected',
-        validThrough: electionDay,
+        validThrough: electionDate,
         baseSalary: baseSalary,
         estimatedSalary: baseSalary,
         eligibilityToWorkRequirement: eligibilityRequirements,
         employmentType,
-
         url,
       }}
     />

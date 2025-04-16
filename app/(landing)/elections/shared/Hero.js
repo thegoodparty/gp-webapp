@@ -1,5 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import SearchLocation from '../../shared/SearchLocation'
+import SearchLocation from './SearchLocation'
 import Breadcrumbs from '@shared/utils/Breadcrumbs'
 import { shortToLongState } from 'helpers/statesHelper'
 import Image from 'next/image'

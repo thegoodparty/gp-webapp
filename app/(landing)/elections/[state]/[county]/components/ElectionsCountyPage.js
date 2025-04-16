@@ -4,8 +4,8 @@ import LinksSection from '../../../shared/LinksSection'
 import RacesSection from '../../../shared/RacesSection'
 import LearnToRun from '../../../shared/LearnToRun'
 import Guides from '../../../shared/Guides'
-import Hero from '../../components/Hero'
 import CountyFacts from './CountyFacts'
+import Hero from '../../../shared/Hero'
 
 export default function ElectionsCountyPage(props) {
   const { state, childEntities, races, articles, county } = props

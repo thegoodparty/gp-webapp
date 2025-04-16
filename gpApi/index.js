@@ -43,6 +43,10 @@ const gpApi = {
       url: `${electionBase}places`,
       method: 'GET',
     },
+    races: {
+      url: `${electionBase}races`,
+      method: 'GET',
+    },
   },
 
   race: {

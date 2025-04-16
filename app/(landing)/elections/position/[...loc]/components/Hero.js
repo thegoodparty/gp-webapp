@@ -9,13 +9,12 @@ import Link from 'next/link'
 export default function Hero({
   state,
   county,
-  municipality,
-  level,
+  Place,
+  positionLevel,
   normalizedPositionName,
   electionDate,
   filingDateEnd,
   loc,
-  locationName,
 }) {
   const stateName = shortToLongState[state.toUpperCase()]
   const breadcrumbsLinks = [
@@ -25,18 +24,21 @@ export default function Hero({
       href: `/elections/${state}`,
     },
   ]
-  if ((level === 'city' && county) || (level === 'county' && county)) {
+  if (
+    (positionLevel?.toLowerCase() === 'city' && county) ||
+    (positionLevel?.toLowerCase() === 'county' && county)
+  ) {
     breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
     breadcrumbsLinks.push({
-      label: `${locationName} county`,
-      href: `/elections/${county.slug}`,
+      label: `${Place?.name} county`,
+      href: `/elections/${county}`,
     })
   }
-  if (level === 'city' && municipality) {
+  if (positionLevel?.toLowerCase() === 'city' && Place) {
     breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
     breadcrumbsLinks.push({
-      label: municipality.name,
-      href: `/elections/${municipality.slug}`,
+      label: Place.name,
+      href: `/elections/${Place.slug}`,
     })
   }
   breadcrumbsLinks.push({

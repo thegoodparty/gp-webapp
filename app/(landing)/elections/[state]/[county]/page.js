@@ -5,7 +5,7 @@ import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
 import ElectionsCountyPage from './components/ElectionsCountyPage'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
-
+import fetchPlace from '../../shared/fetchPlace'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
@@ -93,7 +93,7 @@ export default async function Page({ params }) {
     permanentRedirect(url)
   }
 
-  const county = await fetchCounty(state, params.county)
+  const county = await fetchPlace({ slug: `${state}/${params.county}` })
   const { children, Races: races } = county
   county.children = null
   county.races = null

@@ -70,7 +70,7 @@ export default function CityFacts({ city, county }) {
                     <div className="text-2xl font-semibold">{field.label}</div>
                     <div className="text-lg text-slate-200 mt-2 mb-10">
                       {field.isMoney ? '$' : ''}
-                      {field.isNumber
+                      {field.isNumber || field.isPercent
                         ? numberFormatter(field.value)
                         : field.value}
                       {field.isPercent ? '%' : ''}

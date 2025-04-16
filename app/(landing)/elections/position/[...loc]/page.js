@@ -1,21 +1,23 @@
 import pageMetaData from 'helpers/metadataHelper'
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 
-const fetchPosition = async (state, county, city, positionSlug) => {
-  const api = gpApi.race.byRace
+const fetchRace = async (raceSlug) => {
+  const api = gpApi.elections.races
   const payload = {
-    state,
-    county,
-    city,
-    positionSlug,
+    raceSlug,
+    includePlace: true,
   }
 
-  return await gpFetch(api, payload, 3600)
+  const res = await gpFetch(api, payload, 3600)
+  if (Array.isArray(res) && res.length > 0) {
+    return res[0]
+  }
+  return null
 }
 
 const parseLoc = (loc) => {
@@ -31,44 +33,34 @@ const parseLoc = (loc) => {
   }
   return { state, county, city, positionSlug }
 }
-const year = new Date().getFullYear()
 
 export async function generateMetadata({ params }) {
   const { loc } = params
   const { state, county, city, positionSlug } = parseLoc(loc)
-  const { race, otherRaces, positions } = await fetchPosition(
-    state,
-    county,
-    city,
-    positionSlug,
-  )
+  const race = await fetchRace(loc.join('/'))
   const slug = `elections/position/${loc.join('/')}`
 
   const {
-    level,
-    positionName,
+    positionLevel,
+    positionNames,
     positionDescription,
-    locationName,
-    normalizedPositionName,
+    Place,
+    state: raceState,
   } = race || {}
-  let locStr = locationName
-  if (!level || level.toLowerCase() === 'local') {
-    locStr = `${
-      locationName || race.municipality?.name || ''
-    }, ${race?.state?.toUpperCase()}`
+
+  let locStr = Place?.name || ''
+  if (!positionLevel || positionLevel.toLowerCase() === 'local') {
+    locStr = `${Place?.name || ''}, ${raceState?.toUpperCase()}`
   }
-  if (level?.toLowerCase() === 'city') {
-    locStr += ` City, ${race.state?.toUpperCase() || ''}`
-  } else if (level?.toLowerCase() === 'county') {
-    locStr += ` County, ${race.state?.toUpperCase() || ''}`
-  } else if (level?.toLowerCase() === 'state') {
-    // locStr += ` ${race.state.toUpperCase()}`
+  if (positionLevel?.toLowerCase() === 'city') {
+    locStr += ` City, ${raceState?.toUpperCase() || ''}`
+  } else if (positionLevel?.toLowerCase() === 'county') {
+    locStr += ` County, ${raceState?.toUpperCase() || ''}`
   }
 
-  console.log('slug', slug)
   const meta = pageMetaData({
-    title: `Run for ${normalizedPositionName} in ${locStr}`,
-    description: `Learn the details about running for ${normalizedPositionName} in ${locStr}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
+    title: `Run for ${race?.normalizedPositionName} in ${locStr}`,
+    description: `Learn the details about running for ${race?.normalizedPositionName} in ${locStr}. Learn the requirements to run, what the job entails, and helpful tips for running a successful campaign. ${positionDescription}`,
     slug,
   })
   return meta
@@ -79,20 +71,8 @@ export default async function Page({ params }) {
   if (!loc || loc.length === 0 || loc.length > 4) {
     return notFound()
   }
-  const { state, county, city, positionSlug } = parseLoc(loc)
-  const { race, otherRaces, positions } = await fetchPosition(
-    state,
-    county,
-    city,
-    positionSlug,
-  )
-  if (!race) {
-    redirect(
-      `/elections/${state}${county ? `/${county}` : ''}${
-        city ? `/${city}` : ''
-      }`,
-    )
-  }
+  const { state, county, city } = parseLoc(loc)
+  const race = await fetchRace(loc.join('/'))
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
@@ -107,9 +87,9 @@ export default async function Page({ params }) {
 
   const childProps = {
     race,
-    otherRaces,
+    otherRaces: [], // We'll need to update this once we have the otherRaces data
     articles,
-    positions,
+    positions: race.positionNames || [race.normalizedPositionName],
     state,
     county,
     city,

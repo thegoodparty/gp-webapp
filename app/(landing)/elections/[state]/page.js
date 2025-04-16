@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
+import fetchPlace from '../shared/fetchPlace'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
@@ -15,6 +16,7 @@ export const fetchState = async (state) => {
     slug: state,
     includeChildren: true,
     includeRaces: true,
+    raceColumns: 'slug,normalizedPositionName',
   }
   const res = await gpFetch(api, payload, 3600)
   if (Array.isArray(res)) {
@@ -43,7 +45,7 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const { children, Races: races } = await fetchState(state)
+  const { children, Races: races } = await fetchPlace({ slug: state })
   console.log('children', children)
   console.log('races', races)
 

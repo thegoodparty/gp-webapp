@@ -31,7 +31,7 @@ function processAndSort(strings) {
 
 export default function PositionDetails({ race, positions }) {
   const {
-    level,
+    positionLevel,
     filingDateStart,
     filingDateEnd,
     frequency,
@@ -41,7 +41,7 @@ export default function PositionDetails({ race, positions }) {
     positionDescription,
     eligibilityRequirements,
   } = race
-  const term = frequency.match(/\d+/g)
+  const term = frequency?.[0] || 'N/A'
   const cleanPositions = processAndSort(positions)
   return (
     <section className="grid grid-cols-12 gap-4 mt-6 md:mt-12">
@@ -50,11 +50,12 @@ export default function PositionDetails({ race, positions }) {
         <ul>
           <li className=" leading-loose">
             Office level:{' '}
-            <span className="font-normal capitalize">{level || 'N/A'}</span>
+            <span className="font-normal capitalize">
+              {positionLevel?.toLowerCase() || 'N/A'}
+            </span>
           </li>
           <li className=" leading-loose">
-            Length of term:{' '}
-            <span className="font-normal">{term || 'N/A'} years</span>
+            Length of term: <span className="font-normal">{term} years</span>
           </li>
           <li className=" leading-loose">
             Commitment level:{' '}

@@ -1,6 +1,6 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { shortToLongState } from 'helpers/statesHelper'
-import Hero from './Hero'
+import Hero from '../../shared/Hero'
 import LinksSection from '../../shared/LinksSection'
 import RacesSection from '../../shared/RacesSection'
 import LearnToRun from '../../shared/LearnToRun'

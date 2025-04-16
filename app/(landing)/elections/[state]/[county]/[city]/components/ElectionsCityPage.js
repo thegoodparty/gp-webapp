@@ -1,10 +1,10 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { shortToLongState } from 'helpers/statesHelper'
-import RacesSection from '../../../../shared/RacesSection'
-import LearnToRun from '../../../../shared/LearnToRun'
-import Guides from '../../../../shared/Guides'
-import Hero from '../../../components/Hero'
 import CityFacts from './CityFacts'
+import RacesSection from 'app/(landing)/elections/shared/RacesSection'
+import LearnToRun from 'app/(landing)/elections/shared/LearnToRun'
+import Guides from 'app/(landing)/elections/shared/Guides'
+import Hero from '../../../../shared/Hero'
 
 export default function ElectionsCountyPage(props) {
   const { state, municipality, races, articles, county } = props

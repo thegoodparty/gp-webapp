@@ -12,18 +12,15 @@ import VwoVariable from './VwoVariable'
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props
-  const { level, state, locationName } = race
-  let loc = locationName
-  if (!level || level?.toLowerCase() === 'local') {
-    loc = `${
-      locationName || race.municipality?.name || ''
-    }, ${race.state?.toUpperCase()}`
+  const { positionLevel, state, Place } = race
+  let loc = Place?.name || ''
+  if (!positionLevel || positionLevel?.toLowerCase() === 'local') {
+    loc = `${Place?.name || ''}, ${race.state?.toUpperCase()}`
   }
-  if (level?.toLowerCase() === 'city') {
-    loc += `, ${state?.toUpperCase()}`
-  } else if (level?.toLowerCase() === 'county') {
+  if (positionLevel?.toLowerCase() === 'city') {
+    loc += ` City, ${state?.toUpperCase()}`
+  } else if (positionLevel?.toLowerCase() === 'county') {
     loc += ` County, ${state?.toUpperCase()}`
-  } else if (level?.toLowerCase() === 'state') {
   }
 
   const positionLink = (race) => {

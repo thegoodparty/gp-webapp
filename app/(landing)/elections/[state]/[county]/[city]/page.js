@@ -5,7 +5,7 @@ import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
 import ElectionsCityPage from './components/ElectionsCityPage'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
-
+import fetchPlace from 'app/(landing)/elections/shared/fetchPlace'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
@@ -30,7 +30,10 @@ const year = new Date().getFullYear()
 export async function generateMetadata({ params }) {
   const { state, county, city } = params
   const stateName = shortToLongState[state.toUpperCase()]
-  const place = await fetchCity(state, county, city)
+  const place = await fetchPlace({
+    slug: `${state}/${county}/${city}`,
+    includeParent: true,
+  })
 
   const meta = pageMetaData({
     title: `Run for Office in ${place.name}, ${stateName} ${year}`,
@@ -46,7 +49,10 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const place = await fetchCity(state, county, city)
+  const place = await fetchPlace({
+    slug: `${state}/${county}/${city}`,
+    includeParent: true,
+  })
   if (!place) {
     notFound()
   }
