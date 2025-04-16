@@ -12,14 +12,14 @@ export const VoterContactsCount = ({ pathToVictory }) => {
   return (
     <H4>
       Your actions so far have earned you{' '}
-      <strong>
+      <span className="font-bold">
         {numberFormatter(getVoterContactsTotal(reportedVoterGoals))} voter
         contacts
-      </strong>{' '}
+      </span>{' '}
       out of{' '}
-      <strong>
+      <span className="font-bold">
         {numberFormatter(getVoterContactsGoal(pathToVictory))} needed to win
-      </strong>
+      </span>
       .
     </H4>
   )
