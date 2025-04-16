@@ -17,7 +17,7 @@ import {
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
 import TaskFlow from './flows/TaskFlow'
-import { TASK_TYPES } from '../constants/tasks.const'
+import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 

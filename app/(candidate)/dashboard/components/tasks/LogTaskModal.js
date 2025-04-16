@@ -10,7 +10,7 @@ import {
   createIrresponsiblyMassagedHistoryItem,
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
-import { TASK_TYPES } from '../constants/tasks.const'
+import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 export const TASK_TYPE_HEADINGS = {
