@@ -1,25 +1,29 @@
 'use client'
-import Button from '@shared/buttons/Button'
 import { useUser } from '@shared/hooks/useUser'
 import RenderInputField from '@shared/inputs/RenderInputField'
-import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { validateZip } from 'app/(entrance)/sign-up/components/SignUpPage'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
+import Body2 from '@shared/typography/Body2'
 
 const fields = [
   {
     key: 'zip',
-    label: 'Zipcode',
+    label: 'Zip Code',
     type: 'number',
     required: true,
   },
   {
     key: 'level',
-    label: 'Level',
+    label: 'Office Level',
     type: 'select',
-    required: true,
     options: ['Local/Township/City', 'County/Regional', 'State', 'Federal'],
+  },
+  {
+    key: 'officeName',
+    label: 'OfficeName',
+    type: 'text',
+    required: true,
   },
   {
     key: 'electionDate',
@@ -29,9 +33,13 @@ const fields = [
   },
 ]
 
-export default function OfficeStepForm(props) {
-  const { handleNextPart, level, zip, electionDate, adminMode } = props
-  const [processing, setProcessing] = useState(false)
+export default function OfficeStepForm({
+  handleNextPart,
+  level,
+  zip,
+  electionDate,
+  adminMode,
+}) {
   const [state, setState] = useState({
     zip: zip || '',
     level: level || '',
@@ -39,44 +47,36 @@ export default function OfficeStepForm(props) {
   })
   const [user, _] = useUser()
 
-  const canSubmit = () => {
-    return state.zip && state.level && validateZip(state.zip)
-  }
+  const canSubmit = state.zip && validateZip(state.zip)
 
-  const handleNext = async () => {
-    setProcessing(true)
-
-    if (!canSubmit()) {
-      setProcessing(false)
-      return
-    }
-
-    handleNextPart(state.zip, state.level, state.electionDate)
-    setProcessing(false)
-  }
+  useEffect(() => {
+    console.log(`[state.zip, state.level, state.electionDate] =>`, [
+      state.zip,
+      state.level,
+      state.electionDate,
+    ])
+    console.log(`canSubmit =>`, canSubmit)
+    canSubmit && handleNextPart(state.zip, state.level, state.electionDate)
+  }, [state.zip, state.level, state.electionDate])
 
   const onChangeField = (key, value) => {
     setState({
       ...state,
       [key]: value,
     })
-    //  Clear error when user types
-  }
-  let userName = user?.firstName + ' ' + user?.lastName
-  if (adminMode) {
-    userName = ''
   }
 
   return (
     <>
       <H1 className="text-center">
-        Welcome, {userName}
+        Welcome, {adminMode ? '' : user?.firstName || ''}
         <br />
-        Let&apos;s look for your office
+        Let&apos;s find your office
       </H1>
-      <Body1 className="text-center mt-4">
-        To pull accurate results, please fill in the missing information:
-      </Body1>
+      <Body2 className="text-center mt-4">
+        Make sure it matches your candidacy papers from when you filed for
+        office.
+      </Body2>
       <div className="w-full max-w-2xl mt-10">
         {fields.map((field) => (
           <Fragment key={field.key}>
@@ -87,18 +87,6 @@ export default function OfficeStepForm(props) {
             />
           </Fragment>
         ))}
-      </div>
-      <div className="flex justify-end w-full">
-        <Button
-          size="large"
-          className={{ block: true }}
-          disabled={!canSubmit() || processing}
-          loading={processing}
-          type="submit"
-          onClick={handleNext}
-        >
-          Next
-        </Button>
       </div>
     </>
   )

@@ -6,24 +6,26 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import H3 from '@shared/typography/H3'
 import CantFindRaceModal from './CantFindRaceModal'
 import { useRouter } from 'next/navigation'
-import Button from '@shared/buttons/Button'
-import H1 from '@shared/typography/H1'
-import Body1 from '@shared/typography/Body1'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import Body2 from '@shared/typography/Body2'
 
 const fetchRaces = async (zipcode, level, electionDate) => {
-  let cleanLevel = level
-  if (level === 'Local/Township/City') {
-    cleanLevel = 'Local'
-  }
-  if (level === 'County/Regional') {
-    cleanLevel = 'County'
-  }
+  const cleanLevel =
+    level === 'Local/Township/City'
+      ? 'Local'
+      : level === 'County/Regional'
+      ? 'County'
+      : level
+
   const payload = {
     zipcode,
-    level: cleanLevel,
+    ...(cleanLevel
+      ? {
+          level: cleanLevel,
+        }
+      : {}),
     ...(electionDate ? { electionDate } : {}),
   }
 
@@ -48,7 +50,7 @@ export default function BallotRaces(props) {
     onBack,
   } = props
   const [races, setRaces] = useState(false)
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue] = useState('')
   const [selected, setSelected] = useState(selectedOffice || false)
   const [loading, setLoading] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
@@ -57,7 +59,7 @@ export default function BallotRaces(props) {
 
   useEffect(() => {
     loadRaces(zip, level, electionDate)
-  }, [])
+  }, [zip, level, electionDate])
 
   const loadRaces = async (zip, level, electionDate) => {
     if (zip) {
@@ -155,13 +157,18 @@ export default function BallotRaces(props) {
     }
   }
 
+  const racesLength = races?.length || 0
+  const countMessage = `${racesLength} office${
+    racesLength === 1 ? '' : 's'
+  } found`
+
   return (
     <section className="mb-2">
-      <H1 className="text-center">Which office are you running for?</H1>
-      <Body1 className="text-center mt-4">
-        Make sure it matches your candidacy papers from when you filed for
-        office.
-      </Body1>
+      {/*<H1 className="text-center">Which office are you running for?</H1>*/}
+      {/*<Body1 className="text-center mt-4">*/}
+      {/*  Make sure it matches your candidacy papers from when you filed for*/}
+      {/*  office.*/}
+      {/*</Body1>*/}
 
       {loading ? (
         <div className="mt-6 text-center">
@@ -171,8 +178,19 @@ export default function BallotRaces(props) {
           <H3>Loading Races</H3>
         </div>
       ) : (
-        <div className="mt-6">
-          {Array.isArray(races) &&
+        <Body2>
+          {countMessage}
+          {races?.length === 0 ? (
+            <div className="bg-white rounded-lg p-6 border border-gray-200 mt-4">
+              <ol className="space-y-2">
+                <li>1. Try a different Zip Code</li>
+                <li>2. Select a different office level</li>
+                <li>3. Try another office name</li>
+                <li>4. Double check your candidacy papers</li>
+              </ol>
+            </div>
+          ) : (
+            Array.isArray(races) &&
             races.map((race, index) => (
               <RaceCard
                 key={index}
@@ -181,17 +199,17 @@ export default function BallotRaces(props) {
                 selectCallback={handleSelect}
                 inputValue={inputValue}
               />
-            ))}
-          <Button
-            onClick={handleShowModal}
-            color="neutral"
-            variant="text"
-            size="large"
-            className="w-full"
-          >
-            I can&apos;t find my office
-          </Button>
-        </div>
+            ))
+          )}
+          <div className="my-8 text-center">
+            <a
+              onClick={handleShowModal}
+              className="text-blue-600 hover:text-blue-700 cursor-pointer"
+            >
+              I don&apos;t see my office
+            </a>
+          </div>
+        </Body2>
       )}
       {showHelpModal && (
         <CantFindRaceModal
