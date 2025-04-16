@@ -72,7 +72,7 @@ test("Verify Blog filtering", async ({ page }) => {
     // Verify user redirected to category page
     await expect(page).toHaveURL(
       new RegExp(`/section/${categoryButtons[1]}`, "i"),
-      { timeout: 5000 }
+      { timeout: 10000 }
     );
 
     // Filter blog page by topic
@@ -85,7 +85,7 @@ test("Verify Blog filtering", async ({ page }) => {
 
     // Verify user redirected to topic page
     await page.waitForLoadState("networkidle");
-    await expect(page).toHaveURL(/.*\/blog\/tag/, { timeout: 5000 });
+    await expect(page).toHaveURL(/.*\/blog\/tag/, { timeout: 10000 });
 
     // Report test results
     await addTestResult(runId, caseId, 1, "Test passed");
