@@ -20,7 +20,7 @@ const fields = [
     options: ['Local/Township/City', 'County/Regional', 'State', 'Federal'],
   },
   {
-    key: 'officeName',
+    key: 'fuzzyFilter',
     label: 'OfficeName',
     type: 'text',
     required: true,
@@ -34,7 +34,7 @@ const fields = [
 ]
 
 export default function OfficeStepForm({
-  handleNextPart,
+  onChange,
   level,
   zip,
   electionDate,
@@ -43,6 +43,7 @@ export default function OfficeStepForm({
   const [state, setState] = useState({
     zip: zip || '',
     level: level || '',
+    fuzzyFilter: '',
     electionDate: electionDate || '',
   })
   const [user, _] = useUser()
@@ -50,14 +51,8 @@ export default function OfficeStepForm({
   const canSubmit = state.zip && validateZip(state.zip)
 
   useEffect(() => {
-    console.log(`[state.zip, state.level, state.electionDate] =>`, [
-      state.zip,
-      state.level,
-      state.electionDate,
-    ])
-    console.log(`canSubmit =>`, canSubmit)
-    canSubmit && handleNextPart(state.zip, state.level, state.electionDate)
-  }, [state.zip, state.level, state.electionDate])
+    canSubmit && onChange({ ...state })
+  }, [state])
 
   const onChangeField = (key, value) => {
     setState({

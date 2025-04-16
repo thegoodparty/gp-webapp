@@ -10,6 +10,19 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import Body2 from '@shared/typography/Body2'
+import Fuse from 'fuse.js'
+
+const FUSE_OPTIONS = {
+  keys: ['position.name'],
+  threshold: 0.4,
+  ignoreLocation: true,
+  minMatchCharLength: 1,
+  shouldSort: true,
+  findAllMatches: true,
+  includeScore: true,
+  useExtendedSearch: true,
+  isCaseSensitive: false,
+}
 
 const fetchRaces = async (zipcode, level, electionDate) => {
   const cleanLevel =
@@ -36,30 +49,68 @@ const fetchRaces = async (zipcode, level, electionDate) => {
   return resp.data
 }
 
-export default function BallotRaces(props) {
-  const {
-    campaign,
-    selectedOfficeCallback,
-    selectedOffice,
-    step,
-    updateCallback,
-    zip,
-    level,
-    electionDate,
-    adminMode,
-    onBack,
-  } = props
+const getHighlightedText = (text, searchTerm) => {
+  if (!searchTerm) return text
+
+  const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'))
+  return parts.map((part, index) =>
+    part.toLowerCase() === searchTerm.toLowerCase() ? (
+      <strong key={index}>{part}</strong>
+    ) : (
+      part
+    ),
+  )
+}
+
+export default function BallotRaces({
+  campaign,
+  selectedOfficeCallback,
+  selectedOffice,
+  step,
+  updateCallback,
+  zip,
+  level,
+  electionDate,
+  adminMode,
+  onBack,
+  fuzzyFilter,
+}) {
   const [races, setRaces] = useState(false)
+  const [filteredRaces, setFilteredRaces] = useState([])
   const [inputValue] = useState('')
   const [selected, setSelected] = useState(selectedOffice || false)
   const [loading, setLoading] = useState(false)
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [fuse, setFuse] = useState(null)
 
   const router = useRouter()
 
   useEffect(() => {
     loadRaces(zip, level, electionDate)
   }, [zip, level, electionDate])
+
+  useEffect(() => {
+    if (Array.isArray(races)) {
+      const racesData = races.map((race) => ({
+        ...race,
+        position: {
+          ...race.position,
+          name: race.position?.name || '',
+        },
+      }))
+      setFuse(new Fuse(racesData, FUSE_OPTIONS))
+      setFilteredRaces(races)
+    }
+  }, [races])
+
+  useEffect(() => {
+    if (fuse && fuzzyFilter) {
+      const results = fuse.search(fuzzyFilter)
+      setFilteredRaces(results.map((result) => result.item))
+    } else if (Array.isArray(races)) {
+      setFilteredRaces(races)
+    }
+  }, [fuzzyFilter, fuse, races])
 
   const loadRaces = async (zip, level, electionDate) => {
     if (zip) {
@@ -68,11 +119,11 @@ export default function BallotRaces(props) {
       if (!initRaces) {
         throw new Error(`Couldn't fetch races for zip ${zip}`)
       }
-      setRaces(
-        initRaces.sort((a, b) =>
-          a.election.electionDay.localeCompare(b.election.electionDay),
-        ),
+      const sortedRaces = initRaces.sort((a, b) =>
+        a.election.electionDay.localeCompare(b.election.electionDay),
       )
+      setRaces(sortedRaces)
+      setFilteredRaces(sortedRaces)
       setLoading(false)
     }
   }
@@ -157,7 +208,7 @@ export default function BallotRaces(props) {
     }
   }
 
-  const racesLength = races?.length || 0
+  const racesLength = filteredRaces?.length || 0
   const countMessage = `${racesLength} office${
     racesLength === 1 ? '' : 's'
   } found`
@@ -190,12 +241,18 @@ export default function BallotRaces(props) {
               </ol>
             </div>
           ) : (
-            Array.isArray(races) &&
-            races.map((race, index) => (
+            Array.isArray(filteredRaces) &&
+            filteredRaces.map((race, index) => (
               <RaceCard
                 key={index}
-                race={race}
-                selected={race?.id === selected.id}
+                race={{
+                  ...race,
+                  position: {
+                    ...race.position,
+                    name: getHighlightedText(race.position.name, fuzzyFilter),
+                  },
+                }}
+                selected={race?.id === selected?.id}
                 selectCallback={handleSelect}
                 inputValue={inputValue}
               />

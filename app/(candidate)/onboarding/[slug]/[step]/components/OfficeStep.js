@@ -32,7 +32,8 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   })
-  const [part, setPart] = useState(1) // this step has two parts.
+
+  const { ballotSearch } = state
 
   const [processing, setProcessing] = useState(false)
   const trackingAttrs = useMemo(
@@ -189,23 +190,17 @@ export default function OfficeStep(props) {
       }
     : false
 
-  const handleNextPart = (zip, level, electionDate) => {
+  const updateState = (newState) => {
     setState({
       ...state,
-      ballotSearch: {
-        zip,
-        level,
-        electionDate,
-      },
+      ballotSearch: newState,
     })
-    setPart(2)
   }
 
   const handleBack = () => {
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickBack, {
       step,
     })
-    setPart(1)
   }
 
   return (
@@ -213,10 +208,10 @@ export default function OfficeStep(props) {
       <div className="flex items-center flex-col">
         <OfficeStepForm
           campaign={campaign}
-          handleNextPart={handleNextPart}
-          zip={state.ballotSearch?.zip || campaign.details?.zip}
-          level={state.ballotSearch?.level || ''}
-          electionDate={state.ballotSearch?.electionDate || ''}
+          onChange={updateState}
+          zip={ballotSearch?.zip || campaign.details?.zip}
+          level={ballotSearch?.level || ''}
+          electionDate={ballotSearch?.electionDate || ''}
           adminMode={adminMode}
         />
         <>
@@ -227,11 +222,12 @@ export default function OfficeStep(props) {
               selectedOffice={selectedOffice}
               updateCallback={updateCallback}
               step={step}
-              zip={state.ballotSearch?.zip || campaign.details?.zip}
-              level={state.ballotSearch?.level}
-              electionDate={state.ballotSearch?.electionDate}
+              zip={ballotSearch?.zip || campaign.details?.zip}
+              level={ballotSearch?.level}
+              electionDate={ballotSearch?.electionDate}
               adminMode={adminMode}
               onBack={handleBack}
+              fuzzyFilter={ballotSearch?.fuzzyFilter}
             />
           </div>
           <div className="flex justify-between w-full">
