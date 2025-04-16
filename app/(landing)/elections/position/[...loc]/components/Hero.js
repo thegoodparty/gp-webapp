@@ -21,26 +21,14 @@ export default function Hero({
     { href: `/elections`, label: 'How to run' },
     {
       label: `How to run in ${stateName}`,
-      href: `/elections/${state}`,
+      href: `/elections/${state.toLowerCase()}`,
+    },
+    {
+      label: `${Place?.name}`,
+      href: `/elections/${Place?.slug}`,
     },
   ]
-  if (
-    (positionLevel?.toLowerCase() === 'city' && county) ||
-    (positionLevel?.toLowerCase() === 'county' && county)
-  ) {
-    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
-    breadcrumbsLinks.push({
-      label: `${Place?.name} county`,
-      href: `/elections/${county}`,
-    })
-  }
-  if (positionLevel?.toLowerCase() === 'city' && Place) {
-    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
-    breadcrumbsLinks.push({
-      label: Place.name,
-      href: `/elections/${Place.slug}`,
-    })
-  }
+
   breadcrumbsLinks.push({
     label: normalizedPositionName,
   })

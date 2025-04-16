@@ -1,6 +1,9 @@
 import Link from 'next/link'
 
 export default function LinksSection({ entities, linkFunc, title }) {
+  if (!entities || entities.length === 0) {
+    return null
+  }
   return (
     <section className="bg-white px-4 pt-5 pb-12 md:p-12 md:rounded-3xl shadow-lg">
       <h2 className="font-medium text-xl md:text-3xl mb-5 md:mb-10">{title}</h2>
