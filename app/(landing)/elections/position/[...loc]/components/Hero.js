@@ -8,7 +8,6 @@ import Link from 'next/link'
 
 export default function Hero({
   state,
-  county,
   Place,
   positionLevel,
   normalizedPositionName,
@@ -17,17 +16,30 @@ export default function Hero({
   loc,
 }) {
   const stateName = shortToLongState[state.toUpperCase()]
+
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
     {
       label: `How to run in ${stateName}`,
       href: `/elections/${state.toLowerCase()}`,
     },
-    {
-      label: `${Place?.name}`,
-      href: `/elections/${Place?.slug}`,
-    },
   ]
+  if (
+    positionLevel?.toLowerCase() === 'local' ||
+    positionLevel?.toLowerCase() === 'city'
+  ) {
+    const slugParts = Place?.slug.split('/')
+    slugParts.pop()
+    const newSlug = slugParts.join('/')
+    breadcrumbsLinks.push({
+      label: `${Place?.countyName}`,
+      href: `/elections/${newSlug}`,
+    })
+  }
+  breadcrumbsLinks.push({
+    label: `${Place?.name}`,
+    href: `/elections/${Place?.slug}`,
+  })
 
   breadcrumbsLinks.push({
     label: normalizedPositionName,
