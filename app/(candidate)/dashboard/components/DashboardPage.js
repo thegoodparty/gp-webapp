@@ -4,19 +4,17 @@ import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper'
 import { useCallback, useEffect, useState } from 'react'
 import { calculateContactGoals } from './voterGoalsHelpers'
 import ElectionOver from './ElectionOver'
-import UpdateHistorySection from './UpdateHistorySection'
 import EmptyState from './EmptyState'
 import { updateUser } from 'helpers/userHelper'
 import { useUser } from '@shared/hooks/useUser'
-import { P2vSection } from './p2v/P2vSection'
-import ContactMethodsSection from './contactMethods/ContactMethodsSection'
 import PrimaryResultModal from './PrimaryResultModal'
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign'
 import LoadingAnimation from '@shared/utils/LoadingAnimation'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
+import TasksList from '../tasks/components/TasksList'
 
-export default function DashboardPage({ pathname }) {
+export default function DashboardPage({ pathname, tasks }) {
   const [_, setUser] = useUser()
   const [campaign, setCampaign] = useState(null)
   const { pathToVictory: p2vObject, goals, details } = campaign || {}
@@ -140,11 +138,7 @@ export default function DashboardPage({ pathname }) {
                     primaryResultState.primaryResult === 'lost' ? (
                       <ElectionOver />
                     ) : (
-                      <>
-                        <P2vSection {...childProps} />
-                        <ContactMethodsSection {...childProps} />
-                        <UpdateHistorySection />
-                      </>
+                      <TasksList campaign={campaign} tasks={tasks} />
                     )}
                   </>
                 ) : (
