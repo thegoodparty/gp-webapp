@@ -15,7 +15,6 @@ export const fetchState = async (state) => {
   const payload = {
     slug: state,
     includeChildren: true,
-    includeRaces: true,
     raceColumns: 'slug,normalizedPositionName',
   }
   const res = await gpFetch(api, payload, 3600)

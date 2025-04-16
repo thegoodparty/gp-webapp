@@ -8,10 +8,11 @@ const fetchPlace = async ({
 }) => {
   const api = gpApi.elections.places
   const payload = {
-    slug,
+    slug: slug.toLowerCase(),
     includeChildren: true,
     includeRaces,
-    raceColumns: 'slug,normalizedPositionName,electionDate,positionDescription,positionLevel',
+    raceColumns:
+      'slug,normalizedPositionName,electionDate,positionDescription,positionLevel',
     includeParent,
   }
   const res = await gpFetch(api, payload, 3600)

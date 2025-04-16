@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
 import Button from '@shared/buttons/Button'
+import fetchPlace from './fetchPlace'
 
 const fetchState = async (state) => {
   const api = gpApi.elections.places
@@ -48,20 +49,24 @@ export default function SearchLocation({ withHeader = false, initialState }) {
 
   const onChangeState = async (stateName) => {
     console.log('stateName', stateName)
-    const { children } = await fetchState(stateName)
+    const place = await fetchPlace({ slug: stateName, includeRaces: false })
     setState({
       ...state,
       state: stateName,
-      countyOptions: children,
+      countyOptions: place.children,
     })
   }
 
   const onChangeCounty = async (countyName) => {
-    const { children } = await fetchCounty(state.state, countyName)
+    console.log('onChangeCounty', countyName)
+    const place = await fetchPlace({
+      slug: `${state.state.toLowerCase()}/${slugify(countyName, true)}`,
+      includeRaces: false,
+    })
     setState({
       ...state,
       county: countyName,
-      munOptions: children,
+      munOptions: place.children,
     })
   }
 
