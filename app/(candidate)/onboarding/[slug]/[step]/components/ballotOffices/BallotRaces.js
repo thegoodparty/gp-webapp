@@ -54,7 +54,9 @@ const getHighlightedText = (text, searchTerm) => {
   const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'))
   return parts.map((part, index) =>
     part.toLowerCase() === searchTerm.toLowerCase() ? (
-      <strong key={index}>{part}</strong>
+      <strong className="text-blue-600" key={index}>
+        {part}
+      </strong>
     ) : (
       part
     ),

@@ -21,18 +21,13 @@ const fields = [
   },
   {
     key: 'fuzzyFilter',
-    label: 'OfficeName',
+    label: 'Office Name',
     type: 'text',
     required: true,
   },
 ]
 
-export default function OfficeStepForm({
-  onChange,
-  level,
-  zip,
-  adminMode,
-}) {
+export default function OfficeStepForm({ onChange, level, zip, adminMode }) {
   const [state, setState] = useState({
     zip: zip || '',
     level: level || '',
