@@ -30,8 +30,7 @@ const fields = [
 ]
 
 export default function OfficeStepForm(props) {
-  const { campaign, handleNextPart, level, zip, electionDate, adminMode } =
-    props
+  const { handleNextPart, level, zip, electionDate, adminMode } = props
   const [processing, setProcessing] = useState(false)
   const [state, setState] = useState({
     zip: zip || '',
