@@ -14,7 +14,7 @@ export const CampaignCountdown = ({ electionDate }) => {
   }
 
   return (
-    <H1 className="mb-4">
+    <H1 className="mb-4 mt-4">
       {`${value} ${unit}${value > 1 ? 's' : ''} until Election Day!`}
     </H1>
   )
