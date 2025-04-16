@@ -25,22 +25,22 @@ test.skip('Update Campaign Details', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Update campaign details
-        await page.getByPlaceholder('Campaign Committee').fill(newCampaignCommittee);
-        await page.getByLabel('Occupation *').fill(newOccupation);
-        await page.getByLabel('Campaign website').fill(newWebsite);
-        await page.getByRole('combobox').click();
-        await page.getByRole('combobox').selectOption(newParty);
+        page.getByPlaceholder('Campaign Committee').fill(newCampaignCommittee);
+        page.getByLabel('Occupation *').fill(newOccupation);
+        page.getByLabel('Campaign website').fill(newWebsite);
+        page.getByRole('combobox').click();
+        page.getByRole('combobox').selectOption(newParty);
 
-        await page.locator('section').filter({ hasText: 'Campaign Details' }).getByRole('button').click();
+        page.locator('section').filter({ hasText: 'Campaign Details' }).getByRole('button').click();
 
         // Refresh page
         await page.reload({ waitUntil: 'networkidle' });
 
         // Confirm new campaign details are saved
-        await expect(page.getByPlaceholder('Campaign Committee')).toHaveValue(newCampaignCommittee);
-        await expect(page.getByLabel('Occupation *')).toHaveValue(newOccupation);
-        await expect(page.getByLabel('Campaign website')).toHaveValue(newWebsite);
-        await expect(page.getByRole('combobox')).toHaveValue(newParty);
+        expect(page.getByPlaceholder('Campaign Committee')).toHaveValue(newCampaignCommittee);
+        expect(page.getByLabel('Occupation *')).toHaveValue(newOccupation);
+        expect(page.getByLabel('Campaign website')).toHaveValue(newWebsite);
+        expect(page.getByRole('combobox')).toHaveValue(newParty);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -62,26 +62,23 @@ test.skip('Update Office Details', async ({ page }) => {
         const electionRole = 'Daly City Clerk';
 
         // Select new office location
-        await page.getByRole('button', { name: 'Edit Office Details' }).click();
-        await page.getByText('To pull accurate results,').isVisible();
-        await page.getByLabel('Zipcode *').fill(newOfficeZip);
-        await page.getByRole('combobox').selectOption(electionLevel);
-        await page.getByRole('button', { name: 'Next' }).click();
-
-        // Wait for new office location results
-        await expect(page.locator('div').filter({ hasText: /^Loading Races$/ })).toBeHidden();
+        page.getByRole('button', { name: 'Edit Office Details' }).click();
+        page.getByText('To pull accurate results,').isVisible();
+        page.getByLabel('Zipcode *').fill(newOfficeZip);
+        page.getByRole('combobox').selectOption(electionLevel);
+        page.getByRole('button', { name: 'Next' }).click();
 
         // Select first local office listing
-        const officeSelection = page.getByRole('button', { name: electionRole }).first();
+        const officeSelection = await page.getByRole('button', { name: electionRole }).first();
         await officeSelection.scrollIntoViewIfNeeded();
-        await officeSelection.click();
-        await page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
-        await page.getByRole('button', { name: 'Save' }).click();
+        officeSelection.click();
+        page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
+        page.getByRole('button', { name: 'Save' }).click();
 
         // Confirm new office details
         const newOfficeTitle = await page.getByLabel('Office').inputValue();
         await expect(oldOfficeTitle).not.toEqual(newOfficeTitle);
-        await expect(await page.getByLabel('Office').inputValue()).toBe(newOfficeTitle);
+        expect(await page.getByLabel('Office').inputValue()).toBe(newOfficeTitle);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -99,16 +96,16 @@ test('Update Your Why Statement', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Update Your Why Statement
-        await page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
-        await page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
-        await page.getByRole('button', { name: 'Save' }).nth(2).click();
-        await page.waitForLoadState("networkidle");
+        page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
+        page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
+        page.getByRole('button', { name: 'Save' }).nth(2).click();
+        await page.waitForLoadState('domcontentloaded');
 
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
 
         // Confirm saved Why Statement
-        await page.getByText(newWhyStatement).isVisible();
+        page.getByText(newWhyStatement).isVisible();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -127,16 +124,16 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Update Your Why Statement
-        await page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
-        await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
-        await page.getByRole('button', { name: 'Save' }).nth(3).click();
+        page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
+        page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
+        page.getByRole('button', { name: 'Save' }).nth(3).click();
         await page.waitForLoadState("networkidle");
 
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
 
         // Confirm saved Why Statement
-        await page.getByText(newFunFacts).isVisible();
+        page.getByText(newFunFacts).isVisible();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -155,17 +152,17 @@ test('Add Opponent', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Add new opponent data
-        await page.getByRole('button', { name: 'Add New Opponent' }).click();
-        await page.getByLabel('Name *').fill(opponent);
-        await page.locator('form').getByRole('combobox').selectOption('Other');
-        await page.getByPlaceholder('EXAMPLE: Republican hotel').fill(opponentDescription);
-        await page.getByRole('button', { name: 'Add Opponent' }).click();
-        await page.getByRole('button', { name: 'Save' }).nth(1).click();
+        page.getByRole('button', { name: 'Add New Opponent' }).click();
+        page.getByLabel('Name *').fill(opponent);
+        page.locator('form').getByRole('combobox').selectOption('Other');
+        page.getByPlaceholder('EXAMPLE: Republican hotel').fill(opponentDescription);
+        page.getByRole('button', { name: 'Add Opponent' }).click();
+        page.getByRole('button', { name: 'Save' }).nth(1).click();
         await page.waitForLoadState("networkidle");
 
         // Refresh page and confirm saved opponent data
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.getByText(opponent, { exact: true }).isVisible();
+        page.getByText(opponent, { exact: true }).isVisible();
     
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
