@@ -13,7 +13,6 @@ const STEPS = {
 export default function CantFindRaceModal({
   campaign,
   onClose,
-  onBack,
   onSaveCustomOffice,
 }) {
   const [step, setStep] = useState(STEPS.TROUBLESHOOT)

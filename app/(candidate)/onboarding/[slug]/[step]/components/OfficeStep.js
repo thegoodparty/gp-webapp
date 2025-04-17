@@ -197,12 +197,6 @@ export default function OfficeStep(props) {
     })
   }
 
-  const handleBack = () => {
-    trackEvent(EVENTS.Onboarding.OfficeStep.ClickBack, {
-      step,
-    })
-  }
-
   return (
     <form noValidate onSubmit={(e) => e.preventDefault()}>
       <div className="flex items-center flex-col">
@@ -224,7 +218,6 @@ export default function OfficeStep(props) {
               zip={ballotSearch?.zip || campaign.details?.zip}
               level={ballotSearch?.level}
               adminMode={adminMode}
-              onBack={handleBack}
               fuzzyFilter={ballotSearch?.fuzzyFilter}
             />
           </div>

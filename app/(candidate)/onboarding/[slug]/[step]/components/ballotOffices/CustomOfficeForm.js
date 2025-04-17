@@ -13,21 +13,21 @@ import Body2 from '@shared/typography/Body2'
 const fields = [
   {
     key: 'office',
-    label: 'Office Name *',
+    label: 'Office Name',
     type: 'text',
     required: true,
     placeholder: 'Other',
   },
   {
     key: 'state',
-    label: 'State **',
+    label: 'State',
     type: 'select',
     options: flatStates,
     required: true,
   },
   {
     key: 'city',
-    label: 'City, Town Or County *',
+    label: 'City, Town Or County',
     type: 'text',
     required: true,
   },
@@ -39,14 +39,14 @@ const fields = [
   },
   {
     key: 'officeTermLength',
-    label: 'Term Length *',
+    label: 'Term Length',
     type: 'select',
     required: true,
     options: ['Select', '2 years', '3 years', '4 years', '6 years'],
   },
   {
     key: 'electionDate',
-    label: 'General Election Date *',
+    label: 'General Election Date',
     type: 'date',
     required: true,
     noPastDates: true,
@@ -108,7 +108,10 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
         <H1 as="h2">Request help</H1>
       </div>
       <Body2 className="mb-12 text-center">
-        We are sorry you can&apos;t find your office. This requires manual help by our team. This process may take up to 3 days, during which your account access will be limited. You will be notified via email once the process is finished.
+        We are sorry you can&apos;t find your office. This requires manual help
+        by our team. This process may take up to 3 days, during which your
+        account access will be limited. You will be notified via email once the
+        process is finished.
       </Body2>
       <div className="space-y-6">
         {fields.map((field) => (

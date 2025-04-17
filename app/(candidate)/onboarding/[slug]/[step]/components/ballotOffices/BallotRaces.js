@@ -72,7 +72,6 @@ export default function BallotRaces({
   zip,
   level,
   adminMode,
-  onBack,
   fuzzyFilter,
 }) {
   const [races, setRaces] = useState(false)
@@ -268,7 +267,6 @@ export default function BallotRaces({
         <CantFindRaceModal
           campaign={campaign}
           onClose={handleCloseModal}
-          onBack={onBack}
           onSaveCustomOffice={handleSaveCustomOffice}
         />
       )}
