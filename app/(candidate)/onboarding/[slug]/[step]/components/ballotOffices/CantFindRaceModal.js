@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
-import Body1 from '@shared/typography/Body1'
 import Button from '@shared/buttons/Button'
 import CustomOfficeForm from './CustomOfficeForm'
+import Body2 from '@shared/typography/Body2'
 
 const STEPS = {
   TROUBLESHOOT: 'troubleshoot',
@@ -23,51 +23,52 @@ export default function CantFindRaceModal({
       <div className="max-w-[640px] mx-auto w-[80vw] p-8">
         {step === STEPS.SET_CUSTOM_OFFICE ? (
           <>
-            <H1 as="h2" className="text-center">
-              Office Details
-            </H1>
-            <CustomOfficeForm campaign={campaign} onSave={onSaveCustomOffice} />
+            <CustomOfficeForm
+              campaign={campaign}
+              onSave={onSaveCustomOffice}
+              onBack={onClose}
+            />
           </>
         ) : (
           <>
             <H1 as="h2" className="text-center">
               Troubleshooting
             </H1>
-            <Body1 className="my-8">
-              <ol className="list-decimal list-outside font-outfit font-medium ml-8 [&>li]:leading-6 [&>li]:mb-2">
-                <li>
-                  Ensure you&apos;ve entered the correct ZIP for the office
-                  you&apos;re running for.
-                </li>
-                <li>
-                  Ensure you have the correct general election date. If
-                  there&apos;s a primary or runoff for your race, still enter
-                  the general election date.
-                </li>
-                <li>
-                  Try another office level. Some states report office levels
-                  differently than others, so you might need to try another
-                  office level to find the correct race.
-                </li>
-              </ol>
-              <Button
-                variant="text"
-                color="neutral"
-                className="mt-2"
-                onClick={() => setStep(STEPS.SET_CUSTOM_OFFICE)}
-              >
-                I&apos;ve tried all of these steps and still can&apos;t find my
-                office
-              </Button>
-            </Body1>
-
-            <div className="flex-col-reverse sm:flex-row flex gap-2 justify-between">
-              <Button size="large" color="neutral" onClick={onClose}>
-                Close
-              </Button>
-              <Button size="large" onClick={onBack}>
-                Back to search
-              </Button>
+            <div className="mt-8">
+              <Body2 className="bg-white rounded-lg p-6 border border-gray-200">
+                <ol className="space-y-4 list-decimal pl-5">
+                  <li className="pl-1">
+                    Zip Code: Make sure the Zip Code matches the office
+                    you&apos;re running for.
+                  </li>
+                  <li className="pl-1">
+                    Office Level: Try another office level to find the correct
+                    race.
+                  </li>
+                  <li className="pl-1">
+                    Office Name: Try broadening your search.
+                  </li>
+                  <li className="pl-1">Double check your candidacy papers.</li>
+                </ol>
+              </Body2>
+              <div className="my-8 text-center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="bg-slate-800 text-white hover:bg-slate-700"
+                  onClick={onClose}
+                >
+                  Back to search
+                </Button>
+              </div>
+              <div className="text-center">
+                <a
+                  className="text-blue-600 hover:text-blue-700 cursor-pointer"
+                  onClick={() => setStep(STEPS.SET_CUSTOM_OFFICE)}
+                >
+                  <Body2>I still don&apos;t see my office</Body2>
+                </a>
+              </div>
             </div>
           </>
         )}

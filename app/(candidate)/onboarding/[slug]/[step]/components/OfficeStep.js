@@ -228,18 +228,9 @@ export default function OfficeStep(props) {
               fuzzyFilter={ballotSearch?.fuzzyFilter}
             />
           </div>
-          <div className="flex justify-between w-full">
+          <div className="flex w-full justify-center">
             <Button
               size="large"
-              color="neutral"
-              className={{ block: true }}
-              onClick={handleBack}
-            >
-              Back
-            </Button>
-            <Button
-              size="large"
-              className={{ block: true }}
               disabled={!canSubmit() || processing}
               loading={processing}
               type="submit"
