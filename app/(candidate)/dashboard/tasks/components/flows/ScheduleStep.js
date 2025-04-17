@@ -7,6 +7,7 @@ import { useState, useMemo } from 'react'
 import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
+import { addDays } from 'date-fns'
 
 export default function ScheduleStep({
   onChangeCallback,
@@ -24,6 +25,7 @@ export default function ScheduleStep({
       message: '',
     },
   )
+  const [dateError, setDateError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const resolvedFileName = useMemo(
@@ -46,14 +48,16 @@ export default function ScheduleStep({
     onChangeCallback('schedule', newState)
   }
 
-  const canSubmit = () => state.date != '' && state.message != ''
+  const canSubmit = () => state.date != '' && state.message != '' && !dateError
 
   const handleNext = async () => {
     setIsLoading(true)
     const resp = await submitCallback()
 
     if (resp.ok === false || resp.errors) {
-      errorSnackbar('Failed to submit request.')
+      const error = resp.errors[0]?.message
+      errorSnackbar(`Failed to submit request. ${error}`)
+      setIsLoading(false)
       return
     }
 
@@ -63,9 +67,7 @@ export default function ScheduleStep({
   }
   const isTel = type === 'telemarketing'
   const today = new Date()
-  const futureDate = new Date(today)
-  futureDate.setDate(today.getDate() + 3)
-  const minDate = futureDate.toISOString().split('T')[0]
+  const minDate = addDays(today, 3).toISOString().split('T')[0]
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
@@ -90,6 +92,15 @@ export default function ScheduleStep({
             value={state.date}
             onChange={(e) => {
               onChangeField('date', e.target.value)
+
+              const selectedDate = new Date(e.target.value)
+              const minDateObj = new Date(minDate)
+
+              if (selectedDate >= minDateObj) {
+                setDateError(null)
+              } else {
+                setDateError('Date must be at least 72 hours from now')
+              }
             }}
             InputLabelProps={{
               shrink: true,
@@ -97,6 +108,8 @@ export default function ScheduleStep({
             inputProps={{
               min: minDate,
             }}
+            error={!!dateError}
+            helperText={dateError}
           />
         </div>
         <div className="mt-4">
