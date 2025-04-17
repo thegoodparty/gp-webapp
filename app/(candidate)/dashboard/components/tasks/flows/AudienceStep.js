@@ -10,7 +10,10 @@ import { useEffect, useState, useMemo } from 'react'
 import { countVoterFile } from 'app/(candidate)/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
-import { LEGACY_TASK_TYPES, TASK_TYPES } from '../../constants/tasks.const'
+import {
+  LEGACY_TASK_TYPES,
+  TASK_TYPES,
+} from '../../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 const TEXT_PRICE = 0.03

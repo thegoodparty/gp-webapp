@@ -1,5 +1,8 @@
 import H1 from '@shared/typography/H1'
-import { TASK_TYPES, LEGACY_TASK_TYPES } from '../../constants/tasks.const'
+import {
+  TASK_TYPES,
+  LEGACY_TASK_TYPES,
+} from '../../../shared/constants/tasks.const'
 import Button from '@shared/buttons/Button'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 import { useMemo } from 'react'

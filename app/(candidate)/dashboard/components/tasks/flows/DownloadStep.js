@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
-import { TASK_TYPES } from '../../constants/tasks.const'
+import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
 import { voterFileDownload } from 'helpers/voterFileDownload'

@@ -13,7 +13,7 @@ import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
-import { STEPS, STEPS_BY_TYPE } from '../../constants/tasks.const'
+import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 
 const DEFAULT_STATE = {

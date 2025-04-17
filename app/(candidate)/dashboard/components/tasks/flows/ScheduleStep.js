@@ -7,8 +7,11 @@ import { useState, useMemo } from 'react'
 import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
+import {
+  LEGACY_TASK_TYPES,
+  TASK_TYPES,
+} from '../../../shared/constants/tasks.const'
 import { addDays } from 'date-fns'
-import { LEGACY_TASK_TYPES, TASK_TYPES } from '../../constants/tasks.const'
 
 export default function ScheduleStep({
   onChangeCallback,

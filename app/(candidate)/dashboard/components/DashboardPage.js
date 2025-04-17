@@ -1,31 +1,32 @@
 'use client'
 import DashboardLayout from '../shared/DashboardLayout'
-import { weekRangeFromDate, weeksTill } from 'helpers/dateHelper'
+import { weeksTill } from 'helpers/dateHelper'
 import { useCallback, useEffect, useState } from 'react'
 import { calculateContactGoals } from './voterGoalsHelpers'
 import ElectionOver from './ElectionOver'
-import UpdateHistorySection from './UpdateHistorySection'
 import EmptyState from './EmptyState'
 import { updateUser } from 'helpers/userHelper'
 import { useUser } from '@shared/hooks/useUser'
-import { P2vSection } from './p2v/P2vSection'
-import ContactMethodsSection from './contactMethods/ContactMethodsSection'
 import PrimaryResultModal from './PrimaryResultModal'
-import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign'
 import LoadingAnimation from '@shared/utils/LoadingAnimation'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
+import TasksList from './tasks/TasksList'
 
-export default function DashboardPage({ pathname }) {
+export default function DashboardPage({
+  pathname,
+  tasks,
+  campaign: campaignProp,
+}) {
   const [_, setUser] = useUser()
-  const [campaign, setCampaign] = useState(null)
+  const [campaign, setCampaign] = useState(campaignProp)
   const { pathToVictory: p2vObject, goals, details } = campaign || {}
   const pathToVictory = p2vObject?.data || {}
   const { primaryElectionDate } = details || {}
   const [primaryResultState, setPrimaryResultState] = useState({
     modalOpen: false,
     modalDismissed: false,
-    primaryResult: undefined,
+    primaryResult: campaignProp.details?.primaryResult,
   })
 
   const officeName =
@@ -33,34 +34,18 @@ export default function DashboardPage({ pathname }) {
       ? details?.otherOffice
       : details?.office
 
-  // TODO: we're only having to do this, because we're caching the user object in the cookie and
-  //  accessing it from there, instead of the source of truth, the DB.
-  //  What we should be doing is fetching the user object from the server on each route change,
-  //  and then we won't have to do this.
-  const updateUserCookie = async () => {
-    const updated = await updateUser()
-    if (updated) {
-      setUser(updated)
-    }
-  }
-
   useEffect(() => {
-    if (campaign) return
+    updateUserCookie()
 
-    loadCampaign()
-
-    async function loadCampaign() {
-      const campaign = await fetchUserClientCampaign()
-      setCampaign(campaign)
-      const storedPrimaryResult = campaign.details?.primaryResult
-
-      setPrimaryResultState({
-        modalOpen: false,
-        modalDismissed: false,
-        primaryResult: storedPrimaryResult,
-      })
-
-      updateUserCookie()
+    // TODO: we're only having to do this, because we're caching the user object in the cookie and
+    //  accessing it from there, instead of the source of truth, the DB.
+    //  What we should be doing is fetching the user object from the server on each route change,
+    //  and then we won't have to do this.
+    async function updateUserCookie() {
+      const updated = await updateUser()
+      if (updated) {
+        setUser(updated)
+      }
     }
   }, [])
 
@@ -86,8 +71,6 @@ export default function DashboardPage({ pathname }) {
   }
 
   const weeksUntil = weeksTill(resolvedDate)
-
-  const dateRange = weekRangeFromDate(resolvedDate, weeksUntil.weeks)
   const contactGoals = calculateContactGoals(resolvedContactGoal)
 
   const primaryResultCloseCallback = useCallback((selectedResult) => {
@@ -117,19 +100,10 @@ export default function DashboardPage({ pathname }) {
     }
   }, [])
 
-  const childProps = {
-    campaign,
-    pathname,
-    contactGoals,
-    weeksUntil,
-    dateRange,
-    pathToVictory,
-  }
-
   return (
     <VoterContactsProvider>
       <CampaignUpdateHistoryProvider>
-        <DashboardLayout {...childProps}>
+        <DashboardLayout pathname={pathname} campaign={campaign}>
           {campaign ? (
             <>
               <div>
@@ -140,11 +114,7 @@ export default function DashboardPage({ pathname }) {
                     primaryResultState.primaryResult === 'lost' ? (
                       <ElectionOver />
                     ) : (
-                      <>
-                        <P2vSection {...childProps} />
-                        <ContactMethodsSection {...childProps} />
-                        <UpdateHistorySection />
-                      </>
+                      <TasksList campaign={campaign} tasks={tasks} />
                     )}
                   </>
                 ) : (
