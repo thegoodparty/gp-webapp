@@ -27,7 +27,7 @@ export default function PositionSchema({ race, loc }) {
   }
   const slug = `elections/position/${loc.join('/')}`
   const url = `${APP_BASE}/${slug}`
-  const baseSalary = salary ? `${salary.match(/\d+/g)}` : 'Not Specified'
+  const zipCode = filingOfficeAddress?.match(/\d{5}/)?.[0] || ''
 
   return (
     <JsonLd
@@ -48,17 +48,26 @@ export default function PositionSchema({ race, loc }) {
           '@type': 'Place',
           address: {
             '@type': 'PostalAddress',
-            addressLocality: Place?.name,
+            addressLocality: Place?.name || '',
             addressRegion: state,
+            addressCountry: 'US',
+            streetAddress: filingOfficeAddress || '',
+            postalCode: zipCode,
             telephone: filingPhoneNumber,
           },
         },
-        employmentType: 'Elected',
+        employmentType: employmentType || 'FULL_TIME',
         validThrough: electionDate,
-        baseSalary: baseSalary,
-        estimatedSalary: baseSalary,
+        baseSalary: {
+          '@type': 'MonetaryAmount',
+          value: {
+            '@type': 'QuantitativeValue',
+            value: parseInt(salary?.match(/\d+/g)?.[0] || '0'),
+            unitText: 'YEAR',
+          },
+          currency: 'USD',
+        },
         eligibilityToWorkRequirement: eligibilityRequirements,
-        employmentType,
         url,
       }}
     />
