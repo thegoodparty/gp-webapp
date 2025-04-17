@@ -3,9 +3,10 @@ import { expect } from '@playwright/test';
 export async function acceptCookieTerms(page) {
     // Accept cookie terms (if visible)
     try {
-        await page.waitForSelector('[data-testid="cookie-snackbar"]', { state: 'visible', timeout: 2000 });
-        await page.click('button[data-testid="cookie-accept-btn"]');
+        console.log('Cookie terms displayed and accepted');
+        await page.getByRole('button', { name: 'Close' }).click();
     } catch(error) {
+        console.log('Cookie terms not displayed');
     }
 }
 

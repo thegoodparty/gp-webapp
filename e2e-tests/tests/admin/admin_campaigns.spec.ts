@@ -15,7 +15,7 @@ const testSearchEmail = 'dustin@goodparty.org';
 
 test.beforeEach(async ({page}) => {
     await page.goto('/admin/campaign-statistics');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 });
 
 
@@ -23,8 +23,8 @@ test('Verify admin user can access Admin Campaigns page', async ({page}) => {
     const caseId = 25;
     try {
         // Verify Campaigns page
-        await page.getByRole('heading', { name: 'Campaigns' }).first().isVisible();
-        await page.getByRole('button', { name: 'Add a new campaign' }).isVisible();
+        page.getByRole('heading', { name: 'Campaigns' }).first().isVisible();
+        page.getByRole('button', { name: 'Add a new campaign' }).isVisible();
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -37,14 +37,14 @@ test.skip('Verify admin user can impersonate user', async ({page}) => {
     const caseId = 73;
     try {
         // Search and select user for impersonation
-        await page.getByLabel('User Email').fill(testSearchEmail);
-        await page.getByRole('button', { name: 'Search' }).click();
+        page.getByLabel('User Email').fill(testSearchEmail);
+        page.getByRole('button', { name: 'Search' }).click();
         await page.getByRole('cell', { name: testSearchEmail }).isVisible();
-        await page.getByRole('row', { name: 'dustin-sison Dustin Sison No' }).locator('div').getByRole('img').click();
-        await page.getByRole('button', { name: 'Impersonate' }).click();
+        page.getByRole('row', { name: 'dustin-sison Dustin Sison No' }).locator('div').getByRole('img').click();
+        page.getByRole('button', { name: 'Impersonate' }).click();
         // Confirm impersonation
         await page.waitForLoadState('networkidle');
-        await page.goto('/profile');
+        await page.goto('/profile', {waitUntil: 'domcontentloaded'});
         await expect(page.getByTestId('personal-email')).toHaveValue(testSearchEmail);
 
         // Report test results
@@ -85,15 +85,12 @@ test.skip('Verify admin user can add/delete campaigns', async ({page}) => {
         await page.waitForLoadState('networkidle');
         await page.getByLabel('General Election Date (').fill(electionDate);
         await page.getByLabel('General Election Date (').press('Enter');
-        await page
-          .getByRole("progressbar")
-          .waitFor({ state: "hidden", timeout: 20000 });
         await page.getByRole("button", { name: role }).first().click();
         await page.getByRole("button", { name: "Save" }).click();
         await page.waitForLoadState('networkidle');
 
         // Confirm campaign is created
-        await page.goto('/admin/campaign-statistics');
+        await page.goto('/admin/campaign-statistics', {waitUntil: 'domcontentloaded'});
         await page.getByLabel('User Email').fill(testEmail);
         await page.getByRole('button', { name: 'Search' }).click();
         await page.getByRole('cell', { name: testEmail }).isVisible();

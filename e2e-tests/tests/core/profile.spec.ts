@@ -3,7 +3,6 @@ import { expect, test } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
-import { acceptCookieTerms } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 import * as path from 'path';
 
@@ -23,9 +22,6 @@ test('Adjust Personal Information', async ({ page }) => {
     const zipCode = userData.zipCode.substring(0, 5);
 
     try {
-        // Accept cookie terms (if visible)
-        await acceptCookieTerms(page);
-
         await page.locator("[data-testid='personal-first-name']").fill(firstName);
         await page.locator("[data-testid='personal-email']").fill(newEmailAddress);
         await page.locator("input[name='phone']").fill(phoneNumber);
@@ -48,14 +44,11 @@ test('Adjust Personal Information', async ({ page }) => {
     }
 });
 
-test.skip('Adjust Notification Settings', async ({ page }) => {
+test('Adjust Notification Settings', async ({ page }) => {
     const caseId = 34;
 
     try {
-        // Accept cookie terms (if visible)
-        await acceptCookieTerms(page);
-
-        const switchElements = page.getByRole('checkbox');
+        const switchElements = await page.getByRole('checkbox');
         const switchCount = await switchElements.count();
         expect(switchCount).toBeGreaterThanOrEqual(4);
 
@@ -89,9 +82,6 @@ test.skip('Change Account Password', async ({ page }) => {
     );
 
     try {
-        // Accept cookie terms (if visible)
-        await acceptCookieTerms(page);
-
         // Change account password
         await page.getByLabel('Old Password *').fill(`${password}`);
         await page.getByLabel('New Password *').fill(`${password}`);

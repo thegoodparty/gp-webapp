@@ -13,11 +13,11 @@ test('Verify admin user can access P2V Stats page', async ({page}) => {
 
     try {
         await page.goto('/admin/p2v-stats');
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Verify P2V Stats page
-        await page.getByRole('heading', { name: 'P2V Stats' }).isVisible();
-        await page.getByRole('button', { name: 'Refresh P2V Stats' }).isVisible();
+        page.getByRole('heading', { name: 'P2V Stats' }).isVisible();
+        page.getByRole('button', { name: 'Refresh P2V Stats' }).isVisible();
         
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

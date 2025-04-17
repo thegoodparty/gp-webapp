@@ -13,8 +13,8 @@ test('Verify admin user can access Top Issues page', async ({page}) => {
 
     try {
         await page.goto('/admin/top-issues');
-        await page.waitForLoadState('networkidle');
-        await page.getByRole('button', { name: 'Add a Top Issue' }).isVisible();
+        await page.waitForLoadState('domcontentloaded');
+        page.getByRole('button', { name: 'Add a Top Issue' }).isVisible();
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
