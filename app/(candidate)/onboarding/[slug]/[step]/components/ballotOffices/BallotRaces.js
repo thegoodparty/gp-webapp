@@ -65,7 +65,7 @@ const getHighlightedText = (text, searchTerm) => {
 
 export default function BallotRaces({
   campaign,
-  selectedOfficeCallback,
+  onSelect,
   selectedOffice,
   step,
   updateCallback,
@@ -133,13 +133,9 @@ export default function BallotRaces({
   }
 
   const handleSelect = (race) => {
-    if (race?.id === selected?.id) {
-      setSelected(false)
-      selectedOfficeCallback(false)
-    } else {
-      setSelected(race)
-      selectedOfficeCallback(race)
-    }
+    const selectedRace = race?.id === selected?.id ? false : race
+    setSelected(selectedRace)
+    onSelect(selectedRace)
   }
 
   const handleShowModal = () => {

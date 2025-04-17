@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import ButtonLoading from './ButtonLoading'
+import { forwardRef } from 'react'
 
 export const COLOR_CLASSES = {
   primary:
@@ -103,74 +104,84 @@ export const SIZE_CLASSES = {
  * </Button>
  */
 
-export default function Button({
-  href,
-  target,
-  nativeLink = false,
-  size = 'medium',
-  variant = 'contained',
-  color = 'primary',
-  children,
-  className,
-  loading,
-  disabled,
-  ...restProps
-}) {
-  let baseClasses =
-    'rounded-lg text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors no-underline outline-offset-0 inline-block'
+const Button = forwardRef(
+  (
+    {
+      href,
+      target,
+      nativeLink = false,
+      size = 'medium',
+      variant = 'contained',
+      color = 'primary',
+      children,
+      className,
+      loading,
+      disabled,
+      ...restProps
+    },
+    ref,
+  ) => {
+    let baseClasses =
+      'rounded-lg text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors no-underline outline-offset-0 inline-block'
 
-  if (variant !== 'text') baseClasses += ' border-2 border-transparent '
+    if (variant !== 'text') baseClasses += ' border-2 border-transparent '
 
-  if (variant === 'contained')
-    baseClasses += ' outline outline-4 outline-transparent'
+    if (variant === 'contained')
+      baseClasses += ' outline outline-4 outline-transparent'
 
-  const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.contained
-  const colorClasses = variantClasses[color] || variantClasses.primary
-  const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium
+    const variantClasses = VARIANT_CLASSES[variant] || VARIANT_CLASSES.contained
+    const colorClasses = variantClasses[color] || variantClasses.primary
+    const sizeClasses = SIZE_CLASSES[size] || SIZE_CLASSES.medium
 
-  const compiledClassName = `${baseClasses} ${sizeClasses} ${colorClasses} ${
-    className || ''
-  }`
+    const compiledClassName = `${baseClasses} ${sizeClasses} ${colorClasses} ${
+      className || ''
+    }`
 
-  // render a disabled button instead of link if disabled = true
-  if (href && !disabled) {
-    if (nativeLink) {
-      // use native <a> tag if nativeLink = true
+    // render a disabled button instead of link if disabled = true
+    if (href && !disabled) {
+      if (nativeLink) {
+        // use native <a> tag if nativeLink = true
+        return (
+          <a
+            href={href}
+            target={target}
+            className={compiledClassName}
+            {...restProps}
+            {...(ref ? { ref } : {})}
+          >
+            {children}
+          </a>
+        )
+      }
       return (
-        <a
+        <Link
           href={href}
           target={target}
           className={compiledClassName}
           {...restProps}
+          {...(ref ? { ref } : {})}
         >
           {children}
-        </a>
+        </Link>
       )
     }
+
     return (
-      <Link
-        href={href}
-        target={target}
+      <button
+        type="button"
         className={compiledClassName}
+        disabled={disabled}
         {...restProps}
+        {...(ref ? { ref } : {})}
       >
+        {loading === true && (
+          <ButtonLoading size={size} className="align-text-bottom" />
+        )}
+
         {children}
-      </Link>
+      </button>
     )
-  }
+  },
+)
 
-  return (
-    <button
-      type="button"
-      className={compiledClassName}
-      disabled={disabled}
-      {...restProps}
-    >
-      {loading === true && (
-        <ButtonLoading size={size} className="align-text-bottom" />
-      )}
-
-      {children}
-    </button>
-  )
-}
+export default Button

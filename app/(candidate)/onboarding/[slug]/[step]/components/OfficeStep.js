@@ -5,7 +5,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -32,6 +32,7 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   })
+  const submitButtonRef = useRef(null)
 
   const { ballotSearch } = state
 
@@ -163,11 +164,13 @@ export default function OfficeStep(props) {
     setProcessing(false)
   }
 
-  const handleBallotOffice = async (office) => {
+  const onSelect = async (office) => {
     if (office) {
       trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSelected, {
         office: office?.position?.name,
       })
+
+      submitButtonRef.current.scrollIntoView({ behavior: 'smooth' })
 
       setState({
         ...state,
@@ -217,7 +220,7 @@ export default function OfficeStep(props) {
           <div className="w-full max-w-2xl">
             <BallotRaces
               campaign={campaign}
-              selectedOfficeCallback={handleBallotOffice}
+              onSelect={onSelect}
               selectedOffice={selectedOffice}
               updateCallback={updateCallback}
               step={step}
@@ -244,6 +247,7 @@ export default function OfficeStep(props) {
               loading={processing}
               type="submit"
               onClick={handleSave}
+              ref={submitButtonRef}
               {...trackingAttrs}
             >
               {step ? 'Next' : 'Save'}
