@@ -20,7 +20,7 @@ const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
 export const GenerateReviewScreen = ({
   aiScriptKey = '',
   onBack = () => {},
-  onNext = (scriptKey) => {},
+  onNext = (scriptKey, scriptContent) => {},
 }) => {
   const { errorSnackbar } = useSnackbar()
   const [aiContent, setAiContent] = useState({})
@@ -52,7 +52,7 @@ export const GenerateReviewScreen = ({
           value: aiContent,
         },
       ])
-      onNext(aiScriptKey)
+      onNext(aiScriptKey, aiContent.content)
     } catch (e) {
       console.error('Error updating campaign with AI content => ', e)
       errorSnackbar('Error saving AI-generated content')

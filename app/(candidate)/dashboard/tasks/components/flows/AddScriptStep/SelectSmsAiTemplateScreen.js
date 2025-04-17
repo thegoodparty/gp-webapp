@@ -106,8 +106,8 @@ export const SelectSmsAiTemplateScreen = ({
       <header className="text-center">
         <H1>Generate a New Script</H1>
         <Body1 className="mt-4 mb-8">
-          Use our AI to generate the script for your text campaign. Select a
-          script type below to get started.
+          Use our AI to generate your script. Select a script template below to
+          get started.
         </Body1>
       </header>
 
