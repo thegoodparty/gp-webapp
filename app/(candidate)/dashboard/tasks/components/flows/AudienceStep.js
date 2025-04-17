@@ -11,6 +11,7 @@ import { countVoterFile } from 'app/(candidate)/dashboard/voter-records/[type]/c
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
 import { LEGACY_TASK_TYPES, TASK_TYPES } from '../../constants/tasks.const'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 const TEXT_PRICE = 0.03
 const CALL_PRICE = 0.04
@@ -30,6 +31,16 @@ export default function AudienceStep({
   const hasValues = useMemo(
     () => Object.values(audience).some((value) => value === true),
     [audience],
+  )
+
+  const nextTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Next Target Audience', { type }),
+    [type],
+  )
+
+  const backTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Back Target Audience', { type }),
+    [type],
   )
 
   useEffect(() => {
@@ -100,7 +111,12 @@ export default function AudienceStep({
         </div>
         <div className="mt-4 grid grid-cols-12 gap-4">
           <div className="col-span-6 text-left mt-6">
-            <Button size="large" color="neutral" onClick={backCallback}>
+            <Button
+              size="large"
+              color="neutral"
+              onClick={backCallback}
+              {...backTrackingAttrs}
+            >
               Back
             </Button>
           </div>
@@ -110,6 +126,7 @@ export default function AudienceStep({
               color="secondary"
               onClick={nextCallback}
               disabled={!hasValues}
+              {...nextTrackingAttrs}
             >
               Next
             </Button>

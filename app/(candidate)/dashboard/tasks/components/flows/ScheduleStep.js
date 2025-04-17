@@ -7,6 +7,7 @@ import { useState, useMemo } from 'react'
 import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
+import { LEGACY_TASK_TYPES, TASK_TYPES } from '../../constants/tasks.const'
 
 export default function ScheduleStep({
   onChangeCallback,
@@ -61,7 +62,8 @@ export default function ScheduleStep({
     setIsLoading(false)
     nextCallback()
   }
-  const isTel = type === 'telemarketing'
+  const isTel =
+    type === LEGACY_TASK_TYPES.telemarketing || type === TASK_TYPES.robocall
   const today = new Date()
   const futureDate = new Date(today)
   futureDate.setDate(today.getDate() + 3)
@@ -69,16 +71,11 @@ export default function ScheduleStep({
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
-        <H1>
-          Schedule Campaign for:
-          <br />
-          <span className="text-tertiary">{resolvedFileName}</span>
-        </H1>
+        <H1>Schedule {isTel ? 'robocall' : 'text message'}</H1>
         <Body1 className="mt-4 mb-8">
-          Use the from below to schedule your{' '}
-          {isTel ? 'phone banking' : 'texting'} campaign with our politics team.
-          Please note that we require a minimum of 72 hours prior to the send
-          date to coordinate your campaign.
+          Use the from below to schedule your campaign.
+          <br />
+          <strong>Requires 3 days to process.</strong>
         </Body1>
 
         <div className="mt-4">
