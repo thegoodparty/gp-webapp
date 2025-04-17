@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { isbot } from 'isbot'
 import { MdClose } from 'react-icons/md'
 import Button from '../buttons/Button'
+import Body2 from '@shared/typography/Body2'
 
 export default function CookiesSnackbar() {
   const [showBanner, setShowBanner] = useState(false)
