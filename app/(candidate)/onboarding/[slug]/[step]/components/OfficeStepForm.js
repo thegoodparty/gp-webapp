@@ -23,7 +23,6 @@ const fields = [
     key: 'fuzzyFilter',
     label: 'Office Name',
     type: 'text',
-    required: true,
   },
 ]
 
