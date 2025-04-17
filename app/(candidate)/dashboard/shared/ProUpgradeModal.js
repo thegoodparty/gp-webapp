@@ -18,6 +18,7 @@ export function ProUpgradeModal({
   variant,
   onClose,
   onUpgradeLinkClick,
+  trackingAttrs = {},
 }) {
   let title, description, items, highlight, cta
 
@@ -123,6 +124,7 @@ export function ProUpgradeModal({
             color="secondary"
             className="mt-8"
             onClick={onUpgradeLinkClick ? onUpgradeLinkClick : onClose}
+            {...trackingAttrs}
           >
             {cta}
           </Button>

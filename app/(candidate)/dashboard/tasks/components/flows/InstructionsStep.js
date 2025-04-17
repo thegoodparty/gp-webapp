@@ -1,6 +1,8 @@
 import H1 from '@shared/typography/H1'
 import { TASK_TYPES, LEGACY_TASK_TYPES } from '../../constants/tasks.const'
 import Button from '@shared/buttons/Button'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { useMemo } from 'react'
 
 const INSTRUCTIONS_BY_TYPE = {
   [TASK_TYPES.text]: [
@@ -48,6 +50,11 @@ export default function InstructionsStep({
 }) {
   const instructions = INSTRUCTIONS_BY_TYPE[type] || []
 
+  const trackingAttrs = useMemo(
+    () => buildTrackingAttrs('Start Task', { type }),
+    [type],
+  )
+
   return (
     <div className="p-4 min-w-[500px]">
       <H1 className="text-center">How this works</H1>
@@ -60,7 +67,12 @@ export default function InstructionsStep({
         <Button size="large" color="neutral" onClick={closeCallback}>
           Cancel
         </Button>
-        <Button size="large" color="secondary" onClick={nextCallback}>
+        <Button
+          size="large"
+          color="secondary"
+          onClick={nextCallback}
+          {...trackingAttrs}
+        >
           Next
         </Button>
       </div>

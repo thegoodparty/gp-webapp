@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Modal from '@shared/utils/Modal'
 import H1 from '@shared/typography/H1'
 import TextField from '@shared/inputs/TextField'
@@ -12,6 +12,7 @@ import {
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { useUser } from '@shared/hooks/useUser'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(
@@ -45,6 +46,15 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
   const [recordedVoterGoals, setRecordedVoterGoals] = useVoterContacts()
   const [updateHistory, setUpdateHistory] = useCampaignUpdateHistory()
   const [formState, setFormState] = useState(INITIAL_FORM_STATE)
+
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Save Voters Contacted', {
+        contactTypes: Object.keys(formState),
+        options: formState,
+      }),
+    [formState],
+  )
 
   const handleInputChange = (field) => (e) => {
     setFormState({
@@ -152,6 +162,7 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
             size="large"
             onClick={handleSubmit}
             className="px-16"
+            {...trackingAttrs}
           >
             Save
           </Button>

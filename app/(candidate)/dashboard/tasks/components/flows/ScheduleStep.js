@@ -7,6 +7,8 @@ import { useState, useMemo } from 'react'
 import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
+import { addDays } from 'date-fns'
+import { LEGACY_TASK_TYPES, TASK_TYPES } from '../../constants/tasks.const'
 
 export default function ScheduleStep({
   onChangeCallback,
@@ -24,6 +26,7 @@ export default function ScheduleStep({
       message: '',
     },
   )
+  const [dateError, setDateError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const resolvedFileName = useMemo(
@@ -46,14 +49,16 @@ export default function ScheduleStep({
     onChangeCallback('schedule', newState)
   }
 
-  const canSubmit = () => state.date != '' && state.message != ''
+  const canSubmit = () => state.date != '' && state.message != '' && !dateError
 
   const handleNext = async () => {
     setIsLoading(true)
     const resp = await submitCallback()
 
     if (resp.ok === false || resp.errors) {
-      errorSnackbar('Failed to submit request.')
+      const error = resp.errors[0]?.message
+      errorSnackbar(`Failed to submit request. ${error}`)
+      setIsLoading(false)
       return
     }
 
@@ -61,24 +66,18 @@ export default function ScheduleStep({
     setIsLoading(false)
     nextCallback()
   }
-  const isTel = type === 'telemarketing'
+  const isTel =
+    type === LEGACY_TASK_TYPES.telemarketing || type === TASK_TYPES.robocall
   const today = new Date()
-  const futureDate = new Date(today)
-  futureDate.setDate(today.getDate() + 3)
-  const minDate = futureDate.toISOString().split('T')[0]
+  const minDate = addDays(today, 3).toISOString().split('T')[0]
   return (
     <div className="p-4 w-[80vw] max-w-xl">
       <div className="text-center">
-        <H1>
-          Schedule Campaign for:
-          <br />
-          <span className="text-tertiary">{resolvedFileName}</span>
-        </H1>
+        <H1>Schedule {isTel ? 'robocall' : 'text message'}</H1>
         <Body1 className="mt-4 mb-8">
-          Use the from below to schedule your{' '}
-          {isTel ? 'phone banking' : 'texting'} campaign with our politics team.
-          Please note that we require a minimum of 72 hours prior to the send
-          date to coordinate your campaign.
+          Use the from below to schedule your campaign.
+          <br />
+          <strong>Requires 3 days to process.</strong>
         </Body1>
 
         <div className="mt-4">
@@ -90,6 +89,15 @@ export default function ScheduleStep({
             value={state.date}
             onChange={(e) => {
               onChangeField('date', e.target.value)
+
+              const selectedDate = new Date(e.target.value)
+              const minDateObj = new Date(minDate)
+
+              if (selectedDate >= minDateObj) {
+                setDateError(null)
+              } else {
+                setDateError('Date must be at least 72 hours from now')
+              }
             }}
             InputLabelProps={{
               shrink: true,
@@ -97,6 +105,8 @@ export default function ScheduleStep({
             inputProps={{
               min: minDate,
             }}
+            error={!!dateError}
+            helperText={dateError}
           />
         </div>
         <div className="mt-4">

@@ -1,8 +1,20 @@
 import Button from '@shared/buttons/Button'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { useMemo } from 'react'
 
-export default function CloseConfirmModal({ open, onConfirm, onCancel }) {
+export default function CloseConfirmModal({ open, type, onConfirm, onCancel }) {
+  const continueTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Continue Task', { type }),
+    [type],
+  )
+
+  const exitTrackingAttrs = useMemo(
+    () => buildTrackingAttrs('Confirm Exit Task', { type }),
+    [type],
+  )
+
   return (
     <Modal open={open} preventBackdropClose preventEscClose hideClose>
       <div className="p-6 text-center">
@@ -11,10 +23,20 @@ export default function CloseConfirmModal({ open, onConfirm, onCancel }) {
         </H1>
 
         <div className="flex justify-center gap-4">
-          <Button size="large" color="neutral" onClick={onCancel}>
+          <Button
+            size="large"
+            color="neutral"
+            onClick={onCancel}
+            {...continueTrackingAttrs}
+          >
             Continue
           </Button>
-          <Button size="large" color="error" onClick={onConfirm}>
+          <Button
+            size="large"
+            color="error"
+            onClick={onConfirm}
+            {...exitTrackingAttrs}
+          >
             Exit
           </Button>
         </div>
