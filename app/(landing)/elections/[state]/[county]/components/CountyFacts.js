@@ -36,7 +36,7 @@ export default function CountyFacts({ county }) {
     },
     {
       label: 'Unemployment rate',
-      value: unemploymentRate,
+      value: unemploymentRate ? numberFormatter(unemploymentRate) : '',
       icon: <MdOutlineWorkOff />,
       isPercent: true,
     },
