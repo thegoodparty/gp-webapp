@@ -72,9 +72,7 @@ export default function AddScriptStep({
       <GenerateReviewScreen
         aiScriptKey={aiScriptKey}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
-        onNext={(scriptKey, scriptContent) =>
-          onComplete(scriptKey, scriptContent)
-        }
+        onNext={onComplete}
       />
     ),
     [ADD_SCRIPT_FLOW.CREATE_SMS]: (
