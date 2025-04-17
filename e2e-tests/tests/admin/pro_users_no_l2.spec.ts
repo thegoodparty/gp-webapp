@@ -13,10 +13,10 @@ test('Verify admin user can access Pro users w/o voter file page', async ({page}
 
     try {
         await page.goto('/admin/pro-no-voter-file');
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Verify Pro users w/o voter file page
-        await page.getByRole('heading', { name: 'Pro Users without L2 Data' }).isVisible();
+        page.getByRole('heading', { name: 'Pro Users without L2 Data' }).isVisible();
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {

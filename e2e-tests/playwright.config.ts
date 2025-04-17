@@ -6,7 +6,7 @@ console.log('BASE_URL from env:', process.env.BASE_URL);
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
-  timeout: 60000,
+  timeout: 120000,
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

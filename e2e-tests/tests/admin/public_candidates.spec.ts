@@ -13,10 +13,10 @@ test('Verify admin user can access public candidates page', async ({page}) => {
 
     try {
         await page.goto('/admin/public-candidates');
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Verify Public Candidates page
-        await page.getByRole('heading', { name: 'Public Candidates' }).isVisible();
+        page.getByRole('heading', { name: 'Public Candidates' }).isVisible();
         
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

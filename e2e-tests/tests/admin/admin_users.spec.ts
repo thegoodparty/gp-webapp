@@ -12,21 +12,21 @@ test.use({
 
 test.beforeEach(async ({page}) => {
     await page.goto('/admin/users');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 });
 
 test('Admin users page', async ({page}) => {
     const caseId = 26;
     try {
         // Verify admin users page
-        await page.getByRole('heading', { name: 'Users' }).isVisible();
+        page.getByRole('heading', { name: 'Users' }).isVisible();
 
-        await page.getByRole('columnheader', { name: 'Actions' }).isVisible();
-        await page.getByRole('columnheader', { name: 'Name' }).isVisible();
-        await page.getByRole('columnheader', { name: 'Email' }).isVisible();
-        await page.getByRole('columnheader', { name: 'Campaign Role(s)' }).isVisible();
-        await page.getByRole('columnheader', { name: 'Last Visit' }).isVisible();
-        await page.locator('td').first().isVisible();
+        page.getByRole('columnheader', { name: 'Actions' }).isVisible();
+        page.getByRole('columnheader', { name: 'Name' }).isVisible();
+        page.getByRole('columnheader', { name: 'Email' }).isVisible();
+        page.getByRole('columnheader', { name: 'Campaign Role(s)' }).isVisible();
+        page.getByRole('columnheader', { name: 'Last Visit' }).isVisible();
+        page.locator('td').first().isVisible();
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -54,9 +54,9 @@ test.skip('Send candidate invite', async ({page}) => {
         await page.getByRole('option', { name: 'candidate' }).click();
         await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         await page.getByRole('button', { name: 'Add User' }).click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -84,9 +84,9 @@ test.skip('Send sales invite', async ({page}) => {
         await page.getByRole('option', { name: 'sales' }).click();
         await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         await page.getByRole('button', { name: 'Add User' }).click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');

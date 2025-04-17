@@ -13,7 +13,10 @@ test('Verify admin user can access AI Content page', async ({page}) => {
 
     try {
         await page.goto('/admin/ai-content');
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
+    
+        // Verify Search input
+        await page.getByRole('heading', { name: 'AI Content' }).isVisible();
         
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

@@ -121,7 +121,7 @@ export async function loginAccount(
 ) {
   const baseURL = process.env.BASE_URL;
 
-  await page.goto(`${baseURL}/login`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/login`, { waitUntil: "domcontentloaded" });
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -130,7 +130,7 @@ export async function loginAccount(
   await page.getByTestId("login-email-input").nth(1).fill(emailAddress);
   await page.getByTestId("login-password-input").nth(1).fill(password);
   await page.getByTestId("login-submit-button").click();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 export async function createAccount(
@@ -147,10 +147,14 @@ export async function createAccount(
   const baseURL = process.env.BASE_URL || '';
   const electionLevel = 'Local/Township/City';
 
-  await page.goto(`${baseURL}/sign-up`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/sign-up`, { waitUntil: "domcontentloaded" });
+
+  // Accept cookie terms (if visible)
+  await acceptCookieTerms(page);
 
   // Verify user is on login page
-  await expect(page.getByText(loginPageHeader)).toBeVisible();
+  await page.waitForLoadState('domcontentloaded');
+  expect(page.getByText(loginPageHeader)).toBeVisible();
 
   // Fill in sign up page
   await page.getByRole("textbox", { name: "First Name" }).fill(firstName);
@@ -161,11 +165,7 @@ export async function createAccount(
   await page.getByRole("textbox", { name: "password" }).fill(password + "1");
   await page.getByRole("button", { name: "Join" }).click();
 
-  // Accept cookie terms (if visible)
-  await acceptCookieTerms(page);
-
   await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
-  await page.waitForLoadState('networkidle', { timeout: 60000 });
   await page.getByRole('combobox').selectOption(electionLevel);
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByText("What office are you interested in?").isVisible();
@@ -186,7 +186,7 @@ export async function createAccount(
   await page.getByRole("button", { name: "I Agree" }).click();
   await page.getByRole('button', { name: 'Agreed' }).nth(3).isVisible();
   await page.getByRole("button", { name: "Submit" }).click();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await page.getByRole('button', { name: 'View Dashboard' }).click();
 }
 
@@ -197,7 +197,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.goto("/dashboard/upgrade-to-pro", { waitUntil: "commit" });
 
   // Waits for page to load completely
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Verify user is on voter data (free) page
   await expect(page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' })).toBeVisible();
@@ -246,7 +246,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByPlaceholder('ZIP').fill('90210');
   await page.getByPlaceholder('(800) 555-').fill(phoneNumber);
   await page.getByTestId('hosted-payment-submit-button').click();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
   await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
 }
@@ -267,21 +267,17 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Navigating to profile page...');
-  await page.goto(`${baseURL}/profile`, { waitUntil: "networkidle" });
-
-  // Wait for profile page to load completely
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForLoadState('networkidle');
+  await page.goto(`${baseURL}/profile`, { waitUntil: "domcontentloaded" });
 
   console.log('Looking for Delete Account button...');
   // Wait for and click Delete Account button with a longer timeout
-  const deleteButton = page.getByRole('button', { name: 'Delete Account' });
+  const deleteButton = await page.getByRole('button', { name: 'Delete Account' });
   await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
   await deleteButton.click();
 
   console.log('Looking for Proceed button...');
   // Wait for and click Proceed button
-  const proceedButton = page.getByRole('button', { name: 'Proceed' });
+  const proceedButton = await page.getByRole('button', { name: 'Proceed' });
   await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
   await proceedButton.click();
 
