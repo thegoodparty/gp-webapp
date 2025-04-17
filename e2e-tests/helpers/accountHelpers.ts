@@ -145,7 +145,6 @@ export async function createAccount(
   const lastName = testAccountLastName;
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
-  const electionLevel = 'Local/Township/City';
 
   await page.goto(`${baseURL}/sign-up`, { waitUntil: "domcontentloaded" });
 
@@ -165,10 +164,9 @@ export async function createAccount(
   await page.getByRole("textbox", { name: "password" }).fill(password + "1");
   await page.getByRole("button", { name: "Join" }).click();
 
-  await page.getByText('To pull accurate results,').isVisible({ timeout: 60000 });
-  await page.getByRole('combobox').selectOption(electionLevel);
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByText("What office are you interested in?").isVisible();
+  await page.waitForLoadState('domcontentloaded', { timeout: 60000 });
+  await page.getByText('Make sure it matches your').isVisible();
+  await page.getByLabel('Office Name').fill(role);
   await page.getByRole("button", { name: role, timeout: 60000 }).first().click();
   await page.getByRole("button", { name: "Next" }).click();
   await page
@@ -267,7 +265,7 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Navigating to profile page...');
-  await page.goto(`${baseURL}/profile`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseURL}/profile`, { waitUntil: "networkidle" });
 
   console.log('Looking for Delete Account button...');
   // Wait for and click Delete Account button with a longer timeout
