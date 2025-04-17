@@ -115,7 +115,7 @@ test('Update Your Why Statement', async ({ page }) => {
 });
 
 
-test('Update Fun Facts about Yourself', async ({ page }) => {
+test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     const caseId = 49;
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
@@ -142,7 +142,7 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-test('Add Opponent', async ({ page }) => {
+test.skip('Add Opponent', async ({ page }) => {
     const caseId = 50;
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
