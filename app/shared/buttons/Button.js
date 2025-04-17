@@ -145,8 +145,8 @@ const Button = (
           href={href}
           target={target}
           className={compiledClassName}
+          ref={ref}
           {...restProps}
-          {...(ref ? { ref } : {})}
         >
           {children}
         </a>
@@ -157,8 +157,8 @@ const Button = (
         href={href}
         target={target}
         className={compiledClassName}
+        ref={ref}
         {...restProps}
-        {...(ref ? { ref } : {})}
       >
         {children}
       </Link>
@@ -170,8 +170,8 @@ const Button = (
       type="button"
       className={compiledClassName}
       disabled={disabled}
+      ref={ref}
       {...restProps}
-      {...(ref ? { ref } : {})}
     >
       {loading === true && (
         <ButtonLoading size={size} className="align-text-bottom" />
