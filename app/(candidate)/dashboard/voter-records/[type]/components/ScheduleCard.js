@@ -2,7 +2,7 @@ import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import Overline from '@shared/typography/Overline'
 import Paper from '@shared/utils/Paper'
-import ScheduleFlow from './ScheduleFlow'
+import TaskFlow from 'app/(candidate)/dashboard/tasks/components/flows/TaskFlow'
 
 export default function ScheduleCard(props) {
   const { type } = props
@@ -27,7 +27,7 @@ export default function ScheduleCard(props) {
             : '$.04 per outbound call. Automatically leave voicemails for one and a half cents.'}
         </Body2>
       </div>
-      <ScheduleFlow {...props} />
+      <TaskFlow {...props} />
     </Paper>
   )
 }

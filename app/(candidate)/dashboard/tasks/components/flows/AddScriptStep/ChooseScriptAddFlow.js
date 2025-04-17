@@ -3,7 +3,7 @@ import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import RadioList from '@shared/inputs/RadioList'
 import { ModalFooter } from '@shared/ModalFooter'
-import { ADD_SCRIPT_FLOW } from 'app/(candidate)/dashboard/voter-records/[type]/components/ScheduleAddScriptFlow/AddScriptFlow'
+import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { useState } from 'react'
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
@@ -22,8 +22,7 @@ export const ChooseScriptAddFlow = ({
     let eventName
     if (key === ADD_SCRIPT_FLOW.SELECT_SMS) {
       eventName =
-        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script
-          .ClickSaved
+        EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script.ClickSaved
     } else if (key === ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE) {
       eventName =
         EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Script

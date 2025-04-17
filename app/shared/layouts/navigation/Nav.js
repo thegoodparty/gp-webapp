@@ -3,8 +3,6 @@ import RightSide from './RightSide'
 import RightSideMobile from './RightSideMobile'
 import { HeaderLogo } from '@shared/layouts/navigation/HeaderLogo'
 
-import Body2 from '@shared/typography/Body2'
-
 export default async function Nav() {
   return (
     <>
@@ -16,13 +14,7 @@ export default async function Nav() {
           >
             <div className="flex items-center">
               <HeaderLogo />
-              <Body2 className="pl-2 italic xl:block lg:hidden xs:block hidden">
-                empowering independents to run
-                <span className="hidden md:inline xl:hidden 2xl:inline">
-                  , win
-                </span>{' '}
-                and serve!
-              </Body2>
+
               <LeftSide />
             </div>
             <RightSide />

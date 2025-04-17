@@ -4,15 +4,14 @@ import { useState } from 'react'
 import 'react-image-crop/dist/ReactCrop.css'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import FileDropZone from '@shared/inputs/FileDropZone'
 import ImageCropPreview from '@shared/inputs/ImageCropPreview'
 import { trackEvent } from 'helpers/fullStoryHelper'
+import Button from '@shared/buttons/Button'
 
 const MAX_FILE_SIZE = 500000
 
-export default function ScheduleFlowImageStep({
+export default function ImageStep({
   image,
   onChangeCallback,
   nextCallback,
@@ -59,10 +58,17 @@ export default function ScheduleFlowImageStep({
         <FileDropZone maxSize={MAX_FILE_SIZE} onChange={handleOnChange} />
       )}
       <div className="mt-8 flex justify-between">
-        <SecondaryButton onClick={backCallback}>Back</SecondaryButton>
-        <PrimaryButton disabled={!file || fileTooLarge} onClick={nextCallback}>
+        <Button size="large" color="neutral" onClick={backCallback}>
+          Back
+        </Button>
+        <Button
+          size="large"
+          color="secondary"
+          disabled={!file || fileTooLarge}
+          onClick={nextCallback}
+        >
           Next
-        </PrimaryButton>
+        </Button>
       </div>
     </div>
   )

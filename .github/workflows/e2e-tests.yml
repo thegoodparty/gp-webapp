@@ -10,14 +10,101 @@ on:
     - cron: '0 8 * * *'
     
 jobs:
-  run-e2e-tests:
+  start-runner:
+    name: Start EC2 Runner
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3]
+    outputs:
+      label: ${{ steps.start-ec2-runner.outputs.label }}
+      ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Start EC2 runner
+        id: start-ec2-runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: start
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          ec2-image-id: ${{ secrets.EC2_IMAGE_ID }}
+          ec2-instance-type: c6gd.xlarge
+          subnet-id: ${{ secrets.SUBNET_ID }}
+          security-group-id: ${{ secrets.SECURITY_GROUP_ID }}
+          aws-resource-tags: >
+            [
+              {"Key": "Name", "Value": "github-runner"}
+            ]
+
+      - name: Clean up and prepare workspace
+        run: |
+          # Show initial space
+          df -h
+          
+          # Aggressive cleanup
+          sudo apt-get clean
+          sudo apt-get autoremove -y
+          sudo rm -rf /var/lib/apt/lists/*
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache
+          
+          # Clear npm and yarn caches
+          npm cache clean --force || true
+          yarn cache clean || true
+          
+          # Remove unnecessary large packages
+          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mono-.*' '^php.*' || true
+          sudo apt-get remove -y '^google-cloud-sdk.*' '^azure-cli.*' || true
+          
+          # Show final space
+          df -h
+
+      - name: Extend root volume
+        run: |
+          sudo growpart /dev/root 1 || true
+          sudo resize2fs /dev/root || true
+          df -h
+
+      - name: Setup NVMe storage
+        run: |
+          # List available NVMe devices
+          lsblk
+          
+          # Create mount point
+          sudo mkdir -p /mnt/nvme
+          
+          # Format and mount the NVMe drive (adjust device name as needed)
+          sudo mkfs -t xfs /dev/nvme1n1 || true
+          sudo mount /dev/nvme1n1 /mnt/nvme || true
+          
+          # Set permissions
+          sudo chown -R $USER:$USER /mnt/nvme
+          
+          # Move working directory to NVMe storage
+          mkdir -p /mnt/nvme/workspace
+          echo "RUNNER_TEMP=/mnt/nvme/workspace" >> $GITHUB_ENV
+          echo "RUNNER_WORKSPACE=/mnt/nvme/workspace" >> $GITHUB_ENV
+
+  run-e2e-tests:
+    needs: start-runner
+    runs-on: ${{ needs.start-runner.outputs.label }}
     if: github.event.deployment_status.state == 'success'
     steps:
+      - name: Free up disk space
+        run: |
+          sudo apt-get clean
+          sudo apt-get autoremove -y
+          sudo rm -rf /var/lib/apt/lists/*
+          df -h
+
+      - name: Disk usage before installation
+        run: df -h
+
       - name: Print Workflow Trigger Event
         env:
           GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
@@ -56,7 +143,7 @@ jobs:
           repository: thegoodparty/test-automation
           token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
-          ref: implement_sharding
+          ref: develop
 
       - name: Install Playwright Dependencies in test-automation Repo
         run: |
@@ -114,3 +201,26 @@ jobs:
               }
             ]
           }' $SLACK_WORKFLOW_WEBHOOK
+
+  stop-runner:
+    name: Stop self-hosted EC2 runner
+    needs:
+      - start-runner
+      - run-e2e-tests
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Stop EC2 runner
+        uses: machulav/ec2-github-runner@v2
+        with:
+          mode: stop
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          label: ${{ needs.start-runner.outputs.label }}
+          ec2-instance-id: ${{ needs.start-runner.outputs.ec2-instance-id }}
