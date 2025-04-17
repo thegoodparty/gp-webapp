@@ -10,7 +10,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-details", {waitUntil: "domcontentloaded"});
+    await page.goto("/dashboard/campaign-details", {waitUntil: "networkidle"});
 });
 
 test('Update Campaign Details', async ({ page }) => {
@@ -25,10 +25,10 @@ test('Update Campaign Details', async ({ page }) => {
         await expect(page.getByRole('heading', { name: 'Campaign Details' })).toBeVisible();
 
         // Update campaign details
+        await page.getByPlaceholder('Campaign Committee').isVisible();
         await page.getByPlaceholder('Campaign Committee').fill(newCampaignCommittee);
         await page.getByLabel('Occupation *').fill(newOccupation);
         await page.getByLabel('Campaign website').fill(newWebsite);
-        await page.getByRole('combobox').click();
         await page.getByRole('combobox').selectOption(newParty);
 
         await page.locator('section').filter({ hasText: 'Campaign Details' }).getByRole('button').click();
