@@ -2,12 +2,13 @@
 import { useState } from 'react'
 import RenderInputField from '@shared/inputs/RenderInputField'
 import { flatStates } from 'helpers/statesHelper'
-import Body1 from '@shared/typography/Body1'
 import {
   dateFromNonStandardUSFormatString,
   isSameDay,
 } from 'helpers/dateHelper'
 import Button from '@shared/buttons/Button'
+import H1 from '@shared/typography/H1'
+import Body2 from '@shared/typography/Body2'
 
 const fields = [
   {
@@ -15,6 +16,7 @@ const fields = [
     label: 'Office Name',
     type: 'text',
     required: true,
+    placeholder: 'Other',
   },
   {
     key: 'state',
@@ -23,36 +25,36 @@ const fields = [
     options: flatStates,
     required: true,
   },
-
   {
     key: 'city',
-    label: 'City, Town or County',
+    label: 'City, Town Or County',
     type: 'text',
+    required: true,
   },
-
   {
     key: 'district',
-    label: 'District (if applicable)',
+    label: 'District (If Applicable)',
     type: 'text',
+    placeholder: '2',
   },
-
   {
     key: 'officeTermLength',
     label: 'Term Length',
     type: 'select',
     required: true,
-    options: ['2 years', '3 years', '4 years', '6 years'],
+    options: ['Select', '2 years', '3 years', '4 years', '6 years'],
   },
   {
     key: 'electionDate',
-    label: 'Election Date',
+    label: 'General Election Date',
     type: 'date',
     required: true,
     noPastDates: true,
+    placeholder: '10/28/2025',
   },
 ]
 
-export default function CustomOfficeForm({ campaign, onSave }) {
+export default function CustomOfficeForm({ campaign, onSave, onBack }) {
   const [state, setState] = useState({
     state: campaign.details?.state || '',
     office: campaign.details?.office || '',
@@ -72,6 +74,7 @@ export default function CustomOfficeForm({ campaign, onSave }) {
     state.state === '' ||
     state.office === '' ||
     state.officeTermLength === '' ||
+    state.city === '' ||
     state.electionDate === '' ||
     error
 
@@ -101,24 +104,45 @@ export default function CustomOfficeForm({ campaign, onSave }) {
 
   return (
     <div>
-      <Body1 className="my-8">
-        Please Note: Make sure your office was not in the list. Manual entry of
-        your office details requires our team&apos;s review, which can delay
-        full access to features. Wait times vary based on demand.
-      </Body1>
-      {fields.map((field) => (
-        <RenderInputField
-          field={field}
-          key={field.key}
-          value={state[field.key]}
-          onChangeCallback={onChange}
-          error={field.noPastDates && error}
-        />
-      ))}
+      <div className="text-center mb-8">
+        <H1 as="h2">Request help</H1>
+      </div>
+      <Body2 className="mb-12 text-center">
+        We are sorry you can&apos;t find your office. This requires manual help
+        by our team. This process may take up to 3 days, during which your
+        account access will be limited. You will be notified via email once the
+        process is finished.
+      </Body2>
+      <div className="space-y-6">
+        {fields.map((field) => (
+          <RenderInputField
+            field={field}
+            key={field.key}
+            value={state[field.key]}
+            onChangeCallback={onChange}
+            error={field.noPastDates && error}
+          />
+        ))}
+      </div>
 
-      <div className="flex justify-center mb-8">
-        <Button size="large" onClick={handleSave} disabled={disableSubmit}>
-          <div className="font-black">Save</div>
+      <div className="flex justify-between mt-12">
+        <Button
+          variant="outlined"
+          color="neutral"
+          size="large"
+          onClick={onBack}
+          className="bg-slate-100"
+        >
+          Back to search
+        </Button>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={handleSave}
+          disabled={disableSubmit}
+          className="bg-slate-800 hover:bg-slate-700"
+        >
+          Send request
         </Button>
       </div>
     </div>
