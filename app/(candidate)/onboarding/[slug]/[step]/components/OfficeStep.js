@@ -5,7 +5,7 @@ import {
 } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
@@ -32,7 +32,6 @@ export default function OfficeStep(props) {
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   })
-  const submitButtonRef = useRef(null)
 
   const { ballotSearch } = state
 
@@ -170,8 +169,6 @@ export default function OfficeStep(props) {
         office: office?.position?.name,
       })
 
-      submitButtonRef.current.scrollIntoView({ behavior: 'smooth' })
-
       setState({
         ...state,
         ballotOffice: office,
@@ -247,7 +244,6 @@ export default function OfficeStep(props) {
               loading={processing}
               type="submit"
               onClick={handleSave}
-              ref={submitButtonRef}
               {...trackingAttrs}
             >
               {step ? 'Next' : 'Save'}
