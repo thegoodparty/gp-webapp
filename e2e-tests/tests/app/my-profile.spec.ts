@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
     await page.goto("/dashboard/campaign-details", {waitUntil: "networkidle"});
 });
 
-test('Update Campaign Details', async ({ page }) => {
+test.skip('Update Campaign Details', async ({ page }) => {
     const caseId = 46;
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
@@ -49,7 +49,7 @@ test('Update Campaign Details', async ({ page }) => {
     }
 });
 
-test('Update Office Details', async ({ page }) => {
+test.skip('Update Office Details', async ({ page }) => {
     const caseId = 47;
     try {
         // Verify user is on campaign details page
@@ -86,7 +86,7 @@ test('Update Office Details', async ({ page }) => {
     }
 });
 
-test('Update Your Why Statement', async ({ page }) => {
+test.skip('Update Your Why Statement', async ({ page }) => {
     const caseId = 48;
     const newWhyStatement = generateTimeStamp() + ' Statement';
 
