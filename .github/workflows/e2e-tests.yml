@@ -2,12 +2,18 @@ name: E2E Tests
 
 on:
   deployment_status:
+    types: [success]
     environments:
       - 'Preview - gp-ui'
       - 'Production - gp-ui'
-    schedule:
-    # Run at midnight PST (8 AM UTC)
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
     - cron: '0 8 * * *'
+
+concurrency:
+  group: e2e-tests-${{ github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   start-runner:
