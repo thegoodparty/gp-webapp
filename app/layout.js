@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-sync-scripts */
 import { Outfit } from 'next/font/google'
 import localFont from 'next/font/local'
 import Script from 'next/script'

@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { FOOTER_COLUMNS, SOCIAL_LINKS } from 'app/shared/layouts/constants'
 import MaxWidth from 'app/shared/layouts/MaxWidth'
-import { usePathname } from 'next/navigation'
 import { FooterButtonLink } from '@shared/layouts/footer/components/FooterButtonLink'
 import { FooterExternalLink } from '@shared/layouts/footer/components/FooterExternalLink'
 import { FooterLinkWrapper } from '@shared/layouts/footer/components/FooterLinkWrapper'
@@ -11,19 +10,21 @@ import { FooterLinkWrapper } from '@shared/layouts/footer/components/FooterLinkW
 const year = new Date().getFullYear()
 
 export default function Footer() {
-  const pathname = usePathname()
-  const isOnboardingPath = pathname?.startsWith('/onboarding')
-  const isDashboardPath =
-    pathname?.startsWith('/dashboard') ||
-    pathname?.startsWith('/volunteer-dashboard') ||
-    pathname?.startsWith('/product-tour')
-
-  const isProfilePath = pathname?.startsWith('/profile')
-  const isServePath = pathname?.startsWith('/serve')
-
-  if (isOnboardingPath || isDashboardPath || isProfilePath || isServePath) {
-    return null
-  }
+  // // TODO: This conditional hiding logic should not be done in the client,
+  // //  this should be done on the server in the layout layer
+  // const pathname = usePathname()
+  // const isOnboardingPath = pathname?.startsWith('/onboarding')
+  // const isDashboardPath =
+  //   pathname?.startsWith('/dashboard') ||
+  //   pathname?.startsWith('/volunteer-dashboard') ||
+  //   pathname?.startsWith('/product-tour')
+  //
+  // const isProfilePath = pathname?.startsWith('/profile')
+  // const isServePath = pathname?.startsWith('/serve')
+  //
+  // if (isOnboardingPath || isDashboardPath || isProfilePath || isServePath) {
+  //   return null
+  // }
 
   return (
     <footer className="bg-primary-dark px-8 py-6 border-solid border-t border-zinc-200 pt-10">
