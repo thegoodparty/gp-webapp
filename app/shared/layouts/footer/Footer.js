@@ -1,9 +1,8 @@
-'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FOOTER_COLUMNS, SOCIAL_LINKS } from 'app/shared/layouts/constants'
 import MaxWidth from 'app/shared/layouts/MaxWidth'
-import { usePathname } from 'next/navigation'
+import { headers } from 'next/headers'
 import { FooterButtonLink } from '@shared/layouts/footer/components/FooterButtonLink'
 import { FooterExternalLink } from '@shared/layouts/footer/components/FooterExternalLink'
 import { FooterLinkWrapper } from '@shared/layouts/footer/components/FooterLinkWrapper'
@@ -11,7 +10,8 @@ import { FooterLinkWrapper } from '@shared/layouts/footer/components/FooterLinkW
 const year = new Date().getFullYear()
 
 export default function Footer() {
-  const pathname = usePathname()
+  const headersList = headers()
+  const pathname = headersList.get('x-pathname') || ''
   const isOnboardingPath = pathname?.startsWith('/onboarding')
   const isDashboardPath =
     pathname?.startsWith('/dashboard') ||
