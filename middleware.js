@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite';
+import { NextResponse } from 'next/server'
+import { handleApiRequestRewrite } from 'helpers/handleApiRequestRewrite'
 
-import { API_VERSION_PREFIX } from 'appEnv';
+import { API_VERSION_PREFIX } from 'appEnv'
 
 const dbRedirects = {
   '/social': 'https://shor.by/goodpartyorg',
@@ -85,34 +85,34 @@ const dbRedirects = {
     'https://goodparty.org/get-stickers/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_aug_3_ac_stickers_qr_3_&utm_content=3_&',
   '/run': '/run-for-office',
   '/elections/senate/me': '/',
-};
+}
 
 export default async function middleware(req) {
-  const { pathname } = req.nextUrl;
+  const { pathname } = req.nextUrl
   // This is a workaround to pass the pathname to SSR pages
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set('x-pathname', pathname);
+  const requestHeaders = new Headers(req.headers)
+  requestHeaders.set('x-pathname', pathname)
 
   if (dbRedirects && dbRedirects[pathname]) {
-    const url = dbRedirects[pathname];
+    const url = dbRedirects[pathname]
     if (url.startsWith('http')) {
       return NextResponse.redirect(`${url}${req.nextUrl.search || ''}`, {
         status: 301,
-      });
+      })
     }
     return NextResponse.redirect(
       `${req.nextUrl.origin}${url}${req.nextUrl.search || ''}`,
       { status: 301 },
-    );
+    )
   }
 
-  const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`);
+  const apiRewriteRequest = pathname.startsWith(`/api${API_VERSION_PREFIX}`)
   if (apiRewriteRequest) {
     try {
-      return await handleApiRequestRewrite(req);
+      return await handleApiRequestRewrite(req)
     } catch (error) {
-      console.error('Error in handleApiRequestRewrite', error);
-      throw error;
+      console.error('Error in handleApiRequestRewrite', error)
+      throw error
     }
   }
 
@@ -120,9 +120,9 @@ export default async function middleware(req) {
     request: {
       headers: requestHeaders,
     },
-  });
+  })
 }
 
 export const config = {
   matcher: '/:path*',
-};
+}
