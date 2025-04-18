@@ -9,10 +9,6 @@ on:
     # Run at midnight PST (8 AM UTC)
     - cron: '0 8 * * *'
 
-concurrency:
-  group: e2e-tests-${{ github.ref_name }}
-  cancel-in-progress: true
-
 jobs:
   start-runner:
     name: Start EC2 Runner
