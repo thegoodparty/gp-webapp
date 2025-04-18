@@ -9,7 +9,7 @@ import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
 
 export default function AddScriptStep({
-  onComplete = (scriptKey) => {},
+  onComplete = (scriptKey, scriptContent) => {},
   backCallback,
   campaign,
   defaultAiTemplateId,
@@ -72,7 +72,7 @@ export default function AddScriptStep({
       <GenerateReviewScreen
         aiScriptKey={aiScriptKey}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
-        onNext={() => onComplete(aiScriptKey)}
+        onNext={onComplete}
       />
     ),
     [ADD_SCRIPT_FLOW.CREATE_SMS]: (

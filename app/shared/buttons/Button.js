@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import ButtonLoading from './ButtonLoading'
+import { forwardRef } from 'react'
 
 export const COLOR_CLASSES = {
   primary:
@@ -103,19 +104,22 @@ export const SIZE_CLASSES = {
  * </Button>
  */
 
-export default function Button({
-  href,
-  target,
-  nativeLink = false,
-  size = 'medium',
-  variant = 'contained',
-  color = 'primary',
-  children,
-  className,
-  loading,
-  disabled,
-  ...restProps
-}) {
+const Button = (
+  {
+    href,
+    target,
+    nativeLink = false,
+    size = 'medium',
+    variant = 'contained',
+    color = 'primary',
+    children,
+    className,
+    loading,
+    disabled,
+    ...restProps
+  },
+  ref,
+) => {
   let baseClasses =
     'rounded-lg text-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors no-underline outline-offset-0 inline-block'
 
@@ -141,6 +145,7 @@ export default function Button({
           href={href}
           target={target}
           className={compiledClassName}
+          ref={ref}
           {...restProps}
         >
           {children}
@@ -152,6 +157,7 @@ export default function Button({
         href={href}
         target={target}
         className={compiledClassName}
+        ref={ref}
         {...restProps}
       >
         {children}
@@ -164,6 +170,7 @@ export default function Button({
       type="button"
       className={compiledClassName}
       disabled={disabled}
+      ref={ref}
       {...restProps}
     >
       {loading === true && (
@@ -174,3 +181,5 @@ export default function Button({
     </button>
   )
 }
+
+export default forwardRef(Button)
