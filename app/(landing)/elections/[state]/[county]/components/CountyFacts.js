@@ -15,6 +15,19 @@ export default function CountyFacts({ county }) {
     homeValue,
   } = county
 
+  // if all fields are null, return null
+
+  if (
+    !cityLargest &&
+    !population &&
+    !density &&
+    !incomeHouseholdMedian &&
+    !unemploymentRate &&
+    !homeValue
+  ) {
+    return null
+  }
+
   const fields = [
     { label: 'Largest city', value: cityLargest, icon: <FaCity /> },
     {
@@ -25,7 +38,7 @@ export default function CountyFacts({ county }) {
     },
     {
       label: 'Density',
-      value: `${density ? numberFormatter(density) : ''} per Sq KM`,
+      value: `${density ? `${numberFormatter(density)} per Sq KM` : ''}`,
       icon: <FaPeopleRoof />,
     },
     {
