@@ -2,24 +2,17 @@ name: E2E Tests
 
 on:
   deployment_status:
-    types: [success]
     environments:
       - 'Preview - gp-ui'
       - 'Production - gp-ui'
-  pull_request:
-    types: [opened, synchronize, reopened]
-  schedule:
+    schedule:
+    # Run at midnight PST (8 AM UTC)
     - cron: '0 8 * * *'
-
-concurrency:
-  group: e2e-tests-${{ github.ref_name }}
-  cancel-in-progress: true
-
+    
 jobs:
   start-runner:
     name: Start EC2 Runner
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     outputs:
       label: ${{ steps.start-ec2-runner.outputs.label }}
       ec2-instance-id: ${{ steps.start-ec2-runner.outputs.ec2-instance-id }}
@@ -30,7 +23,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
+          
       - name: Start EC2 runner
         id: start-ec2-runner
         uses: machulav/ec2-github-runner@v2
@@ -46,46 +39,31 @@ jobs:
               {"Key": "Name", "Value": "github-runner"}
             ]
 
-      - name: Clean up and prepare workspace
+      - name: Setup NVMe storage
         run: |
-          df -h
-          sudo apt-get clean
-          sudo apt-get autoremove -y
-          sudo rm -rf /var/lib/apt/lists/*
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache
-          npm cache clean --force || true
-          yarn cache clean || true
-          sudo apt-get remove -y '^ghc-8.*' '^dotnet-.*' '^llvm-.*' '^mono-.*' '^php.*' || true
-          sudo apt-get remove -y '^google-cloud-sdk.*' '^azure-cli.*' || true
-          df -h
+          # List available NVMe devices
+          lsblk
+          
+          # Create mount point
+          sudo mkdir -p /mnt/nvme
+          
+          # Format and mount the NVMe drive (adjust device name as needed)
+          sudo mkfs -t xfs /dev/nvme1n1 || true
+          sudo mount /dev/nvme1n1 /mnt/nvme || true
+          
+          # Set permissions
+          sudo chown -R $USER:$USER /mnt/nvme
+          
+          # Move working directory to NVMe storage
+          mkdir -p /mnt/nvme/workspace
+          echo "RUNNER_TEMP=/mnt/nvme/workspace" >> $GITHUB_ENV
+          echo "RUNNER_WORKSPACE=/mnt/nvme/workspace" >> $GITHUB_ENV
 
   run-e2e-tests:
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
-    timeout-minutes: 45
     if: github.event.deployment_status.state == 'success'
     steps:
-      - name: Setup NVMe storage on EC2 runner
-        run: |
-          echo "Checking for NVMe volumes"
-          lsblk
-
-          if lsblk | grep -q nvme1n1; then
-            sudo mkdir -p /mnt/nvme
-            sudo mkfs -t xfs /dev/nvme1n1 || true
-            sudo mount /dev/nvme1n1 /mnt/nvme || true
-            sudo chown -R $USER:$USER /mnt/nvme
-            mkdir -p /mnt/nvme/workspace
-
-            echo "RUNNER_TEMP=/mnt/nvme/workspace" >> $GITHUB_ENV
-            echo "RUNNER_WORKSPACE=/mnt/nvme/workspace" >> $GITHUB_ENV
-          else
-            echo "No NVMe device found — skipping NVMe setup"
-          fi
-
       - name: Free up disk space
         run: |
           sudo apt-get clean
@@ -99,7 +77,8 @@ jobs:
       - name: Print Workflow Trigger Event
         env:
           GITHUB_EVENT_CONTEXT: ${{ toJson(github) }}
-        run: echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
+        run: |
+          echo "GitHub Event Context: $GITHUB_EVENT_CONTEXT"
 
       - name: Check out the repository to the runner
         uses: actions/checkout@v4
@@ -121,7 +100,9 @@ jobs:
 
       - name: Capture Deployment URL
         run: |
+          # Get the Vercel preview URL directly from the deployment status
           DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          
           echo "Using deployment URL: $DEPLOYMENT_URL"
           echo "BASE_URL=$DEPLOYMENT_URL" >> "$GITHUB_ENV"
 
@@ -145,7 +126,7 @@ jobs:
           npx playwright test
         env:
           BASE_URL: ${{ env.BASE_URL }}
-          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }} "
+          TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
           TESTRAIL_API_KEY: ${{ secrets.TESTRAIL_API_KEY }}
           TESTRAIL_API_URL: ${{ secrets.TESTRAIL_API_URL }}
@@ -160,9 +141,11 @@ jobs:
         env:
           SLACK_WORKFLOW_WEBHOOK: ${{ secrets.SLACK_WORKFLOW_WEBHOOK }}
         run: |
+          # Set STATUS and COLOR based on job status
           STATUS=$(if [[ "${{ job.status }}" == "success" ]]; then echo "Pass"; else echo "Fail"; fi)
           COLOR=$(if [[ "${{ job.status }}" == "success" ]]; then echo "good"; else echo "danger"; fi)
-
+          
+          # Send the Slack notification
           curl -X POST -H "Content-type: application/json" \
           --data '{
             "text": "Playwright Test Results ('"${STATUS}"')",
@@ -192,7 +175,6 @@ jobs:
       - start-runner
       - run-e2e-tests
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     if: always()
     steps:
       - name: Configure AWS credentials
