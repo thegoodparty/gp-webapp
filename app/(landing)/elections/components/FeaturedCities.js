@@ -114,7 +114,7 @@ export default function FeaturedCities() {
                     {city.name}
                   </h3>
                   <div className=" text-blue-600 text-4xl md:text-7xl font-extrabold">
-                    #{city.openElections}
+                    {city.openElections}
                   </div>
                   <div className="text-slate-200 md:text-lg mt-1 md:mt-2">
                     open elections
