@@ -4,7 +4,7 @@ import {
   TaskAltRounded,
 } from '@mui/icons-material'
 
-export default function TaskCheck({ checked, onClick }) {
+export default function TaskCheck({ checked, onClick, trackingAttrs }) {
   const handleClick = () => {
     if (!checked) {
       onClick()
@@ -12,7 +12,11 @@ export default function TaskCheck({ checked, onClick }) {
   }
 
   return (
-    <span onClick={handleClick} className="group">
+    <span
+      onClick={handleClick}
+      className="group cursor-pointer"
+      {...trackingAttrs}
+    >
       {!checked ? (
         <>
           <CircleOutlined className="group-hover:hidden" />
