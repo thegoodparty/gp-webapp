@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { generateTimeStamp } from 'helpers/dataHelpers';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -10,10 +11,11 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-details", {waitUntil: "networkidle"});
+    await page.goto("/dashboard/campaign-details");
+    await documentReady(page);
 });
 
-test.skip('Update Campaign Details', async ({ page }) => {
+test('Update Campaign Details', async ({ page }) => {
     const caseId = 46;
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
@@ -86,7 +88,7 @@ test.skip('Update Office Details', async ({ page }) => {
     }
 });
 
-test.skip('Update Your Why Statement', async ({ page }) => {
+test('Update Your Why Statement', async ({ page }) => {
     const caseId = 48;
     const newWhyStatement = generateTimeStamp() + ' Statement';
 
@@ -98,7 +100,7 @@ test.skip('Update Your Why Statement', async ({ page }) => {
         await page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
         await page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
         await page.getByRole('button', { name: 'Save' }).nth(2).click();
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
 
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -114,7 +116,7 @@ test.skip('Update Your Why Statement', async ({ page }) => {
 });
 
 
-test.skip('Update Fun Facts about Yourself', async ({ page }) => {
+test('Update Fun Facts about Yourself', async ({ page }) => {
     const caseId = 49;
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
@@ -126,8 +128,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
         await page.getByPlaceholder('EXAMPLE: In my free time, I').clear();
         await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
         await page.getByRole('button', { name: 'Save' }).nth(3).click();
-        await page.waitForLoadState("networkidle");
-
+        await documentReady(page);
         // Refresh page
         await page.reload({ waitUntil: 'domcontentloaded' });
 
@@ -141,7 +142,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-test.skip('Add Opponent', async ({ page }) => {
+test('Add Opponent', async ({ page }) => {
     const caseId = 50;
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
@@ -157,7 +158,7 @@ test.skip('Add Opponent', async ({ page }) => {
         await page.getByPlaceholder('EXAMPLE: Republican hotel').fill(opponentDescription);
         await page.getByRole('button', { name: 'Add Opponent' }).click();
         await page.getByRole('button', { name: 'Save' }).nth(1).click();
-        await page.waitForLoadState("networkidle");
+        await documentReady(page);
 
         // Refresh page and confirm saved opponent data
         await page.reload({ waitUntil: 'domcontentloaded' });
