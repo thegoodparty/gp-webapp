@@ -4,10 +4,12 @@ import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import { userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import { loginAccount } from 'helpers/accountHelpers';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/login", {waitUntil: "domcontentloaded"});
+    await page.goto("/login");
+    await documentReady(page);
 });
 
 test('Verify invalid login credentials error message', async ({ page }) => {

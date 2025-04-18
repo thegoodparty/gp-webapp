@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const pageTitle = /GoodParty.org/
@@ -9,7 +10,8 @@ const bannerButton = /Join Now/
 const candidatesButton = /Find Candidates/
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/', {waitUntil: "commit"});
+  await page.goto('/');
+  await documentReady(page);
 });
 
 test('Verify Homepage', async ({ page }) => {

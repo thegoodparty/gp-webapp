@@ -3,6 +3,7 @@ import { test } from "@playwright/test";
 import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
+import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test("Style Guide - Black Button", async ({ page }) => {
@@ -11,7 +12,7 @@ test("Style Guide - Black Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-blackbutton--default', {waitUntil: "commit"});
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const blackButtons = [
@@ -42,7 +43,7 @@ test("Style Guide - Black Outlined Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-blackoutlinedbutton--default');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const blackOutlineButtons = [
@@ -74,7 +75,7 @@ test("Style Guide - Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-button--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
 
@@ -151,7 +152,7 @@ test("Style Guide - Error Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-errorbutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
     const frame = await getStorybookFrame(page);
 
         const errorButtons = [
@@ -186,7 +187,7 @@ test("Style Guide - Icon Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-iconbutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const iconButtons = [
@@ -239,7 +240,7 @@ test("Style Guide - Info Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-infobutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const infoButtons = [
@@ -274,7 +275,7 @@ test("Style Guide - Pill Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-pill--default');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const pillButtons = [
@@ -304,7 +305,7 @@ test("Style Guide - Pink Button Client", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-pinkbuttonclient--default');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const pinkButtonClient = [
@@ -330,7 +331,7 @@ test("Style Guide - Primary Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-primarybutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const primaryButtons = [
@@ -365,7 +366,7 @@ test("Style Guide - Purple Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-purplebutton--default');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const purpleButton = [
@@ -390,7 +391,7 @@ test("Style Guide - Question Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-questionbutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const questionButton = [
@@ -414,7 +415,7 @@ test("Style Guide - Secondary Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-secondarybutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const secondaryButtons = [
@@ -452,7 +453,7 @@ test("Style Guide - Severity Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-severitybutton--default');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const severityButtons = [
@@ -496,7 +497,7 @@ test("Style Guide - Success Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-successbutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
 
@@ -532,7 +533,7 @@ test("Style Guide - Warning Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/docs/buttons-warningbutton--docs');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
 
@@ -568,7 +569,7 @@ test("Style Guide - Yellow Button", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/buttons-yellowbutton--default');
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const yellowButton = [

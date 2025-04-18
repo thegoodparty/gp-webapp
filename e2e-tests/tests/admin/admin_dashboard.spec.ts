@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -13,7 +14,7 @@ test('Verify admin user can access admin dashboard', async ({page}) => {
 
     try {
         await page.goto('/admin');
-        await page.waitForLoadState('networkidle');
+        await documentReady(page);
 
         // Verify Admin Dashboard is displayed
         page.getByRole('heading', { name: 'Admin Dashboard' }).isVisible();

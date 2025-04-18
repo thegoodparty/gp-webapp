@@ -3,6 +3,7 @@ import { test } from "@playwright/test";
 import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
+import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test("Style Guide - Acknowledgement Question", async ({ page }) => {
@@ -11,7 +12,7 @@ test("Style Guide - Acknowledgement Question", async ({ page }) => {
     try {
       await page.goto(styleGuideURL + '?path=/story/acknowledgements-acknowledgementquestion--default', {waitUntil: "commit"});
   
-      await page.waitForLoadState("networkidle");
+      await documentReady(page);
   
       const frame = await getStorybookFrame(page);
       const acknowledgementQuestionElements = [

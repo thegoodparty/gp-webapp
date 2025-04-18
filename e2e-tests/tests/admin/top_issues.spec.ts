@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -13,7 +14,7 @@ test('Verify admin user can access Top Issues page', async ({page}) => {
 
     try {
         await page.goto('/admin/top-issues');
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
         page.getByRole('button', { name: 'Add a Top Issue' }).isVisible();
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');

@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { test, expect } from "@playwright/test";
-import { checkButtons } from "helpers/domHelpers";
+import { checkButtons, documentReady } from "helpers/domHelpers";
 import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import * as fs from "fs";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
@@ -51,7 +51,6 @@ test("Verify Blog page", async ({ page }) => {
 
 test("Verify Blog filtering", async ({ page }) => {
   const caseId = 16;
-  const topicsHeader = "Explore all Topics";
 
   try {
     // Filter blog page by category
@@ -71,7 +70,7 @@ test("Verify Blog filtering", async ({ page }) => {
       .click();
 
     // Verify user redirected to topic page
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
     await expect(page).toHaveURL(/.*\/blog\/tag/, { timeout: 10000 });
 
     // Report test results
@@ -91,7 +90,7 @@ test.skip("Verify Blog Article page", async ({ page }) => {
   try {
     // Navigate to featured blog article
     await page.locator(`button:has-text("Read More")`).first().click();
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
     await expect(page).toHaveURL(/.*\/article/, { timeout: 5000 });
 
     // Verify blog article contents

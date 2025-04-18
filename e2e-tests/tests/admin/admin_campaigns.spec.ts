@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { testAccountLastName } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -15,7 +16,7 @@ const testSearchEmail = 'dustin@goodparty.org';
 
 test.beforeEach(async ({page}) => {
     await page.goto('/admin/campaign-statistics');
-    await page.waitForLoadState('domcontentloaded');
+    await documentReady(page);
 });
 
 

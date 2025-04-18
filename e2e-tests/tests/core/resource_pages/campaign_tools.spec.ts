@@ -1,13 +1,14 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { coreNav} from 'helpers/navHelpers';
-import { checkButtons, checkImgAltText } from "helpers/domHelpers";
+import { checkButtons, checkImgAltText, documentReady } from "helpers/domHelpers";
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/run-for-office", {waitUntil: "commit"})
+    await page.goto("/run-for-office");
+    await documentReady(page);
 });
 
 test('Verify Campaign Tools page', async ({ page }) => {

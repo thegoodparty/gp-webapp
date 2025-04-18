@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { upgradeToPro } from 'helpers/accountHelpers';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -10,7 +11,8 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/voter-records", {waitUntil: "networkidle"});
+    await page.goto("/dashboard/voter-records");
+    await documentReady(page);
 });
 
 test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {

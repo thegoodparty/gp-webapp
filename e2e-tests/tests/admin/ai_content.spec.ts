@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -13,7 +14,7 @@ test('Verify admin user can access AI Content page', async ({page}) => {
 
     try {
         await page.goto('/admin/ai-content');
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
     
         // Verify Search input
         await page.getByRole('heading', { name: 'AI Content' }).isVisible();

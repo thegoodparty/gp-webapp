@@ -4,6 +4,7 @@ import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
 import { readFileSync } from "fs";
+import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test("Style Guide - File Drop Styling Test", async ({ page }) => {
@@ -12,7 +13,7 @@ test("Style Guide - File Drop Styling Test", async ({ page }) => {
     try {
       await page.goto(styleGuideURL + '/?path=/story/inputs-filedropzone--default', {waitUntil: "commit"});
   
-      await page.waitForLoadState("networkidle");
+      await documentReady(page);
   
       const frame = await getStorybookFrame(page);
       const fileDropZoneElements = [
@@ -36,7 +37,7 @@ test("Style Guide - File Drop File Test", async ({ page }) => {
   
     try {
       await page.goto(styleGuideURL + '/?path=/story/inputs-filedropzone--default', {waitUntil: "commit"});
-      await page.waitForLoadState("networkidle");
+      await documentReady(page);
   
       const frame = await getStorybookFrame(page);
       

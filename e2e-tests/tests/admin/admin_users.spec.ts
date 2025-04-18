@@ -4,6 +4,7 @@ import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 import { testAccountLastName } from 'helpers/accountHelpers';
 import { userData } from 'helpers/dataHelpers';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -12,7 +13,7 @@ test.use({
 
 test.beforeEach(async ({page}) => {
     await page.goto('/admin/users');
-    await page.waitForLoadState('domcontentloaded');
+    await documentReady(page);
 });
 
 test('Admin users page', async ({page}) => {
@@ -54,9 +55,9 @@ test.skip('Send candidate invite', async ({page}) => {
         await page.getByRole('option', { name: 'candidate' }).click();
         await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
         await page.getByRole('button', { name: 'Add User' }).click();
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -84,9 +85,9 @@ test.skip('Send sales invite', async ({page}) => {
         await page.getByRole('option', { name: 'sales' }).click();
         await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
         await page.getByRole('button', { name: 'Add User' }).click();
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
 
         // Report test results  
         await addTestResult(runId, caseId, 1, 'Test passed');

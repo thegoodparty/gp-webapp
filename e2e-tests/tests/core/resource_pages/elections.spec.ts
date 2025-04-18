@@ -1,12 +1,13 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { checkImgAltText } from "helpers/domHelpers";
+import { checkImgAltText, documentReady } from "helpers/domHelpers";
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/elections", {waitUntil: "commit"})
+    await page.goto("/elections");
+    await documentReady(page);
 });
 
 test('Verify Explore Offices page', async ({ page }) => {
