@@ -265,7 +265,8 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Navigating to profile page...');
-  await page.goto(`${baseURL}/profile`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/profile`);
+  await documentReady(page);
 
   console.log('Looking for Delete Account button...');
   // Wait for and click Delete Account button with a longer timeout
