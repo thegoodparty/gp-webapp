@@ -138,6 +138,9 @@ export const getVoterContactsTotal = ({
   digitalAds,
   text,
   events,
+  robocall,
+  phoneBanking,
+  socialMedia,
 }) =>
   (doorKnocking || 0) +
   (calls || 0) +
@@ -145,7 +148,10 @@ export const getVoterContactsTotal = ({
   (directMail || 0) +
   (digitalAds || 0) +
   (text || 0) +
-  (events || 0)
+  (events || 0) +
+  (robocall || 0) +
+  (phoneBanking || 0) +
+  (socialMedia || 0)
 
 export const calculateVoterContactCounts = (
   pathToVictory,

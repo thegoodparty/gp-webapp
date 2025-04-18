@@ -1,8 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { fetchVoterFile } from '../../components/VoterRecordsPage'
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 import Button from '@shared/buttons/Button'
+import { voterFileDownload } from 'helpers/voterFileDownload'
 
 export default function DownloadFile(props) {
   const [loading, setLoading] = useState(false)
@@ -17,33 +17,17 @@ export default function DownloadFile(props) {
       file: fileName,
     })
     setLoading(true)
-    let response
-    if (isCustom) {
-      trackEvent('Download Voter File attempt', { type: 'custom' })
-      const customFilters = campaign.data.customVoterFiles[index]
-      response = await fetchVoterFile('custom', customFilters)
-    } else {
-      response = await fetchVoterFile(type)
-      trackEvent('Download Voter File attempt', { type })
-    }
 
-    if (response) {
-      // Read the response as Blob
-      const blob = await response.blob()
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `${fileName}.csv`)
-      document.body.appendChild(link)
-      link.click()
+    const downloadType = isCustom ? 'custom' : type
+    const filters = isCustom ? campaign.data.customVoterFiles[index] : null
 
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(link)
-      trackEvent('Download Voter File Success', { type })
-    } else {
+    trackEvent('Download Voter File attempt', { type: downloadType })
+    try {
+      await voterFileDownload(downloadType, filters)
+      trackEvent('Download Voter File Success', { type: downloadType })
+    } catch (error) {
       trackEvent('Download Voter File Failure', {
-        type,
+        type: downloadType,
         slug: props.campaign.slug,
       })
     }
