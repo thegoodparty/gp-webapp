@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { expect, chromium } from "@playwright/test";
 import { userData, generateEmail, generatePhone } from "helpers/dataHelpers";
-import { acceptCookieTerms } from "helpers/domHelpers";
+import { acceptCookieTerms, documentReady } from "helpers/domHelpers";
 import * as path from 'path';
 import * as fs from 'fs';
 import PDFDocument from 'pdfkit';
@@ -152,7 +152,7 @@ export async function createAccount(
   await acceptCookieTerms(page);
 
   // Verify user is on login page
-  await page.waitForLoadState('domcontentloaded');
+  await documentReady(page);
   expect(page.getByText(loginPageHeader)).toBeVisible();
 
   // Fill in sign up page
@@ -195,7 +195,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.goto("/dashboard/upgrade-to-pro", { waitUntil: "commit" });
 
   // Waits for page to load completely
-  await page.waitForLoadState('domcontentloaded');
+  await documentReady(page);
 
   // Verify user is on voter data (free) page
   await expect(page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' })).toBeVisible();
@@ -244,7 +244,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByPlaceholder('ZIP').fill('90210');
   await page.getByPlaceholder('(800) 555-').fill(phoneNumber);
   await page.getByTestId('hosted-payment-submit-button').click();
-  await page.waitForLoadState('domcontentloaded');
+  await documentReady(page);
   await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
   await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
 }
@@ -279,7 +279,7 @@ export async function deleteAccount(page = null) {
   await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
   await proceedButton.click();
 
-  await page.waitForLoadState('domcontentloaded');
+  await documentReady(page);
   await page.context().clearCookies();
 
   // Only close the browser if we created it in this function

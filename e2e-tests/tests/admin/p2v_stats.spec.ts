@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { test } from '@playwright/test';
 import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
 import * as fs from 'fs';
+import { documentReady } from 'helpers/domHelpers';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
@@ -13,7 +14,7 @@ test('Verify admin user can access P2V Stats page', async ({page}) => {
 
     try {
         await page.goto('/admin/p2v-stats');
-        await page.waitForLoadState('domcontentloaded');
+        await documentReady(page);
 
         // Verify P2V Stats page
         page.getByRole('heading', { name: 'P2V Stats' }).isVisible();

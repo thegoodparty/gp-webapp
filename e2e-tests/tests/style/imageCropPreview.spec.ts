@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
 import { getStorybookFrame, styleGuideURL, validateElements } from "helpers/styleHelpers";
 import * as fs from "fs";
+import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
 test("Style Guide - ImageCropPreview Styling", async ({ page }) => {
@@ -11,7 +12,7 @@ test("Style Guide - ImageCropPreview Styling", async ({ page }) => {
   try {
     await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default', {waitUntil: "commit"});
 
-    await page.waitForLoadState("networkidle");
+    await documentReady(page);
 
     const frame = await getStorybookFrame(page);
     const imageCropElements = [
@@ -41,7 +42,7 @@ test("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
     try {
       await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default', {waitUntil: "commit"});
   
-      await page.waitForLoadState("networkidle");
+      await documentReady(page);
   
       const frame = await getStorybookFrame(page);
       
@@ -64,7 +65,7 @@ test("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
     try {
         await page.goto(styleGuideURL + '/?path=/story/inputs-imagecroppreview--default', {waitUntil: "commit"});
     
-        await page.waitForLoadState("networkidle");
+        await documentReady(page);
     
         const frame = await getStorybookFrame(page);
 

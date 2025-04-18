@@ -45,3 +45,7 @@ export async function getNavatticPlayerFrame(page, popUp = false) {
         return outerFrame;
     }
 }
+
+export async function documentReady(page) {
+    await page.waitForLoadState('domcontentloaded');
+}
