@@ -66,10 +66,7 @@ jobs:
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
     timeout-minutes: 45
-    if: |
-      github.event_name == 'schedule' ||
-      (github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success') ||
-      github.event_name == 'pull_request'
+    if: github.event.deployment_status.state == 'success'
     steps:
       - name: Setup NVMe storage on EC2 runner
         run: |
