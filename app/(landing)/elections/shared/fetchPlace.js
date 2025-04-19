@@ -19,6 +19,6 @@ const fetchPlace = async ({
   if (Array.isArray(res)) {
     return res[0]
   }
-  return {}
+  return false
 }
 export default fetchPlace

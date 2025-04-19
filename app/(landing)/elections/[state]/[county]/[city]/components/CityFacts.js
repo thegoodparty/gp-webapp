@@ -6,7 +6,6 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 export default function CityFacts({ city, county }) {
   if (!city) return null
-  console.log('city', city)
   const {
     population,
     density,

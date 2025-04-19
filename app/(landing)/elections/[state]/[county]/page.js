@@ -72,28 +72,21 @@ export default async function Page({ params }) {
     articleSlugs.map((slug) => fetchArticle(slug)),
   )
 
-  if (state.length > 2) {
-    // state is the slug, county is the id
-    const { race } = await fetchPosition(params.county) // this is the id
-    if (!race) {
+  const county = await fetchPlace({ slug: `${state}/${params.county}` })
+  if (!county) {
+    // try to append county to the slug and redirect if found
+    const newSlug = `${state}/${params.county}-county`
+    const newCounty = await fetchPlace({
+      slug: newSlug,
+      includeParent: false,
+      includeRaces: false,
+    })
+    if (newCounty) {
+      permanentRedirect(`/elections/${newSlug}`)
+    } else {
       notFound()
     }
-    const { county, municipality, state } = race
-    let url = `/elections/position/`
-    if (!county && !municipality) {
-      url += `${state.toLowerCase()}/`
-    }
-    if (county) {
-      url += `${county.slug}/`
-    } else if (municipality) {
-      url += `${municipality.slug}/`
-    }
-    url += race.positionSlug
-
-    permanentRedirect(url)
   }
-
-  const county = await fetchPlace({ slug: `${state}/${params.county}` })
   const { children, Races: races } = county
   county.children = null
   county.races = null
