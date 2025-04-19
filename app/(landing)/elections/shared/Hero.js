@@ -31,7 +31,7 @@ export default function Hero({
   if (level === 'city') {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: `${parent.name} county`,
+      label: `${parent.name}`,
       href: `/elections/${parent.slug}`,
     })
     breadcrumbsLinks.push({
@@ -50,8 +50,8 @@ export default function Hero({
     subTitle = `${county?.name || 'county'} elections`
   } else if (level === 'city') {
     const cityName = `${municipality?.name}`
-    title = `Run for ${cityName || 'a'} city office`
-    subTitle = `${cityName || ''} city elections`
+    title = `Run for ${cityName || 'an'} office`
+    subTitle = `${cityName || ''} elections`
   }
   return (
     <>

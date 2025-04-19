@@ -6,7 +6,7 @@ import { numberFormatter } from 'helpers/numberHelper'
 
 export default function CityFacts({ city, county }) {
   if (!city) return null
-
+  console.log('city', city)
   const {
     population,
     density,
@@ -25,7 +25,7 @@ export default function CityFacts({ city, county }) {
     },
     {
       label: 'Density',
-      value: `${density ? numberFormatter(density) : ''} per Sq KM`,
+      value: `${density ? `${numberFormatter(density)} per Sq KM` : ''}`,
       icon: <FaPeopleRoof />,
     },
     {
@@ -53,12 +53,12 @@ export default function CityFacts({ city, county }) {
     <section className="bg-primary-dark py-14 md:py-20  mt-12 md:mt-20">
       <div className="max-w-screen-xl mx-auto mt-20 text-slate-50">
         <h3 className=" text-2xl md:text-5xl font-semibold text-center mb-12 md:mb-20">
-          {city.county_full} Fast facts
+          {city.name} fast facts
         </h3>
         <div className="grid grid-cols-12 gap-4">
           {fields.map((field) => (
             <>
-              {field.value && (
+              {field.value ? (
                 <div
                   key={field.label}
                   className="col-span-6 md:col-span-4 flex flex-col items-center"
@@ -77,6 +77,8 @@ export default function CityFacts({ city, county }) {
                     </div>
                   </div>
                 </div>
+              ) : (
+                ''
               )}
             </>
           ))}

@@ -1,30 +1,17 @@
-'use client'
 import Button from '@shared/buttons/Button'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
 import { slugify } from 'helpers/articleHelper'
-import { isbot } from 'isbot'
+import { numberFormatter } from 'helpers/numberHelper'
 import Image from 'next/image'
 import map from 'public/images/elections/map.png'
-import { useState } from 'react'
 
-const fetchLocFromIp = async () => {
-  const resp = await fetch(
-    'https://pro.ip-api.com/json/?fields=status,countryCode,region,city&key=c8O5omxoySWBzAi',
-    {
-      method: 'GET',
-    },
-  )
-  return resp.json()
-}
-
-async function fetchFeatured(city, state) {
+async function fetchFeatured() {
   try {
-    const api = gpApi.race.proximity
+    const api = gpApi.elections.featuredCities
     const payload = {
-      city,
-      state,
+      count: 3,
     }
     return await gpFetch(api, payload, 3600)
   } catch (e) {
@@ -36,50 +23,24 @@ async function fetchFeatured(city, state) {
 const defaultCities = [
   {
     name: 'Los Angeles',
-    state: 'CA',
     slug: `ca/los-angeles/los-angeles`,
-    openElections: 72,
+    race_count: 72,
   },
   {
     name: 'Austin',
-    state: 'Tx',
-    openElections: 68,
+    race_count: 68,
     slug: 'tx/travis/austin',
   },
   {
     name: 'San Diego',
-    state: 'CA',
-    openElections: 44,
+    race_count: 44,
     slug: 'ca/san%20diego/san%20diego',
   },
 ]
-export default function FeaturedCities() {
-  const [featuredCities, setFeaturedCities] = useState(defaultCities)
-
-  // useEffect(() => {
-  //   getIpLocation();
-  // }, []);
-
-  const getIpLocation = async () => {
-    try {
-      const isBot = isbot(navigator.userAgent)
-      if (!isBot) {
-        const { region, city, countryCode } = await fetchLocFromIp()
-
-        if (countryCode !== 'US') {
-          return
-        }
-        const { cities } = await fetchFeatured(city, region)
-        if (cities && cities.length > 0) {
-          setFeaturedCities(cities)
-        }
-
-        console.log('region', region)
-        console.log('city', city)
-      }
-    } catch (error) {
-      console.log('error in getIpLocation', error)
-    }
+export default async function FeaturedCities() {
+  const featuredCities = await fetchFeatured()
+  if (!featuredCities || !featuredCities.length) {
+    return <div className="h-20 bg-primary-dark" />
   }
 
   const link = (city) => {
@@ -102,7 +63,7 @@ export default function FeaturedCities() {
         <div className="bg-primary-dark text-gray-50 -mt-[104px] md:-mt-[194px] pt-36 md:pt-40">
           <MaxWidth>
             <h2 className="text-3xl md:text-5xl font-semibold mb-10 md:mb-20">
-              Featured cities
+              Featured districts
             </h2>
             <div className="grid grid-cols-12 gap-4">
               {featuredCities.map((city) => (
@@ -114,7 +75,7 @@ export default function FeaturedCities() {
                     {city.name}
                   </h3>
                   <div className=" text-blue-600 text-4xl md:text-7xl font-extrabold">
-                    {city.openElections}
+                    {numberFormatter(city.race_count)}
                   </div>
                   <div className="text-slate-200 md:text-lg mt-1 md:mt-2">
                     open elections

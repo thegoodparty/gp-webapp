@@ -47,6 +47,10 @@ const gpApi = {
       url: `${electionBase}races`,
       method: 'GET',
     },
+    featuredCities: {
+      url: `${electionBase}places/most-elections`,
+      method: 'GET',
+    },
   },
 
   race: {
