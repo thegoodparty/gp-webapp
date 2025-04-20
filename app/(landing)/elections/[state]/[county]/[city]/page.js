@@ -6,6 +6,7 @@ import gpFetch from 'gpApi/gpFetch'
 import ElectionsCityPage from './components/ElectionsCityPage'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 import fetchPlace from 'app/(landing)/elections/shared/fetchPlace'
+import PlaceSchema from 'app/(landing)/elections/shared/PlaceSchema'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
@@ -16,6 +17,8 @@ export const fetchCity = async (state, county, city) => {
     includeChildren: true,
     includeRaces: true,
     includeParent: true,
+    raceColumns:
+      'slug,normalizedPositionName,positionDescription,electionDate,positionLevel',
   }
 
   const res = await gpFetch(api, payload, 3600)
@@ -79,5 +82,10 @@ export default async function Page({ params }) {
     parent,
   }
 
-  return <ElectionsCityPage {...childProps} />
+  return (
+    <>
+      <ElectionsCityPage {...childProps} />
+      <PlaceSchema place={place} />
+    </>
+  )
 }

@@ -6,6 +6,7 @@ import gpFetch from 'gpApi/gpFetch'
 import ElectionsCountyPage from './components/ElectionsCountyPage'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 import fetchPlace from '../../shared/fetchPlace'
+import PlaceSchema from '../../shared/PlaceSchema'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
@@ -99,5 +100,10 @@ export default async function Page({ params }) {
     articles,
   }
 
-  return <ElectionsCountyPage {...childProps} />
+  return (
+    <>
+      <ElectionsCountyPage {...childProps} />
+      <PlaceSchema place={county} />
+    </>
+  )
 }
