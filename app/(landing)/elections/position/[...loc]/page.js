@@ -1,7 +1,7 @@
 import pageMetaData from 'helpers/metadataHelper'
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
@@ -36,13 +36,11 @@ const parseLoc = (loc) => {
 
 export async function generateMetadata({ params }) {
   const { loc } = params
-  const { state, county, city, positionSlug } = parseLoc(loc)
   const race = await fetchRace(loc.join('/'))
   const slug = `elections/position/${loc.join('/')}`
 
   const {
     positionLevel,
-    positionNames,
     positionDescription,
     Place,
     state: raceState,
@@ -71,8 +69,19 @@ export default async function Page({ params }) {
   if (!loc || loc.length === 0 || loc.length > 4) {
     return notFound()
   }
-  const { state, county, city } = parseLoc(loc)
+
   const race = await fetchRace(loc.join('/'))
+  if (!race) {
+    const newSlug = `${loc[0]}/${loc[1]}-county/${loc[2]}`
+    const newRace = await fetchRace(newSlug)
+
+    if (newRace) {
+      permanentRedirect(`/elections/position/${newSlug}`)
+    }
+    return notFound()
+  }
+
+  const { state, county, city } = parseLoc(loc)
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
