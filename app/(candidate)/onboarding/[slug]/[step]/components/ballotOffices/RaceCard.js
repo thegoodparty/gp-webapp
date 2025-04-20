@@ -1,14 +1,9 @@
-import Body1 from '@shared/typography/Body1'
 import { GrRadial, GrRadialSelected } from 'react-icons/gr'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
+import H5 from '@shared/typography/H5'
 
-export default function RaceCard({
-  race,
-  // modalCallback,
-  selected,
-  selectCallback,
-}) {
+export default function RaceCard({ race, selected, selectCallback }) {
   const { position, election } = race
   if (!position) {
     return null
@@ -26,20 +21,22 @@ export default function RaceCard({
     <div
       role="button"
       tabIndex={0}
-      className="px-4 py-4 bg-indigo-50 rounded-md mb-2 items-center justify-between cursor-pointer transition-colors hover:bg-slate-200"
+      className={`px-4 py-4 bg-indigo-50 rounded-md mb-4 items-center justify-between cursor-pointer transition-colors hover:bg-slate-200 border ${
+        selected ? 'border-black' : 'border-gray-200'
+      }`}
       onClick={() => selectCallback(race)}
       onKeyDown={(e) => handleKeyDown(e, race)}
     >
       <div className="flex items-center">
         {selected ? (
-          <GrRadialSelected className="text-primary min-w-[16px]" />
+          <GrRadialSelected className="text-primary text-xl" />
         ) : (
-          <GrRadial className="min-w-[16px]" />
+          <GrRadial className="text-xl text-indigo" />
         )}
         <div className="ml-3 text-left">
-          <Body1>{name}</Body1>
+          <H5>{name}</H5>
           <Body2>{normalizedPosition?.name || ''}</Body2>
-          <Body2 className="mt-2">
+          <Body2 className="">
             Election Date: {dateUsHelper(electionDay)}{' '}
             {primaryElectionDate ? (
               <span>

@@ -2,10 +2,20 @@ import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { useMemo } from 'react'
 
 const SUPPORT_EMAIL = 'politics@goodparty.org'
 
 export default function DeadlineModal({ type, deadline, onClose }) {
+  const trackingAttrs = useMemo(
+    () =>
+      buildTrackingAttrs('Deadline Missed Email Button', {
+        type,
+        deadline,
+      }),
+    [type, deadline],
+  )
   return (
     <Modal open={true} closeCallback={onClose}>
       <div className="p-6 text-center">
@@ -23,6 +33,7 @@ export default function DeadlineModal({ type, deadline, onClose }) {
             size="large"
             color="neutral"
             onClick={onClose}
+            {...trackingAttrs}
           >
             Email our team
           </Button>

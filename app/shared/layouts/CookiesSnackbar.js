@@ -1,9 +1,9 @@
 'use client'
-
-import ErrorButton from '@shared/buttons/ErrorButton'
 import { getCookie, setCookie } from 'helpers/cookieHelper'
 import { useEffect, useState } from 'react'
 import { isbot } from 'isbot'
+import { MdClose } from 'react-icons/md'
+import Button from '../buttons/Button'
 
 export default function CookiesSnackbar() {
   const [showBanner, setShowBanner] = useState(false)
@@ -22,14 +22,24 @@ export default function CookiesSnackbar() {
     setShowBanner(false)
   }
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-primary-dark text-white p-4 text-center" data-testid="cookie-snackbar">
-      We use cookies to personalize content, analyze traffic, and provide you
-      with a better user experience. By continuing to browse this site, you
-      consent to the use of cookies.
-      <div className="mt-6" onClick={handleAccept}>
-        <ErrorButton className="ml-4" size="medium" dataTestId={"cookie-accept-btn"}>
-          Accept
-        </ErrorButton>
+    <div className="fixed bottom-4 flex justify-center w-full">
+      <div
+        className="bg-primary-dark text-white p-4 flex max-w-[440px] mx-8 rounded-lg"
+        data-testid="cookie-snackbar"
+      >
+        <span className="text-xs">
+          By continuing to browse this site, you consent to the use of cookies.
+        </span>
+        <Button
+          className="ml-6 flex items-center inline self-center"
+          color="white"
+          onClick={handleAccept}
+          size="medium"
+          dataTestId={'cookie-accept-btn'}
+        >
+          Close
+          <MdClose className="ml-2 text-xl" />
+        </Button>
       </div>
     </div>
   )

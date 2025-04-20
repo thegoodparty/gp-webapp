@@ -12,13 +12,9 @@ import { HiOutlineScale } from 'react-icons/hi'
 import { SiMinutemailer } from 'react-icons/si'
 import Caption from '@shared/typography/Caption'
 import { calcAnswers } from '../../shared/QuestionProgress'
-import {
-  buildTrackingAttrs,
-  trackEvent,
-  EVENTS,
-} from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/fullStoryHelper'
 
-const categoryIcons = {
+export const TEMPLATE_CATEGORY_ICONS = {
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,
   'Media & PR': <BsMegaphone className="text-orange-600" />,
   'Social Media Content': <FiShare2 className="text-cyan-600" />,
@@ -107,7 +103,7 @@ export default function TemplateList(props) {
                   `}
                   >
                     <div className="mr-3 md:mr-0 md:mb-4 text-2xl ">
-                      {categoryIcons[category.name]}
+                      {TEMPLATE_CATEGORY_ICONS[category.name]}
                     </div>
                     <H5>{template.name}</H5>
                   </div>
