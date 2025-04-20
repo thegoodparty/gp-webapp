@@ -53,34 +53,6 @@ const gpApi = {
     },
   },
 
-  race: {
-    byState: {
-      url: `${electionBase}race/by-state`,
-      method: 'GET',
-    },
-    allStates: {
-      // for sitemaps
-      url: `${electionBase}race/all-state`,
-      method: 'GET',
-    },
-    byCounty: {
-      url: `${electionBase}race/by-county`,
-      method: 'GET',
-    },
-    byCity: {
-      url: `${electionBase}race/by-city`,
-      method: 'GET',
-    },
-    byRace: {
-      url: `${electionBase}race`,
-      method: 'GET',
-    },
-    proximity: {
-      url: `${electionBase}race/proximity-cities`,
-      method: 'GET',
-    },
-  },
-
   candidate: {
     find: {
       url: `${base}candidate`,

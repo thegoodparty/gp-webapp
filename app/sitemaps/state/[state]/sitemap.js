@@ -46,8 +46,10 @@ export default async function sitemap({ id }) {
   try {
     const state = flatStates[id].toLocaleLowerCase()
 
-    const places = await fetchStatePlaces(state)
-    const races = await fetchStateRaces(state)
+    const [places, races] = await Promise.all([
+      fetchStatePlaces(state),
+      fetchStateRaces(state),
+    ])
 
     const mainSitemap = []
     // state url

@@ -45,8 +45,6 @@ export default async function Page({ params }) {
   }
 
   const { children, Races: races } = await fetchPlace({ slug: state })
-  console.log('children', children)
-  console.log('races', races)
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',

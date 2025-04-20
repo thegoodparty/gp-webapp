@@ -4,6 +4,25 @@ import { dateUsHelper } from 'helpers/dateHelper'
 import Link from 'next/link'
 import { FaArrowRightLong } from 'react-icons/fa6'
 
+const positionLevelColors = {
+  STATE: {
+    bg: 'bg-[#F5FFFC]',
+    hover: 'hover:bg-[rgba(51,225,178,0.8)]',
+  },
+  COUNTY: {
+    bg: 'bg-[#F5FFFC]',
+    hover: 'hover:bg-[rgba(58,187,234,0.5)]',
+  },
+  CITY: {
+    bg: 'bg-[#FDF9FF]',
+    hover: 'hover:bg-[rgba(201,133,242,0.35)]',
+  },
+  LOCAL: {
+    bg: 'bg-[#FDF9FF]',
+    hover: 'hover:bg-[rgba(201,133,242,0.35)]',
+  },
+}
+
 export default function Race({ race }) {
   const {
     normalizedPositionName,
@@ -12,13 +31,9 @@ export default function Race({ race }) {
     positionLevel,
     slug,
   } = race
-  let color = ''
 
-  if (positionLevel === 'STATE') {
-    color = '#F5FFFC'
-  } else if (positionLevel === 'COUNTY') {
-    color = '#3ABBEA'
-  }
+  const colors = positionLevelColors[positionLevel?.toUpperCase()] || {}
+
   return (
     <Link
       href={`/elections/position/${slug}`}
@@ -26,19 +41,9 @@ export default function Race({ race }) {
       id={`office-${slug}-${race.hashId}`}
     >
       <div
-        className={` py-5 px-5 mb-3 rounded-lg transition-colors ${
-          positionLevel === 'STATE'
-            ? 'bg-[#F5FFFC] hover:bg-[rgba(51,225,178,0.8)]'
-            : ''
-        } ${
-          positionLevel === 'COUNTY'
-            ? 'bg-[#F5FFFC] hover:bg-[rgba(58,187,234,0.5)]'
-            : ''
-        }  ${
-          positionLevel === 'CITY' || positionLevel === 'LOCAL'
-            ? 'bg-[#FDF9FF] hover:bg-[rgba(201,133,242,0.35)]'
-            : ''
-        }`}
+        className={`py-5 px-5 mb-3 rounded-lg transition-colors ${
+          colors.bg || ''
+        } ${colors.hover || ''}`}
       >
         <div className="grid-cols-12 gap-3 grid items-center">
           <div className="col-span-12 md:col-span-9">

@@ -15,8 +15,6 @@ export default function CountyFacts({ county }) {
     homeValue,
   } = county
 
-  // if all fields are null, return null
-
   if (
     !cityLargest &&
     !population &&

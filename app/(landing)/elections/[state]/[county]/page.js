@@ -1,8 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { shortToLongState } from 'helpers/statesHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import ElectionsCountyPage from './components/ElectionsCountyPage'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 import fetchPlace from '../../shared/fetchPlace'
@@ -11,27 +9,12 @@ export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export const fetchCounty = async (state, county) => {
-  const api = gpApi.elections.places
-  const payload = {
+  const place = await fetchPlace({
     slug: `${state}/${county}`,
     includeChildren: true,
     includeRaces: true,
-  }
-
-  const res = await gpFetch(api, payload, 3600)
-  if (Array.isArray(res)) {
-    return res[0]
-  }
-  return {}
-}
-
-const fetchPosition = async (id) => {
-  const api = gpApi.race.byRace
-  const payload = {
-    id,
-  }
-
-  return await gpFetch(api, payload, 0)
+  })
+  return place
 }
 
 const year = new Date().getFullYear()

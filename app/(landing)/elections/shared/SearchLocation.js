@@ -2,8 +2,6 @@
 
 import { InputAdornment, Select } from '@mui/material'
 import H2 from '@shared/typography/H2'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { slugify } from 'helpers/articleHelper'
 import { states } from 'helpers/statesHelper'
 import Image from 'next/image'
@@ -12,26 +10,6 @@ import { useState } from 'react'
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
 import Button from '@shared/buttons/Button'
 import fetchPlace from './fetchPlace'
-
-const fetchState = async (state) => {
-  const api = gpApi.elections.places
-  const payload = {
-    slug: state.toLowerCase(),
-    includeChildren: true,
-  }
-
-  return await gpFetch(api, payload, 3600)
-}
-
-const fetchCounty = async (state, county) => {
-  const api = gpApi.elections.places
-  const payload = {
-    slug: `${state.toLowerCase()}/${slugify(county, true)}`,
-    includeChildren: true,
-  }
-
-  return await gpFetch(api, payload, 3600)
-}
 
 const nameCompare = ({ name: aName }, { name: bName }) =>
   aName.localeCompare(bName)

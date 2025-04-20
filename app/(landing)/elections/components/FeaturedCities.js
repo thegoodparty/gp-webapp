@@ -20,23 +20,6 @@ async function fetchFeatured() {
   }
 }
 
-const defaultCities = [
-  {
-    name: 'Los Angeles',
-    slug: `ca/los-angeles/los-angeles`,
-    race_count: 72,
-  },
-  {
-    name: 'Austin',
-    race_count: 68,
-    slug: 'tx/travis/austin',
-  },
-  {
-    name: 'San Diego',
-    race_count: 44,
-    slug: 'ca/san%20diego/san%20diego',
-  },
-]
 export default async function FeaturedCities() {
   const featuredCities = await fetchFeatured()
   if (!featuredCities || !featuredCities.length) {

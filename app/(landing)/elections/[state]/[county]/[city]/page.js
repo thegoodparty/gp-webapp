@@ -1,6 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { shortToLongState } from 'helpers/statesHelper'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
 import ElectionsCityPage from './components/ElectionsCityPage'
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }) {
   const meta = pageMetaData({
     title: `Run for Office in ${place.name}, ${stateName} ${year}`,
     description: `Learn about opportunities to run for office in ${place.name}, ${stateName} and a helpful tips for a successful campaign.`,
-    slug: `/elections/${state}/${county}/${city}`,
+    slug: `/elections/${place.slug}`,
   })
   return meta
 }
@@ -57,7 +57,18 @@ export default async function Page({ params }) {
     includeParent: true,
   })
   if (!place) {
-    notFound()
+    // try to append county to the slug and redirect if found
+    const newSlug = `${state}/${county}-county/${city}`
+    const newPlace = await fetchPlace({
+      slug: newSlug,
+      includeParent: false,
+      includeRaces: false,
+    })
+    if (newPlace) {
+      permanentRedirect(`/elections/${newSlug}`)
+    } else {
+      notFound()
+    }
   }
 
   const { Races: races, parent } = place
