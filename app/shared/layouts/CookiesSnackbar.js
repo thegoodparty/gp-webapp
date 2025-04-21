@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { isbot } from 'isbot'
 import { MdClose } from 'react-icons/md'
 import Button from '../buttons/Button'
+import Body2 from '@shared/typography/Body2'
 
 export default function CookiesSnackbar() {
   const [showBanner, setShowBanner] = useState(false)
@@ -27,9 +28,9 @@ export default function CookiesSnackbar() {
         className="bg-primary-dark text-white p-4 flex max-w-[440px] mx-8 rounded-lg"
         data-testid="cookie-snackbar"
       >
-        <span className="text-xs">
+        <Body2>
           By continuing to browse this site, you consent to the use of cookies.
-        </span>
+        </Body2>
         <Button
           className="ml-6 flex items-center inline self-center"
           color="white"
