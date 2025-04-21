@@ -26,7 +26,6 @@ export default function SearchLocation({ withHeader = false, initialState }) {
   const router = useRouter()
 
   const onChangeState = async (stateName) => {
-    console.log('stateName', stateName)
     const place = await fetchPlace({ slug: stateName, includeRaces: false })
     setState({
       ...state,
@@ -36,7 +35,6 @@ export default function SearchLocation({ withHeader = false, initialState }) {
   }
 
   const onChangeCounty = async (countyName) => {
-    console.log('onChangeCounty', countyName)
     const place = await fetchPlace({
       slug: `${state.state.toLowerCase()}/${slugify(countyName, true)}`,
       includeRaces: false,

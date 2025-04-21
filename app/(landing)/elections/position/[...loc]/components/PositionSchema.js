@@ -1,5 +1,6 @@
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
+import { PositionLevel } from '../constants/PositionLevel'
 
 export default function PositionSchema({ race, loc }) {
   const {
@@ -17,17 +18,17 @@ export default function PositionSchema({ race, loc }) {
     filingDateEnd,
   } = race
   let locStr = Place?.name || ''
-  if (positionLevel?.toLowerCase() === 'local') {
+  if (positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
     locStr += `, ${state?.toUpperCase() || ''}`
   }
-  if (positionLevel?.toLowerCase() === 'city') {
+  if (positionLevel?.toUpperCase() === PositionLevel.CITY) {
     locStr += ` City, ${state}`
-  } else if (positionLevel?.toLowerCase() === 'county') {
+  } else if (positionLevel?.toUpperCase() === PositionLevel.COUNTY) {
     locStr += ` County, ${state}`
   }
   const slug = `elections/position/${loc.join('/')}`
   const url = `${APP_BASE}/${slug}`
-  const zipCode = filingOfficeAddress?.match(/\d{5}/)?.[0] || ''
+  const zipCode = filingOfficeAddress?.match(/\b\d{5}(?:-\d{4})?\b/)?.[0] || ''
 
   return (
     <JsonLd
