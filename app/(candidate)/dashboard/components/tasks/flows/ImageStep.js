@@ -42,7 +42,7 @@ export default function ImageStep({
 
   return (
     <div className="p-4 min-w-[500px]">
-      <H1 className="mb-4 text-center">Attach Image</H1>
+      <H1 className="mb-4 text-center">Attach image</H1>
       <Body1 className="text-center my-8">
         Attach your image below.
         <br />

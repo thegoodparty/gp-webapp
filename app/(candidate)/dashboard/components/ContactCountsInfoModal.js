@@ -45,38 +45,37 @@ export const ContactCountsInfoModal = ({
 
         <div className="bg-white rounded-lg p-8 border border-gray-200">
           <H2 className="text-center">How we calculate this number</H2>
-          <ol className="mt-6 space-y-4 list-decimal list-inside text-lg [&>li]:marker:font-normal [&>li]:marker:text-base">
+          <ol className="mt-6 list-decimal list-inside [&>li]:marker:font-normal [&>li]:marker:text-base [&>li]:font-outfit [&>li]:mb-2">
             <li>
-              <Body2 className="inline">
-                There are{' '}
-                <H6 className="inline">
-                  {numberFormatter(totalRegisteredVoters)}
-                </H6>{' '}
-                total voters in your district.
-              </Body2>
+              There are{' '}
+              <span className="font-semibold">
+                {numberFormatter(totalRegisteredVoters)}
+              </span>{' '}
+              total voters in your district.
             </li>
             <li>
-              <Body2 className="inline">
-                We expect{' '}
-                <H6 className="inline">{numberFormatter(projectedTurnout)}</H6>{' '}
-                people to vote based on previous elections (
-                <H6 className="inline">{turnoutPerc}%</H6> turnout).
-              </Body2>
+              We expect{' '}
+              <span className="font-semibold">
+                {numberFormatter(projectedTurnout)}
+              </span>{' '}
+              people to vote based on previous elections (
+              <span className="font-semibold">{turnoutPerc}%</span> turnout).
             </li>
             <li>
-              <Body2 className="inline">
-                You need{' '}
-                <H6 className="inline">{numberFormatter(winNumber)}</H6> votes
-                to win with <H6 className="inline">50%</H6> of the votes.
-              </Body2>
+              You need{' '}
+              <span className="font-semibold">
+                {numberFormatter(winNumber)}
+              </span>{' '}
+              votes to win with <span className="font-semibold">50%</span> of
+              the votes.
             </li>
             <li>
-              <Body2 className="inline">
-                To do that, you need to make{' '}
-                <H6 className="inline">{numberFormatter(voterContactGoal)}</H6>{' '}
-                voter contacts (<H6 className="inline">5x</H6> your votes needed
-                to win).
-              </Body2>
+              To do that, you need to make{' '}
+              <span className="font-semibold">
+                {numberFormatter(voterContactGoal)}
+              </span>{' '}
+              voter contacts (<span className="font-semibold">5x</span> your
+              votes needed to win).
             </li>
           </ol>
         </div>

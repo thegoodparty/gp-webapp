@@ -99,7 +99,14 @@ export default function AudienceStep({
               <span className="mx-3">|</span>
               Estimated cost:
               <span className="font-bold text-black ml-1">
-                ${numberFormatter(count * price, 2)}
+                {loadingCount ? (
+                  <CircularProgress
+                    size={14}
+                    className="inline-block align-middle"
+                  />
+                ) : (
+                  `$${numberFormatter(count * price, 2)}`
+                )}
               </span>
             </>
           )}

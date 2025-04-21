@@ -22,7 +22,7 @@ export const SelectSmSScriptScreen = ({
   return (
     <>
       <header className="text-center">
-        <H1>Attach Saved Script</H1>
+        <H1>Attach saved script</H1>
         <Body1 className="mt-4 mb-8">Attach your script below.</Body1>
       </header>
       <div className="mt-6">
