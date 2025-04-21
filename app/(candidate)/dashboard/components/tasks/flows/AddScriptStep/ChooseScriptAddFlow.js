@@ -37,7 +37,7 @@ export const ChooseScriptAddFlow = ({
   return (
     <>
       <header className="text-center">
-        <H1>Add a Script</H1>
+        <H1>Add a script</H1>
         <Body1 className="mt-4 mb-8">
           How would you like to add your script?
         </Body1>

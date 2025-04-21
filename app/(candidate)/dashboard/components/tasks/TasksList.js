@@ -34,10 +34,8 @@ export default function TasksList({ campaign, tasks: tasksProp = [] }) {
   const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
   const daysUntilElection = differenceInDays(electionDate, new Date())
 
-  // TODO: what if no election date?
-  // TODO: what if no p2v?
   async function handleCheckClick(task) {
-    const { id: taskId, type } = task
+    const { id: taskId, flowType: type } = task
 
     // skip voter counts for education tasks
     if (type === TASK_TYPES.education) {

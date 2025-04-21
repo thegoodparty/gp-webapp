@@ -114,8 +114,8 @@ export default function ScheduleStep({
         </div>
         <div className="mt-4">
           <TextField
-            label="Message"
-            placeholder="Do you have any additional questions or asks?"
+            label="Scheduling Request"
+            placeholder="Do you have any additional requests related to scheduling your campaign?"
             multiline
             rows={5}
             fullWidth
