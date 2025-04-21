@@ -52,9 +52,9 @@ export default function CantFindRaceModal({
               </Body2>
               <div className="my-8 text-center">
                 <Button
+                  color="neutral"
+                  size="medium"
                   variant="contained"
-                  color="secondary"
-                  className="bg-slate-800 text-white hover:bg-slate-700"
                   onClick={onClose}
                 >
                   Back to search
