@@ -9,36 +9,11 @@ import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
-import { headers } from 'next/headers'
 import PromoBanner from '@shared/utils/PromoBanner'
+import { getReqPathname } from '@shared/utils/getReqPathname'
 
-const getReqPathname = () => {
-  const headersList = headers()
-  return headersList.get('x-pathname')
-}
-
-const isProductRoute = (pathname) => {
-  const isOnboardingPath = pathname?.startsWith('/onboarding')
-  const isDashboardPath =
-    pathname?.startsWith('/dashboard') ||
-    pathname?.startsWith('/volunteer-dashboard') ||
-    pathname?.startsWith('/product-tour')
-
-  const isProfilePath = pathname?.startsWith('/profile')
-  const isServePath = pathname?.startsWith('/serve')
-
-  return Boolean(
-    isOnboardingPath || isDashboardPath || isProfilePath || isServePath,
-  )
-}
-
-const PageWrapper = ({ children }) => {
-  const pathname = getReqPathname()
-  const isProductPath = isProductRoute(pathname)
-  const isLoginPath = pathname === '/login'
-  const isSignUpPath = pathname === '/sign-up'
-  const showPromoAlert = !(isProductPath || isLoginPath || isSignUpPath)
-
+const PageWrapper = async ({ children }) => {
+  const pathname = await getReqPathname()
   return (
     <UserProvider>
       <ImpersonateUserProvider>
@@ -48,17 +23,13 @@ const PageWrapper = ({ children }) => {
               <div className="overflow-x-hidden">
                 <JsonLdSchema />
                 <Nav />
-                {showPromoAlert && (
-                  <Suspense>
-                    <PromoBanner />
-                  </Suspense>
-                )}
+                <Suspense>
+                  <PromoBanner initPathname={pathname} />
+                </Suspense>
                 {children}
-                {!isProductPath && (
-                  <Suspense>
-                    <Footer />
-                  </Suspense>
-                )}
+                <Suspense>
+                  <Footer initPathname={pathname} />
+                </Suspense>
                 <Snackbar />
                 <Suspense>
                   <CookiesSnackbar />

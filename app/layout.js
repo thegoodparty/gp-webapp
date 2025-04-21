@@ -46,52 +46,51 @@ export const metadata = {
     "We're transforming civic leadership with tools and data that empower independents to run, win and serve without needing partisan or big-money support. Join Us!",
 }
 
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta property="og:site_name" content="GoodParty.org" />
-        <meta property="og:type" content="website" />
+const RootLayout = ({ children }) => (
+  <html lang="en" className={`${outfit.variable} ${sfPro.variable}`}>
+    <head>
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="mobile-web-app-capable" content="yes" />
+      <meta property="og:site_name" content="GoodParty.org" />
+      <meta property="og:type" content="website" />
 
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta name="theme-color" content="#ffffff" />
-        <meta property="fb:app_id" content="241239336921963" />
-        {!IS_PROD && <meta name="robots" content="noindex" />}
-        <link
-          rel="icon"
-          type="image/png"
-          href="https://assets.goodparty.org/favicon/favicon-512x512.png"
-          sizes="512x512"
-        />
-        <link
-          rel="apple-touch-icon"
-          href="https://assets.goodparty.org/favicon/android-icon-192x192.png"
-        />
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta name="theme-color" content="#ffffff" />
+      <meta property="fb:app_id" content="241239336921963" />
+      {!IS_PROD && <meta name="robots" content="noindex" />}
+      <link
+        rel="icon"
+        type="image/png"
+        href="https://assets.goodparty.org/favicon/favicon-512x512.png"
+        sizes="512x512"
+      />
+      <link
+        rel="apple-touch-icon"
+        href="https://assets.goodparty.org/favicon/android-icon-192x192.png"
+      />
 
-        <link rel="manifest" href="/manifest.json" />
-        <VwoScript />
-        <FullStoryScript />
-      </head>
-      <body>
-        <PageWrapper>{children}</PageWrapper>
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-M53W2ZV"
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
-      </body>
-      <Script
-        strategy="afterInteractive"
-        type="text/javascript"
-        id="gtm"
-        dangerouslySetInnerHTML={{
-          __html: `
+      <link rel="manifest" href="/manifest.json" />
+      <VwoScript />
+      <FullStoryScript />
+    </head>
+    <body>
+      <PageWrapper>{children}</PageWrapper>
+      <noscript>
+        <iframe
+          src="https://www.googletagmanager.com/ns.html?id=GTM-M53W2ZV"
+          height="0"
+          width="0"
+          style={{ display: 'none', visibility: 'hidden' }}
+        />
+      </noscript>
+    </body>
+    <Script
+      strategy="afterInteractive"
+      type="text/javascript"
+      id="gtm"
+      dangerouslySetInnerHTML={{
+        __html: `
         // GTM
         if(window.location.hostname === 'goodparty.org'){
           (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -101,15 +100,15 @@ export default function RootLayout({ children }) {
   })(window,document,'script','dataLayer','GTM-M53W2ZV');
           }
         `,
-        }}
-      />
+      }}
+    />
 
-      <Script
-        type="text/javascript"
-        id="hs-script-loader"
-        strategy="afterInteractive"
-        src="//js.hs-scripts.com/21589597.js"
-      />
-    </html>
-  )
-}
+    <Script
+      type="text/javascript"
+      id="hs-script-loader"
+      strategy="afterInteractive"
+      src="//js.hs-scripts.com/21589597.js"
+    />
+  </html>
+)
+export default RootLayout

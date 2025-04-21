@@ -3,30 +3,41 @@ import { IoIosCloseCircle } from 'react-icons/io'
 import { useEffect, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import { useLocalStorage } from '@shared/hooks/useLocalStorage'
+import { isProductRoute } from '@shared/utils/isProductRoute'
+import { usePathname } from 'next/navigation'
 
 const PROMO_URL =
   'https://goodpartyorg.circle.so/join?invitation_token=972b834345e05305e97fcc639c51ac54e3a04d8b-1c106100-4719-4b8a-81e1-73e513bbcd5f'
 const HIDE_PROMO_LOCAL_STORAGE_KEY = 'hide-promo'
+const EXCLUDED_PROMO_PATHS = [
+  '/login',
+  '/sign-up',
+  '/forgot-password',
+  '/set-password',
+]
 
-export default function PromoBanner() {
+const showPromoAlert = (pathname) => {
+  const isProductPath = isProductRoute(pathname)
+  return !isProductPath && !EXCLUDED_PROMO_PATHS.includes(pathname)
+}
+
+const PromoBanner = ({ initPathname }) => {
   const [hidePromo, setHidePromo] = useLocalStorage(
     HIDE_PROMO_LOCAL_STORAGE_KEY,
     false,
   )
-  const [showPromo, setshowPromo] = useState(true)
+  const pathname = usePathname()
+  const [showPromo, setShowPromo] = useState(showPromoAlert(initPathname))
 
-  useEffect(() => {
-    try {
-      setshowPromo(!hidePromo)
-    } catch (e) {
-      console.log(e)
-    }
-  }, [])
+  useEffect(
+    () => setShowPromo(!hidePromo && showPromoAlert(pathname)),
+    [pathname, hidePromo],
+  )
 
   const handleClose = () => {
     try {
       setHidePromo(true)
-      setshowPromo(false)
+      setShowPromo(false)
     } catch (e) {
       console.log(e)
     }
@@ -63,3 +74,5 @@ export default function PromoBanner() {
     </div>
   ) : null
 }
+
+export default PromoBanner
