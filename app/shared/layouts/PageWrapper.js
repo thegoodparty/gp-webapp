@@ -9,33 +9,38 @@ import { UserProvider } from '@shared/user/UserProvider'
 import { CampaignStatusProvider } from '@shared/user/CampaignStatusProvider'
 import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
+import PromoBanner from '@shared/utils/PromoBanner'
+import { getReqPathname } from '@shared/utils/getReqPathname'
 
-const PageWrapper = ({ children, hideFooter }) => (
-  <UserProvider>
-    <ImpersonateUserProvider>
-      <CampaignProvider>
-        <CampaignStatusProvider>
-          <NavigationProvider>
-            <div className="overflow-x-hidden">
-              <JsonLdSchema />
-              <Nav />
-              {children}
-              {!hideFooter && (
+const PageWrapper = async ({ children }) => {
+  const pathname = await getReqPathname()
+  return (
+    <UserProvider>
+      <ImpersonateUserProvider>
+        <CampaignProvider>
+          <CampaignStatusProvider>
+            <NavigationProvider>
+              <div className="overflow-x-hidden">
+                <JsonLdSchema />
+                <Nav />
                 <Suspense>
-                  <Footer />
+                  <PromoBanner initPathname={pathname} />
                 </Suspense>
-              )}
-              <Snackbar />
-
-              <Suspense>
-                <CookiesSnackbar />
-              </Suspense>
-            </div>
-          </NavigationProvider>
-        </CampaignStatusProvider>
-      </CampaignProvider>
-    </ImpersonateUserProvider>
-  </UserProvider>
-)
+                {children}
+                <Suspense>
+                  <Footer initPathname={pathname} />
+                </Suspense>
+                <Snackbar />
+                <Suspense>
+                  <CookiesSnackbar />
+                </Suspense>
+              </div>
+            </NavigationProvider>
+          </CampaignStatusProvider>
+        </CampaignProvider>
+      </ImpersonateUserProvider>
+    </UserProvider>
+  )
+}
 
 export default PageWrapper

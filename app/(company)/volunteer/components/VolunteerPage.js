@@ -7,12 +7,10 @@ import { Suspense } from 'react'
 import FromCommunity from './FromCommunity'
 import FAQs from './FAQs'
 import HelpWin from './HelpWin'
-import StickersCallout from '@shared/utils/StickersCallout'
 
 export default function RunForOfficePage() {
   return (
     <>
-      <StickersCallout />
       <div className="mt-16 md:mt-32">
         <Hero />
         <Suspense>
