@@ -1,6 +1,6 @@
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
-import { PositionLevel } from '../constants/PositionLevel'
+import { PositionLevel } from '../../../shared/PositionLevel'
 
 export default function PositionSchema({ race, loc }) {
   const {

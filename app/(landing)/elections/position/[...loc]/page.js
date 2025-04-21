@@ -5,6 +5,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
+import { PositionLevel } from '../../../shared/PositionLevel'
 
 const fetchRace = async (raceSlug) => {
   const api = gpApi.elections.races
@@ -47,12 +48,12 @@ export async function generateMetadata({ params }) {
   } = race || {}
 
   let locStr = Place?.name || ''
-  if (!positionLevel || positionLevel.toLowerCase() === 'local') {
+  if (!positionLevel || positionLevel.toUpperCase() === PositionLevel.LOCAL) {
     locStr = `${Place?.name || ''}, ${raceState?.toUpperCase()}`
   }
-  if (positionLevel?.toLowerCase() === 'city') {
+  if (positionLevel?.toUpperCase() === PositionLevel.CITY) {
     locStr += ` City, ${raceState?.toUpperCase() || ''}`
-  } else if (positionLevel?.toLowerCase() === 'county') {
+  } else if (positionLevel?.toUpperCase() === PositionLevel.COUNTY) {
     locStr += ` County, ${raceState?.toUpperCase() || ''}`
   }
 

@@ -1,4 +1,5 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
+import { PositionLevel } from '../../../shared/PositionLevel'
 
 import Hero from './Hero'
 import PositionDetails from './PositionDetails'
@@ -14,12 +15,12 @@ export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props
   const { positionLevel, state, Place } = race
   let loc = Place?.name || ''
-  if (!positionLevel || positionLevel?.toLowerCase() === 'local') {
+  if (!positionLevel || positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
     loc = `${Place?.name || ''}, ${race.state?.toUpperCase()}`
   }
-  if (positionLevel?.toLowerCase() === 'city') {
+  if (positionLevel?.toUpperCase() === PositionLevel.CITY) {
     loc += ` City, ${state?.toUpperCase()}`
-  } else if (positionLevel?.toLowerCase() === 'county') {
+  } else if (positionLevel?.toUpperCase() === PositionLevel.COUNTY) {
     loc += ` County, ${state?.toUpperCase()}`
   }
 

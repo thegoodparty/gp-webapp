@@ -5,6 +5,7 @@ import Subtitle2 from '@shared/typography/Subtitle2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import Link from 'next/link'
+import { PositionLevel } from '../../../shared/PositionLevel'
 
 export default function Hero({
   state,
@@ -25,8 +26,8 @@ export default function Hero({
     },
   ]
   if (
-    positionLevel?.toLowerCase() === 'local' ||
-    positionLevel?.toLowerCase() === 'city'
+    positionLevel?.toUpperCase() === PositionLevel.LOCAL ||
+    positionLevel?.toUpperCase() === PositionLevel.CITY
   ) {
     const slugParts = Place?.slug.split('/')
     slugParts.pop()
