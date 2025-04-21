@@ -1,5 +1,4 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { PositionLevel } from '../../../shared/PositionLevel'
 
 import Hero from './Hero'
 import PositionDetails from './PositionDetails'
@@ -10,6 +9,7 @@ import LinksSection from 'app/(landing)/elections/shared/LinksSection'
 import Guides from 'app/(landing)/elections/shared/Guides'
 import Explore from './Explore'
 import VwoVariable from './VwoVariable'
+import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props

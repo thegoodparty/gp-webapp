@@ -5,7 +5,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
-import { PositionLevel } from '../../../shared/PositionLevel'
+import { PositionLevel } from '../../shared/PositionLevel'
 
 const fetchRace = async (raceSlug) => {
   const api = gpApi.elections.races

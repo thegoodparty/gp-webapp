@@ -5,7 +5,7 @@ import Subtitle2 from '@shared/typography/Subtitle2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import Link from 'next/link'
-import { PositionLevel } from '../../../shared/PositionLevel'
+import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function Hero({
   state,
