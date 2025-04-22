@@ -14,7 +14,7 @@ import Fuse from 'fuse.js'
 
 const FUSE_OPTIONS = {
   keys: ['position.name'],
-  threshold: 0.4,
+  threshold: 0.3,
   ignoreLocation: true,
   minMatchCharLength: 1,
   shouldSort: true,
@@ -132,7 +132,8 @@ export default function BallotRaces({
   }
 
   const handleSelect = (race) => {
-    const selectedRace = race?.id === selected?.id ? false : race
+    const selectedRace =
+      race?.id === selected?.id ? false : races.find(({ id }) => id === race.id)
     setSelected(selectedRace)
     onSelect(selectedRace)
   }
@@ -210,12 +211,6 @@ export default function BallotRaces({
 
   return (
     <section className="mb-2">
-      {/*<H1 className="text-center">Which office are you running for?</H1>*/}
-      {/*<Body1 className="text-center mt-4">*/}
-      {/*  Make sure it matches your candidacy papers from when you filed for*/}
-      {/*  office.*/}
-      {/*</Body1>*/}
-
       {loading ? (
         <div className="mt-6 text-center">
           <CircularProgress />
@@ -225,8 +220,8 @@ export default function BallotRaces({
         </div>
       ) : (
         <Body2>
-          {countMessage}
-          {races?.length === 0 ? (
+          <span className="mb-4 block">{countMessage}</span>
+          {racesLength === 0 ? (
             <div className="bg-white rounded-lg p-6 border border-gray-200 mt-4">
               <ol className="space-y-2">
                 <li>1. Try a different Zip Code</li>

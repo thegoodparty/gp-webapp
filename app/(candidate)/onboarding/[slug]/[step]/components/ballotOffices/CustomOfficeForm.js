@@ -127,11 +127,10 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
 
       <div className="flex justify-between mt-12">
         <Button
-          variant="outlined"
           color="neutral"
-          size="large"
+          size="medium"
+          variant="contained"
           onClick={onBack}
-          className="bg-slate-100"
         >
           Back to search
         </Button>

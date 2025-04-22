@@ -1,6 +1,5 @@
 import { fetchArticleTags } from './fetchArticleTags'
 import { fetchArticlesTitles } from './fetchArticlesTitles'
-import StickersCallout from '@shared/utils/StickersCallout'
 import Breadcrumbs from '@shared/utils/Breadcrumbs'
 import Overline from '@shared/typography/Overline'
 import Body2 from '@shared/typography/Body2'
@@ -47,7 +46,6 @@ export default async function BlogWrapper({
 
   return (
     <>
-      <StickersCallout />
       <div className="min-w-[400px] max-w-screen-xl mx-auto px-6 py-8">
         {showBreadcrumbs && (
           <Breadcrumbs
