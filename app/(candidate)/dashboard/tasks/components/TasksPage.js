@@ -22,6 +22,7 @@ import {
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../constants/tasks.const'
 import { differenceInDays } from 'date-fns'
+import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 export default function TasksPage({
   pathname,
@@ -32,20 +33,21 @@ export default function TasksPage({
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
   const [deadlineModalTask, setDeadlineModalTask] = useState(null)
-  const [showFlowModal, setShowFlowModal] = useState(null)
+  const [flowModalTask, setFlowModalTask] = useState(null)
+  const [proUpgradeTrackingAttrs, setProUpgradeTrackingAttrs] = useState({})
   const { errorSnackbar } = useSnackbar()
 
   const electionDate = campaign.details.electionDate
-  const viablityScore = campaign?.pathToVictory?.data?.viability?.score || 0
-
+  const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
   const daysUntilElection = differenceInDays(electionDate, new Date())
 
   // TODO: what if no election date?
   // TODO: what if no p2v?
   async function handleCheckClick(task) {
-    const { id: taskId, skipVoterCount } = task
+    const { id: taskId, type } = task
 
-    if (skipVoterCount) {
+    // skip voter counts for education tasks
+    if (type === TASK_TYPES.education) {
       completeTask(taskId)
     } else {
       setCompleteModalTask(task)
@@ -66,6 +68,12 @@ export default function TasksPage({
 
     if (proRequired && !campaign.isPro) {
       setShowProUpgradeModal(true)
+      setProUpgradeTrackingAttrs(
+        buildTrackingAttrs('Upgrade to Pro', {
+          viabilityScore,
+          type: flowType,
+        }),
+      )
       return
     }
 
@@ -75,10 +83,10 @@ export default function TasksPage({
     }
 
     if (Object.values(TASK_TYPES).includes(flowType)) {
-      setShowFlowModal(flowType)
+      setFlowModalTask(task)
     } else {
       console.error('Unknown flow type:', flowType)
-      setShowFlowModal(null)
+      setFlowModalTask(null)
     }
   }
 
@@ -109,7 +117,7 @@ export default function TasksPage({
       <CampaignUpdateHistoryProvider>
         <DashboardLayout pathname={pathname} campaign={campaign}>
           <DashboardHeader campaign={campaign} tasks={tasks} />
-          <div className="mx-auto bg-white rounded-xl p-6 mt-8">
+          <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
             <H2>Tasks for this week</H2>
             <Body2 className="!font-outfit mt-1">
               Election day: {dateUsHelper(electionDate)}
@@ -151,18 +159,20 @@ export default function TasksPage({
           <ProUpgradeModal
             open={showProUpgradeModal}
             variant={
-              viablityScore < VIABILITY_SCORE_THRESHOLD
+              viabilityScore < VIABILITY_SCORE_THRESHOLD
                 ? VARIANTS.Second_NonViable
                 : VARIANTS.Second_Viable
             }
             onClose={() => setShowProUpgradeModal(false)}
+            trackingAttrs={proUpgradeTrackingAttrs}
           />
-          {showFlowModal && (
+          {flowModalTask && (
             <TaskFlow
               forceOpen
-              type={showFlowModal}
+              type={flowModalTask.flowType}
               campaign={campaign}
-              onClose={() => setShowFlowModal(null)}
+              onClose={() => setFlowModalTask(null)}
+              defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
             />
           )}
         </DashboardLayout>

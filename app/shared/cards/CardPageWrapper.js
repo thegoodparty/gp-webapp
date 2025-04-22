@@ -6,7 +6,7 @@ export default function CardPageWrapper({ children }) {
     <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
       <MaxWidth>
         <div className="flex items-center justify-center">
-          <div className="grid py-6 max-w-2xl w-[85vw]">
+          <div className="grid mt-6 mb-32 max-w-2xl w-[85vw]">
             <Paper>
               <div className="p-4 md:p-6 lg:p-8">{children}</div>
             </Paper>

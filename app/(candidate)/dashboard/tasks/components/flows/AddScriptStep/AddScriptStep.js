@@ -9,9 +9,10 @@ import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
 
 export default function AddScriptStep({
-  onComplete = (scriptKey) => {},
+  onComplete = (scriptKey, scriptContent) => {},
   backCallback,
   campaign,
+  defaultAiTemplateId,
 }) {
   const [currentScreen, setCurrentScreen] = useState(
     ADD_SCRIPT_FLOW.CHOOSE_FLOW,
@@ -44,6 +45,7 @@ export default function AddScriptStep({
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE]: (
       <SelectSmsAiTemplateScreen
+        defaultAiTemplateId={defaultAiTemplateId}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(aiTemplateKey) => {
           setAiTemplateKey(aiTemplateKey)
@@ -70,7 +72,7 @@ export default function AddScriptStep({
       <GenerateReviewScreen
         aiScriptKey={aiScriptKey}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
-        onNext={() => onComplete(aiScriptKey)}
+        onNext={onComplete}
       />
     ),
     [ADD_SCRIPT_FLOW.CREATE_SMS]: (

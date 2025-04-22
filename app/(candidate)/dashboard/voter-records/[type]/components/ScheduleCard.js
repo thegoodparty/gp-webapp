@@ -2,16 +2,23 @@ import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
 import Overline from '@shared/typography/Overline'
 import Paper from '@shared/utils/Paper'
-import ScheduleFlow from 'app/(candidate)/dashboard/tasks/components/flows/TaskFlow'
+import TaskFlow from 'app/(candidate)/dashboard/tasks/components/flows/TaskFlow'
+import {
+  LEGACY_TASK_TYPES,
+  TASK_TYPES,
+} from 'app/(candidate)/dashboard/tasks/constants/tasks.const'
 
 export default function ScheduleCard(props) {
   const { type } = props
   let typeText = ''
-  if (type === 'sms') {
+  let taskType = ''
+  if (type === LEGACY_TASK_TYPES.sms) {
     typeText = 'text'
+    taskType = TASK_TYPES.text
   }
-  if (type === 'telemarketing') {
-    typeText = 'phone banking'
+  if (type === LEGACY_TASK_TYPES.telemarketing) {
+    typeText = 'robocall'
+    taskType = TASK_TYPES.robocall
   }
 
   return (
@@ -27,7 +34,7 @@ export default function ScheduleCard(props) {
             : '$.04 per outbound call. Automatically leave voicemails for one and a half cents.'}
         </Body2>
       </div>
-      <ScheduleFlow {...props} />
+      <TaskFlow {...props} type={taskType} />
     </Paper>
   )
 }

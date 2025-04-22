@@ -46,6 +46,7 @@ export default function TaskFlow({
   isCustom,
   fileName,
   onClose,
+  defaultAiTemplateId,
 }) {
   const [open, setOpen] = useState(forceOpen)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -126,10 +127,11 @@ export default function TaskFlow({
     return await scheduleVoterMessagingCampaign(updatedState)
   }
 
-  const handleAddScriptOnComplete = (scriptKeyOrText) => {
+  const handleAddScriptOnComplete = (scriptKeyOrText, scriptContent) => {
     handleChange('script', scriptKeyOrText)
 
-    const content = campaign.aiContent?.[scriptKeyOrText]?.content
+    const content =
+      scriptContent ?? campaign.aiContent?.[scriptKeyOrText]?.content
     const scriptText = content
       ? sanitizeHtml(content, {
           allowedTags: [],
@@ -180,6 +182,7 @@ export default function TaskFlow({
       </div>
       <CloseConfirmModal
         open={confirmOpen}
+        type={type}
         onCancel={handleCloseCancel}
         onConfirm={handleCloseConfirm}
       />
@@ -201,11 +204,12 @@ export default function TaskFlow({
           <AddScriptStep
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
+            defaultAiTemplateId={defaultAiTemplateId}
             {...callbackProps}
           />
         )}
         {stepName === STEPS.image && (
-          <ImageStep image={state.image} {...callbackProps} />
+          <ImageStep type={type} image={state.image} {...callbackProps} />
         )}
         {stepName === STEPS.schedule && (
           <ScheduleStep
@@ -224,7 +228,11 @@ export default function TaskFlow({
           />
         )}
         {stepName === STEPS.socialPost && (
-          <SocialPostStep scriptText={state.scriptText} {...callbackProps} />
+          <SocialPostStep
+            type={type}
+            scriptText={state.scriptText}
+            {...callbackProps}
+          />
         )}
       </Modal>
     </>
