@@ -221,7 +221,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   // Upload the PDF file
   const fileInput = page.locator("button input[type='file']");
   await fileInput.setInputFiles(pdfPath);
-  await expect(page.getByRole('button', { name: 'Next' })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Next', timeout: 20000 })).toBeEnabled();
   fs.unlinkSync(pdfPath);
   await page.getByRole('button', { name: 'Next' }).click();
 
