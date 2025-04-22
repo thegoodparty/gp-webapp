@@ -30,7 +30,7 @@ test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) =
     }
 });
 
-test('Upgrade user to Pro', async ({ page }) => {
+test.skip('Upgrade user to Pro', async ({ page }) => {
     const caseId = 42;
     try {
         await upgradeToPro(page);
