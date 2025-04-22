@@ -25,8 +25,12 @@ async function runP2V(slug) {
   }
 }
 
-export default function OfficeStep(props) {
-  const { campaign, step, updateCallback, adminMode } = props
+export default function OfficeStep({
+  campaign,
+  step,
+  updateCallback,
+  adminMode,
+}) {
   const router = useRouter()
   const [state, setState] = useState({
     ballotOffice: false,
