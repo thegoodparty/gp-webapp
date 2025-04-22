@@ -1,10 +1,9 @@
 import MaxWidth from '@shared/layouts/MaxWidth'
-import SearchLocation from '../../shared/SearchLocation'
+import SearchLocation from './SearchLocation'
 import Breadcrumbs from '@shared/utils/Breadcrumbs'
 import { shortToLongState } from 'helpers/statesHelper'
 import Image from 'next/image'
 import Subtitle2 from '@shared/typography/Subtitle2'
-import { slugify } from 'helpers/articleHelper'
 
 export default function Hero({
   state,
@@ -13,6 +12,7 @@ export default function Hero({
   color2,
   level,
   municipality,
+  parent,
 }) {
   const stateName = shortToLongState[state.toUpperCase()]
   const breadcrumbsLinks = [
@@ -24,18 +24,18 @@ export default function Hero({
   if (level === 'county') {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: county?.county_full || '',
+      label: county?.name || '',
     })
   }
 
   if (level === 'city') {
     breadcrumbsLinks[1].href = `/elections/${state}`
     breadcrumbsLinks.push({
-      label: `${municipality.county_name} county`,
-      href: `/elections/${state}/${slugify(municipality.county_name, true)}`,
+      label: `${parent.name}`,
+      href: `/elections/${parent.slug}`,
     })
     breadcrumbsLinks.push({
-      label: municipality.city,
+      label: municipality.name,
     })
   }
   let title = ''
@@ -45,13 +45,13 @@ export default function Hero({
     subTitle = `${stateName} state elections`
   } else if (level === 'county') {
     title = `Run for ${
-      county?.county_full || 'a county'
+      county?.name || 'a county'
     }, ${state.toUpperCase()} office`
-    subTitle = `${county?.county_full || 'county'} elections`
+    subTitle = `${county?.name || 'county'} elections`
   } else if (level === 'city') {
-    const cityName = `${municipality?.city}`
-    title = `Run for ${cityName || 'a'} city office`
-    subTitle = `${cityName || ''} city elections`
+    const cityName = `${municipality?.name}`
+    title = `Run for ${cityName || 'an'} office`
+    subTitle = `${cityName || ''} elections`
   }
   return (
     <>

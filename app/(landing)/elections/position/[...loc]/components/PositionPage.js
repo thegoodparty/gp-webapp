@@ -9,21 +9,19 @@ import LinksSection from 'app/(landing)/elections/shared/LinksSection'
 import Guides from 'app/(landing)/elections/shared/Guides'
 import Explore from './Explore'
 import VwoVariable from './VwoVariable'
+import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions } = props
-  const { level, state, locationName } = race
-  let loc = locationName
-  if (!level || level?.toLowerCase() === 'local') {
-    loc = `${
-      locationName || race.municipality?.name || ''
-    }, ${race.state?.toUpperCase()}`
+  const { positionLevel, state, Place } = race
+  let loc = Place?.name || ''
+  if (!positionLevel || positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
+    loc = `${Place?.name || ''}, ${race.state?.toUpperCase()}`
   }
-  if (level?.toLowerCase() === 'city') {
-    loc += `, ${state?.toUpperCase()}`
-  } else if (level?.toLowerCase() === 'county') {
+  if (positionLevel?.toUpperCase() === PositionLevel.CITY) {
+    loc += ` City, ${state?.toUpperCase()}`
+  } else if (positionLevel?.toUpperCase() === PositionLevel.COUNTY) {
     loc += ` County, ${state?.toUpperCase()}`
-  } else if (level?.toLowerCase() === 'state') {
   }
 
   const positionLink = (race) => {

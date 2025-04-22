@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
-import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { SlArrowDown, SlArrowRight } from 'react-icons/sl'
+import Button from '@shared/buttons/Button'
 
 export const PositionsListItem = ({ positions = [] }) => {
   const [expandPositions, setExpandPositions] = useState(false)
@@ -10,10 +10,8 @@ export const PositionsListItem = ({ positions = [] }) => {
     <li className="leading-loose">
       Positions:{' '}
       {enableShowMore && (
-        <SecondaryButton
-          className={{
-            'align-middle': true,
-          }}
+        <Button
+          color="neutral"
           onClick={() => setExpandPositions(!expandPositions)}
           size="small"
         >
@@ -23,13 +21,15 @@ export const PositionsListItem = ({ positions = [] }) => {
           ) : (
             <SlArrowDown className="inline-block ml-2 align-middle" />
           )}
-        </SecondaryButton>
+        </Button>
       )}
       <span className="font-normal">
         {positions
           .slice(0, !expandPositions ? 5 : undefined)
           .map((position) => (
-            <div key={position}>{position}</div>
+            <div key={position} className="mb-1">
+              {position}
+            </div>
           ))}
         {enableShowMore && !expandPositions && <span>...</span>}
       </span>

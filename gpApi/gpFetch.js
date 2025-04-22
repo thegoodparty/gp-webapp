@@ -1,4 +1,4 @@
-import { getCookie } from 'helpers/cookieHelper';
+import { getCookie } from 'helpers/cookieHelper'
 
 const IS_LOCAL_ENVIRONMENT =
   Boolean(
@@ -7,7 +7,7 @@ const IS_LOCAL_ENVIRONMENT =
   ) ||
   Boolean(
     typeof window !== 'undefined' && window.location.href.includes('localhost'),
-  );
+  )
 
 async function gpFetch(
   endpoint,
@@ -18,28 +18,28 @@ async function gpFetch(
   nonJSON = false,
 ) {
   let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
-    endpoint;
+    endpoint
   if ((method === 'GET' || method === 'DELETE') && data) {
-    url = `${url}?`;
+    url = `${url}?`
     for (const key in data) {
       if ({}.hasOwnProperty.call(data, key)) {
-        url += `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}&`;
+        url += `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}&`
       }
     }
-    url = url.slice(0, -1);
+    url = url.slice(0, -1)
   }
 
-  let body = data;
+  let body = data
   if ((method === 'POST' || method === 'PUT') && data && !isFormData) {
-    body = JSON.stringify(data);
+    body = JSON.stringify(data)
   }
 
-  let autoToken;
+  let autoToken
   if (withAuth) {
-    autoToken = getCookie('impersonateToken') || token;
+    autoToken = getCookie('impersonateToken') || token
   }
 
-  const requestOptions = headersOptions(body, endpoint.method, autoToken);
+  const requestOptions = headersOptions(body, endpoint.method, autoToken)
 
   return await fetchCall(
     url,
@@ -47,16 +47,16 @@ async function gpFetch(
     revalidate,
     nonJSON,
     returnFullResponse,
-  );
+  )
 }
 
-export default gpFetch;
+export default gpFetch
 
 function headersOptions(body, method = 'GET', token) {
-  const headers = {};
+  const headers = {}
 
   if (token) {
-    headers.Authorization = `Bearer ${token}`;
+    headers.Authorization = `Bearer ${token}`
   }
 
   return {
@@ -65,7 +65,7 @@ function headersOptions(body, method = 'GET', token) {
     credentials: 'include',
     mode: 'cors',
     body,
-  };
+  }
 }
 
 async function fetchCall(
@@ -76,25 +76,25 @@ async function fetchCall(
   returnFullResponse = false,
 ) {
   if (options.method === 'GET') {
-    delete options.body;
+    delete options.body
   }
-  let res;
+  let res
   if (revalidate && !IS_LOCAL_ENVIRONMENT) {
-    res = await fetch(url, { ...options, next: { revalidate } });
+    res = await fetch(url, { ...options, next: { revalidate } })
   } else {
-    res = await fetch(url, { ...options, cache: 'no-store' });
+    res = await fetch(url, { ...options, cache: 'no-store' })
   }
   if (nonJSON || returnFullResponse) {
-    return res;
+    return res
   }
   try {
     // TODO: We should consider returning the response as is and handle the error at the caller level.
     //  There's no way for the caller to determine how to react to error response states w/ this current pattern.
-    const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299;
-    const jsonRes = isSuccessfulResponseStatus ? await res.json() : res;
-    return jsonRes;
+    const isSuccessfulResponseStatus = res.status >= 200 && res.status <= 299
+    const jsonRes = isSuccessfulResponseStatus ? await res.json() : res
+    return jsonRes
   } catch (e) {
-    console.error('error in fetchCall catch', e);
-    return false;
+    console.error('error in fetchCall catch', e)
+    return false
   }
 }

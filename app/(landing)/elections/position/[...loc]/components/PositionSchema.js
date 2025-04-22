@@ -1,13 +1,14 @@
 import { JsonLd } from 'react-schemaorg'
 import { APP_BASE } from 'appEnv'
+import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function PositionSchema({ race, loc }) {
   const {
-    level,
+    positionLevel,
     normalizedPositionName,
     positionDescription,
-    locationName,
-    electionDay,
+    Place,
+    electionDate,
     eligibilityRequirements,
     state,
     salary,
@@ -15,22 +16,19 @@ export default function PositionSchema({ race, loc }) {
     filingOfficeAddress,
     filingPhoneNumber,
     filingDateEnd,
-    municipality,
   } = race
-  let locStr = locationName
-  if (level === 'local') {
-    locStr += `${municipality?.name}, ${state?.toUpperCase() || ''}`
+  let locStr = Place?.name || ''
+  if (positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
+    locStr += `, ${state?.toUpperCase() || ''}`
   }
-  if (level === 'city') {
+  if (positionLevel?.toUpperCase() === PositionLevel.CITY) {
     locStr += ` City, ${state}`
-  } else if (level === 'county') {
-    locStr += ` County, ${race.state}`
-  } else if (level === 'state') {
-    locStr += ` ${state}`
+  } else if (positionLevel?.toUpperCase() === PositionLevel.COUNTY) {
+    locStr += ` County, ${state}`
   }
   const slug = `elections/position/${loc.join('/')}`
   const url = `${APP_BASE}/${slug}`
-  const baseSalary = `${salary?.match(/\d+/g)}` || 'Not Specified'
+  const zipCode = filingOfficeAddress?.match(/\b\d{5}(?:-\d{4})?\b/)?.[0] || ''
 
   return (
     <JsonLd
@@ -51,18 +49,26 @@ export default function PositionSchema({ race, loc }) {
           '@type': 'Place',
           address: {
             '@type': 'PostalAddress',
-            addressLocality: locationName,
+            addressLocality: Place?.name || '',
             addressRegion: state,
+            addressCountry: 'US',
+            streetAddress: filingOfficeAddress || '',
+            postalCode: zipCode,
             telephone: filingPhoneNumber,
           },
         },
-        employmentType: 'Elected',
-        validThrough: electionDay,
-        baseSalary: baseSalary,
-        estimatedSalary: baseSalary,
+        employmentType: employmentType || 'FULL_TIME',
+        validThrough: electionDate,
+        baseSalary: {
+          '@type': 'MonetaryAmount',
+          value: {
+            '@type': 'QuantitativeValue',
+            value: parseInt(salary?.match(/\d+/g)?.[0] || '0'),
+            unitText: 'YEAR',
+          },
+          currency: 'USD',
+        },
         eligibilityToWorkRequirement: eligibilityRequirements,
-        employmentType,
-
         url,
       }}
     />

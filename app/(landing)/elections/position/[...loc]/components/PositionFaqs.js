@@ -15,7 +15,7 @@ export default function PositionFaqs({ race }) {
     partisanType,
     loc,
   } = race
-  const term = frequency.match(/\d+/g)
+  const term = frequency?.[0] || 'N/A'
 
   let runOffPrimary = ''
   if (!isRunoff && !isPrimary) {
@@ -34,9 +34,9 @@ export default function PositionFaqs({ race }) {
       a: `The position of ${normalizedPositionName} is typically elected every ${term} years.`,
     },
     {
-      q: `What does it mean for an election to be ${partisanType}?`,
+      q: `What does it mean for an election to be ${partisanType?.toLowerCase()}?`,
       a: `${
-        partisanType === 'partisan'
+        partisanType?.toLowerCase() === 'partisan'
           ? 'Partisan elections require candidates to declare a party affiliation, like Democrat, Republican, Libertarian, or Independent.'
           : 'Nonpartisan elections do not require candidates to declare a party affiliation.'
       }`,
