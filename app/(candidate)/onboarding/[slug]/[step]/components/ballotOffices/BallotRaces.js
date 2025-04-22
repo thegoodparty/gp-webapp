@@ -132,7 +132,8 @@ export default function BallotRaces({
   }
 
   const handleSelect = (race) => {
-    const selectedRace = race?.id === selected?.id ? false : race
+    const selectedRace =
+      race?.id === selected?.id ? false : races.find(({ id }) => id === race.id)
     setSelected(selectedRace)
     onSelect(selectedRace)
   }
