@@ -190,7 +190,6 @@ export async function createAccount(
 
 export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   const testCardNumber = "4242424242424242";
-  const phoneNumber = generatePhone();
 
   await page.goto("/dashboard/upgrade-to-pro", { waitUntil: "commit" });
 
@@ -198,8 +197,8 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await documentReady(page);
 
   // Verify user is on voter data (free) page
-  await expect(page.getByRole('heading', { name: 'Upgrade to Pro for just $10 a month!' })).toBeVisible();
-  await page.getByRole('button', { name: 'Join Pro Today' }).click();
+  await expect(page.getByRole('heading', { name: 'Why pay more for less?' })).toBeVisible();
+  await page.getByRole('link', { name: 'Start today for just $10/month.' }).click();
 
   // Verify office details
   await page.getByRole('heading', { name: 'Please confirm your office details.' }).isVisible();
@@ -242,7 +241,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByPlaceholder('CVC').fill('123');
   await page.getByPlaceholder('Full name on card').fill(userData.firstName + ' ' + userData.lastName);
   await page.getByPlaceholder('ZIP').fill('90210');
-  await page.getByPlaceholder('(800) 555-').fill(phoneNumber);
+  await page.getByLabel('Save my info for 1-click', { timeout: 10000 }).click();
   await page.getByTestId('hosted-payment-submit-button').click();
   await documentReady(page);
   await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
