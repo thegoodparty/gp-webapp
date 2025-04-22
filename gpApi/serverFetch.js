@@ -1,5 +1,5 @@
-import { getServerToken } from 'helpers/userServerHelper';
-import { clientFetch } from './clientFetch';
+import { getServerToken } from 'helpers/userServerHelper'
+import { clientFetch } from './clientFetch'
 
 /**
  * Performs a server-side HTTP fetch request using the provided endpoint configuration and payload data.
@@ -15,5 +15,5 @@ export async function serverFetch(endpoint, data, options = {}) {
   return clientFetch(endpoint, data, {
     ...options,
     serverToken: getServerToken(),
-  });
+  })
 }
