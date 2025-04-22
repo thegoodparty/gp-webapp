@@ -52,7 +52,7 @@ export default function ScheduleStep({
     onChangeCallback('schedule', newState)
   }
 
-  const canSubmit = () => state.date != '' && state.message != '' && !dateError
+  const canSubmit = () => state.date != '' && !dateError
 
   const handleNext = async () => {
     setIsLoading(true)
@@ -119,8 +119,10 @@ export default function ScheduleStep({
             multiline
             rows={5}
             fullWidth
-            required
             value={state.message}
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={(e) => {
               onChangeField('message', e.target.value)
             }}
