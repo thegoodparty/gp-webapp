@@ -6,7 +6,7 @@ import { AccountSettingsSection } from 'app/(user)/profile/components/AccountSet
 export default function ProfilePage(props) {
   return (
     <div className="bg-indigo-100 min-h-[calc(100vh-60px)]">
-      <div className="max-w-screen-md mx-auto px-4 pt-4 xl:p-0 xl:pt-4">
+      <div className="max-w-screen-md mx-auto px-4 py-4 xl:p-0 xl:pt-4">
         <PersonalSection {...props} />
         <AccountSettingsSection {...props} />
         <NotificationSection />
