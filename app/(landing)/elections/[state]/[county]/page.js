@@ -1,31 +1,20 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { shortToLongState } from 'helpers/statesHelper'
 import { notFound, permanentRedirect } from 'next/navigation'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import ElectionsCountyPage from './components/ElectionsCountyPage'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
-
+import fetchPlace from '../../shared/fetchPlace'
+import PlaceSchema from '../../shared/PlaceSchema'
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty
-  const payload = {
-    state,
-    county,
-  }
-
-  return await gpFetch(api, payload, 3600)
-}
-
-const fetchPosition = async (id) => {
-  const api = gpApi.race.byRace
-  const payload = {
-    id,
-  }
-
-  return await gpFetch(api, payload, 0)
+  const place = await fetchPlace({
+    slug: `${state}/${county}`,
+    includeChildren: true,
+    includeRaces: true,
+  })
+  return place
 }
 
 const year = new Date().getFullYear()
@@ -34,14 +23,14 @@ export async function generateMetadata({ params }) {
   const { state } = params
   if (state.length === 2) {
     const stateName = shortToLongState[state.toUpperCase()]
-    const { county } = await fetchCounty(state, params.county)
+    const county = await fetchCounty(state, params.county)
 
     const meta = pageMetaData({
       title: `Run for Office in ${
-        county?.county || 'a'
+        county?.name || 'a'
       } county, ${stateName} ${year}`,
       description: `Learn about available opportunities to run for office in ${
-        county?.county || 'a'
+        county?.name || 'a'
       } county, ${stateName} and tips for launching a successful campaign.`,
       slug: `/elections/${state}/${params.county}`,
     })
@@ -62,44 +51,42 @@ export default async function Page({ params }) {
     'turning-passion-into-action-campaign-launch',
     'comprehensive-guide-running-for-local-office',
   ]
-  const articles = []
-  for (const slug of articleSlugs) {
-    const content = await fetchArticle(slug)
-    articles.push(content)
-  }
-  if (state.length > 2) {
-    // state is the slug, county is the id
-    const { race } = await fetchPosition(params.county) // this is the id
-    if (!race) {
+
+  const articles = await Promise.all(
+    articleSlugs.map((slug) => fetchArticle(slug)),
+  )
+
+  const county = await fetchPlace({ slug: `${state}/${params.county}` })
+  if (!county) {
+    // try to append county to the slug and redirect if found
+    const newSlug = `${state}/${params.county}-county`
+    const newCounty = await fetchPlace({
+      slug: newSlug,
+      includeParent: false,
+      includeRaces: false,
+    })
+    if (newCounty) {
+      permanentRedirect(`/elections/${newSlug}`)
+    } else {
       notFound()
     }
-    const { county, municipality, state } = race
-    let url = `/elections/position/`
-    if (!county && !municipality) {
-      url += `${state.toLowerCase()}/`
-    }
-    if (county) {
-      url += `${county.slug}/`
-    } else if (municipality) {
-      url += `${municipality.slug}/`
-    }
-    url += race.positionSlug
-
-    permanentRedirect(url)
   }
-
-  const { municipalities, races, county } = await fetchCounty(
-    state,
-    params.county,
-  )
+  const { children, Races: races } = county
+  county.children = null
+  county.races = null
 
   const childProps = {
     state,
-    childEntities: municipalities,
+    childEntities: children,
     races,
     county,
     articles,
   }
 
-  return <ElectionsCountyPage {...childProps} />
+  return (
+    <>
+      <ElectionsCountyPage {...childProps} />
+      <PlaceSchema place={county} />
+    </>
+  )
 }

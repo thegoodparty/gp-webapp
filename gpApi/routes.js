@@ -508,4 +508,4 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
-};
+}

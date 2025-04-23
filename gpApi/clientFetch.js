@@ -1,5 +1,5 @@
-import { IS_LOCAL } from 'appEnv';
-import { buildUrl } from '@shared/utils/buildUrl';
+import { IS_LOCAL } from 'appEnv'
+import { buildUrl } from '@shared/utils/buildUrl'
 
 /**
  * @typedef {Object} ApiEndpoint
@@ -28,28 +28,28 @@ import { buildUrl } from '@shared/utils/buildUrl';
  * @returns {Promise<ApiResponse>} The response object containing the status and parsed data.
  */
 export async function clientFetch(endpoint, data, options = {}) {
-  const { method } = endpoint;
-  const { revalidate, serverToken, returnFullResponse } = options;
+  const { method } = endpoint
+  const { revalidate, serverToken, returnFullResponse } = options
 
-  const url = buildUrl(endpoint, data);
+  const url = buildUrl(endpoint, data)
 
-  const headers = {};
+  const headers = {}
   if (serverToken) {
-    headers.Authorization = `Bearer ${serverToken}`;
+    headers.Authorization = `Bearer ${serverToken}`
   }
 
   const shouldSetJsonContentType =
-    method.toUpperCase() !== 'DELETE' && Boolean(data);
+    method.toUpperCase() !== 'DELETE' && Boolean(data)
 
-  let body;
+  let body
   if (data instanceof FormData) {
-    body = data;
+    body = data
   } else {
-    shouldSetJsonContentType && (headers['Content-Type'] = 'application/json');
-    body = JSON.stringify(data ?? {}); // to avoid sending empty object
+    shouldSetJsonContentType && (headers['Content-Type'] = 'application/json')
+    body = JSON.stringify(data ?? {}) // to avoid sending empty object
   }
 
-  const shouldCache = revalidate && !IS_LOCAL;
+  const shouldCache = revalidate && !IS_LOCAL
 
   const res = await fetch(url, {
     headers,
@@ -58,22 +58,22 @@ export async function clientFetch(endpoint, data, options = {}) {
     mode: 'cors',
     body: method === 'GET' ? undefined : body,
     ...(shouldCache ? { next: { revalidate } } : { cache: 'no-store' }),
-  });
+  })
 
   if (returnFullResponse) {
-    return res;
+    return res
   }
 
   const isJsonResponse = res.headers
     .get('Content-Type')
-    ?.includes('application/json');
+    ?.includes('application/json')
 
   const response = {
     ok: res.ok,
     status: res.status,
     statusText: res.statusText,
     data: isJsonResponse ? await res.json() : await res.text(),
-  };
+  }
 
-  return response;
+  return response
 }

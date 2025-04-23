@@ -5,40 +5,43 @@ import Subtitle2 from '@shared/typography/Subtitle2'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import Link from 'next/link'
+import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function Hero({
   state,
-  county,
-  municipality,
-  level,
+  Place,
+  positionLevel,
   normalizedPositionName,
   electionDate,
   filingDateEnd,
   loc,
-  locationName,
 }) {
   const stateName = shortToLongState[state.toUpperCase()]
+
   const breadcrumbsLinks = [
     { href: `/elections`, label: 'How to run' },
     {
       label: `How to run in ${stateName}`,
-      href: `/elections/${state}`,
+      href: `/elections/${state.toLowerCase()}`,
     },
   ]
-  if ((level === 'city' && county) || (level === 'county' && county)) {
-    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
+  if (
+    positionLevel?.toUpperCase() === PositionLevel.LOCAL ||
+    positionLevel?.toUpperCase() === PositionLevel.CITY
+  ) {
+    const slugParts = Place?.slug.split('/')
+    slugParts.pop()
+    const newSlug = slugParts.join('/')
     breadcrumbsLinks.push({
-      label: `${locationName} county`,
-      href: `/elections/${county.slug}`,
+      label: `${Place?.countyName}`,
+      href: `/elections/${newSlug}`,
     })
   }
-  if (level === 'city' && municipality) {
-    breadcrumbsLinks[1].href = `/elections/${state.toLowerCase()}`
-    breadcrumbsLinks.push({
-      label: municipality.name,
-      href: `/elections/${municipality.slug}`,
-    })
-  }
+  breadcrumbsLinks.push({
+    label: `${Place?.name}`,
+    href: `/elections/${Place?.slug}`,
+  })
+
   breadcrumbsLinks.push({
     label: normalizedPositionName,
   })

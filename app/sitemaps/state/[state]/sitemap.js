@@ -2,7 +2,7 @@
 note: on local (dev) enviroment the path is http://localhost:4000/sitemaps/state/ca/sitemap.xml/4
 on production the path is https://www.getelected.com/sitemaps/state/ca/sitemap/4.xml
 
-https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
+https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap.
 */
 
 import gpApi from 'gpApi'
@@ -10,10 +10,21 @@ import gpFetch from 'gpApi/gpFetch'
 import { flatStates } from 'helpers/statesHelper'
 import { APP_BASE } from 'appEnv'
 
-const fetchState = async (state) => {
-  const api = gpApi.race.allStates
+const fetchStatePlaces = async (state) => {
+  const api = gpApi.elections.places
   const payload = {
     state,
+    placeColumns: 'slug',
+  }
+
+  return await gpFetch(api, payload, 3600)
+}
+
+const fetchStateRaces = async (state) => {
+  const api = gpApi.elections.races
+  const payload = {
+    state,
+    raceColumns: 'slug',
   }
 
   return await gpFetch(api, payload, 3600)
@@ -34,30 +45,21 @@ export async function generateSitemaps() {
 export default async function sitemap({ id }) {
   try {
     const state = flatStates[id].toLocaleLowerCase()
-    const { counties, cities, stateRaces, countyRaces, cityRaces } =
-      await fetchState(state)
+
+    const [places, races] = await Promise.all([
+      fetchStatePlaces(state),
+      fetchStateRaces(state),
+    ])
 
     const mainSitemap = []
     // state url
-    const urls = [`/elections/${state}`]
+    const urls = []
 
-    counties.forEach((county) => {
-      urls.push(`/elections/${county.slug}`)
+    places.forEach((place) => {
+      urls.push(`/elections/${place.slug}`)
     })
 
-    cities.forEach((city) => {
-      urls.push(`/elections/${city.slug}`)
-    })
-
-    stateRaces.forEach((race) => {
-      urls.push(`/elections/position/${race.slug}`)
-    })
-
-    countyRaces.forEach((race) => {
-      urls.push(`/elections/position/${race.slug}`)
-    })
-
-    cityRaces.forEach((race) => {
+    races.forEach((race) => {
       urls.push(`/elections/position/${race.slug}`)
     })
 
