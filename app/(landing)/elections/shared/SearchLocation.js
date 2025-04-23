@@ -2,8 +2,6 @@
 
 import { InputAdornment, Select } from '@mui/material'
 import H2 from '@shared/typography/H2'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { slugify } from 'helpers/articleHelper'
 import { states } from 'helpers/statesHelper'
 import Image from 'next/image'
@@ -11,25 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { fireGTMButtonClickEvent } from '@shared/buttons/fireGTMButtonClickEvent'
 import Button from '@shared/buttons/Button'
-
-const fetchState = async (state) => {
-  const api = gpApi.race.byState
-  const payload = {
-    state,
-  }
-
-  return await gpFetch(api, payload, 3600)
-}
-
-const fetchCounty = async (state, county) => {
-  const api = gpApi.race.byCounty
-  const payload = {
-    state,
-    county,
-  }
-
-  return await gpFetch(api, payload, 3600)
-}
+import fetchPlace from './fetchPlace'
 
 const nameCompare = ({ name: aName }, { name: bName }) =>
   aName.localeCompare(bName)
@@ -46,20 +26,23 @@ export default function SearchLocation({ withHeader = false, initialState }) {
   const router = useRouter()
 
   const onChangeState = async (stateName) => {
-    const { counties } = await fetchState(stateName)
+    const place = await fetchPlace({ slug: stateName, includeRaces: false })
     setState({
       ...state,
       state: stateName,
-      countyOptions: counties,
+      countyOptions: place.children,
     })
   }
 
   const onChangeCounty = async (countyName) => {
-    const { municipalities } = await fetchCounty(state.state, countyName)
+    const place = await fetchPlace({
+      slug: `${state.state.toLowerCase()}/${slugify(countyName, true)}`,
+      includeRaces: false,
+    })
     setState({
       ...state,
       county: countyName,
-      munOptions: municipalities,
+      munOptions: place.children,
     })
   }
 

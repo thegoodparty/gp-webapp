@@ -1,7 +1,8 @@
-import { OLD_API_ROOT } from 'appEnv';
+import { OLD_API_ROOT, ELECTION_API_ROOT } from 'appEnv'
 
 // Just want to point to old api base for old endpoints we want to keep
-let base = `${OLD_API_ROOT}/api/v1/`;
+let base = `${OLD_API_ROOT}/api/v1/`
+let electionBase = `${ELECTION_API_ROOT}/v1/`
 
 const gpApi = {
   campaign: {
@@ -37,31 +38,17 @@ const gpApi = {
       withAuth: true,
     },
   },
-
-  race: {
-    byState: {
-      url: `${base}race/by-state`,
+  elections: {
+    places: {
+      url: `${electionBase}places`,
       method: 'GET',
     },
-    allStates: {
-      // for sitemaps
-      url: `${base}race/all-state`,
+    races: {
+      url: `${electionBase}races`,
       method: 'GET',
     },
-    byCounty: {
-      url: `${base}race/by-county`,
-      method: 'GET',
-    },
-    byCity: {
-      url: `${base}race/by-city`,
-      method: 'GET',
-    },
-    byRace: {
-      url: `${base}race`,
-      method: 'GET',
-    },
-    proximity: {
-      url: `${base}race/proximity-cities`,
+    featuredCities: {
+      url: `${electionBase}places/most-elections`,
       method: 'GET',
     },
   },
@@ -81,6 +68,6 @@ const gpApi = {
       withAuth: true, //admin
     },
   },
-};
+}
 
-export default gpApi;
+export default gpApi
