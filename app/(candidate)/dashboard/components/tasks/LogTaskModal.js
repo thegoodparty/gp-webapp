@@ -10,7 +10,7 @@ import {
   createIrresponsiblyMassagedHistoryItem,
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
-import { TASK_TYPES } from '../constants/tasks.const'
+import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
 export const TASK_TYPE_HEADINGS = {
@@ -74,7 +74,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
     <div className="">
       {
         <Modal open={true} closeCallback={onClose}>
-          <div className="w-[80vw] max-w-[640px] lg:p-6">
+          <div className="max-w-[500px] lg:p-6">
             <H1 className="mb-6 text-center">{modalTitle}</H1>
             <TextField
               label={modalLabel}

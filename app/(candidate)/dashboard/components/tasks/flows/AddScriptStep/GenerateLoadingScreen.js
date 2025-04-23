@@ -80,7 +80,7 @@ export const GenerateLoadingScreen = ({
   return (
     <>
       <header className="text-center">
-        <H1>Generating Script</H1>
+        <H1>Generating script</H1>
         <Body1 className="mt-4 mb-8">This may take a few minutes...</Body1>
       </header>
       <section>
