@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChooseScriptAddFlow } from './ChooseScriptAddFlow'
 import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { SelectSmSScriptScreen } from './SelectSmSScriptScreen'
@@ -7,6 +7,7 @@ import { CreateSmSScriptScreen } from './CreateSmSScriptScreen'
 import { SelectSmsAiTemplateScreen } from './SelectSmsAiTemplateScreen'
 import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
+import { fetchAiContentCategories } from './SelectSmsAiTemplateScreen'
 
 export default function AddScriptStep({
   onComplete = (scriptKey, scriptContent) => {},
@@ -19,6 +20,25 @@ export default function AddScriptStep({
   )
   const [aiTemplateKey, setAiTemplateKey] = useState('')
   const [aiScriptKey, setAiScriptKey] = useState('')
+  const [contentCategories, setContentCategories] = useState([])
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await fetchAiContentCategories(campaign)
+      setContentCategories(categories)
+
+      if (defaultAiTemplateId) {
+        const template = categories
+          .flatMap((category) => category.templates)
+          .find((template) => template.id === defaultAiTemplateId)
+
+        setAiTemplateKey(template.key)
+      } else {
+        setAiTemplateKey('')
+      }
+    }
+    fetchCategories()
+  }, [campaign, defaultAiTemplateId])
 
   const onBack = (screen) => {
     if (!screen) return backCallback()
@@ -26,7 +46,11 @@ export default function AddScriptStep({
   }
 
   const onNext = (screen) => {
-    setCurrentScreen(screen)
+    if (screen === ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE && aiTemplateKey) {
+      setCurrentScreen(ADD_SCRIPT_FLOW.GENERATE_LOADING)
+    } else {
+      setCurrentScreen(screen)
+    }
   }
 
   const Screens = {
@@ -45,13 +69,13 @@ export default function AddScriptStep({
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE]: (
       <SelectSmsAiTemplateScreen
-        defaultAiTemplateId={defaultAiTemplateId}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(aiTemplateKey) => {
           setAiTemplateKey(aiTemplateKey)
           onNext(ADD_SCRIPT_FLOW.GENERATE_LOADING)
         }}
         campaign={campaign}
+        categories={contentCategories}
       />
     ),
     [ADD_SCRIPT_FLOW.GENERATE_LOADING]: (

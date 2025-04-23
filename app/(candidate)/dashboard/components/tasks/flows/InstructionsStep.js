@@ -1,5 +1,8 @@
 import H1 from '@shared/typography/H1'
-import { TASK_TYPES, LEGACY_TASK_TYPES } from '../../constants/tasks.const'
+import {
+  TASK_TYPES,
+  LEGACY_TASK_TYPES,
+} from '../../../shared/constants/tasks.const'
 import Button from '@shared/buttons/Button'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 import { useMemo } from 'react'
@@ -14,19 +17,19 @@ const INSTRUCTIONS_BY_TYPE = {
   ],
   [TASK_TYPES.phoneBanking]: [
     'Select target audience',
-    'Develop your message',
+    'Develop your script',
     'Download materials',
     'Learn more about running a phone banking campaign',
     'Make calls',
   ],
   [TASK_TYPES.doorKnocking]: [
     'Select target audience',
-    'Develop your message',
+    'Develop your script',
     'Download materials',
     'Learn more about running a door knocking campaign',
     'Go knock on doors',
   ],
-  [TASK_TYPES.socialMedia]: ['Develop your message', 'Post to social media'],
+  [TASK_TYPES.socialMedia]: ['Develop your script', 'Post to social media'],
   [TASK_TYPES.robocall]: [
     'Select target audience',
     'Develop your script',

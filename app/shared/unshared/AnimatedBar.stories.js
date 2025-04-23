@@ -1,7 +1,7 @@
 import {
   ANIMATED_PROGRESS_BAR_SIZES,
   AnimatedProgressBar,
-} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
+} from 'app/(candidate)/dashboard/components/AnimatedProgressBar'
 
 export default {
   title: 'Unshared/AnimatedBar',

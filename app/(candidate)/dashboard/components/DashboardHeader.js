@@ -7,17 +7,16 @@ import { CampaignProgress } from 'app/(candidate)/dashboard/components/CampaignP
 export const DashboardHeader = ({ campaign, tasks = [] }) => {
   const { pathToVictory: p2vObject, details: campaignDetails } = campaign || {}
   const pathToVictory = p2vObject?.data || {}
-  const { electionDate: electionDateStr } = campaignDetails || {}
-  const electionDate = new Date(electionDateStr)
+  const { electionDate } = campaignDetails || {}
 
   const numOfRemainingTasks = tasks.filter((task) => !task.completed).length
 
   return (
     <section className="mb-6">
       <CampaignCountdown electionDate={electionDate} />
-      <VoterContactsCount {...{ pathToVictory }} />
+      <VoterContactsCount pathToVictory={pathToVictory} />
       <RemainingTasks numOfRemainingTasks={numOfRemainingTasks} />
-      <CampaignProgress {...{ pathToVictory }} />
+      <CampaignProgress pathToVictory={pathToVictory} />
     </section>
   )
 }

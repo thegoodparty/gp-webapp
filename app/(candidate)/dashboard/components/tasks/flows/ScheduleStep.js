@@ -7,8 +7,11 @@ import { useState, useMemo } from 'react'
 import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'
+import {
+  LEGACY_TASK_TYPES,
+  TASK_TYPES,
+} from '../../../shared/constants/tasks.const'
 import { addDays } from 'date-fns'
-import { LEGACY_TASK_TYPES, TASK_TYPES } from '../../constants/tasks.const'
 
 export default function ScheduleStep({
   onChangeCallback,
@@ -49,7 +52,7 @@ export default function ScheduleStep({
     onChangeCallback('schedule', newState)
   }
 
-  const canSubmit = () => state.date != '' && state.message != '' && !dateError
+  const canSubmit = () => state.date != '' && !dateError
 
   const handleNext = async () => {
     setIsLoading(true)
@@ -111,13 +114,15 @@ export default function ScheduleStep({
         </div>
         <div className="mt-4">
           <TextField
-            label="Message"
-            placeholder="Do you have any additional questions or asks?"
+            label="Scheduling Request"
+            placeholder="Do you have any additional requests related to scheduling your campaign?"
             multiline
             rows={5}
             fullWidth
-            required
             value={state.message}
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={(e) => {
               onChangeField('message', e.target.value)
             }}
