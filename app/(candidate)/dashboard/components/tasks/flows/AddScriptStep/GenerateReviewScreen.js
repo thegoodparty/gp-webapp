@@ -64,7 +64,7 @@ export const GenerateReviewScreen = ({
   return (
     <>
       <header className="text-center">
-        <H1>Review Script</H1>
+        <H1>Review script</H1>
         <Body1 className="mt-4 mb-8">
           Click in the editor to make any necessary changes.
         </Body1>

@@ -1,8 +1,11 @@
 import { differenceInDays, differenceInWeeks } from 'date-fns'
 import H1 from '@shared/typography/H1'
 
+/**
+ * @param {string} electionDate - ISO string of the election date (e.g. '2024-11-05', how we store it in campaign details)
+ */
 export const CampaignCountdown = ({ electionDate }) => {
-  const today = new Date()
+  const today = new Date().toISOString().split('T')[0]
   const weeks = differenceInWeeks(electionDate, today)
   const days = differenceInDays(electionDate, today)
 
