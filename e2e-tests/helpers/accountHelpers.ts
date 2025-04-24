@@ -130,7 +130,9 @@ export async function loginAccount(
   await page.getByTestId("login-email-input").nth(1).fill(emailAddress);
   await page.getByTestId("login-password-input").nth(1).fill(password);
   await page.getByTestId("login-submit-button").click();
-  await page.waitForLoadState('domcontentloaded');
+  await documentReady(page);
+  await page.getByText('Dashboard').isVisible();
+  await page.waitForLoadState('networkidle');
 }
 
 export async function createAccount(

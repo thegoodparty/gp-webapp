@@ -5,13 +5,15 @@ import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 import * as path from 'path';
+import { documentReady } from 'helpers/domHelpers';
 
 test.use({
     storageState: 'auth.json',
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/profile', {waitUntil: "networkidle"});
+    await page.goto('/profile');
+    await documentReady(page);
 });
 
 test('Adjust Personal Information', async ({ page }) => {
@@ -29,7 +31,7 @@ test('Adjust Personal Information', async ({ page }) => {
         await page.locator('form').filter({ hasText: 'Save Changes' }).getByRole('button').first().click();
 
         // Waits for save to complete
-        await page.waitForLoadState('networkidle');
+        await documentReady(page);
 
         // Verifies changes are saved
         await expect(page.locator("[data-testid='personal-first-name']")).toHaveValue(firstName);
