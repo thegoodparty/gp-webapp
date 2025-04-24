@@ -5,6 +5,7 @@ import PageWrapper from './shared/layouts/PageWrapper'
 import './globals.css'
 import VwoScript from '@shared/scripts/VwoScript'
 import FullStoryScript from '@shared/scripts/FullStoryScript'
+import SegmentScript from '@shared/scripts/SegmentScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
@@ -71,6 +72,7 @@ const RootLayout = ({ children }) => (
       />
 
       <link rel="manifest" href="/manifest.json" />
+      <SegmentScript />
       <VwoScript />
       <FullStoryScript />
     </head>
