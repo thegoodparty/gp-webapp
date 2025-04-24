@@ -12,6 +12,7 @@ import NavButton from './NavButton'
 import Button from '@shared/buttons/Button'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import SegmentIdentity from './SegmentIdentity'
 
 export default function RightSide() {
   const [user] = useUser()
@@ -112,6 +113,7 @@ export default function RightSide() {
         </>
       )}
       <FullStorySelectiveInit user={user} />
+      <SegmentIdentity />
     </div>
   )
 }
