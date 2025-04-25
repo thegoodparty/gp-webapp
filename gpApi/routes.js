@@ -37,7 +37,7 @@ export const apiRoutes = {
       path: '/authentication/social-login/:socialProvider',
       method: 'POST',
     },
-    setSetPasswordEmail: {
+    sendSetPasswordEmail: {
       path: '/authentication/send-set-password-email',
       method: 'POST',
     },

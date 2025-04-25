@@ -28,20 +28,7 @@ const createCampaign = async (payload) => {
     return false
   }
 }
-const sendEmail = async (userId) => {
-  try {
-    const payload = {
-      userId,
-    }
-    return await clientFetch(
-      apiRoutes.authentication.setSetPasswordEmail,
-      payload,
-    )
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
-}
+
 const fields = [
   {
     key: 'firstName',
@@ -108,15 +95,6 @@ export const CreateCampaignForm = ({}) => {
 
   const handleChooseOfficeComplete = async () => {
     successSnackbar('Office Saved! Sending set password email...')
-
-    const emailResponse = await sendEmail(newCampaign.userId)
-
-    if (emailResponse.ok) {
-      successSnackbar('Email sent!')
-    } else {
-      errorSnackbar('Email failed to send!')
-    }
-
     setShowOfficeSelectionModal(false)
     setValues(initialValues)
     setNewCampaign(null)

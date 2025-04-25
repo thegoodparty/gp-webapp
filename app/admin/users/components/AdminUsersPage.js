@@ -7,7 +7,6 @@ import { useMemo } from 'react'
 import { formatToPhone } from 'helpers/numberHelper'
 import { dateUsHelper, dateWithTime } from 'helpers/dateHelper'
 import Actions from './Actions'
-import { AddUserButton } from 'app/admin/users/components/AddUserButton'
 import { userIsAdmin } from 'helpers/userHelper'
 
 const buildTableInputData = (users) =>
@@ -119,9 +118,6 @@ export default function AdminUsersPage(props) {
   return (
     <AdminWrapper {...props}>
       <PortalPanel color="#2CCDB0">
-        <div className="flex flex-col items-end">
-          <AddUserButton />
-        </div>
         <Table
           data={data}
           columns={columns}
