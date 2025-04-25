@@ -7,6 +7,8 @@ const dbRedirects = {
   '/social': 'https://shor.by/goodpartyorg',
   '/pricing': '/run-for-office#pricing-section',
   '/iva': 'https://lp.goodparty.org/iva',
+  '/blog/article/how-ai-campaign-manager-works':
+    '/blog/article/political-campaign-tools',
   '/aa':
     'https://goodparty.org/candidates/?utm_source=mob&utm_medium=stickers&utm_campaign=2024_oct_1_aa_find_candidates_optin_&utm_content=optin_&',
   '/bz':
