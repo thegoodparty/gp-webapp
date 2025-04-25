@@ -36,7 +36,9 @@ test('Update Campaign Details', async ({ page }) => {
         await page.locator('section').filter({ hasText: 'Campaign Details' }).getByRole('button').click();
 
         // Refresh page
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        await documentReady(page);
+        await page.reload();
+        await documentReady(page);
 
         // Confirm new campaign details are saved
         await expect(page.getByPlaceholder('Campaign Committee')).toHaveValue(newCampaignCommittee);
