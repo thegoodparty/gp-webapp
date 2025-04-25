@@ -7,14 +7,14 @@ import {
   fetchGlossaryByLetter,
   fetchGlossaryItemsBySlug,
 } from 'app/political-terms/util/glossaryItemFetching.util'
+import { ALPHABET } from '@shared/utils/alphabet'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  const lettersArray = 'abcdefghijklmnopqrstuvwxyz'.split('')
   const itemsBySlug = await fetchGlossaryItemsBySlug()
-  const slugs = [...lettersArray, ...Object.keys(itemsBySlug)]
+  const slugs = [...ALPHABET, ...Object.keys(itemsBySlug)]
 
   return slugs.map((slug) => {
     return {
