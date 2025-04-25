@@ -5,7 +5,7 @@ import H2 from '@shared/typography/H2'
 import {
   ANIMATED_PROGRESS_BAR_SIZES,
   AnimatedProgressBar,
-} from 'app/(candidate)/dashboard/components/p2v/AnimatedProgressBar'
+} from 'app/(candidate)/dashboard/components/AnimatedProgressBar'
 import Subtitle2 from '@shared/typography/Subtitle2'
 import { numberFormatter } from 'helpers/numberHelper'
 import { ContactCountsInfoModal } from 'app/(candidate)/dashboard/components/ContactCountsInfoModal'

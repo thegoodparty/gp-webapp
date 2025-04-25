@@ -77,7 +77,7 @@ export default function TaskItem({
   }
 
   return (
-    <li className="flex flex-col sm:flex-row items-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
+    <li className="flex flex-col sm:flex-row items-center p-4 mt-4 gap-x-4 bg-white rounded-lg border border-black/[0.12]">
       <div className="flex items-center gap-x-2 gap-y-4 w-full sm:w-auto">
         <div className="mt-1 self-start">
           <TaskCheck
@@ -96,7 +96,7 @@ export default function TaskItem({
           onClick={handleAction}
           size="medium"
           color="neutral"
-          className="flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
+          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
         >
           <LockRounded className="mr-1 text-base" />
           No Longer Available
@@ -109,7 +109,7 @@ export default function TaskItem({
           size="medium"
           color={completed ? 'success' : 'secondary'}
           disabled={completed}
-          className="flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
+          className="sm:flex items-center ml-auto w-full sm:w-auto mt-4 sm:mt-0 whitespace-nowrap"
           {...actionTrackingAttrs}
         >
           {completed ? (

@@ -1,13 +1,10 @@
 'use client'
 import { useState } from 'react'
-import DashboardLayout from '../../shared/DashboardLayout'
 import TaskItem from './TaskItem'
 import H2 from '@shared/typography/H2'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
 import { dateUsHelper } from 'helpers/dateHelper'
-import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
-import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import { DashboardHeader } from 'app/(candidate)/dashboard/components/DashboardHeader'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -20,15 +17,11 @@ import {
   VIABILITY_SCORE_THRESHOLD,
 } from '../../shared/ProUpgradeModal'
 import TaskFlow from './flows/TaskFlow'
-import { TASK_TYPES } from '../constants/tasks.const'
+import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
 import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
 
-export default function TasksPage({
-  pathname,
-  campaign,
-  tasks: tasksProp = [],
-}) {
+export default function TasksList({ campaign, tasks: tasksProp = [] }) {
   const [tasks, setTasks] = useState(tasksProp)
   const [completeModalTask, setCompleteModalTask] = useState(null)
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
@@ -41,10 +34,8 @@ export default function TasksPage({
   const viabilityScore = campaign?.pathToVictory?.data?.viability?.score || 0
   const daysUntilElection = differenceInDays(electionDate, new Date())
 
-  // TODO: what if no election date?
-  // TODO: what if no p2v?
   async function handleCheckClick(task) {
-    const { id: taskId, type } = task
+    const { id: taskId, flowType: type } = task
 
     // skip voter counts for education tasks
     if (type === TASK_TYPES.education) {
@@ -113,70 +104,66 @@ export default function TasksPage({
   }
 
   return (
-    <VoterContactsProvider>
-      <CampaignUpdateHistoryProvider>
-        <DashboardLayout pathname={pathname} campaign={campaign}>
-          <DashboardHeader campaign={campaign} tasks={tasks} />
-          <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
-            <H2>Tasks for this week</H2>
-            <Body2 className="!font-outfit mt-1">
-              Election day: {dateUsHelper(electionDate)}
-            </Body2>
+    <>
+      <DashboardHeader campaign={campaign} tasks={tasks} />
+      <div className="mx-auto bg-white rounded-xl p-6 mt-8 mb-32">
+        <H2>Tasks for this week</H2>
+        <Body2 className="!font-outfit mt-1">
+          Election day: {dateUsHelper(electionDate)}
+        </Body2>
 
-            <ul className="p-0 mt-4">
-              {tasks.length > 0 ? (
-                tasks.map((task) => (
-                  <TaskItem
-                    key={task.id}
-                    task={task}
-                    isPro={campaign.isPro}
-                    daysUntilElection={daysUntilElection}
-                    onCheck={handleCheckClick}
-                    onAction={handleActionClick}
-                  />
-                ))
-              ) : (
-                <li className="block text-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
-                  <H4 className="mt-1">No tasks for this week</H4>
-                </li>
-              )}
-            </ul>
-          </div>
-          {completeModalTask && (
-            <LogTaskModal
-              onSubmit={handleCompleteSubmit}
-              onClose={handleCompleteCancel}
-              flowType={completeModalTask.flowType}
-            />
+        <ul className="p-0 mt-4">
+          {tasks.length > 0 ? (
+            tasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                isPro={campaign.isPro}
+                daysUntilElection={daysUntilElection}
+                onCheck={handleCheckClick}
+                onAction={handleActionClick}
+              />
+            ))
+          ) : (
+            <li className="block text-center p-4 mt-4 bg-white rounded-lg border border-black/[0.12]">
+              <H4 className="mt-1">No tasks for this week</H4>
+            </li>
           )}
-          {deadlineModalTask && (
-            <DeadlineModal
-              type={deadlineModalTask.flowType}
-              deadline={deadlineModalTask.deadline}
-              onClose={() => setDeadlineModalTask(null)}
-            />
-          )}
-          <ProUpgradeModal
-            open={showProUpgradeModal}
-            variant={
-              viabilityScore < VIABILITY_SCORE_THRESHOLD
-                ? VARIANTS.Second_NonViable
-                : VARIANTS.Second_Viable
-            }
-            onClose={() => setShowProUpgradeModal(false)}
-            trackingAttrs={proUpgradeTrackingAttrs}
-          />
-          {flowModalTask && (
-            <TaskFlow
-              forceOpen
-              type={flowModalTask.flowType}
-              campaign={campaign}
-              onClose={() => setFlowModalTask(null)}
-              defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
-            />
-          )}
-        </DashboardLayout>
-      </CampaignUpdateHistoryProvider>
-    </VoterContactsProvider>
+        </ul>
+      </div>
+      {completeModalTask && (
+        <LogTaskModal
+          onSubmit={handleCompleteSubmit}
+          onClose={handleCompleteCancel}
+          flowType={completeModalTask.flowType}
+        />
+      )}
+      {deadlineModalTask && (
+        <DeadlineModal
+          type={deadlineModalTask.flowType}
+          deadline={deadlineModalTask.deadline}
+          onClose={() => setDeadlineModalTask(null)}
+        />
+      )}
+      <ProUpgradeModal
+        open={showProUpgradeModal}
+        variant={
+          viabilityScore < VIABILITY_SCORE_THRESHOLD
+            ? VARIANTS.Second_NonViable
+            : VARIANTS.Second_Viable
+        }
+        onClose={() => setShowProUpgradeModal(false)}
+        trackingAttrs={proUpgradeTrackingAttrs}
+      />
+      {flowModalTask && (
+        <TaskFlow
+          forceOpen
+          type={flowModalTask.flowType}
+          campaign={campaign}
+          onClose={() => setFlowModalTask(null)}
+          defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
+        />
+      )}
+    </>
   )
 }

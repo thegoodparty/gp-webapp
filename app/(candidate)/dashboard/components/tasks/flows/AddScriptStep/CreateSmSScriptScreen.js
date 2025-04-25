@@ -27,7 +27,7 @@ export const CreateSmSScriptScreen = ({
   return (
     <>
       <header className="text-center">
-        <H1>Attach Saved Script</H1>
+        <H1>Add your script</H1>
         <Body1 className="mt-4 mb-8">
           Please write or paste your script below.
         </Body1>
