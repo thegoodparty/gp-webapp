@@ -1,12 +1,12 @@
 'use client'
-import ChecklistAnimation from '@shared/animations/ChecklistAnimation'
-import NeedHelpAnimation from '@shared/animations/NeedHelpAnimation'
 import Button from '@shared/buttons/Button'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
+import Body2 from '@shared/typography/Body2'
 import H2 from '@shared/typography/H2'
-import H3 from '@shared/typography/H3'
+import Overline from '@shared/typography/Overline'
 import Paper from '@shared/utils/Paper'
+import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -29,59 +29,33 @@ export default function ReviewStep() {
   const { website, campaignEmail, einNumber } = details || {}
 
   return (
-    <>
-      <Paper className="mt-8">
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-12 md:col-span-6 lg:col-span-8">
-            <H2>Compliance Review</H2>
-            <Body1 className="mb-8 mt-2">
-              Please review the following information and click next to
-              continue.
-            </Body1>
-            <div className="max-w-xl text-lg">
-              <ul>
-                <li className="pb-2">
-                  <strong>EIN:</strong> {einNumber}
-                </li>
-                <li className="pb-2">
-                  <strong>Website:</strong> {website}
-                </li>
-                <li className="pb-2">
-                  <strong>Campaign Email:</strong> {campaignEmail}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="col-span-12 md:col-span-6 lg:col-span-4">
-            <div className="relative w-72 xl:w-96">
-              <ChecklistAnimation />
-            </div>
-          </div>
-          <div className="col-span-12 mt-2 flex justify-center">
-            <Link href="/dashboard/text-messaging/p2p-setup/ein">
-              <Button color="neutral" className="mr-4">
-                Back
-              </Button>
-            </Link>
-            <Button onClick={handleNext}>Submit</Button>
-          </div>
-        </div>
-      </Paper>
-      <Paper className="mt-8">
-        <div className="flex justify-between">
-          <div>
-            <H3>What will happen next?</H3>
-            <Body1 className="mt-2">
-              We will work with the mobile carrier to get your campaign
-              approved. This process can take up to 10 business days.
-            </Body1>
-          </div>
-          <div className="w-48 lg:w-96 relative">
-            <NeedHelpAnimation />
-          </div>
-        </div>
-      </Paper>
-    </>
+    <Paper className="mt-8 max-w-4xl mx-auto">
+      <div className="mb-8">
+        <H2>Confirm Information</H2>
+        <Body1 className="mb-8 mt-2">
+          Please confirm the following information for your compliance review:
+        </Body1>
+        <Overline className="mb-1">EIN</Overline>
+        <Body2>{einNumber}</Body2>
+        <Overline className="mb-1 mt-4">Website</Overline>
+        <Body2>{website}</Body2>
+        <Overline className="mb-1 mt-4">Campaign Email</Overline>
+        <Body2>{campaignEmail}</Body2>
+      </div>
+      <AlertBanner
+        message="By clicking Finish you certify all information is correct and.... Once approved we will work with the mobile carrier to get your text messaging campaign live. This can take up to 10 business days."
+        type="info"
+      />
+      <div className="mt-8 flex justify-between">
+        <Link href="/dashboard/text-messaging/p2p-setup/email">
+          <Button color="neutral" className="mr-4">
+            Back
+          </Button>
+        </Link>
+        <Button onClick={handleNext} color="secondary">
+          Finish
+        </Button>
+      </div>
+    </Paper>
   )
 }
