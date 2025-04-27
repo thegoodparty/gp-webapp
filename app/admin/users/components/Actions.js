@@ -5,7 +5,7 @@ import ImpersonateAction from '/app/admin/shared/ImpersonateAction'
 import ResendPasswordEmailAction from './ResendPasswordEmailAction'
 
 export default function Actions({ user }) {
-  const { id, email, userType } = user
+  const { id, email } = user
   const [showMenu, setShowMenu] = useState(false)
 
   return (
