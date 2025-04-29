@@ -15,29 +15,56 @@ test.beforeEach(async ({ page }) => {
     await documentReady(page);
 });
 
-test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
-    const caseId = 41;
+test.describe.serial('Voter data pro features', () => {
+    test.skip(
+        !process.env.BASE_URL?.match(/^https?:\/\/(dev\.|qa\.|)goodparty\.org/),
+        'Skipping GoodParty.org PRO / voter data tests on non-production environments'
+    );
 
-    try {
-        // Verify user is on voter data (free) page
-        await expect(page.getByRole('heading', { name: 'Why pay more for less?' })).toBeVisible();
-        await page.getByRole('link', { name: 'Start today for just $10/month.' }).click();
+    test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
+        const caseId = 41;
 
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
-});
+        try {
+            // Verify user is on voter data (free) page
+            await expect(page.getByRole('heading', { name: 'Why pay more for less?' })).toBeVisible();
+            await page.getByRole('link', { name: 'Start today for just $10/month.' }).click();
 
-test.skip('Upgrade user to Pro', async ({ page }) => {
+            // Report test results
+            await addTestResult(runId, caseId, 1, 'Test passed');
+        } catch (error) {
+            await handleTestFailure(page, runId, caseId, error);    
+        }
+    });
+
+  test('Upgrade user to Pro', async ({ page }) => {
     const caseId = 42;
     try {
-        await upgradeToPro(page);
-
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
+      await upgradeToPro(page);
+      await page.getByRole('link', { name: 'GoodParty.org PRO' }).isVisible();
+      // Report test results
+      await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
+      await handleTestFailure(page, runId, caseId, error);    
     }
+  });
+
+  test('Generate custom voter file', async ({ page }) => {
+    const caseId = 43;
+    try {
+      await page.locator('div').filter({ hasText: /^Create a custom voter file$/ }).getByRole('button').click();
+      await page.getByLabel('Channel *').click();
+      await page.getByRole('option', { name: 'Direct Mail' }).click();
+      await page.getByLabel('Purpose').click();
+      await page.getByRole('option', { name: 'GOTV' }).click();
+      await page.getByRole('button', { name: 'Next' }).click();
+      await page.getByRole('button', { name: 'Create Voter File' }).click();
+      await documentReady(page);
+      await page.getByRole('link', { name: /Direct Mail - GOTV/ }).first().isVisible();
+
+      // Report test results
+      await addTestResult(runId, caseId, 1, 'Test passed');
+    } catch (error) {
+      await handleTestFailure(page, runId, caseId, error);    
+    }
+  });
 });

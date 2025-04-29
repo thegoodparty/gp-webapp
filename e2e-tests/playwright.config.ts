@@ -6,12 +6,12 @@ console.log('BASE_URL from env:', process.env.BASE_URL);
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
-  timeout: 120000,
+  timeout: 90000,
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 2,
-  workers: 3,
+  workers: 7,
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],
