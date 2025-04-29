@@ -1,12 +1,13 @@
 import "dotenv/config";
 import { expect, chromium } from "@playwright/test";
-import { userData, generateEmail, generatePhone } from "helpers/dataHelpers";
+import { userData, generateEmail, generatePhone, generateTimeStamp } from "helpers/dataHelpers";
 import { acceptCookieTerms, documentReady } from "helpers/domHelpers";
 import * as path from 'path';
 import * as fs from 'fs';
-import PDFDocument from 'pdfkit';
 
 export const testAccountLastName = 'test';
+export const testAccountFirstName = generateTimeStamp();
+export const baseUrl = process.env.BASE_URL;
 
 export async function ensureSession() {
   const SESSION_FILE = path.resolve(__dirname, '../auth.json');
@@ -45,7 +46,7 @@ export async function ensureSession() {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   // Save the storage state (session)
-  console.log(`Saving new test account: ${emailAddress} + ${password}`);
+  console.log(`Saving new test account: ${testAccountFirstName} ${testAccountLastName} - ${emailAddress} - ${password}`);
   await page.context().storageState({ path: SESSION_FILE });
   await browser.close();
 
@@ -71,20 +72,39 @@ export async function ensureAdminSession() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  // Use admin credentials from environment variables
-  const adminEmail = process.env.TEST_USER_ADMIN;
-  const adminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
+  try {
+    // Use admin credentials from environment variables
+    const adminEmail = process.env.TEST_USER_ADMIN;
+    const adminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
 
-  if (!adminEmail || !adminPassword) {
-    throw new Error('Admin credentials not found in environment variables');
+    if (!adminEmail || !adminPassword) {
+      throw new Error('Admin credentials not found in environment variables');
+    }
+
+    await loginAccount(page, adminEmail, adminPassword);
+    console.log(`Marking ${testAccountFirstName} ${testAccountLastName} test account as verified...`);
+    
+    // Ensure URL is properly constructed and encoded
+    const victoryPathUrl = `${baseUrl}/admin/victory-path/${encodeURIComponent(testAccountFirstName)}-${encodeURIComponent(testAccountLastName)}`;
+    console.log(`Navigating to: ${victoryPathUrl}`);
+    
+    await page.goto(victoryPathUrl);
+    await documentReady(page);
+    
+    await page.getByRole('button', { name: '\u200b', exact: true }).nth(1).click();
+    await page.getByRole('option', { name: 'Yes' }).click();
+    await page.getByRole('button', { name: 'Save' }).click();
+    await documentReady(page);
+
+    // Save the admin storage state (session)
+    console.log(`Saving admin session for: ${adminEmail}`);
+    await page.context().storageState({ path: ADMIN_SESSION_FILE });
+  } catch (error) {
+    console.error('Error in ensureAdminSession:', error);
+    throw error;
+  } finally {
+    await browser.close();
   }
-
-  await loginAccount(page, adminEmail, adminPassword);
-
-  // Save the admin storage state (session)
-  console.log(`Saving admin session for: ${adminEmail}`);
-  await page.context().storageState({ path: ADMIN_SESSION_FILE });
-  await browser.close();
 
   console.log('New admin session created and saved.');
 }
@@ -140,11 +160,11 @@ export async function createAccount(
   zipCode = "94066",
   role = "South San Francisco City Clerk",
   password = userData.password,
-  emailAddress = generateEmail()
+  emailAddress = generateEmail(),
+  firstName = testAccountFirstName,
+  lastName = testAccountLastName
 ) {
   const loginPageHeader = "Join GoodParty.org";
-  const firstName = userData.firstName;
-  const lastName = testAccountLastName;
   const phoneNumber = generatePhone();
   const baseURL = process.env.BASE_URL || '';
 
@@ -190,10 +210,10 @@ export async function createAccount(
   await page.getByRole('button', { name: 'View Dashboard' }).click();
 }
 
-export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
+export async function upgradeToPro(page) {
   const testCardNumber = "4242424242424242";
 
-  await page.goto("/dashboard/upgrade-to-pro", { waitUntil: "commit" });
+  await page.goto("/dashboard/upgrade-to-pro");
 
   // Waits for page to load completely
   await documentReady(page);
@@ -203,31 +223,12 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByRole('link', { name: 'Start today for just $10/month.' }).click();
 
   // Verify office details
+  await documentReady(page);
   await page.getByRole('heading', { name: 'Please confirm your office details.' }).isVisible();
   await page.getByRole('link', { name: 'Confirm' }).click();
-  await page.getByLabel('Name Of Campaign Committee').fill(campaignCommittee);
-  await page.getByRole('checkbox').click();
-
-  // Generate a PDF file
-  const pdfPath = path.resolve(__dirname, 'sample.pdf');
-  const doc = new PDFDocument();
-  const writeStream = fs.createWriteStream(pdfPath);
-
-  doc.pipe(writeStream);
-  doc.text('This is a dynamically generated PDF file.');
-  doc.end();
-
-  // Wait for the PDF file to be written
-  await new Promise((resolve) => writeStream.on('finish', resolve));
-
-  // Upload the PDF file
-  const fileInput = page.locator("button input[type='file']");
-  await fileInput.setInputFiles(pdfPath);
-  await expect(page.getByRole('button', { name: 'Next', timeout: 20000 })).toBeEnabled();
-  fs.unlinkSync(pdfPath);
-  await page.getByRole('button', { name: 'Next' }).click();
 
   // Agree to GoodParty.org Terms
+  await documentReady(page);
   await page.getByRole("button", { name: "I Accept" }).click();
   await page.getByRole("button", { name: "I Accept" }).click();
   await page.getByRole("button", { name: "I Accept" }).click();
@@ -235,6 +236,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await page.getByRole('button', { name: 'Finish' }).click();
 
   // Pay for pro through Stripe
+  await documentReady(page);
   await page.getByLabel('Email').fill(userData.email);
   await page.getByTestId('product-summary-product-image', { timeout: 10000 }).isVisible();
   await page.getByTestId('card-accordion-item').click();
@@ -248,6 +250,7 @@ export async function upgradeToPro(page, campaignCommittee = "Test Campaign") {
   await documentReady(page);
   await page.getByRole('heading', { name: 'You are now subscribed to GoodParty.org Pro!', timeout: 60000 }).isVisible();
   await page.getByRole('button', { name: 'Go Back to Dashboard' }).click();
+  await documentReady(page);
 }
 
 export async function deleteAccount(page = null) {

@@ -9,7 +9,7 @@ module.exports = async () => {
     1, 4, 5, 7, 8, 12, 16,
     18, 22,
     24, 25, 26, 27, 29, 30, 31, 32, 33, 34,
-    41, 42, 46, 47, 48, 49, 50,
+    41, 42, 43, 46, 47, 48, 49, 50,
     55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 76, 77, 78, 79, 80, 81,
     71, 86, 87, 88, 89
   ];
@@ -19,12 +19,12 @@ module.exports = async () => {
   console.log(`Test run created with ID: ${testRunId}`);
 
   try {
-    console.log('Creating admin session...');
-    await ensureAdminSession();
-    console.log('Admin session created successfully');
     console.log('Creating test user session...');
     await ensureSession();
     console.log('Test user session created successfully');
+    console.log('Creating admin session...');
+    await ensureAdminSession();
+    console.log('Admin session created successfully');
   } catch (error) {
     console.error('Error during session setup:', error);
     throw error;
