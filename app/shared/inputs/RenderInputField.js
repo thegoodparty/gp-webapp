@@ -81,7 +81,7 @@ export default function RenderInputField({
         <PhoneInput
           value={value}
           required={field.required}
-          onChangeCallback={(phone, isValid) => {
+          onChangeCallback={(phone) => {
             onChangeCallback(field.key, phone)
           }}
           hideIcon
@@ -92,34 +92,33 @@ export default function RenderInputField({
       )}
 
       {field.type === 'radio' && (
-        <div
-          className={`mb-4 flex justify-center flex-col ${
-            field.alignLeft ? 'ml-2' : 'items-center'
-          }`}
-        >
-          <div className="text-zinc-500 mb-1">
+        <div className={`mb-4 ${field.alignLeft ? 'ml-2' : 'items-center'}`}>
+          <div className="mb-1">
             {field.label}
             {field.label && field.required && <sup> *</sup>}
           </div>
           <RadioGroup
-            row
+            className="flex flex-col justify-start"
             name={field.label}
             label={field.label}
-            value={value || null}
-            onChange={(e) => onChangeCallback(field.key, e.target.value)}
+            defaultValue={field.defaultValue}
+            onChange={(e) => {
+              onChangeCallback(field.key, e.target.value)
+            }}
             error={error}
             disabled={field.disabled}
           >
-            <FormControlLabel
-              value="yes"
-              control={<Radio />}
-              label={field.options ? field.options[0] : 'Yes'}
-            />
-            <FormControlLabel
-              value="no"
-              control={<Radio />}
-              label={field.options ? field.options[1] : 'No'}
-            />
+            {field.options &&
+              field.options.map(({ key, label, value }) => (
+                <FormControlLabel
+                  key={key}
+                  {...{
+                    value: value,
+                    label,
+                    control: <Radio className="flex-block" />,
+                  }}
+                />
+              ))}
           </RadioGroup>
         </div>
       )}
