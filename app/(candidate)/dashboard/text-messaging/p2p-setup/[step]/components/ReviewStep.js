@@ -43,7 +43,7 @@ export default function ReviewStep() {
         <Body2>{campaignEmail}</Body2>
       </div>
       <AlertBanner
-        message="By clicking Finish you certify all information is correct and.... Once approved we will work with the mobile carrier to get your text messaging campaign live. This can take up to 10 business days."
+        message="By clicking Finish you certify all information is correct and&hellip; Once approved we will work with the mobile carrier to get your text messaging campaign live. This can take up to 10 business days."
         type="info"
       />
       <div className="mt-8 flex justify-between">

@@ -4,7 +4,7 @@ import { useTextMessaging } from 'app/shared/hooks/useTextMessaging'
 import TextMessagingRequest from './TextMessagingRequest'
 import Body2 from '@shared/typography/Body2'
 export default function TextMessagingRequests() {
-  const { textMessaging } = useTextMessaging()
+  const [textMessaging] = useTextMessaging()
   return (
     <Paper>
       <H2 className="mb-4">Text Messaging Requests</H2>

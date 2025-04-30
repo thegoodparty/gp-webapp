@@ -2,29 +2,31 @@ import EINStep from './EINStep'
 import WebsiteStep from './WebsiteStep'
 import EmailStep from './EmailStep'
 import ReviewStep from './ReviewStep'
-import P2PSteps from './P2PSteps'
+import StyledStepper from 'app/(candidate)/dashboard/text-messaging/p2p-setup/[step]/components/StyledStepper'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import BackLink from './BackLink'
-const STEPS = {
-  EIN: 'ein',
-  WEBSITE: 'website',
-  EMAIL: 'email',
-  REVIEW: 'review',
-}
 
-export default function P2pSetupPage(props) {
-  const stepIndex = Object.values(STEPS).indexOf(props.step)
+const P2P_STEPS = [
+  { label: 'EIN', route: 'ein', component: <EINStep /> },
+  { label: 'Website', route: 'website', component: <WebsiteStep /> },
+  { label: 'Email', route: 'email', component: <EmailStep /> },
+  { label: 'Review', route: 'review', component: <ReviewStep /> },
+]
+
+const P2pSetupPage = ({ step }) => {
+  const stepIndex = P2P_STEPS.findIndex((stepDef) => stepDef.route === step)
   return (
     <div className="min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
       <BackLink />
-
       <MaxWidth>
-        <P2PSteps activeStep={stepIndex} />
-        {props.step === STEPS.EIN && <EINStep />}
-        {props.step === STEPS.WEBSITE && <WebsiteStep />}
-        {props.step === STEPS.EMAIL && <EmailStep />}
-        {props.step === STEPS.REVIEW && <ReviewStep />}
+        <StyledStepper
+          activeStep={stepIndex}
+          stepLabels={P2P_STEPS.map((s) => s.label)}
+        />
+        {P2P_STEPS[stepIndex]?.component}
       </MaxWidth>
     </div>
   )
 }
+
+export default P2pSetupPage

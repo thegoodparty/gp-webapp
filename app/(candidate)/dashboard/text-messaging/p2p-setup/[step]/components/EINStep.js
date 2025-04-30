@@ -4,7 +4,10 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
 import Paper from '@shared/utils/Paper'
-import { EinCheckInput } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
+import {
+  EIN_PATTERN_FULL,
+  EinCheckInput,
+} from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -14,28 +17,35 @@ import { BiLinkExternal } from 'react-icons/bi'
 import Body2 from '@shared/typography/Body2'
 import TextField from '@shared/inputs/TextField'
 import { useUser } from '@shared/hooks/useUser'
+import { getUserFullName } from '@shared/utils/getUserFullName'
 
 export default function EINStep() {
   const [campaign] = useCampaign()
   const [user] = useUser()
   const [einNumber, setEinNumber] = useState(campaign?.details?.einNumber)
-  const [einName, setEinName] = useState(campaign?.details?.einName)
-  const [einAddress, setEinAddress] = useState(campaign?.details?.einAddress)
-  const [validatedEin, setValidatedEin] = useState(null)
+  const [einName, setEinName] = useState(campaign?.details?.einName || '')
+  const [einAddress, setEinAddress] = useState(
+    campaign?.details?.einAddress || '',
+  )
+  const [validatedEin, setValidatedEin] = useState(
+    EIN_PATTERN_FULL.test(campaign?.details?.einNumber) || null,
+  )
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    setEinNumber(campaign?.details?.einNumber)
-    setEinName(
-      campaign?.details?.einName || `${user?.firstName} ${user?.lastName}`,
-    )
-    setEinAddress(campaign?.details?.einAddress)
-  }, [campaign, user])
+    const campaignDetails = campaign?.details
+    const currentEinNumber = campaignDetails?.einNumber
+    setEinNumber(campaignDetails?.einNumber)
+    setEinName(campaignDetails?.einName || getUserFullName(user))
+    setEinAddress(campaignDetails?.einAddress)
+    currentEinNumber &&
+      setValidatedEin(EIN_PATTERN_FULL.test(currentEinNumber) || null)
+  }, [campaign?.details, user])
 
   const handleEinChange = (value) => {
     setEinNumber(value)
-    setValidatedEin(null)
+    setValidatedEin(EIN_PATTERN_FULL.test(value) || null)
   }
 
   const handleNext = async () => {

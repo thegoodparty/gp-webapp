@@ -8,15 +8,12 @@ export const TextMessagingContext = createContext([{}, () => {}])
 export function TextMessagingProvider({
   children,
   textMessaging: initialTextMessaging,
-  compliance: initialCompliance,
 }) {
   const [textMessaging, setTextMessaging] = useState(initialTextMessaging)
-  const [compliance, setCompliance] = useState(initialCompliance)
 
   const refreshTextMessaging = async () => {
     try {
       const resp = await clientFetch(apiRoutes.textMessaging.list)
-
       setTextMessaging(
         resp?.status === 404 || resp.ok === false ? {} : resp.data,
       )
@@ -27,9 +24,7 @@ export function TextMessagingProvider({
   }
 
   return (
-    <TextMessagingContext.Provider
-      value={[textMessaging, refreshTextMessaging, compliance, setCompliance]}
-    >
+    <TextMessagingContext.Provider value={[textMessaging, refreshTextMessaging]}>
       {children}
     </TextMessagingContext.Provider>
   )

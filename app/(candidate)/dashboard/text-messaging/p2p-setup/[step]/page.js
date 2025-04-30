@@ -10,25 +10,24 @@ async function fetchTextMessaging() {
   return resp.data
 }
 
-const meta = pageMetaData({
+export const metadata = pageMetaData({
   title: 'P2P Setup  | GoodParty.org',
   description: 'P2P Setup',
   slug: '/dashboard/text-messaging/p2p-setup/[step]',
 })
-export const metadata = meta
 
-export default async function Page({ params, searchParams }) {
+export default async function Page({ params: { step } }) {
   await adminAccessOnly()
 
-  const { step } = params
+  const campaign = await fetchUserCampaign()
 
-  const [campaign] = await Promise.all([fetchUserCampaign()])
-
-  const childProps = {
-    pathname: `/dashboard/text-messaging/p2p-setup/${step}`,
-    campaign,
-    step,
-  }
-
-  return <P2pSetupPage {...childProps} />
+  return (
+    <P2pSetupPage
+      {...{
+        pathname: `/dashboard/text-messaging/p2p-setup/${step}`,
+        campaign,
+        step,
+      }}
+    />
+  )
 }

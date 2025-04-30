@@ -4,9 +4,10 @@ import H5 from '@shared/typography/H5'
 import Chip from '@shared/utils/Chip'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { Fragment } from 'react'
-import { useTextMessaging } from 'app/shared/hooks/useTextMessaging'
+import { useTenDLC } from 'app/shared/hooks/useTenDLC'
+
 export default function TextMessagingRequest({ request }) {
-  const { compliance } = useTextMessaging()
+  const [compliance] = useTenDLC()
   const {
     status,
     message,
