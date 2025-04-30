@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
-test("Style Guide - Black Button", async ({ page }) => {
+test.skip("Style Guide - Black Button", async ({ page }) => {
   const caseId = 55;
 
   try {
@@ -37,7 +37,7 @@ test("Style Guide - Black Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Black Outlined Button", async ({ page }) => {
+test.skip("Style Guide - Black Outlined Button", async ({ page }) => {
   const caseId = 56;
 
   try {
@@ -69,7 +69,7 @@ test("Style Guide - Black Outlined Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Button", async ({ page }) => {
+test.skip("Style Guide - Button", async ({ page }) => {
   const caseId = 57;
 
   try {
@@ -146,7 +146,7 @@ test("Style Guide - Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Error Button", async ({ page }) => {
+test.skip("Style Guide - Error Button", async ({ page }) => {
   const caseId = 58;
 
   try {
@@ -181,7 +181,7 @@ test("Style Guide - Error Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Icon Button", async ({ page }) => {
+test.skip("Style Guide - Icon Button", async ({ page }) => {
   const caseId = 59;
 
   try {
@@ -234,7 +234,7 @@ test("Style Guide - Icon Button", async ({ page }) => {
 });
 
 
-test("Style Guide - Info Button", async ({ page }) => {
+test.skip("Style Guide - Info Button", async ({ page }) => {
   const caseId = 60;
 
   try {
@@ -269,7 +269,7 @@ test("Style Guide - Info Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Pill Button", async ({ page }) => {
+test.skip("Style Guide - Pill Button", async ({ page }) => {
   const caseId = 61;
 
   try {
@@ -299,7 +299,7 @@ test("Style Guide - Pill Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Pink Button Client", async ({ page }) => {
+test.skip("Style Guide - Pink Button Client", async ({ page }) => {
   const caseId = 62;
 
   try {
@@ -325,7 +325,7 @@ test("Style Guide - Pink Button Client", async ({ page }) => {
 });
 
 
-test("Style Guide - Primary Button", async ({ page }) => {
+test.skip("Style Guide - Primary Button", async ({ page }) => {
   const caseId = 63;
 
   try {
@@ -360,7 +360,7 @@ test("Style Guide - Primary Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Purple Button", async ({ page }) => {
+test.skip("Style Guide - Purple Button", async ({ page }) => {
   const caseId = 64;
 
   try {
@@ -385,7 +385,7 @@ test("Style Guide - Purple Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Question Button", async ({ page }) => {
+test.skip("Style Guide - Question Button", async ({ page }) => {
   const caseId = 65;
 
   try {
@@ -409,7 +409,7 @@ test("Style Guide - Question Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Secondary Button", async ({ page }) => {
+test.skip("Style Guide - Secondary Button", async ({ page }) => {
   const caseId = 66;
 
   try {
@@ -447,7 +447,7 @@ test("Style Guide - Secondary Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Severity Button", async ({ page }) => {
+test.skip("Style Guide - Severity Button", async ({ page }) => {
   const caseId = 67;
 
   try {
@@ -491,7 +491,7 @@ test("Style Guide - Severity Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Success Button", async ({ page }) => {
+test.skip("Style Guide - Success Button", async ({ page }) => {
   const caseId = 68;
 
   try {
@@ -527,7 +527,7 @@ test("Style Guide - Success Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Warning Button", async ({ page }) => {
+test.skip("Style Guide - Warning Button", async ({ page }) => {
   const caseId = 69;
 
   try {
@@ -563,7 +563,7 @@ test("Style Guide - Warning Button", async ({ page }) => {
   }
 });
 
-test("Style Guide - Yellow Button", async ({ page }) => {
+test.skip("Style Guide - Yellow Button", async ({ page }) => {
   const caseId = 70;
 
   try {

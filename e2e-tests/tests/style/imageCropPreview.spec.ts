@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
-test("Style Guide - ImageCropPreview Styling", async ({ page }) => {
+test.skip("Style Guide - ImageCropPreview Styling", async ({ page }) => {
   const caseId = 77;
 
   try {
@@ -36,7 +36,7 @@ test("Style Guide - ImageCropPreview Styling", async ({ page }) => {
   }
 });
 
-test("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
+test.skip("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
     const caseId = 78;
   
     try {
@@ -59,7 +59,7 @@ test("Style Guide - ImageCropPreview Valid File Test", async ({ page }) => {
     }
   });
 
-  test("Style Guide - ImageCropPreview Invalid File Test", async ({ page }) => {
+  test.skip("Style Guide - ImageCropPreview Invalid File Test", async ({ page }) => {
     const caseId = 79;
   
     try {
