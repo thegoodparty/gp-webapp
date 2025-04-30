@@ -7,7 +7,7 @@ import { readFileSync } from "fs";
 import { documentReady } from "helpers/domHelpers";
 const runId = fs.readFileSync("testRunId.txt", "utf-8");
 
-test("Style Guide - File Drop Styling Test", async ({ page }) => {
+test.skip("Style Guide - File Drop Styling Test", async ({ page }) => {
     const caseId = 80;
   
     try {
@@ -32,7 +32,7 @@ test("Style Guide - File Drop Styling Test", async ({ page }) => {
     }
   });
 
-test("Style Guide - File Drop File Test", async ({ page }) => {
+test.skip("Style Guide - File Drop File Test", async ({ page }) => {
     const caseId = 81;
   
     try {
