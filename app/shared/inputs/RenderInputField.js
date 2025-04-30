@@ -103,7 +103,6 @@ export default function RenderInputField({
             label={field.label}
             defaultValue={field.defaultValue}
             onChange={(e) => {
-              console.log('onChange', e.target.value)
               onChangeCallback(field.key, e.target.value)
             }}
             error={error}

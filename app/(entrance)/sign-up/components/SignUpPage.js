@@ -106,18 +106,25 @@ export const validateZip = (zip) => {
   return validZip.test(zip)
 }
 
-async function register(firstName, lastName, email, phone, zip, password) {
+async function register({
+  firstName,
+  lastName,
+  email,
+  phone,
+  zip,
+  password,
+  signUpMode,
+}) {
   try {
-    const payload = {
+    const resp = await clientFetch(apiRoutes.authentication.register, {
       firstName,
       lastName,
       email,
       phone,
       zip,
       password,
-    }
-
-    const resp = await clientFetch(apiRoutes.authentication.register, payload)
+      signUpMode,
+    })
     if (resp.status === 409) {
       return { exists: true }
     }
@@ -181,21 +188,18 @@ export default function SignUpPage() {
     setLoading(true)
 
     if (enableSubmit) {
-      const { user, exists, token } = await register(
-        facilitatedSignUpMode ? candidateFirstName : firstName,
-        facilitatedSignUpMode ? candidateLastName : lastName,
+      const { user, token } = await register({
+        firstName: facilitatedSignUpMode ? candidateFirstName : firstName,
+        lastName: facilitatedSignUpMode ? candidateLastName : lastName,
         email,
         phone,
         zip,
         password,
-      )
+        signUpMode,
+      })
 
       if (!user) {
-        errorSnackbar(
-          exists
-            ? `An account with this email (${email}) already exists`
-            : 'Error creating account',
-        )
+        errorSnackbar('Failed to create account')
         setLoading(false)
       }
 
