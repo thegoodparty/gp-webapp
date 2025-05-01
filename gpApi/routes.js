@@ -504,7 +504,7 @@ export const apiRoutes = {
       method: 'POST',
     },
     list: {
-      path: '/text-campaigns',
+      path: '/text-campaign/text-campaigns',
       method: 'GET',
     },
   },
