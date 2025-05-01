@@ -44,7 +44,7 @@ export default async function Page({ params }) {
     notFound()
   }
 
-  const { children, Races: races } = await fetchPlace({ slug: state })
+  const { counties, districts, others, children, Races: races } = await fetchPlace({ slug: state, categorizeChildren: true })
 
   const articleSlugs = [
     '8-things-to-know-before-running-for-local-office',
@@ -59,7 +59,8 @@ export default async function Page({ params }) {
 
   const childProps = {
     state,
-    childEntity: children,
+    categorizedChildren: {counties, districts, others},
+    children,
     races,
     articles,
   }
