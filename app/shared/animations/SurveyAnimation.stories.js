@@ -1,7 +1,7 @@
-
+import SurveyAnimation from './SurveyAnimation'
 export default {
   title: 'Animations/SurveyAnimation',
-  component: VoteAnimation,
+  component: SurveyAnimation,
   tags: ['autodocs'],
   args: {},
 }

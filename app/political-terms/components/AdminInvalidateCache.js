@@ -2,9 +2,9 @@
 import BlackButtonClient from '@shared/buttons/BlackButtonClient'
 import { getUserCookie } from 'helpers/cookieHelper'
 import { revalidatePage } from 'helpers/cacheHelper'
-import { alphabet } from './LayoutWithAlphabet'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { userIsAdmin } from 'helpers/userHelper'
+import { ALPHABET } from '@shared/utils/alphabet'
 
 export default function AdminInvalidateCache() {
   const user = getUserCookie(true)
@@ -16,7 +16,7 @@ export default function AdminInvalidateCache() {
 
   const handleInvalidate = async () => {
     successSnackbar('Invalidating letter pages')
-    alphabet.forEach(async (letter) => {
+    ALPHABET.forEach(async (letter) => {
       await revalidatePage(`/political-terms/${letter}`)
     })
   }

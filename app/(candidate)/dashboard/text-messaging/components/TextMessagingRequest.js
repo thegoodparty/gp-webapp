@@ -4,8 +4,10 @@ import H5 from '@shared/typography/H5'
 import Chip from '@shared/utils/Chip'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { Fragment } from 'react'
+import { useTenDLC } from 'app/shared/hooks/useTenDLC'
 
 export default function TextMessagingRequest({ request }) {
+  const [compliance] = useTenDLC()
   const {
     status,
     message,
@@ -59,7 +61,17 @@ export default function TextMessagingRequest({ request }) {
   return (
     <div className="p-4 border border-gray-200 rounded">
       <H3>{name}</H3>
-      <Chip className="mt-2 mb-4 bg-blue-100 text-blue-800" label={status} />
+      {compliance ? (
+        <Chip
+          className="mt-2 mb-4 bg-green-100 text-green-800"
+          label={status}
+        />
+      ) : (
+        <Chip
+          className="mt-2 mb-4 bg-red-100 text-red-800"
+          label="Blocked by 10 DLC Compliance"
+        />
+      )}
 
       {fields.map((field) => (
         <Body2 className="mb-1" key={field.label}>
@@ -71,7 +83,10 @@ export default function TextMessagingRequest({ request }) {
       {audienceFields.map((field) => (
         <Fragment key={field.label}>
           {field.value && (
-            <Body2 className="mb-1" key={field.label}>
+            <Body2
+              className="mb-1 mr-1 border-r border-gray-200 pr-2 inline-block"
+              key={field.label}
+            >
               {field.label}
             </Body2>
           )}

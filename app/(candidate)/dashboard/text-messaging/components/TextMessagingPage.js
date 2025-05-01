@@ -1,18 +1,21 @@
 'use client'
-import H1 from '@shared/typography/H1'
 import DashboardLayout from '../../shared/DashboardLayout'
 import { TextMessagingProvider } from 'app/shared/hooks/TextMessagingProvider'
-import TextMessagingRequests from './TextMessagingRequests'
+import NoCompliance from './NoCompliance'
+import { StyledAlert } from '@shared/alerts/StyledAlert'
+import { TenDLCProvider } from '@shared/hooks/TenDLCProvider'
 
 export default function TextMessagingPage(props) {
   return (
-    <TextMessagingProvider textMessaging={props.textMessaging}>
-      <DashboardLayout {...props} showAlert={false}>
-        <div className="mb-8">
-          <H1>Text Messaging</H1>
-        </div>
-        <TextMessagingRequests />
-      </DashboardLayout>
-    </TextMessagingProvider>
+    <TenDLCProvider compliance={props.compliance}>
+      <TextMessagingProvider textMessaging={props.textMessaging}>
+        <DashboardLayout {...props} showAlert={false}>
+          <StyledAlert severity="warning" className="flex items-center mb-4">
+            This is visible for admins only
+          </StyledAlert>
+          {!props.compliance && <NoCompliance />}
+        </DashboardLayout>
+      </TextMessagingProvider>
+    </TenDLCProvider>
   )
 }

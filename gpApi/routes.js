@@ -37,7 +37,7 @@ export const apiRoutes = {
       path: '/authentication/social-login/:socialProvider',
       method: 'POST',
     },
-    setSetPasswordEmail: {
+    sendSetPasswordEmail: {
       path: '/authentication/send-set-password-email',
       method: 'POST',
     },
@@ -504,7 +504,7 @@ export const apiRoutes = {
       method: 'POST',
     },
     list: {
-      path: '/text-campaigns',
+      path: '/text-campaign/text-campaigns',
       method: 'GET',
     },
   },
