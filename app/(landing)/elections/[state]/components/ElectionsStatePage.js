@@ -10,6 +10,7 @@ export default function ElectionsStatePage(props) {
   const {
     state,
     categorizedChildren: { counties = [], districts = [], others = [] },
+    children = [],
     races,
     articles,
   } = props
@@ -31,7 +32,16 @@ export default function ElectionsStatePage(props) {
         <div className="bg-primary-dark pt-1 pb-20 mt-10">
           <div className="max-w-screen-xl mx-auto mt-20">
             <div className="rounded-2xl bg-white px-8 py-10 space-y-16">
-  
+
+              {/* TODO: Remove when election-api is updated*/}
+              {children.length > 0 && (
+                <LinksSection
+                  entities={children}
+                  linkFunc={placeLink}
+                  title={`Explore elections in ${stateName}`}
+                />
+              )}
+
               {/* counties */}
               {counties.length > 0 && (
                 <LinksSection
