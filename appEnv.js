@@ -21,8 +21,7 @@ export const OLD_API_ROOT =
 
 export const ELECTION_API_ROOT =
   process.env.NEXT_PUBLIC_ELECTION_API_BASE ||
-  //'https://election-api-dev.goodparty.org',
-  'http://localhost:3000'
+  'https://election-api-dev.goodparty.org'
 
 export const API_VERSION_PREFIX = '/v1'
 
