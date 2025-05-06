@@ -13,8 +13,6 @@ import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions, candidates } = props
-  console.log('candidates listed: ')
-  console.dir(candidates)
   const { positionLevel, state, Place } = race
   let loc = Place?.name || ''
   if (!positionLevel || positionLevel?.toUpperCase() === PositionLevel.LOCAL) {

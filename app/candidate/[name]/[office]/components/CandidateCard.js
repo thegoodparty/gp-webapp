@@ -1,4 +1,3 @@
-// components/CandidateCard.tsx
 import Image from 'next/image'
 import { IoPersonSharp } from 'react-icons/io5'
 import {
