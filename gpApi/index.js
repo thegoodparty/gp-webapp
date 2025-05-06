@@ -51,23 +51,27 @@ const gpApi = {
       url: `${electionBase}places/most-elections`,
       method: 'GET',
     },
+    candidacies: {
+      url: `${electionBase}candidacies`,
+      method: 'GET',
+    }
   },
 
-  candidate: {
-    find: {
-      url: `${base}candidate`,
-      method: 'GET',
-    },
-    list: {
-      url: `${base}candidates`,
-      method: 'GET',
-    },
-    delete: {
-      url: `${base}candidate`,
-      method: 'DELETE',
-      withAuth: true, //admin
-    },
-  },
+  // candidate: {
+  //   find: {
+  //     url: `${base}candidate`,
+  //     method: 'GET',
+  //   },
+  //   list: {
+  //     url: `${base}candidates`,
+  //     method: 'GET',
+  //   },
+  //   delete: {
+  //     url: `${base}candidate`,
+  //     method: 'DELETE',
+  //     withAuth: true, //admin
+  //   },
+  // },
 }
 
 export default gpApi

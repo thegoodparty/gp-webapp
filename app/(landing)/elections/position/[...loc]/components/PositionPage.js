@@ -12,7 +12,9 @@ import VwoVariable from './VwoVariable'
 import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
 
 export default function PositionPage(props) {
-  const { race, otherRaces, articles, county, city, positions } = props
+  const { race, otherRaces, articles, county, city, positions, candidates } = props
+  console.log('candidates listed: ')
+  console.dir(candidates)
   const { positionLevel, state, Place } = race
   let loc = Place?.name || ''
   if (!positionLevel || positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
@@ -29,6 +31,13 @@ export default function PositionPage(props) {
       city ? `${city}/` : ''
     }${race.slug}`
   }
+
+  const candidateLink = (c) => `/candidate/${c.slug}`
+  const candidatesForLinks = candidates?.map((c) => ({
+     ...c,
+    name: `${c.firstName} ${c.lastName}`
+  }))
+
   race.loc = loc
 
   return (
@@ -36,6 +45,15 @@ export default function PositionPage(props) {
       <MaxWidth>
         <Hero {...race} />
         <PositionDetails race={race} positions={positions} />
+              {/* ---------- Candidates running in this race ---------- */}
+              {candidatesForLinks?.length > 0 && (
+          <LinksSection
+            title={`Candidates running for ${race.normalizedPositionName}`}
+            entities={candidatesForLinks}
+            linkFunc={candidateLink}
+          />
+        )}
+        {/* ------------------------------------------------------ */}
       </MaxWidth>
 
       <CtaBanner race={race} />

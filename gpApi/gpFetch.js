@@ -17,6 +17,8 @@ async function gpFetch(
   isFormData = false,
   nonJSON = false,
 ) {
+  console.log('Endpoint is defined as: ', endpoint)
+  console.log('Data is: ', data)
   let { url, method, withAuth, returnFullResponse, additionalRequestOptions } =
     endpoint
   if ((method === 'GET' || method === 'DELETE') && data) {

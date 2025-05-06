@@ -21,6 +21,19 @@ const fetchRace = async (raceSlug) => {
   return null
 }
 
+const fetchCandidates = async (raceSlug) => {
+  const api = gpApi.elections.candidacies
+  const payload = {
+    raceSlug
+  }
+
+  const res = await gpFetch(api, payload, 3600)
+  if (Array.isArray(res) && res.length > 0) {
+    return res
+  }
+  return null
+}
+
 const parseLoc = (loc) => {
   const state = loc[0]
   const positionSlug = loc[loc.length - 1]
@@ -72,6 +85,7 @@ export default async function Page({ params }) {
   }
 
   const race = await fetchRace(loc.join('/'))
+  const candidates = await fetchCandidates(loc.join('/'))
   if (!race) {
     const newSlug = `${loc[0]}/${loc[1]}-county/${loc[2]}`
     const newRace = await fetchRace(newSlug)
@@ -103,6 +117,7 @@ export default async function Page({ params }) {
     state,
     county,
     city,
+    candidates
   }
   return (
     <>

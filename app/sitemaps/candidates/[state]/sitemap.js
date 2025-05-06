@@ -12,9 +12,10 @@ import { flatStates } from 'helpers/statesHelper'
 import { APP_BASE } from 'appEnv'
 
 const fetchCandidates = async (state) => {
-  const api = gpApi.candidate.list
+  const api = gpApi.elections.candidacies
   const payload = {
     state,
+    columns: 'slug'
   }
 
   return await gpFetch(api, payload, 3600)
