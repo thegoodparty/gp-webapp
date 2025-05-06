@@ -7,6 +7,7 @@ import VwoScript from '@shared/scripts/VwoScript'
 import FullStoryScript from '@shared/scripts/FullStoryScript'
 import SegmentScript from '@shared/scripts/SegmentScript'
 import { APP_BASE, IS_PROD } from 'appEnv'
+import RouteTracker from '@shared/scripts/RouteTrackerScript'
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--outfit-font' })
 
@@ -77,6 +78,7 @@ const RootLayout = ({ children }) => (
       <FullStoryScript />
     </head>
     <body>
+      <RouteTracker />
       <PageWrapper>{children}</PageWrapper>
       <noscript>
         <iframe
