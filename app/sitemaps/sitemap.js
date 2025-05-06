@@ -1,4 +1,3 @@
-import { alphabet } from 'app/political-terms/components/LayoutWithAlphabet'
 import { faqArticleRoute } from '../../helpers/articleHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { APP_BASE } from 'appEnv'
@@ -6,6 +5,7 @@ import { unAuthFetch } from 'gpApi/unAuthFetch'
 import { fetchContentByType } from 'helpers/fetchHelper'
 import { fetchBlogArticlesList } from 'app/blog/shared/fetchBlogArticlesList'
 import { fetchSections } from 'app/blog/shared/fetchSections'
+import { ALPHABET } from '@shared/utils/alphabet'
 
 export const fetchFAQs = async () => {
   return await fetchContentByType('faqArticle')
@@ -91,7 +91,7 @@ export default async function sitemap() {
   } catch (e) {
     console.log('error at faqs SiteMapXML', e)
   }
-  alphabet.forEach((letter) => {
+  ALPHABET.forEach((letter) => {
     mainSitemap.push({
       url: `${APP_BASE}/political-terms/${letter}`,
       lastModified: now,

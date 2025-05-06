@@ -29,6 +29,7 @@ export default async function Page({ params, searchParams }) {
     pathname: '/dashboard/text-messaging',
     campaign,
     textMessaging,
+    compliance: false,
   }
 
   return <TextMessagingPage {...childProps} />

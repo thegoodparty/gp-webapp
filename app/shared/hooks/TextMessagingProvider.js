@@ -14,7 +14,6 @@ export function TextMessagingProvider({
   const refreshTextMessaging = async () => {
     try {
       const resp = await clientFetch(apiRoutes.textMessaging.list)
-
       setTextMessaging(
         resp?.status === 404 || resp.ok === false ? {} : resp.data,
       )
@@ -25,9 +24,7 @@ export function TextMessagingProvider({
   }
 
   return (
-    <TextMessagingContext.Provider
-      value={[textMessaging, refreshTextMessaging]}
-    >
+    <TextMessagingContext.Provider value={[textMessaging, refreshTextMessaging]}>
       {children}
     </TextMessagingContext.Provider>
   )
