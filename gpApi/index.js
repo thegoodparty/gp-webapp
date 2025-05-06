@@ -56,22 +56,6 @@ const gpApi = {
       method: 'GET',
     }
   },
-
-  // candidate: {
-  //   find: {
-  //     url: `${base}candidate`,
-  //     method: 'GET',
-  //   },
-  //   list: {
-  //     url: `${base}candidates`,
-  //     method: 'GET',
-  //   },
-  //   delete: {
-  //     url: `${base}candidate`,
-  //     method: 'DELETE',
-  //     withAuth: true, //admin
-  //   },
-  // },
 }
 
 export default gpApi
