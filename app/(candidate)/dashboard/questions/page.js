@@ -14,6 +14,8 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page({ params, searchParams }) {
   await candidateAccess()
   const { generate } = searchParams

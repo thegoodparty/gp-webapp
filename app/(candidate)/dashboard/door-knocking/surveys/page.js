@@ -3,6 +3,8 @@ import DoorKnockingSurveysPage from './components/DoorKnockingSurveysPage'
 import candidateAccess from '../../shared/candidateAccess'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
+
+export const dynamic = 'force-dynamic'
 async function fetchSurveys() {
   try {
     const resp = await serverFetch(apiRoutes.ecanvasser.surveys.list)

@@ -19,13 +19,11 @@ export default function RelatedArticles({ articles }) {
 
   function incrementPage() {
     const nextPage = currentPage < lastPage ? currentPage + 1 : lastPage
-
     setCurrentPage(nextPage)
   }
 
   function decrementPage() {
     const nextPage = currentPage > 0 ? currentPage - 1 : 0
-
     setCurrentPage(nextPage)
   }
 
@@ -36,17 +34,21 @@ export default function RelatedArticles({ articles }) {
       </MarketingH2>
       {articles
         .slice(startIndex, startIndex + PAGE_SIZE)
-        .map((article, index) => (
-          <ArticleCard
-            key={index}
-            title={article.title}
-            summary={article.summary}
-            imageUrl={`https:${article.mainImage.url}`}
-            imageAlt={article.mainImage.alt}
-            linkUrl={`/blog/article/${article.slug}`}
-            showReadMoreButton
-          />
-        ))}
+        .map((article, index) => {
+          if (!article?.mainImage?.url) return null
+
+          return (
+            <ArticleCard
+              key={index}
+              title={article.title || ''}
+              summary={article.summary || ''}
+              imageUrl={`https:${article.mainImage.url}`}
+              imageAlt={article.mainImage.alt || article.title || ''}
+              linkUrl={`/blog/article/${article.slug}`}
+              showReadMoreButton
+            />
+          )
+        })}
       {hasPages && (
         <div className="text-center lg:text-left col-span-1 lg:col-span-3">
           <IconButton
