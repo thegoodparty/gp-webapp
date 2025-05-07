@@ -1,7 +1,7 @@
 import Button from '@shared/buttons/Button'
 import MaxWidth from '@shared/layouts/MaxWidth'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
+import { electionApiRoutes } from 'gpApi/routes'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
 import { slugify } from 'helpers/articleHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 import Image from 'next/image'
@@ -9,11 +9,11 @@ import map from 'public/images/elections/map.png'
 
 async function fetchFeatured() {
   try {
-    const api = gpApi.elections.featuredCities
+    const api = electionApiRoutes.places.featuredCities.path
     const payload = {
       count: 3,
     }
-    return await gpFetch(api, payload, 3600)
+    return await unAuthFetch(api, payload, 3600)
   } catch (e) {
     console.error('error', e)
     return false

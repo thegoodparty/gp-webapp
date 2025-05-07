@@ -1,15 +1,16 @@
 import pageMetaData from 'helpers/metadataHelper'
 import CandidatePage from './components/CandidatePage'
-import gpApi from 'gpApi'
 import { permanentRedirect } from 'next/navigation'
 import CandidateSchema from './components/CandidateSchema'
 import slugify from 'slugify'
+import { electionApiRoutes } from 'gpApi/routes'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
 export const fetchCandidate = async ({slug, raceSlug, includeStances = false}) => {
-  const api = gpApi.elections.candidacies
+  const api = electionApiRoutes.candidacies.find.path
   const payload = {
     ...(slug && {slug}),
     ...(raceSlug && {raceSlug}),

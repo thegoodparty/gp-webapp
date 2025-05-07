@@ -509,3 +509,28 @@ export const apiRoutes = {
     },
   },
 }
+
+export const electionApiRoutes = {
+  places: {
+    find: {
+      path: '/places',
+      method: 'GET'
+    },
+    featuredCities: {
+      path: '/candidacies/most-elections',
+      method: 'GET',
+    }
+  },
+  races: {
+    find: {
+      path: '/races',
+      method: 'GET'
+    }
+  },
+  candidacies: {
+    find: {
+      path: '/candidacies',
+      method: 'GET',
+    },
+  }
+}

@@ -1,21 +1,20 @@
 import pageMetaData from 'helpers/metadataHelper'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 import { PositionLevel } from '../../shared/PositionLevel'
 import { unAuthFetch } from 'gpApi/unAuthFetch'
+import { electionApiRoutes } from 'gpApi/routes'
 
 const fetchRace = async (raceSlug) => {
-  const api = gpApi.elections.races
+  const api = electionApiRoutes.races.find.path
   const payload = {
     raceSlug,
     includePlace: true,
   }
 
-  const res = await gpFetch(api, payload, 3600)
+  const res = await unAuthFetch(api, payload, 3600)
   if (Array.isArray(res) && res.length > 0) {
     return res[0]
   }
@@ -23,7 +22,7 @@ const fetchRace = async (raceSlug) => {
 }
 
 const fetchCandidates = async (raceSlug) => {
-  const api = gpApi.elections.candidacies
+  const api = electionApiRoutes.candidacies.find.path
   const payload = {
     raceSlug
   }
