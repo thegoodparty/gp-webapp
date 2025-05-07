@@ -12,8 +12,7 @@ export const fetchFAQs = async () => {
 }
 
 export const fetchGlossaryByTitle = async () => {
-  const resp = await unAuthFetch(apiRoutes.content.glossaryBySlug.path)
-  return resp.data
+  return await unAuthFetch(apiRoutes.content.glossaryBySlug.path)
 }
 
 const now = new Date()
