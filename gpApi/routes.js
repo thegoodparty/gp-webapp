@@ -500,12 +500,20 @@ export const apiRoutes = {
   },
   textMessaging: {
     createProject: {
-      path: '/text-campaign/project',
+      path: '/text-campaigns',
       method: 'POST',
     },
     list: {
-      path: '/text-campaign/text-campaigns',
+      path: '/text-campaigns',
       method: 'GET',
+    },
+    submitCompliance: {
+      path: '/text-campaigns/compliance',
+      method: 'POST',
+    },
+    submitCompliancePin: {
+      path: '/text-campaigns/compliance/pin',
+      method: 'POST',
     },
   },
 }
