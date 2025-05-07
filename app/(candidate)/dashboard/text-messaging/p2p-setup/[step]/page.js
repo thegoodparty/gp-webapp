@@ -4,6 +4,8 @@ import P2pSetupPage from './components/P2pSetupPage'
 import { adminAccessOnly } from 'helpers/permissionHelper'
 import { getServerUser } from 'helpers/userServerHelper'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = pageMetaData({
   title: 'P2P Setup  | GoodParty.org',
   description: 'P2P Setup',

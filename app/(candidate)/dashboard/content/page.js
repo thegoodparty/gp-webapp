@@ -7,6 +7,8 @@ import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign
 import { getServerUser } from 'helpers/userServerHelper'
 import { serverLoadCandidatePosition } from 'app/(candidate)/dashboard/campaign-details/components/issues/serverIssuesUtils'
 
+export const dynamic = 'force-dynamic'
+
 const meta = pageMetaData({
   title: 'Campaign Content | GoodParty.org',
   description: 'Campaign Content',
