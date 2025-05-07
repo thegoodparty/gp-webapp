@@ -29,7 +29,6 @@ export default async function BlogArticlePage({ article }) {
     mainImage,
     publishDate,
     updateDate,
-    readingTime,
     title,
     tags,
     keyInformation,
@@ -58,7 +57,7 @@ export default async function BlogArticlePage({ article }) {
           delimiter="chevron"
           wrapText={true}
         />
-        {mainImage && (
+        {mainImage?.url && (
           <div
             className="relative min-h-[270px] w-full my-8"
             data-testid="articleHeroImage"
@@ -69,7 +68,7 @@ export default async function BlogArticlePage({ article }) {
                 objectFit: 'cover',
                 objectPosition: 'center',
               }}
-              src={`https:${mainImage?.url}`}
+              src={`https:${mainImage.url}`}
               alt={mainImage.alt}
               sizes="100vw"
               fill

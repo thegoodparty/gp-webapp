@@ -25,10 +25,14 @@ export default function ArticleSchema({ article }) {
         wordCount: readingTime?.words,
         author: {
           name: author?.fields?.name,
-          image: `https:${author?.fields?.image?.url}`,
+          image: author?.fields?.image?.url
+            ? `https:${author?.fields?.image?.url}`
+            : '',
           description: author?.fields?.summary,
         },
-        image: `https:${mainImage?.url}`,
+        image: mainImage?.url
+          ? `https:${mainImage.url}`
+          : 'https://assets.goodparty.org/gp-share.png',
         headline: title,
         name: title,
         url: `https://goodparty.org/blog/article/${slug}`,
