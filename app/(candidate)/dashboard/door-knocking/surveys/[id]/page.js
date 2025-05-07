@@ -4,6 +4,8 @@ import candidateAccess from '../../../shared/candidateAccess'
 import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 
+export const dynamic = 'force-dynamic'
+
 async function fetchSurvey(id) {
   try {
     const resp = await serverFetch(apiRoutes.ecanvasser.surveys.find, {

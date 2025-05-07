@@ -36,6 +36,7 @@ export default async function BlogArticlePage({ article }) {
     relatedArticles,
     references,
   } = article
+
   const sectionSlug = section?.fields?.slug
   const sectionTitle = section?.fields?.title
   const breadcrumbs = [
@@ -86,12 +87,18 @@ export default async function BlogArticlePage({ article }) {
           {title}
         </MarketingH2>
         <div className="md:flex items-center justify-between">
-          <BlogAuthor
-            imageUrl={author?.fields?.image?.fields?.file?.url}
-            name={author?.fields?.name}
-            publishDate={publishDate}
-            updateDate={updateDate}
-          />
+          {author?.fields?.name && (
+            <BlogAuthor
+              imageUrl={
+                author?.fields?.image?.fields?.file?.url
+                  ? `https:${author.fields.image.fields.file.url}`
+                  : null
+              }
+              name={author.fields.name}
+              publishDate={publishDate}
+              updateDate={updateDate}
+            />
+          )}
           <ShareBlog />
         </div>
         <div className="border-y border-gray-200 py-8">
@@ -151,11 +158,17 @@ export default async function BlogArticlePage({ article }) {
             <ScrollToTop />
           </div>
         </div>
-        <BlogAuthorFooter
-          imageUrl={author?.fields?.image?.fields?.file?.url}
-          name={author?.fields?.name}
-          summary={author?.fields?.summary}
-        />
+        {author?.fields?.name && (
+          <BlogAuthorFooter
+            imageUrl={
+              author?.fields?.image?.fields?.file?.url
+                ? `https:${author.fields.image.fields.file.url}`
+                : null
+            }
+            name={author.fields.name}
+            summary={author?.fields?.summary || ''}
+          />
+        )}
       </article>
       {relatedArticles && <RelatedArticles articles={relatedArticles} />}
     </>
