@@ -88,8 +88,8 @@ export default async function BlogArticlePage({ article }) {
         </MarketingH2>
         <div className="md:flex items-center justify-between">
           <BlogAuthor
-            imageUrl={author.fields.image?.url}
-            name={author.fields.name}
+            imageUrl={author?.fields?.image?.fields?.file?.url}
+            name={author?.fields?.name}
             publishDate={publishDate}
             updateDate={updateDate}
           />
