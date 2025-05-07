@@ -40,7 +40,7 @@ export async function ensureSession() {
   if (!fs.existsSync(screenshotDir)) {
     fs.mkdirSync(screenshotDir, { recursive: true });
   }
-  
+
   // Take screenshot after successful login, when we're sure the page is stable
   const screenshotPath = path.resolve(screenshotDir, 'account-creation.png');
   await page.screenshot({ path: screenshotPath, fullPage: true });
@@ -83,15 +83,16 @@ export async function ensureAdminSession() {
 
     await loginAccount(page, adminEmail, adminPassword);
     console.log(`Marking ${testAccountFirstName} ${testAccountLastName} test account as verified...`);
-    
+
     // Ensure URL is properly constructed and encoded
     const victoryPathUrl = `${baseUrl}/admin/victory-path/${encodeURIComponent(testAccountFirstName)}-${encodeURIComponent(testAccountLastName)}`;
     console.log(`Navigating to: ${victoryPathUrl}`);
-    
+
     await page.goto(victoryPathUrl);
     await documentReady(page);
-    
+
     await page.getByRole('button', { name: '\u200b', exact: true }).nth(1).click();
+    await page.getByRole('option', { name: 'Yes' }).isVisible();
     await page.getByRole('option', { name: 'Yes' }).click();
     await page.getByRole('button', { name: 'Save' }).click();
     await documentReady(page);
