@@ -33,6 +33,4 @@ export const APP_BASE = IS_LOCAL
         : process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
     }`
 
-export const NEXT_PUBLIC_SEGMENT_WRITE_KEY = IS_PROD
-  ? "FkKZtkOmjiezDnlSV5aK4lE0eBDnrPTd"
-  : "4qKrvy4yiQsHrVT6eTheaYrrCClLDCIN"
+export const NEXT_PUBLIC_SEGMENT_WRITE_KEY = process.env.NEXT_PUBLIC_SEGMENT_WRITE_KEY
