@@ -38,24 +38,6 @@ const gpApi = {
       withAuth: true,
     },
   },
-  elections: {
-    places: {
-      url: `${electionBase}places`,
-      method: 'GET',
-    },
-    races: {
-      url: `${electionBase}races`,
-      method: 'GET',
-    },
-    featuredCities: {
-      url: `${electionBase}places/most-elections`,
-      method: 'GET',
-    },
-    candidacies: {
-      url: `${electionBase}candidacies`,
-      method: 'GET',
-    }
-  },
 }
 
 export default gpApi
