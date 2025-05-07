@@ -153,9 +153,9 @@ export default async function BlogArticlePage({ article }) {
           </div>
         </div>
         <BlogAuthorFooter
-          imageUrl={author.fields.image?.url}
-          name={author.fields.name}
-          summary={author.fields.summary}
+          imageUrl={author?.fields?.image?.fields?.file?.url}
+          name={author?.fields?.name}
+          summary={author?.fields?.summary}
         />
       </article>
       {relatedArticles && <RelatedArticles articles={relatedArticles} />}
