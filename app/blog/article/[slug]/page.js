@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
     description: content.summary,
     image: content?.mainImage?.url
       ? `https:${content.mainImage.url}`
-      : 'https://goodparty.org/images/goodparty-logo.png',
+      : 'https://assets.goodparty.org/gp-share.png',
     slug: `/blog/article/${slug}`,
   })
 }
