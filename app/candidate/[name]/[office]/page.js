@@ -1,7 +1,6 @@
 import pageMetaData from 'helpers/metadataHelper'
 import CandidatePage from './components/CandidatePage'
 import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { permanentRedirect } from 'next/navigation'
 import CandidateSchema from './components/CandidateSchema'
 import slugify from 'slugify'
@@ -16,7 +15,7 @@ export const fetchCandidate = async ({slug, raceSlug, includeStances = false}) =
     ...(raceSlug && {raceSlug}),
     includeStances,
   }
-  const res = await gpFetch(api, payload, 3600)
+  const res = await unAuthFetch(api, payload, 3600)
 
   if (Array.isArray(res)) {
     return res[0]

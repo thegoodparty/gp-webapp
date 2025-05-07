@@ -61,7 +61,7 @@ export default function CandidateCard({ candidate }) {
     firstName,
     lastName,
     party,
-    office,
+    positionName,
     placeName,
     state,
     image,
@@ -106,7 +106,7 @@ export default function CandidateCard({ candidate }) {
 
           <div className="flex mb-3 items-center">
             <IoPersonSharp className="text-secondary-light" size={20} />
-            <H5 className="ml-2">Running for {office}</H5>
+            <H5 className="ml-2">Running for {positionName}</H5>
           </div>
 
           <div className="flex items-center mb-8">

@@ -6,6 +6,7 @@ import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 import { PositionLevel } from '../../shared/PositionLevel'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
 
 const fetchRace = async (raceSlug) => {
   const api = gpApi.elections.races
@@ -27,7 +28,7 @@ const fetchCandidates = async (raceSlug) => {
     raceSlug
   }
 
-  const res = await gpFetch(api, payload, 3600)
+  const res = await unAuthFetch(api, payload, 3600)
   if (Array.isArray(res) && res.length > 0) {
     return res
   }

@@ -46,7 +46,7 @@ export default function PositionPage(props) {
               {/* ---------- Candidates running in this race ---------- */}
               {candidatesForLinks?.length > 0 && (
           <LinksSection
-            title={`Candidates running for ${race.normalizedPositionName}`}
+            title={`Independent Candidates running for ${race.normalizedPositionName}`}
             entities={candidatesForLinks}
             linkFunc={candidateLink}
           />
