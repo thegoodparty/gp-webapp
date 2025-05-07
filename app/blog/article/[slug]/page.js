@@ -31,7 +31,9 @@ export async function generateMetadata({ params }) {
   return pageMetaData({
     title: `${content?.title} | GoodParty.org`,
     description: content.summary,
-    image: content.mainImage && `https:${content?.mainImage?.url}`,
+    image: content?.mainImage?.url
+      ? `https:${content.mainImage.url}`
+      : 'https://assets.goodparty.org/gp-share.png',
     slug: `/blog/article/${slug}`,
   })
 }

@@ -10,6 +10,8 @@ async function fetchTextMessaging() {
   return resp.data
 }
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = pageMetaData({
   title: 'P2P Setup  | GoodParty.org',
   description: 'P2P Setup',
