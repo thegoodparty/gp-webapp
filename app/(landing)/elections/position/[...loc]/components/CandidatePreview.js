@@ -1,3 +1,4 @@
+import Button from '@shared/buttons/Button'
 import H3 from '@shared/typography/H3'
 import Overline from '@shared/typography/Overline'
 import Image from 'next/image'
@@ -30,6 +31,9 @@ export default function CandidatePreview({ candidate }) {
           {firstName} {lastName}
         </H3>
         <Overline className="mt-1"> {party}</Overline>
+        <Button color="secondary" className="mt-8 w-full">
+          Learn more about {firstName} {lastName}
+        </Button>
       </div>
     </div>
   )
