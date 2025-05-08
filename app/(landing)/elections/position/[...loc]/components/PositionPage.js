@@ -10,6 +10,9 @@ import Guides from 'app/(landing)/elections/shared/Guides'
 import Explore from './Explore'
 import VwoVariable from './VwoVariable'
 import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
+import CandidateCard from 'app/candidate/[name]/[office]/components/CandidateCard'
+import Link from 'next/link'
+import H3 from '@shared/typography/H3'
 
 export default function PositionPage(props) {
   const { race, otherRaces, articles, county, city, positions, candidates } = props
@@ -31,10 +34,10 @@ export default function PositionPage(props) {
   }
 
   const candidateLink = (c) => `/candidate/${c.slug}`
-  const candidatesForLinks = candidates?.map((c) => ({
-     ...c,
-    name: `${c.firstName} ${c.lastName}`
-  }))
+  // const candidatesForLinks = candidates?.map((c) => ({
+  //    ...c,
+  //   name: `${c.firstName} ${c.lastName}`
+  // }))
 
   race.loc = loc
 
@@ -43,13 +46,22 @@ export default function PositionPage(props) {
       <MaxWidth>
         <Hero {...race} />
         <PositionDetails race={race} positions={positions} />
-              {/* ---------- Candidates running in this race ---------- */}
-              {candidatesForLinks?.length > 0 && (
-          <LinksSection
-            title={`Independent Candidates running for ${race.normalizedPositionName}`}
-            entities={candidatesForLinks}
-            linkFunc={candidateLink}
-          />
+        {/* ---------- Candidates running in this race ---------- */}
+        {candidates?.length > 0 && (
+          <section className="my-20">
+            <H3 className="mb-8">
+              Independent Candidates running for {race.normalizedPositionName}
+            </H3>
+
+            {/* grid → max 3 per row */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {candidates.map((c) => (
+                <Link key={c.slug} href={candidateLink(c)} className="block">
+                  <CandidateCard candidate={c} variant={'grid'} />
+                </Link>
+              ))}
+            </div>
+          </section>
         )}
         {/* ------------------------------------------------------ */}
       </MaxWidth>

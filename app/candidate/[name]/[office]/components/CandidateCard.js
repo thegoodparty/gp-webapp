@@ -22,7 +22,8 @@ import TealButton from './TealButton'
 import StickyCard from './StickyCard'
 import CTA from './CTA'
 
-function mapSocialIcon(type) {
+/* helpers */
+const mapSocialIcon = (type) => {
   switch (type) {
     case 'twitter':
       return <FaXTwitter size={20} />
@@ -39,7 +40,7 @@ function mapSocialIcon(type) {
   }
 }
 
-function detectSocialType(url) {
+const detectSocialType = (url) => {
   if (url.includes('twitter.com')) return 'twitter'
   if (url.includes('facebook.com')) return 'facebook'
   if (url.includes('instagram.com')) return 'instagram'
@@ -48,15 +49,16 @@ function detectSocialType(url) {
   return 'website'
 }
 
-function prettyUrl(url) {
+const prettyUrl = (url) => {
   try {
-    return new URL(url).hostname.replace(/^www\./, '') // e.g. linkedin.com
+    return new URL(url).hostname.replace(/^www\./, '')
   } catch {
     return url
   }
 }
 
-export default function CandidateCard({ candidate }) {
+/* component */
+export default function CandidateCard({ candidate, variant = 'profile' }) {
   const {
     firstName,
     lastName,
@@ -69,14 +71,31 @@ export default function CandidateCard({ candidate }) {
     email,
   } = candidate
 
-  const partyName = party === 'Independent' ? 'Non-Partisan Candidate' : ''
+  const partyName =
+    party === 'Independent' || party === 'Nonpartisan'
+      ? 'Non-Partisan Candidate'
+      : ''
+
+  const Wrapper =
+    variant === 'profile'
+      ? ({ children }) => <StickyCard>{children}</StickyCard>
+      : ({ children }) => <>{children}</>
 
   return (
-    <div className="mb-4 lg:w-[400px] lg:mr-4 pt-12 md:pt-0">
-      <div className="lg:w-[400px]">&nbsp;</div>
-      <StickyCard>
-        <div className="mb-4 lg:w-[400px] bg-primary-dark p-6 rounded-2xl border border-gray-700">
-          <div className="flex justify-between">
+    <div
+      className={`mb-6 ${
+        variant === 'profile' ? 'lg:w-[400px] pt-12 md:pt-0' : ''
+      }`}
+    >
+      {variant === 'profile' && <div className="lg:w-[400px]" />}
+
+      <Wrapper>
+        <div
+          className={`bg-primary-dark p-6 rounded-2xl border border-gray-700
+          ${variant === 'grid' ? 'text-white h-full flex flex-col' : ''}`}
+        >
+          {/* head-shot */}
+          <div className="flex justify-between mb-4">
             {image ? (
               <div className="bg-primary inline-block border border-white rounded-2xl relative w-28 h-28">
                 <Image
@@ -85,7 +104,7 @@ export default function CandidateCard({ candidate }) {
                   alt={`${firstName} ${lastName}`}
                   priority
                   unoptimized
-                  className="rounded-2xl w-28 h-28 object-cover object-center"
+                  className="rounded-2xl object-cover object-center"
                 />
               </div>
             ) : (
@@ -94,6 +113,7 @@ export default function CandidateCard({ candidate }) {
               </div>
             )}
           </div>
+
           <Overline className="my-4">{partyName}</Overline>
           <H1 className="mb-4">
             {firstName} {lastName}
@@ -117,7 +137,8 @@ export default function CandidateCard({ candidate }) {
             </H5>
           </div>
 
-          {email || urls.length > 0 ? (
+          {/* social / email — skip in grid view */}
+          {variant === 'profile' && (email || urls.length > 0) && (
             <ul className="mb-8 space-y-2">
               {email && (
                 <li>
@@ -148,9 +169,10 @@ export default function CandidateCard({ candidate }) {
                 )
               })}
             </ul>
-          ) : null}
+          )}
 
-          <CTA id="candidate-card-cta">
+          {/* CTA */}
+          <CTA id="candidate-card-cta" className="mt-auto">
             <TealButton>
               <div className="flex items-center justify-center">
                 <span className="mr-1">Access Voter Data &amp; Tools</span>
@@ -159,6 +181,7 @@ export default function CandidateCard({ candidate }) {
             </TealButton>
           </CTA>
 
+          {/* footer */}
           <div className="mt-8 flex border border-white p-2 rounded-lg">
             <MdVolunteerActivism size={30} />
             <Body2 className="ml-2">
@@ -167,7 +190,7 @@ export default function CandidateCard({ candidate }) {
             </Body2>
           </div>
         </div>
-      </StickyCard>
+      </Wrapper>
     </div>
   )
 }
