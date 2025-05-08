@@ -1,6 +1,5 @@
 'use client'
 import Button from '@shared/buttons/Button'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
 import Paper from '@shared/utils/Paper'
@@ -8,7 +7,6 @@ import {
   EIN_PATTERN_FULL,
   EinCheckInput,
 } from 'app/(candidate)/dashboard/pro-sign-up/committee-check/components/EinCheckInput'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -16,59 +14,53 @@ import { StyledAlert } from '@shared/alerts/StyledAlert'
 import { BiLinkExternal } from 'react-icons/bi'
 import Body2 from '@shared/typography/Body2'
 import TextField from '@shared/inputs/TextField'
-import { useUser } from '@shared/hooks/useUser'
-import { getUserFullName } from '@shared/utils/getUserFullName'
+import { useComplianceForm } from './ComplianceFormContext'
 
 export default function EINStep() {
-  const [campaign] = useCampaign()
-  const [user] = useUser()
-  const [einNumber, setEinNumber] = useState(campaign?.details?.einNumber)
-  const [einName, setEinName] = useState(campaign?.details?.einName || '')
-  const [einAddress, setEinAddress] = useState(
-    campaign?.details?.einAddress || '',
-  )
-  const [validatedEin, setValidatedEin] = useState(
-    EIN_PATTERN_FULL.test(campaign?.details?.einNumber) || null,
-  )
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [complianceForm, setComplianceForm] = useComplianceForm()
+
+  const einNumber = complianceForm?.ein
+  const einName = complianceForm?.name
+  const einAddress = complianceForm?.address
+
+  const [validatedEin, setValidatedEin] = useState(
+    EIN_PATTERN_FULL.test(einNumber) || null,
+  )
 
   useEffect(() => {
-    const campaignDetails = campaign?.details
-    const currentEinNumber = campaignDetails?.einNumber
-    setEinNumber(campaignDetails?.einNumber)
-    setEinName(campaignDetails?.einName || getUserFullName(user))
-    setEinAddress(campaignDetails?.einAddress)
-    currentEinNumber &&
-      setValidatedEin(EIN_PATTERN_FULL.test(currentEinNumber) || null)
-  }, [campaign?.details, user])
+    // TODO: is this redundant?
+    einNumber && setValidatedEin(EIN_PATTERN_FULL.test(einNumber) || null)
+  }, [einNumber])
 
   const handleEinChange = (value) => {
-    setEinNumber(value)
+    setComplianceForm((current) => ({
+      ...current,
+      ein: value,
+    }))
     setValidatedEin(EIN_PATTERN_FULL.test(value) || null)
   }
 
+  const handleAddressChange = (value) => {
+    setComplianceForm((current) => ({
+      ...current,
+      address: value,
+    }))
+  }
+
+  const handleNameChange = (value) => {
+    setComplianceForm((current) => ({
+      ...current,
+      name: value,
+    }))
+  }
+
   const handleNext = async () => {
-    setLoading(true)
-    await updateCampaign([
-      {
-        key: 'details.einNumber',
-        value: einNumber,
-      },
-      {
-        key: 'details.einName',
-        value: einName,
-      },
-      {
-        key: 'details.einAddress',
-        value: einAddress,
-      },
-    ])
     router.push('/dashboard/text-messaging/p2p-setup/website')
   }
 
   const canSubmit =
-    !loading && einNumber && einNumber.length === 10 && einName && einAddress
+    einNumber && einNumber.length === 10 && einName && einAddress
 
   return (
     <>
@@ -92,7 +84,7 @@ export default function EINStep() {
             <TextField
               label="Name (Should be the same as the EIN name)"
               value={einName}
-              onChange={(e) => setEinName(e.target.value)}
+              onChange={(e) => handleNameChange(e.target.value)}
               fullWidth
               required
               name="Name"
@@ -102,7 +94,7 @@ export default function EINStep() {
             <TextField
               label="Address (Should be the same as the EIN address)"
               value={einAddress}
-              onChange={(e) => setEinAddress(e.target.value)}
+              onChange={(e) => handleAddressChange(e.target.value)}
               fullWidth
               required
               name="Address"
@@ -130,7 +122,7 @@ export default function EINStep() {
             </Button>
           </Link>
           <Button onClick={handleNext} disabled={!canSubmit} color="secondary">
-            {loading ? 'Loading...' : 'Next'}
+            Next
           </Button>
         </div>
       </Paper>

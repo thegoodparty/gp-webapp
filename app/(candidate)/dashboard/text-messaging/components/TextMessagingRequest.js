@@ -4,10 +4,13 @@ import H5 from '@shared/typography/H5'
 import Chip from '@shared/utils/Chip'
 import { dateUsHelper } from 'helpers/dateHelper'
 import { Fragment } from 'react'
-import { useTenDLC } from 'app/shared/hooks/useTenDLC'
+import { useCampaign } from 'app/shared/hooks/useCampaign'
+import { COMPLIANCE_STATUSES } from './TextMessagingPage'
 
 export default function TextMessagingRequest({ request }) {
-  const [compliance] = useTenDLC()
+  const [campaign] = useCampaign()
+  const complianceStatus = campaign?.data?.tcrComplianceInfo?.status
+
   const {
     status,
     message,
@@ -61,7 +64,7 @@ export default function TextMessagingRequest({ request }) {
   return (
     <div className="p-4 border border-gray-200 rounded">
       <H3>{name}</H3>
-      {compliance ? (
+      {complianceStatus === COMPLIANCE_STATUSES.approved ? (
         <Chip
           className="mt-2 mb-4 bg-green-100 text-green-800"
           label={status}
