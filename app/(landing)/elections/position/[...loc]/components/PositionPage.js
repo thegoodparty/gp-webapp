@@ -10,12 +10,13 @@ import Guides from 'app/(landing)/elections/shared/Guides'
 import Explore from './Explore'
 import VwoVariable from './VwoVariable'
 import { PositionLevel } from 'app/(landing)/elections/shared/PositionLevel'
-import CandidateCard from 'app/candidate/[name]/[office]/components/CandidateCard'
 import Link from 'next/link'
 import H3 from '@shared/typography/H3'
+import CandidatePreview from './CandidatePreview'
 
 export default function PositionPage(props) {
-  const { race, otherRaces, articles, county, city, positions, candidates } = props
+  const { race, otherRaces, articles, county, city, positions, candidates } =
+    props
   const { positionLevel, state, Place } = race
   let loc = Place?.name || ''
   if (!positionLevel || positionLevel?.toUpperCase() === PositionLevel.LOCAL) {
@@ -56,8 +57,12 @@ export default function PositionPage(props) {
             {/* grid → max 3 per row */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {candidates.map((c) => (
-                <Link key={c.slug} href={candidateLink(c)} className="block">
-                  <CandidateCard candidate={c} variant={'grid'} />
+                <Link
+                  key={c.slug}
+                  href={candidateLink(c)}
+                  className="block h-full"
+                >
+                  <CandidatePreview candidate={c} />
                 </Link>
               ))}
             </div>
