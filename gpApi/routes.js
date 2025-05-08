@@ -80,8 +80,6 @@ export const apiRoutes = {
   },
   campaign: {
     pathToVictory: {
-      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
-      // this is just a placeholder for testing with
       create: {
         path: '/campaigns/mine/path-to-victory',
         method: 'POST',
