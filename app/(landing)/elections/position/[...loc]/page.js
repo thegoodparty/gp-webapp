@@ -1,22 +1,35 @@
 import pageMetaData from 'helpers/metadataHelper'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { notFound, permanentRedirect } from 'next/navigation'
 import PositionPage from './components/PositionPage'
 import PositionSchema from './components/PositionSchema'
 import { fetchArticle } from 'app/blog/article/[slug]/page'
 import { PositionLevel } from '../../shared/PositionLevel'
+import { unAuthFetch } from 'gpApi/unAuthFetch'
+import { electionApiRoutes } from 'gpApi/routes'
 
 const fetchRace = async (raceSlug) => {
-  const api = gpApi.elections.races
+  const api = electionApiRoutes.races.find.path
   const payload = {
     raceSlug,
     includePlace: true,
   }
 
-  const res = await gpFetch(api, payload, 3600)
+  const res = await unAuthFetch(api, payload, 3600)
   if (Array.isArray(res) && res.length > 0) {
     return res[0]
+  }
+  return null
+}
+
+const fetchCandidates = async (raceSlug) => {
+  const api = electionApiRoutes.candidacies.find.path
+  const payload = {
+    raceSlug
+  }
+
+  const res = await unAuthFetch(api, payload, 3600)
+  if (Array.isArray(res) && res.length > 0) {
+    return res
   }
   return null
 }
@@ -72,6 +85,7 @@ export default async function Page({ params }) {
   }
 
   const race = await fetchRace(loc.join('/'))
+  const candidates = await fetchCandidates(loc.join('/'))
   if (!race) {
     const newSlug = `${loc[0]}/${loc[1]}-county/${loc[2]}`
     const newRace = await fetchRace(newSlug)
@@ -103,6 +117,7 @@ export default async function Page({ params }) {
     state,
     county,
     city,
+    candidates
   }
   return (
     <>
