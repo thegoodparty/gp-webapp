@@ -1,5 +1,5 @@
 import { electionApiRoutes } from 'gpApi/routes'
-import { unAuthFetch } from 'gpApi/unAuthFetch'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 
 const fetchPlace = async ({
   slug,
@@ -17,7 +17,7 @@ const fetchPlace = async ({
     includeParent,
     categorizeChildren,
   }
-  const res = await unAuthFetch(api, payload, 3600)
+  const res = await unAuthElectionFetch(api, payload, 3600)
   if (Array.isArray(res)) {
     return res[0]
   }

@@ -4,7 +4,7 @@ import { permanentRedirect } from 'next/navigation'
 import CandidateSchema from './components/CandidateSchema'
 import slugify from 'slugify'
 import { electionApiRoutes } from 'gpApi/routes'
-import { unAuthFetch } from 'gpApi/unAuthFetch'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
@@ -16,7 +16,7 @@ export const fetchCandidate = async ({slug, raceSlug, includeStances = false}) =
     ...(raceSlug && {raceSlug}),
     includeStances,
   }
-  const res = await unAuthFetch(api, payload, 3600)
+  const res = await unAuthElectionFetch(api, payload, 3600)
 
   if (Array.isArray(res)) {
     return res[0]

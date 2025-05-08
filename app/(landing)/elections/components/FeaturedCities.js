@@ -1,7 +1,7 @@
 import Button from '@shared/buttons/Button'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { electionApiRoutes } from 'gpApi/routes'
-import { unAuthFetch } from 'gpApi/unAuthFetch'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 import { slugify } from 'helpers/articleHelper'
 import { numberFormatter } from 'helpers/numberHelper'
 import Image from 'next/image'
@@ -13,7 +13,7 @@ async function fetchFeatured() {
     const payload = {
       count: 3,
     }
-    return await unAuthFetch(api, payload, 3600)
+    return await unAuthElectionFetch(api, payload, 3600)
   } catch (e) {
     console.error('error', e)
     return false
