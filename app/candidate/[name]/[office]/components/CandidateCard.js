@@ -114,30 +114,43 @@ export default function CandidateCard({ candidate, variant = 'profile' }) {
             )}
           </div>
 
-          <Overline className="my-4">{partyName}</Overline>
+          {/* Non-partisan tag — profile only */}
+          {variant === 'profile' && (
+            <Overline className="my-4">{partyName}</Overline>
+          )}
+
           <H1 className="mb-4">
             {firstName} {lastName}
           </H1>
 
-          <div className="flex mb-3 items-center">
-            <MdStars className="text-secondary-light" size={20} />
-            <H5 className="ml-2">{party}</H5>
-          </div>
+          {/* Party line — profile only */}
+          {variant === 'profile' && (
+            <div className="flex mb-3 items-center">
+              <MdStars className="text-secondary-light" size={20} />
+              <H5 className="ml-2">{party}</H5>
+            </div>
+          )}
 
-          <div className="flex mb-3 items-center">
-            <IoPersonSharp className="text-secondary-light" size={20} />
-            <H5 className="ml-2">Running for {positionName}</H5>
-          </div>
+          {/* Position line — profile only */}
+          {variant === 'profile' && (
+            <div className="flex mb-3 items-center">
+              <IoPersonSharp className="text-secondary-light" size={20} />
+              <H5 className="ml-2">Running for {positionName}</H5>
+            </div>
+          )}
 
-          <div className="flex items-center mb-8">
-            <FaMapMarkerAlt className="text-secondary-light" size={20} />
-            <H5 className="ml-2">
-              {placeName ? `${placeName}, ` : ''}
-              {state}
-            </H5>
-          </div>
+          {/* Location — profile only */}
+          {variant === 'profile' && (
+            <div className="flex items-center mb-8">
+              <FaMapMarkerAlt className="text-secondary-light" size={20} />
+              <H5 className="ml-2">
+                {placeName ? `${placeName}, ` : ''}
+                {state}
+              </H5>
+            </div>
+          )}
 
-          {/* social / email — skip in grid view */}
+          {/* Social / email — profile only */}
           {variant === 'profile' && (email || urls.length > 0) && (
             <ul className="mb-8 space-y-2">
               {email && (
@@ -171,24 +184,28 @@ export default function CandidateCard({ candidate, variant = 'profile' }) {
             </ul>
           )}
 
-          {/* CTA */}
-          <CTA id="candidate-card-cta" className="mt-auto">
-            <TealButton>
-              <div className="flex items-center justify-center">
-                <span className="mr-1">Access Voter Data &amp; Tools</span>
-                <FaArrowRight />
-              </div>
-            </TealButton>
-          </CTA>
+          {/* CTA — profile only */}
+          {variant === 'profile' && (
+            <CTA id="candidate-card-cta" className="mt-auto">
+              <TealButton>
+                <div className="flex items-center justify-center">
+                  <span className="mr-1">Access Voter Data &amp; Tools</span>
+                  <FaArrowRight />
+                </div>
+              </TealButton>
+            </CTA>
+          )}
 
-          {/* footer */}
-          <div className="mt-8 flex border border-white p-2 rounded-lg">
-            <MdVolunteerActivism size={30} />
-            <Body2 className="ml-2">
-              <strong>GoodParty.org</strong> helps non-partisan and independent
-              candidates win their elections.
-            </Body2>
-          </div>
+          {/* Footer — profile only */}
+          {variant === 'profile' && (
+            <div className="mt-8 flex border border-white p-2 rounded-lg">
+              <MdVolunteerActivism size={30} />
+              <Body2 className="ml-2">
+                <strong>GoodParty.org</strong> helps non-partisan and independent
+                candidates win their elections.
+              </Body2>
+            </div>
+          )}
         </div>
       </Wrapper>
     </div>
