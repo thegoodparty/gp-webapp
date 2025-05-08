@@ -14,6 +14,8 @@ export const COMPLIANCE_STATUSES = {
   approved: 'approved',
   /** Rejected */
   rejected: 'rejected',
+  /** Error */
+  error: 'error',
 }
 
 export default function TextMessagingPage({

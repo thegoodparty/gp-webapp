@@ -10,7 +10,10 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useComplianceForm } from './ComplianceFormContext'
+import {
+  useComplianceForm,
+  clearLocalComplianceFormData,
+} from './ComplianceFormContext'
 import { useSnackbar } from 'helpers/useSnackbar'
 
 /**
@@ -38,10 +41,10 @@ export default function ReviewStep() {
   const einNumber = complianceForm?.ein
 
   const handleNext = async () => {
-    console.log('COMPLIANCE FORM', complianceForm)
     const resp = await submitCompliance(complianceForm)
 
     if (resp.ok) {
+      clearLocalComplianceFormData()
       successSnackbar('Compliance information submitted successfully.')
       router.push('/dashboard/text-messaging')
     } else {
