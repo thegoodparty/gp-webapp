@@ -84,17 +84,29 @@ export async function ensureAdminSession() {
     await loginAccount(page, adminEmail, adminPassword);
     console.log(`Marking ${testAccountFirstName} ${testAccountLastName} test account as verified...`);
 
-    // Ensure URL is properly constructed and encoded
     const victoryPathUrl = `${baseUrl}/admin/victory-path/${encodeURIComponent(testAccountFirstName)}-${encodeURIComponent(testAccountLastName)}`;
     console.log(`Navigating to: ${victoryPathUrl}`);
 
     await page.goto(victoryPathUrl);
     await documentReady(page);
 
-    await page.getByRole('button', { name: '\u200b', exact: true }).nth(1).click();
-    await page.getByRole('option', { name: 'Yes' }).isVisible();
-    await page.getByRole('option', { name: 'Yes' }).click();
-    await page.getByRole('button', { name: 'Save' }).click();
+    // Add more explicit waiting and logging
+    console.log('Waiting for dropdown button...');
+    const dropdownButton = page.getByRole('button', { name: '\u200b', exact: true }).nth(1);
+    await dropdownButton.waitFor({ state: 'visible', timeout: 60000 });
+    await dropdownButton.click();
+
+    console.log('Waiting for Yes option...');
+    const yesOption = page.getByRole('option', { name: 'Yes' });
+    await yesOption.waitFor({ state: 'visible', timeout: 60000 });
+    await page.waitForTimeout(1000);
+    await yesOption.click();
+
+    console.log('Waiting for Save button...');
+    const saveButton = page.getByRole('button', { name: 'Save' });
+    await saveButton.waitFor({ state: 'visible', timeout: 60000 });
+    await saveButton.click();
+    
     await documentReady(page);
 
     // Save the admin storage state (session)
@@ -102,6 +114,8 @@ export async function ensureAdminSession() {
     await page.context().storageState({ path: ADMIN_SESSION_FILE });
   } catch (error) {
     console.error('Error in ensureAdminSession:', error);
+    // Take screenshot on error
+    await page.screenshot({ path: 'admin-session-error.png', fullPage: true });
     throw error;
   } finally {
     await browser.close();
