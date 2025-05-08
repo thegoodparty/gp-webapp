@@ -81,7 +81,7 @@ export default async function BlogArticlePage({ article }) {
           className="inline-block bg-purple-500 text-white px-2 py-1 rounded"
           data-testid="articleCategory"
         >
-          {section.fields?.title}
+          {section?.fields?.title}
         </Overline>
         <MarketingH2 className="mt-8 mb-4 !text-4xl" asH1>
           {title}
