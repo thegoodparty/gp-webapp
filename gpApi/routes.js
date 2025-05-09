@@ -80,8 +80,6 @@ export const apiRoutes = {
   },
   campaign: {
     pathToVictory: {
-      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
-      // this is just a placeholder for testing with
       create: {
         path: '/campaigns/mine/path-to-victory',
         method: 'POST',
@@ -343,6 +341,10 @@ export const apiRoutes = {
       nextApiRoute: true,
     },
     user: {
+      get: {
+        path: '/admin/users/:id',
+        method: 'GET',
+      },
       list: {
         path: '/admin/users',
         method: 'GET',
@@ -513,6 +515,10 @@ export const apiRoutes = {
     },
     submitCompliancePin: {
       path: '/text-campaigns/compliance/pin',
+      method: 'POST',
+    },
+    approveCompliance: {
+      path: '/text-campaigns/compliance/approve',
       method: 'POST',
     },
   },

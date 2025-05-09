@@ -50,7 +50,7 @@ export function ComplianceFormProvider({ children, initialFormData }) {
     }
 
     hasInitialized.current = true
-  }, [])
+  }, [initialFormData])
 
   useEffect(() => {
     if (!hasInitialized.current) return
