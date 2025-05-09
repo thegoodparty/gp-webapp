@@ -55,6 +55,7 @@ export default async function sitemap({ id }) {
     })
     return mainSitemap
   } catch (e) {
+    console.error('candidates sitemap error', e)
     return []
   }
 }
