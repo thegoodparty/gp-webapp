@@ -41,7 +41,7 @@ test.describe.serial('Elections page', () => {
 
     test('Verify State-level Election page', async ({ page }) => {
         const caseId = 92;
-        const pageTitle = /Run for California state office/;
+        const pageTitle = /Run for Office in California/;
         const pageHeader = /California state elections/;
         const countyElectionsHeader = /Explore county elections in California/;
         const testElection = /Davis/;
@@ -68,7 +68,7 @@ test.describe.serial('Elections page', () => {
 
     test('Verify County-level Election page', async ({ page }) => {
         const caseId = 93;
-        const pageTitle = /Run for Dublin, CA office/;
+        const pageTitle = /Run for Office in Dublin county, California/;
         const pageHeader = /Dublin elections/;
         const testRole = /City Legislature/;
         const fastFactsHeader = /Dublin Fast facts/;
@@ -94,7 +94,7 @@ test.describe.serial('Elections page', () => {
 
     test('Verify Municipal-level Election page', async ({ page }) => {
         const caseId = 94;
-        const pageTitle = /Run for Beverly township/;
+        const pageTitle = /Run for Office in Beverly township, Illinois/;
         const pageHeader = /Beverly township elections/;
         const testRole = /Parks and Recreation District/;
         const fastFactsHeader = /Beverly township fast facts/;
