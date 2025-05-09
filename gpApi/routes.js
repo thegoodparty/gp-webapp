@@ -341,6 +341,10 @@ export const apiRoutes = {
       nextApiRoute: true,
     },
     user: {
+      get: {
+        path: '/admin/users/:id',
+        method: 'GET',
+      },
       list: {
         path: '/admin/users',
         method: 'GET',
@@ -511,6 +515,10 @@ export const apiRoutes = {
     },
     submitCompliancePin: {
       path: '/text-campaigns/compliance/pin',
+      method: 'POST',
+    },
+    approveCompliance: {
+      path: '/text-campaigns/compliance/approve',
       method: 'POST',
     },
   },
