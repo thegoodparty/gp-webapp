@@ -1,5 +1,3 @@
-'use client'
-
 import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
 import Body2 from '@shared/typography/Body2'

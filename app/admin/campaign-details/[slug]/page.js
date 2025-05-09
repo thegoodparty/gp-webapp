@@ -21,7 +21,7 @@ export default async function Page({ params }) {
 
   return (
     <AdminCampaignProvider campaign={campaign}>
-      <AdminCampaignDetailsPage pathname={pathname} campaign={campaign} />
+      <AdminCampaignDetailsPage pathname={pathname} />
     </AdminCampaignProvider>
   )
 }
