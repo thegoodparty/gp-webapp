@@ -27,12 +27,11 @@ export default async function Page({ params, searchParams }) {
     fetchTextMessaging(),
   ])
 
-  const childProps = {
-    pathname: '/dashboard/text-messaging',
-    campaign,
-    textMessaging,
-    compliance: false,
-  }
-
-  return <TextMessagingPage {...childProps} />
+  return (
+    <TextMessagingPage
+      pathname="/dashboard/text-messaging"
+      campaign={campaign}
+      textMessaging={textMessaging}
+    />
+  )
 }

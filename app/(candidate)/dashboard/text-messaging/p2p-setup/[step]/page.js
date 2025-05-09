@@ -2,13 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import P2pSetupPage from './components/P2pSetupPage'
 import { adminAccessOnly } from 'helpers/permissionHelper'
-import { serverFetch } from 'gpApi/serverFetch'
-import { apiRoutes } from 'gpApi/routes'
-
-async function fetchTextMessaging() {
-  const resp = await serverFetch(apiRoutes.textMessaging.list)
-  return resp.data
-}
+import { getServerUser } from 'helpers/userServerHelper'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,14 +16,7 @@ export default async function Page({ params: { step } }) {
   await adminAccessOnly()
 
   const campaign = await fetchUserCampaign()
+  const user = await getServerUser()
 
-  return (
-    <P2pSetupPage
-      {...{
-        pathname: `/dashboard/text-messaging/p2p-setup/${step}`,
-        campaign,
-        step,
-      }}
-    />
-  )
+  return <P2pSetupPage step={step} user={user} campaign={campaign} />
 }
