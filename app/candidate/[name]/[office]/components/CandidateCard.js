@@ -43,16 +43,13 @@ export default function CandidateCard(props) {
     firstName,
     lastName,
     party,
-    office,
     city,
     state,
-    claimed,
     image,
     socialUrls,
     email,
+    positionName,
   } = candidate
-
-  console.log('socialUrls', socialUrls)
 
   let partyName = ''
   if (party === 'Independent') {
@@ -92,7 +89,7 @@ export default function CandidateCard(props) {
           </div>
           <div className="flex mb-3 items-center">
             <IoPersonSharp className="text-secondary-light" size={20} />
-            <H5 className="ml-2">Running for {office}</H5>
+            <H5 className="ml-2">Running for {positionName}</H5>
           </div>
           <div className="flex  items-center mb-8">
             <FaMapMarkerAlt className="text-secondary-light" size={20} />

@@ -1,43 +1,33 @@
 'use client'
 import Button from '@shared/buttons/Button'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import H2 from '@shared/typography/H2'
 import Paper from '@shared/utils/Paper'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import TextField from '@shared/inputs/TextField'
 import { isValidUrl } from 'helpers/linkhelper'
 import Body2 from '@shared/typography/Body2'
 import H4 from '@shared/typography/H4'
+import { useComplianceForm } from './ComplianceFormContext'
 
 export default function WebsiteStep() {
-  const [campaign] = useCampaign()
-  const [website, setWebsite] = useState(campaign?.details?.website)
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [complianceForm, setComplianceForm] = useComplianceForm()
 
-  useEffect(() => {
-    setWebsite(campaign?.details?.website)
-  }, [campaign])
+  const website = complianceForm?.website
 
   const handleWebsiteChange = (value) => {
-    setWebsite(value)
+    setComplianceForm((current) => ({
+      ...current,
+      website: value,
+    }))
   }
 
   const handleNext = async () => {
-    setLoading(true)
-    await updateCampaign([
-      {
-        key: 'details.website',
-        value: website,
-      },
-    ])
     router.push('/dashboard/text-messaging/p2p-setup/email')
   }
 
-  const canSubmit = !loading && website && isValidUrl(website)
+  const canSubmit = website && isValidUrl(website)
 
   return (
     <>
@@ -122,7 +112,7 @@ export default function WebsiteStep() {
             </Button>
           </Link>
           <Button onClick={handleNext} disabled={!canSubmit} color="secondary">
-            {loading ? 'Loading...' : 'Next'}
+            Next
           </Button>
         </div>
       </Paper>

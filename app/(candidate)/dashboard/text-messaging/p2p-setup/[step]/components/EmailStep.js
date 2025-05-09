@@ -1,47 +1,33 @@
 'use client'
 import Button from '@shared/buttons/Button'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import H2 from '@shared/typography/H2'
 import Paper from '@shared/utils/Paper'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput'
-import { useUser } from '@shared/hooks/useUser'
 import H4 from '@shared/typography/H4'
 import Body2 from '@shared/typography/Body2'
+import { useComplianceForm } from './ComplianceFormContext'
 
 export default function EmailStep() {
-  const [campaign] = useCampaign()
-  const [user] = useUser()
-  const [email, setEmail] = useState(
-    campaign?.details?.campaignEmail || user?.email,
-  )
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [complianceForm, setComplianceForm] = useComplianceForm()
 
-  useEffect(() => {
-    setEmail(campaign?.details?.campaignEmail || user?.email)
-  }, [campaign, user])
+  const email = complianceForm?.email
 
   const handleEmailChange = (value) => {
-    setEmail(value)
+    setComplianceForm((current) => ({
+      ...current,
+      email: value,
+    }))
   }
 
   const handleNext = async () => {
-    setLoading(true)
-    await updateCampaign([
-      {
-        key: 'details.campaignEmail',
-        value: email,
-      },
-    ])
     router.push('/dashboard/text-messaging/p2p-setup/review')
   }
 
-  const canSubmit = !loading && email && isValidEmail(email)
+  const canSubmit = email && isValidEmail(email)
 
   return (
     <Paper className="mt-8 max-w-4xl mx-auto">
@@ -118,7 +104,7 @@ export default function EmailStep() {
           </Button>
         </Link>
         <Button onClick={handleNext} disabled={!canSubmit} color="secondary">
-          {loading ? 'Loading...' : 'Next'}
+          Next
         </Button>
       </div>
     </Paper>

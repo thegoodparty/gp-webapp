@@ -1,32 +1,58 @@
 'use client'
 import Button from '@shared/buttons/Button'
-import { useCampaign } from '@shared/hooks/useCampaign'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import H2 from '@shared/typography/H2'
 import Overline from '@shared/typography/Overline'
 import Paper from '@shared/utils/Paper'
 import { AlertBanner } from 'app/(candidate)/dashboard/components/AlertBanner'
-import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { clientFetch } from 'gpApi/clientFetch'
+import { apiRoutes } from 'gpApi/routes'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import {
+  useComplianceForm,
+  clearLocalComplianceFormData,
+} from './ComplianceFormContext'
+import { useSnackbar } from 'helpers/useSnackbar'
+
+/**
+ * Submits compliance information for text messaging campaign
+ * @param {Object} body - The compliance information
+ * @param {string} body.ein - Employer Identification Number
+ * @param {string} body.name - Org name associated with EIN
+ * @param {string} body.address - Address associated with EIN
+ * @param {string} body.website - 10DLC compliant website
+ * @param {string} body.email - 10DLC compliant email
+ */
+function submitCompliance(body) {
+  return clientFetch(apiRoutes.textMessaging.submitCompliance, {
+    ...body,
+  })
+}
 
 export default function ReviewStep() {
-  const [campaign] = useCampaign()
   const router = useRouter()
+  const [complianceForm] = useComplianceForm()
+  const { errorSnackbar, successSnackbar } = useSnackbar()
+
+  const website = complianceForm?.website
+  const campaignEmail = complianceForm?.email
+  const einNumber = complianceForm?.ein
+
   const handleNext = async () => {
-    await updateCampaign([
-      {
-        key: 'details.complianceStatus',
-        value: 'submitted',
-      },
-    ])
+    const resp = await submitCompliance(complianceForm)
 
-    router.push('/dashboard/text-messaging')
+    if (resp.ok) {
+      clearLocalComplianceFormData()
+      successSnackbar('Compliance information submitted successfully.')
+      router.push('/dashboard/text-messaging')
+    } else {
+      errorSnackbar(
+        'Error submitting compliance information. Please try again later.',
+      )
+    }
   }
-
-  const { details } = campaign || {}
-  const { website, campaignEmail, einNumber } = details || {}
 
   return (
     <Paper className="mt-8 max-w-4xl mx-auto">

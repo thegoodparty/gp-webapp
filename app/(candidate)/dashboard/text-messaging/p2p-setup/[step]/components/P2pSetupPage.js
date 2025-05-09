@@ -1,3 +1,4 @@
+'use client'
 import EINStep from './EINStep'
 import WebsiteStep from './WebsiteStep'
 import EmailStep from './EmailStep'
@@ -15,6 +16,7 @@ const P2P_STEPS = [
 
 const P2pSetupPage = ({ step }) => {
   const stepIndex = P2P_STEPS.findIndex((stepDef) => stepDef.route === step)
+
   return (
     <div className="min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
       <BackLink />

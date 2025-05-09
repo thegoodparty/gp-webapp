@@ -500,12 +500,45 @@ export const apiRoutes = {
   },
   textMessaging: {
     createProject: {
-      path: '/text-campaign/project',
+      path: '/text-campaigns',
       method: 'POST',
     },
     list: {
-      path: '/text-campaign/text-campaigns',
+      path: '/text-campaigns',
       method: 'GET',
     },
+    submitCompliance: {
+      path: '/text-campaigns/compliance',
+      method: 'POST',
+    },
+    submitCompliancePin: {
+      path: '/text-campaigns/compliance/pin',
+      method: 'POST',
+    },
   },
+}
+
+export const electionApiRoutes = {
+  places: {
+    find: {
+      path: '/places',
+      method: 'GET'
+    },
+    featuredCities: {
+      path: '/places/most-elections',
+      method: 'GET',
+    }
+  },
+  races: {
+    find: {
+      path: '/races',
+      method: 'GET'
+    }
+  },
+  candidacies: {
+    find: {
+      path: '/candidacies',
+      method: 'GET',
+    },
+  }
 }

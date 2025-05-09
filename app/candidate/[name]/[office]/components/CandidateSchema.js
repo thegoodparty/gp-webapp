@@ -7,17 +7,17 @@ export default function CandidateSchema({ candidate, slug }) {
     firstName,
     lastName,
     party,
-    office,
-    city,
+    positionName,
+    placeName,
     state,
     image,
-    socialUrls,
+    urls,
     email,
   } = candidate
 
   let sameAs = []
-  if (socialUrls) {
-    sameAs = socialUrls.map((url) => url.url)
+  if (urls) {
+    sameAs = urls.map((url) => url.url)
   }
 
   const address = {
@@ -25,8 +25,8 @@ export default function CandidateSchema({ candidate, slug }) {
     addressRegion: state,
   }
 
-  if (city) {
-    address.addressLocality = city
+  if (placeName) {
+    address.addressLocality = placeName
   }
 
   return (
@@ -36,7 +36,7 @@ export default function CandidateSchema({ candidate, slug }) {
         '@type': 'Person',
         name: `${firstName} ${lastName}`,
         image,
-        jobTitle: `Candidate for ${office}`,
+        jobTitle: `Candidate for ${positionName}`,
         affiliation: {
           '@type': 'PoliticalParty',
           name: party,
