@@ -525,7 +525,7 @@ export const electionApiRoutes = {
       method: 'GET'
     },
     featuredCities: {
-      path: '/candidacies/most-elections',
+      path: '/places/most-elections',
       method: 'GET',
     }
   },
