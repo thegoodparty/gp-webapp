@@ -1,49 +1,47 @@
 import pageMetaData from 'helpers/metadataHelper'
 import CandidatePage from './components/CandidatePage'
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { permanentRedirect } from 'next/navigation'
 import CandidateSchema from './components/CandidateSchema'
+import slugify from 'slugify'
+import { electionApiRoutes } from 'gpApi/routes'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 
 export const revalidate = 3600
 export const dynamic = 'force-static'
 
-export const fetchCandidate = async (name, office, bustCache) => {
-  const api = gpApi.candidate.find
+export const fetchCandidate = async ({slug, raceSlug, includeStances = false}) => {
+  const api = electionApiRoutes.candidacies.find.path
   const payload = {
-    name,
-    office,
-    bustCache,
+    ...(slug && {slug}),
+    ...(raceSlug && {raceSlug}),
+    includeStances,
   }
-  return await gpFetch(api, payload, 3600)
+  const res = await unAuthElectionFetch(api, payload, 3600)
+
+  if (Array.isArray(res)) {
+    return res[0]
+  }
+  return false
 }
 
 export async function generateMetadata({ params, searchParams }) {
-  const { bustCache } = searchParams
   const { name, office } = params
-  const { candidate } = await fetchCandidate(
-    name,
-    office,
-    bustCache === 'true',
-  )
+  const slug = `${slugify(name)}/${slugify(office)}`
+  const candidate = await fetchCandidate({slug})
   const { firstName, lastName, about, image } = candidate || {}
   const meta = pageMetaData({
-    title: `${firstName} ${lastName} for ${candidate?.office} | GoodParty.org`,
+    title: `${firstName} ${lastName} for ${candidate?.positionName} | GoodParty.org`,
     description: about,
     image,
-    slug: `/candidate/${name}/${office}`,
+    slug: `/candidate/${slug}`,
   })
   return meta
 }
 
 export default async function Page({ params, searchParams }) {
-  const { bustCache } = searchParams
   const { name, office } = params
-  const { candidate } = await fetchCandidate(
-    name,
-    office,
-    bustCache === 'true',
-  )
+  const slug = `${slugify(name)}/${slugify(office)}`
+  const candidate = await fetchCandidate({slug, includeStances: true})
   if (!candidate) {
     permanentRedirect('/candidates')
   }

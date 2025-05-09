@@ -2,10 +2,9 @@ import MarketingH4 from '@shared/typography/MarketingH4'
 import Overline from '@shared/typography/Overline'
 import DescriptionLabel from './DescriptionLabel'
 
-export default function TopIssuesCard(props) {
-  const { candidate } = props
-  const { topIssues } = candidate
-  if (!topIssues || topIssues.length === 0) {
+export default function TopIssuesCard({candidate, maxToShow = 3}) {
+  const stances = candidate?.Stances ?? []
+  if (stances.length === 0) {
     return null
   }
 
@@ -14,11 +13,11 @@ export default function TopIssuesCard(props) {
       <Overline className="text-gray-400 mb-2">Voter Issues</Overline>
       <MarketingH4 className="mb-8">Top Issues</MarketingH4>
 
-      {topIssues.map((item, index) => (
+      {stances.slice(0, maxToShow).map((stance, idx) => (
         <DescriptionLabel
-          key={index}
-          title={`Issue ${index + 1} - ${item.issue}`}
-          description={item.stance}
+          key={stance.id}
+          title={`Issue ${idx + 1} - ${stance.Issue?.name ?? ''}`}
+          description={stance.stanceStatement}
         />
       ))}
     </section>
