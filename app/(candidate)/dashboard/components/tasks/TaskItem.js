@@ -4,7 +4,7 @@ import Body2 from '@shared/typography/Body2'
 import { CheckRounded, LockRounded } from '@mui/icons-material'
 import TaskCheck from './TaskCheck'
 import H4 from '@shared/typography/H4'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 export default function TaskItem({
   task,

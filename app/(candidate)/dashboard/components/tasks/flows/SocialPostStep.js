@@ -8,7 +8,7 @@ import {
   TwitterLogo,
   NextdoorLogo,
 } from '@shared/brand-logos'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
 
 export default function SocialPostStep({ type, scriptText, closeCallback }) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { trackEvent } from 'helpers/fullStoryHelper'
+import { trackEvent } from 'helpers/analyticsHelper'
 import { useEffect } from 'react'
 
 export default function TrackCantDownload({ campaign }) {

@@ -13,7 +13,7 @@ import Button from '@shared/buttons/Button'
 import { RecordVoterContactsModal } from 'app/(candidate)/dashboard/components/RecordVoterContactsModal'
 import { useVoterContacts } from '@shared/hooks/useVoterContacts'
 import { InfoOutlined } from '@mui/icons-material'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 export const CampaignProgress = ({ pathToVictory }) => {
   const [reportedVoterGoals] = useVoterContacts()

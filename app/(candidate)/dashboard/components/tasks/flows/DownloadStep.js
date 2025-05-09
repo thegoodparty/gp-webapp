@@ -6,7 +6,7 @@ import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
 import { voterFileDownload } from 'helpers/voterFileDownload'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'

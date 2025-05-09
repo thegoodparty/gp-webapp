@@ -11,7 +11,7 @@ import FullStorySelectiveInit from './FullStorySelectiveInit'
 import NavButton from './NavButton'
 import Button from '@shared/buttons/Button'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import SegmentIdentity from './SegmentIdentity'
 
 export default function RightSide() {

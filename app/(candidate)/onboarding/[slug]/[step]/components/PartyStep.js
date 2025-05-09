@@ -9,9 +9,9 @@ import { useRouter } from 'next/navigation'
 import { useState, useMemo } from 'react'
 import TextField from '@shared/inputs/TextField'
 import Modal from '@shared/utils/Modal'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import RadioList from '@shared/inputs/RadioList'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 
 const options = [

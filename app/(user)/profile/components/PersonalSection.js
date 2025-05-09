@@ -18,7 +18,7 @@ import ImageSection from './ImageSection'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 async function refreshUser() {
   try {

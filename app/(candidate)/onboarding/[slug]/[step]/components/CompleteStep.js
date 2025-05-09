@@ -8,7 +8,7 @@ import {
   buildTrackingAttrs,
   EVENTS,
   trackEvent,
-} from 'helpers/fullStoryHelper'
+} from 'helpers/analyticsHelper'
 import { useState } from 'react'
 import { useSnackbar } from 'helpers/useSnackbar'
 import Button from '@shared/buttons/Button'

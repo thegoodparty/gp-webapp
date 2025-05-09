@@ -4,7 +4,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { getUserCookie } from 'helpers/cookieHelper'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Link from 'next/link'
 
 export default function FlowComplete({ resetCallback }) {

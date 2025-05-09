@@ -1,6 +1,6 @@
 import { numberFormatter } from 'helpers/numberHelper'
 import Modal from '@shared/utils/Modal'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import H6 from '@shared/typography/H6'

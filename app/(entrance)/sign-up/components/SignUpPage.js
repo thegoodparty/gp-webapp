@@ -17,7 +17,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',

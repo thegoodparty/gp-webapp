@@ -1,7 +1,7 @@
 'use client'
 import { usePathname } from 'next/navigation'
 import Button from '@shared/buttons/Button'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export const ExitToDashboardButton = () => {
   const pathname = usePathname()

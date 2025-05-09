@@ -7,7 +7,7 @@ import Link from 'next/link'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Image from 'next/image'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
-import { trackEvent } from 'helpers/fullStoryHelper'
+import { trackEvent } from 'helpers/analyticsHelper'
 
 const PurchaseSuccessPage = () => {
   useEffect(() => {

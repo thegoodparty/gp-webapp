@@ -12,7 +12,7 @@ import {
   MdMessage,
   MdSensorDoor,
 } from 'react-icons/md'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
 import { useEffect } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'

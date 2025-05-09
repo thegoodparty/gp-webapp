@@ -16,7 +16,7 @@ import NeedHelp from './NeedHelp'
 import ViewAudienceFiltersModal from './ViewAudienceFiltersModal'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE']
 

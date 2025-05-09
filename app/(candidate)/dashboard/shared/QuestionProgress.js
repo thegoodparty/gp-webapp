@@ -2,7 +2,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import H2 from '@shared/typography/H2'
 import Subtitle1 from '@shared/typography/Subtitle1'
 import Link from 'next/link'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export function calcAnswers(campaign, candidatePositions) {
   const totalQuestions = 6

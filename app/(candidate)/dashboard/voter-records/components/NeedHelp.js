@@ -10,7 +10,7 @@ import NeedHelpSuccess from './NeedHelpSuccess'
 import Button from '@shared/buttons/Button'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export async function sendMessage(type, message) {
   try {

@@ -6,7 +6,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import RunningAgainstForm from './RunningAgainstForm'
 import RunningAgainstCard from './RunningAgainstCard'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function RunningAgainstSection({
   campaign,

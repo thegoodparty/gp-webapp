@@ -3,7 +3,7 @@
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import H2 from '@shared/typography/H2'
 import Modal from '@shared/utils/Modal'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useEffect, useMemo, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
 

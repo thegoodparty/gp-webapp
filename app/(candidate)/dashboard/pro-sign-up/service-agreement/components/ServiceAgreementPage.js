@@ -11,7 +11,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import Link from 'next/link'
 import { TermAndTerminationText } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/TermAndTerminationText'
 import { ServiceAgreementSignatureSection } from 'app/(candidate)/dashboard/pro-sign-up/service-agreement/components/ServiceAgreementSignatureSection'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 
 const ACKNOWLEDGEMENTS = [

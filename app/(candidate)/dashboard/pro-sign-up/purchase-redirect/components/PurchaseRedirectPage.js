@@ -9,7 +9,7 @@ import { updateUser } from 'helpers/userHelper'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const doRedirect = async (currentTimeoutId) => {
   clearTimeout(currentTimeoutId)

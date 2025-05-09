@@ -17,7 +17,7 @@ import { CommitteeSupportingFilesUpload } from 'app/(candidate)/dashboard/pro-si
 import Overline from '@shared/typography/Overline'
 import { Switch } from '@mui/material'
 import Button from '@shared/buttons/Button'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const COMMITTEE_HELP_MESSAGE = (
   <span>

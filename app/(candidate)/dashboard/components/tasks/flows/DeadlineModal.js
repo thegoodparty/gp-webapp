@@ -2,7 +2,7 @@ import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
 
 const SUPPORT_EMAIL = 'politics@goodparty.org'

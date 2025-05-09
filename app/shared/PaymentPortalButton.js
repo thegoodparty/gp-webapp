@@ -4,7 +4,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { useState } from 'react'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const PaymentPortalStyledButton = ({ children, ...restProps }) => (
   <PrimaryButton className="flex items-center" {...restProps}>

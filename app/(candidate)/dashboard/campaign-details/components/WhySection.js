@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { CircularProgress } from '@mui/material'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const fields = [
   {

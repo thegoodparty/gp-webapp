@@ -6,7 +6,7 @@ import Chip from '@shared/utils/Chip'
 import Paper from '@shared/utils/Paper'
 import Image from 'next/image'
 import { IoArrowForward } from 'react-icons/io5'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function VendorCard({
   logo,
