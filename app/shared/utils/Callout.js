@@ -1,7 +1,7 @@
 'use client'
 import { IoIosCloseCircle } from 'react-icons/io'
 import { useEffect, useState } from 'react'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 
 export default function Callout() {

@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion'
 import { useRouter } from 'next/navigation'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePageExit } from '@shared/hooks/usePageExit'
 
 const CARD_DIY = {

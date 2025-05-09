@@ -10,7 +10,7 @@ import { IoMdCheckmark } from 'react-icons/io'
 import { MdOutlineRefresh, MdAutoAwesome } from 'react-icons/md'
 import ChatFeedback from './ChatFeedback'
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ChatMessage({ message, type, isLastMessage }) {
   const [copied, setCopied] = useState(false)

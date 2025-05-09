@@ -15,7 +15,7 @@ import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
 } from 'helpers/buildAiContentSections'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
 
 let aiTotalCount = 0

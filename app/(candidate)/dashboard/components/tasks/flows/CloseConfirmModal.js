@@ -1,7 +1,7 @@
 import Button from '@shared/buttons/Button'
 import H1 from '@shared/typography/H1'
 import Modal from '@shared/utils/Modal'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
 
 export default function CloseConfirmModal({ open, type, onConfirm, onCancel }) {
