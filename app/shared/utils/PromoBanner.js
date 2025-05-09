@@ -21,7 +21,7 @@ const showPromoAlert = (pathname) => {
   const isProductPath = isProductRoute(pathname)
   return (
     !isProductPath &&
-    !EXCLUDED_PROMO_PATHS.some((path) => pathname.startsWith(path))
+    !EXCLUDED_PROMO_PATHS.some((path) => pathname?.startsWith(path))
   )
 }
 
