@@ -4,11 +4,7 @@ import Overline from '@shared/typography/Overline'
 
 export default function AboutCard(props) {
   const { candidate } = props
-  const {
-    firstName,
-    lastName,
-    about,
-  } = candidate
+  const { firstName, lastName, about } = candidate
 
   return (
     <section className="bg-primary-dark border border-gray-700 p-6 rounded-2xl h-full">
