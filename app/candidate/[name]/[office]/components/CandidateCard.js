@@ -39,7 +39,6 @@ function mapSocialIcon(type) {
 
 export default function CandidateCard(props) {
   const { candidate } = props
-  console.log('candidate', candidate)
   const {
     firstName,
     lastName,
