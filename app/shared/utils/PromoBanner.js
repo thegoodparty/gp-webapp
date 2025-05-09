@@ -14,11 +14,15 @@ const EXCLUDED_PROMO_PATHS = [
   '/sign-up',
   '/forgot-password',
   '/set-password',
+  '/candidate/',
 ]
 
 const showPromoAlert = (pathname) => {
   const isProductPath = isProductRoute(pathname)
-  return !isProductPath && !EXCLUDED_PROMO_PATHS.includes(pathname)
+  return (
+    !isProductPath &&
+    !EXCLUDED_PROMO_PATHS.some((path) => pathname.startsWith(path))
+  )
 }
 
 const PromoBanner = ({ initPathname }) => {
