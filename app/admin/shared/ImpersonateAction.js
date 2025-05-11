@@ -1,5 +1,5 @@
 'use client'
-import PrimaryButton from '@shared/buttons/PrimaryButton'
+import Button from '@shared/buttons/Button'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { useSnackbar } from 'helpers/useSnackbar'
 
@@ -27,10 +27,12 @@ export default function ImpersonateAction({
   }
 
   return (
-    <div className="my-3">
-      <PrimaryButton onClick={handleImpersonateUser} size="small" fullWidth>
-        <span className="whitespace-nowrap">Impersonate</span>
-      </PrimaryButton>
-    </div>
+    <Button
+      onClick={handleImpersonateUser}
+      size="small"
+      className="w-full font-semibold"
+    >
+      <span className="whitespace-nowrap">Impersonate</span>
+    </Button>
   )
 }

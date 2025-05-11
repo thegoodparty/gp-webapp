@@ -3,6 +3,12 @@ import DashboardLayout from '../../shared/DashboardLayout'
 import { TextMessagingProvider } from 'app/shared/hooks/TextMessagingProvider'
 import NoCompliance from './NoCompliance'
 import { StyledAlert } from '@shared/alerts/StyledAlert'
+import TextMessagingRequests from './TextMessagingRequests'
+import CompliancePin from './CompliancePin'
+import ComplianceApproval from './ComplianceApproval'
+import { useCampaign } from '@shared/hooks/useCampaign'
+import ComplianceRejection from './ComplianceRejection'
+import ComplianceError from './ComplianceError'
 
 // NOTE: copy/pasted from gp-api TcrComplianceStatus enum
 export const COMPLIANCE_STATUSES = {
@@ -20,10 +26,14 @@ export const COMPLIANCE_STATUSES = {
 
 export default function TextMessagingPage({
   pathname,
-  campaign,
+  campaign: propCampaign,
   textMessaging,
 }) {
+  const [hookCampaign] = useCampaign()
+
+  const campaign = hookCampaign ?? propCampaign
   const complianceStatus = campaign?.data?.tcrComplianceInfo?.status
+
   return (
     <TextMessagingProvider textMessaging={textMessaging}>
       <DashboardLayout
@@ -37,13 +47,15 @@ export default function TextMessagingPage({
         {!complianceStatus ? (
           <NoCompliance />
         ) : complianceStatus === COMPLIANCE_STATUSES.submitted ? (
-          <>Form submitted, awaiting PIN!!!</>
+          <CompliancePin />
         ) : complianceStatus === COMPLIANCE_STATUSES.pending ? (
-          <>PIN confirmed, awaiting final approval!!!</>
+          <ComplianceApproval />
         ) : complianceStatus === COMPLIANCE_STATUSES.approved ? (
-          <>Approved!!!</>
+          <TextMessagingRequests />
+        ) : complianceStatus === COMPLIANCE_STATUSES.rejected ? (
+          <ComplianceRejection />
         ) : (
-          <>Rejected!!!</>
+          <ComplianceError />
         )}
       </DashboardLayout>
     </TextMessagingProvider>

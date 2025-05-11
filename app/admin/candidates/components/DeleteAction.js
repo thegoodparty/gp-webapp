@@ -1,5 +1,5 @@
 'use client'
-import ErrorButton from '@shared/buttons/ErrorButton'
+import Button from '@shared/buttons/Button'
 import AlertDialog from '@shared/utils/AlertDialog'
 import gpApi from 'gpApi'
 import gpFetch from 'gpApi/gpFetch'
@@ -58,18 +58,18 @@ export default function DeleteAction({ id, slug, isLive }) {
 
   return (
     <>
-      <div
-        className="my-3"
+      <Button
         onClick={() => {
           setShowDelete(true)
         }}
+        color="error"
+        size="small"
+        className="w-full font-semibold"
       >
-        <ErrorButton size="small" fullWidth>
-          <span className="whitespace-nowrap">
-            {isLive ? 'Hide Candidate' : 'Delete Campaign'}
-          </span>
-        </ErrorButton>
-      </div>
+        <span className="whitespace-nowrap">
+          {isLive ? 'Hide Candidate' : 'Delete Campaign'}
+        </span>
+      </Button>
       <AlertDialog
         open={showDelete}
         handleClose={() => {

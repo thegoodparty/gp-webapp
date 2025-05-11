@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
@@ -15,6 +16,7 @@ import {
   clearLocalComplianceFormData,
 } from './ComplianceFormContext'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 /**
  * Submits compliance information for text messaging campaign
@@ -33,7 +35,9 @@ function submitCompliance(body) {
 
 export default function ReviewStep() {
   const router = useRouter()
+  const [, , refreshCampaign] = useCampaign()
   const [complianceForm] = useComplianceForm()
+  const [loading, setLoading] = useState(false)
   const { errorSnackbar, successSnackbar } = useSnackbar()
 
   const website = complianceForm?.website
@@ -41,7 +45,9 @@ export default function ReviewStep() {
   const einNumber = complianceForm?.ein
 
   const handleNext = async () => {
+    setLoading(true)
     const resp = await submitCompliance(complianceForm)
+    setLoading(false)
 
     if (resp.ok) {
       clearLocalComplianceFormData()
@@ -52,6 +58,7 @@ export default function ReviewStep() {
         'Error submitting compliance information. Please try again later.',
       )
     }
+    refreshCampaign()
   }
 
   return (
@@ -78,7 +85,12 @@ export default function ReviewStep() {
             Back
           </Button>
         </Link>
-        <Button onClick={handleNext} color="secondary">
+        <Button
+          onClick={handleNext}
+          color="secondary"
+          loading={loading}
+          disabled={loading}
+        >
           Finish
         </Button>
       </div>
