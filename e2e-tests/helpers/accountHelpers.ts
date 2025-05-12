@@ -91,7 +91,7 @@ export async function ensureAdminSession() {
     await documentReady(page);
 
     console.log('Waiting for dropdown button...');
-    const dropdownButton = page.getByRole('button', { name: '\u200b', exact: true }).nth(1);
+    const dropdownButton = page.locator('.MuiSelect-select').first();
     await dropdownButton.waitFor({ state: 'visible', timeout: 60000 });
     await dropdownButton.click();
 
