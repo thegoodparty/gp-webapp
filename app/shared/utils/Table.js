@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -38,14 +38,21 @@ export default function Table({
   filterColumns = true,
   initialSortById = '',
   defaultFilters = [],
-  defaultPageSize = 10,
+  defaultPageSize = 25,
   showPagination = true,
 }) {
-  // Pagination state
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: defaultPageSize,
   })
+
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageSize: defaultPageSize,
+      pageIndex: 0,
+    }))
+  }, [defaultPageSize])
 
   const filterTypes = useMemo(
     () => ({
@@ -199,7 +206,7 @@ export default function Table({
             value={table.getState().pagination.pageSize}
             onChange={(e) => table.setPageSize(Number(e.target.value))}
           >
-            {[10, 20, 30, 40, 50].map((size) => (
+            {[10, 25, 50, 100].map((size) => (
               <option key={size} value={size}>
                 Show {size}
               </option>
