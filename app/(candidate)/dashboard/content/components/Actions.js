@@ -91,7 +91,6 @@ export default function Actions(props) {
               onClick={() => {
                 setShowMenu(!showMenu)
               }}
-              div
               className="ml-5 hidden md:block"
             >
               <SecondaryButton size="medium">

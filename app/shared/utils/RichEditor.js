@@ -12,37 +12,43 @@ export default function RichEditor({
     theme: 'bubble',
   })
 
+  // Set initial content when editor is ready
   useEffect(() => {
-    if (content !== initialText && initialText !== null) {
+    if (quill && initialText) {
+      console.log('Setting initial text:', initialText)
+      quill.clipboard.dangerouslyPasteHTML(initialText)
       setContent(initialText)
     }
-  }, [initialText])
+  }, [quill, initialText])
 
   useEffect(() => {
     if (quill) {
-      quill.on('text-change', () => {
+      const textChangeHandler = () => {
         const value = quill.root.innerHTML
+        console.log('Text changed:', value)
         if (value) {
           setContent(value)
           onChangeCallback(value)
         }
-      })
+      }
 
-      quill.on('blur', () => {
+      const blurHandler = () => {
         const value = quill.root.innerHTML
         if (value) {
           setContent(value)
           onChangeCallback(value, 1)
         }
-      })
+      }
+
+      quill.on('text-change', textChangeHandler)
+      quill.on('blur', blurHandler)
+
+      return () => {
+        quill.off('text-change', textChangeHandler)
+        quill.off('blur', blurHandler)
+      }
     }
   }, [quill, onChangeCallback])
-
-  useEffect(() => {
-    if (quill && content) {
-      quill.root.innerHTML = content
-    }
-  }, [quill, content])
 
   return (
     <div className="p-3 border rounded-lg border-gray-200 [&>.quill>.ql-container]:text-base">
