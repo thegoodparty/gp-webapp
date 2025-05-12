@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { CameraAltRounded } from '@mui/icons-material'
-import { useSnackbarState } from '@shared/utils/Snackbar'
+import { useSnackbar } from 'helpers/useSnackbar'
 import Overline from '@shared/typography/Overline'
 
 // TODO: add more file types
@@ -29,7 +29,7 @@ export default function FileDropZone({
   onChange,
   className = '',
 }) {
-  const snackbarState = useSnackbarState()
+  const { errorSnackbar } = useSnackbar()
   const [{ isDragging, cannotDrop }, setState] = useState({
     isDragging: false,
     cannotDrop: false,
@@ -108,11 +108,7 @@ export default function FileDropZone({
   }
 
   function notifyError(msg) {
-    snackbarState.set(() => ({
-      isOpen: true,
-      message: msg,
-      isError: true,
-    }))
+    errorSnackbar(msg)
   }
 
   return (
