@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import {
   useReactTable,
   getCoreRowModel,
@@ -36,10 +36,17 @@ export default function Table({
   columns,
   data,
   filterColumns = true,
-  pagination = true,
   initialSortById = '',
   defaultFilters = [],
+  defaultPageSize = 10,
+  showPagination = true,
 }) {
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: defaultPageSize,
+  })
+
   const filterTypes = useMemo(
     () => ({
       fuzzyText: filterColumns ? fuzzyTextFilterFn : undefined,
@@ -64,20 +71,20 @@ export default function Table({
 
   const initialState = useMemo(
     () => ({
-      pagination: {
-        pageIndex: 0,
-        pageSize: pagination ? 10 : 10000,
-      },
       sorting: initialSortById ? [{ id: initialSortById, desc: true }] : [],
       filters: defaultFilters,
     }),
-    [initialSortById, pagination],
+    [initialSortById, defaultFilters],
   )
 
   const table = useReactTable({
     data,
     columns,
-    state: initialState,
+    state: {
+      ...initialState,
+      pagination,
+    },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -150,7 +157,7 @@ export default function Table({
           ))}
         </tbody>
       </table>
-      {pagination && (
+      {showPagination && (
         <div className="flex items-center justify-center my-4">
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
