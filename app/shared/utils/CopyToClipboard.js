@@ -1,5 +1,5 @@
 'use client'
-import { CopyToClipboard as CopyHelper } from 'react-copy-to-clipboard'
+import { CopyToClipboard as CopyHelper } from 'react-copy-to-clipboard-ts'
 import { useSnackbar } from 'helpers/useSnackbar'
 
 export default function CopyToClipboard({ children, text, onCopy }) {

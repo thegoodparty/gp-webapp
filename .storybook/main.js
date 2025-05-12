@@ -8,7 +8,6 @@ const config = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    '@storybook/addon-styling',
   ],
   framework: {
     name: '@storybook/nextjs',

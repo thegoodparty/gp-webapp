@@ -51,12 +51,14 @@ export default function AiContentsPage(props) {
   const columns = useMemo(
     () => [
       {
-        Header: 'Content Type',
-        accessor: 'contentType',
+        id: 'contentType',
+        header: 'Content Type',
+        accessorKey: 'contentType',
       },
       {
-        Header: 'Count',
-        accessor: 'count',
+        id: 'count',
+        header: 'Count',
+        accessorKey: 'count',
       },
     ],
     [],

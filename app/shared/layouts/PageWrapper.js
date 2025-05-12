@@ -1,4 +1,4 @@
-import Snackbar from '@shared/utils/Snackbar'
+import { SnackbarProvider } from '@shared/utils/Snackbar'
 import { Suspense } from 'react'
 import Footer from 'app/shared/layouts/footer/Footer'
 import JsonLdSchema from './JsonLdSchema'
@@ -20,21 +20,22 @@ const PageWrapper = async ({ children }) => {
         <CampaignProvider>
           <CampaignStatusProvider>
             <NavigationProvider>
-              <div className="overflow-x-hidden">
-                <JsonLdSchema />
-                <Nav />
-                <Suspense>
-                  <PromoBanner initPathname={pathname} />
-                </Suspense>
-                {children}
-                <Suspense>
-                  <Footer initPathname={pathname} />
-                </Suspense>
-                <Snackbar />
-                <Suspense>
-                  <CookiesSnackbar />
-                </Suspense>
-              </div>
+              <SnackbarProvider>
+                <div className="overflow-x-hidden">
+                  <JsonLdSchema />
+                  <Nav />
+                  <Suspense>
+                    <PromoBanner initPathname={pathname} />
+                  </Suspense>
+                  {children}
+                  <Suspense>
+                    <Footer initPathname={pathname} />
+                  </Suspense>
+                  <Suspense>
+                    <CookiesSnackbar />
+                  </Suspense>
+                </div>
+              </SnackbarProvider>
             </NavigationProvider>
           </CampaignStatusProvider>
         </CampaignProvider>

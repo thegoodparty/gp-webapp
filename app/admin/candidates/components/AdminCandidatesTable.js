@@ -269,113 +269,179 @@ export default function AdminCandidatesTable({ campaigns }) {
 
   const columns = [
     {
-      Header: 'Actions',
+      id: 'actions',
+      header: 'Actions',
       collapse: true,
-      accessor: 'actions',
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         return <Actions {...row.original} />
       },
     },
     {
-      Header: 'Profile',
-      accessor: 'slug',
+      id: 'profile',
+      header: 'Profile',
+      accessorKey: 'slug',
     },
     {
-      Header: 'Candidate User',
-      accessor: 'userName',
-      Cell: ({ row }) => (
+      id: 'candidateUser',
+      header: 'Candidate User',
+      accessorKey: 'userName',
+      cell: ({ row }) => (
         <UserAdminLink userId={row.original.candidateUserId}>
           {row.original.userName}
         </UserAdminLink>
       ),
     },
     {
-      Header: 'Launch Status',
-      accessor: 'launched',
+      id: 'launchStatus',
+      header: 'Launch Status',
+      accessorKey: 'launched',
     },
     {
-      Header: 'Active (Live)',
-      accessor: 'isActive',
+      id: 'isActive',
+      header: 'Active (Live)',
+      accessorKey: 'isActive',
     },
     {
-      Header: 'Waiting for P2V',
-      accessor: 'waitingForP2v',
+      id: 'waitingForP2v',
+      header: 'Waiting for P2V',
+      accessorKey: 'waitingForP2v',
     },
     {
-      Header: 'P2V Status',
-      accessor: 'p2vStatus',
+      id: 'p2vStatus',
+      header: 'P2V Status',
+      accessorKey: 'p2vStatus',
     },
     {
-      Header: 'Viability Score',
-      accessor: 'viabilityScore',
+      id: 'viabilityScore',
+      header: 'Viability Score',
+      accessorKey: 'viabilityScore',
     },
     {
-      Header: 'Running',
-      accessor: 'knowRun',
-    },
-
-    { Header: 'HB Past Candidate', accessor: 'hbPastCandidate' },
-    { Header: 'Hb Incumbent', accessor: 'hbIncumbent' },
-    {
-      Header: 'Hb Candidate Experience Level',
-      accessor: 'hbCandidateExperienceLevel',
-    },
-    { Header: 'Hb Final Viability Rating', accessor: 'hbFinalViabilityRating' },
-    {
-      Header: 'Hb Primary Election Result',
-      accessor: 'hbPrimaryElectionResult',
-    },
-    { Header: 'Hb Election Results', accessor: 'hbElectionResults' },
-    {
-      Header: 'Hb Professional Experience',
-      accessor: 'hbProfessionalExperience',
-    },
-    { Header: 'Hb P2p Campaigns', accessor: 'hbP2pCampaigns' },
-    { Header: 'Hb P2p Sent', accessor: 'hbP2pSent' },
-    { Header: 'Hb Confirmed Self Filer', accessor: 'hbConfirmedSelfFiler' },
-    { Header: 'Hb Verified Candidates', accessor: 'hbVerifiedCandidates' },
-    { Header: 'Hb Date Verified', accessor: 'hbDateVerified' },
-    { Header: 'Hb Pro Candidate', accessor: 'hbProCandidate' },
-    { Header: 'Hb Filing Deadline', accessor: 'hbFilingDeadline' },
-    { Header: 'Hb Opponents', accessor: 'hbOpponents' },
-    {
-      Header: 'First Name',
-      accessor: 'firstName',
+      id: 'running',
+      header: 'Running',
+      accessorKey: 'knowRun',
     },
     {
-      Header: 'Last Name',
-      accessor: 'lastName',
+      id: 'hbPastCandidate',
+      header: 'HB Past Candidate',
+      accessorKey: 'hbPastCandidate',
     },
     {
-      Header: 'Short Version',
-      accessor: 'shortVersion',
-    },
-
-    {
-      Header: 'Is Pro?',
-      accessor: 'isPro',
+      id: 'hbIncumbent',
+      header: 'Hb Incumbent',
+      accessorKey: 'hbIncumbent',
     },
     {
-      Header: 'Is Verified?',
-      accessor: 'isVerified',
+      id: 'hbCandidateExperienceLevel',
+      header: 'Hb Candidate Experience Level',
+      accessorKey: 'hbCandidateExperienceLevel',
     },
     {
-      Header: 'Verified Date',
-      accessor: 'dateVerified',
-      Cell: ({ row }) => getDateCellContents(row?.original?.dateVerified),
+      id: 'hbFinalViabilityRating',
+      header: 'Hb Final Viability Rating',
+      accessorKey: 'hbFinalViabilityRating',
     },
     {
-      Header: 'Tier',
-      accessor: 'tier',
+      id: 'hbPrimaryElectionResult',
+      header: 'Hb Primary Election Result',
+      accessorKey: 'hbPrimaryElectionResult',
     },
     {
-      Header: 'Did Win?',
-      accessor: 'didWin',
+      id: 'hbElectionResults',
+      header: 'Hb Election Results',
+      accessorKey: 'hbElectionResults',
     },
     {
-      Header: 'Path to Victory',
-      accessor: 'victoryPath',
-      Cell: ({ row }) => {
+      id: 'hbProfessionalExperience',
+      header: 'Hb Professional Experience',
+      accessorKey: 'hbProfessionalExperience',
+    },
+    {
+      id: 'hbP2pCampaigns',
+      header: 'Hb P2p Campaigns',
+      accessorKey: 'hbP2pCampaigns',
+    },
+    {
+      id: 'hbP2pSent',
+      header: 'Hb P2p Sent',
+      accessorKey: 'hbP2pSent',
+    },
+    {
+      id: 'hbConfirmedSelfFiler',
+      header: 'Hb Confirmed Self Filer',
+      accessorKey: 'hbConfirmedSelfFiler',
+    },
+    {
+      id: 'hbVerifiedCandidates',
+      header: 'Hb Verified Candidates',
+      accessorKey: 'hbVerifiedCandidates',
+    },
+    {
+      id: 'hbDateVerified',
+      header: 'Hb Date Verified',
+      accessorKey: 'hbDateVerified',
+    },
+    {
+      id: 'hbProCandidate',
+      header: 'Hb Pro Candidate',
+      accessorKey: 'hbProCandidate',
+    },
+    {
+      id: 'hbFilingDeadline',
+      header: 'Hb Filing Deadline',
+      accessorKey: 'hbFilingDeadline',
+    },
+    {
+      id: 'hbOpponents',
+      header: 'Hb Opponents',
+      accessorKey: 'hbOpponents',
+    },
+    {
+      id: 'firstName',
+      header: 'First Name',
+      accessorKey: 'firstName',
+    },
+    {
+      id: 'lastName',
+      header: 'Last Name',
+      accessorKey: 'lastName',
+    },
+    {
+      id: 'shortVersion',
+      header: 'Short Version',
+      accessorKey: 'shortVersion',
+    },
+    {
+      id: 'isPro',
+      header: 'Is Pro?',
+      accessorKey: 'isPro',
+    },
+    {
+      id: 'isVerified',
+      header: 'Is Verified?',
+      accessorKey: 'isVerified',
+    },
+    {
+      id: 'dateVerified',
+      header: 'Verified Date',
+      accessorKey: 'dateVerified',
+      cell: ({ row }) => getDateCellContents(row?.original?.dateVerified),
+    },
+    {
+      id: 'tier',
+      header: 'Tier',
+      accessorKey: 'tier',
+    },
+    {
+      id: 'didWin',
+      header: 'Did Win?',
+      accessorKey: 'didWin',
+    },
+    {
+      id: 'victoryPath',
+      header: 'Path to Victory',
+      accessorKey: 'victoryPath',
+      cell: ({ row }) => {
         return (
           <Link
             href={`/admin/victory-path/${row.original.slug}`}
@@ -387,9 +453,10 @@ export default function AdminCandidatesTable({ campaigns }) {
       },
     },
     {
-      Header: 'Email',
-      accessor: 'email',
-      Cell: ({ row }) => {
+      id: 'email',
+      header: 'Email',
+      accessorKey: 'email',
+      cell: ({ row }) => {
         return (
           <a href={`mailto:${row.original.email}`} className="underline">
             {row.original.email}
@@ -398,9 +465,10 @@ export default function AdminCandidatesTable({ campaigns }) {
       },
     },
     {
-      Header: 'Metrics',
-      accessor: 'metrics',
-      Cell: ({ row }) => {
+      id: 'metrics',
+      header: 'Metrics',
+      accessorKey: 'metrics',
+      cell: ({ row }) => {
         return (
           <a
             href={`/admin/candidate-metrics/${row.original.slug}`}
@@ -413,45 +481,52 @@ export default function AdminCandidatesTable({ campaigns }) {
         )
       },
     },
-
     {
-      Header: 'Doors Knocked',
-      accessor: 'doorKnocking',
+      id: 'doorKnocking',
+      header: 'Doors Knocked',
+      accessorKey: 'doorKnocking',
     },
     {
-      Header: 'Direct Mail',
-      accessor: 'directMail',
+      id: 'directMail',
+      header: 'Direct Mail',
+      accessorKey: 'directMail',
     },
     {
-      Header: 'Phone Calls',
-      accessor: 'calls',
+      id: 'calls',
+      header: 'Phone Calls',
+      accessorKey: 'calls',
     },
     {
-      Header: 'Digital Advertising',
-      accessor: 'digitalAds',
+      id: 'digitalAds',
+      header: 'Digital Advertising',
+      accessorKey: 'digitalAds',
     },
     {
-      Header: 'Texting',
-      accessor: 'text',
+      id: 'text',
+      header: 'Texting',
+      accessorKey: 'text',
     },
     {
-      Header: 'Events & Rallies',
-      accessor: 'events',
+      id: 'events',
+      header: 'Events & Rallies',
+      accessorKey: 'events',
     },
     {
-      Header: 'Yard Signs',
-      accessor: 'yardSigns',
+      id: 'yardSigns',
+      header: 'Yard Signs',
+      accessorKey: 'yardSigns',
     },
     {
-      Header: 'AI Docs Created',
-      accessor: 'aiDocsCreated',
+      id: 'aiDocsCreated',
+      header: 'AI Docs Created',
+      accessorKey: 'aiDocsCreated',
     },
-
     {
-      Header: 'Phone',
-      accessor: 'phone',
+      id: 'phone',
+      header: 'Phone',
+      accessorKey: 'phone',
       collapse: true,
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         if (row.original.phone === 'n/a') {
           return 'n/a'
         }
@@ -463,144 +538,153 @@ export default function AdminCandidatesTable({ campaigns }) {
       },
     },
     {
-      Header: 'Onboarding Step',
-      accessor: 'currentStep',
+      id: 'currentStep',
+      header: 'Onboarding Step',
+      accessorKey: 'currentStep',
     },
     {
-      Header: 'Last Visit',
-      accessor: 'lastVisited',
-      sortDescFirst: true,
-      sortType: (rowA, rowB) =>
+      id: 'lastVisited',
+      header: 'Last Visit',
+      accessorKey: 'lastVisited',
+      sortingFn: (rowA, rowB) =>
         dateColumnSort(rowA.original.lastVisited, rowB.original.lastVisited),
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         return row.original.lastVisited
           ? dateWithTime(row.original.lastVisited)
           : 'n/a'
       },
     },
     {
-      Header: 'Date Created',
-      accessor: (data) => {
-        return data.createdAt ? new Date(data.createdAt) : new Date()
-      },
-      sortType: 'datetime',
-      Cell: ({ row }) => getDateCellContents(row?.original?.createdAt),
+      id: 'createdAt',
+      header: 'Date Created',
+      accessorFn: (row) =>
+        row.createdAt ? new Date(row.createdAt) : new Date(),
+      sortingFn: 'datetime',
+      cell: ({ row }) => getDateCellContents(row?.original?.createdAt),
     },
     {
-      Header: 'Last Modified',
-      accessor: (data) => {
-        return data.updatedAt ? new Date(data.updatedAt) : new Date()
-      },
-      sortType: 'datetime',
-      Cell: ({ row }) => getDateCellContents(row?.original?.updatedAt),
+      id: 'updatedAt',
+      header: 'Last Modified',
+      accessorFn: (row) =>
+        row.updatedAt ? new Date(row.updatedAt) : new Date(),
+      sortingFn: 'datetime',
+      cell: ({ row }) => getDateCellContents(row?.original?.updatedAt),
     },
     {
-      Header: 'Party',
-      accessor: 'party',
+      id: 'party',
+      header: 'Party',
+      accessorKey: 'party',
     },
     {
-      Header: 'Office',
-      accessor: 'office',
+      id: 'office',
+      header: 'Office',
+      accessorKey: 'office',
     },
     {
-      Header: 'BR Office Level',
-      accessor: 'ballotLevel',
+      id: 'ballotLevel',
+      header: 'BR Office Level',
+      accessorKey: 'ballotLevel',
     },
     {
-      Header: 'Enriched Office Level',
-      accessor: 'level',
+      id: 'level',
+      header: 'Enriched Office Level',
+      accessorKey: 'level',
     },
     {
-      Header: 'Primary Date',
-      accessor: (data) =>
-        data.primaryElectionDate
-          ? new Date(data.primaryElectionDate)
+      id: 'primaryElectionDate',
+      header: 'Primary Date',
+      accessorFn: (row) =>
+        row.primaryElectionDate
+          ? new Date(row.primaryElectionDate)
           : new Date('1970-01-01'),
-      sortDescFirst: true,
-      sortType: (rowA, rowB) =>
+      sortingFn: (rowA, rowB) =>
         dateColumnSort(
           rowA.original.primaryElectionDate,
           rowB.original.primaryElectionDate,
         ),
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         return dateUsHelper(row.original.primaryElectionDate)
       },
     },
     {
-      Header: 'Election Date',
-      // TODO: Just abstract out this bit and use for other datetime columns as well
-      accessor: (data) =>
-        data.electionDate
-          ? new Date(data.electionDate)
-          : new Date('1970-01-01'),
-      sortDescFirst: true,
-      sortType: (rowA, rowB) =>
+      id: 'electionDate',
+      header: 'Election Date',
+      accessorFn: (row) =>
+        row.electionDate ? new Date(row.electionDate) : new Date('1970-01-01'),
+      sortingFn: (rowA, rowB) =>
         dateColumnSort(rowA.original.electionDate, rowB.original.electionDate),
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         return dateUsHelper(row.original.electionDate)
       },
     },
     {
-      Header: 'Filing Period Start',
-      accessor: (data) =>
-        data.electionDate
-          ? new Date(data.filingPeriodsStart)
+      id: 'filingPeriodsStart',
+      header: 'Filing Period Start',
+      accessorFn: (row) =>
+        row.electionDate
+          ? new Date(row.filingPeriodsStart)
           : new Date('1970-01-01'),
-      sortDescFirst: true,
-      sortType: (rowA, rowB) =>
+      sortingFn: (rowA, rowB) =>
         dateColumnSort(
           rowA.original.filingPeriodsStart,
           rowB.original.filingPeriodsStart,
         ),
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         return dateUsHelper(row.original.filingPeriodsStart)
       },
     },
     {
-      Header: 'Filing Period End',
-      accessor: (data) =>
-        data.electionDate
-          ? new Date(data.filingPeriodsEnd)
+      id: 'filingPeriodsEnd',
+      header: 'Filing Period End',
+      accessorFn: (row) =>
+        row.electionDate
+          ? new Date(row.filingPeriodsEnd)
           : new Date('1970-01-01'),
-      sortDescFirst: true,
-      sortType: (rowA, rowB) =>
+      sortingFn: (rowA, rowB) =>
         dateColumnSort(
           rowA.original.filingPeriodsEnd,
           rowB.original.filingPeriodsEnd,
         ),
-      Cell: ({ row }) => {
+      cell: ({ row }) => {
         return dateUsHelper(row.original.filingPeriodsEnd)
       },
     },
     {
-      Header: 'Term Length',
-      accessor: 'officeTermLength',
+      id: 'officeTermLength',
+      header: 'Term Length',
+      accessorKey: 'officeTermLength',
     },
     {
-      Header: 'District',
-      accessor: 'district',
+      id: 'district',
+      header: 'District',
+      accessorKey: 'district',
     },
     {
-      Header: 'Zip',
-      accessor: 'zip',
+      id: 'zip',
+      header: 'Zip',
+      accessorKey: 'zip',
     },
     {
-      Header: 'City',
-      accessor: 'city',
+      id: 'city',
+      header: 'City',
+      accessorKey: 'city',
     },
     {
-      Header: 'State',
-      accessor: 'state',
+      id: 'state',
+      header: 'State',
+      accessorKey: 'state',
       collapse: true,
     },
     {
-      Header: 'Candidacy',
-      accessor: 'campaignCommittee',
+      id: 'campaignCommittee',
+      header: 'Candidacy',
+      accessorKey: 'campaignCommittee',
     },
     {
-      Header: 'Website',
-      accessor: 'website',
-      Cell: ({ row }) => {
+      id: 'website',
+      header: 'Website',
+      accessorKey: 'website',
+      cell: ({ row }) => {
         if (!row.original.website) {
           return ''
         }
@@ -612,8 +696,9 @@ export default function AdminCandidatesTable({ campaigns }) {
       },
     },
     {
-      Header: 'Pledged',
-      accessor: 'pledged',
+      id: 'pledged',
+      header: 'Pledged',
+      accessorKey: 'pledged',
     },
   ]
 
