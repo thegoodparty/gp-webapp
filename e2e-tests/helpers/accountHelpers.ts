@@ -90,17 +90,15 @@ export async function ensureAdminSession() {
     await page.goto(victoryPathUrl);
     await documentReady(page);
 
-    // Add more explicit waiting and logging
     console.log('Waiting for dropdown button...');
     const dropdownButton = page.getByRole('button', { name: '\u200b', exact: true }).nth(1);
     await dropdownButton.waitFor({ state: 'visible', timeout: 60000 });
     await dropdownButton.click();
 
     console.log('Waiting for Yes option...');
-    const yesOption = page.getByRole('option', { name: 'Yes' });
-    await yesOption.waitFor({ state: 'visible', timeout: 60000 });
-    await page.waitForTimeout(1000);
-    await yesOption.click();
+    await page.waitForTimeout(5000);
+    await page.getByRole('option', { name: 'Yes' }).waitFor({ state: 'visible', timeout: 5000 });
+    await page.getByRole('option', { name: 'Yes' }).click();
 
     console.log('Waiting for Save button...');
     const saveButton = page.getByRole('button', { name: 'Save' });
