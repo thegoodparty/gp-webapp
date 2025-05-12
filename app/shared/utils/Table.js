@@ -12,16 +12,12 @@ import styles from './Table.module.scss'
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { matchSorter } from 'match-sorter'
 
-function DefaultColumnFilter({
-  column: { filterValue, preFilteredRows, setFilter },
-}) {
-  const count = (preFilteredRows || []).length
+function DefaultColumnFilter({ column }) {
+  const count = column.getFacetedRowModel?.()?.rows?.length ?? 0
   return (
     <input
-      value={filterValue || ''}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined)
-      }}
+      value={column.getFilterValue() ?? ''}
+      onChange={(e) => column.setFilterValue(e.target.value || undefined)}
       placeholder={`Search ${count} records...`}
     />
   )
