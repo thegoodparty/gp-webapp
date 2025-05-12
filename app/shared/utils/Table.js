@@ -38,8 +38,13 @@ export default function Table({
   filterColumns = true,
   initialSortById = '',
   defaultFilters = [],
-  defaultPageSize = 25,
+  defaultPageSize = 10,
   showPagination = true,
+  pageIndex: controlledPageIndex,
+  onPageIndexChange,
+  pageCount: controlledPageCount,
+  pageSize: controlledPageSize,
+  onPageSizeChange,
 }) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -53,6 +58,17 @@ export default function Table({
       pageIndex: 0,
     }))
   }, [defaultPageSize])
+
+  const pageIndex = controlledPageIndex ?? pagination.pageIndex
+  const pageSize = controlledPageSize ?? pagination.pageSize
+  const pageCount = controlledPageCount
+  const setPageIndex =
+    onPageIndexChange ??
+    ((idx) => setPagination((prev) => ({ ...prev, pageIndex: idx })))
+  const setPageSize =
+    onPageSizeChange ??
+    ((size) =>
+      setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 })))
 
   const filterTypes = useMemo(
     () => ({
@@ -89,15 +105,20 @@ export default function Table({
     columns,
     state: {
       ...initialState,
-      pagination,
+      pagination: { pageIndex, pageSize },
     },
-    onPaginationChange: setPagination,
+    onPaginationChange: ({ pageIndex, pageSize }) => {
+      setPageIndex(pageIndex)
+      setPageSize(pageSize)
+    },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     defaultColumn,
     filterTypes,
+    manualPagination: !!controlledPageCount,
+    pageCount: controlledPageCount,
   })
 
   return (
@@ -168,14 +189,14 @@ export default function Table({
         <div className="flex items-center justify-center my-4">
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
             {'<<'}
           </button>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => table.previousPage()}
+            onClick={() => setPageIndex(pageIndex - 1)}
             disabled={!table.getCanPreviousPage()}
           >
             {'<'}
@@ -184,8 +205,7 @@ export default function Table({
             <span>
               Page{' '}
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{' '}
-                {table.getPageCount()}
+                {pageIndex + 1} of {pageCount ?? table.getPageCount()}
               </strong>
             </span>
             <span>
@@ -193,18 +213,20 @@ export default function Table({
               <input
                 className="w-8 border p-1"
                 type="number"
-                defaultValue={table.getState().pagination.pageIndex + 1}
+                value={pageIndex + 1}
+                min={1}
+                max={pageCount ?? table.getPageCount()}
                 onChange={(e) => {
                   const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  table.setPageIndex(page)
+                  setPageIndex(page)
                 }}
               />
             </span>
           </div>
           <select
             className="border px-2 py-1 mx-1"
-            value={table.getState().pagination.pageSize}
-            onChange={(e) => table.setPageSize(Number(e.target.value))}
+            value={pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
           >
             {[10, 25, 50, 100].map((size) => (
               <option key={size} value={size}>
@@ -214,14 +236,16 @@ export default function Table({
           </select>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => table.nextPage()}
+            onClick={() => setPageIndex(pageIndex + 1)}
             disabled={!table.getCanNextPage()}
           >
             {'>'}
           </button>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() =>
+              setPageIndex((pageCount ?? table.getPageCount()) - 1)
+            }
             disabled={!table.getCanNextPage()}
           >
             {'>>'}
