@@ -71,87 +71,91 @@ export default function MyContent(props) {
     data.sort((a, b) => a.updatedAt - b.updatedAt)
   }
 
-  const columns = useMemo(() => [
-    {
-      Header: 'Name',
-      accessor: 'name',
-      Cell: ({ row }) => {
-        if (
-          row.original.updatedAt !== undefined &&
-          row.original.updatedAt != 'Invalid Date'
-        ) {
-          return (
-            <Link
-              href="/dashboard/content/[slug]"
-              as={`/dashboard/content/${row.original.slug}`}
-              onClick={() => {
-                trackEvent(EVENTS.ContentBuilder.ClickContent, {
-                  name: row.original.name,
-                  slug: row.original.slug,
-                  key: row.original.documentKey,
-                })
-              }}
-              className="inline-block"
-            >
+  const columns = useMemo(
+    () => [
+      {
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
+        cell: ({ row }) => {
+          if (
+            row.original.updatedAt !== undefined &&
+            row.original.updatedAt != 'Invalid Date'
+          ) {
+            return (
+              <Link
+                href="/dashboard/content/[slug]"
+                as={`/dashboard/content/${row.original.slug}`}
+                onClick={() => {
+                  trackEvent(EVENTS.ContentBuilder.ClickContent, {
+                    name: row.original.name,
+                    slug: row.original.slug,
+                    key: row.original.documentKey,
+                  })
+                }}
+                className="inline-block"
+              >
+                <div className="flex flex-row items-center font-semibold">
+                  <IoDocumentText className="ml-3 text-md shrink-0" />
+                  <div className="ml-3">{row.original.name}</div>
+                </div>
+              </Link>
+            )
+          } else {
+            return (
+              // do not show link for documents that are processing.
               <div className="flex flex-row items-center font-semibold">
                 <IoDocumentText className="ml-3 text-md shrink-0" />
                 <div className="ml-3">{row.original.name}</div>
               </div>
-            </Link>
-          )
-        } else {
-          return (
-            // do not show link for documents that are processing.
-            <div className="flex flex-row items-center font-semibold">
-              <IoDocumentText className="ml-3 text-md shrink-0" />
-              <div className="ml-3">{row.original.name}</div>
-            </div>
-          )
-        }
-      },
-    },
-    {
-      Header: 'Last Modified',
-      accessor: (data) => {
-        return data.updatedAt ? new Date(data.updatedAt) : new Date()
-      },
-      sortType: 'datetime',
-      Cell: ({ row }) => {
-        let updatedAt
-        if (row.original.updatedAt) {
-          updatedAt = dateWithTime(row.original.updatedAt)
-          if (updatedAt === undefined || updatedAt === 'Invalid Date') {
-            const now = new Date()
-            updatedAt = dateWithTime(now)
+            )
           }
-        }
-        return updatedAt
+        },
       },
-    },
-    {
-      Header: '',
-      collapse: true,
-      accessor: 'actions',
-      Cell: ({ row }) => {
-        const actionProps = {
-          slug: row.original?.slug ? row.original.slug : '',
-          name: row.original?.name ? row.original.name : '',
-          documentKey: row.original?.documentKey
-            ? row.original.documentKey
-            : '',
-          tableVersion,
-          updatedAt: row.original.updatedAt
-            ? row.original.updatedAt
-            : undefined,
-          status:
-            row.original.updatedAt && row.original.updatedAt != 'Invalid Date'
-              ? undefined
-              : 'processing',
-        }
-        return <Actions {...actionProps} />
+      {
+        id: 'lastModified',
+        header: 'Last Modified',
+        accessorFn: (row) =>
+          row.updatedAt ? new Date(row.updatedAt) : new Date(),
+        sortingFn: 'datetime',
+        cell: ({ row }) => {
+          let updatedAt
+          if (row.original.updatedAt) {
+            updatedAt = dateWithTime(row.original.updatedAt)
+            if (updatedAt === undefined || updatedAt === 'Invalid Date') {
+              const now = new Date()
+              updatedAt = dateWithTime(now)
+            }
+          }
+          return updatedAt
+        },
       },
-    },
-  ])
+      {
+        id: 'actions',
+        header: '',
+        collapse: true,
+        cell: ({ row }) => {
+          const actionProps = {
+            slug: row.original?.slug ? row.original.slug : '',
+            name: row.original?.name ? row.original.name : '',
+            documentKey: row.original?.documentKey
+              ? row.original.documentKey
+              : '',
+            tableVersion,
+            updatedAt: row.original.updatedAt
+              ? row.original.updatedAt
+              : undefined,
+            status:
+              row.original.updatedAt && row.original.updatedAt != 'Invalid Date'
+                ? undefined
+                : 'processing',
+          }
+          return <Actions {...actionProps} />
+        },
+      },
+    ],
+    [tableVersion],
+  )
 
   async function getUserCampaign() {
     const campaignObj = await getCampaign()

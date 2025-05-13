@@ -23,7 +23,6 @@ const CandidateProgressBar = ({
     didWin,
     votesReceived,
   } = candidate
-  const followOffset = 0 // useHookstate(followOffsetState);
   const offsetFollow = 0
 
   let people = overrideFollowers ? likelyVoters : peopleSoFar

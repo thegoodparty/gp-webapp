@@ -9,111 +9,138 @@ import { dateUsHelper, dateWithTime } from 'helpers/dateHelper'
 import Actions from './Actions'
 import { userIsAdmin } from 'helpers/userHelper'
 
-const buildTableInputData = (users) =>
-  users.map((user) => {
-    const metaData = user.metaData || {}
-    const userType = userIsAdmin(user) ? 'admin' : user.roles?.join(', ')
+const buildTableInputData = (users) => {
+  if (!Array.isArray(users)) return []
 
-    return {
-      ...user,
-      userType,
-      lastVisited: metaData?.lastVisited && new Date(metaData?.lastVisited),
-      createdAt: user.createdAt && new Date(user.createdAt),
-      campaigns: user.campaigns || [],
-    }
-  })
+  return users
+    .map((user) => {
+      if (!user) return null
+
+      const metaData = user.metaData || {}
+      const userType = userIsAdmin(user)
+        ? 'admin'
+        : user.roles?.join(', ') || ''
+
+      return {
+        ...user,
+        userType,
+        lastVisited: metaData?.lastVisited
+          ? new Date(metaData.lastVisited)
+          : null,
+        createdAt: user.createdAt ? new Date(user.createdAt) : null,
+        campaigns: user.campaigns || [],
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        zip: user.zip || '',
+      }
+    })
+    .filter(Boolean) // Remove any null entries
+}
 
 export default function AdminUsersPage(props) {
   const users = props.users || []
   const { defaultFilters = [] } = props
   const inputData = buildTableInputData(users)
 
-  const data = useMemo(() => inputData)
+  const data = useMemo(() => inputData, [inputData])
 
-  let columns = useMemo(() => [
-    {
-      Header: 'Actions',
-      collapse: true,
-      accessor: 'actions',
-      Cell: ({ row }) => {
-        return <Actions user={row.original} />
+  const columns = useMemo(
+    () => [
+      {
+        id: 'actions',
+        header: 'Actions',
+        collapse: true,
+        cell: ({ row }) => {
+          return <Actions user={row.original} />
+        },
       },
-    },
-
-    {
-      Header: 'Name',
-      accessor: 'name',
-      Cell: ({ row }) => {
-        return (
-          <>
-            {row.original.firstName} {row.original.lastName}
-          </>
-        )
+      {
+        id: 'name',
+        header: 'Name',
+        accessorFn: (row) =>
+          `${row.firstName || ''} ${row.lastName || ''}`.trim() || 'N/A',
+        cell: ({ row }) => {
+          const name = `${row.original.firstName || ''} ${
+            row.original.lastName || ''
+          }`.trim()
+          return name || 'N/A'
+        },
       },
-    },
-
-    {
-      Header: 'Email',
-      accessor: 'email',
-
-      Cell: ({ row }) => (
-        <Tooltip title={row.original.email}>
-          <a href={`mailto:${row.original.email}`}>{row.original.email}</a>
-        </Tooltip>
-      ),
-    },
-    {
-      Header: 'Last Visit',
-      accessor: 'lastVisited',
-      sortType: 'datetime',
-      Cell: ({ row }) => {
-        return row.original.lastVisited &&
-          row.original.lastVisited?.toString() !== 'Invalid Date'
-          ? dateWithTime(row.original.lastVisited)
-          : 'n/a'
+      {
+        id: 'email',
+        header: 'Email',
+        accessorKey: 'email',
+        cell: ({ row }) => {
+          const email = row.original.email
+          if (!email) return 'N/A'
+          return (
+            <Tooltip title={email}>
+              <a href={`mailto:${email}`}>{email}</a>
+            </Tooltip>
+          )
+        },
       },
-    },
-
-    {
-      Header: 'Date Created',
-      accessor: 'createdAt',
-      sortType: 'datetime',
-      Cell: ({ row }) => {
-        return row.original.createdAt?.toString() !== 'Invalid Date'
-          ? dateUsHelper(row.original.createdAt)
-          : 'n/a'
+      {
+        id: 'lastVisited',
+        header: 'Last Visit',
+        accessorKey: 'lastVisited',
+        sortingFn: 'datetime',
+        cell: ({ row }) => {
+          const date = row.original.lastVisited
+          return date && date.toString() !== 'Invalid Date'
+            ? dateWithTime(date)
+            : 'N/A'
+        },
       },
-    },
-
-    {
-      Header: 'Phone',
-      accessor: 'phone',
-
-      Cell: ({ row }) => (
-        <Tooltip title={row.original.phone}>
-          <a href={`tel:${row.original.phone}`}>
-            {formatToPhone(row.original.phone)}
-          </a>
-        </Tooltip>
-      ),
-    },
-
-    {
-      Header: 'Zip',
-      accessor: 'zip',
-    },
-
-    {
-      Header: 'User Type',
-      accessor: 'userType',
-
-      collapse: true,
-    },
-    {
-      accessor: 'id',
-      hide: true,
-    },
-  ])
+      {
+        id: 'createdAt',
+        header: 'Date Created',
+        accessorKey: 'createdAt',
+        sortingFn: 'datetime',
+        cell: ({ row }) => {
+          const date = row.original.createdAt
+          return date && date.toString() !== 'Invalid Date'
+            ? dateUsHelper(date)
+            : 'N/A'
+        },
+      },
+      {
+        id: 'phone',
+        header: 'Phone',
+        accessorKey: 'phone',
+        cell: ({ row }) => {
+          const phone = row.original.phone
+          if (!phone) return 'N/A'
+          return (
+            <Tooltip title={phone}>
+              <a href={`tel:${phone}`}>{formatToPhone(phone)}</a>
+            </Tooltip>
+          )
+        },
+      },
+      {
+        id: 'zip',
+        header: 'Zip',
+        accessorKey: 'zip',
+        cell: ({ row }) => row.original.zip || 'N/A',
+      },
+      {
+        id: 'userType',
+        header: 'User Type',
+        accessorKey: 'userType',
+        cell: ({ row }) => row.original.userType || 'N/A',
+        collapse: true,
+      },
+      {
+        id: 'id',
+        accessorKey: 'id',
+        hide: true,
+      },
+    ],
+    [],
+  )
 
   return (
     <AdminWrapper {...props}>
