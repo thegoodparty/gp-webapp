@@ -26,7 +26,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
   const router = useRouter()
 
   const onChangeState = async (stateName) => {
-    const place = await fetchPlace({ slug: stateName, includeRaces: false })
+    const place = await fetchPlace({ slug: stateName, includeRaces: false, placeColumns: 'slug,name,id' })
     setState({
       ...state,
       state: stateName,
@@ -38,6 +38,7 @@ export default function SearchLocation({ withHeader = false, initialState }) {
     const place = await fetchPlace({
       slug: `${state.state.toLowerCase()}/${slugify(countyName, true)}`,
       includeRaces: false,
+      placeColumns: 'slug,name,id'
     })
     setState({
       ...state,
