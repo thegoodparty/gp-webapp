@@ -51,24 +51,29 @@ export default function AdminUsersPage(props) {
 
   const data = useMemo(() => inputData)
 
-  let columns = useMemo(() => [
-    {
-      Header: 'Name',
-      accessor: 'name',
-    },
-    {
-      Header: 'Description',
-      accessor: 'description',
-    },
-    {
-      Header: 'Actions',
-      collapse: true,
-      accessor: 'actions',
-      Cell: ({ row }) => {
-        return <BustCacheButton {...row.original} />
+  const columns = useMemo(
+    () => [
+      {
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
       },
-    },
-  ])
+      {
+        id: 'description',
+        header: 'Description',
+        accessorKey: 'description',
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        collapse: true,
+        cell: ({ row }) => {
+          return <BustCacheButton {...row.original} />
+        },
+      },
+    ],
+    [],
+  )
 
   return (
     <AdminWrapper {...props}>

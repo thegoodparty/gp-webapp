@@ -1,61 +1,33 @@
 'use client'
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
-  useTable,
-  useSortBy,
-  usePagination,
-  useFilters,
-  useGlobalFilter,
-  useAsyncDebounce,
-} from 'react-table'
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+  flexRender,
+} from '@tanstack/react-table'
 import styles from './Table.module.scss'
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { matchSorter } from 'match-sorter'
 
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter,
-}) {
-  const count = preGlobalFilteredRows.length
-  const [value, setValue] = React.useState(globalFilter)
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined)
-  }, 200)
-
-  return (
-    <span>
-      Search:{' '}
-      <input
-        value={value || ''}
-        onChange={(e) => {
-          setValue(e.target.value)
-          onChange(e.target.value)
-        }}
-        placeholder={`${count} records...`}
-        style={{ fontSize: '1.1rem', border: '0' }}
-      />
-    </span>
-  )
-}
-
-function DefaultColumnFilter({
-  column: { filterValue, preFilteredRows, setFilter },
-}) {
-  const count = preFilteredRows.length
+function DefaultColumnFilter({ column }) {
+  const count = column.getFacetedRowModel?.()?.rows?.length ?? 0
   return (
     <input
-      value={filterValue || ''}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
-      }}
+      value={column.getFilterValue() ?? ''}
+      onChange={(e) => column.setFilterValue(e.target.value || undefined)}
       placeholder={`Search ${count} records...`}
     />
   )
 }
 
-function fuzzyTextFilterFn(rows, id, filterValue) {
-  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] })
+function fuzzyTextFilterFn(row, columnId, filterValue) {
+  return (
+    matchSorter([row], filterValue, { keys: [(row) => row.getValue(columnId)] })
+      .length > 0
+  )
 }
 
 fuzzyTextFilterFn.autoRemove = (val) => !val
@@ -64,22 +36,50 @@ export default function Table({
   columns,
   data,
   filterColumns = true,
-  pagination = true,
   initialSortById = '',
   defaultFilters = [],
+  defaultPageSize = 10,
+  showPagination = true,
+  pageIndex: controlledPageIndex,
+  onPageIndexChange,
+  pageCount: controlledPageCount,
+  pageSize: controlledPageSize,
+  onPageSizeChange,
 }) {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: defaultPageSize,
+  })
+
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageSize: defaultPageSize,
+      pageIndex: 0,
+    }))
+  }, [defaultPageSize])
+
+  const pageIndex = controlledPageIndex ?? pagination.pageIndex
+  const pageSize = controlledPageSize ?? pagination.pageSize
+  const pageCount = controlledPageCount
+  const setPageIndex =
+    onPageIndexChange ??
+    ((idx) => setPagination((prev) => ({ ...prev, pageIndex: idx })))
+  const setPageSize =
+    onPageSizeChange ??
+    ((size) =>
+      setPagination((prev) => ({ ...prev, pageSize: size, pageIndex: 0 })))
+
   const filterTypes = useMemo(
     () => ({
       fuzzyText: filterColumns ? fuzzyTextFilterFn : undefined,
-      text: (rows, id, filterValue) => {
-        return rows.filter((row) => {
-          const rowValue = row.values[id]
-          return rowValue !== undefined
-            ? String(rowValue)
-                .toLowerCase()
-                .startsWith(String(filterValue).toLowerCase())
-            : true
-        })
+      text: (row, columnId, filterValue) => {
+        const rowValue = row.getValue(columnId)
+        return rowValue !== undefined
+          ? String(rowValue)
+              .toLowerCase()
+              .startsWith(String(filterValue).toLowerCase())
+          : true
       },
     }),
     [filterColumns],
@@ -92,84 +92,72 @@ export default function Table({
     [filterColumns],
   )
 
-  const initialFilters = useMemo(() => defaultFilters, [])
-
   const initialState = useMemo(
     () => ({
-      pageIndex: 0,
-      sortBy: initialSortById ? [{ id: initialSortById, desc: true }] : [],
-      filters: initialFilters,
+      sorting: initialSortById ? [{ id: initialSortById, desc: true }] : [],
+      filters: defaultFilters,
     }),
-    [initialSortById],
+    [initialSortById, defaultFilters],
   )
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
-      columns,
-      data,
-      initialState,
-      defaultColumn,
-      filterTypes,
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      ...initialState,
+      pagination: { pageIndex, pageSize },
     },
-    useFilters,
-    useGlobalFilter,
-    useSortBy,
-    usePagination,
-  )
-
-  useEffect(() => {
-    if (!pagination) {
-      setPageSize(10000)
-    }
-  }, [pagination, setPageSize])
+    onPaginationChange: ({ pageIndex, pageSize }) => {
+      setPageIndex(pageIndex)
+      setPageSize(pageSize)
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    defaultColumn,
+    filterTypes,
+    manualPagination: !!controlledPageCount,
+    pageCount: controlledPageCount,
+  })
 
   return (
     <div className={styles.wrapper}>
-      <table
-        {...getTableProps()}
-        className="font-sfpro text-lg text-indigo-800 font-normal shrink-0"
-      >
+      <table className="font-sfpro text-lg text-indigo-800 font-normal shrink-0">
         <thead>
-          {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
               {headerGroup.headers.map(
-                (column, i) =>
-                  Boolean(!column.hide) && (
+                (header) =>
+                  Boolean(!header.column.columnDef.hide) && (
                     <th
-                      key={i}
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       <div
                         className={`flex flex-row items-center ${
-                          index === 0 && 'pl-2'
+                          headerGroup.id === '0' && 'pl-2'
                         }`}
                       >
-                        {column.render('Header')}
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
-                          ) : (
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                        {{
+                          asc: (
                             <FaArrowUp className="text-xs font-normal ml-2 mb-[1px]" />
-                          )
-                        ) : null}
+                          ),
+                          desc: (
+                            <FaArrowDown className="text-xs font-normal ml-2 mb-[1px]" />
+                          ),
+                        }[header.column.getIsSorted()] ?? null}
                       </div>
-                      {column.canFilter && filterColumns
-                        ? column.render('Filter')
+                      {header.column.getCanFilter() && filterColumns
+                        ? flexRender(
+                            header.column.columnDef.Filter,
+                            header.getContext(),
+                          )
                         : null}
                     </th>
                   ),
@@ -177,37 +165,39 @@ export default function Table({
             </tr>
           ))}
         </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row)
-            return (
-              <tr key={i} {...row.getRowProps()}>
-                {row.cells.map(
-                  (cell, j) =>
-                    Boolean(!cell.column.hide) && (
-                      <td key={j} {...cell.getCellProps()}>
-                        {cell.render('Cell')}
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row
+                .getVisibleCells()
+                .map(
+                  (cell) =>
+                    Boolean(!cell.column.columnDef.hide) && (
+                      <td key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
                       </td>
                     ),
                 )}
-              </tr>
-            )
-          })}
+            </tr>
+          ))}
         </tbody>
       </table>
-      {pagination && (
+      {showPagination && (
         <div className="flex items-center justify-center my-4">
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => gotoPage(0)}
-            disabled={!canPreviousPage}
+            onClick={() => setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
           >
             {'<<'}
           </button>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => previousPage()}
-            disabled={!canPreviousPage}
+            onClick={() => setPageIndex(pageIndex - 1)}
+            disabled={!table.getCanPreviousPage()}
           >
             {'<'}
           </button>
@@ -215,7 +205,7 @@ export default function Table({
             <span>
               Page{' '}
               <strong>
-                {pageIndex + 1} of {pageOptions.length}
+                {pageIndex + 1} of {pageCount ?? table.getPageCount()}
               </strong>
             </span>
             <span>
@@ -223,10 +213,12 @@ export default function Table({
               <input
                 className="w-8 border p-1"
                 type="number"
-                defaultValue={pageIndex + 1}
+                value={pageIndex + 1}
+                min={1}
+                max={pageCount ?? table.getPageCount()}
                 onChange={(e) => {
                   const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  gotoPage(page)
+                  setPageIndex(page)
                 }}
               />
             </span>
@@ -236,7 +228,7 @@ export default function Table({
             value={pageSize}
             onChange={(e) => setPageSize(Number(e.target.value))}
           >
-            {[10, 20, 30, 40, 50].map((size) => (
+            {[10, 25, 50, 100].map((size) => (
               <option key={size} value={size}>
                 Show {size}
               </option>
@@ -244,15 +236,17 @@ export default function Table({
           </select>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => nextPage()}
-            disabled={!canNextPage}
+            onClick={() => setPageIndex(pageIndex + 1)}
+            disabled={!table.getCanNextPage()}
           >
             {'>'}
           </button>
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
-            onClick={() => gotoPage(pageCount - 1)}
-            disabled={!canNextPage}
+            onClick={() =>
+              setPageIndex((pageCount ?? table.getPageCount()) - 1)
+            }
+            disabled={!table.getCanNextPage()}
           >
             {'>>'}
           </button>

@@ -7,7 +7,7 @@ import Body2 from '@shared/typography/Body2'
 import RadioList from '@shared/inputs/RadioList'
 import Button from '@shared/buttons/Button'
 import PartyAnimation from '@shared/animations/PartyAnimation'
-import { useSnackbarState } from '@shared/utils/Snackbar'
+import { useSnackbar } from 'helpers/useSnackbar'
 
 function WonMessage({ electionDate }) {
   return (
@@ -46,7 +46,7 @@ export default function PrimaryResultModal({
   electionDate,
   onClose,
 }) {
-  const snackbarState = useSnackbarState()
+  const { errorSnackbar } = useSnackbar()
   const [primaryResult, setPrimaryResult] = useState(null)
   const [requestState, setRequestState] = useState({
     loading: false,
@@ -76,12 +76,7 @@ export default function PrimaryResultModal({
       setRequestState({ loading: false, error: false })
     } catch (e) {
       console.error('Error submiting Primary Result:', e)
-      snackbarState.set({
-        isOpen: true,
-        message: 'Failed to submit election result.',
-        isError: true,
-      })
-
+      errorSnackbar('Failed to submit election result.')
       setRequestState({ loading: false, error: true })
     }
   }
