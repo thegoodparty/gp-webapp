@@ -12,12 +12,13 @@ import { generateAIContent } from 'helpers/generateAIContent'
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { debounce } from 'helpers/debounceHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 export const GenerateLoadingScreen = ({
-  campaign = {},
   aiTemplateKey = '',
   onNext = (aiScriptKey = '') => {},
 }) => {
+  const [campaign, setCampaign] = useCampaign()
   const [aiContentSections] = buildAiContentSections(
     campaign,
     AI_CONTENT_SUB_SECTION_KEY,
@@ -47,6 +48,7 @@ export const GenerateLoadingScreen = ({
       campaign,
       AI_CONTENT_SUB_SECTION_KEY,
     )
+    setCampaign(campaign)
     if (jobsProcessing) {
       return debounce(() => generateContentPolling(aiScriptKey), 1000 * 3)
     } else {
