@@ -48,6 +48,7 @@ export const GenerateLoadingScreen = ({
       campaign,
       AI_CONTENT_SUB_SECTION_KEY,
     )
+
     setCampaign(campaign)
     if (jobsProcessing) {
       return debounce(() => generateContentPolling(aiScriptKey), 1000 * 3)
