@@ -17,6 +17,8 @@ const meta = pageMetaData({
 })
 export const metadata = meta
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page({ params, searchParams }) {
   await adminAccessOnly()
 
@@ -25,11 +27,11 @@ export default async function Page({ params, searchParams }) {
     fetchTextMessaging(),
   ])
 
-  const childProps = {
-    pathname: '/dashboard/text-messaging',
-    campaign,
-    textMessaging,
-  }
-
-  return <TextMessagingPage {...childProps} />
+  return (
+    <TextMessagingPage
+      pathname="/dashboard/text-messaging"
+      campaign={campaign}
+      textMessaging={textMessaging}
+    />
+  )
 }

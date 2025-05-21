@@ -5,19 +5,19 @@ on production the path is https://www.goodparty.org/sitemaps/candidates/ca/sitem
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 */
 
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
 import { flatStates } from 'helpers/statesHelper'
 
 import { APP_BASE } from 'appEnv'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
+import { electionApiRoutes } from 'gpApi/routes'
 
 const fetchCandidates = async (state) => {
-  const api = gpApi.candidate.list
+  const api = electionApiRoutes.candidacies.find.path
   const payload = {
     state,
+    columns: 'slug',
   }
-
-  return await gpFetch(api, payload, 3600)
+  return await unAuthElectionFetch(api, payload, 3600)
 }
 
 const now = new Date()
@@ -35,14 +35,14 @@ export async function generateSitemaps() {
 export default async function sitemap({ id }) {
   try {
     const state = flatStates[id].toLocaleLowerCase()
-    const { candidates } = await fetchCandidates(state)
+    const candidates = await fetchCandidates(state)
 
     const mainSitemap = []
     const urls = []
     // state url
 
-    candidates.forEach((slug) => {
-      urls.push(`/candidate/${slug}`)
+    candidates.forEach((candidate) => {
+      urls.push(`/candidate/${candidate.slug}`)
     })
 
     urls.forEach((url) => {

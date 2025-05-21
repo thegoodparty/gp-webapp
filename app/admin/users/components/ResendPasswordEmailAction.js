@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import Button from '@shared/buttons/Button'
-import { sendSetPasswordEmail } from './AddUserButton'
 import AlertDialog from '@shared/utils/AlertDialog'
 import { USER_ROLES, userHasRole } from 'helpers/userHelper'
+import { sendSetPasswordEmail } from 'app/admin/shared/sendSetPasswordEmail'
 
 export default function ResendPasswordEmailAction({ user }) {
   const { id: userId, email, firstName, lastName } = user

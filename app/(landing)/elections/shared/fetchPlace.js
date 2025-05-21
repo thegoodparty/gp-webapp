@@ -1,12 +1,13 @@
-import gpApi from 'gpApi'
-import gpFetch from 'gpApi/gpFetch'
+import { electionApiRoutes } from 'gpApi/routes'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 
 const fetchPlace = async ({
   slug,
   includeRaces = true,
   includeParent = false,
+  categorizeChildren = false,
 }) => {
-  const api = gpApi.elections.places
+  const api = electionApiRoutes.places.find.path
   const payload = {
     slug: slug.toLowerCase(),
     includeChildren: true,
@@ -14,8 +15,9 @@ const fetchPlace = async ({
     raceColumns:
       'slug,normalizedPositionName,electionDate,positionDescription,positionLevel',
     includeParent,
+    categorizeChildren,
   }
-  const res = await gpFetch(api, payload, 3600)
+  const res = await unAuthElectionFetch(api, payload, 3600)
   if (Array.isArray(res)) {
     return res[0]
   }

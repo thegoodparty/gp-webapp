@@ -2,7 +2,7 @@
 import Body2 from '@shared/typography/Body2'
 import { marked } from 'marked'
 import Typewriter from 'typewriter-effect'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import { FaRegCopy } from 'react-icons/fa'
 import { useState } from 'react'
 import Subtitle2 from '@shared/typography/Subtitle2'

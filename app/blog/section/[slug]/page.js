@@ -60,9 +60,9 @@ export default async function Page({ params }) {
 export async function generateStaticParams() {
   const sections = await fetchSections()
 
-  return sections?.map(({ section }) => {
+  return sections?.map(({ fields }) => {
     return {
-      slug: section?.slug,
+      slug: fields?.slug,
     }
   })
 }

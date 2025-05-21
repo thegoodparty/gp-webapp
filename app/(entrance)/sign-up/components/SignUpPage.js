@@ -2,7 +2,7 @@
 import { isValidEmail } from '@shared/inputs/EmailInput.js'
 import PasswordInput from '@shared/inputs/PasswrodInput.js'
 import MaxWidth from '@shared/layouts/MaxWidth'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import { isValidPassword } from '@shared/inputs/IsValidPassword'
 import Paper from '@shared/utils/Paper'
@@ -17,9 +17,14 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
 
-const fields = [
+const SIGN_UP_MODES = {
+  CANDIDATE: 'candidate',
+  FACILITATED: 'facilitated',
+}
+
+const SIGN_UP_FIELDS = [
   {
     key: 'firstName',
     label: 'First Name',
@@ -33,6 +38,24 @@ const fields = [
     type: 'text',
     placeholder: 'Doe',
     required: true,
+  },
+  {
+    key: 'signUpMode',
+    label: 'What best describes your situation?',
+    type: 'radio',
+    defaultValue: SIGN_UP_MODES.CANDIDATE,
+    options: [
+      {
+        key: SIGN_UP_MODES.CANDIDATE,
+        label: `I'm running for office`,
+        value: SIGN_UP_MODES.CANDIDATE,
+      },
+      {
+        key: SIGN_UP_MODES.FACILITATED,
+        label: `I'm helping someone who is running for office`,
+        value: SIGN_UP_MODES.FACILITATED,
+      },
+    ],
   },
   {
     key: 'email',
@@ -61,23 +84,47 @@ const fields = [
   },
 ]
 
+const FACILITATED_SIGN_UP_FIELDS = [
+  {
+    key: 'candidateFirstName',
+    label: `Candidate's first name`,
+    type: 'text',
+    placeholder: 'Jane',
+    required: true,
+  },
+  {
+    key: 'candidateLastName',
+    label: `Candidate's last name`,
+    type: 'text',
+    placeholder: 'Doe',
+    required: true,
+  },
+]
+
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
   return validZip.test(zip)
 }
 
-async function register(firstName, lastName, email, phone, zip, password) {
+async function register({
+  firstName,
+  lastName,
+  email,
+  phone,
+  zip,
+  password,
+  signUpMode,
+}) {
   try {
-    const payload = {
+    const resp = await clientFetch(apiRoutes.authentication.register, {
       firstName,
       lastName,
       email,
       phone,
       zip,
       password,
-    }
-
-    const resp = await clientFetch(apiRoutes.authentication.register, payload)
+      signUpMode,
+    })
     if (resp.status === 409) {
       return { exists: true }
     }
@@ -88,54 +135,93 @@ async function register(firstName, lastName, email, phone, zip, password) {
   }
 }
 
+const validUserNames = ({
+  firstName,
+  lastName,
+  candidateFirstName,
+  candidateLastName,
+  signUpMode,
+}) =>
+  (signUpMode === SIGN_UP_MODES.CANDIDATE && firstName && lastName) ||
+  (signUpMode === SIGN_UP_MODES.FACILITATED &&
+    candidateFirstName &&
+    candidateLastName)
+
 export default function SignUpPage() {
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
+    signUpMode: SIGN_UP_MODES.CANDIDATE,
+    candidateFirstName: '',
+    candidateLastName: '',
     email: '',
     phone: '',
     zip: '',
     password: '',
   })
+
+  const [fields, setFields] = useState([...SIGN_UP_FIELDS])
   const [loading, setLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
   const router = useRouter()
 
-  const enableSubmit = () =>
-    isValidEmail(state.email) && isValidPassword(state.password)
+  const {
+    firstName,
+    lastName,
+    signUpMode,
+    email,
+    phone,
+    zip,
+    password,
+    candidateFirstName,
+    candidateLastName,
+  } = state
+
+  const facilitatedSignUpMode = signUpMode === SIGN_UP_MODES.FACILITATED
+
+  const enableSubmit =
+    validUserNames(state) && isValidEmail(email) && isValidPassword(password)
 
   const handleSubmit = async () => {
     if (loading) return
     setLoading(true)
 
-    if (enableSubmit()) {
-      const { user, exists, token } = await register(
-        state.firstName,
-        state.lastName,
-        state.email,
-        state.phone,
-        state.zip,
-        state.password,
-      )
+    if (enableSubmit) {
+      const { user, token } = await register({
+        firstName: facilitatedSignUpMode ? candidateFirstName : firstName,
+        lastName: facilitatedSignUpMode ? candidateLastName : lastName,
+        email,
+        phone,
+        zip,
+        password,
+        signUpMode,
+      })
 
-      if (user) {
-        await saveToken(token)
-        setUser(user)
-        const redirect = await createCampaign()
-        setLoading(false)
-        router.push(redirect)
-        return
-      } else {
-        errorSnackbar(
-          exists
-            ? `An account with this email (${state.email}) already exists`
-            : 'Error creating account',
-        )
+      if (!user) {
+        errorSnackbar('Failed to create account')
         setLoading(false)
       }
+
+      await saveToken(token)
+      setUser(user)
+      const redirect = await createCampaign()
+      setLoading(false)
+      router.push(redirect)
     }
   }
+
+  useEffect(() => {
+    if (facilitatedSignUpMode) {
+      setFields([
+        ...SIGN_UP_FIELDS.slice(0, 3),
+        ...FACILITATED_SIGN_UP_FIELDS,
+        ...SIGN_UP_FIELDS.slice(3),
+      ])
+    } else {
+      setFields([...SIGN_UP_FIELDS])
+    }
+  }, [signUpMode])
 
   const onChangeField = (key, value) => {
     setState({
@@ -201,7 +287,7 @@ export default function SignUpPage() {
 
                 <div className="mt-8" onClick={handleSubmit}>
                   <Button
-                    disabled={loading || !enableSubmit()}
+                    disabled={loading || !enableSubmit}
                     type="submit"
                     color="primary"
                     size="large"

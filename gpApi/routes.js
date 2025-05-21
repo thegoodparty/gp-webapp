@@ -37,7 +37,7 @@ export const apiRoutes = {
       path: '/authentication/social-login/:socialProvider',
       method: 'POST',
     },
-    setSetPasswordEmail: {
+    sendSetPasswordEmail: {
       path: '/authentication/send-set-password-email',
       method: 'POST',
     },
@@ -80,8 +80,6 @@ export const apiRoutes = {
   },
   campaign: {
     pathToVictory: {
-      // TODO: not migrated to nest yet!!! https://goodparty.atlassian.net/browse/WEB-3496
-      // this is just a placeholder for testing with
       create: {
         path: '/campaigns/mine/path-to-victory',
         method: 'POST',
@@ -343,6 +341,10 @@ export const apiRoutes = {
       nextApiRoute: true,
     },
     user: {
+      get: {
+        path: '/admin/users/:id',
+        method: 'GET',
+      },
       list: {
         path: '/admin/users',
         method: 'GET',
@@ -500,12 +502,49 @@ export const apiRoutes = {
   },
   textMessaging: {
     createProject: {
-      path: '/text-campaign/project',
+      path: '/text-campaigns',
       method: 'POST',
     },
     list: {
       path: '/text-campaigns',
       method: 'GET',
     },
+    submitCompliance: {
+      path: '/text-campaigns/compliance',
+      method: 'POST',
+    },
+    submitCompliancePin: {
+      path: '/text-campaigns/compliance/pin',
+      method: 'POST',
+    },
+    approveCompliance: {
+      path: '/text-campaigns/compliance/approve',
+      method: 'POST',
+    },
   },
+}
+
+export const electionApiRoutes = {
+  places: {
+    find: {
+      path: '/places',
+      method: 'GET'
+    },
+    featuredCities: {
+      path: '/places/most-elections',
+      method: 'GET',
+    }
+  },
+  races: {
+    find: {
+      path: '/races',
+      method: 'GET'
+    }
+  },
+  candidacies: {
+    find: {
+      path: '/candidacies',
+      method: 'GET',
+    },
+  }
 }

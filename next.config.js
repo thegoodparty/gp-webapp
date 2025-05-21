@@ -1,7 +1,7 @@
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
-});
+})
 
 const nextConfig = {
   reactStrictMode: true,
@@ -11,6 +11,7 @@ const nextConfig = {
       'assets.goodparty.org',
       'images.ctfassets.net',
       'maps.googleapis.com',
+      'assets.civicengine.com'
     ],
   },
   env: {
@@ -30,8 +31,8 @@ const nextConfig = {
         source: '/robots.txt',
         destination: '/api/robots',
       },
-    ];
+    ]
   },
-};
+}
 
-module.exports = withPWA(nextConfig);
+module.exports = withPWA(nextConfig)

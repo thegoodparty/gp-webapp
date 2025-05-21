@@ -29,7 +29,6 @@ export default async function BlogArticlePage({ article }) {
     mainImage,
     publishDate,
     updateDate,
-    readingTime,
     title,
     tags,
     keyInformation,
@@ -37,6 +36,7 @@ export default async function BlogArticlePage({ article }) {
     relatedArticles,
     references,
   } = article
+
   const sectionSlug = section?.fields?.slug
   const sectionTitle = section?.fields?.title
   const breadcrumbs = [
@@ -58,8 +58,11 @@ export default async function BlogArticlePage({ article }) {
           delimiter="chevron"
           wrapText={true}
         />
-        {mainImage && (
-          <div className="relative min-h-[270px] w-full my-8" data-testid="articleHeroImage">
+        {mainImage?.url && (
+          <div
+            className="relative min-h-[270px] w-full my-8"
+            data-testid="articleHeroImage"
+          >
             <Image
               style={{
                 borderRadius: '10px',
@@ -74,19 +77,28 @@ export default async function BlogArticlePage({ article }) {
             />
           </div>
         )}
-        <Overline className="inline-block bg-purple-500 text-white px-2 py-1 rounded" data-testid="articleCategory">
-          {section.fields?.title}
+        <Overline
+          className="inline-block bg-purple-500 text-white px-2 py-1 rounded"
+          data-testid="articleCategory"
+        >
+          {section?.fields?.title}
         </Overline>
         <MarketingH2 className="mt-8 mb-4 !text-4xl" asH1>
           {title}
         </MarketingH2>
         <div className="md:flex items-center justify-between">
-          <BlogAuthor
-            imageUrl={author.fields.image?.url}
-            name={author.fields.name}
-            publishDate={publishDate}
-            updateDate={updateDate}
-          />
+          {author?.fields?.name && (
+            <BlogAuthor
+              imageUrl={
+                author?.fields?.image?.fields?.file?.url
+                  ? `https:${author.fields.image.fields.file.url}`
+                  : null
+              }
+              name={author.fields.name}
+              publishDate={publishDate}
+              updateDate={updateDate}
+            />
+          )}
           <ShareBlog />
         </div>
         <div className="border-y border-gray-200 py-8">
@@ -146,11 +158,17 @@ export default async function BlogArticlePage({ article }) {
             <ScrollToTop />
           </div>
         </div>
-        <BlogAuthorFooter
-          imageUrl={author.fields.image?.url}
-          name={author.fields.name}
-          summary={author.fields.summary}
-        />
+        {author?.fields?.name && (
+          <BlogAuthorFooter
+            imageUrl={
+              author?.fields?.image?.fields?.file?.url
+                ? `https:${author.fields.image.fields.file.url}`
+                : null
+            }
+            name={author.fields.name}
+            summary={author?.fields?.summary || ''}
+          />
+        )}
       </article>
       {relatedArticles && <RelatedArticles articles={relatedArticles} />}
     </>
