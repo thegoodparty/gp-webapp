@@ -7,7 +7,7 @@ import SecondaryButton from '@shared/buttons/SecondaryButton'
 import H2 from '@shared/typography/H2'
 import H5 from '@shared/typography/H5'
 import H6 from '@shared/typography/H6'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function TranslateAction({
   showTranslate,

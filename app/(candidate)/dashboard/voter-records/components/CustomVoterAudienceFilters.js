@@ -2,7 +2,7 @@ import Checkbox from '@shared/inputs/Checkbox'
 import TextField from '@shared/inputs/TextField'
 import Body2 from '@shared/typography/Body2'
 import Overline from '@shared/typography/Overline'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 import { useEffect, useState } from 'react'
 

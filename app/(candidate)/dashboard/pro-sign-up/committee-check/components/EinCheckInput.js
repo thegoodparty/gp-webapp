@@ -1,7 +1,7 @@
 'use client'
 import TextField from '@shared/inputs/TextField'
 import { AsyncValidationIcon } from 'app/(candidate)/dashboard/shared/AsyncValidationIcon'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import React from 'react'
 
 const EIN_PATTERN_PARTIAL = /^\d{1,2}-\d{0,7}$|^\d{2}$|^\d$/

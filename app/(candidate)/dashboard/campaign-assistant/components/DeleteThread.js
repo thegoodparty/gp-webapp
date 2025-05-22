@@ -3,7 +3,7 @@ import AlertDialog from '@shared/utils/AlertDialog'
 import { useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { deleteThread } from './ajaxActions'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function DeleteThread({ chat }) {
   const [showMenu, setShowMenu] = useState(false)

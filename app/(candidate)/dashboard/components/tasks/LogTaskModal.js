@@ -11,7 +11,7 @@ import {
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 export const TASK_TYPE_HEADINGS = {
   [TASK_TYPES.text]: 'How many text messages did you schedule?',

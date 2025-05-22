@@ -10,7 +10,7 @@ import RecordCount from './RecordCount'
 import slugify from 'slugify'
 import DownloadFile from './DownloadFile'
 import ViewAudienceFiltersModal from '../../components/ViewAudienceFiltersModal'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function Hero(props) {
   const { type, campaign, fileName, customFile } = props

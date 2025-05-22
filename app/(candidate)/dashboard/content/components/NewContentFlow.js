@@ -15,7 +15,7 @@ import {
 } from 'helpers/buildAiContentSections'
 import { getNewAiContentSectionKey } from 'helpers/getNewAiContentSectionKey'
 import { MdAutoAwesome } from 'react-icons/md'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function NewContentFlow(props) {
   const {

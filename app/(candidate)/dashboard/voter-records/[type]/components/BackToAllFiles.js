@@ -2,7 +2,7 @@
 
 import Button from '@shared/buttons/Button'
 import { FaChevronLeft } from 'react-icons/fa'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function BackToAllFiles({ type, fileName }) {
   return (

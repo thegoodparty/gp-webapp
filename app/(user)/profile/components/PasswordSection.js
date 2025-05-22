@@ -10,7 +10,7 @@ import PasswordInput from '@shared/inputs/PasswrodInput'
 import DeleteAccountButton from './DeleteAccountButton'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const PASSWORD_REQUEST_FAILED = 'Password request failed'
 const CURRENT_PASSWORD_INCORRECT = 'Old password is incorrect'

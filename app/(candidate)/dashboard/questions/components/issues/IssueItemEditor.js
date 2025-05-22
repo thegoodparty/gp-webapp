@@ -5,7 +5,7 @@ import { IssuePositionsList } from 'app/(candidate)/dashboard/questions/componen
 import { IssueItemLabel } from 'app/(candidate)/dashboard/questions/components/issues/IssueItemLabel'
 import { IssueEditorButtons } from 'app/(candidate)/dashboard/questions/components/issues/IssueEditorButtons'
 import { CandidatePositionStatement } from 'app/(candidate)/dashboard/questions/components/issues/CandidatePositionStatement'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function IssueItemEditor({
   issue,

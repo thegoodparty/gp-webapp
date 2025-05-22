@@ -12,7 +12,7 @@ import {
   createUpdateHistory,
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { useUser } from '@shared/hooks/useUser'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 const getEditedFields = (formState) =>
   Object.keys(formState).reduce(

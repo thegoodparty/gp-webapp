@@ -5,7 +5,7 @@ import RadioList from '@shared/inputs/RadioList'
 import { ModalFooter } from '@shared/ModalFooter'
 import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { useState } from 'react'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export const ChooseScriptAddFlow = ({
   onBack = () => {},

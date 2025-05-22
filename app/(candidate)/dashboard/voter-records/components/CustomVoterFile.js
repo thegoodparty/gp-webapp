@@ -7,7 +7,7 @@ import Modal from '@shared/utils/Modal'
 import { useState } from 'react'
 import CustomVoterAudience from './CustomVoterAudience'
 import Button from '@shared/buttons/Button'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { TRACKING_KEYS } from './CustomVoterAudienceFilters'
 
 const fields = [

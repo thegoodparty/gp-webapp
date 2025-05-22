@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { VARIANTS, ProUpgradeModal } from './ProUpgradeModal'
 import { VIABILITY_SCORE_THRESHOLD } from './ProUpgradeModal'
 
