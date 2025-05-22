@@ -30,7 +30,7 @@ export const GenerateLoadingScreen = ({
   const fireError = () => {
     setGenerateTimeoutId(null)
     errorSnackbar(
-      'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right',
+      'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
     )
   }
 
