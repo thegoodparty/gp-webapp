@@ -107,9 +107,9 @@ export default function PledgeStep({ campaign, pledge, step }) {
     <div>
       <H1 className="py-10 text-center">GoodParty.org User Agreement</H1>
       <Body1 className="text-center mb-10">
-        I order to use GoodParty.org tools you must Accept each part of our user
-        agreement confirming that you will run an Independent, People Powered,
-        Anti-corruption campaign that adheres to our terms of service.
+        In order to use GoodParty.org tools you must Accept each part of our user
+        agreement confirming that you will run an Independent, people-powered,
+        anti-corruption campaign that adheres to our terms of service.
       </Body1>
       {steps.map((step, index) => (
         <AcknowledgementQuestion
