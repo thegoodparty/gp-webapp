@@ -346,7 +346,7 @@ export const EVENTS = {
 }
 
 export const trackEvent = (name, properties) => {
-  // TODO: Repurpose this file and function for Segment when we get the green light to rip out FS
+  // TODO: Repurpose this file and function for Segment when we get the green light to rip out FS.
   try {
     // Segment has different environments, and should run even when FS is disabled
     segmentTrackEvent(name, properties)
