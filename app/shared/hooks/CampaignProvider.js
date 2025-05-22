@@ -1,28 +1,24 @@
 'use client'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState, useCallback } from 'react'
 import { fetchUserClientCampaign } from 'helpers/fetchUserClientCampaign'
 import { useUser } from '@shared/hooks/useUser'
 
 export const CampaignContext = createContext([null, () => {}])
 
-export const CampaignProvider = ({ children }) => {
-  const [campaign, setCampaign] = useState(null)
+export const CampaignProvider = ({ children, campaign: initCampaign }) => {
+  const [campaign, setCampaign] = useState(initCampaign)
   const [user] = useUser()
 
-  const refreshCampaign = async () => {
-    const campaign = await fetchUserClientCampaign()
-    setCampaign(campaign?.ok && campaign.ok === false ? null : campaign)
-  }
+  const refreshCampaign = useCallback(async () => {
+    const resp = await fetchUserClientCampaign()
+    setCampaign(!resp.ok ? null : resp.data)
+  }, [])
 
   useEffect(() => {
-    const getCampaign = async () => {
-      const campaign = await fetchUserClientCampaign()
-      setCampaign(campaign?.ok && campaign.ok === false ? null : campaign)
-    }
     if (user) {
-      getCampaign()
+      refreshCampaign()
     }
-  }, [user])
+  }, [user, refreshCampaign])
 
   return (
     <CampaignContext.Provider value={[campaign, setCampaign, refreshCampaign]}>

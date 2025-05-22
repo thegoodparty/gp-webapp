@@ -11,13 +11,17 @@ import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
+import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 
 const PageWrapper = async ({ children }) => {
   const pathname = await getReqPathname()
+
+  const campaign = await fetchUserCampaign()
+
   return (
     <UserProvider>
       <ImpersonateUserProvider>
-        <CampaignProvider>
+        <CampaignProvider initCampaign={campaign}>
           <CampaignStatusProvider>
             <NavigationProvider>
               <SnackbarProvider>
