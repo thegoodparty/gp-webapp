@@ -104,7 +104,6 @@ export async function ensureAdminSession() {
     const saveButton = page.getByRole('button', { name: 'Save' });
     await saveButton.waitFor({ state: 'visible', timeout: 60000 });
     await saveButton.click();
-    
     await documentReady(page);
 
     // Save the admin storage state (session)
