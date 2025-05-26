@@ -185,7 +185,7 @@ export default function Table({
           ))}
         </tbody>
       </table>
-      {showPagination && (
+      {showPagination && table.getRowModel().rows?.length > 0 && (
         <div className="flex items-center justify-center my-4">
           <button
             className="px-2 py-1 mx-1 bg-slate-600 text-white font-black rounded"
