@@ -52,11 +52,13 @@ export default function Table({
   })
 
   useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      pageSize: defaultPageSize,
-      pageIndex: 0,
-    }))
+    if (showPagination) {
+      setPagination((prev) => ({
+        ...prev,
+        pageSize: defaultPageSize,
+        pageIndex: 0,
+      }))
+    }
   }, [defaultPageSize])
 
   const pageIndex = controlledPageIndex ?? pagination.pageIndex

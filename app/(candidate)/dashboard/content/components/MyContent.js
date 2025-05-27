@@ -263,9 +263,8 @@ export default function MyContent(props) {
           <Table
             columns={columns}
             data={data}
+            showPagination={false}
             filterColumns={false}
-            pagination={false}
-            initialSortById="updatedAt"
           />
         </>
       )}
