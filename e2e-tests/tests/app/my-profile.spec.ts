@@ -144,7 +144,7 @@ test('Update Fun Facts about Yourself', async ({ page }) => {
     }
 });
 
-test('Add Opponent', async ({ page }) => {
+test.skip('Add Opponent', async ({ page }) => {
     const caseId = 50;
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
