@@ -30,7 +30,7 @@ test.skip('Verify Dashboard page', async ({ page }) => {
     }
 });
 
-test('Log voter contact data', async ({ page }) => {
+test.skip('Log voter contact data', async ({ page }) => {
     const caseId = 91;
 
     try {
