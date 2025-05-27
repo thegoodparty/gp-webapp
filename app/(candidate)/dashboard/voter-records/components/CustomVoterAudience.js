@@ -8,7 +8,7 @@ import {
   buildTrackingAttrs,
   trackEvent,
   EVENTS,
-} from 'helpers/fullStoryHelper'
+} from 'helpers/analyticsHelper'
 
 import { useState } from 'react'
 import CustomVoterAudienceFilters from './CustomVoterAudienceFilters'

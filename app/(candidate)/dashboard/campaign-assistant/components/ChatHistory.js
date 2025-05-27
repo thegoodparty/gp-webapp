@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { MdMenu } from 'react-icons/md'
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
 import { ChatHistoryGroup } from 'app/(candidate)/dashboard/campaign-assistant/components/ChatHistoryGroup'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ChatHistory() {
   const { chats } = useChat()

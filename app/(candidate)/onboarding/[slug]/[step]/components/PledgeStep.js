@@ -18,7 +18,7 @@ import {
   buildTrackingAttrs,
   EVENTS,
   trackEvent,
-} from 'helpers/fullStoryHelper'
+} from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 
 const steps = ['1', '2', '3', '4']

@@ -12,7 +12,7 @@ import { HiOutlineScale } from 'react-icons/hi'
 import { SiMinutemailer } from 'react-icons/si'
 import Caption from '@shared/typography/Caption'
 import { calcAnswers } from '../../shared/QuestionProgress'
-import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs, trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export const TEMPLATE_CATEGORY_ICONS = {
   'Email Blasts': <SiMinutemailer className="text-purple-300" />,

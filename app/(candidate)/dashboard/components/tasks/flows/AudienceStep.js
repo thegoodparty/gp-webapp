@@ -14,7 +14,7 @@ import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 const TEXT_PRICE = 0.03
 const CALL_PRICE = 0.04

@@ -6,7 +6,7 @@ import {
 import { useRouter } from 'next/navigation'
 import BallotRaces from './ballotOffices/BallotRaces'
 import { useMemo, useState } from 'react'
-import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'

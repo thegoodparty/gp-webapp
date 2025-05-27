@@ -8,7 +8,7 @@ import CantFindRaceModal from './CantFindRaceModal'
 import { useRouter } from 'next/navigation'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import Body2 from '@shared/typography/Body2'
 import Fuse from 'fuse.js'
 

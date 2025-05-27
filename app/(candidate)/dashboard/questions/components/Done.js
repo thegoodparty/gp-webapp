@@ -2,7 +2,7 @@
 import Confetti from './Confetti'
 import H1 from '@shared/typography/H1'
 import { useEffect } from 'react'
-import { trackEvent } from 'helpers/fullStoryHelper'
+import { trackEvent } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 
 export default function Done() {
