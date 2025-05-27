@@ -1,4 +1,5 @@
-import { kebabCase } from 'es-toolkit';
+import { kebabCase } from 'es-toolkit'
+import { segmentTrackEvent } from './segmentHelper'
 
 export const EVENTS = {
   SignUp: {
@@ -342,19 +343,21 @@ export const EVENTS = {
       CancelDelete: 'Settings - Delete Account: Cancel Delete',
     },
   },
-};
+}
 
 export const trackEvent = (name, properties) => {
+  // TODO: Repurpose this file and function for Segment when we get the green light to rip out FS.
   try {
-    console.debug('[TRACKING]', name, properties);
+    // Segment has different environments, and should run even when FS is disabled
+    segmentTrackEvent(name, properties)
     if (typeof FS === 'undefined') {
-      return;
+      return
     }
-    FS('trackEvent', { name, properties });
+    FS('trackEvent', { name, properties })
   } catch (e) {
-    console.log('error tracking FullStory event', e);
+    console.log('error tracking FullStory event', e)
   }
-};
+}
 
 /**
  * Helper function to simplify setting Fullstory tracking attributes for an Element
@@ -375,45 +378,45 @@ export const buildTrackingAttrs = (name, properties) => {
   if (!properties) {
     return {
       'data-fs-element': name,
-    };
+    }
   }
 
-  const attributes = {};
-  const propSchema = {};
+  const attributes = {}
+  const propSchema = {}
 
   Object.entries(properties).forEach(([key, initialValue]) => {
-    const prefixedKey = `data-${kebabCase(key)}`;
-    let value = initialValue;
-    let propType;
+    const prefixedKey = `data-${kebabCase(key)}`
+    let value = initialValue
+    let propType
 
     switch (typeof initialValue) {
       case 'string':
-        propType = 'str';
-        break;
+        propType = 'str'
+        break
       case 'boolean':
-        propType = 'bool';
-        break;
+        propType = 'bool'
+        break
       case 'number':
-        propType = Number.isInteger(value) ? 'int' : 'real';
-        break;
+        propType = Number.isInteger(value) ? 'int' : 'real'
+        break
       case 'object':
         if (initialValue instanceof Date) {
-          propType = 'date';
-          value = initialValue.toISOString();
-          break;
+          propType = 'date'
+          value = initialValue.toISOString()
+          break
         }
       default:
         // ignore property if not one of the above types
-        return;
+        return
     }
 
-    attributes[prefixedKey] = value;
-    propSchema[prefixedKey] = propType;
-  });
+    attributes[prefixedKey] = value
+    propSchema[prefixedKey] = propType
+  })
 
   return {
     'data-fs-element': name,
     'data-fs-properties-schema': JSON.stringify(propSchema),
     ...attributes,
-  };
-};
+  }
+}

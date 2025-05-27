@@ -16,7 +16,7 @@ import { handleLogOut } from '@shared/user/handleLogOut'
 import { useImpersonateUser } from '@shared/hooks/useImpersonateUser'
 import { MdAdd, MdFactCheck } from 'react-icons/md'
 import { USER_ROLES, userHasRole, userIsAdmin } from 'helpers/userHelper'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const links = [
   {

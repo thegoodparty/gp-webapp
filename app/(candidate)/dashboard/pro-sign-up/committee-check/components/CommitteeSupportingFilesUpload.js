@@ -8,7 +8,7 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { InputHelpIcon } from 'app/(candidate)/dashboard/shared/InputHelpIcon'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 const FILE_LIMIT_MB = 10
 

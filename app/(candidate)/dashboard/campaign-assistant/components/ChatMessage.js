@@ -2,7 +2,7 @@
 import Body2 from '@shared/typography/Body2'
 import { marked } from 'marked'
 import Typewriter from 'typewriter-effect'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { CopyToClipboard } from 'react-copy-to-clipboard-ts'
 import { FaRegCopy } from 'react-icons/fa'
 import { useState } from 'react'
 import Subtitle2 from '@shared/typography/Subtitle2'
@@ -10,7 +10,7 @@ import { IoMdCheckmark } from 'react-icons/io'
 import { MdOutlineRefresh, MdAutoAwesome } from 'react-icons/md'
 import ChatFeedback from './ChatFeedback'
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ChatMessage({ message, type, isLastMessage }) {
   const [copied, setCopied] = useState(false)

@@ -6,7 +6,7 @@ import Overline from '@shared/typography/Overline'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
 import { IoArrowForward } from 'react-icons/io5'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function ReadMoreCard({ type }) {
   let link = '#'

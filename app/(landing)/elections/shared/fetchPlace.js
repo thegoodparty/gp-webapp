@@ -6,6 +6,7 @@ const fetchPlace = async ({
   includeRaces = true,
   includeParent = false,
   categorizeChildren = false,
+  placeColumns = ''
 }) => {
   const api = electionApiRoutes.places.find.path
   const payload = {
@@ -16,7 +17,9 @@ const fetchPlace = async ({
       'slug,normalizedPositionName,electionDate,positionDescription,positionLevel',
     includeParent,
     categorizeChildren,
+    ...(placeColumns ? { placeColumns } : {})
   }
+
   const res = await unAuthElectionFetch(api, payload, 3600)
   if (Array.isArray(res)) {
     return res[0]

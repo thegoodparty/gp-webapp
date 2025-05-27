@@ -17,7 +17,7 @@ import { fetchPromptInputFields } from 'helpers/fetchPromptInputFields'
 import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const RichEditor = dynamic(() => import('app/shared/utils/RichEditor'), {
   ssr: false,

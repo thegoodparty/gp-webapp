@@ -9,7 +9,7 @@ import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/C
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { AlreadyProUserPrompt } from 'app/(candidate)/dashboard/shared/AlreadyProUserPrompt'
 import Button from '@shared/buttons/Button'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
 
 const ProSignUpPage = ({ campaign }) => {

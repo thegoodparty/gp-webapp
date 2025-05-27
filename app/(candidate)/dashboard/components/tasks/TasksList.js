@@ -19,7 +19,7 @@ import {
 import TaskFlow from './flows/TaskFlow'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { differenceInDays } from 'date-fns'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 
 export default function TasksList({ campaign, tasks: tasksProp = [] }) {
   const [tasks, setTasks] = useState(tasksProp)
