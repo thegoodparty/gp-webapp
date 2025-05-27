@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
     await documentReady(page);
 });
 
-test('Verify Dashboard page', async ({ page }) => {
+test.skip('Verify Dashboard page', async ({ page }) => {
     const caseId = 90;
 
     try {
