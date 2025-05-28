@@ -3,10 +3,9 @@ import { addTestResult } from 'helpers/testrailHelper';
 import * as fs from 'fs';
 
 const runId = fs.readFileSync('testRunId.txt', 'utf-8');
-const apiURL = 'https://api.goodparty.org/';
-const apiDevURL = 'https://api-dev.goodparty.org/';
-const apiQaURL = 'https://api-qa.goodparty.org/';
-
+const apiURL = 'https://gp-api.goodparty.org/v1/health';
+const apiDevURL = 'https://gp-api-dev.goodparty.org/v1/health';
+const apiQaURL = 'https://gp-api-qa.goodparty.org/v1/health';
 test.describe('API Health Checks', () => {
   const apiEndpoints = [
     { name: 'main', url: apiURL },
@@ -14,7 +13,7 @@ test.describe('API Health Checks', () => {
     { name: 'qa', url: apiQaURL },
   ];
 
-  test.skip('should verify main API is running', async ({ request }) => {
+  test('should verify main API is running', async ({ request }) => {
     const caseId = 71;
     try {
       for (const endpoint of apiEndpoints) {
