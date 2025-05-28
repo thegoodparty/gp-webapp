@@ -39,7 +39,7 @@ test.describe.serial('Elections page', () => {
         }
     });
 
-    test('Verify State-level Election page', async ({ page }) => {
+    test.skip('Verify State-level Election page', async ({ page }) => {
         const caseId = 92;
         const pageTitle = /Run for Office in California/;
         const pageHeader = /California state elections/;

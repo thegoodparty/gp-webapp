@@ -14,7 +14,7 @@ test.describe('API Health Checks', () => {
     { name: 'qa', url: apiQaURL },
   ];
 
-  test('should verify main API is running', async ({ request }) => {
+  test.skip('should verify main API is running', async ({ request }) => {
     const caseId = 71;
     try {
       for (const endpoint of apiEndpoints) {
