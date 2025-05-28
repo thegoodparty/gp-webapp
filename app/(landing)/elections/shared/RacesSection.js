@@ -19,7 +19,7 @@ export default function RacesSection({ races }) {
       </div>
       {races.map((race) => (
         <div
-          key={race.hash}
+          key={race.id}
           className="col-span-12 md:col-span-6 lg:col-span-4"
         >
           <Race race={race} />

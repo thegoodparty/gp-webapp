@@ -1,4 +1,4 @@
-import Snackbar from '@shared/utils/Snackbar'
+import { SnackbarProvider } from '@shared/utils/Snackbar'
 import { Suspense } from 'react'
 import Footer from 'app/shared/layouts/footer/Footer'
 import JsonLdSchema from './JsonLdSchema'
@@ -11,30 +11,35 @@ import { CampaignProvider } from '@shared/hooks/CampaignProvider'
 import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
+import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 
 const PageWrapper = async ({ children }) => {
   const pathname = await getReqPathname()
+
+  const campaign = await fetchUserCampaign()
+
   return (
     <UserProvider>
       <ImpersonateUserProvider>
-        <CampaignProvider>
+        <CampaignProvider initCampaign={campaign}>
           <CampaignStatusProvider>
             <NavigationProvider>
-              <div className="overflow-x-hidden">
-                <JsonLdSchema />
-                <Nav />
-                <Suspense>
-                  <PromoBanner initPathname={pathname} />
-                </Suspense>
-                {children}
-                <Suspense>
-                  <Footer initPathname={pathname} />
-                </Suspense>
-                <Snackbar />
-                <Suspense>
-                  <CookiesSnackbar />
-                </Suspense>
-              </div>
+              <SnackbarProvider>
+                <div className="overflow-x-hidden">
+                  <JsonLdSchema />
+                  <Nav />
+                  <Suspense>
+                    <PromoBanner initPathname={pathname} />
+                  </Suspense>
+                  {children}
+                  <Suspense>
+                    <Footer initPathname={pathname} />
+                  </Suspense>
+                  <Suspense>
+                    <CookiesSnackbar />
+                  </Suspense>
+                </div>
+              </SnackbarProvider>
             </NavigationProvider>
           </CampaignStatusProvider>
         </CampaignProvider>

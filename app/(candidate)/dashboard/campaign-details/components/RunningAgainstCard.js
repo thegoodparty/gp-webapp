@@ -2,7 +2,7 @@ import { useState } from 'react'
 import IconButton from '@shared/buttons/IconButton'
 import { DeleteRounded, EditRounded } from '@mui/icons-material'
 import RunningAgainstForm from './RunningAgainstForm'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function RunningAgainstCard({
   name,

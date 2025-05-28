@@ -13,7 +13,7 @@ import { handleLogOut } from '@shared/user/handleLogOut'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 async function deleteAccountCallback(id) {
   try {

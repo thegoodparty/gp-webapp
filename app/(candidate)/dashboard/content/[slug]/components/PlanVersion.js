@@ -4,7 +4,7 @@ import { dateWithTime } from 'helpers/dateHelper'
 import { IoIosArrowDown } from 'react-icons/io'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import { Button } from '@mui/material'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function PlanVersion({
   versions,

@@ -9,7 +9,7 @@ import H5 from '@shared/typography/H5'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useUser } from '@shared/hooks/useUser'
 import { AccountSettingsButton } from 'app/(user)/profile/components/AccountSettingsButton'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export const AccountSettingsSection = () => {
   const [user = {}] = useUser()

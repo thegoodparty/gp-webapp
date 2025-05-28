@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { useCampaignStatus } from '@shared/hooks/useCampaignStatus'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { usePathname } from 'next/navigation'
 
 const ProBadge = () => (
