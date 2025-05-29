@@ -1,13 +1,15 @@
+'use client'
 import React from 'react'
 import DashboardLayout from '../../shared/DashboardLayout'
+import EmptyOutreachHero from './EmptyOutreachHero'
+import OutreachHeader from './OutreachHeader'
+import OutreachCreateCards from './OutreachCreateCards'
 
-export default function OutreachPage({ campaign }) {
+export default function OutreachPage({ pathname, campaign, outreaches = [] }) {
   return (
-    <DashboardLayout campaign={campaign}>
-      <div>
-        <h1>Outreach Page</h1>
-        <p>Manage your outreach activities here.</p>
-      </div>
+    <DashboardLayout pathname={pathname} campaign={campaign}>
+      {!outreaches.length ? <EmptyOutreachHero /> : <OutreachHeader />}
+      <OutreachCreateCards />
     </DashboardLayout>
   )
-} 
+}
