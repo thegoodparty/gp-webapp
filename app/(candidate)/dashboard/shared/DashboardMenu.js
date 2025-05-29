@@ -51,6 +51,13 @@ const DEFAULT_MENU_ITEMS = [
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
   },
   {
+    label: 'VoterOutreach',
+    icon: <MdMessage />,
+    link: '/dashboard/outreach',
+    id: 'outreach-dashboard',
+    onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
+  },
+  {
     label: 'My Profile',
     icon: <MdAccountCircle />,
     link: '/dashboard/campaign-details',
