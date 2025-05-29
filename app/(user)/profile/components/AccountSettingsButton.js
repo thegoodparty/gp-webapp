@@ -7,7 +7,7 @@ import { DemoAccountDeleteDialog } from '@shared/utils/DemoAccountDeleteDialog'
 import { handleDemoAccountDeletion } from '@shared/utils/handleDemoAccountDeletion'
 import Link from 'next/link'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export const AccountSettingsButton = ({ isPro, isDemo }) => {
   const router = useRouter()

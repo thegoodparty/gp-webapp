@@ -10,7 +10,7 @@ import TranslateAction from './TranslateAction'
 import { kebabToCamel } from '/helpers/stringHelper'
 import SecondaryButton from '@shared/buttons/SecondaryButton'
 import CircularProgress from '@mui/material/CircularProgress'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 export default function Actions(props) {
   let {

@@ -9,7 +9,7 @@ import Paper from '@shared/utils/Paper'
 import H2 from '@shared/typography/H2'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const fields = [
   {

@@ -6,7 +6,7 @@ import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import FileDropZone from '@shared/inputs/FileDropZone'
 import ImageCropPreview from '@shared/inputs/ImageCropPreview'
-import { trackEvent, buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { trackEvent, buildTrackingAttrs } from 'helpers/analyticsHelper'
 import Button from '@shared/buttons/Button'
 
 const MAX_FILE_SIZE = 500000

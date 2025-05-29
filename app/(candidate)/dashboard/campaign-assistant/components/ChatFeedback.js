@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { IoMdThumbsDown, IoMdThumbsUp } from 'react-icons/io'
 import { chatFeedback } from './ajaxActions'
 import useChat from 'app/(candidate)/dashboard/campaign-assistant/components/useChat'
-import { EVENTS, trackEvent } from 'helpers/fullStoryHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function ChatFeedback() {
   const { feedback: dbFeedback, threadId } = useChat()

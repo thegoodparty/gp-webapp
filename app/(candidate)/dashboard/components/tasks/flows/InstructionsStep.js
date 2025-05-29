@@ -4,7 +4,7 @@ import {
   LEGACY_TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
 import Button from '@shared/buttons/Button'
-import { buildTrackingAttrs } from 'helpers/fullStoryHelper'
+import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
 
 const INSTRUCTIONS_BY_TYPE = {
