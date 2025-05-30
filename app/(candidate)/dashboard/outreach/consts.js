@@ -19,3 +19,11 @@ export const IMPACT_LEVELS_LABELS = {
   medium: 'Medium Impact',
   high: 'High Impact',
 }
+
+export const NUM_OF_MOCK_OUTREACHES = 10
+
+export const OUTREACH_TYPE_MAPPING = {
+  p2pTexting: 'Text message',
+  doorKnocking: 'Door knocking',
+  phoneBanking: 'Phone banking',
+}

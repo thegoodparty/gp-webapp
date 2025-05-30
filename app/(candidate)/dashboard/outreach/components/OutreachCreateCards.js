@@ -52,6 +52,7 @@ export default function OutreachCreateCards() {
         rounded-2xl
         p-4
         md:p-6
+        mb-12
       "
     >
       {OUTREACH_OPTIONS.map(({ title, impact, cost, key }) => (
