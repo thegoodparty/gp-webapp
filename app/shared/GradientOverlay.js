@@ -3,9 +3,9 @@ export const GradientOverlay = ({ children, className = '' }) => (
     <div className="relative overflow-auto">
       {children}
       <div
-        className="absolute bottom-0 left-0 right-0 h-5/6 w-full backdrop-blur-[1px]"
+        className="absolute bottom-0 left-0 right-0 h-full w-full backdrop-blur-[2px]"
         style={{
-          mask: `linear-gradient(to bottom, transparent, rgba(0, 0, 0, .40), rgba(0, 0, 0, .95), rgba(0, 0, 0, 1))`,
+          mask: `linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.4) 62%, rgba(0, 0, 0, 0) 100%)`,
         }}
       />
       <div
