@@ -20,7 +20,7 @@ export const IMPACT_LEVELS_LABELS = {
   high: 'High Impact',
 }
 
-export const NUM_OF_MOCK_OUTREACHES = 10
+export const NUM_OF_MOCK_OUTREACHES = 5
 
 export const OUTREACH_TYPE_MAPPING = {
   p2pTexting: 'Text message',

@@ -18,8 +18,13 @@ export default function OutreachPage({
       {outreaches.length ? <OutreachHeader /> : <EmptyOutreachHero />}
       <OutreachCreateCards />
       <OutreachTable
-        outreaches={outreaches.length ? outreaches : mockOutreaches}
-        gradient={Boolean(outreaches.length)}
+        {...{
+          outreaches: outreaches.length ? outreaches : mockOutreaches,
+          gradient: Boolean(!outreaches?.length),
+          ...(!outreaches?.length
+            ? { title: 'What your outreach could look like' }
+            : {}),
+        }}
       />
     </DashboardLayout>
   )

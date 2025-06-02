@@ -3,8 +3,13 @@ import { dateWithTime } from 'helpers/dateHelper'
 import SimpleTable from '@shared/utils/SimpleTable'
 import React from 'react'
 import H4 from '@shared/typography/H4'
+import { GradientOverlay } from '@shared/GradientOverlay'
 
-export const OutreachTable = ({ outreaches }) => {
+export const OutreachTable = ({
+  title = 'Your campaigns',
+  outreaches,
+  gradient = false,
+}) => {
   const columns = [
     {
       header: 'Channel',
@@ -60,10 +65,12 @@ export const OutreachTable = ({ outreaches }) => {
     },
   ]
 
+  const table = <SimpleTable columns={columns} data={outreaches} />
+
   return (
     <section className="mt-4">
-      <H4 className="mb-4">Your campaigns</H4>
-      <SimpleTable columns={columns} data={outreaches} />
+      <H4 className="mb-4">{title}</H4>
+      {gradient ? <GradientOverlay>{table}</GradientOverlay> : table}
     </section>
   )
 }
