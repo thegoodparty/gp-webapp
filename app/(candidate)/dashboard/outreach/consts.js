@@ -27,3 +27,19 @@ export const OUTREACH_TYPE_MAPPING = {
   doorKnocking: 'Door knocking',
   phoneBanking: 'Phone banking',
 }
+export const AUDIENCE_LABELS_MAPPING = {
+  audienceSuperVoters: 'Super',
+  audienceLikelyVoters: 'Likely',
+  audienceUnreliableVoters: 'Unreliable',
+  audienceUnlikelyVoters: 'Unlikely',
+  audienceFirstTimeVoters: 'First Time',
+  partyIndependent: 'Independent',
+  partyDemocrat: 'Democrat',
+  partyRepublican: 'Republican',
+  age18_25: '18-25',
+  age25_35: '25-35',
+  age35_50: '35-50',
+  age50Plus: '50+',
+  genderMale: 'Male',
+  genderFemale: 'Female',
+}
