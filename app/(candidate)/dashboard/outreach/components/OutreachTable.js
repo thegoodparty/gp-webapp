@@ -1,17 +1,21 @@
+'use client'
 import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/consts'
 import { dateWithTime } from 'helpers/dateHelper'
 import SimpleTable from '@shared/utils/SimpleTable'
-import React from 'react'
+import { useMemo, useState } from 'react'
 import H4 from '@shared/typography/H4'
 import { GradientOverlay } from '@shared/GradientOverlay'
 import { StackedChips } from '@shared/utils/StackedChips'
 import { formatAudienceLabels } from 'app/(candidate)/dashboard/outreach/util/formatAudienceLabels.util'
+import { ActualViewAudienceFiltersModal } from 'app/(candidate)/dashboard/voter-records/components/ViewAudienceFiltersModal'
+import { convertAudienceFiltersForModal } from 'app/(candidate)/dashboard/outreach/util/convertAudienceFiltersForModal.util'
 
 export const OutreachTable = ({
   title = 'Your campaigns',
   outreaches,
   gradient = false,
 }) => {
+  const [viewFilters, setViewFilters] = useState(false)
   const columns = [
     {
       header: 'Channel',
@@ -39,9 +43,7 @@ export const OutreachTable = ({
             <StackedChips
               {...{
                 labels: audienceLabels,
-                onClick: (labels, e) => {
-                  console.log('derp', labels, e)
-                },
+                onClick: (labels, e) => setViewFilters(row.voterFileFilter),
               }}
             />
             {audienceLabels.length && (
@@ -70,12 +72,25 @@ export const OutreachTable = ({
     },
   ]
 
+  const convertedFilters = useMemo(
+    () => viewFilters && convertAudienceFiltersForModal(viewFilters),
+    [viewFilters],
+  )
+
   const table = <SimpleTable columns={columns} data={outreaches} />
 
   return (
     <section className="mt-4">
       <H4 className="mb-4">{title}</H4>
       {gradient ? <GradientOverlay>{table}</GradientOverlay> : table}
+      <ActualViewAudienceFiltersModal
+        {...{
+          open: viewFilters,
+          audienceFilters: convertedFilters,
+          onClose: () => setViewFilters(false),
+          className: 'ml-1 self-center',
+        }}
+      />
     </section>
   )
 }
