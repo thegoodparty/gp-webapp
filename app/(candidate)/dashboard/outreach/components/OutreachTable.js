@@ -4,27 +4,8 @@ import SimpleTable from '@shared/utils/SimpleTable'
 import React from 'react'
 import H4 from '@shared/typography/H4'
 import { GradientOverlay } from '@shared/GradientOverlay'
+import { StackedChips } from '@shared/utils/StackedChips'
 import { formatAudienceLabels } from 'app/(candidate)/dashboard/outreach/util/formatAudienceLabels.util'
-import Chip from '@shared/utils/Chip'
-
-const VoterFileFilterChip = ({ label }) => <Chip
-  {...{
-    className: `
-      px-2
-      py-1
-      rounded-full
-      border
-      border-gray-200
-      bg-gray-100
-      text-black
-      font-normal
-      flex
-      items-center
-      justify-center
-    `,
-    label,
-    variant: 'outlined',
-  }} />
 
 export const OutreachTable = ({
   title = 'Your campaigns',
@@ -50,12 +31,29 @@ export const OutreachTable = ({
       header: 'Audience',
       cell: ({ row }) => {
         const audienceLabels = formatAudienceLabels(row.voterFileFilter)
-        return (
-          <span>
-            {audienceLabels.slice(0, 3).map((label, index) => (
-              <VoterFileFilterChip key={index} label={label} />
-            ))}
-            {audienceLabels.length && ` (${audienceLabels.length})`}
+        const atMostThreeLabels = audienceLabels.slice(0, 3)
+        return !audienceLabels?.length ? (
+          <span className="text-gray-500">n/a</span>
+        ) : (
+          <span className="flex flex-row items-center relative">
+            <StackedChips
+              {...{
+                labels: audienceLabels,
+                onClick: (labels, e) => {
+                  console.log('derp', labels, e)
+                },
+              }}
+            />
+            {audienceLabels.length && (
+              <span
+                className="relative ml-2"
+                style={{
+                  left: `${(atMostThreeLabels.length - 1) * 0.25}rem`,
+                }}
+              >
+                ({audienceLabels.length})
+              </span>
+            )}
           </span>
         )
       },

@@ -18,7 +18,7 @@ export const OutreachPage = ({
     <OutreachTable
       {...{
         outreaches: outreaches.length ? outreaches : mockOutreaches,
-        gradient: Boolean(outreaches?.length),
+        gradient: Boolean(!outreaches?.length),
         ...(!outreaches?.length
           ? { title: 'What your outreach could look like' }
           : {}),
