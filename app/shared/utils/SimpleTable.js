@@ -1,6 +1,11 @@
 import React from 'react'
 
-export default function SimpleTable({ columns = [], data = [] }) {
+export default function SimpleTable({
+  columns = [],
+  data = [],
+  onRowClick = null,
+}) {
+  const enableRowClick = typeof onRowClick === 'function'
   return (
     <table
       className="
@@ -47,7 +52,16 @@ export default function SimpleTable({ columns = [], data = [] }) {
                   ? 'border-none'
                   : 'border-b border-gray-200'
               }
+              
+              ${enableRowClick ? 'cursor-pointer hover:bg-gray-50' : ''}
             `}
+            {...{
+              ...(enableRowClick
+                ? {
+                    onClick: (e) => onRowClick(row, e),
+                  }
+                : {}),
+            }}
           >
             {columns.map((column, colIndex) => (
               <td

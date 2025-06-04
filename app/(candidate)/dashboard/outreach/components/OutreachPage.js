@@ -20,7 +20,7 @@ export const OutreachPage = ({
         outreaches: outreaches.length ? outreaches : mockOutreaches,
         gradient: Boolean(!outreaches?.length),
         ...(!outreaches?.length
-          ? { title: 'What your outreach could look like' }
+          ? { title: 'How your outreach could look' }
           : {}),
       }}
     />

@@ -16,7 +16,10 @@ export const dynamic = 'force-dynamic'
 export default async function Page() {
   await candidateAccess()
   const campaign = await fetchUserCampaign()
-  const outreaches = []
+  // TODO: replace w/ real data
+  const outreaches =
+    // []
+    Array.from({ length: 10 }, () => createOutreach(campaign.id))
   const mockOutreaches = Array.from({ length: NUM_OF_MOCK_OUTREACHES }, () =>
     createOutreach(campaign.id),
   )

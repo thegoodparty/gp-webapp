@@ -9,13 +9,23 @@ import { StackedChips } from '@shared/utils/StackedChips'
 import { formatAudienceLabels } from 'app/(candidate)/dashboard/outreach/util/formatAudienceLabels.util'
 import { ActualViewAudienceFiltersModal } from 'app/(candidate)/dashboard/voter-records/components/ViewAudienceFiltersModal'
 import { convertAudienceFiltersForModal } from 'app/(candidate)/dashboard/outreach/util/convertAudienceFiltersForModal.util'
+import Popover from '@mui/material/Popover'
+import {
+  OUTREACH_ACTION_TYPES,
+  OutreachActions,
+} from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
 
 export const OutreachTable = ({
   title = 'Your campaigns',
   outreaches,
   gradient = false,
 }) => {
-  const [viewFilters, setViewFilters] = useState(false)
+  const [viewFilters, setViewFilters] = useState(null)
+  const [actOnOutreach, setActOnOutreach] = useState(null)
+  const [popoverPosition, setPopoverPosition] = useState({
+    top: 0,
+    left: 0,
+  })
   const columns = [
     {
       header: 'Channel',
@@ -43,7 +53,10 @@ export const OutreachTable = ({
             <StackedChips
               {...{
                 labels: audienceLabels,
-                onClick: (labels, e) => setViewFilters(row.voterFileFilter),
+                onClick: (labels, e) => {
+                  e.stopPropagation()
+                  setViewFilters(row.voterFileFilter)
+                },
               }}
             />
             {audienceLabels.length && (
@@ -64,12 +77,6 @@ export const OutreachTable = ({
       header: 'Voters',
       cell: ({ row }) => row.voterFileFilter.voterCount,
     },
-    {
-      header: 'Actions',
-      cell: () => (
-        <span style={{ fontSize: '1.5rem', lineHeight: 1 }}>•••</span>
-      ),
-    },
   ]
 
   const convertedFilters = useMemo(
@@ -77,17 +84,87 @@ export const OutreachTable = ({
     [viewFilters],
   )
 
-  const table = <SimpleTable columns={columns} data={outreaches} />
+  const handleRowClick = (outreach, { clientX, clientY } = {}) => {
+    console.log(outreach, {
+      clientX,
+      clientY,
+    })
+    setActOnOutreach(outreach)
+    setPopoverPosition({
+      top: clientY + 10,
+      left: clientX + 10,
+    })
+  }
+
+  const handlePopoverClose = () => {
+    setActOnOutreach(null)
+    setPopoverPosition({ top: 0, left: 0 })
+  }
+
+  const handleCopyScript = (outreach) => {
+    console.log('Copy script for outreach:', outreach)
+    // TODO: Implement copy script logic here
+  }
+
+  const handleDownloadFilteredVoterFile = (outreach) => {
+    console.log('Download filtered voter file for outreach:', outreach)
+    // TODO: Implement download filtered voter file logic here
+  }
+
+  const actionHandlers = {
+    [OUTREACH_ACTION_TYPES.COPY_SCRIPT]: handleCopyScript,
+    [OUTREACH_ACTION_TYPES.DOWNLOAD_LIST]: handleDownloadFilteredVoterFile,
+  }
+
+  const handleActionClick = (outreach, actionType) => {
+    actionHandlers[actionType] && actionHandlers[actionType](outreach)
+    setActOnOutreach(null)
+  }
+
+  const table = (
+    <SimpleTable
+      columns={columns}
+      data={outreaches}
+      onRowClick={handleRowClick}
+    />
+  )
 
   return (
     <section className="mt-4">
       <H4 className="mb-4">{title}</H4>
-      {gradient ? <GradientOverlay>{table}</GradientOverlay> : table}
+      {gradient ? (
+        <GradientOverlay>{table}</GradientOverlay>
+      ) : (
+        <>
+          {table}
+          <Popover
+            open={Boolean(actOnOutreach)}
+            onClose={handlePopoverClose}
+            anchorReference="anchorPosition"
+            anchorPosition={popoverPosition}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+          >
+            <OutreachActions
+              {...{
+                outreach: actOnOutreach,
+                onClick: handleActionClick,
+              }}
+            />
+          </Popover>
+        </>
+      )}
       <ActualViewAudienceFiltersModal
         {...{
-          open: viewFilters,
+          open: Boolean(viewFilters),
           audienceFilters: convertedFilters,
-          onClose: () => setViewFilters(false),
+          onClose: () => setViewFilters(null),
           className: 'ml-1 self-center',
         }}
       />
