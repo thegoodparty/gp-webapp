@@ -1,4 +1,4 @@
-import { AUDIENCE_LABELS_MAPPING } from 'app/(candidate)/dashboard/outreach/consts'
+import { AUDIENCE_LABELS_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
 
 export const formatAudienceLabels = ({
   audienceSuperVoters,

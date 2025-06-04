@@ -1,4 +1,4 @@
-import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/consts'
+import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
 import { faker } from '@faker-js/faker'
 
 export const createOutreach = (campaignId) => {

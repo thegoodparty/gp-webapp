@@ -6,6 +6,7 @@ import H5 from '@shared/typography/H5'
 import { OutreachImpact } from 'app/(candidate)/dashboard/outreach/components/OutreachImpact'
 
 export default function OutreachCreateCard({
+  type,
   title,
   impact,
   cost,
@@ -14,7 +15,7 @@ export default function OutreachCreateCard({
 }) {
   return (
     <Card
-      onClick={onClick}
+      onClick={() => onClick(type)}
       className={clsx(
         'flex flex-col justify-between cursor-pointer transition-shadow w-full shadow-md hover:shadow-lg border border-transparent bg-white',
         selected && 'border-blue-500 outline outline-2 outline-blue-300',

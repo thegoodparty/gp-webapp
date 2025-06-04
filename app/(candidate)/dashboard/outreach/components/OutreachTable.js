@@ -1,5 +1,5 @@
 'use client'
-import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/consts'
+import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
 import { dateWithTime } from 'helpers/dateHelper'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { useMemo, useState } from 'react'

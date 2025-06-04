@@ -1,7 +1,7 @@
 import {
   IMPACT_LEVEL_ICONS,
   IMPACT_LEVELS_LABELS,
-} from 'app/(candidate)/dashboard/outreach/consts'
+} from 'app/(candidate)/dashboard/outreach/constants'
 
 export const OutreachImpact = ({ impact }) => (
   <div className="flex items-end gap-1 text-xs text-gray-600 min-w-0">

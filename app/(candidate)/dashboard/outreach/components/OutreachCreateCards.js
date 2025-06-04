@@ -1,36 +1,39 @@
 import OutreachCreateCard from './OutreachCreateCard'
-import { IMPACTS_LEVELS } from 'app/(candidate)/dashboard/outreach/consts'
+import {
+  IMPACTS_LEVELS,
+  OUTREACH_TYPES,
+} from 'app/(candidate)/dashboard/outreach/constants'
 
 const OUTREACH_OPTIONS = [
   {
     title: 'Text message',
     impact: IMPACTS_LEVELS.medium,
     cost: '$.035/msg',
-    key: 'sms',
+    type: OUTREACH_TYPES.p2pTexting,
   },
   {
     title: 'Robocall',
     impact: IMPACTS_LEVELS.medium,
     cost: '$.045/msg',
-    key: 'robocall',
+    type: OUTREACH_TYPES.robocall,
   },
   {
     title: 'Door knocking',
     impact: IMPACTS_LEVELS.high,
     cost: 'Free',
-    key: 'door',
+    type: OUTREACH_TYPES.doorKnocking,
   },
   {
     title: 'Phone banking',
     impact: IMPACTS_LEVELS.medium,
     cost: 'Free',
-    key: 'phone',
+    type: OUTREACH_TYPES.phoneBanking,
   },
   {
     title: 'Social post',
     impact: IMPACTS_LEVELS.low,
     cost: 'Free',
-    key: 'social',
+    type: OUTREACH_TYPES.social,
   },
 ]
 
@@ -55,13 +58,8 @@ export default function OutreachCreateCards() {
         mb-12
       "
     >
-      {OUTREACH_OPTIONS.map(({ title, impact, cost, key }) => (
-        <OutreachCreateCard
-          key={key}
-          title={title}
-          impact={impact}
-          cost={cost}
-        />
+      {OUTREACH_OPTIONS.map(({ title, impact, cost, type }) => (
+        <OutreachCreateCard {...{ key: type, type, title, impact, cost }} />
       ))}
     </div>
   )

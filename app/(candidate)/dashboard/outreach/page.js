@@ -2,7 +2,7 @@ import pageMetaData from 'helpers/metadataHelper'
 import { OutreachPage } from './components/OutreachPage'
 import candidateAccess from '../shared/candidateAccess'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
-import { NUM_OF_MOCK_OUTREACHES } from './consts'
+import { NUM_OF_MOCK_OUTREACHES } from 'app/(candidate)/dashboard/outreach/constants'
 import { createOutreach } from 'app/(candidate)/dashboard/outreach/util/createOutreach.util'
 
 const meta = pageMetaData({

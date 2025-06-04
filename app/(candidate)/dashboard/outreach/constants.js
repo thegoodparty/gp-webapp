@@ -43,3 +43,10 @@ export const AUDIENCE_LABELS_MAPPING = {
   genderMale: 'Male',
   genderFemale: 'Female',
 }
+export const OUTREACH_TYPES = {
+  p2pTexting: 'p2pTexting',
+  doorKnocking: 'doorKnocking',
+  phoneBanking: 'phoneBanking',
+  social: 'social',
+  robocall: 'robocall',
+}
