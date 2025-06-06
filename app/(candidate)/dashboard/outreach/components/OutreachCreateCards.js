@@ -1,15 +1,19 @@
+'use client'
 import OutreachCreateCard from './OutreachCreateCard'
 import {
   IMPACTS_LEVELS,
   OUTREACH_TYPES,
 } from 'app/(candidate)/dashboard/outreach/constants'
+import TaskFlow from 'app/(candidate)/dashboard/components/tasks/flows/TaskFlow'
+import { useState } from 'react'
+import { useCampaign } from '@shared/hooks/useCampaign'
 
 const OUTREACH_OPTIONS = [
   {
     title: 'Text message',
     impact: IMPACTS_LEVELS.medium,
     cost: '$.035/msg',
-    type: OUTREACH_TYPES.p2pTexting,
+    type: OUTREACH_TYPES.text,
   },
   {
     title: 'Robocall',
@@ -33,11 +37,20 @@ const OUTREACH_OPTIONS = [
     title: 'Social post',
     impact: IMPACTS_LEVELS.low,
     cost: 'Free',
-    type: OUTREACH_TYPES.social,
+    type: OUTREACH_TYPES.socialMedia,
   },
 ]
 
 export default function OutreachCreateCards() {
+  const [campaign] = useCampaign()
+  const [flowModalTask, setFlowModalTask] = useState(null)
+
+  const handleCreateClick = (type) => {
+    setFlowModalTask({
+      flowType: type,
+    })
+  }
+
   return (
     <div
       className="
@@ -59,8 +72,27 @@ export default function OutreachCreateCards() {
       "
     >
       {OUTREACH_OPTIONS.map(({ title, impact, cost, type }) => (
-        <OutreachCreateCard {...{ key: type, type, title, impact, cost }} />
+        <OutreachCreateCard
+          key={type}
+          {...{
+            type,
+            title,
+            impact,
+            cost,
+            onClick: handleCreateClick,
+          }}
+        />
       ))}
+
+      {flowModalTask && (
+        <TaskFlow
+          forceOpen
+          type={flowModalTask.flowType}
+          campaign={campaign}
+          onClose={() => setFlowModalTask(null)}
+          // defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
+        />
+      )}
     </div>
   )
 }

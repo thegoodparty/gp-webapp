@@ -522,29 +522,35 @@ export const apiRoutes = {
       method: 'POST',
     },
   },
+  outreach: {
+    list: {
+      path: '/outreach',
+      method: 'GET',
+    },
+  },
 }
 
 export const electionApiRoutes = {
   places: {
     find: {
       path: '/places',
-      method: 'GET'
+      method: 'GET',
     },
     featuredCities: {
       path: '/places/most-elections',
       method: 'GET',
-    }
+    },
   },
   races: {
     find: {
       path: '/races',
-      method: 'GET'
-    }
+      method: 'GET',
+    },
   },
   candidacies: {
     find: {
       path: '/candidacies',
       method: 'GET',
     },
-  }
+  },
 }

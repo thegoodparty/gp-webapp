@@ -15,6 +15,7 @@ import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCa
 import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
+import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -24,6 +25,7 @@ const DEFAULT_STATE = {
   script: false,
   scriptText: '',
   image: undefined,
+  voterCount: 0,
 }
 
 /**
@@ -54,10 +56,13 @@ export default function TaskFlow({
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
   const stepName = stepList[state.step]
   const isLastStep = state.step >= stepList.length - 1
+  const [outreaches, setOutreaches] = useOutreach()
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
   )
+
+  console.log(`outreaches =>`, outreaches)
 
   const handleChange = (key, value) => {
     setState((prevState) => ({
@@ -124,7 +129,11 @@ export default function TaskFlow({
       ...state,
       type,
     }
-    return await scheduleVoterMessagingCampaign(updatedState)
+    const result = await scheduleVoterMessagingCampaign(updatedState)
+    if (!(result?.ok === false || result?.error)) {
+      setOutreaches([...outreaches, result])
+    }
+    return result
   }
 
   const handleAddScriptOnComplete = (scriptKeyOrText, scriptContent) => {

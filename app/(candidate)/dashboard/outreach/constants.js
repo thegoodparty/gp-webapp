@@ -43,10 +43,12 @@ export const AUDIENCE_LABELS_MAPPING = {
   genderMale: 'Male',
   genderFemale: 'Female',
 }
+
+// Based off the OutreachType in gp-api
 export const OUTREACH_TYPES = {
-  p2pTexting: 'p2pTexting',
+  text: 'text',
   doorKnocking: 'doorKnocking',
   phoneBanking: 'phoneBanking',
-  social: 'social',
+  socialMedia: 'socialMedia',
   robocall: 'robocall',
 }

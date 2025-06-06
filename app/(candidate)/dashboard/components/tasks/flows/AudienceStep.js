@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import CustomVoterAudienceFilters, {
   TRACKING_KEYS,
 } from 'app/(candidate)/dashboard/voter-records/components/CustomVoterAudienceFilters'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { countVoterFile } from 'app/(candidate)/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
@@ -59,6 +59,7 @@ export default function AudienceStep({
       })
 
       setCount(res)
+      onChangeCallback('voterCount', res)
       setLoadingCount(false)
     }, 300)
   }, [audience, isCustom, type, hasValues])
@@ -135,7 +136,8 @@ export default function AudienceStep({
               size="large"
               color="secondary"
               onClick={nextCallback}
-              disabled={!hasValues}
+              disabled={!hasValues || loadingCount}
+              loading={loadingCount}
               {...nextTrackingAttrs}
             >
               Next

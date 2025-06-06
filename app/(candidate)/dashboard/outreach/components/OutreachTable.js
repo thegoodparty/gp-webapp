@@ -14,18 +14,19 @@ import {
   OUTREACH_ACTION_TYPES,
   OutreachActions,
 } from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
+import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
-export const OutreachTable = ({
-  title = 'Your campaigns',
-  outreaches,
-  gradient = false,
-}) => {
+export const OutreachTable = ({ mockOutreaches }) => {
+  const [outreaches] = useOutreach()
+  const useMockData = !outreaches?.length
+  const tableData = useMockData ? mockOutreaches : outreaches
   const [viewFilters, setViewFilters] = useState(null)
   const [actOnOutreach, setActOnOutreach] = useState(null)
   const [popoverPosition, setPopoverPosition] = useState({
     top: 0,
     left: 0,
   })
+  const title = useMockData ? 'How your outreach could look' : 'Your campaigns'
   const columns = [
     {
       header: 'Channel',
@@ -124,7 +125,7 @@ export const OutreachTable = ({
   const table = (
     <SimpleTable
       columns={columns}
-      data={outreaches}
+      data={tableData.sort((a, b) => new Date(a.date) - new Date(b.date))}
       onRowClick={handleRowClick}
     />
   )
@@ -132,7 +133,7 @@ export const OutreachTable = ({
   return (
     <section className="mt-4">
       <H4 className="mb-4">{title}</H4>
-      {gradient ? (
+      {useMockData ? (
         <GradientOverlay>{table}</GradientOverlay>
       ) : (
         <>

@@ -12,7 +12,7 @@ import {
   MdMessage,
   MdSensorDoor,
 } from 'react-icons/md'
-import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
 import { useEffect } from 'react'
 import { syncEcanvasser } from 'utils/syncEcanvasser'
@@ -51,7 +51,7 @@ const DEFAULT_MENU_ITEMS = [
     onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickContentBuilder),
   },
   {
-    label: 'VoterOutreach',
+    label: 'Voter Outreach',
     icon: <MdMessage />,
     link: '/dashboard/outreach',
     id: 'outreach-dashboard',
