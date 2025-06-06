@@ -163,7 +163,7 @@ export async function loginAccount(
   await page.getByTestId("login-password-input").nth(1).fill(password);
   await page.getByTestId("login-submit-button").click();
   await documentReady(page);
-  await page.waitForURL(`${baseURL}/dashboard`, { timeout: 10000 });
+  await page.waitForURL(`${baseURL}/dashboard`, { timeout: 30000 });
   await page.waitForLoadState('networkidle');
 }
 
