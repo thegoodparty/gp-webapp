@@ -9,7 +9,6 @@ import { apiRoutes } from 'gpApi/routes'
 
 const fetchOutreaches = async () => {
   const response = await serverFetch(apiRoutes.outreach.list)
-  console.log(`response =>`, response)
   if (!response.ok) {
     if (response.status === 404) {
       return []

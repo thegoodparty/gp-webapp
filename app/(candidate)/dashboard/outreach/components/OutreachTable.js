@@ -86,10 +86,6 @@ export const OutreachTable = ({ mockOutreaches }) => {
   )
 
   const handleRowClick = (outreach, { clientX, clientY } = {}) => {
-    console.log(outreach, {
-      clientX,
-      clientY,
-    })
     setActOnOutreach(outreach)
     setPopoverPosition({
       top: clientY + 10,

@@ -4,7 +4,6 @@ export const outreachContext = createContext([[], () => {}])
 
 export const OutreachProvider = ({ initValue = [], children }) => {
   const [outreaches, setOutreaches] = useState(initValue)
-  console.log(`WTF? outreaches =>`, outreaches)
 
   return (
     <outreachContext.Provider value={[outreaches, setOutreaches]}>
