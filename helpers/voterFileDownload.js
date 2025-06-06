@@ -2,7 +2,7 @@ import { fetchVoterFile } from 'app/(candidate)/dashboard/voter-records/componen
 import { format } from 'date-fns'
 
 export async function voterFileDownload(type, filters, fileName) {
-  const res = await fetchVoterFile(type, filters ? { filters } : undefined)
+  const res = await fetchVoterFile(type, filters || undefined)
 
   if (res.ok) {
     const blob = await res.blob()
