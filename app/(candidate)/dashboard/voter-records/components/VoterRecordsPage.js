@@ -17,6 +17,7 @@ import ViewAudienceFiltersModal from './ViewAudienceFiltersModal'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import PaginationButtons from './PaginationButtons'
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE']
 const ITEMS_PER_PAGE = 50
@@ -156,25 +157,11 @@ export default function VoterRecordsPage(props) {
                 />
               </div>
               {totalPages > 1 && (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => goToPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300"
-                  >
-                    Previous
-                  </button>
-                  <span className="text-gray-600 text-sm">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={() => goToPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300"
-                  >
-                    Next
-                  </button>
-                </div>
+                <PaginationButtons
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={goToPage}
+                />
               )}
             </div>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 border-x border-x-gray-200 ">
