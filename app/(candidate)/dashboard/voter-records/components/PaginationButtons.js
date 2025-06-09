@@ -3,10 +3,6 @@ export default function PaginationButtons({
   totalPages,
   onPageChange,
 }) {
-  if (totalPages <= 1) {
-    return null
-  }
-
   return (
     <div className="flex items-center gap-2">
       <button
