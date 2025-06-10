@@ -76,6 +76,7 @@ export async function ensureAdminSession() {
     // Use admin credentials from environment variables
     const adminEmail = process.env.TEST_USER_ADMIN;
     const adminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
+    const victoryPathUrl = `${baseUrl}/admin/victory-path/${encodeURIComponent(testAccountFirstName)}-${encodeURIComponent(testAccountLastName)}`;
 
     if (!adminEmail || !adminPassword) {
       throw new Error('Admin credentials not found in environment variables');
@@ -84,10 +85,8 @@ export async function ensureAdminSession() {
     await loginAccount(page, adminEmail, adminPassword);
     console.log(`Marking ${testAccountFirstName} ${testAccountLastName} test account as verified...`);
 
-    const victoryPathUrl = `${baseUrl}/admin/victory-path/${encodeURIComponent(testAccountFirstName)}-${encodeURIComponent(testAccountLastName)}`;
     console.log(`Navigating to: ${victoryPathUrl}`);
-
-    await page.goto(victoryPathUrl);
+    await page.goto(victoryPathUrl, { waitUntil: "domcontentloaded" });
     await documentReady(page);
 
     console.log('Waiting for dropdown button...');
