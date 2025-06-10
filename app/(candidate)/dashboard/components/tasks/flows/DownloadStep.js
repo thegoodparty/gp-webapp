@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
@@ -53,7 +53,7 @@ export default function DownloadStep({
     )
 
     try {
-      await voterFileDownload(type, selectedAudience)
+      await voterFileDownload(type, { filters: selectedAudience })
     } catch (error) {
       errorSnackbar('Error downloading voter file')
     }
