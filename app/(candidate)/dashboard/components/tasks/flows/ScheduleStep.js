@@ -58,8 +58,6 @@ export default function ScheduleStep({
     setIsLoading(true)
     const resp = await submitCallback()
 
-    console.log(`resp =>`, resp)
-
     if (resp.ok === false || resp.errors) {
       const error = resp.errors[0]?.message
       errorSnackbar(`Failed to submit request. ${error}`)

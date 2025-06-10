@@ -62,8 +62,6 @@ export default function TaskFlow({
     [type],
   )
 
-  console.log(`outreaches =>`, outreaches)
-
   const handleChange = (key, value) => {
     setState((prevState) => ({
       ...prevState,
