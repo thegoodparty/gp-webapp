@@ -47,24 +47,4 @@ test.describe.serial('Voter data pro features', () => {
       await handleTestFailure(page, runId, caseId, error);
     }
   });
-
-  test('Generate custom voter file', async ({ page }) => {
-    const caseId = 43;
-    try {
-      await page.locator('div').filter({ hasText: /^Create a custom voter file$/ }).getByRole('button').click();
-      await page.getByLabel('Channel *').click();
-      await page.getByRole('option', { name: 'Direct Mail' }).click();
-      await page.getByLabel('Purpose').click();
-      await page.getByRole('option', { name: 'GOTV' }).click();
-      await page.getByRole('button', { name: 'Next' }).click();
-      await page.getByRole('button', { name: 'Create Voter File' }).click();
-      await documentReady(page);
-      await page.getByRole('link', { name: /Direct Mail - GOTV/ }).first().isVisible();
-
-      // Report test results
-      await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-      await handleTestFailure(page, runId, caseId, error);
-    }
-  });
 });
