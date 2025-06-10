@@ -66,6 +66,18 @@ export default async function Page({ params }) {
     })
     if (newPlace) {
       permanentRedirect(`/elections/${newSlug}`)
+    }
+    
+    // New data has municipalities often under the state
+    const newSlug2 = `${state}/${city}`
+    const newPlace2 = await fetchPlace({
+      slug: newSlug2,
+      includeParent: false,
+      includeRaces: false
+    })
+    
+    if (newPlace2) {
+      permanentRedirect(`/elections/${newSlug2}`)
     } else {
       notFound()
     }
