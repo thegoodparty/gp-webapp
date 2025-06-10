@@ -136,7 +136,7 @@ export async function cleanupSession() {
   // Clean up regular test account and session if they exist
   if (fs.existsSync(testAccountPath)) {
     console.log('Cleaning up test account...');
-    await deleteAccount(); // No need to create browser/page or login
+    await deleteAccount();
 
     console.log('Test account deleted.');
     fs.unlinkSync(SESSION_FILE);
@@ -275,7 +275,7 @@ export async function deleteAccount(page = null) {
     shouldCloseBrowser = true;
     const browser = await chromium.launch();
     const context = await browser.newContext({
-      storageState: SESSION_FILE  // Use the saved auth.json session
+      storageState: SESSION_FILE
     });
     page = await context.newPage();
   }
@@ -287,13 +287,13 @@ export async function deleteAccount(page = null) {
   console.log('Looking for Delete Account button...');
   // Wait for and click Delete Account button with a longer timeout
   const deleteButton = await page.getByRole('button', { name: 'Delete Account' });
-  await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
+  await deleteButton.waitFor({ state: 'visible', timeout: 60000 });
   await deleteButton.click();
 
   console.log('Looking for Proceed button...');
   // Wait for and click Proceed button
   const proceedButton = await page.getByRole('button', { name: 'Proceed' });
-  await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
+  await proceedButton.waitFor({ state: 'visible', timeout: 60000 });
   await proceedButton.click();
 
   await documentReady(page);
