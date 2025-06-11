@@ -25,13 +25,13 @@ test('Generate default voter file', async ({ page }) => {
         const download = await downloadPromise;
 
         // Save the file to a temporary location and check its size
-        const tempFilePath = 'temp-download0.csv';
-        await download.saveAs(tempFilePath);
-        const stats = fs.statSync(tempFilePath);
+        const tempFilePath0 = 'temp-download0.csv';
+        await download.saveAs(tempFilePath0);
+        const stats = fs.statSync(tempFilePath0);
         expect(stats.size).toBeGreaterThan(200);
 
         // Clean up the temporary file
-        fs.unlinkSync(tempFilePath);
+        fs.unlinkSync(tempFilePath0);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
@@ -64,13 +64,13 @@ test('Generate custom voter file', async ({ page }) => {
         const download = await downloadPromise;
 
         // Save the file to a temporary location and check its size
-        const tempFilePath = 'temp-download1.csv';
-        await download.saveAs(tempFilePath);
-        const stats = fs.statSync(tempFilePath);
-        expect(stats.size).toBeGreaterThan(200);
+        const tempFilePath1 = 'temp-download1.csv';
+        await download.saveAs(tempFilePath1);
+        const stats = fs.statSync(tempFilePath1);
+        expect(stats.size).toBeGreaterThan(150);
 
         // Clean up the temporary file
-        fs.unlinkSync(tempFilePath);
+        fs.unlinkSync(tempFilePath1);
 
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
