@@ -280,15 +280,12 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Navigating to profile page...');
-  await page.goto(`${baseURL}/profile`);
-  await documentReady(page);
-
   // Retry logic for Delete Account button
   let deleteButton, proceedButton;
   let lastError;
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      await page.reload({ waitUntil: 'domcontentloaded' });
+      await page.goto(`${baseURL}/profile`);
       await documentReady(page);
       console.log(`Looking for Delete Account button... (Attempt ${attempt})`);
       deleteButton = await page.getByRole('button', { name: 'Delete Account' });
