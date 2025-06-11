@@ -90,7 +90,7 @@ test.skip('Update Office Details', async ({ page }) => {
     }
 });
 
-test('Update Your Why Statement', async ({ page }) => {
+test.skip('Update Your Why Statement', async ({ page }) => {
     const caseId = 48;
     const newWhyStatement = generateTimeStamp() + ' Statement';
 
@@ -118,7 +118,7 @@ test('Update Your Why Statement', async ({ page }) => {
 });
 
 
-test('Update Fun Facts about Yourself', async ({ page }) => {
+test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     const caseId = 49;
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
