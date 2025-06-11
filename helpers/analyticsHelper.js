@@ -13,6 +13,7 @@ export const EVENTS = {
     ClickSetPassword: 'Set Password: Click Set Password',
   },
   Onboarding: {
+    RegistrationCompleted: 'Onboarding: Registration Completed',
     ClickFinishLater: 'Onboarding: Click Finish Later',
     OfficeStep: {
       ClickNext: 'Onboarding - Office Step: Click Next',
