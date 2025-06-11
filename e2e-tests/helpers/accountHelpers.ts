@@ -283,17 +283,31 @@ export async function deleteAccount(page = null) {
   await page.goto(`${baseURL}/profile`);
   await documentReady(page);
 
-  console.log('Looking for Delete Account button...');
-  // Wait for and click Delete Account button with a longer timeout
-  const deleteButton = await page.getByRole('button', { name: 'Delete Account' });
-  await deleteButton.waitFor({ state: 'visible', timeout: 60000 });
-  await deleteButton.click();
+  // Retry logic for Delete Account button
+  let deleteButton, proceedButton;
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await documentReady(page);
+      console.log(`Looking for Delete Account button... (Attempt ${attempt})`);
+      deleteButton = await page.getByRole('button', { name: 'Delete Account' });
+      await deleteButton.waitFor({ state: 'visible', timeout: 30000 });
+      await deleteButton.click();
 
-  console.log('Looking for Proceed button...');
-  // Wait for and click Proceed button
-  const proceedButton = await page.getByRole('button', { name: 'Proceed' });
-  await proceedButton.waitFor({ state: 'visible', timeout: 60000 });
-  await proceedButton.click();
+      console.log('Looking for Proceed button...');
+      proceedButton = await page.getByRole('button', { name: 'Proceed' });
+      await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
+      await proceedButton.click();
+      break; // Success, exit loop
+    } catch (error) {
+      lastError = error;
+      console.error(`Attempt ${attempt} failed:`, error);
+    }
+  }
+  if (!deleteButton || !proceedButton) {
+    throw lastError || new Error('Failed to find and click Delete Account/Proceed button after retries');
+  }
 
   await documentReady(page);
   await page.context().clearCookies();
