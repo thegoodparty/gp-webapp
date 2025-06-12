@@ -16,6 +16,8 @@ import {
 } from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
+const NotApplicableLabel = () => <span className="text-gray-500">n/a</span>
+
 export const OutreachTable = ({ mockOutreaches }) => {
   const [outreaches] = useOutreach()
   const useMockData = !outreaches?.length
@@ -45,10 +47,10 @@ export const OutreachTable = ({ mockOutreaches }) => {
     {
       header: 'Audience',
       cell: ({ row }) => {
-        const audienceLabels = formatAudienceLabels(row.voterFileFilter)
+        const audienceLabels = formatAudienceLabels(row.voterFileFilter || {})
         const atMostThreeLabels = audienceLabels.slice(0, 3)
         return !audienceLabels?.length ? (
-          <span className="text-gray-500">n/a</span>
+          <NotApplicableLabel />
         ) : (
           <span className="flex flex-row items-center relative">
             <StackedChips
@@ -76,7 +78,8 @@ export const OutreachTable = ({ mockOutreaches }) => {
     },
     {
       header: 'Voters',
-      cell: ({ row }) => row.voterFileFilter.voterCount,
+      cell: ({ row }) =>
+        row.voterFileFilter?.voterCount || <NotApplicableLabel />,
     },
   ]
 

@@ -90,7 +90,6 @@ export default function OutreachCreateCards() {
           type={flowModalTask.flowType}
           campaign={campaign}
           onClose={() => setFlowModalTask(null)}
-          // defaultAiTemplateId={flowModalTask.defaultAiTemplateId}
         />
       )}
     </div>

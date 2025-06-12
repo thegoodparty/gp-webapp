@@ -334,6 +334,12 @@ export const apiRoutes = {
       },
     },
   },
+  voterFileFilter: {
+    create: {
+      path: '/voters/voter-file/filter',
+      method: 'POST',
+    },
+  },
   admin: {
     bustCache: {
       path: '/revalidate',
@@ -523,6 +529,10 @@ export const apiRoutes = {
     },
   },
   outreach: {
+    create: {
+      path: '/outreach',
+      method: 'POST',
+    },
     list: {
       path: '/outreach',
       method: 'GET',

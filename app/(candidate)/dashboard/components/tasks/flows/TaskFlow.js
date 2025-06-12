@@ -16,6 +16,9 @@ import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import { useSnackbar } from 'helpers/useSnackbar'
+import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
+import { createOutreach } from 'helpers/createOutreach'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -34,7 +37,6 @@ const DEFAULT_STATE = {
  * @property {React.ReactElement} customButton Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
  * @property {boolean} isCustom
- * @property {string} fileName
  */
 
 /**
@@ -46,7 +48,6 @@ export default function TaskFlow({
   customButton,
   campaign,
   isCustom,
-  fileName,
   onClose,
   defaultAiTemplateId,
 }) {
@@ -57,6 +58,7 @@ export default function TaskFlow({
   const stepName = stepList[state.step]
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
+  const { errorSnackbar, successSnackbar } = useSnackbar()
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
@@ -121,16 +123,93 @@ export default function TaskFlow({
     setState(DEFAULT_STATE)
   }
 
+  // TODO: This is doing waaaaaay too much. We should refactor this to break up
+  //  the logic into smaller functions here.
   const handleSubmit = async () => {
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit)
     const updatedState = {
       ...state,
       type,
     }
-    const result = await scheduleVoterMessagingCampaign(updatedState)
-    if (!(result?.ok === false || result?.error)) {
-      setOutreaches([...outreaches, result])
+
+    const { audience, voterCount = 0, script, schedule, image } = updatedState
+    const { message } = schedule || {}
+
+    // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
+    //  to match the API once we redo that component so that we don't have to do
+    //  this mapping
+    const {
+      audience_superVoters: audienceSuperVoters,
+      audience_likelyVoters: audienceLikelyVoters,
+      audience_unreliableVoters: audienceUnreliableVoters,
+      audience_unlikelyVoters: audienceUnlikelyVoters,
+      audience_firstTimeVoters: audienceFirstTimeVoters,
+      party_independent: partyIndependent,
+      party_democrat: partyDemocrat,
+      party_republican: partyRepublican,
+      age_18_25: age18_25,
+      age_25_35: age25_35,
+      age_35_50: age35_50,
+      age_50_plus: age50Plus,
+      gender_male: genderMale,
+      gender_female: genderFemale,
+    } = audience || {}
+
+    const date = state.schedule?.date && new Date(state.schedule.date)
+
+    const voterFileFilter = await createVoterFileFilter({
+      name: `${type} Campaign ${date.toLocaleDateString()}`,
+      ...{
+        audienceSuperVoters,
+        audienceLikelyVoters,
+        audienceUnreliableVoters,
+        audienceUnlikelyVoters,
+        audienceFirstTimeVoters,
+        partyIndependent,
+        partyDemocrat,
+        partyRepublican,
+        age18_25,
+        age25_35,
+        age35_50,
+        age50Plus,
+        genderMale,
+        genderFemale,
+      },
+      voterCount,
+    })
+
+    console.log(`voterFileFilter =>`, voterFileFilter)
+
+    if (!voterFileFilter) {
+      errorSnackbar('There was an error creating your voter file filter')
+      return
     }
+
+    const outreach = await createOutreach(
+      {
+        campaignId: campaign.id,
+        outreachType: type,
+        name,
+        message,
+        script,
+        date,
+        voterFileFilterId: voterFileFilter.id,
+      },
+      image,
+    )
+
+    if (!outreach) {
+      errorSnackbar('There was an error creating your outreach campaign')
+      return
+    }
+
+    const result = await scheduleVoterMessagingCampaign(outreach.id)
+    if (!result) {
+      errorSnackbar('There was an error scheduling your campaign')
+      return
+    }
+    successSnackbar('Request submitted successfully.')
+    setOutreaches([...outreaches, result])
     return result
   }
 
@@ -222,7 +301,6 @@ export default function TaskFlow({
           <ScheduleStep
             schedule={state.schedule}
             type={type}
-            fileName={fileName}
             {...callbackProps}
           />
         )}
