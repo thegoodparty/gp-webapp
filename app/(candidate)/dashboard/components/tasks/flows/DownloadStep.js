@@ -19,7 +19,6 @@ export default function DownloadStep({
   type,
   audience,
   scriptText,
-  // closeCallback,
   onCreateOutreach = async () => {},
 }) {
   useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])
@@ -45,11 +44,6 @@ export default function DownloadStep({
     () => buildTrackingAttrs('Read Blog', { type }),
     [type],
   )
-
-  // const returnTrackingAttrs = useMemo(
-  //   () => buildTrackingAttrs('Return to Dashboard', { type }),
-  //   [type],
-  // )
 
   async function handleDownload() {
     setDownloading(true)
@@ -93,17 +87,6 @@ export default function DownloadStep({
         >
           Read more on our blog
         </Button>
-
-        {/*<Button*/}
-        {/*  href="/dashboard"*/}
-        {/*  size="large"*/}
-        {/*  variant="text"*/}
-        {/*  className="mt-8"*/}
-        {/*  onClick={closeCallback}*/}
-        {/*  {...returnTrackingAttrs}*/}
-        {/*>*/}
-        {/*  Return to Dashboard*/}
-        {/*</Button>*/}
       </div>
     </div>
   )

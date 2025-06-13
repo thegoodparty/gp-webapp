@@ -1,4 +1,5 @@
 import { MdContentCopy, MdDownload } from 'react-icons/md'
+import CopyToClipboard from '@shared/utils/CopyToClipboard'
 
 export const OUTREACH_ACTION_TYPES = {
   COPY_SCRIPT: 'COPY_SCRIPT',
@@ -8,16 +9,21 @@ export const OUTREACH_ACTION_TYPES = {
 const ACTIONS = [
   {
     type: OUTREACH_ACTION_TYPES.COPY_SCRIPT,
-    label: (
-      <>
+    label: ({ outreach = {}, onCopy = () => {} }) => (
+      <CopyToClipboard
+        {...{
+          text: outreach?.script || '',
+          onCopy,
+        }}
+      >
         <MdContentCopy className="mr-2" />
         Copy Script
-      </>
+      </CopyToClipboard>
     ),
   },
   {
     type: OUTREACH_ACTION_TYPES.DOWNLOAD_LIST,
-    label: (
+    label: ({ outreach = {} }) => (
       <>
         <MdDownload className="mr-2" />
         Download list
@@ -32,13 +38,9 @@ export const OutreachActions = ({ outreach, onClick = () => {} }) => {
       {ACTIONS.map((action) => (
         <div
           key={action.type}
-          onClick={(e) => {
-            e.stopPropagation()
-            onClick(outreach, action.type)
-          }}
           className="flex items-center space-x-2 p-4 hover:bg-gray-100 cursor-pointer"
         >
-          {action.label}
+          {action.label({ outreach, onClick, onCopy: () => onClick() })}
         </div>
       ))}
     </div>
