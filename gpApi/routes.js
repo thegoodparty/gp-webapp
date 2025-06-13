@@ -522,29 +522,51 @@ export const apiRoutes = {
       method: 'POST',
     },
   },
+  website: {
+    get: {
+      path: '/websites/mine',
+      method: 'GET',
+    },
+    create: {
+      path: '/websites',
+      method: 'POST',
+    },
+    update: {
+      path: '/websites/mine',
+      method: 'PUT',
+    },
+    contactForm: {
+      path: '/websites/contact-form',
+      method: 'POST',
+    },
+    preview: {
+      path: '/websites/preview/:vanityPath',
+      method: 'GET',
+    },
+  },
 }
 
 export const electionApiRoutes = {
   places: {
     find: {
       path: '/places',
-      method: 'GET'
+      method: 'GET',
     },
     featuredCities: {
       path: '/places/most-elections',
       method: 'GET',
-    }
+    },
   },
   races: {
     find: {
       path: '/races',
-      method: 'GET'
-    }
+      method: 'GET',
+    },
   },
   candidacies: {
     find: {
       path: '/candidacies',
       method: 'GET',
     },
-  }
+  },
 }

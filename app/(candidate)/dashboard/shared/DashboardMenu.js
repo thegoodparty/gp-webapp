@@ -11,6 +11,7 @@ import {
   MdLibraryBooks,
   MdMessage,
   MdSensorDoor,
+  MdWeb,
 } from 'react-icons/md'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useEcanvasser } from '@shared/hooks/useEcanvasser'
@@ -107,6 +108,14 @@ const TEXTING_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickTextMessaging),
 }
 
+const WEBSITE_MENU_ITEM = {
+  id: 'website-dashboard',
+  label: 'Website',
+  link: '/dashboard/website',
+  icon: <MdWeb />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
+}
+
 const getDashboardMenuItems = (campaign) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
   if (campaign?.isPro) {
@@ -136,6 +145,7 @@ export default function DashboardMenu({
   }, [campaign, ecanvasser])
   if (userIsAdmin(user)) {
     menuItems.push(TEXTING_MENU_ITEM)
+    menuItems.push(WEBSITE_MENU_ITEM)
   }
 
   const handleEnterPress = (e) => {
