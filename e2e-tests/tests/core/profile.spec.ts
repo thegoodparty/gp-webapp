@@ -24,6 +24,7 @@ test('Adjust Personal Information', async ({ page }) => {
     const zipCode = userData.zipCode.substring(0, 5);
 
     try {
+        await page.locator("[data-testid='personal-first-name']").waitFor({ state: 'visible', timeout: 60000 });
         await page.locator("[data-testid='personal-first-name']").fill(firstName);
         await page.locator("[data-testid='personal-email']").fill(newEmailAddress);
         await page.locator("input[name='phone']").fill(phoneNumber);
