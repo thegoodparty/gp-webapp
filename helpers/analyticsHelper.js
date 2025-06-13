@@ -1,6 +1,16 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 
+const UTM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+]
+
+const CLID_SUFFIX = 'clid'
+
 export const EVENTS = {
   SignUp: {
     ClickLogin: 'Sign Up: Click Login',
@@ -13,7 +23,7 @@ export const EVENTS = {
     ClickSetPassword: 'Set Password: Click Set Password',
   },
   Onboarding: {
-    RegistrationCompleted: 'Onboarding: Registration Completed',
+    RegistrationCompleted: 'Onboarding - Registration Completed',
     ClickFinishLater: 'Onboarding: Click Finish Later',
     OfficeStep: {
       ClickNext: 'Onboarding - Office Step: Click Next',
@@ -31,6 +41,9 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
+    Dashboard: {
+      FirstViewed: 'Onboarding - Candidate Dashboard First Viewed'
+    } 
   },
   Navigation: {
     Top: {
@@ -74,6 +87,7 @@ export const EVENTS = {
       },
     },
     VoterContact: {
+      CampaignCompleted: 'Voter Outreach - Campaign Completed',
       LogProgress: {
         Exit: 'Dashboard - Voter Contact - Log Progress: Exit Log Progress',
         ClickAdd:
@@ -357,13 +371,7 @@ export function extractClids(searchParams) {
   return clids
 }
 
-const UTM_KEYS = [
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_content",
-  "utm_term",
-]
+
 
 export function persistUtmsOnce() {
   if (typeof window === 'undefined' || !window.location.search) return
@@ -378,10 +386,28 @@ export function persistUtmsOnce() {
     const lastKey = `${key}_last`
 
     if (!sessionStorage.getItem(firstKey)) {
-      sessionStroage.setItem(firstKey, value)
+      sessionStorage.setItem(firstKey, value)
     }
 
     sessionStorage.setItem(lastKey, value)
+  }
+}
+
+export function persistClidsOnce() {
+  if (typeof window === 'undefined' || !window.location.search) return
+
+  const params = new URLSearchParams(window.location.search)
+
+  for (const [key, value] of params.entries()) {
+    if (!key.toLowerCase().endsWith(CLID_SUFFIX) || !value) continue
+
+    const firstKey = `${key}_first`
+    const lastKey  = `${key}_last`
+
+    if (!sessionStorage.getItem(firstKey)) {
+      sessionStorage.setItem(firstKey, value) // write-once
+    }
+    sessionStorage.setItem(lastKey, value)     // always update
   }
 }
 
@@ -399,11 +425,24 @@ export function getPersistedUtms() {
   return utms
 }
 
+export function getPersistedClids() {
+  const clids = {}
+
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const key = sessionStorage.key(i)
+    if (key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
+    key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)) {
+      clids[key] = sessionStorage.getItem(key)
+    }
+  }
+  return clids
+}
+
 export const trackEvent = (name, properties) => {
   // TODO: Repurpose this file and function for Segment when we get the green light to rip out FS.
   try {
     // Segment has different environments, and should run even when FS is disabled
-    commonProperties = {
+    const commonProperties = {
       ...getPersistedUtms(),
       ...properties,
     }

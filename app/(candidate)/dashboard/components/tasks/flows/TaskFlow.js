@@ -120,6 +120,15 @@ export default function TaskFlow({
 
   const handleSubmit = async () => {
     trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit)
+    // Separate call for Bryan's new event type
+    const { budget, audience} = state
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, {
+      medium: type,
+      name: 'none',
+      price: budget,
+      recipientCount: audience.count || 0,
+      method: 'automatic',
+    })
     const updatedState = {
       ...state,
       type,

@@ -18,7 +18,7 @@ import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
 import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import SegmentIdentity from '@shared/layouts/navigation/SegmentIdentity'
+import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
@@ -166,6 +166,7 @@ export default function SignUpPage() {
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
   const router = useRouter()
+  const analytics = useAnalytics()
 
   const {
     firstName,
@@ -204,18 +205,21 @@ export default function SignUpPage() {
         setLoading(false)
       }
 
-    SegmentIdentity({
-      // TODO: Add signUpMethod when there's more than one method (ex: Google)
-      signUpPath: 'outbound',
-      signUpDate: new Date().toISOString(),
-    })
-    trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
-      signUpPath: 'outbound',
-      signUpDate: new Date().toISOString()
-    })
-
       await saveToken(token)
       setUser(user)
+
+      const signUpPath = 'inbound'
+      const signUpDate = new Date().toISOString()
+      analytics.identify(user.id, {
+        signUpPath,
+        signUpDate,
+        signUpMethod: 'email'
+      })
+      trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
+        signUpPath,
+        signUpDate
+      })
+
       const redirect = await createCampaign()
       setLoading(false)
       router.push(redirect)

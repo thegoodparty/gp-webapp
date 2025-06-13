@@ -12,6 +12,7 @@ import { ImpersonateUserProvider } from '@shared/user/ImpersonateUserProvider'
 import PromoBanner from '@shared/utils/PromoBanner'
 import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
+import SegmentIdentify from './navigation/SegmentIdentify'
 
 const PageWrapper = async ({ children }) => {
   const pathname = await getReqPathname()
@@ -38,6 +39,7 @@ const PageWrapper = async ({ children }) => {
                   <Suspense>
                     <CookiesSnackbar />
                   </Suspense>
+                  <SegmentIdentify/>
                 </div>
               </SnackbarProvider>
             </NavigationProvider>

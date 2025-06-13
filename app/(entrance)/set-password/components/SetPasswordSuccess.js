@@ -2,16 +2,8 @@ import Button from '@shared/buttons/Button'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import { CheckRounded } from '@mui/icons-material'
-import { trackEvent } from 'helpers/analyticsHelper'
-import SegmentIdentity from '@shared/layouts/navigation/SegmentIdentity'
 
 export default function SetPasswordSuccess() {
-  SegmentIdentity({
-    // TODO: Add signUpMethod when there's more than one method (ex: Google)
-    signUpPath: 'outbound',
-    signUpDate: new Date().toISOString(),
-  })
-  trackEvent(EVENTS.Onboarding.RegistrationCompleted)
   return (
     <>
       <hgroup className="text-center">

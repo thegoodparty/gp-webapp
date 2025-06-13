@@ -24,6 +24,7 @@ import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
@@ -61,6 +62,7 @@ export default function LoginPage() {
 
   const [_, setUser] = useUser()
   const { errorSnackbar } = useSnackbar()
+  const analytics = useAnalytics()
 
   const enableSubmit = () =>
     isValidEmail(state.email) && isValidPassword(state.password)
@@ -73,6 +75,9 @@ export default function LoginPage() {
         await saveToken(token)
         setUserCookie(user)
         setUser(user)
+        const { id, email, firstName, lastName, phone, zip } = user
+        analytics.identify(id, { email, firstName, lastName, phone, zip})
+        
         const campaignRequests = await getCampaignRequests(user.id)
 
         if (campaignRequests?.length) {
