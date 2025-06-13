@@ -96,9 +96,9 @@ export default function WebsiteContent({ website }) {
   const [formData, setFormData] = useState({
     smsConsent: false,
   })
-  const content = website.content
-  const candidateName = content.campaignName
-  const activeTheme = WEBSITE_THEMES[content.theme] || WEBSITE_THEMES.light
+  const content = website?.content || {}
+  const candidateName = content?.campaignName || ''
+  const activeTheme = WEBSITE_THEMES[content?.theme] || WEBSITE_THEMES.light
   const currentDate = new Date().toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
@@ -113,7 +113,6 @@ export default function WebsiteContent({ website }) {
   function handleChange(name, value) {
     setFormData((current) => {
       const newFormData = { ...current, [name]: value }
-      console.log(newFormData)
       return newFormData
     })
   }
@@ -125,7 +124,7 @@ export default function WebsiteContent({ website }) {
       >
         <nav className="px-8 flex justify-between items-center">
           <Image
-            src={content.logo || '/images/logo/heart.svg'}
+            src={content?.logo || '/images/logo/heart.svg'}
             alt="Campaign Logo"
             height={32}
             width={200}
@@ -149,8 +148,8 @@ export default function WebsiteContent({ website }) {
       <section className={`py-16 px-4 ${activeTheme.secondary}`}>
         <div className="px-8 flex-col md:flex-row flex gap-8 justify-between items-stretch md:items-center">
           <div>
-            <H1 className="mb-4">{content.main.title}</H1>
-            <p className="text-2xl mb-6">{content.main.tagline}</p>
+            <H1 className="mb-4">{content?.main?.title || ''}</H1>
+            <p className="text-2xl mb-6">{content?.main?.tagline || ''}</p>
             <Button
               href="#contact"
               className={`inline-block !${activeTheme.accent} !${activeTheme.accentText}`}
@@ -158,10 +157,10 @@ export default function WebsiteContent({ website }) {
               Send a Message
             </Button>
           </div>
-          {content.main.image ? (
+          {content?.main?.image ? (
             <div className="w-full max-w-md h-80 rounded-lg shadow-lg overflow-hidden">
               <Image
-                src={content.main.image}
+                src={content?.main?.image}
                 alt="Campaign Hero"
                 className="w-full h-full object-cover"
                 height={320}
@@ -179,9 +178,9 @@ export default function WebsiteContent({ website }) {
         className={`mx-auto max-w-3xl py-10 px-4 ${activeTheme.bg} scroll-mt-16`}
       >
         <H2 className="mb-4">About</H2>
-        <p className="mb-6">{content.about.bio}</p>
+        <p className="mb-6">{content?.about?.bio || ''}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {content.about.issues.map((issue, index) => (
+          {content?.about?.issues?.map((issue, index) => (
             <div
               key={index}
               className={`p-4 rounded-lg ${activeTheme.secondary} text-center`}
@@ -191,7 +190,7 @@ export default function WebsiteContent({ website }) {
             </div>
           ))}
 
-          {content.about.issues.length === 0 &&
+          {(!content?.about?.issues || content?.about?.issues?.length === 0) &&
             Array(4)
               .fill(0)
               .map((_, index) => (
@@ -309,9 +308,9 @@ export default function WebsiteContent({ website }) {
 
         <div className="mt-8 text-center">
           <p className="font-medium">Campaign Headquarters</p>
-          <p className="mt-1">{content.contact.address}</p>
-          <p className="mt-1">{content.contact.email}</p>
-          <p className="mt-1">{content.contact.phone}</p>
+          <p className="mt-1">{content?.contact?.address || ''}</p>
+          <p className="mt-1">{content?.contact?.email || ''}</p>
+          <p className="mt-1">{content?.contact?.phone || ''}</p>
         </div>
       </section>
 
@@ -319,7 +318,7 @@ export default function WebsiteContent({ website }) {
         <div className="container mx-auto text-center">
           <p className="text-sm mb-4">
             &copy; {new Date().getFullYear()} • All Rights Reserved •{' '}
-            {content.privacy?.showLink !== false && (
+            {
               <button
                 type="button"
                 className="text-sm hover:underline"
@@ -327,7 +326,7 @@ export default function WebsiteContent({ website }) {
               >
                 Privacy Policy
               </button>
-            )}
+            }
           </p>
 
           <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-2 pt-2 ">
@@ -376,7 +375,7 @@ export default function WebsiteContent({ website }) {
             </button>
             <div>
               <h2 className="text-xl font-bold mb-1">
-                SMS Privacy Policy for {content.main.title}
+                SMS Privacy Policy for {content?.main?.title || ''}
               </h2>
               <div className="text-sm text-gray-500 mb-4">
                 Last Updated: {currentDate}
@@ -412,7 +411,7 @@ export default function WebsiteContent({ website }) {
                   <p>
                     You have the right to access, correct, and delete your
                     personal information. You can exercise these rights by
-                    contacting us at {content.contact.email}.
+                    contacting us at {content?.contact?.email || ''}.
                   </p>
                 </div>
                 <div>
@@ -426,8 +425,8 @@ export default function WebsiteContent({ website }) {
                   </p>
                   <p>
                     If you need assistance with text messaging, reply with HELP
-                    or contact us at {content.contact.phone} or{' '}
-                    {content.contact.email}.
+                    or contact us at {content?.contact?.phone || ''} or{' '}
+                    {content?.contact?.email || ''}.
                   </p>
                 </div>
                 <div>
@@ -444,9 +443,9 @@ export default function WebsiteContent({ website }) {
                     If you have any questions about our privacy practices or
                     this policy, please contact us at:
                   </p>
-                  <p className="mt-2">Email: {content.contact.email}</p>
-                  <p>Phone: {content.contact.phone}</p>
-                  <p>Address: {content.contact.address}</p>
+                  <p className="mt-2">Email: {content?.contact?.email || ''}</p>
+                  <p>Phone: {content?.contact?.phone || ''}</p>
+                  <p>Address: {content?.contact?.address || ''}</p>
                 </div>
               </div>
             </div>

@@ -4,7 +4,6 @@ import WebsiteContent from './WebsiteContent'
 import Paper from '@shared/utils/Paper'
 
 export default function WebsitePreview({ website, campaign }) {
-  console.log('website preview', website)
   return (
     <Paper className="!p-0 flex-grow h-full flex flex-col">
       <div className="p-4 border-b flex justify-between items-center">
@@ -16,6 +15,7 @@ export default function WebsitePreview({ website, campaign }) {
         </div>
         <div className="flex items-center gap-4">
           <Button
+            nativeLink
             href={`/c/${website.vanityPath}`}
             variant="outline"
             size="sm"
