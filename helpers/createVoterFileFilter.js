@@ -8,7 +8,6 @@ export const createVoterFileFilter = async (filterData) => {
       console.error('Error creating voter file filter:', resp.statusText)
       return null
     }
-    console.log(`resp =>`, resp)
     return resp.data
   } catch (e) {
     console.error('error creating voter file filter', e)

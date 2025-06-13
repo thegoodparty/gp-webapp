@@ -84,7 +84,7 @@ export default function OutreachCreateCards() {
         />
       ))}
 
-      {flowModalTask && (
+      {flowModalTask && campaign && (
         <TaskFlow
           forceOpen
           type={flowModalTask.flowType}

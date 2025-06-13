@@ -7,6 +7,8 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
 import { voterFileDownload } from 'helpers/voterFileDownload'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { useSingleEffect } from '@shared/hooks/useSingleEffect'
+import { doCreateOutReachEffectHandler } from 'app/(candidate)/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -17,8 +19,11 @@ export default function DownloadStep({
   type,
   audience,
   scriptText,
-  closeCallback,
+  // closeCallback,
+  onCreateOutreach = async () => {},
 }) {
+  useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])
+
   const [downloading, setDownloading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const blogUrl =
@@ -41,10 +46,10 @@ export default function DownloadStep({
     [type],
   )
 
-  const returnTrackingAttrs = useMemo(
-    () => buildTrackingAttrs('Return to Dashboard', { type }),
-    [type],
-  )
+  // const returnTrackingAttrs = useMemo(
+  //   () => buildTrackingAttrs('Return to Dashboard', { type }),
+  //   [type],
+  // )
 
   async function handleDownload() {
     setDownloading(true)
@@ -89,16 +94,16 @@ export default function DownloadStep({
           Read more on our blog
         </Button>
 
-        <Button
-          href="/dashboard"
-          size="large"
-          variant="text"
-          className="mt-8"
-          onClick={closeCallback}
-          {...returnTrackingAttrs}
-        >
-          Return to Dashboard
-        </Button>
+        {/*<Button*/}
+        {/*  href="/dashboard"*/}
+        {/*  size="large"*/}
+        {/*  variant="text"*/}
+        {/*  className="mt-8"*/}
+        {/*  onClick={closeCallback}*/}
+        {/*  {...returnTrackingAttrs}*/}
+        {/*>*/}
+        {/*  Return to Dashboard*/}
+        {/*</Button>*/}
       </div>
     </div>
   )

@@ -42,7 +42,8 @@ export const OutreachTable = ({ mockOutreaches }) => {
     },
     {
       header: 'Date',
-      cell: ({ row }) => dateWithTime(row.date),
+      cell: ({ row }) =>
+        row.date ? dateWithTime(row.date) : <NotApplicableLabel />,
     },
     {
       header: 'Audience',

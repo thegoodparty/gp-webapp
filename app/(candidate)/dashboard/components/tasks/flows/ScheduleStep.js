@@ -15,7 +15,8 @@ export default function ScheduleStep({
   onChangeCallback,
   nextCallback,
   backCallback,
-  submitCallback,
+  onCreateOutreach = async () => {},
+  onScheduleOutreach = async () => {},
   type,
   schedule,
 }) {
@@ -47,7 +48,7 @@ export default function ScheduleStep({
 
   const handleNext = async () => {
     setIsLoading(true)
-    await submitCallback()
+    await onScheduleOutreach(await onCreateOutreach())
     setIsLoading(false)
     nextCallback()
   }

@@ -11,14 +11,16 @@ import DownloadStep from './DownloadStep'
 import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
-import { createOutreach } from 'helpers/createOutreach'
+import {
+  handleCreateOutreach,
+  handleCreateVoterFileFilter,
+  handleScheduleOutreach,
+} from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -123,96 +125,6 @@ export default function TaskFlow({
     setState(DEFAULT_STATE)
   }
 
-  // TODO: This is doing waaaaaay too much. We should refactor this to break up
-  //  the logic into smaller functions here.
-  const handleSubmit = async () => {
-    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit)
-    const updatedState = {
-      ...state,
-      type,
-    }
-
-    const { audience, voterCount = 0, script, schedule, image } = updatedState
-    const { message } = schedule || {}
-
-    // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
-    //  to match the API once we redo that component so that we don't have to do
-    //  this mapping
-    const {
-      audience_superVoters: audienceSuperVoters,
-      audience_likelyVoters: audienceLikelyVoters,
-      audience_unreliableVoters: audienceUnreliableVoters,
-      audience_unlikelyVoters: audienceUnlikelyVoters,
-      audience_firstTimeVoters: audienceFirstTimeVoters,
-      party_independent: partyIndependent,
-      party_democrat: partyDemocrat,
-      party_republican: partyRepublican,
-      age_18_25: age18_25,
-      age_25_35: age25_35,
-      age_35_50: age35_50,
-      age_50_plus: age50Plus,
-      gender_male: genderMale,
-      gender_female: genderFemale,
-    } = audience || {}
-
-    const date = state.schedule?.date && new Date(state.schedule.date)
-
-    const voterFileFilter = await createVoterFileFilter({
-      name: `${type} Campaign ${date.toLocaleDateString()}`,
-      ...{
-        audienceSuperVoters,
-        audienceLikelyVoters,
-        audienceUnreliableVoters,
-        audienceUnlikelyVoters,
-        audienceFirstTimeVoters,
-        partyIndependent,
-        partyDemocrat,
-        partyRepublican,
-        age18_25,
-        age25_35,
-        age35_50,
-        age50Plus,
-        genderMale,
-        genderFemale,
-      },
-      voterCount,
-    })
-
-    console.log(`voterFileFilter =>`, voterFileFilter)
-
-    if (!voterFileFilter) {
-      errorSnackbar('There was an error creating your voter file filter')
-      return
-    }
-
-    const outreach = await createOutreach(
-      {
-        campaignId: campaign.id,
-        outreachType: type,
-        name,
-        message,
-        script,
-        date,
-        voterFileFilterId: voterFileFilter.id,
-      },
-      image,
-    )
-
-    if (!outreach) {
-      errorSnackbar('There was an error creating your outreach campaign')
-      return
-    }
-
-    const result = await scheduleVoterMessagingCampaign(outreach.id)
-    if (!result) {
-      errorSnackbar('There was an error scheduling your campaign')
-      return
-    }
-    successSnackbar('Request submitted successfully.')
-    setOutreaches([...outreaches, result])
-    return result
-  }
-
   const handleAddScriptOnComplete = (scriptKeyOrText, scriptContent) => {
     handleChange('script', scriptKeyOrText)
 
@@ -234,9 +146,31 @@ export default function TaskFlow({
     closeCallback: handleClose,
     nextCallback: handleNext,
     backCallback: handleBack,
-    submitCallback: handleSubmit,
     resetCallback: handleReset,
   }
+
+  const onCreateOutreach = useMemo(
+    () =>
+      handleCreateOutreach({
+        type,
+        state,
+        campaignId: campaign.id,
+        outreaches,
+        setOutreaches,
+        errorSnackbar,
+      }),
+    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
+  )
+
+  const onCreateVoterFileFilter = useMemo(
+    () =>
+      handleCreateVoterFileFilter({
+        type,
+        state,
+        errorSnackbar,
+      }),
+    [type, state, errorSnackbar],
+  )
 
   return (
     <>
@@ -284,6 +218,7 @@ export default function TaskFlow({
             audience={state.audience}
             isCustom={isCustom}
             {...callbackProps}
+            onCreateVoterFileFilter={onCreateVoterFileFilter}
           />
         )}
         {stepName === STEPS.script && (
@@ -302,6 +237,11 @@ export default function TaskFlow({
             schedule={state.schedule}
             type={type}
             {...callbackProps}
+            onCreateOutreach={onCreateOutreach}
+            onScheduleOutreach={handleScheduleOutreach(
+              errorSnackbar,
+              successSnackbar,
+            )}
           />
         )}
         {stepName === STEPS.download && (
@@ -310,6 +250,7 @@ export default function TaskFlow({
             scriptText={state.scriptText}
             audience={state.audience}
             {...callbackProps}
+            onCreateOutreach={onCreateOutreach}
           />
         )}
         {stepName === STEPS.socialPost && (
@@ -317,6 +258,7 @@ export default function TaskFlow({
             type={type}
             scriptText={state.scriptText}
             {...callbackProps}
+            onCreateOutreach={onCreateOutreach}
           />
         )}
       </Modal>

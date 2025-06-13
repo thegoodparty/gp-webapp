@@ -28,6 +28,7 @@ export default function AudienceStep({
   withVoicemail,
   audience,
   isCustom,
+  onCreateVoterFileFilter = async () => {},
 }) {
   const [count, setCount] = useState(0)
   const [loadingCount, setLoadingCount] = useState(false)
@@ -45,6 +46,11 @@ export default function AudienceStep({
     () => buildTrackingAttrs('Back Target Audience', { type }),
     [type],
   )
+
+  const handleOnNext = async () => {
+    onChangeCallback('voterFileFilter', await onCreateVoterFileFilter())
+    nextCallback()
+  }
 
   useEffect(() => {
     if (!hasValues) return
@@ -135,7 +141,7 @@ export default function AudienceStep({
             <Button
               size="large"
               color="secondary"
-              onClick={nextCallback}
+              onClick={handleOnNext}
               disabled={!hasValues || loadingCount}
               loading={loadingCount}
               {...nextTrackingAttrs}

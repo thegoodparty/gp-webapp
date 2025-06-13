@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 
-export const outreachContext = createContext([[], () => {}])
+export const outreachContext = createContext([[], ([]) => []])
 
 export const OutreachProvider = ({ initValue = [], children }) => {
   const [outreaches, setOutreaches] = useState(initValue)
