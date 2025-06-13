@@ -14,6 +14,6 @@ import { clientFetch } from './clientFetch'
 export async function serverFetch(endpoint, data, options = {}) {
   return clientFetch(endpoint, data, {
     ...options,
-    serverToken: getServerToken(),
+    serverToken: await getServerToken(),
   })
 }
