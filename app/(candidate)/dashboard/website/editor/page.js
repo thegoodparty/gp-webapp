@@ -1,13 +1,14 @@
 import pageMetaData from 'helpers/metadataHelper'
 import { adminAccessOnly } from 'helpers/permissionHelper'
-import WebsitePage from './components/WebsitePage'
+import WebsiteEditorPage from './components/WebsiteEditorPage'
 import { serverFetch } from 'gpApi/serverFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { redirect } from 'next/navigation'
 
 const meta = pageMetaData({
-  title: 'Website | GoodParty.org',
-  description: 'Website',
-  slug: '/dashboard/website',
+  title: 'Website Editor| GoodParty.org',
+  description: 'Website Editor',
+  slug: '/dashboard/website/editor',
 })
 export const metadata = meta
 
@@ -19,7 +20,14 @@ export default async function Page() {
   const resp = await serverFetch(apiRoutes.website.get, {})
   const website = resp.ok ? resp.data : null
 
+  if (!website) {
+    redirect('/dashboard/website')
+  }
+
   return (
-    <WebsitePage pathname="/dashboard/website" preloadedWebsite={website} />
+    <WebsiteEditorPage
+      pathname="/dashboard/website/editor"
+      preloadedWebsite={website}
+    />
   )
 }
