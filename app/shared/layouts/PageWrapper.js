@@ -14,10 +14,15 @@ import { getReqPathname } from '@shared/utils/getReqPathname'
 import { fetchUserCampaign } from 'app/(candidate)/onboarding/shared/getCampaign'
 import SegmentIdentify from './navigation/SegmentIdentify'
 
+const CANDIDATE_WEBSITE_PATHS = ['/c/']
+
 const PageWrapper = async ({ children }) => {
   const pathname = await getReqPathname()
-
   const campaign = await fetchUserCampaign()
+
+  if (CANDIDATE_WEBSITE_PATHS.some((path) => pathname.startsWith(path))) {
+    return children
+  }
 
   return (
     <UserProvider>

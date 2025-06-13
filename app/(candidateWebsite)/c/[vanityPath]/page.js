@@ -4,7 +4,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 import { notFound } from 'next/navigation'
 
 export const revalidate = 3600
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }) {
   const { vanityPath } = await params
