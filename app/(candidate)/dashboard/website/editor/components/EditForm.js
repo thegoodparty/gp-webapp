@@ -13,11 +13,12 @@ import AddressAutocomplete from './AddressAutocomplete'
 import Script from 'next/script'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
+import Button from '@shared/buttons/Button'
 
 const THEME_OPTIONS = Object.keys(WEBSITE_THEMES)
 const MAPS_API_KEY = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'
 
-export default function EditForm({ content, onChange }) {
+export default function EditForm({ content, onChange, onSave, saveLoading }) {
   const [logoFile, setLogoFile] = useState(null)
   const [heroFile, setHeroFile] = useState(null)
   const [mapsLoaded, setMapsLoaded] = useState(false)
@@ -38,6 +39,11 @@ export default function EditForm({ content, onChange }) {
     }
 
     onChange(newContent)
+  }
+
+  const handleSave = (e) => {
+    e.preventDefault()
+    onSave(content)
   }
 
   const handleImageUpload = (path, file) => {
@@ -78,7 +84,7 @@ export default function EditForm({ content, onChange }) {
         onReady={() => setMapsLoaded(true)}
       />
       <Paper className="max-w-md">
-        <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-8" onSubmit={handleSave}>
           <div>
             <H2>Website Content</H2>
             <div className="space-y-4 mt-4">
@@ -86,7 +92,7 @@ export default function EditForm({ content, onChange }) {
                 <div className="text-sm text-gray-500 mb-2">Theme</div>
                 <Select
                   native
-                  value={content.theme}
+                  value={content?.theme || ''}
                   fullWidth
                   variant="outlined"
                   onChange={(e) => handleFieldChange('theme', e.target.value)}
@@ -127,7 +133,7 @@ export default function EditForm({ content, onChange }) {
                 placeholder="Enter your campaign title"
                 fullWidth
                 required
-                value={content.main.title}
+                value={content?.main?.title || ''}
                 onChange={(e) =>
                   handleFieldChange(['main', 'title'], e.target.value)
                 }
@@ -138,7 +144,7 @@ export default function EditForm({ content, onChange }) {
                 label="Tagline"
                 fullWidth
                 required
-                value={content.main.tagline}
+                value={content?.main?.tagline || ''}
                 onChange={(e) =>
                   handleFieldChange(['main', 'tagline'], e.target.value)
                 }
@@ -177,7 +183,7 @@ export default function EditForm({ content, onChange }) {
                 required
                 multiline
                 rows={4}
-                value={content.about.bio}
+                value={content?.about?.bio || ''}
                 onChange={(e) =>
                   handleFieldChange(['about', 'bio'], e.target.value)
                 }
@@ -185,7 +191,7 @@ export default function EditForm({ content, onChange }) {
               />
 
               <IssuesForm
-                issues={content.about.issues || []}
+                issues={content?.about?.issues || []}
                 onChange={(issues) =>
                   handleFieldChange(['about', 'issues'], issues)
                 }
@@ -198,7 +204,7 @@ export default function EditForm({ content, onChange }) {
             <div className="mt-4">
               {mapsLoaded ? (
                 <AddressAutocomplete
-                  value={content.contact.address}
+                  value={content?.contact?.address || ''}
                   onChange={(value) =>
                     handleFieldChange(['contact', 'address'], value)
                   }
@@ -208,7 +214,7 @@ export default function EditForm({ content, onChange }) {
                   style={{ marginBottom: '16px' }}
                   label="Address"
                   fullWidth
-                  value={content.contact.address}
+                  value={content?.contact?.address || ''}
                   onChange={(e) =>
                     handleFieldChange(['contact', 'address'], e.target.value)
                   }
@@ -217,7 +223,7 @@ export default function EditForm({ content, onChange }) {
               )}
               <EmailInput
                 style={{ marginBottom: '16px' }}
-                value={content.contact.email}
+                value={content?.contact?.email || ''}
                 onChangeCallback={(e) =>
                   handleFieldChange(['contact', 'email'], e.target.value)
                 }
@@ -226,7 +232,7 @@ export default function EditForm({ content, onChange }) {
               />
               <PhoneInput
                 style={{ marginBottom: '16px' }}
-                value={content.contact.phone}
+                value={content?.contact?.phone || ''}
                 onChangeCallback={(phone) =>
                   handleFieldChange(['contact', 'phone'], phone)
                 }
@@ -236,6 +242,9 @@ export default function EditForm({ content, onChange }) {
               />
             </div>
           </div>
+          <Button loading={saveLoading} disabled={saveLoading} type="submit">
+            Save
+          </Button>
         </form>
       </Paper>
     </>

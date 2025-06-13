@@ -531,6 +531,10 @@ export const apiRoutes = {
       path: '/websites',
       method: 'POST',
     },
+    update: {
+      path: '/websites/mine',
+      method: 'PUT',
+    },
     contactForm: {
       path: '/websites/contact-form',
       method: 'POST',
