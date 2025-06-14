@@ -57,7 +57,6 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
 }
 
 export const SelectSmsAiTemplateScreen = ({
-  campaign,
   categories,
   onBack = () => {},
   onNext = (scriptKey) => {},

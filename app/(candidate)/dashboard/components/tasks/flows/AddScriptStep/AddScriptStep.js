@@ -1,13 +1,15 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ChooseScriptAddFlow } from './ChooseScriptAddFlow'
 import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
 import { SelectSmSScriptScreen } from './SelectSmSScriptScreen'
 import { CreateSmSScriptScreen } from './CreateSmSScriptScreen'
-import { SelectSmsAiTemplateScreen } from './SelectSmsAiTemplateScreen'
+import {
+  fetchAiContentCategories,
+  SelectSmsAiTemplateScreen,
+} from './SelectSmsAiTemplateScreen'
 import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
-import { fetchAiContentCategories } from './SelectSmsAiTemplateScreen'
 
 export default function AddScriptStep({
   onComplete = (scriptKey, scriptContent) => {},
@@ -74,7 +76,6 @@ export default function AddScriptStep({
           setAiTemplateKey(aiTemplateKey)
           onNext(ADD_SCRIPT_FLOW.GENERATE_LOADING)
         }}
-        campaign={campaign}
         categories={contentCategories}
       />
     ),

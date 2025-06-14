@@ -3,22 +3,24 @@ import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import CopyScriptButton from '../CopyScriptButton'
 import {
-  InstagramLogo,
   FacebookLogo,
-  TwitterLogo,
+  InstagramLogo,
   NextdoorLogo,
+  TwitterLogo,
 } from '@shared/brand-logos'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useMemo } from 'react'
+import { useSingleEffect } from '@shared/hooks/useSingleEffect'
+import { doCreateOutReachEffectHandler } from 'app/(candidate)/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
 
-export default function SocialPostStep({ type, scriptText, closeCallback }) {
+export default function SocialPostStep({
+  type,
+  scriptText,
+  onCreateOutreach = async () => {},
+}) {
+  useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])
   const copyTrackingAttrs = useMemo(
     () => buildTrackingAttrs('Copy Script', { type }),
-    [type],
-  )
-
-  const returnTrackingAttrs = useMemo(
-    () => buildTrackingAttrs('Return to Dashboard', { type }),
     [type],
   )
 
@@ -70,16 +72,6 @@ export default function SocialPostStep({ type, scriptText, closeCallback }) {
             <NextdoorLogo /> Nextdoor
           </Button>
         </div>
-        <div className="mx-auto my-6 h-[1px] w-[35%] bg-black/[0.12]"></div>
-        <Button
-          href="/dashboard"
-          size="large"
-          variant="text"
-          onClick={closeCallback}
-          {...returnTrackingAttrs}
-        >
-          Return to Dashboard
-        </Button>
       </div>
     </div>
   )

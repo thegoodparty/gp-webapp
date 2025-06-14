@@ -50,23 +50,37 @@ export default function ViewAudienceFiltersModal({
           <InfoRounded /> View Audience Filters
         </Button>
       )}
-
-      <Modal open={open} closeCallback={onClose}>
-        {file ? (
-          <div className="w-[80vw] max-w-4xl p-2 md:p-8">
-            <H2 className="text-center">
-              Custom Voter File: <br />
-              {file.name}
-            </H2>
-            <Body1 className="text-center mb-4 mt-2">
-              Viewing your custom audience filters
-            </Body1>
-            <CustomVoterAudienceFilters audience={audienceFilters} readOnly />
-          </div>
-        ) : (
-          <Body1>No file selected</Body1>
-        )}
-      </Modal>
+      {/*TODO: Refactor to use compositional design patterns and put _just_ a*/}
+      {/* modal into a components called `[Something]Modal` so that it can be*/}
+      {/* used in other places*/}
+      <ActualViewAudienceFiltersModal
+        {...{
+          open,
+          onClose,
+          audienceFilters,
+          fileName: file ? file.name : 'No file selected',
+        }}
+      />
     </>
   )
 }
+
+export const ActualViewAudienceFiltersModal = ({
+  open = false,
+  onClose = () => {},
+  audienceFilters = {},
+  fileName = '',
+}) => (
+  <Modal open={open} closeCallback={onClose}>
+    <div className="w-[80vw] max-w-4xl p-2 md:p-8">
+      <H2 className="text-center">
+        Custom Voter File Filter: <br />
+        {fileName}
+      </H2>
+      <Body1 className="text-center mb-4 mt-2">
+        Viewing your custom audience filters
+      </Body1>
+      <CustomVoterAudienceFilters audience={audienceFilters} readOnly />
+    </div>
+  </Modal>
+)
