@@ -47,7 +47,7 @@ export const handleCreateOutreach =
     return outreach
   }
 
-const mapAudienceForPersistence = ({
+export const mapAudienceForPersistence = ({
   audience_superVoters: audienceSuperVoters,
   audience_likelyVoters: audienceLikelyVoters,
   audience_unreliableVoters: audienceUnreliableVoters,

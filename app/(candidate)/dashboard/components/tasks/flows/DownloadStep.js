@@ -5,10 +5,11 @@ import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
-import { voterFileDownload } from 'helpers/voterFileDownload'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
 import { useSingleEffect } from '@shared/hooks/useSingleEffect'
 import { doCreateOutReachEffectHandler } from 'app/(candidate)/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
+
+import { downloadVoterList } from 'app/(candidate)/dashboard/outreach/util/downloadVoterList.util'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -46,18 +47,14 @@ export default function DownloadStep({
   )
 
   async function handleDownload() {
-    setDownloading(true)
-    const selectedAudience = Object.keys(audience).filter(
-      (key) => audience[key] === true,
+    await downloadVoterList(
+      {
+        voterFileFilter: audience,
+        outreachType: type,
+      },
+      setDownloading,
+      errorSnackbar,
     )
-
-    try {
-      await voterFileDownload(type, { filters: selectedAudience })
-    } catch (error) {
-      errorSnackbar('Error downloading voter file')
-    }
-
-    setDownloading(false)
   }
 
   return (

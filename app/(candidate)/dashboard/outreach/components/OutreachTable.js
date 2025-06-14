@@ -1,6 +1,6 @@
 'use client'
 import { OUTREACH_TYPE_MAPPING } from 'app/(candidate)/dashboard/outreach/constants'
-import { dateWithTime } from 'helpers/dateHelper'
+import { dateUsHelper } from 'helpers/dateHelper'
 import SimpleTable from '@shared/utils/SimpleTable'
 import { useMemo, useState } from 'react'
 import H4 from '@shared/typography/H4'
@@ -10,10 +10,7 @@ import { formatAudienceLabels } from 'app/(candidate)/dashboard/outreach/util/fo
 import { ActualViewAudienceFiltersModal } from 'app/(candidate)/dashboard/voter-records/components/ViewAudienceFiltersModal'
 import { convertAudienceFiltersForModal } from 'app/(candidate)/dashboard/outreach/util/convertAudienceFiltersForModal.util'
 import Popover from '@mui/material/Popover'
-import {
-  OUTREACH_ACTION_TYPES,
-  OutreachActions,
-} from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
+import { OutreachActions } from 'app/(candidate)/dashboard/outreach/components/OutreachActions'
 import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
 
 const NotApplicableLabel = () => <span className="text-gray-500">n/a</span>
@@ -43,7 +40,7 @@ export const OutreachTable = ({ mockOutreaches }) => {
     {
       header: 'Date',
       cell: ({ row }) =>
-        row.date ? dateWithTime(row.date) : <NotApplicableLabel />,
+        row.date ? dateUsHelper(row.date, 'long') : <NotApplicableLabel />,
     },
     {
       header: 'Audience',
@@ -102,23 +99,7 @@ export const OutreachTable = ({ mockOutreaches }) => {
     setPopoverPosition({ top: 0, left: 0 })
   }
 
-  const handleCopyScript = (outreach) => {
-    console.log('Copy script for outreach:', outreach)
-    // TODO: Implement copy script logic here
-  }
-
-  const handleDownloadFilteredVoterFile = (outreach) => {
-    console.log('Download filtered voter file for outreach:', outreach)
-    // TODO: Implement download filtered voter file logic here
-  }
-
-  const actionHandlers = {
-    [OUTREACH_ACTION_TYPES.COPY_SCRIPT]: handleCopyScript,
-    [OUTREACH_ACTION_TYPES.DOWNLOAD_LIST]: handleDownloadFilteredVoterFile,
-  }
-
-  const handleActionClick = (outreach, actionType) => {
-    actionHandlers[actionType] && actionHandlers[actionType](outreach)
+  const handleActionClick = () => {
     setActOnOutreach(null)
   }
 

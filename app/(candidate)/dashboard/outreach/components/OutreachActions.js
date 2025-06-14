@@ -1,48 +1,22 @@
-import { MdContentCopy, MdDownload } from 'react-icons/md'
-import CopyToClipboard from '@shared/utils/CopyToClipboard'
+import { CopyScriptActionOption } from 'app/(candidate)/dashboard/outreach/components/CopyScriptActionOption'
+import { DownloadAudienceActionOption } from 'app/(candidate)/dashboard/outreach/components/DownloadAudienceActionOption'
 
-export const OUTREACH_ACTION_TYPES = {
-  COPY_SCRIPT: 'COPY_SCRIPT',
-  DOWNLOAD_LIST: 'DOWNLOAD_LIST',
-}
-
-const ACTIONS = [
-  {
-    type: OUTREACH_ACTION_TYPES.COPY_SCRIPT,
-    label: ({ outreach = {}, onCopy = () => {} }) => (
-      <CopyToClipboard
-        {...{
-          text: outreach?.script || '',
-          onCopy,
-        }}
-      >
-        <MdContentCopy className="mr-2" />
-        Copy Script
-      </CopyToClipboard>
-    ),
-  },
-  {
-    type: OUTREACH_ACTION_TYPES.DOWNLOAD_LIST,
-    label: ({ outreach = {} }) => (
-      <>
-        <MdDownload className="mr-2" />
-        Download list
-      </>
-    ),
-  },
-]
-
-export const OutreachActions = ({ outreach, onClick = () => {} }) => {
-  return (
-    <div className="flex flex-col space-y-2">
-      {ACTIONS.map((action) => (
-        <div
-          key={action.type}
-          className="flex items-center space-x-2 p-4 hover:bg-gray-100 cursor-pointer"
-        >
-          {action.label({ outreach, onClick, onCopy: () => onClick() })}
-        </div>
-      ))}
-    </div>
-  )
-}
+export const OutreachActions = ({ outreach, onClick = () => {} }) => (
+  <div className="flex flex-col space-y-2">
+    <CopyScriptActionOption
+      {...{
+        outreach,
+        onCopy: () => onClick(),
+      }}
+      outreach={outreach}
+      onClick={onClick}
+    />
+    <DownloadAudienceActionOption
+      {...{
+        outreach,
+        onClick: onClick,
+        disabled: !outreach?.voterFileFilter,
+      }}
+    />
+  </div>
+)
