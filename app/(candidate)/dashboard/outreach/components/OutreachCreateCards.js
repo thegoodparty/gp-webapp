@@ -1,5 +1,5 @@
 'use client'
-import OutreachCreateCard from './OutreachCreateCard'
+import { OutreachCreateCard } from './OutreachCreateCard'
 import {
   IMPACTS_LEVELS,
   OUTREACH_TYPES,
