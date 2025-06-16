@@ -1,4 +1,5 @@
-// TODO: Refactor this later once we can finally kill the old modal
+// TODO: Refactor this later once we can finally kill the old modal:
+//  https://goodparty.atlassian.net/browse/WEB-4277
 const VOTER_FILE_FILTER_KEYS_CONVERSION_MAPPING = {
   audienceSuperVoters: 'audience_superVoters',
   audienceLikelyVoters: 'audience_likelyVoters',
