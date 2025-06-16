@@ -23,7 +23,8 @@ export const downloadVoterList = async (
     genderFemale,
   } = voterFileFilter
 
-  // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
+  // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters:
+  //  https://goodparty.atlassian.net/browse/WEB-4277
   const audience = {
     audience_superVoters: audienceSuperVoters,
     audience_likelyVoters: audienceLikelyVoters,
