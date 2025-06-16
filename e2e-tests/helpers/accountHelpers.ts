@@ -92,12 +92,29 @@ export async function ensureAdminSession() {
     console.log('Waiting for dropdown button...');
     const dropdownButton = page.locator('.MuiSelect-select').first();
     await dropdownButton.waitFor({ state: 'visible', timeout: 60000 });
-    await dropdownButton.click();
 
-    console.log('Waiting for Yes option...');
-    await page.waitForTimeout(5000);
-    await page.getByRole('option', { name: 'Yes' }).waitFor({ state: 'visible', timeout: 5000 });
-    await page.getByRole('option', { name: 'Yes' }).click();
+    // Retry logic for dropdown and Yes option
+    let maxRetries = 3;
+    let retryCount = 0;
+    let success = false;
+
+    while (retryCount < maxRetries && !success) {
+      try {
+        console.log(`Attempt ${retryCount + 1} to click dropdown and select Yes...`);
+        await dropdownButton.click();
+        await page.waitForTimeout(5000);
+        const yesOption = page.getByRole('option', { name: 'Yes' });
+        await yesOption.waitFor({ state: 'visible', timeout: 5000 });
+        await yesOption.click();
+        success = true;
+      } catch (error) {
+        console.log(`Attempt ${retryCount + 1} failed:`, error.message);
+        retryCount++;
+        if (retryCount === maxRetries) {
+          throw new Error(`Failed to select Yes option after ${maxRetries} attempts`);
+        }
+      }
+    }
 
     console.log('Waiting for Save button...');
     const saveButton = page.getByRole('button', { name: 'Save' });
