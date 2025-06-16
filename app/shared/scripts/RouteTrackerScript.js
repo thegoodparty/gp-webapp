@@ -20,7 +20,6 @@ export default function RouteTracker() {
       ...getPersistedUtms(), 
       ...getPersistedClids() 
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, analytics]) // We only want to run this when the pathname changes
 
   return null
