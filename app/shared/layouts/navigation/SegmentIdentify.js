@@ -13,14 +13,10 @@ export default function SegmentIdentify({extraTraits = {}}) {
   const [user] = useUser()
   const searchParams = useSearchParams()
   useEffect(() => {
-     
-    typeof window !== 'undefined' && console.log('window.analytics is: ', analytics)
 
     if (!analytics || !analytics?.user || analytics.user().id()) return
-    console.log('analytics.user(): ', analytics.user())
     persistUtmsOnce()
 
-    console.log('foobar')
     if (user?.id) {
       
       analytics.identify(user.id, {
