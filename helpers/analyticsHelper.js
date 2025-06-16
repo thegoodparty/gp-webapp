@@ -369,7 +369,25 @@ export function extractClids(searchParams) {
   return clids
 }
 
+export function trackRegistrationCompleted({
+  analytics,
+  userId,
+  signUpPath,
+  signUpMethod = 'email'
+}) {
+  const signUpDate = new Date().toISOString()
 
+  analytics.identify(userId, {
+    signUpPath,
+    signUpDate,
+    signUpMethod,
+  })
+  trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
+    signUpPath,
+    signUpDate,
+    signUpMethod,
+  })
+}
 
 export function persistUtmsOnce() {
   if (typeof window === 'undefined' || !window.location.search) return

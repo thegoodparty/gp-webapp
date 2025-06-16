@@ -75,10 +75,23 @@ export const RecordVoterContactsModal = ({ open = false, setOpen }) => {
       newHistoryItemsData.map((item) => createUpdateHistory(item)),
     )
     const newContactTotals = calculateIncrementedFields(recordedVoterGoals, updatedFields)
-    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { ...newContactTotals})
+
+    for (const [medium, recipientCount] of Object.entries(updatedFields)) {
+      if (recipientCount.length <= 0 || Number(recipientCount) <= 0) continue
+      trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { 
+        recipientCount,
+        price: 0,
+        medium,
+        method: 'unknown',
+        campaignName: 'null',
+      })
+    }
+
     analytics.identify(user.id, { 
-      voterContacts: Object.values(newContactTotals).reduce((sum, val) => sum + Number(val) || 0, 0)
+      voterContacts: Object.values({ ...recordedVoterGoals, ...newContactTotals })
+      .reduce((sum, val) => sum + Number(val) || 0, 0)
     })
+
     setRecordedVoterGoals({
       ...recordedVoterGoals,
       ...newContactTotals,

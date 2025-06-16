@@ -17,7 +17,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent, trackRegistrationCompleted } from 'helpers/analyticsHelper'
 import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 const SIGN_UP_MODES = {
@@ -208,17 +208,10 @@ export default function SignUpPage() {
       await saveToken(token)
       setUser(user)
 
-      const signUpPath = 'inbound'
-      const signUpDate = new Date().toISOString()
-      analytics.identify(user.id, {
-        signUpPath,
-        signUpDate,
-        signUpMethod: 'email'
-      })
-      trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
-        signUpPath,
-        signUpDate,
-        signUpMethod: 'email'
+      trackRegistrationCompleted({
+        analytics, 
+        userId: user.id, 
+        signUpPath: 'inbound'
       })
 
       const redirect = await createCampaign()

@@ -10,6 +10,7 @@ import Paper from '@shared/utils/Paper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { trackRegistrationCompleted } from 'helpers/analyticsHelper'
 
 async function setPasswordApi(email, password, token) {
   try {
@@ -74,18 +75,13 @@ export default function FormSection({ email, token }) {
         await saveToken(userToken)
         setUserCookie(user)
         setUser(user)
-        // Test this
-        const signUpPath = 'outbound'
-        const signUpDate = new Date().toISOString()
-        analytics.identify(user.id, {
-          signUpPath,
-          signUpDate,
+
+        trackRegistrationCompleted({
+          analytics,
+          userId: user.id,
+          signUpPath: 'outbound'
         })
-        trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
-          signUpPath,
-          signUpDate,
-          signUpMethod: 'email'
-        })
+
         window.location.href = '/dashboard'
       } else if (res.ok === false) {
         const { message } = await res.json()

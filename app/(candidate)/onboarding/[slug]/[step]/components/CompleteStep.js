@@ -6,7 +6,6 @@ import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { getUserCookie } from 'helpers/cookieHelper'
 import {
   buildTrackingAttrs,
-  EVENTS,
   trackEvent,
 } from 'helpers/analyticsHelper'
 import { useState } from 'react'
@@ -37,7 +36,6 @@ export default function CompleteStep() {
     setLoading(true)
     successSnackbar('Saving...')
 
-    trackEvent(EVENTS.Onboarding.Dashboard.FirstViewed)
     const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }]
 
     await updateCampaign(attr)
