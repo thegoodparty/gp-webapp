@@ -65,7 +65,7 @@ export const mapAudienceForPersistence = ({
 } = {}) => {
   // TODO: Fix the keys for the audience values in the CustomVoterAudienceFilters
   //  to match the API once we redo that component so that we don't have to do
-  //  this mapping
+  //  this mapping: https://goodparty.atlassian.net/browse/WEB-4277
 
   const mappedAudience = {
     audienceSuperVoters,
