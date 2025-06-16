@@ -217,7 +217,8 @@ export default function SignUpPage() {
       })
       trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
         signUpPath,
-        signUpDate
+        signUpDate,
+        signUpMethod: 'email'
       })
 
       const redirect = await createCampaign()

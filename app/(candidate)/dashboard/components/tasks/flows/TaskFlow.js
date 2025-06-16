@@ -126,7 +126,7 @@ export default function TaskFlow({
       medium: type,
       name: 'none',
       price: budget,
-      recipientCount: audience.count || 0,
+      voterContacts: audience.count || 0,
       method: 'automatic',
     })
     const updatedState = {
