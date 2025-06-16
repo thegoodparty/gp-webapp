@@ -103,10 +103,25 @@ export const OutreachTable = ({ mockOutreaches }) => {
     setActOnOutreach(null)
   }
 
+  // Sort table data by date, placing entries without a date at the end
+  const sortedTableData = useMemo(
+    () =>
+      tableData.sort((a, b) =>
+        !a.date && !b.date
+          ? 0
+          : !a.date
+          ? 1
+          : !b.date
+          ? -1
+          : new Date(a.date) - new Date(b.date),
+      ),
+    [tableData],
+  )
+
   const table = (
     <SimpleTable
       columns={columns}
-      data={tableData.sort((a, b) => new Date(a.date) - new Date(b.date))}
+      data={sortedTableData}
       onRowClick={handleRowClick}
     />
   )

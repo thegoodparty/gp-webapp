@@ -24,7 +24,7 @@ export const handleCreateOutreach =
   }) =>
   async () => {
     const { message } = schedule || {}
-    const date = schedule?.date && new Date(schedule.date)
+    const date = schedule?.date
     const outreach = await createOutreach(
       {
         campaignId,

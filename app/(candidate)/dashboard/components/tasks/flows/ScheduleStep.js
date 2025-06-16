@@ -9,7 +9,7 @@ import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import { addDays } from 'date-fns'
+import { addDays, format, parseISO, startOfDay } from 'date-fns'
 
 export default function ScheduleStep({
   onChangeCallback,
@@ -52,6 +52,25 @@ export default function ScheduleStep({
     setIsLoading(false)
     nextCallback()
   }
+
+  const handleTextFieldOnChange = (e) => {
+    const dateString = e.target.value
+    const localDate = startOfDay(parseISO(dateString))
+    onChangeField('date', localDate)
+
+    const minDateObj = startOfDay(parseISO(minDate))
+
+    if (localDate >= minDateObj) {
+      setDateError(null)
+    } else {
+      setDateError('Date must be at least 72 hours from now')
+    }
+  }
+
+  // This conversion has to be done to appease MUI's date-type TextField
+  const dateTextFieldValue = state?.date
+    ? format(state?.date, 'yyyy-MM-dd')
+    : ''
   const isTel =
     type === LEGACY_TASK_TYPES.telemarketing || type === TASK_TYPES.robocall
   const today = new Date()
@@ -72,22 +91,8 @@ export default function ScheduleStep({
             label="Send date"
             type="date"
             required
-            value={state.date}
-            onChange={(e) => {
-              // TODO: this should create the date object here, not just a
-              //  string that then always has to be converted everywhere else
-              //  it's used
-              onChangeField('date', e.target.value)
-
-              const selectedDate = new Date(e.target.value)
-              const minDateObj = new Date(minDate)
-
-              if (selectedDate >= minDateObj) {
-                setDateError(null)
-              } else {
-                setDateError('Date must be at least 72 hours from now')
-              }
-            }}
+            value={dateTextFieldValue}
+            onChange={handleTextFieldOnChange}
             InputLabelProps={{
               shrink: true,
             }}
