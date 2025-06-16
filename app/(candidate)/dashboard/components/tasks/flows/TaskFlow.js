@@ -61,6 +61,7 @@ export default function TaskFlow({
   const isLastStep = state.step >= stepList.length - 1
   const [outreaches, setOutreaches] = useOutreach()
   const { errorSnackbar, successSnackbar } = useSnackbar()
+  console.log(`state =>`, state)
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
@@ -241,6 +242,7 @@ export default function TaskFlow({
             onScheduleOutreach={handleScheduleOutreach(
               errorSnackbar,
               successSnackbar,
+              state?.audience?.audience_request,
             )}
           />
         )}

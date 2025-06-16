@@ -3,9 +3,16 @@ import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
 
 export const handleScheduleOutreach =
-  (errorSnackbar = () => {}, successSnackbar = () => {}) =>
+  (
+    errorSnackbar = () => {},
+    successSnackbar = () => {},
+    audienceRequest = '',
+  ) =>
   async (outreach = {}) => {
-    const result = await scheduleVoterMessagingCampaign(outreach.id)
+    const result = await scheduleVoterMessagingCampaign(
+      outreach.id,
+      audienceRequest,
+    )
     if (!result) {
       errorSnackbar('There was an error scheduling your campaign')
       return
