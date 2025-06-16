@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"
 import { useAnalytics } from "@shared/hooks/useAnalytics"
 
 export default function RouteTracker() {
-  console.log('RouteTracker called')
   const analytics = useAnalytics()
   const pathname = usePathname()
 
@@ -21,7 +20,6 @@ export default function RouteTracker() {
       ...getPersistedUtms(), 
       ...getPersistedClids() 
     })
-    console.log('Finish analytics.page() call')
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, analytics]) // We only want to run this when the pathname changes
 
