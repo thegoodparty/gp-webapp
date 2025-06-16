@@ -52,7 +52,7 @@ export default function ViewAudienceFiltersModal({
       )}
       {/*TODO: Refactor to use compositional design patterns and put _just_ a*/}
       {/* modal into a components called `[Something]Modal` so that it can be*/}
-      {/* used in other places*/}
+      {/* used in other places: https://goodparty.atlassian.net/browse/WEB-4278*/}
       <ActualViewAudienceFiltersModal
         {...{
           open,
