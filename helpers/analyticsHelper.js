@@ -41,9 +41,6 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
-    Dashboard: {
-      FirstViewed: 'Onboarding - Candidate Dashboard First Viewed'
-    } 
   },
   Navigation: {
     Top: {
@@ -69,6 +66,7 @@ export const EVENTS = {
     },
   },
   Dashboard: {
+    Viewed: 'Dashboard - Candidate Dashboard Viewed',
     PathToVictory: {
       ClickUnderstand:
         'Dashboard - Path to Victory: Click Understand Path to Victory',

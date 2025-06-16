@@ -37,8 +37,7 @@ export default function CompleteStep() {
     setLoading(true)
     successSnackbar('Saving...')
 
-    trackEvent(EVENTS.Onboarding.CompleteStep.ClickGoToDashboard)
-
+    trackEvent(EVENTS.Onboarding.Dashboard.FirstViewed)
     const attr = [{ key: 'data.currentStep', value: 'onboarding-complete' }]
 
     await updateCampaign(attr)
