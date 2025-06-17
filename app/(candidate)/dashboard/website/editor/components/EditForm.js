@@ -43,10 +43,15 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
 
   const handleSave = (e) => {
     e.preventDefault()
-    onSave(content)
+
+    onSave({
+      ...content,
+      logoFile,
+      heroFile,
+    })
   }
 
-  const handleImageUpload = (path, file) => {
+  const handleImageChange = (path, file) => {
     if (!file) return
 
     const reader = new FileReader()
@@ -58,11 +63,7 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
     // Update the file state based on which image is being uploaded
     if (path === 'logo') {
       setLogoFile(file)
-    } else if (
-      Array.isArray(path) &&
-      path[0] === 'main' &&
-      path[1] === 'image'
-    ) {
+    } else {
       setHeroFile(file)
     }
   }
@@ -112,13 +113,13 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
                 {logoFile ? (
                   <ImageCropPreview
                     file={logoFile}
-                    onCrop={(file) => handleImageUpload('logo', file)}
+                    onCrop={(file) => handleImageChange('logo', file)}
                     onClear={handleClearLogo}
                   />
                 ) : (
                   <FileDropZone
                     maxSize={5000000} // 5MB
-                    onChange={(file) => handleImageUpload('logo', file)}
+                    onChange={(file) => handleImageChange('logo', file)}
                   />
                 )}
               </div>
@@ -158,7 +159,7 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
                   <ImageCropPreview
                     file={heroFile}
                     onCrop={(file) =>
-                      handleImageUpload(['main', 'image'], file)
+                      handleImageChange(['main', 'image'], file)
                     }
                     onClear={handleClearHero}
                   />
@@ -166,7 +167,7 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
                   <FileDropZone
                     maxSize={5000000} // 5MB
                     onChange={(file) =>
-                      handleImageUpload(['main', 'image'], file)
+                      handleImageChange(['main', 'image'], file)
                     }
                   />
                 )}

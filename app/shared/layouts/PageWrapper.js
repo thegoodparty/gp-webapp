@@ -20,7 +20,7 @@ const PageWrapper = async ({ children }) => {
   const pathname = await getReqPathname()
   const campaign = await fetchUserCampaign()
 
-  if (CANDIDATE_WEBSITE_PATHS.some((path) => pathname.startsWith(path))) {
+  if (CANDIDATE_WEBSITE_PATHS.some((path) => pathname?.startsWith(path))) {
     return children
   }
 

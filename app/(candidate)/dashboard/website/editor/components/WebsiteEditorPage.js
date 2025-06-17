@@ -11,7 +11,7 @@ import { objectToFormData } from 'helpers/formDataHelper'
 
 function updateWebsite(content) {
   try {
-    const formData = objectToFormData(content)
+    const formData = objectToFormData(content, ['logoFile', 'heroFile'])
     return clientFetch(apiRoutes.website.update, formData)
   } catch (e) {
     console.error('error', e)
