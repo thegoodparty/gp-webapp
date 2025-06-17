@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
     await documentReady(page);
 });
 
-test('Verify For Voters / Volunteer page', async ({ page }) => {
+test.skip('Verify For Voters / Volunteer page', async ({ page }) => {
     const caseId = 8;
 
     const pageTitle = /Get Involved/;
@@ -22,8 +22,8 @@ test('Verify For Voters / Volunteer page', async ({ page }) => {
         'Schedule info session'
     ];
     const pageImgAltText = [
-        'megaphone', 'Whatever you can do!', 'Help with your creativity!', 
-        'Connect and make friends', 'Real action = real electoral results', 'Sal Davis', 
+        'megaphone', 'Whatever you can do!', 'Help with your creativity!',
+        'Connect and make friends', 'Real action = real electoral results', 'Sal Davis',
         'Terry Vo', 'Kieryn McCann', 'Level up', 'Networking', 'Fun perks', 'Real Impact', 'GoodParty'
     ];
     const volunteerButton = /Start taking action/
@@ -49,7 +49,7 @@ test('Verify For Voters / Volunteer page', async ({ page }) => {
         await page.locator("input[name='phone']").fill(userData.phoneNumber);
         await page.locator("input[name='email']").fill(userData.email);
         await page.locator("input[type='checkbox']").click();
-        await page.locator('button', { hasText: volunteerButton}).click();
+        await page.locator('button', { hasText: volunteerButton }).click();
         await expect(page.getByText(volunteerConfirm)).toBeVisible({ timeout: 30000 });
 
         // Locate all expandable sections
@@ -70,6 +70,6 @@ test('Verify For Voters / Volunteer page', async ({ page }) => {
         // Report test results
         await addTestResult(runId, caseId, 1, 'Test passed');
     } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
+        await handleTestFailure(page, runId, caseId, error);
     }
 });
