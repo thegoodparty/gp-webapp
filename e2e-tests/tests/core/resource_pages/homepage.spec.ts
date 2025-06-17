@@ -1,39 +1,27 @@
 import { test, expect } from '@playwright/test';
-import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
-import * as fs from 'fs';
+import { setupTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 const pageTitle = /GoodParty.org/
-const bannerText = /Join our Discord/
-const bannerButton = /Join Now/
-const candidatesButton = /Find Candidates/
+const bannerText = /Join the GoodParty.org Community on Circle/
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await documentReady(page);
 });
 
+// Setup reporting for homepage test
+const homepageCaseId = 1;
+setupTestReporting(test, homepageCaseId);
+
 test('Verify Homepage', async ({ page }) => {
-  const caseId = 1;
+  // Verify page title
+  await expect(page).toHaveTitle(pageTitle);
 
-  try {
-    // Verify page title
-    await expect(page).toHaveTitle(pageTitle);
+  // Verify navbar and footer presence
+  await expect(page.getByTestId('navbar')).toBeVisible();
+  await expect(page.locator('footer')).toBeVisible();
 
-    // Verify navbar and footer presence
-    expect(page.getByTestId('navbar')).toBeVisible();
-    expect(page.locator('footer')).toBeVisible();
-
-    // Verify Discord banner
-    expect(page.getByText(bannerText));
-    expect(page.getByRole('button', { name: bannerButton }));
-
-    // Verify links in body
-    expect(page.getByRole('button', { name: candidatesButton }));
-
-    await addTestResult(runId, caseId, 1, 'Test passed');
-  } catch (error) {
-    await handleTestFailure(page, runId, caseId, error);    
-  }
+  // Verify banner
+  await expect(page.getByText(bannerText)).toBeVisible();
 });

@@ -12,7 +12,6 @@ module.exports = async () => {
     40, 41, 42, 43, 46, 47, 48, 49,
     71, 86, 87, 88, 89, 93, 94, 95
   ];
-  let styleGuideTestCaseIds = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 76, 77, 78, 79, 80, 81];
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
   const testRunId = await createTestRun(testRunName, testCaseIds, baseUrl);
   fs.writeFileSync("testRunId.txt", testRunId.toString());

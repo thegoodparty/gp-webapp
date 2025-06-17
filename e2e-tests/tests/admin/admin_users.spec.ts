@@ -1,97 +1,83 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
-import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
-import * as fs from 'fs';
+import { setupTestReporting } from 'helpers/testrailHelper';
 import { testAccountLastName } from 'helpers/accountHelpers';
 import { userData } from 'helpers/dataHelpers';
 import { documentReady } from 'helpers/domHelpers';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-test.beforeEach(async ({page}) => {
+test.beforeEach(async ({ page }) => {
     await page.goto('/admin/users');
     await documentReady(page);
 });
 
-test('Admin users page', async ({page}) => {
-    const caseId = 26;
-    try {
-        // Verify admin users page
-        page.getByRole('heading', { name: 'Users' }).isVisible();
+// Setup reporting for each test
+const adminUsersCaseId = 26;
+setupTestReporting(test, adminUsersCaseId);
 
-        page.getByRole('columnheader', { name: 'Actions' }).isVisible();
-        page.getByRole('columnheader', { name: 'Name' }).isVisible();
-        page.getByRole('columnheader', { name: 'Email' }).isVisible();
-        page.getByRole('columnheader', { name: 'Campaign Role(s)' }).isVisible();
-        page.getByRole('columnheader', { name: 'Last Visit' }).isVisible();
-        page.locator('td').first().isVisible();
+test('Admin users page', async ({ page }) => {
+    // Verify admin users page
+    await page.getByRole('heading', { name: 'Users' }).isVisible();
 
-        // Report test results  
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+    await page.getByRole('columnheader', { name: 'Actions' }).isVisible();
+    await page.getByRole('columnheader', { name: 'Name' }).isVisible();
+    await page.getByRole('columnheader', { name: 'Email' }).isVisible();
+    await page.getByRole('columnheader', { name: 'Campaign Role(s)' }).isVisible();
+    await page.getByRole('columnheader', { name: 'Last Visit' }).isVisible();
+    await page.locator('td').first().isVisible();
 });
 
-test.skip('Send candidate invite', async ({page}) => {
-    const caseId = 53;
+// Setup reporting for candidate invite test
+const candidateInviteCaseId = 53;
+setupTestReporting(test, candidateInviteCaseId);
+
+test.skip('Send candidate invite', async ({ page }) => {
     const inviteFirstName = userData.firstName;
     const inviteLastName = testAccountLastName;
     const inviteEmail = userData.email;
 
-    try {
-        await page.getByRole('heading', { name: 'Users' }).isVisible();
-        await page.getByRole('button', { name: 'Add User' }).click();
+    await page.getByRole('heading', { name: 'Users' }).isVisible();
+    await page.getByRole('button', { name: 'Add User' }).click();
 
-        // Add and submit user information
-        await page.getByRole('heading', { name: 'Add User' }).isVisible();
-        await page.getByLabel('First Name').fill(inviteFirstName);
-        await page.getByLabel('Last Name').fill(inviteLastName);
-        await page.getByLabel('Email').fill(inviteEmail);
-        await page.getByRole('button', { name: 'Select' }).click();
-        await page.getByRole('option', { name: 'candidate' }).click();
-        await page.getByRole('button', { name: 'Cancel' }).isVisible();
+    // Add and submit user information
+    await page.getByRole('heading', { name: 'Add User' }).isVisible();
+    await page.getByLabel('First Name').fill(inviteFirstName);
+    await page.getByLabel('Last Name').fill(inviteLastName);
+    await page.getByLabel('Email').fill(inviteEmail);
+    await page.getByRole('button', { name: 'Select' }).click();
+    await page.getByRole('option', { name: 'candidate' }).click();
+    await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
-        await documentReady(page);
-        await page.getByRole('button', { name: 'Add User' }).click();
-        await documentReady(page);
-
-        // Report test results  
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+    await documentReady(page);
+    await page.getByRole('button', { name: 'Add User' }).click();
+    await documentReady(page);
 });
 
-test.skip('Send sales invite', async ({page}) => {
-    const caseId = 54;
+// Setup reporting for sales invite test
+const salesInviteCaseId = 54;
+setupTestReporting(test, salesInviteCaseId);
+
+test.skip('Send sales invite', async ({ page }) => {
     const inviteFirstName = userData.firstName;
     const inviteLastName = testAccountLastName;
     const inviteEmail = userData.email;
 
-    try {
-        await page.getByRole('heading', { name: 'Users' }).isVisible();
-        await page.getByRole('button', { name: 'Add User' }).click();
+    await page.getByRole('heading', { name: 'Users' }).isVisible();
+    await page.getByRole('button', { name: 'Add User' }).click();
 
-        // Add and submit user information
-        await page.getByRole('heading', { name: 'Add User' }).isVisible();
-        await page.getByLabel('First Name').fill(inviteFirstName);
-        await page.getByLabel('Last Name').fill(inviteLastName);
-        await page.getByLabel('Email').fill(inviteEmail);
-        await page.getByRole('button', { name: 'Select' }).click();
-        await page.getByRole('option', { name: 'sales' }).click();
-        await page.getByRole('button', { name: 'Cancel' }).isVisible();
+    // Add and submit user information
+    await page.getByRole('heading', { name: 'Add User' }).isVisible();
+    await page.getByLabel('First Name').fill(inviteFirstName);
+    await page.getByLabel('Last Name').fill(inviteLastName);
+    await page.getByLabel('Email').fill(inviteEmail);
+    await page.getByRole('button', { name: 'Select' }).click();
+    await page.getByRole('option', { name: 'sales' }).click();
+    await page.getByRole('button', { name: 'Cancel' }).isVisible();
 
-        await documentReady(page);
-        await page.getByRole('button', { name: 'Add User' }).click();
-        await documentReady(page);
-
-        // Report test results  
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+    await documentReady(page);
+    await page.getByRole('button', { name: 'Add User' }).click();
+    await documentReady(page);
 });

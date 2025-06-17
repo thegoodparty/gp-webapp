@@ -1,24 +1,19 @@
 import 'dotenv/config';
-import { test } from '@playwright/test';
-import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
-import * as fs from 'fs';
+import { test, expect } from '@playwright/test';
+import { setupTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-test('Verify admin user can access Top Issues page', async ({page}) => {
-    const caseId = 27;
+const topIssuesCaseId = 27;
+setupTestReporting(test, topIssuesCaseId);
 
-    try {
-        await page.goto('/admin/top-issues');
-        await documentReady(page);
-        page.getByRole('button', { name: 'Add a Top Issue' }).isVisible();
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+test('Verify admin user can access Top Issues page', async ({ page }) => {
+    await page.goto('/admin/top-issues');
+    await documentReady(page);
+
+    await expect(page.getByRole('button', { name: 'Add a Top Issue' })
+    ).toBeVisible({ timeout: 1000 });
 });
