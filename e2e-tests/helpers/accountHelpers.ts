@@ -216,6 +216,7 @@ export async function createAccount(
 
   await page.waitForLoadState('domcontentloaded', { timeout: 60000 });
   await page.getByText('Make sure it matches your').isVisible();
+  await page.getByLabel('Office Name').waitFor({ state: 'visible', timeout: 60000 });
   await page.getByLabel('Office Name').fill(role);
   await page.getByRole("button", { name: role, timeout: 60000 }).first().click();
   await page.getByRole("button", { name: "Next" }).click();
