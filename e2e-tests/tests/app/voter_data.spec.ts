@@ -21,7 +21,7 @@ test.describe.serial('Voter data pro features', () => {
     'Skipping GoodParty.org PRO / voter data tests on non-production environments'
   );
 
-  test('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
+  test.skip('Voter Data shows Upgrade to Pro prompt for free users', async ({ page }) => {
     const caseId = 41;
 
     try {

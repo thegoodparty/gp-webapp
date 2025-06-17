@@ -2,97 +2,68 @@ import { test, expect } from '@playwright/test';
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
 import { getSitemapUrls } from '../../helpers/navHelpers';
-import { addTestResult } from '@testrailHelper';
-import * as fs from 'fs';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+import { setupTestReporting } from 'helpers/testrailHelper';
 
 test.describe('Sitemap Tests', () => {
-  const BASE_URL = process.env.BASE_URL;
-  const testState = 'ca';
-  const validDomains = [
-    /^https:\/\/goodparty\.org\//,
-    /^https:\/\/gp-ui-git-develop-good-party\.vercel\.app\//,
-    /^https:\/\/dev\.goodparty\.org\//
-];
-  
-  test('verify sitemap accessibility', async () => {
-    const caseId = 86;
+    const BASE_URL = process.env.BASE_URL;
+    const testState = 'ca';
+    const validDomains = [
+        /^https:\/\/goodparty\.org\//,
+        /^https:\/\/gp-ui-git-develop-good-party\.vercel\.app\//,
+        /^https:\/\/dev\.goodparty\.org\//
+    ];
 
-    try {
+    // Setup reporting for sitemap accessibility test
+    const sitemapAccessibilityCaseId = 86;
+    setupTestReporting(test, sitemapAccessibilityCaseId);
+
+    test('verify sitemap accessibility', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const response = await axios.get(mainSitemapUrl);
         expect(response.status).toBe(200);
-        
+
         const data = await parseStringPromise(response.data);
         expect(data.sitemapindex).toBeDefined();
         expect(data.sitemapindex.sitemap).toBeDefined();
-        
-        const stateSitemaps = data.sitemapindex.sitemap.filter(sitemap => 
-        sitemap.loc[0].includes('/sitemaps/state/'));
+
+        const stateSitemaps = data.sitemapindex.sitemap.filter(sitemap =>
+            sitemap.loc[0].includes('/sitemaps/state/'));
         expect(stateSitemaps.length).toBe(51);
-        
-        const candidateSitemaps = data.sitemapindex.sitemap.filter(sitemap => 
-        sitemap.loc[0].includes('/sitemaps/candidates/'));
+
+        const candidateSitemaps = data.sitemapindex.sitemap.filter(sitemap =>
+            sitemap.loc[0].includes('/sitemaps/candidates/'));
         expect(candidateSitemaps.length).toBe(51);
+    });
 
-        await addTestResult(runId, caseId, 1, "Test passed");
-    } catch (error) {
-        await addTestResult(
-            runId,
-            caseId,
-            5,
-            `Test failed: ${error.stack}`
-        );
-    }
-  });
+    // Setup reporting for state sitemaps test
+    const stateSitemapsCaseId = 87;
+    setupTestReporting(test, stateSitemapsCaseId);
 
-  test('state sitemaps contain valid URLs', async () => {
-    const caseId = 87;
-
-    try {
+    test('state sitemaps contain valid URLs', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const mainResponse = await axios.get(mainSitemapUrl);
         const mainData = await parseStringPromise(mainResponse.data);
-        
+
         // Find state sitemaps
-        const stateSitemaps = mainData.sitemapindex.sitemap.filter(sitemap => 
+        const stateSitemaps = mainData.sitemapindex.sitemap.filter(sitemap =>
             sitemap.loc[0].includes('/state/')
         );
         console.log(`Found ${stateSitemaps.length} state sitemaps`);
-        await addTestResult(runId, caseId, 1, "Test passed");
-    } catch (error) {
-        console.error('State sitemap test failed:', error);
-        await addTestResult(
-            runId,
-            caseId,
-            5,
-            `Test failed: ${error.stack}`
-        );
-        throw error;
-    }
-  });
+    });
 
-  test('verify sitemap URLs have valid lastmod dates', async () => {
-    const caseId = 89;
+    // Setup reporting for sitemap lastmod test
+    const sitemapLastmodCaseId = 89;
+    setupTestReporting(test, sitemapLastmodCaseId);
 
-    try {
+    test('verify sitemap URLs have valid lastmod dates', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const response = await axios.get(mainSitemapUrl);
         const data = await parseStringPromise(response.data);
-        
+
         for (const sitemap of data.sitemapindex.sitemap) {
             const lastmod = new Date(sitemap.lastmod[0]);
             expect(lastmod).toBeInstanceOf(Date);
             expect(lastmod.getTime()).not.toBeNaN();
         }
-        await addTestResult(runId, caseId, 1, "Test passed");
-    } catch (error) {
-        await addTestResult(
-            runId,
-            caseId,
-            5,
-            `Test failed: ${error.stack}`
-        );
-    }
-  });
+    });
 });

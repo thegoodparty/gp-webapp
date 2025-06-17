@@ -27,7 +27,7 @@ export async function addTestResult(runId, caseId, statusId, comment = '') {
         return response.data;
     } catch (error) {
         console.error(`Failed to update TestRail case ID ${caseId}:`, error.message);
-        testResultStatuses.push(5); 
+        testResultStatuses.push(5);
         throw error;
     }
 }
@@ -35,7 +35,7 @@ export async function addTestResult(runId, caseId, statusId, comment = '') {
 // Helper to create a new test run
 export async function createTestRun(name: string, caseIds: number[], baseUrl: string) {
     const description = `Test Environment URL: ${baseUrl}\n\nAutomated test run created at ${new Date().toISOString()}`;
-    
+
     const response = await axios.post(
         `${TESTRAIL_URL}/index.php?/api/v2/add_run/${process.env.TESTRAIL_PROJECT_ID}`,
         {
@@ -48,7 +48,7 @@ export async function createTestRun(name: string, caseIds: number[], baseUrl: st
             auth: AUTH
         }
     );
-    
+
     console.log(`Test run created with ID: ${response.data.id}`);
     return response.data.id;
 }
@@ -73,7 +73,7 @@ export async function checkForTestFailures() {
             process.exit(1); // Exit with non-zero code to signal failure
         }
 
-        console.log('All tests passed successfully.');
+        console.log('All tests executed successfully.');
     } catch (error) {
         console.error('Error while checking TestRail results:', error.message);
         process.exit(1); // Exit with non-zero code if there's an error
@@ -122,4 +122,19 @@ export async function handleTestFailure(page: Page, runId: string, caseId: numbe
     }
 }
 
-module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure };
+export async function setupTestReporting(test: any, caseId: number) {
+    const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+
+    test.afterEach(async ({ page }, testInfo) => {
+        // Only report after all retries are complete
+        if (testInfo.retry === testInfo.retries) {
+            if (testInfo.status === 'passed') {
+                await addTestResult(runId, caseId, 1, 'Test passed');
+            } else if (testInfo.status === 'failed') {
+                await handleTestFailure(page, runId, caseId, testInfo.error);
+            }
+        }
+    });
+}
+
+module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure, setupTestReporting };
