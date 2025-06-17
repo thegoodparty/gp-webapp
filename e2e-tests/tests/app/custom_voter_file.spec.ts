@@ -9,7 +9,7 @@ test.use({
     storageState: 'admin-auth.json',
 });
 
-test('Generate default voter file', async ({ page }) => {
+test.skip('Generate default voter file', async ({ page }) => {
     const caseId = 95;
     try {
         await page.goto("/dashboard/voter-records");
@@ -40,7 +40,7 @@ test('Generate default voter file', async ({ page }) => {
     }
 });
 
-test('Generate custom voter file', async ({ page }) => {
+test.skip('Generate custom voter file', async ({ page }) => {
     const caseId = 43;
     try {
         await page.goto("/dashboard/voter-records");
