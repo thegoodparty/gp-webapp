@@ -14,6 +14,7 @@ import Script from 'next/script'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import Button from '@shared/buttons/Button'
+import Image from 'next/image'
 
 const THEME_OPTIONS = Object.keys(WEBSITE_THEMES)
 const MAPS_API_KEY = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'
@@ -116,6 +117,22 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
                     onCrop={(file) => handleImageChange('logo', file)}
                     onClear={handleClearLogo}
                   />
+                ) : content?.logo ? (
+                  <>
+                    <Image
+                      src={content.logo}
+                      alt="Logo"
+                      width={100}
+                      height={100}
+                    />
+                    <Button
+                      className="mt-2"
+                      size="small"
+                      onClick={handleClearLogo}
+                    >
+                      Select new image
+                    </Button>
+                  </>
                 ) : (
                   <FileDropZone
                     maxSize={5000000} // 5MB
@@ -163,6 +180,22 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
                     }
                     onClear={handleClearHero}
                   />
+                ) : content?.main?.image ? (
+                  <>
+                    <Image
+                      src={content.main.image}
+                      alt="Hero Image"
+                      width={100}
+                      height={100}
+                    />
+                    <Button
+                      className="mt-2"
+                      size="small"
+                      onClick={handleClearHero}
+                    >
+                      Select new image
+                    </Button>
+                  </>
                 ) : (
                   <FileDropZone
                     maxSize={5000000} // 5MB
