@@ -2,7 +2,6 @@
 import { getCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { camelToKebab } from 'helpers/stringHelper'
 import { useEffect, useMemo, useState } from 'react'
-import Table from '@shared/utils/Table'
 import Actions from './Actions'
 import { dateWithTime } from 'helpers/dateHelper'
 import Link from 'next/link'
@@ -15,8 +14,9 @@ import {
   AI_CONTENT_SUB_SECTION_KEY,
   buildAiContentSections,
 } from 'helpers/buildAiContentSections'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 import { useSnackbar } from 'helpers/useSnackbar'
+import SimpleTable from '@shared/utils/SimpleTable'
 
 let aiTotalCount = 0
 const excludedKeys = [
@@ -40,8 +40,6 @@ export default function MyContent(props) {
   const [jobStarting, setJobStarting] = useState(false)
   const { errorSnackbar } = useSnackbar()
 
-  let tableVersion = true
-
   const onSelectPrompt = (key, additionalPrompts, inputValues) => {
     setJobStarting(true)
     trackEvent('ai_content_generation_start', { key })
@@ -54,108 +52,85 @@ export default function MyContent(props) {
     setSection(key)
   }
 
-  let data = []
-  if (sections) {
-    Object.keys(sections).forEach((key) => {
-      const section = sections[key]
-      if (excludedKeys.includes(key) || !section.name) {
-        return
-      }
-      data.push({
+  const columns = [
+    {
+      header: 'Name',
+      cell: ({ row }) => {
+        const isProcessing = !row.updatedAt || row.updatedAt === 'Invalid Date'
+        const content = (
+          <div className="flex flex-row items-center font-semibold">
+            <IoDocumentText className="ml-3 text-md shrink-0" />
+            <div className="ml-3">{row.name}</div>
+          </div>
+        )
+
+        if (isProcessing) {
+          return content
+        }
+
+        return (
+          <Link
+            href="/dashboard/content/[slug]"
+            as={`/dashboard/content/${row.slug}`}
+            onClick={() => {
+              trackEvent(EVENTS.ContentBuilder.ClickContent, {
+                name: row.name,
+                slug: row.slug,
+                key: row.documentKey,
+              })
+            }}
+            className="inline-block"
+          >
+            {content}
+          </Link>
+        )
+      },
+    },
+    {
+      header: 'Last Modified',
+      cell: ({ row }) => {
+        let updatedAt
+        if (row.updatedAt) {
+          updatedAt = dateWithTime(row.updatedAt)
+          if (updatedAt === undefined || updatedAt === 'Invalid Date') {
+            const now = new Date()
+            updatedAt = dateWithTime(now)
+          }
+        }
+        return updatedAt
+      },
+    },
+    {
+      header: '',
+      cell: ({ row }) => {
+        const actionProps = {
+          slug: row.slug || '',
+          name: row.name || '',
+          documentKey: row.documentKey || '',
+          updatedAt: row.updatedAt,
+          status:
+            row.updatedAt && row.updatedAt !== 'Invalid Date'
+              ? undefined
+              : 'processing',
+        }
+        return <Actions {...actionProps} />
+      },
+    },
+  ]
+
+  const tableData = useMemo(() => {
+    if (!sections) return []
+
+    return Object.entries(sections)
+      .filter(([key]) => !excludedKeys.includes(key) && sections[key].name)
+      .map(([key, section]) => ({
         name: section.name,
         updatedAt: new Date(section.updatedAt),
         slug: camelToKebab(key),
         documentKey: key,
-      })
-    })
-    data.sort((a, b) => a.updatedAt - b.updatedAt)
-  }
-
-  const columns = useMemo(
-    () => [
-      {
-        id: 'name',
-        header: 'Name',
-        accessorKey: 'name',
-        cell: ({ row }) => {
-          if (
-            row.original.updatedAt !== undefined &&
-            row.original.updatedAt != 'Invalid Date'
-          ) {
-            return (
-              <Link
-                href="/dashboard/content/[slug]"
-                as={`/dashboard/content/${row.original.slug}`}
-                onClick={() => {
-                  trackEvent(EVENTS.ContentBuilder.ClickContent, {
-                    name: row.original.name,
-                    slug: row.original.slug,
-                    key: row.original.documentKey,
-                  })
-                }}
-                className="inline-block"
-              >
-                <div className="flex flex-row items-center font-semibold">
-                  <IoDocumentText className="ml-3 text-md shrink-0" />
-                  <div className="ml-3">{row.original.name}</div>
-                </div>
-              </Link>
-            )
-          } else {
-            return (
-              // do not show link for documents that are processing.
-              <div className="flex flex-row items-center font-semibold">
-                <IoDocumentText className="ml-3 text-md shrink-0" />
-                <div className="ml-3">{row.original.name}</div>
-              </div>
-            )
-          }
-        },
-      },
-      {
-        id: 'lastModified',
-        header: 'Last Modified',
-        accessorFn: (row) =>
-          row.updatedAt ? new Date(row.updatedAt) : new Date(),
-        sortingFn: 'datetime',
-        cell: ({ row }) => {
-          let updatedAt
-          if (row.original.updatedAt) {
-            updatedAt = dateWithTime(row.original.updatedAt)
-            if (updatedAt === undefined || updatedAt === 'Invalid Date') {
-              const now = new Date()
-              updatedAt = dateWithTime(now)
-            }
-          }
-          return updatedAt
-        },
-      },
-      {
-        id: 'actions',
-        header: '',
-        collapse: true,
-        cell: ({ row }) => {
-          const actionProps = {
-            slug: row.original?.slug ? row.original.slug : '',
-            name: row.original?.name ? row.original.name : '',
-            documentKey: row.original?.documentKey
-              ? row.original.documentKey
-              : '',
-            tableVersion,
-            updatedAt: row.original.updatedAt
-              ? row.original.updatedAt
-              : undefined,
-            status:
-              row.original.updatedAt && row.original.updatedAt != 'Invalid Date'
-                ? undefined
-                : 'processing',
-          }
-          return <Actions {...actionProps} />
-        },
-      },
-    ],
-    [tableVersion],
-  )
+      }))
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+  }, [sections])
 
   async function getUserCampaign() {
     const campaignObj = await getCampaign()
@@ -181,7 +156,6 @@ export default function MyContent(props) {
     debounce(getUserCampaign, 10000)
 
     if (aiTotalCount >= 100) {
-      //fail
       errorSnackbar(
         'We are experiencing an issue creating your content. Please report an issue using the Feedback bar on the right.',
       )
@@ -238,7 +212,6 @@ export default function MyContent(props) {
       setJobStarting(false)
       setLoading(false)
       setInitialChat(false)
-      //fail
       errorSnackbar(
         'There was an error creating your content. Please Report an issue on the feedback bar on the right.',
       )
@@ -260,13 +233,7 @@ export default function MyContent(props) {
             forceOpenModal={props.forceOpenModal}
           />
 
-          <Table
-            columns={columns}
-            data={data}
-            filterColumns={false}
-            pagination={false}
-            initialSortById="updatedAt"
-          />
+          <SimpleTable columns={columns} data={tableData} />
         </>
       )}
     </div>

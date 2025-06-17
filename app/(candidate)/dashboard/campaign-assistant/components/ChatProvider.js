@@ -6,7 +6,7 @@ import {
   getChatThread,
   regenerateChatThread,
 } from 'app/(candidate)/dashboard/campaign-assistant/components/ajaxActions'
-import { trackEvent } from 'helpers/fullStoryHelper'
+import { trackEvent } from 'helpers/analyticsHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 

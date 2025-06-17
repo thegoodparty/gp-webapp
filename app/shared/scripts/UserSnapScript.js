@@ -1,6 +1,6 @@
 'use client'
 import { getUserCookie } from 'helpers/cookieHelper'
-import { trackEvent } from 'helpers/fullStoryHelper'
+import { trackEvent } from 'helpers/analyticsHelper'
 import Script from 'next/script'
 import { useEffect } from 'react'
 

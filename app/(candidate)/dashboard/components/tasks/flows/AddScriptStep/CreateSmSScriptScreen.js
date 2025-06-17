@@ -3,7 +3,7 @@ import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import TextField from '@shared/inputs/TextField'
 import { ModalFooter } from '@shared/ModalFooter'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const MAX_SMS_CHAR_COUNT = 1600
 export const CreateSmSScriptScreen = ({

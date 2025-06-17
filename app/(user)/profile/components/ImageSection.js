@@ -11,7 +11,7 @@ import ImageUpload from '@shared/utils/ImageUpload'
 import { getUserCookie } from 'helpers/cookieHelper'
 import Body2 from '@shared/typography/Body2'
 import { useUser } from '@shared/hooks/useUser'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 function ImageSection() {
   const [user, setUser] = useUser()

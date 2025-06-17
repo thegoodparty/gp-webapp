@@ -7,7 +7,7 @@ import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { updateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import { CircularProgress } from '@mui/material'
 import { isValidUrl } from 'helpers/linkhelper'
-import { trackEvent, EVENTS } from 'helpers/fullStoryHelper'
+import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
 
 const fields = [
   {
@@ -43,7 +43,7 @@ const fields = [
     label: 'Campaign website',
     type: 'text',
     validateFn: isValidUrl,
-    helperText: 'Please provide a full url starting with http:// or https://',
+    helperText: 'Please provide the full url starting with http:// or https://',
   },
 ]
 

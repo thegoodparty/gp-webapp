@@ -14,7 +14,7 @@ export const metadata = meta
 export const dynamic = 'force-dynamic'
 const Page = async ({ params }) => {
   await candidateAccess()
-  restrictDemoAccess()
+  await restrictDemoAccess()
 
   const campaign = await fetchUserCampaign()
 
