@@ -11,6 +11,7 @@ import Button from '@shared/buttons/Button'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import OfficeStepForm from './OfficeStepForm'
+import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
 
 async function runP2V(slug) {
   try {
@@ -47,6 +48,12 @@ export default function OfficeStep({
       }),
     [step],
   )
+
+  useTrackOfficeSearch({
+    zip: ballotSearch?.zip, 
+    level: ballotSearch?.level,
+    officeName: ballotSearch?.inputValue || ballotSearch?.fuzzyFilter
+  })
 
   const canSubmit = () => {
     if (step) {

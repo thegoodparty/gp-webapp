@@ -12,6 +12,7 @@ import { CampaignOfficeSelectionModal } from 'app/(candidate)/dashboard/shared/C
 import { getUserCookie } from 'helpers/cookieHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { useAnalytics } from './hooks/useAnalytics'
 
 const createCampaign = async (payload) => {
   try {
@@ -81,6 +82,7 @@ export const CreateCampaignForm = ({}) => {
   const [newCampaign, setNewCampaign] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const { successSnackbar, errorSnackbar } = useSnackbar()
+  const analytics = useAnalytics()
 
   const onChangeField = (key, value) => {
     setValues({
@@ -112,6 +114,12 @@ export const CreateCampaignForm = ({}) => {
     if (campaignResponse.ok) {
       setNewCampaign(campaignResponse.data)
       successSnackbar('Created!')
+      
+      trackRegistrationCompleted({
+        analytics,
+        userId: campaignResponse.userId,
+        signUpPath: 'outbound'
+      })
     } else {
       const errorData = campaignResponse.data
       console.error('Campaign creation error', errorData)
