@@ -1,22 +1,29 @@
 'use client'
-import Lottie from 'react-lottie-player'
+import { Player, PlayerEvent } from '@lottiefiles/react-lottie-player'
 
 export default function LottieAnimation({
   style = {},
   callback = () => {},
+  animationData = {},
   ...restProps
 }) {
+  const handleEvent = (event) => {
+    if (event === PlayerEvent.Complete) {
+      callback()
+    }
+  }
   return (
     // NOTE: inert needs a string value here or React throws an error (Fixed in React 19)
-    <div inert="true">
-      <Lottie
+    <div inert={true}>
+      <Player
         loop={false}
-        play={true}
-        onComplete={callback}
+        autoplay={true}
+        onEvent={handleEvent}
         style={{
           cursor: 'default',
           ...style,
         }}
+        src={animationData}
         {...restProps}
       />
     </div>

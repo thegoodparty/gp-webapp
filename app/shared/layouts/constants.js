@@ -57,11 +57,6 @@ export const FOOTER_COLUMNS = [
         link: '/academy',
         id: 'footer-campaign-academy',
       },
-      {
-        label: 'Book an Info Session',
-        link: '/info-session',
-        id: 'footer-campaign-info',
-      },
       { label: 'Book a Demo', link: '/get-a-demo', id: 'footer-campaign-demo' },
       {
         label: 'Political Definitions',

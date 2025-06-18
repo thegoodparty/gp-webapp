@@ -15,7 +15,7 @@ export default async function Page() {
   if (!user) {
     redirect('/login')
   }
-  const token = getServerToken()
+  const token = await getServerToken()
   const campaign = await fetchUserCampaign()
   const { subscriptionCancelAt } = campaign?.details || {}
 
