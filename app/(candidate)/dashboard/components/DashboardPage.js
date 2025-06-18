@@ -12,6 +12,7 @@ import LoadingAnimation from '@shared/utils/LoadingAnimation'
 import { VoterContactsProvider } from '@shared/hooks/VoterContactsProvider'
 import { CampaignUpdateHistoryProvider } from '@shared/hooks/CampaignUpdateHistoryProvider'
 import TasksList from './tasks/TasksList'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export default function DashboardPage({
   pathname,
@@ -99,6 +100,15 @@ export default function DashboardPage({
       })
     }
   }, [])
+
+  trackEvent(EVENTS.Dashboard.Viewed, 
+    {
+      p2vCompleted: `${(pathToVictory && pathToVictory?.p2vStatus === 'Complete') 
+        ? 'true' 
+        : 'false'
+      }` 
+    }
+  )
 
   return (
     <VoterContactsProvider>
