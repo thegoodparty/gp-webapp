@@ -240,9 +240,10 @@ export default function TaskFlow({
             {...callbackProps}
             onCreateOutreach={onCreateOutreach}
             onScheduleOutreach={handleScheduleOutreach(
+              type,
               errorSnackbar,
               successSnackbar,
-              state?.audience?.audience_request,
+              state,
             )}
           />
         )}

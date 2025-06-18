@@ -1,14 +1,17 @@
 import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { createOutreach } from 'helpers/createOutreach'
 import { createVoterFileFilter } from 'helpers/createVoterFileFilter'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 export const handleScheduleOutreach =
   (
+    type = '',
     errorSnackbar = () => {},
     successSnackbar = () => {},
-    audienceRequest = '',
+    { budget, audience } = {},
   ) =>
   async (outreach = {}) => {
+    const { audienceRequest } = audience || {}
     const result = await scheduleVoterMessagingCampaign(
       outreach.id,
       audienceRequest,
@@ -17,6 +20,11 @@ export const handleScheduleOutreach =
       errorSnackbar('There was an error scheduling your campaign')
       return
     }
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignRequested, {
+      medium: type,
+      price: budget,
+      voterContacts: audience.count || 0,
+    })
     successSnackbar('Request submitted successfully.')
   }
 
