@@ -87,194 +87,163 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
       />
       <Paper className="max-w-md">
         <form className="space-y-8" onSubmit={handleSave}>
-          <div>
-            <H2>Website Content</H2>
-            <div className="space-y-4 mt-4">
-              <div>
-                <div className="text-sm text-gray-500 mb-2">Theme</div>
-                <Select
-                  native
-                  value={content?.theme || ''}
-                  fullWidth
-                  variant="outlined"
-                  onChange={(e) => handleFieldChange('theme', e.target.value)}
-                >
-                  {THEME_OPTIONS.map((theme) => (
-                    <option key={theme} value={theme}>
-                      {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                    </option>
-                  ))}
-                </Select>
-              </div>
+          <H2>Website Content</H2>
+          <div className="space-y-4 mt-4">
+            <div className="text-sm text-gray-500 mb-2">Theme</div>
+            <Select
+              native
+              value={content?.theme || ''}
+              fullWidth
+              variant="outlined"
+              onChange={(e) => handleFieldChange('theme', e.target.value)}
+            >
+              {THEME_OPTIONS.map((theme) => (
+                <option key={theme} value={theme}>
+                  {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                </option>
+              ))}
+            </Select>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Logo
-                </label>
-                {logoFile ? (
-                  <ImageCropPreview
-                    file={logoFile}
-                    onCrop={(file) => handleImageChange('logo', file)}
-                    onClear={handleClearLogo}
-                  />
-                ) : content?.logo ? (
-                  <>
-                    <Image
-                      src={content.logo}
-                      alt="Logo"
-                      width={100}
-                      height={100}
-                    />
-                    <Button
-                      className="mt-2"
-                      size="small"
-                      onClick={handleClearLogo}
-                    >
-                      Select new image
-                    </Button>
-                  </>
-                ) : (
-                  <FileDropZone
-                    maxSize={5000000} // 5MB
-                    onChange={(file) => handleImageChange('logo', file)}
-                  />
-                )}
-              </div>
-            </div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Logo
+            </label>
+            {logoFile ? (
+              <ImageCropPreview
+                file={logoFile}
+                onCrop={(file) => handleImageChange('logo', file)}
+                onClear={handleClearLogo}
+              />
+            ) : content?.logo ? (
+              <>
+                <Image src={content.logo} alt="Logo" width={100} height={100} />
+                <Button className="mt-2" size="small" onClick={handleClearLogo}>
+                  Select new image
+                </Button>
+              </>
+            ) : (
+              <FileDropZone
+                maxSize={5000000} // 5MB
+                onChange={(file) => handleImageChange('logo', file)}
+              />
+            )}
           </div>
 
-          <div>
-            <H2>Main</H2>
-            <div className="space-y-4 mt-4">
-              <TextField
-                label="Title"
-                placeholder="Enter your campaign title"
-                fullWidth
-                required
-                value={content?.main?.title || ''}
-                onChange={(e) =>
-                  handleFieldChange(['main', 'title'], e.target.value)
-                }
-                InputLabelProps={{ shrink: true }}
+          <H2>Main</H2>
+          <div className="space-y-4 mt-4">
+            <TextField
+              label="Title"
+              placeholder="Enter your campaign title"
+              fullWidth
+              required
+              value={content?.main?.title || ''}
+              onChange={(e) =>
+                handleFieldChange(['main', 'title'], e.target.value)
+              }
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              style={{ marginBottom: '16px' }}
+              label="Tagline"
+              fullWidth
+              required
+              value={content?.main?.tagline || ''}
+              onChange={(e) =>
+                handleFieldChange(['main', 'tagline'], e.target.value)
+              }
+              InputLabelProps={{ shrink: true }}
+            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Hero Image
+            </label>
+            {heroFile ? (
+              <ImageCropPreview
+                file={heroFile}
+                onCrop={(file) => handleImageChange(['main', 'image'], file)}
+                onClear={handleClearHero}
               />
-              <TextField
-                style={{ marginBottom: '16px' }}
-                label="Tagline"
-                fullWidth
-                required
-                value={content?.main?.tagline || ''}
-                onChange={(e) =>
-                  handleFieldChange(['main', 'tagline'], e.target.value)
-                }
-                InputLabelProps={{ shrink: true }}
-              />
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Hero Image
-                </label>
-                {heroFile ? (
-                  <ImageCropPreview
-                    file={heroFile}
-                    onCrop={(file) =>
-                      handleImageChange(['main', 'image'], file)
-                    }
-                    onClear={handleClearHero}
-                  />
-                ) : content?.main?.image ? (
-                  <>
-                    <Image
-                      src={content.main.image}
-                      alt="Hero Image"
-                      width={100}
-                      height={100}
-                    />
-                    <Button
-                      className="mt-2"
-                      size="small"
-                      onClick={handleClearHero}
-                    >
-                      Select new image
-                    </Button>
-                  </>
-                ) : (
-                  <FileDropZone
-                    maxSize={5000000} // 5MB
-                    onChange={(file) =>
-                      handleImageChange(['main', 'image'], file)
-                    }
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <H2>About</H2>
-            <div className="mt-4 space-y-4">
-              <TextField
-                label="Bio"
-                fullWidth
-                required
-                multiline
-                rows={4}
-                value={content?.about?.bio || ''}
-                onChange={(e) =>
-                  handleFieldChange(['about', 'bio'], e.target.value)
-                }
-                InputLabelProps={{ shrink: true }}
-              />
-
-              <IssuesForm
-                issues={content?.about?.issues || []}
-                onChange={(issues) =>
-                  handleFieldChange(['about', 'issues'], issues)
-                }
-              />
-            </div>
-          </div>
-
-          <div>
-            <H2>Contact Information</H2>
-            <div className="mt-4">
-              {mapsLoaded ? (
-                <AddressAutocomplete
-                  value={content?.contact?.address || ''}
-                  onChange={(value) =>
-                    handleFieldChange(['contact', 'address'], value)
-                  }
+            ) : content?.main?.image ? (
+              <>
+                <Image
+                  src={content.main.image}
+                  alt="Hero Image"
+                  width={100}
+                  height={100}
                 />
-              ) : (
-                <TextField
-                  style={{ marginBottom: '16px' }}
-                  label="Address"
-                  fullWidth
-                  value={content?.contact?.address || ''}
-                  onChange={(e) =>
-                    handleFieldChange(['contact', 'address'], e.target.value)
-                  }
-                  InputLabelProps={{ shrink: true }}
-                />
-              )}
-              <EmailInput
-                style={{ marginBottom: '16px' }}
-                value={content?.contact?.email || ''}
-                onChangeCallback={(e) =>
-                  handleFieldChange(['contact', 'email'], e.target.value)
-                }
-                shrink
-                className="mb-4"
+                <Button className="mt-2" size="small" onClick={handleClearHero}>
+                  Select new image
+                </Button>
+              </>
+            ) : (
+              <FileDropZone
+                maxSize={5000000} // 5MB
+                onChange={(file) => handleImageChange(['main', 'image'], file)}
               />
-              <PhoneInput
-                style={{ marginBottom: '16px' }}
-                value={content?.contact?.phone || ''}
-                onChangeCallback={(phone) =>
-                  handleFieldChange(['contact', 'phone'], phone)
+            )}
+          </div>
+
+          <H2>About</H2>
+          <div className="mt-4 space-y-4">
+            <TextField
+              label="Bio"
+              fullWidth
+              required
+              multiline
+              rows={4}
+              value={content?.about?.bio || ''}
+              onChange={(e) =>
+                handleFieldChange(['about', 'bio'], e.target.value)
+              }
+              InputLabelProps={{ shrink: true }}
+            />
+
+            <IssuesForm
+              issues={content?.about?.issues || []}
+              onChange={(issues) =>
+                handleFieldChange(['about', 'issues'], issues)
+              }
+            />
+          </div>
+
+          <H2>Contact Information</H2>
+          <div className="mt-4">
+            {mapsLoaded ? (
+              <AddressAutocomplete
+                value={content?.contact?.address || ''}
+                onChange={(value) =>
+                  handleFieldChange(['contact', 'address'], value)
                 }
-                hideIcon
-                shrink
-                className="mb-4"
               />
-            </div>
+            ) : (
+              <TextField
+                style={{ marginBottom: '16px' }}
+                label="Address"
+                fullWidth
+                value={content?.contact?.address || ''}
+                onChange={(e) =>
+                  handleFieldChange(['contact', 'address'], e.target.value)
+                }
+                InputLabelProps={{ shrink: true }}
+              />
+            )}
+            <EmailInput
+              style={{ marginBottom: '16px' }}
+              value={content?.contact?.email || ''}
+              onChangeCallback={(e) =>
+                handleFieldChange(['contact', 'email'], e.target.value)
+              }
+              shrink
+              className="mb-4"
+            />
+            <PhoneInput
+              style={{ marginBottom: '16px' }}
+              value={content?.contact?.phone || ''}
+              onChangeCallback={(phone) =>
+                handleFieldChange(['contact', 'phone'], phone)
+              }
+              hideIcon
+              shrink
+              className="mb-4"
+            />
           </div>
           <Button loading={saveLoading} disabled={saveLoading} type="submit">
             Save
