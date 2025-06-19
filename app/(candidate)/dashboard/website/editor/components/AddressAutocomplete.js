@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import TextField from '@shared/inputs/TextField'
+import Script from 'next/script'
+
+const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
 export default function AddressAutocomplete({
   value,
@@ -9,11 +12,11 @@ export default function AddressAutocomplete({
   const inputRef = useRef(null)
   const autocompleteRef = useRef(null)
   const [inputValue, setInputValue] = useState(value || '')
+  const [mapsLoaded, setMapsLoaded] = useState(false)
 
   useEffect(() => {
-    if (!window.google || !inputRef.current) return
+    if (!mapsLoaded || !window.google || !inputRef.current) return
 
-    // Initialize Google Places Autocomplete
     autocompleteRef.current = new window.google.maps.places.Autocomplete(
       inputRef.current.querySelector('input'),
       {
@@ -22,7 +25,6 @@ export default function AddressAutocomplete({
       },
     )
 
-    // Add place_changed event listener
     const listener = autocompleteRef.current.addListener(
       'place_changed',
       () => {
@@ -35,29 +37,36 @@ export default function AddressAutocomplete({
     )
 
     return () => {
-      // Cleanup listener when component unmounts
-      if (window.google) {
+      if (window.google && listener) {
         window.google.maps.event.removeListener(listener)
       }
     }
-  }, [onChange])
+  }, [mapsLoaded, onChange])
 
-  // Handle manual input changes
   const handleInputChange = (e) => {
     const newValue = e.target.value
     setInputValue(newValue)
     onChange(newValue)
   }
 
+  if (!MAPS_API_KEY) {
+    console.warn('Google Maps API key is missing!')
+  }
+
   return (
-    <TextField
-      ref={inputRef}
-      label={label}
-      fullWidth
-      value={inputValue}
-      onChange={handleInputChange}
-      style={{ marginBottom: '16px' }}
-      InputLabelProps={{ shrink: true }}
-    />
+    <>
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places`}
+        onReady={() => setMapsLoaded(true)}
+      />
+      <TextField
+        ref={inputRef}
+        label={label}
+        fullWidth
+        value={inputValue}
+        onChange={handleInputChange}
+        InputLabelProps={{ shrink: true }}
+      />
+    </>
   )
 }
