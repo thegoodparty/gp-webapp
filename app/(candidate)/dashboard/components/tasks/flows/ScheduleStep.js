@@ -3,26 +3,23 @@ import TextField from '@shared/inputs/TextField'
 import Body1 from '@shared/typography/Body1'
 import H1 from '@shared/typography/H1'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
-import { useState, useMemo } from 'react'
-import { getDefaultVoterFileName } from 'app/(candidate)/dashboard/voter-records/components/VoterFileTypes'
-import { useSnackbar } from 'helpers/useSnackbar'
+import { useMemo, useState } from 'react'
 import Button from '@shared/buttons/Button'
 import {
   LEGACY_TASK_TYPES,
   TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
-import { addDays } from 'date-fns'
+import { addDays, format, parseISO, startOfDay } from 'date-fns'
 
 export default function ScheduleStep({
   onChangeCallback,
   nextCallback,
   backCallback,
-  submitCallback,
-  fileName,
+  onCreateOutreach = async () => {},
+  onScheduleOutreach = async () => {},
   type,
   schedule,
 }) {
-  const { errorSnackbar, successSnackbar } = useSnackbar()
   const [state, setState] = useState(
     schedule || {
       date: '',
@@ -31,11 +28,6 @@ export default function ScheduleStep({
   )
   const [dateError, setDateError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-
-  const resolvedFileName = useMemo(
-    () => (fileName ? fileName : getDefaultVoterFileName(type)),
-    [fileName, type],
-  )
 
   const trackingAttrs = useMemo(
     () =>
@@ -56,19 +48,29 @@ export default function ScheduleStep({
 
   const handleNext = async () => {
     setIsLoading(true)
-    const resp = await submitCallback()
-
-    if (resp.ok === false || resp.errors) {
-      const error = resp.errors[0]?.message
-      errorSnackbar(`Failed to submit request. ${error}`)
-      setIsLoading(false)
-      return
-    }
-
-    successSnackbar('Request submitted successfully.')
+    await onScheduleOutreach(await onCreateOutreach())
     setIsLoading(false)
     nextCallback()
   }
+
+  const handleTextFieldOnChange = (e) => {
+    const dateString = e.target.value
+    const localDate = startOfDay(parseISO(dateString))
+    onChangeField('date', localDate)
+
+    const minDateObj = startOfDay(parseISO(minDate))
+
+    if (localDate >= minDateObj) {
+      setDateError(null)
+    } else {
+      setDateError('Date must be at least 72 hours from now')
+    }
+  }
+
+  // This conversion has to be done to appease MUI's date-type TextField
+  const dateTextFieldValue = state?.date
+    ? format(state?.date, 'yyyy-MM-dd')
+    : ''
   const isTel =
     type === LEGACY_TASK_TYPES.telemarketing || type === TASK_TYPES.robocall
   const today = new Date()
@@ -89,19 +91,8 @@ export default function ScheduleStep({
             label="Send date"
             type="date"
             required
-            value={state.date}
-            onChange={(e) => {
-              onChangeField('date', e.target.value)
-
-              const selectedDate = new Date(e.target.value)
-              const minDateObj = new Date(minDate)
-
-              if (selectedDate >= minDateObj) {
-                setDateError(null)
-              } else {
-                setDateError('Date must be at least 72 hours from now')
-              }
-            }}
+            value={dateTextFieldValue}
+            onChange={handleTextFieldOnChange}
             InputLabelProps={{
               shrink: true,
             }}

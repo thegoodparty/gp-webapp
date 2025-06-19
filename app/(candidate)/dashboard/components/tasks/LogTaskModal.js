@@ -12,6 +12,7 @@ import {
 } from '@shared/utils/campaignUpdateHistoryServices'
 import { TASK_TYPES } from '../../shared/constants/tasks.const'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 export const TASK_TYPE_HEADINGS = {
   [TASK_TYPES.text]: 'How many text messages did you schedule?',
@@ -38,6 +39,7 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
   const [updateHistoryItems, setUpdateHistory] = useCampaignUpdateHistory()
   const [user] = useUser()
   const [value, setValue] = useState()
+  const analytics = useAnalytics()
 
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Log Task Contacts', { type: flowType, value }),
@@ -51,9 +53,22 @@ export default function LogTaskModal({ onSubmit, onClose, flowType }) {
   const handleSubmit = async () => {
     let newAddition = parseInt(value, 10)
 
-    setReportedVoterGoals({
+    const nextGoals = {
       ...reportedVoterGoals,
       [flowType]: (reportedVoterGoals[flowType] || 0) + newAddition,
+    }
+
+    setReportedVoterGoals(nextGoals)
+
+    trackEvent(EVENTS.Dashboard.VoterContact.CampaignCompleted, { 
+      recipientCount: newAddition,
+      price: 0,
+      medium: flowType,
+      method: 'unknown',
+      campaignName: 'null',
+    })
+    analytics.identify(user.id, {
+      voterContacts: Object.values(nextGoals).reduce((sum, v) => sum + (Number(v) || 0), 0) 
     })
 
     const newHistoryItem = await createUpdateHistory({

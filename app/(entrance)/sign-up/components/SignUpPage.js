@@ -17,7 +17,8 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
-import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent, trackRegistrationCompleted } from 'helpers/analyticsHelper'
+import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 const SIGN_UP_MODES = {
   CANDIDATE: 'candidate',
@@ -165,6 +166,7 @@ export default function SignUpPage() {
   const { errorSnackbar } = useSnackbar()
   const [_, setUser] = useUser()
   const router = useRouter()
+  const analytics = useAnalytics()
 
   const {
     firstName,
@@ -205,6 +207,13 @@ export default function SignUpPage() {
 
       await saveToken(token)
       setUser(user)
+
+      trackRegistrationCompleted({
+        analytics, 
+        userId: user.id, 
+        signUpPath: 'inbound'
+      })
+
       const redirect = await createCampaign()
       setLoading(false)
       router.push(redirect)

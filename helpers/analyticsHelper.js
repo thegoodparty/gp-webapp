@@ -1,6 +1,16 @@
 import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 
+const UTM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+]
+
+const CLID_SUFFIX = 'clid'
+
 export const EVENTS = {
   SignUp: {
     ClickLogin: 'Sign Up: Click Login',
@@ -13,6 +23,7 @@ export const EVENTS = {
     ClickSetPassword: 'Set Password: Click Set Password',
   },
   Onboarding: {
+    RegistrationCompleted: 'Onboarding - Registration Completed',
     ClickFinishLater: 'Onboarding: Click Finish Later',
     OfficeStep: {
       ClickNext: 'Onboarding - Office Step: Click Next',
@@ -55,6 +66,7 @@ export const EVENTS = {
     },
   },
   Dashboard: {
+    Viewed: 'Dashboard - Candidate Dashboard Viewed',
     PathToVictory: {
       ClickUnderstand:
         'Dashboard - Path to Victory: Click Understand Path to Victory',
@@ -73,6 +85,7 @@ export const EVENTS = {
       },
     },
     VoterContact: {
+      CampaignCompleted: 'Voter Outreach - Campaign Completed',
       LogProgress: {
         Exit: 'Dashboard - Voter Contact - Log Progress: Exit Log Progress',
         ClickAdd:
@@ -345,17 +358,117 @@ export const EVENTS = {
   },
 }
 
+export function extractClids(searchParams) {
+  const clids = {}
+
+  for (const [key, value] of searchParams.entries()) {
+    if (key.toLowerCase().endsWith("clid")) {
+      clids[key] = value
+    }
+  }
+  return clids
+}
+
+export function trackRegistrationCompleted({
+  analytics,
+  userId,
+  signUpPath,
+  signUpMethod = 'email'
+}) {
+  const signUpDate = new Date().toISOString()
+
+  analytics.identify(userId, {
+    signUpPath,
+    signUpDate,
+    signUpMethod,
+  })
+  trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
+    signUpPath,
+    signUpDate,
+    signUpMethod,
+  })
+}
+
+export function persistUtmsOnce() {
+  if (typeof window === 'undefined' || !window.location.search) return
+
+  const params = new URLSearchParams(window.location.search)
+
+  for (const key of UTM_KEYS) {
+    const value = params.get(key)
+    if (!value) continue
+
+    const firstKey = `${key}_first`
+    const lastKey = `${key}_last`
+
+    if (!sessionStorage.getItem(firstKey)) {
+      sessionStorage.setItem(firstKey, value)
+    }
+
+    sessionStorage.setItem(lastKey, value)
+  }
+}
+
+export function persistClidsOnce() {
+  if (typeof window === 'undefined' || !window.location.search) return
+
+  const params = new URLSearchParams(window.location.search)
+
+  for (const [key, value] of params.entries()) {
+    if (!key.toLowerCase().endsWith(CLID_SUFFIX) || !value) continue
+
+    const firstKey = `${key}_first`
+    const lastKey  = `${key}_last`
+
+    if (!sessionStorage.getItem(firstKey)) {
+      sessionStorage.setItem(firstKey, value) // write-once
+    }
+    sessionStorage.setItem(lastKey, value)     // always update
+  }
+}
+
+export function getPersistedUtms() {
+  const utms = {}
+
+  for (const key of UTM_KEYS) {
+    const first = sessionStorage.getItem(`${key}_first`)
+    const last = sessionStorage.getItem(`${key}_last`)
+
+    if (first) utms[`${key}_first`] = first
+    if (last) utms[`${key}_last`] = last
+  }
+
+  return utms
+}
+
+export function getPersistedClids() {
+  const clids = {}
+
+  for (let i = 0; i < sessionStorage.length; i++) {
+    const key = sessionStorage.key(i)
+    if (key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
+    key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)) {
+      clids[key] = sessionStorage.getItem(key)
+    }
+  }
+  return clids
+}
+
 export const trackEvent = (name, properties) => {
   // TODO: Repurpose this file and function for Segment when we get the green light to rip out FS.
   try {
     // Segment has different environments, and should run even when FS is disabled
-    segmentTrackEvent(name, properties)
+    const commonProperties = {
+      ...getPersistedUtms(),
+      ...properties,
+    }
+    segmentTrackEvent(name, commonProperties)
     if (typeof FS === 'undefined') {
       return
     }
-    FS('trackEvent', { name, properties })
+    FS('trackEvent', { name, commonProperties })
   } catch (e) {
-    console.log('error tracking FullStory event', e)
+    console.log('error tracking analytics (Segment + Fullstory) event', e)
   }
 }
 
