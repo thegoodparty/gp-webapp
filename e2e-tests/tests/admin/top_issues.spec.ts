@@ -11,7 +11,7 @@ const topIssuesCaseId = 27;
 setupTestReporting(test, topIssuesCaseId);
 
 test('Verify admin user can access Top Issues page', async ({ page }) => {
-    await page.goto('/admin/top-issues');
+    await page.goto('/admin/top-issues', { waitUntil: 'networkidle' });
     await documentReady(page);
 
     await expect(page.getByRole('button', { name: 'Add a Top Issue' })
