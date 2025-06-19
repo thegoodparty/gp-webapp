@@ -1,5 +1,4 @@
 import { CheckRounded } from '@mui/icons-material'
-import { upperFirst } from 'es-toolkit'
 
 const WEBSITE_STATUS = {
   published: 'published',
@@ -18,7 +17,7 @@ export default function StatusChip({ status }) {
       }`}
     >
       {isPublished && <CheckRounded className="!text-sm mr-1" />}
-      {upperFirst(status)}
+      <span className="capitalize">{status}</span>
     </div>
   )
 }
