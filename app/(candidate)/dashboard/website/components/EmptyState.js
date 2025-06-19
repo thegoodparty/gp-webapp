@@ -5,24 +5,6 @@ import IntroSteps from './IntroSteps'
 import Button from '@shared/buttons/Button'
 import Caption from '@shared/typography/Caption'
 
-const STEPS = [
-  {
-    number: 1,
-    title: 'Pick your domain',
-    description: 'Choose your built-in GoodParty.org domain',
-  },
-  {
-    number: 2,
-    title: 'Design your site',
-    description: 'Customize content to make it uniquely yours',
-  },
-  {
-    number: 3,
-    title: 'Publish & share',
-    description: 'Go live and start reaching voters',
-  },
-]
-
 export default function EmptyState({ onClickCreate, createLoading }) {
   return (
     <div className="pt-4 px-2 text-left md:text-center">
@@ -33,7 +15,7 @@ export default function EmptyState({ onClickCreate, createLoading }) {
       </Body2>
       <Paper className="mt-8">
         <div className="flex flex-col gap-8 py-2">
-          <IntroSteps steps={STEPS} />
+          <IntroSteps />
         </div>
       </Paper>
       <Button
