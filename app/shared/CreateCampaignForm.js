@@ -114,12 +114,7 @@ export const CreateCampaignForm = ({}) => {
     if (campaignResponse.ok) {
       setNewCampaign(campaignResponse.data)
       successSnackbar('Created!')
-      
-      trackRegistrationCompleted({
-        analytics,
-        userId: campaignResponse.userId,
-        signUpPath: 'outbound'
-      })
+
     } else {
       const errorData = campaignResponse.data
       console.error('Campaign creation error', errorData)
