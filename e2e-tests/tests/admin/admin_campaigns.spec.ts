@@ -1,12 +1,10 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
-import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
-import * as fs from 'fs';
+import { setupTestReporting } from 'helpers/testrailHelper';
 import { testAccountLastName } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
 import { documentReady } from 'helpers/domHelpers';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
     storageState: 'admin-auth.json',
@@ -14,49 +12,43 @@ test.use({
 
 const testSearchEmail = 'dustin@goodparty.org';
 
-test.beforeEach(async ({page}) => {
+test.beforeEach(async ({ page }) => {
     await page.goto('/admin/campaign-statistics');
     await documentReady(page);
 });
 
+// Setup reporting for admin campaigns page test
+const adminCampaignsCaseId = 25;
+setupTestReporting(test, adminCampaignsCaseId);
 
-test('Verify admin user can access Admin Campaigns page', async ({page}) => {
-    const caseId = 25;
-    try {
-        // Verify Campaigns page
-        page.getByRole('heading', { name: 'Campaigns' }).first().isVisible();
-        page.getByRole('button', { name: 'Add a new campaign' }).isVisible();
-
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+test('Verify admin user can access Admin Campaigns page', async ({ page }) => {
+    // Verify Campaigns page
+    await page.getByRole('heading', { name: 'Campaigns' }).first().isVisible();
+    await page.getByRole('button', { name: 'Add a new campaign' }).isVisible();
 });
 
-test.skip('Verify admin user can impersonate user', async ({page}) => {
-    const caseId = 73;
-    try {
-        // Search and select user for impersonation
-        page.getByLabel('User Email').fill(testSearchEmail);
-        page.getByRole('button', { name: 'Search' }).click();
-        await page.getByRole('cell', { name: testSearchEmail }).isVisible();
-        page.getByRole('row', { name: 'dustin-sison Dustin Sison No' }).locator('div').getByRole('img').click();
-        page.getByRole('button', { name: 'Impersonate' }).click();
-        // Confirm impersonation
-        await page.waitForLoadState('networkidle');
-        await page.goto('/profile', {waitUntil: 'domcontentloaded'});
-        await expect(page.getByTestId('personal-email')).toHaveValue(testSearchEmail);
+// Setup reporting for impersonation test
+const impersonationCaseId = 73;
+setupTestReporting(test, impersonationCaseId);
 
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+test.skip('Verify admin user can impersonate user', async ({ page }) => {
+    // Search and select user for impersonation
+    await page.getByLabel('User Email').fill(testSearchEmail);
+    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('cell', { name: testSearchEmail }).isVisible();
+    await page.getByRole('row', { name: 'dustin-sison Dustin Sison No' }).locator('div').getByRole('img').click();
+    await page.getByRole('button', { name: 'Impersonate' }).click();
+    // Confirm impersonation
+    await page.waitForLoadState('networkidle');
+    await page.goto('/profile', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByTestId('personal-email')).toHaveValue(testSearchEmail);
 });
 
-test.skip('Verify admin user can add/delete campaigns', async ({page}) => {
-    const caseId = 74;
+// Setup reporting for campaign management test
+const campaignManagementCaseId = 74;
+setupTestReporting(test, campaignManagementCaseId);
+
+test.skip('Verify admin user can add/delete campaigns', async ({ page }) => {
     const testFirstName = faker.person.firstName();
     const testLastName = testAccountLastName;
     const testEmail = generateEmail();
@@ -67,38 +59,31 @@ test.skip('Verify admin user can add/delete campaigns', async ({page}) => {
     const electionLevel = 'Local/Township/City';
     const electionDate = '2028-11-10';
 
-    try {
-        // Add a new campaign
-        await page.getByRole('button', { name: 'Add a new campaign' }).click();
-        await page.locator('h2').filter({ hasText: 'New Campaign' }).isVisible();
-        await page.getByLabel('First Name *').fill(testFirstName);
-        await page.getByLabel('Last Name *').fill(testLastName);
-        await page.getByLabel('Email *').fill(testEmail);
-        await page.getByLabel('Phone *').fill(testPhone);
-        await page.getByLabel('Zip Code *').fill(testZipCode);
-        await page.getByRole('combobox').selectOption(testParty);
-        await page.getByRole('button', { name: 'Step 1 - Create Campaign' }).click();
-        await page.waitForLoadState('networkidle');
-        await page.getByRole('button', { name: 'Step 2 - Select Office' }).click();
-        await page.getByText('To pull accurate results,').isVisible();
-        await page.getByLabel('Zipcode *').fill(testZipCode);
-        await page.getByRole('combobox').selectOption(electionLevel);
-        await page.waitForLoadState('networkidle');
-        await page.getByLabel('General Election Date (').fill(electionDate);
-        await page.getByLabel('General Election Date (').press('Enter');
-        await page.getByRole("button", { name: role }).first().click();
-        await page.getByRole("button", { name: "Save" }).click();
-        await page.waitForLoadState('networkidle');
+    // Add a new campaign
+    await page.getByRole('button', { name: 'Add a new campaign' }).click();
+    await page.locator('h2').filter({ hasText: 'New Campaign' }).isVisible();
+    await page.getByLabel('First Name *').fill(testFirstName);
+    await page.getByLabel('Last Name *').fill(testLastName);
+    await page.getByLabel('Email *').fill(testEmail);
+    await page.getByLabel('Phone *').fill(testPhone);
+    await page.getByLabel('Zip Code *').fill(testZipCode);
+    await page.getByRole('combobox').selectOption(testParty);
+    await page.getByRole('button', { name: 'Step 1 - Create Campaign' }).click();
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('button', { name: 'Step 2 - Select Office' }).click();
+    await page.getByText('To pull accurate results,').isVisible();
+    await page.getByLabel('Zipcode *').fill(testZipCode);
+    await page.getByRole('combobox').selectOption(electionLevel);
+    await page.waitForLoadState('networkidle');
+    await page.getByLabel('General Election Date (').fill(electionDate);
+    await page.getByLabel('General Election Date (').press('Enter');
+    await page.getByRole("button", { name: role }).first().click();
+    await page.getByRole("button", { name: "Save" }).click();
+    await page.waitForLoadState('networkidle');
 
-        // Confirm campaign is created
-        await page.goto('/admin/campaign-statistics', {waitUntil: 'domcontentloaded'});
-        await page.getByLabel('User Email').fill(testEmail);
-        await page.getByRole('button', { name: 'Search' }).click();
-        await page.getByRole('cell', { name: testEmail }).isVisible();
-
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);    
-    }
+    // Confirm campaign is created
+    await page.goto('/admin/campaign-statistics', { waitUntil: 'domcontentloaded' });
+    await page.getByLabel('User Email').fill(testEmail);
+    await page.getByRole('button', { name: 'Search' }).click();
+    await page.getByRole('cell', { name: testEmail }).isVisible();
 });

@@ -1,9 +1,7 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
-import { addTestResult, handleTestFailure } from 'helpers/testrailHelper';
-import * as fs from 'fs';
+import { setupTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
-const runId = fs.readFileSync('testRunId.txt', 'utf-8');
 
 test.use({
     storageState: 'auth.json',
@@ -14,36 +12,27 @@ test.beforeEach(async ({ page }) => {
     await documentReady(page);
 });
 
-test.skip('Verify Dashboard page', async ({ page }) => {
-    const caseId = 90;
+// Setup reporting for dashboard verification test
+const dashboardVerificationCaseId = 90;
+setupTestReporting(test, dashboardVerificationCaseId);
 
-    try {
-        // Verify user is on dashboard page
-        await expect(page.getByRole('heading', { name: /until Election Day!/ })).toBeVisible();
-        await expect(page.getByRole('heading', { name: /Campaign progress/ })).toBeVisible();
-        await expect(page.getByRole('heading', { name: /Tasks for this week/ })).toBeVisible();
-        await expect(page.getByRole('button', { name: /Record voter contacts/ })).toBeVisible();
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);
-    }
+test.skip('Verify Dashboard page', async ({ page }) => {
+    // Verify user is on dashboard page
+    await expect(page.getByRole('heading', { name: /until Election Day!/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Campaign progress/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Tasks for this week/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Record voter contacts/ })).toBeVisible();
 });
 
+// Setup reporting for voter contact test
+const voterContactCaseId = 91;
+setupTestReporting(test, voterContactCaseId);
+
 test.skip('Log voter contact data', async ({ page }) => {
-    const caseId = 91;
-
-    try {
-        // Verify user is on dashboard page
-        await page.getByRole('button', { name: /Record voter contacts/ }).click();
-        await page.getByLabel('Text Messages Sent').click();
-        await page.getByLabel('Text Messages Sent').fill('100');
-        await page.getByRole('button', { name: 'Save' }).click();
-        await expect(page.getByText(/100 voters contacted/)).toBeVisible();
-
-        // Report test results
-        await addTestResult(runId, caseId, 1, 'Test passed');
-    } catch (error) {
-        await handleTestFailure(page, runId, caseId, error);
-    }
+    // Verify user is on dashboard page
+    await page.getByRole('button', { name: /Record voter contacts/ }).click();
+    await page.getByLabel('Text Messages Sent').click();
+    await page.getByLabel('Text Messages Sent').fill('100');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.getByText(/100 voters contacted/)).toBeVisible();
 });
