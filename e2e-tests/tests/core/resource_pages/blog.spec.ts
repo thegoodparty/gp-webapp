@@ -1,16 +1,17 @@
 import "dotenv/config";
 import { test, expect } from "@playwright/test";
 import { checkButtons, documentReady } from "helpers/domHelpers";
-import { addTestResult, handleTestFailure } from "helpers/testrailHelper";
-import * as fs from "fs";
-const runId = fs.readFileSync("testRunId.txt", "utf-8");
+import { setupTestReporting } from "helpers/testrailHelper";
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/blog", {waitUntil: "commit"});
+  await page.goto("/blog", { waitUntil: "commit" });
 });
 
+// Setup reporting for blog page test
+const blogPageCaseId = 12;
+setupTestReporting(test, blogPageCaseId);
+
 test("Verify Blog page", async ({ page }) => {
-  const caseId = 12;
   const pageTitle = "Blog";
   const pageSubtitle =
     /Insights into politics, running for office, and the latest updates from the independent movement/;
@@ -21,104 +22,79 @@ test("Verify Blog page", async ({ page }) => {
     "Independent Cause"
   ];
 
-  try {
-    // Verify page title
-    await expect(page.locator(`h1:has-text("${pageTitle}")`)).toBeVisible({
-      timeout: 20000,
-    });
+  // Verify page title
+  await expect(page.locator(`h1:has-text("${pageTitle}")`)).toBeVisible({
+    timeout: 20000,
+  });
 
-    // Verify page contents
-    await expect(page.getByText(pageSubtitle)).toBeVisible();
+  // Verify page contents
+  await expect(page.getByText(pageSubtitle)).toBeVisible();
 
-    // Verify page buttons
-    await checkButtons(page, categoryButtons);
+  // Verify page buttons
+  await checkButtons(page, categoryButtons);
 
-    // Verify opening blog article link
-    await page.locator(`button:has-text("Read More")`).first().isEnabled();
-    await page.locator(`button:has-text("Read More")`).first().click();
-    await expect(page).toHaveURL(/.*\/article/, { timeout: 10000 });
-
-    // Report test results
-    await addTestResult(runId, caseId, 1, "Test passed");
-  } catch (error) {
-    // Report test results
-    const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
-    const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
-    const currentUrl = await page.url();
-    await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}: ${error.stack}`);
-  }
+  // Verify opening blog article link
+  await page.locator(`button:has-text("Read More")`).first().isEnabled();
+  await page.locator(`button:has-text("Read More")`).first().click();
+  await expect(page).toHaveURL(/.*\/article/, { timeout: 10000 });
 });
+
+// Setup reporting for blog filtering test
+const blogFilteringCaseId = 16;
+setupTestReporting(test, blogFilteringCaseId);
 
 test("Verify Blog filtering", async ({ page }) => {
-  const caseId = 16;
+  // Filter blog page by category
+  await page
+    .locator('a').filter({ hasText: /^News$/ })
+    .click();
 
-  try {
-    // Filter blog page by category
-    await page
-      .locator('a').filter({ hasText: /^News$/ })
-      .click();
+  // Verify user redirected to category page
+  await expect(page).toHaveURL(
+    new RegExp(`/section/news`, "i"),
+    { timeout: 10000 }
+  );
 
-    // Verify user redirected to category page
-    await expect(page).toHaveURL(
-      new RegExp(`/section/news`, "i"),
-      { timeout: 10000 }
-    );
+  // Filter blog page by topic
+  await page
+    .getByRole('link', { name: 'Campaign Finance' })
+    .click();
 
-    // Filter blog page by topic
-    await page
-      .getByRole('link', { name: 'Campaign Finance' })
-      .click();
-
-    // Verify user redirected to topic page
-    await documentReady(page);
-    await expect(page).toHaveURL(/.*\/blog\/tag/, { timeout: 10000 });
-
-    // Report test results
-    await addTestResult(runId, caseId, 1, "Test passed");
-  } catch (error) {
-    // Report test results
-    const testrailBaseUrl = process.env.TESTRAIL_URL || 'https://goodparty.testrail.io';
-    const testrailUrl = `${testrailBaseUrl}/index.php?/tests/view/${runId}_${caseId}`;
-    const currentUrl = await page.url();
-    await addTestResult(runId, caseId, 5, `Test failed (${testrailUrl}) at page ${currentUrl}: ${error.stack}`);
-  }
+  // Verify user redirected to topic page
+  await documentReady(page);
+  await expect(page).toHaveURL(/.*\/blog\/tag/, { timeout: 10000 });
 });
 
+// Setup reporting for blog article test
+const blogArticleCaseId = 17;
+setupTestReporting(test, blogArticleCaseId);
+
 test.skip("Verify Blog Article page", async ({ page }) => {
-  const caseId = 17;
+  // Navigate to featured blog article
+  await page.locator(`button:has-text("Read More")`).first().click();
+  await documentReady(page);
+  await expect(page).toHaveURL(/.*\/article/, { timeout: 5000 });
 
-  try {
-    // Navigate to featured blog article
-    await page.locator(`button:has-text("Read More")`).first().click();
-    await documentReady(page);
-    await expect(page).toHaveURL(/.*\/article/, { timeout: 5000 });
+  // Verify blog article contents
+  await expect(page.getByTestId("articleHeroImage")).toBeVisible();
+  await expect(page.getByTestId("articleTitle")).toBeVisible();
+  await expect(page.getByTestId("articleCategory")).toBeVisible();
+  await expect(page.getByTestId("blogAuthor")).toBeVisible();
+  await expect(page.getByTestId("CMS-contentWrapper").first()).toBeVisible();
 
-    // Verify blog article contents
-    await expect(page.getByTestId("articleHeroImage")).toBeVisible();
-    await expect(page.getByTestId("articleTitle")).toBeVisible();
-    await expect(page.getByTestId("articleCategory")).toBeVisible();
-    await expect(page.getByTestId("blogAuthor")).toBeVisible();
-    await expect(page.getByTestId("CMS-contentWrapper").first()).toBeVisible();
+  // Verify article displays share links twice
+  const shareBlogCount = await page
+    .locator('[data-testid="shareBlog"]')
+    .count();
+  await expect(shareBlogCount).toBe(2);
 
-    // Verify article displays share links twice
-    const shareBlogCount = await page
-      .locator('[data-testid="shareBlog"]')
-      .count();
-    await expect(shareBlogCount).toBe(2);
+  // Verify FAQ section displays
+  await expect(page.getByTestId("faqSection")).toBeVisible();
 
-    // Verify FAQ section displays
-    await expect(page.getByTestId("faqSection")).toBeVisible();
-
-    // Verify FAQ section link opens to /faqs page
-    await page
-      .locator('[data-testid="faqSection"] li:first-child button')
-      .click();
-    await page.waitForLoadState("networkidle");
-    await expect(page).toHaveURL(/.*\/faqs/, { timeout: 5000 });
-
-    // Report test results
-    await addTestResult(runId, caseId, 1, "Test passed");
-  } catch (error) {
-    await handleTestFailure(page, runId, caseId, error);    
-  }
+  // Verify FAQ section link opens to /faqs page
+  await page
+    .locator('[data-testid="faqSection"] li:first-child button')
+    .click();
+  await page.waitForLoadState("networkidle");
+  await expect(page).toHaveURL(/.*\/faqs/, { timeout: 5000 });
 });
