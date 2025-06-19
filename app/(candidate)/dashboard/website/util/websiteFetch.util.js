@@ -10,7 +10,7 @@ export function createWebsite() {
   return clientFetch(apiRoutes.website.create, {})
 }
 
-function updateWebsite(content) {
+export function updateWebsite(content) {
   try {
     const formData = objectToFormData(content, ['logoFile', 'heroFile'])
     return clientFetch(apiRoutes.website.update, formData)

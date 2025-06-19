@@ -5,7 +5,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import EditForm from './EditForm'
 import WebsitePreview from './WebsitePreview'
-import { updateWebsite } from '../util/websiteFetch.util'
+import { updateWebsite } from '../../util/websiteFetch.util'
 
 export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
   const [campaign] = useCampaign()
