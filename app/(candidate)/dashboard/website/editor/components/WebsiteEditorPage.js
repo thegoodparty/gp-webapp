@@ -5,19 +5,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { useSnackbar } from '@shared/utils/Snackbar'
 import EditForm from './EditForm'
 import WebsitePreview from './WebsitePreview'
-import { clientFetch } from 'gpApi/clientFetch'
-import { apiRoutes } from 'gpApi/routes'
-import { objectToFormData } from 'helpers/formDataHelper'
-
-function updateWebsite(content) {
-  try {
-    const formData = objectToFormData(content, ['logoFile', 'heroFile'])
-    return clientFetch(apiRoutes.website.update, formData)
-  } catch (e) {
-    console.error('error', e)
-    return false
-  }
-}
+import { updateWebsite } from '../util/websiteFetch.util'
 
 export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
   const [campaign] = useCampaign()

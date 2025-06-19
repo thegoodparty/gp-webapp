@@ -18,8 +18,8 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${website.content.main.title} | GoodParty.org`,
-    description: website.content.main.tagline,
+    title: `${website.content?.main?.title} | GoodParty.org`,
+    description: website.content?.main?.tagline,
   }
 }
 
