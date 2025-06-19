@@ -64,10 +64,10 @@ export default function OutreachCreateCards() {
         gap-4
         md:gap-6
         justify-center
-        bg-gray-200
+        lg:bg-gray-200
         rounded-2xl
-        p-4
-        md:p-6
+        p-0
+        lg:p-6
         mb-12
       "
     >
