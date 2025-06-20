@@ -46,14 +46,14 @@ export async function ensureSession() {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   // Save the storage state (session)
-  console.log(`Saving new test account: ${testAccountFirstName} ${testAccountLastName} - ${emailAddress} - ${password}`);
+  console.log(`Saving new test account: ${testAccountFirstName} ${testAccountLastName} - ${emailAddress} - ${password + '1'}`);
   await page.context().storageState({ path: SESSION_FILE });
   await browser.close();
 
-  // Save account details for cleanup
+  // Save account details for cleanup - use the actual password that was used in the form
   fs.writeFileSync(
     path.resolve(__dirname, '../testAccount.json'),
-    JSON.stringify({ emailAddress, password: password })
+    JSON.stringify({ emailAddress, password: password + '1' })
   );
 
   console.log('New session created and saved.');
@@ -169,7 +169,8 @@ export async function loginAccount(
 ) {
   const baseURL = process.env.BASE_URL;
 
-  await page.goto(`${baseURL}/login`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseURL}/login`);
+  await documentReady(page);
 
   // Accept cookie terms (if visible)
   await acceptCookieTerms(page);
@@ -286,7 +287,6 @@ export async function deleteAccount(page = null) {
   const baseURL = process.env.BASE_URL;
   const SESSION_FILE = path.resolve(__dirname, '../auth.json');
 
-  // If no page is provided, create a new browser context with the saved session
   let shouldCloseBrowser = false;
   if (!page) {
     shouldCloseBrowser = true;
@@ -298,7 +298,6 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Navigating to profile page...');
-  // Retry logic for Delete Account button
   let deleteButton, proceedButton;
   let lastError;
   for (let attempt = 1; attempt <= 3; attempt++) {
@@ -314,7 +313,7 @@ export async function deleteAccount(page = null) {
       proceedButton = await page.getByRole('button', { name: 'Proceed' });
       await proceedButton.waitFor({ state: 'visible', timeout: 30000 });
       await proceedButton.click();
-      break; // Success, exit loop
+      break;
     } catch (error) {
       lastError = error;
       console.error(`Attempt ${attempt} failed:`, error);
@@ -327,7 +326,6 @@ export async function deleteAccount(page = null) {
   await documentReady(page);
   await page.context().clearCookies();
 
-  // Only close the browser if we created it in this function
   if (shouldCloseBrowser) {
     await page.context().browser().close();
   } else {
@@ -335,4 +333,110 @@ export async function deleteAccount(page = null) {
   }
 
   console.log('Account deletion completed successfully');
+}
+
+export async function useTestAccountCredentials(page) {
+  const testAccountPath = path.resolve(__dirname, '../testAccount.json');
+
+  if (!fs.existsSync(testAccountPath)) {
+    throw new Error('Test account file not found. Run ensureSession() first to create a test account.');
+  }
+
+  try {
+    const accountData = JSON.parse(fs.readFileSync(testAccountPath, 'utf-8'));
+    console.log(`Found test account credentials for: ${accountData.emailAddress}`);
+
+    // Check if page is still available before attempting login
+    if (page.isClosed()) {
+      throw new Error('Page was closed before login could start');
+    }
+
+    // Login with the saved credentials
+    await loginAccount(page, accountData.emailAddress, accountData.password);
+
+    // Return the credentials for use in the test
+    return {
+      emailAddress: accountData.emailAddress,
+      password: accountData.password
+    };
+  } catch (error) {
+    console.error('Error in useTestAccountCredentials:', error);
+  }
+}
+
+export async function useAdminCredentials(page) {
+  const adminEmail = process.env.TEST_USER_ADMIN;
+  const adminPassword = process.env.TEST_USER_ADMIN_PASSWORD;
+
+  if (!adminEmail || !adminPassword) {
+    throw new Error('Admin credentials not found in environment variables. Please set TEST_USER_ADMIN and TEST_USER_ADMIN_PASSWORD.');
+  }
+
+  console.log(`Logging in as admin: ${adminEmail}`);
+
+  try {
+    if (page.isClosed()) {
+      throw new Error('Page was closed before admin login could start');
+    }
+
+    await loginAccount(page, adminEmail, adminPassword);
+
+    console.log('Admin login completed successfully');
+
+    return {
+      emailAddress: adminEmail,
+      password: adminPassword
+    };
+  } catch (error) {
+    console.error('Error in useAdminCredentials:', error);
+  }
+}
+
+export async function prepareTest(type, url, text, page) {
+  const adminSessionFile = path.resolve(__dirname, '../admin-auth.json');
+  const sessionFile = path.resolve(__dirname, '../auth.json');
+
+  if (type === 'admin') {
+    if (fs.existsSync(adminSessionFile)) {
+      try {
+        console.log('Using existing admin session...');
+        await page.goto(url);
+        await documentReady(page);
+
+        const isLoggedIn = await page.getByText(text).isVisible().catch(() => false);
+        if (isLoggedIn) {
+          console.log('Successfully logged in with admin session');
+          return;
+        }
+      } catch (error) {
+        console.log('Admin session login failed, falling back to manual login...');
+      }
+    }
+
+    console.log('Performing manual admin login...');
+    await useAdminCredentials(page);
+    await page.goto(url);
+    await documentReady(page);
+  }
+  if (type === 'user') {
+    if (fs.existsSync(sessionFile)) {
+      try {
+        console.log('Using existing session...');
+        await page.goto(url);
+        await documentReady(page);
+
+        const isLoggedIn = await page.getByText(text).isVisible().catch(() => false);
+        if (isLoggedIn) {
+          console.log('Successfully logged in with session');
+          return;
+        }
+      } catch (error) {
+        console.log('Session login failed, falling back to manual login...');
+      }
+    }
+    console.log('Performing manual login...');
+    await useTestAccountCredentials(page);
+    await page.goto(url);
+    await documentReady(page);
+  }
 }
