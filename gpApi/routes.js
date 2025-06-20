@@ -538,6 +538,28 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  website: {
+    get: {
+      path: '/websites/mine',
+      method: 'GET',
+    },
+    create: {
+      path: '/websites',
+      method: 'POST',
+    },
+    update: {
+      path: '/websites/mine',
+      method: 'PUT',
+    },
+    contactForm: {
+      path: '/websites/contact-form',
+      method: 'POST',
+    },
+    preview: {
+      path: '/websites/preview/:vanityPath',
+      method: 'GET',
+    },
+  },
 }
 
 export const electionApiRoutes = {
