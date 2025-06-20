@@ -12,6 +12,7 @@ import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import OfficeStepForm from './OfficeStepForm'
 import { useTrackOfficeSearch } from '@shared/hooks/useTrackOfficeSearch'
+import { useUser } from '@shared/hooks/useUser'
 
 async function runP2V(slug) {
   try {
@@ -37,6 +38,7 @@ export default function OfficeStep({
     ballotOffice: false,
     originalPosition: campaign.details?.positionId,
   })
+  const user = useUser()
 
   const { ballotSearch } = state
 
@@ -48,7 +50,6 @@ export default function OfficeStep({
       }),
     [step],
   )
-
   useTrackOfficeSearch({
     zip: ballotSearch?.zip, 
     level: ballotSearch?.level,
@@ -56,6 +57,8 @@ export default function OfficeStep({
   })
 
   const canSubmit = () => {
+    console.log('state from canSubmit is: ')
+    console.dir(state, { depth: 4 })
     if (step) {
       return !!state.ballotOffice || !!state.originalPosition
     }
@@ -88,7 +91,9 @@ export default function OfficeStep({
       setProcessing(false)
       return
     }
-
+    
+    console.log('state from handleSave is: ')
+    console.dir(state, { depth: 4 })
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext, {
       step,
     })
@@ -158,9 +163,21 @@ export default function OfficeStep({
     }
 
     if (adminMode) {
+      console.log('Hello from update adminMode: true')
       await updateCampaign(attr, campaign.slug)
       await runP2V(campaign.slug)
     } else {
+      const trackingProperties = {
+        officeState: position.state,
+        officeMunicipality: 'Unavailable',
+        officeName: position.name,
+        officeElectionDate: election.electionDay,
+      }
+      analytics.identify(user.id, trackingProperties)
+      trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, { 
+        ...trackingProperties, 
+        officeManuallyInput: false, 
+      })
       await updateCampaign(attr)
       await runP2V()
     }

@@ -379,18 +379,15 @@ export function extractClids(searchParams) {
 export function trackRegistrationCompleted({
   analytics,
   userId,
-  signUpPath,
   signUpMethod = 'email'
 }) {
   const signUpDate = new Date().toISOString()
 
   analytics.identify(userId, {
-    signUpPath,
     signUpDate,
     signUpMethod,
   })
   trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
-    signUpPath,
     signUpDate,
     signUpMethod,
   })

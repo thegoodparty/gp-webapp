@@ -107,7 +107,7 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
     onSave(updated)
 
     const trackingProperties = {
-      state: state.state,
+      officeState: state.state,
       officeMunicipality: state.city,
       officeName: state.office,
       officeElectionDate: state.electionDate,

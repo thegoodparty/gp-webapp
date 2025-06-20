@@ -1,5 +1,6 @@
-import { EVENTS, trackEvent } from "helpers/analyticsHelper"
+import { trackEvent } from "helpers/analyticsHelper"
 import { useDebounceEffect } from "./useDebounceEffect"
+import { EVENTS } from "helpers/analyticsHelper"
 
 export function useTrackOfficeSearch({ zip, level, officeName }) {
   useDebounceEffect(
@@ -10,7 +11,7 @@ export function useTrackOfficeSearch({ zip, level, officeName }) {
         officeName: officeName || '',
       }
       if (props.zipCode || props.officeLevel || props.officeName) {
-        trackEvent(EVENTS.Onboarding.OfficeSearched, props)
+        trackEvent(EVENTS.Onboarding.OfficeStep.OfficeSearched, props)
       }
     },
     400,
