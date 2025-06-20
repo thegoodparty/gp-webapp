@@ -57,8 +57,6 @@ export default function OfficeStep({
   })
 
   const canSubmit = () => {
-    console.log('state from canSubmit is: ')
-    console.dir(state, { depth: 4 })
     if (step) {
       return !!state.ballotOffice || !!state.originalPosition
     }
@@ -92,8 +90,6 @@ export default function OfficeStep({
       return
     }
     
-    console.log('state from handleSave is: ')
-    console.dir(state, { depth: 4 })
     trackEvent(EVENTS.Onboarding.OfficeStep.ClickNext, {
       step,
     })
@@ -163,7 +159,6 @@ export default function OfficeStep({
     }
 
     if (adminMode) {
-      console.log('Hello from update adminMode: true')
       await updateCampaign(attr, campaign.slug)
       await runP2V(campaign.slug)
     } else {
