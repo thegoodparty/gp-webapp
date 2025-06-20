@@ -63,6 +63,7 @@ export const EVENTS = {
       ClickCampaignTeam: 'Navigation - Dashboard: Click Campaign Team',
       ClickFreeResources: 'Navigation - Dashboard: Click Free Resources',
       ClickCommunity: 'Navigation - Dashboard: Click Community',
+      ClickWebsite: 'Navigation - Dashboard: Click Website',
     },
   },
   Dashboard: {

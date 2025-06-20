@@ -10,7 +10,7 @@ import { useState } from 'react'
 import UserSnapScript from '@shared/scripts/UserSnapScript'
 import Script from 'next/script'
 
-const apiKey = 'AIzaSyDMcCbNUtBDnVRnoLClNHQ8hVDILY52ez8'
+const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY
 
 export default function CandidatesPage({
   count,
