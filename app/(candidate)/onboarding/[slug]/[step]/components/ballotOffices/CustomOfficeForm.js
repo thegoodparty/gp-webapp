@@ -9,6 +9,9 @@ import {
 import Button from '@shared/buttons/Button'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
+import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
+import { useUser } from '@shared/hooks/useUser'
 
 const fields = [
   {
@@ -65,6 +68,8 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
     ballotOffice: campaign.details?.ballotOffice || false,
     electionDate: campaign.details?.electionDate || '',
   })
+  const user = useUser()
+  const analytics = useAnalytics()
   const now = new Date()
   const selectedDate = dateFromNonStandardUSFormatString(state['electionDate'])
   const error =
@@ -100,6 +105,18 @@ export default function CustomOfficeForm({ campaign, onSave, onBack }) {
       electionDate: state.electionDate,
     }
     onSave(updated)
+
+    const trackingProperties = {
+      officeState: state.state,
+      officeMunicipality: state.city,
+      officeName: state.office,
+      officeElectionDate: state.electionDate,
+    }
+    analytics.identify(user.id, trackingProperties)
+    trackEvent(EVENTS.Onboarding.OfficeStep.OfficeCompleted, { 
+      ...trackingProperties, 
+      officeManuallyInput: true, 
+    })
   }
 
   return (
