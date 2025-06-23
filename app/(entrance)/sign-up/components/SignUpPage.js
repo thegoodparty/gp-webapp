@@ -210,8 +210,7 @@ export default function SignUpPage() {
 
       trackRegistrationCompleted({
         analytics, 
-        userId: user.id, 
-        signUpPath: 'inbound'
+        userId: user.id,
       })
 
       const redirect = await createCampaign()
