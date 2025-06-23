@@ -10,7 +10,6 @@ import {
   SlideshowRounded,
   SearchRounded,
   VolunteerActivismRounded,
-  EventAvailableRounded,
   MailRounded,
   NewspaperRounded,
   ListRounded,
@@ -90,13 +89,6 @@ export const COMMUNITY_LINKS = [
     icon: <MapIcon />,
     id: 'nav-find-candidates',
     dataTestId: 'nav-find-candidates',
-  },
-  {
-    label: 'Info Session',
-    href: '/info-session',
-    icon: <EventAvailableRounded />,
-    id: 'nav-info-session',
-    dataTestId: 'nav-info-session',
   },
   {
     label: 'Get Stickers',

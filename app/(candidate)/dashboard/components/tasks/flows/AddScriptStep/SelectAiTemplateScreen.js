@@ -1,11 +1,11 @@
 'use client'
-import { getAiSmsTemplatesFromCategories } from 'helpers/getAiSmsTemplatesFromCategories'
+import { getAiTemplatesFromCategories } from 'helpers/getAiTemplatesFromCategories'
 import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import { ModalFooter } from '@shared/ModalFooter'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { SmsTemplateSelect } from './SmsTemplateSelect'
+import { SmsAiTemplateSelect } from 'app/(candidate)/dashboard/components/tasks/flows/AddScriptStep/SmsAiTemplateSelect'
 import { setRequiresQuestionsOnTemplates } from 'helpers/setRequiresQuestionsOnTemplates'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
@@ -56,8 +56,8 @@ export async function fetchAiContentCategories(campaign, cacheTime = 3600) {
   }))
 }
 
-export const SelectSmsAiTemplateScreen = ({
-  campaign,
+export const SelectAiTemplateScreen = ({
+  flowType = '',
   categories,
   onBack = () => {},
   onNext = (scriptKey) => {},
@@ -70,7 +70,7 @@ export const SelectSmsAiTemplateScreen = ({
 
   useEffect(() => {
     if (categories) {
-      const templates = getAiSmsTemplatesFromCategories(categories)
+      const templates = getAiTemplatesFromCategories(categories, flowType)
       setTemplates(templates)
     }
   }, [categories])
@@ -89,7 +89,7 @@ export const SelectSmsAiTemplateScreen = ({
         </Body1>
       </header>
       <section>
-        <SmsTemplateSelect
+        <SmsAiTemplateSelect
           templates={templates}
           selected={selectedTemplateKey}
           onChange={setSelectedTemplateKey}

@@ -5,15 +5,17 @@ import AlertSection from '../components/AlertSection'
 import { EcanvasserProvider } from '@shared/hooks/EcanvasserProvider'
 import { useUser } from '@shared/hooks/useUser'
 import { ProUpgradePrompt } from './ProUpgradePrompt'
+import { usePathname } from 'next/navigation'
 
 export default function DashboardLayout({
   children,
-  pathname,
+  pathname = '',
   campaign,
   showAlert = true,
   wrapperClassName = '',
 }) {
   const [user] = useUser()
+  const hookPathname = usePathname()
 
   return (
     <EcanvasserProvider>
@@ -21,7 +23,7 @@ export default function DashboardLayout({
 
       <div className="flex min-h-[calc(100vh-56px)] bg-indigo-100 p-2 md:p-4">
         <div className="hidden lg:block">
-          <DashboardMenu pathname={pathname} campaign={campaign} />
+          <DashboardMenu pathname={pathname || hookPathname} campaign={campaign} />
         </div>
         <main className={'lg:ml-4 flex-1 ' + wrapperClassName}>
           {campaign && showAlert && <AlertSection campaign={campaign} />}

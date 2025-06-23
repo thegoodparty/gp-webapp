@@ -334,6 +334,12 @@ export const apiRoutes = {
       },
     },
   },
+  voterFileFilter: {
+    create: {
+      path: '/voters/voter-file/filter',
+      method: 'POST',
+    },
+  },
   admin: {
     bustCache: {
       path: '/revalidate',
@@ -522,29 +528,39 @@ export const apiRoutes = {
       method: 'POST',
     },
   },
+  outreach: {
+    create: {
+      path: '/outreach',
+      method: 'POST',
+    },
+    list: {
+      path: '/outreach',
+      method: 'GET',
+    },
+  },
 }
 
 export const electionApiRoutes = {
   places: {
     find: {
       path: '/places',
-      method: 'GET'
+      method: 'GET',
     },
     featuredCities: {
       path: '/places/most-elections',
       method: 'GET',
-    }
+    },
   },
   races: {
     find: {
       path: '/races',
-      method: 'GET'
-    }
+      method: 'GET',
+    },
   },
   candidacies: {
     find: {
       path: '/candidacies',
       method: 'GET',
     },
-  }
+  },
 }

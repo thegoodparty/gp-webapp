@@ -23,12 +23,12 @@ export default function HelpWin() {
               </div>
 
               <Button
-                href="/info-session"
+                href="https://goodpartyorg.circle.so/join?invitation_token=972b834345e05305e97fcc639c51ac54e3a04d8b-1c106100-4719-4b8a-81e1-73e513bbcd5f"
                 id="schedule-info-session"
                 size="large"
                 className="w-full md:w-auto"
               >
-                Schedule info session
+                Join the Community
               </Button>
             </div>
             <div className=" col-span-12 md:col-span-6 hidden md:block">

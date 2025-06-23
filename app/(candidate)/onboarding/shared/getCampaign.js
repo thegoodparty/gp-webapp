@@ -8,7 +8,7 @@ import { serverFetch } from 'gpApi/serverFetch'
 export async function fetchUserCampaignOld() {
   try {
     const api = gpApi.campaign.onboarding.get
-    const token = getServerToken()
+    const token = await getServerToken()
     return await gpFetch(api, false, false, token)
   } catch (e) {
     console.error('error', e)

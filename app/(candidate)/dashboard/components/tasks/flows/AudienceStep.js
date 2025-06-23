@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import CustomVoterAudienceFilters, {
   TRACKING_KEYS,
 } from 'app/(candidate)/dashboard/voter-records/components/CustomVoterAudienceFilters'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { countVoterFile } from 'app/(candidate)/dashboard/voter-records/[type]/components/RecordCount'
 import { numberFormatter } from 'helpers/numberHelper'
 import { debounce } from 'helpers/debounceHelper'
@@ -28,6 +28,7 @@ export default function AudienceStep({
   withVoicemail,
   audience,
   isCustom,
+  onCreateVoterFileFilter = async () => {},
 }) {
   const [count, setCount] = useState(0)
   const [loadingCount, setLoadingCount] = useState(false)
@@ -46,6 +47,11 @@ export default function AudienceStep({
     [type],
   )
 
+  const handleOnNext = async () => {
+    onChangeCallback('voterFileFilter', await onCreateVoterFileFilter())
+    nextCallback()
+  }
+
   useEffect(() => {
     if (!hasValues) return
 
@@ -59,6 +65,7 @@ export default function AudienceStep({
       })
 
       setCount(res)
+      onChangeCallback('voterCount', res)
       setLoadingCount(false)
     }, 300)
   }, [audience, isCustom, type, hasValues])
@@ -134,8 +141,9 @@ export default function AudienceStep({
             <Button
               size="large"
               color="secondary"
-              onClick={nextCallback}
-              disabled={!hasValues}
+              onClick={handleOnNext}
+              disabled={!hasValues || loadingCount}
+              loading={loadingCount}
               {...nextTrackingAttrs}
             >
               Next

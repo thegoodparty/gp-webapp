@@ -11,10 +11,16 @@ import DownloadStep from './DownloadStep'
 import SocialPostStep from './SocialPostStep'
 import CloseConfirmModal from './CloseConfirmModal'
 import { buildTrackingAttrs, EVENTS, trackEvent } from 'helpers/analyticsHelper'
-import { scheduleVoterMessagingCampaign } from 'helpers/scheduleVoterMessagingCampaign'
 import { isObjectEqual } from 'helpers/objectHelper'
 import { STEPS, STEPS_BY_TYPE } from '../../../shared/constants/tasks.const'
 import sanitizeHtml from 'sanitize-html'
+import { useOutreach } from 'app/(candidate)/dashboard/outreach/hooks/OutreachContext'
+import { useSnackbar } from 'helpers/useSnackbar'
+import {
+  handleCreateOutreach,
+  handleCreateVoterFileFilter,
+  handleScheduleOutreach,
+} from 'app/(candidate)/dashboard/components/tasks/flows/util/flowHandlers.util'
 
 const DEFAULT_STATE = {
   step: 0,
@@ -24,6 +30,7 @@ const DEFAULT_STATE = {
   script: false,
   scriptText: '',
   image: undefined,
+  voterCount: 0,
 }
 
 /**
@@ -32,7 +39,6 @@ const DEFAULT_STATE = {
  * @property {React.ReactElement} customButton Pass a custom element to use instead of "Schedule Today" link
  * @property {Object} campaign
  * @property {boolean} isCustom
- * @property {string} fileName
  */
 
 /**
@@ -44,7 +50,6 @@ export default function TaskFlow({
   customButton,
   campaign,
   isCustom,
-  fileName,
   onClose,
   defaultAiTemplateId,
 }) {
@@ -54,6 +59,9 @@ export default function TaskFlow({
   const stepList = useMemo(() => STEPS_BY_TYPE[type], [type])
   const stepName = stepList[state.step]
   const isLastStep = state.step >= stepList.length - 1
+  const [outreaches, setOutreaches] = useOutreach()
+  const { errorSnackbar, successSnackbar } = useSnackbar()
+
   const trackingAttrs = useMemo(
     () => buildTrackingAttrs('Schedule Contact Campaign Link', { type }),
     [type],
@@ -118,15 +126,6 @@ export default function TaskFlow({
     setState(DEFAULT_STATE)
   }
 
-  const handleSubmit = async () => {
-    trackEvent(EVENTS.Dashboard.VoterContact.Texting.ScheduleCampaign.Submit)
-    const updatedState = {
-      ...state,
-      type,
-    }
-    return await scheduleVoterMessagingCampaign(updatedState)
-  }
-
   const handleAddScriptOnComplete = (scriptKeyOrText, scriptContent) => {
     handleChange('script', scriptKeyOrText)
 
@@ -148,9 +147,31 @@ export default function TaskFlow({
     closeCallback: handleClose,
     nextCallback: handleNext,
     backCallback: handleBack,
-    submitCallback: handleSubmit,
     resetCallback: handleReset,
   }
+
+  const onCreateOutreach = useMemo(
+    () =>
+      handleCreateOutreach({
+        type,
+        state,
+        campaignId: campaign.id,
+        outreaches,
+        setOutreaches,
+        errorSnackbar,
+      }),
+    [type, state, campaign, outreaches, setOutreaches, errorSnackbar],
+  )
+
+  const onCreateVoterFileFilter = useMemo(
+    () =>
+      handleCreateVoterFileFilter({
+        type,
+        state,
+        errorSnackbar,
+      }),
+    [type, state, errorSnackbar],
+  )
 
   return (
     <>
@@ -198,10 +219,12 @@ export default function TaskFlow({
             audience={state.audience}
             isCustom={isCustom}
             {...callbackProps}
+            onCreateVoterFileFilter={onCreateVoterFileFilter}
           />
         )}
         {stepName === STEPS.script && (
           <AddScriptStep
+            type={type}
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
             defaultAiTemplateId={defaultAiTemplateId}
@@ -215,8 +238,14 @@ export default function TaskFlow({
           <ScheduleStep
             schedule={state.schedule}
             type={type}
-            fileName={fileName}
             {...callbackProps}
+            onCreateOutreach={onCreateOutreach}
+            onScheduleOutreach={handleScheduleOutreach(
+              type,
+              errorSnackbar,
+              successSnackbar,
+              state,
+            )}
           />
         )}
         {stepName === STEPS.download && (
@@ -225,6 +254,7 @@ export default function TaskFlow({
             scriptText={state.scriptText}
             audience={state.audience}
             {...callbackProps}
+            onCreateOutreach={onCreateOutreach}
           />
         )}
         {stepName === STEPS.socialPost && (
@@ -232,6 +262,7 @@ export default function TaskFlow({
             type={type}
             scriptText={state.scriptText}
             {...callbackProps}
+            onCreateOutreach={onCreateOutreach}
           />
         )}
       </Modal>

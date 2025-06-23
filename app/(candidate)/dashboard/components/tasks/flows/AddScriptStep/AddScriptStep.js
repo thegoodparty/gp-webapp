@@ -1,15 +1,18 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ChooseScriptAddFlow } from './ChooseScriptAddFlow'
 import { ADD_SCRIPT_FLOW } from './AddScriptFlow.const'
-import { SelectSmSScriptScreen } from './SelectSmSScriptScreen'
+import { SelectScriptScreen } from 'app/(candidate)/dashboard/components/tasks/flows/AddScriptStep/SelectScriptScreen'
 import { CreateSmSScriptScreen } from './CreateSmSScriptScreen'
-import { SelectSmsAiTemplateScreen } from './SelectSmsAiTemplateScreen'
+import {
+  fetchAiContentCategories,
+  SelectAiTemplateScreen,
+} from 'app/(candidate)/dashboard/components/tasks/flows/AddScriptStep/SelectAiTemplateScreen'
 import { GenerateLoadingScreen } from './GenerateLoadingScreen'
 import { GenerateReviewScreen } from './GenerateReviewScreen'
-import { fetchAiContentCategories } from './SelectSmsAiTemplateScreen'
 
 export default function AddScriptStep({
+  type,
   onComplete = (scriptKey, scriptContent) => {},
   backCallback,
   campaign,
@@ -58,7 +61,7 @@ export default function AddScriptStep({
       <ChooseScriptAddFlow onBack={() => onBack()} onNext={onNext} />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS]: (
-      <SelectSmSScriptScreen
+      <SelectScriptScreen
         aiContent={campaign.aiContent}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(scriptKey) => {
@@ -68,13 +71,13 @@ export default function AddScriptStep({
       />
     ),
     [ADD_SCRIPT_FLOW.SELECT_SMS_AI_TEMPLATE]: (
-      <SelectSmsAiTemplateScreen
+      <SelectAiTemplateScreen
+        flowType={type}
         onBack={() => onBack(ADD_SCRIPT_FLOW.CHOOSE_FLOW)}
         onNext={(aiTemplateKey) => {
           setAiTemplateKey(aiTemplateKey)
           onNext(ADD_SCRIPT_FLOW.GENERATE_LOADING)
         }}
-        campaign={campaign}
         categories={contentCategories}
       />
     ),
