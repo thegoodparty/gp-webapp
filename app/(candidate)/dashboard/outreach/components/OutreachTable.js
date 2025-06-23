@@ -28,6 +28,11 @@ export const OutreachTable = ({ mockOutreaches }) => {
   const title = useMockData ? 'How your outreach could look' : 'Your campaigns'
   const columns = [
     {
+      header: 'Date',
+      cell: ({ row }) =>
+        row.date ? dateUsHelper(row.date, 'long') : <NotApplicableLabel />,
+    },
+    {
       header: 'Channel',
       cell: ({ row }) => {
         const { outreachType } = row
@@ -36,11 +41,6 @@ export const OutreachTable = ({ mockOutreaches }) => {
               outreachType.charAt(0).toUpperCase() + outreachType.slice(1)
           : ''
       },
-    },
-    {
-      header: 'Date',
-      cell: ({ row }) =>
-        row.date ? dateUsHelper(row.date, 'long') : <NotApplicableLabel />,
     },
     {
       header: 'Audience',
@@ -77,7 +77,9 @@ export const OutreachTable = ({ mockOutreaches }) => {
     {
       header: 'Voters',
       cell: ({ row }) =>
-        row.voterFileFilter?.voterCount || <NotApplicableLabel />,
+        Number(row.voterFileFilter?.voterCount).toLocaleString() || (
+          <NotApplicableLabel />
+        ),
     },
   ]
 
@@ -127,7 +129,7 @@ export const OutreachTable = ({ mockOutreaches }) => {
   )
 
   return (
-    <section className="mt-4">
+    <section className="mt-4 mb-32">
       <H4 className="mb-4">{title}</H4>
       {useMockData ? (
         <GradientOverlay>{table}</GradientOverlay>

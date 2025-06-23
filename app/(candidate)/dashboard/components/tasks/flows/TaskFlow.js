@@ -224,6 +224,7 @@ export default function TaskFlow({
         )}
         {stepName === STEPS.script && (
           <AddScriptStep
+            type={type}
             campaign={campaign}
             onComplete={handleAddScriptOnComplete}
             defaultAiTemplateId={defaultAiTemplateId}

@@ -3,9 +3,9 @@ import H1 from '@shared/typography/H1'
 import Body1 from '@shared/typography/Body1'
 import { SmsScriptSelect } from './SmsScriptSelect'
 import { ModalFooter } from '@shared/ModalFooter'
-import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
-export const SelectSmSScriptScreen = ({
+export const SelectScriptScreen = ({
   aiContent,
   onBack = () => {},
   onNext = (scriptKey) => {},
