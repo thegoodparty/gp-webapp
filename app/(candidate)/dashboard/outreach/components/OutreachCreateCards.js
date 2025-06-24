@@ -103,6 +103,7 @@ export default function OutreachCreateCards() {
         {...{
           variant: VARIANTS.Second_NonViable,
           open: showProUpgradeModal,
+          onClose: () => setShowProUpgradeModal(false),
         }}
       />
 
