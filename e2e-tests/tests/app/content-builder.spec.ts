@@ -23,7 +23,7 @@ const contentBuilderCaseId = 40;
 setupTestReporting(test, contentBuilderCaseId);
 
 test('Generate content with Content Builder', async ({ page }) => {
-    const testTemplate = 'Launch Email';
+    const testTemplate = 'Voter Registration Drive Email';
 
     // Generate new content
     await expect(page.getByRole('button', { name: 'Generate' })).toBeVisible();

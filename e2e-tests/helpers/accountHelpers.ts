@@ -346,7 +346,6 @@ export async function useTestAccountCredentials(page) {
     const accountData = JSON.parse(fs.readFileSync(testAccountPath, 'utf-8'));
     console.log(`Found test account credentials for: ${accountData.emailAddress}`);
 
-    // Check if page is still available before attempting login
     if (page.isClosed()) {
       throw new Error('Page was closed before login could start');
     }
@@ -415,8 +414,11 @@ export async function prepareTest(type, url, text, page) {
 
     console.log('Performing manual admin login...');
     await useAdminCredentials(page);
-    await page.goto(url);
-    await documentReady(page);
+    const currentUrl = page.url();
+    if (!currentUrl.includes(url)) {
+      await page.goto(url);
+      await documentReady(page);
+    }
   }
   if (type === 'user') {
     if (fs.existsSync(sessionFile)) {
@@ -436,7 +438,10 @@ export async function prepareTest(type, url, text, page) {
     }
     console.log('Performing manual login...');
     await useTestAccountCredentials(page);
-    await page.goto(url);
-    await documentReady(page);
+    const currentUrl = page.url();
+    if (!currentUrl.includes(url)) {
+      await page.goto(url);
+      await documentReady(page);
+    }
   }
 }
