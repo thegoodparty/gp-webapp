@@ -43,7 +43,6 @@ export default function Modal({
   }
   return (
     <MuiModal open={open} onClose={handleClose}>
-      {/*<div className="bg-blue-400">*/}
       <Box
         className={`!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 ${boxClassName}`}
         sx={style}
@@ -59,7 +58,6 @@ export default function Modal({
         )}
         {children}
       </Box>
-      {/*</div>*/}
     </MuiModal>
   )
 }
