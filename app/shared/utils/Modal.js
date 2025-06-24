@@ -43,19 +43,23 @@ export default function Modal({
   }
   return (
     <MuiModal open={open} onClose={handleClose}>
-      <div className="bg-blue-400">
-        <Box className={boxClassName} sx={style} style={boxStyle}>
-          {!hideClose && (
-            <div
-              className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
-              onClick={closeCallback}
-            >
-              <IoIosCloseCircle size={24} />
-            </div>
-          )}
-          {children}
-        </Box>
-      </div>
+      {/*<div className="bg-blue-400">*/}
+      <Box
+        className={`!min-w-[calc(100%-theme(space.4))] sm:!min-w-[500px] sm:!p-4 md:!p-8 ${boxClassName}`}
+        sx={style}
+        style={boxStyle}
+      >
+        {!hideClose && (
+          <div
+            className="absolute top-4 right-4 cursor-pointer w-7 h-7 flex items-center justify-center modal-close"
+            onClick={closeCallback}
+          >
+            <IoIosCloseCircle size={24} />
+          </div>
+        )}
+        {children}
+      </Box>
+      {/*</div>*/}
     </MuiModal>
   )
 }

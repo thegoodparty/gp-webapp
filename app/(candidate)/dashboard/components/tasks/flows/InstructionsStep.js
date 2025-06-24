@@ -1,7 +1,7 @@
 import H1 from '@shared/typography/H1'
 import {
-  TASK_TYPES,
   LEGACY_TASK_TYPES,
+  TASK_TYPES,
 } from '../../../shared/constants/tasks.const'
 import Button from '@shared/buttons/Button'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
@@ -59,7 +59,7 @@ export default function InstructionsStep({
   )
 
   return (
-    <div className="p-4 min-w-[500px]">
+    <div className="p-4">
       <H1 className="text-center">How this works</H1>
       <ol className="mt-6 mb-8 list-decimal list-inside leading-6">
         {instructions.map((instruction, index) => (

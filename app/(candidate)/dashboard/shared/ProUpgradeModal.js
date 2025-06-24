@@ -100,12 +100,11 @@ export function ProUpgradeModal({
     <Modal
       open={open}
       closeCallback={onClose}
-      boxClassName="min-w-[500px]"
       preventBackdropClose
       preventEscClose
     >
-      <div className="p-8">
-        <H1 className="m-0 whitespace-nowrap">{title}</H1>
+      <div className="p-0 sm:p-2 md:p-8">
+        <H1 className="m-0 sm:whitespace-nowrap">{title}</H1>
         <Body2 className="my-4">{description}</Body2>
         <Body2 className="leading-4">
           <ul className="list-none list-inside p-0 font-sfpro m-0">
