@@ -168,20 +168,86 @@ export async function loginAccount(
   password
 ) {
   const baseURL = process.env.BASE_URL;
+  const maxRetries = 3;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Login attempt ${attempt}/${maxRetries}`);
+      
+      // Check if page is still valid
+      if (page.isClosed()) {
+        throw new Error('Page was closed before login process could start');
+      }
 
-  await page.goto(`${baseURL}/login`);
-  await documentReady(page);
+      await page.goto(`${baseURL}/login`);
+      await documentReady(page);
 
-  // Accept cookie terms (if visible)
-  await acceptCookieTerms(page);
+      // Check page state after navigation
+      if (page.isClosed()) {
+        throw new Error('Page was closed after navigating to login page');
+      }
 
-  // Log into existing account
-  await page.getByTestId("login-email-input").nth(1).fill(emailAddress);
-  await page.getByTestId("login-password-input").nth(1).fill(password);
-  await page.getByTestId("login-submit-button").click();
-  await documentReady(page);
-  await page.waitForURL(`${baseURL}/dashboard`, { timeout: 30000 });
-  await page.waitForLoadState('networkidle');
+      // Accept cookie terms (if visible)
+      console.log('About to accept cookie terms...');
+      await acceptCookieTerms(page);
+      console.log('Cookie terms accepted successfully');
+
+      // Check page state after cookie terms
+      if (page.isClosed()) {
+        throw new Error('Page was closed after accepting cookie terms');
+      }
+
+      // Check page state before form interaction
+      if (page.isClosed()) {
+        throw new Error('Page was closed before form interaction');
+      }
+
+      // Log into existing account
+      console.log('About to fill email input...');
+      await page.getByTestId("login-email-input").nth(1).fill(emailAddress);
+      console.log('Email input filled successfully');
+      
+      // Check page state after email input
+      if (page.isClosed()) {
+        throw new Error('Page was closed after email input');
+      }
+      
+      console.log('About to fill password input...');
+      await page.getByTestId("login-password-input").nth(1).fill(password);
+      console.log('Password input filled successfully');
+      
+      // Check page state after password input
+      if (page.isClosed()) {
+        throw new Error('Page was closed after password input');
+      }
+      
+      console.log('About to click submit button...');
+      await page.getByTestId("login-submit-button").click();
+      console.log('Submit button clicked successfully');
+      await documentReady(page);
+      await page.waitForURL(`${baseURL}/dashboard`, { timeout: 30000 });
+      await page.waitForLoadState('networkidle');
+
+      // Verify we're actually on the dashboard
+      const currentUrl = page.url();
+      if (!currentUrl.includes('/dashboard')) {
+        throw new Error('Login failed - not redirected to dashboard as expected');
+      }
+      
+      console.log(`Login successful on attempt ${attempt}`);
+      return;
+      
+    } catch (error) {
+      console.error(`Login attempt ${attempt} failed:`, error.message);
+      
+      if (attempt === maxRetries) {
+        throw new Error(`Login failed after ${maxRetries} attempts: ${error.message}`);
+      }
+      
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
 }
 
 export async function createAccount(
@@ -346,12 +412,19 @@ export async function useTestAccountCredentials(page) {
     const accountData = JSON.parse(fs.readFileSync(testAccountPath, 'utf-8'));
     console.log(`Found test account credentials for: ${accountData.emailAddress}`);
 
+    // Check if page is still available before attempting login
     if (page.isClosed()) {
       throw new Error('Page was closed before login could start');
     }
 
-    // Login with the saved credentials
+    // Login with the saved credentials using the safer approach
     await loginAccount(page, accountData.emailAddress, accountData.password);
+
+    // Verify login was successful by checking if we're on the dashboard
+    const currentUrl = page.url();
+    if (!currentUrl.includes('/dashboard')) {
+      throw new Error('Login failed - not redirected to dashboard');
+    }
 
     // Return the credentials for use in the test
     return {
@@ -360,6 +433,7 @@ export async function useTestAccountCredentials(page) {
     };
   } catch (error) {
     console.error('Error in useTestAccountCredentials:', error);
+    throw error; // Re-throw the error to be handled by the caller
   }
 }
 
@@ -374,11 +448,18 @@ export async function useAdminCredentials(page) {
   console.log(`Logging in as admin: ${adminEmail}`);
 
   try {
+    // Check if page is still available before attempting login
     if (page.isClosed()) {
       throw new Error('Page was closed before admin login could start');
     }
 
     await loginAccount(page, adminEmail, adminPassword);
+
+    // Verify login was successful by checking if we're on the dashboard
+    const currentUrl = page.url();
+    if (!currentUrl.includes('/dashboard')) {
+      throw new Error('Admin login failed - not redirected to dashboard');
+    }
 
     console.log('Admin login completed successfully');
 
@@ -388,60 +469,129 @@ export async function useAdminCredentials(page) {
     };
   } catch (error) {
     console.error('Error in useAdminCredentials:', error);
+    throw error;
   }
 }
 
-export async function prepareTest(type, url, text, page) {
-  const adminSessionFile = path.resolve(__dirname, '../admin-auth.json');
-  const sessionFile = path.resolve(__dirname, '../auth.json');
+export async function createFreshPageContext(browser) {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  return { context, page };
+}
 
-  if (type === 'admin') {
-    if (fs.existsSync(adminSessionFile)) {
-      try {
-        console.log('Using existing admin session...');
-        await page.goto(url);
-        await documentReady(page);
-
-        const isLoggedIn = await page.getByText(text).isVisible().catch(() => false);
-        if (isLoggedIn) {
-          console.log('Successfully logged in with admin session');
-          return;
-        }
-      } catch (error) {
-        console.log('Admin session login failed, falling back to manual login...');
+export async function safePageNavigation(page, url, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      // Check if page is still valid
+      if (page.isClosed()) {
+        throw new Error('Page was closed before navigation');
       }
-    }
-
-    console.log('Performing manual admin login...');
-    await useAdminCredentials(page);
-    const currentUrl = page.url();
-    if (!currentUrl.includes(url)) {
+      
       await page.goto(url);
       await documentReady(page);
+      return; // Success
+    } catch (error) {
+      console.log(`Navigation attempt ${attempt} failed:`, error.message);
+      if (attempt === maxRetries) {
+        throw new Error(`Failed to navigate to ${url} after ${maxRetries} attempts: ${error.message}`);
+      }
+      // Wait a bit before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
-  if (type === 'user') {
-    if (fs.existsSync(sessionFile)) {
-      try {
-        console.log('Using existing session...');
-        await page.goto(url);
-        await documentReady(page);
+}
 
-        const isLoggedIn = await page.getByText(text).isVisible().catch(() => false);
-        if (isLoggedIn) {
-          console.log('Successfully logged in with session');
-          return;
+export async function prepareTest(type, url, text, page, browser = null) {
+  const adminSessionFile = path.resolve(__dirname, '../admin-auth.json');
+  const sessionFile = path.resolve(__dirname, '../auth.json');
+  const maxRetries = 3;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Authentication attempt ${attempt}/${maxRetries}`);
+      
+      // Check if page is valid
+      if (page.isClosed()) {
+        if (browser && attempt < maxRetries) {
+          console.log('Page was closed, creating fresh context...');
+          const { context, page: newPage } = await createFreshPageContext(browser);
+          page = newPage;
+        } else {
+          throw new Error('Page was closed and no browser available for recovery');
         }
-      } catch (error) {
-        console.log('Session login failed, falling back to manual login...');
       }
-    }
-    console.log('Performing manual login...');
-    await useTestAccountCredentials(page);
-    const currentUrl = page.url();
-    if (!currentUrl.includes(url)) {
-      await page.goto(url);
-      await documentReady(page);
+
+      if (type === 'admin') {
+        if (fs.existsSync(adminSessionFile)) {
+          try {
+            console.log('Using existing admin session...');
+            await safePageNavigation(page, url);
+
+            const isLoggedIn = await page.getByText(text).isVisible().catch(() => false);
+            if (isLoggedIn) {
+              console.log('Successfully logged in with admin session');
+              return page;
+            }
+          } catch (error) {
+            console.log('Admin session login failed, falling back to manual login...');
+          }
+        }
+
+        console.log('Performing manual admin login...');
+        await useAdminCredentials(page);
+        
+        // Verify page is still valid before attempting navigation
+        if (page.isClosed()) {
+          throw new Error('Page was closed during admin login process');
+        }
+        
+        const currentUrl = page.url();
+        if (!currentUrl.includes(url)) {
+          await safePageNavigation(page, url);
+        }
+      }
+      
+      if (type === 'user') {
+        if (fs.existsSync(sessionFile)) {
+          try {
+            console.log('Using existing session...');
+            await safePageNavigation(page, url);
+
+            const isLoggedIn = await page.getByText(text).isVisible().catch(() => false);
+            if (isLoggedIn) {
+              console.log('Successfully logged in with session');
+              return page;
+            }
+          } catch (error) {
+            console.log('Session login failed, falling back to manual login...');
+          }
+        }
+        console.log('Performing manual login...');
+        await useTestAccountCredentials(page);
+        
+        // Verify page is still valid before attempting navigation
+        if (page.isClosed()) {
+          throw new Error('Page was closed during user login process');
+        }
+        
+        const currentUrl = page.url();
+        if (!currentUrl.includes(url)) {
+          await safePageNavigation(page, url);
+        }
+      }
+      
+      console.log(`Authentication successful on attempt ${attempt}`);
+      return page;
+      
+    } catch (error) {
+      console.error(`Authentication attempt ${attempt} failed:`, error.message);
+      
+      if (attempt === maxRetries) {
+        throw new Error(`Authentication failed after ${maxRetries} attempts: ${error.message}`);
+      }
+      
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 2000));
     }
   }
 }

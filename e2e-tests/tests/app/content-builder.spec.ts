@@ -3,19 +3,9 @@ import { test, expect } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
 import { prepareTest } from 'helpers/accountHelpers';
-import * as fs from 'fs';
-import * as path from 'path';
 
-// Try to use existing session, but fall back to manual login if needed
-const sessionFile = path.resolve(__dirname, '../../auth.json');
-if (fs.existsSync(sessionFile)) {
-    test.use({
-        storageState: 'auth.json',
-    });
-}
-
-test.beforeEach(async ({ page }) => {
-    await prepareTest('user', '/dashboard/content', 'Generate', page);
+test.beforeEach(async ({ page, browser }) => {
+    await prepareTest('user', '/dashboard/content', 'Generate', page, browser);
 });
 
 // Setup reporting for content builder test
