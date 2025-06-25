@@ -77,7 +77,10 @@ export const OutreachTable = ({ mockOutreaches }) => {
     {
       header: 'Voters',
       cell: ({ row }) =>
-        Number(row.voterFileFilter?.voterCount).toLocaleString() || (
+        row.voterFileFilter?.voterCount ||
+        ['0', 0].includes(row.voterFileFilter?.voterCount) ? (
+          Number(row.voterFileFilter?.voterCount).toLocaleString()
+        ) : (
           <NotApplicableLabel />
         ),
     },

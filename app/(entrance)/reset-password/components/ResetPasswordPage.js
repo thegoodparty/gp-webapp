@@ -6,6 +6,7 @@ import ResetPasswordSuccess from './ResetPasswordSuccess'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 
 async function resetPassword(email, password, token) {
   try {
@@ -60,6 +61,10 @@ export default function ResetPasswordPage({ email, token }) {
 
       if (res.ok) {
         setResetSuccessful(true)
+        
+        // Forgot password flow
+        trackEvent(EVENTS.Password.PasswordResetCompleted)
+
         successSnackbar(`Your password has been updated`)
       } else {
         errorSnackbar(`Error updating password: ${res.data?.message}`)

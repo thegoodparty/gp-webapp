@@ -19,6 +19,10 @@ export const EVENTS = {
     ClickCreateAccount: 'Sign In: Click Create Account',
     ClickForgotPassword: 'Sign In: Click Forgot Password',
   },
+  Password: {
+    PasswordResetRequested: 'Account - Password Reset Requested',
+    PasswordResetCompleted: 'Account - Password Reset Completed'
+  },
   SetPassword: {
     ClickSetPassword: 'Set Password: Click Set Password',
   },
@@ -30,6 +34,8 @@ export const EVENTS = {
       ClickBack: 'Onboarding - Office Step: Click Back',
       OfficeSelected: 'Onboarding - Office Step: Office Selected',
       ClickCantSeeOffice: "Onboarding - Office Step: Click Can't See Office",
+      OfficeSearched: 'Onboarding - Candidate Office Searched',
+      OfficeCompleted: 'Onboarding - Candidate Office Completed'
     },
     PartyStep: {
       ClickSubmit: 'Onboarding - Party Step: Click Submit',
@@ -41,6 +47,7 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
+    
   },
   Navigation: {
     Top: {
@@ -373,18 +380,15 @@ export function extractClids(searchParams) {
 export function trackRegistrationCompleted({
   analytics,
   userId,
-  signUpPath,
   signUpMethod = 'email'
 }) {
   const signUpDate = new Date().toISOString()
 
   analytics.identify(userId, {
-    signUpPath,
     signUpDate,
     signUpMethod,
   })
   trackEvent(EVENTS.Onboarding.RegistrationCompleted, {
-    signUpPath,
     signUpDate,
     signUpMethod,
   })

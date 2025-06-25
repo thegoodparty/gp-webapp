@@ -26,6 +26,7 @@ export const OUTREACH_TYPE_MAPPING = {
   p2pTexting: 'Text message',
   doorKnocking: 'Door knocking',
   phoneBanking: 'Phone banking',
+  socialMedia: 'Social post',
 }
 export const AUDIENCE_LABELS_MAPPING = {
   audienceSuperVoters: 'Super',
