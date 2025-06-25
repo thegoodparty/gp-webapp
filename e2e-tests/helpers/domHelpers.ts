@@ -3,8 +3,20 @@ import { expect } from '@playwright/test';
 export async function acceptCookieTerms(page) {
     // Accept cookie terms (if visible)
     try {
+        // Check if page is still valid before attempting to interact
+        if (page.isClosed()) {
+            console.log('Page was closed before accepting cookie terms');
+            return;
+        }
+        
         console.log('Cookie terms displayed and accepted');
-        await page.getByRole('button', { name: 'Close' }).click();
+        await page.getByRole('button', { name: 'Close' }).click({ timeout: 5000 });
+        
+        // Check if page is still valid after clicking
+        if (page.isClosed()) {
+            console.log('Page was closed after clicking cookie terms close button');
+            return;
+        }
     } catch(error) {
         console.log('Cookie terms not displayed');
     }
