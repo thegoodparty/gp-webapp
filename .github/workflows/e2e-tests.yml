@@ -113,7 +113,7 @@ jobs:
           repository: thegoodparty/test-automation
           token: ${{ secrets.GH_PAT_TEST }}
           path: test-automation
-          ref: fix_content_builder_test
+          ref: tests_stability
 
       - name: Install Playwright Dependencies in test-automation Repo
         run: |
