@@ -100,35 +100,32 @@ export function ProUpgradeModal({
     <Modal
       open={open}
       closeCallback={onClose}
-      boxClassName="min-w-[500px]"
       preventBackdropClose
       preventEscClose
     >
-      <div className="p-8">
-        <div>
-          <H1 className="m-0 whitespace-nowrap">{title}</H1>
-          <Body2 className="my-4">{description}</Body2>
-          <Body2 className="leading-4">
-            <ul className="list-none list-inside p-0 font-sfpro m-0">
-              {items.map((item, index) => (
-                <li key={index}>✔&nbsp; {item}</li>
-              ))}
-            </ul>
-          </Body2>
-          {highlight && (
-            <Body2 className="mt-4 text-blue !font-bold">{highlight}</Body2>
-          )}
-          <Button
-            href="/dashboard/upgrade-to-pro"
-            size="large"
-            color="secondary"
-            className="mt-8"
-            onClick={onUpgradeLinkClick ? onUpgradeLinkClick : onClose}
-            {...trackingAttrs}
-          >
-            {cta}
-          </Button>
-        </div>
+      <div className="p-0 sm:p-2 md:p-8">
+        <H1 className="m-0 sm:whitespace-nowrap">{title}</H1>
+        <Body2 className="my-4">{description}</Body2>
+        <Body2 className="leading-4">
+          <ul className="list-none list-inside p-0 font-sfpro m-0">
+            {items.map((item, index) => (
+              <li key={index}>✔&nbsp; {item}</li>
+            ))}
+          </ul>
+        </Body2>
+        {highlight && (
+          <Body2 className="mt-4 text-blue !font-bold">{highlight}</Body2>
+        )}
+        <Button
+          href="/dashboard/upgrade-to-pro"
+          size="large"
+          color="secondary"
+          className="mt-8"
+          onClick={onUpgradeLinkClick ? onUpgradeLinkClick : onClose}
+          {...trackingAttrs}
+        >
+          {cta}
+        </Button>
       </div>
     </Modal>
   )

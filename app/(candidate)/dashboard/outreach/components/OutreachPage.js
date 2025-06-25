@@ -1,7 +1,6 @@
 'use client'
 import React from 'react'
 import DashboardLayout from '../../shared/DashboardLayout'
-import EmptyOutreachHero from './EmptyOutreachHero'
 import { OutreachHeader } from './OutreachHeader'
 import OutreachCreateCards from './OutreachCreateCards'
 import { OutreachTable } from 'app/(candidate)/dashboard/outreach/components/OutreachTable'
@@ -15,7 +14,7 @@ export const OutreachPage = ({
 }) => (
   <OutreachProvider initValue={outreaches}>
     <DashboardLayout pathname={pathname} campaign={campaign}>
-      {outreaches.length ? <OutreachHeader /> : <EmptyOutreachHero />}
+      <OutreachHeader />
       <OutreachCreateCards />
       <OutreachTable
         {...{

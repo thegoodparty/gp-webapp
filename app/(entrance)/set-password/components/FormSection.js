@@ -9,8 +9,8 @@ import { useSnackbar } from 'helpers/useSnackbar'
 import Paper from '@shared/utils/Paper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useAnalytics } from '@shared/hooks/useAnalytics'
-import { trackRegistrationCompleted } from 'helpers/analyticsHelper'
 
 async function setPasswordApi(email, password, token) {
   try {
@@ -75,12 +75,9 @@ export default function FormSection({ email, token }) {
         await saveToken(userToken)
         setUserCookie(user)
         setUser(user)
-
-        trackRegistrationCompleted({
-          analytics,
-          userId: user.id,
-          signUpPath: 'outbound'
-        })
+        
+        // Sales created-user
+        trackEvent(EVENTS.Password.PasswordResetCompleted)
 
         window.location.href = '/dashboard'
       } else if (res.ok === false) {

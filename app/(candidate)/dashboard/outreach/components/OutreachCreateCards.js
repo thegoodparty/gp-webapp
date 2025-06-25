@@ -7,6 +7,10 @@ import {
 import TaskFlow from 'app/(candidate)/dashboard/components/tasks/flows/TaskFlow'
 import { useState } from 'react'
 import { useCampaign } from '@shared/hooks/useCampaign'
+import {
+  ProUpgradeModal,
+  VARIANTS,
+} from 'app/(candidate)/dashboard/shared/ProUpgradeModal'
 
 const OUTREACH_OPTIONS = [
   {
@@ -14,24 +18,28 @@ const OUTREACH_OPTIONS = [
     impact: IMPACTS_LEVELS.medium,
     cost: '$.035/msg',
     type: OUTREACH_TYPES.text,
+    requiresPro: true,
   },
   {
     title: 'Robocall',
     impact: IMPACTS_LEVELS.medium,
     cost: '$.045/msg',
     type: OUTREACH_TYPES.robocall,
+    requiresPro: true,
   },
   {
     title: 'Door knocking',
     impact: IMPACTS_LEVELS.high,
     cost: 'Free',
     type: OUTREACH_TYPES.doorKnocking,
+    requiresPro: true,
   },
   {
     title: 'Phone banking',
     impact: IMPACTS_LEVELS.medium,
     cost: 'Free',
     type: OUTREACH_TYPES.phoneBanking,
+    requiresPro: true,
   },
   {
     title: 'Social post',
@@ -43,12 +51,18 @@ const OUTREACH_OPTIONS = [
 
 export default function OutreachCreateCards() {
   const [campaign] = useCampaign()
+  const { isPro } = campaign || {}
   const [flowModalTask, setFlowModalTask] = useState(null)
+  const [showProUpgradeModal, setShowProUpgradeModal] = useState(false)
 
   const handleCreateClick = (type) => {
     setFlowModalTask({
       flowType: type,
     })
+  }
+
+  const openProUpgradeModal = () => {
+    setShowProUpgradeModal(true)
   }
 
   return (
@@ -64,14 +78,14 @@ export default function OutreachCreateCards() {
         gap-4
         md:gap-6
         justify-center
-        bg-gray-200
+        lg:bg-gray-200
         rounded-2xl
-        p-4
-        md:p-6
+        p-0
+        lg:p-6
         mb-12
       "
     >
-      {OUTREACH_OPTIONS.map(({ title, impact, cost, type }) => (
+      {OUTREACH_OPTIONS.map(({ title, impact, cost, type, requiresPro }) => (
         <OutreachCreateCard
           key={type}
           {...{
@@ -79,10 +93,19 @@ export default function OutreachCreateCards() {
             title,
             impact,
             cost,
-            onClick: handleCreateClick,
+            onClick:
+              requiresPro && !isPro ? openProUpgradeModal : handleCreateClick,
+            requiresPro,
           }}
         />
       ))}
+      <ProUpgradeModal
+        {...{
+          variant: VARIANTS.Second_NonViable,
+          open: showProUpgradeModal,
+          onClose: () => setShowProUpgradeModal(false),
+        }}
+      />
 
       {flowModalTask && campaign && (
         <TaskFlow

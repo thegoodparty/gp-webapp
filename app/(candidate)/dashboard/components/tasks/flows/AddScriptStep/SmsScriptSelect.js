@@ -48,7 +48,6 @@ export const SmsScriptSelect = ({
         getSmsScriptSelectOptions(aiContent).map((op) => (
           <MenuItem value={op.key} key={op.key}>
             {op.name}
-            {}
           </MenuItem>
         ))}
     </Select>
