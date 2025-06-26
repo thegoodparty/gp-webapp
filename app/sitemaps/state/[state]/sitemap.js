@@ -5,11 +5,15 @@ on production the path is https://www.getelected.com/sitemaps/state/ca/sitemap/4
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap.
 */
 
+// Added detailed logging for debugging [[Phase 1]]
+console.log('[SITEMAP] State elections sitemap module loaded')
+
 import { flatStates } from 'helpers/statesHelper'
 import { APP_BASE } from 'appEnv'
 import { electionApiRoutes } from 'gpApi/routes'
 import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 
+// Fetch helpers with robust error handling
 const fetchStatePlaces = async (state) => {
   const api = electionApiRoutes.places.find.path
   const payload = {
@@ -17,7 +21,13 @@ const fetchStatePlaces = async (state) => {
     placeColumns: 'slug',
   }
 
-  return await unAuthElectionFetch(api, payload, 3600)
+  try {
+    const response = await unAuthElectionFetch(api, payload, 3600)
+    return Array.isArray(response) ? response : []
+  } catch (error) {
+    console.error(`[SITEMAP] Error fetching places for ${state}:`, error)
+    return []
+  }
 }
 
 const fetchStateRaces = async (state) => {
@@ -27,52 +37,80 @@ const fetchStateRaces = async (state) => {
     raceColumns: 'slug',
   }
 
-  return await unAuthElectionFetch(api, payload, 3600)
+  try {
+    const response = await unAuthElectionFetch(api, payload, 3600)
+    return Array.isArray(response) ? response : []
+  } catch (error) {
+    console.error(`[SITEMAP] Error fetching races for ${state}:`, error)
+    return []
+  }
 }
 
 const now = new Date()
 
 export async function generateSitemaps() {
-  // Fetch the total number of products and calculate the number of sitemaps needed
-
+  console.log('[SITEMAP] Generating state election sitemaps for all states')
   return flatStates.map((state, index) => {
-    return {
-      id: index,
-    }
+    console.log(`[SITEMAP] Mapping state ${state} to index ${index}`)
+    return { id: index }
   })
 }
 
 export default async function sitemap({ id }) {
-  try {
-    const state = flatStates[id].toLocaleLowerCase()
+  console.log(`[SITEMAP] Generating state elections sitemap for id: ${id}`)
 
-    const [places, races] = await Promise.all([
-      fetchStatePlaces(state),
-      fetchStateRaces(state),
-    ])
+  const stateIndex = parseInt(id, 10)
+  if (Number.isNaN(stateIndex) || stateIndex < 0 || stateIndex >= flatStates.length) {
+    console.error(`[SITEMAP] Invalid state index: ${id}`)
+    return []
+  }
 
-    const mainSitemap = []
-    // state url
-    const urls = []
+  const state = flatStates[stateIndex]?.toLocaleLowerCase()
+  console.log(`[SITEMAP] Processing state: ${state}`)
 
-    places.forEach((place) => {
-      urls.push(`/elections/${place.slug}`)
-    })
+  if (!state) {
+    console.error(`[SITEMAP] No state found at index ${stateIndex}`)
+    return []
+  }
 
-    races.forEach((race) => {
-      urls.push(`/elections/position/${race.slug}`)
-    })
+  const [places, races] = await Promise.all([
+    fetchStatePlaces(state),
+    fetchStateRaces(state),
+  ])
 
-    urls.forEach((url) => {
+  if (!places.length && !races.length) {
+    console.log(`[SITEMAP] No places or races for ${state}, returning empty array`)
+    return []
+  }
+
+  const mainSitemap = []
+
+  // Add place URLs
+  places.forEach((place) => {
+    const slug = place?.slug?.trim()
+    if (slug) {
       mainSitemap.push({
-        url: `${APP_BASE}${url}`,
+        url: `${APP_BASE}/elections/${slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.6,
       })
-    })
-    return mainSitemap
-  } catch (e) {
-    return []
-  }
+    }
+  })
+
+  // Add race URLs
+  races.forEach((race) => {
+    const slug = race?.slug?.trim()
+    if (slug) {
+      mainSitemap.push({
+        url: `${APP_BASE}/elections/position/${slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      })
+    }
+  })
+
+  console.log(`[SITEMAP] Generated ${mainSitemap.length} URLs for ${state} elections`)
+  return mainSitemap
 }
