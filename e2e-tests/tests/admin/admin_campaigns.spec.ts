@@ -1,11 +1,9 @@
 import 'dotenv/config';
 import { expect, test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
-import { testAccountLastName } from 'helpers/accountHelpers';
+import { prepareTest, testAccountLastName } from 'helpers/accountHelpers';
 import { faker } from '@faker-js/faker';
 import { generateEmail, generateTimeStamp } from 'helpers/dataHelpers';
-import { documentReady } from 'helpers/domHelpers';
-
 test.use({
     storageState: 'admin-auth.json',
 });
@@ -13,8 +11,7 @@ test.use({
 const testSearchEmail = 'dustin@goodparty.org';
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/admin/campaign-statistics');
-    await documentReady(page);
+    await prepareTest('admin', '/admin/campaign-statistics', 'Campaigns', page);
 });
 
 // Setup reporting for admin campaigns page test

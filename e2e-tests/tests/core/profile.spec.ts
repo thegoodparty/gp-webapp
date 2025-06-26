@@ -5,16 +5,14 @@ import { generateEmail, userData } from 'helpers/dataHelpers';
 import * as fs from 'fs';
 import * as path from 'path';
 import { documentReady } from 'helpers/domHelpers';
+import { prepareTest } from 'helpers/accountHelpers';
 
 test.use({
     storageState: 'auth.json',
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/profile', {
-        waitUntil: "networkidle"
-    });
-    await documentReady(page);
+    await prepareTest('user', '/profile', 'Personal Information', page);
 });
 
 // Setup reporting for personal information test

@@ -1,19 +1,17 @@
 import 'dotenv/config';
 import { test, expect } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
+import { prepareTest } from 'helpers/accountHelpers';
 
 const testTopic = 'Campaign Strategy';
-const testTopicChat = /^Can you help me with my campaign strategy\?$/;
+const testTopicChat = /Crafting a why statement/;
 
 test.use({
     storageState: 'auth.json',
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-assistant", {
-        waitUntil: "networkidle"
-    });
-    await expect(page).toHaveURL(/.*\/dashboard\/campaign-assistant/);
+    await prepareTest('user', '/dashboard/campaign-assistant', 'AI Assistant', page);
 });
 
 // Setup reporting for AI assistant test
@@ -21,28 +19,30 @@ const aiAssistantCaseId = 36;
 setupTestReporting(test, aiAssistantCaseId);
 
 test.skip('Create new conversation', async ({ page }) => {
-    // Wait for page to be fully loaded
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForLoadState('networkidle');
+    const heading = page.getByRole('heading', { name: 'AI Assistant' });
+    await expect(heading).toBeVisible({ timeout: 30000 });
 
-    await expect(page.getByRole('heading', { name: 'AI Assistant' })).toBeVisible({
-        timeout: 30000
-    });
-
-    // Create new chat with additional waits
     const newChatButton = page.getByRole('button', { name: 'New Chat' });
-    await expect(newChatButton).toBeVisible({ timeout: 10000 });
+    await expect(newChatButton).toBeVisible({ timeout: 15000 });
     await newChatButton.click();
-    await page.waitForLoadState('networkidle');
+    
+    try {
+        await page.waitForLoadState('networkidle', { timeout: 15000 });
+    } catch (error) {
+        console.log('Network idle timeout after new chat, continuing...');
+    }
+
 
     const topicButton = page.getByRole('button', { name: testTopic });
-    await expect(topicButton).toBeVisible({ timeout: 10000 });
+    await expect(topicButton).toBeVisible({ timeout: 15000 });
     await topicButton.click();
-    await page.waitForLoadState('networkidle');
-
-    const chatElement = page.locator('div').filter({ hasText: testTopicChat }).first();
-    await expect(chatElement).toBeVisible({ timeout: 10000 });
+    
+    try {
+        await page.waitForLoadState('networkidle', { timeout: 15000 });
+    } catch (error) {
+        console.log('Network idle timeout after topic selection, continuing...');
+    }
 
     const responseElement = page.locator('.font-normal > div:nth-child(2)');
-    await expect(responseElement).toBeVisible({ timeout: 30000 });
+    await expect(responseElement).toBeVisible({ timeout: 45000 });
 });

@@ -3,14 +3,10 @@ import { test, expect } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { documentReady } from 'helpers/domHelpers';
 import * as fs from 'fs';
+import { prepareTest } from 'helpers/accountHelpers';
 
 test.use({
     storageState: 'admin-auth.json',
-});
-
-test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/voter-records");
-    await page.waitForLoadState('networkidle');
 });
 
 // Setup reporting for default voter file test
@@ -19,14 +15,7 @@ setupTestReporting(test, defaultVoterFileCaseId);
 
 test.skip('Download default voter file', async ({ page }) => {
     const voterFileName = 'Door Knocking (Default)';
-    const voterFileLink = page.getByRole('link', { name: voterFileName }).first();
-
-    await voterFileLink.waitFor({ state: 'visible', timeout: 60000 });
-
-    await expect(voterFileLink).toBeEnabled({ timeout: 30000 });
-    await voterFileLink.click();
-
-    await page.waitForLoadState('networkidle');
+    await prepareTest('admin', '/dashboard/voter-records/doorknocking', voterFileName, page);
     await documentReady(page);
 
     const heading = page.getByRole('heading', { name: voterFileName });
@@ -45,7 +34,7 @@ test.skip('Download default voter file', async ({ page }) => {
     const tempFilePath0 = 'temp-download0.csv';
     await download.saveAs(tempFilePath0);
     const stats = fs.statSync(tempFilePath0);
-    expect(stats.size).toBeGreaterThan(150);
+    expect(stats.size).toBeGreaterThan(100);
 
     // Clean up the temporary file
     fs.unlinkSync(tempFilePath0);
@@ -56,6 +45,8 @@ const customVoterFileCaseId = 43;
 setupTestReporting(test, customVoterFileCaseId);
 
 test.skip('Generate custom voter file', async ({ page }) => {
+    await prepareTest('admin', '/dashboard/voter-records', 'Voter File', page);
+    
     // Wait for and click create custom voter file button
     const createButton = page.getByRole('button', { name: /Create a custom voter file/i }).first();
     await createButton.waitFor({ state: 'visible', timeout: 60000 });

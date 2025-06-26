@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { expect, test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { appNav } from '@helpers';
-import { documentReady } from 'helpers/domHelpers';
+import { prepareTest } from 'helpers/accountHelpers';
 
 test.describe('Mobile viewport tests - App pages', () => {
     test.use({
@@ -14,8 +14,7 @@ test.describe('Mobile viewport tests - App pages', () => {
     setupTestReporting(test, mobileAppCaseId);
 
     test.skip('Verify app pages in mobile view', async ({ page }) => {
-        await page.goto("/dashboard");
-        await documentReady(page);
+        await prepareTest('user', '/dashboard', 'Campaign progress', page);
 
         const verifyPage = async (navItem: string, expectedHeading: string) => {
             await appNav(page, navItem, true);

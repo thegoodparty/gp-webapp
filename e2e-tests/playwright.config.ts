@@ -6,12 +6,12 @@ console.log('BASE_URL from env:', process.env.BASE_URL);
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
   globalTeardown: require.resolve("./globalTeardown.js"),
-  timeout: 90000,
+  timeout: 60000,
   testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 2,
-  workers: 7,
+  retries: 1,
+  workers: 2,
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/playwright-results.json" }],
@@ -22,11 +22,33 @@ export default defineConfig({
     contextOptions: {
       viewport: null,
       ignoreHTTPSErrors: true,
+      acceptDownloads: true,
+      extraHTTPHeaders: {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Cache-Control': 'no-cache',
+      },
     },
     trace: "on-first-retry",
     launchOptions: {
-      slowMo: process.env.CI ? 100 : 0,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      slowMo: process.env.CI ? 100 : 25,
+      args: [
+        '--no-sandbox', 
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--disable-features=TranslateUI',
+        '--disable-ipc-flooding-protection',
+      ],
     },
-  }
+  },
+  expect: {
+    timeout: 10000,
+  },
 });
