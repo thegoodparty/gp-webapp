@@ -5,56 +5,80 @@ on production the path is https://www.goodparty.org/sitemaps/candidates/ca/sitem
 https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 */
 
+// Added extensive logging to aid debugging [[Phase 1]]
+console.log('[SITEMAP] Candidates sitemap module loaded')
+
 import { flatStates } from 'helpers/statesHelper'
-
 import { APP_BASE } from 'appEnv'
-import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 import { electionApiRoutes } from 'gpApi/routes'
+import unAuthElectionFetch from 'electionApi/unAuthElectionFetch'
 
+// Fetch candidate slugs with robust error handling
 const fetchCandidates = async (state) => {
   const api = electionApiRoutes.candidacies.find.path
   const payload = {
     state,
     columns: 'slug',
   }
-  return await unAuthElectionFetch(api, payload, 3600)
+
+  try {
+    const response = await unAuthElectionFetch(api, payload, 3600)
+    return Array.isArray(response) ? response : []
+  } catch (error) {
+    console.error(`[SITEMAP] Error fetching candidates for ${state}:`, error)
+    return []
+  }
 }
 
 const now = new Date()
 
 export async function generateSitemaps() {
-  // Fetch the total number of products and calculate the number of sitemaps needed
-
+  console.log('[SITEMAP] Generating candidate sitemaps for all states')
   return flatStates.map((state, index) => {
-    return {
-      id: index,
-    }
+    console.log(`[SITEMAP] Mapping state ${state} to index ${index}`)
+    return { id: index }
   })
 }
 
 export default async function sitemap({ id }) {
-  try {
-    const state = flatStates[id].toLocaleLowerCase()
-    const candidates = await fetchCandidates(state)
+  console.log(`[SITEMAP] Generating candidate sitemap for id: ${id}`)
 
-    const mainSitemap = []
-    const urls = []
-    // state url
+  const stateIndex = parseInt(id, 10)
+  if (Number.isNaN(stateIndex) || stateIndex < 0 || stateIndex >= flatStates.length) {
+    console.error(`[SITEMAP] Invalid state index: ${id}`)
+    return []
+  }
 
-    candidates.forEach((candidate) => {
-      urls.push(`/candidate/${candidate.slug}`)
-    })
+  const state = flatStates[stateIndex]?.toLocaleLowerCase()
+  console.log(`[SITEMAP] Processing state: ${state}`)
 
-    urls.forEach((url) => {
+  if (!state) {
+    console.error(`[SITEMAP] No state found at index ${stateIndex}`)
+    return []
+  }
+
+  const candidates = await fetchCandidates(state)
+  console.log(`[SITEMAP] Found ${candidates.length} candidates for ${state}`)
+
+  if (!candidates.length) {
+    console.log(`[SITEMAP] No candidates for ${state}, returning empty array`)
+    return []
+  }
+
+  const mainSitemap = []
+
+  candidates.forEach((candidate) => {
+    const slug = candidate?.slug?.trim()
+    if (slug) {
       mainSitemap.push({
-        url: `${APP_BASE}${url}`,
+        url: `${APP_BASE}/candidate/${slug}`,
         lastModified: now,
         changeFrequency: 'monthly',
         priority: 0.9,
       })
-    })
-    return mainSitemap
-  } catch (e) {
-    return []
-  }
+    }
+  })
+
+  console.log(`[SITEMAP] Generated ${mainSitemap.length} URLs for ${state}`)
+  return mainSitemap
 }
