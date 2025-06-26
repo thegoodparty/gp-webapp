@@ -3,21 +3,21 @@ import { test, expect } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
 import { generateTimeStamp } from 'helpers/dataHelpers';
 import { documentReady } from 'helpers/domHelpers';
+import { prepareTest } from 'helpers/accountHelpers';
 
 test.use({
     storageState: 'auth.json',
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/dashboard/campaign-details");
-    await documentReady(page);
+    await prepareTest('user', '/dashboard/campaign-details', 'Campaign Details', page);
 });
 
 // Setup reporting for campaign details test
 const campaignDetailsCaseId = 46;
 setupTestReporting(test, campaignDetailsCaseId);
 
-test.skip('Update Campaign Details', async ({ page }) => {
+test('Update Campaign Details', async ({ page }) => {
     const newCampaignCommittee = generateTimeStamp() + ' Committee';
     const newOccupation = generateTimeStamp() + ' Occupation';
     const newWebsite = 'http://www.' + generateTimeStamp() + '.com/'
@@ -62,10 +62,17 @@ test.skip('Update Office Details', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).scrollIntoViewIfNeeded();
     await page.getByRole('button', { name: 'Save' }).click();
 
-    // Refresh page
+    // Refresh page with error handling
     await page.waitForTimeout(10000);
-    await page.reload();
-    await documentReady(page);
+    try {
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await documentReady(page);
+    } catch (error) {
+        console.log('Page reload failed, trying navigation instead...');
+        const currentUrl = page.url();
+        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+        await documentReady(page);
+    }
 
     // Confirm new office details
     await page.getByLabel('Office').waitFor({ state: 'visible', timeout: 30000 });
@@ -76,14 +83,22 @@ test.skip('Update Office Details', async ({ page }) => {
 const whyStatementCaseId = 48;
 setupTestReporting(test, whyStatementCaseId);
 
-test.skip('Update Your Why Statement', async ({ page }) => {
+test('Update Your Why Statement', async ({ page }) => {
     const newWhyStatement = generateTimeStamp() + ' Statement';
     // Update Your Why Statement
     await page.getByPlaceholder('EXAMPLE: I have 5 years of').clear();
     await page.getByPlaceholder('EXAMPLE: I have 5 years of').fill(newWhyStatement);
     await page.getByRole('button', { name: 'Save' }).nth(2).click();
     await documentReady(page);
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    
+    // Refresh page with error handling
+    try {
+        await page.reload({ waitUntil: 'domcontentloaded' });
+    } catch (error) {
+        console.log('Page reload failed, trying navigation instead...');
+        const currentUrl = page.url();
+        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+    }
 
     // Confirm saved Why Statement
     await page.getByText(newWhyStatement).isVisible();
@@ -92,7 +107,7 @@ test.skip('Update Your Why Statement', async ({ page }) => {
 const funFactsCaseId = 49;
 setupTestReporting(test, funFactsCaseId);
 
-test.skip('Update Fun Facts about Yourself', async ({ page }) => {
+test('Update Fun Facts about Yourself', async ({ page }) => {
     const newFunFacts = generateTimeStamp() + ' Fun Fact';
 
     // Update Your Why Statement
@@ -100,7 +115,15 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
     await page.getByPlaceholder('EXAMPLE: In my free time, I').fill(newFunFacts);
     await page.getByRole('button', { name: 'Save' }).nth(3).click();
     await documentReady(page);
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    
+    // Refresh page with error handling
+    try {
+        await page.reload({ waitUntil: 'domcontentloaded' });
+    } catch (error) {
+        console.log('Page reload failed, trying navigation instead...');
+        const currentUrl = page.url();
+        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+    }
 
     // Confirm saved Why Statement
     await page.getByText(newFunFacts).isVisible();
@@ -110,7 +133,7 @@ test.skip('Update Fun Facts about Yourself', async ({ page }) => {
 const opponentCaseId = 50;
 setupTestReporting(test, opponentCaseId);
 
-test.skip('Add Opponent', async ({ page }) => {
+test('Add Opponent', async ({ page }) => {
     const opponent = generateTimeStamp() + ' Opponent';
     const opponentDescription = generateTimeStamp() + ' Opponent Description';
 
@@ -123,7 +146,14 @@ test.skip('Add Opponent', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).nth(1).click();
     await documentReady(page);
 
-    // Refresh page and confirm saved opponent data
-    await page.reload({ waitUntil: 'domcontentloaded' });
+    // Refresh page and confirm saved opponent data with error handling
+    try {
+        await page.reload({ waitUntil: 'domcontentloaded' });
+    } catch (error) {
+        console.log('Page reload failed, trying navigation instead...');
+        const currentUrl = page.url();
+        await page.goto(currentUrl, { waitUntil: 'domcontentloaded' });
+    }
+    
     await page.getByText(opponent, { exact: true }).isVisible();
 });

@@ -8,9 +8,9 @@ module.exports = async () => {
   let testCaseIds = [
     1, 4, 5, 7, 8, 12, 16,
     18, 22,
-    24, 25, 26, 27, 29, 30, 31, 32, 33, 34,
+    24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 36,
     40, 41, 42, 43, 46, 47, 48, 49,
-    71, 86, 87, 88, 89, 93, 94, 95
+    71, 86, 87, 88, 89, 90, 91, 93, 94, 95
   ];
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
   const testRunId = await createTestRun(testRunName, testCaseIds, baseUrl);

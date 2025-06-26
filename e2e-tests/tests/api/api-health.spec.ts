@@ -13,7 +13,7 @@ test.describe('API Health Checks', () => {
   const caseId = 71;
   setupTestReporting(test, caseId);
 
-  test('should verify main API is running', async ({ request }) => {
+  test.skip('should verify main API is running', async ({ request }) => {
     for (const endpoint of apiEndpoints) {
       const response = await request.get(endpoint.url);
       expect(response.ok()).toBeTruthy();

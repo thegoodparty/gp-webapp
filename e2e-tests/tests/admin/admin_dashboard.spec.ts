@@ -1,22 +1,20 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
-import { documentReady } from 'helpers/domHelpers';
+import { prepareTest } from 'helpers/accountHelpers';
 
 test.use({
     storageState: 'admin-auth.json',
 });
 
-// Setup reporting for admin dashboard test
 const adminDashboardCaseId = 24;
 setupTestReporting(test, adminDashboardCaseId);
 
 test('Verify admin user can access admin dashboard', async ({ page }) => {
-    await page.goto('/admin/dashboard');
-    await documentReady(page);
+    await prepareTest('admin', '/admin', 'Admin Dashboard', page);
 
     // Verify Admin Dashboard is displayed
-    await page.getByRole('heading', { name: 'Admin Dashboard' }).isVisible();
+    await page.getByRole('heading', { name: 'Admin Dashboard' }).isVisible({ timeout: 30000 });
     await page.getByRole('button', { name: 'Admin Dashboard' }).isVisible();
     await page.getByRole('button', { name: 'Campaigns' }).isVisible();
     await page.getByRole('button', { name: 'Users', exact: true }).isVisible();

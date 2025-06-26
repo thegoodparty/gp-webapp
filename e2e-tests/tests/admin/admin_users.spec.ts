@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { test } from '@playwright/test';
 import { setupTestReporting } from 'helpers/testrailHelper';
-import { testAccountLastName } from 'helpers/accountHelpers';
+import { prepareTest, testAccountLastName } from 'helpers/accountHelpers';
 import { userData } from 'helpers/dataHelpers';
 import { documentReady } from 'helpers/domHelpers';
 
@@ -10,8 +10,7 @@ test.use({
 });
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('/admin/users');
-    await documentReady(page);
+    await prepareTest('admin', '/admin/users', 'Users', page);
 });
 
 // Setup reporting for each test
