@@ -43,7 +43,7 @@ const fields = [
     label: 'Campaign website',
     type: 'text',
     validateFn: isValidUrl,
-    helperText: 'Please provide a full url starting with http:// or https://',
+    helperText: 'Please provide the full url starting with http:// or https://',
   },
 ]
 

@@ -129,7 +129,7 @@ export default function MyContent(props) {
         slug: camelToKebab(key),
         documentKey: key,
       }))
-      .sort((a, b) => a.updatedAt - b.updatedAt)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
   }, [sections])
 
   async function getUserCampaign() {

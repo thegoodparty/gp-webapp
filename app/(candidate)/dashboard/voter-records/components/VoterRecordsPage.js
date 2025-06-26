@@ -17,8 +17,10 @@ import ViewAudienceFiltersModal from './ViewAudienceFiltersModal'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
 import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import PaginationButtons from './PaginationButtons'
 
 const tableHeaders = ['NAME', 'CHANNEL', 'PURPOSE', 'AUDIENCE']
+const ITEMS_PER_PAGE = 50
 
 export async function fetchVoterFile(type, customFilters) {
   try {
@@ -51,6 +53,8 @@ async function wakeUp() {
 export default function VoterRecordsPage(props) {
   const [campaign, setCampaign] = useState(props.campaign)
   const [modalFileKey, setModalFileKey] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const addCustomVoterFiles = () => {
     if (
@@ -79,6 +83,31 @@ export default function VoterRecordsPage(props) {
   }
   const withCustom = addCustomVoterFiles()
   const [voterFiles, setVoterFiles] = useState(withCustom)
+
+  // Search filtering
+  const filteredVoterFiles = voterFiles.filter((file) => {
+    const matchesSearch = file.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+
+    return matchesSearch
+  })
+
+  // Pagination logic
+  const totalItems = filteredVoterFiles.length
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+  const endIndex = startIndex + ITEMS_PER_PAGE
+  const currentPageItems = filteredVoterFiles.slice(startIndex, endIndex)
+
+  const goToPage = (page) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)))
+  }
+
+  // Reset to first page when search term changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm])
 
   useEffect(() => {
     wakeUp()
@@ -117,6 +146,24 @@ export default function VoterRecordsPage(props) {
                 />
               </div>
             </div>
+            <div className="mt-6 flex gap-2 justify-between items-center">
+              <div className="flex-1 max-w-md">
+                <input
+                  type="text"
+                  placeholder="Search voter files..."
+                  className="p-2 w-full border border-gray-300 rounded text-sm"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              {totalPages > 1 && (
+                <PaginationButtons
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={goToPage}
+                />
+              )}
+            </div>
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 border-x border-x-gray-200 ">
               {tableHeaders.map((header, index) => (
                 <div
@@ -138,7 +185,7 @@ export default function VoterRecordsPage(props) {
                   <Overline>{header}</Overline>
                 </div>
               ))}
-              {voterFiles.map((file, index) => (
+              {currentPageItems.map((file, index) => (
                 <Fragment key={file.key}>
                   {file.fields.map((field, index2) => (
                     <div

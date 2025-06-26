@@ -1,6 +1,6 @@
 import { MenuItem, Select } from '@mui/material'
 
-export const SmsTemplateSelect = ({
+export const SmsAiTemplateSelect = ({
   templates = [],
   selected = '',
   onChange = (itemKey) => {},

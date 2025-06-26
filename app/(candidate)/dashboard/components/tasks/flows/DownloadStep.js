@@ -1,12 +1,15 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
 import { TASK_TYPES } from '../../../shared/constants/tasks.const'
 import { useSnackbar } from 'helpers/useSnackbar'
 import CopyScriptButton from '../CopyScriptButton'
-import { voterFileDownload } from 'helpers/voterFileDownload'
 import { buildTrackingAttrs } from 'helpers/analyticsHelper'
+import { useSingleEffect } from '@shared/hooks/useSingleEffect'
+import { doCreateOutReachEffectHandler } from 'app/(candidate)/dashboard/components/tasks/flows/util/doCreateOutReachEffectHandler.util'
+
+import { downloadVoterList } from 'app/(candidate)/dashboard/outreach/util/downloadVoterList.util'
 
 const DOOR_KNOCKING_BLOG_URL =
   'https://goodparty.org/blog/tag/door-to-door-canvassing'
@@ -17,8 +20,10 @@ export default function DownloadStep({
   type,
   audience,
   scriptText,
-  closeCallback,
+  onCreateOutreach = async () => {},
 }) {
+  useSingleEffect(doCreateOutReachEffectHandler(onCreateOutreach), [])
+
   const [downloading, setDownloading] = useState(false)
   const { errorSnackbar } = useSnackbar()
   const blogUrl =
@@ -41,28 +46,19 @@ export default function DownloadStep({
     [type],
   )
 
-  const returnTrackingAttrs = useMemo(
-    () => buildTrackingAttrs('Return to Dashboard', { type }),
-    [type],
-  )
-
   async function handleDownload() {
-    setDownloading(true)
-    const selectedAudience = Object.keys(audience).filter(
-      (key) => audience[key] === true,
+    await downloadVoterList(
+      {
+        voterFileFilter: audience,
+        outreachType: type,
+      },
+      setDownloading,
+      errorSnackbar,
     )
-
-    try {
-      await voterFileDownload(type, selectedAudience)
-    } catch (error) {
-      errorSnackbar('Error downloading voter file')
-    }
-
-    setDownloading(false)
   }
 
   return (
-    <div className="p-4 min-w-[500px]">
+    <div className="p-4">
       <H1 className="text-center mb-8">Download your materials</H1>
       <div className="flex flex-col gap-4 items-center">
         <CopyScriptButton
@@ -87,17 +83,6 @@ export default function DownloadStep({
           {...blogTrackingAttrs}
         >
           Read more on our blog
-        </Button>
-
-        <Button
-          href="/dashboard"
-          size="large"
-          variant="text"
-          className="mt-8"
-          onClick={closeCallback}
-          {...returnTrackingAttrs}
-        >
-          Return to Dashboard
         </Button>
       </div>
     </div>
