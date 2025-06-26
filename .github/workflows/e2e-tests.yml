@@ -64,6 +64,7 @@ jobs:
     needs: start-runner
     runs-on: ${{ needs.start-runner.outputs.label }}
     if: github.event.deployment_status.state == 'success'
+    timeout-minutes: 30 # Add timeout to prevent hanging jobs
     steps:
       - name: Free up disk space
         run: |
@@ -88,6 +89,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          cache: 'npm'
 
       - name: Install Dependencies for gp-webapp
         run: npm install
@@ -124,8 +126,12 @@ jobs:
       - name: Run Playwright Tests
         run: |
           cd test-automation
-          npx playwright test
+          # Set CI environment variable for better test behavior
+          export CI=true
+          # Run tests with increased verbosity and better error reporting
+          npx playwright test --reporter=line,html --timeout=120000
         env:
+          CI: true
           BASE_URL: ${{ env.BASE_URL }}
           TEST_RUN_NAME: "Playwright Test Run - Branch: ${{ github.ref_name }} - Commit: ${{ github.sha }}"
           NODE_PATH: ${{ secrets.NODE_PATH }}
@@ -136,6 +142,22 @@ jobs:
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
           TEST_USER_ADMIN: ${{ secrets.TEST_USER_ADMIN }}
           TEST_USER_ADMIN_PASSWORD: ${{ secrets.TEST_USER_ADMIN_PASSWORD }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: test-automation/playwright-report/
+          retention-days: 30
+
+      - name: Upload test traces
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-traces
+          path: test-automation/test-results/
+          retention-days: 30
 
       - name: Notify Slack Workflow
         if: always()
