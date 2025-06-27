@@ -13,16 +13,10 @@ export const ContactCountsInfoModal = ({
   pathToVictory = {},
 }) => {
   const {
-    totalRegisteredVoters,
     projectedTurnout,
     voterContactGoal,
     winNumber,
   } = pathToVictory
-  const turnoutPerc = numberFormatter(
-    totalRegisteredVoters
-      ? (projectedTurnout / totalRegisteredVoters) * 100
-      : 0,
-  )
 
   return (
     <Modal
@@ -47,19 +41,11 @@ export const ContactCountsInfoModal = ({
           <H2 className="text-center">How we calculate this number</H2>
           <ol className="mt-6 list-decimal list-inside [&>li]:marker:font-normal [&>li]:marker:text-base [&>li]:font-outfit [&>li]:mb-2">
             <li>
-              There are{' '}
-              <span className="font-semibold">
-                {numberFormatter(totalRegisteredVoters)}
-              </span>{' '}
-              total voters in your district.
-            </li>
-            <li>
               We expect{' '}
               <span className="font-semibold">
                 {numberFormatter(projectedTurnout)}
               </span>{' '}
-              people to vote based on previous elections (
-              <span className="font-semibold">{turnoutPerc}%</span> turnout).
+              people to vote on trends from similar previous elections in this district.
             </li>
             <li>
               You need{' '}

@@ -58,7 +58,7 @@ export default function DownloadStep({
   }
 
   return (
-    <div className="p-4 min-w-[500px]">
+    <div className="p-4">
       <H1 className="text-center mb-8">Download your materials</H1>
       <div className="flex flex-col gap-4 items-center">
         <CopyScriptButton

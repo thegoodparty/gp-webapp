@@ -38,7 +38,7 @@ export default function AddEcanvasser({ open, onClose, createCallback }) {
   const isDisabled = !email || !apiKey || !isValidEmail(email)
   return (
     <Modal open={open} closeCallback={onClose}>
-      <div className="min-w-[500px]">
+      <div className="p-4">
         <H2 className="mb-4">Add a new Ecanvasser</H2>
         <form onSubmit={handleSubmit}>
           <EmailInput
