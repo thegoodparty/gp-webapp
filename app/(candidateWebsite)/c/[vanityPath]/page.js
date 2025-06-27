@@ -20,6 +20,9 @@ export async function generateMetadata({ params }) {
   return {
     title: `${website.content?.main?.title} | GoodParty.org`,
     description: website.content?.main?.tagline,
+    other: {
+      isCandidateWebsite: true,
+    },
   }
 }
 
