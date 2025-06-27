@@ -43,3 +43,7 @@ next-env.d.ts
 
 # editor config
 /.vscode
+
+# AI Tools
+/.ai/
+*repomix*
