@@ -39,6 +39,8 @@
     "@mui/material": "^7.1.0",
     "@react-google-maps/api": "^2.20.6",
     "@react-oauth/google": "^0.11.0",
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.4.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/postcss": "^4.1.6",
     "@tailwindcss/typography": "^0.5.15",
