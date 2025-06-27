@@ -560,6 +560,20 @@ export const apiRoutes = {
       method: 'GET',
     },
   },
+  domain: {
+    search: {
+      path: '/domains/search',
+      method: 'GET',
+    },
+    register: {
+      path: '/domains',
+      method: 'POST',
+    },
+    completeRegistration: {
+      path: '/domains/complete',
+      method: 'POST',
+    },
+  },
 }
 
 export const electionApiRoutes = {
