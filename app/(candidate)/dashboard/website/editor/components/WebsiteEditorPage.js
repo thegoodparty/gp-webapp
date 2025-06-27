@@ -10,7 +10,9 @@ import {
   publishWebsite,
   unpublishWebsite,
   WEBSITE_STATUS,
+  fetchWebsite,
 } from '../../util/website.util'
+import DomainForm from './DomainForm'
 
 export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
   const [campaign] = useCampaign()
@@ -18,13 +20,30 @@ export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
   const [saveLoading, setSaveLoading] = useState(false)
   const { errorSnackbar } = useSnackbar()
 
-  function handleChange(updatedContent) {
+  function handleContentChange(updatedContent) {
     setWebsite((current) => ({ ...current, content: updatedContent }))
+  }
+
+  function handleVanityPathChange(vanityPath) {
+    setWebsite((current) => ({ ...current, vanityPath }))
+  }
+
+  async function handleRegisterSuccess() {
+    const resp = await fetchWebsite()
+    if (resp.ok) {
+      setWebsite(resp.data)
+    } else {
+      console.error('Failed to reload website', resp)
+      window.location.reload()
+    }
   }
 
   async function handleSave(updatedContent) {
     setSaveLoading(true)
-    const resp = await updateWebsite(updatedContent)
+    const resp = await updateWebsite({
+      ...updatedContent,
+      vanityPath: website.vanityPath,
+    })
     setSaveLoading(false)
     if (!resp.ok) {
       console.error('Failed to update website', resp)
@@ -56,14 +75,21 @@ export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <div className="flex gap-4">
-        <EditForm
-          onChange={handleChange}
-          onSave={handleSave}
-          saveLoading={saveLoading}
-          website={website}
-          onPublish={handlePublish}
-          onUnpublish={handleUnpublish}
-        />
+        <div className="flex flex-col gap-4">
+          <DomainForm
+            website={website}
+            onVanityPathChange={handleVanityPathChange}
+            onRegisterSuccess={handleRegisterSuccess}
+          />
+          <EditForm
+            onChange={handleContentChange}
+            onSave={handleSave}
+            saveLoading={saveLoading}
+            website={website}
+            onPublish={handlePublish}
+            onUnpublish={handleUnpublish}
+          />
+        </div>
         <WebsitePreview website={website} campaign={campaign} />
       </div>
     </DashboardLayout>
