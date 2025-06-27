@@ -713,6 +713,7 @@ export async function prepareTest(type, url, text, page, browser = null) {
             console.log('Using recent admin session, skipping validation...');
             await safePageNavigation(page, url);
             console.log('Successfully navigated with recent admin session');
+            await page.waitForTimeout(10000);
             return page;
           } catch (error) {
             console.log('Recent admin session failed, trying with validation...');
