@@ -1,30 +1,25 @@
 'use client'
 import EmailInput, { isValidEmail } from '@shared/inputs/EmailInput.js'
 import PasswordInput from '@shared/inputs/PasswrodInput.js'
-import gpApi from 'gpApi/index.js'
-import {
-  deleteCookie,
-  getCookie,
-  setUserCookie,
-} from 'helpers/cookieHelper.js'
+import { setUserCookie } from 'helpers/cookieHelper.js'
 import Link from 'next/link.js'
 import { Suspense, useState } from 'react'
-import gpFetch from 'gpApi/gpFetch.js'
 import H1 from '@shared/typography/H1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import { isValidPassword } from '@shared/inputs/IsValidPassword'
-import { fetchCampaignStatus } from 'helpers/fetchCampaignStatus'
 import { useUser } from '@shared/hooks/useUser'
 import CardPageWrapper from '@shared/cards/CardPageWrapper'
 import Body2 from '@shared/typography/Body2'
 import SocialLoginButtons from './SocialLoginButtons'
 import saveToken from 'helpers/saveToken'
 import { useSnackbar } from 'helpers/useSnackbar'
-import { USER_ROLES, userHasRole } from 'helpers/userHelper'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { trackEvent, EVENTS } from 'helpers/analyticsHelper'
+import { EVENTS, trackEvent } from 'helpers/analyticsHelper'
 import { useAnalytics } from '@shared/hooks/useAnalytics'
+import { useRouter } from 'next/navigation'
+
+import { doLoginRedirect } from '@shared/utils/doLoginRedirect'
 
 export const validateZip = (zip) => {
   const validZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/
@@ -45,15 +40,6 @@ async function login(email, password) {
   }
 }
 
-const getCampaignRequests = async (userId) => {
-  try {
-    return await gpFetch(gpApi.campaign.campaignRequests.get, { userId })
-  } catch (e) {
-    console.log('error at getCampaignRequests', e)
-    return {}
-  }
-}
-
 export default function LoginPage() {
   const [state, setState] = useState({
     email: '',
@@ -63,6 +49,7 @@ export default function LoginPage() {
   const [_, setUser] = useUser()
   const { errorSnackbar } = useSnackbar()
   const analytics = useAnalytics()
+  const router = useRouter()
 
   const enableSubmit = () =>
     isValidEmail(state.email) && isValidPassword(state.password)
@@ -76,38 +63,9 @@ export default function LoginPage() {
         setUserCookie(user)
         setUser(user)
         const { id, email, firstName, lastName, phone, zip } = user
-        analytics.identify(id, { email, firstName, lastName, phone, zip})
-        
-        const campaignRequests = await getCampaignRequests(user.id)
+        analytics.identify(id, { email, firstName, lastName, phone, zip })
 
-        if (campaignRequests?.length) {
-          window.location.href = '/onboarding/managing/final'
-          return
-        }
-
-        const returnUrl = getCookie('returnUrl')
-        if (returnUrl) {
-          deleteCookie('returnUrl')
-          window.location.href = returnUrl
-          return
-        }
-
-        if (userHasRole(user, USER_ROLES.SALES)) {
-          window.location.href = '/sales/add-campaign'
-          return
-        }
-
-        const status = await fetchCampaignStatus()
-
-        if (status?.status === 'candidate') {
-          window.location.href = '/dashboard'
-          return
-        }
-        if (status?.status === 'volunteer') {
-          window.location.href = '/volunteer-dashboard'
-          return
-        }
-        window.location.href = '/'
+        await doLoginRedirect(router, user)
       } else {
         errorSnackbar(
           'Invalid login. Please check your credentials and try again.',
