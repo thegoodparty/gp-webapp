@@ -26,7 +26,6 @@ export default async function sitemap() {
     '/team',
     '/candidates',
     '/login',
-    '/register',
     '/faqs',
     '/privacy',
     '/work-with-us',
