@@ -3,7 +3,7 @@
 import TextField from '@shared/inputs/TextField'
 import H2 from '@shared/typography/H2'
 import { Select } from '@mui/material'
-import { WEBSITE_THEMES } from './WebsiteContent'
+import { WEBSITE_THEMES } from 'app/(candidateWebsite)/c/[vanityPath]/constants/websiteContent.const'
 import Paper from '@shared/utils/Paper'
 import FileDropZone from '@shared/inputs/FileDropZone'
 import ImageCropPreview from '@shared/inputs/ImageCropPreview'
@@ -14,10 +14,19 @@ import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import Button from '@shared/buttons/Button'
 import Image from 'next/image'
+import { WEBSITE_STATUS } from '../../util/websiteFetch.util'
 
 const THEME_OPTIONS = Object.keys(WEBSITE_THEMES)
 
-export default function EditForm({ content, onChange, onSave, saveLoading }) {
+export default function EditForm({
+  website,
+  onChange,
+  onSave,
+  onPublish,
+  onUnpublish,
+  saveLoading,
+}) {
+  const content = website.content
   const [logoFile, setLogoFile] = useState(null)
   const [heroFile, setHeroFile] = useState(null)
 
@@ -223,6 +232,15 @@ export default function EditForm({ content, onChange, onSave, saveLoading }) {
         <Button loading={saveLoading} disabled={saveLoading} type="submit">
           Save
         </Button>
+        {website.status === WEBSITE_STATUS.unpublished ? (
+          <Button color="success" onClick={onPublish}>
+            Publish
+          </Button>
+        ) : (
+          <Button color="error" onClick={onUnpublish}>
+            Unpublish
+          </Button>
+        )}
       </form>
     </Paper>
   )
