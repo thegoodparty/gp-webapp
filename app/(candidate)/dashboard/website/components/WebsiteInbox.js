@@ -94,7 +94,6 @@ export default function WebsiteInbox({}) {
   }
 
   function handleRowClick(row) {
-    console.log(row)
     setModalContact(row)
   }
 
