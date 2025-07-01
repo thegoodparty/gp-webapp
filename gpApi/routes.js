@@ -528,6 +528,12 @@ export const apiRoutes = {
       method: 'POST',
     },
   },
+  issues: {
+    list: {
+      path: '/issues',
+      method: 'GET',
+    },
+  },
   outreach: {
     create: {
       path: '/outreach',

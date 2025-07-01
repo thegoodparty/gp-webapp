@@ -2,11 +2,11 @@ import { kebabCase } from 'es-toolkit'
 import { segmentTrackEvent } from './segmentHelper'
 
 const UTM_KEYS = [
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_content",
-  "utm_term",
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
 ]
 
 const CLID_SUFFIX = 'clid'
@@ -21,7 +21,7 @@ export const EVENTS = {
   },
   Password: {
     PasswordResetRequested: 'Account - Password Reset Requested',
-    PasswordResetCompleted: 'Account - Password Reset Completed'
+    PasswordResetCompleted: 'Account - Password Reset Completed',
   },
   SetPassword: {
     ClickSetPassword: 'Set Password: Click Set Password',
@@ -35,7 +35,7 @@ export const EVENTS = {
       OfficeSelected: 'Onboarding - Office Step: Office Selected',
       ClickCantSeeOffice: "Onboarding - Office Step: Click Can't See Office",
       OfficeSearched: 'Onboarding - Candidate Office Searched',
-      OfficeCompleted: 'Onboarding - Candidate Office Completed'
+      OfficeCompleted: 'Onboarding - Candidate Office Completed',
     },
     PartyStep: {
       ClickSubmit: 'Onboarding - Party Step: Click Submit',
@@ -47,7 +47,6 @@ export const EVENTS = {
     CompleteStep: {
       ClickGoToDashboard: 'Onboarding - Complete Step: Click Go to Dashboard',
     },
-    
   },
   Navigation: {
     Top: {
@@ -65,6 +64,7 @@ export const EVENTS = {
       ClickVoterData: 'Navigation - Dashboard: Click Voter Data',
       ClickDoorKnocking: 'Navigation - Dashboard: Click Door Knocking',
       ClickTextMessaging: 'Navigation - Dashboard: Click Text Messaging',
+      ClickIssues: 'Navigation - Dashboard: Click Issues',
       ClickContentBuilder: 'Navigation - Dashboard: Click Content Builder',
       ClickMyProfile: 'Navigation - Dashboard: Click My Profile',
       ClickCampaignTeam: 'Navigation - Dashboard: Click Campaign Team',
@@ -369,7 +369,7 @@ export function extractClids(searchParams) {
   const clids = {}
 
   for (const [key, value] of searchParams.entries()) {
-    if (key.toLowerCase().endsWith("clid")) {
+    if (key.toLowerCase().endsWith('clid')) {
       clids[key] = value
     }
   }
@@ -379,7 +379,7 @@ export function extractClids(searchParams) {
 export function trackRegistrationCompleted({
   analytics,
   userId,
-  signUpMethod = 'email'
+  signUpMethod = 'email',
 }) {
   const signUpDate = new Date().toISOString()
 
@@ -422,12 +422,12 @@ export function persistClidsOnce() {
     if (!key.toLowerCase().endsWith(CLID_SUFFIX) || !value) continue
 
     const firstKey = `${key}_first`
-    const lastKey  = `${key}_last`
+    const lastKey = `${key}_last`
 
     if (!sessionStorage.getItem(firstKey)) {
       sessionStorage.setItem(firstKey, value) // write-once
     }
-    sessionStorage.setItem(lastKey, value)     // always update
+    sessionStorage.setItem(lastKey, value) // always update
   }
 }
 
@@ -450,8 +450,10 @@ export function getPersistedClids() {
 
   for (let i = 0; i < sessionStorage.length; i++) {
     const key = sessionStorage.key(i)
-    if (key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
-    key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)) {
+    if (
+      key.toLowerCase().endsWith(`${CLID_SUFFIX}_first`) ||
+      key.toLowerCase().endsWith(`${CLID_SUFFIX}_last`)
+    ) {
       clids[key] = sessionStorage.getItem(key)
     }
   }
