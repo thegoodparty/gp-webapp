@@ -13,6 +13,8 @@ const testResultStatuses = [];
 
 // Helper to post results to TestRail
 export async function addTestResult(runId, caseId, statusId, comment = '') {
+    console.log(`Attempting to update TestRail: runId=${runId}, caseId=${caseId}, statusId=${statusId}`);
+    
     try {
         const response = await axios.post(
             `${TESTRAIL_URL}/index.php?/api/v2/add_result_for_case/${runId}/${caseId}`,
@@ -27,6 +29,7 @@ export async function addTestResult(runId, caseId, statusId, comment = '') {
         return response.data;
     } catch (error) {
         console.error(`Failed to update TestRail case ID ${caseId}:`, error.message);
+        console.error(`Error response:`, error.response?.data);
         testResultStatuses.push(5);
         throw error;
     }
@@ -123,18 +126,59 @@ export async function handleTestFailure(page: Page, runId: string, caseId: numbe
 }
 
 export async function setupTestReporting(test: any, caseId: number) {
-    const runId = fs.readFileSync('testRunId.txt', 'utf-8');
+    const runId = fs.readFileSync('testRunId.txt', 'utf-8').trim();
 
     test.afterEach(async ({ page }, testInfo) => {
-        // Only report after all retries are complete
-        if (testInfo.retry === testInfo.retries) {
+        console.log(`TestRail reporting for case ${caseId}: status=${testInfo.status}, retry=${testInfo.retry}, retries=${testInfo.retries}`);
+        console.log(`Reporting result for case ${caseId} with status: ${testInfo.status}`);
+        
+        try {
             if (testInfo.status === 'passed') {
-                await addTestResult(runId, caseId, 1, 'Test passed');
+                console.log(`Marking case ${caseId} as PASSED`);
+                await addTestResult(runId, caseId, 1, 'Test passed successfully');
             } else if (testInfo.status === 'failed') {
+                console.log(`Marking case ${caseId} as FAILED`);
                 await handleTestFailure(page, runId, caseId, testInfo.error);
+            } else if (testInfo.status === 'skipped') {
+                console.log(`Marking case ${caseId} as SKIPPED`);
+                await addTestResult(runId, caseId, 4, 'Test was skipped');
+            } else if (testInfo.status === 'timedOut') {
+                console.log(`Marking case ${caseId} as FAILED (timeout)`);
+                await addTestResult(runId, caseId, 5, `Test timed out after ${testInfo.timeout}ms`);
+            } else {
+                console.log(`Marking case ${caseId} as FAILED (unknown status: ${testInfo.status})`);
+                await addTestResult(runId, caseId, 5, `Test failed with unknown status: ${testInfo.status}`);
+            }
+        } catch (reportingError) {
+            console.error(`Error reporting result for case ${caseId}:`, reportingError.message);
+            // Try to report the failure anyway
+            try {
+                await addTestResult(runId, caseId, 5, `Error during reporting: ${reportingError.message}`);
+            } catch (finalError) {
+                console.error(`Final reporting attempt failed for case ${caseId}:`, finalError.message);
             }
         }
     });
 }
 
-module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure, setupTestReporting };
+export async function reportSkippedTests() {
+    const runId = fs.readFileSync('testRunId.txt', 'utf-8').trim();
+    
+    try {
+        const response = await axios.get(`${TESTRAIL_URL}/index.php?/api/v2/get_tests/${runId}`, { auth: AUTH });
+        const tests = response.data.tests;
+        
+        const untestedTests = tests.filter((test) => !test.status_id || test.status_id === null);
+        
+        console.log(`Found ${untestedTests.length} untested tests, marking as skipped`);
+        
+        for (const test of untestedTests) {
+            console.log(`Marking case ${test.case_id} as SKIPPED (was untested)`);
+            await addTestResult(runId, test.case_id, 4, 'Test was skipped (not executed)');
+        }
+    } catch (error) {
+        console.error('Error reporting skipped tests:', error.message);
+    }
+}
+
+module.exports = { addTestResult, createTestRun, checkForTestFailures, authFileCheck, handleTestFailure, setupTestReporting, reportSkippedTests };

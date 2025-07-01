@@ -59,5 +59,21 @@ export async function getNavatticPlayerFrame(page, popUp = false) {
 }
 
 export async function documentReady(page) {
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
+    
+    try {
+        await page.waitForLoadState('networkidle', { timeout: 30000 });
+    } catch (error) {
+        console.log('Network idle timeout, continuing anyway...');
+    }
+
+    try {
+        await page.waitForFunction(() => {
+            return document.readyState === 'complete' && 
+                   !document.querySelector('.loading') && 
+                   !document.querySelector('[data-loading="true"]');
+        }, { timeout: 15000 });
+    } catch (error) {
+        console.log('Page ready state check timeout, continuing anyway...');
+    }
 }
