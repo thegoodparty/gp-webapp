@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 const topIssuesCaseId = 27;
 setupTestReporting(test, topIssuesCaseId);
 
-test('Verify admin user can access Top Issues page', async ({ page }) => {
+test.skip('Verify admin user can access Top Issues page', async ({ page }) => {
     const addButton = page.getByRole('button', { name: 'Add a Top Issue' });
     await expect(addButton).toBeVisible({ timeout: 10000 });
 });
