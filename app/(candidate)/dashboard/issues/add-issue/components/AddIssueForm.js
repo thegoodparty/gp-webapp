@@ -46,14 +46,6 @@ const fields = [
     ],
   },
 ]
-/*
-inPersonMeeting
-  phoneCall
-  email
-  socialMedia
-  letterMail
-  other
-*/
 
 const mapChannelToValue = {
   'In-person Meeting': 'inPersonMeeting',

@@ -22,9 +22,10 @@ export const dynamic = 'force-dynamic'
 export default async function Page({ params, searchParams }) {
   await adminAccessOnly()
 
-  const [campaign] = await Promise.all([fetchUserCampaign()])
-
-  const issues = []
+  const [campaign, issues] = await Promise.all([
+    fetchUserCampaign(),
+    fetchIssues(),
+  ])
 
   return (
     <IssuesPage

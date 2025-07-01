@@ -4,6 +4,7 @@ import { useCampaign } from '@shared/hooks/useCampaign'
 import { IssuesProvider } from '@shared/hooks/IssuesProvider'
 import IssuesHeader from './IssuesHeader'
 import EmptyIssueState from './EmptyIssueState'
+import IssueList from './IssueList'
 
 export default function IssuesPage({
   pathname,
@@ -16,7 +17,7 @@ export default function IssuesPage({
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <IssuesProvider issues={issues}>
         <IssuesHeader />
-        {issues?.length === 0 && <EmptyIssueState />}
+        {issues?.length === 0 ? <EmptyIssueState /> : <IssueList />}
       </IssuesProvider>
     </DashboardLayout>
   )

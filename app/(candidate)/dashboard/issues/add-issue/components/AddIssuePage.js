@@ -4,6 +4,7 @@ import AddIssueForm from './AddIssueForm'
 import Link from 'next/link'
 import Body2 from '@shared/typography/Body2'
 import { MdOutlineArrowBack } from 'react-icons/md'
+import Paper from '@shared/utils/Paper'
 
 export default function AddIssuePage() {
   return (
@@ -21,9 +22,9 @@ export default function AddIssuePage() {
           Manually log an issue reported via phone, in-person meeting, or other
           channel.
         </Body1>
-        <div className="mt-8 bg-white rounded-xl border border-slate-200 p-4">
+        <Paper className="mt-8 ">
           <AddIssueForm />
-        </div>
+        </Paper>
       </div>
     </div>
   )
