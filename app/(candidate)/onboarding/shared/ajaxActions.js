@@ -70,10 +70,15 @@ export function onboardingStep(campaign, step) {
   return `onboarding-${nextStep}`
 }
 
-export async function createCampaign() {
+export async function handleCreateCampaign(existingCampaign) {
   try {
-    const resp = await clientFetch(apiRoutes.campaign.create)
-    const { slug } = resp.data
+    let campaign = existingCampaign
+    if (!campaign) {
+      const resp =
+        existingCampaign || (await clientFetch(apiRoutes.campaign.create))
+      campaign = resp.data
+    }
+    const { slug } = campaign
 
     if (slug) {
       deleteCookie('afterAction')

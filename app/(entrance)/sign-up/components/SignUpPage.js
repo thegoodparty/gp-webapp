@@ -14,10 +14,14 @@ import saveToken from 'helpers/saveToken'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { createCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { handleCreateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
-import { EVENTS, trackEvent, trackRegistrationCompleted } from 'helpers/analyticsHelper'
+import {
+  EVENTS,
+  trackEvent,
+  trackRegistrationCompleted,
+} from 'helpers/analyticsHelper'
 import { useAnalytics } from '@shared/hooks/useAnalytics'
 
 const SIGN_UP_MODES = {
@@ -190,7 +194,7 @@ export default function SignUpPage() {
     setLoading(true)
 
     if (enableSubmit) {
-      const { user, token } = await register({
+      const { user, token, campaign } = await register({
         firstName: facilitatedSignUpMode ? candidateFirstName : firstName,
         lastName: facilitatedSignUpMode ? candidateLastName : lastName,
         email,
@@ -209,11 +213,11 @@ export default function SignUpPage() {
       setUser(user)
 
       trackRegistrationCompleted({
-        analytics, 
+        analytics,
         userId: user.id,
       })
 
-      const redirect = await createCampaign()
+      const redirect = await handleCreateCampaign(campaign)
       setLoading(false)
       router.push(redirect)
     }
