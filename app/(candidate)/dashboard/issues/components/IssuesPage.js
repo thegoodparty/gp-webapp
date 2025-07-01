@@ -16,7 +16,7 @@ export default function IssuesPage({
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <IssuesProvider issues={issues}>
         <IssuesHeader />
-        {issues.length === 0 && <EmptyIssueState />}
+        {issues?.length === 0 && <EmptyIssueState />}
       </IssuesProvider>
     </DashboardLayout>
   )
