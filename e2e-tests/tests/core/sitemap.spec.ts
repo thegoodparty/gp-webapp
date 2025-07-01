@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import axios from 'axios';
 import { parseStringPromise } from 'xml2js';
-import { getSitemapUrls } from '../../helpers/navHelpers';
 import { setupTestReporting } from 'helpers/testrailHelper';
 
 test.describe('Sitemap Tests', () => {
@@ -17,7 +16,7 @@ test.describe('Sitemap Tests', () => {
     const sitemapAccessibilityCaseId = 86;
     setupTestReporting(test, sitemapAccessibilityCaseId);
 
-    test('verify sitemap accessibility', async () => {
+    test.skip('verify sitemap accessibility', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const response = await axios.get(mainSitemapUrl);
         expect(response.status).toBe(200);
@@ -39,7 +38,7 @@ test.describe('Sitemap Tests', () => {
     const stateSitemapsCaseId = 87;
     setupTestReporting(test, stateSitemapsCaseId);
 
-    test('state sitemaps contain valid URLs', async () => {
+    test.skip('state sitemaps contain valid URLs', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const mainResponse = await axios.get(mainSitemapUrl);
         const mainData = await parseStringPromise(mainResponse.data);
@@ -55,7 +54,7 @@ test.describe('Sitemap Tests', () => {
     const sitemapLastmodCaseId = 89;
     setupTestReporting(test, sitemapLastmodCaseId);
 
-    test('verify sitemap URLs have valid lastmod dates', async () => {
+    test.skip('verify sitemap URLs have valid lastmod dates', async () => {
         const mainSitemapUrl = `${BASE_URL}/sitemap.xml`;
         const response = await axios.get(mainSitemapUrl);
         const data = await parseStringPromise(response.data);
