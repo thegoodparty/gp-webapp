@@ -2,14 +2,9 @@
 import Paper from '@shared/utils/Paper'
 import Body1 from '@shared/typography/Body1'
 import H3 from '@shared/typography/H3'
-import { useIssues } from '@shared/hooks/useIssues'
 import AddIssueButton from './AddIssueButton'
 
 export default function EmptyIssueState() {
-  const [issues] = useIssues()
-
-  if (issues.length > 0) return null
-
   return (
     <Paper className="mt-8">
       <div className="py-4 md:py-12 lg:py-24 flex flex-col items-center">

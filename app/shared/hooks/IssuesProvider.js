@@ -19,7 +19,7 @@ export function IssuesProvider({ children, issues: initialIssues }) {
   }
 
   return (
-    <IssuesContext.Provider value={[issues, refreshIssues]}>
+    <IssuesContext.Provider value={[issues, setIssues, refreshIssues]}>
       {children}
     </IssuesContext.Provider>
   )
