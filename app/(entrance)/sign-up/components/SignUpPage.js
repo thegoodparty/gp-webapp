@@ -14,7 +14,7 @@ import saveToken from 'helpers/saveToken'
 import { useSnackbar } from 'helpers/useSnackbar'
 import { apiRoutes } from 'gpApi/routes'
 import { clientFetch } from 'gpApi/clientFetch'
-import { handleCreateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { doPostAuthRedirect } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import Button from '@shared/buttons/Button'
 import { useRouter } from 'next/navigation'
 import {
@@ -217,7 +217,7 @@ export default function SignUpPage() {
         userId: user.id,
       })
 
-      const redirect = await handleCreateCampaign(campaign)
+      const redirect = await doPostAuthRedirect(campaign)
       setLoading(false)
       router.push(redirect)
     }

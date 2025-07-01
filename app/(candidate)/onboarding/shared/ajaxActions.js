@@ -3,6 +3,7 @@
 import { deleteCookie, getCookie } from 'helpers/cookieHelper'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
+import { ONBOARDING_STEPS } from 'app/(candidate)/onboarding/onboarding.consts'
 
 export async function updateCampaign(attr, slug) {
   try {
@@ -62,15 +63,19 @@ export async function fetchCampaignVersions() {
   }
 }
 
+export const parseNumericOnboardingStep = (currentStep = '') =>
+  parseInt(`${currentStep || ''}`.replace(/\D/g, '') || 0)
+
 export function onboardingStep(campaign, step) {
-  const numericStep = campaign?.currentStep
-    ? `${campaign.currentStep}`.replace(/\D/g, '')
-    : 0
+  const numericStep = parseNumericOnboardingStep(campaign?.currentStep)
+
   const nextStep = Math.max(numericStep, step)
   return `onboarding-${nextStep}`
 }
 
-export async function handleCreateCampaign(existingCampaign) {
+// TODO: Refactor/break this up. It's doing WAY too much for one method and is
+//  VERY confusing and brittle.
+export async function doPostAuthRedirect(existingCampaign) {
   try {
     let campaign = existingCampaign
     if (!campaign) {
@@ -78,7 +83,8 @@ export async function handleCreateCampaign(existingCampaign) {
         existingCampaign || (await clientFetch(apiRoutes.campaign.create))
       campaign = resp.data
     }
-    const { slug } = campaign
+    const { slug, data: campaignData } = campaign || {}
+    const { currentStep } = campaignData || {}
 
     if (slug) {
       deleteCookie('afterAction')
@@ -93,7 +99,9 @@ export async function handleCreateCampaign(existingCampaign) {
         deleteCookie('claimProfile')
       }
 
-      return `/onboarding/${slug}/1`
+      return currentStep === ONBOARDING_STEPS.COMPLETE
+        ? '/dashboard'
+        : `/onboarding/${slug}/${parseNumericOnboardingStep(currentStep) + 1}`
     }
   } catch (e) {
     return false

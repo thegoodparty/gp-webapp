@@ -1,12 +1,12 @@
 import { deleteDemoCampaign } from '@shared/utils/deleteDemoCampaign'
 import { updateUser } from 'helpers/userHelper'
-import { handleCreateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { doPostAuthRedirect } from 'app/(candidate)/onboarding/shared/ajaxActions'
 
 export const handleDemoAccountDeletion = (errorSnackbar) => async () => {
   try {
     await deleteDemoCampaign()
     await updateUser()
-    const redirect = await handleCreateCampaign()
+    const redirect = await doPostAuthRedirect()
     window.location.href = redirect
   } catch (e) {
     console.error(e)

@@ -1,7 +1,7 @@
 'use client'
 import MaxWidth from '@shared/layouts/MaxWidth'
 import { useState } from 'react'
-import { handleCreateCampaign } from 'app/(candidate)/onboarding/shared/ajaxActions'
+import { doPostAuthRedirect } from 'app/(candidate)/onboarding/shared/ajaxActions'
 import H1 from '@shared/typography/H1'
 import PrimaryButton from '@shared/buttons/PrimaryButton'
 import TextField from '@shared/inputs/TextField'
@@ -33,7 +33,7 @@ export default function SetNamePage() {
         deleteCookie('returnUrl')
         window.location.href = returnUrl
       } else {
-        const redirect = await handleCreateCampaign()
+        const redirect = await doPostAuthRedirect()
         window.location.href = redirect
       }
     } else {
