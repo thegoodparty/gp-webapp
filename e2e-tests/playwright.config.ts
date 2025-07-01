@@ -2,6 +2,7 @@ import { defineConfig } from "@playwright/test";
 import 'dotenv/config';
 
 console.log('BASE_URL from env:', process.env.BASE_URL);
+console.log('HEADED_MODE from env:', process.env.HEADED_MODE);
 
 export default defineConfig({
   globalSetup: require.resolve("./globalSetup.js"),
@@ -19,6 +20,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:4000/",
     storageState: undefined,
+    headless: !process.env.HEADED_MODE,
     contextOptions: {
       viewport: null,
       ignoreHTTPSErrors: true,
@@ -45,6 +47,30 @@ export default defineConfig({
         '--disable-renderer-backgrounding',
         '--disable-features=TranslateUI',
         '--disable-ipc-flooding-protection',
+        '--disable-web-security',
+        '--disable-features=VizDisplayCompositor',
+        '--disable-extensions',
+        '--disable-plugins',
+        '--disable-default-apps',
+        '--disable-sync',
+        '--disable-translate',
+        '--hide-scrollbars',
+        '--mute-audio',
+        '--no-default-browser-check',
+        '--no-pings',
+        '--disable-background-networking',
+        '--disable-component-extensions-with-background-pages',
+        '--metrics-recording-only',
+        '--safebrowsing-disable-auto-update',
+        '--disable-client-side-phishing-detection',
+        '--disable-component-update',
+        '--disable-domain-reliability',
+        '--disable-features=AudioServiceOutOfProcess',
+        ...(process.env.HEADED_MODE ? [
+          '--display=:99',
+          '--no-sandbox',
+          '--disable-dev-shm-usage'
+        ] : []),
       ],
     },
   },
