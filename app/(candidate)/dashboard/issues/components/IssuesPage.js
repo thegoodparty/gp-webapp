@@ -7,23 +7,17 @@ import EmptyIssueState from './EmptyIssueState'
 
 export default function IssuesPage({
   pathname,
-  campaign: propCampaign,
+  campaign: initCampaign,
   issues,
 }) {
-  const [hookCampaign] = useCampaign()
-
-  const campaign = hookCampaign ?? propCampaign
+  const [campaign] = useCampaign(initCampaign)
 
   return (
-    <IssuesProvider issues={issues}>
-      <DashboardLayout
-        pathname={pathname}
-        campaign={campaign}
-        showAlert={false}
-      >
+    <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
+      <IssuesProvider issues={issues}>
         <IssuesHeader />
-        <EmptyIssueState />
-      </DashboardLayout>
-    </IssuesProvider>
+        {issues.length === 0 && <EmptyIssueState />}
+      </IssuesProvider>
+    </DashboardLayout>
   )
 }
