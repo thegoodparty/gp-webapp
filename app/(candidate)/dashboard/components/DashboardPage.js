@@ -114,7 +114,7 @@ export default function DashboardPage({
   const primaryLost = primaryResultState.primaryResult === 'lost'
 
   if (electionInPast || primaryLost) {
-    //for usersnap to pick up if this issue persists
+    //for usersnap to pick up if this issue persists. https://goodparty.atlassian.net/browse/WEB-3915
     console.log(
       `displaying election over - electionInPast: ${electionInPast}, primaryLost: ${primaryLost}, resolvedDate: ${resolvedDate}, weeksUntil: ${JSON.stringify(
         weeksUntil,
