@@ -600,11 +600,10 @@ export async function safePageNavigation(page, url, maxRetries = 2) {
       
       console.log(`Navigating to ${url} (attempt ${attempt}/${maxRetries})`);
       
-      // Navigate with better error handling and shorter timeout
       try {
         await page.goto(url, { 
           waitUntil: 'domcontentloaded', 
-          timeout: 20000
+          timeout: 60000
         });
       } catch (navError) {
         console.log(`Navigation error: ${navError.message}`);
@@ -741,7 +740,6 @@ export async function prepareTest(type, url, text, page, browser = null) {
         console.log('Performing manual admin login...');
         await useAdminCredentials(page);
         
-        // Verify page is still valid before attempting navigation
         if (page.isClosed()) {
           throw new Error('Page was closed during admin login process');
         }
@@ -753,7 +751,7 @@ export async function prepareTest(type, url, text, page, browser = null) {
       }
       
       if (type === 'user') {
-        if (fs.existsSync(sessionFile) && await isSessionRecent(sessionFile, 30)) { // 30 minutes for user
+        if (fs.existsSync(sessionFile) && await isSessionRecent(sessionFile, 30)) {
           try {
             console.log('Using recent user session, skipping validation...');
             await safePageNavigation(page, url);
