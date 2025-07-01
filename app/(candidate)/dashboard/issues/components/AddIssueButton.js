@@ -3,7 +3,7 @@ import { FaPlus } from 'react-icons/fa'
 
 export default function AddIssueButton() {
   return (
-    <Button color="info">
+    <Button color="info" href="/dashboard/issues/add-issue">
       <div className="flex items-center gap-2">
         <FaPlus />
         Add an issue
