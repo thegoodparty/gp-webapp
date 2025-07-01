@@ -4,67 +4,20 @@ import Image from 'next/image'
 import Checkbox from '@shared/inputs/Checkbox'
 import H1 from '@shared/typography/H1'
 import Button from '@shared/buttons/Button'
-import PlaceholderImage from './PlaceholderImage'
+import PlaceholderImage from '../../../../(candidate)/dashboard/website/editor/components/PlaceholderImage'
 import H2 from '@shared/typography/H2'
 import { clientFetch } from 'gpApi/clientFetch'
 import { apiRoutes } from 'gpApi/routes'
 import TextField from '@shared/inputs/TextField'
 import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
+import { WEBSITE_THEMES } from '../constants/websiteContent.const'
 
-function submitContactForm(formData) {
-  return clientFetch(apiRoutes.website.contactForm, formData)
-}
-
-export const WEBSITE_THEMES = {
-  light: {
-    bg: 'bg-white',
-    text: 'text-gray-800',
-    accent: 'bg-campaign-blue-500',
-    accentText: 'text-white',
-    secondary: 'bg-gray-100',
-    border: 'border-gray-200',
-  },
-  dark: {
-    bg: 'bg-gray-900',
-    text: 'text-white',
-    accent: 'bg-white',
-    accentText: 'text-gray-900',
-    secondary: 'bg-gray-800',
-    border: 'border-gray-700',
-  },
-  vibrant: {
-    bg: 'bg-indigo-50',
-    text: 'text-indigo-900',
-    accent: 'bg-indigo-600',
-    accentText: 'text-white',
-    secondary: 'bg-pink-100',
-    border: 'border-indigo-200',
-  },
-  earthy: {
-    bg: 'bg-amber-50',
-    text: 'text-amber-900',
-    accent: 'bg-amber-600',
-    accentText: 'text-white',
-    secondary: 'bg-amber-100',
-    border: 'border-amber-200',
-  },
-  professional: {
-    bg: 'bg-slate-50',
-    text: 'text-slate-900',
-    accent: 'bg-slate-700',
-    accentText: 'text-white',
-    secondary: 'bg-slate-200',
-    border: 'border-slate-300',
-  },
-  energetic: {
-    bg: 'bg-orange-50',
-    text: 'text-orange-900',
-    accent: 'bg-orange-500',
-    accentText: 'text-white',
-    secondary: 'bg-orange-100',
-    border: 'border-orange-200',
-  },
+function submitContactForm(vanityPath, formData) {
+  return clientFetch(apiRoutes.website.submitContactForm, {
+    ...formData,
+    vanityPath,
+  })
 }
 
 // From gp-api
@@ -107,7 +60,7 @@ export default function WebsiteContent({ website }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    submitContactForm(formData)
+    submitContactForm(website.vanityPath, formData)
   }
 
   function handleChange(name, value) {

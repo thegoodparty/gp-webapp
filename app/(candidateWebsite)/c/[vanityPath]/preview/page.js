@@ -4,7 +4,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { serverFetch } from 'gpApi/serverFetch'
 
 async function getWebsite({ vanityPath }) {
-  const resp = await serverFetch(apiRoutes.website.view, {
+  const resp = await serverFetch(apiRoutes.website.preview, {
     vanityPath,
   })
   return resp.ok ? resp.data : null
@@ -13,17 +13,9 @@ async function getWebsite({ vanityPath }) {
 export const revalidate = 3600
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ params }) {
-  const website = await getWebsite(await params)
-
-  if (!website) {
-    notFound()
-  }
-
-  return {
-    title: `${website.content?.main?.title}`,
-    description: website.content?.main?.tagline,
-  }
+export const metadata = {
+  title: 'Your Website Preview',
+  robots: 'noindex',
 }
 
 export default async function CandidateWebsitePage({ params }) {

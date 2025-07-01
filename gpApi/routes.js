@@ -551,13 +551,21 @@ export const apiRoutes = {
       path: '/websites/mine',
       method: 'PUT',
     },
-    contactForm: {
-      path: '/websites/contact-form',
-      method: 'POST',
-    },
     preview: {
-      path: '/websites/preview/:vanityPath',
+      path: '/websites/:vanityPath/preview',
       method: 'GET',
+    },
+    view: {
+      path: '/websites/:vanityPath/view',
+      method: 'GET',
+    },
+    getContacts: {
+      path: '/websites/mine/contacts',
+      method: 'GET',
+    },
+    submitContactForm: {
+      path: '/websites/:vanityPath/contact-form',
+      method: 'POST',
     },
   },
 }

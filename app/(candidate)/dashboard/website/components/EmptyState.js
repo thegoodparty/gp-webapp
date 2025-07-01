@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import H1 from '@shared/typography/H1'
 import Body2 from '@shared/typography/Body2'
 import Paper from '@shared/utils/Paper'
@@ -5,7 +6,7 @@ import IntroSteps from './IntroSteps'
 import Button from '@shared/buttons/Button'
 import Caption from '@shared/typography/Caption'
 
-export default function EmptyState({ onClickCreate, createLoading }) {
+function EmptyState({ onClickCreate, createLoading }) {
   return (
     <div className="pt-4 px-2 text-left md:text-center">
       <H1>Create your free website</H1>
@@ -33,3 +34,5 @@ export default function EmptyState({ onClickCreate, createLoading }) {
     </div>
   )
 }
+
+export default memo(EmptyState)

@@ -1,6 +1,6 @@
 import { OpenInNewRounded } from '@mui/icons-material'
 import Button from '@shared/buttons/Button'
-import WebsiteContent from './WebsiteContent'
+import WebsiteContent from 'app/(candidateWebsite)/c/[vanityPath]/components/WebsiteContent'
 import Paper from '@shared/utils/Paper'
 
 export default function WebsitePreview({ website, campaign }) {
@@ -16,7 +16,7 @@ export default function WebsitePreview({ website, campaign }) {
         <div className="flex items-center gap-4">
           <Button
             nativeLink
-            href={`/c/${website.vanityPath}`}
+            href={`/c/${website.vanityPath}/preview`}
             variant="outline"
             size="sm"
             className="flex items-center gap-1"

@@ -6,7 +6,7 @@ import { apiRoutes } from 'gpApi/routes'
 import { redirect } from 'next/navigation'
 
 const meta = pageMetaData({
-  title: 'Website Editor| GoodParty.org',
+  title: 'Website Editor | GoodParty.org',
   description: 'Website Editor',
   slug: '/dashboard/website/editor',
 })
