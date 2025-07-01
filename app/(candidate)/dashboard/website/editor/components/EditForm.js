@@ -14,7 +14,7 @@ import EmailInput from '@shared/inputs/EmailInput'
 import PhoneInput from '@shared/inputs/PhoneInput'
 import Button from '@shared/buttons/Button'
 import Image from 'next/image'
-import { WEBSITE_STATUS } from '../../util/websiteFetch.util'
+import { WEBSITE_STATUS } from '../../util/website.util'
 
 const THEME_OPTIONS = Object.keys(WEBSITE_THEMES)
 

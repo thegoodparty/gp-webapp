@@ -10,7 +10,7 @@ import {
   publishWebsite,
   unpublishWebsite,
   WEBSITE_STATUS,
-} from '../../util/websiteFetch.util'
+} from '../../util/website.util'
 
 export default function WebsiteEditorPage({ pathname, preloadedWebsite }) {
   const [campaign] = useCampaign()

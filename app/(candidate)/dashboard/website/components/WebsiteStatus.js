@@ -4,7 +4,7 @@ import Button from '@shared/buttons/Button'
 import H5 from '@shared/typography/H5'
 import Paper from '@shared/utils/Paper'
 import Link from 'next/link'
-import { WEBSITE_STATUS } from '../util/websiteFetch.util'
+import { WEBSITE_STATUS } from '../util/website.util'
 
 function WebsiteStatus({ website, className = '' }) {
   const isPublished = website.status === WEBSITE_STATUS.published
