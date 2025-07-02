@@ -10,6 +10,8 @@ export const IssuesContext = createContext({
   filters: {},
   setFilters: () => {},
   totalIssueCount: 0,
+  viewMode: 'list',
+  setViewMode: () => {},
 })
 
 export function IssuesProvider({ children, issues: initialIssues }) {
@@ -18,6 +20,7 @@ export function IssuesProvider({ children, issues: initialIssues }) {
     search: '',
     status: 'all',
   })
+  const [viewMode, setViewMode] = useState('list')
 
   const refreshIssues = async () => {
     try {
@@ -53,6 +56,8 @@ export function IssuesProvider({ children, issues: initialIssues }) {
     filters,
     setFilters,
     totalIssueCount,
+    viewMode,
+    setViewMode,
   }
 
   return (
