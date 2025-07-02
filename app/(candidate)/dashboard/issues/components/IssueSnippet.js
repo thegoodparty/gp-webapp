@@ -1,3 +1,4 @@
+import Button from '@shared/buttons/Button'
 import Body1 from '@shared/typography/Body1'
 import Body2 from '@shared/typography/Body2'
 import H3 from '@shared/typography/H3'
@@ -36,6 +37,9 @@ export default function IssueSnippet({ issue }) {
           {statusToText[status]}
         </div>
       </div>
+      <Button className="mt-8 w-full" color="neutral" variant="outlined">
+        View Details
+      </Button>
     </Paper>
   )
 }
