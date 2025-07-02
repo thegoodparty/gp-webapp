@@ -1,9 +1,10 @@
 'use client'
-import { useIssues } from '@shared/hooks/useIssues'
-import IssueList from './IssueList'
+import { useViewMode } from '@shared/hooks/useViewMode'
+import IssueList from './list/IssueList'
+import IssueBoard from './board/IssueBoard'
 
 export default function IssueContainer() {
-  const { viewMode } = useIssues()
+  const { viewMode } = useViewMode()
 
-  return <>{viewMode === 'list' ? <IssueList /> : <div>Board</div>}</>
+  return <>{viewMode === 'list' ? <IssueList /> : <IssueBoard />}</>
 }
