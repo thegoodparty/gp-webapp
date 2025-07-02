@@ -20,6 +20,7 @@ import { syncEcanvasser } from 'utils/syncEcanvasser'
 import { userIsAdmin } from 'helpers/userHelper'
 import Image from 'next/image'
 import { useUser } from '@shared/hooks/useUser'
+import { BiSolidUpvote } from 'react-icons/bi'
 
 const VOTER_DATA_UPGRADE_ITEM = {
   label: 'Voter Data',
@@ -123,6 +124,15 @@ const WEBSITE_MENU_ITEM = {
   onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickWebsite),
 }
 
+// admin user only
+const ISSUES_MENU_ITEM = {
+  id: 'issues-dashboard',
+  label: 'Issues',
+  link: '/dashboard/issues',
+  icon: <BiSolidUpvote />,
+  onClick: () => trackEvent(EVENTS.Navigation.Dashboard.ClickIssues),
+}
+
 const getDashboardMenuItems = (campaign) => {
   const menuItems = [...DEFAULT_MENU_ITEMS]
   if (campaign?.isPro) {
@@ -153,6 +163,7 @@ export default function DashboardMenu({
   if (userIsAdmin(user)) {
     menuItems.push(TEXTING_MENU_ITEM)
     menuItems.push(WEBSITE_MENU_ITEM)
+    menuItems.push(ISSUES_MENU_ITEM)
   }
 
   const handleEnterPress = (e) => {
