@@ -62,7 +62,7 @@ export async function documentReady(page) {
     await page.waitForLoadState('domcontentloaded', { timeout: 30000 });
     
     try {
-        await page.waitForLoadState('networkidle', { timeout: 30000 });
+        await page.waitForLoadState('networkidle', { timeout: 5000 });
     } catch (error) {
         console.log('Network idle timeout, continuing anyway...');
     }
