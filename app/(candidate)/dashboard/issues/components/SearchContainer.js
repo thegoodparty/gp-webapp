@@ -1,14 +1,18 @@
 'use client'
 import React from 'react'
 import { useIssues } from '@shared/hooks/useIssues'
+import { useSearchFilters } from '@shared/hooks/useSearchFilters'
 import SearchInput from './SearchInput'
 import StatusFilter from './StatusFilter'
 import ViewModeToggle from './ViewModeToggle'
 import Paper from '@shared/utils/Paper'
 
 export default function SearchContainer() {
-  const { filters, setFilters, totalIssueCount, viewMode, setViewMode } =
-    useIssues()
+  const { issues: allIssues } = useIssues()
+  const { filters, setFilters } = useSearchFilters(allIssues)
+  const [viewMode, setViewMode] = useState('list')
+
+  const totalIssueCount = allIssues?.length || 0
 
   const handleSearchChange = (e) => {
     setFilters({

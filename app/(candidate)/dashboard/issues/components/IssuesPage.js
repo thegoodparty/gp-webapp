@@ -2,6 +2,7 @@
 import DashboardLayout from '../../shared/DashboardLayout'
 import { useCampaign } from '@shared/hooks/useCampaign'
 import { IssuesProvider } from '@shared/hooks/IssuesProvider'
+import { SearchFiltersProvider } from '@shared/hooks/SearchFiltersProvider'
 import IssuesHeader from './IssuesHeader'
 import EmptyIssueState from './EmptyIssueState'
 import IssueContainer from './IssueContainer'
@@ -17,9 +18,11 @@ export default function IssuesPage({
   return (
     <DashboardLayout pathname={pathname} campaign={campaign} showAlert={false}>
       <IssuesProvider issues={issues}>
-        <IssuesHeader />
-        <SearchContainer />
-        {issues?.length === 0 ? <EmptyIssueState /> : <IssueContainer />}
+        <SearchFiltersProvider>
+          <IssuesHeader />
+          <SearchContainer />
+          {issues?.length === 0 ? <EmptyIssueState /> : <IssueContainer />}
+        </SearchFiltersProvider>
       </IssuesProvider>
     </DashboardLayout>
   )

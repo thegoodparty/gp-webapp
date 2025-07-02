@@ -7,5 +7,12 @@ export const useIssues = () => {
   if (!context) {
     throw new Error('useIssues must be used within an IssuesProvider')
   }
-  return context
+
+  const [issues, setIssues, refreshIssues] = context
+
+  return {
+    issues,
+    setIssues,
+    refreshIssues,
+  }
 }
